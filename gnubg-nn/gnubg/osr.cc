@@ -54,17 +54,17 @@ extern "C" {
 //#define DEBUG
 
 
-#if defined( LOADED_BO )
-static inline int
-bearx(unsigned short const nOpp, int const i)
-{
-  extern unsigned char* pBearoff1;
+// #if defined( LOADED_BO )
+// static inline int
+// bearx(unsigned short const nOpp, int const i)
+// {
+//   extern unsigned char* pBearoff1;
 
-  uint const i1 = (nOpp << 6) | ( i << 1 );
+//   uint const i1 = (nOpp << 6) | ( i << 1 );
   
-  return pBearoff1[i1] + (pBearoff1[ i1 | 1 ] << 8);
-}
-#endif
+//   return pBearoff1[i1] + (pBearoff1[ i1 | 1 ] << 8);
+// }
+// #endif
 
 
 
@@ -80,43 +80,8 @@ bearProbs(uint const m[6])
   unsigned short const nOpp = PositionBearoff(x);
 
   static B b;
-
-#if defined( LOADED_BO )
-  b.start = 0;
-  for(/**/; b.start < 31; b.start += 1) {
-    if( bearx(nOpp, b.start) != 0 ) {
-      break;
-    }
-  }
-
-  b.len = 32 - b.start;
-  
-  for(int i = 31; i >= 0; --i) {
-    if( bearx(nOpp, i) != 0 ) {
-      break;
-    }
-
-    b.len -= 1;
-  }
-  
-  float* const f = b.p;
-  
-  for(uint i = b.start; i < b.start + b.len; ++i) {
-    int const p = bearx(nOpp, i);
-
-    f[i - b.start] = p / 65535.0;
-  }
-
-//    B bTmp;
-//    getBearoff(nOpp, &bTmp);
-
-//    assert(bTmp.len == b.len && bTmp.start == b.start &&
-//  	 memcmp(b.p, bTmp.p, sizeof(b.p[0]) * b.len) == 0);
-#else
   
   getBearoff(nOpp, &b);
-  
-#endif
   
   return &b;
 }

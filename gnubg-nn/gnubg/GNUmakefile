@@ -10,10 +10,22 @@ endif
 CFLAGS += $(OPT) -Ilib -g -Wall -W
 
 include ../flags.make
-CFLAGS += $(EXTRAFLAGS) -DHAVE_BEAROFF2
+
+CFLAGS += $(EXTRAFLAGS)
+
+ifeq ($(filter -DLOADED_BO,$(CFLAGS)),)
+BEAROFF = br1
+#uncomment if you want compiled in two sided database
+# BEAROFF += br2
+
+ifeq ($(filter br2,$(BEAROFF)),br2)
+CFLAGS += -DHAVE_BEAROFF2
+endif
+endif
 
 files = pub_eval.o positionid.o osr.o eval.o inputs.o \
-        br1.o br2.o eggmoveg.o mt19937int.o bearoffgammon.o racebg.o bearoffdb.o
+        $(foreach b,$(BEAROFF), $(b).o) eggmoveg.o mt19937int.o \
+        bearoffgammon.o racebg.o bearoffdb.o
 
 all: $(files)
 
@@ -25,7 +37,7 @@ makegm: makegm.o $(stdalf)
 	$(CXX) $(OPT) $(LDFLAGS) -o $@ $^
 
 
-BEAROFFFILES = br1.cc br2.cc
+BEAROFFFILES = $(foreach b, $(BEAROFF), $(b).cc)
 ifdef WIN32
 br1.cc: makebear.exe
      makebear $(BEAROFFFILES)

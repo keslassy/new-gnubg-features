@@ -187,7 +187,12 @@ Analyze::init(const char* netFile)
   }
   
 #if defined( LOADED_BO )
-  string const d = string(envHome) + '/' + "gnubg.bd";
+  if( ! envHome ) {
+    cerr << "GNUBGHOME not set" << endl;
+    return false;
+  }
+  string const os = string(envHome) + '/' + "gnubg_os0.bd";
+  string const ts = string(envHome) + '/' + "gnubg_ts0.bd";
 #endif
 
 #if defined( OS_BEAROFF_DB )
@@ -199,7 +204,7 @@ Analyze::init(const char* netFile)
 
   if( EvalInitialise(initalNetName.c_str()
 #if defined( LOADED_BO )
-		     , d.c_str()
+		     , os.c_str(), ts.c_str()
 #endif 
 #if defined( OS_BEAROFF_DB )
 		     , o.c_str()

@@ -15,7 +15,8 @@ endif
 
 GNUBG = $(wildcard ../gnubg)
 BGOBJS = eval.o inputs.o positionid.o pub_eval.o mt19937int.o eggmoveg.o \
-         osr.o br1.o br2.o bearoffgammon.o racebg.o bearoffdb.o
+         osr.o $(notdir $(wildcard $(GNUBG)/br*.o)) bearoffgammon.o \
+         racebg.o bearoffdb.o
 
 LIBOBGS = $(wildcard $(GNUBG)/lib/*.o)
 

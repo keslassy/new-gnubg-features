@@ -33,6 +33,7 @@
 #define CONST
 #endif
 
+// pack for space
 struct GammonProbs {
   unsigned long p1 : 16;
   unsigned long p2 : 16;

@@ -53,11 +53,7 @@
 char* weightsVersion = VERSION;
 
 #include "osr.h"
-#if ! defined( LOADED_BO )
 #include "br.h"
-#else
-#include <unistd.h>
-#endif
 
 #if defined( OS_BEAROFF_DB )
 #include "bearoffdb.h"
@@ -140,7 +136,10 @@ shared[N_CLASSES] =
 };
 
 #if defined( LOADED_BO )
-static unsigned char* pBearoff1 = NULL, *pBearoff2;
+bearoffcontext* pbc1 = NULL;
+bearoffcontext* pbc2 = NULL;
+//unsigned char* pBearoff1 = NULL;
+//static unsigned char* pBearoff2 = NULL;
 #endif
 
 
@@ -531,12 +530,16 @@ EvalShutdown(void)
 #if defined( OS_BEAROFF_DB )
   BearoffClose(osDB);
 #endif
+#if defined( LOADED_BO )
+  BearoffClose(pbc1);
+  BearoffClose(pbc2);
+#endif
 }
 
 extern int
 EvalInitialise(CONST char* szWeights
 #if defined( LOADED_BO )
-	       , CONST char* szDatabase
+	       , CONST char* osDataBase, CONST char* tsDataBase
 #endif 
 #if defined( OS_BEAROFF_DB )
 	       , CONST char* osDBfilename
@@ -546,31 +549,39 @@ EvalInitialise(CONST char* szWeights
   /* FIXME allow starting without bearoff database (to generate it later!) */
 
 #if defined( LOADED_BO )
-  if( !pBearoff1 ) {
-    int h;
-      
-    /* not yet initialised */
-    if( ( h = open( szDatabase, O_RDONLY ) ) < 0 )
-      return -1;
-
-#if HAVE_MMAP
-    if( !( pBearoff1 = mmap( NULL, 54264 * 32 * 2 + 924 * 924 * 2,
-			     PROT_READ, MAP_SHARED, h, 0 ) ) )
-      return -1;
-#else
-    if( !( pBearoff1 = malloc( 54264 * 32 * 2 + 924 * 924 * 2 ) ) )
-      return -1;
-
-    if( read( h, pBearoff1, 54264 * 32 * 2 + 924 * 924 * 2 ) < 0 ) {
-      free( pBearoff1 );
-
-      return -1;
-    }
-
-    close( h );
-#endif
-    pBearoff2 = pBearoff1 + 54264 * 32 * 2;
+  if( ! pbc1 ) {
+    pbc1 = BearoffInit( osDataBase, BO_IN_MEMORY );
   }
+  
+  if( ! pbc2 ) {
+    pbc2 = BearoffInit( tsDataBase, BO_IN_MEMORY );
+  }
+
+/*   if( !pBearoff1 ) { */
+/*     int h; */
+      
+/*     /\* not yet initialised *\/ */
+/*     if( ( h = open( szDatabase, O_RDONLY ) ) < 0 ) */
+/*       return -1; */
+
+/* #if HAVE_MMAP */
+/*     if( !( pBearoff1 = mmap( NULL, 54264 * 32 * 2 + 924 * 924 * 2, */
+/* 			     PROT_READ, MAP_SHARED, h, 0 ) ) ) */
+/*       return -1; */
+/* #else */
+/*     if( !( pBearoff1 = malloc( 54264 * 32 * 2 + 924 * 924 * 2 ) ) ) */
+/*       return -1; */
+
+/*     if( read( h, pBearoff1, 54264 * 32 * 2 + 924 * 924 * 2 ) < 0 ) { */
+/*       free( pBearoff1 ); */
+
+/*       return -1; */
+/*     } */
+
+/*     close( h ); */
+/* #endif */
+/*     pBearoff2 = pBearoff1 + 54264 * 32 * 2; */
+/*   } */
 #endif
 
 #if defined( OS_BEAROFF_DB )
@@ -858,45 +869,88 @@ EvalBearoff1( CONST int anBoard[2][25], float arOutput[], int ignore);
 static void
 EvalBearoff2( CONST int anBoard[2][25], float arOutput[], int ignore )
 {
-  int n, nOpp;
-
   if( nets[CLASS_BEAROFF1].net ) {
     EvalBearoff1(anBoard, arOutput, ignore);
     return;
   }
   
+#if defined(LOADED_BO)
+  assert ( pbc2 );
+
+  BearoffEval ( pbc2, anBoard, arOutput );
+#elif !defined(HAVE_BEAROFF2)
+  EvalBearoff1(anBoard, arOutput, ignore);
+#else
+  int n, nOpp;
+  
   nOpp = PositionBearoff( anBoard[ 0 ] );
   n = PositionBearoff( anBoard[ 1 ] );
 
-  arOutput[ OUTPUT_WINGAMMON ] = arOutput[ OUTPUT_LOSEGAMMON ] =
+  arOutput[ OUTPUT_WINGAMMON ] =
+    arOutput[ OUTPUT_LOSEGAMMON ] =
     arOutput[ OUTPUT_WINBACKGAMMON ] =
     arOutput[ OUTPUT_LOSEBACKGAMMON ] = 0.0;
 
-#if defined( LOADED_BO )
-  {
-    int b = ( pBearoff2[ ( n * 924 + nOpp ) << 1 ] |
-	      ( pBearoff2[ ( ( n * 924 + nOpp ) << 1 ) | 1 ] << 8 ) );
-    
-    arOutput[ OUTPUT_WIN ] = b / 65535.0;
-  }
-#else
   arOutput[ OUTPUT_WIN ] = getBearoffProbs2(n, nOpp) / 65535.0;
 #endif
 }
 
 #if defined( LOADED_BO )
-#if defined( __GNUC__ )
-inline
-#endif
-static void
-getBearoffProbs(int n, int aaProb[32])
+void
+getBearoffProbs(unsigned int n, int aaProb[32])
 {
+  float p[32];
   int i;
 
-  for( i = 0; i < 32; i++ )
-    aaProb[ i ] = pBearoff1[ ( n << 6 ) | ( i << 1 ) ] +
-      ( pBearoff1[ ( n << 6 ) | ( i << 1 ) | 1 ] << 8 );
+  BearoffDist(pbc1, n, p, 0, 0, 0, 0);
+  for(i = 0; i < 32; ++i) {
+    aaProb[i] = (int)(0.5 + p[i] * 65535);
+  }
+/*   int i; */
+
+/*   for( i = 0; i < 32; i++ ) */
+/*     aaProb[ i ] = pBearoff1[ ( n << 6 ) | ( i << 1 ) ] + */
+/*       ( pBearoff1[ ( n << 6 ) | ( i << 1 ) | 1 ] << 8 ); */
 }
+
+void
+getBearoff(unsigned int n, struct B* b)
+{
+  int aaProb[32];
+  getBearoffProbs(n, aaProb);
+
+  b->start = 0;
+  for(/**/; b->start < 31; b->start += 1) {
+    if( aaProb[b->start] != 0 ) {
+      break;
+    }
+  }
+
+  b->len = 32 - b->start;
+
+  {
+    int i;
+    for(i = 31; i >= 0; --i) {
+      if( aaProb[i] != 0 ) {
+	break;
+      }
+
+      b->len -= 1;
+    }
+  }
+  
+  {
+    float* const f = b->p;
+    unsigned int i;
+    
+    for(i = b->start; i < b->start + b->len; ++i) {
+      int const p = aaProb[i];
+
+      f[i - b->start] = p / 65535.0;
+    }
+  }
+}
+
 #endif
 
 

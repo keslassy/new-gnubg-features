@@ -39,19 +39,23 @@ struct B {
   float p[32];
 };
 
-
-#if defined( __GNUG__ )
+#if defined( __cplusplus )
 extern "C" {
 #endif
 
+  // Next two defined in eval.c when -DLOADED_BO 
   void getBearoffProbs(unsigned int n, int p[32]);
-
-  unsigned int getBearoffProbs2(unsigned int n, unsigned int nOpp);
-
-  void getBearoff(unsigned int n, struct B* b);
   
-#if defined( __GNUG__ )
+  void getBearoff(unsigned int n, struct B* b);
+
+#if defined( HAVE_BEAROFF2 )
+  unsigned int getBearoffProbs2(unsigned int n, unsigned int nOpp);
+#endif
+
+  
+#if defined( __cplusplus )
 }
+
 #endif
 
 #endif

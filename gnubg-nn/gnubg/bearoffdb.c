@@ -374,8 +374,6 @@ BearoffInit ( const char* szFilename, const int bo ) {
     assert(0);
   }
 
-  
-
   if ( ! szFilename || ! *szFilename )
     return NULL;
 

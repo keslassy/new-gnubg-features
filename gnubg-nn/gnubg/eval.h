@@ -101,8 +101,8 @@ ClassifyPosition(CONST int anBoard[2][25]);
 
 extern int EvalInitialise( CONST char *szWeights
 #if defined( LOADED_BO )
-			   , CONST char *szDatabase
-#endif
+	       , CONST char* osDataBase, CONST char* tsDataBase
+#endif 
 #if defined( OS_BEAROFF_DB )
 	       , CONST char* osDB
 #endif
