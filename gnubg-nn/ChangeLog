@@ -1,0 +1,10 @@
+Mon Jun 21 10:34:49 2004  Joseph Heled  <joseph@gnubg.org>
+
+	* flags.make (EXTRAFLAGS): add LOADED_BO to enable usage of
+	mainline bearoff databases.
+
+Sun Jun 20 19:22:44 2004  Joseph Heled  <pepster@users.sourceforge.net>
+
+	* flags.make (EXTRAFLAGS): make HAVE_DLFCN_H conditional on linux
+	for now.
+
