@@ -190,10 +190,10 @@ extern void ApplyMoveRecord( matchstate *pms, list *plGame, moverecord *pmr ) {
     movegameinfo *pmgi = plGame->plNext->p;
     /* FIXME this is wrong -- plGame is not necessarily the right game */
 
-#ifdef TC_DEBUG
+#ifdef TCDEBUG
 printf("ApplyMoveRecord(%d, %d.%d): state:%d, turn: %d, ts0: (%d.%d), ts1: (%d.%d)\n",
 	pmr->mt,
-	pmr->a.ts.tv_sec % 1000, pmr->a.ts.tv_usec / 1000,
+	pmr->a.tl[0].tv_sec % 1000, pmr->a.tl[1].tv_sec % 1000,
 	pms->gs, pms->fTurn,
 	pms->gc.pc[0].tvStamp.tv_sec %1000, pms->gc.pc[0].tvStamp.tv_usec / 1000, 
 	pms->gc.pc[1].tvStamp.tv_sec %1000, pms->gc.pc[1].tvStamp.tv_usec / 1000); 
@@ -204,10 +204,9 @@ printf("ApplyMoveRecord(%d, %d.%d): state:%d, turn: %d, ts0: (%d.%d), ts1: (%d.%
     pms->gs = GAME_PLAYING;
 
 #if USE_TIMECONTROL
-    CheckGameClock(pms, &pmr->a.ts);
+    if (MOVE_TIME != pmr->mt)
 #endif
-
-    pms->fResigned = pms->fResignationDeclined = 0;
+        pms->fResigned = pms->fResignationDeclined = 0;
 
 #if USE_GTK
     if( pms == &ms )
@@ -233,14 +232,13 @@ printf("ApplyMoveRecord(%d, %d.%d): state:%d, turn: %d, ts0: (%d.%d), ts1: (%d.%
 	    ( pms->anScore[ 0 ] == pms->nMatchTo - 1 ||
 	      pms->anScore[ 1 ] == pms->nMatchTo - 1 );
 #if USE_TIMECONTROL
-	pms->gc = pmr->g.gc;
-        CheckGameClock(pms, &pmr->a.ts); // to set timestamps;
-        if (&(pmr->g) == pmgi)
+	pms->nTimeouts[0] = pmr->g.nTimeouts[0];
+	pms->nTimeouts[1] = pmr->g.nTimeouts[1];
 
 	/* If this is the movegameinfo of a game being replayed, hit the 
 	 * clock for the first roll (the dice roll is collapsed into the move */
+        if (&(pmr->g) == pmgi)
             pms->fMove = pms->fTurn = ((moverecord *) (plGame->plNext->plNext->p))->n.fPlayer;
-
 #endif
 	break;
 	
@@ -363,23 +361,24 @@ printf("ApplyMoveRecord(%d, %d.%d): state:%d, turn: %d, ts0: (%d.%d), ts1: (%d.%
 	break;
 #if USE_TIMECONTROL
     case MOVE_TIME:
-	pms->anScore[!pms->fTurn] += pmr->t.nPoints;
+	pms->anScore[!pmr->t.fPlayer] += pmr->t.nPoints;
+	pms->nTimeouts[pmr->t.fPlayer] ++;
 #if USE_GTK
 	if( fX )
 	    GTKUpdateScores();
 #endif
-	if (pms->nMatchTo > 0 && pms->anScore[!pms->fTurn] >= pms->nMatchTo)
+	if (pms->nMatchTo > 0 && pms->anScore[!pmr->t.fPlayer] >= pms->nMatchTo)
         {
 	    pms->gs = GAME_TIMEOUT;
 	    pms->cGames++;
 	    pmgi->nPoints = pmr->t.nPoints;
-	    pmgi->fWinner = !pms->fTurn;
+	    pmgi->fWinner = !pmr->t.fPlayer;
 	    pmgi->fResigned = FALSE;
 	
             playSound ( ap[ pmgi->fWinner ].pt == PLAYER_HUMAN ? 
                     SOUND_HUMAN_WIN_GAME : SOUND_BOT_WIN_GAME );
 
-	    outputf(pmgi->nPoints == 1 ? _("%s is out of time\n%s wins %d point and the match.\n")
+	    outputf(1 == pmgi->nPoints ? _("%s is out of time\n%s wins %d point and the match.\n")
 		: _("%s is out of time\n%s wins %d points and the match.\n"),
 		ap[ ! pmgi->fWinner ].szName,
 		ap[ pmgi->fWinner ].szName, pmgi->nPoints);
@@ -387,12 +386,24 @@ printf("ApplyMoveRecord(%d, %d.%d): state:%d, turn: %d, ts0: (%d.%d), ts1: (%d.%
 
     	    fInterrupt=1;
 	}
+	else
+	{
+            playSound ( ap[ pmgi->fWinner ].pt == PLAYER_HUMAN ? 
+                    SOUND_HUMAN_TIMEOUT: SOUND_BOT_TIMEOUT);
+	    outputf(1 == pmgi->nPoints ? _("%s is out of time, %s wins %d point.\n")
+		: _("%s is out of time,  %s wins %d points.\n"),
+		ap[ pmr->t.fPlayer].szName,
+		ap[ !pmr->t.fPlayer].szName, pmr->t.nPoints);
+	    outputx();
+	}
 	break;
 #endif
     }
 
 #if USE_TIMECONTROL
-        HitGameClock(pms);
+	pms->tvTimeleft[0] = pmr->a.tl[0];
+	pms->tvTimeleft[1] = pmr->a.tl[1];
+        // HitGameClock(pms);
 #endif
 
 #if USE_GTK
@@ -511,6 +522,7 @@ static int PopMoveRecord( list *plDelete ) {
 
     return 0;
 }
+
 extern void AddMoveRecord( void *pv ) {
 
     moverecord *pmr = pv, *pmrOld;
@@ -593,46 +605,19 @@ extern void AddMoveRecord( void *pv ) {
 	{
 #if USE_TIMECONTROL
 	/* Because the roll and play is collapsed into one move in the
-	 * move list, we move the timestamp of the first roll
+	 * move list, we move the timestamps of the first roll
 	 * back to the MOVE_GAMEINFO record, so we can compute correct time
 	 * spent */
 
     	    moverecord *pmrOldOld;
 	    if ( ( pmrOldOld = plLastMove->plPrev->p )->mt == MOVE_GAMEINFO )
-		pmrOldOld->g.ts = pmrOld->sd.ts;
+	    {
+		pmrOldOld->g.tl[0] = pmrOld->sd.tl[0];
+		pmrOldOld->g.tl[1] = pmrOld->sd.tl[1];
+	    }
 #endif
 	    PopMoveRecord( plLastMove );
 	}
-
-#if USE_TIMECONTROL
-   gettimeofday(&pmr->a.ts, 0);
-
-/* We check for timeout before applying any other results of the move */
-    {
-    int penalty;
-
-    if (penalty = CheckGameClock(&ms, &pmr->a.ts) )
-    {
-/* In case of timeout a real MOVE_TIME record is added */
-	moverecord *pmovetime = malloc (sizeof(movetime)); 
-	pmovetime->t.mt = MOVE_TIME;
-	pmovetime->t.sz = NULL;
-	pmovetime->t.ts = pmr->a.ts;
-	pmovetime->t.nPoints = penalty;
-#if USE_GTK
-	if( fX )
-	    GTKAddMoveRecord( pmovetime );
-#endif
-
-        ApplyMoveRecord( &ms, plGame, pmovetime );
-        plLastMove = ListInsert( plGame, pmovetime );
-    	SetMoveRecord( pmovetime );
-	if (ms.gs == GAME_TIMEOUT) return;
-    }
-    }
-/* The original MOVE_TIME records are dummies to generate CheckGameClock */
-    if (pmr->a.mt == MOVE_TIME) return; 
-#endif
 
     /* FIXME perform other elision (e.g. consecutive "set" records) */
 
@@ -759,17 +744,16 @@ static int NewGame( void ) {
     pmr->g.nAutoDoubles = 0;
     IniStatcontext( &pmr->g.sc );
 #if USE_TIMECONTROL
-    if (ms.anScore[0] + ms.anScore[1] == 0)
-    {
-      	InitGameClock(&pmr->g.gc, &tc, 2*pmr->g.nMatch);
-    }
-    else
-    {
-	pmr->g.gc = ms.gc;
-    }
+    pmr->g.tl[0] = ms.tvTimeleft[0];
+    pmr->g.tl[1] = ms.tvTimeleft[1];
     pmr->g.fTimeout = 0;
+    pmr->g.nTimeouts[0] = ms.nTimeouts[0];
+    pmr->g.nTimeouts[1] = ms.nTimeouts[1];
 #endif
     AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
     
 
     UpdateSetting( &ms.nCube );
@@ -821,7 +805,15 @@ static int NewGame( void ) {
     pmr->sd.fPlayer = ms.anDice[ 1 ] > ms.anDice[ 0 ];
     pmr->sd.lt = LUCK_NONE;
     pmr->sd.rLuck = ERR_VAL;
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmr->sd.tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmr->sd.tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
     UpdateSetting( &ms.fTurn );
     UpdateSetting( &ms.gs );
     
@@ -1303,7 +1295,15 @@ extern int ComputerTurn( void ) {
       if( pmn->anMove[ 0 ] < 0 )
 	  playSound ( SOUND_BOT_DANCE );
       
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmn->tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmn->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
       AddMoveRecord( pmn );      
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
       
       return 0;
     }
@@ -1359,7 +1359,15 @@ extern int ComputerTurn( void ) {
     if( pmn->anMove[ 0 ] < 0 )
 	playSound ( SOUND_BOT_DANCE );
       
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmn->tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmn->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmn );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
     return 0;
 
   case PLAYER_EXTERNAL:
@@ -1521,7 +1529,15 @@ extern int ComputerTurn( void ) {
 	  if( pmn->anMove[ 0 ] < 0 )
 	      playSound ( SOUND_BOT_DANCE );
       
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmn->tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmn->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
 	  AddMoveRecord( pmn );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 	  return 0;
       }
 #else
@@ -1609,7 +1625,15 @@ static int TryBearoff( void ) {
 		
 		ShowAutoMove( ms.anBoard, pmn->anMove );
 		
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmn->tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmn->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
 		AddMoveRecord( pmn );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 
 		return 0;
 	    }
@@ -1915,7 +1939,15 @@ extern void CommandAgree( char *sz ) {
     pmr->nResigned = ms.fResigned;
     pmr->esResign.et = EVAL_NONE;
     
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmr->tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmr->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 
     TurnDone();
 }
@@ -2408,7 +2440,15 @@ extern void CommandDouble( char *sz ) {
     }
 #endif
     
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmr->d.tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmr->d.tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
     
     TurnDone();
 }
@@ -2562,7 +2602,15 @@ extern void CommandDrop( char *sz ) {
 		: _("%s refuses the cube and gives up %d points.\n")),
 	       ap[ ms.fTurn ].szName, ms.nCube);
     
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmr->d.tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmr->d.tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
     
     TurnDone();
 }
@@ -2815,7 +2863,15 @@ CommandMove( char *sz ) {
 	    
 	    ShowAutoMove( ms.anBoard, pmn->anMove );
 	    
+#if USE_TIMECONTROL
+	    CheckGameClock(&ms, 0);
+	    pmn->tl[0] = ms.gc.pc[0].tvTimeleft;
+	    pmn->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
 	    AddMoveRecord( pmn );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 
 	    TurnDone();
 	    
@@ -2915,7 +2971,15 @@ CommandMove( char *sz ) {
 		}
 #endif
 		
+#if USE_TIMECONTROL
+		CheckGameClock(&ms, 0);
+		pmn->tl[0] = ms.gc.pc[0].tvTimeleft;
+		pmn->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
 		AddMoveRecord( pmn );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 #if USE_GTK
 		/* Don't animate this move. */
 		fLastMove = FALSE;
@@ -2982,6 +3046,10 @@ extern void ClearMatch( void ) {
     ms.fCrawford = FALSE;
     ms.fPostCrawford = FALSE;
     ms.gs = GAME_NONE;
+#if USE_TIMECONTROL
+    ms.nTimeouts[0] = ms.nTimeouts[1] = 0;
+    ms.gc.pc[0].tc.timing = ms.gc.pc[1].tc.timing =  TC_NONE;
+#endif
     IniStatcontext( &scMatch );
 
     for( pppch = appch; *pppch; pppch++ )
@@ -3053,9 +3121,10 @@ extern void CommandNewMatch( char *sz ) {
     UpdateSetting( &ms.gs );
     
 #if USE_TIMECONTROL
+    InitGameClock(&ms.gc, &tc, 2*ms.nMatchTo);
 #if USE_GUI
 #if USE_GTK
-	nClockTimeout = gtk_timeout_add( 314 , UpdateClockNotify, 0 );
+	nClockTimeout = gtk_timeout_add(314 , UpdateClockNotify, 0 );
 #else
 	/* EventPending( &evNextTurn, TRUE );    */ assert (0);
 #endif
@@ -3097,6 +3166,7 @@ extern void CommandNewSession( char *sz ) {
     UpdateSetting( &ms.gs );
     
 #if USE_TIMECONTROL
+    InitGameClock(&ms.gc, &tc, 0);
 #if USE_GUI
 #if USE_GTK
 	nClockTimeout = gtk_timeout_add( 314 , UpdateClockNotify, 0 );
@@ -3632,7 +3702,15 @@ extern void CommandRedouble( char *sz ) {
     pmr->d.fPlayer = ms.fTurn;
     pmr->d.esDouble.et = EVAL_NONE;
     pmr->d.st = SKILL_NONE;
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmr->d.tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmr->d.tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
     
     TurnDone();
 }
@@ -3845,7 +3923,15 @@ CommandRoll( char *sz ) {
   pmr->sd.fPlayer = ms.fTurn;
   pmr->sd.lt = LUCK_NONE;
   pmr->sd.rLuck = ERR_VAL;
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmr->sd.tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmr->sd.tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
   AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
   
   ShowBoard();
 
@@ -3886,7 +3972,15 @@ CommandRoll( char *sz ) {
     
     ShowAutoMove( ms.anBoard, pmn->anMove );
 
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmn->tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmn->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmn );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 
     TurnDone();
   } else if( ml.cMoves == 1 && ( fAutoMove || ( ClassifyPosition( ms.anBoard )
@@ -3913,7 +4007,15 @@ CommandRoll( char *sz ) {
 
     ShowAutoMove( ms.anBoard, pmn->anMove );
 	
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmn->tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmn->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmn );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
     TurnDone();
   } else
     if( fAutoBearoff && !TryBearoff() )
@@ -3956,7 +4058,15 @@ extern void CommandTake( char *sz ) {
 	outputf( _("%s accepts the cube at %d.\n"), ap[ ms.fTurn ].szName,
 		 ms.nCube << 1 );
     
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmr->d.tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmr->d.tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 
     UpdateSetting( &ms.nCube );
     UpdateSetting( &ms.fCubeOwner );
@@ -4049,7 +4159,17 @@ SetMatchID ( const char *szMatchID ) {
   pmr->g.fResigned = FALSE;
   pmr->g.nAutoDoubles = 0;
   IniStatcontext( &pmr->g.sc );
+#if USE_TIMECONTROL
+    pmr->g.fTimeout = 0;
+    pmr->g.nTimeouts[0] = ms.nTimeouts[0];
+    pmr->g.nTimeouts[1] = ms.nTimeouts[1];
+    pmr->g.tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmr->g.tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
   AddMoveRecord( pmr );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 
   ms.gs = gs;
   ms.fMove = fMove;
@@ -4063,17 +4183,6 @@ SetMatchID ( const char *szMatchID ) {
   UpdateSetting( &ms.fTurn );
   UpdateSetting( &ms.fCrawford );
 
-  /* Set dice */
-
-  if ( anDice[ 0 ] ) {
-
-    char sz[ 10 ];
-  
-    sprintf ( sz, "%d %d", anDice[ 0 ], anDice[ 1 ] );
-    CommandSetDice ( sz );
-
-  }
-
   /* set cube */
 
   if ( fCubeOwner != -1 ) {
@@ -4085,7 +4194,15 @@ SetMatchID ( const char *szMatchID ) {
     pmscp->sz = NULL;
     pmscp->fCubeOwner = fCubeOwner;
     
+#if USE_TIMECONTROL
+    CheckGameClock(&ms, 0);
+    pmscp->tl[0] = ms.gc.pc[0].tvTimeleft;
+    pmscp->tl[1] = ms.gc.pc[1].tvTimeleft;
+#endif
     AddMoveRecord( pmscp );
+#if USE_TIMECONTROL
+    HitGameClock ( &ms );
+#endif 
 
   }
     
@@ -4104,7 +4221,16 @@ SetMatchID ( const char *szMatchID ) {
   if ( strlen ( szID ) )
     CommandSetBoard ( szID );
 
+  /* Set dice */
 
+  if ( anDice[ 0 ] ) {
+
+    char sz[ 10 ];
+  
+    sprintf ( sz, "%d %d", anDice[ 0 ], anDice[ 1 ] );
+    CommandSetDice ( sz );
+
+  }
 }
 
 

@@ -147,9 +147,10 @@ typedef enum _movetype {
  *	time each move, before the clock starts, but no time is added.
  * TC_HOURGLASS - Hourglass timing, what player A spends is added to B's
  *	clock and vice versa
+ * TC_UNKNOWN - unknown timing type (e.g. read from file)
  */
 typedef enum _tctiming {
-TC_NONE=0, TC_PLAIN, TC_FISCHER, TC_BRONSTEIN, TC_HOURGLASS
+TC_NONE=0, TC_PLAIN, TC_FISCHER, TC_BRONSTEIN, TC_HOURGLASS, TC_UNKNOWN
 } tctiming;
 
 /* The different penalty types
@@ -191,7 +192,7 @@ typedef struct _playerclock {
     struct timeval tvStamp; 
     struct timeval tvTimeleft;
     timecontrol tc;
-    int nTimeouts;
+   //  int nTimeouts;
 } playerclock;
    
 typedef struct _gameclock {
@@ -206,7 +207,7 @@ typedef struct _movegameinfo {
     movetype mt;
     char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     int i, /* the number of the game within a match */
 	nMatch, /* match length */
@@ -221,7 +222,7 @@ typedef struct _movegameinfo {
     statcontext sc;
 #if USE_TIMECONTROL
     int fTimeout; /* the game ended on time */ 
-    gameclock gc; /* The gameclock state at game start */
+    int nTimeouts[2];
 #endif
 } movegameinfo;
 
@@ -229,7 +230,7 @@ typedef struct _movedouble {
     movetype mt;
     char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     int fPlayer;
     /* evaluation of cube action */
@@ -244,7 +245,7 @@ typedef struct _movenormal {
     movetype mt;
     char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     int fPlayer;
     int anRoll[ 2 ];
@@ -269,7 +270,7 @@ typedef struct _moveresign {
     movetype mt;
     char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     int fPlayer;
     int nResigned;
@@ -285,7 +286,7 @@ typedef struct _movesetboard {
     movetype mt;
     char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     unsigned char auchKey[ 10 ]; /* always stored as if player 0 was on roll */
 } movesetboard;
@@ -294,7 +295,7 @@ typedef struct _movesetdice {
     movetype mt;
     char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     int fPlayer;
     int anDice[ 2 ];
@@ -306,7 +307,7 @@ typedef struct _movesetcubeval {
     movetype mt;
     char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     int nCube;
 } movesetcubeval;
@@ -315,7 +316,7 @@ typedef struct _movesetcubepos {
     movetype mt;
     char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     int fCubeOwner;
 } movesetcubepos;
@@ -324,7 +325,8 @@ typedef struct _movesetcubepos {
 typedef struct _movetime {
     movetype mt;
     char *sz;
-    struct timeval ts;
+    struct timeval tl[2];
+    int fPlayer;
     int nPoints;
 } movetime;
 #endif
@@ -335,7 +337,7 @@ typedef union _moverecord {
 	movetype mt;
 	char *sz;
 #if USE_TIMECONTROL
-	struct timeval ts;
+	struct timeval tl[2];
 #endif
     } a;
     movegameinfo g;
@@ -373,6 +375,8 @@ typedef struct _matchstate {
     gamestate gs;
 #if USE_TIMECONTROL
     gameclock gc;
+    struct timeval tvTimeleft[2];
+    int nTimeouts[2];
 #endif
 } matchstate;
 

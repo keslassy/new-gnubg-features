@@ -423,8 +423,6 @@ static int applyPenalty(matchstate *pms)
 	    *pgcOpp=&pms->gc.pc[!pms->fTurn];
 	int penalty;
 
-	pgcPlayer->nTimeouts++;
-
 	switch (pgcPlayer->tc.penalty ) {
 	case TC_POINT:
 		penalty = pgcPlayer->tc.nPenalty;
@@ -452,6 +450,9 @@ static int applyPenalty(matchstate *pms)
 
 extern void InitGameClock(gameclock *pgc, timecontrol *ptc, int nPoints)
 {
+#ifdef TCDEBUG
+printf("InitgameClock (match to: %d)\n", nPoints);
+#endif
     int i;
     for (i=0;i<2;i++)
     {
@@ -460,7 +461,6 @@ extern void InitGameClock(gameclock *pgc, timecontrol *ptc, int nPoints)
 	pgc->pc[i].tvTimeleft.tv_sec += ptc->nAddedTime; 
 	pgc->pc[i].tvTimeleft.tv_usec = 0; 
 	pgc->pc[i].tc = *ptc;
-	pgc->pc[i].nTimeouts = 0;
     }
     timerclear(&pgc->pausedtime);
 }
@@ -519,6 +519,14 @@ extern void PauseGameClock(matchstate *pms)
 extern int CheckGameClock(matchstate *pms, struct timeval *tvp)
 {
     int pen=0;
+    struct timeval ts;
+
+    if (0 == tvp)
+    {
+	tvp = &ts;
+	gettimeofday(tvp,0);
+    }
+
 #ifdef TCDEBUG
 printf("CheckGameClock (%d.%d): state:%d, turn: %d, ts0: (%d.%d), ts1: (%d.%d)\n",
 	tvp->tv_sec%1000, tvp->tv_usec/1000,
@@ -594,16 +602,30 @@ printf("CheckGameClock (%d.%d): state:%d, turn: %d, ts0: (%d.%d), ts1: (%d.%d)\n
     while ( pgcPlayer->tvTimeleft.tv_sec < 0 )
 	pen += applyPenalty(pms);
 
+    pms->tvTimeleft[0] = pms->gc.pc[0].tvTimeleft;
+    pms->tvTimeleft[1] = pms->gc.pc[1].tvTimeleft;
     pgcOpp->tvStamp = *tvp;
-    return pen;
+
+    if (pen) {
+    moverecord *pmr;
+	pmr = malloc( sizeof( movetime ) );
+	pmr->mt = MOVE_TIME;
+	pmr->t.sz = 0;
+	pmr->t.fPlayer = ms.fTurn;
+	pmr->t.tl[0] = ms.gc.pc[0].tvTimeleft;
+	pmr->t.tl[1] = ms.gc.pc[1].tvTimeleft;
+	pmr->t.nPoints = pen;
+	AddMoveRecord( pmr );
+   }
+   return pen;
 }
 }
 
-extern char *FormatClock(int fPlayer)
+extern char *FormatClock(struct timeval *ptl, char *buf)
 {
-static char szClock0[20], szClock1[20];
-    char *szClock = fPlayer ? szClock1 : szClock0;
-    long sec=ms.gc.pc[fPlayer].tvTimeleft.tv_sec;
+static char staticBuf[20];
+    char *szClock = buf ? buf :  staticBuf;
+    long sec=ptl->tv_sec;
     int h,m,s;
     int neg;
     if (neg=(sec<0)) sec = -sec;
@@ -612,16 +634,6 @@ static char szClock0[20], szClock1[20];
     m = sec%60;
     h = sec/60;
     sprintf(szClock, "%s%02d:%02d:%02d", neg?"-":" ", h, m, s);
-    switch (ms.gc.pc[fPlayer].nTimeouts) {
-    case 0:
-	break;
-    case 1:
-	strcat(szClock, " F");
-	break;
-    default:
-	sprintf(szClock + strlen(szClock), " Fx%d", ms.gc.pc[fPlayer].nTimeouts);
-	break;
-    }
     return szClock;
 }
 
@@ -642,9 +654,7 @@ extern int UpdateClockNotify(void *p)
 
     if ( GAME_PLAYING != ms.gs ) return;
 
-    moverecord dummy; // wont be added, really
-    dummy.a.mt = MOVE_TIME; 
-    AddMoveRecord(&dummy);
+    CheckGameClock(&ms, 0);
 
 #if USE_GTK
     if (fX)

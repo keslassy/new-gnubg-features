@@ -361,9 +361,17 @@ static char *ToUTF8( unsigned char *sz ) {
 #if USE_TIMECONTROL
 extern void GTKUpdateClock()
 {
-    board_set_clock(BOARD( pwBoard ),  
-	(ms.gc.pc[0].tc.timing == TC_NONE) ? _("n/a") : FormatClock(0) ,
-	(ms.gc.pc[1].tc.timing == TC_NONE) ? _("n/a") : FormatClock(1) );
+char szTime0[20], szTime1[20];
+    sprintf(szTime0, (TC_NONE == ms.gc.pc[0].tc.timing) ?  _("n/a") :
+	(0 == ms.nTimeouts[0]) ? "%s" :
+	(1 == ms.nTimeouts[0]) ? "%s F" : "%s Fx%d",
+	 FormatClock(&ms.tvTimeleft[0], 0), ms.nTimeouts[0]);
+    sprintf(szTime1, (TC_NONE == ms.gc.pc[1].tc.timing) ?  _("n/a") :
+	(0 == ms.nTimeouts[1]) ? "%s" :
+	(1 == ms.nTimeouts[1]) ? "%s F" : "%s Fx%d",
+	 FormatClock(&ms.tvTimeleft[1], 0), ms.nTimeouts[1]);
+	
+    board_set_clock(BOARD( pwBoard ),  szTime0, szTime1);
 }
 
 extern void GTKUpdateScores()

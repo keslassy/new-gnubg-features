@@ -38,24 +38,22 @@ extern void HitGameClock(matchstate *pms);
 
 /* Updates the Game clock and checks whether the time has run out.
  * for the player whose clock is running
+ * @param pms pointer to matchstate
  * @param tvp timestamp for hit
  * @return how many penalty points to apply
  */
 extern int CheckGameClock(matchstate *pms, struct timeval *tvp);
 
 /* Make a formatted string for the given player.
- * The string is allocated in separate static buffers for each player,
- * and a call to FormatClock(0) will not destroy the contents of FormatClock(1)
- * @param fPlayer
+ * @param ptl pointer to  time to format
+ * @param buf pointer to result buffer - if 0 a static buf is used
+ *	but this is rewritten on subsequent calls to FormatClock
  * @return Remaining clock time on the format h:mm:ss 
- *	in addition an 'F' will be added if the flag has fallen,
- *	or 'Fx2', 'Fx3' etc. if the flag has fallen again ...
  */
-extern char *FormatClock(/* matchstate *pms, */ int fPlayer);
+extern char *FormatClock(struct timeval * ptl , char *buf);
 
 /* Force a (real time) update to the clock which again will 
- * issue a dummy MOVE_TIME record which again will generate
- * a CheckGameClock call - which then will generate a proper
+ * issue a 
  * MOVE_TIME record if time has run out
  */ 
 #if USE_GUI
