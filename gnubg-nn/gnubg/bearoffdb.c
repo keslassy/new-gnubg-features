@@ -29,7 +29,11 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+
+#ifndef WIN32
 #include <sys/mman.h>
+#endif
+
 #include <math.h>
 
 #include <sys/stat.h>
@@ -309,7 +313,11 @@ GetDistUncompressed ( bearoffcontext *pbc, const unsigned int nPosID ) {
 
 }
 
+#ifdef WIN32
+#define HAVE_MMAP 0
+#else
 #define HAVE_MMAP 1
+#endif
 
 static int
 ReadIntoMemory ( bearoffcontext *pbc, const int iOffset, const int nSize ) {
