@@ -93,7 +93,7 @@ extern void
 BearoffClose ( bearoffcontext *pbc );
 
 extern void
-BearoffDist ( bearoffcontext *pbc, const unsigned int nPosID,
+BearoffDist ( bearoffcontext *pbc, CONST unsigned int nPosID,
               float arProb[ 32 ], float arGammonProb[ 32 ],
               float ar[ 4 ],
               unsigned short int ausProb[ 32 ], 

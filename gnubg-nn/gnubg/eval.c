@@ -80,14 +80,14 @@ typedef CONST int (*ConstBoard)[25];
 
 
 typedef struct EvalNets_ {
-  const char*   	name;
+  CONST char*   	name;
   neuralnet* 		net;
   neuralnet* 		pnet;
   cache*		ncache;
   cache*		pcache;
   unsigned int		nMoves;
   int           	minNmoves;
-  const NetInputFuncs*	netInputs;
+  CONST NetInputFuncs*	netInputs;
 } EvalNets;
 
 /* indexed on positionclass. don't change entries order */
@@ -110,7 +110,7 @@ evalNetsGen[N_CLASSES] =
    bearoff with race+bearoff data
 */
    
-static int const alternate[N_CLASSES] =
+static int CONST alternate[N_CLASSES] =
 { -1, CLASS_BEAROFF1, -1,  CLASS_BEAROFF1, CLASS_CONTACT, -1
 #if defined( CONTAINMENT_CODE )
   ,CLASS_CRASHED
@@ -138,8 +138,6 @@ shared[N_CLASSES] =
 #if defined( LOADED_BO )
 bearoffcontext* pbc1 = NULL;
 bearoffcontext* pbc2 = NULL;
-//unsigned char* pBearoff1 = NULL;
-//static unsigned char* pBearoff2 = NULL;
 #endif
 
 
@@ -337,7 +335,7 @@ LoadNet(CONST char* szWeights, long cSize)
       }
 
       for(p = 0; p < N_CLASSES; ++p) {
-	const char* CONST name = evalNetsGen[p].name;
+	CONST char* CONST name = evalNetsGen[p].name;
 	if( name ) {
 	  if( strncmp(netType, name, strlen(name)) == 0 ) {
 	    break;
@@ -346,7 +344,7 @@ LoadNet(CONST char* szWeights, long cSize)
       }
 
       if( p < N_CLASSES ) {
-	const NetInputFuncs* inpFunc = 0;
+	CONST NetInputFuncs* inpFunc = 0;
 	char* t = netType + strlen(evalNetsGen[p].name);
 	while( *t && *t == ' ' ) { ++t; }
 	if( *t ) {
@@ -485,7 +483,7 @@ LoadNet(CONST char* szWeights, long cSize)
     positionclass p[3] = {CLASS_RACE, CLASS_CRASHED, CLASS_CONTACT};
     int k;
     for(k = 0; k < 3; ++k) {
-      positionclass const i = p[k];
+      positionclass CONST i = p[k];
       EvalNets* e = &evalNets[i];
 
       if( ! e->net ) {
@@ -557,31 +555,6 @@ EvalInitialise(CONST char* szWeights
     pbc2 = BearoffInit( tsDataBase, BO_IN_MEMORY );
   }
 
-/*   if( !pBearoff1 ) { */
-/*     int h; */
-      
-/*     /\* not yet initialised *\/ */
-/*     if( ( h = open( szDatabase, O_RDONLY ) ) < 0 ) */
-/*       return -1; */
-
-/* #if HAVE_MMAP */
-/*     if( !( pBearoff1 = mmap( NULL, 54264 * 32 * 2 + 924 * 924 * 2, */
-/* 			     PROT_READ, MAP_SHARED, h, 0 ) ) ) */
-/*       return -1; */
-/* #else */
-/*     if( !( pBearoff1 = malloc( 54264 * 32 * 2 + 924 * 924 * 2 ) ) ) */
-/*       return -1; */
-
-/*     if( read( h, pBearoff1, 54264 * 32 * 2 + 924 * 924 * 2 ) < 0 ) { */
-/*       free( pBearoff1 ); */
-
-/*       return -1; */
-/*     } */
-
-/*     close( h ); */
-/* #endif */
-/*     pBearoff2 = pBearoff1 + 54264 * 32 * 2; */
-/*   } */
 #endif
 
 #if defined( OS_BEAROFF_DB )
@@ -906,11 +879,6 @@ getBearoffProbs(unsigned int n, int aaProb[32])
   for(i = 0; i < 32; ++i) {
     aaProb[i] = (int)(0.5 + p[i] * 65535);
   }
-/*   int i; */
-
-/*   for( i = 0; i < 32; i++ ) */
-/*     aaProb[ i ] = pBearoff1[ ( n << 6 ) | ( i << 1 ) ] + */
-/*       ( pBearoff1[ ( n << 6 ) | ( i << 1 ) | 1 ] << 8 ); */
 }
 
 void
@@ -1342,19 +1310,6 @@ NetEvalRace(CONST int anBoard[2][25], float arOutput[])
   
   SanityCheck(anBoard, arOutput);
 }
-
-
-#if defined( nono )
-static void
-evalEvalContact(int anBoard[2][25], float arOutput[])
-{
-  float arInput[CEVAL_NUM_INPUTS];
-  
-  baseInputs( anBoard, arInput );
-    
-  NeuralNetEvaluate(&nnEvalContact, arInput, arOutput);
-}
-#endif
 
 static void
 EvalContact(CONST int anBoard[2][25], float arOutput[], int nm)

@@ -29,7 +29,7 @@ typedef CONST char*
 (*InputNameFunc)(unsigned int n);
 
 typedef struct NetInputFuncs_ {
-  const char*   	name;
+  CONST char*   	name;
   InputsFunc		func;
   unsigned int		nInputs;
   InputNameFunc		ifunc;
@@ -39,8 +39,8 @@ typedef struct NetInputFuncs_ {
 
 extern NetInputFuncs inputFuncs[];
 
-const NetInputFuncs*
-ifByName(const char* name);
+CONST NetInputFuncs*
+ifByName(CONST char* name);
 
 #define MAX_NUM_INPUTS 400
 
@@ -57,7 +57,7 @@ CONST char*
 inputNameFromFunc(CONST NetInputFuncs* inp, unsigned int k);
 
 CONST NetInputFuncs*
-ifFromFile(const char* name);
+ifFromFile(CONST char* name);
 
 unsigned int
 maxIinputs(void);
@@ -66,7 +66,7 @@ void
 getInputs(CONST int anBoard[2][25], CONST int* which, float* values);
 
 int
-closeInputs(const NetInputFuncs* f);
+closeInputs(CONST NetInputFuncs* f);
 
 CONST char*
 genericInputName(unsigned int n);

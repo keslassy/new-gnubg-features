@@ -1,0 +1,4 @@
+Mon Jun 21 15:20:55 2004  Joseph Heled  <joseph@gnubg.org>
+
+	* bearoffdb.c: added two sided file based bearoff.
+

@@ -183,24 +183,26 @@ PositionFromID(int anBoard[2][25], CONST char* pchEnc)
 
 static int anCombination[ 21 ][ 6 ], fCalculated = 0;
 
-static int InitCombination( void ) {
+static int
+InitCombination( void )
+{
 
-    int i, j;
+  int i, j;
 
-    for( i = 0; i < 21; i++ )
-	anCombination[ i ][ 0 ] = i + 1;
+  for( i = 0; i < 21; i++ )
+    anCombination[ i ][ 0 ] = i + 1;
     
+  for( j = 1; j < 6; j++ )
+    anCombination[ 0 ][ j ] = 0;
+
+  for( i = 1; i < 21; i++ )
     for( j = 1; j < 6; j++ )
-	anCombination[ 0 ][ j ] = 0;
+      anCombination[ i ][ j ] = anCombination[ i - 1 ][ j - 1 ] +
+	anCombination[ i - 1 ][ j ];
 
-    for( i = 1; i < 21; i++ )
-	for( j = 1; j < 6; j++ )
-	    anCombination[ i ][ j ] = anCombination[ i - 1 ][ j - 1 ] +
-		anCombination[ i - 1 ][ j ];
-
-    fCalculated = 1;
+  fCalculated = 1;
     
-    return 0;
+  return 0;
 }
 
 static int

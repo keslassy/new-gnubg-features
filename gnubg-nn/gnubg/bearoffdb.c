@@ -47,66 +47,68 @@
 static int anCombination[ 33 ][ 18 ];
 static int fCalculated = 0;
 
-static int InitCombination( void ) {
+static int
+InitCombination( void )
+{
+  int i, j;
 
-    int i, j;
-
-    for( i = 0; i < 33; i++ )
-        anCombination[ i ][ 0 ] = i + 1;
+  for( i = 0; i < 33; i++ )
+    anCombination[ i ][ 0 ] = i + 1;
     
+  for( j = 1; j < 18; j++ )
+    anCombination[ 0 ][ j ] = 0;
+
+  for( i = 1; i < 33; i++ )
     for( j = 1; j < 18; j++ )
-        anCombination[ 0 ][ j ] = 0;
+      anCombination[ i ][ j ] = anCombination[ i - 1 ][ j - 1 ] +
+	anCombination[ i - 1 ][ j ];
 
-    for( i = 1; i < 33; i++ )
-        for( j = 1; j < 18; j++ )
-            anCombination[ i ][ j ] = anCombination[ i - 1 ][ j - 1 ] +
-                anCombination[ i - 1 ][ j ];
-
-    fCalculated = 1;
+  fCalculated = 1;
     
+  return 0;
+}
+
+static int
+Combination( int n, int r )
+{
+  assert( n > 0 );
+  assert( r > 0 );
+  assert( n <= 33 );
+  assert( r <= 18 );
+
+  if( !fCalculated )
+    InitCombination();
+
+  return anCombination[ n - 1 ][ r - 1 ];
+}
+
+static int
+PositionF( int fBits, int n, int r )
+{
+  if( n == r )
     return 0;
-}
 
-static int Combination( int n, int r ) {
-
-    assert( n > 0 );
-    assert( r > 0 );
-    assert( n <= 33 );
-    assert( r <= 18 );
-
-    if( !fCalculated )
-        InitCombination();
-
-    return anCombination[ n - 1 ][ r - 1 ];
-}
-
-static int PositionF( int fBits, int n, int r ) {
-
-    if( n == r )
-        return 0;
-
-    return ( fBits & ( 1 << ( n - 1 ) ) ) ? Combination( n - 1, r ) +
-        PositionF( fBits, n - 1, r - 1 ) : PositionF( fBits, n - 1, r );
+  return ( fBits & ( 1 << ( n - 1 ) ) ) ? Combination( n - 1, r ) +
+    PositionF( fBits, n - 1, r - 1 ) : PositionF( fBits, n - 1, r );
 }
 
 #define PositionBearoff localPositionBearoff
-static unsigned int PositionBearoff( const int anBoard[],
-                                     const int n ) {
+static unsigned int
+PositionBearoff( int CONST anBoard[], int CONST n )
+{
+  int i, fBits, j;
 
-    int i, fBits, j;
+  for( j = n - 1, i = 0; i < n; i++ )
+    j += anBoard[ i ];
 
-    for( j = n - 1, i = 0; i < n; i++ )
-        j += anBoard[ i ];
-
-    fBits = 1 << j;
+  fBits = 1 << j;
     
-    for( i = 0; i < n; i++ ) {
-        j -= anBoard[ i ] + 1;
-        fBits |= ( 1 << j );
+  for( i = 0; i < n; i++ ) {
+    j -= anBoard[ i ] + 1;
+    fBits |= ( 1 << j );
+  }
 
-    }
-
-    return PositionF( fBits, 15 + n, n );
+  return PositionF( fBits, 15 + n, n );
 }
 
 static void
@@ -166,8 +168,8 @@ HashOneSided ( const unsigned int nPosID ) {
 
 
 static void 
-AverageRolls ( const float arProb[ 32 ], float *ar ) {
-
+AverageRolls ( const float arProb[ 32 ], float *ar )
+{
   float sx;
   float sx2;
   int i;
@@ -179,10 +181,8 @@ AverageRolls ( const float arProb[ 32 ], float *ar ) {
     sx2 += i * i * arProb[ i ];
   }
 
-
   ar[ 0 ] = sx;
   ar[ 1 ] = sqrt ( sx2 - sx *sx );
-
 }
 
 static unsigned short int *
@@ -225,7 +225,7 @@ GetDistCompressed ( bearoffcontext *pbc, const unsigned int nPosID ) {
   iOffset = 
     puch[ 0 ] | 
     puch[ 1 ] << 8 |
-    puch[ 2 ] << 16 |
+    puch[2] << 16 |
     puch[ 3 ] << 24;
   
   nz = puch[ 4 ];
@@ -270,7 +270,6 @@ GetDistCompressed ( bearoffcontext *pbc, const unsigned int nPosID ) {
   CopyBytes ( aus, puch, nz, ioff, nzg, ioffg );
 
   return aus;
-
 }
 
 
@@ -349,7 +348,6 @@ ReadIntoMemory ( bearoffcontext *pbc, const int iOffset, const int nSize ) {
 #endif /* HAVE_MMAP */
 
   return 0;
-
 }
 
 /*
@@ -741,7 +739,7 @@ BearoffDist ( bearoffcontext *pbc, const unsigned int nPosID,
 }
 
 extern int
-isBearoff ( bearoffcontext *pbc, CONST int anBoard[ 2 ][ 25 ] ) {
+isBearoff ( bearoffcontext *pbc, CONST int anBoard[2][25] ) {
 
   int nOppBack = -1, nBack = -1;
   int n = 0, nOpp = 0;
@@ -787,21 +785,21 @@ setGammonProb(CONST int anBoard[2][25], int bp0, int bp1, float* g0,
 
 static int
 BearoffEvalOneSided ( bearoffcontext *pbc, 
-                      CONST int anBoard[ 2 ][ 25 ], float arOutput[] ) {
+                      CONST int anBoard[2][25], float arOutput[] ) {
 
   int i, j;
-  float aarProb[ 2 ][ 32 ];
-  float aarGammonProb[ 2 ][ 32 ];
+  float aarProb[2][ 32 ];
+  float aarGammonProb[2][ 32 ];
   float r;
-  int anOn[ 2 ];
-  int an[ 2 ];
-  float ar[ 2 ][ 4 ];
+  int anOn[2];
+  int an[2];
+  float ar[2][ 4 ];
 
   /* get bearoff probabilities */
 
   for ( i = 0; i < 2; ++i ) {
 
-    an[ i ] = PositionBearoff ( anBoard[ i ], pbc->nPoints );
+    an[ i ] = PositionBearoff( anBoard[ i ], pbc->nPoints );
     BearoffDist ( pbc, an[ i ], aarProb[ i ], aarGammonProb[ i ], ar [ i ],
                   NULL, NULL );
 
@@ -954,8 +952,8 @@ BearoffEvalTwoSided(bearoffcontext* pbc, CONST int anBoard[2][25], float arOutpu
 {
   assert( pbc->nPoints == 6);
     
-  int nUs = PositionBearoff ( anBoard[ 1 ], pbc->nPoints /*, pbc->nChequers*/ );
-  int nThem = PositionBearoff ( anBoard[ 0 ], pbc->nPoints /*, pbc->nChequers */ );
+  int nUs = PositionBearoff( anBoard[ 1 ], pbc->nPoints /*, pbc->nChequers*/ );
+  int nThem = PositionBearoff( anBoard[ 0 ], pbc->nPoints /*, pbc->nChequers */ );
   int n = Combination ( pbc->nPoints + pbc->nChequers, pbc->nPoints );
   int iPos = nUs * n + nThem;
   float ar[ 4 ];
@@ -971,9 +969,8 @@ BearoffEvalTwoSided(bearoffcontext* pbc, CONST int anBoard[2][25], float arOutpu
 }
 
 extern int
-BearoffEval(bearoffcontext *pbc,
-	    CONST int anBoard[ 2 ][ 25 ], float arOutput[] ) {
-
+BearoffEval(bearoffcontext *pbc, CONST int anBoard[2][25], float arOutput[] )
+{
   switch ( pbc->bt ) {
   case BEAROFF_GNUBG:
     if ( pbc->fTwoSided ) 

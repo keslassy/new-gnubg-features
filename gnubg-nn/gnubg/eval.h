@@ -125,7 +125,7 @@ struct EvalNets_*
 setNets(struct EvalNets_* evalNets);
 
 typedef struct Stats_ {
-  const char*   name;
+  CONST char*   name;
   unsigned long nEvals;
   unsigned int	lookUps;
   unsigned int	hits;
@@ -206,7 +206,7 @@ extern int FindBestMoves( movelist *pml, float ar[][ NUM_OUTPUTS ], int nPlies,
 			  int c, float d );
 
 extern int neuralNetInit(positionclass  pc,
-			 const char*    inputFuncName,
+			 CONST char*    inputFuncName,
 			 int            nHidden);
 extern int
 neuralNetInitPrune(positionclass pc, int nHidden);
