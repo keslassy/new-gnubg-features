@@ -1,3 +1,9 @@
+Thu Jan 23 17:08:33 2003  Gary Wong  <gtw@gnu.org>
+
+	* Version 0.13.0 pre-released.
+
+	* sound.c (play_file_child): [!USE_GTK] Don't use g_snprintf.
+
 Thu Jan 23 16:46:19 2003  Gary Wong  <gtw@gnu.org>
 
 	* eval.c (NNevalAction): Temporarily disable incremental
