@@ -1119,6 +1119,28 @@ set_shortcuts(PyObject*, PyObject* const args)
   return Py_None;
 }
 
+static PyObject*
+set_osdb(PyObject*, PyObject* const args)
+{
+#if defined( OS_BEAROFF_DB )
+  int use;
+  
+  if( !PyArg_ParseTuple(args, "i", &use) ) {
+    return 0;
+  }
+
+  if( use ) {
+    enableOSdb();
+  } else {
+    disableOSdb();
+  }
+
+#endif
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
 
 static PyObject*
 set_ps(PyObject*, PyObject* const args)
@@ -1265,6 +1287,9 @@ static PyMethodDef gnubg_set_methods[] = {
   
   {"shortcuts",	set_shortcuts,	METH_VARARGS,
    "Set evaluation shortcuts."},
+
+  {"osdb",	set_osdb,	METH_VARARGS,
+   "Enable/Disable OS database" },
   
   {"ps",	set_ps,		METH_VARARGS,
    "Set move filters" },

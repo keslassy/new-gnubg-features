@@ -41,10 +41,13 @@ def stopGame(pos, targetClass) :
   
   if targetClass == gnubg.c_crashed :
     return not (t == gnubg.c_contact or t == gnubg.c_crashed)
-  
-  if targetClass == gnubg.c_backcontain :
-    return not (t == gnubg.c_contact or t == gnubg.c_crashed or \
-                t == gnubg.c_backcontain)
+
+  try :
+    if targetClass == gnubg.c_backcontain :
+      return not (t == gnubg.c_contact or t == gnubg.c_crashed or \
+                  t == gnubg.c_backcontain)
+  except:
+    pass
   
   if targetClass == gnubg.c_race :
     return not (t == gnubg.c_contact or t == gnubg.c_crashed \

@@ -150,6 +150,9 @@ extern void
 EvalBearoffOneSided(CONST int anBoard[2][25], float arOutput[]);
 
 #if defined( OS_BEAROFF_DB )
+void disableOSdb(void);
+void enableOSdb(void);
+
 extern int
 EvalOSrace(CONST int anBoard[2][25], float arOutput[]);
 #endif

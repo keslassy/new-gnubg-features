@@ -58,6 +58,7 @@ char* weightsVersion = VERSION;
 #if defined( OS_BEAROFF_DB )
 #include "bearoffdb.h"
 bearoffcontext* osDB = 0;
+bearoffcontext* savedosDB = 0;
 #endif
 
 /* From pub_eval.c: */
@@ -550,10 +551,18 @@ EvalInitialise(CONST char* szWeights
 #if defined( LOADED_BO )
   if( ! pbc1 ) {
     pbc1 = BearoffInit(osDataBase, BO_IN_MEMORY);
+
+    if( ! pbc1 ) {
+      return NULL;
+    }
   }
   
   if( ! pbc2 ) {
     pbc2 = BearoffInit(tsDataBase, BO_IN_MEMORY);
+
+    if( ! pbc2 ) {
+      return NULL;
+    }
   }
 #endif
 
@@ -1016,10 +1025,9 @@ EvalBearoffOneSided(CONST int anBoard[2][25], float arOutput[])
 
 
 static void
-EvalBearoff1(CONST int anBoard[2][25], float arOutput[], int ignore)
+EvalBearoff1(CONST int anBoard[2][25], float arOutput[],
+	     int ignore __attribute__((unused)))
 {
-  (void)ignore;
-  
   const EvalNets* n = &nets[CLASS_BEAROFF1];
   if( n->net ) {
     float arInput[MAX_NUM_INPUTS];
@@ -1239,6 +1247,20 @@ raceImprovement(CONST int anBoard[2][25], float arOutput[])
 }
 
 #if defined( OS_BEAROFF_DB )
+void
+disableOSdb(void)
+{
+  savedosDB = osDB;
+  osDB = NULL;
+}
+
+void
+enableOSdb(void)
+{
+  osDB = savedosDB;
+  savedosDB = NULL;
+}
+
 int
 EvalOSrace(CONST int anBoard[2][25], float arOutput[])
 {

@@ -288,7 +288,7 @@ net_init(PyObject*, PyObject* args)
     return 0;
   }
 
-  if( ! *inputFuncName ) {
+  if( inputFuncName && ! *inputFuncName ) {
     inputFuncName = 0;
   }
   
