@@ -224,7 +224,7 @@ ToolbarIsEditing( GtkWidget *pwToolbar ) {
 extern toolbarcontrol
 ToolbarUpdate ( GtkWidget *pwToolbar,
                 const matchstate *pms,
-                const int anDice[ 2 ],
+                const DiceShown diceShown,
                 const int fComputerTurn,
                 const int fPlaying ) {
 
@@ -236,7 +236,7 @@ ToolbarUpdate ( GtkWidget *pwToolbar,
 
   c = C_NONE;
 
-  if( ! anDice[ 0 ] )
+  if ( diceShown == DICE_BELOW_BOARD )
     c = C_ROLLDOUBLE;
 
   if( pms->fDoubled )
