@@ -22,6 +22,8 @@
 
 #include "pynets.h"
 #include "pygnubg.h"
+#include "defs.h"
+
 using namespace BG;
 
 extern "C" {

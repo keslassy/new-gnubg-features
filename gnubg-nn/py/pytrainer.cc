@@ -26,7 +26,7 @@ extern "C" {
 }
 
 #include "pytrainer.h"
-
+#include "defs.h"
 
 namespace {
 inline unsigned char*
