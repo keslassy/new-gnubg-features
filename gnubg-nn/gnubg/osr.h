@@ -35,9 +35,6 @@ extern int  osrRepeatable;
 void
 raceProbs(int anBoard[2][25], float ar[5], unsigned int nGames);
 
-void
-racea1(int anBoard[2][25], float ar[5]);
-  
 #if defined( __cplusplus )
 }
 #endif

@@ -24,14 +24,6 @@
 
 #include <vector>
 
-enum EvalLevel {
-  PNONE,
-  
-  PALL,
-
-  P33,
-};
-
 struct MoveRecord {
   unsigned char pos[10];
 
@@ -42,9 +34,20 @@ struct MoveRecord {
   float		matchScore;
 };
 
+#if 0
+// unused code
+enum EvalLevel {
+  PNONE,
+  
+  PALL,
+
+  P33,
+};
+
 extern int
 FindBestMove_1_33(int anMove[8], int nDice0, int nDice1,
 		  int anBoard[2][25], bool direction, EvalLevel l);
+#endif
 
 void
 setPlyBounds(uint np, uint nm, uint na, float th);

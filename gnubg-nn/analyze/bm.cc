@@ -86,6 +86,7 @@ printMoves(movelist const& ml)
 
 #endif
 
+#if 0
 static void
 sanity(float* const p)
 {
@@ -149,7 +150,6 @@ public:
 //
 static uint const
 w[21] = {1, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1};
-
 
 static void
 adjust(Data& d, bool const direction, EvalLevel const level)
@@ -239,6 +239,7 @@ SEARCH_TOLERANCE = 0.30;
 
 static uint const
 MAX_SEARCH_CANDIDATES = 30;
+
 
 static move
 amCandidates[MAX_SEARCH_CANDIDATES];
@@ -433,6 +434,7 @@ FindBestMove_1_33(int        anMove[8],
 
   return nm;
 }
+#endif
 
 
 struct plySearch {

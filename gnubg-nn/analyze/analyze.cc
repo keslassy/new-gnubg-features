@@ -705,9 +705,34 @@ Analyze::analyze(R1&                    r,
   GNUbgBoard b;
   set(board, b, xOnPlay);
 
+  analyze(r, b, xOnPlay, nPlies, nPliesVerify);
+}
+
+void
+Analyze::analyze(R1&               r,
+		 GNUbgBoard const  b,
+		 bool const        xOnPlay,
+		 uint const        nPlies,
+		 uint const        nPliesVerify)
+{
   if( r.nRolloutGames > 0 ) {
     float arOutput[NUM_OUTPUTS], arStdDev[NUM_OUTPUTS];
-    rollout(b, xOnPlay, arOutput, arStdDev, 0, 500, r.nRolloutGames, -1);
+
+    if( r.rollOutProbs ) {
+      // diceGen.startSave in rollout, from nSeq == 0
+      rollout(b, xOnPlay, arOutput, arStdDev, 0, 500, r.nRolloutGames, 0);
+
+      // for first rolloutCubefull
+      diceGen.startRetrive();
+    } else {
+      assert( ! arStdDev );
+      
+      EvaluatePosition(b, arOutput, r.nPlies, 0, xOnPlay, 0,0,0);
+
+      // for first rolloutCubefull
+      diceGen.startSave(r.nRolloutGames);
+    }
+    
     r.setProbs(arOutput);
     
     r.matchProbNoDouble =
@@ -747,6 +772,7 @@ Analyze::analyze(R1&                    r,
     }
   }
 }
+
 
 void
 Analyze::rollout(PrintMatchBoard const board,

@@ -77,7 +77,10 @@ public:
   ///
   class R1 {
   public:
-    R1(void) : nRolloutGames(0) {}
+    R1(uint n = 0) :
+      nRolloutGames(n),
+      rollOutProbs(true)
+      {}
     
     // Plies level used to evaluate double
     uint	nPlies;
@@ -86,6 +89,10 @@ public:
     // cubeless probablities at @ref{nPlies}.
     float 	probs[6];
 
+    /// When doing a cubeful rollout (@arg{nRolloutGames} > 0),
+    /// select between a rollout or evaluation for position cubeless probs.
+    //
+    bool	rollOutProbs;
 
     float	money(void) const;
     float	match(void) const;
@@ -168,11 +175,17 @@ public:
 #endif
 
   void	analyze(R1&                    r,
-		const PrintMatchBoard  board,
+		PrintMatchBoard const  board,
 		bool                   direction,
 		uint                   nPlies,
 		uint                   nPliesVerify);
 
+  void	analyze(R1&                    r,
+		GNUbgBoard const       board,
+		bool                   direction,
+		uint                   nPlies,
+		uint                   nPliesVerify);
+  
   class Result {
   public:
     Result(uint maxMoves, float maxDiffFromBest, uint nr);
