@@ -99,14 +99,14 @@ typedef enum _positionclass {
 extern positionclass
 ClassifyPosition(CONST int anBoard[2][25]);
 
-extern int EvalInitialise( CONST char *szWeights
+extern CONST char* EvalInitialise(CONST char *szWeights
 #if defined( LOADED_BO )
-	       , CONST char* osDataBase, CONST char* tsDataBase
+				  , CONST char* osDataBase, CONST char* tsDataBase
 #endif 
 #if defined( OS_BEAROFF_DB )
-	       , CONST char* osDB
+				  , CONST char* osDB
 #endif
-  );
+				  );
 
 extern void 
 EvalShutdown(void);

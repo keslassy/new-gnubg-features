@@ -139,6 +139,9 @@ Analyze::cubeLife = 0.65;
 bool
 Analyze::calcLuck = false;
 
+uint
+Analyze::netSearchSpace = 10;
+
 bool
 Analyze::useOSRinRollouts = true;
 
@@ -166,8 +169,8 @@ Analyze::~Analyze(void)
 static string initalNetName;
 
 
-bool
-Analyze::init(const char* netFile)
+const char*
+Analyze::init(const char* netFile, bool const shortCuts)
 {
   if( ! netFile ) {
     netFile = getenv("GNUBGWEIGHTS");
@@ -202,15 +205,17 @@ Analyze::init(const char* netFile)
   }
 #endif
 
-  if( EvalInitialise(initalNetName.c_str()
+  const char* version = EvalInitialise(initalNetName.c_str()
 #if defined( LOADED_BO )
-		     , os.c_str(), ts.c_str()
+				       , os.c_str(), ts.c_str()
 #endif 
 #if defined( OS_BEAROFF_DB )
-		     , o.c_str()
+				       , o.c_str()
 #endif
-    ) ) {
-    return false;
+    );
+
+  if( ! version ) {
+    return 0;
   }
 
   Equities::set(Equities::mec26);
@@ -218,9 +223,14 @@ Analyze::init(const char* netFile)
 
   calcLuck = false;
   
+  if( shortCuts ) {
+    setShortCuts(1);
+    setNetShortCuts(netSearchSpace);
+  }
+  
   Analyze::srandom(time(0));
 
-  return true;
+  return version;
 }
 
 const char*

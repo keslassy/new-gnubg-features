@@ -419,11 +419,9 @@ main(int argc, char* argv[])
     }
   }
 
-  //const char* const weightsVersion = Analyze::init(wFile, shortCuts);
-  bool const ok = Analyze::init(wFile);  
-  const char* const weightsVersion = "";
+  const char* const weightsVersion = Analyze::init(wFile, shortCuts);
   
-  if( ! ok ) {
+  if( ! weightsVersion ) {
     cerr << endl << "failed to initalize GNU bg" << endl;
     
     exit(1);

@@ -33,3 +33,6 @@ libs:
 sagnubg: $(OBJS) $(ANALYZE)/libanalyze.a
 	$(CXX)  -o $@ $(OBJS) $(OPT) $(ELDFLAGS) $(LDFLAGS) -lanalyze -ldl
 
+
+GetOpt.o : GetOpt.h 
+main.o : GetOpt.h ../analyze/analyze.h ../analyze/defs.h ../analyze/bms.h ../analyze/bgdefs.h ../gnubg/eval.h ../gnubg/positionid.h ../gnubg/mt19937int.h ../analyze/bm.h ../analyze/equities.h ../gnubg/osr.h 

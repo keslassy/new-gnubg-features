@@ -44,7 +44,7 @@ public:
   
   ~Analyze(void);
   
-  static bool	init(const char* netFile = 0);
+  static const char* init(const char* netFile = 0, bool shortCuts = false);
   static const char* initializedWith(void);
   
   static uint	nPliesMove;
@@ -63,6 +63,8 @@ public:
 
   static bool	calcLuck;
 
+  static uint	netSearchSpace;
+  
   static const char*	weightsVersion;
   
   static bool	useOSRinRollouts;

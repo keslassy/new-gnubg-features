@@ -297,12 +297,13 @@ setNets(EvalNets* evalNets)
   }
 }
 
+/* Version of just loaded net */
+static char szFileVersion[16];
+
 extern EvalNets*
 LoadNet(CONST char* szWeights, long cSize)
 {
-  char szFileVersion[16];
-  
-  FILE *pfWeights;
+  FILE* pfWeights;
 
   EvalNets* evalNets = 0;
   
@@ -534,7 +535,7 @@ EvalShutdown(void)
 #endif
 }
 
-extern int
+extern CONST char*
 EvalInitialise(CONST char* szWeights
 #if defined( LOADED_BO )
 	       , CONST char* osDataBase, CONST char* tsDataBase
@@ -548,13 +549,12 @@ EvalInitialise(CONST char* szWeights
 
 #if defined( LOADED_BO )
   if( ! pbc1 ) {
-    pbc1 = BearoffInit( osDataBase, BO_IN_MEMORY );
+    pbc1 = BearoffInit(osDataBase, BO_IN_MEMORY);
   }
   
   if( ! pbc2 ) {
-    pbc2 = BearoffInit( tsDataBase, BO_IN_MEMORY );
+    pbc2 = BearoffInit(tsDataBase, BO_IN_MEMORY);
   }
-
 #endif
 
 #if defined( OS_BEAROFF_DB )
@@ -567,7 +567,7 @@ EvalInitialise(CONST char* szWeights
     nets = LoadNet(szWeights, -1);
 
     if( nets == NULL ) {
-      return -1;
+      return NULL;
     }
       
   } else {
@@ -588,12 +588,12 @@ EvalInitialise(CONST char* szWeights
 	 CacheCreate(c, (1L << 18))
 #endif
 	  < 0 ) {
-	return -1;
+	return NULL;
       }
     }
   }
 
-  return 0;
+  return szFileVersion;
 }
 
 extern int
