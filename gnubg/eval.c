@@ -1919,6 +1919,11 @@ inline
 #endif
 NNEvalType NNevalAction(void)
 {
+#if 1
+    /* Incremental evaluations are currently buggy -- disable them for
+       now.  See <bug-gnubg@gnu.org> discussions for details. */
+    return NNEVAL_NONE;
+#else
   switch( moveNumber ) {
     /* default, no change */
     case -2:  return NNEVAL_NONE;
@@ -1931,6 +1936,7 @@ NNEvalType NNevalAction(void)
   }
 
   return NNEVAL_FROMBASE;
+#endif
 }
 
 /* side - side that potentially can win a backgammon */
@@ -2380,13 +2386,14 @@ EvaluatePositionFull( int anBoard[ 2 ][ 25 ], float arOutput[],
 
 static int
 EvalKey ( const evalcontext *pec, const int nPlies,
-          const cubeinfo *pci ) {
+          const cubeinfo *pci, int fCubefulEquity ) {
 
   int iKey;
 
   /* Record the signature of important evaluation settings. */
   iKey = pec->nReduced | ( nPlies << 3 ) |
-    ( pec->fCubeful << 6 ) | ( ( (int) ( pec->rNoise * 1000 ) ) << 7 );
+      ( pec->fCubeful << 6 ) | ( ( (int) ( pec->rNoise * 1000 ) ) << 7 ) |
+      ( pci->fMove << 16 );
 
   /* In match play, the score and cube value and position are important. */
   if( pci->nMatchTo )
@@ -2397,13 +2404,15 @@ EvalKey ( const evalcontext *pec, const int nPlies,
       ( ( pci->fCubeOwner < 0 ? 2 :
           pci->fCubeOwner == pci->fMove ) << 29 ) ^
       ( pci->fCrawford << 31 );
-  else if ( pec->fCubeful )
-    /* in cubeful money games the position is important 
-       FIXME: jacoby and beavers does also matter, but we're running out
-       of bits */
+  else if( pec->fCubeful || fCubefulEquity )
+      /* in cubeful money games the cube position and rules are important. */
     iKey ^=
-      ( ( pci->fCubeOwner < 0 ? 2 :
-          pci->fCubeOwner == pci->fMove ) << 29 );
+	( ( pci->fCubeOwner < 0 ? 2 :
+	    pci->fCubeOwner == pci->fMove ) << 29 ) ^
+	( pci->fJacoby << 31 ) ^ ( pci->fBeavers << 28 );
+
+  if( fCubefulEquity )
+      iKey ^= 0x6a47b47e;
   
   return iKey;
 
@@ -2426,15 +2435,15 @@ EvaluatePositionCache( int anBoard[ 2 ][ 25 ], float arOutput[],
 	    fnTick();
     }
 
-    if( pecx->rNoise != 0.0f && !pecx->fDeterministic )
+    if( !cCache || ( pecx->rNoise != 0.0f && !pecx->fDeterministic ) )
 	/* non-deterministic noisy evaluations; cannot cache */
 	return EvaluatePositionFull( anBoard, arOutput, pci, pecx, nPlies,
 				     pc );
     
     PositionKey( anBoard, ec.auchKey );
 
-    ec.nEvalContext = EvalKey ( pecx, nPlies, pci );
-
+    ec.nEvalContext = EvalKey ( pecx, nPlies, pci, FALSE );
+    
 #if defined( GARY_CACHE )
     l = EvalCacheHash( &ec );
     
@@ -5669,19 +5678,22 @@ EvaluatePositionCubeful3( int anBoard[ 2 ][ 25 ],
   int fAll = TRUE;
   evalcache ec, *pecx;
   unsigned long l;
+
+  if( !cCache || ( pec->rNoise != 0.0f && !pec->fDeterministic ) )
+      /* non-deterministic evaluation; never cache */
+      return EvaluatePositionCubeful4( anBoard, arOutput, arCubeful,
+				       aciCubePos, cci, pciMove, pec,
+				       nPlies, fTop );
   
   PositionKey ( anBoard, ec.auchKey );
-    
+
   /* check cache for existence for earlier calculation */
-  
-  if ( pec->rNoise == 0.0f || pec->fDeterministic ) 
-    
-    for ( ici = 0; ici < cci && fAll; ++ici ) {
+  for ( ici = 0; ici < cci && fAll; ++ici ) {
 
       if ( aciCubePos[ ici ].nCube < 0 )
         continue;
 
-      ec.nEvalContext = EvalKey ( pec, nPlies, &aciCubePos[ ici ] );
+      ec.nEvalContext = EvalKey ( pec, nPlies, &aciCubePos[ ici ], TRUE );
       
       if ( ( pecx = CacheLookup ( &cEval, &ec, &l ) ) ) {
         /* cache hit */
@@ -5691,9 +5703,8 @@ EvaluatePositionCubeful3( int anBoard[ 2 ][ 25 ],
       }
       else
         fAll = FALSE;
-      
-    }
-
+  }
+  
   /* get equities */
   
   if ( ! fAll ) {
@@ -5704,13 +5715,11 @@ EvaluatePositionCubeful3( int anBoard[ 2 ][ 25 ],
       return -1;
     
     /* add to cache */
-    
     for ( ici = 0; ici < cci; ++ici ) {
-
       if ( aciCubePos[ ici ].nCube < 0 )
         continue;
 
-      ec.nEvalContext = EvalKey ( pec, nPlies, &aciCubePos[ ici ] );
+      ec.nEvalContext = EvalKey ( pec, nPlies, &aciCubePos[ ici ], TRUE );
       l = keyToLong ( ec.auchKey, ec.nEvalContext );
       l = (l & ((cEval.size >> 1)-1)) << 1;
       memcpy ( ec.ar, arOutput, sizeof ( float ) * NUM_OUTPUTS );

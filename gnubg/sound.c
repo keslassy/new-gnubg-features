@@ -822,7 +822,11 @@ play_file_child(soundcache *psc, const char *filename) {
         char *args[4];
         char command[4096];
 
+#if USE_GTK
         g_snprintf(command, sizeof(command), szSoundCommand, filename);
+#else
+	sprintf( command, szSoundCommand, filename );
+#endif
         
         args[0] = "sh";
         args[1] = "-c";

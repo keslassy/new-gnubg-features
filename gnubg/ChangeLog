@@ -1,3 +1,78 @@
+Thu Jan 23 17:08:33 2003  Gary Wong  <gtw@gnu.org>
+
+	* Version 0.13.0 pre-released.
+
+	* sound.c (play_file_child): [!USE_GTK] Don't use g_snprintf.
+
+Thu Jan 23 16:46:19 2003  Gary Wong  <gtw@gnu.org>
+
+	* eval.c (NNevalAction): Temporarily disable incremental
+	evaluations (suggested by Jørn).
+
+Tue Jan 21 14:49:29 2003  Gary Wong  <gtw@gnu.org>
+
+	* eval.c (EvalKey): Bug fixes for cubeful equity caching: always
+	perform cubeful key consideration for cube decisions (even if
+	the evalcontext says it's cubeless), and don't take the one's
+	complement for cubeful equities, since that gives -1 in trivial
+	cases (which apparently means something special to lib/hash.c).
+
+	* eval.c (EvaluatePositionCache, EvaluatePositionCubeful3): Don't
+	try a cache lookup if the cache size is 0.
+
+Sat Jan 18 16:18:39 2003  Gary Wong  <gtw@gnu.org>
+
+	* render.c (RenderDice, RenderPips): Don't calculate specular
+	component when cos_theta < 0.
+
+Sat Jan 18 11:24:00 2003  Gary Wong  <gtw@gnu.org>
+
+	* render.c (DrawChequers): Fix cosmetic bug with more than 3 chequers
+	on bar (reported by Nardy Pillards).
+
+Thu Jan 16 12:27:05 2003  Gary Wong  <gtw@gnu.org>
+
+	* gtkgame.c (GTKShowPath): Add missing .BKG entry.
+
+Wed Jan 15 15:32:39 2003  Gary Wong  <gtw@gnu.org>
+
+	* gnubg.c (ExportGameJF): Revert previous patch; JF .mat format
+	shouldn't be internationalised.
+
+Wed Jan 15 14:44:05 2003  Gary Wong  <gtw@gnu.org>
+
+	* gnubg.c, set.c, show.c: I18N plural patches from TAKAHASHI Kaoru.
+
+Wed Jan 15 10:40:22 2003  Gary Wong  <gtw@gnu.org>
+
+	* NEWS, README: Updated in preparation for a 0.13 pre-release.
+
+Mon Jan 13 18:54:09 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* gtkgame.c (GTKRolloutUpdate): honour fOutputWinPC.
+	(reported by Albert Silver)
+
+Mon Jan 13 18:17:57 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* show.c (CommandShowFullBoard): player names and scores were inverted.
+	(reported by Nardy Pillards)
+
+Sun Jan 12 17:29:14 2003  Gary Wong  <gtw@gnu.org>
+
+	* eval.c (EvalKey): New parameter fCubefulEquity, so that cache
+	entries which set OUTPUT_CUBEFUL_EQUITY will not collide with
+	those which do not.  All callers changed.
+
+Sun Jan 12 13:23:44 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* gnubg.c (ProgressValue): add missing "if ( ! fShowProgress )".
+	(contributed by O.M. Riordan)
+
+Sat Jan 11 17:03:37 2003  Gary Wong  <gtw@gnu.org>
+
+	* gtkgame.c (RecordErase): Quote player name parameter.  (Reported by
+	Nardy Pillards.)
+
 Sat Jan 11 11:29:01 2003  Joern Thyssen  <jth@gnubg.org>
 
 	* gtktexi.c, gtkmovefilter.c, import.c, show.c, gtkgame.c, eval.c:
@@ -10,7 +85,7 @@ Sat Jan 11 10:58:54 2003  Joern Thyssen  <jth@gnubg.org>
 
 Fri Jan 10 22:56:30 2003  Joern Thyssen  <jth@gnubg.org>
 
-	* eval.c (FindBestMovePlied, FindnSAveBestMoves):
+	* eval.c (FindBestMovePlied, FindnSaveBestMoves):
 	change algorithm for accept=0 according to Michael
 	Depreli's suggestions.
 
@@ -20,7 +95,7 @@ Fri Jan 10 19:48:24 2003  Joern Thyssen  <jth@gnubg.org>
 
 Fri Jan 10 19:42:38 2003  Joern Thyssen  <jth@gnubg.org>
 
-	* gtkgame.c (EvalCHanged): fix bug when comparing to
+	* gtkgame.c (EvalChanged): fix bug when comparing to
 	predefined settings.
 	(reported by Scott Steiner)
 

@@ -6326,8 +6326,12 @@ GTKRolloutUpdate( float aarMu[][ NUM_ROLLOUT_OUTPUTS ],
     
       for( i = 0; i < NUM_ROLLOUT_OUTPUTS; i++ ) {
         
-        if ( i < OUTPUT_EQUITY )
-          sprintf( sz, "%6.4f", aarMu[ j ][ i ] );
+        if ( i < OUTPUT_EQUITY ) {
+          if ( fOutputWinPC )
+            sprintf( sz, "%6.2f%%", 100.0f * aarMu[ j ][ i ] );
+          else
+            sprintf( sz, "%6.4f", aarMu[ j ][ i ] );
+        }
         else if ( i == OUTPUT_EQUITY ) {
 
           if ( ! ms.nMatchTo )
@@ -7760,7 +7764,9 @@ GTKShowPath ( void ) {
     { N_("Loading of match equity files (.xml)"), 
       N_("Match Equity Tables") },
     { N_("Loading of TrueMoneyGames files (.tmg)"), 
-      N_("TrueMoneyGames TMG") } 
+      N_("TrueMoneyGames TMG") },
+    { N_("Loading of BKG files"),
+      N_("BKG") }
   };
 
   
@@ -8705,7 +8711,7 @@ static void RecordErase( GtkWidget *pw, recordwindowinfo *prwi ) {
     char sz[ 64 ];
     
     gtk_clist_get_text( GTK_CLIST( prwi->pwList ), prwi->nRow, 0, &pch );
-    sprintf( sz, "record erase %s", pch );
+    sprintf( sz, "record erase \"%s\"", pch );
     UserCommand( sz );
     gtk_clist_remove( GTK_CLIST( prwi->pwList ), prwi->nRow );
 }
