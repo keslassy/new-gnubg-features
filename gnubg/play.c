@@ -2788,9 +2788,10 @@ extern void CommandNewGame( char *sz ) {
 			     "and discard the one in progress? ") ) )
 		return;
 	}
-    }
     
-    PopGame( plGame, TRUE );
+        PopGame( plGame, TRUE );
+    
+    }
     
     fComputing = TRUE;
     
