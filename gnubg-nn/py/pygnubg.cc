@@ -640,6 +640,7 @@ motif_probs(PyObject*, PyObject* const args)
 #endif
 
 extern float centeredLDweight, ownedLDweight;
+extern bool useRaceMagic;
 
 static PyObject*
 gnubg_doubleroll(PyObject*, PyObject* const args, PyObject* keywds)
@@ -838,17 +839,18 @@ gnubg_bestmove(PyObject*, PyObject* const args, PyObject* keywds)
   int moveBoard = 0;
   int resignInfo = 0;
   int list = 0;
+  int reduced = 0;
   
   Board board;
   int dice1, dice2;
   
   static char* kwlist[] = {"pos", "dice1", "dice2", "n", "s", "b", "r",
-			   "list", 0};
+			   "list", "reduced", 0};
   
-  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&ii|iciii", kwlist, 
+  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&ii|iciiii", kwlist, 
 				   &anyBoard, &board, &dice1, &dice2,
 				   &nPlies, &side,
-				   &moveBoard, &resignInfo, &list)) {
+				   &moveBoard, &resignInfo, &list, &reduced)) {
     return 0;
   }
 
@@ -882,7 +884,7 @@ gnubg_bestmove(PyObject*, PyObject* const args, PyObject* keywds)
   
   int move[8];
   
-  int const n = findBestMove(move, dice1, dice2, board, xOnPlay, nPlies, r);
+  int const n = findBestMove(move, dice1, dice2, board, xOnPlay, nPlies, r, reduced);
 
   PyObject* moveTuple = PyTuple_New(n/2);
   

@@ -104,6 +104,7 @@ estimateNR(const unsigned char* const auch)
 
 float centeredLDweight = 0.65;
 float ownedLDweight = 0.7;
+bool useRaceMagic = true;
 
 static float
 positionFdt(uint const                  xAway,
@@ -116,7 +117,7 @@ positionFdt(uint const                  xAway,
   // For contact positions, use a fixed number for now.
   float l = ownedLDweight;
 
-  if( posIsRace(auch) ) {
+  if( useRaceMagic && posIsRace(auch) ) {
     Equities::Es c;
     Equities::Es d;
 

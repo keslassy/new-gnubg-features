@@ -1791,7 +1791,8 @@ EvaluatePositionFull(CONST int anBoard[2][25], float arOutput[],
   int i, n0, n1;
   positionclass pc = ClassifyPosition(anBoard);
 
-  {                                                        assert( p == 0 ); }
+  // (FIXME) add this again after we get rid of reduced
+  //{                                                        assert( p == 0 ); }
   
   if( (pc > CLASS_PERFECT || (p && snp > 0 && pc != CLASS_OVER))
       && nPlies > 0 ) {
@@ -1939,7 +1940,7 @@ EvaluatePosition(CONST int anBoard[2][25], float arOutput[],
 		 unsigned char* pauch)
 {
   evalcache ec, *pec;
-  long l;
+  long l = -1;
 
   {                                       assert( !p || (int)snp <= nPlies ); }
 	
@@ -1982,7 +1983,7 @@ EvaluatePosition(CONST int anBoard[2][25], float arOutput[],
 #if defined( GARY_CODE )
   return CacheAdd(nets[CLASS_CONTACT].ncache, l, &ec, sizeof(ec));
 #else
-  CacheAdd(nets[CLASS_CONTACT].ncache, &ec, l);
+  if( l >= 0 ) CacheAdd(nets[CLASS_CONTACT].ncache, &ec, l);
   return 0;
 #endif
 }

@@ -86,7 +86,6 @@ printMoves(movelist const& ml)
 
 #endif
 
-#if 0
 static void
 sanity(float* const p)
 {
@@ -129,6 +128,7 @@ struct Data {
   unsigned char a[21 * 10];
 };
 
+
 /// Sort 21 rolls by equity
 class SortX {
 public:
@@ -152,7 +152,7 @@ static uint const
 w[21] = {1, 2, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1};
 
 static void
-adjust(Data& d, bool const direction, EvalLevel const level)
+adjust(Data& d, bool const direction /*, EvalLevel const level*/)
 {
   SortX::D s[21];
 
@@ -169,33 +169,33 @@ adjust(Data& d, bool const direction, EvalLevel const level)
   sort(s, s + 21, SortX());
 
   uint const ad33[7] = {2, 5, 8, 10, 12, 15, 18};
-  uint const adall[21] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-  14, 15, 16, 17, 18, 19, 20};
+//   uint const adall[21] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+//   14, 15, 16, 17, 18, 19, 20};
   
   const uint* ad = 0;
   uint nad = 0;
 
-  switch( level ) {
-    case PALL:
-    {
-      ad = adall;
-      nad = sizeof(adall)/sizeof(adall[0]);
-      break;
-    }
+//   switch( level ) {
+//     case PALL:
+//     {
+//       ad = adall;
+//       nad = sizeof(adall)/sizeof(adall[0]);
+//       break;
+//     }
 
-    case P33:
-    {
+//     case P33:
+//     {
       ad = ad33;
       nad = sizeof(ad33)/sizeof(ad33[0]);
-      break;
-    }
+//       break;
+//     }
 
-    case PNONE:
-    {
-      assert(0);
-      break;
-    }
-  }
+//     case PNONE:
+//     {
+//       assert(0);
+//       break;
+//     }
+//   }
 
   uint ntote = 0;
   float tote[5];
@@ -234,12 +234,13 @@ adjust(Data& d, bool const direction, EvalLevel const level)
   d.e = Equities::mwc(d.p, direction);
 }
 
+#if 0
+
 static float const
 SEARCH_TOLERANCE = 0.30;
 
 static uint const
 MAX_SEARCH_CANDIDATES = 30;
-
 
 static move
 amCandidates[MAX_SEARCH_CANDIDATES];
@@ -248,7 +249,7 @@ uint
 SEARCH_CANDIDATES = 12;
 
 int
-FindBestMove_1_33(int        anMove[8],
+findBestMove_1_33(int        anMove[8],
 		  int const  nDice0,
 		  int const  nDice1,
 		  int        anBoard[2][25],
@@ -437,6 +438,37 @@ FindBestMove_1_33(int        anMove[8],
 #endif
 
 
+static void
+scoreMovesPly2r33(movelist&   ml,
+		  bool const  xOnPlay)
+{
+  Data eval;
+  int        anBoard[2][25];
+  
+  float* const arEval = eval.p;
+  ml.rBestScore = -99999.9;
+	
+  for(int i = 0; i < ml.cMoves; ++i) {
+    PositionFromKey(anBoard, ml.amMoves[i].auch);
+
+    SwapSides(anBoard);
+
+    EvaluatePosition(anBoard, arEval, 1, 0,
+		     !xOnPlay, eval.prr, 1, eval.a);
+	
+    InvertEvaluation(arEval);
+
+    adjust(eval, xOnPlay /*, P33*/);
+
+    ml.amMoves[i].rScore = eval.e;
+
+    if( eval.e >= ml.rBestScore ) {
+      ml.iMoveBest = i;
+      ml.rBestScore = eval.e;
+    }
+  }
+}
+
 struct plySearch {
   uint	nMoves;
   uint	nAdditional;
@@ -501,7 +533,8 @@ findBestMove(int        anMove[8],
 	     int        anBoard[2][25],
 	     bool const direction,
 	     uint const nPlies,
-	     std::vector<MoveRecord>*	mRecord)
+	     std::vector<MoveRecord>*	mRecord,
+	     bool       reduced)
 {
   movelist ml;
   
@@ -563,8 +596,12 @@ findBestMove(int        anMove[8],
       if( mRecord ) {
 	preset(ml);
       }
-      
-      scoreMoves(ml, nPlies, direction);
+
+      if( reduced && nPlies == 2 ) {
+	scoreMovesPly2r33(ml, direction);
+      } else {
+	scoreMoves(ml, nPlies, direction);
+      }
 
 #if defined( DEBUG )
       if( bmDebug & 0x1 ) {

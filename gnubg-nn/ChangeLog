@@ -1,3 +1,7 @@
+Wed Nov  3 21:19:18 2004  Joseph Heled  <joseph@gnubg.org>
+
+	* Re-intreduce reduced 33% evals.
+
 Mon Jun 21 10:34:49 2004  Joseph Heled  <joseph@gnubg.org>
 
 	* flags.make (EXTRAFLAGS): add LOADED_BO to enable usage of

@@ -59,6 +59,7 @@ findBestMove(int        anMove[8],
 	     int        anBoard[2][25],
 	     bool const direction,
 	     uint const nPlies,
-	     std::vector<MoveRecord>*	mRecord = 0);
+	     std::vector<MoveRecord>*	mRecord = 0,
+	     bool reduced = false);
 
 #endif
