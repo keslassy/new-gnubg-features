@@ -139,6 +139,11 @@ typedef struct _hashentryonesided {
   unsigned short int aus[ 64 ];
 } hashentryonesided;
 
+typedef struct _hashentrytwosided {
+  unsigned int nPosID;
+  unsigned char auch[ 8 ];
+} hashentrytwosided;
+
 static int
 hcmpOneSided( void *p1, void *p2 ) {
 
@@ -870,6 +875,100 @@ BearoffEvalOneSided ( bearoffcontext *pbc,
   return ar [ 0 ][ 0 ] * 65535.0;
 }
 
+static unsigned long
+HashTwoSided ( const unsigned int nPosID ) {
+  return nPosID;
+}
+
+/*
+ * BEAROFF_GNUBG: read two sided bearoff database
+ *
+ */
+
+static int
+ReadTwoSidedBearoff ( bearoffcontext *pbc,
+                      const unsigned int iPos,
+                      float ar[ 4 ], unsigned short int aus[ 4 ] ) {
+
+  int k = ( pbc->fCubeful ) ? 4 : 1;
+  int i;
+  unsigned char ac[ 8 ];
+  unsigned char *pc = NULL;
+  unsigned short int us;
+
+  /* look up in cache */
+
+  if ( ! pbc->fInMemory && pbc->ph ) {
+
+    hashentrytwosided *phe;
+    hashentrytwosided he;
+    
+    he.nPosID = iPos;
+    if ( ( phe = HashLookup ( pbc->ph, HashTwoSided ( iPos ), &he ) ) ) 
+      pc = phe->auch;
+      
+  }
+
+  if ( ! pc ) {
+
+    if ( pbc->fInMemory )
+      pc = ((char *) pbc->p)+ 40 + 2 * iPos * k;
+    else {
+      lseek ( pbc->h, 40 + 2 * iPos * k, SEEK_SET );
+      read ( pbc->h, ac, k * 2 );
+      pc = ac;
+    }
+
+    /* add to cache */
+
+    if ( ! pbc->fInMemory && pbc->ph ) {
+      /* add to cache */
+      hashentrytwosided *phe = 
+        (hashentrytwosided *) malloc ( sizeof ( hashentrytwosided ) );
+      if ( phe ) {
+        phe->nPosID = iPos;
+        memcpy ( phe->auch, pc, sizeof ( phe->auch ) );
+        HashAdd ( pbc->ph, HashTwoSided ( iPos ), phe );
+      }
+      
+    }
+    
+  }
+
+  for ( i = 0; i < k; ++i ) {
+    us = pc[ 2 * i ] | ( pc[ 2 * i + 1 ] ) << 8;
+    if ( aus )
+      aus[ i ] = us;
+    if ( ar )
+      ar[ i ] = us / 32767.5f - 1.0f;
+  }      
+
+  ++pbc->nReads;
+
+  return 0;
+
+}
+
+static int
+BearoffEvalTwoSided(bearoffcontext* pbc, CONST int anBoard[2][25], float arOutput[])
+{
+  assert( pbc->nPoints == 6);
+    
+  int nUs = PositionBearoff ( anBoard[ 1 ], pbc->nPoints /*, pbc->nChequers*/ );
+  int nThem = PositionBearoff ( anBoard[ 0 ], pbc->nPoints /*, pbc->nChequers */ );
+  int n = Combination ( pbc->nPoints + pbc->nChequers, pbc->nPoints );
+  int iPos = nUs * n + nThem;
+  float ar[ 4 ];
+  
+  if ( ReadTwoSidedBearoff ( pbc, iPos, ar, NULL ) )
+    return -1;
+
+  memset ( arOutput, 0, 5 * sizeof ( float ) );
+  arOutput[ OUTPUT_WIN ] = ar[ 0 ] / 2.0f + 0.5;
+  
+  return 0;
+
+}
 
 extern int
 BearoffEval(bearoffcontext *pbc,
@@ -877,10 +976,8 @@ BearoffEval(bearoffcontext *pbc,
 
   switch ( pbc->bt ) {
   case BEAROFF_GNUBG:
-
     if ( pbc->fTwoSided ) 
-      /* BearoffEvalTwoSided ( pbc, anBoard, arOutput ); */
-      assert(0);
+      BearoffEvalTwoSided ( pbc, anBoard, arOutput );
     else 
       BearoffEvalOneSided ( pbc, anBoard, arOutput );
 
