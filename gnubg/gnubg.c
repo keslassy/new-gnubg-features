@@ -7261,6 +7261,8 @@ extern char *
 Convert ( const char *sz, 
           const char *szDestCharset, const char *szSourceCharset ) {
 
+#if HAVE_ICONV
+
   iconv_t id;
   int lIn, lOut, l, rc, nUsed;
   const char *pchIn;
@@ -7334,6 +7336,12 @@ Convert ( const char *sz,
     outputerr ( "iconv_close" );
 
   return pchDest;
+
+#else /* HAVE_ICONV */
+
+  return strdup( sz );
+
+#endif /* ! HAVE_ICONV */
 
 }
 
