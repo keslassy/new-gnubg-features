@@ -1,3 +1,8 @@
+Sat Jan 25 19:24:12 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* analysis.c (absoluteFibsRating): fix minor bug in interpolation
+	formula. (reported by James F. Kibler)
+
 Sat Jan 25 11:05:40 2003  Joern Thyssen  <jth@gnubg.org>
 
 	* import.c (ExpandMatMove): new function.
