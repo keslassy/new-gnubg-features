@@ -2492,6 +2492,42 @@ CommandSetExportHTMLTypeGNU ( char *sz ) {
 }
 
 
+static void
+SetExportHTMLCSS ( const htmlexportcss hecss ) {
+
+  if ( exsExport.hecss == hecss )
+    return;
+
+  exsExport.hecss = hecss;
+
+  outputf ( _("CSS stylesheet for HTML export: %s\n"),
+            gettext ( aszHTMLExportCSS[ hecss ] ) );
+
+}
+
+
+extern void
+CommandSetExportHTMLCSSHead ( char *sz ) {
+
+  SetExportHTMLCSS ( HTML_EXPORT_CSS_HEAD );
+
+}
+
+extern void
+CommandSetExportHTMLCSSInline ( char *sz ) {
+
+  SetExportHTMLCSS ( HTML_EXPORT_CSS_INLINE );
+
+}
+
+extern void
+CommandSetExportHTMLCSSExternal ( char *sz ) {
+
+  SetExportHTMLCSS ( HTML_EXPORT_CSS_EXTERNAL );
+
+}
+
+
 extern void 
 CommandSetExportHTMLPictureURL ( char *sz ) {
 
