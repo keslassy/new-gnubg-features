@@ -2602,6 +2602,10 @@ extern void RunGTK( GtkWidget *pwSplash ) {
     
     DestroySplash ( pwSplash );
 
+    /* force update of board; needed to display board correctly if user
+       has special settings, e.g., clockwise or nackgammon */
+    ShowBoard();
+
     gtk_main();
 }
 
