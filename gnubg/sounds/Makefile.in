@@ -81,11 +81,15 @@ ESD_CFLAGS = @ESD_CFLAGS@
 ESD_CONFIG = @ESD_CONFIG@
 ESD_LIBS = @ESD_LIBS@
 FLEX = @FLEX@
+FT2_CFLAGS = @FT2_CFLAGS@
+FT2_CONFIG = @FT2_CONFIG@
+FT2_LIBS = @FT2_LIBS@
 GENCAT = @GENCAT@
 GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GNUPLOT = @GNUPLOT@
 GTKDATA = @GTKDATA@
+GTKEXTRA_LIBS = @GTKEXTRA_LIBS@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
@@ -113,8 +117,12 @@ NAS_LIBS = @NAS_LIBS@
 PACKAGE = @PACKAGE@
 PKG_CONFIG = @PKG_CONFIG@
 PNGTOPNM = @PNGTOPNM@
+PNG_LIBS = @PNG_LIBS@
+PNMSCALE = @PNMSCALE@
+PNMTOPNG = @PNMTOPNG@
 PNMTOPS = @PNMTOPS@
 POSUB = @POSUB@
+PSTOPNM = @PSTOPNM@
 RANLIB = @RANLIB@
 SRCONV = @SRCONV@
 STRIP = @STRIP@
@@ -135,7 +143,10 @@ sounds_DATA = chequer.wav dance.wav double.wav drop.wav fanfare.wav \
 	take.wav
 
 
-EXTRA_DIST = gnubg.orc music.orc
+EXTRA_DIST = gnubg.orc music.orc chequer.sco dance.sco double.sco drop.sco \
+	fanfare.sco gameover.sco haere-ra.sco matchover.sco move.sco \
+	resign.sco roll.sco take.sco $(sounds_DATA)
+
 subdir = sounds
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h

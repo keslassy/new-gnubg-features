@@ -21,6 +21,13 @@ SOUND_SOURCES =
 SOUND_LIBS = 
 endif
 
+## timecontrol
+if USE_TIMECONTROL
+TIME_SOURCES = timecontrol.h timecontrol.c
+else
+TIME_SOURCES =
+endif
+
 if COMPILE_BR1
 BR1_SOURCES = br1.c
 else
@@ -54,7 +61,8 @@ COMMON_SOURCES = backgammon.h gnubg.c getopt.h getopt.c getopt1.c eval.h \
 	export.c sound.h record.c record.h osr.c osr.h \
         bearoffgammon.c bearoffgammon.h bearoff.c bearoff.h \
 	onechequer.c onechequer.h path.c path.h render.c render.h \
-	htmlimages.c
+	htmlimages.c 
+
 COMMON_DEPS = @LIBOBJS@ lib/libevent.a
 
 bin_PROGRAMS = gnubg makebearoff
@@ -70,7 +78,7 @@ gnubg_SOURCES = $(COMMON_SOURCES) gtkboard.c gtkboard.h gtkgame.c gtkgame.h \
 	gtkrace.c gtkrace.h nextmarked.xpm prevmarked.xpm \
 	gtkmovefilter.c gtkmovefilter.h gtkmet.c gtkmet.h gtkcolour.c \
 	gtkcolour.h gtksplash.c gtksplash.h \
-	$(BR1_SOURCES) $(SOUND_SOURCES) $(FONT_SOURCES)
+	$(BR1_SOURCES) $(SOUND_SOURCES) $(FONT_SOURCES) $(TIME_SOURCES)
 gnubg_LDADD = @GTK_LIBS@ $(COMMON_LIBS) $(SOUND_LIBS) $(PNG_LIBS)
 gnubg_DEPENDENCIES = $(COMMON_DEPS)
 else
@@ -78,7 +86,7 @@ if USE_EXT
 ## --- EXT
 INCLUDES = $(COMMON_INCS) -I$(srcdir)/ext @X_CFLAGS@  $(SOUND_INCS)
 gnubg_SOURCES = $(COMMON_SOURCES) xboard.c xboard.h xgame.c xgame.h \
-	$(BR1_SOURCES) $(SOUND_SOURCES) $(FONT_SOURCES)
+	$(BR1_SOURCES) $(SOUND_SOURCES) $(FONT_SOURCES) $(TIME_SOURCES)
 gnubg_LDADD = -Lext -lext @X_LIBS@ @X_PRE_LIBS@ -lXmu @X_EXTRA_LIBS@ -lX11 \
 	$(COMMON_LIBS) $(SOUND_LIBS)
 gnubg_DEPENDENCIES = $(COMMON_DEPS) ext/libext.a
@@ -86,7 +94,7 @@ else
 ## --- Plain
 INCLUDES = $(COMMON_INCS) $(SOUND_INCS) $(PNG_LIBS)
 gnubg_SOURCES = $(COMMON_SOURCES) $(BR1_SOURCES) $(SOUND_SOURCES) \
-	$(FONT_SOURCES)
+	$(FONT_SOURCES) $(TIME_SOURCES)
 gnubg_LDADD = $(COMMON_LIBS) $(SOUND_LIBS) $(PNG_LIBS)
 gnubg_DEPENDENCIES = $(COMMON_DEPS)
 endif

@@ -435,6 +435,9 @@
 /* Define if you want to use sounds with GNU Backgammon */
 #undef USE_SOUND
 
+/* Define if you want to use time controls (eg. clocks) with GNU Backgammon */
+#undef USE_TIMECONTROL
+
 /* Version number of package */
 #undef VERSION
 

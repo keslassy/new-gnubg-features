@@ -57,6 +57,10 @@ extern gint game_set( Board *board, gint points[ 2 ][ 25 ], int roll,
 extern gint game_set_old_dice( Board *board, gint die0, gint die1 );
 extern void board_set_playing( Board *board, gboolean f );
 extern void board_animate( Board *board, int move[ 8 ], int player );
+#if USE_TIMECONTROL
+extern void board_set_clock(Board *board, gchar *c0, gchar *c1);
+extern void board_set_scores(Board *board, int s0, int s1);
+#endif
 
 extern GtkWidget *
 image_from_xpm_d ( char **xpm, GtkWidget *pw );
@@ -78,6 +82,9 @@ typedef struct _BoardData {
     GtkWidget *take, *drop, *redouble;
     GtkWidget *vbox_ids;
     GtkWidget *pipcount0, *pipcount1;
+#if USE_TIMECONTROL
+    GtkWidget *clock0, *clock1;
+#endif
     GdkGC *gc_and, *gc_or, *gc_copy, *gc_cube;
     GdkPixmap *appmKey[ 2 ];
     

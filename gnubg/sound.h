@@ -46,6 +46,10 @@ typedef enum _gnubgsound {
   SOUND_BOT_WIN_GAME,
   SOUND_BOT_WIN_MATCH,
   /* number of sounds */
+#if USE_TIMECONTROL
+  SOUND_HUMAN_TIMEOUT,
+  SOUND_BOT_TIMEOUT,
+#endif
   NUM_SOUNDS
 } gnubgsound;
 

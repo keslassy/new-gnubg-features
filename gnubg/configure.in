@@ -325,6 +325,14 @@ fi
 AC_SUBST(NAS_LIBS)
 AC_SUBST(NAS_CFLAGS)
 
+dnl Clocks
+
+AC_ARG_WITH(timecontrol,[  --with-timecontrol	enable clocks])
+AM_CONDITIONAL(USE_TIMECONTROL, test "$with_timecontrol" != "no" )
+if test "$with_timecontrol" != "no"; then
+  AC_DEFINE(USE_TIMECONTROL,1,Define if you want to use time controls (eg. clocks) with GNU Backgammon)
+fi
+
 dnl test for libpng
 
 AC_CHECK_LIB(png,png_create_info_struct)

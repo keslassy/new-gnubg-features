@@ -75,6 +75,10 @@
 #include "gtkmet.h"
 #include "gtksplash.h"
 
+#if USE_TIMECONTROL
+#include "timecontrol.h"
+#endif
+
 #define GNUBGMENURC ".gnubgmenurc"
 
 #if USE_GTK2
@@ -354,6 +358,19 @@ static char *ToUTF8( unsigned char *sz ) {
 #define TRANS(x) (x)
 #endif
 
+#if USE_TIMECONTROL
+extern void GTKUpdateClock()
+{
+    board_set_clock(BOARD( pwBoard ),  
+	(ms.gc.pc[0].tc.timing == TC_NONE) ? _("n/a") : FormatClock(0) ,
+	(ms.gc.pc[1].tc.timing == TC_NONE) ? _("n/a") : FormatClock(1) );
+}
+
+extern void GTKUpdateScores()
+{
+    board_set_scores(BOARD( pwBoard ),  ms.anScore[0], ms.anScore[1]);
+}
+#endif
 
 static void
 setWindowGeometry ( GtkWidget *pw, const windowgeometry *pwg ) {
@@ -527,6 +544,7 @@ static void StdinReadNotify( gpointer p, gint h, GdkInputCondition cond ) {
     else
 	Prompt();
 }
+
 
 extern void GTKAllowStdin( void ) {
 
@@ -1157,6 +1175,14 @@ extern void GTKAddMoveRecord( moverecord *pmr ) {
     case MOVE_GAMEINFO:
 	/* no need to list this */
 	return;
+
+#if USE_TIMECONTROL
+    case MOVE_TIME:
+	sprintf(pch = sz, _("(%s out of time [%d])"),
+		     ap[ ms.fTurn ].szName , pmr->t.nPoints);
+	fPlayer = -1;
+	break;
+#endif
 
     case MOVE_NORMAL:
 	fPlayer = pmr->n.fPlayer;
