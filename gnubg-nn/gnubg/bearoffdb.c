@@ -44,6 +44,12 @@
 #include "eval.h"
 #include "bearoffgammon.h"
 
+#ifdef WIN32
+#define BINARY O_BINARY
+#else
+#define BINARY 0
+#endif
+
 static int anCombination[ 33 ][ 18 ];
 static int fCalculated = 0;
 
@@ -396,7 +402,7 @@ BearoffInit ( const char* szFilename, const int bo ) {
    * Open bearoff file
    */
 
-  if( ( pbc->h = open( szFilename, O_RDONLY ) ) < 0 ) {
+  if( ( pbc->h = open( szFilename, O_RDONLY | BINARY) ) < 0 ) {
   
     // if ( ( pbc->h = PathOpen ( szFilename, szDir, BINARY ) ) < 0 ) {
     /* open failed */
