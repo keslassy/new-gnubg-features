@@ -2788,9 +2788,10 @@ extern void CommandNewGame( char *sz ) {
 			     "and discard the one in progress? ") ) )
 		return;
 	}
-    }
     
-    PopGame( plGame, TRUE );
+        PopGame( plGame, TRUE );
+    
+    }
     
     fComputing = TRUE;
     
@@ -3549,6 +3550,7 @@ static skilltype ShouldDouble ( void ) {
 		ms.anDice[ 0 ]         || 
 		ms.fDoubled || 
 		ms.fResigned ||
+                ! fCubeUse ||
 		(ap[ ms.fTurn ].pt != PLAYER_HUMAN )) {
 
       return (SKILL_NONE);
@@ -3599,7 +3601,7 @@ static skilltype ShouldDouble ( void ) {
 	case DOUBLE_PASS:
 	case REDOUBLE_PASS:
 
- 	  rDeltaEquity = arDouble [OUTPUT_NODOUBLE] - arDouble [OUTPUT_NODOUBLE];
+ 	  rDeltaEquity = arDouble [OUTPUT_NODOUBLE] - arDouble [OUTPUT_DROP];
 	  break;
 
 	default:
@@ -3666,6 +3668,8 @@ CommandRoll( char *sz ) {
   pmr->sd.lt = LUCK_NONE;
   pmr->sd.rLuck = ERR_VAL;
   AddMoveRecord( pmr );
+
+  InvalidateStoredMoves();
   
   ShowBoard();
 

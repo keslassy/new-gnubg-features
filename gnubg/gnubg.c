@@ -48,6 +48,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #include <time.h>
@@ -93,6 +94,7 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #include "sound.h"
 #include "path.h"
 #include "render.h"
+#include "record.h"
 
 #if USE_GUILE
 #include <libguile.h>
@@ -4018,7 +4020,7 @@ extern void CommandImportTMG( char *sz ) {
     if( ( pf = fopen( sz, "r" ) ) ) {
 	ImportTMG( pf, sz );
 	fclose( pf );
-        //setDefaultFileName ( sz, PATH_SGG );
+        setDefaultFileName ( sz, PATH_TMG );
     } else
 	outputerr( sz );
 }
@@ -5893,6 +5895,9 @@ ProgressStartValue ( char *sz, int iMax ) {
 extern void
 ProgressValue ( int iValue ) {
 
+  if ( !fShowProgress )
+    return;
+
   iProgressValue = iValue;
 
 #if HAVE_GETTIMEOFDAY
@@ -6028,6 +6033,31 @@ CreateGnubgDirectory ( void ) {
 
   return 0;
 
+
+}
+
+
+static void
+MoveGnubgpr ( void ) {
+
+#if __GNUC__
+    char szOld[ strlen( szHomeDirectory ) + 10 ];
+    char szNew[ strlen( szHomeDirectory ) + 2 + strlen ( GNUBGPR ) ];
+#elif HAVE_ALLOCA
+    char *szOld = alloca( strlen( szHomeDirectory ) + 10 );
+    char *szNew = alloca( strlen( szHomeDirectory ) + 2 + strlen ( GNUBGPR ) );
+#else
+    char szOld[ 4096 ];
+    char szNew[ 4096 ];
+#endif
+
+  sprintf ( szOld, "%s/.gnubgpr", szHomeDirectory );
+  sprintf ( szNew, "%s/%s", szHomeDirectory, GNUBGPR );
+
+  if ( ! access ( szOld, R_OK ) )
+    /* old file exists */
+    if ( rename ( szOld, szNew ) ) 
+      outputerr ( szOld );
 
 }
 
@@ -6508,6 +6538,12 @@ static void real_main( void *closure, int argc, char *argv[] ) {
 
     if ( CreateGnubgDirectory () )
       exit ( EXIT_FAILURE );
+
+    /* move .gnubgpr into gnubg directory */
+    /*  FIXME: this code can be removed when all users have had their
+        .gnubgpr move */
+
+    MoveGnubgpr();
     
     /* load rc files */
 
@@ -7096,6 +7132,12 @@ getDefaultPath ( const pathformat f ) {
 
 }
 
+extern void
+InvalidateStoredMoves ( void ) {
+
+  sm.ms.nMatchTo = -1;
+
+}
 
 
 extern void
@@ -7219,6 +7261,8 @@ extern char *
 Convert ( const char *sz, 
           const char *szDestCharset, const char *szSourceCharset ) {
 
+#if HAVE_ICONV
+
   iconv_t id;
   int lIn, lOut, l, rc, nUsed;
   const char *pchIn;
@@ -7292,6 +7336,12 @@ Convert ( const char *sz,
     outputerr ( "iconv_close" );
 
   return pchDest;
+
+#else /* HAVE_ICONV */
+
+  return strdup( sz );
+
+#endif /* ! HAVE_ICONV */
 
 }
 

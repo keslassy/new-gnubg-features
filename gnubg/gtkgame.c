@@ -2602,6 +2602,10 @@ extern void RunGTK( GtkWidget *pwSplash ) {
     
     DestroySplash ( pwSplash );
 
+    /* force update of board; needed to display board correctly if user
+       has special settings, e.g., clockwise or nackgammon */
+    ShowBoard();
+
     gtk_main();
 }
 
@@ -6326,8 +6330,12 @@ GTKRolloutUpdate( float aarMu[][ NUM_ROLLOUT_OUTPUTS ],
     
       for( i = 0; i < NUM_ROLLOUT_OUTPUTS; i++ ) {
         
-        if ( i < OUTPUT_EQUITY )
-          sprintf( sz, "%6.4f", aarMu[ j ][ i ] );
+        if ( i < OUTPUT_EQUITY ) {
+          if ( fOutputWinPC )
+            sprintf( sz, "%6.2f%%", 100.0f * aarMu[ j ][ i ] );
+          else
+            sprintf( sz, "%6.4f", aarMu[ j ][ i ] );
+        }
         else if ( i == OUTPUT_EQUITY ) {
 
           if ( ! ms.nMatchTo )
@@ -7760,7 +7768,9 @@ GTKShowPath ( void ) {
     { N_("Loading of match equity files (.xml)"), 
       N_("Match Equity Tables") },
     { N_("Loading of TrueMoneyGames files (.tmg)"), 
-      N_("TrueMoneyGames TMG") } 
+      N_("TrueMoneyGames TMG") },
+    { N_("Loading of BKG files"),
+      N_("BKG") }
   };
 
   
@@ -8705,7 +8715,7 @@ static void RecordErase( GtkWidget *pw, recordwindowinfo *prwi ) {
     char sz[ 64 ];
     
     gtk_clist_get_text( GTK_CLIST( prwi->pwList ), prwi->nRow, 0, &pch );
-    sprintf( sz, "record erase %s", pch );
+    sprintf( sz, "record erase \"%s\"", pch );
     UserCommand( sz );
     gtk_clist_remove( GTK_CLIST( prwi->pwList ), prwi->nRow );
 }
@@ -8885,66 +8895,66 @@ extern void GTKRecordShow( FILE *pfIn, char *szFile, char *szPlayer ) {
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 0, pr.szName );
 	
 	if( pr.cGames >= 20 )
-	    sprintf( sz, "%.4f", pr.arErrorChequerplay[ EXPAVG_20 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorChequerplay[ EXPAVG_20 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 1, sz );
 	
 	if( pr.cGames >= 20 )
-	    sprintf( sz, "%.4f", pr.arErrorCube[ EXPAVG_20 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorCube[ EXPAVG_20 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 2, sz );
 	
 	if( pr.cGames >= 20 )
-	    sprintf( sz, "%.4f", pr.arErrorCombined[ EXPAVG_20 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorCombined[ EXPAVG_20 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 3, sz );
 	
 	if( pr.cGames >= 100 )
-	    sprintf( sz, "%.4f", pr.arErrorChequerplay[ EXPAVG_100 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorChequerplay[ EXPAVG_100 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 4, sz );
 	
 	if( pr.cGames >= 100 )
-	    sprintf( sz, "%.4f", pr.arErrorCube[ EXPAVG_100 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorCube[ EXPAVG_100 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 5, sz );
 	
 	if( pr.cGames >= 100 )
-	    sprintf( sz, "%.4f", pr.arErrorCombined[ EXPAVG_100 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorCombined[ EXPAVG_100 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 6, sz );
 	
 	if( pr.cGames >= 500 )
-	    sprintf( sz, "%.4f", pr.arErrorChequerplay[ EXPAVG_500 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorChequerplay[ EXPAVG_500 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 7, sz );
 	
 	if( pr.cGames >= 500 )
-	    sprintf( sz, "%.4f", pr.arErrorCube[ EXPAVG_500 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorCube[ EXPAVG_500 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 8, sz );
 	
 	if( pr.cGames >= 500 )
-	    sprintf( sz, "%.4f", pr.arErrorCombined[ EXPAVG_500 ] );
+	    sprintf( sz, "%.4f", -pr.arErrorCombined[ EXPAVG_500 ] );
 	else
 	    strcpy( sz, _("n/a") );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 9, sz );
 	
-	sprintf( sz, "%.4f", pr.arErrorChequerplay[ EXPAVG_TOTAL ] );
+	sprintf( sz, "%.4f", -pr.arErrorChequerplay[ EXPAVG_TOTAL ] );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 10, sz );
 	
-	sprintf( sz, "%.4f", pr.arErrorCube[ EXPAVG_TOTAL ] );
+	sprintf( sz, "%.4f", -pr.arErrorCube[ EXPAVG_TOTAL ] );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 11, sz );
 	
-	sprintf( sz, "%.4f", pr.arErrorCombined[ EXPAVG_TOTAL ] );
+	sprintf( sz, "%.4f", -pr.arErrorCombined[ EXPAVG_TOTAL ] );
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 12, sz );
 	
 	if( pr.cGames >= 20 )
@@ -8985,7 +8995,7 @@ extern void GTKRecordShow( FILE *pfIn, char *szFile, char *szPlayer ) {
 	
 	gtk_clist_set_text( GTK_CLIST( pwList ), i, 21,
 			    aszLuckRating[ getLuckRating( pr.arLuck[
-				EXPAVG_TOTAL ] ) ] );
+				EXPAVG_TOTAL ] / 20 ) ] );
 	
 	if( !CompareNames( pr.szName, szPlayer ) )
 	    gtk_clist_select_row( GTK_CLIST( pwList ), i, 0 );

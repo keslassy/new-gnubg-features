@@ -1851,14 +1851,15 @@ extern void RenderDice( renderdata *prd, unsigned char *puch0,
 			      prd->arLight[ 1 ] * y_norm +
 			      prd->arLight[ 2 ] * z_norm ) > 0.0 ) {
 			    diffuse += cos_theta * 0.8;
-			    cos_theta = 2 * z_norm * cos_theta -
-				prd->arLight[ 2 ];
-			    specular_x += pow( cos_theta,
-					       arDiceExponent[ 0 ] ) *
-				arDiceCoefficient[ 0 ];
-			    specular_o += pow( cos_theta,
-					       arDiceExponent[ 1 ] ) *
-				arDiceCoefficient[ 1 ];
+			    if( ( cos_theta = 2 * z_norm * cos_theta -
+				  prd->arLight[ 2 ] ) > 0.0 ) {
+				specular_x += pow( cos_theta,
+						   arDiceExponent[ 0 ] ) *
+				    arDiceCoefficient[ 0 ];
+				specular_o += pow( cos_theta,
+						   arDiceExponent[ 1 ] ) *
+				    arDiceCoefficient[ 1 ];
+			    }
 			}
 		    }
 		missed:		    
@@ -1946,14 +1947,15 @@ extern void RenderPips( renderdata *prd, unsigned char *puch0,
 					    prd->arLight[ 2 ] * z ) /
 			      sqrt( x * x + y * y + z * z ) ) > 0 ) {
 			    diffuse += cos_theta * 0.8;
-			    cos_theta = 2 * z / 5 * cos_theta -
-				prd->arLight[ 2 ];
-			    specular_x += pow( cos_theta,
-					       arDiceExponent[ 0 ] ) *
-				arDiceCoefficient[ 0 ];
-			    specular_o += pow( cos_theta,
-					       arDiceExponent[ 1 ] ) *
-				arDiceCoefficient[ 1 ];
+			    if( ( cos_theta = 2 * z / 5 * cos_theta -
+				  prd->arLight[ 2 ] ) > 0.0 ) {
+				specular_x += pow( cos_theta,
+						   arDiceExponent[ 0 ] ) *
+				    arDiceCoefficient[ 0 ];
+				specular_o += pow( cos_theta,
+						   arDiceExponent[ 1 ] ) *
+				    arDiceCoefficient[ 1 ];
+			    }
 			}
 		    }
 		    x += 1.0 / ( prd->nSize );
@@ -2003,7 +2005,7 @@ static void DrawChequers( renderdata *prd, unsigned char *puch, int nStride,
 			  int x, int y, int cx, int cy ) {
     int i, c, yChequer;
 
-    c = ( !n || n == 25 ) ? 3 : 5;
+    c = ( !iPoint || iPoint == 25 ) ? 3 : 5;
     yChequer = aaanPositions[ prd->fClockwise ][ iPoint ][ 1 ] * prd->nSize;
     
     for( i = 0; i < n; i++ ) {

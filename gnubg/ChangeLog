@@ -1,3 +1,193 @@
+Wed Apr  2 22:46:49 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* rollout.c (BasicCubefulRollout): fix bug in calculating
+	cubeful equity when doing exact bearoff truncation for money
+	game rollouts.
+
+Thu Mar 27 20:09:12 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* play.c (CommandNewGame): only pop game if a game is in progress.
+	(reported in rec.games.gammon)
+
+Thu Mar 27 19:39:59 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* import.c (ImportTMG): import beavers correctly
+	* gnubg.c (CommandImportTMG): set path to tmg files.
+	(reported by Ned Cross)
+
+Fri Mar 21 14:21:17 2003  Gary Wong  <gtw@gnu.org>
+
+	* Version 0.13.1 pre-released.
+
+Thu Mar 13 17:56:15 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* record.c (RecordAddGame): update statistics before writing
+	player records.
+	(reported by Holger Bochnig)
+
+Sat Mar  8 11:03:05 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* import.c (ParseMatMove): fix .mat import to handle
+	resignations by player on roll after she rolled.
+	(reported by Scott Steiner)
+
+Sat Mar  8 08:56:38 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* gnubg.c (Convert): define Convert as strdup if libiconv
+	is not available.
+	(reported by Øystein Johansen)
+
+Sat Mar  8 08:31:48 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* text.c, html.c: Fix problem with wrong alerts in export of positions.
+	(reported by several people)
+
+Sun Mar  2 16:02:51 2003  Joern Thyssen  <jth@gnubg.org>
+
+	Rename .gnubgpr to .gnubg/gnubgpr
+
+	* gnubg.c (Movegnubgpr): new function.
+	* record.c: new name for player's records file
+
+Sun Mar  2 15:28:50 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* gtkgame.c (RunGTK): force update of board
+	(reported by several people)
+
+Sun Mar  2 12:51:52 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* html.c (HTMLPrintMoveAnalysis): fix bug that lead to wrong
+	color of table header
+	(reported by Michael Depreli)
+
+Tue Feb 25 14:09:36 GMT 2003 Jim Segrave    <jes@jes-2.demon.nl>
+
+	* fix cut&paste typo which prevented tutor from seeing double/drop
+	  errors 
+
+Thu Jan 30 18:52:34 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* gnubg.c (InvalidateStoredMoves): new function.
+	* play.c (CommandRoll): invalidate stored moves otherwise the
+	shown hint may be wrong if the player goes back to a previous
+	move and roll new dice.
+	(reported by Billie Patterson)
+
+Wed Jan 29 20:24:32 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* rollout.c (getResignation): resign single in money game with
+	Jacoby rule and centered cube.
+	(reported by Ric Gerace)
+
+Wed Jan 29 17:10:27 2003  Joern Thyssen  <jth@gnubg.org>
+
+        * boards.xml: add Ian Shaw's new Iberian design :-)
+
+Mon Jan 27 10:00:00 2003  Gary Wong  <gtw@gnu.org>
+
+	* gtkgame.c (GTKRecordShow): Show error rates as negative, and
+	add a hack to divide pr.arLuck by 20 before calling getLuckRating()
+	to compensate for the function expecting a per-move (not per-game)
+	rate.  (Reported by Jørn.)
+
+Tue Jan 28 07:16:05 GMT   Jim Segrave    <jes@jes-2.demon.nl>
+
+    * play.c - ShouldDouble did'nt check if the cube was disabled, 
+	      so you could get tutor warnings for missed doubles when they
+	      weren't possible.
+
+Sun Jan 26 10:08:21 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* gtkchequer.c (HintSelect): return after double-click 
+	as the board is changed or the dialog destroyed
+	(reported by Holger Bochnig)
+
+Sat Jan 25 19:24:12 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* analysis.c (absoluteFibsRating): fix minor bug in interpolation
+	formula. (reported by James F. Kibler)
+
+Sat Jan 25 11:05:40 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* import.c (ExpandMatMove): new function.
+	* import.c (ParseMatMove): expand consolidated moves.
+	(reported by Ron Barry)
+
+Thu Jan 23 17:08:33 2003  Gary Wong  <gtw@gnu.org>
+
+	* Version 0.13.0 pre-released.
+
+	* sound.c (play_file_child): [!USE_GTK] Don't use g_snprintf.
+
+Thu Jan 23 16:46:19 2003  Gary Wong  <gtw@gnu.org>
+
+	* eval.c (NNevalAction): Temporarily disable incremental
+	evaluations (suggested by Jørn).
+
+Tue Jan 21 14:49:29 2003  Gary Wong  <gtw@gnu.org>
+
+	* eval.c (EvalKey): Bug fixes for cubeful equity caching: always
+	perform cubeful key consideration for cube decisions (even if
+	the evalcontext says it's cubeless), and don't take the one's
+	complement for cubeful equities, since that gives -1 in trivial
+	cases (which apparently means something special to lib/hash.c).
+
+	* eval.c (EvaluatePositionCache, EvaluatePositionCubeful3): Don't
+	try a cache lookup if the cache size is 0.
+
+Sat Jan 18 16:18:39 2003  Gary Wong  <gtw@gnu.org>
+
+	* render.c (RenderDice, RenderPips): Don't calculate specular
+	component when cos_theta < 0.
+
+Sat Jan 18 11:24:00 2003  Gary Wong  <gtw@gnu.org>
+
+	* render.c (DrawChequers): Fix cosmetic bug with more than 3 chequers
+	on bar (reported by Nardy Pillards).
+
+Thu Jan 16 12:27:05 2003  Gary Wong  <gtw@gnu.org>
+
+	* gtkgame.c (GTKShowPath): Add missing .BKG entry.
+
+Wed Jan 15 15:32:39 2003  Gary Wong  <gtw@gnu.org>
+
+	* gnubg.c (ExportGameJF): Revert previous patch; JF .mat format
+	shouldn't be internationalised.
+
+Wed Jan 15 14:44:05 2003  Gary Wong  <gtw@gnu.org>
+
+	* gnubg.c, set.c, show.c: I18N plural patches from TAKAHASHI Kaoru.
+
+Wed Jan 15 10:40:22 2003  Gary Wong  <gtw@gnu.org>
+
+	* NEWS, README: Updated in preparation for a 0.13 pre-release.
+
+Mon Jan 13 18:54:09 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* gtkgame.c (GTKRolloutUpdate): honour fOutputWinPC.
+	(reported by Albert Silver)
+
+Mon Jan 13 18:17:57 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* show.c (CommandShowFullBoard): player names and scores were inverted.
+	(reported by Nardy Pillards)
+
+Sun Jan 12 17:29:14 2003  Gary Wong  <gtw@gnu.org>
+
+	* eval.c (EvalKey): New parameter fCubefulEquity, so that cache
+	entries which set OUTPUT_CUBEFUL_EQUITY will not collide with
+	those which do not.  All callers changed.
+
+Sun Jan 12 13:23:44 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* gnubg.c (ProgressValue): add missing "if ( ! fShowProgress )".
+	(contributed by O.M. Riordan)
+
+Sat Jan 11 17:03:37 2003  Gary Wong  <gtw@gnu.org>
+
+	* gtkgame.c (RecordErase): Quote player name parameter.  (Reported by
+	Nardy Pillards.)
+
 Sat Jan 11 11:29:01 2003  Joern Thyssen  <jth@gnubg.org>
 
 	* gtktexi.c, gtkmovefilter.c, import.c, show.c, gtkgame.c, eval.c:
@@ -10,7 +200,7 @@ Sat Jan 11 10:58:54 2003  Joern Thyssen  <jth@gnubg.org>
 
 Fri Jan 10 22:56:30 2003  Joern Thyssen  <jth@gnubg.org>
 
-	* eval.c (FindBestMovePlied, FindnSAveBestMoves):
+	* eval.c (FindBestMovePlied, FindnSaveBestMoves):
 	change algorithm for accept=0 according to Michael
 	Depreli's suggestions.
 
@@ -20,7 +210,7 @@ Fri Jan 10 19:48:24 2003  Joern Thyssen  <jth@gnubg.org>
 
 Fri Jan 10 19:42:38 2003  Joern Thyssen  <jth@gnubg.org>
 
-	* gtkgame.c (EvalCHanged): fix bug when comparing to
+	* gtkgame.c (EvalChanged): fix bug when comparing to
 	predefined settings.
 	(reported by Scott Steiner)
 

@@ -19,6 +19,7 @@ EOF
 cat > $contributors <<'EOF'
 Kazuaki Asai
 Eric Augustine
+Ron Barry
 Steve Baedke
 Holger Bochnig
 Chuck Bower
@@ -32,6 +33,7 @@ Bill Davidson
 Michael Depreli
 Max Durbano
 Fotis
+Ric Gerace
 Michel Grimminck
 Eric Groleau
 Jeff Haferman
@@ -39,6 +41,7 @@ Alain Henry
 Jens Hoefkens
 Nis Jorgensen
 Matija Kejzar
+James F. Kibler
 Jonathan Kinsey
 Johnny Kirk
 Gerhard Knop
@@ -55,6 +58,7 @@ Mirori Orange
 Peter Orum
 Roy Passfield
 Thomas Patrick
+Billie Patterson
 Zvezdan Petkovic
 Nardy Pillards
 Petri Pitkänen

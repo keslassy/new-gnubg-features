@@ -297,6 +297,86 @@ ImportJF( FILE * fp, char *szFileName) {
 
 static int fWarned, fPostCrawford;
 
+
+static void
+ExpandMatMove ( int anBoard[ 2 ][ 25 ], int anMove[ 8 ], int *pc,
+             const int anDice[ 2 ] ) {
+
+  int i, j, k;
+  int c = *pc;
+
+  if ( anDice[ 0 ] != anDice[ 1 ] ) {
+    
+    if ( ( anMove[ 0 ] - anMove[ 1 ] ) == ( anDice[ 0 ] + anDice[ 1 ] ) ) {
+
+      int an[ 8 ];
+
+      /* consolidated move */
+
+      for ( i = 0; i < 2; ++i ) {
+
+        an[ 0 ] = anMove[ 0 ];
+        an[ 1 ] = an[ 0 ] - anDice[ i ];
+        
+        an[ 2 ] = an[ 1 ];
+        an[ 3 ] = an[ 2 ] - anDice[ !i ];
+
+        an[ 4 ] = -1;
+        an[ 5 ] = -1;
+
+        if ( IsValidMove ( anBoard, an ) ) {
+          memcpy ( anMove, an, sizeof ( an ) );
+          ++*pc;
+          break;
+        }
+
+      }
+
+    }
+
+  }
+  else {
+  
+    for ( i = 0; i < c; ++i ) {
+
+      /* if this is a consolidated move then "expand" it */
+
+      j = ( anMove[ 2 * i ] - anMove[ 2 * i + 1 ] ) / anDice[ 0 ];
+
+      for ( k = 1; k < j; ++k ) {
+
+        /* new move */
+
+        anMove[ 2 * *pc ] = anMove[ 2 * *pc +1 ] = anMove[ 2 * i ];
+        anMove[ 2 * *pc + 1 ] -= anDice[ 0 ];
+
+        /* fix old move */
+
+        anMove[ 2 * i ] -= anDice[ 0 ];
+
+        ++*pc;
+
+        assert ( *pc <= 4 );
+
+        /* terminator */
+
+        if ( *pc < 4 ) {
+          anMove [ 2 * *pc ] = -1;
+          anMove [ 2 * *pc + 1 ] = -1;
+        }
+
+      }
+
+    }
+
+  }
+
+  if ( c != *pc )
+    /* reorder moves */
+    CanonicalMoveOrder ( anMove );
+
+}
+
 static void ParseMatMove( char *sz, int iPlayer ) {
 
     char *pch;
@@ -343,45 +423,70 @@ static void ParseMatMove( char *sz, int iPlayer ) {
 	pmr->n.stMove = SKILL_NONE;
 	pmr->n.stCube = SKILL_NONE;
 	
-	if( ( c = ParseMove( sz + 3, pmr->n.anMove ) ) >= 0 ) {
-	    for( i = 0; i < ( c << 1 ); i++ )
-		pmr->n.anMove[ i ]--;
-	    if( c < 4 )
-		pmr->n.anMove[ c << 1 ] = pmr->n.anMove[ ( c << 1 ) | 1 ] = -1;
+        c = ParseMove( sz + 3, pmr->n.anMove );
 
-            for ( i = 0; i < c; ++i )
-              printf ( "move= %d/%d\n", pmr->n.anMove[ 2 * i ],
-                       pmr->n.anMove[ 2 * i + 1 ] );
+	if( c > 0 ) {
 
+            /* moves found */
+
+            for( i = 0; i < ( c << 1 ); i++ )
+              pmr->n.anMove[ i ]--;
+            if( c < 4 )
+              pmr->n.anMove[ c << 1 ] = pmr->n.anMove[ ( c << 1 ) | 1 ] = -1;
+            
+            /* remove consolidation */
+            
+            ExpandMatMove ( ms.anBoard, pmr->n.anMove, &c, 
+                            pmr->n.anRoll );
+            
+            /* check if move is valid */
+            
             if ( ! IsValidMove ( ms.anBoard, pmr->n.anMove ) )
               outputf ( _("WARNING: Invalid move: \"%s\" encountered\n"),
                         sz + 3 );
-	    
-	    AddMoveRecord( pmr );
+            
+            AddMoveRecord( pmr );
+            
+            return;
+	} 
+        else if ( ! c ) {
 
-	    return;
-	} else {
-	    /* roll but no move found; check for a resignation */
-	    int anDice[ 2 ] = { pmr->n.anRoll[ 0 ], pmr->n.anRoll[ 1 ] };
+          /* roll but no move found; if there are legal moves assume
+             a resignation */
+          int anDice[ 2 ] = { pmr->n.anRoll[ 0 ], pmr->n.anRoll[ 1 ] };
+          movelist ml;
 	    
-	    free( pmr );
-	    sz += 3;
-	    sz += strspn( sz, " \t" );
-	    
-	    if( !strncasecmp( sz, "win", 3 ) ) {
-		/* the player not on roll resigned -- record the roll */
-		pmr = malloc( sizeof( pmr->sd ) );
-		pmr->sd.mt = MOVE_SETDICE;
-		pmr->sd.sz = NULL;
-		pmr->sd.fPlayer = iPlayer;
-		pmr->sd.anDice[ 0 ] = anDice[ 0 ];
-		pmr->sd.anDice[ 1 ] = anDice[ 1 ];
-		pmr->sd.lt = LUCK_NONE;
-		pmr->sd.rLuck = ERR_VAL;
-		AddMoveRecord( pmr );
-		/* and now fall through and handle the resignation below */
-	    } else
-		return;
+          if ( GenerateMoves( &ml, ms.anBoard, 
+                              pmr->n.anRoll[ 0 ], pmr->n.anRoll[ 1 ], 
+                              FALSE ) ) {
+
+            /* legal moves; just record roll */
+
+            free( pmr ); /* free movenormal from above */
+          
+            pmr = malloc( sizeof( pmr->sd ) );
+            pmr->sd.mt = MOVE_SETDICE;
+            pmr->sd.sz = NULL;
+            pmr->sd.fPlayer = iPlayer;
+            pmr->sd.anDice[ 0 ] = anDice[ 0 ];
+            pmr->sd.anDice[ 1 ] = anDice[ 1 ];
+            pmr->sd.lt = LUCK_NONE;
+            pmr->sd.rLuck = ERR_VAL;
+            AddMoveRecord( pmr );
+
+            return;
+
+          } else {
+
+            /* no legal moves; record the movenormal */
+
+            pmr->n.anMove[ 0 ] = pmr->n.anMove[ 1 ] = -1;
+            AddMoveRecord( pmr );
+
+            return;
+
+          }
+
 	}
     }
 	
@@ -1764,6 +1869,7 @@ static void ImportTMGGame( FILE *pf, int i, int nLength, int n0, int n1,
       TMG_MOVE = 4,
       TMG_DOUBLE = 5,
       TMG_TAKE = 7,
+      TMG_BEAVER = 8,
       TMG_PASS = 10,
       TMG_WIN_SINGLE = 14,
       TMG_WIN_GAMMON = 15,
@@ -1897,6 +2003,7 @@ static void ImportTMGGame( FILE *pf, int i, int nLength, int n0, int n1,
           break;
 
         case TMG_DOUBLE: /* double:   -7 5 Double to 2 */
+        case TMG_BEAVER: /* beaver:      25 8 Beaver to 8 */
 
           pmr = malloc( sizeof( pmr->d ) );
           pmr->d.mt = MOVE_DOUBLE;
@@ -1934,12 +2041,12 @@ static void ImportTMGGame( FILE *pf, int i, int nLength, int n0, int n1,
           AddMoveRecord( pmr );
 
           break;
-                            
+
         case TMG_WIN_SINGLE: /* win single:    4 14 1 thj wins 1 point */
         case TMG_WIN_GAMMON: /* resign:  -30 15 2 Saltyzoo7 wins 2 points */
         case TMG_WIN_BACKGAMMON: /* win backgammon: ??? */
 
-          if ( ! GameStatus ( ms.anBoard ) ) {
+          if ( ms.gs == GAME_PLAYING ) {
             /* game is in progress: the opponent resigned */
             pmr = malloc( sizeof( *pmr ) );
             pmr->r.mt = MOVE_RESIGN;
@@ -2006,6 +2113,11 @@ ImportTMG ( FILE *pf, const char *szFilename ) {
   int i, j;
   char sz[ 80 ];
 
+#if USE_GTK
+  if( fX )
+    GTKFreeze();
+#endif
+  
   FreeMatch();
   ClearMatch();
 
