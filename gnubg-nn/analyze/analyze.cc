@@ -194,14 +194,23 @@ Analyze::init(const char* netFile, bool const shortCuts)
     cerr << "GNUBGHOME not set" << endl;
     return false;
   }
+#ifdef WIN32
+  string const os = string(envHome) + '\\' + "gnubg_os0.bd";
+  string const ts = string(envHome) + '\\' + "gnubg_ts0.bd";
+#else
   string const os = string(envHome) + '/' + "gnubg_os0.bd";
   string const ts = string(envHome) + '/' + "gnubg_ts0.bd";
+#endif // Win32
 #endif
 
 #if defined( OS_BEAROFF_DB )
   string o;
   if( envHome ) {
+#ifdef WIN32
+    o = string(envHome) + '\\' + "gnubg_os.db";
+#else
     o = string(envHome) + '/' + "gnubg_os.db";
+#endif // Win32
   }
 #endif
 

@@ -23,9 +23,11 @@
  */
 
 extern "C" {
-#include <eval.h>
+#include "eval.h"
 #include <positionid.h>
 #include <mt19937int.h>
+#include "defs.h"
+
 }
 
 #include <sys/types.h>
