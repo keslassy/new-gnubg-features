@@ -1107,9 +1107,7 @@ set_shortcuts(PyObject*, PyObject* const args)
     return 0;
   }
 
-  if( use ) {
-    setShortCuts(!!use);
-  }
+  setShortCuts(!!use);
 
   if( n > 0 ) {
     setNetShortCuts(n);

@@ -1,0 +1,5 @@
+Tue Oct 26 15:33:05 2004  Joseph Heled  <joseph@gnubg.org>
+
+	* pygnubg.cc (set_shortcuts): Fix bug. once shortcuts were on,
+	they would not be turned off
+
