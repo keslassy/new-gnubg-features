@@ -1984,7 +1984,7 @@ extern void RenderPips( renderdata *prd, unsigned char *puch0,
 static void PointArea( renderdata *prd, int n, int *px, int *py,
 		       int *pcx, int *pcy ) {
     
-    int c = ( !iPoint || iPoint == 25 ) ? 3 : 5;
+    int c = ( !n || n == 25 ) ? 3 : 5;
     
     *px = aaanPositions[ prd->fClockwise ][ n ][ 0 ] * prd->nSize;
     *py = aaanPositions[ prd->fClockwise ][ n ][ 1 ] * prd->nSize;
@@ -2003,7 +2003,7 @@ static void DrawChequers( renderdata *prd, unsigned char *puch, int nStride,
 			  int x, int y, int cx, int cy ) {
     int i, c, yChequer;
 
-    c = ( !n || n == 25 ) ? 3 : 5;
+    c = ( !iPoint || iPoint == 25 ) ? 3 : 5;
     yChequer = aaanPositions[ prd->fClockwise ][ iPoint ][ 1 ] * prd->nSize;
     
     for( i = 0; i < n; i++ ) {
