@@ -7099,6 +7099,12 @@ getDefaultPath ( const pathformat f ) {
 
 }
 
+extern void
+InvalidateStoredMoves ( void ) {
+
+  sm.ms.nMatchTo = -1;
+
+}
 
 
 extern void
