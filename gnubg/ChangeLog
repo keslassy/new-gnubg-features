@@ -1,3 +1,8 @@
+Sat Jan 18 11:24:00 2003  Gary Wong  <gtw@gnu.org>
+
+	* render.c (DrawChequers): Fix cosmetic bug with more than 3 chequers
+	on bar (reported by Nardy Pillards).
+
 Thu Jan 16 12:27:05 2003  Gary Wong  <gtw@gnu.org>
 
 	* gtkgame.c (GTKShowPath): Add missing .BKG entry.
