@@ -4083,6 +4083,8 @@ getInputs(CONST int anBoard[2][25], CONST int* which, float* values)
   }
 }
 
+#if defined( HAVE_DLFCN_H )
+
 #include <dlfcn.h>
 
 const NetInputFuncs*
@@ -4118,4 +4120,6 @@ closeInputs(const NetInputFuncs* f)
   }
   return 0;
 }
-  
+
+#endif
+

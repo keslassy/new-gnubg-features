@@ -225,8 +225,6 @@ EvalCacheHash(evalcache* pec)
 }
 #endif
 
-#include <dlfcn.h> // dlclose
-
 void
 DestroyNets(EvalNets* evalNets)
 {
@@ -280,7 +278,9 @@ DestroyNets(EvalNets* evalNets)
       }
     }
 
+#if defined( HAVE_DLFCN_H )
     closeInputs(evalNets[k].netInputs);
+#endif
   }
 
   free(evalNets);
@@ -360,9 +360,11 @@ LoadNet(CONST char* szWeights, long cSize)
 	
 	if( *t ) {
 	  inpFunc = ifByName(t);
+#if defined( HAVE_DLFCN_H )
 	  if( ! inpFunc ) {
 	    inpFunc = ifFromFile(t);
 	  }
+#endif
 	  if( ! inpFunc ) {
 	    fprintf(stderr, "net input function %s not found", t);
 	    
@@ -2846,7 +2848,9 @@ neuralNetInit(positionclass pc, const char* inputFuncName, int nHidden)
     p = ifByName(inputFuncName);
 
     if( ! p ) {
+#if defined( HAVE_DLFCN_H )
       p = ifFromFile(inputFuncName);
+#endif
 
       if( ! p ) {
 	return 0;

@@ -4,5 +4,8 @@
 #
 # CONTAINMENT_CODE: Experimntal code for containment class, a sub class of
 # crashed
+#
+# HAVE_DLFCN_H: if you have a working dynamic loading code
+#
 
-EXTRAFLAGS = -DOS_BEAROFF_DB
+EXTRAFLAGS = -DOS_BEAROFF_DB -DHAVE_DLFCN_H
