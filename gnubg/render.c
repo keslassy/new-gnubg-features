@@ -1984,7 +1984,7 @@ extern void RenderPips( renderdata *prd, unsigned char *puch0,
 static void PointArea( renderdata *prd, int n, int *px, int *py,
 		       int *pcx, int *pcy ) {
     
-    int c = ( !n || n == 25 ) ? 3 : 5;
+    int c = ( !iPoint || iPoint == 25 ) ? 3 : 5;
     
     *px = aaanPositions[ prd->fClockwise ][ n ][ 0 ] * prd->nSize;
     *py = aaanPositions[ prd->fClockwise ][ n ][ 1 ] * prd->nSize;
