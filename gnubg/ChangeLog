@@ -1,3 +1,9 @@
+Sat Apr 12 09:10:26 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* eval.c (EvaluatePositionCubeful3): fTop *must* be a part
+	of EvalKey... unfortunately we're out of bits...
+	This is just a quick'n'dirty fix!
+	(bug reported by Achim)
 
 Wed Apr  2 22:46:49 2003  Joern Thyssen  <jth@gnubg.org>
 
