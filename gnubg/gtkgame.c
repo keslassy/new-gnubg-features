@@ -7764,7 +7764,7 @@ GTKShowPath ( void ) {
     { N_("Loading of match equity files (.xml)"), 
       N_("Match Equity Tables") },
     { N_("Loading of TrueMoneyGames files (.tmg)"), 
-      N_("TrueMoneyGames TMG") } 
+      N_("TrueMoneyGames TMG") },
     { N_("Loading of BKG files"),
       N_("BKG") }
   };
