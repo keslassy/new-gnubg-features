@@ -983,26 +983,26 @@ NeuralNetTrainS(neuralnet* pnn, float arInput[], float arOutput[],
 
   {
     int k = 0;
-  while( tList[k] >= 0 ) {
-    i = tList[k];
-    assert( 0 <= i && i < pnn->cInput );
-    ++k;
+    while( tList[k] >= 0 ) {
+      i = tList[k];
+      {                                       assert( 0 <= i && i < pnn->cInput ); }
+      ++k;
     
-    if( arInput[ i ] == 1.0 ) {
-      prWeight = pnn->arHiddenWeight + i * pnn->cHidden;
-      pr = arHiddenError;
-      for(j = pnn->cHidden; j; j-- ) {
-	*prWeight++ += rAlpha * *pr++;
+      if( arInput[ i ] == 1.0 ) {
+	prWeight = pnn->arHiddenWeight + i * pnn->cHidden;
+	pr = arHiddenError;
+	for(j = pnn->cHidden; j; j-- ) {
+	  *prWeight++ += rAlpha * *pr++;
+	}
+      }
+      else if( arInput[ i ] ) {
+	prWeight = pnn->arHiddenWeight + i * pnn->cHidden;
+	pr = arHiddenError;
+	for( j = pnn->cHidden; j; j-- ) {
+	  *prWeight++ += rAlpha * *pr++ * arInput[ i ];
+	}
       }
     }
-    else if( arInput[ i ] ) {
-      prWeight = pnn->arHiddenWeight + i * pnn->cHidden;
-      pr = arHiddenError;
-      for( j = pnn->cHidden; j; j-- ) {
-	*prWeight++ += rAlpha * *pr++ * arInput[ i ];
-      }
-    }
-  }
   }
   
   for( i = 0; i < pnn->cHidden; i++ ) {

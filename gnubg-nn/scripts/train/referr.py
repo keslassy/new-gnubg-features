@@ -1,3 +1,4 @@
+import sys
 import gnubg
 from bgutil import find
 
@@ -13,7 +14,7 @@ def matchEqutiy(i,l) :
   return i[5]
 
 
-def benchmarkError(refFileName) :
+def benchmarkError(refFileName, verbose = 0) :
   """ error of current net on ref data"""
   
   nCubePos = 0
@@ -62,6 +63,9 @@ def benchmarkError(refFileName) :
         tcubeErr += tErr
 
       gnubg.set.score(0,0)
+
+      if verbose and (nCubePos % 5000) == 0 :
+        print >> sys.stderr, "c",
       
     elif line[0] == 'm' :
       l = line.split()
@@ -85,7 +89,9 @@ def benchmarkError(refFileName) :
 	
       nMovePos += 1
       moveErr += loss
-
+      if verbose and (nMovePos % 5000) == 0 :
+        print >> sys.stderr, "m",
+      
   refFile.close()
 
   if nMovePos == 0 :
