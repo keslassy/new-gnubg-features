@@ -1,3 +1,9 @@
+Tue Jan 28 07:16:05 GMT   Jim Segrave    <jes@jes-2.demon.nl>
+
+    * play.c - ShouldDouble did'nt check if the cube was disabled, 
+	      so you could get tutor warnings for missed doubles when they
+	      weren't possible.
+
 Sun Jan 26 10:08:21 2003  Joern Thyssen  <jth@gnubg.org>
 
 	* gtkchequer.c (HintSelect): return after double-click 
