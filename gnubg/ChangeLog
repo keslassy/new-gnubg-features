@@ -1,3 +1,8 @@
+Sun Mar  2 12:51:52 2003  Joern Thyssen  <jth@gnubg.org>
+
+	* html.c (HTMLPrintMoveAnalysis): fix bug that lead to wrong
+	color of table header
+	(reported by Michael Depreli)
 
 Tue Feb 25 14:09:36 GMT 2003 Jim Segrave    <jes@jes-2.demon.nl>
 
