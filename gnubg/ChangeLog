@@ -1,3 +1,10 @@
+Sun Mar  2 16:02:51 2003  Joern Thyssen  <jth@gnubg.org>
+
+	Rename .gnubgpr to .gnubg/gnubgpr
+
+	* gnubg.c (Movegnubgpr): new function.
+	* record.c: new name for player's records file
+
 Sun Mar  2 15:28:50 2003  Joern Thyssen  <jth@gnubg.org>
 
 	* gtkgame.c (RunGTK): force update of board
