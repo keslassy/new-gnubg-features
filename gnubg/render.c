@@ -30,6 +30,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
+#include "path.h"
 #endif
 #include <isaac.h>
 #include <math.h>
@@ -124,10 +125,6 @@ FT_Library ftl;
 #define FT_GLYPH_FORMAT_BITMAP ft_glyph_format_bitmap
 #define FT_PIXEL_MODE_GRAY ft_pixel_mode_grays
 #endif
-
-extern unsigned char auchLuxiRB[], auchLuxiSB[], auchLuxiSR[];
-extern unsigned int cbLuxiRB, cbLuxiSB, cbLuxiSR;
-
 #endif
 
 renderdata rdDefault = {
@@ -1517,13 +1514,17 @@ RenderLabels( renderdata *prd, unsigned char *puch, int nStride,
     FT_Face ftf;
     int i;
     FT_Glyph aftg[ 10 ];
+    char *file;
 
-    if( FT_New_Memory_Face( ftl, auchLuxiSB, cbLuxiSB, 0, &ftf ) )
+    file = PathSearch(FONT_VERA, szDataDirectory);
+    if( FT_New_Face( ftl, file, 0, &ftf ) )
 	{
 		RenderBasicLabels( prd, puch, nStride, iStart, iEnd, iDelta );
+                free(file);
 		return;
 	}
-    
+    free(file);
+
     if( FT_Set_Pixel_Sizes( ftf, 0, prd->nSize * 5 / 2 ) )
 	{
 		RenderBasicLabels( prd, puch, nStride, iStart, iEnd, iDelta );
@@ -1779,8 +1780,10 @@ extern void RenderChequers( renderdata *prd, unsigned char *puch0,
 			1 / ( 1 - prd->rRound ) + 1;
 		s = ssqrt( 1 - r * r );
 		s1 = ssqrt( 1 - r1 * r1 );
-		
-		theta = atanf( r1 / s1 );
+		if (s1 != 0)
+			theta = atanf( r1 / s1 );
+		else
+			theta = 0;
 		
 		for( f = 0; f < 2; f++ ) {
 		    b = asinf( sinf( theta ) / prd->arRefraction[ f ] );
@@ -1848,8 +1851,10 @@ extern void RenderChequerLabels( renderdata *prd, unsigned char *puch,
     FT_Face ftf;
     FT_Glyph aftg[ 10 ];
     int fFreetype = FALSE;
+    char *file;
     
-    if( !FT_New_Memory_Face( ftl, auchLuxiSR, cbLuxiSR, 0, &ftf ) &&
+    file = PathSearch(FONT_VERA, szDataDirectory);
+    if( !FT_New_Face( ftl, file, 0, &ftf ) &&
 	!FT_Set_Pixel_Sizes( ftf, 0, 2 * prd->nSize ) ) {
 	fFreetype = TRUE;
 	for( i = 0; i < 10; i++ ) {
@@ -1859,6 +1864,7 @@ extern void RenderChequerLabels( renderdata *prd, unsigned char *puch,
 
 	FT_Done_Face( ftf );
     }
+    free(file);
 #endif
 
     for( i = 0; i < 12; i++ ) {
@@ -2025,9 +2031,11 @@ extern void RenderCubeFaces( renderdata *prd, unsigned char *puch,
     FT_Face ftf;
     FT_Glyph aftg[ 10 ], aftgSmall[ 10 ];
     int fFreetype = FALSE;
+    char *file;
     
-    if( !FT_New_Memory_Face( ftl, auchLuxiRB, cbLuxiRB, 0, &ftf ) &&
-	!FT_Set_Pixel_Sizes( ftf, 0, 5 * prd->nSize ) ) {
+    file = PathSearch(FONT_VERA_SERIF_BOLD, szDataDirectory);
+    if( !FT_New_Face( ftl, file, 0, &ftf ) &&
+	!FT_Set_Pixel_Sizes( ftf, 0, 4.5 * prd->nSize ) ) {
 	fFreetype = TRUE;
 	
 	for( i = 0; i < 10; i++ ) {
@@ -2035,7 +2043,7 @@ extern void RenderCubeFaces( renderdata *prd, unsigned char *puch,
 	    FT_Get_Glyph( ftf->glyph, aftg + i );
 	}
 	
-	FT_Set_Pixel_Sizes( ftf, 0, 21 * prd->nSize / 8 );
+	FT_Set_Pixel_Sizes( ftf, 0, 2 * prd->nSize );
 	
 	for( i = 0; i < 10; i++ ) {
 	    FT_Load_Char( ftf, '0' + i, FT_LOAD_RENDER );
@@ -2044,6 +2052,7 @@ extern void RenderCubeFaces( renderdata *prd, unsigned char *puch,
 	
 	FT_Done_Face( ftf );
     }
+    free(file);
 #endif
     
     for( i = 0; i < 6; i++ ) {
@@ -2057,7 +2066,7 @@ extern void RenderCubeFaces( renderdata *prd, unsigned char *puch,
 #if HAVE_FREETYPE
 	if( fFreetype )
 	    RenderNumber( puch, nStride, aftg, 2 << i, 3 * prd->nSize,
-			  78 * prd->nSize / 16, 0, 0, 0x80 );
+			  4.8 * prd->nSize, 0, 0, 0x80 );
 	else
 #endif
 	    RenderBasicNumber( puch, nStride, 4 * prd->nSize, 2 << i,
@@ -2105,8 +2114,10 @@ extern void RenderResignFaces( renderdata *prd, unsigned char *puch,
     FT_Face ftf;
     FT_Glyph aftg[ 10 ], aftgSmall[ 10 ];
     int fFreetype = FALSE;
+    char *file;
     
-    if( !FT_New_Memory_Face( ftl, auchLuxiRB, cbLuxiRB, 0, &ftf ) &&
+    file = PathSearch(FONT_VERA_SERIF_BOLD, szDataDirectory);
+    if( !FT_New_Face( ftl, file, 0, &ftf ) &&
 	!FT_Set_Pixel_Sizes( ftf, 0, 5 * prd->nSize ) ) {
 	fFreetype = TRUE;
 	
@@ -2124,6 +2135,7 @@ extern void RenderResignFaces( renderdata *prd, unsigned char *puch,
 	
 	FT_Done_Face( ftf );
     }
+    free(file);
 #endif
     
     for( i = 0; i < 3; i++ ) {
