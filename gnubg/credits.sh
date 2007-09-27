@@ -37,6 +37,7 @@ David Montgomery
 Jim Segrave
 Joern Thyssen
 Gary Wong
+Christian Anthon
 EOF
 
 cat > $contributors <<EOF
@@ -71,7 +72,6 @@ EOF
 
 cat > $credit <<EOF
 Misja Alma
-Christian Anthon
 Kazuaki Asai
 Eric Augustine
 Erik Barfoed
@@ -253,8 +253,7 @@ cat > credits.c <<EOF
 #include <glib/gi18n.h>
 #include "credits.h"
 
-char aszCOPYRIGHT[] = N_("Copyright 1999, 2000, 2001, 2002, 2003, 2004 "
-			"by Gary Wong.");
+char aszCOPYRIGHT[] = N_("Copyright, 1999-2004 by Gary Wong, 2004-2007 GNU Backgammon is the legal property of its authors.");
 
 credEntry ceAuthors[] = {
 EOF
