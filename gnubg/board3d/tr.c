@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2008/03/05 19:16:33  Superfly_Jon
+ * Fix 3d png export, replace render to pixmap code
+ *
  * Revision 1.9  1998/01/29  16:56:54  brianp
  * allow trOrtho() and trFrustum() to be called at any time, minor clean-up
  *
@@ -462,12 +465,12 @@ void trRasterPos3f(TRcontext *tr, GLfloat x, GLfloat y, GLfloat z)
          glLoadIdentity();
          glOrtho(0.0, tr->CurrentTileWidth,
                  0.0, tr->CurrentTileHeight, 0.0, 1.0);
-         glRasterPos3f(0.0, 0.0, -winZ);
+         glRasterPos3f(0.0, 0.0, -(GLfloat)winZ);
 
          /* Now use empty bitmap to adjust raster position to (winX,winY) */
          {
             GLubyte bitmap[1] = {0};
-            glBitmap(1, 1, 0.0, 0.0, winX, winY, bitmap);
+            glBitmap(1, 1, 0.0, 0.0, (GLfloat)winX, (GLfloat)winY, bitmap);
          }
 
          /* restore original matrices */
