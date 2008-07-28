@@ -1,0 +1,52 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_INIT([GNU Backgamon NN], [0.16], [bug-gnubg@gnu.org])
+AC_CONFIG_SRCDIR([py/pygnubg.cc])
+AC_CONFIG_HEADER([config.h])
+AM_INIT_AUTOMAKE
+
+AC_DISABLE_SHARED
+AC_PROG_LIBTOOL
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CC
+
+# Checks for header files.
+AC_FUNC_ALLOCA
+AC_HEADER_STDC
+AC_CHECK_HEADERS([fcntl.h memory.h stdlib.h string.h strings.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+AC_C_VOLATILE
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_MEMCMP
+AC_FUNC_MMAP
+AC_FUNC_REALLOC
+AC_FUNC_STRTOD
+AC_CHECK_FUNCS([memmove memset pow sqrt strcasecmp strchr strdup strncasecmp])
+
+AZ_PYTHON_DEFAULT()
+AZ_PYTHON_WITH()
+AZ_PYTHON_VERSION_ENSURE([2.2])
+AZ_PYTHON_CSPEC
+AZ_PYTHON_LSPEC
+if test "x$az_python_cspec" == "x"; then
+	AC_MSG_ERROR("Needs python devel");
+fi
+
+AC_DEFINE(OS_BEAROFF_DB, 1, [osbdb])
+AC_DEFINE(LOADED_BO, 1, [lbo])
+AC_DEFINE(DOICC, 1, [doicc])
+AC_DEFINE(DEBUG, 1, [debug])
+
+AC_CONFIG_FILES([Makefile analyze/Makefile gnubg/Makefile gnubg/lib/Makefile py/Makefile sa/Makefile])
+AC_OUTPUT

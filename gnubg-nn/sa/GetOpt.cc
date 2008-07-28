@@ -15,6 +15,9 @@ You should have received a copy of the GNU Library General Public
 License along with this library; if not, write to the Free Software
 Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #ifdef __GNUG__
 #pragma implementation

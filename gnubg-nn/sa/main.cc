@@ -143,6 +143,9 @@ Each letter stands for 4 bits (A == 0x0, F == 0xf), and concatenated they form
 the 80 bit GNUbg position ID.
 
 */
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <cstdio>
 #include <iostream>
