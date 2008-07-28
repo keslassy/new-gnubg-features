@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([GNU Backgamon NN], [0.16], [bug-gnubg@gnu.org])
+AC_INIT([gnubg-nn], [0.16], [bug-gnubg@gnu.org])
 AC_CONFIG_SRCDIR([py/pygnubg.cc])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
@@ -48,5 +48,5 @@ AC_DEFINE(LOADED_BO, 1, [lbo])
 AC_DEFINE(DOICC, 1, [doicc])
 AC_DEFINE(DEBUG, 1, [debug])
 
-AC_CONFIG_FILES([Makefile analyze/Makefile gnubg/Makefile gnubg/lib/Makefile py/Makefile sa/Makefile])
+AC_CONFIG_FILES([Makefile analyze/Makefile gnubg/Makefile gnubg/lib/Makefile py/Makefile sa/Makefile doc/Makefile scripts/Makefile m4/Makefile])
 AC_OUTPUT

@@ -2,13 +2,13 @@ INCLUDES=-I$(srcdir)/../analyze \
          -I$(srcdir)/../gnubg \
 	 @PYTHON_CSPEC@
 
-pygnubg_SOURCES = analyze.h bgdefs.h bm.h defs.h equities.h misc.h player.h br.h eval.h inputs.h mt19937int.h osr.h positionid.h pygnubg.h pynets.h pytrainer.h raceinfo.h stdutil.h pygnubg.cc pynets.cc pytrainer.cc raceinfo.cc
+pygnubg_SOURCES = ../analyze/analyze.h ../analyze/bgdefs.h ../analyze/bm.h ../analyze/defs.h ../analyze/equities.h ../analyze/misc.h ../analyze/player.h ../gnubg/br.h ../gnubg/eval.h ../gnubg/inputs.h ../gnubg/mt19937int.h ../gnubg/osr.h ../gnubg/positionid.h pygnubg.h pynets.h pytrainer.h raceinfo.h stdutil.h pygnubg.cc pynets.cc pytrainer.cc raceinfo.cc
 pygnubg_LDADD =@PYTHON_LSPEC@ \
 	       -L$(srcdir)/../analyze \
 	       -L$(srcdir)/../gnubg \
 	       -L$(srcdir)/../gnubg/lib \
-	       $(srcdir)/../analyze/libanalyze.la \
-	       $(srcdir)/../gnubg/libgnubg.la \
-	       $(srcdir)/../gnubg/lib/libneuralnet.la
+	       ../analyze/libanalyze.la \
+	       ../gnubg/libgnubg.la \
+	       ../gnubg/lib/libneuralnet.la
 bin_PROGRAMS = pygnubg
 #SYSLIBS= -ldl -lpthread -lutil
