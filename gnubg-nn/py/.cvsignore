@@ -3,3 +3,5 @@
 pygnubg
 *.pyc
 
+Makefile
+Makefile.in

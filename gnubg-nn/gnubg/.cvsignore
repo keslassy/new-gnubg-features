@@ -7,3 +7,5 @@ makegm
 .deps
 *.lo
 *.la
+Makefile
+Makefile.in

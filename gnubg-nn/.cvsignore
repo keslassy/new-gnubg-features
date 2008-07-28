@@ -16,4 +16,5 @@ libtool
 ltmain.sh
 missing
 stamp-h1
-
+Makefile
+Makefile.in
