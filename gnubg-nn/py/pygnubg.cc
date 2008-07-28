@@ -17,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <iostream>
 
@@ -668,9 +671,9 @@ gnubg_doubleroll(PyObject*, PyObject* const args, PyObject* keywds)
 
   AnalyzeBoard board;
 
-  static char* kwlist[] = {"pos", "n", "v", "s", "i", "p", 0};
+  static const char* kwlist[] = {"pos", "n", "v", "s", "i", "p", 0};
   
-  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&|iiciO", kwlist, 
+  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&|iiciO", (char**)kwlist, 
 				   &anyAnalyzeBoard, &board,
 				   &nPlies, &nPliesVerify, &side,
 				   &verboseInfo, &p)) {
@@ -752,9 +755,9 @@ gnubg_rollout(PyObject*, PyObject* const args, PyObject* keywds)
   
   AnalyzeBoard board;
 
-  static char* kwlist[] = {"pos", "n", "np",  "level", "nt", "std", 0};
+  static const char* kwlist[] = {"pos", "n", "np",  "level", "nt", "std", 0};
   
-  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&|iiiii", kwlist, 
+  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&|iiiii", (char**)kwlist, 
 				   &anyAnalyzeBoard, &board,
 				   &cGames, &nPlies, &level,
 				   &nTruncate, &wantSts)) {
@@ -795,9 +798,9 @@ gnubg_cubefullRollout(PyObject*, PyObject* const args, PyObject* keywds)
   uint nPlies = 0;
   char side = 0;
   
-  static char* kwlist[] = {"pos", "ngames", "side", "ply", 0};
+  static const char* kwlist[] = {"pos", "ngames", "side", "ply", 0};
   
-  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&|ici", kwlist, 
+  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&|ici", (char**)kwlist, 
 				   &anyAnalyzeBoard, &board,
 				   &nGames, &side, &nPlies)) {
     return 0;
@@ -844,10 +847,10 @@ gnubg_bestmove(PyObject*, PyObject* const args, PyObject* keywds)
   Board board;
   int dice1, dice2;
   
-  static char* kwlist[] = {"pos", "dice1", "dice2", "n", "s", "b", "r",
+  static const char* kwlist[] = {"pos", "dice1", "dice2", "n", "s", "b", "r",
 			   "list", "reduced", 0};
   
-  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&ii|iciiii", kwlist, 
+  if( !PyArg_ParseTupleAndKeywords(args, keywds, "O&ii|iciiii", (char**)kwlist, 
 				   &anyBoard, &board, &dice1, &dice2,
 				   &nPlies, &side,
 				   &moveBoard, &resignInfo, &list, &reduced)) {

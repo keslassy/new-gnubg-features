@@ -1,3 +1,6 @@
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <stdio.h>
 /*
     mec - match equity calculator for backgammon. calculate equity table

@@ -21,6 +21,9 @@
 
 /* Generate bearoff database as C code to be compiled, with access methods. */
 /* Seperate into two files, which compile faster then one big file          */
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <stdlib.h>
 

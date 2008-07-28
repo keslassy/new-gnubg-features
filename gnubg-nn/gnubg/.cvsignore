@@ -3,3 +3,7 @@ br1.cc
 br2.cc
 makebear
 makegm
+.libs
+.deps
+*.lo
+*.la

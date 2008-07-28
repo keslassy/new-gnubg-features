@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 #if defined( __GNUG__ )
 #pragma implementation
 #endif
@@ -224,6 +226,7 @@ Analyze::init(const char* netFile, bool const shortCuts)
     );
 
   if( ! version ) {
+          cerr << "Failed to initialise net:" << initalNetName.c_str() << endl;
     return 0;
   }
 

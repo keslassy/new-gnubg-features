@@ -21,6 +21,9 @@
  *
  */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -700,7 +703,7 @@ eggPositionKey(int anBoard[2][26], unsigned char auchKey[10])
 
 static emovelist moves[MAX_MOVES];
 
-static move amMoves[MAX_MOVES];
+move amMoves[MAX_MOVES];
 
 int
 eGenerateMoves(movelist* pml, CONST int anBoard[2][25], int n0, int n1)

@@ -20,6 +20,9 @@
  *
  * $Id$
  */
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #if defined( OS_BEAROFF_DB )
 
