@@ -14,6 +14,8 @@ PURPOSE.  See the GNU Library General Public License for more details.
 You should have received a copy of the GNU Library General Public
 License along with this library; if not, write to the Free Software
 Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
+$Id$
 */
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -34,7 +36,7 @@ char *alloca ();
 #endif
 
 
-#if defined(__linux) || defined(powerpc) || defined(WIN32)
+#if defined(__linux) || defined(powerpc) || defined(WIN32) || defined(__FreeBSD__)
 #include <string.h>
 #else
 #include <strings.h>
