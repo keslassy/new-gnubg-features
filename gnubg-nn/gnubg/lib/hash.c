@@ -17,6 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * $Id$
  */
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -325,7 +326,7 @@ CacheCreate(cache* pc, unsigned int s)
 
   if( s == 0 ) {
     pc->m = 0;
-    return;
+    return 0;
   }
 
   if( s < 2 ) {
