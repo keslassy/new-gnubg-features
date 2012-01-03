@@ -16,6 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * $Id$
  */
 
 #if HAVE_CONFIG_H
@@ -722,7 +723,10 @@ SanityCheck(CONST int anBoard[2][25], float arOutput[] )
     /* Player is out of home board; no backgammons possible */
     arOutput[ OUTPUT_LOSEBACKGAMMON ] = 0.0;
 
-  {                                 assert( arOutput[ OUTPUT_WIN ] <= 1.0 ); }
+  if( arOutput[ OUTPUT_WIN ] < 0.0f )
+    arOutput[ OUTPUT_WIN ] = 0.0f;
+  else if( arOutput[ OUTPUT_WIN ] > 1.0f )
+    arOutput[ OUTPUT_WIN ] = 1.0f;
 
   if( arOutput[ OUTPUT_WINGAMMON ] > arOutput[ OUTPUT_WIN ] ) {
     arOutput[ OUTPUT_WINGAMMON ] = arOutput[ OUTPUT_WIN ];
