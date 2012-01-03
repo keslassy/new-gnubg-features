@@ -67,8 +67,12 @@ data = readData(dataFileName)
 
 nPos = len(data)
 
+# Should training ignore backgammons?
 ignoreBGs = ignoreBG or targetClass == gnubg.c_race
 
+# Third argument is true if you want to train the small pruning nets.
+# iTrain is a list of input positions to train. Part of my experiments (JH)
+#
 trainer = gnubg.trainer(data, ignoreBGs, 0, iTrain)
   
 del data
