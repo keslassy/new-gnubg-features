@@ -851,7 +851,7 @@ pubeval1(int race, int pos[])
 #include <math.h>
 
 static float
-pubEvalVal(int race, int b[2][26])
+pubEvalVale(int race, int b[2][26])
 {
   int anPubeval[28], j;
 
@@ -889,6 +889,7 @@ pubEvalVal(int race, int b[2][26])
   }
 }
 
+// probably bug, may need to reverse sides
 void
 getPBMove(CONST int anBoard[2][25], int race, int bestMove[2][25], int n0, int n1)
 {
@@ -919,7 +920,7 @@ getPBMove(CONST int anBoard[2][25], int race, int bestMove[2][25], int n0, int n
       play_move(eb /*, 1*/, m);
 
       {
-	float v = pubEvalVal(race, eb);
+	float v = pubEvalVale(race, eb);
 	if( v > best ) {
 	  best = v;
 	  iBest = i;

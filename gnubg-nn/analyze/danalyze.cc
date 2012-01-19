@@ -24,6 +24,8 @@
 #include <iostream>
 using std::cout;
 using std::endl;
+
+#include <cstdio>
 #endif
 #include <map>
 using std::map;

@@ -226,7 +226,7 @@ Analyze::init(const char* netFile, bool const shortCuts)
     );
 
   if( ! version ) {
-          cerr << "Failed to initialise net:" << initalNetName.c_str() << endl;
+    cerr << "Failed to initialise net:" << initalNetName.c_str() << endl;
     return 0;
   }
 

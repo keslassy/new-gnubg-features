@@ -484,22 +484,22 @@ gnubg_moves(PyObject*, PyObject* const args)
     if( m ) {
       uint n = 0;
       for( /**/; n < 8; n += 2) {
-	if( mv.anMove[n] < 0 ) {
-	  break;
-	}
+				if( mv.anMove[n] < 0 ) {
+					break;
+				}
       }
       
       PyObject* moveTuple = PyTuple_New(n/2);
       
       for(uint j = 0; j < n; j += 2) {
-	int const from = mv.anMove[j]+1;
-	int const to = (mv.anMove[j+1] >= 0) ? mv.anMove[j+1]+1 : 0;
+				int const from = mv.anMove[j]+1;
+				int const to = (mv.anMove[j+1] >= 0) ? mv.anMove[j+1]+1 : 0;
 
-	PyObject* const s = PyTuple_New(2);
-	PyTuple_SET_ITEM(s, 0, PyInt_FromLong(from));
-	PyTuple_SET_ITEM(s, 1, PyInt_FromLong(to));
+				PyObject* const s = PyTuple_New(2);
+				PyTuple_SET_ITEM(s, 0, PyInt_FromLong(from));
+				PyTuple_SET_ITEM(s, 1, PyInt_FromLong(to));
 
-	PyTuple_SET_ITEM(moveTuple, j/2, s);
+				PyTuple_SET_ITEM(moveTuple, j/2, s);
       }
       
       PyObject* const t = PyTuple_New(2);
@@ -535,8 +535,8 @@ gnubg_probs(PyObject*, PyObject* const args)
     case PLY_OSR:
     {
       if( ! isRace(board) ) {
-	PyErr_SetString(PyExc_RuntimeError, "Not a race position");
-	return 0;
+				PyErr_SetString(PyExc_RuntimeError, "Not a race position");
+				return 0;
       }
 
       raceProbs(board, p, nr);
@@ -641,6 +641,66 @@ motif_probs(PyObject*, PyObject* const args)
   return tuple;
 }
 #endif
+
+static PyObject*
+gnubg_pubevalscore(PyObject*, PyObject* const args)
+{
+  Board board;
+  
+  if( !PyArg_ParseTuple(args, "O&", &anyBoard, &board) ) {
+		return 0;
+  }
+
+  int const fRace = ClassifyPosition( board ) <= CLASS_RACE;
+	float const score = pubEvalVal(fRace, board);
+
+  return PyFloat_FromDouble(score);
+}
+
+static PyObject*
+gnubg_pubbestmove(PyObject*, PyObject* const args)
+{
+  Board board;
+  int dice1, dice2;
+  
+  if( !PyArg_ParseTuple(args, "O&ii",
+												&anyBoard, &board, &dice1, &dice2) ) {
+    return 0;
+  }
+
+  if( dice1 < 0 || dice1 > 6 || dice2 < 0 || dice2 > 6 ) {
+    PyErr_SetString(PyExc_ValueError, "invalid dice");
+    return 0;
+  }
+
+  int move[8];
+  int n = FindPubevalMove(dice1, dice2, board, move);
+
+  PyObject* moveTuple = PyTuple_New(n/2);
+  
+  for(int j = 0; j < n/2; ++j) {
+    int const k = 2*j;
+    int const from = (move[k] >= 0) ? move[k]+1 : 0;
+    int const to = (move[k+1] >= 0) ? move[k+1]+1 : 0;
+
+    PyObject* const s = PyTuple_New(2);
+    PyTuple_SET_ITEM(s, 0, PyInt_FromLong(from));
+    PyTuple_SET_ITEM(s, 1, PyInt_FromLong(to));
+
+    PyTuple_SET_ITEM(moveTuple, j, s);
+  }
+  
+	SwapSides(board);
+
+	PyObject* s = PyString_FromString(boardString(board));
+
+	PyObject* result = PyTuple_New(2);
+
+  PyTuple_SET_ITEM(result, 0, moveTuple);
+  PyTuple_SET_ITEM(result, 1, s);
+  
+  return result;  
+}
 
 extern float centeredLDweight, ownedLDweight;
 extern bool useRaceMagic;
@@ -951,28 +1011,28 @@ gnubg_bestmove(PyObject*, PyObject* const args, PyObject* keywds)
       PyTuple_SET_ITEM(s, 0, PyString_FromString(a));
 
       {
-	int* move = ri.move;
-	int n = 0;
-	for(/**/; n < 4; ++n) {
-	  if( move[2*n] < 0 ) {
-	    break;
-	  }
-	}
-	PyObject* m = PyTuple_New(2*n);
-	for(int j = 0; j < n; ++j) {
-	  int const k = 2*j;
-	  int const from = (move[k] >= 0) ? move[k]+1 : 0;
-	  int const to = (move[k+1] >= 0) ? move[k+1]+1 : 0;
-	  PyTuple_SET_ITEM(m, k, PyInt_FromLong(from));
-	  PyTuple_SET_ITEM(m, k+1, PyInt_FromLong(to));
-	}
-	PyTuple_SET_ITEM(s, 1, m);
+				int* move = ri.move;
+				int n = 0;
+				for(/**/; n < 4; ++n) {
+					if( move[2*n] < 0 ) {
+						break;
+					}
+				}
+				PyObject* m = PyTuple_New(2*n);
+				for(int j = 0; j < n; ++j) {
+					int const k = 2*j;
+					int const from = (move[k] >= 0) ? move[k]+1 : 0;
+					int const to = (move[k+1] >= 0) ? move[k+1]+1 : 0;
+					PyTuple_SET_ITEM(m, k, PyInt_FromLong(from));
+					PyTuple_SET_ITEM(m, k+1, PyInt_FromLong(to));
+				}
+				PyTuple_SET_ITEM(s, 1, m);
       }
       
       PyObject* p = PyTuple_New(5);
   
       for(uint k = 0; k < 5; ++k) {
-	PyTuple_SET_ITEM(p, k, PyFloat_FromDouble(ri.probs[k]));
+				PyTuple_SET_ITEM(p, k, PyFloat_FromDouble(ri.probs[k]));
       }
 
       PyTuple_SET_ITEM(s, 2, p);
@@ -986,8 +1046,7 @@ gnubg_bestmove(PyObject*, PyObject* const args, PyObject* keywds)
     ++tupleIndex;
   }
   
-  return resultTupe;
-  
+  return resultTupe;  
 }
 
 static PyObject*
@@ -1081,7 +1140,13 @@ static PyMethodDef gnubg_methods[] = {
   { "motif_probs", motif_probs,		METH_VARARGS,
    "Evaluate a position using Motif engine."},
 #endif
-  
+
+	{ "pubevalscore", gnubg_pubevalscore, METH_VARARGS,
+	 "PUBEVAL score of position."},
+
+	{ "pubbestmove", gnubg_pubbestmove, METH_VARARGS,
+	 "PUBEVAL best move."},
+	
   {0,		0, 0, 0}		/* sentinel */
 };
 
@@ -1177,24 +1242,24 @@ set_equities(PyObject*, PyObject* const args)
     case 1:
     {
       if( !PyArg_ParseTuple(args, "s", &which) ) {
-	return 0;
+				return 0;
       }
 
       if( strcasecmp("gnur", which) == 0 ) {
-	Equities::set(Equities::gnur);
+				Equities::set(Equities::gnur);
       } else if( strcasecmp("jacobs", which) == 0 ) {
-	Equities::set(Equities::Jacobs);
+				Equities::set(Equities::Jacobs);
       } else if( strcasecmp("woolsey", which) == 0 ) {
-	Equities::set(Equities::WoolseyHeinrich);
+				Equities::set(Equities::WoolseyHeinrich);
       } else if( strcasecmp("snowie", which) == 0 ) {
-	Equities::set(Equities::Snowie);
+				Equities::set(Equities::Snowie);
       } else if( strcasecmp("mec26", which) == 0 ) {
-	Equities::set(Equities::mec26);
+				Equities::set(Equities::mec26);
       } else if( strcasecmp("mec57", which) == 0 ) {
-	Equities::set(Equities::mec57);
+				Equities::set(Equities::mec57);
       } else {
-	PyErr_SetString(PyExc_RuntimeError, "Not a valid equities table name");
-	return 0;
+				PyErr_SetString(PyExc_RuntimeError, "Not a valid equities table name");
+				return 0;
       }
       break;
     }
@@ -1202,12 +1267,12 @@ set_equities(PyObject*, PyObject* const args)
     {
       double w, gr;
       if( !PyArg_ParseTuple(args, "dd", &w, &gr) ) {
-	return 0;
+				return 0;
       }
       
       if( ! (w > 0.0 && w < 1.0 && gr > 0.0 && gr < 1.0) ) {
-	PyErr_SetString(PyExc_ValueError, "Not in [01] range");
-	return 0;
+				PyErr_SetString(PyExc_ValueError, "Not in [01] range");
+				return 0;
       }
       
       Equities::set(w, gr);

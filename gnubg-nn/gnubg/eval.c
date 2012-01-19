@@ -1517,7 +1517,7 @@ static int CompareMoves( const move *pm0, const move *pm1 )
   return pm1->rScore > pm0->rScore ? 1 : -1;
 }
 
-static float
+float
 pubEvalVal(int race, int b[2][25])
 {
   int anPubeval[28], j;
@@ -2854,7 +2854,8 @@ FindPubevalMove(int nDice0, int nDice1, int anBoard[2][25], int anMove[8])
 
     for( i = 0; i < ml.cMoves; i++ ) {
       PositionFromKey( anBoardTemp, ml.amMoves[ i ].auch );
-
+      SwapSides( anBoardTemp );
+      
       ml.amMoves[i].rScore = pubEvalVal(fRace, anBoardTemp);
       
       if( ml.amMoves[ i ].rScore > ml.rBestScore ) {
@@ -2873,7 +2874,7 @@ FindPubevalMove(int nDice0, int nDice1, int anBoard[2][25], int anMove[8])
       anMove[2*i] = bm->anMove[2*i];
       anMove[2*i+1] = bm->anMove[2*i+1];
     }
-    ml.cMaxMoves =  bm->cMoves;
+    ml.cMaxMoves = bm->cMoves;
   }
 
   return ml.cMaxMoves * 2;

@@ -221,6 +221,13 @@ extern int setShortCuts(int use);
 #if defined( PUBEVALFILTER )
 extern int setPubevalShortCuts(unsigned int nMoves); 
 #endif
+
+extern void
+sortPubEval(movelist* pml, int nDice0, int nDice1, CONST int anBoard[2][25]);
+extern float
+pubEvalVal(int race, int b[2][25]);
+
+
 /*  extern void setNetShortCuts(unsigned int nMovesContact, */
 /*  			   unsigned int nMovesRace); */
 extern void setNetShortCuts(unsigned int n);
