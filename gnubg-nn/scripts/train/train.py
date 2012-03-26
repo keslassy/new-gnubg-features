@@ -40,7 +40,7 @@ for o, a in optlist:
   elif o == '-v':
     verbose = 1
   elif o == '-l':
-    alphaLow = a
+    alphaLow = float(a)
   elif o == '-n' :
     doDec = 0
   elif o == '-b' :
