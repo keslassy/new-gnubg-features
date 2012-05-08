@@ -116,7 +116,7 @@ PositionBearoff( int CONST anBoard[], int CONST n )
 
   fBits = 1 << j;
     
-  for( i = 0; i < n; i++ ) {
+  for( i = 0; i < n - 1; i++ ) {
     j -= anBoard[ i ] + 1;
     fBits |= ( 1 << j );
   }
