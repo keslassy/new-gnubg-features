@@ -718,7 +718,7 @@ main(int argc, char* argv[])
 	    cerr << "Unknown option " << option << endl;
 	    exit(1);
 	  }
-	  *out << option << " "  << value;
+	  *out << option << " "  << value << " ";
 	}
 
 	// set to new values if changed
@@ -822,7 +822,8 @@ main(int argc, char* argv[])
 	  }
 
 	  Analyze::srandom(rseed);
-	  analyzer.rollout(btmp, false, p, 0, 512, nRollOutGames, k, target);
+	  // analyzer.rollout(btmp, false, p, 0, 512, nRollOutGames, k, target);
+          analyzer.rollout(btmp, false, p, 0, 0, 512, nRollOutGames, k, target);
 
 	  mv.rScore = -Equities::money(p);
 
