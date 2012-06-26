@@ -1052,6 +1052,8 @@ Analyze::rollout(GNUbgBoard const board,
 		 int  const       nSeq,
 		 RolloutEndsAt    endsAt)
 {
+  assert( nGames > 0 );
+  
   if( nSeq >= 0 ) {
     if( nSeq == 0 || diceGen.curNseq() != nGames ) {
       diceGen.startSave(nGames);

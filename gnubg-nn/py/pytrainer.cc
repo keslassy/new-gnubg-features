@@ -17,11 +17,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+#include "Python.h"
+
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-#include "Python.h"
 
 extern "C" {
 #include <positionid.h>

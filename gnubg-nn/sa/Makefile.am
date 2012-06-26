@@ -12,3 +12,5 @@ sagnubg_LDADD =@PYTHON_LSPEC@ \
 	       ../gnubg/libgnubg.la \
 	       ../gnubg/lib/libneuralnet.la
 bin_PROGRAMS = sagnubg
+AM_CFLAGS = $(SSE_CFLAGS)
+AM_CXXFLAGS = $(SSE_CFLAGS)

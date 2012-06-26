@@ -12,3 +12,5 @@ pygnubg_LDADD =@PYTHON_LSPEC@ \
 	       ../gnubg/lib/libneuralnet.la
 bin_PROGRAMS = pygnubg
 #SYSLIBS= -ldl -lpthread -lutil
+AM_CFLAGS = $(SSE_CFLAGS)
+AM_CXXFLAGS = $(SSE_CFLAGS)

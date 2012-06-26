@@ -697,6 +697,7 @@ eggPositionKey(int anBoard[2][26], unsigned char auchKey[10])
   }
 }
 
+#include "eggmove.h"
 #include "eval.h"
 
 #define MAX_MOVES 3060

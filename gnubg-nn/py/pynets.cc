@@ -413,7 +413,29 @@ net_flush(PyObject*, PyObject*)
   Py_INCREF(Py_None);
   return Py_None;
 }
+
+static PyObject*
+net_sse(PyObject*, PyObject* const args)
+{
+  int fuse;
   
+  if( !PyArg_ParseTuple(args, "i", &fuse) ) {
+    return 0;
+  }
+
+  if( !( 0 <= fuse && fuse <= 1) ) {
+    PyErr_SetString(PyExc_RuntimeError, "not bool");
+    return 0;
+  }
+
+  if( ! useSSE(fuse) ) {
+    PyErr_SetString(PyExc_RuntimeError, "failed to set sse");
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
 // init - creates a python object for cuttent
 // current() - gets current
 //  increment count for current var
@@ -457,6 +479,9 @@ static PyMethodDef net_methods[] = {
 
   { "gen_inputs", net_gen_inputs, METH_VARARGS,
     "get generic inputs" },
+
+  {"sse",	net_sse,	METH_VARARGS,
+   "Enable/Disable SSE" },
   
   {0,0,0,0}		/* sentinel */
 };

@@ -76,6 +76,8 @@ NeuralNetTrainS(neuralnet* pnn, float arInput[], float arOutput[],
 extern int NeuralNetResize( neuralnet *pnn, int cInput, int cHidden,
 			    int cOutput );
 
+#include <stdio.h>
+
 extern int NeuralNetLoad( neuralnet *pnn, FILE *pf );
 extern int NeuralNetSave( neuralnet *pnn, FILE *pf );
 

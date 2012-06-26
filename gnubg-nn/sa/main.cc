@@ -90,7 +90,7 @@ equity difference of @eqn{move_i} from best.
 @item c @var{position}
 
 Perform Cube-full Rollout of @var{position} with centered cube and 2 cube
-follwong a Double/Take. Output is
+follwing a Double/Take. Output is
 
 @example
 c @var{position} @eqn{P_nd P_dt} @var{action}
@@ -434,6 +434,7 @@ main(int argc, char* argv[])
   
   srandom(time(0));
 
+  useSSE(1);
   
 #if defined( WIN32 )
 #undef srandom
@@ -822,7 +823,6 @@ main(int argc, char* argv[])
 	  }
 
 	  Analyze::srandom(rseed);
-	  // analyzer.rollout(btmp, false, p, 0, 512, nRollOutGames, k, target);
           analyzer.rollout(btmp, false, p, 0, 0, 512, nRollOutGames, k, target);
 
 	  mv.rScore = -Equities::money(p);

@@ -2002,9 +2002,7 @@ EvaluatePosition(CONST int anBoard[2][25], float arOutput[],
 #endif
 }
 
-extern void
-getPBMove(CONST int anBoard[2][25], int race, int bestMove[2][25],
-	  int n0, int n1);
+#include "eggmove.h"
 
 void
 EvaluatePositionPart(CONST int anBoard[2][25], int nPlies, float arOutput[])

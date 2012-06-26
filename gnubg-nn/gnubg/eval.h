@@ -244,4 +244,6 @@ inputNameByClass(positionclass pc, unsigned int k);
 extern CONST char*
 inputNameByFunc(CONST char* inpFunc, unsigned int k);
 
+#include "lib/sse.h"
+
 #endif

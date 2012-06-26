@@ -17,13 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+
+#include "Python.h"
+
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif
 
 #include <iostream>
-
-#include "Python.h"
 
 #include "stdutil.h"
 
@@ -572,7 +573,7 @@ gnubg_probs(PyObject*, PyObject* const args)
       EvaluatePosition(board, p, 0, 0, 0, 0, 0, 0);
       EvaluatePosition(board, p1, 1, 0, 0, 0, 0, 0);
       for(uint k = 0; k < 5; ++k) {
-	p[k] = (p[k] + p1[k])/2;
+				p[k] = (p[k] + p1[k])/2;
       }
       break;
     }
@@ -580,8 +581,7 @@ gnubg_probs(PyObject*, PyObject* const args)
     {
 #if defined( OS_BEAROFF_DB )
       if( ! EvalOSrace(board, p) ) {
-	PyErr_SetString(PyExc_RuntimeError,
-			"can't eval with OS race dababase");
+				PyErr_SetString(PyExc_RuntimeError, "can't eval with OS race dababase");
 	return 0;
       }
 #else
@@ -662,8 +662,8 @@ gnubg_pubbestmove(PyObject*, PyObject* const args)
 {
   Board board;
   int dice1, dice2;
-  
-  if( !PyArg_ParseTuple(args, "O&ii",
+	
+  if( !PyArg_ParseTuple(args, "O&ii|i",
 												&anyBoard, &board, &dice1, &dice2) ) {
     return 0;
   }
@@ -1141,11 +1141,11 @@ static PyMethodDef gnubg_methods[] = {
    "Evaluate a position using Motif engine."},
 #endif
 
-	{ "pubevalscore", gnubg_pubevalscore, METH_VARARGS,
-	 "PUBEVAL score of position."},
+  { "pubevalscore", gnubg_pubevalscore, METH_VARARGS,
+    "PUBEVAL score of position."},
 
-	{ "pubbestmove", gnubg_pubbestmove, METH_VARARGS,
-	 "PUBEVAL best move."},
+  { "pubbestmove", gnubg_pubbestmove, METH_VARARGS,
+    "PUBEVAL best move."},
 	
   {0,		0, 0, 0}		/* sentinel */
 };
@@ -1246,20 +1246,20 @@ set_equities(PyObject*, PyObject* const args)
       }
 
       if( strcasecmp("gnur", which) == 0 ) {
-				Equities::set(Equities::gnur);
+	Equities::set(Equities::gnur);
       } else if( strcasecmp("jacobs", which) == 0 ) {
-				Equities::set(Equities::Jacobs);
+	Equities::set(Equities::Jacobs);
       } else if( strcasecmp("woolsey", which) == 0 ) {
-				Equities::set(Equities::WoolseyHeinrich);
+	Equities::set(Equities::WoolseyHeinrich);
       } else if( strcasecmp("snowie", which) == 0 ) {
-				Equities::set(Equities::Snowie);
+	Equities::set(Equities::Snowie);
       } else if( strcasecmp("mec26", which) == 0 ) {
-				Equities::set(Equities::mec26);
+	Equities::set(Equities::mec26);
       } else if( strcasecmp("mec57", which) == 0 ) {
-				Equities::set(Equities::mec57);
+	Equities::set(Equities::mec57);
       } else {
-				PyErr_SetString(PyExc_RuntimeError, "Not a valid equities table name");
-				return 0;
+	PyErr_SetString(PyExc_RuntimeError, "Not a valid equities table name");
+	return 0;
       }
       break;
     }
@@ -1267,12 +1267,12 @@ set_equities(PyObject*, PyObject* const args)
     {
       double w, gr;
       if( !PyArg_ParseTuple(args, "dd", &w, &gr) ) {
-				return 0;
+	return 0;
       }
       
       if( ! (w > 0.0 && w < 1.0 && gr > 0.0 && gr < 1.0) ) {
-				PyErr_SetString(PyExc_ValueError, "Not in [01] range");
-				return 0;
+	PyErr_SetString(PyExc_ValueError, "Not in [01] range");
+	return 0;
       }
       
       Equities::set(w, gr);
@@ -1347,7 +1347,7 @@ set_cube(PyObject*, PyObject* const args)
   Py_INCREF(Py_None);
   return Py_None;
 }
-
+  
 
 static PyMethodDef gnubg_set_methods[] = {
   {"seed",	set_seed,	METH_VARARGS,
@@ -1504,6 +1504,9 @@ main(int ac, char** av)
   /* Do some application specific code */
 
   // load all gnubg modules
+
+  // By default, try using SSE 
+  useSSE(1);
   
   PyRun_SimpleString("import gnubg, gnubg_setup, gnubg_equities, bgnet\n"
 		     "gnubg.set = gnubg_setup\n"
