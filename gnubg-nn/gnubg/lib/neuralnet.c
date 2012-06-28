@@ -694,14 +694,12 @@ extern int
 NeuralNetEvaluate(neuralnet* pnn, float arInput[], float arOutput[],
 		  NNEvalType t)
 {
-  if( fuseSSE ) {
-    ++ pnn->nEvals;    
+  ++ pnn->nEvals;    
+  if( fuseSSE && (pnn->cInput & 0x3 == 0) && (pnn->cHidden & 0x3 == 0) ) {
     NeuralNetEvaluateSSE(pnn, arInput, arOutput);
   } else {
     Intermediate ar[ pnn->cHidden ];
 
-    ++ pnn->nEvals;
-  
     switch( t ) {
       case NNEVAL_NONE:
       {
