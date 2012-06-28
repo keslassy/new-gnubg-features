@@ -562,8 +562,8 @@ NeuralNetDestroy(neuralnet* pnn)
   sse_free( pnn->arHiddenThreshold ); pnn->arHiddenThreshold = 0;
   sse_free( pnn->arOutputThreshold ); pnn->arOutputThreshold = 0;
 
-  sse_free(pnn->savedBase); pnn->savedBase = 0;
-  sse_free(pnn->savedIBase); pnn->savedIBase = 0;
+  free(pnn->savedBase); pnn->savedBase = 0;
+  free(pnn->savedIBase); pnn->savedIBase = 0;
   
 /*    free( pnn->arHiddenWeightt ); */
     
