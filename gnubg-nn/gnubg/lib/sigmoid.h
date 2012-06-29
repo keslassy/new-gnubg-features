@@ -2,7 +2,7 @@
 #define _SIGMOID_H_
 
 /* e[k] = exp(k/10) / 10 */
-static float e[100] = {
+static const float e[100] = {
 0.10000000000000001, 
 0.11051709180756478, 
 0.12214027581601698, 
@@ -105,6 +105,7 @@ static float e[100] = {
 1993.0370438230298, 
 };
 
+#define maxSigmoid  1993.0370438230298 * 10
 
 static inline float
 sigmoid(float const xin)
@@ -125,7 +126,7 @@ sigmoid(float const xin)
       x1 = 485165195.40979028; /* exp(20) */
     }
 #else
-    x1 = 1993.0370438230298 * 10;
+    x1 = maxSigmoid;
 #endif
   }
   

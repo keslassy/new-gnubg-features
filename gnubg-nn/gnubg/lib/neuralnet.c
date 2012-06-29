@@ -695,7 +695,7 @@ NeuralNetEvaluate(neuralnet* pnn, float arInput[], float arOutput[],
 		  NNEvalType t)
 {
   ++ pnn->nEvals;    
-  if( fuseSSE && (pnn->cInput & 0x3 == 0) && (pnn->cHidden & 0x3 == 0) ) {
+  if( fuseSSE ) {
     NeuralNetEvaluateSSE(pnn, arInput, arOutput);
   } else {
     Intermediate ar[ pnn->cHidden ];

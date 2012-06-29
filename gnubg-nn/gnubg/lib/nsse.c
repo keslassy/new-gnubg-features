@@ -176,6 +176,11 @@ static const union {
 } tens = {{10.0f, 10.0f, 10.0f, 10.0f}};
 
 static const union {
+	float f[4];
+	__m128 ps;
+} mmm ={{maxSigmoid,maxSigmoid,maxSigmoid,maxSigmoid}};
+
+static const union {
 	int32_t i32[4];
 	__m128 ps;
 } abs_mask = {{0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF}};
@@ -188,9 +193,9 @@ static inline __m128 sigmoid_positive_ps( __m128 xin )
   } i;
   __m128 ex;
   float *ex_elem = (float*) &ex;
-  __m128 x1 = _mm_min_ps( xin, tens.ps );
+  __m128 mask10 = _mm_cmplt_ps( xin, tens.ps );
 
-  x1 = _mm_mul_ps( x1, tens.ps );
+  __m128 x1 = _mm_mul_ps( xin, tens.ps );
   i.i  = _mm_cvttps_epi32( x1 );
   ex_elem[0] = e[i.i32[0]];
   ex_elem[1] = e[i.i32[1]];
@@ -199,6 +204,9 @@ static inline __m128 sigmoid_positive_ps( __m128 xin )
   x1 = _mm_sub_ps( x1, _mm_cvtepi32_ps( i.i ) ); 
   x1 = _mm_add_ps( x1, tens.ps );
   x1 = _mm_mul_ps( x1, ex );
+
+  x1 = _mm_or_ps( _mm_and_ps( mask10, x1 ) , _mm_andnot_ps ( mask10 , mmm.ps));
+  
   x1 = _mm_add_ps( x1, ones.ps ); 
 #ifdef __FAST_MATH__
   return _mm_rcp_ps( x1 );
@@ -211,77 +219,105 @@ static inline __m128
 sigmoid_ps( __m128 xin )
 {	
   __m128 mask = _mm_cmplt_ps( xin, _mm_setzero_ps() );
-  __m128 c; 
   xin = _mm_and_ps (xin , abs_mask.ps ); /* Abs. value by clearing signbit */
-  c = sigmoid_positive_ps(xin);
-  return _mm_or_ps( _mm_and_ps(  mask, c ) , _mm_andnot_ps ( mask , _mm_sub_ps( ones.ps, c )));
+  __m128 c = sigmoid_positive_ps(xin);
+  return _mm_or_ps( _mm_and_ps( mask, c ) , _mm_andnot_ps ( mask , _mm_sub_ps( ones.ps, c )));
 }
 
 #endif  // USE_SSE2
 
 static void
-EvaluateSSE( const neuralnet *pnn, const float arInput[], float ar[],
-                        float arOutput[], float *saveAr ) {
+EvaluateSSE(const neuralnet *pnn, const float arInput[], float ar[], float arOutput[])
+{
+  const unsigned int cHidden = pnn->cHidden;
+  unsigned int i, j;
+  float* prWeight = pnn->arHiddenWeight;
+  __m128 vec0, vec1, vec3, sum;
 
-    const unsigned int cHidden = pnn->cHidden;
-    unsigned int i, j;
-    float *prWeight;
-#if USE_SSE2
-    float *par;
-#endif
-    __m128 vec0, vec1, vec3, scalevec, sum;
-    
-    /* Calculate activity at hidden nodes */
-    memcpy(ar, pnn->arHiddenThreshold, cHidden * sizeof(float));
+  int const misAligned = (pnn->cHidden & 0x3);
+  // two extra simple checks for aligned case
+  
+  /* Calculate activity at hidden nodes */
+  memcpy(ar, pnn->arHiddenThreshold, cHidden * sizeof(float));
 
-    prWeight = pnn->arHiddenWeight;
-    
-    for (i = 0; i < pnn->cInput; i++)
-      {
-	float const ari = arInput[i];
+  if( misAligned ) {
+    SSE_ALIGN(float w[4]);
+    for (i = 0; i < pnn->cInput; i++) {
+      float const ari = arInput[i];
 
-	if (!ari)
-	  prWeight += cHidden;
-	else
-	  {
-	    float *pr = ar;
-	    if (ari == 1.0f)
-	      {
-		for( j = (cHidden >> 2); j; j--, pr += 4, prWeight += 4 )
-		  {
-		    vec0 = _mm_load_ps( pr );  
-		    vec1 = _mm_load_ps( prWeight );  
-		    sum =  _mm_add_ps(vec0, vec1);
-		    _mm_store_ps(pr, sum);
-		  }
-	      }
-	    else
-	      {
-                scalevec = _mm_set1_ps( ari );
-		for( j = (cHidden >> 2); j; j--, pr += 4, prWeight += 4 )
-		  {
-		    vec0 = _mm_load_ps( pr );  
-		    vec1 = _mm_load_ps( prWeight ); 
-		    vec3 = _mm_mul_ps( vec1, scalevec );
-		    sum =  _mm_add_ps( vec0, vec3 );
-		    _mm_store_ps ( pr, sum );
-		  }
-	      }
+      if (!ari) {
+	prWeight += cHidden;
+      } else {
+	float *pr = ar;
+	if (ari == 1.0f) {
+	  for( j = (cHidden >> 2); j; j--, pr += 4, prWeight += 4 ) {
+	    vec0 = _mm_load_ps( pr );
+	    memcpy(w, prWeight, sizeof(w));
+	    vec1 = _mm_load_ps( w );  
+	    sum =  _mm_add_ps(vec0, vec1);
+	    _mm_store_ps(pr, sum);
 	  }
+	  for( j = misAligned; j; j-- ) {
+	    *pr++ += *prWeight++;
+	  }
+	} else {
+	  __m128 scalevec = _mm_set1_ps( ari );
+	  for( j = (cHidden >> 2); j; j--, pr += 4, prWeight += 4 ) {
+	    vec0 = _mm_load_ps( pr );
+	    memcpy(w, prWeight, sizeof(w));
+	    vec1 = _mm_load_ps( w );  
+	    vec3 = _mm_mul_ps( vec1, scalevec );
+	    sum =  _mm_add_ps( vec0, vec3 );
+	    _mm_store_ps ( pr, sum );
+	  }
+	  for( j = misAligned; j; j-- ) {
+	    *pr++ += *prWeight++ * ari;
+	  }
+	}
       }
+    }
+  } else {
+    for (i = 0; i < pnn->cInput; i++) {
+      float const ari = arInput[i];
 
-    if( saveAr )
-      memcpy( saveAr, ar, cHidden * sizeof( *saveAr));
-    
-//#if USE_SSE2
-#if 0
-    // something is wrong with this code
-    scalevec = _mm_set1_ps(pnn->rBetaHidden);
-    for (par = ar, i = (cHidden >> 2); i; i--, par += 4) {
-      __m128 vec = _mm_load_ps(par);
-      vec = _mm_mul_ps(vec, scalevec);
-      vec = sigmoid_ps(vec);
-      _mm_store_ps(par, vec);
+      if (!ari) {
+	prWeight += cHidden;
+      } else {
+	float *pr = ar;
+	if (ari == 1.0f) {
+	  for( j = (cHidden >> 2); j; j--, pr += 4, prWeight += 4 ) {
+	    vec0 = _mm_load_ps( pr );  
+	    vec1 = _mm_load_ps( prWeight );  
+	    sum =  _mm_add_ps(vec0, vec1);
+	    _mm_store_ps(pr, sum);
+	  }
+	} else {
+	  __m128 scalevec = _mm_set1_ps( ari );
+	  for( j = (cHidden >> 2); j; j--, pr += 4, prWeight += 4 ) {
+	    vec0 = _mm_load_ps( pr );  
+	    vec1 = _mm_load_ps( prWeight ); 
+	    vec3 = _mm_mul_ps( vec1, scalevec );
+	    sum =  _mm_add_ps( vec0, vec3 );
+	    _mm_store_ps ( pr, sum );
+	  }
+	}
+      }
+    }
+  }
+
+#if USE_SSE2
+    {
+      __m128 scalevec = _mm_set1_ps(pnn->rBetaHidden);
+      float *par = ar;
+      for (i = (cHidden >> 2); i; i--, par += 4) {
+	__m128 vec = _mm_load_ps(par);
+	vec = _mm_mul_ps(vec, scalevec);
+	vec = sigmoid_ps(vec);
+	_mm_store_ps(par, vec);
+      }
+      for( i = misAligned; i ; --i, ++par ) {
+	*par = sigmoid(-pnn->rBetaHidden * *par); 
+      }
     }
 #else
     for (i = 0; i < cHidden; i++)
@@ -291,6 +327,35 @@ EvaluateSSE( const neuralnet *pnn, const float arInput[], float ar[],
     /* Calculate activity at output nodes */
     prWeight = pnn->arOutputWeight;
 
+  if( misAligned ) {
+    for( i = 0; i < pnn->cOutput; i++ ) {
+      SSE_ALIGN(float w[4]);
+
+       float r;
+       float *pr = ar;
+       sum = _mm_setzero_ps();
+       for( j = (cHidden >> 2); j ; j--, prWeight += 4, pr += 4 ){
+         vec0 = _mm_load_ps( pr );           /* Four floats into vec0 */
+	 memcpy(w, prWeight, sizeof(w));
+	 vec1 = _mm_load_ps( w );  
+         vec3 = _mm_mul_ps ( vec0, vec1 );   /* Multiply */
+         sum = _mm_add_ps( sum, vec3 );  /* Add */
+       }
+
+       vec0 = _mm_shuffle_ps(sum, sum,_MM_SHUFFLE(2,3,0,1));
+       vec1 = _mm_add_ps(sum, vec0);
+       vec0 = _mm_shuffle_ps(vec1,vec1,_MM_SHUFFLE(1,1,3,3));
+       sum = _mm_add_ps(vec1,vec0);
+       _mm_store_ss(&r, sum); 
+
+       for( j = (pnn->cHidden & 0x3); j; j-- ) {
+	 r += *pr++ * *prWeight++;
+       }
+       
+       arOutput[ i ] = sigmoid( -pnn->rBetaOutput * (r + pnn->arOutputThreshold[ i ]));
+    }
+
+  } else {
     for( i = 0; i < pnn->cOutput; i++ ) {
 
        float r;
@@ -311,21 +376,22 @@ EvaluateSSE( const neuralnet *pnn, const float arInput[], float ar[],
 
        arOutput[ i ] = sigmoid( -pnn->rBetaOutput * (r + pnn->arOutputThreshold[ i ]));
     }
+  }
 }
 
-extern int NeuralNetEvaluateSSE(const neuralnet *pnn, /*lint -e{818}*/ float arInput[],
-				float arOutput[])
+extern int
+NeuralNetEvaluateSSE(const neuralnet *pnn, float arInput[], float arOutput[])
 {
-    SSE_ALIGN(float ar[pnn->cHidden]);
+  SSE_ALIGN(float ar[pnn->cHidden]);
 
 #if DEBUG_SSE
 	/* Not 64bit robust (pointer truncation) - causes strange crash */
-    assert(sse_aligned(ar));
-    assert(sse_aligned(arInput));
+  assert(sse_aligned(ar));
+  assert(sse_aligned(arInput));
 #endif
 
-    EvaluateSSE(pnn, arInput, ar, arOutput, 0);
-    return 0;
+  EvaluateSSE(pnn, arInput, ar, arOutput);
+  return 0;
 }
 
 #else
