@@ -20,6 +20,9 @@ for line in f:
   elif line[0] == 'o' :
     assert lastSeed not in upd,lastSeed
     upd[lastSeed] = line.split(' ')[1:]
+  elif line[0] == '#' :
+    # skip "# ply <n>" lines
+    continue
   else :
     raise line
   
