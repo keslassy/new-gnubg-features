@@ -415,6 +415,22 @@ net_flush(PyObject*, PyObject*)
 }
 
 static PyObject*
+net_cacheResize(PyObject*, PyObject* args)
+{
+  int cSize;
+  
+  if( !PyArg_ParseTuple(args, "i", &cSize) ) {
+    PyErr_SetString(PyExc_ValueError, "args error.");
+    return 0;
+  }
+  
+  EvalCacheResize(cSize);
+  
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject*
 net_sse(PyObject*, PyObject* const args)
 {
   int fuse;
@@ -448,13 +464,15 @@ static PyMethodDef net_methods[] = {
    "net = current() # Get current net."},
   
   {"get",	net_get, METH_VARARGS,
-   "nat = get(file,[,cache-size]) - Get net from 'file'"},
+   "net = get(file,[,cache-size]) - Get net from 'file'"},
   
   {"set",	net_set, METH_VARARGS, "Use 'net'"},
   
   {"save",	net_save, METH_VARARGS, "Save current net to 'file'"},
 
   {"flush",	net_flush, METH_VARARGS, "flush cache"},
+
+  {"cresize",	net_cacheResize, METH_VARARGS, "resize cache"},
   
   {"inputs",    net_inputs, METH_VARARGS,
    "inputs,classOfPosition = inputs(pos) # raw net inputs"},

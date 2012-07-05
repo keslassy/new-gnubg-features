@@ -66,7 +66,7 @@ typedef enum  {
 } NNEvalType;
 
 extern int NeuralNetEvaluate( neuralnet *pnn, float arInput[],
-			      float arOutput[], NNEvalType t);
+			      float arOutput[] /*, NNEvalType t*/);
 extern int NeuralNetTrain( neuralnet *pnn, float arInput[], float arOutput[],
 			   float arDesired[], float rAlpha );
 extern int

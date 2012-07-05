@@ -193,7 +193,7 @@ using std::ifstream;
 using std::ofstream;
 
 namespace {
-const char* const version = "1.92";
+const char* const version = "1.93";
 
 bool
 validBoard(const char s[21])
@@ -272,6 +272,7 @@ static uint const N_RS = 262;
 static uint const N_EP = 263;
 static uint const N_SC = 264;
 static uint const N_OG = 265;
+static uint const N_OSRO = 266;
 
 static const GetOptLongOption
 longOpt[] =
@@ -287,6 +288,7 @@ longOpt[] =
   { "eval-plies",       GetOptLongOption::required_argument,    0,  N_EP } ,
   { "no-shortcuts",     GetOptLongOption::no_argument,          0,  N_SC },
   { "n-osr",            GetOptLongOption::required_argument,    0,  N_OG },
+  { "osr-in-roll",      GetOptLongOption::required_argument,    0,  N_OSRO },
   { "resume",           GetOptLongOption::no_argument,          0,  N_RS } ,
   
   { "verbose",		GetOptLongOption::optional_argument,	0, 'v' } , 
@@ -330,6 +332,7 @@ main(int argc, char* argv[])
   uint evalPlies = 2;
   bool shortCuts = true;
   uint osrGames = 1296;
+  int  osrInRoll = 1;
   
   bool include0Ply = true;
   bool resume = false;
@@ -403,6 +406,16 @@ main(int argc, char* argv[])
 
 	if( osrGames <= 0 ) {
 	  cerr << endl << "non positive osrGames" << endl;
+	  exit(1);
+	}
+	break;
+      }
+      case N_OSRO:
+      {
+	osrInRoll = atoi(opt.optarg);
+
+	if( !( osrInRoll == 0 || osrInRoll == 1) ) {
+	  cerr << endl << "osrInRoll must be either 0 or 1" << endl;
 	  exit(1);
 	}
 	break;
@@ -556,6 +569,8 @@ main(int argc, char* argv[])
 		setShortCuts(shortCuts);
 	      } else if( option == "osrGames" ) {
 		osrGames = atoi(value.c_str());
+	      } else if( option == "osrInRoll" ) {
+		osrInRoll = atoi(value.c_str());
 	      } else {
 		cerr << "Unknown option " << option << endl;
 		exit(1);
@@ -625,6 +640,7 @@ main(int argc, char* argv[])
        << " evalPlies "      << evalPlies
        << " shortCuts "      << shortCuts
        << " osrGames "       << osrGames
+       << " osrInRoll "      << osrInRoll
        << endl;
   
 
@@ -633,7 +649,7 @@ main(int argc, char* argv[])
   ad.rollOutProbs = false;
   
   // 
-  Analyze::useOSRinRollouts = true;
+  Analyze::useOSRinRollouts = osrInRoll;
   
   char b[21];
   uint d[2];
@@ -786,8 +802,7 @@ main(int argc, char* argv[])
 	  if( verbose ) {
 	    cerr << "Evaluating 2ply " << posFromAuch(mv.auch);
 	  }
-	  
-	  
+	  	  
 	  EvaluatePosition(btmp, p, 2, 0, 0, 0, 0, 0);
 
 	  mv.rScore = -Equities::money(p);
@@ -809,8 +824,6 @@ main(int argc, char* argv[])
 	} else {
 	  ml.cMoves = min(ml.cMoves, int(rolloutLimit));
 	}
-
-
 	
 	for(uint k = 0; k < ml.cMoves; ++k) {
 	  move& mv = ml.amMoves[k];

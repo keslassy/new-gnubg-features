@@ -67,7 +67,7 @@ bearoffcontext* savedosDB = 0;
 /* From pub_eval.c: */
 extern float pubeval( int race, int pos[] );
 
-typedef void ( *classevalfunc )(CONST int anBoard[2][25], float arOutput[], int);
+typedef void ( *classevalfunc )(CONST int anBoard[2][25], float arOutput[] /*, int*/);
 typedef void ( *classdumpfunc )(int anBoard[2][25], char *szOutput );
 
 #define MINPPERPOINT 4
@@ -86,11 +86,17 @@ typedef CONST int (*ConstBoard)[25];
 typedef struct EvalNets_ {
   CONST char*   	name;
   neuralnet* 		net;
+  // prune net - a fast net used to prune moves for 0ply evaluation
   neuralnet* 		pnet;
+  // cache for main net
   cache*		ncache;
+  // cache for prune net
   cache*		pcache;
+  // Prune leaves 'nMoves' moves
   unsigned int		nMoves;
+  // Do not prune if number of moves is less than 'minNmoves'
   int           	minNmoves;
+  // Function which computes the net inputs from the board
   CONST NetInputFuncs*	netInputs;
 } EvalNets;
 
@@ -301,7 +307,7 @@ setNets(EvalNets* evalNets)
   }
 }
 
-/* Version of just loaded net */
+/* Version of last loaded net */
 static char szFileVersion[16];
 
 extern EvalNets*
@@ -860,13 +866,13 @@ ClassifyPosition(CONST int anBoard[2][25])
 }
 
 static void
-EvalBearoff1( CONST int anBoard[2][25], float arOutput[], int ignore);
+EvalBearoff1( CONST int anBoard[2][25], float arOutput[] /*, int ignore*/);
 
 static void
-EvalBearoff2( CONST int anBoard[2][25], float arOutput[], int ignore )
+EvalBearoff2( CONST int anBoard[2][25], float arOutput[] /*, int ignore */ )
 {
   if( nets[CLASS_BEAROFF1].net ) {
-    EvalBearoff1(anBoard, arOutput, ignore);
+    EvalBearoff1(anBoard, arOutput /*, ignore*/);
     return;
   }
   
@@ -1039,8 +1045,8 @@ EvalBearoffOneSided(CONST int anBoard[2][25], float arOutput[])
 
 
 static void
-EvalBearoff1(CONST int anBoard[2][25], float arOutput[],
-	     int ignore __attribute__((unused)))
+EvalBearoff1(CONST int anBoard[2][25], float arOutput[]
+	     /*, int ignore __attribute__((unused))*/)
 {
   const EvalNets* n = &nets[CLASS_BEAROFF1];
   if( n->net ) {
@@ -1050,7 +1056,7 @@ EvalBearoff1(CONST int anBoard[2][25], float arOutput[],
     n->netInputs->func(anBoard, arInput);
     // assert( n->netInputs->func  == CalculateBearoffInputs );
 
-    NeuralNetEvaluate(n->net, arInput, arOutput, NNEVAL_NONE);
+    NeuralNetEvaluate(n->net, arInput, arOutput/*, NNEVAL_NONE*/);
 
     SanityCheck(anBoard, arOutput);
   } else {
@@ -1082,12 +1088,14 @@ raceBGprob(CONST int anBoard[2][25], unsigned int side)
   for(i = 0; i < 6; ++i) {
     totMenHome += anBoard[side][i];
   }
-      
+  // its a race
+  {                 assert( anBoard[1-side][23] == 0 && anBoard[1-side][24] == 0); } 
   for(i = 22; i >= 18; --i) {
     totPipsOp += anBoard[1-side][i] * (i-17);
   }
 
-  if(! ((totMenHome + 3) / 4 - (side == 1 ? 1 : 0) <= (totPipsOp + 2) / 3) ) {
+  if( totPipsOp == 0 ||
+      ! ((totMenHome + 3) / 4 - (side == 1 ? 1 : 0) <= (totPipsOp + 2) / 3) ) {
     return 0.0;
   }
 
@@ -1134,9 +1142,9 @@ raceBGprob(CONST int anBoard[2][25], unsigned int side)
       
       if( PositionBearoff( dummy[ 0 ] ) > 923 ||
 	  PositionBearoff( dummy[ 1 ] ) > 923 ) {
-	EvalBearoff1((ConstBoard)dummy, p, -1);
+	EvalBearoff1((ConstBoard)dummy, p /*, -1*/);
       } else {
-	EvalBearoff2((ConstBoard)dummy, p, -1);
+	EvalBearoff2((ConstBoard)dummy, p /*, -1*/);
       }
 
       return side == 1 ? p[0] : 1 - p[0];
@@ -1290,12 +1298,12 @@ EvalOSrace(CONST int anBoard[2][25], float arOutput[])
 #endif
 
 static void
-EvalClass(positionclass pc, CONST int anBoard[2][25], float arOutput[], int nm)
+EvalClass(positionclass pc, CONST int anBoard[2][25], float arOutput[] /*, int nm*/)
 {
   float arInput[MAX_NUM_INPUTS];
 
-  NNEvalType t = ((nm > 0) ? NNEVAL_FROMBASE :
-		  ((nm == 0) ? NNEVAL_SAVE : NNEVAL_NONE));
+  /* NNEvalType t = ((nm > 0) ? NNEVAL_FROMBASE : */
+  /* 		  ((nm == 0) ? NNEVAL_SAVE : NNEVAL_NONE)); */
   
   const EvalNets* n = &nets[pc];
   while( ! n->net ) {
@@ -1307,11 +1315,11 @@ EvalClass(positionclass pc, CONST int anBoard[2][25], float arOutput[], int nm)
   
   n->netInputs->func(anBoard, arInput);
     
-  NeuralNetEvaluate(n->net, arInput, arOutput, t);
+  NeuralNetEvaluate(n->net, arInput, arOutput /*,t*/);
 }
 
 static void
-EvalRace(CONST int anBoard[2][25], float arOutput[], int nm)
+EvalRace(CONST int anBoard[2][25], float arOutput[] /*, int nm*/)
 {
 #if defined( OS_BEAROFF_DB )
   if( osDB && isBearoff(osDB, anBoard) ) { 
@@ -1319,7 +1327,7 @@ EvalRace(CONST int anBoard[2][25], float arOutput[], int nm)
   } else {
 #endif
 
-    EvalClass(CLASS_RACE, anBoard, arOutput, nm);
+    EvalClass(CLASS_RACE, anBoard, arOutput /*, nm*/);
 
 #if defined( OS_BEAROFF_DB )
   }
@@ -1338,7 +1346,7 @@ NetEvalRace(CONST int anBoard[2][25], float arOutput[])
   osDB = 0;
 #endif
 
-  EvalRace(anBoard, arOutput, -1);
+  EvalRace(anBoard, arOutput /*, -1*/);
   
 #if defined( OS_BEAROFF_DB )
   osDB = tmp;
@@ -1348,39 +1356,39 @@ NetEvalRace(CONST int anBoard[2][25], float arOutput[])
 }
 
 static void
-EvalContact(CONST int anBoard[2][25], float arOutput[], int nm)
+EvalContact(CONST int anBoard[2][25], float arOutput[] /*, int nm*/)
 {
-  EvalClass(CLASS_CONTACT, anBoard, arOutput, nm);
+  EvalClass(CLASS_CONTACT, anBoard, arOutput/*, nm*/);
 }
 
 static void
-EvalCrashed(CONST int anBoard[2][25], float arOutput[], int nm)
+EvalCrashed(CONST int anBoard[2][25], float arOutput[] /*, int nm*/)
 {
   if( nets[CLASS_CRASHED].net ) {
-    EvalClass(CLASS_CRASHED, anBoard, arOutput, nm);
+    EvalClass(CLASS_CRASHED, anBoard, arOutput/*, nm*/);
   } else {
-    EvalContact(anBoard, arOutput, nm);
+    EvalContact(anBoard, arOutput /*, nm*/);
   }
 }
 
 #if defined( CONTAINMENT_CODE )
 static void
-EvalBackContain(CONST int anBoard[2][25], float arOutput[], int nm)
+EvalBackContain(CONST int anBoard[2][25], float arOutput[] /*, int nm*/)
 {
   if( nets[CLASS_BACKCONTAIN].net ) {
-    EvalClass(CLASS_BACKCONTAIN, anBoard, arOutput, nm);
+    EvalClass(CLASS_BACKCONTAIN, anBoard, arOutput /*, nm*/);
   } else {
-    EvalCrashed(anBoard, arOutput, nm);
+    EvalCrashed(anBoard, arOutput /*, nm*/);
   }
 }
 #endif
 
 static void
-EvalOver( CONST int anBoard[2][25], float arOutput[], int n)
+EvalOver( CONST int anBoard[2][25], float arOutput[] /*, int n*/)
 {
   int i, c;
 
-  (void) n;
+  //(void) n;
   
   for( i = 0; i < 25; i++ )
     if( anBoard[ 0 ][ i ] )
@@ -1466,15 +1474,15 @@ static classevalfunc acef[ N_CLASSES ] = {
 
 
 static void
-evalPly(positionclass pc, CONST int anBoard[2][25], float arOutput[], int nm)
+evalPly(positionclass pc, CONST int anBoard[2][25], float arOutput[] /*, int nm*/)
 {
   float arInput[CEVAL_NUM_INPUTS];
   neuralnet* n = nets[pc].pnet;                                assert( n ); 
   
   baseInputs(anBoard, arInput);
     
-  (void) nm;
-  NeuralNetEvaluate(n, arInput, arOutput, NNEVAL_NONE);
+  //(void) nm;
+  NeuralNetEvaluate(n, arInput, arOutput /*, NNEVAL_NONE*/);
 
   if( pc == CLASS_RACE ) {
     raceImprovement(anBoard, arOutput);
@@ -1487,11 +1495,11 @@ evalPrune(CONST int anBoard[2][25], float arOutput[])
   positionclass pc = ClassifyPosition(anBoard);
   
   if( ! nets[pc].pnet ) {
-    acef[pc](anBoard, arOutput, 0);
+    acef[pc](anBoard, arOutput/*, 0*/);
     return 0;
   }
   
-  evalPly(pc, anBoard, arOutput, 0);
+  evalPly(pc, anBoard, arOutput /*, 0*/);
 
   if( pc == CLASS_RACE ) {
     raceImprovement(anBoard, arOutput);
@@ -1697,7 +1705,7 @@ FindBestMoveInEval(int nDice0, int nDice1, int anBoard[2][25], int direction)
       int const useEvalNet =
 	(pass == 0 && nMoves != 0 && ml.cMoves > nets[posClass].minNmoves );
       
-      int first = 1;
+      //int first = 1;
 
       if( pass == 1 ) {
 	qsort(ml.amMoves, ml.cMoves, sizeof(move), (cfunc)CompareMoves);
@@ -1743,14 +1751,14 @@ FindBestMoveInEval(int nDice0, int nDice1, int anBoard[2][25], int direction)
 
 	    } else {
 	      if( useEvalNet && pc == posClass ) {
-		evalPly(pc, (ConstBoard)anBoard, ec.ar, i);
+		evalPly(pc, (ConstBoard)anBoard, ec.ar /*, i*/);
 	      } else {
-		int b = (pc != posClass) ? -1 : (first ? 0 : 1);
-		if( b == 0 ) {
-		  first = 0;
-		}
+		//int b = (pc != posClass) ? -1 : (first ? 0 : 1);
+		//if( b == 0 ) {
+		//	  first = 0;
+		//	}
 		
-		acef[pc]((ConstBoard)anBoard, ec.ar, b);
+		acef[pc]((ConstBoard)anBoard, ec.ar /*, b*/);
 	      }
 
 	      SanityCheck((ConstBoard)anBoard, ec.ar);
@@ -1790,7 +1798,7 @@ EvaluatePositionFast(CONST int anBoard[2][25], float arOutput[])
 {
   positionclass pc = ClassifyPosition(anBoard);
 
-  acef[pc] (anBoard, arOutput, -1);
+  acef[pc] (anBoard, arOutput /*, -1*/);
 
   SanityCheck(anBoard, arOutput);
 }
@@ -1803,7 +1811,7 @@ EvaluatePositionFull(CONST int anBoard[2][25], float arOutput[],
 		     unsigned char* pauch)
 {
   int i, n0, n1;
-  positionclass pc = ClassifyPosition(anBoard);
+  positionclass const pc = ClassifyPosition(anBoard);
 
   // (FIXME) add this again after we get rid of reduced
   //{                                                        assert( p == 0 ); }
@@ -1897,7 +1905,7 @@ EvaluatePositionFull(CONST int anBoard[2][25], float arOutput[],
   } else {
     /* at leaf node; use static evaluation */
 
-    acef[pc] (anBoard, arOutput, -1);
+    acef[pc] (anBoard, arOutput /*, -1*/);
 
     SanityCheck( anBoard, arOutput );
 
@@ -2057,7 +2065,7 @@ EvaluatePositionPart(CONST int anBoard[2][25], int nPlies, float arOutput[])
   } else {
     /* at leaf node; use static evaluation */
 
-    acef[ pc ]( anBoard, arOutput, -1);
+    acef[ pc ]( anBoard, arOutput /*, -1*/);
 
     SanityCheck( anBoard, arOutput );
   }
@@ -2087,7 +2095,7 @@ GameStatus(CONST int anBoard[2][25])
   if( ClassifyPosition( anBoard ) != CLASS_OVER )
     return 0;
 
-  EvalOver(anBoard, ar, -1);
+  EvalOver(anBoard, ar /*, -1*/);
 
   if( ar[ OUTPUT_WINBACKGAMMON ] || ar[ OUTPUT_LOSEBACKGAMMON ] )
     return 3;
@@ -2128,7 +2136,7 @@ NetEval(float* p, CONST int anBoard[2][25], positionclass pc, float* inputs)
 {
   EvalNets* i = &nets[pc];
 
-  NeuralNetEvaluate(i->net, inputs, p, NNEVAL_NONE);
+  NeuralNetEvaluate(i->net, inputs, p /*, NNEVAL_NONE*/);
 
   if( pc == CLASS_RACE ) {
     raceImprovement(anBoard, p);
@@ -2673,7 +2681,7 @@ EvaluatePositionFullToBO(CONST int anBoard[2][25], float arOutput[],
   } else {
     /* at leaf node; use static evaluation */
 
-    acef[pc] (anBoard, arOutput, -1);
+    acef[pc] (anBoard, arOutput /*, -1*/);
 
     SanityCheck( anBoard, arOutput );
   }
@@ -2761,7 +2769,7 @@ playsToRace(CONST int anBoard[2][25], int cGames)
 
 
 extern int
-EvalCacheStats(int* pc, int* pcLookup, int* pcHit)
+EvalCacheStats(unsigned int* pc, unsigned int* pcLookup, unsigned int* pcHit)
 {
   cache* c = nets[CLASS_CONTACT].ncache;
   *pc = c->nAdds;
@@ -2825,6 +2833,20 @@ EvalCacheFlush(void)
     }
     if( nets[k].ncache ) {
       CacheFlush( nets[k].ncache );
+    }
+  }
+}
+
+extern void
+EvalCacheResize(int cSize)
+{
+  int k;
+  for(k = 0; k < N_CLASSES; ++k) {
+    if( nets[k].pcache ) {
+      CacheResize( nets[k].pcache, cSize );
+    }
+    if( nets[k].ncache ) {
+      CacheResize( nets[k].ncache, cSize );
     }
   }
 }

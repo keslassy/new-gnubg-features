@@ -197,8 +197,9 @@ PruneTrainPosition(CONST int anBoard[2][25], float arDesired[], float alpha);
 extern void SwapSides( int anBoard[ 2 ][ 25 ] );
 extern int GameStatus( CONST int anBoard[ 2 ][ 25 ] );
 
-extern int EvalCacheStats( int *pc, int *pcLookup, int *pcHit );
+extern int EvalCacheStats( unsigned int *pc, unsigned int *pcLookup, unsigned int *pcHit );
 extern void EvalCacheFlush(void);
+extern void EvalCacheResize(int cSize);
 
 #define GenerateMoves eGenerateMoves
 

@@ -2955,7 +2955,7 @@ CalculateMXInputs(CONST int anBoard[2][25], float arInput[])
 		      arInput + (4 * 25 * 2 + MORE_INPUTS));
 }
 
-
+#if 0 
 static void
 rContain(CONST int anBoard[2][25], int toPlayBack, int oppBack,
 	 float* toPlay, float* op)
@@ -3069,6 +3069,8 @@ rContain(CONST int anBoard[2][25], int toPlayBack, int oppBack,
     }
   }
 }
+
+#endif
 
 static void
 CalculateCrashedInputs(CONST int anBoard[2][25], float arInput[])

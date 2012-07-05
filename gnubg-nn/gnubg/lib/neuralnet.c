@@ -32,6 +32,7 @@
 #include "neuralnet.h"
 #include "sse.h"
 
+extern unsigned long genrand( void );
 #define random genrand
 
 // #define SIGMOIDNEW 0
@@ -632,6 +633,7 @@ Evaluate(neuralnet* pnn, float arInput[], Intermediate ar[], float arOutput[],
   return 0;
 }
 
+#if 0
 static int
 EvaluateFromBase(neuralnet* pnn, float arInputDif[], Intermediate ar[],
 		 float arOutput[])
@@ -688,18 +690,21 @@ EvaluateFromBase(neuralnet* pnn, float arInputDif[], Intermediate ar[],
   return 0;
 }
 
+#endif
+
 int fuseSSE = 0;
 
 extern int
-NeuralNetEvaluate(neuralnet* pnn, float arInput[], float arOutput[],
-		  NNEvalType t)
+NeuralNetEvaluate(neuralnet* pnn, float arInput[], float arOutput[]
+		  /*,NNEvalType t*/)
 {
   ++ pnn->nEvals;    
   if( fuseSSE ) {
     NeuralNetEvaluateSSE(pnn, arInput, arOutput);
   } else {
     Intermediate ar[ pnn->cHidden ];
-
+    Evaluate(pnn, arInput, ar, arOutput, 0);
+#if 0
     switch( t ) {
       case NNEVAL_NONE:
       {
@@ -734,6 +739,7 @@ NeuralNetEvaluate(neuralnet* pnn, float arInput[], float arOutput[],
 	break;
       }
     }
+#endif
   }
     
   return 0;

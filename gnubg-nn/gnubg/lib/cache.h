@@ -43,7 +43,7 @@ extern int CacheDestroy( cache *pc );
 extern int CacheAdd( cache *pc, unsigned long l, void *p, size_t cb );
 extern void *CacheLookup( cache *pc, unsigned long l, void *p );
 extern int CacheFlush( cache *pc );
-extern int CacheStats( cache *pc, int *pcLookup, int *pcHit );
+extern int CacheStats( cache *pc, unsigned int *pcLookup, unsigned int *pcHit );
 
 #else
 
@@ -79,7 +79,7 @@ CacheLookup(cache* pc, cacheNode* e, unsigned long* l);
 void CacheAdd(cache* pc, cacheNode* e, unsigned long l);
 void CacheFlush(cache* pc);
 void CacheDestroy(cache* pc);
-void CacheStats(cache* pc, int* pcLookup, int* pcHit);
+void CacheStats(cache* pc, unsigned int* pcLookup, unsigned int* pcHit);
 
 #endif
 

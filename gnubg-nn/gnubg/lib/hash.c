@@ -25,6 +25,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "cache.h"
 #include "hash.h"
@@ -441,7 +442,7 @@ CacheResize( cache *pc, int cNew )
 }
 
 void
-CacheStats(cache* pc, int* pcLookup, int* pcHit)
+CacheStats(cache* pc, unsigned int* pcLookup, unsigned int* pcHit)
 {
   if ( pcLookup )
     *pcLookup = pc->cLookup;
