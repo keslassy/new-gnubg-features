@@ -1421,10 +1421,6 @@ To roll the dice the CL version type 'roll'.
           also be saved to the file. You can also use the tool bar button
           labeled Save to open the file dialog box directly. There is also a
           keyboard shortcut, Ctrl-S, for saving a match or session.</para>
-        <warning>
-          <para>Please note that saving a position will not save any
-          analysis.</para>
-        </warning>
         <para>The export dialog is accessed by choosing <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice> This dialog is similar to the save dialog. Again you may
           choose a different filename and whether to export an entire match, a
           game or a position. Then you must choose an export format as well.
@@ -2642,9 +2638,7 @@ To roll the dice the CL version type 'roll'.
           <title>Introduction to move filters</title>
           <para><application>GNU Backgammon</application> uses a technique
             called move filters in order to prune the complete list of legal
-            moves when analyzing checker play decisions. Move filters can be
-            considered a generalization of the search space used in earlier
-            versions of <application>GNU Backgammon</application>.</para>
+            moves when analyzing checker play decisions.</para>
           <para>A move filter for a given ply, say, 2-ply, consists of four
             parameters for each sub ply:</para>
           <orderedlist continuation="restarts" inheritnum="ignore">
@@ -4634,7 +4628,7 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_install_new">
         <title>I want to install a newer version.</title>
-        <para>Go a head, your settings should be saved..</para>
+        <para>Go ahead, your settings should be saved.</para>
       </sect3>
       <sect3 id="gnubg-faq_install_compile">
         <title>I would like to compile it from the source code.</title>
@@ -4943,14 +4937,11 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_play_5">
         <title>Why am I allowed to place more than 5 checkers on a point?</title>
-        <para>The official backgammon tournament rules allow to put all 15
-          checkers on a point. If you want to play with a maximum of 5 checkers,
-          go to the menu Settings and activate the Egyptian Rule. Notice, the
-          Egyptian Rule is not in the standard rules of backgammon. The position
-          evaluator in <application>GNU Backgammon</application> doesn't have a
-          clue about how to evaluate positions according to the Egyptian rule
-          either. It strongly recommended that this rule is not used if you're
-          trying to learn backgammon.</para>
+        <para>The official backgammon tournament rules allow to put
+          up to all 15 checkers on a point. Playing with a maximum of 5
+          checkers, sometimes known as the Egyptian Rule, is no longer
+          supported by
+          <application>GNU Backgammon</application>.</para>
       </sect3>
       <sect3 id="gnubg-faq_play_poorly">
         <title><application>GNU Backgammon</application> plays poorly.</title>
@@ -5105,11 +5096,6 @@ Equity
         </informaltable>
         <para>You may change these comment in the menu `Window, Annotation'
           choosing another comment for moves and/or double</para>
-        <note>
-          <para>Why a ? move
-          should be deemed worse than a ?! move - that's one of life's little
-            mysteries.</para>
-        </note>
       </sect3>
       <sect3 id="gnubg-faq_analysing_rate">
         <title>How is the error rate determined?</title>
