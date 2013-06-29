@@ -1,3 +1,15 @@
+2013-06-29  Michael Petch  <mpetch@gnubg.org>
+
+    * backgammon.h, gnubg.c, gnubgmodule.c: Added preliminary 
+    support for Python module function 'hint'. Work in progress
+    The function interface and the dictionary returned may change.
+    Added module functions mwc2eq_stderr and eq2mwc_stderr.
+
+    Inefficient memory use for eval and rollout contexts should be 
+    cleaned up. Rollout contexts should include all the cube and 
+    chequer play sub contexts. The hint dictionary needs to be
+    documented.
+
 2013-06-25  Michael Petch  <mpetch@gnubg.org>
 
     * backgammon.h, gnubg.c, play.c: hint_move has been modified to 
@@ -2441,7 +2453,7 @@ Tue Jun 24 01:06:38 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
 Thu Jun 19 22:00:38 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
-	* ChangeLog, Makefile.am, configure.in, gnubgstock.c, gnubgstock.h,
+	* Makefile.am, configure.in, gnubgstock.c, gnubgstock.h,
 	gtkgame.c, gtktoolbar.c, pixmaps/.cvsignore, pixmaps/Makefile.am,
 	pixmaps/gnubg-stock-pixbufs.h, pixmaps/16x16/actions/cancel_16.png,
 	pixmaps/16x16/actions/double_16.png,

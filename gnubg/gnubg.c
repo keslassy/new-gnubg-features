@@ -2364,7 +2364,7 @@ hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
         fd.aamf = *GetEvalMoveFilter();
         if (procdatarec){
             show = FALSE;
-            fShowProgress = (long)procdatarec->avInputData[0];
+            fShowProgress = (long)procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS];
         }
         if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt){
             fShowProgress = fSaveShowProg;
@@ -2415,10 +2415,10 @@ hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
     }
 
     if (procdatarec){
-        procdatarec->avOutputData[0] = (void *)&ms;
-        procdatarec->avOutputData[1] = (void *)&ci;
-        procdatarec->avOutputData[2] = (void *)&pmr->ml;
-        procdatarec->avOutputData[3] = (void *)&pmr;
+        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MATCHSTATE] = (void *)&ms;
+        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_CUBEINFO] = (void *)&ci;
+        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MOVELIST] = (void *)&pmr->ml;
+        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MOVERECORD] = (void *)&pmr;
     }
 
     n = MIN(pmr->ml.cMoves, n);
@@ -2426,8 +2426,9 @@ hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
         if (show)
             output(FormatMoveHint(szBuf, &ms, &pmr->ml, i, TRUE, TRUE, TRUE));
         else if (procdatarec && procdatarec->pfProcessRecord){
-            procdatarec->avOutputData[4] = (void *)(long)i;
-            procdatarec->pfProcessRecord(procdatarec);
+            procdatarec->avOutputData[PROCREC_HINT_ARGOUT_INDEX] = (void *)(long)i;
+            if (!procdatarec->pfProcessRecord(procdatarec))
+                break;
         }
     }
 }
