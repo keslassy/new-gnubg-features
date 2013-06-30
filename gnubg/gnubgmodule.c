@@ -617,7 +617,7 @@ PythonHint_Callback (procrecorddata *pr)
         const float *p = mi->arEvalMove;
         const float *s = mi->arEvalStdDev;
 
-        details = Py_BuildValue("s:(fffff),s:(fffff),s:f,s:f",
+        details = Py_BuildValue("{s:(fffff),s:(fffff),s:f,s:f}",
                                         "probs", p[0], p[1], p[2], p[3], p[4],
                                         "probs-std", s[0], s[1], s[2], s[3], s[4],
                                         "match-eq", p[OUTPUT_EQUITY],
