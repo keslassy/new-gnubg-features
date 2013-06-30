@@ -3,6 +3,13 @@
     * eval.h, rollout.c, gnubgmodule.c:  Store the JSD that a 
     rollout alternative was stopped on into the rollout context
 
+    dbprovider.c gnubg.c gnubgmodule.c gnubgmodule.h: Allow a
+    user Python startup script (gnubg_user.py) to be loaded
+    at startup AFTER gnubg.py. No error is thrown if the file
+    doesn't exist. gnubg_user.py is not meant to be imported,
+    but loaded as a textfile into the main name space just like
+    gnubg.py .
+
 2013-06-29  Michael Petch  <mpetch@gnubg.org>
 
     * backgammon.h, gnubg.c, gnubgmodule.c: Added preliminary 

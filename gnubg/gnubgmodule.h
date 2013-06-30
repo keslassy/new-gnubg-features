@@ -49,7 +49,7 @@ extern PyObject *PythonGnubgModule();
 extern void PythonInitialise(char *argv0);
 extern void PythonShutdown(void);
 extern void PythonRun(const char *sz);
-extern int LoadPythonFile(const char *sz);
+extern int LoadPythonFile(const char *sz, int fQuiet);
 extern gint python_run_file(gpointer file);
 
 #endif                          /* GNUBGMODULE_H */

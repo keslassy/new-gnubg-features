@@ -2692,7 +2692,7 @@ CommandLoadPython(char *sz)
 
     if (sz && *sz)
 #if USE_PYTHON
-        LoadPythonFile(sz);
+        LoadPythonFile(sz, FALSE);
 #else
         outputl(_("This build of GNU Backgammon does not support Python"));
 #endif
@@ -4829,7 +4829,7 @@ main(int argc, char *argv[])
     if (pchPythonScript) {
 #if USE_PYTHON
         fInteractive = FALSE;
-        LoadPythonFile(pchPythonScript);
+        LoadPythonFile(pchPythonScript, FALSE);
         Shutdown();
         exit(EXIT_SUCCESS);
 #else

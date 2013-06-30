@@ -3144,7 +3144,8 @@ PythonInitialise(char *argv0)
     PyRun_SimpleString("import gnubg\n");
 
     /* run gnubg.py start up script */
-    LoadPythonFile("gnubg.py");
+    LoadPythonFile("gnubg.py", FALSE);
+    LoadPythonFile("gnubg_user.py", TRUE);
     py_gnubg_module = PyImport_AddModule("__main__");
 }
 
@@ -3201,7 +3202,7 @@ PythonRun(const char *sz)
 }
 
 extern int
-LoadPythonFile(const char *sz)
+LoadPythonFile(const char *sz, int fQuiet)
 {
     char *path = NULL;
     char *cmd = NULL;
@@ -3219,7 +3220,9 @@ LoadPythonFile(const char *sz)
     }
     if (!g_file_test(path, G_FILE_TEST_IS_REGULAR)) {
         g_free(path);
-        outputerrf("Python file (%s) not found\n", sz);
+        if (!fQuiet)
+            outputerrf("Python file (%s) not found\n", sz);
+
         return FALSE;
     }
     escpath = g_strescape(path, NULL);

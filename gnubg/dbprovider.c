@@ -251,7 +251,7 @@ GetDBProvider(DBProviderType dbType)
 #if USE_PYTHON
     static int setup = FALSE;
     if (!setup) {
-        if (LoadPythonFile("database.py") == 0) {
+        if (LoadPythonFile("database.py", FALSE) == 0) {
             PyObject *m;
             /* Get main python dictionary */
             if ((m = PyImport_AddModule("__main__")) == NULL) {
