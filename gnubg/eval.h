@@ -141,6 +141,7 @@ typedef struct {
     unsigned int nMinimumJsdGames;
     double rJsdLimit;
     unsigned int nGamesDone;
+    double rStoppedOnJSD;
     int nSkip;
 } rolloutcontext;
 

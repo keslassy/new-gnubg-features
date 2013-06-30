@@ -992,6 +992,8 @@ check_jsds(int *active)
                     /* This move is no longer worth rolling out */
 
                     fNoMore[ajiJSD[alt].nOrder] = 1;
+                    ro_apes[alt]->rc.rStoppedOnJSD = ajiJSD[alt].rJSD;
+
                     (*active)--;
 
                 } else {
@@ -1044,6 +1046,8 @@ check_jsds(int *active)
         if (rcRollout.fStopOnJsd &&
             (altGameCount[0] >= (rcRollout.nMinimumJsdGames)) &&
             rcRollout.rJsdLimit < MIN(ajiJSD[0].rJSD, ajiJSD[1].rJSD)) {
+            ro_apes[0]->rc.rStoppedOnJSD = ajiJSD[0].rJSD;
+            ro_apes[1]->rc.rStoppedOnJSD = ajiJSD[1].rJSD;
             fNoMore[0] = 1;
             fNoMore[1] = 1;
             *active = 0;
