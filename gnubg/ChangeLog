@@ -1,3 +1,8 @@
+2013-06-30  Michael Petch  <mpetch@gnubg.org>
+
+    * eval.h, rollout.c, gnubgmodule.c:  Store the JSD that a 
+    rollout alternative was stopped on into the rollout context
+
 2013-06-29  Michael Petch  <mpetch@gnubg.org>
 
     * backgammon.h, gnubg.c, gnubgmodule.c: Added preliminary 
