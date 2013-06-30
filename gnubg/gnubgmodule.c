@@ -3048,7 +3048,7 @@ PyMethodDef gnubgMethods[] = {
      "          'date'=>(tuple dd, mm, yyyy)\n"
      "          'default-eval-context' = dictionary\n"
      "            'plies'=> int, 'deterministic'=>0/1, 'noise'=>float,\n"
-     "            'cubeful'=>0/1\n"
+     "            'cubeful'=>0/1, 'prune'=>0/1\n"
      "          'match_length' = int\n"
      "          'result' =>0/1\n"
      "          'rules' = 'Crawford'/whatever\n" 
