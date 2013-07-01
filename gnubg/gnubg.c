@@ -1115,7 +1115,7 @@ extern int
 SetToggle(const char *szName, int *pf, char *sz, const char *szOn, const char *szOff)
 {
     char *pch = NextToken(&sz);
-    int cch;
+    size_t cch;
 
     if (!pch) {
         outputf(_("You must specify whether to set '%s' on or off.\n"), szName);
@@ -1229,7 +1229,7 @@ HandleCommand(char *sz, command * ac)
 
     command *pc;
     char *pch;
-    int cch;
+    size_t cch;
 
     if (ac == acTop) {
         outputnew();
@@ -1508,13 +1508,13 @@ ShowBoard(void)
                 else
                     sprintf(szCube, "(%s: %d)", _("Cube"), ms.nCube);
             } else {
-                int cch = strlen(ap[ms.fCubeOwner].szName);
+                size_t cch = strlen(ap[ms.fCubeOwner].szName);
 
                 if (cch > 20)
                     cch = 20;
 
                 sprintf(szCube, "%c: %*s (%s: %d)", ms.fCubeOwner ? 'X' : 'O',
-                        cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
+                        (int)cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
 
                 apch[ms.fCubeOwner ? 6 : 0] = szCube;
 
@@ -1680,7 +1680,7 @@ FindHelpCommand(command * pcBase, char *sz, char *pchCommand, char *pchUsage)
 
     command *pc;
     const char *pch;
-    int cch;
+    size_t cch;
 
     if (!(pch = NextToken(&sz)))
         return pcBase;
@@ -1722,7 +1722,7 @@ extern char *
 CheckCommand(char *sz, command * ac)
 {
     command *pc;
-    int cch;
+    size_t cch;
     char *pch = NextToken(&sz);
     if (!pch)
         return 0;
@@ -2364,7 +2364,7 @@ hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
         fd.aamf = *GetEvalMoveFilter();
         if (procdatarec){
             show = FALSE;
-            fShowProgress = (long)procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS];
+            fShowProgress = (int)procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS];
         }
         if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt){
             fShowProgress = fSaveShowProg;
@@ -2780,13 +2780,13 @@ CommandCopy(char *UNUSED(sz))
             else
                 sprintf(szCube, "(%s: %d)", _("Cube"), ms.nCube);
         } else {
-            int cch = strlen(ap[ms.fCubeOwner].szName);
+            size_t cch = strlen(ap[ms.fCubeOwner].szName);
 
             if (cch > 20)
                 cch = 20;
 
             sprintf(szCube, "%c: %*s (%s: %d)", ms.fCubeOwner ? 'X' :
-                    'O', cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
+                    'O', (int)cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
 
             aps[ms.fCubeOwner ? 6 : 0] = szCube;
 
@@ -3396,7 +3396,7 @@ NullGenerator(const char *UNUSED(sz), int UNUSED(nState))
 static char *
 GenerateKeywords(const char *sz, int nState)
 {
-    static int cch;
+    static size_t cch;
     static command *pc;
     char *szDup;
 
@@ -3426,7 +3426,8 @@ GenerateKeywords(const char *sz, int nState)
 static char *
 ERCompletion(const char *sz, int nState)
 {
-    static int i, cch;
+    static int i;
+    static size_t cch;
     const char *pch;
     char *szDup;
 
@@ -3454,7 +3455,7 @@ static char *
 OnOffCompletion(const char *sz, int nState)
 {
     static unsigned int i;
-    static int cch;
+    static size_t cch;
     static const char *asz[] = { "false", "no", "off", "on", "true", "yes" };
     const char *pch;
     char *szDup;
@@ -3481,7 +3482,8 @@ OnOffCompletion(const char *sz, int nState)
 static char *
 PlayerCompletionGen(const char *sz, int nState, int fBoth)
 {
-    static int i, cch;
+    static int i;
+    static size_t cch;
     const char *pch;
     char *szDup;
 
@@ -4421,7 +4423,8 @@ getDiceRandomDotOrg(void)
     int h;
     int cb;
 
-    int nBytesRead, i;
+    ssize_t nBytesRead;
+    int i;
     struct sockaddr *psa;
     char szHostname[80];
     char szHTTP[] =
