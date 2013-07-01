@@ -2346,7 +2346,7 @@ hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
     int hist;
     movelist ml;
     findData fd;
-    long fSaveShowProg = fShowProgress;
+    ssize_t fSaveShowProg = fShowProgress;
 
     if (!ms.anDice[0])
         return;
@@ -2367,7 +2367,7 @@ hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
         fd.aamf = *GetEvalMoveFilter();
         if (procdatarec){
             show = FALSE;
-            fShowProgress = (long)procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS];
+            fShowProgress = (ssize_t)procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS];
         }
         if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt){
             fShowProgress = fSaveShowProg;
