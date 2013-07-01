@@ -649,8 +649,8 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
     procrecorddata prochint;
     char szNumber[6];
     char *szHintType;
-    moverecord *pmr;
-    movelist ml;
+//    moverecord *pmr;
+//    movelist ml;
     int nMaxMoves = -1;
 
     if (!PyArg_ParseTuple(args, "|i", &nMaxMoves))
