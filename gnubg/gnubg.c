@@ -333,6 +333,7 @@ rolloutcontext rcRollout = {
     324,                        /* minimum games  */
     2.33,                       /* stop when best has j.s.d. for 99% confidence */
     0,                          /* nGamesDone */
+    0.0,                        /* rStoppedOnJSD */
     0,                          /* nSkip */
 };
 
@@ -386,6 +387,7 @@ rolloutcontext rcRollout = {
   324,    /* minimum games  */ \
   2.33,   /* stop when best has j.s.d. for 99% confidence */ \
   0, \
+  0.0, \
   0 \
   } \
 }
@@ -440,6 +442,7 @@ rolloutcontext rcRollout = {
   324,    /* minimum games  */ \
   2.33,   /* stop when best has j.s.d. for 99% confidence */ \
   0, \
+  0.0, \
   0 \
   } \
 }
