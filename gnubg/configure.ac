@@ -80,10 +80,12 @@ AC_CHECK_PROGS(DOCBOOK2TEXI, docbook2x-texi db2x_docbook2texi, false)
 AC_CHECK_PROGS(DOCBOOK2MAN, docbook2x-man db2x_docbook2man, false)
 AC_CHECK_PROGS(DBLATEX, dblatex, false)
 AC_CHECK_PROGS(XSLTPROC, xsltproc, false)
+AC_CHECK_PROGS(GMSGFMT, msgfmt, false)
 AC_ARG_VAR([DOCBOOK2TEXI], [path for docbook2texi from docbook2x package])
 AC_ARG_VAR([DOCBOOK2MAN], [path for docbook2man from docbook2x package])
 AC_ARG_VAR([DBLATEX], [path for dblatex used to build pdf documentation])
 AC_ARG_VAR([XSLTPROC], [path for xsltproc used to build html documentation])
+AC_ARG_VAR([GMSGFMT], [path for msgfmt used to compile message catalogs])
 
 dnl
 dnl Setup libtool
