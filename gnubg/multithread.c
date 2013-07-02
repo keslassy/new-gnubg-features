@@ -440,8 +440,13 @@ MT_WorkerThreadFunction(void *id)
 #if __GNUC__ && defined(WIN32)
     /* Align stack pointer on 16 byte boundary so SSE variables work correctly */
     int align_offset;
+#ifdef USE_AVX
+    asm __volatile__("andl $-32, %%esp":::"%esp");
+    align_offset = ((int) (&align_offset)) % 32;
+#else
     asm __volatile__("andl $-16, %%esp":::"%esp");
     align_offset = ((int) (&align_offset)) % 16;
+#endif
 #endif
     {
         int *pID = (int *) id;
