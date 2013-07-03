@@ -1605,14 +1605,17 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
 
     while (fgets(sz, 1024, pf)) {
 
+        char *pchtmp;
+
         nMoveOld = nMove;
         fPlayerOld = fPlayer;
 
         /* check for game over */
         for (pch = sz; *pch; pch++)
-            if (!strncmp(pch, "  wins ", 7))
+            if ((pchtmp = strstr(pch, " wins "))) {
+                pch = pchtmp;
                 goto finished;
-            else if (*pch == ':' || *pch == ' ')
+            } else if (*pch == ':' || *pch == ' ')
                 break;
 
         if (isdigit(*sz)) {
@@ -1932,20 +1935,31 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
         /* game was terminated by an resignation */
         /* parse string, e.g., MosheTissona_MC  wins 2 points. */
 
-        pch += 7;               /* step over '  wins ' */
+        long nr;
+
+        pch += 6;               /* step over ' wins ' */
+
+        nr = strtol(pch, NULL, 10);
+        if (nr == 0)
+            outputerrf(_("Unparseable line: %s"), sz);
+        /* This doesn't really bother us as we rely
+         * on the initial score of the next game.
+         * The MOVE_RESIGN record below may be inaccurate, though */
 
         pmr = NewMoveRecord();
 
         pmr->mt = MOVE_RESIGN;
         pmr->sz = szComment;
         pmr->fPlayer = fResigned;
-        pmr->r.nResigned = atoi(pch) / ms.nCube;
+        pmr->r.nResigned = (int) nr / ms.nCube;
         if (pmr->r.nResigned > 3)
             pmr->r.nResigned = 3;
+        if (pmr->r.nResigned < 1)
+            pmr->r.nResigned = 1;
+
         szComment = NULL;
 
         AddMoveRecord(pmr);
-
     }
 
     AddGame(pmgi);
