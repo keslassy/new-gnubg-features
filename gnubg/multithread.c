@@ -464,11 +464,11 @@ MT_WorkerThreadFunction(void *id)
             }
         } while (!td.closingThreads);
 
+#ifdef GLIB_THREADS
 #if __GNUC__ && defined(WIN32)
         /* De-align stack pointer to avoid crash on exit */
         asm __volatile__("addl %0, %%esp"::"r"(align_offset):"%esp");
 #endif
-#ifdef GLIB_THREADS
         return NULL;
 #endif
     }

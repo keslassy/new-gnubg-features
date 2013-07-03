@@ -369,6 +369,8 @@ if test "x$simdcpu" != "xno"; then
 		fi
 	fi
 fi
+AM_CONDITIONAL(USE_AVX, test "x$simdcpu" = "xavx")
+
 
 AC_MSG_RESULT([$host (sse=$simdcpu, SIMD_CFLAGS="$SIMD_CFLAGS")])
 AC_ARG_VAR(SIMD_CFLAGS, [CFLAGS needed for compiling in SIMD CPU support])

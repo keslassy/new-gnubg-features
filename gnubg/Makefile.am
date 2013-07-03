@@ -62,7 +62,6 @@ gnubg_SOURCES = \
 		drawboard.c \
 		drawboard.h \
 		evallock.c \
-		eval.c \
 		eval.h \
 		export.c \
 		export.h \
@@ -128,6 +127,15 @@ gnubg_SOURCES = \
 		util.h \
 		util.c 
 
+noinst_LTLIBRARIES = libeval.la
+libeval_la_SOURCES = eval.c eval.h
+
+if USE_AVX
+if WIN32
+libeval_la_CFLAGS = -fno_inline
+endif
+endif
+
 if USE_GTK
 gnubg_SOURCES += gtkboard.c gtkboard.h gtkgame.c gtkgame.h gtkfile.c gtkfile.h \
 		 gtkprefs.c gtkprefs.h gtk-multiview.c gtk-multiview.h gtktheory.c \
@@ -141,11 +149,13 @@ gnubg_SOURCES += gtkboard.c gtkboard.h gtkgame.c gtkgame.h gtkfile.c gtkfile.h \
 		 gtkuidefs.h gtklocdefs.c gtklocdefs.h
 endif
 
+
 #
 ##linkpath for gnubg
 #
 
-gnubg_LDADD = -L$(srcdir)/lib lib/libevent.la @GTK_LIBS@ @LIBPNG_LIBS@ @CAIRO_LIBS@ @PANGOCAIRO_LIBS@ \
+gnubg_LDADD = libeval.la -L$(srcdir)/lib lib/libevent.la \
+          @GTK_LIBS@ @LIBPNG_LIBS@ @CAIRO_LIBS@ @PANGOCAIRO_LIBS@ \
 	      @GTHREAD_LIBS@ \
 	      @LTLIBOBJS@ \
 	      @FREETYPE2_LIBS@ @GLIB_LIBS@ @LIBPNG_LIBS@ @CANBERRA_LIBS@ \
