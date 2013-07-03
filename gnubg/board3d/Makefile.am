@@ -18,6 +18,7 @@ EXTRA_DIST = wglBuffer.c wglBuffer.h
 libboard3d_la_SOURCES = drawboard3d.c font3d.c fun3d.h graph.c gtkcolour3d.c \
 			inc3d.h matrix.c matrix.h misc3d.c model.c model.h \
 			shadow.c types3d.h widget3d.c tr.c tr.h
+libboard3d_la_CFLAGS = $(AM_CFLAGS)
 
 if WIN32
 libboard3d_la_SOURCES += $(EXTRA_DIST)
