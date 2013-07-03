@@ -65,10 +65,25 @@ dnl Compiler setup
 dnl
 
 AC_GNU_SOURCE
+
+# the following needs to come before the expansion of AC_PROG_CC
+cflags_were_set=false
+if test "${CFLAGS+set}" = set; then
+  AM_CFLAGS=$CFLAGS
+  CFLAGS=
+  cflags_were_set=:
+fi
 AC_PROG_CC
 AM_PROG_CC_C_O
-AM_CONDITIONAL(CROSS_COMPILING, test "x$cross_compiling" = "xyes")
 
+# the following needs to come after the expansion of AC_PROG_CC
+if $cflags_were_set; then :; else
+  AM_CFLAGS=$CFLAGS
+  CFLAGS=
+fi
+AC_SUBST(AM_CFLAGS)
+
+AM_CONDITIONAL(CROSS_COMPILING, test "x$cross_compiling" = "xyes")
 
 dnl
 dnl Checks for programs.

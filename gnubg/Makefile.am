@@ -129,10 +129,13 @@ gnubg_SOURCES = \
 
 noinst_LTLIBRARIES = libeval.la
 libeval_la_SOURCES = eval.c eval.h
+libeval_la_CFLAGS = $(AM_CFLAGS)
 
+# If using AVX on WIN32 disable inline function optimizations
+# in eval.c
 if USE_AVX
 if WIN32
-libeval_la_CFLAGS = -fno_inline
+libeval_la_CFLAGS += -fno-inline
 endif
 endif
 
@@ -182,23 +185,23 @@ endif
 #
 ##common sources for building the utility programs
 #
-UTILSOURCES = eval.h eval.c positionid.h positionid.c \
+UTILSOURCES = eval.h positionid.h positionid.c \
 	matchequity.c matchequity.h matchid.h matchid.c \
 	osr.c osr.h \
         bearoffgammon.c bearoffgammon.h bearoff.c bearoff.h \
 	mec.h mec.c util.c util.h
 
 makebearoff_SOURCES = makebearoff.c $(UTILSOURCES)
-makebearoff_LDADD = -Llib lib/libevent.la  @GLIB_LIBS@
+makebearoff_LDADD = libeval.la -Llib lib/libevent.la  @GLIB_LIBS@
 
 makehyper_SOURCES = makehyper.c $(UTILSOURCES)
-makehyper_LDADD = -Llib lib/libevent.la  @GLIB_LIBS@
+makehyper_LDADD = libeval.la -Llib lib/libevent.la @GLIB_LIBS@
 
 bearoffdump_SOURCES = bearoffdump.c $(UTILSOURCES)
-bearoffdump_LDADD = -Llib lib/libevent.la  @GLIB_LIBS@
+bearoffdump_LDADD = libeval.la -Llib lib/libevent.la @GLIB_LIBS@
 
 makeweights_SOURCES = makeweights.c
-makeweights_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ 
+makeweights_LDADD = libeval.la -Llib lib/libevent.la @GLIB_LIBS@ 
 
 
 #
