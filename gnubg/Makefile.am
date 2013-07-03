@@ -131,14 +131,6 @@ noinst_LTLIBRARIES = libeval.la
 libeval_la_SOURCES = eval.c eval.h
 libeval_la_CFLAGS = $(AM_CFLAGS)
 
-# If using AVX on WIN32 disable inline function optimizations
-# in eval.c
-if USE_AVX
-if WIN32
-libeval_la_CFLAGS += -fno-inline
-endif
-endif
-
 if USE_GTK
 gnubg_SOURCES += gtkboard.c gtkboard.h gtkgame.c gtkgame.h gtkfile.c gtkfile.h \
 		 gtkprefs.c gtkprefs.h gtk-multiview.c gtk-multiview.h gtktheory.c \

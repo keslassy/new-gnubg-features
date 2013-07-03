@@ -81,7 +81,6 @@ if $cflags_were_set; then :; else
   AM_CFLAGS=$CFLAGS
   CFLAGS=
 fi
-AC_SUBST(AM_CFLAGS)
 
 AM_CONDITIONAL(CROSS_COMPILING, test "x$cross_compiling" = "xyes")
 
@@ -451,6 +450,13 @@ AC_HELP_STRING([--with-eval-max-threads=size],
 	EVAL_THREAD_COUNT=$with_eval_max_threads
 	AC_DEFINE_UNQUOTED(MAX_NUMTHREADS, $EVAL_THREAD_COUNT, [maximum number of evaluation threads])
 ])
+
+
+if test "x$simdcpu" = "xavx" && test "x$win32" = "xyes" ; then
+    AM_CFLAGS="$AM_CFLAGS -fno-inline"
+fi
+
+AC_SUBST(AM_CFLAGS)
 
 
 dnl *************
