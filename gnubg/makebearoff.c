@@ -620,7 +620,7 @@ generate_os(const int nOS, const int fHeader,
     /* initialise xhash */
 
     if (XhashCreate(&h, nHashSize / (fGammon ? 128 : 64))) {
-        fprintf(stderr, _("Error creating xhash with %d elements\n"), nHashSize / fGammon ? 128 : 64);
+        fprintf(stderr, _("Error creating xhash with %d elements\n"), nHashSize / (fGammon ? 128 : 64));
         exit(2);
     }
 
@@ -1167,7 +1167,7 @@ generate_ts(const int nTSP, const int nTSC,
     /* initialise xhash */
 
     if (XhashCreate(&h, nHashSize / (fCubeful ? 8 : 2))) {
-        fprintf(stderr, _("Error creating xhash with %d elements\n"), nHashSize / fCubeful ? 8 : 2);
+        fprintf(stderr, _("Error creating xhash with %d elements\n"), nHashSize / (fCubeful ? 8 : 2));
         exit(2);
     }
 
