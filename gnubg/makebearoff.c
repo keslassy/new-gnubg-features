@@ -1283,7 +1283,7 @@ main(int argc, char **argv)
     static int show_version = 0;
 
     bearoffcontext *pbc = NULL;
-    FILE *output = stdout;
+    FILE *output;
     double r;
     int nTSP = 0, nTSC = 0;
 
