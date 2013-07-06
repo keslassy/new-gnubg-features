@@ -220,72 +220,72 @@ RestoreGS(listOLD * pl, statcontext * psc)
         case 'M':              /* moves */
             psc->fMoves = TRUE;
 
-            psc->anUnforcedMoves[0] = strtol(pch + 2, &pch, 10);
-            psc->anUnforcedMoves[1] = strtol(pch, &pch, 10);
-            psc->anTotalMoves[0] = strtol(pch, &pch, 10);
-            psc->anTotalMoves[1] = strtol(pch, &pch, 10);
+            psc->anUnforcedMoves[0] = (int)strtol(pch + 2, &pch, 10);
+            psc->anUnforcedMoves[1] = (int)strtol(pch, &pch, 10);
+            psc->anTotalMoves[0] = (int)strtol(pch, &pch, 10);
+            psc->anTotalMoves[1] = (int)strtol(pch, &pch, 10);
 
             for (st = SKILL_VERYBAD; st <= SKILL_NONE; st++) {
-                psc->anMoves[0][st] = strtol(pch, &pch, 10);
-                psc->anMoves[1][st] = strtol(pch, &pch, 10);
+                psc->anMoves[0][st] = (int)strtol(pch, &pch, 10);
+                psc->anMoves[1][st] = (int)strtol(pch, &pch, 10);
             }
 
-            psc->arErrorCheckerplay[0][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorCheckerplay[0][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorCheckerplay[1][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorCheckerplay[1][1] = g_ascii_strtod(pch, &pch);
+            psc->arErrorCheckerplay[0][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorCheckerplay[0][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorCheckerplay[1][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorCheckerplay[1][1] = (float)g_ascii_strtod(pch, &pch);
 
             break;
 
         case 'C':              /* cube */
             psc->fCube = TRUE;
 
-            psc->anTotalCube[0] = strtol(pch + 2, &pch, 10);
-            psc->anTotalCube[1] = strtol(pch, &pch, 10);
-            psc->anDouble[0] = strtol(pch, &pch, 10);
-            psc->anDouble[1] = strtol(pch, &pch, 10);
-            psc->anTake[0] = strtol(pch, &pch, 10);
-            psc->anTake[1] = strtol(pch, &pch, 10);
-            psc->anPass[0] = strtol(pch, &pch, 10);
-            psc->anPass[1] = strtol(pch, &pch, 10);
+            psc->anTotalCube[0] = (int)strtol(pch + 2, &pch, 10);
+            psc->anTotalCube[1] = (int)strtol(pch, &pch, 10);
+            psc->anDouble[0] = (int)strtol(pch, &pch, 10);
+            psc->anDouble[1] = (int)strtol(pch, &pch, 10);
+            psc->anTake[0] = (int)strtol(pch, &pch, 10);
+            psc->anTake[1] = (int)strtol(pch, &pch, 10);
+            psc->anPass[0] = (int)strtol(pch, &pch, 10);
+            psc->anPass[1] = (int)strtol(pch, &pch, 10);
 
-            psc->anCubeMissedDoubleDP[0] = strtol(pch, &pch, 10);
-            psc->anCubeMissedDoubleDP[1] = strtol(pch, &pch, 10);
-            psc->anCubeMissedDoubleTG[0] = strtol(pch, &pch, 10);
-            psc->anCubeMissedDoubleTG[1] = strtol(pch, &pch, 10);
-            psc->anCubeWrongDoubleDP[0] = strtol(pch, &pch, 10);
-            psc->anCubeWrongDoubleDP[1] = strtol(pch, &pch, 10);
-            psc->anCubeWrongDoubleTG[0] = strtol(pch, &pch, 10);
-            psc->anCubeWrongDoubleTG[1] = strtol(pch, &pch, 10);
-            psc->anCubeWrongTake[0] = strtol(pch, &pch, 10);
-            psc->anCubeWrongTake[1] = strtol(pch, &pch, 10);
-            psc->anCubeWrongPass[0] = strtol(pch, &pch, 10);
-            psc->anCubeWrongPass[1] = strtol(pch, &pch, 10);
+            psc->anCubeMissedDoubleDP[0] = (int)strtol(pch, &pch, 10);
+            psc->anCubeMissedDoubleDP[1] = (int)strtol(pch, &pch, 10);
+            psc->anCubeMissedDoubleTG[0] = (int)strtol(pch, &pch, 10);
+            psc->anCubeMissedDoubleTG[1] = (int)strtol(pch, &pch, 10);
+            psc->anCubeWrongDoubleDP[0] = (int)strtol(pch, &pch, 10);
+            psc->anCubeWrongDoubleDP[1] = (int)strtol(pch, &pch, 10);
+            psc->anCubeWrongDoubleTG[0] = (int)strtol(pch, &pch, 10);
+            psc->anCubeWrongDoubleTG[1] = (int)strtol(pch, &pch, 10);
+            psc->anCubeWrongTake[0] = (int)strtol(pch, &pch, 10);
+            psc->anCubeWrongTake[1] = (int)strtol(pch, &pch, 10);
+            psc->anCubeWrongPass[0] = (int)strtol(pch, &pch, 10);
+            psc->anCubeWrongPass[1] = (int)strtol(pch, &pch, 10);
 
-            psc->arErrorMissedDoubleDP[0][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorMissedDoubleDP[0][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorMissedDoubleTG[0][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorMissedDoubleTG[0][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongDoubleDP[0][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongDoubleDP[0][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongDoubleTG[0][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongDoubleTG[0][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongTake[0][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongTake[0][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongPass[0][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongPass[0][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorMissedDoubleDP[1][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorMissedDoubleDP[1][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorMissedDoubleTG[1][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorMissedDoubleTG[1][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongDoubleDP[1][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongDoubleDP[1][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongDoubleTG[1][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongDoubleTG[1][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongTake[1][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongTake[1][1] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongPass[1][0] = g_ascii_strtod(pch, &pch);
-            psc->arErrorWrongPass[1][1] = g_ascii_strtod(pch, &pch);
+            psc->arErrorMissedDoubleDP[0][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorMissedDoubleDP[0][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorMissedDoubleTG[0][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorMissedDoubleTG[0][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongDoubleDP[0][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongDoubleDP[0][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongDoubleTG[0][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongDoubleTG[0][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongTake[0][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongTake[0][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongPass[0][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongPass[0][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorMissedDoubleDP[1][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorMissedDoubleDP[1][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorMissedDoubleTG[1][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorMissedDoubleTG[1][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongDoubleDP[1][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongDoubleDP[1][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongDoubleTG[1][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongDoubleTG[1][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongTake[1][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongTake[1][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongPass[1][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arErrorWrongPass[1][1] = (float)g_ascii_strtod(pch, &pch);
 
             break;
 
@@ -295,14 +295,14 @@ RestoreGS(listOLD * pl, statcontext * psc)
             pch += 2;
 
             for (lt = LUCK_VERYBAD; lt <= LUCK_VERYGOOD; lt++) {
-                psc->anLuck[0][lt] = strtol(pch, &pch, 10);
-                psc->anLuck[1][lt] = strtol(pch, &pch, 10);
+                psc->anLuck[0][lt] = (int)strtol(pch, &pch, 10);
+                psc->anLuck[1][lt] = (int)strtol(pch, &pch, 10);
             }
 
-            psc->arLuck[0][0] = g_ascii_strtod(pch, &pch);
-            psc->arLuck[0][1] = g_ascii_strtod(pch, &pch);
-            psc->arLuck[1][0] = g_ascii_strtod(pch, &pch);
-            psc->arLuck[1][1] = g_ascii_strtod(pch, &pch);
+            psc->arLuck[0][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arLuck[0][1] = (float)g_ascii_strtod(pch, &pch);
+            psc->arLuck[1][0] = (float)g_ascii_strtod(pch, &pch);
+            psc->arLuck[1][1] = (float)g_ascii_strtod(pch, &pch);
 
             break;
 
@@ -449,7 +449,7 @@ RestoreRootNode(listOLD * pl)
             if (*++pch != '+')
                 continue;
 
-            pmr->g.nPoints = strtol(pch, &pch, 10);
+            pmr->g.nPoints = (int)strtol(pch, &pch, 10);
             if (pmr->g.nPoints < 1)
                 pmr->g.nPoints = 1;
 
@@ -525,8 +525,8 @@ RestoreRolloutScore(move * pm, const char *sz)
     if (!pc)
         return;
     pc += 6;
-    pm->rScore = g_ascii_strtod(pc, &pc);
-    pm->rScore2 = g_ascii_strtod(pc, &pc);
+    pm->rScore = (float)g_ascii_strtod(pc, &pc);
+    pm->rScore2 = (float)g_ascii_strtod(pc, &pc);
 }
 
 static void
@@ -560,7 +560,7 @@ RestoreRolloutOutput(float ar[NUM_ROLLOUT_OUTPUTS], const char *sz, const char *
     pc += strlen(szKeyword) + 1;
 
     for (i = 0; i < 7; i++)
-        ar[i] = g_ascii_strtod(pc, &pc);
+        ar[i] = (float)g_ascii_strtod(pc, &pc);
 
 }
 
@@ -586,19 +586,19 @@ RestoreEvalContext(evalcontext * pec, char *pc)
     int ver = CheckSGFVersion((const char **) &pc);
 
     InitEvalContext(pec);
-    pec->nPlies = strtol(pc, &pc, 10);
+    pec->nPlies = (unsigned int)strtol(pc, &pc, 10);
     if (*pc == 'C') {
         pec->fCubeful = TRUE;
         pc++;
     }
     if (ver < 3) {
-        red = strtol(pc, &pc, 10);
-        pec->fDeterministic = strtol(pc, &pc, 10);
-        pec->rNoise = g_ascii_strtod(pc, &pc);
+        red = (int)strtol(pc, &pc, 10);
+        pec->fDeterministic = (unsigned int)strtol(pc, &pc, 10);
+        pec->rNoise = (float)g_ascii_strtod(pc, &pc);
     } else {
-        pec->fDeterministic = strtol(pc, &pc, 10);
-        pec->rNoise = g_ascii_strtod(pc, &pc);
-        fUsePrune = strtol(pc, &pc, 10);
+        pec->fDeterministic = (unsigned int)strtol(pc, &pc, 10);
+        pec->rNoise = (float)g_ascii_strtod(pc, &pc);
+        fUsePrune = (unsigned int)strtol(pc, &pc, 10);
         pec->fUsePrune = fUsePrune;
     }
 }
@@ -759,9 +759,9 @@ RestoreRolloutMoveFilter(const char *sz, char *name, movefilter mf[MAX_FILTER_PL
 
     pc += strlen(name);
     for (i = 0; i < nPlies; ++i) {
-        mf[nPlies - 1][i].Accept = strtol(pc, &pc, 10);
-        mf[nPlies - 1][i].Extra = strtol(pc, &pc, 10);
-        mf[nPlies - 1][i].Threshold = g_ascii_strtod(pc, &pc);
+        mf[nPlies - 1][i].Accept = (int)strtol(pc, &pc, 10);
+        mf[nPlies - 1][i].Extra = (int)strtol(pc, &pc, 10);
+        mf[nPlies - 1][i].Threshold = (float)g_ascii_strtod(pc, &pc);
     }
 }
 
@@ -886,43 +886,43 @@ RestoreDoubleAnalysis(property * pp,
         aarOutput[1][OUTPUT_CUBEFUL_EQUITY] = -20000.0;
 
         if (ver < 2) {
-            arUnused[0] = g_ascii_strtod(pch, &pch);
-            arUnused[1] = g_ascii_strtod(pch, &pch);
-            arUnused[2] = g_ascii_strtod(pch, &pch);
-            arUnused[3] = g_ascii_strtod(pch, &pch);
-            pes->ec.nPlies = strtol(pch, &pch, 10);
+            arUnused[0] = (float)g_ascii_strtod(pch, &pch);
+            arUnused[1] = (float)g_ascii_strtod(pch, &pch);
+            arUnused[2] = (float)g_ascii_strtod(pch, &pch);
+            arUnused[3] = (float)g_ascii_strtod(pch, &pch);
+            pes->ec.nPlies = (unsigned int)strtol(pch, &pch, 10);
             if (*pch == 'C') {
                 pes->ec.fCubeful = TRUE;
                 pch++;
             }
-            nReduced = strtol(pch, &pch, 10);
-            pes->ec.fDeterministic = strtol(pch, &pch, 10);
-            pes->ec.rNoise = g_ascii_strtod(pch, &pch);
+            nReduced = (int)strtol(pch, &pch, 10);
+            pes->ec.fDeterministic = (unsigned int)strtol(pch, &pch, 10);
+            pes->ec.rNoise = (float)g_ascii_strtod(pch, &pch);
         } else if (ver == 2) {
-            pes->ec.nPlies = strtol(pch, &pch, 10);
+            pes->ec.nPlies = (unsigned int)strtol(pch, &pch, 10);
             if (*pch == 'C') {
                 pes->ec.fCubeful = TRUE;
                 pch++;
             }
-            nReduced = strtol(pch, &pch, 10);
-            pes->ec.fDeterministic = strtol(pch, &pch, 10);
-            pes->ec.rNoise = g_ascii_strtod(pch, &pch);
-            fUsePrune = strtol(pch, &pch, 10);
+            nReduced = (int)strtol(pch, &pch, 10);
+            pes->ec.fDeterministic = (unsigned int)strtol(pch, &pch, 10);
+            pes->ec.rNoise = (float)g_ascii_strtod(pch, &pch);
+            fUsePrune = (int)strtol(pch, &pch, 10);
         } else {
-            pes->ec.nPlies = strtol(pch, &pch, 10);
+            pes->ec.nPlies = (unsigned int)strtol(pch, &pch, 10);
             if (*pch == 'C') {
                 pes->ec.fCubeful = TRUE;
                 pch++;
             }
-            pes->ec.fDeterministic = strtol(pch, &pch, 10);
-            pes->ec.rNoise = g_ascii_strtod(pch, &pch);
-            fUsePrune = strtol(pch, &pch, 10);
+            pes->ec.fDeterministic = (unsigned int)strtol(pch, &pch, 10);
+            pes->ec.rNoise = (float)g_ascii_strtod(pch, &pch);
+            fUsePrune = (int)strtol(pch, &pch, 10);
         }
         pes->ec.fUsePrune = fUsePrune;
 
         for (i = 0; i < 2; i++)
             for (j = 0; j < 7; j++)
-                aarOutput[i][j] = g_ascii_strtod(pch, &pch);
+                aarOutput[i][j] = (float)g_ascii_strtod(pch, &pch);
         break;
 
     case 'R':
@@ -948,7 +948,7 @@ RestoreMarkedMoves(property * pp, movelist * pml)
 {
     int val;
     char *pch = pp->pl->plNext->p;
-    while ((val = strtol(pch, &pch, 10))) {
+    while ((val = (int)strtol(pch, &pch, 10))) {
         if (val > (int) pml->cMoves || val < 1)
             continue;
         pml->amMoves[val - 1].cmark = CMARK_ROLLOUT;
@@ -1017,38 +1017,38 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
             nReduced = 0;
             fDeterministic = 0;
             for (i = 0; i < 5; i++)
-                pm->arEvalMove[i] = g_ascii_strtod(pch, &pch);
-            pm->rScore = g_ascii_strtod(pch, &pch);
+                pm->arEvalMove[i] = (float)g_ascii_strtod(pch, &pch);
+            pm->rScore = (float)g_ascii_strtod(pch, &pch);
             if (ver < 2) {
-                pm->esMove.ec.nPlies = strtol(pch, &pch, 10);
+                pm->esMove.ec.nPlies = (unsigned int)strtol(pch, &pch, 10);
                 if (*pch == 'C') {
                     pm->esMove.ec.fCubeful = TRUE;
                     pch++;
                 }
-                nReduced = strtol(pch, &pch, 10);
-                pm->esMove.ec.fDeterministic = strtol(pch, &pch, 10);
-                pm->esMove.ec.rNoise = g_ascii_strtod(pch, &pch);
+                nReduced = (int)strtol(pch, &pch, 10);
+                pm->esMove.ec.fDeterministic = (unsigned int)strtol(pch, &pch, 10);
+                pm->esMove.ec.rNoise = (float)g_ascii_strtod(pch, &pch);
             } else if (ver == 2) {
-                pm->esMove.ec.nPlies = strtol(pch, &pch, 10);
+                pm->esMove.ec.nPlies = (unsigned int)strtol(pch, &pch, 10);
                 if (*pch == 'C') {
                     pm->esMove.ec.fCubeful = TRUE;
                     pch++;
                 }
-                nReduced = strtol(pch, &pch, 10);
-                pm->esMove.ec.fDeterministic = strtol(pch, &pch, 10);
-                pm->esMove.ec.rNoise = g_ascii_strtod(pch, &pch);
-                fUsePrune = strtol(pch, &pch, 10);
+                nReduced = (int)strtol(pch, &pch, 10);
+                pm->esMove.ec.fDeterministic = (unsigned int)strtol(pch, &pch, 10);
+                pm->esMove.ec.rNoise = (float)g_ascii_strtod(pch, &pch);
+                fUsePrune = (int)strtol(pch, &pch, 10);
             } else {
-                pm->esMove.ec.nPlies = strtol(pch, &pch, 10);
+                pm->esMove.ec.nPlies = (unsigned int)strtol(pch, &pch, 10);
                 if (*pch == 'C') {
                     pm->esMove.ec.fCubeful = TRUE;
                     pch++;
                 }
                 /* FIXME: reduced shouldn't be saved/loaded */
-                nReduced = strtol(pch, &pch, 10);
-                pm->esMove.ec.fDeterministic = strtol(pch, &pch, 10);
-                pm->esMove.ec.rNoise = g_ascii_strtod(pch, &pch);
-                fUsePrune = strtol(pch, &pch, 10);
+                nReduced = (int)strtol(pch, &pch, 10);
+                pm->esMove.ec.fDeterministic = (unsigned int)strtol(pch, &pch, 10);
+                pm->esMove.ec.rNoise = (float)g_ascii_strtod(pch, &pch);
+                fUsePrune = (int)strtol(pch, &pch, 10);
             }
             pm->esMove.ec.fUsePrune = fUsePrune;
             break;
@@ -1269,7 +1269,7 @@ RestoreNode(listOLD * pl)
         else if (pp->ach[0] == 'D' && pp->ach[1] == 'C')
             ast[1] = SKILL_DOUBTFUL;
         else if (pp->ach[0] == 'L' && pp->ach[1] == 'U')
-            rLuck = g_ascii_strtod(pp->pl->plNext->p, NULL);
+            rLuck = (float)g_ascii_strtod(pp->pl->plNext->p, NULL);
         else if (pp->ach[0] == 'G' && pp->ach[1] == 'B')
             /* good for black */
             lt = *((char *) pp->pl->plNext->p) == '2' ? LUCK_VERYGOOD : LUCK_GOOD;
