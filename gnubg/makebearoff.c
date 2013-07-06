@@ -135,7 +135,7 @@ XhashDestroy(xhash * ph)
     for (i = 0; i < ph->nHashSize; ++i)
         if (ph->phe[i].p)
             free(ph->phe[i].p);
-
+    free(ph->phe);
 }
 
 
