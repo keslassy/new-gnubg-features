@@ -245,7 +245,7 @@ StartFromDatabase(hyperequity ahe[], const int nC, const char *szFilename)
 
             for (k = 0; k < NUM_OUTPUTS; ++k) {
                 us = ac[3 * k] | (ac[3 * k + 1]) << 8 | (ac[3 * k + 2]) << 16;
-                r = us / 16777215.0;
+                r = us / 16777215.0f;
                 g_assert(r >= 0 && r <= 1);
                 ahe[i * nPos + j].arOutput[k] = r;
             }
@@ -294,15 +294,15 @@ static float
 CubeEquity(const float rND, const float rDT, const float rDP)
 {
 
-    if ((2.0 * rDT) >= rND && rDP >= rND) {
+    if ((2.0f * rDT) >= rND && rDP >= rND) {
         /* it's a double */
 
-        if ((2.0 * rDT) >= rDP)
+        if ((2.0f * rDT) >= rDP)
             /* double, pass */
             return rDP;
         else
             /* double, take */
-            return 2.0 * rDT;
+            return 2.0f * rDT;
 
     } else
         /* no double */
@@ -328,7 +328,6 @@ HyperEquity(const int nUs, const int nThem, hyperequity * phe, const int nC, con
     int nPos = Combination(25 + nC, nC);
     const hyperequity *phex;
     float r;
-    hyperclass hc;
 
     /* save old hyper equity */
 
@@ -339,7 +338,7 @@ HyperEquity(const int nUs, const int nThem, hyperequity * phe, const int nC, con
     PositionFromBearoff(anBoard[0], nThem, 25, nC);
     PositionFromBearoff(anBoard[1], nUs, 25, nC);
 
-    switch ((hc = ClassifyHyper(anBoard))) {
+    switch (ClassifyHyper(anBoard)) {
     case HYPER_OVER:
 
         HyperOver((ConstTanBoard) anBoard, phe->arOutput, nC);
@@ -448,18 +447,18 @@ HyperEquity(const int nUs, const int nThem, hyperequity * phe, const int nC, con
                 /* sum up equities */
 
                 for (k = 0; k < NUM_OUTPUTS; ++k)
-                    heNew.arOutput[k] += (i == j) ? heBest.arOutput[k] : 2.0 * heBest.arOutput[k];
+                    heNew.arOutput[k] += (i == j) ? heBest.arOutput[k] : 2.0f * heBest.arOutput[k];
                 for (k = 0; k < 5; ++k)
-                    heNew.arEquity[k] += (i == j) ? heBest.arEquity[k] : 2.0 * heBest.arEquity[k];
+                    heNew.arEquity[k] += (i == j) ? heBest.arEquity[k] : 2.0f * heBest.arEquity[k];
 
             }
 
         /* normalise */
 
         for (k = 0; k < NUM_OUTPUTS; ++k)
-            phe->arOutput[k] = heNew.arOutput[k] / 36.0;
+            phe->arOutput[k] = heNew.arOutput[k] / 36.0f;
         for (k = 0; k < 5; ++k)
-            phe->arEquity[k] = heNew.arEquity[k] / 36.0;
+            phe->arEquity[k] = heNew.arEquity[k] / 36.0f;
 
         break;
 
@@ -518,7 +517,7 @@ WriteEquity(FILE * pf, const float r)
 {
 
     unsigned int us;
-    us = (r / 6.0f + 0.5f) * 0xFFFFFF;
+    us = (unsigned int) ((r / 6.0f + 0.5f) * 0xFFFFFF);
 
     putc(us & 0xFF, pf);
     putc((us >> 8) & 0xFF, pf);
@@ -533,7 +532,7 @@ WriteProb(FILE * pf, const float r)
 
     unsigned int us;
 
-    us = r * 0xFFFFFF;
+    us = (unsigned int) (r * 0xFFFFFF);
 
     putc(us & 0xFF, pf);
     putc((us >> 8) & 0xFF, pf);
@@ -592,7 +591,7 @@ main(int argc, char **argv)
     hyperequity *aheEquity;
     int nPos;
     float rNorm;
-    float rEpsilon = 1.0e-5;
+    float rEpsilon = 1.0e-5f;
     gchar *szEpsilon = NULL;
     bearoffcontext *pbc = NULL;
     int it;
@@ -646,8 +645,8 @@ main(int argc, char **argv)
     }
 
     if (szEpsilon)
-        rEpsilon = g_strtod(szEpsilon, NULL);
-    if (rEpsilon > 1.0 || rEpsilon < 0.0) {
+        rEpsilon = (float) g_strtod(szEpsilon, NULL);
+    if (rEpsilon > 1.0f || rEpsilon < 0.0f) {
         g_printerr("Valid threadholds are 0.0 - 1.0\n");
         exit(1);
     }

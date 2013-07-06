@@ -965,7 +965,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
         /* Back anchor */
 
-        for (i = nBack == 24 ? 23 : nBack; i >= 0; --i) {
+        for (i = ((nBack == 24) ? 23 : nBack); i >= 0; --i) {
             if (anBoard[i] >= 2) {
                 break;
             }
@@ -2008,7 +2008,7 @@ raceBGprob(const TanBoard anBoard, int side, const bgvariation bgv)
                 p += ((float) bgp[j]) / scale * sum;
             }
 
-            p /= 65535.0;
+            p /= 65535.0f;
 
             return p;
 
@@ -2086,7 +2086,7 @@ EvalRaceBG(const TanBoard anBoard, float arOutput[], const bgvariation bgv)
 
         float pr = raceBGprob(anBoard, side, bgv);
 
-        if (pr > 0.0) {
+        if (pr > 0.0f) {
             if (side == 1) {
                 arOutput[OUTPUT_WINBACKGAMMON] = pr;
 
@@ -2291,7 +2291,7 @@ Noise(const evalcontext * pec, const TanBoard anBoard, int iOutput)
             r = x * x + y * y;
         } while (r > 1.0f || r == 0.0f);
 
-        r = y * sqrtf(-2.0f * log(r) / r);
+        r = y * sqrtf(-2.0f * logf(r) / r);
     }
 
     r *= pec->rNoise;
@@ -2904,14 +2904,14 @@ extern float
 KleinmanCount(int nPipOnRoll, int nPipNotOnRoll)
 {
     int nDiff, nSum;
-    double rK;
+    float rK;
 
     nDiff = nPipNotOnRoll - nPipOnRoll;
     nSum = nPipNotOnRoll + nPipOnRoll;
 
     if (nSum > 4) {
-        rK = (double) (nDiff + 4) / (2 * sqrt(nSum - 4));
-        return 0.5f * (1.0f + erf(rK));
+        rK = (nDiff + 4) / (2 * sqrtf(nSum - 4));
+        return 0.5f * (1.0f + erff(rK));
     } else
         return 0.f;
 }
@@ -3043,7 +3043,7 @@ StatusNeuralNet(neuralnet * pnn, char *szTitle, char *sz)
     char buf[200];
     sz += sprintf(sz, " * %s %s:\n", szTitle, _("neural network evaluator"));
     sprintf(buf, _("version %s, %d inputs, %d hidden units"), WEIGHTS_VERSION, pnn->cInput, pnn->cHidden);
-    sz += sprintf(sz, "   - %s.\n\n", buf);
+    sprintf(sz, "   - %s.\n\n", buf);
 }
 
 static void
@@ -3305,7 +3305,7 @@ isOptional(const float r1, const float r2)
 
     const float epsilon = 1.0e-5f;
 
-    return (fabs(r1 - r2) <= epsilon);
+    return (fabsf(r1 - r2) <= epsilon);
 
 }
 
@@ -3376,8 +3376,8 @@ FindBestCubeDecision(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], 
 
             arDouble[OUTPUT_OPTIMAL] = arDouble[OUTPUT_TAKE];
 
-            if (!pci->nMatchTo && arDouble[OUTPUT_TAKE] >= -2.0 && arDouble[OUTPUT_TAKE] <= 0.0 && pci->fBeavers) {
-                if (arDouble[OUTPUT_TAKE] * 2.0 < arDouble[OUTPUT_NODOUBLE]) {
+            if (!pci->nMatchTo && arDouble[OUTPUT_TAKE] >= -2.0f && arDouble[OUTPUT_TAKE] <= 0.0f && pci->fBeavers) {
+                if (arDouble[OUTPUT_TAKE] * 2.0f < arDouble[OUTPUT_NODOUBLE]) {
                     /*not a double if we can beaver */
                     return NODOUBLE_BEAVER;
                 } else
@@ -3452,7 +3452,7 @@ FindBestCubeDecision(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], 
 
                 /* 5. DP > ND > DT: No double, {take, beaver} */
 
-                if (arDouble[OUTPUT_TAKE] >= -2.0 && arDouble[OUTPUT_TAKE] <= 0.0 && !pci->nMatchTo && pci->fBeavers)
+                if (arDouble[OUTPUT_TAKE] >= -2.0f && arDouble[OUTPUT_TAKE] <= 0.0f && !pci->nMatchTo && pci->fBeavers)
                     return (pci->fCubeOwner == -1) ? NODOUBLE_BEAVER : NO_REDOUBLE_BEAVER;
                 else
                     return (pci->fCubeOwner == -1) ? NODOUBLE_TAKE : NO_REDOUBLE_TAKE;
@@ -3689,20 +3689,20 @@ Cl2CfMatchCentered(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
 
     /* Calculate normal, gammon, and backgammon ratios */
 
-    if (arOutput[OUTPUT_WIN] > 0.0) {
+    if (arOutput[OUTPUT_WIN] > 0.0f) {
         rG0 = (arOutput[OUTPUT_WINGAMMON] - arOutput[OUTPUT_WINBACKGAMMON]) / arOutput[OUTPUT_WIN];
         rBG0 = arOutput[OUTPUT_WINBACKGAMMON] / arOutput[OUTPUT_WIN];
     } else {
-        rG0 = 0.0;
-        rBG0 = 0.0;
+        rG0 = 0.0f;
+        rBG0 = 0.0f;
     }
 
-    if (arOutput[OUTPUT_WIN] < 1.0) {
+    if (arOutput[OUTPUT_WIN] < 1.0f) {
         rG1 = (arOutput[OUTPUT_LOSEGAMMON] - arOutput[OUTPUT_LOSEBACKGAMMON]) / (1.0f - arOutput[OUTPUT_WIN]);
         rBG1 = arOutput[OUTPUT_LOSEBACKGAMMON] / (1.0f - arOutput[OUTPUT_WIN]);
     } else {
-        rG1 = 0.0;
-        rBG1 = 0.0;
+        rG1 = 0.0f;
+        rBG1 = 0.0f;
     }
 
     /* MWC(dead cube) = cubeless equity */
@@ -3731,7 +3731,7 @@ Cl2CfMatchCentered(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
             + rG1 * aarMETResult[pci->fMove][NDLG]
             + rBG1 * aarMETResult[pci->fMove][NDLB];
 
-        if (rOppTG > 0.0)
+        if (rOppTG > 0.0f)
             /* avoid division by zero */
             rMWCLive = rMWCLose + (rMWCOppCash - rMWCLose) * arOutput[OUTPUT_WIN] / rOppTG;
         else
@@ -3764,7 +3764,7 @@ Cl2CfMatchCentered(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
             + rG0 * aarMETResult[pci->fMove][NDWG]
             + rBG0 * aarMETResult[pci->fMove][NDWB];
 
-        if (rTG < 1.0)
+        if (rTG < 1.0f)
             rMWCLive = rMWCCash + (rMWCWin - rMWCCash) * (arOutput[OUTPUT_WIN] - rTG) / (1.0f - rTG);
         else
             rMWCLive = rMWCWin;
@@ -3794,15 +3794,15 @@ Cl2CfMatchOwned(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
 
     /* Calculate normal, gammon, and backgammon ratios */
 
-    if (arOutput[OUTPUT_WIN] > 0.0) {
+    if (arOutput[OUTPUT_WIN] > 0.0f) {
         rG0 = (arOutput[OUTPUT_WINGAMMON] - arOutput[OUTPUT_WINBACKGAMMON]) / arOutput[OUTPUT_WIN];
         rBG0 = arOutput[OUTPUT_WINBACKGAMMON] / arOutput[OUTPUT_WIN];
     } else {
-        rG0 = 0.0;
-        rBG0 = 0.0;
+        rG0 = 0.0f;
+        rBG0 = 0.0f;
     }
 
-    if (arOutput[OUTPUT_WIN] < 1.0) {
+    if (arOutput[OUTPUT_WIN] < 1.0f) {
         rG1 = (arOutput[OUTPUT_LOSEGAMMON] - arOutput[OUTPUT_LOSEBACKGAMMON]) / (1.0f - arOutput[OUTPUT_WIN]);
         rBG1 = arOutput[OUTPUT_LOSEBACKGAMMON] / (1.0f - arOutput[OUTPUT_WIN]);
     } else {
@@ -3839,7 +3839,7 @@ Cl2CfMatchOwned(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
             + rG1 * aarMETResult[pci->fMove][NDLG]
             + rBG1 * aarMETResult[pci->fMove][NDLB];
 
-        if (rTG > 0.0)
+        if (rTG > 0.0f)
             rMWCLive = rMWCLose + (rMWCCash - rMWCLose) * arOutput[OUTPUT_WIN] / rTG;
         else
             rMWCLive = rMWCLose;
@@ -3864,7 +3864,7 @@ Cl2CfMatchOwned(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
             + rG0 * aarMETResult[pci->fMove][NDWG]
             + rBG0 * aarMETResult[pci->fMove][NDWB];
 
-        if (rTG < 1.0)
+        if (rTG < 1.0f)
             rMWCLive = rMWCCash + (rMWCWin - rMWCCash) * (arOutput[OUTPUT_WIN] - rTG) / (1.0f - rTG);
         else
             rMWCLive = rMWCWin;
@@ -3895,15 +3895,15 @@ Cl2CfMatchUnavailable(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
 
     /* Calculate normal, gammon, and backgammon ratios */
 
-    if (arOutput[OUTPUT_WIN] > 0.0) {
+    if (arOutput[OUTPUT_WIN] > 0.0f) {
         rG0 = (arOutput[OUTPUT_WINGAMMON] - arOutput[OUTPUT_WINBACKGAMMON]) / arOutput[OUTPUT_WIN];
         rBG0 = arOutput[OUTPUT_WINBACKGAMMON] / arOutput[OUTPUT_WIN];
     } else {
-        rG0 = 0.0;
-        rBG0 = 0.0;
+        rG0 = 0.0f;
+        rBG0 = 0.0f;
     }
 
-    if (arOutput[OUTPUT_WIN] < 1.0) {
+    if (arOutput[OUTPUT_WIN] < 1.0f) {
         rG1 = (arOutput[OUTPUT_LOSEGAMMON] - arOutput[OUTPUT_LOSEBACKGAMMON]) / (1.0f - arOutput[OUTPUT_WIN]);
         rBG1 = arOutput[OUTPUT_LOSEBACKGAMMON] / (1.0f - arOutput[OUTPUT_WIN]);
     } else {
@@ -3942,7 +3942,7 @@ Cl2CfMatchUnavailable(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
             + rG1 * aarMETResult[pci->fMove][NDLG]
             + rBG1 * aarMETResult[pci->fMove][NDLB];
 
-        if (rOppTG > 0.0)
+        if (rOppTG > 0.0f)
             /* avoid division by zero */
             rMWCLive = rMWCLose + (rMWCOppCash - rMWCLose) * arOutput[OUTPUT_WIN] / rOppTG;
         else
@@ -4396,19 +4396,19 @@ extern void
 calculate_gammon_rates(float aarRates[2][2], float arOutput[], cubeinfo * pci)
 {
 
-    if (arOutput[OUTPUT_WIN] > 0.0) {
+    if (arOutput[OUTPUT_WIN] > 0.0f) {
         aarRates[pci->fMove][0] = (arOutput[OUTPUT_WINGAMMON] - arOutput[OUTPUT_WINBACKGAMMON]) / arOutput[OUTPUT_WIN];
         aarRates[pci->fMove][1] = arOutput[OUTPUT_WINBACKGAMMON] / arOutput[OUTPUT_WIN];
     } else {
-        aarRates[pci->fMove][0] = aarRates[pci->fMove][1] = 0;
+        aarRates[pci->fMove][0] = aarRates[pci->fMove][1] = 0.0f;
     }
 
-    if (arOutput[OUTPUT_WIN] < 1.0) {
+    if (arOutput[OUTPUT_WIN] < 1.0f) {
         aarRates[!pci->fMove][0] =
             (arOutput[OUTPUT_LOSEGAMMON] - arOutput[OUTPUT_LOSEBACKGAMMON]) / (1.0f - arOutput[OUTPUT_WIN]);
         aarRates[!pci->fMove][1] = arOutput[OUTPUT_LOSEBACKGAMMON] / (1.0f - arOutput[OUTPUT_WIN]);
     } else {
-        aarRates[!pci->fMove][0] = aarRates[!pci->fMove][1] = 0;
+        aarRates[!pci->fMove][0] = aarRates[!pci->fMove][1] = 0.0f;
     }
 
 }
@@ -5775,7 +5775,7 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
                     fResort = TRUE;
                 }
 
-                if ((fabs(pml->amMoves[i].rScore - pml->amMoves[0].rScore) > rThr) && (nMaxPly < pec->nPlies)) {
+                if ((fabsf(pml->amMoves[i].rScore - pml->amMoves[0].rScore) > rThr) && (nMaxPly < pec->nPlies)) {
 
                     /* this is en error/blunder: re-analyse at top-ply */
 
@@ -5837,7 +5837,7 @@ GeneralCubeDecisionE(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
     /* Scale double-take equity */
     if (!pci->nMatchTo)
-        arCubeful[1] *= 2.0;
+        arCubeful[1] *= 2.0f;
 
     for (i = 0; i < 2; i++) {
 
@@ -6225,7 +6225,6 @@ EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard,
     int ici;
     int fAll = TRUE;
     evalcache ec;
-    unsigned long l;
 
     if (!cCache || pec->rNoise != 0.0f)
         /* non-deterministic evaluation; never cache */
@@ -6248,7 +6247,7 @@ EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard,
 
         ec.nEvalContext = EvalKey(pec, nPlies, &aciCubePos[ici], TRUE);
 
-        if ((l = CacheLookup(&cEval, &ec, arOutput, arCubeful + ici)) != CACHEHIT) {
+        if (CacheLookup(&cEval, &ec, arOutput, arCubeful + ici) != CACHEHIT) {
             fAll = FALSE;
         }
     }
