@@ -975,6 +975,11 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
     for (pml->cMoves = 0, pl = pl->plNext; pl->p; pl = pl->plNext)
         pml->cMoves++;
 
+    if (pml->cMoves == 0) {
+        g_assert_not_reached();
+        return;
+    }
+
     /* FIXME we could work these out, but it hardly seems worth it */
     pml->cMaxMoves = pml->cMaxPips = pml->iMoveBest = 0;
     pml->rBestScore = 0;
