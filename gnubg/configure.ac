@@ -453,7 +453,7 @@ AC_HELP_STRING([--with-eval-max-threads=size],
 
 
 if test "x$simdcpu" = "xavx" && test "x$win32" = "xyes" ; then
-    AM_CFLAGS="$AM_CFLAGS -O0"
+    AM_CFLAGS="$AM_CFLAGS"
 fi
 
 AC_SUBST(AM_CFLAGS)

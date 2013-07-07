@@ -595,7 +595,7 @@ PythonHint_Callback (procrecorddata *pr)
     float rEq = pml->amMoves[index].rScore;
     float rEqTop = pml->amMoves[0].rScore;
     float rEqDiff = rEq - rEqTop;
-    
+
     FormatMove(szMove, (ConstTanBoard)pms->anBoard, pml->amMoves[index].anMove);
 
     switch (pes->et) {
@@ -606,7 +606,7 @@ PythonHint_Callback (procrecorddata *pr)
         const move *mi = &pml->amMoves[index];
         details = Py_BuildValue("{s:(fffff),s:f}", "probs", mi->arEvalMove[0], mi->arEvalMove[1],
                                 mi->arEvalMove[2], mi->arEvalMove[3], mi->arEvalMove[4], "score", mi->rScore);
-                                        
+
         ctxdict = EvalContextToPy(&pes->ec); 
         hintdict = Py_BuildValue("{s:i,s:s,s:s,s:f,s:f,s:N,s:N}", "movenum", index + 1, "type", "eval", "move", szMove, 
                                  "equity", rEq, "eqdiff", rEqDiff, "context", ctxdict, "details", details);
@@ -649,8 +649,6 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
     procrecorddata prochint;
     char szNumber[6];
     char *szHintType;
-//    moverecord *pmr;
-//    movelist ml;
     int nMaxMoves = -1;
 
     if (!PyArg_ParseTuple(args, "|i", &nMaxMoves))

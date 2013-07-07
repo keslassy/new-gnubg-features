@@ -1,14 +1,11 @@
-2013-06-30  Michael Petch  <mpetch@gnubg.org>
+2013-07-06  Michael Petch  <mpetch@gnubg.org>
 
-    * eval.h, rollout.c, gnubgmodule.c:  Store the JSD that a 
-    rollout alternative was stopped on into the rollout context
-
-    dbprovider.c gnubg.c gnubgmodule.c gnubgmodule.h: Allow a
-    user Python startup script (gnubg_user.py) to be loaded
-    at startup AFTER gnubg.py. No error is thrown if the file
-    doesn't exist. gnubg_user.py is not meant to be imported,
-    but loaded as a textfile into the main name space just like
-    gnubg.py .
+    * lib/inputs.c, lib/simd.h, Makefile.am, configure.ac: Fix an 
+    AVX alignment bug while creating the baseinputs for the NN on
+    Win32 platforms with GNUC.
+    
+    * eval.c, gnubgmodule.c, multithread.c, multithread.h,
+    m4/ax_ext.m4: Fix some warnings and general cleanup
 
 2013-06-29  Michael Petch  <mpetch@gnubg.org>
 

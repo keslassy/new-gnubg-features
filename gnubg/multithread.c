@@ -867,7 +867,6 @@ int
 MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
 {
     GList *member;
-    guint cb_source = 0;
     guint as_source = 0;
     td.doneTasks = 0;
 
@@ -878,7 +877,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     multi_debug("Waiting for all tasks");
 
     pCallback(NULL);
-    cb_source = g_timeout_add(1000, pCallback, NULL);
+    g_timeout_add(1000, pCallback, NULL);
     if (autosave)
         as_source = g_timeout_add(nAutoSaveTime * 60000, save_autosave, NULL);
     for (member = g_list_first(td.tasks); member; member = member->next, td.doneTasks++) {

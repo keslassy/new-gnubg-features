@@ -101,7 +101,9 @@ extern void MT_SetResultFailed(void);
 #endif
 
 #else                           /*USE_MULTITHREAD */
+#if !defined(MAX_NUMTHREADS)
 #define MAX_NUMTHREADS 1
+#endif
 extern int asyncRet;
 #define MT_Exclusive() {}
 #define MT_Release() {}

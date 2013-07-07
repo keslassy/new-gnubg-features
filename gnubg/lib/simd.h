@@ -13,6 +13,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifndef SIMD_H
+#define SIMD_H
+
 #if USE_SIMD_INSTRUCTIONS
 
 #include <stdlib.h>
@@ -49,3 +52,5 @@ extern void sse_free(float *ptr);
 #define sse_free free
 
 #endif
+
+#endif /* SIMD_H */

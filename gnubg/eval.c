@@ -572,7 +572,9 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
     static int fInitialised = FALSE;
     char *gnubg_bearoff;
     char *gnubg_bearoff_os;
+#if USE_SIMD_INSTRUCTIONS
     int result, simderror = TRUE;
+#endif
 
     if (!fInitialised) {
 #if USE_SIMD_INSTRUCTIONS
