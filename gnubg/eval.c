@@ -459,7 +459,7 @@ ComputeTable(void)
 }
 
 
-NNState nnStatesStorage[MAX_NUMTHREADS][3];
+static NNState nnStatesStorage[MAX_NUMTHREADS][3];
 
 static void
 DestroyWeights(void)
@@ -5272,7 +5272,7 @@ extern evalCache cpEval;
 extern classevalfunc acef[N_CLASSES];
 extern unsigned int cCache;
 extern evalcontext ecBasic;
-NNState nnStatesStorage[MAX_NUMTHREADS][3];
+static NNState nnStatesStorage[MAX_NUMTHREADS][3];
 #endif
 
 static int GeneralEvaluationEPlied(NNState * nnStates, float arOutput[NUM_ROLLOUT_OUTPUTS],
