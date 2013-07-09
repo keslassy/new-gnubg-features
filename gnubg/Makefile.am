@@ -61,6 +61,8 @@ gnubg_SOURCES = \
 		dice.h \
 		drawboard.c \
 		drawboard.h \
+        eval.c \
+        evallock.c \
 		eval.h \
 		export.c \
 		export.h \
@@ -126,18 +128,6 @@ gnubg_SOURCES = \
 		util.h \
 		util.c 
 
-noinst_LTLIBRARIES = libeval.la
-libeval_la_SOURCES = eval.c eval.h evallock.c
-libeval_la_CFLAGS = $(AM_CFLAGS)
-
-# If using AVX on WIN32 disable inline function optimizations
-# in eval.c
-if USE_AVX
-if WIN32
-libeval_la_CFLAGS += -O0
-endif
-endif
-
 if USE_GTK
 gnubg_SOURCES += gtkboard.c gtkboard.h gtkgame.c gtkgame.h gtkfile.c gtkfile.h \
 		 gtkprefs.c gtkprefs.h gtk-multiview.c gtk-multiview.h gtktheory.c \
@@ -156,7 +146,7 @@ endif
 ##linkpath for gnubg
 #
 
-gnubg_LDADD = libeval.la -L$(srcdir)/lib lib/libevent.la \
+gnubg_LDADD = -L$(srcdir)/lib lib/libevent.la \
           @GTK_LIBS@ @LIBPNG_LIBS@ @CAIRO_LIBS@ @PANGOCAIRO_LIBS@ \
 	      @GTHREAD_LIBS@ \
 	      @LTLIBOBJS@ \
@@ -184,23 +174,23 @@ endif
 #
 ##common sources for building the utility programs
 #
-UTILSOURCES = eval.h positionid.h positionid.c \
+UTILSOURCES = eval.h eval.c positionid.h positionid.c \
 	matchequity.c matchequity.h matchid.h matchid.c \
-	osr.c osr.h \
-        bearoffgammon.c bearoffgammon.h bearoff.c bearoff.h \
+	osr.c osr.h multithread.h \
+    bearoffgammon.c bearoffgammon.h bearoff.c bearoff.h \
 	mec.h mec.c util.c util.h
 
 makebearoff_SOURCES = makebearoff.c $(UTILSOURCES)
-makebearoff_LDADD = libeval.la -Llib lib/libevent.la  @GLIB_LIBS@
+makebearoff_LDADD = -Llib lib/libevent.la  @GLIB_LIBS@
 
 makehyper_SOURCES = makehyper.c $(UTILSOURCES)
-makehyper_LDADD = libeval.la -Llib lib/libevent.la @GLIB_LIBS@
+makehyper_LDADD =  -Llib lib/libevent.la @GLIB_LIBS@
 
 bearoffdump_SOURCES = bearoffdump.c $(UTILSOURCES)
-bearoffdump_LDADD = libeval.la -Llib lib/libevent.la @GLIB_LIBS@
+bearoffdump_LDADD = -Llib lib/libevent.la @GLIB_LIBS@
 
 makeweights_SOURCES = makeweights.c
-makeweights_LDADD = libeval.la -Llib lib/libevent.la @GLIB_LIBS@ 
+makeweights_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ 
 
 
 #

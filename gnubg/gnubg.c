@@ -2492,9 +2492,8 @@ Shutdown(void)
     MoveListDestroy();
 #endif
 
-#if USE_MULTITHREAD
     MT_Close();
-#endif
+
     EvalShutdown();
 
 #if USE_PYTHON
@@ -4685,10 +4684,6 @@ main(int argc, char *argv[])
 
     output_initialize();
 
-#if USE_MULTITHREAD
-    MT_InitThreads();
-#endif
-
     /* set language */
     init_defaults();
 #if USE_GTK
@@ -4775,6 +4770,9 @@ main(int argc, char *argv[])
 
     PushSplash(pwSplash, _("Initialising"), _("neural nets"));
     init_nets(fNoBearoff);
+
+    PushSplash(pwSplash, _("Initialising"), _("initialising thread data"));
+    MT_InitThreads();
 
 #if defined(WIN32) && HAVE_SOCKETS
     PushSplash(pwSplash, _("Initialising"), _("Windows sockets"));

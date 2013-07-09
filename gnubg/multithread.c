@@ -23,7 +23,7 @@
  */
 
 #include "config.h"
-#if USE_MULTITHREAD
+
 #ifdef WIN32
 #include <process.h>
 #endif
@@ -40,6 +40,40 @@
 #include "speed.h"
 #include "rollout.h"
 #include "util.h"
+#include "lib/simd.h"
+
+typedef struct _ThreadLocalData {
+    int id;
+    move *aMoves;
+    NNState *pnnState;
+} ThreadLocalData;
+
+static ThreadLocalData *
+MT_CreateThreadLocalData(int id)
+{
+    ThreadLocalData *tld = (ThreadLocalData *)malloc(sizeof(ThreadLocalData));
+    tld->id = id;
+    tld->pnnState = (NNState *)malloc(sizeof(NNState)*3);
+    memset(tld->pnnState, 0, sizeof(NNState)*3);
+    tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase = malloc(nnRace.cHidden * sizeof(float));
+    memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase, 0, nnRace.cHidden * sizeof(float));
+    tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase = malloc(nnRace.cInput * sizeof(float));
+    memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase, 0,  nnRace.cInput * sizeof(float));
+    tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase = malloc(nnCrashed.cHidden * sizeof(float));
+    memset(tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase, 0, nnCrashed.cHidden * sizeof(float));
+    tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedIBase = malloc(nnCrashed.cInput * sizeof(float));
+    memset(tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedIBase, 0, nnCrashed.cInput * sizeof(float));
+    tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedBase = malloc(nnContact.cHidden * sizeof(float));
+    memset(tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedBase, 0, nnContact.cHidden * sizeof(float));
+    tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedIBase = malloc(nnContact.cInput * sizeof(float));
+    memset(tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedIBase, 0, nnContact.cInput * sizeof(float));
+
+    tld->aMoves = (move *)malloc(sizeof(move)*MAX_INCOMPLETE_MOVES);
+    memset (tld->aMoves, 0, sizeof(move)*MAX_INCOMPLETE_MOVES);
+    return tld;
+}
+
+#if USE_MULTITHREAD
 
 #define UI_UPDATETIME 250
 
@@ -91,7 +125,7 @@ typedef struct _ThreadData {
     unsigned int numThreads;
 } ThreadData;
 
-ThreadData td;
+SSE_ALIGN(ThreadData td);
 
 #ifdef GLIB_THREADS
 
@@ -118,14 +152,14 @@ TLSFree(TLSItem UNUSED(pItem))
 }
 
 static void
-TLSSetValue(TLSItem pItem, int value)
+TLSSetValue(TLSItem pItem, size_t value)
 {
-    int *pNew = (int *) malloc(sizeof(int));
+    size_t *pNew = (size_t *) malloc(sizeof(size_t));
     *pNew = value;
     g_private_set(pItem, (gpointer) pNew);
 }
 
-#define TLSGet(item) *((int*)g_private_get(item))
+#define TLSGet(item) *((size_t*)g_private_get(item))
 
 static void
 InitManualEvent(ManualEvent * pME)
@@ -356,6 +390,7 @@ Mutex_Release(Mutex mutex)
     multi_debug("Releasing lock");
     ReleaseMutex(mutex);
 }
+
 #else
 #define Mutex_Lock(mutex, reason) WaitForSingleObject(mutex, INFINITE)
 #define Mutex_Release(mutex) ReleaseMutex(mutex)
@@ -372,7 +407,17 @@ MT_GetNumThreads(void)
 static void
 CloseThread(void *UNUSED(unused))
 {
+    int i;
+    NNState *pnnState = ((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState;
+
     g_assert(td.closingThreads);
+    free(((ThreadLocalData *)TLSGet(td.tlsItem))->aMoves);
+    for (i = 0; i < 3; i++) {
+        free(pnnState[i].savedBase);
+        free(pnnState[i].savedIBase);
+    }
+    free(((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState);
+    free((void *)TLSGet(td.tlsItem));
     MT_SafeInc(&td.result);
 }
 
@@ -430,17 +475,17 @@ MT_AbortTasks(void)
 
 #ifdef GLIB_THREADS
 static gpointer
-MT_WorkerThreadFunction(void *id)
+MT_WorkerThreadFunction(void *tld)
 #else
 static void
-MT_WorkerThreadFunction(void *id)
+MT_WorkerThreadFunction(void *tld)
 #endif
 {
     /* why do we need this align ? - because of a gcc bug */
 #if __GNUC__ && defined(WIN32)
-    /* Align stack pointer on 16/13 byte boundary so SSE/AVX variables work correctly */
+    /* Align stack pointer on 16/32 byte boundary so SSE/AVX variables work correctly */
     int align_offset;
-#ifdef USE_AVX
+#if defined(USE_AVX)
     asm __volatile__("andl $-32, %%esp":::"%esp");
     align_offset = ((int) (&align_offset)) % 32;
 #else
@@ -449,9 +494,9 @@ MT_WorkerThreadFunction(void *id)
 #endif
 #endif
     {
-        int *pID = (int *) id;
-        TLSSetValue(td.tlsItem, *pID);
-        free(pID);
+        ThreadLocalData *pTLD = (ThreadLocalData *) tld;
+        TLSSetValue(td.tlsItem, (size_t)pTLD);
+
         MT_SafeInc(&td.result);
         MT_TaskDone(NULL);      /* Thread created */
         do {
@@ -489,16 +534,16 @@ MT_CreateThreads(void)
     td.result = 0;
     td.closingThreads = FALSE;
     for (i = 0; i < td.numThreads; i++) {
-        int *pID = (int *) malloc(sizeof(int));
-        *pID = i;
+        ThreadLocalData *pTLD = MT_CreateThreadLocalData(i);
+
 #ifdef GLIB_THREADS
 #if GLIB_CHECK_VERSION (2,32,0)
-        if (!g_thread_try_new("Worker", MT_WorkerThreadFunction, pID, NULL))
+        if (!g_thread_try_new("Worker", MT_WorkerThreadFunction, pTLD, NULL))
 #else
-        if (!g_thread_create(MT_WorkerThreadFunction, pID, FALSE, NULL))
+        if (!g_thread_create(MT_WorkerThreadFunction, pTLD, FALSE, NULL))
 #endif
 #else
-        if (_beginthread(MT_WorkerThreadFunction, 0, pID) == 0)
+        if (_beginthread(MT_WorkerThreadFunction, 0, pTLD) == 0)
 #endif
             printf("Failed to create thread\n");
     }
@@ -550,7 +595,8 @@ MT_InitThreads(void)
     td.totalTasks = -1;
     InitManualEvent(&td.activity);
     TLSCreate(&td.tlsItem);
-    TLSSetValue(td.tlsItem, 0); /* Main thread shares id 0 */
+    TLSSetValue(td.tlsItem, (size_t)MT_CreateThreadLocalData(0)); /* Main thread shares id 0 */
+
 #if defined(DEBUG_MULTITHREADED) && defined(WIN32)
     mainThreadID = GetCurrentThreadId();
 #endif
@@ -696,12 +742,6 @@ MT_Close(void)
     TLSFree(td.tlsItem);
 }
 
-extern int
-MT_GetThreadID(void)
-{
-    return TLSGet(td.tlsItem);
-}
-
 extern void
 MT_Exclusive(void)
 {
@@ -817,7 +857,26 @@ multi_debug(const char *str, ...)
     ReleaseMutex(td.multiLock);
 #endif
 }
+
 #endif
+
+extern int
+MT_GetThreadID(void)
+{
+    return ((ThreadLocalData *)TLSGet(td.tlsItem))->id;
+}
+
+extern NNState *
+MT_Get_nnState(void)
+{
+    return ((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState;
+}
+
+extern move *
+MT_Get_aMoves(void)
+{
+    return ((ThreadLocalData *)TLSGet(td.tlsItem))->aMoves;
+}
 
 #else
 #include "multithread.h"
@@ -834,7 +893,7 @@ typedef struct _ThreadData {
     GList *tasks;
     int result;
 } ThreadData;
-ThreadData td;
+SSE_ALIGN(ThreadData td);
 
 int asyncRet;
 void
@@ -905,4 +964,52 @@ MT_AbortTasks(void)
 {
     td.result = -1;
 }
+
+static SSE_ALIGN(ThreadLocalData *tld) = NULL;
+
+extern int
+MT_GetThreadID(void)
+{
+    return (tld->id);
+}
+
+extern NNState *
+MT_Get_nnState(void)
+{
+    return (tld->pnnState);
+}
+
+extern move *
+MT_Get_aMoves(void)
+{
+    return (tld->aMoves);
+}
+
+extern void
+MT_InitThreads(void)
+{
+    tld = MT_CreateThreadLocalData(0); /* Main thread shares id 0 */
+}
+
+extern void
+MT_Close(void)
+{
+    int i;
+    NNState *pnnState;
+
+    if (!tld)
+        return;
+
+    free(tld->aMoves);
+    pnnState = tld->pnnState;
+    for (i = 0; i < 3; i++) {
+        free(pnnState[i].savedBase);
+        free(pnnState[i].savedIBase);
+    }
+    free(pnnState);
+    free(tld);
+}
+
 #endif
+
+

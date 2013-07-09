@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 16:23-0600\n"
+"POT-Creation-Date: 2013-07-08 17:52-0600\n"
 "PO-Revision-Date: 2011-02-05 18:26+0200\n"
 "Last-Translator: Mihai <mihaiv@gmail.com>\n"
 "Language-Team:  <>\n"
@@ -734,7 +734,7 @@ msgstr ""
 msgid "Rewinding dice file (%s)"
 msgstr "Revenire la început fişier zaruri (%s)\n"
 
-#: drawboard.c:72 drawboard.c:295 gnubg.c:5094 gtkexport.c:651 gtkgame.c:2736
+#: drawboard.c:72 drawboard.c:295 gnubg.c:5092 gtkexport.c:651 gtkgame.c:2736
 #: gtkgame.c:3641 gtkgame.c:6109
 msgid "GNU Backgammon"
 msgstr "Table GNU"
@@ -749,144 +749,144 @@ msgstr "ID poziţie:"
 msgid "Match ID"
 msgstr "ID partidă:"
 
-#: eval.c:265
+#: eval.c:270
 msgid "Standard backgammon"
 msgstr "Table standard"
 
-#: eval.c:266
+#: eval.c:271
 #, fuzzy
 msgid "Nackgammon"
 msgstr "marţ tehnic"
 
-#: eval.c:267
+#: eval.c:272
 msgid "1-chequer hypergammon"
 msgstr "Hypergammon 1-pul"
 
-#: eval.c:268
+#: eval.c:273
 msgid "2-chequer hypergammon"
 msgstr "Hypergammon 2-puluri"
 
-#: eval.c:269
+#: eval.c:274
 msgid "3-chequer hypergammon"
 msgstr "Hypergammon 3-pululuri"
 
-#: eval.c:285 set.c:2954
+#: eval.c:290 set.c:2954
 msgid "No evaluation"
 msgstr "Nici o evaluare"
 
-#: eval.c:286 set.c:2955
+#: eval.c:291 set.c:2955
 msgid "Neural net evaluation"
 msgstr "Evaluare reţea neurală"
 
-#: eval.c:287 eval.c:4103 format.c:798 gtkchequer.c:465 gtkcube.c:824
+#: eval.c:292 eval.c:4082 format.c:798 gtkchequer.c:465 gtkcube.c:824
 #: gtkgame.c:3218 gtkrace.c:231 html.c:1873 set.c:2956
 msgid "Rollout"
 msgstr "Simulare"
 
-#: eval.c:307
+#: eval.c:312
 #, fuzzy
 msgid "setting|beginner"
 msgstr "începător"
 
-#: eval.c:308
+#: eval.c:313
 #, fuzzy
 msgid "setting|casual play"
 msgstr "joc ocazional"
 
-#: eval.c:309
+#: eval.c:314
 #, fuzzy
 msgid "setting|intermediate"
 msgstr "mediu"
 
-#: eval.c:310
+#: eval.c:315
 #, fuzzy
 msgid "setting|advanced"
 msgstr "avansat"
 
-#: eval.c:311
+#: eval.c:316
 #, fuzzy
 msgid "setting|expert"
 msgstr "Setează setările pentru export"
 
-#: eval.c:312
+#: eval.c:317
 #, fuzzy
 msgid "setting|world class"
 msgstr "clasă mondială"
 
-#: eval.c:313
+#: eval.c:318
 #, fuzzy
 msgid "setting|supremo"
 msgstr "suprem"
 
-#: eval.c:314
+#: eval.c:319
 #, fuzzy
 msgid "setting|grandmaster"
 msgstr "mare maestru"
 
-#: eval.c:315
+#: eval.c:320
 #, fuzzy
 msgid "setting|4ply"
 msgstr "joc ocazional"
 
-#: eval.c:347
+#: eval.c:352
 msgid "Tiny"
 msgstr "Foarte mic"
 
-#: eval.c:348
+#: eval.c:353
 msgid "Narrow"
 msgstr "Îngust"
 
-#: eval.c:349
+#: eval.c:354
 msgid "Normal"
 msgstr "Normal"
 
-#: eval.c:350 gtkoptions.c:1215
+#: eval.c:355 gtkoptions.c:1215
 msgid "Large"
 msgstr "Mare"
 
-#: eval.c:351
+#: eval.c:356
 msgid "Huge"
 msgstr "Uriaş"
 
-#: eval.c:364
+#: eval.c:369
 msgid "doubletype|Double"
 msgstr ""
 
-#: eval.c:365
+#: eval.c:370
 #, fuzzy
 msgid "doubletype|Beaver"
 msgstr "Fără dublare, castor"
 
-#: eval.c:366
+#: eval.c:371
 msgid "doubletype|Raccoon"
 msgstr ""
 
-#: eval.c:525 eval.c:554
+#: eval.c:520 eval.c:549
 #, fuzzy, c-format
 msgid "%s is not a weights file"
 msgstr "%s: nu este un fişier de ponderi\n"
 
-#: eval.c:536 eval.c:559
+#: eval.c:531 eval.c:554
 #, c-format
 msgid "weights file %s, has incorrect version (%s), expected (%s)"
 msgstr ""
 
-#: eval.c:582
+#: eval.c:579
 #, c-format
 msgid "Can't check for SIMD support - non pentium cpu\n"
 msgstr ""
 
-#: eval.c:585
+#: eval.c:582
 #, c-format
 msgid "No cpuid check available\n"
 msgstr ""
 
-#: eval.c:595
+#: eval.c:592
 #, c-format
 msgid "Unknown error while doing SIMD support test\n"
 msgstr ""
 
-#: eval.c:601
+#: eval.c:598
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -895,7 +895,7 @@ msgid ""
 msgstr ""
 "Această instalare de Table GNU a fost compilată fără suport pentru Python."
 
-#: eval.c:604
+#: eval.c:601
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -904,125 +904,125 @@ msgid ""
 msgstr ""
 "Această instalare de Table GNU a fost compilată fără suport pentru Python."
 
-#: eval.c:3044
+#: eval.c:3023
 #, fuzzy
 msgid "neural network evaluator"
 msgstr "Evaluare reţea neurală"
 
-#: eval.c:3045
+#: eval.c:3024
 #, fuzzy, c-format
 msgid "version %s, %d inputs, %d hidden units"
 msgstr ""
 " * %s evaluator reţea neurală:\n"
 "   - versiune %s, intrări %d, unităţi ascunse %d"
 
-#: eval.c:3053 format.c:1084
+#: eval.c:3032 format.c:1084
 msgid "Race"
 msgstr "Cursă"
 
-#: eval.c:3060 format.c:1085
+#: eval.c:3039 format.c:1085
 msgid "Crashed"
 msgstr "Prabuşit"
 
-#: eval.c:3067 format.c:1086
+#: eval.c:3046 format.c:1086
 msgid "Contact"
 msgstr "Contact"
 
-#: eval.c:3110 format.c:774 gtkcube.c:359 html.c:1706
+#: eval.c:3089 format.c:774 gtkcube.c:359 html.c:1706
 msgid "Double, take"
 msgstr "Dublare, ia"
 
-#: eval.c:3112 format.c:775 gtkcube.c:360 html.c:1707
+#: eval.c:3091 format.c:775 gtkcube.c:360 html.c:1707
 msgid "Double, pass"
 msgstr "Dublare, pas"
 
-#: eval.c:3114
+#: eval.c:3093
 msgid "No double, take"
 msgstr "Fără dublare, ia"
 
-#: eval.c:3116
+#: eval.c:3095
 msgid "Too good to double, take"
 msgstr "Prea bine pentru dublare, ia"
 
-#: eval.c:3118
+#: eval.c:3097
 msgid "Too good to double, pass"
 msgstr "Prea bine pentru dublare, pas"
 
-#: eval.c:3120
+#: eval.c:3099
 msgid "Double, beaver"
 msgstr "Dublare, castor"
 
-#: eval.c:3122
+#: eval.c:3101
 msgid "No double, beaver"
 msgstr "Fără dublare, castor"
 
-#: eval.c:3124
+#: eval.c:3103
 msgid "Redouble, take"
 msgstr "Redublare, ia"
 
-#: eval.c:3126
+#: eval.c:3105
 msgid "Redouble, pass"
 msgstr "Redublare, pas"
 
-#: eval.c:3128
+#: eval.c:3107
 msgid "No redouble, take"
 msgstr "Nici o redublare, ia"
 
-#: eval.c:3130
+#: eval.c:3109
 msgid "Too good to redouble, take"
 msgstr "Pre bine pentru redublare, ia"
 
-#: eval.c:3132
+#: eval.c:3111
 msgid "Too good to redouble, pass"
 msgstr "Prea bine pentru redublare, pas"
 
-#: eval.c:3134
+#: eval.c:3113
 msgid "No redouble, beaver"
 msgstr "Fără redublare, castor"
 
-#: eval.c:3136
+#: eval.c:3115
 msgid "Never double, take (dead cube)"
 msgstr "Niciodată dublare, ia (cub inactiv)"
 
-#: eval.c:3138
+#: eval.c:3117
 msgid "Never redouble, take (dead cube)"
 msgstr "Niciodată redublare, ia (cub inactiv)"
 
-#: eval.c:3140
+#: eval.c:3119
 msgid "Optional double, beaver"
 msgstr "Dublare opţională, castor"
 
-#: eval.c:3142
+#: eval.c:3121
 msgid "Optional double, take"
 msgstr "Dublare opţională, ia"
 
-#: eval.c:3144
+#: eval.c:3123
 msgid "Optional redouble, take"
 msgstr "Redublare opţională, ia"
 
-#: eval.c:3146
+#: eval.c:3125
 msgid "Optional double, pass"
 msgstr "Redublare opţională, pas"
 
-#: eval.c:3148
+#: eval.c:3127
 msgid "Optional redouble, pass"
 msgstr "Redublare opţională, pas"
 
-#: eval.c:3150
+#: eval.c:3129
 #, fuzzy
 msgid "Unknown cube decision"
 msgstr "Decizii cub în total"
 
-#: eval.c:4100 format.c:1111 gtkgame.c:4939 html.c:302 progress.c:686
+#: eval.c:4079 format.c:1111 gtkgame.c:4939 html.c:302 progress.c:686
 #: show.c:121
 msgid "Cubeful"
 msgstr "Cu cub"
 
-#: eval.c:4100 gtkmovelistctrl.c:289 html.c:299 progress.c:685 show.c:121
+#: eval.c:4079 gtkmovelistctrl.c:289 html.c:299 progress.c:685 show.c:121
 msgid "Cubeless"
 msgstr "Fără cub"
 
-#: eval.c:4100 format.c:116 format.c:795 format.c:1129
+#: eval.c:4079 format.c:116 format.c:795 format.c:1129
 #, fuzzy
 msgid "ply"
 msgstr "%d-mut"
@@ -1218,7 +1218,7 @@ msgstr " şi până la %d mutări în plus în valoarea %0.3g\n"
 msgid "Play"
 msgstr "Mutare"
 
-#: format.c:296 gnubg.c:1512 gnubg.c:1520 gnubg.c:2784 gnubg.c:2792
+#: format.c:296 gnubg.c:1512 gnubg.c:1520 gnubg.c:2783 gnubg.c:2791
 #: gtkgame.c:3205 gtkgame.c:3219 gtkoptions.c:418 gtkprefs.c:2722
 #: gtkprefs.c:2732 gtktheory.c:670 progress.c:269 progress.c:350
 msgid "Cube"
@@ -1960,15 +1960,15 @@ msgstr "Comandă incompletă -- încearcă 'help'."
 msgid "Unknown keyword `%s'.\n"
 msgstr "Cuvânt cheie necunoscut: %s\n"
 
-#: gnubg.c:1396 gnubg.c:1427 gnubg.c:1500 gnubg.c:2772 play.c:2473
+#: gnubg.c:1396 gnubg.c:1427 gnubg.c:1500 gnubg.c:2771 play.c:2473
 msgid "Rolled"
 msgstr "Aruncat"
 
-#: gnubg.c:1458 gnubg.c:5548 gtkgame.c:1428 gtkgame.c:1447 gtkgame.c:1465
+#: gnubg.c:1458 gnubg.c:5546 gtkgame.c:1428 gtkgame.c:1447 gtkgame.c:1465
 msgid "No game in progress."
 msgstr "Nici un joc în curs."
 
-#: gnubg.c:1483 gnubg.c:1485 gnubg.c:2755 gnubg.c:2757 text.c:61 text.c:66
+#: gnubg.c:1483 gnubg.c:1485 gnubg.c:2754 gnubg.c:2756 text.c:61 text.c:66
 #, c-format
 msgid "%d point"
 msgid_plural "%d points"
@@ -1976,7 +1976,7 @@ msgstr[0] "%d punct"
 msgstr[1] "%d puncte"
 msgstr[2] "%d puncte"
 
-#: gnubg.c:1492 gnubg.c:2764 text.c:75
+#: gnubg.c:1492 gnubg.c:2763 text.c:75
 #, c-format
 msgid "Cube offered at %d"
 msgstr "Cubul oferit la %d"
@@ -1986,16 +1986,16 @@ msgstr "Cubul oferit la %d"
 msgid "%s %d%d"
 msgstr "%d%d"
 
-#: gnubg.c:1502 gnubg.c:2774 text.c:85
+#: gnubg.c:1502 gnubg.c:2773 text.c:85
 msgid "On roll"
 msgstr "La aruncare"
 
-#: gnubg.c:1510 gnubg.c:2782 text.c:93
+#: gnubg.c:1510 gnubg.c:2781 text.c:93
 #, c-format
 msgid "%d point match (Cube: %d)"
 msgstr "Partidă de %d puncte (Cub: %d)"
 
-#: gnubg.c:1525 gnubg.c:2797 gtkgame.c:5607 text.c:108
+#: gnubg.c:1525 gnubg.c:2796 gtkgame.c:5607 text.c:108
 #, c-format
 msgid "%d point match"
 msgstr "partidă de %d puncte"
@@ -2019,7 +2019,7 @@ msgstr "Nici un joc"
 msgid "Game over"
 msgstr "Jocul s-a terminat"
 
-#: gnubg.c:1647 gnubg.c:2624 show.c:453 show.c:483 show.c:797 show.c:1108
+#: gnubg.c:1647 gnubg.c:2623 show.c:453 show.c:483 show.c:797 show.c:1108
 #: show.c:1162 show.c:1209 show.c:1256 show.c:1371
 msgid "No position specified and no game in progress."
 msgstr "Nici o poziţie specificată şi nici un joc în curs."
@@ -2108,20 +2108,20 @@ msgstr "Considerând mutarea..."
 msgid "There are no legal moves."
 msgstr "Nu există mutări legale."
 
-#: gnubg.c:2444 gnubgmodule.c:663
+#: gnubg.c:2444 gnubgmodule.c:661
 msgid "You must set up a board first."
 msgstr "Trebuie să setezi o tablă mai întâi."
 
-#: gnubg.c:2598
+#: gnubg.c:2597
 msgid "That command is not yet implemented."
 msgstr "Acea comandă nu este încă implementată."
 
-#: gnubg.c:2620
+#: gnubg.c:2619
 msgid ""
 "The rollout command takes no arguments and only rollouts the current position"
 msgstr ""
 
-#: gnubg.c:2631
+#: gnubg.c:2630
 #, fuzzy, c-format
 msgid "Current Position"
 msgstr "Poziţia curentă."
@@ -2129,246 +2129,252 @@ msgstr "Poziţia curentă."
 #. Python escape.
 #. Ideally we should be able to handle both > print 1+1 sys.exit() and > print 1+1
 #. * currently we only handle the latter...
-#: gnubg.c:2673
+#: gnubg.c:2672
 msgid "Only Python commands supported, not multiline code"
 msgstr ""
 
-#: gnubg.c:2700
+#: gnubg.c:2699
 msgid "This build of GNU Backgammon does not support Python"
 msgstr "Această compilare de Table GNU nu suportă Python"
 
-#: gnubg.c:2703 gnubg.c:2726
+#: gnubg.c:2702 gnubg.c:2725
 #, fuzzy
 msgid "You must specify a file to load from."
 msgstr ""
 "Trebuie să specifici un fişier din care să încarci (vezi `help load game')."
 
-#: gnubg.c:3383
+#: gnubg.c:3382
 #, fuzzy, c-format
 msgid "Settings saved to %s."
 msgstr "Setările salvate la %s.\n"
 
-#: gnubg.c:3383
+#: gnubg.c:3382
 msgid "standard output stream"
 msgstr "flux ieşire standard"
 
-#: gnubg.c:3852 makebearoff.c:1359 makebearoff.c:1360 makebearoff.c:1361
-#: makebearoff.c:1362 makebearoff.c:1364 makebearoff.c:1421 makebearoff.c:1426
+#: gnubg.c:3851 makebearoff.c:1406 makebearoff.c:1407 makebearoff.c:1408
+#: makebearoff.c:1409 makebearoff.c:1411 makebearoff.c:1468 makebearoff.c:1473
 #: show.c:386 show.c:1791 show.c:1793 show.c:1795 show.c:1798 show.c:1823
 #: show.c:1827 show.c:1831 show.c:1840 show.c:1848 show.c:1852 show.c:1856
 #: show.c:1865 show.c:1871 show.c:1875 show.c:1879 show.c:1945
 msgid "yes"
 msgstr "da"
 
-#: gnubg.c:3852 makebearoff.c:1359 makebearoff.c:1360 makebearoff.c:1361
-#: makebearoff.c:1362 makebearoff.c:1364 makebearoff.c:1421 makebearoff.c:1426
+#: gnubg.c:3851 makebearoff.c:1406 makebearoff.c:1407 makebearoff.c:1408
+#: makebearoff.c:1409 makebearoff.c:1411 makebearoff.c:1468 makebearoff.c:1473
 #: show.c:386 show.c:1791 show.c:1793 show.c:1795 show.c:1798 show.c:1823
 #: show.c:1827 show.c:1831 show.c:1840 show.c:1848 show.c:1852 show.c:1856
 #: show.c:1865 show.c:1871 show.c:1875 show.c:1879 show.c:1945
 msgid "no"
 msgstr "nu"
 
-#: gnubg.c:3882 gnubg.c:5152
+#: gnubg.c:3881 gnubg.c:5150
 msgid "Please answer `y' or `n'."
 msgstr "Te rog răspunde 'y' (da) sau 'n' (nu)."
 
-#: gnubg.c:3910
+#: gnubg.c:3909
 #, fuzzy
 msgid "output will be shown"
 msgstr "Numerele pip nu vor fi arătate."
 
-#: gnubg.c:3910
+#: gnubg.c:3909
 #, fuzzy
 msgid "output will not be shown"
 msgstr "Numerele pip nu vor fi arătate."
 
-#: gnubg.c:4372
+#: gnubg.c:4371
 msgid "Enter dice: "
 msgstr "Introduce zaruri:"
 
-#: gnubg.c:4390
+#: gnubg.c:4389
 msgid "You must enter two numbers between 1 and 6."
 msgstr "Trebuie să introduci două numere între 1 şi 6"
 
-#: gnubg.c:4454
+#: gnubg.c:4453
 #, fuzzy, c-format
 msgid "Fetching %d random numbers from <%s>\n"
 msgstr "Aducând %d numere aleatoare de la <www.random.org>\n"
 
 #. parse string
-#: gnubg.c:4506
+#: gnubg.c:4505
 msgid "Done."
 msgstr "Gata."
 
-#: gnubg.c:4541
+#: gnubg.c:4540
 #, fuzzy
 msgid "Failure setting up RNG"
 msgstr "Eroare la setarea RNG\n"
 
-#: gnubg.c:4545
+#: gnubg.c:4544
 #, fuzzy
 msgid "Failure setting up RNG for rollout."
 msgstr "Eroare la setarea RNG pentru simulare.\n"
 
-#: gnubg.c:4643
+#: gnubg.c:4642
 msgid "Do not use bearoff database"
 msgstr "Nu folosi bază de date de scoatere"
 
-#: gnubg.c:4645
+#: gnubg.c:4644
 msgid "Evaluate commands in FILE and exit"
 msgstr "Evaluează comenzi în FILE şi ieşi"
 
-#: gnubg.c:4647
+#: gnubg.c:4646
 msgid "Set language to LANG"
 msgstr "Setează limba la LANG"
 
-#: gnubg.c:4649
+#: gnubg.c:4648
 msgid "Evaluate Python code in FILE and exit"
 msgstr "Evaluează cod Python în FILE şi ieşi"
 
-#: gnubg.c:4651
+#: gnubg.c:4650
 msgid "Disable sound effects"
 msgstr "Dezactivează efectele de sunet"
 
-#: gnubg.c:4653
+#: gnubg.c:4652
 msgid "Do not read .gnubgrc and .gnubgautorc commands"
 msgstr "Nu citi comenzile .gnubgrc şi .gnubgautorc"
 
-#: gnubg.c:4656
+#: gnubg.c:4655
 #, fuzzy
 msgid "Show gtk splash screen"
 msgstr "Nu arăta imaginea de întâmpinare gtk"
 
-#: gnubg.c:4658
+#: gnubg.c:4657
 #, fuzzy
 msgid "Start the command line instead of using the graphical interface"
 msgstr "Modifică felul cum arată interfaţa grafică"
 
-#: gnubg.c:4660
+#: gnubg.c:4659
 msgid "Show version information and exit"
 msgstr "Arată informaţii despre versiune şi ieşi"
 
-#: gnubg.c:4662
+#: gnubg.c:4661
 #, fuzzy
 msgid "Ignore tty input when using the graphical interface"
 msgstr "Ignoră intrarea tty la folosirea sistemului de ferestre"
 
-#: gnubg.c:4664
+#: gnubg.c:4663
 msgid "Turn on debug"
 msgstr "Porneşte depanarea"
 
-#: gnubg.c:4666
+#: gnubg.c:4665
 #, fuzzy
 msgid "Specify location of general data"
 msgstr "Specifică un generator extern"
 
-#: gnubg.c:4668
+#: gnubg.c:4667
 msgid "Specify location of program specific data"
 msgstr ""
 
-#: gnubg.c:4670
+#: gnubg.c:4669
 msgid "Specify location of program documentation"
 msgstr ""
 
-#: gnubg.c:4768 gnubg.c:4771 gnubg.c:4776 gnubg.c:4780 gnubg.c:4785
+#: gnubg.c:4763 gnubg.c:4766 gnubg.c:4771 gnubg.c:4774 gnubg.c:4778
+#: gnubg.c:4783
 msgid "Initialising"
 msgstr "Iniţializare"
 
-#: gnubg.c:4768 gtkoptions.c:979
+#: gnubg.c:4763 gtkoptions.c:979
 msgid "Random number generator"
 msgstr "Generator de numere aleatoare"
 
-#: gnubg.c:4771
+#: gnubg.c:4766
 msgid "match equity table"
 msgstr "tabela de valori a partidei"
 
-#: gnubg.c:4776
+#: gnubg.c:4771
 msgid "neural nets"
 msgstr "reţele neurale"
 
-#: gnubg.c:4780
+#: gnubg.c:4774
+#, fuzzy
+msgid "initialising thread data"
+msgstr "Eroare la iniţializarea bazei de date de scoatere vechi!\n"
+
+#: gnubg.c:4778
 msgid "Windows sockets"
 msgstr "Socket-uri Windows"
 
-#: gnubg.c:4785
+#: gnubg.c:4783
 msgid "Python"
 msgstr "Python"
 
-#: gnubg.c:4793
+#: gnubg.c:4791
 msgid "Loading"
 msgstr "Încărcare"
 
-#: gnubg.c:4793
+#: gnubg.c:4791
 msgid "User Settings"
 msgstr "Setări utilizator"
 
-#: gnubg.c:4842
+#: gnubg.c:4840
 #, fuzzy, c-format
 msgid "GNU Backgammon build without Python."
 msgstr "Table GNU compilat fără Python\n"
 
-#: gnubg.c:4874 gnubg.c:4917
+#: gnubg.c:4872 gnubg.c:4915
 msgid "Command only valid in match play"
 msgstr "Comanda este validă doar în timpul partidei"
 
-#: gnubg.c:4886 gnubg.c:4887 gnubg.c:4889
+#: gnubg.c:4884 gnubg.c:4885 gnubg.c:4887
 #, fuzzy
 msgid "MWC for equity"
 msgstr "MWC înainte de renunţare"
 
-#: gnubg.c:4888 gnubg.c:4933
+#: gnubg.c:4886 gnubg.c:4931
 #, fuzzy
 msgid "By linear interpolation"
 msgstr "După interpolare liniară:\n"
 
-#: gnubg.c:4931 gnubg.c:4932 gnubg.c:4934
+#: gnubg.c:4929 gnubg.c:4930 gnubg.c:4932
 #, fuzzy
 msgid "Equity for MWC"
 msgstr "Valoare partidă ca MWC"
 
-#: gnubg.c:5075
+#: gnubg.c:5073
 #, c-format
 msgid "File \"%s\" exists. Overwrite? "
 msgstr "Fişierul \"%s\" există. Suprascrie? "
 
-#: gnubg.c:5170
+#: gnubg.c:5168
 #, fuzzy
 msgid "You may be about to make a very bad play"
 msgstr "Eşti pe cale să joci foarte slab. Eşti sigur? "
 
-#: gnubg.c:5174
+#: gnubg.c:5172
 #, fuzzy
 msgid "You may be about to make a bad play"
 msgstr "Eşti pe cale să joci slab. Eşti sigur? "
 
-#: gnubg.c:5178
+#: gnubg.c:5176
 #, fuzzy
 msgid "You may be about to make a doubtful play"
 msgstr "Eşti pe cale să joci îndoielnic. Eşti sigur? "
 
-#: gnubg.c:5190
+#: gnubg.c:5188
 msgid "Are you sure?"
 msgstr ""
 
-#: gnubg.c:5252
+#: gnubg.c:5250
 msgid "Analysis used for `hint' has been cleared"
 msgstr "Analiza utilizată pentru 'hint' a fost ştearsă"
 
-#: gnubg.c:5419
+#: gnubg.c:5417
 #, c-format
 msgid ""
 "Locale in your environment not supported by C library. Falling back to C "
 "locale.\n"
 msgstr ""
 
-#: gnubg.c:5611
+#: gnubg.c:5609
 #, fuzzy
 msgid ""
 "Are you sure you want to discard the current match and your existing "
 "autosave? "
 msgstr "Eşti sigur că vrei să ştergi toate partidele din această bază de date?"
 
-#: gnubg.c:5619
+#: gnubg.c:5617
 #, fuzzy
 msgid "Are you sure you want to discard the current match? "
 msgstr "Eşti sigur că vrei să ştergi toate partidele din această bază de date?"
@@ -2424,87 +2430,87 @@ msgstr ""
 msgid "error in SetPosInfo\n"
 msgstr ""
 
-#: gnubgmodule.c:667
+#: gnubgmodule.c:665
 #, fuzzy
 msgid "Hints for cube actions not yet implemented"
 msgstr "Acea comandă nu este încă implementată."
 
-#: gnubgmodule.c:672
+#: gnubgmodule.c:670
 #, fuzzy
 msgid "Hints for resignations not yet implemented"
 msgstr "Acea comandă nu este încă implementată."
 
-#: gnubgmodule.c:677
+#: gnubgmodule.c:675
 #, fuzzy
 msgid "Hints for take actions not yet implemented"
 msgstr "Acea comandă nu este încă implementată."
 
-#: gnubgmodule.c:893
+#: gnubgmodule.c:891
 msgid ""
 "requires 2 arguments (MoveTuple, Board). (see gnubg.findbestmove() and gnubg."
 "board() for examples)"
 msgstr ""
 
-#: gnubgmodule.c:899
+#: gnubgmodule.c:897
 #, fuzzy
 msgid "Invalid move tuple as argument"
 msgstr "Adnotare invalidă"
 
-#: gnubgmodule.c:904
+#: gnubgmodule.c:902
 #, fuzzy
 msgid "Invalid board as argument "
 msgstr "Adnotare invalidă"
 
-#: gnubgmodule.c:943
+#: gnubgmodule.c:941
 #, fuzzy
 msgid "interrupted/errno in GeneralEvaluateE"
 msgstr "interupted/errro în GeneralEvaluateE"
 
-#: gnubgmodule.c:988
+#: gnubgmodule.c:986
 #, fuzzy
 msgid "interrupted/errno in GeneralCubeDecisionE"
 msgstr "interupted/errno în GeneralCubeDecisionE"
 
-#: gnubgmodule.c:1032
+#: gnubgmodule.c:1030
 #, c-format
 msgid "What? No dice?\n"
 msgstr ""
 
-#: gnubgmodule.c:1127
+#: gnubgmodule.c:1125
 #, fuzzy
 msgid "number of rolls must be greater than 0"
 msgstr "Factorul cursă al eficienţei cubului trebuie să fie mai mare ca 0."
 
-#: gnubgmodule.c:1169
+#: gnubgmodule.c:1167
 msgid "invalid matchlength"
 msgstr "lungime partidă invalidă"
 
-#: gnubgmodule.c:1340
+#: gnubgmodule.c:1338
 msgid ""
 "requires 0 or exactly 3 arguments (Board, Cube-Info dict, Pos-Info dict). "
 "(see gnubg.board(), gnubg.cubeinfo(), gnubg.posinfo() for examples)"
 msgstr ""
 
-#: gnubgmodule.c:1349 gnubgmodule.c:1391
+#: gnubgmodule.c:1347 gnubgmodule.c:1389
 #, fuzzy
 msgid "no current position available"
 msgstr "Scrie poziţia curentă într-un fişier"
 
-#: gnubgmodule.c:1403
+#: gnubgmodule.c:1401
 msgid ""
 "a cube-info argument requires a pos-info dictionary as an argument (see "
 "gnubg.matchid() for an example)"
 msgstr ""
 
-#: gnubgmodule.c:1432
+#: gnubgmodule.c:1430
 msgid "invalid positionid"
 msgstr "id poziţie invalid"
 
-#: gnubgmodule.c:1538
+#: gnubgmodule.c:1536
 msgid "invalid number of chequers or points"
 msgstr "număr de puluri sau puncte invalide"
 
-#: gnubgmodule.c:1545
+#: gnubgmodule.c:1543
 msgid "invalid position number"
 msgstr "număr poziţie invalid"
 
@@ -7889,7 +7895,7 @@ msgstr "gnubg.css nu este scris pentru că există deja în \"%s\"\n"
 
 #: html.c:2923 html.c:3073 html.c:3208 html.c:3243 latex.c:522 play.c:1871
 #: play.c:2233 play.c:2289 play.c:2489 play.c:2556 play.c:3229 play.c:3298
-#: play.c:3392 play.c:3520 play.c:3769 sgf.c:2301 sgf.c:2339 sgf.c:2387
+#: play.c:3392 play.c:3520 play.c:3769 sgf.c:2306 sgf.c:2344 sgf.c:2392
 #: show.c:981 show.c:1293 show.c:1503 show.c:1972 show.c:1996 text.c:803
 #: text.c:896
 msgid "No game in progress (type `new game' to start one)."
@@ -7935,187 +7941,192 @@ msgstr ""
 "Această instalare de Table GNU a fost compilată fără\n"
 "suport pentru scrierea imaginilor HTML."
 
-#: import.c:152
+#: import.c:151
 msgid "File not recognised as Jellyfish file."
 msgstr "Fişierul nu a fost recunoscut ca fişier Jellyfish."
 
-#: import.c:350
+#: import.c:349
 #, fuzzy
 msgid "Failed reading jellyfish file"
 msgstr "Fişierul nu a fost recunoscut ca fişier Jellyfish."
 
-#: import.c:388
+#: import.c:387
 msgid "This file is not a valid Jellyfish .pos file!\n"
 msgstr "Acesta nu este un fişier Jellyfish .pos valid!\n"
 
-#: import.c:595 import.c:765 import.c:1229 import.c:1717 import.c:1766
-#: import.c:1859 import.c:2610 import.c:2838
+#: import.c:594 import.c:764 import.c:1228 import.c:1719 import.c:1768
+#: import.c:1861 import.c:2623 import.c:2851
 msgid "Take record found but doesn't follow a double"
 msgstr "Înregistrare de luat găsită dar nu urmează o dublare"
 
-#: import.c:632
+#: import.c:631
 msgid "No '(' following text 'Illegal play'"
 msgstr "Nu '(' următorul text 'Joc invalid'"
 
-#: import.c:641
+#: import.c:640
 msgid "Illegal Snowie position format for illegal play."
 msgstr "Format de poziţie Snowie invalid pentru joc invalid."
 
-#: import.c:687
+#: import.c:686
 #, c-format
 msgid "WARNING: Expand move failed. This file contains garbage!"
 msgstr "AVERTISMENT: Extinderea mutării a eşuat. Acest fişier conţine gunoi!"
 
-#: import.c:693
+#: import.c:692
 #, c-format
 msgid "WARNING: Invalid move: \"%s\" encountered\n"
 msgstr "AVERTISMENT: Mutarea invalidă \"%s\" a fost întâlnită\n"
 
-#: import.c:776 import.c:1242 import.c:1874 import.c:2626
+#: import.c:775 import.c:1241 import.c:1876 import.c:2639
 msgid "Drop record found but doesn't follow a double"
 msgstr "Înregistrarea de renunţare găsită dar nu urmează o dublare"
 
-#: import.c:801
+#: import.c:800
 #, c-format
 msgid "Unrecognised move \"%s\" in .mat file.\n"
 msgstr "Mutare nerecunoscută \"%s\" în fişier .map.\n"
 
-#: import.c:964
+#: import.c:963
 #, c-format
 msgid "%s: not a valid .mat file"
 msgstr "%s: nu este un fişier .mat valid"
 
-#: import.c:1038
+#: import.c:1037
 #, c-format
 msgid "Invalid match length %d found in mat file\n"
 msgstr ""
 
-#: import.c:1064
+#: import.c:1063
 #, c-format
 msgid "WARNING! Unrecognized line in mat file: '%s'\n"
 msgstr "AVERTISMENT! Linie nerecunoscută în fişier .mat: '%s'\n"
 
-#: import.c:1100
+#: import.c:1099
 #, c-format
 msgid "Import as a %s match had errors. Try a different variation?"
 msgstr ""
 
-#: import.c:1199
+#: import.c:1198
 #, c-format
 msgid "WARNING! Illegal or invalid move: '%s'\n"
 msgstr "AVERTISMENT! Mutare invalidă: '%s'\n"
 
-#: import.c:1268
+#: import.c:1267
 #, c-format
 msgid "Unrecognised move \"%s\" in oldmoves file.\n"
 msgstr "Mutare nerecunoscută \"%s\" în fişier oldmoves\n"
 
-#: import.c:1515 import.c:1520
+#: import.c:1514 import.c:1519
 #, c-format
 msgid "%s: not a valid oldmoves file"
 msgstr "%s: nu este un fişier oldmoves valid"
 
-#: import.c:1644
+#: import.c:1646
 msgid "Beaver record found but doesn't follow a double"
 msgstr "Înregistrare castor găsit, dar nu urmează o dublare"
 
-#: import.c:1821
+#: import.c:1823
 msgid "Beaver found but doesn't follow a double"
 msgstr "Castor găsit, dar nu urmează o dublare"
 
-#: import.c:1841
+#: import.c:1843
 msgid "Raccoon found but doesn't follow a double"
 msgstr "Raton găsit dar nu urmează o dublare"
 
+#: import.c:1944
+#, c-format
+msgid "Unparseable line: %s"
+msgstr ""
+
 #. No player line found
-#: import.c:2261
+#: import.c:2274
 #, c-format
 msgid "%s: not a valid SGG file"
 msgstr "%s: nu este un fişier SGG valid"
 
-#: import.c:2338
+#: import.c:2351
 #, c-format
 msgid "TMG MatchID: %s"
 msgstr "ID pardidă TMG: %s"
 
-#: import.c:3454
+#: import.c:3467
 msgid "You must specify a BKG session file to import (see `help import bkg')."
 msgstr ""
 "Trebuie să specifici un fişier de sesiune BKG pentru a importa (vezi `help "
 "import bkg')."
 
-#: import.c:3480
+#: import.c:3493
 msgid "You must specify a position file to import (see `help import pos')."
 msgstr ""
 "Trebuie să specifici un fişier poziţie pentru a importa (vezi `help import "
 "pos')."
 
-#: import.c:3506
+#: import.c:3519
 msgid "You must specify a match file to import (see `help import mat')."
 msgstr ""
 "Trebuie să specifici un fişier partidă pentru a importa (vezi `help import "
 "mat')."
 
-#: import.c:3532
+#: import.c:3545
 msgid ""
 "You must specify an oldmoves file to import (see `help import oldmoves')."
 msgstr ""
 "Trebuie să specifici un fişier oldmoves pentru a importa (vezi `help import "
 "oldmoves')."
 
-#: import.c:3559
+#: import.c:3572
 msgid "You must specify an SGG file to import (see `help import sgg')."
 msgstr ""
 "Trebuie să specifici un fişier SGG pentru a importa (vezi 'help import sgg')."
 
-#: import.c:3585
+#: import.c:3598
 msgid "You must specify an TMG file to import (see `help import tmg')."
 msgstr ""
 "Trebuie să specifici un fişier TMG pentru a importa (vezi 'help import tmg')."
 
-#: import.c:3612
+#: import.c:3625
 msgid ""
 "You must specify a Snowie Text file to import (see `help import snowietxt')."
 msgstr ""
 "Trebuie să specifici un fişier text Snowie pentru a importa (vezi 'help "
 "import snowietxt')."
 
-#: import.c:3635
+#: import.c:3648
 msgid ""
 "You must specify a GammonEmpire file to import (see `help import empire')."
 msgstr ""
 "Trebuie să specifici un fişier GammonEmpire pentru a importa (vezi 'help "
 "import empire')."
 
-#: import.c:3660
+#: import.c:3673
 msgid ""
 "You must specify a PartyGammon file to import (see `help import party')."
 msgstr ""
 "Trebuie să specifici un fişier PartyGammon pentru a importa (vezi 'help "
 "import party')."
 
-#: import.c:3710
+#: import.c:3723
 #, c-format
 msgid "You must specify a file to import (see `help import auto')."
 msgstr ""
 "Trebuie să specifici un fişier pentru a importa (vezi 'help import auto')."
 
-#: import.c:3714
+#: import.c:3727
 #, fuzzy, c-format
 msgid "The file `%s' doesn't exist"
 msgstr "Fişierul de sunet (%s) nu există.\n"
 
-#: import.c:3719
+#: import.c:3732
 #, fuzzy, c-format
 msgid "`%s' is not a backgammon file"
 msgstr "%s nu este un fişier de table"
 
-#: import.c:3723
+#: import.c:3736
 #, fuzzy, c-format
 msgid "The format of '%s' is not recognized"
 msgstr "Partida nu s-a terminat\n"
 
-#: import.c:3937
+#: import.c:3950
 msgid ""
 "You must specify a BackGammonRoom file to import (see `help import bgroom')."
 msgstr ""
@@ -8152,234 +8163,234 @@ msgstr ""
 "Trebuie să specifici un fişier în care să exporţi (vezi 'help export match "
 "latex')."
 
-#: makebearoff.c:623 makebearoff.c:1170
+#: makebearoff.c:669 makebearoff.c:1216
 #, c-format
 msgid "Error creating xhash with %d elements\n"
 msgstr "Eroare la crearea xhash cu %d elemente\n"
 
-#: makebearoff.c:1352
+#: makebearoff.c:1399
 #, c-format
 msgid "Size of one-sided bearoff database must be between 0 and 18\n"
 msgstr ""
 "Mărimea unei baze de date de scoatere pentru o singură parte trebuie să fie "
 "între 0 şi 18\n"
 
-#: makebearoff.c:1355
+#: makebearoff.c:1402
 #, fuzzy
 msgid "One-sided database"
 msgstr "Simulare/Bază de date pentru o singură parte"
 
-#: makebearoff.c:1356 makebearoff.c:1417
+#: makebearoff.c:1403 makebearoff.c:1464
 #, fuzzy
 msgid "Number of points"
 msgstr "Număr de închideri casă"
 
-#: makebearoff.c:1357 makebearoff.c:1418
+#: makebearoff.c:1404 makebearoff.c:1465
 #, fuzzy
 msgid "Number of chequers"
 msgstr "Număr de puluri: %d\n"
 
-#: makebearoff.c:1358
+#: makebearoff.c:1405
 #, fuzzy
 msgid "Number of positions"
 msgstr "Număr de închideri casă"
 
-#: makebearoff.c:1359
+#: makebearoff.c:1406
 #, fuzzy
 msgid "Approximate by normal distribution"
 msgstr "   - distribuţiile sunt aproximate cu o distribuţie normală\n"
 
-#: makebearoff.c:1360
+#: makebearoff.c:1407
 #, fuzzy
 msgid "Include gammon distributions"
 msgstr "baza de date include distribuţii marţ"
 
-#: makebearoff.c:1361
+#: makebearoff.c:1408
 msgid "Use compression scheme"
 msgstr ""
 
-#: makebearoff.c:1362 makebearoff.c:1421
+#: makebearoff.c:1409 makebearoff.c:1468
 msgid "Write header"
 msgstr ""
 
-#: makebearoff.c:1363
+#: makebearoff.c:1410
 #, fuzzy
 msgid "Size of cache"
 msgstr "Dimensiunea imaginilor PNG:"
 
-#: makebearoff.c:1364 makebearoff.c:1426
+#: makebearoff.c:1411 makebearoff.c:1473
 #, fuzzy
 msgid "Reuse old bearoff database"
 msgstr "Nu folosi bază de date de scoatere"
 
-#: makebearoff.c:1369
+#: makebearoff.c:1416
 #, fuzzy
 msgid "Size of database"
 msgstr "Bază de date pentru două părţi"
 
-#: makebearoff.c:1372
+#: makebearoff.c:1419
 #, fuzzy
 msgid "Size of database (uncompressed)"
 msgstr "Dimensiune bază de date (necompresată)   : %.0f (%.1f MB)\n"
 
-#: makebearoff.c:1375
+#: makebearoff.c:1422
 #, fuzzy
 msgid "Estimated size of compressed db"
 msgstr "Mărimea estimată a bazei de date compresate   : %.0f (%.1f MB)\n"
 
-#: makebearoff.c:1380 makebearoff.c:1430
+#: makebearoff.c:1427 makebearoff.c:1477
 #, c-format
 msgid "Error initialising old bearoff database!\n"
 msgstr "Eroare la iniţializarea bazei de date de scoatere vechi!\n"
 
-#: makebearoff.c:1388 makebearoff.c:1438
+#: makebearoff.c:1435 makebearoff.c:1485
 #, c-format
 msgid "The old database is not of the same kind as the requested database\n"
 msgstr "Baza de date veche nu este de acelaşi tip ca baza de date cerută\n"
 
-#: makebearoff.c:1416
+#: makebearoff.c:1463
 #, fuzzy
 msgid "Two-sided database:\n"
 msgstr "Bază de date pentru două părţi"
 
-#: makebearoff.c:1419
+#: makebearoff.c:1466
 #, fuzzy
 msgid "Calculate equities"
 msgstr "Calculând valorile"
 
-#: makebearoff.c:1420
+#: makebearoff.c:1467
 msgid "cubeless and cubeful"
 msgstr "fără cub şi cu cub"
 
-#: makebearoff.c:1420
+#: makebearoff.c:1467
 msgid "cubeless only"
 msgstr "doar fără cub"
 
-#: makebearoff.c:1422
+#: makebearoff.c:1469
 #, fuzzy
 msgid "Number of one-sided positions"
 msgstr "Număr total de poziţii o singură parte: %d\n"
 
-#: makebearoff.c:1423
+#: makebearoff.c:1470
 #, fuzzy
 msgid "Total number of positions"
 msgstr "Număr total de poziţii o singură parte: %d\n"
 
-#: makebearoff.c:1424
+#: makebearoff.c:1471
 msgid "Size of resulting file"
 msgstr ""
 
-#: makebearoff.c:1425
+#: makebearoff.c:1472
 #, fuzzy
 msgid "Size of xhash"
 msgstr "Dimensiunea imaginilor PNG:"
 
-#: makehyper.c:208
+#: makehyper.c:221
 #, fuzzy
 msgid "Number of game-over positions"
 msgstr "Număr de jocuri cu loviri"
 
-#: makehyper.c:209
+#: makehyper.c:222
 #, fuzzy
 msgid "Number of non-contact positions"
 msgstr "Eficienţa cubului pentru poziţii de contact"
 
-#: makehyper.c:210
+#: makehyper.c:223
 #, fuzzy
 msgid "Number of contact positions"
 msgstr "Eficienţa cubului pentru poziţii de contact"
 
-#: makehyper.c:211
+#: makehyper.c:224
 #, fuzzy
 msgid "Total number of legal positions"
 msgstr "Număr total de poziţii o singură parte: %d\n"
 
-#: makehyper.c:212
+#: makehyper.c:225
 #, fuzzy
 msgid "Number of illegal positions"
 msgstr "Poziţie ilegală."
 
-#: makehyper.c:213
+#: makehyper.c:226
 #, fuzzy
 msgid "Total number of positions in file"
 msgstr "Număr total de poziţii o singură parte: %d\n"
 
-#: makehyper.c:664
+#: makehyper.c:676
 #, c-format
 msgid "Number of chequers: %d\n"
 msgstr "Număr de puluri: %d\n"
 
-#: makehyper.c:668
+#: makehyper.c:680
 #, fuzzy
 msgid "Total number of one sided positions"
 msgstr "Număr total de poziţii o singură parte: %d\n"
 
-#: makehyper.c:669
+#: makehyper.c:681
 #, fuzzy
 msgid "Total number of two sided positions"
 msgstr "Număr total de poziţii două părţi: %d\n"
 
-#: makehyper.c:670
+#: makehyper.c:682
 #, fuzzy
 msgid "Estimated size of file"
 msgstr "Timp rămas estimat"
 
-#: makehyper.c:670
+#: makehyper.c:682
 #, fuzzy
 msgid "bytes"
 msgstr "da"
 
-#: makehyper.c:671
+#: makehyper.c:683
 #, fuzzy
 msgid "Output file"
 msgstr "Fişiere suportate"
 
-#: makehyper.c:672
+#: makehyper.c:684
 #, fuzzy
 msgid "Convergens threshold"
 msgstr "Prag convergenţă               : %e\n"
 
-#: makehyper.c:678
+#: makehyper.c:690
 #, c-format
 msgid "*** Obtain start guess ***\n"
 msgstr "*** Obţine presupunerea de început ***\n"
 
-#: makehyper.c:686
+#: makehyper.c:698
 #, c-format
 msgid "0-vector start guess\n"
 msgstr "presupunere de început 0-vector\n"
 
-#: makehyper.c:689
+#: makehyper.c:701
 #, c-format
 msgid "Start from file\n"
 msgstr "Începe din fişier\n"
 
-#: makehyper.c:695
+#: makehyper.c:707
 #, c-format
 msgid "Time for start guess: %d seconds\n"
 msgstr "Moment de începere presupunere: %d secunde\n"
 
-#: makehyper.c:703
+#: makehyper.c:715
 #, c-format
 msgid "*** Iteration %03d *** \n"
 msgstr "*** Iteraţia %03d *** \n"
 
-#: makehyper.c:713
+#: makehyper.c:725
 #, c-format
 msgid "norm of delta: %f\n"
 msgstr "norm al delta: %f\n"
 
-#: makehyper.c:726
+#: makehyper.c:738
 #, c-format
 msgid "Time for iteration %03d: %d seconds\n"
 msgstr "Timp pentru iteraţie %03d:%d secunde\n"
 
-#: makehyper.c:738
+#: makehyper.c:750
 #, c-format
 msgid "Time for writing final file: %d seconds\n"
 msgstr "Timp pentru scrierea fişierului final: %d secunde\n"
 
-#: makehyper.c:742
+#: makehyper.c:754
 #, c-format
 msgid "Total time: %d seconds\n"
 msgstr "Timp total: %d secunde\n"
@@ -11238,33 +11249,33 @@ msgstr "Trebuie să specifici un număr semi-pozitiv."
 msgid "warning: no backgammon games in SGF file"
 msgstr "avertisment: nici un joc de table în fişierul SGF"
 
-#: sgf.c:1427
+#: sgf.c:1432
 msgid "You must specify a file to load from (see `help load game')."
 msgstr ""
 "Trebuie să specifici un fişier din care să încarci (vezi `help load game')."
 
-#: sgf.c:1479
+#: sgf.c:1484
 msgid "You must specify a file to load from (see `help load position')."
 msgstr ""
 "Trebuie să specifici un fişier din care să încarci (vezi `help load "
 "position')."
 
-#: sgf.c:1527
+#: sgf.c:1532
 msgid "You must specify a file to load from (see `help load match')."
 msgstr ""
 "Trebuie să specifici un fişier din care să încarci (vezi `help load match')."
 
-#: sgf.c:2306
+#: sgf.c:2311
 msgid "You must specify a file to save to (see `help save game')."
 msgstr ""
 "Trebuie să specifici un fişier în care să salvezi (vezi `help save game')."
 
-#: sgf.c:2346
+#: sgf.c:2351
 msgid "You must specify a file to save to (see `help save match')."
 msgstr ""
 "Trebuie să specifici un fişier în care să salvezi (vezi `help save match')."
 
-#: sgf.c:2392
+#: sgf.c:2397
 msgid "You must specify a file to save to (see `help save position')."
 msgstr ""
 "Trebuie să specifici un fişier în care să salvezi (vezi `help save "

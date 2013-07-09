@@ -40,13 +40,59 @@
 #include "util.h"
 #include "backgammon.h"
 #include "multithread.h"
+#include "lib/simd.h"
 
-#if USE_MULTITHREAD
+typedef struct _ThreadLocalData {
+    int id;
+    move *aMoves;
+    NNState *pnnState;
+} ThreadLocalData;
+
+ThreadLocalData *td;
+
+static ThreadLocalData *
+MT_CreateThreadLocalData(int id)
+{
+    ThreadLocalData *tld = (ThreadLocalData *)malloc(sizeof(ThreadLocalData));
+    tld->id = id;
+    tld->pnnState = (NNState *)malloc(sizeof(NNState)*3);
+    tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase = malloc(nnRace.cHidden * sizeof(float));
+    tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase = malloc(nnRace.cInput * sizeof(float));
+    tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase = malloc(nnCrashed.cHidden * sizeof(float));
+    tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedIBase = malloc(nnCrashed.cInput * sizeof(float));
+    tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedBase = malloc(nnContact.cHidden * sizeof(float));
+    tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedIBase = malloc(nnContact.cInput * sizeof(float));
+
+    tld->aMoves = (move *)malloc(sizeof(move)*MAX_INCOMPLETE_MOVES);
+
+    return tld;
+}
+
+extern void
+MT_InitThreads(void)
+{
+    td = MT_CreateThreadLocalData(0); /* Main thread shares id 0 */
+}
+
 extern int
 MT_GetThreadID(void)
 {
-    return (0);
+    return (td->id);
 }
+
+extern NNState *
+MT_Get_nnState(void)
+{
+    return (td->pnnState);
+}
+
+extern move *
+MT_Get_aMoves(void)
+{
+    return (td->aMoves);
+}
+
+#if USE_MULTITHREAD
 
 extern void
 MT_Release(void)
@@ -1282,6 +1328,7 @@ main(int argc, char **argv)
     static char *szTwoSided = NULL;
     static int show_version = 0;
 
+    MT_InitThreads(); 
     bearoffcontext *pbc = NULL;
     FILE *output;
     double r;

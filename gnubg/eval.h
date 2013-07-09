@@ -595,4 +595,7 @@ extern int EvalKey(const evalcontext * pec, const int nPlies, const cubeinfo * p
 extern void MakeCubePos(const cubeinfo aciCubePos[], const int cci, const int fTop, cubeinfo aci[], const int fInvert);
 extern void GetECF3(float arCubeful[], int cci, float arCf[], cubeinfo aci[]);
 extern int EvaluatePerfectCubeful(const TanBoard anBoard, float arEquity[], const bgvariation bgv);
+
+extern neuralnet nnContact, nnRace, nnCrashed;
+
 #endif

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon 0.13-devel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-01 16:23-0600\n"
+"POT-Creation-Date: 2013-07-08 17:52-0600\n"
 "PO-Revision-Date: 2003-01-24 14:19-0500\n"
 "Last-Translator: Gary Wong <gtw@gnu.org>\n"
 "Language-Team: none\n"
@@ -722,7 +722,7 @@ msgstr ""
 msgid "Rewinding dice file (%s)"
 msgstr ""
 
-#: drawboard.c:72 drawboard.c:295 gnubg.c:5094 gtkexport.c:651 gtkgame.c:2736
+#: drawboard.c:72 drawboard.c:295 gnubg.c:5092 gtkexport.c:651 gtkgame.c:2736
 #: gtkgame.c:3641 gtkgame.c:6109
 msgid "GNU Backgammon"
 msgstr "GNU Backgammon"
@@ -737,144 +737,144 @@ msgstr "Position ID:"
 msgid "Match ID"
 msgstr "Match ID:"
 
-#: eval.c:265
+#: eval.c:270
 msgid "Standard backgammon"
 msgstr ""
 
-#: eval.c:266
+#: eval.c:271
 #, fuzzy
 msgid "Nackgammon"
 msgstr "backgammon"
 
-#: eval.c:267
+#: eval.c:272
 msgid "1-chequer hypergammon"
 msgstr ""
 
-#: eval.c:268
+#: eval.c:273
 msgid "2-chequer hypergammon"
 msgstr ""
 
-#: eval.c:269
+#: eval.c:274
 msgid "3-chequer hypergammon"
 msgstr ""
 
-#: eval.c:285 set.c:2954
+#: eval.c:290 set.c:2954
 msgid "No evaluation"
 msgstr "No evaluation"
 
-#: eval.c:286 set.c:2955
+#: eval.c:291 set.c:2955
 msgid "Neural net evaluation"
 msgstr "Neural net evaluation"
 
-#: eval.c:287 eval.c:4103 format.c:798 gtkchequer.c:465 gtkcube.c:824
+#: eval.c:292 eval.c:4082 format.c:798 gtkchequer.c:465 gtkcube.c:824
 #: gtkgame.c:3218 gtkrace.c:231 html.c:1873 set.c:2956
 msgid "Rollout"
 msgstr "Rollout"
 
-#: eval.c:307
+#: eval.c:312
 #, fuzzy
 msgid "setting|beginner"
 msgstr "beginner"
 
-#: eval.c:308
+#: eval.c:313
 #, fuzzy
 msgid "setting|casual play"
 msgstr "casual play"
 
-#: eval.c:309
+#: eval.c:314
 #, fuzzy
 msgid "setting|intermediate"
 msgstr "intermediate"
 
-#: eval.c:310
+#: eval.c:315
 #, fuzzy
 msgid "setting|advanced"
 msgstr "advanced"
 
-#: eval.c:311
+#: eval.c:316
 #, fuzzy
 msgid "setting|expert"
 msgstr "Set settings for export"
 
-#: eval.c:312
+#: eval.c:317
 #, fuzzy
 msgid "setting|world class"
 msgstr "world class"
 
-#: eval.c:313
+#: eval.c:318
 #, fuzzy
 msgid "setting|supremo"
 msgstr "supremo"
 
-#: eval.c:314
+#: eval.c:319
 #, fuzzy
 msgid "setting|grandmaster"
 msgstr "grandmaster"
 
-#: eval.c:315
+#: eval.c:320
 #, fuzzy
 msgid "setting|4ply"
 msgstr "casual play"
 
-#: eval.c:347
+#: eval.c:352
 msgid "Tiny"
 msgstr "Tiny"
 
-#: eval.c:348
+#: eval.c:353
 msgid "Narrow"
 msgstr "Narrow"
 
-#: eval.c:349
+#: eval.c:354
 msgid "Normal"
 msgstr "Normal"
 
-#: eval.c:350 gtkoptions.c:1215
+#: eval.c:355 gtkoptions.c:1215
 msgid "Large"
 msgstr "Large"
 
-#: eval.c:351
+#: eval.c:356
 msgid "Huge"
 msgstr "Huge"
 
-#: eval.c:364
+#: eval.c:369
 msgid "doubletype|Double"
 msgstr ""
 
-#: eval.c:365
+#: eval.c:370
 #, fuzzy
 msgid "doubletype|Beaver"
 msgstr "No double, beaver"
 
-#: eval.c:366
+#: eval.c:371
 msgid "doubletype|Raccoon"
 msgstr ""
 
-#: eval.c:525 eval.c:554
+#: eval.c:520 eval.c:549
 #, fuzzy, c-format
 msgid "%s is not a weights file"
 msgstr "%s: not a weights file\n"
 
-#: eval.c:536 eval.c:559
+#: eval.c:531 eval.c:554
 #, c-format
 msgid "weights file %s, has incorrect version (%s), expected (%s)"
 msgstr ""
 
-#: eval.c:582
+#: eval.c:579
 #, c-format
 msgid "Can't check for SIMD support - non pentium cpu\n"
 msgstr ""
 
-#: eval.c:585
+#: eval.c:582
 #, c-format
 msgid "No cpuid check available\n"
 msgstr ""
 
-#: eval.c:595
+#: eval.c:592
 #, c-format
 msgid "Unknown error while doing SIMD support test\n"
 msgstr ""
 
-#: eval.c:601
+#: eval.c:598
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -882,7 +882,7 @@ msgid ""
 "does not support AVX\n"
 msgstr "This installation of GNU Backgammon was compiled without GUI support."
 
-#: eval.c:604
+#: eval.c:601
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -890,125 +890,125 @@ msgid ""
 "does not support SSE\n"
 msgstr "This installation of GNU Backgammon was compiled without GUI support."
 
-#: eval.c:3044
+#: eval.c:3023
 #, fuzzy
 msgid "neural network evaluator"
 msgstr "Neural net evaluation"
 
-#: eval.c:3045
+#: eval.c:3024
 #, fuzzy, c-format
 msgid "version %s, %d inputs, %d hidden units"
 msgstr ""
 " * %s neural network evaluator:\n"
 "   - version %s, %d inputs, %d hidden units"
 
-#: eval.c:3053 format.c:1084
+#: eval.c:3032 format.c:1084
 msgid "Race"
 msgstr "Race"
 
-#: eval.c:3060 format.c:1085
+#: eval.c:3039 format.c:1085
 msgid "Crashed"
 msgstr "Crashed"
 
-#: eval.c:3067 format.c:1086
+#: eval.c:3046 format.c:1086
 msgid "Contact"
 msgstr "Contact"
 
-#: eval.c:3110 format.c:774 gtkcube.c:359 html.c:1706
+#: eval.c:3089 format.c:774 gtkcube.c:359 html.c:1706
 msgid "Double, take"
 msgstr "Double, take"
 
-#: eval.c:3112 format.c:775 gtkcube.c:360 html.c:1707
+#: eval.c:3091 format.c:775 gtkcube.c:360 html.c:1707
 msgid "Double, pass"
 msgstr "Double, pass"
 
-#: eval.c:3114
+#: eval.c:3093
 msgid "No double, take"
 msgstr "No double, take"
 
-#: eval.c:3116
+#: eval.c:3095
 msgid "Too good to double, take"
 msgstr "Too good to double, take"
 
-#: eval.c:3118
+#: eval.c:3097
 msgid "Too good to double, pass"
 msgstr "Too good to double, pass"
 
-#: eval.c:3120
+#: eval.c:3099
 msgid "Double, beaver"
 msgstr "Double, beaver"
 
-#: eval.c:3122
+#: eval.c:3101
 msgid "No double, beaver"
 msgstr "No double, beaver"
 
-#: eval.c:3124
+#: eval.c:3103
 msgid "Redouble, take"
 msgstr "Redouble, take"
 
-#: eval.c:3126
+#: eval.c:3105
 msgid "Redouble, pass"
 msgstr "Redouble, pass"
 
-#: eval.c:3128
+#: eval.c:3107
 msgid "No redouble, take"
 msgstr "No redouble, take"
 
-#: eval.c:3130
+#: eval.c:3109
 msgid "Too good to redouble, take"
 msgstr "Too good to redouble, take"
 
-#: eval.c:3132
+#: eval.c:3111
 msgid "Too good to redouble, pass"
 msgstr "Too good to redouble, pass"
 
-#: eval.c:3134
+#: eval.c:3113
 msgid "No redouble, beaver"
 msgstr "No redouble, beaver"
 
-#: eval.c:3136
+#: eval.c:3115
 msgid "Never double, take (dead cube)"
 msgstr "Never double, take (dead cube)"
 
-#: eval.c:3138
+#: eval.c:3117
 msgid "Never redouble, take (dead cube)"
 msgstr "Never redouble, take (dead cube)"
 
-#: eval.c:3140
+#: eval.c:3119
 msgid "Optional double, beaver"
 msgstr "Optional double, beaver"
 
-#: eval.c:3142
+#: eval.c:3121
 msgid "Optional double, take"
 msgstr "Optional double, take"
 
-#: eval.c:3144
+#: eval.c:3123
 msgid "Optional redouble, take"
 msgstr "Optional redouble, take"
 
-#: eval.c:3146
+#: eval.c:3125
 msgid "Optional double, pass"
 msgstr "Optional double, pass"
 
-#: eval.c:3148
+#: eval.c:3127
 msgid "Optional redouble, pass"
 msgstr "Optional redouble, pass"
 
-#: eval.c:3150
+#: eval.c:3129
 #, fuzzy
 msgid "Unknown cube decision"
 msgstr "Total cube decisions"
 
-#: eval.c:4100 format.c:1111 gtkgame.c:4939 html.c:302 progress.c:686
+#: eval.c:4079 format.c:1111 gtkgame.c:4939 html.c:302 progress.c:686
 #: show.c:121
 msgid "Cubeful"
 msgstr "Cubeful"
 
-#: eval.c:4100 gtkmovelistctrl.c:289 html.c:299 progress.c:685 show.c:121
+#: eval.c:4079 gtkmovelistctrl.c:289 html.c:299 progress.c:685 show.c:121
 msgid "Cubeless"
 msgstr "Cubeless"
 
-#: eval.c:4100 format.c:116 format.c:795 format.c:1129
+#: eval.c:4079 format.c:116 format.c:795 format.c:1129
 #, fuzzy
 msgid "ply"
 msgstr "%d-ply"
@@ -1198,7 +1198,7 @@ msgstr " and up to %d more moves within equity %0.3g\n"
 msgid "Play"
 msgstr "Ply"
 
-#: format.c:296 gnubg.c:1512 gnubg.c:1520 gnubg.c:2784 gnubg.c:2792
+#: format.c:296 gnubg.c:1512 gnubg.c:1520 gnubg.c:2783 gnubg.c:2791
 #: gtkgame.c:3205 gtkgame.c:3219 gtkoptions.c:418 gtkprefs.c:2722
 #: gtkprefs.c:2732 gtktheory.c:670 progress.c:269 progress.c:350
 msgid "Cube"
@@ -1941,22 +1941,22 @@ msgstr "Incomplete command -- try ‘help’."
 msgid "Unknown keyword `%s'.\n"
 msgstr "Unknown keyword ‘%s’ -- try ‘help’.\n"
 
-#: gnubg.c:1396 gnubg.c:1427 gnubg.c:1500 gnubg.c:2772 play.c:2473
+#: gnubg.c:1396 gnubg.c:1427 gnubg.c:1500 gnubg.c:2771 play.c:2473
 msgid "Rolled"
 msgstr ""
 
-#: gnubg.c:1458 gnubg.c:5548 gtkgame.c:1428 gtkgame.c:1447 gtkgame.c:1465
+#: gnubg.c:1458 gnubg.c:5546 gtkgame.c:1428 gtkgame.c:1447 gtkgame.c:1465
 msgid "No game in progress."
 msgstr "No game in progress."
 
-#: gnubg.c:1483 gnubg.c:1485 gnubg.c:2755 gnubg.c:2757 text.c:61 text.c:66
+#: gnubg.c:1483 gnubg.c:1485 gnubg.c:2754 gnubg.c:2756 text.c:61 text.c:66
 #, c-format
 msgid "%d point"
 msgid_plural "%d points"
 msgstr[0] ""
 msgstr[1] ""
 
-#: gnubg.c:1492 gnubg.c:2764 text.c:75
+#: gnubg.c:1492 gnubg.c:2763 text.c:75
 #, c-format
 msgid "Cube offered at %d"
 msgstr "Cube offered at %d"
@@ -1966,16 +1966,16 @@ msgstr "Cube offered at %d"
 msgid "%s %d%d"
 msgstr "%s to play %d%d"
 
-#: gnubg.c:1502 gnubg.c:2774 text.c:85
+#: gnubg.c:1502 gnubg.c:2773 text.c:85
 msgid "On roll"
 msgstr "On roll"
 
-#: gnubg.c:1510 gnubg.c:2782 text.c:93
+#: gnubg.c:1510 gnubg.c:2781 text.c:93
 #, c-format
 msgid "%d point match (Cube: %d)"
 msgstr "%d point match (Cube: %d)"
 
-#: gnubg.c:1525 gnubg.c:2797 gtkgame.c:5607 text.c:108
+#: gnubg.c:1525 gnubg.c:2796 gtkgame.c:5607 text.c:108
 #, c-format
 msgid "%d point match"
 msgstr "%d point match"
@@ -1999,7 +1999,7 @@ msgstr "No game"
 msgid "Game over"
 msgstr "Game over"
 
-#: gnubg.c:1647 gnubg.c:2624 show.c:453 show.c:483 show.c:797 show.c:1108
+#: gnubg.c:1647 gnubg.c:2623 show.c:453 show.c:483 show.c:797 show.c:1108
 #: show.c:1162 show.c:1209 show.c:1256 show.c:1371
 msgid "No position specified and no game in progress."
 msgstr "No position specified and no game in progress."
@@ -2088,20 +2088,20 @@ msgstr "Considering move..."
 msgid "There are no legal moves."
 msgstr "There are no legal moves."
 
-#: gnubg.c:2444 gnubgmodule.c:663
+#: gnubg.c:2444 gnubgmodule.c:661
 msgid "You must set up a board first."
 msgstr "You must set up a board first."
 
-#: gnubg.c:2598
+#: gnubg.c:2597
 msgid "That command is not yet implemented."
 msgstr "That command is not yet implemented."
 
-#: gnubg.c:2620
+#: gnubg.c:2619
 msgid ""
 "The rollout command takes no arguments and only rollouts the current position"
 msgstr ""
 
-#: gnubg.c:2631
+#: gnubg.c:2630
 #, fuzzy, c-format
 msgid "Current Position"
 msgstr "Current position"
@@ -2109,242 +2109,248 @@ msgstr "Current position"
 #. Python escape.
 #. Ideally we should be able to handle both > print 1+1 sys.exit() and > print 1+1
 #. * currently we only handle the latter...
-#: gnubg.c:2673
+#: gnubg.c:2672
 msgid "Only Python commands supported, not multiline code"
 msgstr ""
 
-#: gnubg.c:2700
+#: gnubg.c:2699
 msgid "This build of GNU Backgammon does not support Python"
 msgstr ""
 
-#: gnubg.c:2703 gnubg.c:2726
+#: gnubg.c:2702 gnubg.c:2725
 #, fuzzy
 msgid "You must specify a file to load from."
 msgstr "You must specify a file to load from (see ‘help load game’)."
 
-#: gnubg.c:3383
+#: gnubg.c:3382
 #, fuzzy, c-format
 msgid "Settings saved to %s."
 msgstr "Settings saved to %s.\n"
 
-#: gnubg.c:3383
+#: gnubg.c:3382
 msgid "standard output stream"
 msgstr "standard output stream"
 
-#: gnubg.c:3852 makebearoff.c:1359 makebearoff.c:1360 makebearoff.c:1361
-#: makebearoff.c:1362 makebearoff.c:1364 makebearoff.c:1421 makebearoff.c:1426
+#: gnubg.c:3851 makebearoff.c:1406 makebearoff.c:1407 makebearoff.c:1408
+#: makebearoff.c:1409 makebearoff.c:1411 makebearoff.c:1468 makebearoff.c:1473
 #: show.c:386 show.c:1791 show.c:1793 show.c:1795 show.c:1798 show.c:1823
 #: show.c:1827 show.c:1831 show.c:1840 show.c:1848 show.c:1852 show.c:1856
 #: show.c:1865 show.c:1871 show.c:1875 show.c:1879 show.c:1945
 msgid "yes"
 msgstr "yes"
 
-#: gnubg.c:3852 makebearoff.c:1359 makebearoff.c:1360 makebearoff.c:1361
-#: makebearoff.c:1362 makebearoff.c:1364 makebearoff.c:1421 makebearoff.c:1426
+#: gnubg.c:3851 makebearoff.c:1406 makebearoff.c:1407 makebearoff.c:1408
+#: makebearoff.c:1409 makebearoff.c:1411 makebearoff.c:1468 makebearoff.c:1473
 #: show.c:386 show.c:1791 show.c:1793 show.c:1795 show.c:1798 show.c:1823
 #: show.c:1827 show.c:1831 show.c:1840 show.c:1848 show.c:1852 show.c:1856
 #: show.c:1865 show.c:1871 show.c:1875 show.c:1879 show.c:1945
 msgid "no"
 msgstr "no"
 
-#: gnubg.c:3882 gnubg.c:5152
+#: gnubg.c:3881 gnubg.c:5150
 msgid "Please answer `y' or `n'."
 msgstr "Please answer ‘y’ or ‘n’."
 
-#: gnubg.c:3910
+#: gnubg.c:3909
 #, fuzzy
 msgid "output will be shown"
 msgstr "The pip counts will not be shown."
 
-#: gnubg.c:3910
+#: gnubg.c:3909
 #, fuzzy
 msgid "output will not be shown"
 msgstr "The pip counts will not be shown."
 
-#: gnubg.c:4372
+#: gnubg.c:4371
 msgid "Enter dice: "
 msgstr "Enter dice: "
 
-#: gnubg.c:4390
+#: gnubg.c:4389
 msgid "You must enter two numbers between 1 and 6."
 msgstr "You must enter two numbers between 1 and 6."
 
-#: gnubg.c:4454
+#: gnubg.c:4453
 #, fuzzy, c-format
 msgid "Fetching %d random numbers from <%s>\n"
 msgstr "Fetching %d random numbers from <www.random.org>\n"
 
 #. parse string
-#: gnubg.c:4506
+#: gnubg.c:4505
 msgid "Done."
 msgstr "Done."
 
-#: gnubg.c:4541
+#: gnubg.c:4540
 msgid "Failure setting up RNG"
 msgstr ""
 
-#: gnubg.c:4545
+#: gnubg.c:4544
 msgid "Failure setting up RNG for rollout."
 msgstr ""
 
-#: gnubg.c:4643
+#: gnubg.c:4642
 msgid "Do not use bearoff database"
 msgstr ""
 
-#: gnubg.c:4645
+#: gnubg.c:4644
 msgid "Evaluate commands in FILE and exit"
 msgstr ""
 
-#: gnubg.c:4647
+#: gnubg.c:4646
 msgid "Set language to LANG"
 msgstr ""
 
-#: gnubg.c:4649
+#: gnubg.c:4648
 msgid "Evaluate Python code in FILE and exit"
 msgstr ""
 
-#: gnubg.c:4651
+#: gnubg.c:4650
 msgid "Disable sound effects"
 msgstr ""
 
-#: gnubg.c:4653
+#: gnubg.c:4652
 msgid "Do not read .gnubgrc and .gnubgautorc commands"
 msgstr ""
 
-#: gnubg.c:4656
+#: gnubg.c:4655
 msgid "Show gtk splash screen"
 msgstr ""
 
-#: gnubg.c:4658
+#: gnubg.c:4657
 #, fuzzy
 msgid "Start the command line instead of using the graphical interface"
 msgstr "Modify the look and feel of the graphical interface"
 
-#: gnubg.c:4660
+#: gnubg.c:4659
 msgid "Show version information and exit"
 msgstr ""
 
-#: gnubg.c:4662
+#: gnubg.c:4661
 #, fuzzy
 msgid "Ignore tty input when using the graphical interface"
 msgstr "Control parameters for the graphical interface"
 
-#: gnubg.c:4664
+#: gnubg.c:4663
 msgid "Turn on debug"
 msgstr ""
 
-#: gnubg.c:4666
+#: gnubg.c:4665
 #, fuzzy
 msgid "Specify location of general data"
 msgstr "Specify an external generator"
 
-#: gnubg.c:4668
+#: gnubg.c:4667
 msgid "Specify location of program specific data"
 msgstr ""
 
-#: gnubg.c:4670
+#: gnubg.c:4669
 msgid "Specify location of program documentation"
 msgstr ""
 
-#: gnubg.c:4768 gnubg.c:4771 gnubg.c:4776 gnubg.c:4780 gnubg.c:4785
+#: gnubg.c:4763 gnubg.c:4766 gnubg.c:4771 gnubg.c:4774 gnubg.c:4778
+#: gnubg.c:4783
 msgid "Initialising"
 msgstr "Initialising"
 
-#: gnubg.c:4768 gtkoptions.c:979
+#: gnubg.c:4763 gtkoptions.c:979
 msgid "Random number generator"
 msgstr "Random number generator"
 
-#: gnubg.c:4771
+#: gnubg.c:4766
 msgid "match equity table"
 msgstr "match equity table"
 
-#: gnubg.c:4776
+#: gnubg.c:4771
 msgid "neural nets"
 msgstr "neural nets"
 
-#: gnubg.c:4780
+#: gnubg.c:4774
+#, fuzzy
+msgid "initialising thread data"
+msgstr "Error initialising old bearoff database!\n"
+
+#: gnubg.c:4778
 msgid "Windows sockets"
 msgstr ""
 
-#: gnubg.c:4785
+#: gnubg.c:4783
 msgid "Python"
 msgstr ""
 
-#: gnubg.c:4793
+#: gnubg.c:4791
 msgid "Loading"
 msgstr "Loading"
 
-#: gnubg.c:4793
+#: gnubg.c:4791
 msgid "User Settings"
 msgstr "User Settings"
 
-#: gnubg.c:4842
+#: gnubg.c:4840
 #, fuzzy, c-format
 msgid "GNU Backgammon build without Python."
 msgstr "GNU Backgammon - Question"
 
-#: gnubg.c:4874 gnubg.c:4917
+#: gnubg.c:4872 gnubg.c:4915
 msgid "Command only valid in match play"
 msgstr "Command only valid in match play"
 
-#: gnubg.c:4886 gnubg.c:4887 gnubg.c:4889
+#: gnubg.c:4884 gnubg.c:4885 gnubg.c:4887
 #, fuzzy
 msgid "MWC for equity"
 msgstr "MWC before resignation"
 
-#: gnubg.c:4888 gnubg.c:4933
+#: gnubg.c:4886 gnubg.c:4931
 #, fuzzy
 msgid "By linear interpolation"
 msgstr "By linear interpolation:\n"
 
-#: gnubg.c:4931 gnubg.c:4932 gnubg.c:4934
+#: gnubg.c:4929 gnubg.c:4930 gnubg.c:4932
 #, fuzzy
 msgid "Equity for MWC"
 msgstr "Match equity as MWC"
 
-#: gnubg.c:5075
+#: gnubg.c:5073
 #, c-format
 msgid "File \"%s\" exists. Overwrite? "
 msgstr "File “%s” exists. Overwrite? "
 
-#: gnubg.c:5170
+#: gnubg.c:5168
 #, fuzzy
 msgid "You may be about to make a very bad play"
 msgstr "You may be about to make a very bad play. Are you sure? "
 
-#: gnubg.c:5174
+#: gnubg.c:5172
 #, fuzzy
 msgid "You may be about to make a bad play"
 msgstr "You may be about to make a bad play. Are you sure? "
 
-#: gnubg.c:5178
+#: gnubg.c:5176
 #, fuzzy
 msgid "You may be about to make a doubtful play"
 msgstr "You may be about to make a doubtful play. Are you sure? "
 
-#: gnubg.c:5190
+#: gnubg.c:5188
 msgid "Are you sure?"
 msgstr ""
 
-#: gnubg.c:5252
+#: gnubg.c:5250
 msgid "Analysis used for `hint' has been cleared"
 msgstr ""
 
-#: gnubg.c:5419
+#: gnubg.c:5417
 #, c-format
 msgid ""
 "Locale in your environment not supported by C library. Falling back to C "
 "locale.\n"
 msgstr ""
 
-#: gnubg.c:5611
+#: gnubg.c:5609
 #, fuzzy
 msgid ""
 "Are you sure you want to discard the current match and your existing "
 "autosave? "
 msgstr "Are you sure you want to exit and abort the game in progress? "
 
-#: gnubg.c:5619
+#: gnubg.c:5617
 #, fuzzy
 msgid "Are you sure you want to discard the current match? "
 msgstr ""
@@ -2390,84 +2396,84 @@ msgstr ""
 msgid "error in SetPosInfo\n"
 msgstr ""
 
-#: gnubgmodule.c:667
+#: gnubgmodule.c:665
 #, fuzzy
 msgid "Hints for cube actions not yet implemented"
 msgstr "That command is not yet implemented."
 
-#: gnubgmodule.c:672
+#: gnubgmodule.c:670
 #, fuzzy
 msgid "Hints for resignations not yet implemented"
 msgstr "That command is not yet implemented."
 
-#: gnubgmodule.c:677
+#: gnubgmodule.c:675
 #, fuzzy
 msgid "Hints for take actions not yet implemented"
 msgstr "That command is not yet implemented."
 
-#: gnubgmodule.c:893
+#: gnubgmodule.c:891
 msgid ""
 "requires 2 arguments (MoveTuple, Board). (see gnubg.findbestmove() and gnubg."
 "board() for examples)"
 msgstr ""
 
-#: gnubgmodule.c:899
+#: gnubgmodule.c:897
 #, fuzzy
 msgid "Invalid move tuple as argument"
 msgstr "Invalid annotation"
 
-#: gnubgmodule.c:904
+#: gnubgmodule.c:902
 #, fuzzy
 msgid "Invalid board as argument "
 msgstr "Invalid annotation"
 
-#: gnubgmodule.c:943
+#: gnubgmodule.c:941
 msgid "interrupted/errno in GeneralEvaluateE"
 msgstr ""
 
-#: gnubgmodule.c:988
+#: gnubgmodule.c:986
 msgid "interrupted/errno in GeneralCubeDecisionE"
 msgstr ""
 
-#: gnubgmodule.c:1032
+#: gnubgmodule.c:1030
 #, c-format
 msgid "What? No dice?\n"
 msgstr ""
 
-#: gnubgmodule.c:1127
+#: gnubgmodule.c:1125
 msgid "number of rolls must be greater than 0"
 msgstr ""
 
-#: gnubgmodule.c:1169
+#: gnubgmodule.c:1167
 msgid "invalid matchlength"
 msgstr ""
 
-#: gnubgmodule.c:1340
+#: gnubgmodule.c:1338
 msgid ""
 "requires 0 or exactly 3 arguments (Board, Cube-Info dict, Pos-Info dict). "
 "(see gnubg.board(), gnubg.cubeinfo(), gnubg.posinfo() for examples)"
 msgstr ""
 
-#: gnubgmodule.c:1349 gnubgmodule.c:1391
+#: gnubgmodule.c:1347 gnubgmodule.c:1389
 #, fuzzy
 msgid "no current position available"
 msgstr "Write the current position to a file"
 
-#: gnubgmodule.c:1403
+#: gnubgmodule.c:1401
 msgid ""
 "a cube-info argument requires a pos-info dictionary as an argument (see "
 "gnubg.matchid() for an example)"
 msgstr ""
 
-#: gnubgmodule.c:1432
+#: gnubgmodule.c:1430
 msgid "invalid positionid"
 msgstr ""
 
-#: gnubgmodule.c:1538
+#: gnubgmodule.c:1536
 msgid "invalid number of chequers or points"
 msgstr ""
 
-#: gnubgmodule.c:1545
+#: gnubgmodule.c:1543
 msgid "invalid position number"
 msgstr ""
 
@@ -7716,7 +7722,7 @@ msgstr ""
 
 #: html.c:2923 html.c:3073 html.c:3208 html.c:3243 latex.c:522 play.c:1871
 #: play.c:2233 play.c:2289 play.c:2489 play.c:2556 play.c:3229 play.c:3298
-#: play.c:3392 play.c:3520 play.c:3769 sgf.c:2301 sgf.c:2339 sgf.c:2387
+#: play.c:3392 play.c:3520 play.c:3769 sgf.c:2306 sgf.c:2344 sgf.c:2392
 #: show.c:981 show.c:1293 show.c:1503 show.c:1972 show.c:1996 text.c:803
 #: text.c:896
 msgid "No game in progress (type `new game' to start one)."
@@ -7757,171 +7763,176 @@ msgstr ""
 "This installation of GNU Backgammon was compiled without\n"
 "support for writing HTML images."
 
-#: import.c:152
+#: import.c:151
 msgid "File not recognised as Jellyfish file."
 msgstr "File not recognized as Jellyfish file."
 
-#: import.c:350
+#: import.c:349
 #, fuzzy
 msgid "Failed reading jellyfish file"
 msgstr "File not recognized as Jellyfish file."
 
-#: import.c:388
+#: import.c:387
 msgid "This file is not a valid Jellyfish .pos file!\n"
 msgstr ""
 
-#: import.c:595 import.c:765 import.c:1229 import.c:1717 import.c:1766
-#: import.c:1859 import.c:2610 import.c:2838
+#: import.c:594 import.c:764 import.c:1228 import.c:1719 import.c:1768
+#: import.c:1861 import.c:2623 import.c:2851
 msgid "Take record found but doesn't follow a double"
 msgstr ""
 
-#: import.c:632
+#: import.c:631
 msgid "No '(' following text 'Illegal play'"
 msgstr ""
 
-#: import.c:641
+#: import.c:640
 msgid "Illegal Snowie position format for illegal play."
 msgstr ""
 
-#: import.c:687
+#: import.c:686
 #, c-format
 msgid "WARNING: Expand move failed. This file contains garbage!"
 msgstr ""
 
-#: import.c:693
+#: import.c:692
 #, c-format
 msgid "WARNING: Invalid move: \"%s\" encountered\n"
 msgstr "WARNING: Invalid move: “%s” encountered\n"
 
-#: import.c:776 import.c:1242 import.c:1874 import.c:2626
+#: import.c:775 import.c:1241 import.c:1876 import.c:2639
 msgid "Drop record found but doesn't follow a double"
 msgstr ""
 
-#: import.c:801
+#: import.c:800
 #, c-format
 msgid "Unrecognised move \"%s\" in .mat file.\n"
 msgstr "Unrecognized move “%s” in .mat file.\n"
 
-#: import.c:964
+#: import.c:963
 #, c-format
 msgid "%s: not a valid .mat file"
 msgstr "%s: not a valid .mat file"
 
-#: import.c:1038
+#: import.c:1037
 #, c-format
 msgid "Invalid match length %d found in mat file\n"
 msgstr ""
 
-#: import.c:1064
+#: import.c:1063
 #, c-format
 msgid "WARNING! Unrecognized line in mat file: '%s'\n"
 msgstr ""
 
-#: import.c:1100
+#: import.c:1099
 #, c-format
 msgid "Import as a %s match had errors. Try a different variation?"
 msgstr ""
 
-#: import.c:1199
+#: import.c:1198
 #, c-format
 msgid "WARNING! Illegal or invalid move: '%s'\n"
 msgstr ""
 
-#: import.c:1268
+#: import.c:1267
 #, c-format
 msgid "Unrecognised move \"%s\" in oldmoves file.\n"
 msgstr "Unrecognized move “%s” in oldmoves file.\n"
 
-#: import.c:1515 import.c:1520
+#: import.c:1514 import.c:1519
 #, c-format
 msgid "%s: not a valid oldmoves file"
 msgstr "%s: not a valid oldmoves file"
 
-#: import.c:1644
+#: import.c:1646
 msgid "Beaver record found but doesn't follow a double"
 msgstr ""
 
-#: import.c:1821
+#: import.c:1823
 msgid "Beaver found but doesn't follow a double"
 msgstr ""
 
-#: import.c:1841
+#: import.c:1843
 msgid "Raccoon found but doesn't follow a double"
 msgstr ""
 
+#: import.c:1944
+#, c-format
+msgid "Unparseable line: %s"
+msgstr ""
+
 #. No player line found
-#: import.c:2261
+#: import.c:2274
 #, c-format
 msgid "%s: not a valid SGG file"
 msgstr "%s: not a valid SGG file"
 
-#: import.c:2338
+#: import.c:2351
 #, c-format
 msgid "TMG MatchID: %s"
 msgstr "TMG MatchID: %s"
 
-#: import.c:3454
+#: import.c:3467
 msgid "You must specify a BKG session file to import (see `help import bkg')."
 msgstr "You must specify a BKG session file to import (see ‘help import bkg’)."
 
-#: import.c:3480
+#: import.c:3493
 msgid "You must specify a position file to import (see `help import pos')."
 msgstr "You must specify a position file to import (see ‘help import pos’)."
 
-#: import.c:3506
+#: import.c:3519
 msgid "You must specify a match file to import (see `help import mat')."
 msgstr "You must specify a match file to import (see ‘help import mat’)."
 
-#: import.c:3532
+#: import.c:3545
 msgid ""
 "You must specify an oldmoves file to import (see `help import oldmoves')."
 msgstr ""
 "You must specify an oldmoves file to import (see ‘help import oldmoves’)."
 
-#: import.c:3559
+#: import.c:3572
 msgid "You must specify an SGG file to import (see `help import sgg')."
 msgstr "You must specify an SGG file to import (see ‘help import sgg’)."
 
-#: import.c:3585
+#: import.c:3598
 msgid "You must specify an TMG file to import (see `help import tmg')."
 msgstr "You must specify an TMG file to import (see ‘help import tmg’)."
 
-#: import.c:3612
+#: import.c:3625
 msgid ""
 "You must specify a Snowie Text file to import (see `help import snowietxt')."
 msgstr ""
 
-#: import.c:3635
+#: import.c:3648
 msgid ""
 "You must specify a GammonEmpire file to import (see `help import empire')."
 msgstr ""
 
-#: import.c:3660
+#: import.c:3673
 msgid ""
 "You must specify a PartyGammon file to import (see `help import party')."
 msgstr ""
 
-#: import.c:3710
+#: import.c:3723
 #, c-format
 msgid "You must specify a file to import (see `help import auto')."
 msgstr ""
 
-#: import.c:3714
+#: import.c:3727
 #, c-format
 msgid "The file `%s' doesn't exist"
 msgstr ""
 
-#: import.c:3719
+#: import.c:3732
 #, fuzzy, c-format
 msgid "`%s' is not a backgammon file"
 msgstr "%s: not a weights file\n"
 
-#: import.c:3723
+#: import.c:3736
 #, c-format
 msgid "The format of '%s' is not recognized"
 msgstr ""
 
-#: import.c:3937
+#: import.c:3950
 #, fuzzy
 msgid ""
 "You must specify a BackGammonRoom file to import (see `help import bgroom')."
@@ -7953,228 +7964,228 @@ msgstr "You must specify a file to export to (see ‘help export game latex’).
 msgid "You must specify a file to export to (see `help export match latex')."
 msgstr "You must specify a file to export to (see ‘help export match latex’)."
 
-#: makebearoff.c:623 makebearoff.c:1170
+#: makebearoff.c:669 makebearoff.c:1216
 #, c-format
 msgid "Error creating xhash with %d elements\n"
 msgstr "Error creating xhash with %d elements\n"
 
-#: makebearoff.c:1352
+#: makebearoff.c:1399
 #, c-format
 msgid "Size of one-sided bearoff database must be between 0 and 18\n"
 msgstr "Size of one-sided bearoff database must be between 0 and 18\n"
 
-#: makebearoff.c:1355
+#: makebearoff.c:1402
 #, fuzzy
 msgid "One-sided database"
 msgstr "cubeless database"
 
-#: makebearoff.c:1356 makebearoff.c:1417
+#: makebearoff.c:1403 makebearoff.c:1464
 #, fuzzy
 msgid "Number of points"
 msgstr "Play a new match to some number of points"
 
-#: makebearoff.c:1357 makebearoff.c:1418
+#: makebearoff.c:1404 makebearoff.c:1465
 #, fuzzy
 msgid "Number of chequers"
 msgstr "Will not automatically bear off checkers."
 
-#: makebearoff.c:1358
+#: makebearoff.c:1405
 #, fuzzy
 msgid "Number of positions"
 msgstr "Number of close-outs"
 
-#: makebearoff.c:1359
+#: makebearoff.c:1406
 #, fuzzy
 msgid "Approximate by normal distribution"
 msgstr "   - distributions are approximated with a normal distribution\n"
 
-#: makebearoff.c:1360
+#: makebearoff.c:1407
 #, fuzzy
 msgid "Include gammon distributions"
 msgstr "database includes gammon distributions"
 
-#: makebearoff.c:1361
+#: makebearoff.c:1408
 msgid "Use compression scheme"
 msgstr ""
 
-#: makebearoff.c:1362 makebearoff.c:1421
+#: makebearoff.c:1409 makebearoff.c:1468
 msgid "Write header"
 msgstr ""
 
-#: makebearoff.c:1363
+#: makebearoff.c:1410
 #, fuzzy
 msgid "Size of cache"
 msgstr "Size of PNG images:"
 
-#: makebearoff.c:1364 makebearoff.c:1426
+#: makebearoff.c:1411 makebearoff.c:1473
 #, fuzzy
 msgid "Reuse old bearoff database"
 msgstr "Unknown bearoff database\n"
 
-#: makebearoff.c:1369
+#: makebearoff.c:1416
 #, fuzzy
 msgid "Size of database"
 msgstr "Unknown bearoff database\n"
 
-#: makebearoff.c:1372
+#: makebearoff.c:1419
 #, fuzzy
 msgid "Size of database (uncompressed)"
 msgstr "Size of database (uncompressed)   : %.0f (%.1f MB)\n"
 
-#: makebearoff.c:1375
+#: makebearoff.c:1422
 #, fuzzy
 msgid "Estimated size of compressed db"
 msgstr "Estimated size of compressed db   : %.0f (%.1f MB)\n"
 
-#: makebearoff.c:1380 makebearoff.c:1430
+#: makebearoff.c:1427 makebearoff.c:1477
 #, c-format
 msgid "Error initialising old bearoff database!\n"
 msgstr "Error initialising old bearoff database!\n"
 
-#: makebearoff.c:1388 makebearoff.c:1438
+#: makebearoff.c:1435 makebearoff.c:1485
 #, c-format
 msgid "The old database is not of the same kind as the requested database\n"
 msgstr "The old database is not of the same kind as the requested database\n"
 
-#: makebearoff.c:1416
+#: makebearoff.c:1463
 msgid "Two-sided database:\n"
 msgstr ""
 
-#: makebearoff.c:1419
+#: makebearoff.c:1466
 #, fuzzy
 msgid "Calculate equities"
 msgstr "Cubeful evaluations"
 
-#: makebearoff.c:1420
+#: makebearoff.c:1467
 msgid "cubeless and cubeful"
 msgstr "cubeless and cubeful"
 
-#: makebearoff.c:1420
+#: makebearoff.c:1467
 msgid "cubeless only"
 msgstr "cubeless only"
 
-#: makebearoff.c:1422
+#: makebearoff.c:1469
 #, fuzzy
 msgid "Number of one-sided positions"
 msgstr "Number of close-outs"
 
-#: makebearoff.c:1423
+#: makebearoff.c:1470
 #, fuzzy
 msgid "Total number of positions"
 msgstr "Play a new match to some number of points"
 
-#: makebearoff.c:1424
+#: makebearoff.c:1471
 msgid "Size of resulting file"
 msgstr ""
 
-#: makebearoff.c:1425
+#: makebearoff.c:1472
 #, fuzzy
 msgid "Size of xhash"
 msgstr "Size of PNG images:"
 
-#: makehyper.c:208
+#: makehyper.c:221
 #, fuzzy
 msgid "Number of game-over positions"
 msgstr "Number of games with hit(s)"
 
-#: makehyper.c:209
+#: makehyper.c:222
 msgid "Number of non-contact positions"
 msgstr ""
 
-#: makehyper.c:210
+#: makehyper.c:223
 #, fuzzy
 msgid "Number of contact positions"
 msgstr "Number of close-outs"
 
-#: makehyper.c:211
+#: makehyper.c:224
 #, fuzzy
 msgid "Total number of legal positions"
 msgstr "Play a new match to some number of points"
 
-#: makehyper.c:212
+#: makehyper.c:225
 #, fuzzy
 msgid "Number of illegal positions"
 msgstr "Illegal position."
 
-#: makehyper.c:213
+#: makehyper.c:226
 #, fuzzy
 msgid "Total number of positions in file"
 msgstr "Play a new match to some number of points"
 
-#: makehyper.c:664
+#: makehyper.c:676
 #, c-format
 msgid "Number of chequers: %d\n"
 msgstr ""
 
-#: makehyper.c:668
+#: makehyper.c:680
 #, fuzzy
 msgid "Total number of one sided positions"
 msgstr "trained on %d positions"
 
-#: makehyper.c:669
+#: makehyper.c:681
 #, fuzzy
 msgid "Total number of two sided positions"
 msgstr "trained on %d positions"
 
-#: makehyper.c:670
+#: makehyper.c:682
 msgid "Estimated size of file"
 msgstr ""
 
-#: makehyper.c:670
+#: makehyper.c:682
 #, fuzzy
 msgid "bytes"
 msgstr "yes"
 
-#: makehyper.c:671
+#: makehyper.c:683
 msgid "Output file"
 msgstr ""
 
-#: makehyper.c:672
+#: makehyper.c:684
 #, fuzzy
 msgid "Convergens threshold"
 msgstr "Error threshold %f.\n"
 
-#: makehyper.c:678
+#: makehyper.c:690
 #, c-format
 msgid "*** Obtain start guess ***\n"
 msgstr ""
 
-#: makehyper.c:686
+#: makehyper.c:698
 #, c-format
 msgid "0-vector start guess\n"
 msgstr ""
 
-#: makehyper.c:689
+#: makehyper.c:701
 #, c-format
 msgid "Start from file\n"
 msgstr ""
 
-#: makehyper.c:695
+#: makehyper.c:707
 #, c-format
 msgid "Time for start guess: %d seconds\n"
 msgstr ""
 
-#: makehyper.c:703
+#: makehyper.c:715
 #, c-format
 msgid "*** Iteration %03d *** \n"
 msgstr ""
 
-#: makehyper.c:713
+#: makehyper.c:725
 #, c-format
 msgid "norm of delta: %f\n"
 msgstr ""
 
-#: makehyper.c:726
+#: makehyper.c:738
 #, c-format
 msgid "Time for iteration %03d: %d seconds\n"
 msgstr ""
 
-#: makehyper.c:738
+#: makehyper.c:750
 #, c-format
 msgid "Time for writing final file: %d seconds\n"
 msgstr ""
 
-#: makehyper.c:742
+#: makehyper.c:754
 #, c-format
 msgid "Total time: %d seconds\n"
 msgstr ""
@@ -10951,27 +10962,27 @@ msgstr "You must specify a semi-positive number."
 msgid "warning: no backgammon games in SGF file"
 msgstr "warning: no backgammon games in SGF file"
 
-#: sgf.c:1427
+#: sgf.c:1432
 msgid "You must specify a file to load from (see `help load game')."
 msgstr "You must specify a file to load from (see ‘help load game’)."
 
-#: sgf.c:1479
+#: sgf.c:1484
 msgid "You must specify a file to load from (see `help load position')."
 msgstr ""
 
-#: sgf.c:1527
+#: sgf.c:1532
 msgid "You must specify a file to load from (see `help load match')."
 msgstr "You must specify a file to load from (see ‘help load match’)."
 
-#: sgf.c:2306
+#: sgf.c:2311
 msgid "You must specify a file to save to (see `help save game')."
 msgstr "You must specify a file to save to (see ‘help save game’)."
 
-#: sgf.c:2346
+#: sgf.c:2351
 msgid "You must specify a file to save to (see `help save match')."
 msgstr "You must specify a file to save to (see ‘help save match’)."
 
-#: sgf.c:2392
+#: sgf.c:2397
 msgid "You must specify a file to save to (see `help save position')."
 msgstr "You must specify a file to save to (see ‘help save position’)."
 

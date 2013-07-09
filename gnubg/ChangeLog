@@ -1,3 +1,13 @@
+2013-07-08  Michael Petch  <mpetch@gnubg.org>
+
+    * Makefile.am, bearoffdump.c, eval.c, eval.h, gnubg.c,
+      makebearoff.c, makehyper.c multithread.c multithread.h 
+      po/*: Move static thread local data from eval.c into
+    thread local storage (multithread.c). This reduces the
+    bss data size. Thread storage is allocated on the heap
+    as required. Ensure that the data is properly aligned for
+    SIMD usage.
+
 2013-07-06  Michael Petch  <mpetch@gnubg.org>
 
     * lib/inputs.c, lib/simd.h, Makefile.am, configure.ac: Fix an 

@@ -20,8 +20,13 @@
  */
 
 #include "config.h"
-#include "backgammon.h"
 
+#if __GNUC__ && defined(WIN32) && defined(USE_AVX)
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+#endif
+
+#include "backgammon.h"
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <locale.h>
@@ -458,9 +463,6 @@ ComputeTable(void)
     ComputeTable1();
 }
 
-
-static NNState nnStatesStorage[MAX_NUMTHREADS][3];
-
 static void
 DestroyWeights(void)
 {
@@ -478,13 +480,6 @@ EvalShutdown(void)
 {
 
     int i;
-
-    int j;
-    for (j = 0; j < MAX_NUMTHREADS; j++)
-        for (i = 0; i < 3; i++) {
-            free(nnStatesStorage[j][i].savedBase);
-            free(nnStatesStorage[j][i].savedIBase);
-        }
 
     /* close bearoff databases */
 
@@ -726,18 +721,6 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
     g_assert(nnpContact.cInput == NUM_PRUNING_INPUTS && nnpContact.cOutput == NUM_OUTPUTS);
     g_assert(nnpCrashed.cInput == NUM_PRUNING_INPUTS && nnpCrashed.cOutput == NUM_OUTPUTS);
     g_assert(nnpRace.cInput == NUM_PRUNING_INPUTS && nnpRace.cOutput == NUM_OUTPUTS);
-
-    {
-        int j;
-        for (j = 0; j < MAX_NUMTHREADS; j++) {
-            nnStatesStorage[j][CLASS_RACE - CLASS_RACE].savedBase = malloc(nnRace.cHidden * sizeof(float));
-            nnStatesStorage[j][CLASS_RACE - CLASS_RACE].savedIBase = malloc(nnRace.cInput * sizeof(float));
-            nnStatesStorage[j][CLASS_CRASHED - CLASS_RACE].savedBase = malloc(nnCrashed.cHidden * sizeof(float));
-            nnStatesStorage[j][CLASS_CRASHED - CLASS_RACE].savedIBase = malloc(nnCrashed.cInput * sizeof(float));
-            nnStatesStorage[j][CLASS_CONTACT - CLASS_RACE].savedBase = malloc(nnContact.cHidden * sizeof(float));
-            nnStatesStorage[j][CLASS_CONTACT - CLASS_RACE].savedIBase = malloc(nnContact.cInput * sizeof(float));
-        }
-    }
 }
 
 /* Calculates inputs for any contact position, for one player only. */
@@ -2642,10 +2625,6 @@ se_eq2mwc(const float rEq, const cubeinfo * pci)
 
 }
 
-
-
-
-
 extern int
 ApplySubMove(TanBoard anBoard, const int iSrc, const int nRoll, const int fCheckLegal)
 {
@@ -2881,15 +2860,13 @@ GenerateMoves(movelist * pml, const TanBoard anBoard, int n0, int n1, int fParti
 {
 
     int anRoll[4], anMoves[8];
-    static move amMoves[MAX_NUMTHREADS][MAX_INCOMPLETE_MOVES];
-
     anRoll[0] = n0;
     anRoll[1] = n1;
 
     anRoll[2] = anRoll[3] = ((n0 == n1) ? n0 : 0);
 
     pml->cMoves = pml->cMaxMoves = pml->cMaxPips = pml->iMoveBest = 0;
-    pml->amMoves = amMoves[MT_GetThreadID()];
+    pml->amMoves = MT_Get_aMoves();
     GenerateMovesSub(pml, anRoll, 0, 23, 0, anBoard, anMoves, fPartial);
 
     if (anRoll[0] != anRoll[1]) {
@@ -5272,7 +5249,6 @@ extern evalCache cpEval;
 extern classevalfunc acef[N_CLASSES];
 extern unsigned int cCache;
 extern evalcontext ecBasic;
-static NNState nnStatesStorage[MAX_NUMTHREADS][3];
 #endif
 
 static int GeneralEvaluationEPlied(NNState * nnStates, float arOutput[NUM_ROLLOUT_OUTPUTS],
@@ -5581,8 +5557,7 @@ ScoreMoves(movelist * pml, const cubeinfo * pci, const evalcontext * pec, int nP
 {
     unsigned int i;
     int r = 0;                  /* return value */
-    NNState *nnStates;
-    nnStates = nnStatesStorage[MT_GetThreadID()];
+    NNState *nnStates = MT_Get_nnState();
 
     pml->rBestScore = -99999.9f;
 
@@ -6284,3 +6259,8 @@ EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard,
     return 0;
 
 }
+
+#if defined(__GNUC__) && defined(WIN32) && defined(USE_AVX)
+#pragma GCC pop_options
+#endif
+
