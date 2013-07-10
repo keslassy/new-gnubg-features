@@ -350,7 +350,9 @@ BearOff(int nId, unsigned int nPoints,
         unsigned short int aOutProb[64],
         const int fGammon, xhash * ph, bearoffcontext * pbc, const int fCompress, FILE * pfOutput, FILE * pfTmp)
 {
-
+#if !defined(G_DISABLE_ASSERT)
+    int iBest;
+#endif
     int iMode, j, anRoll[2], aProb[64];
     unsigned int i;
     TanBoard anBoard, anBoardTemp;
@@ -415,6 +417,9 @@ BearOff(int nId, unsigned int nPoints,
             GenerateMoves(&ml, (ConstTanBoard) anBoard, anRoll[0], anRoll[1], FALSE);
 
             usBest = 0xFFFFFFFF;
+#if !defined(G_DISABLE_ASSERT)
+            iBest = -1;
+#endif
             usGammonBest = 0xFFFFFFFF;
 
             for (i = 0; i < ml.cMoves; i++) {
@@ -443,6 +448,9 @@ BearOff(int nId, unsigned int nPoints,
                 /* find best move to win */
 
                 if ((us = RollsOS(pusj)) < usBest) {
+#if !defined(G_DISABLE_ASSERT)
+                    iBest = j;
+#endif
                     usBest = us;
                     memcpy(ausBest, pusj, 64);
                 }
@@ -455,6 +463,9 @@ BearOff(int nId, unsigned int nPoints,
                 }
 
             }
+
+            g_assert(iBest >= 0);
+            /* g_assert( iGammonBest >= 0 ); */
 
             if (anRoll[0] == anRoll[1]) {
                 for (i = 0; i < 31; i++) {
@@ -688,13 +699,16 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
     TanBoard anBoard, anBoardTemp;
     int ii, j, k;
     unsigned int i;
+#if !defined(G_DISABLE_ASSERT)
+    int iBest;
+    int iGammonBest;
+#endif
     float rBest;
     float rMean;
     float rVarSum, rGammonVarSum;
     float *prj;
     float arj[4];
     float arBest[4];
-
     float arGammonBest[4];
     float rGammonBest;
 
@@ -741,6 +755,10 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
 
             rBest = 1e10;
             rGammonBest = 1e10;
+#if !defined(G_DISABLE_ASSERT)
+            iBest = -1;
+            iGammonBest = -1;
+#endif
 
             for (i = 0; i < ml.cMoves; ++i) {
 
@@ -757,6 +775,9 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
                 /* find best move to win */
 
                 if (prj[0] < rBest) {
+#if !defined(G_DISABLE_ASSERT)
+                    iBest = j;
+#endif
                     rBest = prj[0];
                     memcpy(arBest, prj, 4 * sizeof(float));
                 }
@@ -764,11 +785,17 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
                 /* find best move to save gammon */
 
                 if (prj[2] < rGammonBest) {
+#if !defined(G_DISABLE_ASSERT)
+                    iGammonBest = j;
+#endif
                     rGammonBest = prj[2];
                     memcpy(arGammonBest, prj, 4 * sizeof(float));
                 }
 
             }
+
+            g_assert(iBest >= 0);
+            g_assert(iGammonBest >= 0);
 
             rMean = 1.0f + arBest[0];
 
