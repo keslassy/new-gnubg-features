@@ -41,8 +41,6 @@
 #include "lib/simd.h"
 #include "multithread.h"
 
-SSE_ALIGN(ThreadData td);
-
 static cubeinfo ci;
 static cubeinfo ciJacoby;
 
