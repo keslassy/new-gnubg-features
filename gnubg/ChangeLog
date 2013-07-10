@@ -1,3 +1,13 @@
+
+2013-07-10  Michael Petch  <mpetch@gnubg.org>
+
+    * +mtsupport.c, Makefile.am, Makefile.w32, bearoffdump.c,
+       makebearoff.c, makehyper.c, multithread.c, multithread.h:
+    Reduce the cpu cycle overhead of the new heap allocated thread 
+    local data. Rework the multithreaded code. Split multithreaded
+    support functions out of multithread.c and into mtsupport.c . 
+    mtsupport.c can be used by the utiltity programs (makebearoff etc).
+
 2013-07-08  Michael Petch  <mpetch@gnubg.org>
 
     * Makefile.am, bearoffdump.c, eval.c, eval.h, gnubg.c,
