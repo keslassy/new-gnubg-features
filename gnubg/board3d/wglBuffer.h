@@ -4,8 +4,8 @@
 #define WGL_DEPTH_BUFFER_BIT_ARB 4
 /*#define WGL_STENCIL_BUFFER_BIT_ARB 8 */
 
-int wglBufferInitialize(void);
-HANDLE CreateBufferRegion(unsigned int buffers);
-void SaveBufferRegion(HANDLE region, int x, int y, int width, int height);
-void RestoreBufferRegion(HANDLE region, int x, int y, int width, int height);
+extern int wglBufferInitialize(void);
+extern HANDLE CreateBufferRegion(unsigned int buffers);
+extern void SaveBufferRegion(HANDLE region, int x, int y, int width, int height);
+extern void RestoreBufferRegion(HANDLE region, int x, int y, int width, int height);
 /*void DeleteBufferRegion(HANDLE region); */

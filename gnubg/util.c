@@ -21,7 +21,6 @@
 
 #include "config.h"
 #include "util.h"
-#include <glib.h>
 #include <stdlib.h>
 #include <string.h>
 #include "common.h"
@@ -31,8 +30,10 @@ char *pkg_datadir = NULL;
 char *docdir = NULL;
 #ifdef WIN32
 #include <io.h>
-
+#include <fcntl.h>
+#include <errno.h>
 #include <windows.h>
+
 extern void
 PrintSystemError(const char *message)
 {
@@ -121,10 +122,6 @@ FILE *fdopen(int, const char *);
 #ifndef WIN32
 #define TEMP_g_file_open_tmp g_file_open_tmp
 #else
-#include <io.h>
-#include <fcntl.h>
-#include <errno.h>
-
 int
 TEMP_g_mkstemp(char *tmpl)
 {

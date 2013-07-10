@@ -1,6 +1,7 @@
 
 #include "config.h"
 #include "inc3d.h"
+#include "wglBuffer.h"
 
 typedef HANDLE(WINAPI * fCreateRegion) (HDC dc, int layer, unsigned int type);
 typedef BOOL(WINAPI * fSaveRegion) (HANDLE region, int x, int y, int width, int height);
@@ -12,7 +13,7 @@ static fSaveRegion wglSaveBufferRegionARB;
 static fRestoreRegion wglRestoreBufferRegionARB;
 static fDeleteRegion wglDeleteBufferRegionARB;
 
-int
+extern int
 wglBufferInitialize()
 {
     if (!extensionSupported("WGL_ARB_buffer_region"))
@@ -41,14 +42,14 @@ CreateBufferRegion(unsigned int buffers)
     return FBRegion;
 }
 #endif
-void
+extern void
 SaveBufferRegion(HANDLE region, int x, int y, int width, int height)
 {
     if (wglSaveBufferRegionARB(region, x, y, width, height) == FALSE)
         puts("wglSaveBufferRegionARB Failed");
 }
 
-void
+extern void
 RestoreBufferRegion(HANDLE region, int x, int y, int width, int height)
 {
     if (wglRestoreBufferRegionARB(region, x, y, width, height, 0, 0) == FALSE)

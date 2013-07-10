@@ -654,7 +654,9 @@ RNGSystemSeed(const rng rngx, void *p, unsigned long *pnSeed)
     unsigned int n = 0;
 
 #if HAVE_LIBGMP
+#if !defined(WIN32)
     int h;
+#endif
     if (!pnSeed) {
 #if defined(WIN32)
         /* Can be amended to support seeds > 32 bit */
