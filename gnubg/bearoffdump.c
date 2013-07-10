@@ -30,44 +30,11 @@
 #include "multithread.h"
 #include "backgammon.h"
 
-extern move *
-MT_Get_aMoves(void)
-{
-    return NULL;
-}
-
-extern NNState *
-MT_Get_nnState(void)
-{
-    return NULL;
-}
-
-
-extern int
-MT_GetThreadID(void)
-{
-    return (0);
-}
-
-#if USE_MULTITHREAD
-
 extern void
-MT_Release(void)
+MT_CloseThreads(void)
 {
     return;
 }
-
-extern void
-MT_Exclusive(void)
-{
-    return;
-}
-#else
-extern void
-CallbackProgress(void)
-{
-}
-#endif
 
 extern int
 main(int argc, char **argv)

@@ -19,7 +19,7 @@ SOURCE = analysis bearoff bearoffgammon non-src/copying non-src/credits \
 	formatgs \
 	timer mec relational \
 	gnubgmodule non-src/external_l non-src/external_y \
-	file simpleboard \
+	file simpleboard mtsupport \
 	util corecount dbprovider gnubgstock
 
 GTKSOURCE = gtk-multiview gtkboard gtkcube gtkchequer gtkexport gtkgame gtkmet \
@@ -43,7 +43,7 @@ EXTRA_FILES=$(BINDIR)/textures.txt $(BINDIR)/met/met.dtd \
 
 makebearoff_SOURCE = makebearoff eval positionid matchequity \
 		     matchid osr bearoffgammon bearoff \
-		     mec util
+		     mec util mtsupport
 
 makebearoff_OBJECTS=$(patsubst %,$(OBJDIR)/%.o,$(makebearoff_SOURCE))
 

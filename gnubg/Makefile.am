@@ -90,6 +90,7 @@ gnubg_SOURCES = \
 		matchid.h \
 		mec.c \
 		mec.h \
+        mtsupport.c \
 		multithread.c \
 		multithread.h \
 		openurl.c \
@@ -176,21 +177,21 @@ endif
 #
 UTILSOURCES = eval.h eval.c positionid.h positionid.c \
 	matchequity.c matchequity.h matchid.h matchid.c \
-	osr.c osr.h multithread.h \
+	osr.c osr.h multithread.h mtsupport.c \
     bearoffgammon.c bearoffgammon.h bearoff.c bearoff.h \
 	mec.h mec.c util.c util.h
 
 makebearoff_SOURCES = makebearoff.c $(UTILSOURCES)
-makebearoff_LDADD = -Llib lib/libevent.la  @GLIB_LIBS@
+makebearoff_LDADD = -Llib lib/libevent.la  @GLIB_LIBS@ @GTHREAD_LIBS@
 
 makehyper_SOURCES = makehyper.c $(UTILSOURCES)
-makehyper_LDADD =  -Llib lib/libevent.la @GLIB_LIBS@
+makehyper_LDADD =  -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@
 
 bearoffdump_SOURCES = bearoffdump.c $(UTILSOURCES)
-bearoffdump_LDADD = -Llib lib/libevent.la @GLIB_LIBS@
+bearoffdump_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@
 
 makeweights_SOURCES = makeweights.c
-makeweights_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ 
+makeweights_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@
 
 
 #

@@ -18,11 +18,21 @@
 #ifndef MULTITHREAD_H
 #define MULTITHREAD_H
 
-#include "backgammon.h"
 #include "config.h"
 
+#if defined(WIN32)
+#include <process.h>
+#include <windows.h>
+#endif
+
+#if defined(USE_MULTITHREAD)
+#include <glib.h>
+#endif
+
+#include "backgammon.h"
+
 /*#define DEBUG_MULTITHREADED 1 */
-#ifdef DEBUG_MULTITHREADED
+#if defined (USE_MULTITHREAD) && defined(DEBUG_MULTITHREADED)
 void multi_debug(const char *str, ...);
 #else
 #define multi_debug(x)
@@ -42,6 +52,76 @@ typedef struct _AnalyseMoveTask {
     matchstate ms;
 } AnalyseMoveTask;
 
+typedef struct _ThreadLocalData {
+    int id;
+    move *aMoves;
+    NNState *pnnState;
+} ThreadLocalData;
+
+#if defined(GLIB_THREADS)
+typedef struct _ManualEvent {
+#if GLIB_CHECK_VERSION (2,32,0)
+    GCond cond;
+#else
+    GCond *cond;
+#endif
+    int signalled;
+} *ManualEvent;
+typedef GPrivate* TLSItem;
+
+#if GLIB_CHECK_VERSION (2,32,0)
+typedef GMutex Mutex;
+#else
+typedef GMutex *Mutex;
+#endif
+#elif defined(WIN32) /* GLIB_THREAD */
+typedef HANDLE ManualEvent;
+typedef DWORD TLSItem;
+typedef HANDLE Event;
+typedef HANDLE Mutex;
+#define WaitForManualEvent(ME) WaitForSingleObject(ME, INFINITE)
+#define ResetManualEvent(ME) ResetEvent(ME)
+#define SetManualEvent(ME) SetEvent(ME)
+
+#if defined (DEBUG_MULTITHREADED)
+extern void Mutex_Lock(Mutex mutex, const char *reason);
+#else
+#define Mutex_Lock(mutex, reason) WaitForSingleObject(mutex, INFINITE)
+#define Mutex_Release(mutex) ReleaseMutex(mutex)
+#endif
+
+#endif
+
+#if defined(USE_MULTITHREAD)
+
+typedef struct _ThreadData {
+    int doneTasks;
+    GList *tasks;
+    int result;
+    ThreadLocalData *tld;
+
+    ManualEvent activity;
+    TLSItem tlsItem;
+    Mutex queueLock;
+    Mutex multiLock;
+    ManualEvent syncStart;
+    ManualEvent syncEnd;
+
+    int addedTasks;
+    int totalTasks;
+
+    int closingThreads;
+    unsigned int numThreads;
+} ThreadData;
+#else
+typedef struct _ThreadData {
+    int doneTasks;
+    GList *tasks;
+    int result;
+    ThreadLocalData *tld;
+} ThreadData;
+#endif
+
 extern int MT_GetDoneTasks(void);
 extern void MT_AbortTasks(void);
 extern void MT_AddTask(Task * pt, gboolean lock);
@@ -49,24 +129,27 @@ extern void mt_add_tasks(unsigned int num_tasks, AsyncFun pFun, void *taskData, 
 extern int MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave);
 extern void MT_InitThreads(void);
 extern void MT_Close(void);
-extern NNState *MT_Get_nnState(void);
-extern move *MT_Get_aMoves(void);
+extern ThreadLocalData *MT_CreateThreadLocalData(int id);
 
-#if USE_MULTITHREAD
+extern ThreadData td;
 
-#include <glib.h>
+#if defined(USE_MULTITHREAD)
 
-#ifdef WIN32
-#ifndef GLIB_THREADS
-#include <windows.h>
-#endif
-#endif
+#define UI_UPDATETIME 250
+
+#if defined (GLIB_THREADS)
+typedef GPrivate* TLSItem;
+#define TLSGet(item) *((size_t*)g_private_get(item))
+
+#else /* WIN32 */
+#define TLSGet(item) *((int*)TlsGetValue(item))
+#endif /* GLIB_THREADS */
 
 #if !defined(MAX_NUMTHREADS)
 #define MAX_NUMTHREADS 48
 #endif
 
-extern unsigned int MT_GetNumThreads(void);
+
 extern void MT_Release(void);
 extern void MT_Exclusive(void);
 extern void MT_StartThreads(void);
@@ -75,9 +158,15 @@ extern void MT_SyncInit(void);
 extern void MT_SyncStart(void);
 extern double MT_SyncEnd(void);
 extern void MT_SetResultFailed(void);
-extern int MT_GetThreadID(void);
+extern void TLSCreate(TLSItem * pItem);
+extern unsigned int MT_GetNumThreads(void);
 
-#ifdef GLIB_THREADS
+#define MT_GetTLD() ((ThreadLocalData *)TLSGet(td.tlsItem))
+#define MT_GetThreadID() ((ThreadLocalData *)TLSGet(td.tlsItem))->id
+#define MT_Get_nnState() ((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState
+#define MT_Get_aMoves() ((ThreadLocalData *)TLSGet(td.tlsItem))->aMoves
+
+#if defined (GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,30,0)
 #define MT_SafeIncValue(x) (g_atomic_int_add(x, 1) + 1)
 #define MT_SafeIncCheck(x) (g_atomic_int_add(x, 1))
@@ -117,6 +206,11 @@ extern int asyncRet;
 #define MT_SafeAdd(x, y) ((*x) += y)
 #define MT_SafeDec(x) (--(*x))
 #define MT_SafeDecCheck(x) ((--(*x)) == 0)
+#define MT_GetThreadID() 0
+#define MT_Get_nnState() td.tld->pnnState
+#define MT_Get_aMoves() td.tld->aMoves
+#define MT_GetTLD() td.tld
+
 #endif
 
 #endif
