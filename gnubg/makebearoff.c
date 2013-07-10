@@ -707,8 +707,8 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
     float rMean;
     float rVarSum, rGammonVarSum;
     float *prj;
-    float arj[4];
-    float arBest[4];
+    float arj[4] = { 0.0, 0.0, 0.0, 0.0 };
+    float arBest[4] = { 0.0, 0.0, 0.0, 0.0 };
     float arGammonBest[4];
     float rGammonBest;
 
