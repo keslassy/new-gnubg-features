@@ -20,7 +20,7 @@ SOURCE = analysis bearoff bearoffgammon non-src/copying non-src/credits \
 	timer mec relational \
 	gnubgmodule non-src/external_l non-src/external_y \
 	file simpleboard mtsupport \
-	util corecount dbprovider gnubgstock
+	util dbprovider gnubgstock
 
 GTKSOURCE = gtk-multiview gtkboard gtkcube gtkchequer gtkexport gtkgame gtkmet \
 	gtkprefs gtkmovefilter gtkrace gtktheory gtksplash \
@@ -144,10 +144,6 @@ objdirs: $(OBJDIR) $(OBJDIR)\non-src
 $(BIN_DIRS) $(OBJDIR) $(OBJDIR)\non-src:
 	@echo mkdir $@
 	@mkdir "$@"
-
-$(OBJDIR)/corecount.o: corecount.c	# Don't compile with optimisation (as crashes)
-	@echo Compiling $<
-	@${CC} -o $@ -c $<
 
 $(OBJDIR)/%.o: %.c
 	@echo Compiling $<
