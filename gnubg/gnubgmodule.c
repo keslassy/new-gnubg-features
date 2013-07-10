@@ -1564,10 +1564,7 @@ PythonPositionFromBearoff(PyObject * UNUSED(self), PyObject * args)
 static void
 DictSetItemSteal(PyObject * dict, const char *key, PyObject * val)
 {
-    int const s = PyDict_SetItemString(dict, CHARP_HACK key, val);
-    {
-        g_assert(s == 0);
-    }
+    g_assert(PyDict_SetItemString(dict, CHARP_HACK key, val) == 0);
     Py_DECREF(val);
 }
 
@@ -1798,8 +1795,7 @@ PyMove(const int move[8])
     }
 
     if (i < 4) {
-        int s = _PyTuple_Resize(&moveTuple, i);
-        g_assert(s != -1);
+        g_assert(_PyTuple_Resize(&moveTuple, i) != -1);
     }
 
     return moveTuple;
@@ -2364,8 +2360,7 @@ PythonGame(const listOLD * plGame,
                                                            (float (*)[NUM_ROLLOUT_OUTPUTS]) pmr->CubeDecPtr->aarStdDev,
                                                            ms, verbose);
                             {
-                                int s = PyDict_Merge(analysis, d, 1);
-                                g_assert(s != -1);
+                                g_assert(PyDict_Merge(analysis, d, 1) != -1);
                             }
                             Py_DECREF(d);
                         }
@@ -2403,8 +2398,7 @@ PythonGame(const listOLD * plGame,
                             PyObject *d = PyDoubleAnalysis(&c->esDouble, (float (*)[NUM_ROLLOUT_OUTPUTS]) c->aarOutput,
                                                            (float (*)[NUM_ROLLOUT_OUTPUTS]) c->aarStdDev, ms, verbose);
                             {
-                                int s = PyDict_Merge(analysis, d, 1);
-                                g_assert(s != -1);
+                                g_assert(PyDict_Merge(analysis, d, 1) != -1);
                             }
                             Py_DECREF(d);
                         }
@@ -3114,7 +3108,7 @@ python_run_file(gpointer file)
 #endif
 
 extern PyObject *
-PythonGnubgModule()
+PythonGnubgModule(void)
 {
     return py_gnubg_module;
 }

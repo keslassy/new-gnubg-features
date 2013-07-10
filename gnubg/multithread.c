@@ -49,23 +49,6 @@ MT_GetNumThreads(void)
     return td.numThreads;
 }
 
-static void
-CloseThread(void *UNUSED(unused))
-{
-    int i;
-    NNState *pnnState = ((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState;
-
-    g_assert(td.closingThreads);
-    free(((ThreadLocalData *)TLSGet(td.tlsItem))->aMoves);
-    for (i = 0; i < 3; i++) {
-        free(pnnState[i].savedBase);
-        free(pnnState[i].savedIBase);
-    }
-    free(((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState);
-    free((void *)TLSGet(td.tlsItem));
-    MT_SafeInc(&td.result);
-}
-
 extern void
 MT_CloseThreads(void)
 {

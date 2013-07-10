@@ -23,11 +23,14 @@
 #define GNUBGMODULE_H
 
 #if USE_PYTHON
+
 #ifdef WIN32
 /* needed for mingw inclusion of Python.h */
 #include <stdint.h>
 #endif
 #include <Python.h>
+extern PyObject *PythonGnubgModule(void);
+
 #if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
 typedef int Py_ssize_t;
 #define PY_SSIZE_T_MAX INT_MAX

@@ -93,6 +93,8 @@ isCrossOver(const unsigned int from, const unsigned int to)
  *
  */
 
+#if !defined(G_DISABLE_ASSERT)
+
 static unsigned int
 chequersout(const unsigned int anBoard[25])
 {
@@ -104,8 +106,12 @@ chequersout(const unsigned int anBoard[25])
     return n;
 }
 
+#endif
+
 /*! \brief checks that we haven't moved too many checkers of any point on the board
  * but board need not contain all 15 checkers */
+#if !defined(G_DISABLE_ASSERT)
+
 static int
 checkboard(const unsigned int anBoard[25])
 {
@@ -116,6 +122,8 @@ checkboard(const unsigned int anBoard[25])
             return 0;
     return 1;
 }
+
+#endif
 
 static void
 FindBestMoveOSR2(unsigned int anBoard[25], const unsigned int anDice[2], unsigned int *pnOut)
