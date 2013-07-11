@@ -577,12 +577,13 @@ GTKSuspendInput(void)
     if (!fX)
         return;
 
-    if (suspendCount == 0 && GDK_IS_WINDOW(pwGrab)) {   /* Grab events so that the board window knows this is a re-entrant
-                                                         * call, and won't allow commands like roll, move or double. */
+    if (suspendCount == 0 && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
+        /* Grab events so that the board window knows this is a re-entrant*/
+        /*  call, and won't allow commands like roll, move or double. */
         grabbedWidget = pwGrab;
         if (pwGrab == pwStop) {
-            gtk_widget_set_sensitive(pwStop, TRUE);
             gtk_widget_grab_focus(pwStop);
+            gtk_widget_set_sensitive(pwStop, TRUE);
         }
         gtk_grab_add(pwGrab);
         grabIdSignal = g_signal_connect_after(G_OBJECT(pwGrab), "key-press-event", G_CALLBACK(gtk_true), NULL);
@@ -3779,7 +3780,7 @@ CreateMainWindow(void)
     gtk_box_pack_start(GTK_BOX(pwHbox), pwStop, FALSE, FALSE, 2);
     g_signal_connect(G_OBJECT(pwStop), "button-press-event", G_CALLBACK(StopNotButton), NULL);
     g_signal_connect(G_OBJECT(pwStopButton), "button-press-event", G_CALLBACK(Stop), NULL);
-
+    gtk_widget_set_sensitive(pwStop, FALSE);
     pwGrab = pwStop;
 
     gtk_box_pack_start(GTK_BOX(pwHbox), pwProgress = gtk_progress_bar_new(), FALSE, FALSE, 0);
