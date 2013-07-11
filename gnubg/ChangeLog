@@ -1,3 +1,7 @@
+2013-07-10  Michael Petch  <mpetch@gnubg.org>
+
+    * gtkgame.c: Fixed bug that prevented the stop button in the
+    status bar from being active.
 
 2013-07-10  Michael Petch  <mpetch@gnubg.org>
 
