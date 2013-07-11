@@ -577,7 +577,7 @@ GTKSuspendInput(void)
     if (!fX)
         return;
 
-    if (suspendCount == 0 && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
+    if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
         /* Grab events so that the board window knows this is a re-entrant*/
         /*  call, and won't allow commands like roll, move or double. */
         grabbedWidget = pwGrab;
