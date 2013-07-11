@@ -25,6 +25,7 @@
 #include <glib.h>
 #include <stdio.h>
 
+extern char *prefsdir;
 extern char *datadir;
 extern char *pkg_datadir;
 extern char *docdir;

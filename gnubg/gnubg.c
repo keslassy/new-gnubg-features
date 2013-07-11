@@ -4667,6 +4667,8 @@ main(int argc, char *argv[])
          N_("Specify location of program specific data"), NULL},
         {"docdir", 'O', 0, G_OPTION_ARG_STRING, &docdir,
          N_("Specify location of program documentation"), NULL},
+        {"prefsdir", 's', 0, G_OPTION_ARG_STRING, &prefsdir,
+         N_("Specify location of user's preferences directory"), NULL},
         {NULL, 0, 0, 0, NULL, NULL, NULL}
     };
     GError *error = NULL;
@@ -4712,6 +4714,10 @@ main(int argc, char *argv[])
 
     if (!debug)
         g_log_set_handler(NULL, G_LOG_LEVEL_DEBUG, &null_debug, NULL);
+
+    if (prefsdir){
+        szHomeDirectory = prefsdir;
+    }
 
 #ifdef WIN32
     /* data directory: initialise to the path where gnubg is installed */

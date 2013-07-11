@@ -25,6 +25,7 @@
 #include <string.h>
 #include "common.h"
 
+char *prefsdir = NULL;
 char *datadir = NULL;
 char *pkg_datadir = NULL;
 char *docdir = NULL;
