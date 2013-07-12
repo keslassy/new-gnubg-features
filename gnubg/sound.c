@@ -443,6 +443,7 @@ playSoundFile(char *file, gboolean UNUSED(sync))
         else
 #endif
             ca_context_create(&canberracontext);
+	ca_context_change_props(canberracontext, CA_PROP_CANBERRA_ENABLE, "1", NULL);
     }
     ca_context_play(canberracontext, 0, CA_PROP_MEDIA_FILENAME, file, NULL);
 #endif

@@ -97,6 +97,7 @@ Max Durbano
 Peter Eberhard
 Robert Eberlein
 Fotis
+Dan Fandrich
 Kennedy Fraser
 Ric Gerace
 Michel Grimminck
