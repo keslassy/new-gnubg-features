@@ -1,109 +1,109 @@
 2013-07-12  Michael Petch  <mpetch@gnubg.org>
 
-    * sound.c: On systems using libcanberra it is possible that the
-    canberra sound system may be available, but disabled by default.
-    When the sound context is created enable the canberra sound
-    system explicitly. Bug report (and patch) received from
-    Dan Fandrich . See:
-     http://lists.gnu.org/archive/html/bug-gnubg/2013-07/msg00008.html
+	* sound.c: On systems using libcanberra it is possible that the
+	canberra sound system may be available, but disabled by default.
+	When the sound context is created enable the canberra sound
+	system explicitly. Bug report (and patch) received from
+	Dan Fandrich. See:
+    http://lists.gnu.org/archive/html/bug-gnubg/2013-07/msg00008.html
 
 2013-07-11  Michael Petch  <mpetch@gnubg.org>
 
-    * gnubg.c, utils.h, utils.c: Added a new command line option
-    '-s <path>' to specify the location of the user's GNUBG preferences
-    directory. This overrides the default location of $(HOME)/.gnubg .
-    If you wish to save your settings to the directory that GNUBG 
-    was installed to, then use '-s .'
+	* gnubg.c, utils.h, utils.c: Added a new command line option
+	'-s <path>' to specify the location of the user's GNUBG preferences
+	directory. This overrides the default location of $(HOME)/.gnubg .
+	If you wish to save your settings to the directory that GNUBG 
+	was installed to, then use '-s .'
 
 2013-07-10  Michael Petch  <mpetch@gnubg.org>
 
-    * gtkgame.c: Fixed bug that prevented the stop button in the
-    status bar from being active.
+	* gtkgame.c: Fixed bug that prevented the stop button in the
+	status bar from being active.
 
 2013-07-10  Michael Petch  <mpetch@gnubg.org>
 
-    * +mtsupport.c, Makefile.am, Makefile.w32, bearoffdump.c,
-       makebearoff.c, makehyper.c, multithread.c, multithread.h:
-    Reduce the cpu cycle overhead of the new heap allocated thread 
-    local data. Rework the multithreaded code. Split multithreaded
-    support functions out of multithread.c and into mtsupport.c . 
-    mtsupport.c can be used by the utiltity programs (makebearoff etc).
+	* +mtsupport.c, Makefile.am, Makefile.w32, bearoffdump.c,
+	   makebearoff.c, makehyper.c, multithread.c, multithread.h:
+	Reduce the cpu cycle overhead of the new heap allocated thread 
+	local data. Rework the multithreaded code. Split multithreaded
+	support functions out of multithread.c and into mtsupport.c . 
+	mtsupport.c can be used by the utiltity programs (makebearoff etc).
 
 2013-07-08  Michael Petch  <mpetch@gnubg.org>
 
-    * Makefile.am, bearoffdump.c, eval.c, eval.h, gnubg.c,
-      makebearoff.c, makehyper.c multithread.c multithread.h 
-      po/*: Move static thread local data from eval.c into
-    thread local storage (multithread.c). This reduces the
-    bss data size. Thread storage is allocated on the heap
-    as required. Ensure that the data is properly aligned for
-    SIMD usage.
+	* Makefile.am, bearoffdump.c, eval.c, eval.h, gnubg.c,
+	  makebearoff.c, makehyper.c multithread.c multithread.h 
+	  po/*: Move static thread local data from eval.c into
+	thread local storage (multithread.c). This reduces the
+	bss data size. Thread storage is allocated on the heap
+	as required. Ensure that the data is properly aligned for
+	SIMD usage.
 
 2013-07-06  Michael Petch  <mpetch@gnubg.org>
 
-    * lib/inputs.c, lib/simd.h, Makefile.am, configure.ac: Fix an 
-    AVX alignment bug while creating the baseinputs for the NN on
-    Win32 platforms with GNUC.
-    
-    * eval.c, gnubgmodule.c, multithread.c, multithread.h,
-    m4/ax_ext.m4: Fix some warnings and general cleanup
+	* lib/inputs.c, lib/simd.h, Makefile.am, configure.ac: Fix an 
+	AVX alignment bug while creating the baseinputs for the NN on
+	Win32 platforms with GNUC.
+	
+	* eval.c, gnubgmodule.c, multithread.c, multithread.h,
+	m4/ax_ext.m4: Fix some warnings and general cleanup
 
 2013-06-29  Michael Petch  <mpetch@gnubg.org>
 
-    * backgammon.h, gnubg.c, gnubgmodule.c: Added preliminary 
-    support for Python module function 'hint'. Work in progress
-    The function interface and the dictionary returned may change.
-    Added module functions mwc2eq_stderr and eq2mwc_stderr.
+	* backgammon.h, gnubg.c, gnubgmodule.c: Added preliminary 
+	support for Python module function 'hint'. Work in progress
+	The function interface and the dictionary returned may change.
+	Added module functions mwc2eq_stderr and eq2mwc_stderr.
 
-    Inefficient memory use for eval and rollout contexts should be 
-    cleaned up. Rollout contexts should include all the cube and 
-    chequer play sub contexts. The hint dictionary needs to be
-    documented.
-
-2013-06-25  Michael Petch  <mpetch@gnubg.org>
-
-    * backgammon.h, gnubg.c, play.c: hint_move has been modified to 
-    support external callbacks. Part of future Python integration.
+	Inefficient memory use for eval and rollout contexts should be 
+	cleaned up. Rollout contexts should include all the cube and 
+	chequer play sub contexts. The hint dictionary needs to be
+	documented.
 
 2013-06-25  Michael Petch  <mpetch@gnubg.org>
 
-    * eval.c, lib/neuralnet.c: If SIMD instructions are compiled in
-    and they are not supported by the processor, output an error 
-    message and then terminate immediately.
+	* backgammon.h, gnubg.c, play.c: hint_move has been modified to 
+	support external callbacks. Part of future Python integration.
+
+2013-06-25  Michael Petch  <mpetch@gnubg.org>
+
+	* eval.c, lib/neuralnet.c: If SIMD instructions are compiled in
+	and they are not supported by the processor, output an error 
+	message and then terminate immediately.
 
 2013-06-22  Michael Petch  <mpetch@gnubg.org>
 
-    * INSTALL, configure.ac, eval.c, gnubg.c, gnubg.spec, 
-      po/POTFILES.in
-    Rename file sse.h to simd.h. Rename USE_SSE_VECTORIZE to 
-    USE_SIMD_INSTRUCTIONS, rename SSE_Supported to SIMD_Supported,
-    rename DISABLE_SSE_TEST to DISABLE_SIMD_TEST,
-    rename SSE_CFLAGS to SIMD_CFLAGS
+	* INSTALL, configure.ac, eval.c, gnubg.c, gnubg.spec, 
+	  po/POTFILES.in
+	Rename file sse.h to simd.h. Rename USE_SSE_VECTORIZE to 
+	USE_SIMD_INSTRUCTIONS, rename SSE_Supported to SIMD_Supported,
+	rename DISABLE_SSE_TEST to DISABLE_SIMD_TEST,
+	rename SSE_CFLAGS to SIMD_CFLAGS
 
-    Make sse/simd usage more consistent, ./configure option
-    --enable-sse/--disable-sse is now --enable-simd/--disable-simd
+	Make sse/simd usage more consistent, ./configure option
+	--enable-sse/--disable-sse is now --enable-simd/--disable-simd
 
 2013-06-20  Michael Petch  <mpetch@gnubg.org>
 
-    * +m4/ax_check_compile_flag.m4, +m4/ax_ext.m4 
-    +m4/ax_gcc_x86_avx_xgetbv.m4 +m4/ax_gcc_x86_cpuid.m4,
-    configure.ac: Added better autoconf support to determine 
-    whether the processor supports certain SIMD instruction sets
-    like SSE,SSE2,AVX etc.
+	* +m4/ax_check_compile_flag.m4, +m4/ax_ext.m4 
+	+m4/ax_gcc_x86_avx_xgetbv.m4 +m4/ax_gcc_x86_cpuid.m4,
+	configure.ac: Added better autoconf support to determine 
+	whether the processor supports certain SIMD instruction sets
+	like SSE,SSE2,AVX etc.
 
-    --enable-simd behaves a bit different. --enable-simd with no
-    parameters is the same as --enable-simd=yes . The behavior of
-    --enable-simd=yes has been changed to find the latest supported
-    SIMD instruction set used by the build machines CPU. Priority
-    is given in this order (highest first): SSE2, SSE, AVX, None.
-    Since AVX is still experimental it is not given priority over
-    SSE2 during build time autodetection.
+	--enable-simd behaves a bit different. --enable-simd with no
+	parameters is the same as --enable-simd=yes . The behavior of
+	--enable-simd=yes has been changed to find the latest supported
+	SIMD instruction set used by the build machines CPU. Priority
+	is given in this order (highest first): SSE2, SSE, AVX, None.
+	Since AVX is still experimental it is not given priority over
+	SSE2 during build time autodetection.
 
 2013-06-19  Michael Petch  <mpetch@gnubg.org>
 
-    * +output.c +output.h, gnubg.c, backgammon.h, lib/Makefile.am
-    lib/neuralnet.c: Moved the output functions from gnubg.c to
-    their own files.
+	* +output.c +output.h, gnubg.c, backgammon.h, lib/Makefile.am
+	lib/neuralnet.c: Moved the output functions from gnubg.c to
+	their own files.
 
 2013-06-19  Michael Petch  <mpetch@gnubg.org>
 
@@ -112,9 +112,9 @@
 	additions. Separate the cputest from the --enable-simd
 	configure option. Created a new option --disable-cputest. 
 
-    Supports cputest functionality on GCC builds with either
-    64-bit or 32-Bit OSes on Intel processors. Code will work
-    with builds that use -fpic option.
+	Supports cputest functionality on GCC builds with either
+	64-bit or 32-Bit OSes on Intel processors. Code will work
+	with builds that use -fpic option.
 
 2013-06-18  Michael Petch  <mpetch@gnubg.org>
 
@@ -136,7 +136,7 @@
 2013-06-15  Michael Petch  <mpetch@gnubg.org>
 
 	* All .c and .h files: Standardized the code formatting with
-	 indent -kr -l120 -fc1 -sc -nut -psl . K&R style, 120 column limit
+    indent -kr -l120 -fc1 -sc -nut -psl . K&R style, 120 column limit
 	process comment in column 1, multiline comments have an asterisk 
 	at the beginning of each line, convert all tabs to spaces, and
 	split the return type of a function from the function name
