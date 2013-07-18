@@ -1,8 +1,15 @@
 2013-07-17  Michael Petch  <mpetch@gnubg.org>
 
+	* analysis.c, dbprovider.c, eval.c, gnubgmodule.c, gnubgmodule.h,
+	  multithread.c, lib/inputs.c, lib/neuralnetsse.c, lib/simd.h:
+	Fix stack issues that cause AVX WIN32 builds to segfault when 
+	optimizations are used. 
+
+2013-07-17  Michael Petch  <mpetch@gnubg.org>
+
 	* sound.c: Allow GNUBG to build on OS/X builds using the CLang
-    compiler. CLang supports AVX instructions. GCC shipped by Apple
-    is based upon the older 4.2 version of GCC.
+	compiler. CLang supports AVX instructions. GCC shipped by Apple
+	is based upon the older 4.2 version of GCC.
 
 2013-07-12  Michael Petch  <mpetch@gnubg.org>
 
