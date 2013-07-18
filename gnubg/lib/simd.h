@@ -58,11 +58,13 @@
 extern float *sse_malloc(size_t size);
 extern void sse_free(float *ptr);
 
-#else
+#else /* USE_SIMD_INSTRUCTIONS */
 
 #define SSE_ALIGN(D) D
 #define sse_malloc malloc
 #define sse_free free
+#define SIMD_STACKALIGN
+#define SIMD_AVX_STACKALIGN
 
 #endif
 
