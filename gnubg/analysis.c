@@ -41,6 +41,7 @@
 #include "progress.h"
 #include "multithread.h"
 #include "format.h"
+#include "lib/simd.h"
 
 const char *aszRating[N_RATINGS] = {
     N_("rating|Awful!"),

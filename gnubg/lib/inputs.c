@@ -106,7 +106,7 @@ SSE_ALIGN(float_vec_aligned inpvecb[16]) = {
 1.0, 1.0, 1.0, 6.0}};
 
 #if USE_SIMD_INSTRUCTIONS
-extern void
+extern SIMD_AVX_STACKALIGN void
 baseInputs(const TanBoard anBoard, float arInput[])
 {
     int i = 3;

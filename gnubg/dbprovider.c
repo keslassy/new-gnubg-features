@@ -26,7 +26,6 @@
 #include "gnubgmodule.h"
 
 #include "backgammon.h"
-#include <stdlib.h>
 #include <glib/gstdio.h>
 #include <string.h>
 #include "dbprovider.h"

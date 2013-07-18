@@ -40,7 +40,20 @@
 #define SSE_ALIGN(D) D __attribute__ ((aligned(ALIGN_SIZE)))
 #endif
 
-#define sse_aligned(ar) (!(((int)ar) % ALIGN_SIZE))
+#if __GNUC__ && defined(WIN32)
+/* Align stack pointer on 16 byte boundary so SSE variables work correctly */
+#define SIMD_STACKALIGN __attribute__((force_align_arg_pointer))
+#if defined(USE_AVX)
+#define SIMD_AVX_STACKALIGN __attribute__((force_align_arg_pointer))
+#else
+#define SIMD_AVX_STACKALIGN
+#endif                          /* USE_AVX */
+#else
+#define SIMD_STACKALIGN
+#define SIMD_AVX_STACKALIGN
+#endif                          /* GNUC/WIN32 */
+
+#define sse_aligned(ar) (!(((size_t)ar) % ALIGN_SIZE))
 
 extern float *sse_malloc(size_t size);
 extern void sse_free(float *ptr);

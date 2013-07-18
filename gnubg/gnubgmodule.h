@@ -39,13 +39,7 @@ typedef int Py_ssize_t;
 extern PyObject *PythonGnubgModule();
 #endif                          /* USE_PYTHON */
 
-#if __GNUC__ && defined(WIN32)
-/* Align stack pointer on 16 byte boundary so SSE variables work correctly */
-#define STACKALIGN __attribute__((force_align_arg_pointer))
-#else
-#define STACKALIGN
-
-#endif                          /* STACKALIGN */
+#include "lib/simd.h"
 
 #include <glib.h>
 

@@ -102,13 +102,14 @@ MT_AbortTasks(void)
 }
 
 #ifdef GLIB_THREADS
-static gpointer
+static SIMD_STACKALIGN gpointer
 MT_WorkerThreadFunction(void *tld)
 #else
-static void
+static SIMD_STACKALIGN void
 MT_WorkerThreadFunction(void *tld)
 #endif
 {
+#if 0
     /* why do we need this align ? - because of a gcc bug */
 #if __GNUC__ && defined(WIN32)
     /* Align stack pointer on 16/32 byte boundary so SSE/AVX variables work correctly */
@@ -120,6 +121,8 @@ MT_WorkerThreadFunction(void *tld)
     asm __volatile__("andl $-16, %%esp":::"%esp");
     align_offset = ((int) (&align_offset)) % 16;
 #endif
+#endif
+
 #endif
     {
         ThreadLocalData *pTLD = (ThreadLocalData *) tld;
@@ -138,9 +141,11 @@ MT_WorkerThreadFunction(void *tld)
         } while (!td.closingThreads);
 
 #ifdef GLIB_THREADS
+#if 0
 #if __GNUC__ && defined(WIN32)
         /* De-align stack pointer to avoid crash on exit */
         asm __volatile__("addl %0, %%esp"::"r"(align_offset):"%esp");
+#endif
 #endif
         return NULL;
 #endif

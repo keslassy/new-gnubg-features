@@ -642,7 +642,7 @@ PythonHint_Callback (procrecorddata *pr)
     return TRUE;
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PythonHint(PyObject * UNUSED(self), PyObject * args)
 {
     PyObject *retval = NULL, *gnubgid = NULL, *tmpobj;
@@ -909,7 +909,7 @@ PythonMoveTuple2String(PyObject * UNUSED(self), PyObject * args)
     return PyString_FromString(szMove);
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PythonEvaluate(PyObject * UNUSED(self), PyObject * args)
 {
 
@@ -952,7 +952,7 @@ PythonEvaluate(PyObject * UNUSED(self), PyObject * args)
     }
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PythonEvaluateCubeful(PyObject * UNUSED(self), PyObject * args)
 {
 
@@ -1002,7 +1002,7 @@ PythonEvaluateCubeful(PyObject * UNUSED(self), PyObject * args)
     }
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
 {
 
@@ -1195,7 +1195,7 @@ PythonMET(PyObject * UNUSED(self), PyObject * args)
 
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PythonEq2mwcStdErr(PyObject * UNUSED(self), PyObject * args)
 {
 
@@ -1215,7 +1215,7 @@ PythonEq2mwcStdErr(PyObject * UNUSED(self), PyObject * args)
 
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PythonEq2mwc(PyObject * UNUSED(self), PyObject * args)
 {
 
@@ -1241,7 +1241,7 @@ PythonMatchChecksum(PyObject * UNUSED(self), PyObject * UNUSED(args))
     return PyString_FromString(GetMatchCheckSum());
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PythonMwc2eq(PyObject * UNUSED(self), PyObject * args)
 {
 
@@ -1260,7 +1260,7 @@ PythonMwc2eq(PyObject * UNUSED(self), PyObject * args)
     return PyFloat_FromDouble(mwc2eq(r, &ci));
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PythonMwc2eqStdErr(PyObject * UNUSED(self), PyObject * args)
 {
 
@@ -1867,7 +1867,7 @@ addLuck(PyObject * dict, float const rLuck, lucktype const lt)
     }
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PyMoveAnalysis(const movelist * pml, PyMatchState * ms)
 {
     unsigned int i;
@@ -1966,7 +1966,7 @@ PyMoveAnalysis(const movelist * pml, PyMatchState * ms)
     }
 }
 
-STACKALIGN static PyObject *
+SIMD_STACKALIGN static PyObject *
 PyDoubleAnalysis(const evalsetup * pes,
                  float aarOutput[][NUM_ROLLOUT_OUTPUTS],
                  float aarStdDev[][NUM_ROLLOUT_OUTPUTS], PyMatchState * ms, int const verbose)

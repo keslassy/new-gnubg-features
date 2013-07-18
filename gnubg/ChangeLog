@@ -1,3 +1,9 @@
+2013-07-17  Michael Petch  <mpetch@gnubg.org>
+
+	* sound.c: Allow GNUBG to build on OS/X builds using the CLang
+    compiler. CLang supports AVX instructions. GCC shipped by Apple
+    is based upon the older 4.2 version of GCC.
+
 2013-07-12  Michael Petch  <mpetch@gnubg.org>
 
 	* sound.c: On systems using libcanberra it is possible that the

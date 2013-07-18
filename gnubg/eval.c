@@ -20,12 +20,6 @@
  */
 
 #include "config.h"
-
-#if __GNUC__ && defined(WIN32) && defined(USE_AVX)
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-#endif
-
 #include "backgammon.h"
 #include <glib.h>
 #include <glib/gstdio.h>
@@ -44,6 +38,7 @@
 #include "simd.h"
 #include "multithread.h"
 #include "util.h"
+#include "lib/simd.h"
 
 typedef int (*classevalfunc) (const TanBoard anBoard, float arOutput[], const bgvariation bgv, NNState * nnStates);
 
@@ -2428,7 +2423,7 @@ extern int
 GameStatus(const TanBoard anBoard, const bgvariation bgv)
 {
 
-    float ar[NUM_OUTPUTS] = { 0, 0, 0, 0, 0 };  /* NUM_OUTPUTS are 5 */
+    SSE_ALIGN(float ar[NUM_OUTPUTS]) = { 0, 0, 0, 0, 0 };  /* NUM_OUTPUTS are 5 */
 
     if (ClassifyPosition(anBoard, bgv) != CLASS_OVER)
         return 0;
@@ -4632,7 +4627,7 @@ getMatchPoints(float aaarPoints[2][4][2],
                int afAutoRedouble[2], int afDead[2], const cubeinfo * pci, float aarRates[2][2])
 {
 
-    float arOutput[NUM_OUTPUTS];
+    SSE_ALIGN(float arOutput[NUM_OUTPUTS]);
     float arDP1[2], arDP2[2], arCP1[2], arCP2[2], arTG[2];
     float rDTW, rDTL, rNDW, rNDL, rDP, rRisk, rGain;
 
@@ -5263,7 +5258,7 @@ static int ScoreMoves(movelist * pml, const cubeinfo * pci, const evalcontext * 
 
 #define PRUNE_MOVES 10
 
-static void
+static SIMD_AVX_STACKALIGN void
 FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const TanBoard anBoardIn,
                    TanBoard anBoardOut, const cubeinfo * const pci, const evalcontext * pec)
 {
@@ -5297,7 +5292,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
     for (i = 0; i < ml.cMoves; i++) {
         positionclass pc;
         SSE_ALIGN(float arInput[200]);
-        float arOutput[NUM_OUTPUTS];
+        SSE_ALIGN(float arOutput[NUM_OUTPUTS]);
         evalcache ec;
         uint32_t l;
         /* declared volatile to avoid wrong compiler optimization
@@ -5322,11 +5317,11 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
             {
                 neuralnet *nets[] = { &nnpRace, &nnpCrashed, &nnpContact };
                 neuralnet *n = nets[pc - CLASS_RACE];
+#if USE_SIMD_INSTRUCTIONS
+                NeuralNetEvaluateSSE(n, arInput, arOutput, NULL);
+#else
                 if (nnStates)
                     nnStates[pc - CLASS_RACE].state = (i == 0) ? NNSTATE_INCREMENTAL : NNSTATE_DONE;
-#if USE_SIMD_INSTRUCTIONS
-                NeuralNetEvaluateSSE(n, arInput, arOutput, nnStates);
-#else
                 NeuralNetEvaluate(n, arInput, arOutput, nnStates);
 #endif
                 if (pc == CLASS_RACE)
@@ -5382,7 +5377,7 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
                      const cubeinfo * pci, const evalcontext * pec, unsigned int nPlies, positionclass pc)
 {
     int i, n0, n1;
-    float arVariationOutput[NUM_OUTPUTS];
+    SSE_ALIGN(float arVariationOutput[NUM_OUTPUTS]);
     float rTemp;
     int w;
 
@@ -5515,7 +5510,7 @@ extern int
 ScoreMove(NNState * nnStates, move * pm, const cubeinfo * pci, const evalcontext * pec, int nPlies)
 {
     TanBoard anBoardTemp;
-    float arEval[NUM_ROLLOUT_OUTPUTS];
+    SSE_ALIGN(float arEval[NUM_ROLLOUT_OUTPUTS]);
     cubeinfo ci;
 
     PositionFromKey(anBoardTemp, &pm->key);
@@ -5795,7 +5790,7 @@ GeneralCubeDecisionE(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
                      const cubeinfo * pci, const evalcontext * pec, const evalsetup * UNUSED(pes))
 {
 
-    float arOutput[NUM_OUTPUTS];
+    SSE_ALIGN(float arOutput[NUM_OUTPUTS]);
     cubeinfo aciCubePos[2];
     float arCubeful[2];
     int i, j;
@@ -5898,7 +5893,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
     int i, ici;
     positionclass pc;
     float r;
-    float ar[NUM_OUTPUTS];
+    SSE_ALIGN(float ar[NUM_OUTPUTS]);
     float arEquity[4];
     float rCubeX;
 
@@ -6259,8 +6254,3 @@ EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard,
     return 0;
 
 }
-
-#if defined(__GNUC__) && defined(WIN32) && defined(USE_AVX)
-#pragma GCC pop_options
-#endif
-
