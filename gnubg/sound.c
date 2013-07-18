@@ -167,14 +167,14 @@ static AUGraph theGraph;
 static int fCAInitialised = FALSE;
 static Float64 fileDuration = 0.0;
 
-#define CoreAudioChkError(func,context) \
+#define CoreAudioChkError(func,context,ret) \
 	{ \
 		int result; \
 		if ((result = func)!=0) \
 		{ \
 			outputf(_("Apple CoreAudio Error (" context "): %d\n"), result); \
 		        pthread_mutex_unlock (&mutexCAAccess); \
-			return; \
+			return ret; \
 		} \
 	}
 double CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat, AudioFileID audioFile);
@@ -231,7 +231,7 @@ CoreAudio_PlayFile(char *const fileName)
     AudioStreamBasicDescription fileFormat;
     UInt32 propsize = sizeof(AudioStreamBasicDescription);
     CoreAudioChkError(AudioFileGetProperty(audioFile, kAudioFilePropertyDataFormat,
-                                           &propsize, &fileFormat), "AudioFileGetProperty Dataformat");
+                                           &propsize, &fileFormat), "AudioFileGetProperty Dataformat",);
 
     /* Setup sound state */
     AudioUnit fileAU;
@@ -244,7 +244,7 @@ CoreAudio_PlayFile(char *const fileName)
     /* Load the file contents */
     fileDuration = CoreAudio_PrepareFileAU(&fileAU, &fileFormat, audioFile);
 
-    if (pthread_create(&CAThread, 0L, CoreAudio_PlayFile_Thread, NULL) == 0)
+    if (pthread_create(&CAThread, 0L, (void *)CoreAudio_PlayFile_Thread, NULL) == 0)
         pthread_detach(CAThread);
     else {
         CoreAudio_ShutDown();
@@ -258,7 +258,7 @@ CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat
     UInt64 nPackets;
     UInt32 propsize = sizeof(nPackets);
     CoreAudioChkError(AudioFileGetProperty(audioFile, kAudioFilePropertyAudioDataPacketCount,
-                                           &propsize, &nPackets), "AudioFileGetProperty PacketCount");
+                                           &propsize, &nPackets), "AudioFileGetProperty PacketCount", 0.0);
 
     /* Get playing time in seconds */
     Float64 fileDuration = (nPackets * fileFormat->mFramesPerPacket) / fileFormat->mSampleRate;
@@ -277,12 +277,12 @@ CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat
 
     CoreAudioChkError(AudioUnitSetProperty(*au, kAudioUnitProperty_ScheduledFileRegion,
                                            kAudioUnitScope_Global, 0, &rgn, sizeof(rgn)),
-                      "kAudioUnitProperty_ScheduledFileRegion");
+                      "kAudioUnitProperty_ScheduledFileRegion", 0.0);
 
     UInt32 defaultVal = 0;
     CoreAudioChkError(AudioUnitSetProperty(*au, kAudioUnitProperty_ScheduledFilePrime,
                                            kAudioUnitScope_Global, 0, &defaultVal, sizeof(defaultVal)),
-                      "kAudioUnitProperty_ScheduledFilePrime");
+                      "kAudioUnitProperty_ScheduledFilePrime", 0.0);
 
 
     /* Inform AU to start playing at next cycle */
@@ -292,7 +292,7 @@ CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat
     startTime.mSampleTime = -1;
     CoreAudioChkError(AudioUnitSetProperty(*au, kAudioUnitProperty_ScheduleStartTimeStamp,
                                            kAudioUnitScope_Global, 0, &startTime, sizeof(startTime)),
-                      "AudioUnitSetproperty StartTime");
+                      "AudioUnitSetproperty StartTime", 0.0);
 
     return fileDuration;
 }
@@ -301,7 +301,7 @@ void
 CoreAudio_MakeSimpleGraph(AUGraph * theGraph, AudioUnit * fileAU, AudioStreamBasicDescription * fileFormat,
                           AudioFileID audioFile)
 {
-    CoreAudioChkError(NewAUGraph(theGraph), "NewAUGraph");
+    CoreAudioChkError(NewAUGraph(theGraph), "NewAUGraph",);
 
     AudioComponentDescription cd;
     memset(&cd, 0, sizeof(cd));
@@ -312,30 +312,30 @@ CoreAudio_MakeSimpleGraph(AUGraph * theGraph, AudioUnit * fileAU, AudioStreamBas
     cd.componentManufacturer = kAudioUnitManufacturer_Apple;
 
     AUNode outputNode;
-    CoreAudioChkError(AUGraphAddNode(*theGraph, &cd, &outputNode), "AUGraphAddNode Output");
+    CoreAudioChkError(AUGraphAddNode(*theGraph, &cd, &outputNode), "AUGraphAddNode Output",);
 
     /* Initialize and add the AU node */
     AUNode fileNode;
     cd.componentType = kAudioUnitType_Generator;
     cd.componentSubType = kAudioUnitSubType_AudioFilePlayer;
 
-    CoreAudioChkError(AUGraphAddNode(*theGraph, &cd, &fileNode), "AUGraphAddNode AU");
+    CoreAudioChkError(AUGraphAddNode(*theGraph, &cd, &fileNode), "AUGraphAddNode AU",);
 
     /* Make connections */
-    CoreAudioChkError(AUGraphOpen(*theGraph), "AUGraphOpen");
+    CoreAudioChkError(AUGraphOpen(*theGraph), "AUGraphOpen",);
 
     /* Set Schedule properties and initialize the graph with the file */
     AudioUnit anAU;
     memset(&anAU, 0, sizeof(anAU));
-    CoreAudioChkError(AUGraphNodeInfo(*theGraph, fileNode, NULL, &anAU), "AUGraphNodeInfo");
+    CoreAudioChkError(AUGraphNodeInfo(*theGraph, fileNode, NULL, &anAU), "AUGraphNodeInfo",);
 
     *fileAU = anAU;
 
     CoreAudioChkError(AudioUnitSetProperty(*fileAU, kAudioUnitProperty_ScheduledFileIDs,
                                            kAudioUnitScope_Global, 0, &audioFile, sizeof(audioFile)),
-                      "SetScheduleFile");
-    CoreAudioChkError(AUGraphConnectNodeInput(*theGraph, fileNode, 0, outputNode, 0), "AUGraphConnectNodeInput");
-    CoreAudioChkError(AUGraphInitialize(*theGraph), "AUGraphInitialize");
+                      "SetScheduleFile",);
+    CoreAudioChkError(AUGraphConnectNodeInput(*theGraph, fileNode, 0, outputNode, 0), "AUGraphConnectNodeInput",);
+    CoreAudioChkError(AUGraphInitialize(*theGraph), "AUGraphInitialize",);
 }
 
 #elif HAVE_CANBERRA
