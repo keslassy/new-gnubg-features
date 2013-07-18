@@ -371,9 +371,6 @@ extern void
 extern void
  InvertEvaluation(float ar[NUM_OUTPUTS]);
 
-extern void
- InvertEvaluationCf(float ar[4]);
-
 EXP_LOCK_FUN(int, FindBestMove, int anMove[8], int nDice0, int nDice1,
              TanBoard anBoard, cubeinfo * pci, evalcontext * pec, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES]);
 

@@ -2383,22 +2383,6 @@ InvertEvaluation(float ar[NUM_OUTPUTS])
     ar[OUTPUT_LOSEBACKGAMMON] = r;
 }
 
-
-extern void
-InvertEvaluationCf(float ar[4])
-{
-
-    int i;
-
-    for (i = 0; i < 4; i++) {
-
-        ar[i] = -ar[i];
-
-    }
-
-}
-
-
 extern void
 InvertEvaluationR(float ar[NUM_ROLLOUT_OUTPUTS], const cubeinfo * pci)
 {
