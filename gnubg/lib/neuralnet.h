@@ -54,6 +54,9 @@ typedef struct _NNState {
     NNStateType state;
     float *savedBase;
     float *savedIBase;
+#if !defined(USE_SIMD_INSTRUCTIONS)
+    int cSavedIBase;
+#endif
 } NNState;
 
 extern int NeuralNetCreate(neuralnet * pnn, unsigned int cInput, unsigned int cHidden, unsigned int cOutput,

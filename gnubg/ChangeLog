@@ -1,3 +1,10 @@
+2013-07-20  Michael Petch  <mpetch@gnubg.org>
+
+	* eval.c lib/neuralnet.c, lib/neuralnet.h: Remedy a bug that
+	produced inconsistent results when producing non-SIMD builds. Make
+	sure that EvaluateFromBase is using comparable nets when using a
+	neural net shortcut.
+
 2013-07-17  Michael Petch  <mpetch@gnubg.org>
 
 	* analysis.c, dbprovider.c, eval.c, gnubgmodule.c, gnubgmodule.h,

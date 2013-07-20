@@ -230,6 +230,9 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
         }
     case NNEVAL_SAVE:
         {
+#if !USE_SIMD_INSTRUCTIONS
+            pnState->cSavedIBase = pnn->cInput;
+#endif
             memcpy(pnState->savedIBase, arInput, pnn->cInput * sizeof(*ar));
             Evaluate(pnn, arInput, ar, arOutput, pnState->savedBase);
             break;
@@ -237,7 +240,12 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
     case NNEVAL_FROMBASE:
         {
             unsigned int i;
-
+#if !USE_SIMD_INSTRUCTIONS
+            if (pnState->cSavedIBase != pnn->cInput){
+                Evaluate(pnn, arInput, ar, arOutput, 0);
+                break;
+            }
+#endif
             memcpy(ar, pnState->savedBase, pnn->cHidden * sizeof(*ar));
 
             {
