@@ -3381,6 +3381,11 @@ CommandSaveSettings(char *szParam)
     else {
         outputf(_("Settings saved to %s."), (!strcmp(szFile, "-")) ? _("standard output stream") : szFile);
         output("\n");
+        if(cOutputPostponed){
+            outputresume();
+            outputx();
+            outputpostpone();            
+        }
     }
     g_free(szFile);
 
