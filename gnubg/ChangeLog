@@ -1,5 +1,11 @@
 2013-07-20  Michael Petch  <mpetch@gnubg.org>
 
+	* multithread.c: Fix bug on thread disabled builds that caused
+    an assertion while updating the progress bar. Ensure the callback
+    timer is removed when all tasks are done.
+
+2013-07-20  Michael Petch  <mpetch@gnubg.org>
+
 	* eval.c lib/neuralnet.c, lib/neuralnet.h: Remedy a bug that
 	produced inconsistent results when producing non-SIMD builds. Make
 	sure that EvaluateFromBase is using comparable nets when using a
