@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-10 22:11-0600\n"
+"POT-Creation-Date: 2013-07-21 17:50-0600\n"
 "PO-Revision-Date: 2008-12-29 00:40+0100\n"
 "Last-Translator: Fernando García García <fergarciaga@gmail.com>\n"
 "Language-Team: ES-Translation\n"
@@ -20,168 +20,168 @@ msgstr ""
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-SourceCharset: iso-8859-15\n"
 
-#: analysis.c:46
+#: analysis.c:47
 msgid "rating|Awful!"
 msgstr "calificación|Horrible"
 
-#: analysis.c:47
+#: analysis.c:48
 msgid "rating|Beginner"
 msgstr "calificación|Principiante"
 
-#: analysis.c:48
+#: analysis.c:49
 msgid "rating|Casual player"
 msgstr "calificación|Jugador ocasional"
 
-#: analysis.c:49
+#: analysis.c:50
 msgid "rating|Intermediate"
 msgstr "calificación|Intermedio"
 
-#: analysis.c:50
+#: analysis.c:51
 msgid "rating|Advanced"
 msgstr "calificación|Avanzado"
 
-#: analysis.c:51
+#: analysis.c:52
 msgid "rating|Expert"
 msgstr "calificación|Experto"
 
-#: analysis.c:52
+#: analysis.c:53
 msgid "rating|World class"
 msgstr "calificación|Clase mundial"
 
-#: analysis.c:53
+#: analysis.c:54
 msgid "rating|Supernatural"
 msgstr "calificación|Sobrenatural"
 
-#: analysis.c:54
+#: analysis.c:55
 msgid "rating|N/A"
 msgstr "calificación|N/D"
 
-#: analysis.c:58
+#: analysis.c:59
 msgid "luck|Go to bed"
 msgstr "azar|¡No es tu día!"
 
-#: analysis.c:59
+#: analysis.c:60
 msgid "luck|Bad dice, man!"
 msgstr "azar|Malos dados, amigo"
 
-#: analysis.c:60
+#: analysis.c:61
 msgid "luck|None"
 msgstr "azar|Normal"
 
-#: analysis.c:61
+#: analysis.c:62
 msgid "luck|Good dice, man!"
 msgstr "azar|Buenos dados, amigo"
 
-#: analysis.c:62
+#: analysis.c:63
 msgid "luck|Go to Las Vegas"
 msgstr "azar|¡Estás de suerte, compra lotería!"
 
-#: analysis.c:1114
+#: analysis.c:1115
 msgid ""
 "No analysis selected, you must specify at least one type of analysis to "
 "perform"
 msgstr ""
 "No se seleccionó un análisis, debe especificar al menos un tipo de análisis"
 
-#: analysis.c:1151
+#: analysis.c:1152
 msgid "Analysing game; move:"
 msgstr "Analizando el juego, mover:"
 
-#: analysis.c:1185
+#: analysis.c:1186
 msgid "Analysing match; move:"
 msgstr "Analizando la partida, mover:"
 
 #. header
-#: analysis.c:1401 bearoff.c:564 bearoff.c:600 bearoff.c:603 bearoff.c:642
+#: analysis.c:1402 bearoff.c:564 bearoff.c:600 bearoff.c:603 bearoff.c:642
 #: bearoff.c:668 bearoff.c:698 format.c:269 html.c:2491 show.c:1306
 msgid "Player"
 msgstr "Jugador"
 
-#: analysis.c:1407
+#: analysis.c:1408
 msgid "Chequerplay statistics"
 msgstr "Estadísticas del juego de fichas"
 
-#: analysis.c:1429 html.c:2521
+#: analysis.c:1430 html.c:2521
 msgid "Luck statistics"
 msgstr "Estadísticas de azar"
 
-#: analysis.c:1451 html.c:2542 progress.c:342
+#: analysis.c:1452 html.c:2542 progress.c:342
 msgid "Cube statistics"
 msgstr "Estadísticas del cubo"
 
-#: analysis.c:1473 html.c:2563
+#: analysis.c:1474 html.c:2563
 msgid "Overall statistics"
 msgstr "Estadísticas globales"
 
-#: analysis.c:1558
+#: analysis.c:1559
 msgid "Please use 'analyse move' on the double decision"
 msgstr ""
 
-#: analysis.c:1567
+#: analysis.c:1568
 msgid "Analysing move..."
 msgstr "Analizando movimiento..."
 
-#: analysis.c:1574
+#: analysis.c:1575
 msgid "Please use `hint' on unfinished moves"
 msgstr ""
 
-#: analysis.c:1762
+#: analysis.c:1763
 msgid "Cannot clear analysis on this move"
 msgstr "No se puede borrar el análisis en este movimiento"
 
-#: analysis.c:2012
+#: analysis.c:2013
 #, fuzzy, c-format
 msgid ""
 "Move %d\n"
 "Cube marked\n"
 msgstr "Movimiento marcado como %s.\n"
 
-#: analysis.c:2038
+#: analysis.c:2039
 #, fuzzy, c-format
 msgid "Move %d\n"
 msgstr "Movió"
 
-#: analysis.c:2040
+#: analysis.c:2041
 #, c-format
 msgid "%i (%s) marked\n"
 msgstr ""
 
-#: analysis.c:2059
+#: analysis.c:2060
 #, fuzzy, c-format
 msgid "Game %d\n"
 msgstr "Juego"
 
-#: analysis.c:2421
+#: analysis.c:2422
 #, c-format
 msgid "No moverecord stored for this cube."
 msgstr ""
 
-#: analysis.c:2426
+#: analysis.c:2427
 #, c-format
 msgid "This move doesn't imply a cubeaction. Cannot mark."
 msgstr ""
 
-#: analysis.c:2438
+#: analysis.c:2439
 #, fuzzy, c-format
 msgid "No moverecord stored for this move."
 msgstr "Añadido comentario para este movimiento."
 
-#: analysis.c:2443
+#: analysis.c:2444
 #, c-format
 msgid "This is not a normal chequer move. Cannot mark."
 msgstr ""
 
-#: analysis.c:2448
+#: analysis.c:2449
 #, fuzzy, c-format
 msgid "No moves to analyse"
 msgstr "Seleccione archivos para analizar"
 
-#: analysis.c:2531
+#: analysis.c:2532
 #, c-format
 msgid "`cmark move set none' requires a list of moves to set"
 msgstr ""
 
-#: analysis.c:2545
+#: analysis.c:2546
 #, c-format
 msgid "`cmark move set rollout' requires a list of moves to set"
 msgstr ""
@@ -501,43 +501,43 @@ msgstr "Traducciones"
 msgid "Support"
 msgstr "Soporte"
 
-#: dbprovider.c:260
+#: dbprovider.c:259
 msgid "Error importing 'main' module"
 msgstr "Error al importar el módulo 'principal' ('main')"
 
-#: dbprovider.c:348
+#: dbprovider.c:347
 msgid "Error connecting to database"
 msgstr "Error al conectar con la base de datos"
 
-#: dbprovider.c:419
+#: dbprovider.c:418
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr "Error en el socket de Windows"
 
-#: dbprovider.c:424 dbprovider.c:433
+#: dbprovider.c:423 dbprovider.c:432
 #, c-format
 msgid "invalid Python return"
 msgstr "retorno de Python inválido"
 
-#: dbprovider.c:444
+#: dbprovider.c:443
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Error al obtener el elemento %zu\n"
 
-#: dbprovider.c:454
+#: dbprovider.c:453
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Error al obtener el subelemento (%zu, %zu)\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:466
 msgid "none"
 msgstr "ninguno"
 
-#: dbprovider.c:469
+#: dbprovider.c:468
 msgid "unknown type"
 msgstr "tipo desconocido"
 
-#: dbprovider.c:476
+#: dbprovider.c:475
 #, fuzzy, c-format
 msgid "Item %d is not a list\n"
 msgstr "El elemento %zu no es una lista\n"
@@ -694,7 +694,7 @@ msgstr ""
 msgid "Rewinding dice file (%s)"
 msgstr "Rebobinando archivo de dados (%s)"
 
-#: drawboard.c:72 drawboard.c:295 gnubg.c:5092 gtkexport.c:651 gtkgame.c:2737
+#: drawboard.c:72 drawboard.c:295 gnubg.c:5103 gtkexport.c:651 gtkgame.c:2737
 #: gtkgame.c:3642 gtkgame.c:6110
 msgid "GNU Backgammon"
 msgstr "GNU Backgammon"
@@ -707,136 +707,136 @@ msgstr "ID de posición"
 msgid "Match ID"
 msgstr "ID de partida"
 
-#: eval.c:270
+#: eval.c:265
 msgid "Standard backgammon"
 msgstr "Backgammon estándar"
 
-#: eval.c:271
+#: eval.c:266
 #, fuzzy
 msgid "Nackgammon"
 msgstr "backgammon"
 
-#: eval.c:272
+#: eval.c:267
 msgid "1-chequer hypergammon"
 msgstr "Hypergammon de 1 ficha"
 
-#: eval.c:273
+#: eval.c:268
 msgid "2-chequer hypergammon"
 msgstr "Hypergammon de 2 fichas"
 
-#: eval.c:274
+#: eval.c:269
 msgid "3-chequer hypergammon"
 msgstr "Hypergammon de 3 fichas"
 
-#: eval.c:290 set.c:2954
+#: eval.c:285 set.c:2954
 msgid "No evaluation"
 msgstr "Sin evaluación"
 
-#: eval.c:291 set.c:2955
+#: eval.c:286 set.c:2955
 msgid "Neural net evaluation"
 msgstr "Evaluación con red neuronal"
 
-#: eval.c:292 eval.c:4082 format.c:798 gtkchequer.c:465 gtkcube.c:824
+#: eval.c:287 eval.c:4061 format.c:798 gtkchequer.c:465 gtkcube.c:824
 #: gtkgame.c:3219 gtkrace.c:231 html.c:1873 set.c:2956
 msgid "Rollout"
 msgstr "Simulación de lanzamientos («rollout»)"
 
-#: eval.c:312
+#: eval.c:307
 msgid "setting|beginner"
 msgstr "configuración|principiante"
 
-#: eval.c:313
+#: eval.c:308
 msgid "setting|casual play"
 msgstr "configuración|jugador ocasional"
 
-#: eval.c:314
+#: eval.c:309
 msgid "setting|intermediate"
 msgstr "configuración|intermedio"
 
-#: eval.c:315
+#: eval.c:310
 msgid "setting|advanced"
 msgstr "configuración|avanzado"
 
-#: eval.c:316
+#: eval.c:311
 msgid "setting|expert"
 msgstr "configuración|experto"
 
-#: eval.c:317
+#: eval.c:312
 msgid "setting|world class"
 msgstr "configuración|clase mundial"
 
-#: eval.c:318
+#: eval.c:313
 msgid "setting|supremo"
 msgstr "configuración|supremo"
 
-#: eval.c:319
+#: eval.c:314
 msgid "setting|grandmaster"
 msgstr "configuración|gran maestro"
 
-#: eval.c:320
+#: eval.c:315
 #, fuzzy
 msgid "setting|4ply"
 msgstr "configuración|jugador ocasional"
 
-#: eval.c:352
+#: eval.c:347
 msgid "Tiny"
 msgstr "Diminuto"
 
-#: eval.c:353
+#: eval.c:348
 msgid "Narrow"
 msgstr "Pequeño"
 
-#: eval.c:354
+#: eval.c:349
 msgid "Normal"
 msgstr "Normal"
 
-#: eval.c:355 gtkoptions.c:1215
+#: eval.c:350 gtkoptions.c:1215
 msgid "Large"
 msgstr "Grande"
 
-#: eval.c:356
+#: eval.c:351
 msgid "Huge"
 msgstr "Enorme"
 
-#: eval.c:369
+#: eval.c:364
 msgid "doubletype|Double"
 msgstr "doblaje|Doblar"
 
-#: eval.c:370
+#: eval.c:365
 msgid "doubletype|Beaver"
 msgstr "doblaje|«Beaver» (Redoblar)"
 
-#: eval.c:371
+#: eval.c:366
 msgid "doubletype|Raccoon"
 msgstr "doblaje|«Raccoon» (Re-redoblar)"
 
-#: eval.c:520 eval.c:549
+#: eval.c:515 eval.c:544
 #, c-format
 msgid "%s is not a weights file"
 msgstr "%s no es un fichero de pesos válido"
 
-#: eval.c:531 eval.c:554
+#: eval.c:526 eval.c:549
 #, c-format
 msgid "weights file %s, has incorrect version (%s), expected (%s)"
 msgstr ""
 "el archivo de pesos %s tiene una versión incorrecta (%s), se esperaba (%s)"
 
-#: eval.c:579
+#: eval.c:574
 #, c-format
 msgid "Can't check for SIMD support - non pentium cpu\n"
 msgstr ""
 
-#: eval.c:582
+#: eval.c:577
 #, c-format
 msgid "No cpuid check available\n"
 msgstr ""
 
-#: eval.c:592
+#: eval.c:587
 #, c-format
 msgid "Unknown error while doing SIMD support test\n"
 msgstr ""
 
-#: eval.c:598
+#: eval.c:593
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -844,7 +844,7 @@ msgid ""
 "does not support AVX\n"
 msgstr "Esta instalación de GNU Backgammon se compiló sin soporte para Python."
 
-#: eval.c:601
+#: eval.c:596
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -852,122 +852,122 @@ msgid ""
 "does not support SSE\n"
 msgstr "Esta instalación de GNU Backgammon se compiló sin soporte para Python."
 
-#: eval.c:3023
+#: eval.c:3002
 msgid "neural network evaluator"
 msgstr "evaluador con redes neuronales"
 
-#: eval.c:3024
+#: eval.c:3003
 #, c-format
 msgid "version %s, %d inputs, %d hidden units"
 msgstr "versión %s, %d entradas, %d unidades ocultas"
 
-#: eval.c:3032 format.c:1084
+#: eval.c:3011 format.c:1084
 msgid "Race"
 msgstr "Carrera"
 
-#: eval.c:3039 format.c:1085
+#: eval.c:3018 format.c:1085
 #, fuzzy
 msgid "Crashed"
 msgstr "Colisión"
 
-#: eval.c:3046 format.c:1086
+#: eval.c:3025 format.c:1086
 msgid "Contact"
 msgstr "Contacto"
 
-#: eval.c:3089 format.c:774 gtkcube.c:359 html.c:1706
+#: eval.c:3068 format.c:774 gtkcube.c:359 html.c:1706
 msgid "Double, take"
 msgstr "Doblar, tomar"
 
-#: eval.c:3091 format.c:775 gtkcube.c:360 html.c:1707
+#: eval.c:3070 format.c:775 gtkcube.c:360 html.c:1707
 msgid "Double, pass"
 msgstr "Doblar, pasar"
 
-#: eval.c:3093
+#: eval.c:3072
 msgid "No double, take"
 msgstr "No doblar, tomar"
 
-#: eval.c:3095
+#: eval.c:3074
 msgid "Too good to double, take"
 msgstr "Demasiado bueno para doblar, tomar"
 
-#: eval.c:3097
+#: eval.c:3076
 msgid "Too good to double, pass"
 msgstr "Demasiado bueno para doblar, pasar"
 
-#: eval.c:3099
+#: eval.c:3078
 msgid "Double, beaver"
 msgstr "Doblar, «beaver» (redoblar)"
 
-#: eval.c:3101
+#: eval.c:3080
 msgid "No double, beaver"
 msgstr "No doblar, «beaver» (redoblar)"
 
-#: eval.c:3103
+#: eval.c:3082
 msgid "Redouble, take"
 msgstr "Redoblar, tomar"
 
-#: eval.c:3105
+#: eval.c:3084
 msgid "Redouble, pass"
 msgstr "Redoblar, pasar"
 
-#: eval.c:3107
+#: eval.c:3086
 msgid "No redouble, take"
 msgstr "No redoblar, tomar"
 
-#: eval.c:3109
+#: eval.c:3088
 msgid "Too good to redouble, take"
 msgstr "Demasiado bueno para redoblar, tomar"
 
-#: eval.c:3111
+#: eval.c:3090
 msgid "Too good to redouble, pass"
 msgstr "Demasiado bueno para redoblar, pasar"
 
-#: eval.c:3113
+#: eval.c:3092
 msgid "No redouble, beaver"
 msgstr "No redoblar, «beaver»"
 
-#: eval.c:3115
+#: eval.c:3094
 msgid "Never double, take (dead cube)"
 msgstr "Nunca doblar, tomar (cubo muerto)"
 
-#: eval.c:3117
+#: eval.c:3096
 msgid "Never redouble, take (dead cube)"
 msgstr "Nunca redoblar, tomar (cubo muerto)"
 
-#: eval.c:3119
+#: eval.c:3098
 msgid "Optional double, beaver"
 msgstr "Doblaje opcional, «beaver»"
 
-#: eval.c:3121
+#: eval.c:3100
 msgid "Optional double, take"
 msgstr "Doblaje opcional, tomar"
 
-#: eval.c:3123
+#: eval.c:3102
 msgid "Optional redouble, take"
 msgstr "Doblaje opcional, tomar"
 
-#: eval.c:3125
+#: eval.c:3104
 msgid "Optional double, pass"
 msgstr "Redoblaje opcional, tomar"
 
-#: eval.c:3127
+#: eval.c:3106
 msgid "Optional redouble, pass"
 msgstr "Redoblaje opcional, pasar"
 
-#: eval.c:3129
+#: eval.c:3108
 msgid "Unknown cube decision"
 msgstr "Decisión de cubo desconocida"
 
-#: eval.c:4079 format.c:1111 gtkgame.c:4940 html.c:302 progress.c:686
+#: eval.c:4058 format.c:1111 gtkgame.c:4940 html.c:302 progress.c:686
 #: show.c:121
 msgid "Cubeful"
 msgstr "Con cubo («cubeful»)"
 
-#: eval.c:4079 gtkmovelistctrl.c:289 html.c:299 progress.c:685 show.c:121
+#: eval.c:4058 gtkmovelistctrl.c:289 html.c:299 progress.c:685 show.c:121
 msgid "Cubeless"
 msgstr "Sin cubo («cubeless»)"
 
-#: eval.c:4079 format.c:116 format.c:795 format.c:1129
+#: eval.c:4058 format.c:116 format.c:795 format.c:1129
 msgid "ply"
 msgstr "turno («ply»)"
 
@@ -1883,7 +1883,7 @@ msgstr "Clave `%s' desconocida."
 msgid "Rolled"
 msgstr "Lanzado"
 
-#: gnubg.c:1458 gnubg.c:5546 gtkgame.c:1429 gtkgame.c:1448 gtkgame.c:1466
+#: gnubg.c:1458 gnubg.c:5557 gtkgame.c:1429 gtkgame.c:1448 gtkgame.c:1466
 msgid "No game in progress."
 msgstr "No hay un juego en curso."
 
@@ -2061,7 +2061,7 @@ msgstr "Configuración guardada en %s."
 msgid "standard output stream"
 msgstr "flujo de salida estándar"
 
-#: gnubg.c:3851 makebearoff.c:1353 makebearoff.c:1354 makebearoff.c:1355
+#: gnubg.c:3856 makebearoff.c:1353 makebearoff.c:1354 makebearoff.c:1355
 #: makebearoff.c:1356 makebearoff.c:1358 makebearoff.c:1415 makebearoff.c:1420
 #: show.c:386 show.c:1791 show.c:1793 show.c:1795 show.c:1798 show.c:1823
 #: show.c:1827 show.c:1831 show.c:1840 show.c:1848 show.c:1852 show.c:1856
@@ -2069,7 +2069,7 @@ msgstr "flujo de salida estándar"
 msgid "yes"
 msgstr "sí"
 
-#: gnubg.c:3851 makebearoff.c:1353 makebearoff.c:1354 makebearoff.c:1355
+#: gnubg.c:3856 makebearoff.c:1353 makebearoff.c:1354 makebearoff.c:1355
 #: makebearoff.c:1356 makebearoff.c:1358 makebearoff.c:1415 makebearoff.c:1420
 #: show.c:386 show.c:1791 show.c:1793 show.c:1795 show.c:1798 show.c:1823
 #: show.c:1827 show.c:1831 show.c:1840 show.c:1848 show.c:1852 show.c:1856
@@ -2077,205 +2077,209 @@ msgstr "sí"
 msgid "no"
 msgstr "no"
 
-#: gnubg.c:3881 gnubg.c:5150
+#: gnubg.c:3886 gnubg.c:5161
 msgid "Please answer `y' or `n'."
 msgstr "Por favor, responda sí (`y') o no (`n')."
 
-#: gnubg.c:3909
+#: gnubg.c:3914
 #, fuzzy
 msgid "output will be shown"
 msgstr "Las cuentas de «pips» no se mostrarán."
 
-#: gnubg.c:3909
+#: gnubg.c:3914
 #, fuzzy
 msgid "output will not be shown"
 msgstr "Las cuentas de «pips» no se mostrarán."
 
-#: gnubg.c:4371
+#: gnubg.c:4376
 msgid "Enter dice: "
 msgstr "Introduzca dados: "
 
-#: gnubg.c:4389
+#: gnubg.c:4394
 msgid "You must enter two numbers between 1 and 6."
 msgstr "Debe introducir dos números entre 1 y 6."
 
-#: gnubg.c:4453
+#: gnubg.c:4458
 #, fuzzy, c-format
 msgid "Fetching %d random numbers from <%s>\n"
 msgstr "Tomando %d números aleatorios de <www.random.org>\n"
 
 #. parse string
-#: gnubg.c:4505
+#: gnubg.c:4510
 msgid "Done."
 msgstr "Hecho."
 
-#: gnubg.c:4540
+#: gnubg.c:4545
 msgid "Failure setting up RNG"
 msgstr "Fallo al establecer un generador de números aleatorios"
 
-#: gnubg.c:4544
+#: gnubg.c:4549
 msgid "Failure setting up RNG for rollout."
 msgstr ""
 "Fallo al establecer un generador de números aleatorios para la simulación de "
 "lanzamientos"
 
-#: gnubg.c:4642
+#: gnubg.c:4647
 msgid "Do not use bearoff database"
 msgstr "No usar una base de datos sobre el saque de fichas"
 
-#: gnubg.c:4644
+#: gnubg.c:4649
 msgid "Evaluate commands in FILE and exit"
 msgstr "Evaluar comandos en FILE y salir"
 
-#: gnubg.c:4646
+#: gnubg.c:4651
 msgid "Set language to LANG"
 msgstr "Establecer idioma a LANG"
 
-#: gnubg.c:4648
+#: gnubg.c:4653
 msgid "Evaluate Python code in FILE and exit"
 msgstr "Evaluar código Python en FILE y salir"
 
-#: gnubg.c:4650
+#: gnubg.c:4655
 msgid "Disable sound effects"
 msgstr "Desactivar sonidos"
 
-#: gnubg.c:4652
+#: gnubg.c:4657
 msgid "Do not read .gnubgrc and .gnubgautorc commands"
 msgstr "No leer comandos .gnubgrc ni .gnubgautorc"
 
-#: gnubg.c:4655
+#: gnubg.c:4660
 #, fuzzy
 msgid "Show gtk splash screen"
 msgstr "No mostrar pantalla de inicio GTK"
 
-#: gnubg.c:4657
+#: gnubg.c:4662
 msgid "Start the command line instead of using the graphical interface"
 msgstr "Arrancar la línea de comandos en lugar de usar la interfaz gráfica"
 
-#: gnubg.c:4659
+#: gnubg.c:4664
 msgid "Show version information and exit"
 msgstr "Mostrar información de versión y salir"
 
-#: gnubg.c:4661
+#: gnubg.c:4666
 msgid "Ignore tty input when using the graphical interface"
 msgstr "Ignorar la entrada TTY cuando se use la interfaz gráfica"
 
-#: gnubg.c:4663
+#: gnubg.c:4668
 msgid "Turn on debug"
 msgstr "Activar al depurar"
 
-#: gnubg.c:4665
+#: gnubg.c:4670
 msgid "Specify location of general data"
 msgstr ""
 
-#: gnubg.c:4667
+#: gnubg.c:4672
 msgid "Specify location of program specific data"
 msgstr ""
 
-#: gnubg.c:4669
+#: gnubg.c:4674
 msgid "Specify location of program documentation"
 msgstr ""
 
-#: gnubg.c:4763 gnubg.c:4766 gnubg.c:4771 gnubg.c:4774 gnubg.c:4778
-#: gnubg.c:4783
+#: gnubg.c:4676
+msgid "Specify location of user's preferences directory"
+msgstr ""
+
+#: gnubg.c:4774 gnubg.c:4777 gnubg.c:4782 gnubg.c:4785 gnubg.c:4789
+#: gnubg.c:4794
 msgid "Initialising"
 msgstr "Inicializando"
 
-#: gnubg.c:4763 gtkoptions.c:979
+#: gnubg.c:4774 gtkoptions.c:979
 msgid "Random number generator"
 msgstr "Generador de números aleatorios"
 
-#: gnubg.c:4766
+#: gnubg.c:4777
 msgid "match equity table"
 msgstr "tabla de equidad de partida"
 
-#: gnubg.c:4771
+#: gnubg.c:4782
 msgid "neural nets"
 msgstr "redes neuronales"
 
-#: gnubg.c:4774
+#: gnubg.c:4785
 #, fuzzy
 msgid "initialising thread data"
 msgstr ""
 "¡Error al inicializar la base de datos antigua sobre el saque de fichas!\n"
 
-#: gnubg.c:4778
+#: gnubg.c:4789
 msgid "Windows sockets"
 msgstr "Socket de Windows"
 
-#: gnubg.c:4783
+#: gnubg.c:4794
 msgid "Python"
 msgstr "Python"
 
-#: gnubg.c:4791
+#: gnubg.c:4802
 msgid "Loading"
 msgstr "Cargando"
 
-#: gnubg.c:4791
+#: gnubg.c:4802
 msgid "User Settings"
 msgstr "Configuración de usuario"
 
-#: gnubg.c:4840
+#: gnubg.c:4851
 #, c-format
 msgid "GNU Backgammon build without Python."
 msgstr "GNU Backgammon compilado sin Python."
 
-#: gnubg.c:4872 gnubg.c:4915
+#: gnubg.c:4883 gnubg.c:4926
 msgid "Command only valid in match play"
 msgstr "Comando válido únicamente en modo partida"
 
-#: gnubg.c:4884 gnubg.c:4885 gnubg.c:4887
+#: gnubg.c:4895 gnubg.c:4896 gnubg.c:4898
 msgid "MWC for equity"
 msgstr "MWC para equidad"
 
-#: gnubg.c:4886 gnubg.c:4931
+#: gnubg.c:4897 gnubg.c:4942
 msgid "By linear interpolation"
 msgstr "Mediante interpolación lineal"
 
-#: gnubg.c:4929 gnubg.c:4930 gnubg.c:4932
+#: gnubg.c:4940 gnubg.c:4941 gnubg.c:4943
 msgid "Equity for MWC"
 msgstr "Equidad para MWC"
 
-#: gnubg.c:5073
+#: gnubg.c:5084
 #, c-format
 msgid "File \"%s\" exists. Overwrite? "
 msgstr "El archivo \"%s\" ya existe. ¿Sobrescribir?"
 
-#: gnubg.c:5168
+#: gnubg.c:5179
 msgid "You may be about to make a very bad play"
 msgstr "Puede que vaya a realizar una jugada muy mala"
 
-#: gnubg.c:5172
+#: gnubg.c:5183
 msgid "You may be about to make a bad play"
 msgstr "Puede que vaya a realizar una jugada mala"
 
-#: gnubg.c:5176
+#: gnubg.c:5187
 msgid "You may be about to make a doubtful play"
 msgstr "Puede que vaya a realizar una jugada dudosa"
 
-#: gnubg.c:5188
+#: gnubg.c:5199
 msgid "Are you sure?"
 msgstr "¿Seguro?"
 
-#: gnubg.c:5250
+#: gnubg.c:5261
 msgid "Analysis used for `hint' has been cleared"
 msgstr "Se borró el análisis usado para `hint'"
 
-#: gnubg.c:5417
+#: gnubg.c:5428
 #, c-format
 msgid ""
 "Locale in your environment not supported by C library. Falling back to C "
 "locale.\n"
 msgstr ""
 
-#: gnubg.c:5609
+#: gnubg.c:5620
 #, fuzzy
 msgid ""
 "Are you sure you want to discard the current match and your existing "
 "autosave? "
 msgstr "¿Seguro que quiere borrar todas las partidas de esta base de datos?"
 
-#: gnubg.c:5617
+#: gnubg.c:5628
 #, fuzzy
 msgid "Are you sure you want to discard the current match? "
 msgstr ""
@@ -12531,12 +12535,12 @@ msgstr ""
 msgid "Playing sound"
 msgstr "Configuración de jugador"
 
-#: sound.c:554
+#: sound.c:555
 #, c-format
 msgid "No sound played for: %s\n"
 msgstr "Sin reproducción de sonido para: %s\n"
 
-#: sound.c:556
+#: sound.c:557
 #, c-format
 msgid "Sound for: %s: %s\n"
 msgstr "Sonido para: %s: %s\n"
