@@ -1,5 +1,22 @@
 2013-07-22  Michael Petch  <mpetch@gnubg.org>
 
+	* configure.ac, openurl.c: Add a configure option 
+	--with-default-browser to override the default value "xdg-open".
+	if --with-default-browser is specified without an argument
+	it will look for a default in this order sensible-browser, 
+	xdg-open, firefox . If none are found the default xdg-open 
+	will be used. This option is not available on Win32 platforms.
+
+	Add a new configure option --enable-gasserts . Previously
+	g_assert macros have been enabled by default. They are now 
+	disabled by default. This option is used to enable those
+	macros. 
+
+	Take the AVX code out of the experimental stage. If AVX is
+	supported on the processor and OS then it will be used by default.
+
+2013-07-22  Michael Petch  <mpetch@gnubg.org>
+
 	* gtk-multiview.c, gtk-multiview.h, mec.c, sound.c, board3d/tr.c, 
 	board3d/tr.h, lib/mm_malloc.h: Fix some licensing inconsistencies
 	identified by Russ Allbery.

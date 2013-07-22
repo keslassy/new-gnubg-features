@@ -46,7 +46,7 @@ get_web_browser(void)
 #ifdef __APPLE__
         pch = "open";
 #else
-        pch = "firefox";
+        pch = OPEN_URL_PROG;
 #endif
     }
     return pch;

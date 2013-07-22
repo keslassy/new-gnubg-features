@@ -353,12 +353,12 @@ AX_EXT()
 AC_MSG_CHECKING([for SIMD CPU instructions])
 AC_ARG_ENABLE( simd, [  --enable-simd=TYPE      enable SIMD usage for newer cpus(TYPE=yes,avx,sse2,no)], simdcpu=$enableval, simdcpu="undef")
 if test "x$simdcpu" = "xundef" || test "x$simdcpu" = "xyes"; then
-    if test "x$ax_cv_have_sse2_ext" = "xyes"; then
+    if test "x$ax_cv_have_avx_ext" = "xyes"; then 
+        simdcpu="avx"
+    elif test "x$ax_cv_have_sse2_ext" = "xyes"; then
         simdcpu="sse2"
     elif test "x$ax_cv_have_sse_ext" = "xyes"; then 
         simdcpu="sse"
-    elif test "x$ax_cv_have_avx_ext" = "xyes"; then 
-        simdcpu="avx"
     else
         simdcpu="no"
     fi
@@ -456,11 +456,45 @@ if test "x$simdcpu" = "xavx" && test "x$win32" = "xyes" ; then
     AM_CFLAGS="$AM_CFLAGS"
 fi
 
+dnl
+dnl Check for program to open browser
+dnl
+
+if test x"$win32" == x"no"; then
+    AC_CHECK_PROGS([DEFAULT_WWW_PROG], [sensible-browser xdg-open firefox], [xdg-open])
+    AC_MSG_CHECKING([for program to open URLs])
+    AC_ARG_WITH([default_browser],
+    AC_HELP_STRING([--with-default-browser=program],
+	    	[specify the program to open URLs: (default=xdg-open, or default=sensible-browser on Debian distros)]),
+    [
+        if [test x"$with_default_browser" == x"no"]; then
+    	    OPENWWW_PROG="xdg-open"
+        elif [test x"$with_default_browser" == x"yes"]; then
+            OPENWWW_PROG="$DEFAULT_WWW_PROG"
+        else
+        	OPENWWW_PROG="$with_default_browser"
+        fi
+    ],
+    [
+        OPENWWW_PROG="$DEFAULT_WWW_PROG"
+    ])
+    AC_MSG_RESULT($OPENWWW_PROG)
+else
+    AC_DEFINE_UNQUOTED(OPEN_URL_PROG, "", [program to open URLs])
+fi
+
+AC_MSG_CHECKING([whether g_asserts are enabled])
+AC_ARG_ENABLE([gasserts], 
+    AC_HELP_STRING([--enable-gasserts], [enable g_assert debugging macros Default no]), [gasserts="yes"], [gasserts="no"])
+if test x"$enable_gasserts" != x"no"; then
+    AM_CFLAGS="$AM_CFLAGS -DG_DISABLE_ASSERT"
+fi
+AS_IF( [test x"$enable_gasserts" != x"no"], [AC_MSG_RESULT($gasserts)], [AC_MSG_RESULT(no)] )
+
 AC_SUBST(AM_CFLAGS)
 
-
 dnl *************
-dnl Misc. setings
+dnl Misc. settings
 dnl *************
 
 dnl internationalization macros
