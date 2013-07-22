@@ -65,6 +65,7 @@ f_GeneralEvaluationE GeneralEvaluationE = GeneralEvaluationENoLocking;
 #define GeneralEvaluationEPlied GeneralEvaluationEPliedNoLocking
 #define EvaluatePositionCubeful3 EvaluatePositionCubeful3NoLocking
 #define ScoreMoves ScoreMovesNoLocking
+#define ScoreMovesPruned ScoreMovesPrunedNoLocking
 #define FindBestMoveInEval FindBestMoveInEvalNoLocking
 #define GeneralEvaluationEPliedCubeful GeneralEvaluationEPliedCubefulNoLocking
 #define EvaluatePositionCubeful4 EvaluatePositionCubeful4NoLocking
@@ -568,7 +569,7 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
 
     if (!fInitialised) {
 #if USE_SIMD_INSTRUCTIONS
-        result = SIMD_Supported() ;
+        result = SIMD_Supported();
         switch (result) {
         case -1:
             outputerrf(_("Can't check for SIMD support - non pentium cpu\n"));
@@ -2407,7 +2408,8 @@ extern int
 GameStatus(const TanBoard anBoard, const bgvariation bgv)
 {
 
-    SSE_ALIGN(float ar[NUM_OUTPUTS]) = { 0, 0, 0, 0, 0 };  /* NUM_OUTPUTS are 5 */
+    SSE_ALIGN(float ar[NUM_OUTPUTS]) = {
+    0, 0, 0, 0, 0};             /* NUM_OUTPUTS are 5 */
 
     if (ClassifyPosition(anBoard, bgv) != CLASS_OVER)
         return 0;
@@ -3143,7 +3145,7 @@ GetEvalCacheSize(void)
 extern void
 SetEvalCacheSize(unsigned int size)
 {
-    EvalCacheResize((size == 0) ? 0 : 1U<<(size + 16));
+    EvalCacheResize((size == 0) ? 0 : 1U << (size + 16));
 }
 
 extern unsigned int
@@ -3158,7 +3160,7 @@ GetCacheMB(int size)
     if (size <= 0)
         return 0;
     else
-        return (1<<(size + 15)) * sizeof(cacheNode) / (1024 * 1024);
+        return (1 << (size + 15)) * sizeof(cacheNode) / (1024 * 1024);
 }
 
 extern int
@@ -5209,6 +5211,7 @@ DoubleType(const int fDoubled, const int fMove, const int fTurn)
 #define GeneralEvaluationEPlied GeneralEvaluationEPliedWithLocking
 #define EvaluatePositionCubeful3 EvaluatePositionCubeful3WithLocking
 #define ScoreMoves ScoreMovesWithLocking
+#define ScoreMovesPruned ScoreMovesPrunedWithLocking
 #define FindBestMoveInEval FindBestMoveInEvalWithLocking
 #define GeneralEvaluationEPliedCubeful GeneralEvaluationEPliedCubefulWithLocking
 #define EvaluatePositionCubeful4 EvaluatePositionCubeful4WithLocking
@@ -5239,6 +5242,7 @@ static int EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard, 
 /* Functions that have both locking and non-locking versions below here */
 
 static int ScoreMoves(movelist * pml, const cubeinfo * pci, const evalcontext * pec, int nPlies);
+static int ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi);
 
 #define PRUNE_MOVES 10
 
@@ -5302,6 +5306,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
                 neuralnet *nets[] = { &nnpRace, &nnpCrashed, &nnpContact };
                 neuralnet *n = nets[pc - CLASS_RACE];
 #if USE_SIMD_INSTRUCTIONS
+                (void) nnStates;        /* silence compiler warning */
                 NeuralNetEvaluateSSE(n, arInput, arOutput, NULL);
 #else
                 if (nnStates)
@@ -5341,18 +5346,11 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
 
     ((cubeinfo *) pci)->fMove = !pci->fMove;
 
-    if (i == ml.cMoves) {
-        move amMoves[PRUNE_MOVES];
-        ml.cMoves = PRUNE_MOVES;
-        for (i = 0; i < PRUNE_MOVES; i++) {
-            unsigned int const j = bmovesi[i];
-            memcpy(&amMoves[i], &ml.amMoves[j], sizeof(amMoves[0]));
-            bmovesi[i] = i;
-        }
-        memcpy(&ml.amMoves[0], amMoves, ml.cMoves * sizeof(amMoves[0]));
-    }
+    if (i == ml.cMoves)
+        ScoreMovesPruned(&ml, pci, pec, bmovesi);
+    else
+        ScoreMoves(&ml, pci, pec, 0);
 
-    ScoreMoves(&ml, pci, pec, 0);
     PositionFromKey(anBoardOut, &ml.amMoves[ml.iMoveBest].key);
 }
 
@@ -5565,6 +5563,40 @@ ScoreMoves(movelist * pml, const cubeinfo * pci, const evalcontext * pec, int nP
 
         nnStates[0].state = nnStates[1].state = nnStates[2].state = NNSTATE_NONE;
     }
+
+    return r;
+}
+
+static int
+ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi)
+{
+    unsigned int i, j;
+    int r = 0;                  /* return value */
+    NNState *nnStates = MT_Get_nnState();
+
+    pml->rBestScore = -99999.9f;
+
+    /* start incremental evaluations */
+    nnStates[0].state = nnStates[1].state = nnStates[2].state = NNSTATE_INCREMENTAL;
+
+    for (j = 0; j < PRUNE_MOVES; j++) {
+
+        i = bmovesi[j];
+
+        if (ScoreMove(nnStates, pml->amMoves + i, pci, pec, 0) < 0) {
+            r = -1;
+            break;
+        }
+
+        if ((pml->amMoves[i].rScore > pml->rBestScore) || ((pml->amMoves[i].rScore == pml->rBestScore)
+                                                           && (pml->amMoves[i].rScore2 >
+                                                               pml->amMoves[pml->iMoveBest].rScore2))) {
+            pml->iMoveBest = i;
+            pml->rBestScore = pml->amMoves[i].rScore;
+        }
+    }
+
+    nnStates[0].state = nnStates[1].state = nnStates[2].state = NNSTATE_NONE;
 
     return r;
 }
