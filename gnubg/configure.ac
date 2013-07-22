@@ -478,6 +478,7 @@ if test x"$win32" == x"no"; then
     [
         OPENWWW_PROG="$DEFAULT_WWW_PROG"
     ])
+    AC_DEFINE_UNQUOTED(OPEN_URL_PROG, "$OPENWWW_PROG", [program to open URLs])
     AC_MSG_RESULT($OPENWWW_PROG)
 else
     AC_DEFINE_UNQUOTED(OPEN_URL_PROG, "", [program to open URLs])
