@@ -2146,7 +2146,7 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
             TargetHelpColor->red = 0 * (65535 / 255);
             TargetHelpColor->green = 255 * (65535 / 255);
             TargetHelpColor->blue = 0 * (65535 / 255);
-            TargetHelpColor->pixel = (gulong) (TargetHelpColor->red * 65536 +
+            TargetHelpColor->pixel = (guint32) (TargetHelpColor->red * 65536 +
                                                TargetHelpColor->green * 256 + TargetHelpColor->blue);
             /* get the closest color available in the colormap if no 24-bit */
             gdk_colormap_alloc_color(gtk_widget_get_colormap(board), TargetHelpColor, TRUE, TRUE);
@@ -2293,7 +2293,7 @@ board_text_to_setting(const gchar ** board_text, gint * failed)
         *failed = 1;
         return 0;
     }
-    return strtol(*board_text, (char **) board_text, 10);
+    return (int)strtol(*board_text, (char **) board_text, 10);
 }
 
 static gint
