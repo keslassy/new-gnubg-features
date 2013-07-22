@@ -1,3 +1,9 @@
+2013-07-22  Michael Petch  <mpetch@gnubg.org>
+
+	* gtk-multiview.c, gtk-multiview.h, mec.c, sound.c, board3d/tr.c, 
+	board3d/tr.h, lib/mm_malloc.h: Fix some licensing inconsistencies
+	identified by Russ Allbery.
+
 2013-07-21  Michael Petch  <mpetch@gnubg.org>
 
 	* gnubg.c: When displaying "save settings to" attempt to output the 
