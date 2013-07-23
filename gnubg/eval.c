@@ -1460,18 +1460,18 @@ menOffAll(const unsigned int *anBoard, float *afInput)
         menOff -= anBoard[i];
     }
 
-    if (menOff > 10) {
-        afInput[0] = 1.0;
-        afInput[1] = 1.0;
-        afInput[2] = (menOff - 10) / 5.0f;
-    } else if (menOff > 5) {
+    if (menOff <= 5) {
+        afInput[0] = menOff ? menOff / 5.0f : 0.0f;
+        afInput[1] = 0.0f;
+        afInput[2] = 0.0f;
+    } else if (menOff <= 10) {
         afInput[0] = 1.0f;
         afInput[1] = (menOff - 5) / 5.0f;
         afInput[2] = 0.0f;
     } else {
-        afInput[0] = menOff ? menOff / 5.0f : 0.0f;
-        afInput[1] = 0.0f;
-        afInput[2] = 0.0f;
+        afInput[0] = 1.0;
+        afInput[1] = 1.0;
+        afInput[2] = (menOff - 10) / 5.0f;
     }
 }
 
@@ -1488,19 +1488,20 @@ menOffNonCrashed(const unsigned int *anBoard, float *afInput)
         g_assert(menOff <= 8);
     }
 
-    if (menOff > 5) {
-        afInput[0] = 1.0f;
-        afInput[1] = 1.0f;
-        afInput[2] = (menOff - 6) / 3.0f;
-    } else if (menOff > 2) {
+    if (menOff <= 2) {
+        afInput[0] = menOff ? menOff / 3.0f : 0.0f;
+        afInput[1] = 0.0f;
+        afInput[2] = 0.0f;
+    } else if (menOff <= 5) {
         afInput[0] = 1.0f;
         afInput[1] = (menOff - 3) / 3.0f;
         afInput[2] = 0.0f;
     } else {
-        afInput[0] = menOff ? menOff / 3.0f : 0.0f;
-        afInput[1] = 0.0f;
-        afInput[2] = 0.0f;
+        afInput[0] = 1.0f;
+        afInput[1] = 1.0f;
+        afInput[2] = (menOff - 6) / 3.0f;
     }
+
 }
 
 /* Calculates contact neural net inputs from the board position. */
