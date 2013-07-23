@@ -43,6 +43,7 @@ info.
 
   --enable-simd=TYPE      enable SIMD for newer cpus(TYPE=yes,no,sse,sse2,avx 
                           default=yes)
+  --enable-gasserts       enable g_assert debugging macros (Default disabled)
   --disable-cputest       disable runtime SIMD CPU test (Default no)
   --enable-threads        enable multithread support (Default enabled)
   --with-gtk              use GTK+ 2.0 (Default if found)
@@ -51,3 +52,7 @@ info.
   --with-eval-max-threads=size
                           define the maximum number of evaluation threads
                           allowed: (default=48)
+  --with-default-browser=program
+                          specify the program to open URLs: (default=xdg-open,
+                          or default=sensible-browser on Debian distros)
+

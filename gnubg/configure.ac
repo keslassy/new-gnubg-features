@@ -486,7 +486,7 @@ fi
 
 AC_MSG_CHECKING([whether g_asserts are enabled])
 AC_ARG_ENABLE([gasserts], 
-    AC_HELP_STRING([--enable-gasserts], [enable g_assert debugging macros Default no]), [gasserts="yes"], [gasserts="no"])
+    AC_HELP_STRING([--enable-gasserts], [enable g_assert debugging macros (Default disabled)]), [gasserts="yes"], [gasserts="no"])
 if test x"$enable_gasserts" != x"no"; then
     AM_CFLAGS="$AM_CFLAGS -DG_DISABLE_ASSERT"
 fi
