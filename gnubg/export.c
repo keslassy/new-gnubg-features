@@ -770,7 +770,7 @@ ExportSnowieTxt(char *sz, const matchstate * pms)
 
     /* dice */
 
-    sz += sprintf(sz, "%d;%d;", (pms->anDice[0] > 0) ? pms->anDice[0] : 0, (pms->anDice[1] > 0) ? pms->anDice[1] : 0);
+    sprintf(sz, "%d;%d;", (pms->anDice[0] > 0) ? pms->anDice[0] : 0, (pms->anDice[1] > 0) ? pms->anDice[1] : 0);
 
 }
 

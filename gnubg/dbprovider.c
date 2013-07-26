@@ -552,7 +552,7 @@ PyPostgreDeleteDatabase(const char *dbfilename, const char *user, const char *pa
     if (PyPostgreConnect("postgres", user, password, hostname) < 0)
         return FALSE;
 
-    ret = PyUpdateCommand("END");
+    PyUpdateCommand("END");
     buf = g_strdup_printf("DROP DATABASE %s", dbfilename);
     ret = PyUpdateCommand(buf);
     g_free(buf);
