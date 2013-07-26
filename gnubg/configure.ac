@@ -487,10 +487,10 @@ fi
 AC_MSG_CHECKING([whether g_asserts are enabled])
 AC_ARG_ENABLE([gasserts], 
     AC_HELP_STRING([--enable-gasserts], [enable g_assert debugging macros (Default disabled)]), [gasserts="yes"], [gasserts="no"])
-if test x"$enable_gasserts" != x"no"; then
+if test x"$enable_gasserts" != x"yes"; then
     AM_CFLAGS="$AM_CFLAGS -DG_DISABLE_ASSERT"
 fi
-AS_IF( [test x"$enable_gasserts" != x"no"], [AC_MSG_RESULT($gasserts)], [AC_MSG_RESULT(no)] )
+AS_IF( [test x"$enable_gasserts" != x"yes"], [AC_MSG_RESULT($gasserts)], [AC_MSG_RESULT(yes)] )
 
 AC_SUBST(AM_CFLAGS)
 
