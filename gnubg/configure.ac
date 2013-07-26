@@ -23,7 +23,7 @@ AC_INIT([GNU Backgammon],m4_esyscmd(echo 1.02.000$VERSION_EXT | tr -d '\n'),[bug
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR(gnubg.c)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_HEADERS([config.h])
 
 dnl
