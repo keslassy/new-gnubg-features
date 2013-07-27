@@ -2752,11 +2752,10 @@ PythonNavigate(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
         if (nextGame != INT_MIN && nextGame != 0) {
             listOLD *pl = lMatch.plNext;
 
-            for (; pl->p != plGame && pl != &lMatch; pl = pl->plNext);
+            for (; pl->p != plGame && pl != &lMatch; pl = pl->plNext)
+                ;
+            g_assert(pl->p == plGame);
 
-            {
-                g_assert(pl->p == plGame);
-            }
             {
                 int n = nextGame;
                 if (n > 0) {
@@ -3097,10 +3096,12 @@ python_run_file(gpointer file)
     py_dict = PyModule_GetDict(PythonGnubgModule());
     py_ret = PyRun_String(pch, Py_eval_input, PythonGnubgModule(), py_dict);
 
-    if (py_ret)
+    if (py_ret) {
         Py_DECREF(py_ret);
-    if (py_ret)
+    }
+    if (py_ret) {
         Py_DECREF(py_dict);
+    }
     g_free(pch);
     g_free(file);
     return FALSE;
@@ -3152,8 +3153,9 @@ PythonShutdown(void)
         python_dir = NULL;
     }
 #endif
-    if (py_gnubg_module)
+    if (py_gnubg_module) {
         Py_DECREF(py_gnubg_module);
+    }
 
     py_gnubg_module = NULL;
 }
@@ -3180,10 +3182,12 @@ PythonRun(const char *sz)
             if (py_ret && PyInt_Check(py_ret) && PyInt_AsLong(py_ret))
                 success = TRUE;
 
-        if (py_ret)
+        if (py_ret) {
             Py_DECREF(py_ret);
-        if (py_dict)
+        }
+        if (py_dict) {
             Py_DECREF(py_dict);
+        }
 
         if (success)
             return;
