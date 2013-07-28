@@ -636,7 +636,7 @@ PythonHint_Callback (procrecorddata *pr)
     }
     if (hintdict){
         PyList_Append (list, hintdict);
-        Py_DecRef(hintdict);
+        Py_DECREF(hintdict);
     }
         
     return TRUE;
