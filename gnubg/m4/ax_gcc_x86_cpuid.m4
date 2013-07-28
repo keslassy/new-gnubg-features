@@ -64,11 +64,8 @@ AC_CACHE_CHECK(for x86 cpuid $1 output, ax_cv_gcc_x86_cpuid_$1,
  [AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>], [
      int op = $1, eax, ebx, ecx, edx;
      FILE *f;
-     __asm__("pushl %%ebx\n\t
-              cpuid\n\t
-              mov %%ebx, %%esi\n\t
-              popl %%ebx"
-        : "=a" (eax), "=S" (ebx), "=c" (ecx), "=d" (edx)
+      __asm__("cpuid"
+        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
         : "a" (op));
      f = fopen("conftest_cpuid", "w"); if (!f) return 1;
      fprintf(f, "%x:%x:%x:%x\n", eax, ebx, ecx, edx);
