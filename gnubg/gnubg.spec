@@ -1,6 +1,6 @@
 ###############################################################
 #
-# Spec file for package gnubg (Version 0.14).
+# Spec file for package gnubg (Version 1.02).
 #
 # Copyright (c) 2003 Achim Mueller, Germany.
 # This file and all modifications and additions to the pristine
@@ -15,8 +15,8 @@ License:      GNU General Public License (GPL) - all versions
 Group:        Amusements/Games/Board/Other
 Packager:     <ace@gnubg.org>
 Summary:      A backgammon game and analyser
-Version:      0.15
-Release:      4 
+Version:      1.02
+Release:      5 
 Source:       %{name}-%{version}.tar.gz
 BuildRoot:    %{_tmppath}/%{name}-%{version}-build
 URL:          http://www.gnubg.org
@@ -31,13 +31,16 @@ play GNU Backgammon using the command line or a graphical interface
 
 Authors:
 --------
+Christian Anthon
 Joseph Heled <joseph@gnubg.org>
 Oystein Johansen <oystein@gnubg.org>
+Jonathan Kinsey
+Philippe Michel
 David Montgomery
+Michael Petch <mpetch@gnubg.org>
 Jim Segrave
 Joern Thyssen <jth@gnubg.org>
 Gary Wong <gtw@gnu.org>
-
 
 
 %package databases
@@ -69,8 +72,6 @@ This package contains the sounds for GNU Backgammon.
             --with-python \
 	    --infodir=${RPM_BUILD_ROOT}%{prefix}/share/info \
 	    --mandir=${RPM_BUILD_ROOT}%{prefix}/share/man \
-            --without-gdbm \
-	    --without-guile \
 	    --with-board3d \
 	    --enable-simd
 	    
