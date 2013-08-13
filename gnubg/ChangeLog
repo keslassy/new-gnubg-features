@@ -1,3 +1,8 @@
+2013-08-13  Michael Petch  <mpetch@gnubg.org>
+
+	* gtkmet.c: Fix MET assertion problem reported by Ian Shaw.
+	see http://lists.gnu.org/archive/html/bug-gnubg/2013-08/msg00013.html
+
 2013-07-22  Michael Petch  <mpetch@gnubg.org>
 
 	* configure.ac, openurl.c: Add a configure option 
