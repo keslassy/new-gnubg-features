@@ -51,9 +51,10 @@
 
 
 #undef VERSION
-#define VERSION "0.17"
+#define VERSION "1.00"
 
 char* weightsVersion = VERSION;
+char* compatibleVersions[] = {"0.91", "0.17", NULL};
 
 #include "osr.h"
 #include "br.h"
@@ -317,6 +318,8 @@ LoadNet(CONST char* szWeights, long cSize)
 
   EvalNets* evalNets = 0;
   
+  int compatible = 0, i = 0;
+
   if( !( pfWeights = fopen( szWeights, "r" ) ) ) {
     return NULL;
   }
@@ -324,6 +327,20 @@ LoadNet(CONST char* szWeights, long cSize)
   if( fscanf( pfWeights, "GNU Backgammon %15s\n", szFileVersion ) != 1 ||
       strncmp( szFileVersion, VERSION, strlen(VERSION) ) != 0 ) {
     fprintf(stderr, "expecting version %s, file %s", VERSION, szFileVersion);
+    while (compatibleVersions[i]) {
+      char *s = compatibleVersions[i++];
+
+      if (strncmp( szFileVersion, s, strlen(s) ) == 0) {
+	compatible = 1;
+	fprintf(stderr, " is compatible\n");
+	break;
+      }
+    }
+  }
+  else compatible = 1;
+  
+  if (!compatible) {
+    fprintf(stderr, " is not compatible\n");
     return NULL;
   }
 
