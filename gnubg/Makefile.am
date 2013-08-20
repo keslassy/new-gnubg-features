@@ -27,7 +27,7 @@ if USE_PYTHON
 AM_CPPFLAGS += @PYTHON_INCLUDES@ 
 endif
 
-AM_CPPFLAGS += -DAC_DOCDIR='"$(docdir)/"' -DAC_DATADIR='"$(datadir)"' -DAC_PKGDATADIR='"$(datadir)/gnubg"'
+AM_CPPFLAGS += -DAC_DOCDIR='"$(docdir)"' -DAC_DATADIR='"$(datadir)"' -DAC_PKGDATADIR='"$(datadir)/gnubg"'
 
 OTHER_LIBS =
 if WIN32
