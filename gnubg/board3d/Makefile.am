@@ -7,7 +7,7 @@ AM_CPPFLAGS = -I$(srcdir)/.. $(COMMON_INCS) @GTK_CFLAGS@ $(SOUND_INCS) \
 	-I$(srcdir)/../lib \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DAC_DATADIR='"$(datadir)"' -DAC_PKGDATADIR=='"$(datadir)/gnubg"'\
-	@FREETYPE2_CFLAGS@ @GTKGLEXT_CFLAGS@
+	@FREETYPE2_CFLAGS@ @GTKGLEXT_CFLAGS@ $(GLU_CFLAGS)
 
 if USE_BOARD3D
 noinst_LTLIBRARIES = libboard3d.la

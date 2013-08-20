@@ -130,6 +130,7 @@ PKG_CHECK_MODULES(LIBPNG, [libpng >= 1.2], have_libpng="yes", AC_MSG_WARN([no pn
 PKG_CHECK_MODULES(CAIRO, [cairo >= 1.2], have_cairo="yes", [AC_MSG_WARN([no cairo support])])
 PKG_CHECK_MODULES(PANGOCAIRO, [pangocairo >= 1.0], have_pangocairo="yes", [AC_MSG_WARN([no pangocairo support])])
 PKG_CHECK_MODULES(SQLITE, [sqlite3], have_sqlite="yes", AC_MSG_WARN([no sqlite support]))
+PKG_CHECK_MODULES(GLU, [glu], have_glu="yes", AC_MSG_WARN([no glu support]))
 
 if test "x$win32" != "xyes"; then
     PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk support]))
@@ -302,7 +303,7 @@ fi
 
 AC_CHECK_HEADERS(GL/glx.h)
 
-if test  "$with_board3d" != "no" && test "$with_gtk" != "no" && test "x$have_gtk" = "xyes" && test "x$have_gtkglext" = "xyes"; then
+if test  "$with_board3d" != "no" && test "$with_gtk" != "no" && test "x$have_gtk" = "xyes" && test "x$have_gtkglext" = "xyes" -a "x$have_glu" = "xyes"; then
 	AC_DEFINE(USE_BOARD3D,1, [Define if you want to use the 3d boards])
 	no_board3d="no"
 fi
