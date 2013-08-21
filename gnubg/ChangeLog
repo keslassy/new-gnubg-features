@@ -1,7 +1,17 @@
-2013-08-13  Michael Petch  <mpetch@gnubg.org>
+2013-08-20  Michael Petch  <mpetch@gnubg.org>
 
-	* gtkmet.c: Fix MET assertion problem reported by Ian Shaw.
-	see http://lists.gnu.org/archive/html/bug-gnubg/2013-08/msg00013.html
+	* +doc/bearoffdump.6, +doc/makebearoff.6, +doc/makehyper.6,
+	  +doc/makeweights.6, doc/Makefile.am, Makefile.am:
+	Add man pages for the GNUBG utilities, based upon the man pages
+	created by Russ Allbery for Debian/GNU Linux. Fix docdir usage,
+	and compress the man pages.
+
+2013-08-20  Michael Petch  <mpetch@gnubg.org>
+
+	* configure.ac: Apply patch provided by Christopher Hofmann.
+	Autoconf now checks for the GLU library when building with
+	3D boards.
+	* mkinstalldirs: Update to a newer version from automake-1.14
 
 2013-07-22  Michael Petch  <mpetch@gnubg.org>
 
