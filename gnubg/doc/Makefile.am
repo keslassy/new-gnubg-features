@@ -91,7 +91,7 @@ html_node: gnubg.texi
 install-data-hook:
 	(cd $(DESTDIR)$(mandir)/man6; \
 	for file in *.6; do \
-		gzip $${file} -c > $${file}.gz; \
+		gzip -9f $${file}; \
 	done)
 
 uninstall-hook:
