@@ -38,18 +38,14 @@ gnubg_image_DATA = images/1540d81e.png images/16d7944c.png images/1805dc7d.png \
 		   images/setturn.png images/tutor.png images/tutorwarning.png \
 		   images/3117171e.png images/m22b92249.png
 
-man6_FINAL = makeweights.6 bearoffdump.6 makebearoff.6 makehyper.6
-man6_MANS = gnubg.6 $(man6_FINAL)
-man6_MANS_gz = $(man6_MANS:.6=.6.gz)
+man6_NOBLD = makeweights.6 bearoffdump.6 makebearoff.6 makehyper.6
+notrans_man_MANS = gnubg.6 $(man6_NOBLD)
 
 EXTRA_DIST = allabout.xml gnubgdb.xml gnubgman.xml gnubg/allabout.html \
-	     gnubg/allabout.pdf $(man6_FINAL) gnubg/gnubg.html \
+	     gnubg/allabout.pdf $(man6_NOBLD) gnubg/gnubg.html \
 		 gnubg/gnubg.info gnubg/gnubg.pdf gnubg/gnubg.texi $(gnubg_image_DATA)
 
-all: $(man6_MANS_gz) gnubg.html allabout.html gnubg.texi gnubg.info gnubg.pdf allabout.pdf
-
-%.6.gz: %.6
-	gzip $< -c > $@ 
+all: gnubg.html allabout.html gnubg.texi gnubg.info gnubg.pdf allabout.pdf
 
 gnubg.6: gnubgman.xml
 	$(DOCBOOK2MAN) $< || \
@@ -92,5 +88,17 @@ gnubg.info: gnubg.texi
 html_node: gnubg.texi
 	makeinfo --html $< -o $@
 
-MOSTLYCLEANFILES=gnubg.html allabout.html gnubg.6 $(man6_MANS_gz) gnubg.info gnubg.texi manpage.links manpage.refs
-CLEANFILES=gnubg.texi gnubg.info gnubg.6 $(man6_MANS_gz) gnubg.pdf allabout.pdf
+install-data-hook:
+	(cd $(DESTDIR)$(mandir)/man6; \
+	for file in *.6; do \
+		gzip $${file} -c > $${file}.gz; \
+	done)
+
+uninstall-hook:
+	(cd $(DESTDIR)$(mandir)/man6; \
+	for file in *.gz; do \
+		rm -f $${file}; \
+	done)
+
+MOSTLYCLEANFILES=gnubg.html allabout.html gnubg.6 gnubg.info gnubg.texi manpage.links manpage.refs
+CLEANFILES=gnubg.texi gnubg.info gnubg.6 gnubg.pdf allabout.pdf
