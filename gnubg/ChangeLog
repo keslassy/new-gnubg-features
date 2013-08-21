@@ -1,5 +1,12 @@
 2013-08-20  Michael Petch  <mpetch@gnubg.org>
 
+	* boards.xml, gnubg.gtkrc, gnubg.sql, met/met.dtd, met/met.xsl,
+      scripts/batch.py, scripts/batch_win.py, scripts/database.py,
+      scripts/db_import.py, scripts/gnubg.py, scripts/matchseries.py:
+	Update license information.
+
+2013-08-20  Michael Petch  <mpetch@gnubg.org>
+
 	* +doc/bearoffdump.6, +doc/makebearoff.6, +doc/makehyper.6,
 	  +doc/makeweights.6, doc/Makefile.am, Makefile.am:
 	Add man pages for the GNUBG utilities, based upon the man pages
