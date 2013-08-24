@@ -119,12 +119,6 @@ static const char *aaszStyleSheetClasses[NUM_CLASSES][2] = {
     {"boardimage", "vertical-align: top"}
 };
 
-#define FORMATHTMLPROB(f) \
-( ( f ) < 1.0f ) ? "&nbsp;" : "", \
-( ( f ) < 0.1f ) ? "&nbsp;" : "", \
-( f ) * 100.0f
-
-
 const char *aszHTMLExportType[NUM_HTML_EXPORT_TYPES] = {
     "gnu",
     "bbs",
