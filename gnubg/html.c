@@ -3170,13 +3170,7 @@ ExportPositionGammOnLine(FILE * pf)
         iMove = -1;
     HTMLBoardHeader(pf, &ms, HTML_EXPORT_TYPE_BBS, HTML_EXPORT_CSS_INLINE, getGameNumber(plGame), iMove, FALSE);
 
-    printHTMLBoard(pf, &ms, ms.fTurn,
-#ifdef GAMMONLINE_TEST
-                   "http://www.gammonline.com/demo/Images/",
-#else
-                   "../Images/",
-#endif
-                   "gif", HTML_EXPORT_TYPE_BBS, HTML_EXPORT_CSS_INLINE);
+    printHTMLBoard(pf, &ms, ms.fTurn, "../Images/", "gif", HTML_EXPORT_TYPE_BBS, HTML_EXPORT_CSS_INLINE);
 
     if (pmr) {
         HTMLAnalysis(pf, &ms, pmr, "../Images/", "gif", HTML_EXPORT_TYPE_BBS, HTML_EXPORT_CSS_INLINE);
