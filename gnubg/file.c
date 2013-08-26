@@ -74,7 +74,7 @@ ExportFormat export_format[] = {
 ImportFormat import_format[] = {
     {IMPORT_SGF, ".sgf", N_("Gnu Backgammon File"), "sgf"}
     ,                           /*must be the first element */
-    {IMPORT_SGG, ".sgg", N_("Gamesgrid Save Game"), "sgg"}
+    {IMPORT_SGG, ".sgg", N_("GamesGrid Save Game"), "sgg"}
     ,
     {IMPORT_BKG, ".bkg", N_("Hans Berliner's BKG Format"), "bkg"}
     ,
@@ -86,13 +86,13 @@ ImportFormat import_format[] = {
     ,
     {IMPORT_SNOWIETXT, ".txt", N_("Snowie Text"), "snowietxt"}
     ,
-    {IMPORT_TMG, ".tmg", N_("True Moneygames"), "tmg"}
+    {IMPORT_TMG, ".tmg", N_("TrueMoneyGames"), "tmg"}
     ,
     {IMPORT_EMPIRE, ".gam", N_("GammonEmpire Game"), "empire"}
     ,
     {IMPORT_PARTY, ".gam", N_("PartyGammon Game"), "party"}
     ,
-    {IMPORT_BGROOM, ".bgf", N_("BackGammonRoom Game"), "bgroom"}
+    {IMPORT_BGROOM, ".bgf", N_("BGRoom Game"), "bgroom"}
     ,
     {N_IMPORT_TYPES, NULL, N_("Unknown file format"), NULL}
 };

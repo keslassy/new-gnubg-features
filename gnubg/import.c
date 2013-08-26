@@ -3765,7 +3765,7 @@ OutputMove(FILE * fpOut, int side, const char *outBuf)
 }
 
 static int
-ConvertBackGammonRoomFileToMat(FILE * bgrFP, FILE * matFP)
+ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
 {
 
     char *player1 = NULL;
@@ -3947,7 +3947,7 @@ CommandImportBGRoom(char *sz)
     sz = NextToken(&sz);
 
     if (!sz || !*sz) {
-        outputl(_("You must specify a BackGammonRoom file to import (see `help " "import bgroom')."));
+        outputl(_("You must specify a BGRoom file to import (see `help " "import bgroom')."));
         return;
     }
 
@@ -3964,7 +3964,7 @@ CommandImportBGRoom(char *sz)
         return;
     }
 
-    if (ConvertBackGammonRoomFileToMat(gamf, matf)) {
+    if (ConvertBGRoomFileToMat(gamf, matf)) {
         if ((pf = g_fopen(matfile, "r")) != 0) {
             rc = ImportMat(pf, matfile);
             fclose(pf);
