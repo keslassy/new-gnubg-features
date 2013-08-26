@@ -2726,7 +2726,7 @@ ImportTMG(FILE * pf, const char *UNUSED(szFilename))
 
     for (j = 0; j < 2; ++j)
         SetMatchInfo(&mi.pchRating[j], NULL, NULL);
-    SetMatchInfo(&mi.pchPlace, "TrueMoneyGames (http://www.truemoneygames.com)", NULL);
+    SetMatchInfo(&mi.pchPlace, "TrueMoneyGames", NULL);
     SetMatchInfo(&mi.pchEvent, NULL, NULL);
     SetMatchInfo(&mi.pchRound, NULL, NULL);
     SetMatchInfo(&mi.pchAnnotator, NULL, NULL);
