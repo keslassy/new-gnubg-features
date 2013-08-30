@@ -603,9 +603,9 @@ gnubg moves 8/5 6/5.
       </para>
     </sect2>
     <sect2 id="gnubg-starting_mac">
-      <title>Mac OSX</title>
-      <para>Once you have installed both an X11R6 server and <application moreinfo="none">GNU Backgammon</application> for MacOS X, you can run
-          <application moreinfo="none">GNU Backgammon</application> for MacOS X
+      <title>Mac OS X</title>
+      <para>Once you have installed both an X11R6 server and <application moreinfo="none">GNU Backgammon</application> for Mac OS X, you can run
+          <application moreinfo="none">GNU Backgammon</application> for Mac OS X
         by:</para>
       <orderedlist continuation="restarts" inheritnum="ignore">
         <listitem>
@@ -621,7 +621,7 @@ gnubg moves 8/5 6/5.
                   Backgammon</application> in your private Applications folder,
                 type <command> cd Applications/gnubg</command> to get into
                   <application moreinfo="none">GNU Backgammon</application> for
-                MacOS X's folder, and then type <command>./gnubg</command> to
+                Mac OS X's folder, and then type <command>./gnubg</command> to
                 run it;</para>
             </listitem>
             <listitem>
@@ -629,7 +629,7 @@ gnubg moves 8/5 6/5.
                   Backgammon</application> in the global, top-level Applications
                 folder, type <command>cd /Applications/gnubg</command> to get
                 into <application moreinfo="none">GNU Backgammon</application>
-                for MacOS X's folder, and type <command>./gnubg</command> to run
+                for Mac OS X's folder, and type <command>./gnubg</command> to run
                 it; </para>
             </listitem>
           </orderedlist>
@@ -4550,12 +4550,19 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_general_os">
         <title>What operating systems are supported?</title>
-        <para>Currently, <application>GNU Backgammon</application> is actually
-          designed for <emphasis>GNU/Linux</emphasis>. It also compiles and
-          (hopefully) runs under <emphasis>*BSD, IRIX, Solaris</emphasis> and
-            <emphasis>Tru64 Unix</emphasis>. Last but not least there are
-          frequently binaries for <emphasis>MS Windows</emphasis>. It has also
-          been ported to <emphasis>MacOS</emphasis>. When you successfully port
+        <para><application>GNU Backgammon</application> is mostly developped
+          on <emphasis>GNU/Linux</emphasis>. It also builds and runs under
+          other Unix operating systems like those derived from
+          <emphasis>BSD</emphasis> or
+          <emphasis>Solaris</emphasis>. The main prerequisite is the
+          availability of the GLib library at version 2.6 or later.
+	</para>
+	<para>Installable packages for
+          <emphasis>MS Windows</emphasis> and <emphasis>Mac OS X</emphasis> are
+          available for download at the project official website. Already
+	  built packages are often provided by Linux distributions as well.
+	</para>
+	<para>When you successfully port
           GNU Backgammon to other operating systems, you are welcome to give us
           a note at <ulink url="mailto:bug-gnubg@gnu.org">the GNU backgammon
             mailing list.</ulink>
@@ -4577,8 +4584,8 @@ Equity
             Public License</ulink>. But be aware that <application>GNU
             Backgammon</application> is not <emphasis>public domain
           software</emphasis> or <emphasis>shareware</emphasis> as you perhaps
-          know from <emphasis>MS Windows</emphasis>.<application>GNU
-          Backgammon</application> is free as in <emphasis> freedom </emphasis>,
+          know from <emphasis>MS Windows</emphasis>. <application>GNU
+          Backgammon</application> is free as in <emphasis>freedom</emphasis>,
           i.e. all the source code is there for you to inspect, change or
           distribute as long as you keep said license.</para>
       </sect3>
