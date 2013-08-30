@@ -3450,8 +3450,42 @@ Correct cube action: No double, beaver
     </sect2>
     <sect2 id="gnubg-tech_met">
       <title>Match Equity Tables</title>
-      <para>It's possible to use several different match equity tables with GNU
-        Backgammon.</para>
+      <para>Multiple match equity tables are bundled with <application>GNU
+        Backgammon</application>, although most of them are only of marginal
+        or historical interest.</para>
+      <itemizedlist spacing="normal">
+      <listitem>
+      <emphasis>Rockwell-Kazaross</emphasis> or
+      <emphasis>Kazaross-XG2</emphasis> are the recommended choice.
+      They were created by rolling out the initial position for every score
+      up to -15:-15 and are the best currently available estimations
+      of the match equities for a strong bot playing itself.
+      </listitem>
+      <listitem>
+      <emphasis>g11</emphasis>, <emphasis>snowie</emphasis> and
+      <emphasis>woolsey</emphasis> are the tables that were used by earlier
+      versions of <application>GNU Backgammon</application>,
+      <application>Snowie</application> or for hand calculations back when
+      bots didn't do match equity calculations (or there was no bot at all).
+      All of them are now considered obsolete. Analyses or rollouts using
+      them can still be found in books, magazines or web sites so it can
+      occasionally be interesting to use them in
+      <application>GNU Backgammon</application>
+      for comparison to these older results.
+      </listitem>
+      <listitem>
+      <emphasis>jacobs</emphasis>, <emphasis>jac050</emphasis> and
+      <emphasis>jac100</emphasis> are from the book
+      <emphasis>_Can a Fish Taste Twice as Good_</emphasis> by Jake Jacobs and
+      Walter Trice and give match equities if players are of equal strength, if
+      one is 50 Elo points stronger and if one is 100 points stronger
+      respectively.
+      They should only be used to analyse such unequal opponents situations.
+      </listitem>
+      <listitem>
+      The other tables are obsolete and of no practical use.
+      </listitem>
+      </itemizedlist>
     </sect2>
     <sect2 id="gnubg-tech_python">
       <title>Python scripting</title>
