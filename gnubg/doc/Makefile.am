@@ -42,7 +42,7 @@ man6_NOBLD = makeweights.6 bearoffdump.6 makebearoff.6 makehyper.6
 notrans_man_MANS = gnubg.6 $(man6_NOBLD)
 
 EXTRA_DIST = allabout.xml gnubgdb.xml gnubgman.xml gnubg/allabout.html \
-	     gnubg/allabout.pdf $(man6_NOBLD) gnubg/gnubg.html \
+	     gnubg/allabout.pdf $(man6_NOBLD) gnubg/gnubg.6 gnubg/gnubg.html \
 		 gnubg/gnubg.info gnubg/gnubg.pdf gnubg/gnubg.texi $(gnubg_image_DATA)
 
 all: gnubg.html allabout.html gnubg.texi gnubg.info gnubg.pdf allabout.pdf
