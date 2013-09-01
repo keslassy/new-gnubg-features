@@ -4690,7 +4690,13 @@ Equity
       <sect3 id="gnubg-faq_install_cpu">
         <title>On what CPU will <application>GNU Backgammon</application> run
           fastest?</title>
-        <para>Here is a list of CPU and Evaluations per second ( <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Evaluation Speed</guimenuitem></menuchoice>). Feel free to add your CPU:</para>
+	<para><application>GNU Backgammon</application>'s speed depends on the
+        CPU only. It doesn't need much memory (any machine not totally obsolete
+        will have enough) and does little or no I/O (a fast disk or a SSD won't make any difference).
+        </para>
+        <para>The table below lists CPUs and the result of the command <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Evaluation Speed</guimenuitem></menuchoice>, showing the relative speed of various processors.
+        Note that these numbers are not directly comparable with those given by the similar command from <application>eXtreme Gammon</application>.
+        </para>
         <informaltable frame="all">
           <tgroup cols="6">
             <tbody>
@@ -4702,13 +4708,60 @@ Equity
                 <entry>OS </entry>
                 <entry>GNUBG-Version</entry>
                 <entry> </entry>
-</row> <row>
-                <entry>28450 *1</entry>
-                <entry>AMD Sempron 3000+ (1800 MHz)</entry>
-                <entry>K8T800-A</entry>
-                <entry>1024 MB</entry>
-                <entry>Win 2000</entry>
-                <entry>0.14-mingw</entry>
+              </row>
+              <row>
+                <entry>449500</entry>
+                <entry>Intel Core i5-2400 3.10 GHz</entry>
+                <entry>Dell Optiplex 790</entry>
+                <entry>4 GB</entry>
+                <entry>CentOS 6</entry>
+                <entry>1.02</entry>
+                <entry>4 threads</entry>
+              </row>
+              <row>
+                <entry>258600</entry>
+                <entry>Intel Core i5-2400 3.10 GHz</entry>
+                <entry>Dell Optiplex 790</entry>
+                <entry>4 GB</entry>
+                <entry>CentOS 6</entry>
+                <entry>1.02</entry>
+                <entry>2 threads</entry>
+              </row>
+              <row>
+                <entry>131400</entry>
+                <entry>Intel Core i5-2400 3.10 GHz</entry>
+                <entry>Dell Optiplex 790</entry>
+                <entry>4 GB</entry>
+                <entry>CentOS 6</entry>
+                <entry>1.02</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
+                <entry>125100</entry>
+                <entry>Intel Core 2 Duo P8400 2.26 GHz</entry>
+                <entry>Dell Latitude E6400</entry>
+                <entry>2 GB</entry>
+                <entry>Win XP SP3</entry>
+                <entry>1.02</entry>
+                <entry>2 threads</entry>
+              </row>
+              <row>
+                <entry>64300</entry>
+                <entry>Intel Core 2 Duo T7500 2.2 GHz</entry>
+                <entry>Dell Latitude D630</entry>
+                <entry>4 GB</entry>
+                <entry>FreeBSD 9.2</entry>
+                <entry>1.02</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
+                <entry>63500</entry>
+                <entry>Intel Core 2 Duo P8400 2.26 GHz</entry>
+                <entry>Dell Latitude E6400</entry>
+                <entry>2 GB</entry>
+                <entry>Win XP SP3</entry>
+                <entry>1.02</entry>
+                <entry>1 thread</entry>
               </row>
               <row>
                 <entry>28000</entry>
@@ -4728,7 +4781,7 @@ Equity
               </row>
               <row>
                 <entry>26000</entry>
-                <entry>Celeron 331 2.66 GHz</entry>
+                <entry>Intel Celeron 331 2.66 GHz</entry>
                 <entry>Dell Dimension 3100</entry>
                 <entry>512 MB</entry>
                 <entry>Win XP SP2</entry>
@@ -4736,7 +4789,7 @@ Equity
               </row>
               <row>
                 <entry>24500</entry>
-                <entry>Sempron 2800+ (rev E6_at_2000 MHz)</entry>
+                <entry>AMD Sempron 2800+ (2000 MHz)</entry>
                 <entry>Asus K8V-X</entry>
                 <entry>768 MB</entry>
                 <entry>Win XP SP2</entry>
@@ -4744,7 +4797,7 @@ Equity
               </row>
               <row>
                 <entry>23000</entry>
-                <entry>P4 2.8 GHz</entry>
+                <entry>Intel Pentium 4 2.8 GHz</entry>
                 <entry>Asus P4P800D</entry>
                 <entry>1024 MB</entry>
                 <entry>Win XP SP2</entry>
@@ -4752,110 +4805,51 @@ Equity
               </row>
               <row>
                 <entry>21759</entry>
-                <entry>Athlon64 3000+ (32bit mode)</entry>
+                <entry>AMD Athlon64 3000+ (32bit mode)</entry>
                 <entry>Acer Aspire 1522</entry>
                 <entry>512 MB</entry>
                 <entry>Kubuntu 5.04</entry>
                 <entry>0.14.3-devel</entry>
               </row>
               <row>
-                <entry>21500 *1</entry>
-                <entry>AMD Sempron 3000+ (1800 MHz)</entry>
-                <entry>K8T800-A</entry>
-                <entry>1024 MB</entry>
-                <entry>Win 2000</entry>
-                <entry>0.14.3-devel</entry>
-              </row>
-              <row>
                 <entry>20120</entry>
-                <entry>Athlon XP 2500+ (_at_1833 Mhz)</entry>
+                <entry>AMD Athlon XP 2500+ (1833 Mhz)</entry>
                 <entry>MSI K7N-Delta2</entry>
                 <entry>1024 MB</entry>
                 <entry>Suse Linux 9.2</entry>
                 <entry>0.14.3-devel</entry>
               </row>
               <row>
-                <entry>20200</entry>
-                <entry>Pentium M 1.7 GHz</entry>
-                <entry>Sony Vaio Z1XSP</entry>
-                <entry>512 MB</entry>
-                <entry>FreeBSD 5.2</entry>
-                <entry> </entry>
-</row> <row>
-                <entry>19515</entry>
-                <entry>Intel Pentium M 0.8 GHz *2</entry>
-                <entry>Sony Vaio PCG-SRX51P</entry>
-                <entry>256 MB</entry>
-                <entry>Fedora FC6(T3)</entry>
-                <entry>0.14.3-devel</entry>
-              </row>
-              <row>
                 <entry>19200</entry>
-                <entry>Pentium M 1.6 GHz</entry>
-                <entry>IBM X41</entry>
+                <entry>Intel Pentium M 1.6 GHz</entry>
+                <entry>IBM ThinkPad X41</entry>
                 <entry>1024 MB</entry>
                 <entry>Win XP SP2</entry>
                 <entry>0.14.3-devel</entry>
               </row>
               <row>
-                <entry>16900</entry>
-                <entry>P4 2 GHz</entry>
-                <entry>?</entry>
-                <entry>256 MB</entry>
-                <entry>Win 2000</entry>
-                <entry>0.14-devel</entry>
-              </row>
-              <row>
                 <entry>14400</entry>
-                <entry>P3 1GHz</entry>
+                <entry>Intel Pentium III-M 1GHz</entry>
                 <entry>Sony Vaio PCG-R600HFPD</entry>
                 <entry>256 MB</entry>
                 <entry>Win XP SP2</entry>
                 <entry>0.16-mingw</entry>
               </row>
               <row>
-                <entry>13000 *3</entry>
-                <entry>AMD 1GHz</entry>
-                <entry>Jetway</entry>
-                <entry>1536 MB</entry>
-                <entry>Win 2000</entry>
-                <entry>0.14-devel</entry>
-              </row>
-              <row>
-                <entry>10506</entry>
-                <entry>Intel Pentium M 0.8 GHz</entry>
-                <entry>Sony Vaio PCG-SRX51P</entry>
+                <entry>8520</entry>
+                <entry>Intel Celeron 750 MHz</entry>
+                <entry>Toshiba Satellite 4600</entry>
                 <entry>256 MB</entry>
-                <entry>Windows XP(SP2)</entry>
-                <entry>0.14-mingw</entry>
+                <entry>Win XP SP1</entry>
+                <entry>1.02</entry>
               </row>
               <row>
-                <entry>6200</entry>
-                <entry>Celeron 650 MHz</entry>
-                <entry>toshiba laptop</entry>
-                <entry>256 MB</entry>
-                <entry>Win me</entry>
-                <entry>0.14-devel</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-        <informaltable frame="all">
-          <tgroup cols="2">
-            <colspec colname="c1" colnum="1" colwidth="1*"/>
-            <colspec colname="c2" colnum="2" colwidth="1*"/>
-            <tbody>
-              <row>
-                <entry>*1</entry>
-                <entry>These are the two versions evaluated on the same machine. Big difference!</entry>
-              </row>
-              <row>
-                <entry>*2</entry>
-                <entry>According to cat /proc/cpuinfo</entry>
-              </row>
-              <row>
-                <entry>*3</entry>
-                <entry>Highly variable: 12000 .. 13700</entry>
+                <entry>6990</entry>
+                <entry>Intel Celeron 600 MHz</entry>
+                <entry>Toshiba Satellite 4310</entry>
+                <entry>128 MB</entry>
+                <entry>Win XP SP2</entry>
+                <entry>1.02</entry>
               </row>
             </tbody>
           </tgroup>
