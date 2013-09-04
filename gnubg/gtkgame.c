@@ -3744,12 +3744,12 @@ CreateMainWindow(void)
 
     idMenu = gtk_menu_new();
 
-    menu_item = gtk_menu_item_new_with_label(_("Copy Position ID"));
+    menu_item = gtk_menu_item_new_with_label(_("Copy GNUbg ID"));
     gtk_menu_shell_append(GTK_MENU_SHELL(idMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(CopyIDs), NULL);
 
-    menu_item = gtk_menu_item_new_with_label(_("Paste Position ID"));
+    menu_item = gtk_menu_item_new_with_label(_("Paste GNUbg ID"));
     gtk_menu_shell_append(GTK_MENU_SHELL(idMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(PasteIDs), NULL);
