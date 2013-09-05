@@ -45,7 +45,6 @@
 #include "gtkgame.h"
 #include "gtkwindows.h"
 
-#define SIZE_DIE 4
 #define SIZE_QUADRANT 52
 
 
