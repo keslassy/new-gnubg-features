@@ -560,7 +560,7 @@ InitRNGSeedMP(mpz_t n, rng rng, rngcontext * rngctx)
 
                 free(achState);
             } else {
-                InitRNGSeed((unsigned long) (mpz_get_ui(n)), rng, rngctx);
+                InitRNGSeed((unsigned int) (mpz_get_ui(n)), rng, rngctx);
             }
             break;
         }
@@ -780,9 +780,9 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
     switch (*prng) {
     case RNG_ANSI:
         while ((tmprnd = rand()) >= rand_max_l);        /* Try again */
-        anDice[0] = 1 + tmprnd / rand_max_q;
+        anDice[0] = 1 + (unsigned int) (tmprnd / rand_max_q);
         while ((tmprnd = rand()) >= rand_max_l);
-        anDice[1] = 1 + tmprnd / rand_max_q;
+        anDice[1] = 1 + (unsigned int) (tmprnd / rand_max_q);
         rngctx->c += 2;
         break;
 
@@ -803,9 +803,9 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
     case RNG_BSD:
 #if HAVE_RANDOM
         while ((tmprnd = random()) >= rand_max_l);      /* Try again */
-        anDice[0] = 1 + tmprnd / rand_max_q;
+        anDice[0] = 1 + (unsigned int) (tmprnd / rand_max_q);
         while ((tmprnd = random()) >= rand_max_l);
-        anDice[1] = 1 + tmprnd / rand_max_q;
+        anDice[1] = 1 + (unsigned int) (tmprnd / rand_max_q);
         rngctx->c += 2;
         break;
 #else
@@ -814,9 +814,9 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
 
     case RNG_ISAAC:
         while ((tmprnd = irand(&rngctx->rc)) >= exp232_l);      /* Try again */
-        anDice[0] = 1 + tmprnd / exp232_q;
+        anDice[0] = 1 + (unsigned int) (tmprnd / exp232_q);
         while ((tmprnd = irand(&rngctx->rc)) >= exp232_l);
-        anDice[1] = 1 + tmprnd / exp232_q;
+        anDice[1] = 1 + (unsigned int) (tmprnd / exp232_q);
         rngctx->c += 2;
         break;
 
@@ -846,9 +846,9 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
 
     case RNG_MERSENNE:
         while ((tmprnd = genrand_int32(&rngctx->mti, rngctx->mt)) >= exp232_l); /* Try again */
-        anDice[0] = 1 + tmprnd / exp232_q;
+        anDice[0] = 1 + (unsigned int) (tmprnd / exp232_q);
         while ((tmprnd = genrand_int32(&rngctx->mti, rngctx->mt)) >= exp232_l);
-        anDice[1] = 1 + tmprnd / exp232_q;
+        anDice[1] = 1 + (unsigned int) (tmprnd / exp232_q);
         rngctx->c += 2;
         break;
 
