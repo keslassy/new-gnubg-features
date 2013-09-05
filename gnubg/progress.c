@@ -69,7 +69,7 @@ typedef struct _rolloutprogress {
     GtkWidget *pwRolloutStop;
     GtkWidget *pwRolloutStopAll;
     GtkWidget *pwRolloutViewStat;
-    guint nRolloutSignal;
+    gulong nRolloutSignal;
     GtkWidget *pwElapsed;
     GtkWidget *pwLeft;
     GtkWidget *pwSE;
