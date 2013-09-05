@@ -654,16 +654,16 @@ GetBuildInfoString(void)
  return value points to jklm, ppch points to space before 
  the 'n'
  ppch points past null terminator
-
+ 
  ignores leading whitespace, advances ppch over token and trailing
  whitespace
-
+ 
  matching single or double quotes are allowed, any character outside
  of quotes or in doubly quoated strings can be escaped with a
  backslash and will be taken as literal.  Backslashes within single
  quoted strings are taken literally. Multiple quoted strins can be
  concatentated.  
-
+ 
  For example: input ' abc\"d"e f\"g h i"jk'l m n \" o p q'rst uvwzyz'
  with the terminator list ' \t\r\n\v\f'
  The returned token will be the string
@@ -1016,7 +1016,13 @@ ParsePosition(TanBoard an, char **ppch, char *pchDesc)
         static oldpositionkey key;
 
         for (i = 0; i < 10; ++i) {
-            key.auch[i] = ((pch[2 * i + 0] - 'A') << 4) + (pch[2 * i + 1] - 'A');
+            if (pch[2 * i + 0] >= 'A' && pch[2 * i + 0] <= 'P' && pch[2 * i + 1] >= 'A' && pch[2 * i + 1] <= 'P')
+                key.auch[i] = (unsigned char) ((pch[2 * i + 0] - 'A') << 4)
+                    + (pch[2 * i + 1] - 'A');
+            else {
+                outputl(_("Illegal position."));
+                return -1;
+            }
         }
 
         oldPositionFromKey(an, &key);
@@ -1517,7 +1523,7 @@ ShowBoard(void)
                     cch = 20;
 
                 sprintf(szCube, "%c: %*s (%s: %d)", ms.fCubeOwner ? 'X' : 'O',
-                        (int)cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
+                        (int) cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
 
                 apch[ms.fCubeOwner ? 6 : 0] = szCube;
 
@@ -2335,7 +2341,7 @@ hint_take(int show, int did_take)
 }
 
 extern void
-hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
+hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
 {
     unsigned int i;
     char szBuf[1024];
@@ -2365,11 +2371,11 @@ hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
         fd.pci = &ci;
         fd.pec = &GetEvalChequer()->ec;
         fd.aamf = *GetEvalMoveFilter();
-        if (procdatarec){
+        if (procdatarec) {
             show = FALSE;
-            fShowProgress = (ssize_t)procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS];
+            fShowProgress = (ssize_t) procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS];
         }
-        if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt){
+        if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt) {
             fShowProgress = fSaveShowProg;
             return;
         }
@@ -2417,19 +2423,19 @@ hint_move(char *sz, gboolean show, procrecorddata *procdatarec)
         return;
     }
 
-    if (procdatarec){
-        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MATCHSTATE] = (void *)&ms;
-        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_CUBEINFO] = (void *)&ci;
-        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MOVELIST] = (void *)&pmr->ml;
-        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MOVERECORD] = (void *)&pmr;
+    if (procdatarec) {
+        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MATCHSTATE] = (void *) &ms;
+        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_CUBEINFO] = (void *) &ci;
+        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MOVELIST] = (void *) &pmr->ml;
+        procdatarec->avOutputData[PROCREC_HINT_ARGOUT_MOVERECORD] = (void *) &pmr;
     }
 
     n = MIN(pmr->ml.cMoves, n);
     for (i = 0; i < n; i++) {
         if (show)
             output(FormatMoveHint(szBuf, &ms, &pmr->ml, i, TRUE, TRUE, TRUE));
-        else if (procdatarec && procdatarec->pfProcessRecord){
-            procdatarec->avOutputData[PROCREC_HINT_ARGOUT_INDEX] = (void *)(long)i;
+        else if (procdatarec && procdatarec->pfProcessRecord) {
+            procdatarec->avOutputData[PROCREC_HINT_ARGOUT_INDEX] = (void *) (long) i;
             if (!procdatarec->pfProcessRecord(procdatarec))
                 break;
         }
@@ -2788,7 +2794,7 @@ CommandCopy(char *UNUSED(sz))
                 cch = 20;
 
             sprintf(szCube, "%c: %*s (%s: %d)", ms.fCubeOwner ? 'X' :
-                    'O', (int)cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
+                    'O', (int) cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
 
             aps[ms.fCubeOwner ? 6 : 0] = szCube;
 
@@ -3381,10 +3387,10 @@ CommandSaveSettings(char *szParam)
     else {
         outputf(_("Settings saved to %s."), (!strcmp(szFile, "-")) ? _("standard output stream") : szFile);
         output("\n");
-        if(cOutputPostponed){
+        if (cOutputPostponed) {
             outputresume();
             outputx();
-            outputpostpone();            
+            outputpostpone();
         }
     }
     g_free(szFile);
@@ -4640,8 +4646,7 @@ main(int argc, char *argv[])
     char *met = NULL;
 
     static char *pchCommands = NULL, *pchPythonScript = NULL, *lang = NULL;
-    static int fNoBearoff = FALSE, fNoX = FALSE, fSplash = FALSE, fNoTTY =
-        FALSE, show_version = FALSE, debug = FALSE;
+    static int fNoBearoff = FALSE, fNoX = FALSE, fSplash = FALSE, fNoTTY = FALSE, show_version = FALSE, debug = FALSE;
     GOptionEntry ao[] = {
         {"no-bearoff", 'b', 0, G_OPTION_ARG_NONE, &fNoBearoff,
          N_("Do not use bearoff database"), NULL},
@@ -4720,10 +4725,9 @@ main(int argc, char *argv[])
     if (!debug)
         g_log_set_handler(NULL, G_LOG_LEVEL_DEBUG, &null_debug, NULL);
 
-    if (prefsdir){
+    if (prefsdir) {
         szHomeDirectory = prefsdir;
     }
-
 #ifdef WIN32
     /* data directory: initialise to the path where gnubg is installed */
     {
