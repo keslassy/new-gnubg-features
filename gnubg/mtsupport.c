@@ -43,14 +43,14 @@ SSE_ALIGN(ThreadData td);
 extern ThreadLocalData *
 MT_CreateThreadLocalData(int id)
 {
-    ThreadLocalData *tld = (ThreadLocalData *)malloc(sizeof(ThreadLocalData));
+    ThreadLocalData *tld = (ThreadLocalData *) malloc(sizeof(ThreadLocalData));
     tld->id = id;
-    tld->pnnState = (NNState *)malloc(sizeof(NNState)*3);
-    memset(tld->pnnState, 0, sizeof(NNState)*3);
+    tld->pnnState = (NNState *) malloc(sizeof(NNState) * 3);
+    memset(tld->pnnState, 0, sizeof(NNState) * 3);
     tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase = malloc(nnRace.cHidden * sizeof(float));
     memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase, 0, nnRace.cHidden * sizeof(float));
     tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase = malloc(nnRace.cInput * sizeof(float));
-    memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase, 0,  nnRace.cInput * sizeof(float));
+    memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase, 0, nnRace.cInput * sizeof(float));
     tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase = malloc(nnCrashed.cHidden * sizeof(float));
     memset(tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase, 0, nnCrashed.cHidden * sizeof(float));
     tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedIBase = malloc(nnCrashed.cInput * sizeof(float));
@@ -60,19 +60,16 @@ MT_CreateThreadLocalData(int id)
     tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedIBase = malloc(nnContact.cInput * sizeof(float));
     memset(tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedIBase, 0, nnContact.cInput * sizeof(float));
 
-    tld->aMoves = (move *)malloc(sizeof(move)*MAX_INCOMPLETE_MOVES);
-    memset (tld->aMoves, 0, sizeof(move)*MAX_INCOMPLETE_MOVES);
+    tld->aMoves = (move *) malloc(sizeof(move) * MAX_INCOMPLETE_MOVES);
+    memset(tld->aMoves, 0, sizeof(move) * MAX_INCOMPLETE_MOVES);
     return tld;
 }
 
 #if USE_MULTITHREAD
 
-#define UI_UPDATETIME 250
-
 #if defined(DEBUG_MULTITHREADED) && defined(WIN32)
 unsigned int mainThreadID;
 #endif
-
 
 #ifdef GLIB_THREADS
 #if GLIB_CHECK_VERSION (2,32,0)
@@ -364,7 +361,7 @@ MT_InitThreads(void)
     td.totalTasks = -1;
     InitManualEvent(&td.activity);
     TLSCreate(&td.tlsItem);
-    TLSSetValue(td.tlsItem, (size_t)MT_CreateThreadLocalData(0)); /* Main thread shares id 0 */
+    TLSSetValue(td.tlsItem, (size_t) MT_CreateThreadLocalData(0));      /* Main thread shares id 0 */
 
 #if defined(DEBUG_MULTITHREADED) && defined(WIN32)
     mainThreadID = GetCurrentThreadId();
@@ -384,16 +381,16 @@ extern void
 CloseThread(void *UNUSED(unused))
 {
     int i;
-    NNState *pnnState = ((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState;
+    NNState *pnnState = ((ThreadLocalData *) TLSGet(td.tlsItem))->pnnState;
 
     g_assert(td.closingThreads);
-    free(((ThreadLocalData *)TLSGet(td.tlsItem))->aMoves);
+    free(((ThreadLocalData *) TLSGet(td.tlsItem))->aMoves);
     for (i = 0; i < 3; i++) {
         free(pnnState[i].savedBase);
         free(pnnState[i].savedIBase);
     }
-    free(((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState);
-    free((void *)TLSGet(td.tlsItem));
+    free(((ThreadLocalData *) TLSGet(td.tlsItem))->pnnState);
+    free((void *) TLSGet(td.tlsItem));
     MT_SafeInc(&td.result);
 }
 
@@ -496,14 +493,12 @@ multi_debug(const char *str, ...)
 #include <gtkgame.h>
 #endif
 
-#define UI_UPDATETIME 250
-
 SSE_ALIGN(ThreadData td);
 
 extern void
 MT_InitThreads(void)
 {
-    td.tld = MT_CreateThreadLocalData(0); /* Main thread shares id 0 */
+    td.tld = MT_CreateThreadLocalData(0);       /* Main thread shares id 0 */
 }
 
 extern void
@@ -526,5 +521,3 @@ MT_Close(void)
 }
 
 #endif
-
-

@@ -31,6 +31,8 @@
 
 #include "backgammon.h"
 
+#define UI_UPDATETIME 250
+
 /*#define DEBUG_MULTITHREADED 1 */
 #if defined (USE_MULTITHREAD) && defined(DEBUG_MULTITHREADED)
 void multi_debug(const char *str, ...);
@@ -67,14 +69,14 @@ typedef struct _ManualEvent {
 #endif
     int signalled;
 } *ManualEvent;
-typedef GPrivate* TLSItem;
+typedef GPrivate *TLSItem;
 
 #if GLIB_CHECK_VERSION (2,32,0)
 typedef GMutex Mutex;
 #else
 typedef GMutex *Mutex;
 #endif
-#elif defined(WIN32) /* GLIB_THREAD */
+#elif defined(WIN32)            /* GLIB_THREAD */
 typedef HANDLE ManualEvent;
 typedef DWORD TLSItem;
 typedef HANDLE Event;
@@ -157,9 +159,9 @@ extern void FreeMutex(Mutex mutex);
 #if defined (GLIB_THREADS)
 #define TLSGet(item) *((size_t*)g_private_get(item))
 
-#else /* WIN32 */
+#else                           /* WIN32 */
 #define TLSGet(item) *((int*)TlsGetValue(item))
-#endif /* GLIB_THREADS */
+#endif                          /* GLIB_THREADS */
 
 #if !defined(MAX_NUMTHREADS)
 #define MAX_NUMTHREADS 48

@@ -126,7 +126,7 @@ MT_WorkerThreadFunction(void *tld)
 #endif
     {
         ThreadLocalData *pTLD = (ThreadLocalData *) tld;
-        TLSSetValue(td.tlsItem, (size_t)pTLD);
+        TLSSetValue(td.tlsItem, (size_t) pTLD);
 
         MT_SafeInc(&td.result);
         MT_TaskDone(NULL);      /* Thread created */
@@ -392,8 +392,6 @@ MT_SyncEnd(void)
 #include <gtkgame.h>
 #endif
 
-#define UI_UPDATETIME 250
-
 int asyncRet;
 void
 MT_AddTask(Task * pt, gboolean lock)
@@ -467,5 +465,3 @@ MT_AbortTasks(void)
 }
 
 #endif
-
-
