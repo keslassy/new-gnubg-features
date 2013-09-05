@@ -92,7 +92,7 @@ create_model(void)
     GtkTreeIter iter;
     RowSet *rs;
 
-    long moves[4];
+    int moves[4];
     unsigned int i, j;
     gfloat stats[14];
 
@@ -134,7 +134,7 @@ create_model(void)
 
     for (j = 1; j < rs->rows; ++j) {
         for (i = 1; i < 5; ++i)
-            moves[i - 1] = strtol(rs->data[j][i], NULL, 0);
+            moves[i - 1] = (int) strtol(rs->data[j][i], NULL, 0);
 
         for (i = 5; i < 14; ++i)
             stats[i - 5] = (float) g_strtod(rs->data[j][i], NULL);
@@ -329,8 +329,8 @@ GetRelList(RowSet * pRow)
     GtkCellRenderer *renderer;
     GtkWidget *treeview;
 
-    unsigned int cols = pRow ? pRow->cols : 0;
-    unsigned int rows = pRow ? pRow->rows : 0;
+    unsigned int cols = pRow ? (unsigned int) pRow->cols : 0;
+    unsigned int rows = pRow ? (unsigned int) pRow->rows : 0;
 
     if (!pRow || !rows || !cols)
         return gtk_label_new(_("Search failed or empty."));
