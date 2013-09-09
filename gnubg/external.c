@@ -204,7 +204,7 @@ ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz)
 
         /* yuck... there's no portable way to obtain the necessary
          * sockaddr_un size, but this is a conservative estimate */
-        psun = malloc(*pcb = 16 + strlen(sz));
+        psun = malloc(*pcb = 16 + (int)strlen(sz));
 
         psun->sun_family = AF_LOCAL;
         strcpy(psun->sun_path, sz);
@@ -238,9 +238,11 @@ ExternalRead(int h, char *pch, size_t cch)
 {
 
     char *p = pch, *pEnd;
-    int n;
 #ifndef WIN32
+    ssize_t n;
     psighandler sh;
+#else
+    int n;
 #endif
 
     while (cch) {
@@ -297,9 +299,11 @@ ExternalWrite(int h, char *pch, size_t cch)
 {
 
     char *p = pch;
-    int n;
 #ifndef WIN32
+    ssize_t n;
     psighandler sh;
+#else
+    int n;
 #endif
 
     while (cch) {
