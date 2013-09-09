@@ -507,7 +507,7 @@ FormatPoint(char *pch, int n)
         strcpy(pch, ("bar"));
         return pch + strlen(("bar"));
     } else if (n > 9)
-        *pch++ = n / 10 + '0';
+        *pch++ = (char) (n / 10) + '0';
 
     *pch++ = (n % 10) + '0';
 
@@ -521,7 +521,7 @@ FormatPointPlain(char *pch, int n)
     g_assert(n >= 0);
 
     if (n > 9)
-        *pch++ = n / 10 + '0';
+        *pch++ = (char) (n / 10) + '0';
 
     *pch++ = (n % 10) + '0';
 
@@ -641,7 +641,7 @@ FormatMove(char *sz, const TanBoard anBoard, int anMove[8])
 
     for (i = 0; i < 3; i++) {
         if (pnSource[i]) {
-            nMoves = pnDest[i] - pnSource[i];
+            nMoves = (int) (pnDest[i] - pnSource[i]);
             for (j = i + 1; j < 4; j++) {
                 if (pnSource[j]) {
                     nDuplicate = 1;
@@ -702,7 +702,7 @@ FormatMove(char *sz, const TanBoard anBoard, int anMove[8])
 
         if (anCount[i] > 1) {
             *pch++ = '(';
-            *pch++ = '0' + anCount[i];
+            *pch++ = '0' + (char) anCount[i];
             *pch++ = ')';
         }
     }
@@ -730,7 +730,7 @@ ParseMove(char *pch, int an[8])
                 return -1;
             }
 
-            if ((anUser[c] = strtol(pch, &pch, 10)) < 0 || anUser[c] > 25) {
+            if ((anUser[c] = (int) strtol(pch, &pch, 10)) < 0 || anUser[c] > 25) {
                 /* Invalid point number. */
                 errno = EINVAL;
                 return -1;
@@ -792,7 +792,7 @@ ParseMove(char *pch, int an[8])
                 break;
 
             case '(':
-                if ((n = strtol(pch + 1, &pch, 10) - 1) < 1) {
+                if ((n = (int) strtol(pch + 1, &pch, 10) - 1) < 1) {
                     /* invalid count */
                     errno = EINVAL;
                     return -1;
@@ -904,7 +904,7 @@ ParseMove(char *pch, int an[8])
  * (see <URL:http://www.fibs.com/fibs_interface.html#board_state>)
  *
  * gnubg extends the meaning of the "doubled" field, so the sign of
- * the field indicates who doubled. This is necessaty to correctly
+ * the field indicates who doubled. This is necessary to correctly
  * detects beavers and raccoons.
  *
  */
