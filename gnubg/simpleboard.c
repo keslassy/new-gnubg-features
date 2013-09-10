@@ -237,7 +237,7 @@ draw_cube(SimpleBoard * board)
     fill_and_stroke(cr, color);
     text = g_strdup_printf("%d", cube);
     cairo_move_to(cr, x, y);
-    draw_centered_text(cr, color.text, 10.0 - 2 * floorf(log10f(cube)), text);
+    draw_centered_text(cr, color.text, 10.0f - 2 * floorf(log10f(cube)), text);
     g_free(text);
 }
 
@@ -491,9 +491,9 @@ extern SimpleBoard *
 simple_board_new(matchstate * ms, cairo_t * cr, float simple_board_size)
 {
     SimpleBoard *board;
-    SimpleBoardColor black_black_white = { {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {1.0, 1.0, 1.0} };
-    SimpleBoardColor white_black_black = { {1.0, 1.0, 1.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0} };
-    SimpleBoardColor grey_black_black = { {0.7, 0.7, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0} };
+    SimpleBoardColor black_black_white = { {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f} };
+    SimpleBoardColor white_black_black = { {1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+    SimpleBoardColor grey_black_black = { {0.7f, 0.7f, 0.7f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 
     board = g_new0(SimpleBoard, 1);
     board->color_checker[0] = white_black_black;
