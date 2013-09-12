@@ -189,7 +189,7 @@ QuasiRandomSeed(perArray * pArray, int n)
         return;
 
     for (i = 0; i < RANDSIZ; i++)
-        rc.randrsl[i] = (unsigned long) n;
+        rc.randrsl[i] = (ub4) n;
 
     irandinit(&rc, TRUE);
 
@@ -1144,13 +1144,13 @@ RolloutLoopMT(void *UNUSED(unused))
 
             /* get the dice generator set up... */
             if (prc->fRotate)
-                QuasiRandomSeed(&dicePerms, prc->nSeed);
+                QuasiRandomSeed(&dicePerms, (int) prc->nSeed);
 
             nSkip = 0;          /* not multi-thread safe do quasi random dice for initial positions */
 
             /* ... and the RNG */
             if (prc->rngRollout != RNG_MANUAL)
-                InitRNGSeed(prc->nSeed + (trial << 8), prc->rngRollout, rngctxMTRollout);
+                InitRNGSeed((unsigned int) (prc->nSeed + (trial << 8)), prc->rngRollout, rngctxMTRollout);
 
             memcpy(&anBoardEval, ro_apBoard[alt], sizeof(anBoardEval));
 
