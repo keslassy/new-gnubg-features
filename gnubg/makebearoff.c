@@ -61,7 +61,7 @@ typedef struct _xhash {
 
 static long cLookup;
 
-static long int
+static int
 XhashPosition(xhash * ph, const int iKey)
 {
 
@@ -241,13 +241,13 @@ OSLookup(const unsigned int iPos,
 
         i = 0;
         for (j = 0; j < nz; ++j, i += 2) {
-            us = ac[i] | ac[i + 1] << 8;
+            us = (unsigned short) (ac[i] | ac[i + 1] << 8);
             aProb[ioff + j] = us;
         }
 
         /* if ( fGammon ) */
         for (j = 0; j < nzg; ++j, i += 2) {
-            us = ac[i] | ac[i + 1] << 8;
+            us = (unsigned short) (ac[i] | ac[i + 1] << 8);
             aProb[32 + ioffg + j] = us;
         }
 
@@ -278,11 +278,11 @@ OSLookup(const unsigned int iPos,
 
         i = 0;
         for (j = 0; j < 32; ++j, i += 2)
-            aProb[j] = ac[i] | ac[i + 1] << 8;
+            aProb[j] = (unsigned short) (ac[i] | ac[i + 1] << 8);
 
         if (fGammon)
             for (j = 0; j < 32; ++j, i += 2)
-                aProb[j + 32] = ac[i] | ac[i + 1] << 8;
+                aProb[j + 32] = (unsigned short) (ac[i] | ac[i + 1] << 8);
 
         /* position cursor at end of file */
 
@@ -483,7 +483,7 @@ BearOff(int nId, unsigned int nPoints,
         }
 
     for (i = 0, j = 0, iMode = 0; i < 32; i++) {
-        j += (aOutProb[i] = (aProb[i] + 18) / 36);
+        j += (aOutProb[i] = (unsigned short) ((aProb[i] + 18) / 36));
         if (aOutProb[i] > aOutProb[iMode])
             iMode = i;
     }
@@ -494,7 +494,7 @@ BearOff(int nId, unsigned int nPoints,
 
     if (fGammon) {
         for (i = 0, j = 0, iMode = 0; i < 32; i++) {
-            j += (aOutProb[32 + i] = (aProb[32 + i] + 18) / 36);
+            j += (aOutProb[32 + i] = (unsigned short) ((aProb[32 + i] + 18) / 36));
             if (aOutProb[32 + i] > aOutProb[32 + iMode])
                 iMode = i;
         }
@@ -659,7 +659,7 @@ generate_os(const int nOS, const int fHeader,
     if (fCompress) {
 
         char ac[256];
-        unsigned int n;
+        size_t n;
         /* write contents of pfTmp to output */
 
         rewind(pfTmp);
@@ -819,15 +819,13 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
 
         }
 
-
     ar[0] /= 36.0f;
-    ar[1] = sqrt(rVarSum / 36.0f - ar[0] * ar[0]);
+    ar[1] = sqrtf(rVarSum / 36.0f - ar[0] * ar[0]);
 
     ar[2] /= 36.0f;
-    ar[3] = sqrt(rGammonVarSum / 36.0f - ar[2] * ar[2]);
+    ar[3] = sqrtf(rGammonVarSum / 36.0f - ar[2] * ar[2]);
 
 }
-
 
 
 static void
@@ -962,7 +960,7 @@ TSLookup(const int nUs, const int nThem,
     }
 
     for (i = 0; i < (fCubeful ? 4 : 1); ++i) {
-        us = ac[2 * i] | ac[2 * i + 1] << 8;
+        us = (unsigned short) (ac[2 * i] | ac[2 * i + 1] << 8);
         arEquity[i] = us - 0x8000;
     }
 
@@ -1024,8 +1022,8 @@ BearOff2(int nUs, int nThem,
     /* look for position in bearoff file */
 
     if (pbc && isBearoff(pbc, (ConstTanBoard) anBoard)) {
-        unsigned short int nUsL = PositionBearoff(anBoard[1], pbc->nPoints, pbc->nChequers);
-        unsigned short int nThemL = PositionBearoff(anBoard[0], pbc->nPoints, pbc->nChequers);
+        unsigned short int nUsL = (unsigned short) PositionBearoff(anBoard[1], pbc->nPoints, pbc->nChequers);
+        unsigned short int nThemL = (unsigned short) PositionBearoff(anBoard[0], pbc->nPoints, pbc->nChequers);
         int nL = Combination(pbc->nPoints + pbc->nChequers, pbc->nPoints);
         unsigned int iPos = nUsL * nL + nThemL;
         unsigned short int aus[4];
@@ -1121,7 +1119,7 @@ BearOff2(int nUs, int nThem,
 
     /* final equities */
     for (k = 0; k < (fCubeful ? 4 : 1); ++k)
-        asiEquity[k] = aiTotal[k] / 36;
+        asiEquity[k] = (short) (aiTotal[k] / 36);
 
 }
 
@@ -1275,7 +1273,7 @@ main(int argc, char **argv)
     static char *szTwoSided = NULL;
     static int show_version = 0;
 
-    MT_InitThreads(); 
+    MT_InitThreads();
     bearoffcontext *pbc = NULL;
     FILE *output;
     double r;
