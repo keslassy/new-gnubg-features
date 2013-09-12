@@ -62,7 +62,7 @@ static char
 HexDigit(char ch)
 {
 
-    ch = toupper(ch);
+    ch = (char) toupper(ch);
 
     if (ch >= '0' && ch <= '9')
         return ch - '0';
@@ -84,7 +84,7 @@ SetColour(const char *sz, unsigned char anColour[])
     sz++;
 
     for (i = 0; i < 3; i++) {
-        anColour[i] = (HexDigit(sz[0]) << 4) | HexDigit(sz[1]);
+        anColour[i] = (char) (HexDigit(sz[0]) << 4) | HexDigit(sz[1]);
         sz += 2;
     }
 
@@ -265,7 +265,7 @@ SetColourARSS(double aarColour[2][4],
 
         if (pch) {
             /* refraction */
-            arRefraction[i] = g_ascii_strtod(pch, NULL);
+            arRefraction[i] = (float) g_ascii_strtod(pch, NULL);
 
             if ((pch = strchr(pch, ';')))
                 *pch++ = 0;
@@ -274,7 +274,7 @@ SetColourARSS(double aarColour[2][4],
 
         if (pch) {
             /* shine */
-            arCoefficient[i] = g_ascii_strtod(pch, NULL);
+            arCoefficient[i] = (float) g_ascii_strtod(pch, NULL);
 
             if ((pch = strchr(pch, ';')))
                 *pch++ = 0;
@@ -283,7 +283,7 @@ SetColourARSS(double aarColour[2][4],
 
         if (pch) {
             /* specular */
-            arExponent[i] = g_ascii_strtod(pch, NULL);
+            arExponent[i] = (float) g_ascii_strtod(pch, NULL);
 
             if ((pch = strchr(pch, ';')))
                 *pch++ = 0;
@@ -347,7 +347,7 @@ SetWood(const char *sz, woodtype * pbw)
 {
 
     woodtype bw;
-    int cch = strlen(sz);
+    size_t cch = strlen(sz);
 
     for (bw = 0; bw <= WOOD_PAINT; bw++)
         if (!StrNCaseCmp(sz, aszWoodName[bw], cch)) {
@@ -372,7 +372,8 @@ check_for_board3d(char *szValue)
 extern void
 RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
 {
-    int c, fValueError = FALSE;
+    size_t c;
+    int fValueError = FALSE;
 
     if (!szParam || !*szParam)
         return;
@@ -467,23 +468,23 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         float rAzimuth, rElevation;
         gchar **split = g_strsplit(szValue, ";", 0);
 
-        rAzimuth = (float) g_ascii_strtod(split[0], NULL);
-        rElevation = (float) g_ascii_strtod(split[1], NULL);
+        rAzimuth = (float) (g_ascii_strtod(split[0], NULL) * G_PI / 180.0);
+        rElevation = (float) (g_ascii_strtod(split[1], NULL) * G_PI / 180.0);
 
         g_strfreev(split);
 
         if (rElevation < 0.0f)
             rElevation = 0.0f;
-        else if (rElevation > 90.0f)
-            rElevation = 90.0f;
+        else if (rElevation > (float) G_PI_2)
+            rElevation = (float) G_PI_2;
 
-        prd->arLight[2] = sinf(rElevation / 180 * G_PI);
-        prd->arLight[0] = cosf(rAzimuth / 180 * G_PI) * sqrt(1.0 - prd->arLight[2] * prd->arLight[2]);
-        prd->arLight[1] = sinf(rAzimuth / 180 * G_PI) * sqrt(1.0 - prd->arLight[2] * prd->arLight[2]);
+        prd->arLight[2] = sinf(rElevation);
+        prd->arLight[0] = cosf(rAzimuth) * sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
+        prd->arLight[1] = sinf(rAzimuth) * sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
     } else if (!StrNCaseCmp(szParam, "shape", c)) {
         float rRound = (float) g_ascii_strtod(szValue, &szValue);
 
-        prd->rRound = 1.0 - rRound;
+        prd->rRound = 1.0f - rRound;
     } else if (!StrNCaseCmp(szParam, "moveindicator", c))
         prd->showMoveIndicator = toupper(*szValue) == 'Y';
 #if USE_BOARD3D
@@ -641,8 +642,8 @@ SaveRenderingSettings(FILE * pf)
     gchar buf3[G_ASCII_DTOSTR_BUF_SIZE];
     renderdata *prd = GetMainAppearance();
     float rElevation = (float) (asinf(prd->arLight[2]) * 180 / G_PI);
-    float rAzimuth = (fabs(prd->arLight[2] - 1.0f) < 1e-5) ? 0.0f :
-        (float) (acosf(prd->arLight[0] / sqrt(1.0 - prd->arLight[2] * prd->arLight[2])) * 180 / G_PI);
+    float rAzimuth = (fabsf(prd->arLight[2] - 1.0f) < 1e-5f) ? 0.0f :
+        (float) (acosf(prd->arLight[0] / sqrtf(1.0f - prd->arLight[2] * prd->arLight[2])) * 180 / G_PI);
 
     if (prd->arLight[1] < 0)
         rAzimuth = 360 - rAzimuth;
