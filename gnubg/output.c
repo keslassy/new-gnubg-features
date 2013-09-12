@@ -1,5 +1,5 @@
 /*
- * gnubg.c
+ * output.c
  *
  * by Gary Wong <gtw@gnu.org>, 1998, 1999, 2000, 2001, 2002, 2003.
  *
@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <string.h>
 #include <signal.h>
 #include <ctype.h>
 #ifdef WIN32
