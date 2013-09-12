@@ -358,8 +358,7 @@ extern void EvalStatus(char *szOutput);
 
 extern int EvalNewWeights(int nSize);
 
-extern int
- EvalSave(const char *szWeights);
+extern int EvalSave(const char *szWeights);
 
 
 EXP_LOCK_FUN(int, EvaluatePosition, NNState * nnStates, const TanBoard anBoard, float arOutput[],
@@ -389,9 +388,7 @@ extern int
  KeithCount(const TanBoard anBoard, int pn[2]);
 
 extern int
-
-
-DumpPosition(const TanBoard anBoard, char *szOutput,
+ DumpPosition(const TanBoard anBoard, char *szOutput,
              const evalcontext * pec, cubeinfo * pci, int fOutputMWC,
              int fOutputWinPC, int fOutputInvert, const char *szMatchID);
 
@@ -436,21 +433,15 @@ extern float
 
 
 extern int
-
-
-SetCubeInfoMoney(cubeinfo * pci, const int nCube, const int fCubeOwner,
+ SetCubeInfoMoney(cubeinfo * pci, const int nCube, const int fCubeOwner,
                  const int fMove, const int fJacoby, const int fBeavers, const bgvariation bgv);
 
 extern int
-
-
-SetCubeInfoMatch(cubeinfo * pci, const int nCube, const int fCubeOwner,
+ SetCubeInfoMatch(cubeinfo * pci, const int nCube, const int fCubeOwner,
                  const int fMove, const int nMatchTo, const int anScore[2], const int fCrawford, const bgvariation bgv);
 
 extern int
-
-
-SetCubeInfo(cubeinfo * pci, const int nCube, const int fCubeOwner,
+ SetCubeInfo(cubeinfo * pci, const int nCube, const int fCubeOwner,
             const int fMove, const int nMatchTo, const int anScore[2],
             const int fCrawford, const int fJacoby, const int fBeavers, const bgvariation bgv);
 
@@ -514,9 +505,7 @@ extern cubedecision
 FindBestCubeDecision(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], const cubeinfo * pci);
 
 extern int
-
-
-getCurrentGammonRates(float aarRates[2][2],
+ getCurrentGammonRates(float aarRates[2][2],
                       float arOutput[], const TanBoard anBoard, cubeinfo * pci, const evalcontext * pec);
 
 extern void
@@ -526,15 +515,11 @@ extern void
  getMoneyPoints(float aaarPoints[2][7][2], const int fJacoby, const int fBeavers, float aarRates[2][2]);
 
 extern void
-
-
-getMatchPoints(float aaarPoints[2][4][2],
+ getMatchPoints(float aaarPoints[2][4][2],
                int afAutoRedouble[2], int afDead[2], const cubeinfo * pci, float aarRates[2][2]);
 
 extern void
-
-
-getCubeDecisionOrdering(int aiOrder[3],
+ getCubeDecisionOrdering(int aiOrder[3],
                         float arDouble[4], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], const cubeinfo * pci);
 
 extern float
@@ -564,9 +549,7 @@ extern int
  equal_movefilter(const int i, movefilter amf1[MAX_FILTER_PLIES], movefilter amf2[MAX_FILTER_PLIES]);
 
 extern int
-
-
-equal_movefilters(movefilter aamf1[MAX_FILTER_PLIES][MAX_FILTER_PLIES],
+ equal_movefilters(movefilter aamf1[MAX_FILTER_PLIES][MAX_FILTER_PLIES],
                   movefilter aamf2[MAX_FILTER_PLIES][MAX_FILTER_PLIES]);
 
 
@@ -582,7 +565,6 @@ extern void
  CalculateRaceInputs(const TanBoard anBoard, float inputs[]);
 
 
-extern float Noise(const evalcontext * pec, const TanBoard anBoard, int iOutput);
 extern int CompareMoves(const move * pm0, const move * pm1);
 extern float EvalEfficiency(const TanBoard anBoard, positionclass pc);
 extern float Cl2CfMoney(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX);
