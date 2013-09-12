@@ -412,45 +412,11 @@ extern command cFilename;
 extern command cOnOff;
 
 extern int fInteractive;
-extern int cOutputDisabled;
-extern int cOutputPostponed;
-extern int foutput_on;
 
 #ifdef _LIBINTL_H
 #warning "libintl.h already included expect warnings under mingw"
 #endif
-/* Write a string to stdout/status bar/popup window */
-extern void output(const char *sz);
-/* Write a string to stdout/status bar/popup window, and append \n */
-extern void outputl(const char *sz);
-/* Write a character to stdout/status bar/popup window */
-extern void outputc(const char ch);
-/* Write a string to stdout/status bar/popup window, printf style */
-extern void outputf(const char *sz, ...)
-    __attribute__ ((format(printf, 1, 2)));
-/* Write a string to stdout/status bar/popup window, vprintf style */
-extern void outputv(const char *sz, va_list val)
-    __attribute__ ((format(printf, 1, 0)));
-/* Write an error message, perror() style */
-extern void outputerr(const char *sz);
-/* Write an error message, fprintf() style */
-extern void outputerrf(const char *sz, ...)
-    __attribute__ ((format(printf, 1, 2)));
-/* Write an error message, vfprintf() style */
-extern void outputerrv(const char *sz, va_list val)
-    __attribute__ ((format(printf, 1, 0)));
-/* Signifies that all output for the current command is complete */
-extern void outputx(void);
-/* Temporarily disable outputx() calls */
-extern void outputpostpone(void);
-/* Re-enable outputx() calls */
-extern void outputresume(void);
-/* Signifies that subsequent output is for a new command */
-extern void outputnew(void);
-/* Disable output */
-extern void outputoff(void);
-/* Enable output */
-extern void outputon(void);
+
 /* now we can include libintl.h */
 #include <glib/gi18n.h>
 /* Like strncpy, except it does the right thing */
@@ -1019,8 +985,7 @@ extern void CommandShowWarranty(char *);
 extern void CommandSwapPlayers(char *);
 extern void CommandTake(char *);
 extern void CommandSetDefaultNames(char *sz);
-extern void hint_move(char *sz, gboolean show, procrecorddata *procdatarec);
-extern int fShowProgress;
+extern void hint_move(char *sz, gboolean show, procrecorddata * procdatarec);
 extern void hint_double(int show, int did_double);
 extern void hint_take(int show, int did_take);
 extern void find_skills(moverecord * pmr, const matchstate * pms, int did_double, int did_take);
@@ -1056,7 +1021,6 @@ extern int quick_roll(void);
 extern int board_in_list(const movelist * pml, const TanBoard old_board, const TanBoard board, int *an);
 extern unsigned int getDiceRandomDotOrg(void);
 extern int GetManualDice(unsigned int anDice[2]);
-extern double get_time(void);
 #endif
 
 extern int fJustSwappedPlayers;
