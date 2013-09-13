@@ -187,7 +187,4 @@ extern void SetSwitchModeMenuText(void);
 extern gboolean gtk_gl_init_success;
 #endif
 
-extern GtkWidget *get_statusbar_label(GtkStatusbar * statusbar);
-extern void toolbar_set_orientation(GtkToolbar * toolbar, GtkOrientation orientation);
-
 #endif
