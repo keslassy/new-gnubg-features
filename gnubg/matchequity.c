@@ -36,10 +36,6 @@
 #include "mec.h"
 #include "util.h"
 
-#define DELTA         0.08
-#define DELTABAR      0.06
-#define G1            0.25
-#define G2            0.15
 #define GAMMONRATE    0.25
 
 #include "eval.h"
@@ -123,8 +119,8 @@ NormalDistArea(float rMin, float rMax, float rMu, float rSigma)
     rtMin = (rMin - rMu) / rSigma;
     rtMax = (rMax - rMu) / rSigma;
 
-    rInt1 = (erf(rtMin / sqrtf(2)) + 1.0f) / 2.0f;
-    rInt2 = (erf(rtMax / sqrtf(2)) + 1.0f) / 2.0f;
+    rInt1 = (erff(rtMin / sqrtf(2)) + 1.0f) / 2.0f;
+    rInt2 = (erff(rtMax / sqrtf(2)) + 1.0f) / 2.0f;
 
     return rInt2 - rInt1;
 }
@@ -251,7 +247,7 @@ initMETZadeh(float aafMET[MAXSCORE][MAXSCORE],
     for (i = 0; i < MAXSCORE; i++) {
 
         aafMET[i][0] = rG1 * 0.5f * ((i - 2 >= 0) ? afMETPostCrawford[i - 2] : 1.0f)
-            + (1.0 - rG1) * 0.5f * ((i - 1 >= 0) ? afMETPostCrawford[i - 1] : 1.0f);
+            + (1.0f - rG1) * 0.5f * ((i - 1 >= 0) ? afMETPostCrawford[i - 1] : 1.0f);
         aafMET[0][i] = 1.0f - aafMET[i][0];
 
     }
@@ -272,7 +268,7 @@ initMETZadeh(float aafMET[MAXSCORE][MAXSCORE],
 
                 aaafD1bar[i][j][nCube] = (GET_MET(i - nCubeValue, j, aafMET)
                                           - rG2 * GET_MET(i, j - 4 * nCubePrimeValue, aafMET)
-                                          - (1.0 - rG2) * GET_MET(i, j - 2 * nCubePrimeValue, aafMET))
+                                          - (1.0f - rG2) * GET_MET(i, j - 2 * nCubePrimeValue, aafMET))
                     / (rG1 * GET_MET(i - 4 * nCubePrimeValue, j, aafMET)
                        + (1.0f - rG1) * GET_MET(i - 2 * nCubePrimeValue, j, aafMET)
                        - rG2 * GET_MET(i, j - 4 * nCubePrimeValue, aafMET)
@@ -711,7 +707,7 @@ ExtendMET(float aarMET[MAXSCORE][MAXSCORE], const int nMaxScore)
 
             nScore1 = j + 1;
 
-            rGames = (nScore0 + nScore1) / 2.00f;
+            rGames = (nScore0 + nScore1) / 2.0f;
 
             if (nScore1 > 10)
                 rStddev1 = 1.77f;
