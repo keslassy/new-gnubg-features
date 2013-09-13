@@ -1010,6 +1010,7 @@ extern int get_input_discard(void);
 extern void SaveGame(FILE * pf, listOLD * plGame);
 
 extern int fMatchCancelled;
+extern int fJustSwappedPlayers;
 
 extern void ProcessEvents(void);
 #if !USE_MULTITHREAD
@@ -1021,6 +1022,5 @@ extern int quick_roll(void);
 extern int board_in_list(const movelist * pml, const TanBoard old_board, const TanBoard board, int *an);
 extern unsigned int getDiceRandomDotOrg(void);
 extern int GetManualDice(unsigned int anDice[2]);
-#endif
 
-extern int fJustSwappedPlayers;
+#endif	/* BACKGAMMON_H */
