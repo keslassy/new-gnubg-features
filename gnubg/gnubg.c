@@ -508,8 +508,6 @@ exportsetup exsExport = {
 };
 
 
-#define DEFAULT_NET_SIZE 128
-
 player ap[2] = {
     {"gnubg", PLAYER_GNU, EVALSETUP_WORLDCLASS, EVALSETUP_WORLDCLASS, MOVEFILTER_NORMAL, 0, NULL}
     ,
@@ -2352,7 +2350,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
     int hist;
     movelist ml;
     findData fd;
-    ssize_t fSaveShowProg = fShowProgress;
+    int fSaveShowProg = fShowProgress;
 
     if (!ms.anDice[0])
         return;
@@ -2373,7 +2371,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         fd.aamf = *GetEvalMoveFilter();
         if (procdatarec) {
             show = FALSE;
-            fShowProgress = (ssize_t) procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS];
+            fShowProgress = (procdatarec->avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS] != NULL);
         }
         if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt) {
             fShowProgress = fSaveShowProg;
