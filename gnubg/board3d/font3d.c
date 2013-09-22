@@ -30,8 +30,8 @@
 
 struct _OGLFont {
     unsigned int glyphs;
-    int advance;
-    int kern[10][10];
+    FT_Pos advance;
+    FT_Pos kern[10][10];
     float scale;
     float heightRatio;
     float height;
@@ -39,7 +39,7 @@ struct _OGLFont {
 };
 
 typedef struct _Point {
-    double data[3];
+    GLdouble data[3];
 } Point;
 
 typedef struct _Contour {
@@ -131,7 +131,7 @@ static int
 RenderText(const char *text, FT_Library ftLib, OGLFont * pFont, const char *pPath, int pointSize, float scale,
            float heightRatio)
 {
-    int len = 0;
+    FT_Pos len = 0;
     FT_Face face;
 
     if (FT_New_Face(ftLib, pPath, 0, &face))
@@ -169,7 +169,7 @@ RenderText(const char *text, FT_Library ftLib, OGLFont * pFont, const char *pPat
         /* Move on to next place */
         if (*text) {
             unsigned int nextGlyphIndex;
-            int kern = 0;
+            FT_Pos kern = 0;
             FT_Vector kernAdvance;
             charCode = (FT_ULong) (int) (*text);
             nextGlyphIndex = FT_Get_Char_Index(face, charCode);
@@ -267,7 +267,7 @@ RenderGlyph(const FT_Outline * pOutline)
             Point *pPoint = &g_array_index(subMesh->tessPoints, Point, point);
 
             g_assert(pPoint->data[2] == 0);
-            glVertex2f((float) pPoint->data[0] / 64.0f, (float) pPoint->data[1] / 64.0f);
+            glVertex2d(pPoint->data[0] / 64.0, pPoint->data[1] / 64.0);
         }
         glEnd();
     }
@@ -282,7 +282,7 @@ RenderGlyph(const FT_Outline * pOutline)
         glBegin(GL_LINE_LOOP);
         for (point = 0; point < contour->conPoints->len; point++) {
             Point *pPoint = &g_array_index(contour->conPoints, Point, point);
-            glVertex2f((float) pPoint->data[0] / 64.0f, (float) pPoint->data[1] / 64.0f);
+            glVertex2d(pPoint->data[0] / 64.0, pPoint->data[1] / 64.0);
         }
         glEnd();
     }
@@ -294,7 +294,7 @@ RenderGlyph(const FT_Outline * pOutline)
     return 1;
 }
 
-static int
+static FT_Pos
 GetKern(const OGLFont * pFont, char cur, char next)
 {
     if (next)
@@ -383,7 +383,7 @@ AddPoint(GArray * points, double x, double y)
 }
 
 #define BEZIER_STEPS 5
-#define BEZIER_STEP_SIZE 0.2f
+#define BEZIER_STEP_SIZE 0.2
 static double controlPoints[4][2];      /* 2D array storing values of de Casteljau algorithm */
 
 static void
@@ -393,16 +393,16 @@ evaluateQuadraticCurve(GArray * points)
     for (i = 0; i <= BEZIER_STEPS; i++) {
         double bezierValues[2][2];
 
-        float t = i * BEZIER_STEP_SIZE;
+        double t = i * BEZIER_STEP_SIZE;
 
-        bezierValues[0][0] = (1.0f - t) * controlPoints[0][0] + t * controlPoints[1][0];
-        bezierValues[0][1] = (1.0f - t) * controlPoints[0][1] + t * controlPoints[1][1];
+        bezierValues[0][0] = (1.0 - t) * controlPoints[0][0] + t * controlPoints[1][0];
+        bezierValues[0][1] = (1.0 - t) * controlPoints[0][1] + t * controlPoints[1][1];
 
-        bezierValues[1][0] = (1.0f - t) * controlPoints[1][0] + t * controlPoints[2][0];
-        bezierValues[1][1] = (1.0f - t) * controlPoints[1][1] + t * controlPoints[2][1];
+        bezierValues[1][0] = (1.0 - t) * controlPoints[1][0] + t * controlPoints[2][0];
+        bezierValues[1][1] = (1.0 - t) * controlPoints[1][1] + t * controlPoints[2][1];
 
-        bezierValues[0][0] = (1.0f - t) * bezierValues[0][0] + t * bezierValues[1][0];
-        bezierValues[0][1] = (1.0f - t) * bezierValues[0][1] + t * bezierValues[1][1];
+        bezierValues[0][0] = (1.0 - t) * bezierValues[0][0] + t * bezierValues[1][0];
+        bezierValues[0][1] = (1.0 - t) * bezierValues[0][1] + t * bezierValues[1][1];
 
         AddPoint(points, bezierValues[0][0], bezierValues[0][1]);
     }
@@ -432,8 +432,8 @@ PopulateContour(GArray * contour, const FT_Vector * points, const char *pointTag
             g_assert(pointTag == FT_Curve_Tag_Conic);   /* Only this main type supported */
 
             while (pointTags[nextPointIndex] == FT_Curve_Tag_Conic) {
-                nextPoint.data[0] = (controlPoint.data[0] + nextPoint.data[0]) * 0.5f;
-                nextPoint.data[1] = (controlPoint.data[1] + nextPoint.data[1]) * 0.5f;
+                nextPoint.data[0] = (controlPoint.data[0] + nextPoint.data[0]) * 0.5;
+                nextPoint.data[1] = (controlPoint.data[1] + nextPoint.data[1]) * 0.5;
 
                 controlPoints[0][0] = previousPoint.data[0];
                 controlPoints[0][1] = previousPoint.data[1];
