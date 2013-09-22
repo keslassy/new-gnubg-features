@@ -1,3 +1,10 @@
+2013-09-22  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* gnubg.c, gtkgame.c (comment only): Fix assertion failure when
+	asking for a hint on a resignation while reviewing a game.
+	Reported via Debian bugs tracker and Russ Allbery.
+	http://lists.gnu.org/archive/html/bug-gnubg/2013-09/msg00006.html
+
 2013-08-20  Michael Petch  <mpetch@gnubg.org>
 
 	* boards.xml, gnubg.gtkrc, gnubg.sql, met/met.dtd, met/met.xsl,

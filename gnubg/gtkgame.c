@@ -578,7 +578,7 @@ GTKSuspendInput(void)
         return;
 
     if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
-        /* Grab events so that the board window knows this is a re-entrant*/
+        /* Grab events so that the board window knows this is a re-entrant */
         /*  call, and won't allow commands like roll, move or double. */
         grabbedWidget = pwGrab;
         if (pwGrab == pwStop) {
@@ -5422,8 +5422,10 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
  *    pci: cubeinfo
  *    fOUtputMWC: output in MWC or equity
  *
- * FIXME: include arOutput in the dialog, so the the user
+ * FIXME: Include arOutput in the dialog, so the the user
  *        can see how many gammons/backgammons she'll win.
+ * FIXME: This only handles the acceptance / refusal side.
+ *        Comment on the resignation itself as well.
  */
 
 extern void

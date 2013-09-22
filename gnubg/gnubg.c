@@ -2443,10 +2443,24 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
 extern void
 CommandHint(char *sz)
 {
+    listOLD *pl;
+    moverecord *pmr;
 
     if (ms.gs != GAME_PLAYING) {
         outputl(_("You must set up a board first."));
 
+        return;
+    }
+
+    /* The code further below handles only the case of asking a hint
+     * on a resignation by gnubg while playing against it. When
+     * clicking on a "resign" entry in the moves panel while reviewing
+     * a game, the match state ms is not up to date and we have to
+     * look at the moves list */
+
+    pl = plLastMove->plNext;
+    if ((pmr = pl->p) && pmr->mt == MOVE_RESIGN) {
+        HintResigned();
         return;
     }
 
