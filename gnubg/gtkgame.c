@@ -85,9 +85,10 @@
 
 #define KEY_ESCAPE -229
 
+#if (USE_BOARD3D && !USE_GTKUIMANAGER)
 /* Offset action to avoid predefined values */
 #define MENU_OFFSET 50
-
+#endif
 
 #if (USE_GTKUIMANAGER)
 static void TogglePanel(guint iType, guint iActionID, GtkToggleAction * action,
