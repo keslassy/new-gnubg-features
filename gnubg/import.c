@@ -91,7 +91,7 @@ ParseSetDate(char *szFilename)
         }
     }
 #endif
-    /* date could not be parsed out of filename, use last access date */
+    /* date could not be parsed, use date of last modification */
     if (matchdate == NULL) {
         if (g_stat(szFilename, &filestat) == 0) {
             matchdate = localtime(&filestat.st_mtime);
@@ -1022,7 +1022,27 @@ ImportMatVariation(FILE * fp, char *szFilename, bgvariation bgVariation, int war
                 } else if (g_str_has_prefix(pch, "[Jacoby ")) {
                     ;           /* discard for now */
                 } else if (g_str_has_prefix(pch, "[Beaver ")) {
-                    /* discard for now */
+                    ;           /* discard for now */
+                } else if (g_str_has_prefix(pch, "[Game ")) {
+
+                    /* Discard useless BGNJ comment. Its format is :
+                     * ; [Game 1, Move 1: Dice set to Manual Rolls]
+                     * or
+                     * ; [Game 2, Move 1: Dice set to Mersenne Twister, seed=1290023973, rollNum=586]
+                     */
+                    gchar **token;
+
+                    token = g_strsplit(pch, " ", 8);
+                    if (!strcmp(token[2], "Move")
+                        && !strcmp(token[4], "Dice")
+                        && !strcmp(token[5], "set")
+                        && !strcmp(token[6], "to"));    /* discard */
+                    else {
+                        pchComment = g_strconcat(pchComment ? pchComment : "", pch, "\n", NULL);
+                        g_free(pchOld);
+                    }
+                    g_strfreev(token);
+
                 } else {
                     pchComment = g_strconcat(pchComment ? pchComment : "", pch, "\n", NULL);
                     g_free(pchOld);
@@ -1980,14 +2000,14 @@ ParseSGGGame(char *pch, int *pi, int *pn0, int *pn1, int *pfCrawford, int *pnLen
 
     pch += 5;
 
-    *pi = (int)strtol(pch, &pch, 10);
+    *pi = (int) strtol(pch, &pch, 10);
 
     if (*pch != '.')
         return -1;
 
     pch++;
 
-    *pn0 = (int)strtol(pch, &pch, 10);
+    *pn0 = (int) strtol(pch, &pch, 10);
 
     if (*pch == '*') {
         pch++;
@@ -1999,7 +2019,7 @@ ParseSGGGame(char *pch, int *pi, int *pn0, int *pn1, int *pfCrawford, int *pnLen
 
     pch++;
 
-    *pn1 = (int)strtol(pch, &pch, 10);
+    *pn1 = (int) strtol(pch, &pch, 10);
 
     if (*pch == '*') {
         pch++;
@@ -2014,7 +2034,7 @@ ParseSGGGame(char *pch, int *pi, int *pn0, int *pn1, int *pfCrawford, int *pnLen
 
     pch++;
 
-    *pnLength = (int)strtol(pch, &pch, 10);
+    *pnLength = (int) strtol(pch, &pch, 10);
 
     return 0;
 }
