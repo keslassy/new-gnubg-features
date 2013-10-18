@@ -379,26 +379,23 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
         case 0:
         case 1:
         case 2:
-            /* simple unsigned integer (gamestate) */
-            if (!PyInt_Check(pyValue)) {
-                /* unknown dict value */
-                PyErr_SetString(PyExc_ValueError, _("invalid value posinfo " "(see gnubg.posinfo() for an example)"));
-                return -1;
-            }
-
-            *((gamestate *) ap[iKey]) = (gamestate) PyInt_AsLong(pyValue);
-
-            break;
-
-        case 3:
             /* simple integer */
             if (!PyInt_Check(pyValue)) {
                 /* unknown dict value */
                 PyErr_SetString(PyExc_ValueError, _("invalid value posinfo " "(see gnubg.posinfo() for an example)"));
                 return -1;
             }
-
             *((int *) ap[iKey]) = (int) PyInt_AsLong(pyValue);
+            break;
+
+        case 3:
+            /* simple unsigned integer (gamestate) */
+            if (!PyInt_Check(pyValue)) {
+                /* unknown dict value */
+                PyErr_SetString(PyExc_ValueError, _("invalid value posinfo " "(see gnubg.posinfo() for an example)"));
+                return -1;
+            }
+            *((gamestate *) ap[iKey]) = (gamestate) PyInt_AsLong(pyValue);
             break;
 
         case 4:
