@@ -3581,7 +3581,7 @@ FileDragDropped(GtkWidget * UNUSED(widget), GdkDragContext * UNUSED(drag_context
                 gint UNUSED(x), gint UNUSED(y), GtkSelectionData * data, guint UNUSED(info), guint UNUSED(time))
 {
     gchar **list;
-    list = g_uri_list_extract_uris((gchar *) gtk_selection_data_get_data(data));
+    list = g_uri_list_extract_uris((const gchar *) gtk_selection_data_get_data(data));
 
     if (list[0]) {
         char *next, *file, *quoted;
