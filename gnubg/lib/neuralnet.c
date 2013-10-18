@@ -383,7 +383,7 @@ SIMD_Supported(void)
 #endif
 
 static int
-check_for_cpuid()
+check_for_cpuid(void)
 {
     int result;
 
