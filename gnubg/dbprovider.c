@@ -281,7 +281,7 @@ GetDBProvider(DBProviderType dbType)
 int
 PyMySQLConnect(const char *dbfilename, const char *user, const char *password, const char *hostname)
 {
-    int iret;
+    long iret;
     PyObject *ret;
 
     const char *host = hostname ? hostname : "";
@@ -293,7 +293,7 @@ PyMySQLConnect(const char *dbfilename, const char *user, const char *password, c
     if (ret == NULL || !PyInt_Check(ret) || (iret = PyInt_AsLong(ret)) < 0) {
         PyErr_Print();
         return -1;
-    } else if (iret == 0) {     /* New database - populate */
+    } else if (iret == 0L) {     /* New database - populate */
         return 0;
     }
     return 1;
@@ -303,7 +303,7 @@ PyMySQLConnect(const char *dbfilename, const char *user, const char *password, c
 int
 PyPostgreConnect(const char *dbfilename, const char *user, const char *password, const char *hostname)
 {
-    int iret;
+    long iret;
     PyObject *ret;
     const char *host = hostname ? hostname : "";
 
@@ -314,7 +314,7 @@ PyPostgreConnect(const char *dbfilename, const char *user, const char *password,
     if (ret == NULL || !PyInt_Check(ret) || (iret = PyInt_AsLong(ret)) < 0) {
         PyErr_Print();
         return -1;
-    } else if (iret == 0) {     /* New database - populate */
+    } else if (iret == 0L) {     /* New database - populate */
         return 0;
     }
     return 1;
