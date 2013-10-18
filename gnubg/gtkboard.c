@@ -2324,7 +2324,6 @@ board_set(Board * board, const gchar * board_text, const gint resigned, const gi
     old_dice[1] = bd->diceRoll[1];
     old_diceShown = bd->diceShown;
     old_turn = bd->turn;
-    old_jacoby = bd->jacoby_flag;
 
     editing = bd->playing && ToolbarIsEditing(pwToolbar);
 
