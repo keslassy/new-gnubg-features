@@ -91,7 +91,11 @@ Board1ToPy(unsigned int anBoard[25])
 static int
 PyToMove(PyObject * p, signed int anMove[8])
 {
+#if PY_MAJOR_VERSION < 2 || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 5)
     int tuplelen;
+#else
+    Py_ssize_t tuplelen;
+#endif
 
     if (!PySequence_Check(p))
         return 0;
@@ -585,7 +589,7 @@ PythonHint_Callback (procrecorddata *pr)
     PyObject *list = (PyObject *)pr->pvUserData;
     PyObject *hintdict = NULL, *ctxdict = NULL, *details = NULL;
 
-    int index = (long)pr->avOutputData[PROCREC_HINT_ARGOUT_INDEX];
+    int index = (int)(long)pr->avOutputData[PROCREC_HINT_ARGOUT_INDEX];
     const matchstate * pms = pr->avOutputData[PROCREC_HINT_ARGOUT_MATCHSTATE];
     const movelist  * pml = pr->avOutputData[PROCREC_HINT_ARGOUT_MOVELIST];
     const evalsetup * pes = &pml->amMoves[index].esMove;
@@ -1562,6 +1566,8 @@ static void
 DictSetItemSteal(PyObject * dict, const char *key, PyObject * val)
 {
     g_assert(PyDict_SetItemString(dict, CHARP_HACK key, val) == 0);
+    (void) dict;                /* silence compiler warning */
+    (void) key;                 /* when assertions are disabled */
     Py_DECREF(val);
 }
 
@@ -1740,9 +1746,9 @@ PythonRolloutContext(PyObject * UNUSED(self), PyObject * args)
     int fRotate = grc->fRotate, fLateEvals = grc->fLateEvals, fDoTruncate = grc->fDoTruncate;
     int nTruncate = grc->nTruncate, fTruncBearoff2 = grc->fTruncBearoff2;
     int fTruncBearoffOS = grc->fTruncBearoffOS, fStopOnSTD = grc->fStopOnSTD;
-    int nTrials = grc->nTrials, nSeed = grc->nSeed, nMinimumGames = grc->nMinimumGames;
+    int nTrials = grc->nTrials, nSeed = (int) grc->nSeed, nMinimumGames = grc->nMinimumGames;
     int fStopOnJsd = grc->fStopOnJsd, nLate = grc->nLate, nMinimumJsdGames = grc->nMinimumJsdGames;
-    float rStdLimit = grc->rStdLimit, rJsdLimit = grc->rJsdLimit;
+    float rStdLimit = (float) grc->rStdLimit, rJsdLimit = (float) grc->rJsdLimit;
 
     if (!PyArg_ParseTuple(args, "|iiiiiiiiiiiiiiiiff", &fCubeful, &fVarRedn, &fInitial,
                           &fRotate, &fLateEvals, &fDoTruncate, &nTruncate, &fTruncBearoff2, 
@@ -1756,7 +1762,7 @@ PythonRolloutContext(PyObject * UNUSED(self), PyObject * args)
     rc.fRotate = fRotate ? 1 : 0;
     rc.fLateEvals = fLateEvals ? 1 : 0;
     rc.fDoTruncate = fDoTruncate ? 1 : 0;
-    rc.nTruncate = nTruncate;
+    rc.nTruncate = (unsigned short) nTruncate;
     rc.fTruncBearoff2 = fTruncBearoff2 ? 1 : 0;
     rc.fTruncBearoffOS = fTruncBearoffOS? 1 : 0; 
     rc.fStopOnSTD = fStopOnSTD ? 1 : 0;
@@ -1764,7 +1770,7 @@ PythonRolloutContext(PyObject * UNUSED(self), PyObject * args)
     rc.nSeed = nSeed;
     rc.nMinimumGames = nMinimumGames;
     rc.fStopOnJsd = fStopOnJsd ? 1 : 0;
-    rc.nLate = nLate;
+    rc.nLate = (unsigned short) nLate;
     rc.nMinimumJsdGames = nMinimumJsdGames;
     rc.rStdLimit = rStdLimit;
     rc.rJsdLimit = rJsdLimit;
