@@ -294,7 +294,7 @@ ReadTwoSidedBearoff(const bearoffcontext * pbc, const unsigned int iPos, float a
     /* add to cache */
 
     for (i = 0; i < k; ++i) {
-        us = pc[2 * i] | (pc[2 * i + 1]) << 8;
+        us = pc[2 * i] | (unsigned short) (pc[2 * i + 1] << 8);
         if (aus)
             aus[i] = us;
         if (ar)
@@ -959,7 +959,7 @@ fnd(const float x, const float mu, const float sigma)
 
         float xm = (x - mu) / sigma;
 
-        return 1.0f / ((sigma * sqrtf(2.0 * G_PI)) * ((float) (exp(-xm * xm / 2.0))));
+        return 1.0f / (sigma * sqrtf(2.0f * (float) G_PI) * expf(-xm * xm / 2.0f));
 
     }
 
@@ -1060,10 +1060,10 @@ CopyBytes(unsigned short int aus[64],
     i = 0;
     memset(aus, 0, 64 * sizeof(unsigned short int));
     for (j = 0; j < nz; ++j, i += 2)
-        aus[ioff + j] = ac[i] | ac[i + 1] << 8;
+        aus[ioff + j] = ac[i] | (unsigned short int) (ac[i + 1] << 8);
 
     for (j = 0; j < nzg; ++j, i += 2)
-        aus[32 + ioffg + j] = ac[i] | ac[i + 1] << 8;
+        aus[32 + ioffg + j] = (unsigned short int) (ac[i] | ac[i + 1] << 8);
 }
 
 static unsigned short int *
