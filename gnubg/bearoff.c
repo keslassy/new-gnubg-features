@@ -161,7 +161,7 @@ HeuristicBearoff(unsigned int anBoard[6], const unsigned int anRoll[2])
             }
 
             nTotal = anDice[i] - 1;
-            for (j = i + 1; j < c; j++) {
+            for (n = -1, j = i + 1; j < c; j++) {
                 nTotal += anDice[j];
                 if (nTotal < 6 && anBoard[nTotal]) {
                     /* there's a chequer we can bear off with subsequent dice;
@@ -170,6 +170,8 @@ HeuristicBearoff(unsigned int anBoard[6], const unsigned int anRoll[2])
                     break;
                 }
             }
+            if (n >= 0)
+                break;
 
             for (n = -1, iSearch = anDice[i]; iSearch <= nMax; iSearch++) {
                 if (anBoard[iSearch] >= 2 &&    /* at least 2 on source point */
