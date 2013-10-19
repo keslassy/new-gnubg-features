@@ -1376,8 +1376,8 @@ PythonMatchID(PyObject * UNUSED(self), PyObject * args)
 
     PyObject *pyCubeInfo = NULL;
     PyObject *pyPosInfo = NULL;
-    cubeinfo ci;
-    posinfo pi;
+    cubeinfo ci = { 1, 0, 0, 0, {0, 0}, FALSE, TRUE, FALSE, {1.0f, 1.0f, 1.0f, 1.0f}, VARIATION_STANDARD};
+    posinfo pi = {{0, 0}, 0, 0, 0, GAME_NONE};
 
     if (!PyArg_ParseTuple(args, "|OO:matchid", &pyCubeInfo, &pyPosInfo))
         return NULL;
