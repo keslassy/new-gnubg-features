@@ -1,3 +1,8 @@
+2013-10-20  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* file.c: Fix automatic import of mat files starting with many
+	comment lines (Backgammon NJ can create such files).
+
 2013-09-22  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gnubg.c, gtkgame.c (comment only): Fix assertion failure when
@@ -26,6 +31,10 @@
 	Autoconf now checks for the GLU library when building with
 	3D boards.
 	* mkinstalldirs: Update to a newer version from automake-1.14
+
+2013-07-28  Michael Petch  <mpetch@gnubg.org>
+
+	Version 1.02 released.
 
 2013-07-22  Michael Petch  <mpetch@gnubg.org>
 
