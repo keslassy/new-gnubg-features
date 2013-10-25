@@ -3059,6 +3059,9 @@ EvalStatus(char *szOutput)
     for (i = N_CLASSES - 1; i >= 0; i--)
         if (acsf[i])
             acsf[i] (strchr(szOutput, 0));
+
+    sprintf(strchr(szOutput, 0),
+        _(" * " "Weights file and databases installed in" ":\n   - %s\n"), getPkgDataDir());
 }
 
 

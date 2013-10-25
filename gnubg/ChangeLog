@@ -1,3 +1,9 @@
+2013-10-25  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* eval.c: Show the weights file and bearoff databases installation
+	directory in Help|About GNU Backgammon|Evaluation Engine or "show
+	engine" output.
+
 2013-10-20  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* file.c: Fix automatic import of mat files starting with many
