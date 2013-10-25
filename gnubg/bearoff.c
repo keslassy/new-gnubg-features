@@ -543,8 +543,7 @@ BearoffStatus(const bearoffcontext * pbc, char *sz)
     default:
         break;
     }
-    sprintf(buf, _("number of reads: %lu"), pbc->nReads);
-    sprintf(sz, "   - %s\n", buf);
+    sprintf(sz, "\n");
 }
 
 static int
@@ -672,7 +671,7 @@ BearoffDumpOneSided(const bearoffcontext * pbc, const TanBoard anBoard, char *sz
                   ar[0][0] * x, ar[1][0] * x, _("Wastage"), ar[0][0] * x - anPips[1], ar[1][0] * x - anPips[0]);
 
     sprintf(sz, "%s = %5.3f * %s\n%s = %s - %s\n\n",
-                  _("EPC"), x, _("Average rolls"), _("Wastage"), _("EPC"), _("pips"));
+            _("EPC"), x, _("Average rolls"), _("Wastage"), _("EPC"), _("pips"));
 
     return 0;
 
