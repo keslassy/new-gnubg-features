@@ -126,7 +126,7 @@ gnubg moves 8/5 6/5.
       </mediaobject>
     </screenshot>
     <para><application moreinfo="none">GNU Backgammon</application> is a world
-      class opponent and rates at around 2000 on FIBS, the First Internet
+      class opponent and rates at around 2100 on FIBS, the First Internet
       Backgammon Server - at its best, it is in the top 5 of over 6000 rated
       players there). <application moreinfo="none">GNU Backgammon</application>
       can be played on numerous other on-line backgammon servers.</para>
@@ -3198,8 +3198,18 @@ To roll the dice the CL version type 'roll'.
           sided database with 15 checkers 6 points from <ulink url="ftp://alpha.gnu.org/gnu/gnubg/gnubg_os0.bd.gz">ftp://alpha.gnu.org/gnu/gnubg/gnubg_os0.bd.gz</ulink>. </para>
 	  <para>Larger databases are available for download from <ulink url="ftp://ftp.demon.nl/pub/Demon/games/gnubg/databases/">ftp://ftp.demon.nl/pub/Demon/games/gnubg/databases/</ulink>. </para>
       </sect3>
+      <sect3 id="gnubg-tech_databases_install">
+        <title>Installation of the databases</title>
+        <para>The databases's installation directory depends on where
+         <application>GNU Backgammon</application> is installed on your system.
+         It is displayed by <menuchoice><guimenu>Help</guimenu>
+         <guimenuitem>About GNU Backgammon</guimenuitem>
+         <guimenuitem>Evaluation Engine</guimenuitem>
+         </menuchoice>.
+        </para>
+      </sect3>
       <sect3 id="gnubg-tech_databases_verify">
-        <title>Verification of databases</title>
+        <title>Verification of the databases</title>
         <para>To verify that your generated or downloaded bearoff database is
           correct, the table below lists the MD5 checksums for a number of
           possible databases. </para>
