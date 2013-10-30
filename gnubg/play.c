@@ -849,8 +849,8 @@ NewGame(void)
     pmr = NewMoveRecord();
     pmr->mt = MOVE_SETDICE;
 
-    pmr->anDice[0] = ms.anDice[0];
-    pmr->anDice[1] = ms.anDice[1];
+    pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+    pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
     pmr->fPlayer = ms.anDice[1] > ms.anDice[0];
 
 
@@ -1353,8 +1353,8 @@ ComputerTurn(void)
             pmr = NewMoveRecord();
 
             pmr->mt = MOVE_NORMAL;
-            pmr->anDice[0] = ms.anDice[0];
-            pmr->anDice[1] = ms.anDice[1];
+            pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+            pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
             pmr->fPlayer = ms.fTurn;
             pmr->esChequer = ap[ms.fTurn].esChequer;
 
@@ -1519,8 +1519,8 @@ ComputerTurn(void)
             parse_move_is_legal(szResponse, &ms, an);
             pmr = NewMoveRecord();
             pmr->mt = MOVE_NORMAL;
-            pmr->anDice[0] = ms.anDice[0];
-            pmr->anDice[1] = ms.anDice[1];
+            pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+            pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
             pmr->fPlayer = ms.fTurn;
             memcpy(pmr->n.anMove, an, sizeof pmr->n.anMove);
             if (pmr->n.anMove[0] < 0) {
@@ -1629,8 +1629,8 @@ TryBearoff(void)
                 pmr = NewMoveRecord();
 
                 pmr->mt = MOVE_NORMAL;
-                pmr->anDice[0] = ms.anDice[0];
-                pmr->anDice[1] = ms.anDice[1];
+                pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+                pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
                 pmr->fPlayer = ms.fTurn;
                 memcpy(pmr->n.anMove, ml.amMoves[i].anMove, sizeof(pmr->n.anMove));
 
@@ -2599,8 +2599,8 @@ CommandMove(char *sz)
 
             pmr->mt = MOVE_NORMAL;
             pmr->sz = NULL;
-            pmr->anDice[0] = ms.anDice[0];
-            pmr->anDice[1] = ms.anDice[1];
+            pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+            pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
             pmr->fPlayer = ms.fTurn;
             if (ml.cMoves)
                 memcpy(pmr->n.anMove, ml.amMoves[0].anMove, sizeof(pmr->n.anMove));
@@ -2636,8 +2636,8 @@ CommandMove(char *sz)
     pmr = NewMoveRecord();
     pmr->mt = MOVE_NORMAL;
     pmr->sz = NULL;
-    pmr->anDice[0] = ms.anDice[0];
-    pmr->anDice[1] = ms.anDice[1];
+    pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+    pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
     pmr->fPlayer = ms.fTurn;
     memcpy(pmr->n.anMove, an, sizeof pmr->n.anMove);
 
@@ -3807,8 +3807,8 @@ CommandRoll(char *UNUSED(sz))
     pmr = NewMoveRecord();
 
     pmr->mt = MOVE_SETDICE;
-    pmr->anDice[0] = ms.anDice[0];
-    pmr->anDice[1] = ms.anDice[1];
+    pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+    pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
     pmr->fPlayer = ms.fTurn;
 
     AddMoveRecord(pmr);
@@ -3834,8 +3834,8 @@ CommandRoll(char *UNUSED(sz))
         pmr = NewMoveRecord();
 
         pmr->mt = MOVE_NORMAL;
-        pmr->anDice[0] = ms.anDice[0];
-        pmr->anDice[1] = ms.anDice[1];
+        pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+        pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
         pmr->fPlayer = ms.fTurn;
 
         ShowAutoMove(msBoard(), pmr->n.anMove);
@@ -3849,8 +3849,8 @@ CommandRoll(char *UNUSED(sz))
         pmr = NewMoveRecord();
 
         pmr->mt = MOVE_NORMAL;
-        pmr->anDice[0] = ms.anDice[0];
-        pmr->anDice[1] = ms.anDice[1];
+        pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+        pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
         pmr->fPlayer = ms.fTurn;
         memcpy(pmr->n.anMove, ml.amMoves[0].anMove, sizeof(pmr->n.anMove));
 
@@ -4149,8 +4149,8 @@ get_current_moverecord(int *pfHistory)
 
     if (ms.anDice[0] > 0) {
         pmr_hint->mt = MOVE_NORMAL;
-        pmr_hint->anDice[0] = ms.anDice[0];
-        pmr_hint->anDice[1] = ms.anDice[1];
+        pmr_hint->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+        pmr_hint->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
     } else if (ms.fDoubled) {
         pmr_hint->mt = MOVE_TAKE;
     } else {

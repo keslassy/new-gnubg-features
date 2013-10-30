@@ -1154,15 +1154,18 @@ RestoreNode(listOLD * pl)
 
             } else {
 
+                int anDiceTmp[2] = { 0, 0 };
+
                 pmr = NewMoveRecord();
 
                 pmr->mt = MOVE_NORMAL;
                 pmr->fPlayer = fPlayer;
 
-                pmr->anDice[1] = 0;
-
                 for (i = 0; i < 2 && *pch; pch++, i++)
-                    pmr->anDice[i] = *pch - '0';
+                    anDiceTmp[i] = *pch - '0';
+
+                pmr->anDice[0] = MAX(anDiceTmp[0], anDiceTmp[1]);
+                pmr->anDice[1] = MIN(anDiceTmp[0], anDiceTmp[1]);
 
                 for (i = 0; i < 4 && pch[0] && pch[1]; pch += 2, i++) {
                     pmr->n.anMove[i << 1] = Point(pch[0], pmr->fPlayer);
@@ -1245,8 +1248,8 @@ RestoreNode(listOLD * pl)
 
                 pmr->mt = MOVE_SETDICE;
                 pmr->fPlayer = ms.fMove;
-                pmr->anDice[0] = ach[0] - '0';
-                pmr->anDice[1] = ach[1] - '0';
+                pmr->anDice[0] = MAX(ach[0], ach[1]) - '0';
+                pmr->anDice[1] = MIN(ach[0], ach[1]) - '0';
             }
         } else if (pp->ach[0] == 'D' && pp->ach[1] == 'A')
             /* double analysis */
@@ -2473,8 +2476,8 @@ CommandSavePosition(char *sz)
         pmsd = NewMoveRecord();
         pmsd->mt = MOVE_SETDICE;
         pmsd->fPlayer = ms.fMove;
-        pmsd->anDice[0] = ms.anDice[0];
-        pmsd->anDice[1] = ms.anDice[1];
+        pmsd->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+        pmsd->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
         pmsd->lt = LUCK_NONE;
         pmsd->rLuck = ERR_VAL;
         ListInsert(&l, pmsd);

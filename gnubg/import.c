@@ -431,8 +431,8 @@ ImportJF(FILE * fp, char *UNUSED(szFileName))
 
         pmr->mt = MOVE_SETDICE;
         pmr->fPlayer = fTurn;
-        pmr->anDice[0] = anDice[0];
-        pmr->anDice[1] = anDice[1];
+        pmr->anDice[0] = MAX(anDice[0], anDice[1]);
+        pmr->anDice[1] = MIN(anDice[0], anDice[1]);
         pmr->lt = LUCK_NONE;
         pmr->rLuck = (float) ERR_VAL;
         AddMoveRecord(pmr);
@@ -647,8 +647,8 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
             pmr = NewMoveRecord();
             pmr->mt = MOVE_SETDICE;
             pmr->fPlayer = iPlayer;
-            pmr->anDice[0] = sz[0] - '0';
-            pmr->anDice[1] = sz[1] - '0';
+            pmr->anDice[0] = MAX(sz[0], sz[1]) - '0';
+            pmr->anDice[1] = MIN(sz[0], sz[1]) - '0';
             AddMoveRecord(pmr);
 
             pmr = NewMoveRecord();
@@ -663,8 +663,8 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
 
         pmr = NewMoveRecord();
         pmr->mt = MOVE_NORMAL;
-        pmr->anDice[0] = sz[0] - '0';
-        pmr->anDice[1] = sz[1] - '0';
+        pmr->anDice[0] = MAX(sz[0], sz[1]) - '0';
+        pmr->anDice[1] = MIN(sz[0], sz[1]) - '0';
         pmr->fPlayer = iPlayer;
 
         c = ParseMove(sz + 3, pmr->n.anMove);
@@ -1171,8 +1171,8 @@ ParseOldmove(char *sz, int fInvert)
     if (sz[3] == '(' && strlen(sz) >= 8) {
         pmr = NewMoveRecord();
         pmr->mt = MOVE_NORMAL;
-        pmr->anDice[0] = sz[4] - '0';
-        pmr->anDice[1] = sz[6] - '0';
+        pmr->anDice[0] = MAX(sz[4], sz[6]) - '0';
+        pmr->anDice[1] = MIN(sz[4], sz[6]) - '0';
         pmr->fPlayer = iPlayer;
 
         if (!StrNCaseCmp(sz + 9, "can't move", 10))
@@ -1682,8 +1682,8 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                     pmr = NewMoveRecord();
                     pmr->mt = MOVE_NORMAL;
                     pmr->sz = szComment;
-                    pmr->anDice[0] = anRoll[0];
-                    pmr->anDice[1] = anRoll[1];
+                    pmr->anDice[0] = MAX(anRoll[0], anRoll[1]);
+                    pmr->anDice[1] = MIN(anRoll[0], anRoll[1]);
                     pmr->fPlayer = fPlayer;
 
                     if ((c = ParseMove(pch + 4, pmr->n.anMove)) >= 0) {
@@ -1749,8 +1749,8 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                             pmr = NewMoveRecord();
                             pmr->mt = MOVE_NORMAL;
                             pmr->sz = szComment;
-                            pmr->anDice[0] = anRoll[0];
-                            pmr->anDice[1] = anRoll[1];
+                            pmr->anDice[0] = MAX(anRoll[0], anRoll[1]);
+                            pmr->anDice[1] = MIN(anRoll[0], anRoll[1]);
                             pmr->fPlayer = fPlayer;
                             AddMoveRecord(pmr);
 
@@ -1799,8 +1799,8 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                             pmr->mt = MOVE_SETDICE;
                             /* we do not want comments on MOVE_SETDICE */
                             pmr->fPlayer = fPlayer;
-                            pmr->anDice[0] = anRoll[0];
-                            pmr->anDice[1] = anRoll[1];
+                            pmr->anDice[0] = MAX(anRoll[0], anRoll[1]);
+                            pmr->anDice[1] = MIN(anRoll[0], anRoll[1]);
 
                             AddMoveRecord(pmr);
                             fBeaver = FALSE;
@@ -2580,8 +2580,8 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
                 pmr = NewMoveRecord();
                 pmr->mt = MOVE_SETDICE;
                 pmr->fPlayer = fPlayer;
-                pmr->anDice[0] = anRoll[0];
-                pmr->anDice[1] = anRoll[1];
+                pmr->anDice[0] = MAX(anRoll[0], anRoll[1]);
+                pmr->anDice[1] = MIN(anRoll[0], anRoll[1]);
 
                 AddMoveRecord(pmr);
 
@@ -2600,8 +2600,8 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
 
                 pmr = NewMoveRecord();
                 pmr->mt = MOVE_NORMAL;
-                pmr->anDice[0] = anRoll[0];
-                pmr->anDice[1] = anRoll[1];
+                pmr->anDice[0] = MAX(anRoll[0], anRoll[1]);
+                pmr->anDice[1] = MIN(anRoll[0], anRoll[1]);
                 pmr->fPlayer = fPlayer;
 
                 if (!strncmp(pch, "0/0", 3)) {  /* See if fan is legal (i.e. no moves available) - otherwise skip */
@@ -2876,8 +2876,8 @@ ImportBKGGame(FILE * pf, int *pi)
             } else if (strlen(sz) > 9 && isdigit(sz[7]) && isdigit(sz[9])) {
                 pmr = NewMoveRecord();
                 pmr->mt = MOVE_NORMAL;
-                pmr->anDice[0] = sz[7] - '0';
-                pmr->anDice[1] = sz[9] - '0';
+                pmr->anDice[0] = MAX(sz[7], sz[9]) - '0';
+                pmr->anDice[1] = MIN(sz[7], sz[9]) - '0';
                 pmr->fPlayer = fPlayer;
 
                 if (strlen(sz) > 13) {
@@ -3186,8 +3186,8 @@ ImportSnowieTxt(FILE * pf)
         pmr = NewMoveRecord();
         pmr->mt = MOVE_SETDICE;
         pmr->fPlayer = fTurn;
-        pmr->anDice[0] = anDice[0];
-        pmr->anDice[1] = anDice[1];
+        pmr->anDice[0] = MAX(anDice[0], anDice[1]);
+        pmr->anDice[1] = MIN(anDice[0], anDice[1]);
         AddMoveRecord(pmr);
     }
 
