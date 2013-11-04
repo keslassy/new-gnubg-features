@@ -650,30 +650,26 @@ Usage:
 gnubg [OPTION...] [file.sgf]
 
 Help Options:
--?, --help                   Show help options
+-h, --help                   Show help options
 --help-all                   Show all help options
 --help-gtk                   Show GTK+ Options
-
-GTK+ Options
---class=CLASS                Program class as used by the window manager
---name=NAME                  Program name as used by the window manager
---screen=SCREEN              X screen to use
---sync                       Make X calls synchronous
---gtk-module=MODULES         Load additional GTK+ modules
---g-fatal-warnings           Make all warnings fatal
 
 Application Options:
 -b, --no-bearoff             Do not use bearoff database
 -c, --commands=FILE          Evaluate commands in FILE and exit
--d, --datadir=DIR            Read database and weight files from DIR
 -l, --lang=LANG              Set language to LANG
 -p, --python=FILE            Evaluate Python code in FILE and exit
 -q, --quiet                  Disable sound effects
 -r, --no-rc                  Do not read .gnubgrc and .gnubgautorc commands
--S, --no-splash              Don't show gtk splash screen
--t, --tty                    Start on tty instead of using window system
+-S, --splash                 Show gtk splash screen
+-t, --tty                    Start the command line instead of using the graphical interface
 -v, --version                Show version information and exit
--w, --window-system-only     Ignore tty input when using window system
+-w, --window-system-only     Ignore tty input when using the graphical interface
+-d, --debug                  Turn on debug
+-D, --datadir                Specify location of general data
+-P, --pkgdatadir             Specify location of program specific data
+-O, --docdir                 Specify location of program documentation
+-s, --prefsdir               Specify location of user's preferences directory
 --display=DISPLAY            X display to use
           </programlisting>
       </example>
