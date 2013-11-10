@@ -4378,8 +4378,8 @@ GetMoveString(moverecord * pmr, int *pPlayer, gboolean addSkillMarks)
     case MOVE_NORMAL:
         *pPlayer = pmr->fPlayer;
         pch = sz;
-        sz[0] = (char) pmr->anDice[0] + '0';
-        sz[1] = (char) pmr->anDice[1] + '0';
+        sz[0] = (char) (MAX(pmr->anDice[0], pmr->anDice[1]) + '0');
+        sz[1] = (char) (MIN(pmr->anDice[0], pmr->anDice[1]) + '0');
         sz[2] = ':';
         sz[3] = ' ';
         FormatMove(sz + 4, msBoard(), pmr->n.anMove);
@@ -4431,7 +4431,7 @@ GetMoveString(moverecord * pmr, int *pPlayer, gboolean addSkillMarks)
 
     case MOVE_SETDICE:
         *pPlayer = pmr->fPlayer;
-        sprintf(sz, _("Rolled %d%d"), pmr->anDice[0], pmr->anDice[1]);
+        sprintf(sz, _("Rolled %d%d"), MAX(pmr->anDice[0], pmr->anDice[1]), MIN(pmr->anDice[0], pmr->anDice[1]));
         pch = sz;
         break;
 
