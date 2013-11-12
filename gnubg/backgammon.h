@@ -594,7 +594,6 @@ extern void CommandHint(char *);
 extern void CommandHistory(char *);
 extern void CommandImportAuto(char *);
 extern void CommandImportBGRoom(char *);
-extern void CommandImportBKG(char *);
 extern void CommandImportEmpire(char *);
 extern void CommandImportJF(char *);
 extern void CommandImportMat(char *);

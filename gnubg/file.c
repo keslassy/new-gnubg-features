@@ -76,8 +76,6 @@ ImportFormat import_format[] = {
     ,                           /*must be the first element */
     {IMPORT_SGG, ".sgg", N_("GamesGrid Save Game"), "sgg"}
     ,
-    {IMPORT_BKG, ".bkg", N_("Hans Berliner's BKG Format"), "bkg"}
-    ,
     {IMPORT_MAT, ".mat", N_("Jellyfish Match"), "mat"}
     ,
     {IMPORT_OLDMOVES, ".fibs", N_("FIBS oldmoves format"), "oldmoves"}
@@ -384,21 +382,6 @@ IsJFPFile(FileHelper * fh)
 }
 
 static int
-IsBKGFile(FileHelper * fh)
-{
-    fhReset(fh);
-    fhSkipWS(fh);
-    if (fhReadString(fh, "Black"))
-        return TRUE;
-    fhReset(fh);
-    fhSkipWS(fh);
-    if (fhReadString(fh, "White"))
-        return TRUE;
-
-    return FALSE;
-}
-
-static int
 IsGAMFile(FileHelper * fh)
 {
     fhReset(fh);
@@ -470,8 +453,6 @@ ReadFilePreview(const char *filename)
         fpd->type = IMPORT_MAT;
     else if (IsJFPFile(fh))
         fpd->type = IMPORT_POS;
-    else if (IsBKGFile(fh))
-        fpd->type = IMPORT_BKG;
     else if (IsGAMFile(fh))
         fpd->type = IMPORT_EMPIRE;
     else if (IsPARFile(fh))

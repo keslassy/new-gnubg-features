@@ -31,7 +31,6 @@ typedef enum {
 typedef enum {
     IMPORT_SGF,
     IMPORT_SGG,
-    IMPORT_BKG,
     IMPORT_MAT,
     IMPORT_OLDMOVES,
     IMPORT_POS,

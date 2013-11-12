@@ -270,8 +270,6 @@ command cER = {
 }, acImport[] = {
     { "auto", CommandImportAuto, N_("Import from any known format"),
       szFILENAME, &cFilename },
-    { "bkg", CommandImportBKG, N_("Import from Hans Berliner's BKG format"),
-      szFILENAME, &cFilename },
     { "mat", CommandImportMat, N_("Import a Jellyfish match"), szFILENAME,
       &cFilename },
     { "gam", CommandImportMat, N_("Import a Jellyfish game"), szFILENAME,
