@@ -2821,7 +2821,18 @@ CommandCopy(char *UNUSED(sz))
         SwapSides(anBoardTemp);
 
     DrawBoard(szOut, (ConstTanBoard) anBoardTemp, ms.fMove, aps, MatchIDFromMatchState(&ms), anChequers[ms.bgv]);
-    strcat(szOut, "\n");
+
+    {
+        unsigned int anPips[2];
+        char szPipCount[32];
+
+        PipCount((ConstTanBoard) anBoardTemp, anPips);
+        sprintf(szPipCount, "Pip counts : O %d, X %d\n", anPips[0], anPips[1]);
+
+        strcat(szOut, "                    ");
+        strcat(szOut, szPipCount);
+    }
+
     TextToClipboard(szOut);
 }
 

@@ -3,6 +3,9 @@
 	* README, backgammon.h, commands.inc, file.c, file.h, import.c,
 	doc/gnubgdb.xml: Remove support of Berliner's BKG format.
 
+	* gnubg.c: Include pip counts in positions copied to clipboard
+	as ASCII.
+
 2013-10-25  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* eval.c: Show the weights file and bearoff databases installation
