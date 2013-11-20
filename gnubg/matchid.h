@@ -33,7 +33,7 @@ typedef struct {
 } posinfo;
 
 extern int
- LogCube(const int n);
+ LogCube(int n);
 
 extern char *MatchID(const unsigned int anDice[2],
                      const int fTurn,
@@ -42,31 +42,24 @@ extern char *MatchID(const unsigned int anDice[2],
                      const int fMove,
                      const int fCubeOwner,
                      const int fCrawford, const int nMatchTo, const int anScore[2], const int nCube,
-                     const int fJacoby,
-                     const gamestate gs);
+                     const int fJacoby, const gamestate gs);
 
 extern char *MatchIDFromKey(unsigned char auchKey[9]);
 
 extern int
-
-
 MatchFromID(unsigned int anDice[2],
             int *pfTurn,
             int *pfResigned,
             int *pfDoubled, int *pfMove, int *pfCubeOwner, int *pfCrawford, int *pnMatchTo, int anScore[2], int *pnCube,
-            int *pfJacoby,
-            gamestate * pgs, const char *szMatchID);
+            int *pfJacoby, gamestate * pgs, const char *szMatchID);
 
 extern int
-
-
 MatchFromKey(int anDice[2],
              int *pfTurn,
              int *pfResigned,
              int *pfDoubled,
              int *pfMove, int *pfCubeOwner, int *pfCrawford, int *pnMatchTo, int anScore[2], int *pnCube,
-             int *pfJacoby,
-             gamestate * pgs, const unsigned char *auchKey);
+             int *pfJacoby, gamestate * pgs, const unsigned char *auchKey);
 
 extern char *MatchIDFromMatchState(const matchstate * pms);
 

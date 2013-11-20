@@ -39,14 +39,14 @@
  */
 
 extern int
-LogCube(const int n)
+LogCube(int n)
 {
+    int i = 0;
 
-    int i;
+    while (n >>= 1)
+        i++;
 
-    for (i = 0;; i++)
-        if (n <= (1 << i))
-            return i;
+    return i;
 }
 
 
@@ -146,8 +146,7 @@ MatchID(const unsigned int anDice[2],
         const int fDoubled,
         const int fMove,
         const int fCubeOwner, const int fCrawford, const int nMatchTo, const int anScore[2], const int nCube,
-        const int fJacoby,
-        const gamestate gs)
+        const int fJacoby, const gamestate gs)
 {
 
     unsigned char auchKey[9];
@@ -185,8 +184,7 @@ MatchFromKey(int anDice[2],
              int *pfResigned,
              int *pfDoubled,
              int *pfMove, int *pfCubeOwner, int *pfCrawford, int *pnMatchTo, int anScore[2], int *pnCube,
-             int *pfJacoby,
-             gamestate * pgs, const unsigned char *auchKey)
+             int *pfJacoby, gamestate * pgs, const unsigned char *auchKey)
 {
     int temp;
     GetBits(auchKey, 0, 4, pnCube);
@@ -242,8 +240,7 @@ MatchFromID(unsigned int anDice[2],
             int *pfTurn,
             int *pfResigned,
             int *pfDoubled, int *pfMove, int *pfCubeOwner, int *pfCrawford, int *pnMatchTo, int anScore[2], int *pnCube,
-            int *pfJacoby,
-            gamestate * pgs, const char *szMatchID)
+            int *pfJacoby, gamestate * pgs, const char *szMatchID)
 {
 
     unsigned char auchKey[9];
@@ -287,7 +284,6 @@ MatchIDFromMatchState(const matchstate * pms)
                    pms->fTurn,
                    pms->fResigned,
                    pms->fDoubled, pms->fMove, pms->fCubeOwner, pms->fCrawford, pms->nMatchTo, pms->anScore, pms->nCube,
-                   pms->fJacoby,
-                   pms->gs);
+                   pms->fJacoby, pms->gs);
 
 }
