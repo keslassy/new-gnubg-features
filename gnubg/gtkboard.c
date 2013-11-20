@@ -525,11 +525,7 @@ update_gnubg_id(BoardData * bd, const TanBoard points)
                           PositionID(points),
                           MatchID(bd->diceRoll, ms.fTurn, ms.fResigned,
                                   ms.fDoubled, ms.fMove, fCubeOwner, bd->crawford_game, bd->match_to,
-#if USE_EXTENDEDMATCHID
                                   anScore, bd->cube, ms.fJacoby, ms.gs));
-#else
-                                  anScore, bd->cube, ms.gs));
-#endif
 
     gtk_label_set_text(GTK_LABEL(pwGnubgID), str);
     g_free(str);
@@ -3293,9 +3289,6 @@ board_edit(BoardData * bd)
 {
     int f = ToolbarIsEditing(pwToolbar);
     int changed = FALSE;
-#ifndef USE_EXTENDEDMATCHID
-    int savefJacoby = fJacoby;
-#endif
 
     update_move(bd);
     update_buttons(bd);
@@ -3385,9 +3378,6 @@ board_edit(BoardData * bd)
                 ms.fJacoby = bd->jacoby_flag = jacoby;
             changed = TRUE;
         }
-#ifndef USE_EXTENDEDMATCHID
-        fJacoby = jacoby;
-#endif
 
         if (nMatchToNew != ms.nMatchTo || changed) {
             /* new match length; issue "set matchid ..." command */
@@ -3407,9 +3397,7 @@ board_edit(BoardData * bd)
                                          ms.fResigned,
                                          ms.fDoubled,
                                          ms.fMove, ms.fCubeOwner, crawford, nMatchToNew, anScoreNew, bd->cube,
-#if USE_EXTENDEDMATCHID
                                          jacoby,
-#endif
                                          ms.gs));
             UserCommand(sz);
             g_free(sz);
@@ -3430,9 +3418,6 @@ board_edit(BoardData * bd)
         gtk_multiview_set_current(GTK_MULTIVIEW(bd->mscore1), bd->lscore1);
         gtk_multiview_set_current(GTK_MULTIVIEW(bd->mmatch), bd->lmatch);
     }
-#ifndef USE_EXTENDEDMATCHID
-    fJacoby = savefJacoby;
-#endif
 }
 
 static void

@@ -3935,12 +3935,7 @@ SetMatchID(const char *szMatchID)
 
     lfJacoby = fJacoby;
     if (MatchFromID(anDice, &fTurn, &fResigned, &fDoubled, &fMove, &fCubeOwner, &fCrawford,
-#if USE_EXTENDEDMATCHID
                     &nMatchTo, anScore, &nCube, &lfJacoby, &gs, szMatchID) < 0) {
-#else
-                    &nMatchTo, anScore, &nCube, &gs, szMatchID) < 0) {
-#endif
-
         outputf(_("Illegal match ID '%s'\n"), szMatchID);
         outputf(_("Dice %d %d, "), anDice[0], anDice[1]);
         outputf(_("player on roll %d (turn %d), "), fMove, fTurn);
@@ -3955,7 +3950,6 @@ SetMatchID(const char *szMatchID)
         outputf(_("game state %d\n"), (int) gs);
         outputx();
         return;
-
     }
 
     if (fDoubled) {

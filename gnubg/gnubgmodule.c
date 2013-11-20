@@ -1327,9 +1327,7 @@ PythonGnubgID(PyObject * UNUSED(self), PyObject * args)
     ci.anScore[0] = ms.anScore[0];
     ci.anScore[1] = ms.anScore[1];
     ci.nCube = ms.nCube;
-#if USE_EXTENDEDMATCHID
     ci.fJacoby = ms.fJacoby;
-#endif
 
     if (!PyArg_ParseTuple(args, "|OOO:gnubgid", &pyBoard, &pyCubeInfo, &pyPosInfo))
         return NULL;
@@ -1358,11 +1356,7 @@ PythonGnubgID(PyObject * UNUSED(self), PyObject * args)
     szPosID = g_strdup(PositionID((ConstTanBoard) anBoard));
     szMatchID = g_strdup(MatchID((unsigned int *) pi.anDice, pi.fTurn, pi.fResigned,
                                  pi.fDoubled, ci.fMove, ci.fCubeOwner, ci.fCrawford, ci.nMatchTo,
-#if USE_EXTENDEDMATCHID
                                  ci.anScore, ci.nCube, ci.fJacoby, pi.gs));
-#else
-                                 ci.anScore, ci.nCube, pi.gs));
-#endif
 
     szGnubgID = g_strjoin(":", szPosID, szMatchID, NULL);
     pyRetVal = PyString_FromString(szGnubgID);
@@ -1409,11 +1403,7 @@ PythonMatchID(PyObject * UNUSED(self), PyObject * args)
     else
         return PyString_FromString(MatchID((unsigned int *) pi.anDice, pi.fTurn, pi.fResigned,
                                            pi.fDoubled, ci.fMove, ci.fCubeOwner, ci.fCrawford, ci.nMatchTo,
-#if USE_EXTENDEDMATCHID
                                            ci.anScore, ci.nCube, ci.fJacoby, pi.gs));
-#else
-                                           ci.anScore, ci.nCube, pi.gs));
-#endif
 }
 
 static PyObject *

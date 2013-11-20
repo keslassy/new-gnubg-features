@@ -336,17 +336,6 @@ fi
 AM_CONDITIONAL(USE_PYTHON, test "$with_python" != "no" && test "$have_python" != "no" )
 
 dnl
-dnl Should we enable Extended MatchID test code
-dnl
-
-AC_MSG_CHECKING([for extended match ids])
-AC_ARG_ENABLE( extmatchid, [  --disable-extmatchid    disable extended MatchIDs ])
-AS_IF([test "x$enable_extmatchid" != "xno"], [
-        AC_DEFINE(USE_EXTENDEDMATCHID,1,Define if you want extended MatchID support)
-])
-AS_IF( [test "x$enable_extmatchid" != "xno"], [AC_MSG_RESULT(yes)], [AC_MSG_RESULT(no)] )
-
-dnl
 dnl SIMD
 dnl
 

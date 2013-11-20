@@ -526,9 +526,7 @@ simple_board_new_from_ids(gchar * position_id, gchar * match_id, cairo_t * cr)
         (board->ms.anDice, &board->ms.fTurn,
          &board->ms.fResigned, &board->ms.fDoubled, &board->ms.fMove,
          &board->ms.fCubeOwner, &board->ms.fCrawford, &board->ms.nMatchTo, board->ms.anScore, &board->ms.nCube,
-#if USE_EXTENDEDMATCHID
          &board->ms.fJacoby,
-#endif
          &board->ms.gs, match_id)) {
         g_free(board);
         return (NULL);
