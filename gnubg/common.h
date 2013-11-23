@@ -71,7 +71,7 @@ typedef void (*psighandler) (int);
 #define strcasecmp strcasecmp_error_use_StrCaseCmp
 #define strncasecmp strncasecmp_error_use_StrNCaseCmp
 
-/* Macro to mark paramaters that aren't used in the function */
+/* Macro to mark parameters that aren't used in the function */
 #ifdef UNUSED
 #elif defined(__GNUC__)
 #define UNUSED(x) UNUSED_ ## x __attribute__((unused))
@@ -80,4 +80,14 @@ typedef void (*psighandler) (int);
 #else
 #define UNUSED(x) _unused_##x
 #endif
+
+/* Helper macros for __builtin_expect */
+#ifdef HAVE_BUILTIN_EXPECT
+#define likely(expression)	__builtin_expect(!!(expression), 1)
+#define unlikely(expression)	__builtin_expect(!!(expression), 0)
+#else
+#define likely(expression)	(expression)
+#define unlikely(expression)	(expression)
+#endif
+
 #endif
