@@ -3112,7 +3112,7 @@ python_run_file(gpointer file)
 #endif
 
 extern PyObject *
-PythonGnubgModule()
+PythonGnubgModule(void)
 {
     return py_gnubg_module;
 }
