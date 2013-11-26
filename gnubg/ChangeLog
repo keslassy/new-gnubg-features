@@ -1,3 +1,9 @@
+2013-11-26  Michael Petch  <mpetch@gnubg.org>
+
+	* gnubgmodule.c: Fix a serious bug created by a previous commit
+	that prevented many of the python interface function from working
+	correctly.
+
 2013-11-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* README, backgammon.h, commands.inc, file.c, file.h, import.c,

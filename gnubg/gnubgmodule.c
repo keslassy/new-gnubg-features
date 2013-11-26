@@ -1555,9 +1555,13 @@ PythonPositionFromBearoff(PyObject * UNUSED(self), PyObject * args)
 static void
 DictSetItemSteal(PyObject * dict, const char *key, PyObject * val)
 {
-    g_assert(PyDict_SetItemString(dict, CHARP_HACK key, val) == 0);
+    int const s = PyDict_SetItemString(dict, CHARP_HACK key, val);
+    {
+        g_assert(s == 0);
+    }
     (void) dict;                /* silence compiler warning */
     (void) key;                 /* when assertions are disabled */
+    (void) s;
     Py_DECREF(val);
 }
 
@@ -1788,7 +1792,9 @@ PyMove(const int move[8])
     }
 
     if (i < 4) {
-        g_assert(_PyTuple_Resize(&moveTuple, i) != -1);
+        int s = _PyTuple_Resize(&moveTuple, i);
+        g_assert(s != -1);
+        (void) s;
     }
 
     return moveTuple;
@@ -2353,7 +2359,9 @@ PythonGame(const listOLD * plGame,
                                                            (float (*)[NUM_ROLLOUT_OUTPUTS]) pmr->CubeDecPtr->aarStdDev,
                                                            ms, verbose);
                             {
-                                g_assert(PyDict_Merge(analysis, d, 1) != -1);
+                                int s = PyDict_Merge(analysis, d, 1);
+                                g_assert(s != -1);
+                                (void) s;
                             }
                             Py_DECREF(d);
                         }
@@ -2391,7 +2399,9 @@ PythonGame(const listOLD * plGame,
                             PyObject *d = PyDoubleAnalysis(&c->esDouble, (float (*)[NUM_ROLLOUT_OUTPUTS]) c->aarOutput,
                                                            (float (*)[NUM_ROLLOUT_OUTPUTS]) c->aarStdDev, ms, verbose);
                             {
-                                g_assert(PyDict_Merge(analysis, d, 1) != -1);
+                                int s = PyDict_Merge(analysis, d, 1);
+                                g_assert(s != -1);
+                                (void) s;
                             }
                             Py_DECREF(d);
                         }
@@ -3102,7 +3112,7 @@ python_run_file(gpointer file)
 #endif
 
 extern PyObject *
-PythonGnubgModule(void)
+PythonGnubgModule()
 {
     return py_gnubg_module;
 }
