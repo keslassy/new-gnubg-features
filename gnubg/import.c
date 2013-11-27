@@ -490,6 +490,8 @@ ExpandMatMove(const TanBoard anBoard, int anMove[8], int *pc, const unsigned int
 
     if (anDice[0] != anDice[1]) {
 
+        /* FIXME: accept bearoff moves with overage, like 65: 9/Off */
+
         if ((unsigned int) (anMove[0] - anMove[1]) == (anDice[0] + anDice[1])) {
 
             int an[8];
@@ -583,6 +585,8 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
         *pch = 0;
 
     if (sz[0] >= '1' && sz[0] <= '6' && sz[1] >= '1' && sz[1] <= '6' && sz[2] == ':') {
+        int dice1 = sz[0] - '0';
+        int dice2 = sz[1] - '0';
 
         if (fBeaver) {
             /* look likes the previous beaver was taken */
@@ -619,6 +623,10 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
             sz[4] = 0;
         }
 
+        /* XG can have additional spaces between roll and "Illegal play" */
+        while (sz[4] == ' ')
+            sz++;
+
         if (!StrNCaseCmp(sz + 4, "illegal play", 12)) {
             /* Snowie type illegal play */
 
@@ -647,8 +655,8 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
             pmr = NewMoveRecord();
             pmr->mt = MOVE_SETDICE;
             pmr->fPlayer = iPlayer;
-            pmr->anDice[0] = sz[0] - '0';
-            pmr->anDice[1] = sz[1] - '0';
+            pmr->anDice[0] = dice1;
+            pmr->anDice[1] = dice2;
             AddMoveRecord(pmr);
 
             pmr = NewMoveRecord();
@@ -663,8 +671,8 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
 
         pmr = NewMoveRecord();
         pmr->mt = MOVE_NORMAL;
-        pmr->anDice[0] = sz[0] - '0';
-        pmr->anDice[1] = sz[1] - '0';
+        pmr->anDice[0] = dice1;
+        pmr->anDice[1] = dice2;
         pmr->fPlayer = iPlayer;
 
         c = ParseMove(sz + 3, pmr->n.anMove);
