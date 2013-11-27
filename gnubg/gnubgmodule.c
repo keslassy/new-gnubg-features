@@ -38,6 +38,7 @@
 #include "positionid.h"
 #include "matchid.h"
 #include "util.h"
+#include "lib/gnubg-types.h"
 
 #if USE_GTK
 #include "gtkgame.h"
@@ -848,6 +849,31 @@ PythonLuckRating(PyObject * UNUSED(self), PyObject * args)
 
     return PyInt_FromLong(getLuckRating(r));
 
+}
+
+static PyObject *
+PythonClassifyPosition(PyObject * UNUSED(self), PyObject * args)
+{
+    PyObject *pyBoard = NULL;
+    TanBoard anBoard;
+    int iVariant = ms.bgv;
+
+    memcpy(anBoard, msBoard(), sizeof(TanBoard));
+
+    if (!PyArg_ParseTuple(args, "|Oi", &pyBoard, &iVariant))
+        return NULL;
+
+    if (pyBoard && !PyToBoard(pyBoard, anBoard)) {
+        PyErr_SetString(PyExc_StandardError, _("Invalid board as argument "));
+        return NULL;
+    }
+
+    if (iVariant < 0 || iVariant >= NUM_VARIATIONS) {
+        PyErr_SetString(PyExc_StandardError, _("Variation unknown "));
+        return NULL;
+    }
+
+    return PyInt_FromLong(ClassifyPosition((ConstTanBoard) anBoard, iVariant));
 }
 
 static PyObject *
@@ -2841,6 +2867,11 @@ PyMethodDef gnubgMethods[] = {
      "       eval-context = dictionary: 'cubeful'=>0/1, 'plies'=>int,\n"
      "           'deterministic'=> 0/1, 'noise'->float\n"
      "    returns: evaluation = tuple (floats optimal, nodouble, take, drop, int recommendation, String recommendationtext)"}
+    ,
+    {"classifypos", (PyCFunction) PythonClassifyPosition, METH_VARARGS,
+     "classify a position for a given backammon variant and board\n"
+     "    arguments: [board], [int variant]\n" 
+     "    returns: int posclass"}
     ,
     {"dicerolls", PythonDiceRolls, METH_VARARGS,
      "return a list of dice rolls from current RNG\n"
