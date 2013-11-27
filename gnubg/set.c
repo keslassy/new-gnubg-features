@@ -2606,6 +2606,37 @@ CommandSetToolbar(char *sz)
 }
 
 extern void
+SetTurn(int i)
+{
+    if (ms.fTurn != i)
+        SwapSides(ms.anBoard);
+
+    ms.fTurn = ms.fMove = i;
+    CancelCubeAction();
+    pmr_hint_destroy();
+    fNextTurn = FALSE;
+#if USE_GTK
+    if (fX) {
+
+        BoardData *bd = BOARD(pwBoard)->board_data;
+        bd->diceRoll[0] = bd->diceRoll[1] = -1;
+        fJustSwappedPlayers = TRUE;
+    }
+#endif
+    ms.anDice[0] = ms.anDice[1] = 0;
+
+
+    UpdateSetting(&ms.fTurn);
+
+#if USE_GTK
+    if (fX)
+        ShowBoard();
+#endif                          /* USE_GTK */
+
+    return;
+}
+
+extern void
 CommandSetTurn(char *sz)
 {
 
@@ -2642,30 +2673,7 @@ CommandSetTurn(char *sz)
         return;
     }
 
-    if (ms.fTurn != i)
-        SwapSides(ms.anBoard);
-
-    ms.fTurn = ms.fMove = i;
-    CancelCubeAction();
-    pmr_hint_destroy();
-    fNextTurn = FALSE;
-#if USE_GTK
-    if (fX) {
-
-        BoardData *bd = BOARD(pwBoard)->board_data;
-        bd->diceRoll[0] = bd->diceRoll[1] = -1;
-        fJustSwappedPlayers = TRUE;
-    }
-#endif
-    ms.anDice[0] = ms.anDice[1] = 0;
-
-
-    UpdateSetting(&ms.fTurn);
-
-#if USE_GTK
-    if (fX)
-        ShowBoard();
-#endif                          /* USE_GTK */
+    SetTurn(i);
 
     outputf(_("`%s' is now on roll.\n"), ap[i].szName);
 }

@@ -498,6 +498,7 @@ extern void SetMatchDate(matchinfo * pmi);
 extern void SetMatchID(const char *szMatchID);
 extern void SetMatchInfo(char **ppch, const char *sz, char *szMessage);
 extern void SetMoveRecord(void *pmr);
+extern void SetTurn(int i);
 extern void show_8912(TanBoard anBoard, char *sz);
 extern void show_bearoff(TanBoard an, char *sz);
 extern void ShowBoard(void);

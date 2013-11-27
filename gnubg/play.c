@@ -2951,9 +2951,7 @@ ChangeGame(listOLD * plGameNew)
         if (reallastmt >= MOVE_SETBOARD && pmr_cur->ml.cMoves == 0)
             pmr_cur->fPlayer = reallastplayer;
         if (pmr_cur->fPlayer != ms.fTurn) {
-            char *sz = g_strdup_printf("%s", pmr_cur->fPlayer ? "1" : "0");
-            CommandSetTurn(sz);
-            g_free(sz);
+            SetTurn(pmr_cur->fPlayer);
         }
         if (dice_rolled) {
             ms.anDice[0] = pmr_cur->anDice[0];
