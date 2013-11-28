@@ -71,13 +71,13 @@ typedef struct _toolbarwidget {
 
 } toolbarwidget;
 
+#if (!USE_GTKUIMANAGER)
 static void
 ButtonClicked(GtkWidget * UNUSED(pw), char *sz)
 {
 
     UserCommand(sz);
 }
-
 
 static void
 ButtonClickedYesNo(GtkWidget * UNUSED(pw), char *sz)
@@ -94,7 +94,6 @@ ButtonClickedYesNo(GtkWidget * UNUSED(pw), char *sz)
     }
 
 }
-
 
 static GtkWidget *
 toggle_button_from_images(GtkWidget * pwImageOff, GtkWidget * pwImageOn, char *sz)
@@ -123,6 +122,7 @@ toggle_button_from_images(GtkWidget * pwImageOff, GtkWidget * pwImageOn, char *s
     return pw;
 
 }
+#endif
 
 extern void
 ToolbarSetPlaying(GtkWidget * pwToolbar, const int f)
@@ -152,7 +152,7 @@ ToolbarSetClockwise(GtkWidget * pwToolbar, const int f)
 
 #if (USE_GTKUIMANAGER)
 extern void
-ToggleClockwise(GtkToggleAction * action, gpointer user_data)
+ToggleClockwise(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
     int f = gtk_toggle_action_get_active(action);
     toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
@@ -226,7 +226,7 @@ click_edit(void)
 
 #if (USE_GTKUIMANAGER)
 extern void
-ToggleEdit(GtkToggleAction * action, gpointer user_data)
+ToggleEdit(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
     BoardData *pbd = BOARD(pwBoard)->board_data;
 
@@ -323,6 +323,7 @@ ToolbarUpdate(GtkWidget * pwToolbar,
     return c;
 }
 
+#if (!USE_GTKUIMANAGER)
 static GtkWidget *
 ToolbarAddButton(GtkToolbar * pwToolbar, const char *stockID, const char *label, const char *tooltip,
                  GCallback callback, void *data)
@@ -337,6 +338,7 @@ ToolbarAddButton(GtkToolbar * pwToolbar, const char *stockID, const char *label,
 
     return GTK_WIDGET(but);
 }
+#endif
 
 GtkWidget *
 ToolbarAddWidget(GtkToolbar * pwToolbar, GtkWidget * pWidget, const char *tooltip)
@@ -350,12 +352,14 @@ ToolbarAddWidget(GtkToolbar * pwToolbar, GtkWidget * pWidget, const char *toolti
     return GTK_WIDGET(ti);
 }
 
+#if (!USE_GTKUIMANAGER)
 static void
 ToolbarAddSeparator(GtkToolbar * pwToolbar)
 {
     GtkToolItem *sep = gtk_separator_tool_item_new();
     gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar), sep, -1);
 }
+#endif
 
 extern GtkWidget *
 ToolbarNew(void)
@@ -563,6 +567,7 @@ ToolbarNew(void)
 #endif
 }
 
+#if (!USE_GTKUIMANAGER)
 static GtkWidget *
 firstChild(GtkWidget * widget)
 {
@@ -601,6 +606,7 @@ SetToolbarItemStyle(gpointer data, gpointer user_data)
     else
         gtk_widget_hide(text);
 }
+#endif
 
 extern void
 SetToolbarStyle(int value)
