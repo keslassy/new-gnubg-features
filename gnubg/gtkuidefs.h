@@ -48,7 +48,6 @@
 	      "<menu name='CopyAsMenu' action='CopyAsMenuAction'>" \
 	        "<menuitem name='PosAsAscii' action='CopyPosAsAsciiAction' />" \
 	        "<menuitem name='GammOnLine' action='CopyAsGammOnLineAction' />" \
-	        "<menuitem name='BackgammonBase' action='CopyAsBackgammonBaseAction' />" \
 	      "</menu>" \
 	      \
 	      "<menuitem name='PasteID' action='PasteIDAction' />" \
