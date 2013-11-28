@@ -1278,7 +1278,7 @@ HideAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
 #if (USE_GTKUIMANAGER)
 void
-ToggleDockPanels(GtkToggleAction * action, gpointer user_data)
+ToggleDockPanels(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
     int newValue = gtk_toggle_action_get_active(action);
     if (fDockPanels != newValue) {
