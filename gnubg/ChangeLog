@@ -623,7 +623,13 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 	-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
 	-DGSEAL_ENABLE is a first step to supporting GTK3.
 	Keep the code backward compatible with GTK 2.6 with
-	conditonal expressions.
+	conditional expressions.
+
+	Philippe Michel  <philippe.michel7@sfr.fr>, 11/2013 :
+	Current code doesn't seem ready for -DGDK_DISABLE_DEPRECATED
+	(compiles with many warnings, crashes when run). CPPFLAGS set to
+	-DGTK_DISABLE_DEPRECATED -DGTK_COMPILATION -DGSEAL_ENABLE seems
+	adequate to check the GtkUIManager related code.
 
 2011-08-24  Michael Petch  <mpetch@gnubg.org>
 
