@@ -192,8 +192,8 @@ static int fAutoCommand;
 
 #if (USE_GTKUIMANAGER)
 static void
-ExecToggleActionCommand_internal(guint iWidgetType, guint iCommand, gchar * szCommand,
-                                 gpointer * widget, gpointer * widgetalt, gpointer user_data)
+ExecToggleActionCommand_internal(guint UNUSED(iWidgetType), guint UNUSED(iCommand), gchar * szCommand,
+                                 gpointer * widget, gpointer * UNUSED(widgetalt), gpointer UNUSED(user_data))
 {
 
     char sz[80];
@@ -208,8 +208,8 @@ ExecToggleActionCommand_internal(guint iWidgetType, guint iCommand, gchar * szCo
 }
 
 static void
-ExecRadioActionCommand_internal(guint iWidgetType, guint iCommand, gchar * szCommand,
-                                gpointer * widget, gpointer * widgetalt, gpointer user_data)
+ExecRadioActionCommand_internal(guint UNUSED(iWidgetType), guint iCommand, gchar * UNUSED(szCommand), gpointer * widget,
+                                gpointer * UNUSED(widgetalt), gpointer UNUSED(user_data))
 {
 
     char sz[80];
@@ -232,8 +232,8 @@ ExecRadioActionCommand_internal(guint iWidgetType, guint iCommand, gchar * szCom
 }
 
 static void
-ExecActionCommand_internal(guint iWidgetType, guint iCommand, gchar * szCommand,
-                           gpointer * widget, gpointer * widgetalt, gpointer user_data)
+ExecActionCommand_internal(guint UNUSED(iWidgetType), guint iCommand, gchar * szCommand, gpointer * UNUSED(widget),
+                           gpointer * UNUSED(widgetalt), gpointer UNUSED(user_data))
 {
 
     char sz[80];
@@ -1351,7 +1351,8 @@ GTKTranslate(const gchar * path, gpointer UNUSED(func_data))
 
 #if (USE_GTKUIMANAGER)
 static void
-ToolbarStyle(guint iType, guint iActionID, GtkRadioAction * action, GtkRadioAction * alt, gpointer user_data)
+ToolbarStyle(guint UNUSED(iType), guint UNUSED(iActionID), GtkRadioAction * action, GtkRadioAction * UNUSED(alt),
+             gpointer UNUSED(user_data))
 {
     guint actionID = gtk_radio_action_get_current_value(GTK_RADIO_ACTION(action));
     /* If radio button has been selected set style */
@@ -1486,7 +1487,8 @@ CopyPositionID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
 #if (USE_GTKUIMANAGER)
 static void
-TogglePanel(guint iType, guint iActionID, GtkToggleAction * action, GtkToggleAction * alt, gpointer user_data)
+TogglePanel(guint UNUSED(iType), guint iActionID, GtkToggleAction * action, GtkToggleAction * UNUSED(alt),
+            gpointer UNUSED(user_data))
 {
     int f;
     gnubgwindow panel = 0;
@@ -1649,7 +1651,7 @@ SwitchDisplayMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
 #if (USE_GTKUIMANAGER)
 static void
-ToggleShowingIDs(GtkToggleAction * action, gpointer user_data)
+ToggleShowingIDs(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
     int newValue = gtk_toggle_action_get_active(action);
     char *sz = g_strdup_printf("set gui showids %s", newValue ? "on" : "off");
