@@ -252,6 +252,10 @@ ExecActionCommand_internal(guint iWidgetType, guint iCommand, gchar * szCommand,
         UserCommand(sz);
         return;
 
+    case CMD_ANALYSE_MATCH:
+        UserCommand("analyse match");
+        UserCommand("show statistics match");
+        return;
 
     default:
         UserCommand(szCommand);
@@ -491,6 +495,10 @@ Command(gpointer UNUSED(p), guint iCommand, GtkWidget * widget)
         UserCommand(sz);
         return;
 
+    case CMD_ANALYSE_MATCH:
+        UserCommand(aszCommands[CMD_ANALYSE_MATCH]);
+        UserCommand(aszCommands[CMD_SHOW_STATISTICS_MATCH]);
+        return;
 
     default:
         UserCommand(aszCommands[iCommand]);

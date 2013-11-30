@@ -1,9 +1,15 @@
+2013-11-30  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* gtkgame.c: Display match statistics when a match analysis is
+	completed (GUI only, and does not apply to those run from a
+	command file or a batch analysis).
+
 2013-11-26  Michael Petch  <mpetch@gnubg.org>
 
 	* gnubgmodule.c: Fix a serious bug created by a previous commit
 	that prevented many of the python interface function from working
 	correctly. Add new classifypos python function to the gnubg python
-    interface. 
+	interface.
 
 2013-11-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
