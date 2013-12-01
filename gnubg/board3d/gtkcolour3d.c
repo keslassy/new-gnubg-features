@@ -86,15 +86,15 @@ SetupLight(void)
     float lp[4] = { PREVIEW_WIDTH / 2, PREVIEW_HEIGHT / 2, 50, 1 };
     glLightfv(GL_LIGHT0, GL_POSITION, lp);
 
-    al[0] = al[1] = al[2] = previewLightLevels[0] / 100.0f;
+    al[0] = al[1] = al[2] = (float) previewLightLevels[0] / 100.0f;
     al[3] = 1;
     glLightfv(GL_LIGHT0, GL_AMBIENT, al);
 
-    dl[0] = dl[1] = dl[2] = previewLightLevels[1] / 100.0f;
+    dl[0] = dl[1] = dl[2] = (float) previewLightLevels[1] / 100.0f;
     dl[3] = 1;
     glLightfv(GL_LIGHT0, GL_DIFFUSE, dl);
 
-    sl[0] = sl[1] = sl[2] = previewLightLevels[2] / 100.0f;
+    sl[0] = sl[1] = sl[2] = (float) previewLightLevels[2] / 100.0f;
     sl[3] = 1;
     glLightfv(GL_LIGHT0, GL_SPECULAR, sl);
 }
@@ -125,7 +125,7 @@ Draw(Material * pMat)
             glScalef(1.f, HINGE_SEGMENTS, 1.f);
         } else {
             glRotatef(-90.f, 0.f, 0.f, 1.f);
-            glScalef(TEXTURE_SCALE / texture.width, TEXTURE_SCALE / texture.height, 1.f);
+            glScalef(TEXTURE_SCALE / (float) texture.width, TEXTURE_SCALE / (float) texture.height, 1.f);
         }
         glMatrixMode(GL_MODELVIEW);
     } else {
@@ -386,7 +386,7 @@ DialogClose(GtkDialog * UNUSED(dialog), gint response, void *UNUSED(data))
 static void
 append_to_combo_box( /*lint -e{818} */ gpointer data, gpointer combo)
 {
-    gtk_combo_box_append_text(combo, data);
+    gtk_combo_box_text_append_text(combo, data);
 }
 
 static void
