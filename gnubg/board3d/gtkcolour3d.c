@@ -23,6 +23,7 @@
 
 #include "config.h"
 #include "inc3d.h"
+#include "gtklocdefs.h"
 
 #include "gtkprefs.h"
 
@@ -202,9 +203,9 @@ SetupColourPreview(void)
 }
 
 static void
-TextureChange(GtkComboBox * combo, gpointer UNUSED(data))
+TextureChange(GtkComboBoxText * combo, gpointer UNUSED(data))
 {
-    char *current = gtk_combo_box_get_active_text(combo);
+    char *current = gtk_combo_box_text_get_active_text(combo);
 
     if (!bUpdate)
         return;
@@ -340,7 +341,7 @@ AddWidgets(GtkWidget * window)
 
     pTexturelabel = gtk_label_new(_("Texture:"));
     gtk_table_attach_defaults(GTK_TABLE(table), pTexturelabel, 2, 3, 2, 3);
-    textureComboBox = gtk_combo_box_new_text();
+    textureComboBox = GTK_WIDGET(gtk_combo_box_text_new());
     texture_set_active();
     gtk_widget_set_sensitive(textureComboBox, FALSE);
     g_signal_connect(textureComboBox, "changed", G_CALLBACK(TextureChange), NULL);
@@ -364,7 +365,7 @@ DialogClose(GtkDialog * UNUSED(dialog), gint response, void *UNUSED(data))
         *curDetails->pBoardMat = col3d;
 
         if (useTexture) {
-            texStr = gtk_combo_box_get_active_text(GTK_COMBO_BOX(textureComboBox));
+            texStr = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(textureComboBox));
 
             if (!strcmp(texStr, NO_TEXTURE_STRING))
                 col3d.textureInfo = 0;
