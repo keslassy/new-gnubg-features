@@ -3139,7 +3139,7 @@ ReportBug(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
 #if (USE_GTKUIMANAGER)
 
 static GtkActionEntry actionEntries[] = {
-    {"FileMenuAction", NULL, N_("_File")},
+    {"FileMenuAction", NULL, N_("_File"), NULL, NULL, G_CALLBACK(NULL)},
     {"FileNewAction", GTK_STOCK_NEW, N_("_New..."), "<control>N", NULL, G_CALLBACK(NewClicked)},
     {"FileOpenAction", GTK_STOCK_OPEN, N_("_Open"), "<control>O", NULL, G_CALLBACK(GTKOpen)},
     {"FileSaveAction", GTK_STOCK_SAVE, N_("_Save"), "<control>S", NULL, G_CALLBACK(GTKSave)},
@@ -3151,26 +3151,26 @@ static GtkActionEntry actionEntries[] = {
     {"FileExitAction", NULL, N_("_Quit"), "<control>Q", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIT)},
 #endif
 
-    {"EditMenuAction", NULL, N_("_Edit")},
+    {"EditMenuAction", NULL, N_("_Edit"), NULL, NULL, G_CALLBACK(NULL)},
     {"UndoAction", GTK_STOCK_UNDO, N_("_Undo"), "<control>Z", NULL, G_CALLBACK(GTKUndo)},
-    {"CopyIDMenuAction", NULL, N_("_Copy ID to Clipboard")},
+    {"CopyIDMenuAction", NULL, N_("_Copy ID to Clipboard"), NULL, NULL, G_CALLBACK(NULL)},
     {"CopyGNUBGIDAction", NULL, N_("GNUbg ID"), "<control>C", NULL, G_CALLBACK(CopyIDs)},
     {"CopyMatchIDAction", NULL, N_("Match ID"), "<control>M", NULL, G_CALLBACK(CopyMatchID)},
     {"CopyPositionIDAction", NULL, N_("Position ID"), "<control>P", NULL, G_CALLBACK(CopyPositionID)},
 
-    {"CopyAsMenuAction", NULL, N_("Copy as")},
+    {"CopyAsMenuAction", NULL, N_("Copy as"), NULL, NULL, G_CALLBACK(NULL)},
     {"CopyPosAsAsciiAction", NULL, N_("Position as ASCII"), NULL, NULL, G_CALLBACK(CommandCopy)},
     {"CopyAsGammOnLineAction", NULL, N_("GammOnLine (HTML)"), NULL, NULL, G_CALLBACK(CopyAsGOL)},
 
     {"PasteIDAction", GTK_STOCK_PASTE, N_("_Paste ID"), "<control>V", NULL, G_CALLBACK(PasteIDs)},
 
-    {"ViewMenuAction", NULL, N_("_View")},
-    {"PanelsMenuAction", NULL, N_("_Panels")},
+    {"ViewMenuAction", NULL, N_("_View"), NULL, NULL, G_CALLBACK(NULL)},
+    {"PanelsMenuAction", NULL, N_("_Panels"), NULL, NULL, G_CALLBACK(NULL)},
 
     {"RestorePanelsAction", NULL, N_("Restore panels"), NULL, NULL, G_CALLBACK(ShowAllPanels)},
     {"HidePanelsAction", NULL, N_("Hide panels"), NULL, NULL, G_CALLBACK(HideAllPanels)},
 
-    {"ToolBarMenuAction", NULL, N_("_Toolbar")},
+    {"ToolBarMenuAction", NULL, N_("_Toolbar"), NULL, NULL, G_CALLBACK(NULL)},
     {"HideToolBarAction", NULL, N_("_Hide Toolbar"), NULL, NULL, G_CALLBACK(HideToolbar)},
     {"ShowToolBarAction", NULL, N_("_Show Toolbar"), NULL, NULL, G_CALLBACK(ShowToolbar)},
 
@@ -3178,7 +3178,7 @@ static GtkActionEntry actionEntries[] = {
     {"SwitchModeAction", NULL, N_("Switch to xD view"), NULL, NULL, G_CALLBACK(SwitchDisplayMode)},
 #endif
 
-    {"GameMenuAction", NULL, N_("_Game")},
+    {"GameMenuAction", NULL, N_("_Game"), NULL, NULL, G_CALLBACK(NULL)},
     {"RollAction", NULL, N_("_Roll"), "<control>R", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ROLL)},
     {"FinishMoveAction", NULL, N_("_Finish move"), "<control>F", NULL, G_CALLBACK(FinishMove)},
     {"DoubleAction", GNUBG_STOCK_DOUBLE, N_("_Double"), "<control>D", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_DOUBLE)},
@@ -3192,11 +3192,11 @@ static GtkActionEntry actionEntries[] = {
     {"SetCubeAction", NULL, N_("Set cube..."), NULL, NULL, G_CALLBACK(GTKSetCube)},
     {"SetDiceAction", NULL, N_("Set _dice..."), NULL, NULL, G_CALLBACK(GTKSetDice)},
 
-    {"SetTurnMenuAction", NULL, N_("Set _turn")},
+    {"SetTurnMenuAction", NULL, N_("Set _turn"), NULL, NULL, G_CALLBACK(NULL)},
 
     {"ClearTurnAction", NULL, N_("Clear turn"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CLEAR_TURN)},
 
-    {"AnalyseMenuAction", NULL, N_("_Analyse")},
+    {"AnalyseMenuAction", NULL, N_("_Analyse"), NULL, NULL, G_CALLBACK(NULL)},
     {"EvaluateAction", NULL, N_("_Evaluate"), "<control>E", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_EVAL)},
     {"HintAction", GNUBG_STOCK_HINT, N_("_Hint"), "<control>H", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_HINT)},
     {"RolloutAction", NULL, N_("_Rollout"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ROLLOUT)},
@@ -3205,7 +3205,7 @@ static GtkActionEntry actionEntries[] = {
     {"AnalyseMatchAction", NULL, N_("Analyse match or session"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_MATCH)},
 
-    {"ClearAnalysisMenuAction", NULL, N_("Clear analysis")},
+    {"ClearAnalysisMenuAction", NULL, N_("Clear analysis"), NULL, NULL, G_CALLBACK(NULL)},
     {"ClearAnalysisMoveAction", GTK_STOCK_CLEAR, N_("Move"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_CLEAR_MOVE)},
     {"ClearAnalysisGameAction", GTK_STOCK_CLEAR, N_("_Game"), NULL, NULL,
@@ -3213,21 +3213,21 @@ static GtkActionEntry actionEntries[] = {
     {"ClearAnalysisMatchOrSessionAction", GTK_STOCK_CLEAR, N_("_Match or session"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_CLEAR_MATCH)},
 
-    {"CMarkMenuAction", NULL, N_("CMark")},
-    {"CMarkCubeMenuAction", NULL, N_("Cube")},
+    {"CMarkMenuAction", NULL, N_("CMark"), NULL, NULL, G_CALLBACK(NULL)},
+    {"CMarkCubeMenuAction", NULL, N_("Cube"), NULL, NULL, G_CALLBACK(NULL)},
     {"CMarkCubeClearAction", NULL, N_("Clear"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_CUBE_CLEAR)},
     {"CMarkCubeShowAction", NULL, N_("Show"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_CUBE_SHOW)},
-    {"CMarkMoveMenuAction", NULL, N_("Move")},
+    {"CMarkMoveMenuAction", NULL, N_("Move"), NULL, NULL, G_CALLBACK(NULL)},
     {"CMarkMoveClearAction", NULL, N_("Clear"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_MOVE_CLEAR)},
     {"CMarkMoveShowAction", NULL, N_("Show"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_MOVE_SHOW)},
-    {"CMarkGameMenuAction", NULL, N_("Game")},
+    {"CMarkGameMenuAction", NULL, N_("Game"), NULL, NULL, G_CALLBACK(NULL)},
     {"CMarkGameClearAction", NULL, N_("Clear"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_GAME_CLEAR)},
     {"CMarkGameShowAction", NULL, N_("Show"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_GAME_SHOW)},
-    {"CMarkMatchMenuAction", NULL, N_("Match")},
+    {"CMarkMatchMenuAction", NULL, N_("Match"), NULL, NULL, G_CALLBACK(NULL)},
     {"CMarkMatchClearAction", NULL, N_("Clear"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_MATCH_CLEAR)},
     {"CMarkMatchShowAction", NULL, N_("Show"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_MATCH_SHOW)},
 
-    {"RolloutMenuAction", NULL, N_("Rollout")},
+    {"RolloutMenuAction", NULL, N_("Rollout"), NULL, NULL, G_CALLBACK(NULL)},
     {"RolloutCubeAction", NULL, N_("Cube"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_CUBE)},
     {"RolloutMoveAction", NULL, N_("Move"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_MOVE)},
     {"RolloutGameAction", NULL, N_("Game"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_GAME)},
@@ -3252,7 +3252,7 @@ static GtkActionEntry actionEntries[] = {
     {"EvaluationSpeedAction", NULL, N_("Evaluation speed"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_CALIBRATION)},
 
-    {"SettingsMenuAction", NULL, N_("_Settings")},
+    {"SettingsMenuAction", NULL, N_("_Settings"), NULL, NULL, G_CALLBACK(NULL)},
     {"SettingsAnalysisAction", NULL, N_("_Analysis..."), NULL, NULL, G_CALLBACK(SetAnalysis)},
     {"SettingsBoardAppearanceAction", NULL, N_("_Board Appearance..."), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SET_APPEARANCE)},
@@ -3262,7 +3262,7 @@ static GtkActionEntry actionEntries[] = {
     {"SettingsOptionsAction", NULL, N_("_Options..."), NULL, NULL, G_CALLBACK(SetOptions)},
     {"SettingsLanguageAction", NULL, N_("_Language..."), NULL, NULL, G_CALLBACK(SetLanguage)},
 
-    {"GoMenuAction", NULL, N_("G_o")},
+    {"GoMenuAction", NULL, N_("G_o"), NULL, NULL, G_CALLBACK(NULL)},
     {"GoPreviousMarkedMoveAction", GNUBG_STOCK_GO_PREV_MARKED, N_("Previous marked move"), "<shift><control>Page_Up",
      NULL, CMD_ACTION_CALLBACK_FROMID(CMD_PREV_MARKED)},
     {"GoPreviousCMarkedMoveAction", GNUBG_STOCK_GO_PREV_CMARKED, N_("Previous cmarked move"), "<shift>Page_Up", NULL,
@@ -3280,7 +3280,7 @@ static GtkActionEntry actionEntries[] = {
     {"GoNextMarkedMoveAction", GNUBG_STOCK_GO_NEXT_MARKED, N_("Next marked move"), "<shift><control>Page_Down", NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_NEXT_MARKED)},
 
-    {"HelpMenuAction", NULL, N_("_Help")},
+    {"HelpMenuAction", NULL, N_("_Help"), NULL, NULL, G_CALLBACK(NULL)},
     {"HelpCommandsAction", NULL, N_("_Commands"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_HELP)},
     {"HelpManualAllAboutAction", NULL, N_("_Manual (all about)"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MANUAL_ABOUT)},
@@ -3290,19 +3290,19 @@ static GtkActionEntry actionEntries[] = {
 };
 
 static GtkToggleActionEntry toggleActionEntries[] = {
-    {"EditPositionAction", GTK_STOCK_EDIT, N_("_Edit Position"), NULL, NULL, G_CALLBACK(ToggleEdit)},
+    {"EditPositionAction", GTK_STOCK_EDIT, N_("_Edit Position"), NULL, NULL, G_CALLBACK(ToggleEdit), FALSE},
 
-    {"PanelGameRecordAction", NULL, N_("_Game record"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_GAMELIST)},   /* TOGGLE */
-    {"PanelAnalysisAction", NULL, N_("_Analysis"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_ANALYSIS)},        /* TOGGLE */
-    {"PanelCommentaryAction", NULL, N_("_Commentary"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMENTARY)},  /* TOGGLE */
-    {"PanelMessageAction", NULL, N_("_Message"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_MESSAGE)},   /* TOGGLE */
-    {"PanelTheoryAction", NULL, N_("_Theory"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_THEORY)},      /* TOGGLE */
-    {"PanelCommandAction", NULL, N_("Command"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMAND)},    /* TOGGLE */
+    {"PanelGameRecordAction", NULL, N_("_Game record"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_GAMELIST), FALSE},   /* TOGGLE */
+    {"PanelAnalysisAction", NULL, N_("_Analysis"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_ANALYSIS), FALSE},        /* TOGGLE */
+    {"PanelCommentaryAction", NULL, N_("_Commentary"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMENTARY), FALSE},  /* TOGGLE */
+    {"PanelMessageAction", NULL, N_("_Message"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_MESSAGE), FALSE},   /* TOGGLE */
+    {"PanelTheoryAction", NULL, N_("_Theory"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_THEORY), FALSE},      /* TOGGLE */
+    {"PanelCommandAction", NULL, N_("Command"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMAND), FALSE},    /* TOGGLE */
 
-    {"DockPanelsAction", NULL, N_("_Dock panels"), NULL, NULL, G_CALLBACK(ToggleDockPanels)},
-    {"ShowIDStatusBarAction", NULL, N_("Show _ID in status bar"), NULL, NULL, G_CALLBACK(ToggleShowingIDs)},    /* TOGGLE */
-    {"FullScreenAction", NULL, N_("Full screen"), "F11", NULL, G_CALLBACK(DoFullScreenMode)},   /* TOGGLE */
-    {"PlayClockwiseAction", NULL, N_("Play _Clockwise"), NULL, NULL, G_CALLBACK(ToggleClockwise)}       /* TOGGLE */
+    {"DockPanelsAction", NULL, N_("_Dock panels"), NULL, NULL, G_CALLBACK(ToggleDockPanels), FALSE},
+    {"ShowIDStatusBarAction", NULL, N_("Show _ID in status bar"), NULL, NULL, G_CALLBACK(ToggleShowingIDs), FALSE},    /* TOGGLE */
+    {"FullScreenAction", NULL, N_("Full screen"), "F11", NULL, G_CALLBACK(DoFullScreenMode), FALSE},   /* TOGGLE */
+    {"PlayClockwiseAction", NULL, N_("Play _Clockwise"), NULL, NULL, G_CALLBACK(ToggleClockwise), FALSE}       /* TOGGLE */
 };
 
 static GtkRadioActionEntry toolbarRadioActionEntries[] = {
