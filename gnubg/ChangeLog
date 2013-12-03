@@ -607,9 +607,9 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 2011-09-02  Michael Petch  <mpetch@gnubg.org>
 
-	* gtkboard.c, gtkfile.c, gtkgame.c, gtklocdefs.c, 
+	* gtkboard.c, gtkfile.c, gtkgame.c, gtklocdefs.c,
 	  gtklocdefs.h, gtktoolbar.c, gtktoolbar.h, gtkwindows.c:
-	Work around more deprecated functions. 
+	Work around more deprecated functions.
 
 2011-08-30  Michael Petch  <mpetch@gnubg.org>
 
@@ -622,7 +622,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 	  set.c, board3d/graph.c, board3d/gtkcolour3d.c,
 	  board3d/inc3d.h, board3d/misc3d.c, board3d/widget3d.c,
 	  +gtklocdefs.h, +gtklocdefs.c, +gtkuidefs.h:
-	Work around deprecated functions in GTK 2.24, 
+	Work around deprecated functions in GTK 2.24,
 	remove direct member access of opaque types,
 	convert GtkItemFactory to GtkUIManager for the menu
 	and toolbars. Building with 2.24 using compile flags
@@ -631,11 +631,11 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 	Keep the code backward compatible with GTK 2.6 with
 	conditional expressions.
 
-	Philippe Michel  <philippe.michel7@sfr.fr>, 11/2013 :
-	Current code doesn't seem ready for -DGDK_DISABLE_DEPRECATED
-	(compiles with many warnings, crashes when run). CPPFLAGS set to
-	-DGTK_DISABLE_DEPRECATED -DGTK_COMPILATION -DGSEAL_ENABLE seems
-	adequate to check the GtkUIManager related code.
+	The above DISABLE_DEPRECATED flags are intrusive and may not allow
+	to build a working gnubg on some platforms. When simply making
+	changes to the menus and toolbars, it is enough to check that they
+	work with -DUSE_GTKUIMANAGER -DGSEAL_ENABLE as well as without
+	these flags.
 
 2011-08-24  Michael Petch  <mpetch@gnubg.org>
 
