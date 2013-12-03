@@ -53,9 +53,6 @@
 #include "fun3d.h"
 #endif
 
-#define MASK_INVISIBLE 1
-#define MASK_VISIBLE 0
-
 /* minimum time in milliseconds before a drag to the
  * same point is considered a real drag rather than a click */
 #define CLICK_TIME 450
@@ -2143,7 +2140,7 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
             TargetHelpColor->green = 255 * (65535 / 255);
             TargetHelpColor->blue = 0 * (65535 / 255);
             TargetHelpColor->pixel = (guint32) (TargetHelpColor->red * 65536 +
-                                               TargetHelpColor->green * 256 + TargetHelpColor->blue);
+                                                TargetHelpColor->green * 256 + TargetHelpColor->blue);
             /* get the closest color available in the colormap if no 24-bit */
             gdk_colormap_alloc_color(gtk_widget_get_colormap(board), TargetHelpColor, TRUE, TRUE);
             gdk_gc_set_foreground(bd->gc_copy, TargetHelpColor);
@@ -2289,7 +2286,7 @@ board_text_to_setting(const gchar ** board_text, gint * failed)
         *failed = 1;
         return 0;
     }
-    return (int)strtol(*board_text, (char **) board_text, 10);
+    return (int) strtol(*board_text, (char **) board_text, 10);
 }
 
 static gint
@@ -3397,8 +3394,7 @@ board_edit(BoardData * bd)
                                          ms.fResigned,
                                          ms.fDoubled,
                                          ms.fMove, ms.fCubeOwner, crawford, nMatchToNew, anScoreNew, bd->cube,
-                                         jacoby,
-                                         ms.gs));
+                                         jacoby, ms.gs));
             UserCommand(sz);
             g_free(sz);
         }
@@ -3434,9 +3430,9 @@ DrawAlphaImage(GdkDrawable * pd, int x, int y, unsigned char *puchSrc, int nStri
 
     for (iy = 0; iy < cy; iy++) {
         for (ix = 0; ix < cx; ix++) {
-            puchDest[0] = puch[0] * 0x100 / (0x100 - puch[3]);
-            puchDest[1] = puch[1] * 0x100 / (0x100 - puch[3]);
-            puchDest[2] = puch[2] * 0x100 / (0x100 - puch[3]);
+            puchDest[0] = (unsigned char) (puch[0] * 0x100 / (0x100 - puch[3]));
+            puchDest[1] = (unsigned char) (puch[1] * 0x100 / (0x100 - puch[3]));
+            puchDest[2] = (unsigned char) (puch[2] * 0x100 / (0x100 - puch[3]));
             puchDest[3] = 0xFF - puch[3];
 
             puch += 4;
