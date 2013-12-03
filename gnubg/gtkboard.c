@@ -3435,7 +3435,7 @@ DrawAlphaImage(GdkDrawable * pd, int x, int y, unsigned char *puchSrc, int nStri
     for (iy = 0; iy < cy; iy++) {
         for (ix = 0; ix < cx; ix++) {
             puchDest[0] = puch[0] * 0x100 / (0x100 - puch[3]);
-            puchDest[1] = puch[2] * 0x100 / (0x100 - puch[3]);
+            puchDest[1] = puch[1] * 0x100 / (0x100 - puch[3]);
             puchDest[2] = puch[2] * 0x100 / (0x100 - puch[3]);
             puchDest[3] = 0xFF - puch[3];
 
