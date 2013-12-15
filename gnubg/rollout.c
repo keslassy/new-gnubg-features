@@ -284,9 +284,6 @@ ClosedBoard(int afClosedBoard[2], const TanBoard anBoard)
 #define BasicCubefulRollout BasicCubefulRolloutWithLocking
 
 extern unsigned int initial_game_count;
-#if USE_GTK
-extern int fX;
-#endif
 
 #endif
 
