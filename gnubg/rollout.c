@@ -174,7 +174,6 @@ log_game_over(FILE * logfp)
         return;
     fprintf(logfp, ")");
     fclose(logfp);
-    logfp = 0;
 }
 
 extern void
