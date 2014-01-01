@@ -1723,7 +1723,7 @@ UseDesign(void)
             if (i != 1)
                 gtk_adjustment_set_value(GTK_ADJUSTMENT(apadjBoard[i]), newPrefs.aSpeckle[i] / 128.0);
 
-            for (j = 0; j < 3; j++)
+            for (j = 0; j < 4; j++)
                 ar[j] = newPrefs.aanBoardColour[i][j] / 255.0;
 
             gtk_color_button_set_from_array(GTK_COLOR_BUTTON(apwBoard[i]), ar);
