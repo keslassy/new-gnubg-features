@@ -657,10 +657,10 @@ GetBuildInfoString(void)
  whitespace
  
  matching single or double quotes are allowed, any character outside
- of quotes or in doubly quoated strings can be escaped with a
+ of quotes or in doubly quoted strings can be escaped with a
  backslash and will be taken as literal.  Backslashes within single
- quoted strings are taken literally. Multiple quoted strins can be
- concatentated.  
+ quoted strings are taken literally. Multiple quoted strings can be
+ concatenated.  
  
  For example: input ' abc\"d"e f\"g h i"jk'l m n \" o p q'rst uvwzyz'
  with the terminator list ' \t\r\n\v\f'
@@ -671,7 +671,7 @@ GetBuildInfoString(void)
  a double quote and is *not* the start of a quoted string.
  The " before the 'd' begins a double quoted string, so spaces and tabs are
  not terminators. The \" between f and g is reduced to a double quote and 
- does not teminate the quoted string. which ends with the double quote 
+ does not terminate the quoted string. which ends with the double quote 
  between i and j. The \" between n and o is taken as a pair of literal
  characters because they are within the single quoted string beginning
  before l and ending after q.
@@ -2731,7 +2731,7 @@ CommandLoadCommands(char *sz)
     char *szQuoted = NULL;
     char *szQuotedTemp = NULL;
     if (sz[0] != '"' && sz[0] != '\'') {
-        szQuoted = szQuotedTemp = g_strdup_printf("'%s'", sz);
+        szQuoted = szQuotedTemp = g_strdup_printf("\"%s\"", sz);
         sz = NextToken(&szQuoted);
     } else
         sz = NextToken(&sz);
@@ -2844,7 +2844,7 @@ LoadRCFiles(void)
     loading_rc = TRUE;
     outputoff();
     sz = g_build_filename(szHomeDirectory, "gnubgautorc", NULL);
-    szz = g_strdup_printf("'%s'", sz);
+    szz = g_strdup_printf("\"%s\"", sz);
     if (g_file_test(sz, G_FILE_TEST_EXISTS))
         CommandLoadCommands(szz);
 
@@ -2853,7 +2853,7 @@ LoadRCFiles(void)
     g_free(szz);
 
     sz = g_build_filename(szHomeDirectory, "gnubgrc", NULL);
-    szz = g_strdup_printf("'%s'", sz);
+    szz = g_strdup_printf("\"%s\"", sz);
     if (g_file_test(sz, G_FILE_TEST_EXISTS))
         CommandLoadCommands(szz);
     g_free(sz);
