@@ -1058,7 +1058,7 @@ ImportMatVariation(FILE * fp, char *szFilename, bgvariation bgVariation, int war
             }
         } else
             /* Look for start of mat file */
-            n = sscanf(szLine, "%d %*1[Pp]oint %*1[Mm]atch%c", &nLength, &ch);
+            n = sscanf(szLine, "%10d %*1[Pp]oint %*1[Mm]atch%c", &nLength, &ch);
     } while (n != 2);
 
     if (nLength < 0) {
@@ -1543,7 +1543,7 @@ ImportOldmoves(FILE * pf, char *szFilename)
         return -1;
     }
 
-    if ((n = sscanf(p, "Score is %d-%d in a %d", &n0, &n1, &nLength)) < 2) {
+    if ((n = sscanf(p, "Score is %10d-%10d in a %10d", &n0, &n1, &nLength)) < 2) {
         outputerrf(_("%s: not a valid oldmoves file"), szFilename);
         return -1;
     }
@@ -1569,7 +1569,7 @@ ImportOldmoves(FILE * pf, char *szFilename)
         if (p == 0)
             break;
 
-        n = sscanf(p, "Score is %d-%d in a %d", &n0, &n1, &nLength);
+        n = sscanf(p, "Score is %10d-%10d in a %10d", &n0, &n1, &nLength);
         if (n < 2)
             break;
     }
@@ -2098,7 +2098,7 @@ ParseSGGDate(const char *sz, unsigned int *pnDay, unsigned int *pnMonth, unsigne
     *pnMonth = 1;
     *pnYear = 1900;
 
-    if (sscanf(sz, "%*s %79s %u, %u", szMonth, &nDay, &nYear) != 3)
+    if (sscanf(sz, "%*s %79s %2u, %4u", szMonth, &nDay, &nYear) != 3)
         return;
 
     *pnDay = nDay;
@@ -2153,7 +2153,7 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
         /* Players are swapped later (at the end of ImportSGG()) and ratings
          * must be swapped here as well to be correctly attributed at the end
          * Order in SGG file is player1 player0 */
-        if ((sscanf(sz, "%*s %lf %d %lf %d", &arRating[0], &anExp[0], &arRating[1], &anExp[1])) != 4)
+        if ((sscanf(sz, "%*s %20lf %10d %20lf %10d", &arRating[0], &anExp[0], &arRating[1], &anExp[1])) != 4)
             break;
 
         for (i = 0; i < 2; ++i) {
@@ -2384,7 +2384,7 @@ ParseTMGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
 
     case 1:                    /* Player1: */
     case 2:                    /* Player2: */
-        if (sscanf(sz, "Player%d: %*d %79s %*f", &j, szName) == 2)
+        if (sscanf(sz, "Player%1d: %*d %79s %*f", &j, szName) == 2)
             if ((j == 1 || j == 2) && *szName)
                 strcpy(ap[j - 1].szName, szName);
         return 0;
@@ -2404,7 +2404,7 @@ ParseTMGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
 
     case 6:                    /* Startdate */
 
-        if ((sscanf(sz, "Startdate: %u-%u-%u", &pmi->nYear, &pmi->nMonth, &pmi->nDay)) != 3)
+        if ((sscanf(sz, "Startdate: %4u-%2u-%2u", &pmi->nYear, &pmi->nMonth, &pmi->nDay)) != 3)
             pmi->nYear = pmi->nMonth = pmi->nDay = 0;
         return 0;
 
@@ -2471,7 +2471,7 @@ ParseTMGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
 static int
 ParseTMGGame(const char *sz, int *piGame, int *pn0, int *pn1, int *pfCrawford, int *post_crawford, const int nLength)
 {
-    int i = sscanf(sz, "Game %d: %d-%d", piGame, pn0, pn1) == 3;
+    int i = sscanf(sz, "Game %10d: %10d-%10d", piGame, pn0, pn1) == 3;
 
     if (!i)
         return FALSE;
