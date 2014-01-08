@@ -687,6 +687,7 @@ GetTextures(BoardData3d * bd3d, renderdata * prd)
 void
 Set3dSettings(renderdata * prdnew, const renderdata * prd)
 {
+    unsigned int i;
     prdnew->pieceType = prd->pieceType;
     prdnew->pieceTextureType = prd->pieceTextureType;
     prdnew->fHinges3d = prd->fHinges3d;
@@ -702,6 +703,12 @@ Set3dSettings(renderdata * prdnew, const renderdata * prd)
     prdnew->boardAngle = prd->boardAngle;
     prdnew->diceSize = prd->diceSize;
     prdnew->planView = prd->planView;
+
+    prdnew->lightType = prd->lightType;
+    for (i = 0; i < 3; i++) {
+      prdnew->lightPos[i] = prd->lightPos[i];
+      prdnew->lightLevels[i] = prd->lightLevels[i];
+    }
 
     memcpy(prdnew->ChequerMat, prd->ChequerMat, sizeof(Material[2]));
     memcpy(&prdnew->DiceMat[0], prd->afDieColour3d[0] ? &prd->ChequerMat[0] : &prd->DiceMat[0], sizeof(Material));
