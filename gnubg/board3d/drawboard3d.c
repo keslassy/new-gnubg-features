@@ -3941,6 +3941,8 @@ extern int renderingBase;
 extern void
 drawBasePreRender(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd)
 {
+    GtkAllocation allocation;
+
     if (bd->rd->showShadows) {
         renderingBase = TRUE;
         shadowDisplay(drawBoardBase, bd, bd3d, prd);
@@ -3948,7 +3950,6 @@ drawBasePreRender(const BoardData * bd, const BoardData3d * bd3d, const renderda
     } else
         drawBoardBase(bd, bd3d, prd);
 
-    GtkAllocation allocation;
     gtk_widget_get_allocation(bd3d->drawing_area3d, &allocation);
     SaveBufferRegion(bd3d->wglBuffer, 0, 0, allocation.width, allocation.height);
 }

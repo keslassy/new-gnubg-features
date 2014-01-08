@@ -970,6 +970,7 @@ ParseFIBSBoard(char *pch, TanBoard anBoard,
     char *szTmp;
     int nTurn, nColor, nDirection;
     int anFIBSBoard[26];
+    int fMustSwap = 0;
 
     /* Names and match length/score */
     c = -1;
@@ -1038,7 +1039,6 @@ ParseFIBSBoard(char *pch, TanBoard anBoard,
     if (!*pfDoubled && !fCanDouble && !fOppCanDouble)
         *pfDoubled = 1;
 
-    int fMustSwap = 0;
     if (*pfDoubled)
         fMustSwap = !fMustSwap;
     if (nTurn * nColor < 0)

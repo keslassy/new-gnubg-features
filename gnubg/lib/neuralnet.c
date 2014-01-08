@@ -241,7 +241,7 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
         {
             unsigned int i;
 #if !USE_SIMD_INSTRUCTIONS
-            if (pnState->cSavedIBase != pnn->cInput){
+            if (pnState->cSavedIBase != (int)pnn->cInput){
                 Evaluate(pnn, arInput, ar, arOutput, 0);
                 break;
             }

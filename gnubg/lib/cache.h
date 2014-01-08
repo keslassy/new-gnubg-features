@@ -88,6 +88,6 @@ void CacheFlush(const evalCache * pc);
 void CacheDestroy(const evalCache * pc);
 void CacheStats(const evalCache * pc, unsigned int *pcLookup, unsigned int *pcHit, unsigned int *pcUsed);
 
-uint32_t GetHashKey(const uint32_t hashMask, const cacheNodeDetail * e);
+uint32_t GetHashKey(uint32_t hashMask, const cacheNodeDetail * e);
 
 #endif

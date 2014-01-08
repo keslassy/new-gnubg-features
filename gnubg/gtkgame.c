@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#include "gnubgmodule.h"
 #include "config.h"
+#include "gnubgmodule.h"
 #include "gtklocdefs.h"
 #include "gtkuidefs.h"
 
