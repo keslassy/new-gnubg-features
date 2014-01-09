@@ -302,8 +302,6 @@ ReadTwoSidedBearoff(const bearoffcontext * pbc, const unsigned int iPos, float a
         if (ar)
             ar[i] = us / 32767.5f - 1.0f;
     }
-
-    ++((bearoffcontext *) pbc)->nReads; /* nReads only used for stats info */
 }
 
 extern int
@@ -365,8 +363,6 @@ ReadHypergammon(const bearoffcontext * pbc, const unsigned int iPos, float arOut
             us = pc[15 + 3 * i] | (pc[15 + 3 * i + 1]) << 8 | (pc[15 + 3 * i + 2]) << 16;
             arEquity[i] = (us / 16777215.0f - 0.5f) * 6.0f;
         }
-
-    ++((bearoffcontext *) pbc)->nReads; /* nReads only used for stats info */
 
     return 0;
 
@@ -1007,8 +1003,6 @@ ReadBearoffOneSidedND(const bearoffcontext * pbc,
     if (ar)
         memcpy(ar, arx, 16);
 
-    ++((bearoffcontext *) pbc)->nReads; /* nReads only used for stats info */
-
     return 0;
 
 }
@@ -1185,8 +1179,6 @@ ReadBearoffOneSidedExact(const bearoffcontext * pbc, const unsigned int nPosID,
     }
 
     AssignOneSided(arProb, arGammonProb, ar, ausProb, ausGammonProb, pus, pus + 32);
-
-    ++((bearoffcontext *) pbc)->nReads; /* nReads only used for stats info */
 
     return 0;
 }

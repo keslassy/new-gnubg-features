@@ -50,9 +50,6 @@ typedef struct _bearoffcontext {
     GMappedFile *map;
 #endif
     unsigned char *p;           /* pointer to data in memory */
-
-    unsigned long int nReads;   /* number of reads */
-
 } bearoffcontext;
 
 enum _bearoffoptions {

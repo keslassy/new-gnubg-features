@@ -1387,10 +1387,7 @@ main(int argc, char **argv)
             generate_os(nOS, fHeader, fCompress, fGammon, nHashSize, pbc, output);
         }
 
-        if (pbc) {
-            fprintf(stderr, "Number of reads in old database: %lu\n", pbc->nReads);
-            BearoffClose(pbc);
-        }
+        BearoffClose(pbc);
 
         fprintf(stderr, "Number of re-reads while generating: %ld\n", cLookup);
     }
@@ -1435,10 +1432,8 @@ main(int argc, char **argv)
 
         /* close old bearoff database */
 
-        if (pbc) {
-            fprintf(stderr, "Number of reads in old database: %lu\n", pbc->nReads);
-            BearoffClose(pbc);
-        }
+        BearoffClose(pbc);
+
         fprintf(stderr, "Number of re-reads while generating: %ld\n", cLookup);
 
     }
