@@ -74,7 +74,7 @@ ParseSetDate(char *szFilename)
      * for other files use last file access date
      */
 
-    struct stat filestat;
+    GStatBuf filestat;
     struct tm *matchdate = NULL;
 
 #if HAVE_STRPTIME
@@ -94,7 +94,7 @@ ParseSetDate(char *szFilename)
     /* date could not be parsed, use date of last modification */
     if (matchdate == NULL) {
         if (g_stat(szFilename, &filestat) == 0) {
-            matchdate = localtime(&filestat.st_mtime);
+            matchdate = localtime((time_t*)&filestat.st_mtime);
         }
     }
 

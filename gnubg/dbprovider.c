@@ -24,6 +24,7 @@
 
 #include "config.h"
 #include "gnubgmodule.h"
+#include "stdlib.h"
 
 #include "backgammon.h"
 #include <glib/gstdio.h>
