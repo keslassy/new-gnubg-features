@@ -932,6 +932,47 @@ ImportGame(FILE * fp, int iGame, int nLength, bgvariation bgVariation, int *warn
         if ((pch = strpbrk(szLine, "\n\r")) != 0)
             *pch = 0;
 
+        if (!strncmp(szLine, "; Set Pos=", 10) && szLine[36] == '/') {
+            /* XG Set Pos extension */
+            char *pos, *posid;
+            TanBoard anBoard;
+            char szcv[5], szco[2];
+
+            pos = g_strndup(szLine + 10, 26);
+            PositionFromXG(anBoard, pos);
+            g_free(pos);
+
+            ms.gs = GAME_PLAYING;
+            ms.fMove = 0;
+
+            if (szLine[37] == '0') {
+                sprintf(szcv, "1");
+                CommandSetCubeCentre(NULL);
+            } else if (szLine[37] == '-') {
+                sprintf(szcv, "%d", 1 << (szLine[38] - '0'));
+                /* FIXME:
+                 * CommandSetCubeOwner() needs its argument to be writable
+                 * CommandSetCubeOwner("1") coredumps
+                 */
+                sprintf(szco, "1");
+                CommandSetCubeOwner(szco);
+            } else {
+                sprintf(szcv, "%d", 1 << (szLine[37] - '0'));
+                sprintf(szco, "0");
+                CommandSetCubeOwner(szco);
+            }
+
+            CommandSetCubeValue(szcv);
+
+            ms.fMove = 0;
+
+            posid = g_strdup(PositionID((ConstTanBoard) anBoard));
+            CommandSetBoard(posid);
+            g_free(posid);
+
+            continue;
+        }
+
         if ((pchLeft = strchr(szLine, ':')) && (pchRight = strchr(pchLeft + 1, ':')) && pchRight > szLine + 3)
             *((pchRight -= 2) - 1) = 0;
         else if (strlen(szLine) > 15 && (pchRight = strstr(szLine + 15, "  ")))
