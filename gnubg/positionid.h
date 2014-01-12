@@ -30,6 +30,8 @@ extern void PositionKey(const TanBoard anBoard, positionkey * pkey);
 extern char *PositionID(const TanBoard anBoard);
 extern char *PositionIDFromKey(const positionkey * pkey);
 
+extern int PositionFromXG(TanBoard anBoard, const char * pos);
+
 extern
 unsigned int PositionBearoff(const unsigned int anBoard[], unsigned int nPoints, unsigned int nChequers);
 

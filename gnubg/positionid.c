@@ -213,6 +213,45 @@ PositionID(const TanBoard anBoard)
 }
 
 extern int
+PositionFromXG(TanBoard anBoard, const char *pos)
+{
+    int i;
+
+    for (i = 0; i < 26; i++) {
+        int p0, p1;
+
+        if (i == 0) {
+            p0 = 24;
+            p1 = -1;
+        } else if (i == 25) {
+            p0 = -1;
+            p1 = 24;
+        } else {
+            p0 = 24 - i;
+            p1 = i - 1;
+        }
+
+        if (pos[i] >= 'A' && pos[i] <= 'P') {
+            if (p0 > -1)
+                anBoard[0][p0] = 0;
+            anBoard[1][p1] = pos[i] - 'A' + 1;
+        } else if (pos[i] >= 'a' && pos[i] <= 'p') {
+            anBoard[0][p0] = pos[i] - 'a' + 1;
+            if (p1 > -1)
+                anBoard[1][p1] = 0;
+        } else if (pos[i] == '-') {
+            if (p0 > -1)
+                anBoard[0][p0] = 0;
+            if (p1 > -1)
+                anBoard[1][p1] = 0;
+        } else {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+extern int
 CheckPosition(const TanBoard anBoard)
 {
     unsigned int ac[2], i;
