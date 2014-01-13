@@ -1,3 +1,9 @@
+2014-01-13 Jon Kinsey <Jon_Kinsey@hotmail.com>
+
+	* gtkprefs.c: Fix some board design bugs: switching 2d wood paint setting,
+	invalid xml characters in design name/description, reduce wrong pop-up
+	about losing design (Thanks to Tom Martin for reports).
+
 2014-01-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* import.c: Interpret eXtreme Gammon's "; Set Pos=..." extension

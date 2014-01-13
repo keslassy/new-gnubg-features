@@ -882,7 +882,6 @@ BoardPage(BoardData * bd)
 static void
 ToggleWood(GtkWidget * pw, BoardData * UNUSED(bd))
 {
-
     int fWood;
 
     fWood = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
@@ -1731,7 +1730,7 @@ UseDesign(void)
 
         /* board, border, and points */
 
-        gtk_combo_box_set_active(GTK_COMBO_BOX(pwWoodType), newPrefs.wt);
+        gtk_combo_box_set_active(GTK_COMBO_BOX(pwWoodType), newPrefs.wt != WOOD_PAINT ? newPrefs.wt : 0);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(newPrefs.wt != WOOD_PAINT ? pwWood : pwWoodF), TRUE);
 
         gtk_widget_set_sensitive(pwWoodType, newPrefs.wt != WOOD_PAINT);
@@ -1770,6 +1769,18 @@ UseDesign(void)
 static void
 WriteTheDesign(boarddesign * pbde, FILE * pf)
 {
+	gchar *title, *author;
+	if (pbde->szTitle) {
+		title = g_markup_escape_text(pbde->szTitle, -1);
+	}
+	else
+		title = _("unknown title");
+
+	if (pbde->szAuthor) {
+		author = g_markup_escape_text(pbde->szAuthor, -1);
+	}
+	else
+		author = _("unknown author");
 
     fputs("   <board-design>\n\n", pf);
 
@@ -1781,11 +1792,14 @@ WriteTheDesign(boarddesign * pbde, FILE * pf)
             "         <author>%s</author>\n"
             "      </about>\n\n"
             "      <design>%s   </design>\n\n",
-            pbde->szTitle ? pbde->szTitle : _("unknown title"),
-            pbde->szAuthor ? pbde->szAuthor : _("unknown author"), pbde->szBoardDesign ? pbde->szBoardDesign : "");
+            title, author, pbde->szBoardDesign ? pbde->szBoardDesign : "");
 
     fputs("   </board-design>\n\n\n", pf);
 
+	if (pbde->szTitle)
+		g_free(title);
+	if (pbde->szAuthor)
+		g_free(author);
 }
 
 static void
@@ -2453,7 +2467,7 @@ DesignSelectNew(GtkTreeView * treeview, gpointer UNUSED(userdata))
 
     if (gtk_widget_is_sensitive(pwDesignAdd)) {
         GTKSetCurrentParent(GTK_WIDGET(pwDesignList));
-        if (!GetInputYN(_("Select new design and lose current changes?"))) {
+        if (!fUpdate || !GetInputYN(_("Select new design and lose current changes?"))) {
             pbdeModified = pbde;
             gtk_widget_set_sensitive(GTK_WIDGET(pwDesignUpdate), pbdeModified->fDeletable);
             return;
@@ -2767,23 +2781,18 @@ ChangePage(GtkNotebook * UNUSED(notebook), GtkNotebook * UNUSED(page), guint pag
 #endif
 }
 
-#if USE_BOARD3D
 static void
 pref_dialog_map(GtkWidget * UNUSED(window), BoardData * bd)
 {
+#if USE_BOARD3D
     DisplayCorrectBoardType(bd, bd->bd3d, bd->rd);
     redrawChange = FALSE;
     bd->rd->quickDraw = FALSE;
-    SetTitle();                 /* Make sure title selected properly */
-}
-#else
-static void
-pref_dialog_map(GtkWidget * UNUSED(window), BoardData * UNUSED(bd))
-{
-    SetTitle();                 /* Make sure title selected properly */
-}
 #endif
-
+    SetTitle();                 /* Make sure title selected properly */
+	gtk_widget_grab_focus(pwDesignList);	/* Select this to stop "change" message after something is changed */
+	fUpdate = TRUE;
+}
 
 extern void
 BoardPreferences(GtkWidget * pwBoard)
@@ -2845,7 +2854,6 @@ BoardPreferences(GtkWidget * pwBoard)
 
     g_signal_connect(pwDialog, "map", G_CALLBACK(pref_dialog_map), bd);
 
-    fUpdate = TRUE;
     GTKRunDialog(pwDialog);
 }
 
