@@ -4015,7 +4015,7 @@ SetMatchID(const char *szMatchID)
 
     if (anDice[0]) {
         char sz[10];
-        sprintf(sz, "%d %d", anDice[0], anDice[1]);
+        sprintf(sz, "%u %u", anDice[0], anDice[1]);
         CommandSetDice(sz);
 
     }
