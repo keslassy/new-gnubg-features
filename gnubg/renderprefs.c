@@ -665,7 +665,7 @@ SaveRenderingSettings(FILE * pf)
     fprintf(pf, "animateflag=%c ", prd->animateFlag ? 'y' : 'n');
     fprintf(pf, "closeboard=%c ", prd->closeBoardOnExit ? 'y' : 'n');
     fprintf(pf, "quickdraw=%c ", prd->quickDraw ? 'y' : 'n');
-    fprintf(pf, "curveaccuracy=%d ", prd->curveAccuracy);
+    fprintf(pf, "curveaccuracy=%u ", prd->curveAccuracy);
     fprintf(pf, "lighttype=%c ", prd->lightType == LT_POSITIONAL ? 'p' : 'd');
 
     g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[0]);
