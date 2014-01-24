@@ -172,20 +172,21 @@ SetMaterialCommon(Material * pMat, const char *sz, const char **arg)
     if (SetColourF(pMat->specularColour, sz) != 0)
         return -1;
 
-    if (sz)
+    if (sz) {
         sz += strlen(sz) + 1;
-    if ((pch = strchr(sz, ';')))
-        *pch = 0;
-
+        if ((pch = strchr(sz, ';')))
+            *pch = 0;
+    }
     if (sz)
         pMat->shine = atoi(sz);
     else
         pMat->shine = 128;
 
-    if (sz)
+    if (sz) {
         sz += strlen(sz) + 1;
-    if ((pch = strchr(sz, ';')))
-        *pch = 0;
+        if ((pch = strchr(sz, ';')))
+            *pch = 0;
+    }
     if (sz) {
         int o = atoi(sz);
         if (o == 100)
