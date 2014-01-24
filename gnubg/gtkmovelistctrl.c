@@ -241,7 +241,6 @@ custom_cell_renderer_movelist_get_size(GtkCellRenderer * cell,
 {
     gint calc_width;
     gint calc_height;
-    char buf[100];
     gfloat xalign, yalign;
 
     gtk_cell_renderer_get_alignment(cell, &xalign, &yalign);
@@ -250,6 +249,7 @@ custom_cell_renderer_movelist_get_size(GtkCellRenderer * cell,
         int l1Width, l2Width;
         PangoRectangle logical_rect;
         PangoLayout *layout;
+        char buf[100];
 
         sprintf(buf, "%.*f", fOutputDigits, 0.888888);
         layout = gtk_widget_create_pango_layout(widget, buf);
@@ -388,7 +388,7 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
     cmark_sz = cellprogress->pml->cmark ? "+" : "";
     highlight_sz = (phd->piHighlight && cellprogress->rank - 1 == *phd->piHighlight) ? "*" : "";
     if (cellprogress->rank > 0)
-        sprintf(buf, "%d%s%s", cellprogress->rank, cmark_sz, highlight_sz);
+        sprintf(buf, "%u%s%s", cellprogress->rank, cmark_sz, highlight_sz);
     else
         sprintf(buf, "??%s%s", cmark_sz, highlight_sz);
 
