@@ -1611,7 +1611,7 @@ WriteEvalContext(FILE * pf, const evalcontext * pec)
 {
     gchar buffer[G_ASCII_DTOSTR_BUF_SIZE];
     g_ascii_formatd(buffer, sizeof(buffer), "%.6f", pec->rNoise);
-    fprintf(pf, "ver %d %d%s %d %s %d",
+    fprintf(pf, "ver %d %u%s %u %s %u",
             SGF_FORMAT_VER, pec->nPlies, pec->fCubeful ? "C" : "", pec->fDeterministic, buffer, pec->fUsePrune);
 }
 
@@ -1633,7 +1633,7 @@ WriteRolloutContext(FILE * pf, const rolloutcontext * prc)
 
     int i;
 
-    fprintf(pf, "RC %d %d %d %d %d %d %d %d %d %d \"%s\" %lu ",
+    fprintf(pf, "RC %u %u %u %u %u %u %d %u %u %d \"%s\" %lu ",
             prc->fCubeful,
             prc->fVarRedn,
             prc->fInitial,
@@ -1699,7 +1699,7 @@ WriteRolloutAnalysis(FILE * pf, int fIsMove,
         fprintf(pf, "X ver %d Eq ", SGF_FORMAT_VER);
     }
 
-    fprintf(pf, "Trials %d ", pes->rc.nGamesDone);
+    fprintf(pf, "Trials %u ", pes->rc.nGamesDone);
     if (!fIsMove)
         fprintf(pf, "NoDouble ");
 
@@ -1747,7 +1747,7 @@ WriteDoubleAnalysis(FILE * pf,
     switch (pes->et) {
     case EVAL_EVAL:
         g_ascii_formatd(buffer, sizeof(buffer), "%.6f", pes->ec.rNoise);
-        fprintf(pf, "E ver %d %d%s %d %s %d",
+        fprintf(pf, "E ver %d %u%s %u %s %u",
                 SGF_FORMAT_VER,
                 pes->ec.nPlies, pes->ec.fCubeful ? "C" : "", pes->ec.fDeterministic, buffer, pes->ec.fUsePrune);
 
@@ -1829,7 +1829,7 @@ WriteMoveAnalysis(FILE * pf, int fPlayer, movelist * pml, unsigned int iMove)
             g_ascii_formatd(buffer, sizeof(buffer), "%.6f", pml->amMoves[i].rScore);
             fprintf(pf, "%s ", buffer);
             g_ascii_formatd(buffer, sizeof(buffer), "%.6f", pml->amMoves[i].esMove.ec.rNoise);
-            fprintf(pf, "%d%s %d %d %s %d",
+            fprintf(pf, "%u%s %d %u %s %u",
                     pml->amMoves[i].esMove.ec.nPlies,
                     pml->amMoves[i].esMove.ec.fCubeful ? "C" : "",
                     0, pml->amMoves[i].esMove.ec.fDeterministic, buffer, pml->amMoves[i].esMove.ec.fUsePrune);
@@ -2096,7 +2096,7 @@ SaveGame(FILE * pf, listOLD * plGame)
         WriteProperty(pf, "WR", mi.pchRating[0]);
         WriteProperty(pf, "BR", mi.pchRating[1]);
         if (mi.nYear) {
-            sprintf(szDate, "%04d-%02d-%02d", mi.nYear, mi.nMonth, mi.nDay);
+            sprintf(szDate, "%04u-%02u-%02u", mi.nYear, mi.nMonth, mi.nDay);
             WriteProperty(pf, "DT", szDate);
         }
         WriteProperty(pf, "EV", mi.pchEvent);
@@ -2153,7 +2153,7 @@ SaveGame(FILE * pf, listOLD * plGame)
                 memcpy(pmr->n.anMove, pmr->ml.amMoves[0].anMove, sizeof(pmr->n.anMove));
                 pmr->n.iMove = 0;
             }
-            fprintf(pf, "\n;%c[%d%d", pmr->fPlayer ? 'B' : 'W', pmr->anDice[0], pmr->anDice[1]);
+            fprintf(pf, "\n;%c[%u%u", pmr->fPlayer ? 'B' : 'W', pmr->anDice[0], pmr->anDice[1]);
             WriteMove(pf, pmr->fPlayer, pmr->n.anMove);
             putc(']', pf);
 
@@ -2259,7 +2259,7 @@ SaveGame(FILE * pf, listOLD * plGame)
             break;
 
         case MOVE_SETDICE:
-            fprintf(pf, "\n;PL[%c]DI[%d%d]", pmr->fPlayer ? 'B' : 'W', pmr->anDice[0], pmr->anDice[1]);
+            fprintf(pf, "\n;PL[%c]DI[%u%u]", pmr->fPlayer ? 'B' : 'W', pmr->anDice[0], pmr->anDice[1]);
 
             WriteLuck(pf, pmr->fPlayer, pmr->rLuck, pmr->lt);
 

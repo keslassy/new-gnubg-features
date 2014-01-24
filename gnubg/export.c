@@ -1051,7 +1051,7 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
             break;
         case MOVE_NORMAL:
             diceRolled = 0;
-            sprintf(sz, "%d%d: ", pmr->anDice[0], pmr->anDice[1]);
+            sprintf(sz, "%u%u: ", pmr->anDice[0], pmr->anDice[1]);
             if (fSst) {         /* Snowie standard text */
                 moverecord *pnextmr;
                 if (pl->plNext && pl->plNext->p) {
@@ -1096,7 +1096,7 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
             break;
         case MOVE_SETDICE:
             /* Could be rolled dice just before resign or an illegal move */
-            sprintf(sz, "%d%d: ", pmr->anDice[0], pmr->anDice[1]);
+            sprintf(sz, "%u%u: ", pmr->anDice[0], pmr->anDice[1]);
             diceRolled = 1;
             break;
         case MOVE_SETBOARD:
