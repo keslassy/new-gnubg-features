@@ -1549,7 +1549,7 @@ FormatPrompt(void)
                     strcpy(pchDest, _("No game"));
                 else {
                     PipCount(msBoard(), anPips);
-                    sprintf(pchDest, "%d:%d", anPips[1], anPips[0]);
+                    sprintf(pchDest, "%u:%u", anPips[1], anPips[0]);
                 }
                 break;
 
@@ -2791,7 +2791,7 @@ CommandCopy(char *UNUSED(sz))
         char szPipCount[32];
 
         PipCount((ConstTanBoard) anBoardTemp, anPips);
-        sprintf(szPipCount, "Pip counts : O %d, X %d\n", anPips[0], anPips[1]);
+        sprintf(szPipCount, "Pip counts : O %u, X %u\n", anPips[0], anPips[1]);
 
         strcat(szOut, "                    ");
         strcat(szOut, szPipCount);
@@ -2893,7 +2893,7 @@ SaveEvalSettings(FILE * pf, const char *sz, evalcontext * pec)
 
     gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
     gchar *szNoise = g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%0.3f", pec->rNoise);
-    fprintf(pf, "%s plies %d\n"
+    fprintf(pf, "%s plies %u\n"
             "%s prune %s\n"
             "%s cubeful %s\n"
             "%s noise %s\n"
@@ -2927,15 +2927,15 @@ SaveRolloutSettings(FILE * pf, const char *sz, rolloutcontext * prc)
             "%s bearofftruncation onesided %s\n"
             "%s later enable %s\n"
             "%s later plies %d\n"
-            "%s trials %d\n"
+            "%s trials %u\n"
             "%s cube-equal-chequer %s\n"
             "%s players-are-same %s\n"
             "%s truncate-equal-player0 %s\n"
             "%s limit enable %s\n"
-            "%s limit minimumgames %d\n"
+            "%s limit minimumgames %u\n"
             "%s limit maxerror %s\n"
             "%s jsd stop %s\n"
-            "%s jsd minimumgames %d\n"
+            "%s jsd minimumgames %u\n"
             "%s jsd limit %s\n",
             sz, prc->fCubeful ? "on" : "off",
             sz, prc->fVarRedn ? "on" : "off",
@@ -3075,7 +3075,7 @@ SaveImportExportSettings(FILE * pf)
     else if (exsExport.fSide)
         fprintf(pf, "set export show player %d\n", exsExport.fSide - 1);
 
-    fprintf(pf, "set export move number %d\n", exsExport.nMoves);
+    fprintf(pf, "set export move number %u\n", exsExport.nMoves);
     fprintf(pf, "set export moves parameters evaluation %s\n", exsExport.afMovesParameters[0] ? "yes" : "no");
     fprintf(pf, "set export moves parameters rollout %s\n", exsExport.afMovesParameters[1] ? "yes" : "no");
     fprintf(pf, "set export moves probabilities %s\n", exsExport.fMovesDetailProb ? "yes" : "no");
@@ -5219,7 +5219,7 @@ CommandDiceRolls(char *sz)
         while (n-- > 0) {
             RollDice(anDice, &rngCurrent, rngctxCurrent);
 
-            printf("%d %d\n", anDice[0], anDice[1]);
+            printf("%u %u\n", anDice[0], anDice[1]);
 
         }
 

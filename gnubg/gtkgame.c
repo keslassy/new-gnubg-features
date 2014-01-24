@@ -774,7 +774,7 @@ GTKSetDice(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     char sz[13];                /* "set dice x y" */
 
     if (!GTKGetManualDice(an)) {
-        sprintf(sz, "set dice %d %d", an[0], an[1]);
+        sprintf(sz, "set dice %u %u", an[0], an[1]);
         UserCommand(sz);
     }
 }
@@ -2248,7 +2248,7 @@ SetEvalCommands(const char *szPrefix, evalcontext * pec, evalcontext * pecOrig)
     outputpostpone();
 
     if (pec->nPlies != pecOrig->nPlies) {
-        sprintf(sz, "%s plies %d", szPrefix, pec->nPlies);
+        sprintf(sz, "%s plies %u", szPrefix, pec->nPlies);
         UserCommand(sz);
     }
 
@@ -5246,7 +5246,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
             }
 
             if (rw.rcRollout.nTrials != rcRollout.nTrials) {
-                sprintf(sz, "set rollout trials %d", rw.rcRollout.nTrials);
+                sprintf(sz, "set rollout trials %u", rw.rcRollout.nTrials);
                 UserCommand(sz);
             }
 
@@ -5256,7 +5256,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
             }
 
             if (rw.rcRollout.nMinimumGames != rcRollout.nMinimumGames) {
-                sprintf(sz, "set rollout limit minimumgames %d", rw.rcRollout.nMinimumGames);
+                sprintf(sz, "set rollout limit minimumgames %u", rw.rcRollout.nMinimumGames);
                 UserCommand(sz);
             }
 
@@ -5275,7 +5275,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
             }
 
             if (rw.rcRollout.nMinimumJsdGames != rcRollout.nMinimumJsdGames) {
-                sprintf(sz, "set rollout jsd minimumgames %d", rw.rcRollout.nMinimumJsdGames);
+                sprintf(sz, "set rollout jsd minimumgames %u", rw.rcRollout.nMinimumJsdGames);
                 UserCommand(sz);
             }
 
