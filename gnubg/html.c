@@ -523,7 +523,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
 
     /* Begin table  and print for player 0 */
     fprintf(pf,
-            "<table style=\"page-break-inside: avoid\"><tr><th align=\"left\">%s</th><th align=\"right\">%d</th></tr>",
+            "<table style=\"page-break-inside: avoid\"><tr><th align=\"left\">%s</th><th align=\"right\">%u</th></tr>",
             ap[0].szName, anPips[1]);
 
     /* avoid page break when printing */
@@ -640,7 +640,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
     fputs("</td></tr>\n", pf);
 
     fprintf(pf,
-            "<tr><th align=\"left\">%s</th><th align=\"right\">%d</th><th align=\"center\" colspan=\"2\"></th></tr>",
+            "<tr><th align=\"left\">%s</th><th align=\"right\">%u</th><th align=\"center\" colspan=\"2\"></th></tr>",
             ap[1].szName, anPips[0]);
 
     /* pip counts */
@@ -2201,7 +2201,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
                 fprintf(pf, "<td %s>n/a</td>\n", GetStyle(CLASS_MOVEPLY, hecss));
                 break;
             case EVAL_EVAL:
-                fprintf(pf, "<td %s>%d</td>\n", GetStyle(CLASS_MOVEPLY, hecss), pmr->ml.amMoves[i].esMove.ec.nPlies);
+                fprintf(pf, "<td %s>%u</td>\n", GetStyle(CLASS_MOVEPLY, hecss), pmr->ml.amMoves[i].esMove.ec.nPlies);
                 break;
             case EVAL_ROLLOUT:
                 fprintf(pf, "<td %s>R</td>\n", GetStyle(CLASS_MOVEPLY, hecss));
