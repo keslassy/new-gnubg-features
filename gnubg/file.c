@@ -467,14 +467,16 @@ ReadFilePreview(const char *filename)
 extern char *
 GetFilename(int CheckForCurrent, ExportType type)
 {
-    char *sz, tstr[15];
+    char *sz;
     time_t t;
 
     if (CheckForCurrent && szCurrentFileName && *szCurrentFileName)
         sz = g_strdup_printf("%s%s", szCurrentFileName, export_format[type].extension);
     else {
+        char tstr[15];
+
         if (mi.nYear)
-            sprintf(tstr, "%04d-%02d-%02d", mi.nYear, mi.nMonth, mi.nDay);
+            sprintf(tstr, "%04u-%02u-%02u", mi.nYear, mi.nMonth, mi.nDay);
         else {
             t = time(NULL);
             if (strftime(tstr, 14, "%Y-%m-%d-%H%M", localtime(&t)) == 0)
