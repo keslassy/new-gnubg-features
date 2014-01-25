@@ -415,7 +415,7 @@ ExportGameLaTeX(FILE * pf, listOLD * plGame)
                                    pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble);
             /* FIXME: output cube skill */
 
-            sprintf(sz, "%s %d%d%s: ", PlayerSymbol(pmr->fPlayer),
+            sprintf(sz, "%s %u%u%s: ", PlayerSymbol(pmr->fPlayer),
                     pmr->anDice[0], pmr->anDice[1], aszLuckTypeLaTeXAbbr[pmr->lt]);
             FormatMove(strchr(sz, 0), (ConstTanBoard) msExport.anBoard, pmr->n.anMove);
             fprintf(pf, "\\begin{center}%s%s\\end{center}\n\n", sz, aszSkillTypeAbbr[pmr->n.stMove]);

@@ -75,7 +75,7 @@ XhashStatus(xhash * ph)
 
     fprintf(stderr, "Xhash status:\n");
     fprintf(stderr, "Size:    %d elements\n", ph->nHashSize);
-    fprintf(stderr, "Queries: %lu (hits: %ld)\n", ph->nQueries, ph->nHits);
+    fprintf(stderr, "Queries: %lu (hits: %lu)\n", ph->nQueries, ph->nHits);
     fprintf(stderr, "Entries: %lu (overwrites: %lu)\n", ph->nEntries, ph->nOverwrites);
 
 }
