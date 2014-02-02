@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # 
 # query_player.sh - a small shell script for getting some player's data
 #
@@ -28,7 +28,7 @@
 #################################################################################
 
 # Put the path to your database here:
-DATABASE=/Users/ace/.gnubg/gnubg.db
+DATABASE=$HOME/.gnubg/gnubg.db
 OUTPUT="$2"
 
 
