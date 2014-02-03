@@ -159,7 +159,7 @@ static int
 SetMaterialCommon(Material * pMat, const char *sz, const char **arg)
 {
     float opac;
-    char *pch;
+    char *pch = NULL;
 
     if (SetColourF(pMat->ambientColour, sz) != 0)
         return -1;
