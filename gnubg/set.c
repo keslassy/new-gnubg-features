@@ -1615,6 +1615,18 @@ CommandSetDefaultNames(char *sz)
 }
 
 extern void
+CommandSetAliases(char *sz)
+{
+        if (strlen(sz) > 63)
+            outputl(_("Aliases list limited to 63 characters, truncating.\n"));
+
+	strncpy(aliases, sz, 63);
+
+    outputf(_("Aliases for player 1 when importing MAT files set to \"%s\".\n "), aliases);
+}
+
+
+extern void
 CommandSetPrompt(char *szParam)
 {
 

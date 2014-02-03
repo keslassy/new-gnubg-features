@@ -1141,6 +1141,21 @@ ImportMatVariation(FILE * fp, char *szFilename, bgvariation bgVariation, int war
 
     UpdateSettings();
 
+    {
+      gchar **token;
+      int i = 0;
+
+      token = g_strsplit_set(aliases, ":", -1);
+
+      while (token[i] != NULL)
+        if (!strcmp(token[i++], ap[0].szName)) {
+          CommandSwapPlayers(NULL);
+          break;
+        }
+
+      g_strfreev(token);
+    }
+
 #if USE_GTK
     if (fX) {
         GTKSet(ap);

@@ -480,6 +480,8 @@ player ap[2] = {
 
 char default_names[2][31] = { "gnubg", "user" };
 
+char aliases[64] = "";
+
 /* Usage strings */
 static char szDICE[] = N_("<die> <die>"),
     szCOMMAND[] = N_("<command>"),
@@ -3178,7 +3180,11 @@ SavePlayerSettings(FILE * pf)
 {
     int i;
     char szTemp[4096];
+
     fprintf(pf, "set defaultnames \"%s\" \"%s\"\n", default_names[0], default_names[1]);
+    if (strlen(aliases) > 0)
+        fprintf(pf, "set aliases %s\n", aliases);
+
     for (i = 0; i < 2; i++) {
         fprintf(pf, "set player %d name %s\n", i, ap[i].szName);
 
