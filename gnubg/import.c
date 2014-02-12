@@ -42,6 +42,10 @@
 #include "positionid.h"
 #include "matchequity.h"
 
+#ifdef WIN32
+#define GStatBuf struct _g_stat_struct
+#endif
+
 static int
 ParseSnowieTxt(char *sz,
                int *pnMatchTo, int *pfJacoby, int *pfUnused1, int *pfUnused2,
