@@ -1,9 +1,14 @@
+2014-02-12  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* html.c: Clean up headers in positions copied as GammOnLine HTML.
+	Issue mentionned by Stick in the bgonline forum.
+
 2014-02-11  Michael Petch  <mpetch@gnubg.org>
 
-	* gnubgmodule.c: Modify findbestmove to use the user selected 
-    analysis level when no evaluation context is passed as a parameter.
-    * import.c: Fix missing GStatBuf type on Win32 platforms
-    * configure.ac: Moving towards release 1.03.000
+	* gnubgmodule.c: Modify findbestmove to use the user selected
+	analysis level when no evaluation context is passed as a parameter.
+	* import.c: Fix missing GStatBuf type on Win32 platforms
+	* configure.ac: Moving towards release 1.03.000
 
 2014-02-03  Philippe Michel  <philippe.michel7@sfr.fr>
 
