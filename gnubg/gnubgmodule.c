@@ -1042,10 +1042,11 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
     int anDice[2];
     int anMove[8];
     cubeinfo ci;
-    evalcontext ec = { 0, 0, 0, 1, 0.0f };
+    evalcontext ec;
 
+    memcpy (&ec, &GetEvalChequer()->ec, sizeof (evalcontext));
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
-    memcpy(anDice, ms.anDice, sizeof anDice);
+    memcpy(anDice, ms.anDice, sizeof (ms.anDice));
     GetMatchStateCubeInfo(&ci, &ms);
     if (!PyArg_ParseTuple(args, "|OOOO", &pyBoard, &pyCubeInfo, &pyEvalContext, &pyDice))
         return NULL;
@@ -1078,7 +1079,7 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
         PyObject *p = PyTuple_New(8);
         int k;
         for (k = 0; k < 8; ++k) {
-            PyTuple_SET_ITEM(p, k, Py_BuildValue("i", anMove[k] + 1));
+            PyTuple_SET_ITEM(p, k, PyInt_FromLong(anMove[k] + 1));
         }
         return p;
     }
