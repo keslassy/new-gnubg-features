@@ -1441,7 +1441,7 @@ getGammonPrice(float arGammonPrice[4],
 
     /* avoid division by zero */
 
-    if (fabs(rWin - rCenter) > epsilon) {
+    if (fabsf(rWin - rCenter) > epsilon) {
 
         /* this expression can be reduced to: 
          * 2 * ( rWinGammon - rWin ) / ( rWin - rLose )
@@ -1628,10 +1628,10 @@ getME(const int nScore0, const int nScore1, const int nMatchTo,
 
     /* check if any player has won the match */
 
-    if (n0 < 0)
+    if (unlikely(n0 < 0))
         /* player 0 has won the game */
         return (fPlayer) ? 0.0f : 1.0f;
-    else if (n1 < 0)
+    else if (unlikely(n1 < 0))
         /* player 1 has won the game */
         return (fPlayer) ? 1.0f : 0.0f;
 
@@ -1822,14 +1822,14 @@ getMEMultiple(const int nScore0, const int nScore1, const int nMatchTo,
         s0 = *score0++;
         s1 = *score1++;
 
-        if (s0 < 0) {
+        if (unlikely(s0 < 0)) {
             /* player 0 wins */
             *p0++ = 1.0f;
             *p1++ = 0.0f;
-        } else if (s1 < 0) {
+        } else if (unlikely(s1 < 0)) {
             *p0++ = 0.0f;
             *p1++ = 1.0f;
-        } else if (fCrawf) {
+        } else if (unlikely(fCrawf)) {
             if (s0 == 0) {      /* player 0 is leading */
                 *p0++ = 1.0f - aafMETPostCrawford[1][s1];
                 *p1++ = aafMETPostCrawford[1][s1];
