@@ -49,7 +49,7 @@ Starting GNU Backgammon
 
 * Linux and Unix::
 * Microsoft Windows::
-* Mac OSX::
+* Mac OS X::
 * Command line options::
 
 Playing a game
@@ -124,7 +124,7 @@ File: gnubg.info,  Node: Introduction,  Next: Rules of the game,  Prev: Top,  Up
 
 This manual describes how to use GNU Backgammon to play and analyze
 backgammon games and matches. It corresponds to version 1.00.0 (updated
-in August, 2009).
+in August, 2013).
 
    GNU Backgammon (gnubg) plays and analyzes both money game sessions
 and tournament matches. It evaluates and rolls out positions, and much
@@ -155,7 +155,7 @@ GNU Backgammon is extensible on platforms which support Python.
 
      gnubg moves 8/5 6/5.
 
-   GNU Backgammon is a world class opponent and rates at around 2000 on
+   GNU Backgammon is a world class opponent and rates at around 2100 on
 FIBS, the First Internet Backgammon Server - at its best, it is in the
 top 5 of over 6000 rated players there). GNU Backgammon can be played
 on numerous other on-line backgammon servers.
@@ -193,11 +193,10 @@ Backgammon.
 
    * Importing of positions, games, and matches from a number of
      standard file formats, including: native GNU Backgammon file
-     (.sgf), GamesGrid Save Game (.sgg), Hans Berliner's BKG format
-     (.bkg), Jellyfish Match (.mat), FIBS Oldmoves (.fibs), Jellyfish
-     Position (.pos), Snowie Text (.txt), TrueMoneyGames (.tmg),
-     GammonEmpire Game (.gam), PartyGammon Game (.gam), and
-     BackGammonRoom Game (.bgf).
+     (.sgf), GamesGrid Save Game (.sgg), Jellyfish Match (.mat), FIBS
+     Oldmoves (.fibs), Jellyfish Position (.pos), Snowie Text (.txt),
+     TrueMoneyGames (.tmg), GammonEmpire Game (.gam), PartyGammon Game
+     (.gam), and BGRoom Game (.bgf).
 
    * Exporting of positions, games, and matches to a number of standard
      file formats, including: native GNU Backgammon file (.sgf),
@@ -586,7 +585,7 @@ File: gnubg.info,  Node: Starting GNU Backgammon,  Next: Playing a game,  Prev: 
 
 * Linux and Unix::
 * Microsoft Windows::
-* Mac OSX::
+* Mac OS X::
 * Command line options::
 
 
@@ -603,7 +602,7 @@ user interface. There is also other options which can be added at the
 start-up.
 
 
-File: gnubg.info,  Node: Microsoft Windows,  Next: Mac OSX,  Prev: Linux and Unix,  Up: Starting GNU Backgammon
+File: gnubg.info,  Node: Microsoft Windows,  Next: Mac OS X,  Prev: Linux and Unix,  Up: Starting GNU Backgammon
 
 3.2 Microsoft Windows
 =====================
@@ -620,13 +619,13 @@ version of GNU Backgammon by choosing Start->Programs->GNU
 Backgammon->GNU Backgammon Command Line Interface.
 
 
-File: gnubg.info,  Node: Mac OSX,  Next: Command line options,  Prev: Microsoft Windows,  Up: Starting GNU Backgammon
+File: gnubg.info,  Node: Mac OS X,  Next: Command line options,  Prev: Microsoft Windows,  Up: Starting GNU Backgammon
 
-3.3 Mac OSX
-===========
+3.3 Mac OS X
+============
 
-Once you have installed both an X11R6 server and GNU Backgammon for
-MacOS X, you can run GNU Backgammon for MacOS X by:
+Once you have installed both an X11R6 server and GNU Backgammon for Mac
+OS X, you can run GNU Backgammon for Mac OS X by:
 
   1. Start your X11R6 server;
 
@@ -636,16 +635,16 @@ MacOS X, you can run GNU Backgammon for MacOS X by:
 
        1. If you have installed GNU Backgammon in your private
           Applications folder, type ` cd Applications/gnubg' to get into
-          GNU Backgammon for MacOS X's folder, and then type `./gnubg'
+          GNU Backgammon for Mac OS X's folder, and then type `./gnubg'
           to run it;
 
        2. If you have installed GNU Backgammon in the global, top-level
           Applications folder, type `cd /Applications/gnubg' to get
-          into GNU Backgammon for MacOS X's folder, and type `./gnubg'
+          into GNU Backgammon for Mac OS X's folder, and type `./gnubg'
           to run it;
 
 
-File: gnubg.info,  Node: Command line options,  Prev: Mac OSX,  Up: Starting GNU Backgammon
+File: gnubg.info,  Node: Command line options,  Prev: Mac OS X,  Up: Starting GNU Backgammon
 
 3.4 Command line options
 ========================
@@ -662,30 +661,26 @@ command line and GUI applications exist instead.
      gnubg [OPTION...] [file.sgf]
 
      Help Options:
-     -?, --help                   Show help options
+     -h, --help                   Show help options
      --help-all                   Show all help options
      --help-gtk                   Show GTK+ Options
-
-     GTK+ Options
-     --class=CLASS                Program class as used by the window manager
-     --name=NAME                  Program name as used by the window manager
-     --screen=SCREEN              X screen to use
-     --sync                       Make X calls synchronous
-     --gtk-module=MODULES         Load additional GTK+ modules
-     --g-fatal-warnings           Make all warnings fatal
 
      Application Options:
      -b, --no-bearoff             Do not use bearoff database
      -c, --commands=FILE          Evaluate commands in FILE and exit
-     -d, --datadir=DIR            Read database and weight files from DIR
      -l, --lang=LANG              Set language to LANG
      -p, --python=FILE            Evaluate Python code in FILE and exit
      -q, --quiet                  Disable sound effects
      -r, --no-rc                  Do not read .gnubgrc and .gnubgautorc commands
-     -S, --no-splash              Don't show gtk splash screen
-     -t, --tty                    Start on tty instead of using window system
+     -S, --splash                 Show gtk splash screen
+     -t, --tty                    Start the command line instead of using the graphical interface
      -v, --version                Show version information and exit
-     -w, --window-system-only     Ignore tty input when using window system
+     -w, --window-system-only     Ignore tty input when using the graphical interface
+     -d, --debug                  Turn on debug
+     -D, --datadir                Specify location of general data
+     -P, --pkgdatadir             Specify location of program specific data
+     -O, --docdir                 Specify location of program documentation
+     -s, --prefsdir               Specify location of user's preferences directory
      --display=DISPLAY            X display to use
 
 
@@ -1484,7 +1479,6 @@ corresponding commands for manual import of a file.
 FIBS oldmoves format                 `import oldmoves <filepath>'
 Gamesgrid Save Game                  `import sgg <filepath>'
 GammonEmpire Game                    `import empire <filepath>'
-Hans Berliner's BKG Format           `import bkg <filepath>'
 Jellyfish Game                       `import gam <filepath>'
 Jellyfish Match                      `import mat <filepath>'
 Jellyfish Position                   `import pos <filepath>'
@@ -2355,7 +2349,7 @@ File: gnubg.info,  Node: Evaluation settings,  Next: Appearance,  Up: Customizin
 * Changing evaluation settings::
 * Predefined settings::
 * Move filters::
-* Cubeful vs. Cubeless: Cubeful vs_ Cubeless.
+* Cubeful vs Cubeless::
 * Pruning neural networks::
 * Noise::
 
@@ -2571,22 +2565,26 @@ predefined setting.
   4. Advanced This setting uses no lookahead and add up to 0.015 noise
      to each evaluation. This setting plays a good game.
 
-  5. Expert This setting uses no lookahead, but does not add any noise
+  5. Expert This setting uses no lookahead but does not add any noise
      to the evaluations. This settings play a strong game.
 
-  6. World class This setting uses 2-ply lookahead, it uses no noise,
-     and it uses a normal move filter. This plays a really strong game
-     close to the best humans players in the world.
+  6. World class This setting uses 2-ply lookahead, it uses no noise
+     and it uses a normal move filter. This plays a really strong game,
+     on par with the very best humans players.
 
   7. Supremo This is basically the same as the World Class setting, but
      it uses a larger move filter.
 
-  8. Grandmaster This setting uses 3-ply lookahead, no noises, and a
-     normal move filter. This setting is extremely strong, but it's
-     also very slow.
+  8. Grandmaster This setting uses 3-ply lookahead, no noise and a
+     large move filter. This setting is extremely strong and still fast
+     on current computers.
+
+  9. 4ply This setting uses 4-ply lookahead, no noise and a large move
+     filter. This setting is extremely strong, but it's also quite
+     slow. It is more suitable to analysis than to actual play.
 
 
-File: gnubg.info,  Node: Move filters,  Next: Cubeful vs_ Cubeless,  Prev: Predefined settings,  Up: Evaluation settings
+File: gnubg.info,  Node: Move filters,  Next: Cubeful vs Cubeless,  Prev: Predefined settings,  Up: Evaluation settings
 
 9.1.10 Move filters
 -------------------
@@ -2770,10 +2768,10 @@ haven't seen more than one case in over 10,000 moves where it missed
 the best move.
 
 
-File: gnubg.info,  Node: Cubeful vs_ Cubeless,  Next: Pruning neural networks,  Prev: Move filters,  Up: Evaluation settings
+File: gnubg.info,  Node: Cubeful vs Cubeless,  Next: Pruning neural networks,  Prev: Move filters,  Up: Evaluation settings
 
-9.1.11 Cubeful vs. Cubeless
----------------------------
+9.1.11 Cubeful vs Cubeless
+--------------------------
 
 In the evaluation settings dialog box you can specify whether or not
 checker play should be evaluated cubeful. It's recommended that you use
@@ -2817,13 +2815,13 @@ play towards gammonish positions at this score.
    It's recommended that you use cubeful checker evaluations.
 
 
-File: gnubg.info,  Node: Pruning neural networks,  Next: Noise,  Prev: Cubeful vs_ Cubeless,  Up: Evaluation settings
+File: gnubg.info,  Node: Pruning neural networks,  Next: Noise,  Prev: Cubeful vs Cubeless,  Up: Evaluation settings
 
 9.1.12 Pruning neural networks
 ------------------------------
 
-A new feature in the evaluation is the use of a set of neural networks
-just to prune away move candidates within a deeper ply search. This
+A feature in the evaluation is the use of a set of neural networks just
+to prune away move candidates within a deeper ply search. This
 increases the speed considerably and it doesn't lose much playing
 strength compared to evaluation without these pruning neural nets. Jim
 Segrave has just done an analysis of this and found that less than 1%
@@ -2927,7 +2925,8 @@ File: gnubg.info,  Node: Obtaining bearoff databases,  Next: Match Equity Tables
 
 * Generate your own::
 * Download::
-* Verification of databases::
+* Installation of the databases::
+* Verification of the databases::
 * One-sided bearoff databases (compressed): One-sided bearoff databases [compressed].
 * Two-sided bearoff databases (with cubeless and cubeful equities): Two-sided bearoff databases [with cubeless and cubeful equities].
 * Two-sided databases for Hypergammon::
@@ -3001,7 +3000,7 @@ GHz box with 512 MB of RAM the calculation ran for 58 iterations of
    See makehyper -help for the complete set of available options.
 
 
-File: gnubg.info,  Node: Download,  Next: Verification of databases,  Prev: Generate your own,  Up: Obtaining bearoff databases
+File: gnubg.info,  Node: Download,  Next: Installation of the databases,  Prev: Generate your own,  Up: Obtaining bearoff databases
 
 10.1.2 Download
 ---------------
@@ -3018,19 +3017,29 @@ ftp://ftp.demon.nl/pub/Demon/games/gnubg/databases/
 (ftp://ftp.demon.nl/pub/Demon/games/gnubg/databases/).
 
 
-File: gnubg.info,  Node: Verification of databases,  Next: One-sided bearoff databases [compressed],  Prev: Download,  Up: Obtaining bearoff databases
+File: gnubg.info,  Node: Installation of the databases,  Next: Verification of the databases,  Prev: Download,  Up: Obtaining bearoff databases
 
-10.1.3 Verification of databases
---------------------------------
+10.1.3 Installation of the databases
+------------------------------------
+
+The databases's installation directory depends on where GNU Backgammon
+is installed on your system.  It is displayed by Help->About GNU
+Backgammon->Evaluation Engine.
+
+
+File: gnubg.info,  Node: Verification of the databases,  Next: One-sided bearoff databases [compressed],  Prev: Installation of the databases,  Up: Obtaining bearoff databases
+
+10.1.4 Verification of the databases
+------------------------------------
 
 To verify that your generated or downloaded bearoff database is
 correct, the table below lists the MD5 checksums for a number of
 possible databases.
 
 
-File: gnubg.info,  Node: One-sided bearoff databases [compressed],  Next: Two-sided bearoff databases [with cubeless and cubeful equities],  Prev: Verification of databases,  Up: Obtaining bearoff databases
+File: gnubg.info,  Node: One-sided bearoff databases [compressed],  Next: Two-sided bearoff databases [with cubeless and cubeful equities],  Prev: Verification of the databases,  Up: Obtaining bearoff databases
 
-10.1.4 One-sided bearoff databases (compressed)
+10.1.5 One-sided bearoff databases (compressed)
 -----------------------------------------------
 
 The table below contains the MD5 checksums for the compressed one sided
@@ -3059,7 +3068,7 @@ Checkers                 Points                   MD5 checksum
 
 File: gnubg.info,  Node: Two-sided bearoff databases [with cubeless and cubeful equities],  Next: Two-sided databases for Hypergammon,  Prev: One-sided bearoff databases [compressed],  Up: Obtaining bearoff databases
 
-10.1.5 Two-sided bearoff databases (with cubeless and cubeful equities)
+10.1.6 Two-sided bearoff databases (with cubeless and cubeful equities)
 -----------------------------------------------------------------------
 
 The table below contains the MD5 checksums for the default two sided
@@ -3085,7 +3094,7 @@ Checkers                 Points                   MD5 checksum
 
 File: gnubg.info,  Node: Two-sided databases for Hypergammon,  Prev: Two-sided bearoff databases [with cubeless and cubeful equities],  Up: Obtaining bearoff databases
 
-10.1.6 Two-sided databases for Hypergammon
+10.1.7 Two-sided databases for Hypergammon
 ------------------------------------------
 
 As the generation of the Hypergammon databases are an iterative process
@@ -3142,8 +3151,31 @@ File: gnubg.info,  Node: Match Equity Tables,  Next: Python scripting,  Prev: Ob
 10.2 Match Equity Tables
 ========================
 
-It's possible to use several different match equity tables with GNU
-Backgammon.
+Multiple match equity tables are bundled with GNU Backgammon, although
+most of them are only of marginal or historical interest.
+
+   * _Rockwell-Kazaross_ or _Kazaross-XG2_ are the recommended choice.
+     They were created by rolling out the initial position for every
+     score up to -15:-15 and are the best currently available
+     estimations of the match equities for a strong bot playing itself.
+
+   * _g11_, _snowie_ and _woolsey_ are the tables that were used by
+     earlier versions of GNU Backgammon, Snowie or for hand
+     calculations back when bots didn't do match equity calculations
+     (or there was no bot at all).  All of them are now considered
+     obsolete. Analyses or rollouts using them can still be found in
+     books, magazines or web sites so it can occasionally be
+     interesting to use them in GNU Backgammon for comparison to these
+     older results.
+
+   * _jacobs_, _jac050_ and _jac100_ are from the book __Can a Fish
+     Taste Twice as Good__ by Jake Jacobs and Walter Trice and give
+     match equities if players are of equal strength, if one is 50 Elo
+     points stronger and if one is 100 points stronger respectively.
+     They should only be used to analyse such unequal opponents
+     situations.
+
+   * The other tables are obsolete and of no practical use.
 
 
 File: gnubg.info,  Node: Python scripting,  Next: Equities explained,  Prev: Match Equity Tables,  Up: Technical Notes
@@ -4155,10 +4187,10 @@ File: gnubg.info,  Node: General questions,  Next: How to install,  Up: Frequent
 * What operating systems are supported?::
 * Where do I get it?::
 * What do I have to pay for GNU Backgammon?::
-* This GNU stuff sounds interesting.: This GNU stuff sounds interesting_.
-* I want to learn more about backgammon.: I want to learn more about backgammon_.
-* Though I really read all the documentation I still have questions.: Though I really read all the documentation I still have questions_.
-* I want to make a few proposals. I have new ideas.: I want to make a few proposals_ I have new ideas_.
+* This GNU stuff sounds interesting::
+* I want to learn more about backgammon::
+* Though I really read all the documentation I still have questions::
+* I want to make a few proposals, I have new ideas: I want to make a few proposals; I have new ideas.
 
 
 File: gnubg.info,  Node: What is GNU Backgammon?,  Next: What operating systems are supported?,  Up: General questions
@@ -4177,12 +4209,18 @@ File: gnubg.info,  Node: What operating systems are supported?,  Next: Where do 
 11.1.2 What operating systems are supported?
 --------------------------------------------
 
-Currently, GNU Backgammon is actually designed for _GNU/Linux_. It also
-compiles and (hopefully) runs under _*BSD, IRIX, Solaris_ and _Tru64
-Unix_. Last but not least there are frequently binaries for _MS
-Windows_. It has also been ported to _MacOS_. When you successfully port
-GNU Backgammon to other operating systems, you are welcome to give us a
-note at the GNU backgammon mailing list. (mailto:bug-gnubg@gnu.org)
+GNU Backgammon is mostly developped on _GNU/Linux_. It also builds and
+runs under other Unix operating systems like those derived from _BSD_ or
+_Solaris_. The main prerequisite is the availability of the GLib
+library at version 2.6 or later.
+
+   Installable packages for _MS Windows_ and _Mac OS X_ are available
+for download at the project official website. Already built packages
+are often provided by Linux distributions as well.
+
+   When you successfully port GNU Backgammon to other operating
+systems, you are welcome to give us a note at the GNU backgammon
+mailing list. (mailto:bug-gnubg@gnu.org)
 
 
 File: gnubg.info,  Node: Where do I get it?,  Next: What do I have to pay for GNU Backgammon?,  Prev: What operating systems are supported?,  Up: General questions
@@ -4196,7 +4234,7 @@ site. Up to date source code can be accessed through CVS
 (https://savannah.gnu.org/cvs/?group=gnubg).
 
 
-File: gnubg.info,  Node: What do I have to pay for GNU Backgammon?,  Next: This GNU stuff sounds interesting_,  Prev: Where do I get it?,  Up: General questions
+File: gnubg.info,  Node: What do I have to pay for GNU Backgammon?,  Next: This GNU stuff sounds interesting,  Prev: Where do I get it?,  Up: General questions
 
 11.1.4 What do I have to pay for GNU  Backgammon?
 -------------------------------------------------
@@ -4205,34 +4243,34 @@ GNU Backgammon is _Free Software_ and is a part of the _GNU Project_.
 You may download it for free. For more information see the GNU General
 Public License (http://www.gnu.org/licenses/gpl.html). But be aware
 that GNU Backgammon is not _public domain software_ or _shareware_ as
-you perhaps know from _MS Windows_.GNU Backgammon is free as in _
-freedom _, i.e. all the source code is there for you to inspect, change
+you perhaps know from _MS Windows_. GNU Backgammon is free as in
+_freedom_, i.e. all the source code is there for you to inspect, change
 or distribute as long as you keep said license.
 
 
-File: gnubg.info,  Node: This GNU stuff sounds interesting_,  Next: I want to learn more about backgammon_,  Prev: What do I have to pay for GNU Backgammon?,  Up: General questions
+File: gnubg.info,  Node: This GNU stuff sounds interesting,  Next: I want to learn more about backgammon,  Prev: What do I have to pay for GNU Backgammon?,  Up: General questions
 
-11.1.5 This GNU stuff sounds interesting.
------------------------------------------
+11.1.5 This GNU stuff sounds interesting
+----------------------------------------
 
 Take a look at the GNU home page (http://www.gnu.org/). It's also the
 page for Free Software Foundation.
 
 
-File: gnubg.info,  Node: I want to learn more about backgammon_,  Next: Though I really read all the documentation I still have questions_,  Prev: This GNU stuff sounds interesting_,  Up: General questions
+File: gnubg.info,  Node: I want to learn more about backgammon,  Next: Though I really read all the documentation I still have questions,  Prev: This GNU stuff sounds interesting,  Up: General questions
 
-11.1.6 I want to learn more about backgammon.
----------------------------------------------
+11.1.6 I want to learn more about backgammon
+--------------------------------------------
 
 A good place to start is Backgammon Galore (http://www.bkgm.com/). For
 an extensive link collection, go to Gammon Links.
 (http://www.chicagopoint.com/links.html)
 
 
-File: gnubg.info,  Node: Though I really read all the documentation I still have questions_,  Next: I want to make a few proposals_ I have new ideas_,  Prev: I want to learn more about backgammon_,  Up: General questions
+File: gnubg.info,  Node: Though I really read all the documentation I still have questions,  Next: I want to make a few proposals; I have new ideas,  Prev: I want to learn more about backgammon,  Up: General questions
 
-11.1.7 Though I really read all the documentation I still have  questions.
---------------------------------------------------------------------------
+11.1.7 Though I really read all the documentation I still have  questions
+-------------------------------------------------------------------------
 
 Send an email to the GNU backgammon mailing list.
 (mailto:bug-gnubg@gnu.org) If it is a bug, be sure to include the name
@@ -4241,10 +4279,10 @@ messages you receive. Try to describe exactly what happens before the
 error occurs.
 
 
-File: gnubg.info,  Node: I want to make a few proposals_ I have new ideas_,  Prev: Though I really read all the documentation I still have questions_,  Up: General questions
+File: gnubg.info,  Node: I want to make a few proposals; I have new ideas,  Prev: Though I really read all the documentation I still have questions,  Up: General questions
 
-11.1.8 I want to make a few proposals. I have new ideas.
---------------------------------------------------------
+11.1.8 I want to make a few proposals, I have new ideas
+-------------------------------------------------------
 
 You're welcome! Send an email with your suggestions to the GNU
 backgammon mailing list. (mailto:bug-gnubg@gnu.org)
@@ -4258,15 +4296,15 @@ File: gnubg.info,  Node: How to install,  Next: Running GNU Backgammon,  Prev: G
 * Menu:
 
 * Do I need some other software to run GNU Backgammon?::
-* I want to install a newer version.: I want to install a newer version_.
-* I would like to compile it from the source code.: I would like to compile it from the source code_.
+* I want to install a newer version::
+* I would like to compile it from the source code::
 * What software do I need for compiling under GNU/Linux?::
 * What software do I need for compiling under MS Windows?::
-* It does not compile.: It does not compile_.
+* It does not compile::
 * On what CPU will GNU Backgammon run fastest?::
 
 
-File: gnubg.info,  Node: Do I need some other software to run GNU Backgammon?,  Next: I want to install a newer version_,  Up: How to install
+File: gnubg.info,  Node: Do I need some other software to run GNU Backgammon?,  Next: I want to install a newer version,  Up: How to install
 
 11.2.1 Do I need some other software to run GNU  Backgammon?
 ------------------------------------------------------------
@@ -4278,24 +4316,24 @@ install the additional libraries that can be found as well on this page
 (http://www.gnubg.org/index.php?itemid=24). (acepoint's directory)
 
 
-File: gnubg.info,  Node: I want to install a newer version_,  Next: I would like to compile it from the source code_,  Prev: Do I need some other software to run GNU Backgammon?,  Up: How to install
+File: gnubg.info,  Node: I want to install a newer version,  Next: I would like to compile it from the source code,  Prev: Do I need some other software to run GNU Backgammon?,  Up: How to install
 
-11.2.2 I want to install a newer version.
------------------------------------------
+11.2.2 I want to install a newer version
+----------------------------------------
 
 Go ahead, your settings should be saved.
 
 
-File: gnubg.info,  Node: I would like to compile it from the source code_,  Next: What software do I need for compiling under GNU/Linux?,  Prev: I want to install a newer version_,  Up: How to install
+File: gnubg.info,  Node: I would like to compile it from the source code,  Next: What software do I need for compiling under GNU/Linux?,  Prev: I want to install a newer version,  Up: How to install
 
-11.2.3 I would like to compile it from the source code.
--------------------------------------------------------
+11.2.3 I would like to compile it from the source code
+------------------------------------------------------
 
 Good luck to you! Download the source code and make sure to read one of
 the two following two items.
 
 
-File: gnubg.info,  Node: What software do I need for compiling under GNU/Linux?,  Next: What software do I need for compiling under MS Windows?,  Prev: I would like to compile it from the source code_,  Up: How to install
+File: gnubg.info,  Node: What software do I need for compiling under GNU/Linux?,  Next: What software do I need for compiling under MS Windows?,  Prev: I would like to compile it from the source code,  Up: How to install
 
 11.2.4 What software do I need for compiling under GNU/Linux?
 -------------------------------------------------------------
@@ -4304,7 +4342,7 @@ Unpack the GNU Backgammon snapshots and follow the instructions of the
 file `INSTALL'.
 
 
-File: gnubg.info,  Node: What software do I need for compiling under MS Windows?,  Next: It does not compile_,  Prev: What software do I need for compiling under GNU/Linux?,  Up: How to install
+File: gnubg.info,  Node: What software do I need for compiling under MS Windows?,  Next: It does not compile,  Prev: What software do I need for compiling under GNU/Linux?,  Up: How to install
 
 11.2.5 What software do I need for compiling under MS Windows?
 --------------------------------------------------------------
@@ -4313,10 +4351,10 @@ Follow the instructions at http://www.gnubg.org/index.php?itemid=50
 (http://www.gnubg.org/index.php?itemid=50).
 
 
-File: gnubg.info,  Node: It does not compile_,  Next: On what CPU will GNU Backgammon run fastest?,  Prev: What software do I need for compiling under MS Windows?,  Up: How to install
+File: gnubg.info,  Node: It does not compile,  Next: On what CPU will GNU Backgammon run fastest?,  Prev: What software do I need for compiling under MS Windows?,  Up: How to install
 
-11.2.6 It does not compile.
----------------------------
+11.2.6 It does not compile
+--------------------------
 
 Check that you have installed all necessary development packages.
 
@@ -4324,65 +4362,88 @@ Check that you have installed all necessary development packages.
 have a clue, send a message to <bug-gnubg@gnu.org>.
 
 
-File: gnubg.info,  Node: On what CPU will GNU Backgammon run fastest?,  Prev: It does not compile_,  Up: How to install
+File: gnubg.info,  Node: On what CPU will GNU Backgammon run fastest?,  Prev: It does not compile,  Up: How to install
 
 11.2.7 On what CPU will GNU Backgammon run  fastest?
 ----------------------------------------------------
 
-Here is a list of CPU and Evaluations per second ( Analyze->Evaluation
-Speed). Feel free to add your CPU:
+GNU Backgammon's speed depends on the CPU only. It doesn't need much
+memory (any machine not totally obsolete will have enough) and does
+little or no I/O (a fast disk or a SSD won't make any difference).
 
-Evals/sec    CPU          System/Main  RAM          OS           GNUBG-Version
-                          board                                  
-28450 *1     AMD Sempron  K8T800-A     1024 MB      Win 2000     0.14-mingw
-             3000+ (1800                                         
-             MHz)                                                
-28000        Intel Core   Mac mini     512 MB       Win XP SP2   0.14-mingw
-             Duo 1.66 GHz Core Duo                               
-27000        Intel        AOpen 1557-J 1024 MB      Win XP SP2   0.14-mingw
-             Pentium M                                           
-             735 (1.7                                            
-             GHz)                                                
-26000        Celeron 331  Dell         512 MB       Win XP SP2   0.14.3-devel
-             2.66 GHz     Dimension                              
-                          3100                                   
-24500        Sempron      Asus K8V-X   768 MB       Win XP SP2   0.14.3-devel
-             2800+ (rev                                          
-             E6_at_2000                                          
-             MHz)                                                
-23000        P4 2.8 GHz   Asus P4P800D 1024 MB      Win XP SP2   0.14.3-devel
-21759        Athlon64     Acer Aspire  512 MB       Kubuntu 5.04 0.14.3-devel
-             3000+        1522                                   
-             (32bit mode)                                        
-21500 *1     AMD Sempron  K8T800-A     1024 MB      Win 2000     0.14.3-devel
-             3000+ (1800                                         
-             MHz)                                                
-20120        Athlon XP    MSI          1024 MB      Suse Linux   0.14.3-devel
-             2500+        K7N-Delta2                9.2          
-             (_at_1833                                           
-             Mhz)                                                
-20200        Pentium M    Sony Vaio    512 MB       FreeBSD 5.2  
-             1.7 GHz      Z1XSP                                  
-19515        Intel        Sony Vaio    256 MB       Fedora       0.14.3-devel
-             Pentium M    PCG-SRX51P                FC6(T3)      
-             0.8 GHz *2                                          
-19200        Pentium M    IBM X41      1024 MB      Win XP SP2   0.14.3-devel
-             1.6 GHz                                             
-16900        P4 2 GHz     ?            256 MB       Win 2000     0.14-devel
-14400        P3 1GHz      Sony Vaio    256 MB       Win XP SP2   0.16-mingw
-                          PCG-R600HFPD                           
-13000 *3     AMD 1GHz     Jetway       1536 MB      Win 2000     0.14-devel
-10506        Intel        Sony Vaio    256 MB       Windows      0.14-mingw
-             Pentium M    PCG-SRX51P                XP(SP2)      
-             0.8 GHz                                             
-6200         Celeron 650  toshiba      256 MB       Win me       0.14-devel
-             MHz          laptop                                 
+   The table below lists CPUs and the result of the command
+Analyze->Evaluation Speed, showing the relative speed of various
+processors.  Note that these numbers are not directly comparable with
+those given by the similar command from eXtreme Gammon.
 
-*1                                   These are the two versions
-                                     evaluated on the same machine. Big
-                                     difference!
-*2                                   According to cat /proc/cpuinfo
-*3                                   Highly variable: 12000 .. 13700
+Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
+                      board                                       
+449500     Intel      Dell       4 GB       CentOS 6   1.02       4 threads
+           Core       Optiplex                                    
+           i5-2400    790                                         
+           3.10 GHz                                               
+258600     Intel      Dell       4 GB       CentOS 6   1.02       2 threads
+           Core       Optiplex                                    
+           i5-2400    790                                         
+           3.10 GHz                                               
+131400     Intel      Dell       4 GB       CentOS 6   1.02       1 thread
+           Core       Optiplex                                    
+           i5-2400    790                                         
+           3.10 GHz                                               
+125100     Intel      Dell       2 GB       Win XP SP3 1.02       2 threads
+           Core 2     Latitude                                    
+           Duo P8400  E6400                                       
+           2.26 GHz                                               
+64300      Intel      Dell       4 GB       FreeBSD    1.02       1 thread
+           Core 2     Latitude              9.2                   
+           Duo T7500  D630                                        
+           2.2 GHz                                                
+63500      Intel      Dell       2 GB       Win XP SP3 1.02       1 thread
+           Core 2     Latitude                                    
+           Duo P8400  E6400                                       
+           2.26 GHz                                               
+37600      Intel      Dell       1 GB       CentOS 5   1.02       
+           Pentium 4  Optiplex                                    
+           2.8 GHz    GX270                                       
+28000      Intel      Mac mini   512 MB     Win XP SP2 0.14-mingw 
+           Core Duo   Core Duo                                    
+           1.66 GHz                                               
+27000      Intel      AOpen      1024 MB    Win XP SP2 0.14-mingw 
+           Pentium M  1557-J                                      
+           735 (1.7                                               
+           GHz)                                                   
+26000      Intel      Dell       512 MB     Win XP SP2 0.14.3-devel
+           Celeron    Dimension                                   
+           331 2.66   3100                                        
+           GHz                                                    
+24500      AMD        Asus K8V-X 768 MB     Win XP SP2 0.14.3-devel
+           Sempron                                                
+           2800+                                                  
+           (2000 MHz)                                             
+23000      Intel      Asus       1024 MB    Win XP SP2 0.14.3-devel
+           Pentium 4  P4P800D                                     
+           2.8 GHz                                                
+21759      AMD        Acer       512 MB     Kubuntu    0.14.3-devel
+           Athlon64   Aspire                5.04                  
+           3000+      1522                                        
+           (32bit                                                 
+           mode)                                                  
+20120      AMD        MSI        1024 MB    Suse       0.14.3-devel
+           Athlon XP  K7N-Delta2            Linux 9.2             
+           2500+                                                  
+           (1833 Mhz)                                             
+19200      Intel      IBM        1024 MB    Win XP SP2 0.14.3-devel
+           Pentium M  ThinkPad                                    
+           1.6 GHz    X41                                         
+14400      Intel      Sony Vaio  256 MB     Win XP SP2 0.16-mingw 
+           Pentium    PCG-R600HFPD                                 
+           III-M 1GHz                                             
+8520       Intel      Toshiba    256 MB     Win XP SP1 1.02       
+           Celeron    Satellite                                   
+           750 MHz    4600                                        
+6990       Intel      Toshiba    128 MB     Win XP SP2 1.02       
+           Celeron    Satellite                                   
+           600 MHz    4310                                        
 
 
 File: gnubg.info,  Node: Running GNU Backgammon,  Next: Playing backgammon,  Prev: How to install,  Up: Frequently Asked Questions
@@ -4392,29 +4453,29 @@ File: gnubg.info,  Node: Running GNU Backgammon,  Next: Playing backgammon,  Pre
 
 * Menu:
 
-* I get an error message when starting.: I get an error message when starting_.
-* GNU Backgammon complains about missing files.: GNU Backgammon complains about missing files_.
-* Starting from the WinXP menu it plays like a beginner.: Starting from the WinXP menu it plays like a beginner_.
-* My screen mixes up while starting GNU Backgammon.: My screen mixes up while starting GNU Backgammon_.
-* I only get a command-line interface. Where is the nice board?: I only get a command-line interface_ Where is the nice board?.
-* When I restart GNU Backgammon all my settings are gone.: When I restart GNU Backgammon all my settings are gone_.
-* I do not need this graphical stuff. Where is the terminal for commands?: I do not need this graphical stuff_ Where is the terminal for commands?.
+* I get an error message when starting::
+* GNU Backgammon complains about missing files::
+* Starting from the WinXP menu it plays like a beginner::
+* My screen mixes up while starting GNU Backgammon::
+* I only get a command-line interface::
+* When I restart GNU Backgammon all my settings are gone::
+* I do not need this graphical stuff::
 
 
-File: gnubg.info,  Node: I get an error message when starting_,  Next: GNU Backgammon complains about missing files_,  Up: Running GNU Backgammon
+File: gnubg.info,  Node: I get an error message when starting,  Next: GNU Backgammon complains about missing files,  Up: Running GNU Backgammon
 
-11.3.1 I get an error message when starting.
---------------------------------------------
+11.3.1 I get an error message when starting
+-------------------------------------------
 
 Well, your computer wants to communicate with you. Give it a chance and
 read (and try to understand) what it is telling you. Then read the next
 items carefully:
 
 
-File: gnubg.info,  Node: GNU Backgammon complains about missing files_,  Next: Starting from the WinXP menu it plays like a beginner_,  Prev: I get an error message when starting_,  Up: Running GNU Backgammon
+File: gnubg.info,  Node: GNU Backgammon complains about missing files,  Next: Starting from the WinXP menu it plays like a beginner,  Prev: I get an error message when starting,  Up: Running GNU Backgammon
 
-11.3.2 GNU Backgammon complains about missing  files.
------------------------------------------------------
+11.3.2 GNU Backgammon complains about missing  files
+----------------------------------------------------
 
 GNU Backgammon reads several different files at start-up. It will first
 try to read a file called gnubg.wd.  This is a file which contains all
@@ -4441,10 +4502,10 @@ start-up, GNU Backgammon will evaluate late bearoff positions with the
 one sided bearoff database.
 
 
-File: gnubg.info,  Node: Starting from the WinXP menu it plays like a beginner_,  Next: My screen mixes up while starting GNU Backgammon_,  Prev: GNU Backgammon complains about missing files_,  Up: Running GNU Backgammon
+File: gnubg.info,  Node: Starting from the WinXP menu it plays like a beginner,  Next: My screen mixes up while starting GNU Backgammon,  Prev: GNU Backgammon complains about missing files,  Up: Running GNU Backgammon
 
-11.3.3 Starting from the WinXP menu it plays like a beginner.
--------------------------------------------------------------
+11.3.3 Starting from the WinXP menu it plays like a beginner
+------------------------------------------------------------
 
 Open the MS Windows menu and go to the entry for gnubg.  Right-click
 with the mouse and choose `properties'. Check, if the `working path' is
@@ -4452,10 +4513,10 @@ the same directory as the `*.exe'-file one line above. If not, adjust
 the working path.
 
 
-File: gnubg.info,  Node: My screen mixes up while starting GNU Backgammon_,  Next: I only get a command-line interface_ Where is the nice board?,  Prev: Starting from the WinXP menu it plays like a beginner_,  Up: Running GNU Backgammon
+File: gnubg.info,  Node: My screen mixes up while starting GNU Backgammon,  Next: I only get a command-line interface,  Prev: Starting from the WinXP menu it plays like a beginner,  Up: Running GNU Backgammon
 
-11.3.4 My screen mixes up while starting GNU  Backgammon.
----------------------------------------------------------
+11.3.4 My screen mixes up while starting GNU  Backgammon
+--------------------------------------------------------
 
 Install the newest driver for your graphic card. Be sure that you have
 chosen at least a desktop resolution of 65535 (16 bit color depth). If
@@ -4463,10 +4524,10 @@ your card is a ATI Rage _somewhat_ there still might be some problems
 with the graphical interface (GTK+) and MS Windows.
 
 
-File: gnubg.info,  Node: I only get a command-line interface_ Where is the nice board?,  Next: When I restart GNU Backgammon all my settings are gone_,  Prev: My screen mixes up while starting GNU Backgammon_,  Up: Running GNU Backgammon
+File: gnubg.info,  Node: I only get a command-line interface,  Next: When I restart GNU Backgammon all my settings are gone,  Prev: My screen mixes up while starting GNU Backgammon,  Up: Running GNU Backgammon
 
-11.3.5 I only get a command-line interface. Where is the nice board?
---------------------------------------------------------------------
+11.3.5 I only get a command-line interface
+------------------------------------------
 
 Using MS Windows, just click on the correct menu entry (`GNU Backgammon
 for windows'). If it still doesn't work, check whether
@@ -4476,18 +4537,18 @@ for windows'). If it still doesn't work, check whether
 installed.
 
 
-File: gnubg.info,  Node: When I restart GNU Backgammon all my settings are gone_,  Next: I do not need this graphical stuff_ Where is the terminal for commands?,  Prev: I only get a command-line interface_ Where is the nice board?,  Up: Running GNU Backgammon
+File: gnubg.info,  Node: When I restart GNU Backgammon all my settings are gone,  Next: I do not need this graphical stuff,  Prev: I only get a command-line interface,  Up: Running GNU Backgammon
 
-11.3.6 When I restart GNU Backgammon all my  settings are gone.
----------------------------------------------------------------
+11.3.6 When I restart GNU Backgammon all my  settings are gone
+--------------------------------------------------------------
 
 Did you save your settings Settings->Save settings before you quit?
 
 
-File: gnubg.info,  Node: I do not need this graphical stuff_ Where is the terminal for commands?,  Prev: When I restart GNU Backgammon all my settings are gone_,  Up: Running GNU Backgammon
+File: gnubg.info,  Node: I do not need this graphical stuff,  Prev: When I restart GNU Backgammon all my settings are gone,  Up: Running GNU Backgammon
 
-11.3.7 I do not need this graphical stuff. Where is the terminal for  commands?
--------------------------------------------------------------------------------
+11.3.7 I do not need this graphical stuff
+-----------------------------------------
 
 For _GNU/Linux_ users: open a terminal and run `gnubg -t'.
 
@@ -4505,15 +4566,15 @@ File: gnubg.info,  Node: Playing backgammon,  Next: Settings,  Prev: Running GNU
 * Menu:
 
 * What is the difference of a new game or match or session?::
-* What the heck is a beaver in Backgammon?::
+* What is a beaver in Backgammon?::
 * How do I move the checkers?::
 * Why am I allowed to place more than 5 checkers on a point?::
-* GNU Backgammon plays poorly.: GNU Backgammon plays poorly_.
-* GNU Backgammon is too strong for me.: GNU Backgammon is too strong for me_.
-* I think the bot is cheating. It always gets good dice.: I think the bot is cheating_ It always gets good dice_.
+* GNU Backgammon plays poorly::
+* GNU Backgammon is too strong for me::
+* I think the bot is cheating::
 
 
-File: gnubg.info,  Node: What is the difference of a new game or match or session?,  Next: What the heck is a beaver in Backgammon?,  Up: Playing backgammon
+File: gnubg.info,  Node: What is the difference of a new game or match or session?,  Next: What is a beaver in Backgammon?,  Up: Playing backgammon
 
 11.4.1 What is the difference of a new game or match or session?
 ----------------------------------------------------------------
@@ -4526,10 +4587,10 @@ differ, mainly the Jacoby rule is applies to sessions and the Crawford
 to match play.
 
 
-File: gnubg.info,  Node: What the heck is a beaver in Backgammon?,  Next: How do I move the checkers?,  Prev: What is the difference of a new game or match or session?,  Up: Playing backgammon
+File: gnubg.info,  Node: What is a beaver in Backgammon?,  Next: How do I move the checkers?,  Prev: What is the difference of a new game or match or session?,  Up: Playing backgammon
 
-11.4.2 What the heck is a beaver in Backgammon?
------------------------------------------------
+11.4.2 What is a beaver in Backgammon?
+--------------------------------------
 
 A beaver is only allowed in a money game session. To beaver means to
 redouble, retaining control of the cube, immediately after your
@@ -4537,7 +4598,7 @@ opponent doubles. For more information see the glossary at Backgammon
 Galore (http://www.bkgm.com/glossary.html#B).
 
 
-File: gnubg.info,  Node: How do I move the checkers?,  Next: Why am I allowed to place more than 5 checkers on a point?,  Prev: What the heck is a beaver in Backgammon?,  Up: Playing backgammon
+File: gnubg.info,  Node: How do I move the checkers?,  Next: Why am I allowed to place more than 5 checkers on a point?,  Prev: What is a beaver in Backgammon?,  Up: Playing backgammon
 
 11.4.3 How do I move the checkers?
 ----------------------------------
@@ -4555,7 +4616,7 @@ the menu Settings->Appearance-> General  and select Show higher die on
 left.
 
 
-File: gnubg.info,  Node: Why am I allowed to place more than 5 checkers on a point?,  Next: GNU Backgammon plays poorly_,  Prev: How do I move the checkers?,  Up: Playing backgammon
+File: gnubg.info,  Node: Why am I allowed to place more than 5 checkers on a point?,  Next: GNU Backgammon plays poorly,  Prev: How do I move the checkers?,  Up: Playing backgammon
 
 11.4.4 Why am I allowed to place more than 5 checkers on a point?
 -----------------------------------------------------------------
@@ -4565,31 +4626,31 @@ checkers on a point. Playing with a maximum of 5 checkers, sometimes
 known as the Egyptian Rule, is no longer supported by GNU Backgammon.
 
 
-File: gnubg.info,  Node: GNU Backgammon plays poorly_,  Next: GNU Backgammon is too strong for me_,  Prev: Why am I allowed to place more than 5 checkers on a point?,  Up: Playing backgammon
+File: gnubg.info,  Node: GNU Backgammon plays poorly,  Next: GNU Backgammon is too strong for me,  Prev: Why am I allowed to place more than 5 checkers on a point?,  Up: Playing backgammon
 
-11.4.5 GNU Backgammon plays poorly.
------------------------------------
+11.4.5 GNU Backgammon plays poorly
+----------------------------------
 
 Are you sure? If the answer is yes you should think about going to
 Monte Carlo this summer and win the Backgammon World Championship. If
 this plan fails, check whether the weights file is loaded at start-up.
-See also *note GNU Backgammon complains about missing files.: GNU
-Backgammon complains about missing files_.
+See also *note GNU Backgammon complains about missing files: GNU
+Backgammon complains about missing files.
 
 
-File: gnubg.info,  Node: GNU Backgammon is too strong for me_,  Next: I think the bot is cheating_ It always gets good dice_,  Prev: GNU Backgammon plays poorly_,  Up: Playing backgammon
+File: gnubg.info,  Node: GNU Backgammon is too strong for me,  Next: I think the bot is cheating,  Prev: GNU Backgammon plays poorly,  Up: Playing backgammon
 
-11.4.6 GNU Backgammon is too strong for me.
--------------------------------------------
+11.4.6 GNU Backgammon is too strong for me
+------------------------------------------
 
 Go to the menu Settings->Players and change the values for Player 0.
 There is also a set of predefined settings you may choose from.
 
 
-File: gnubg.info,  Node: I think the bot is cheating_ It always gets good dice_,  Prev: GNU Backgammon is too strong for me_,  Up: Playing backgammon
+File: gnubg.info,  Node: I think the bot is cheating,  Prev: GNU Backgammon is too strong for me,  Up: Playing backgammon
 
-11.4.7 I think the bot is cheating. It always gets good dice.
--------------------------------------------------------------
+11.4.7 I think the bot is cheating
+----------------------------------
 
 In its default configuration, the dice generator does not cheat.  In
 the menu Settings you may choose between different random dice
@@ -4606,7 +4667,7 @@ File: gnubg.info,  Node: Settings,  Next: Analyzing,  Prev: Playing backgammon, 
 
 * Where can I change the name of the human player?::
 * How do I change the colors?::
-* How do I stop the annoying beeps?"::
+* How do I stop the annoying beeps?::
 * What are Plies?::
 * What is noise?::
 
@@ -4620,7 +4681,7 @@ Go to the menu Settings-> Players.... and click on Player 1. At the top
 there is a field to change the human player's name.
 
 
-File: gnubg.info,  Node: How do I change the colors?,  Next: How do I stop the annoying beeps?",  Prev: Where can I change the name of the human player?,  Up: Settings
+File: gnubg.info,  Node: How do I change the colors?,  Next: How do I stop the annoying beeps?,  Prev: Where can I change the name of the human player?,  Up: Settings
 
 11.5.2 How do I change the colors?
 ----------------------------------
@@ -4629,16 +4690,16 @@ Go to the menu Settings-> Appearance . Here you may change the color of
 checkers, the points and the board itself.
 
 
-File: gnubg.info,  Node: How do I stop the annoying beeps?",  Next: What are Plies?,  Prev: How do I change the colors?,  Up: Settings
+File: gnubg.info,  Node: How do I stop the annoying beeps?,  Next: What are Plies?,  Prev: How do I change the colors?,  Up: Settings
 
-11.5.3 How do I stop the annoying beeps?"
------------------------------------------
+11.5.3 How do I stop the annoying beeps?
+----------------------------------------
 
 Go to the menuSettings-> Appearance  and click on the `General' tab at
 the right. Disable the option `Beep on illegal input'.
 
 
-File: gnubg.info,  Node: What are Plies?,  Next: What is noise?,  Prev: How do I stop the annoying beeps?",  Up: Settings
+File: gnubg.info,  Node: What are Plies?,  Next: What is noise?,  Prev: How do I stop the annoying beeps?,  Up: Settings
 
 11.5.4 What are Plies?
 ----------------------
@@ -4695,12 +4756,12 @@ File: gnubg.info,  Node: Analyzing,  Next: Abbreviations,  Prev: Settings,  Up: 
 
 * What are these funny letters at the right bottom?::
 * How do I set up a position manually?::
-* Which formats must I use to import matches and positions?::
+* Which formats can I use to import matches and positions?::
 * How can I switch the players sides?::
 * What do ! and ? mean?::
 * How is the error rate determined?::
 * What does Pips mean?::
-* What does epc mean?::
+* What does EPC mean?::
 
 
 File: gnubg.info,  Node: What are these funny letters at the right bottom?,  Next: How do I set up a position manually?,  Up: Analyzing
@@ -4708,15 +4769,21 @@ File: gnubg.info,  Node: What are these funny letters at the right bottom?,  Nex
 11.6.1 What are these funny letters at the right bottom?
 --------------------------------------------------------
 
-You will find two small windows titled `Position' and `Match ID' at the
-bottom of the GNU Backgammon window.  Here you may use the
-`position_id'- or `match_id'-format for setting up or copying positions.
+You will find a small window titled `GNUbg ID' at the bottom of the GNU
+Backgammon window.  It contains an short, textual, representation of
+the position at hand, suitable for easily copying and pasting positions.
 
-   An explanation of both formats is found in the GNU Backgammon's
-documentation.
+   It is composed of a `Position ID' describing the checkers position
+and a `Match ID' for the other features (match score, cube position and
+value, dice, who is on roll...).  A detailed description of both
+formats is found earlier in *note A technical description of the
+Position ID::.
+
+   Pasting a `XGID' (a similar shortcut used by eXtreme Gammon) there
+is recognized as well.
 
 
-File: gnubg.info,  Node: How do I set up a position manually?,  Next: Which formats must I use to import matches and positions?,  Prev: What are these funny letters at the right bottom?,  Up: Analyzing
+File: gnubg.info,  Node: How do I set up a position manually?,  Next: Which formats can I use to import matches and positions?,  Prev: What are these funny letters at the right bottom?,  Up: Analyzing
 
 11.6.2 How do I set up a position manually?
 -------------------------------------------
@@ -4736,19 +4803,18 @@ on it.
 player on roll. The dice will then disappear.
 
 
-File: gnubg.info,  Node: Which formats must I use to import matches and positions?,  Next: How can I switch the players sides?,  Prev: How do I set up a position manually?,  Up: Analyzing
+File: gnubg.info,  Node: Which formats can I use to import matches and positions?,  Next: How can I switch the players sides?,  Prev: How do I set up a position manually?,  Up: Analyzing
 
-11.6.3 Which formats must I use to import matches and positions?
-----------------------------------------------------------------
+11.6.3 Which formats can I use to import matches and positions?
+---------------------------------------------------------------
 
 Import of matches and positions from a number of file formats is
-possible: (.bkg) Hans Berliner's BKG Format, (.gam) GammonEmpire Game,
-(.gam) PartyGammon Game, (.mat) Jellyfish Match, (.pos) Jellyfish
-Position, (.sgf) Gnu Backgammon File, (.sgg) GamesGrid Save Game,
-(.tmg) TrueMoneyGames, (.txt) Snowie Text
+possible: (.gam) GammonEmpire Game, (.gam) PartyGammon Game, (.mat)
+Jellyfish Match, (.pos) Jellyfish Position, (.sgf) Gnu Backgammon File,
+(.sgg) GamesGrid Save Game, (.tmg) TrueMoneyGames, (.txt) Snowie Text
 
 
-File: gnubg.info,  Node: How can I switch the players sides?,  Next: What do ! and ? mean?,  Prev: Which formats must I use to import matches and positions?,  Up: Analyzing
+File: gnubg.info,  Node: How can I switch the players sides?,  Next: What do ! and ? mean?,  Prev: Which formats can I use to import matches and positions?,  Up: Analyzing
 
 11.6.4 How can I switch the players sides?
 ------------------------------------------
@@ -4799,7 +4865,7 @@ the menu `Analyze, ... statistics'. Note that you can't change the
 ranges of these values.
 
 
-File: gnubg.info,  Node: What does Pips mean?,  Next: What does epc mean?,  Prev: How is the error rate determined?,  Up: Analyzing
+File: gnubg.info,  Node: What does Pips mean?,  Next: What does EPC mean?,  Prev: How is the error rate determined?,  Up: Analyzing
 
 11.6.7 What does Pips mean?
 ---------------------------
@@ -4817,17 +4883,16 @@ that when you roll a six and a five, the total pips of that roll is
 eleven.)
 
 
-File: gnubg.info,  Node: What does epc mean?,  Prev: What does Pips mean?,  Up: Analyzing
+File: gnubg.info,  Node: What does EPC mean?,  Prev: What does Pips mean?,  Up: Analyzing
 
-11.6.8 What does epc mean?
+11.6.8 What does EPC mean?
 --------------------------
 
 When bearing off checkers, you may notice a display showing the current
-_epc_ value (next to the display of _Pips_). The epc display can be
-turned on or off under menu _Settings -> Options -> Display_ (at least
-in the current version, as of June 2005).
+_EPC_ value (next to the display of _Pips_). The EPC display can be
+turned on or off under menu _Settings -> Options -> Display_.
 
-   _epc_ stands for Effective Pip Count, and is an alternative
+   _EPC_ stands for Effective Pip Count, and is an alternative
 measurement of the _goodness_ of the position. The usual pip count can
 be a misleading _goodness_ estimate when both players are bearing off.
 What is more important (for making cubing decisions) is _the expected
@@ -4839,10 +4904,10 @@ which is 8.167. (The average number of pips in a roll would be 7 if
 rolling a double wouldn't yield a double pip count. A double-6 yields
 24 pips, not 12.)
 
-   Thus, epc takes into account not only the current pip count, but
+   Thus, EPC takes into account not only the current pip count, but
 also the expected pip wastage:
 
-  1. effective pip count (epc) = pip count + expected pip wastage
+  1. Effective Pip Count (EPC) = pip count + expected pip wastage
 
    An example:
 
@@ -4850,21 +4915,21 @@ also the expected pip wastage:
 
   2. Pip count: 5x1 + 4x2 = 13
 
-  3. epc: 2.189 (expected number of remaining rolls) * 8.167 = 17.878
+  3. EPC: 2.189 (expected number of remaining rolls) * 8.167 = 17.878
 
   4. Wasted: 17.878 - 13 = 4.878
 
    It's clear (hopefully) that the expected pip wastage (and hence the
-_epc_) increases with more checkers on lower points (e.g. you get pip
+_EPC_) increases with more checkers on lower points (e.g. you get pip
 wastage when rolling a 6 to bear off a checker from the 2- or 1-point).
 
    It is further explained on BackGammon Galore
 (http://www.bkgm.com/gloss/lookup.cgi?effective+pip+count), especially
 in a post by Douglas Zare (http://www.bkgm.com/rgb/rgb.cgi?view+1076).
 
-   How do one calculate the epc then, or the expected number of
+   How do one calculate the EPC then, or the expected number of
 remaining rolls? GnuBG uses the one-sided bearoff database, which
-contains the change of bearing off the final checker in any given
+contains the chance of bearing off the final checker in any given
 number of rolls. A player would probably use some quite complicated
 heuristics (please see the aforementioned post by Douglas Zare, _and do
 get back here and explain it!_)
@@ -4877,23 +4942,23 @@ File: gnubg.info,  Node: Abbreviations,  Prev: Analyzing,  Up: Frequently Asked 
 
 * Menu:
 
-* GWC::
+* GWC?::
 * MWC?::
 * DP?::
 * CP?::
 * TG?::
-* epc?::
+* EPC?::
 
 
-File: gnubg.info,  Node: GWC,  Next: MWC?,  Up: Abbreviations
+File: gnubg.info,  Node: GWC?,  Next: MWC?,  Up: Abbreviations
 
-11.7.1 GWC
-----------
+11.7.1 GWC?
+-----------
 
 _GWC_ is an abbreviation for game winning chances.
 
 
-File: gnubg.info,  Node: MWC?,  Next: DP?,  Prev: GWC,  Up: Abbreviations
+File: gnubg.info,  Node: MWC?,  Next: DP?,  Prev: GWC?,  Up: Abbreviations
 
 11.7.2 MWC?
 -----------
@@ -4944,7 +5009,7 @@ you do not want to play for the double amount of points.
 taken.
 
 
-File: gnubg.info,  Node: TG?,  Next: epc?,  Prev: CP?,  Up: Abbreviations
+File: gnubg.info,  Node: TG?,  Next: EPC?,  Prev: CP?,  Up: Abbreviations
 
 11.7.5 TG?
 ----------
@@ -4955,12 +5020,12 @@ situation in the game, where you probably should have kept the cube
 than double out your opponent.
 
 
-File: gnubg.info,  Node: epc?,  Prev: TG?,  Up: Abbreviations
+File: gnubg.info,  Node: EPC?,  Prev: TG?,  Up: Abbreviations
 
-11.7.6 epc?
+11.7.6 EPC?
 -----------
 
-See *note What does epc mean?::
+See *note What does EPC mean?::
 
    _This should be an internal link, not an external one. But I can't
 figure out how to link internally to a subsection.  Anyone?_
@@ -5439,218 +5504,219 @@ their use in free software.
 
 Tag Table:
 Node: Top206
-Node: Introduction2350
-Node: GPL copying/warranty info6588
-Node: Rules of the game7083
-Node: Setup7668
-Ref: A board with the checkers in their initial position_8216
-Node: Object of the Game9770
-Ref: Direction of movement of White's checkers_ Red's checkers move in the opposite direction_10115
-Node: Movement of the Checkers10873
-Ref: White opens the game with 53_12177
-Node: Hitting and Entering13590
-Ref: White rolls 64 with a checker on the bar_14375
-Node: Bearing Off15583
-Ref: White rolls 64 and bears off two checkers_16459
-Node: Doubling17102
-Node: Gammons and Backgammons18127
-Node: Optional Rules18808
-Node: Rules for Match Play19776
-Node: Starting GNU Backgammon22022
-Node: Linux and Unix22274
-Node: Microsoft Windows22773
-Node: Mac OSX23515
-Node: Command line options24461
-Ref: GNU Backgammon startup options24858
-Node: Playing a game26356
-Node: Starting a new match or session26646
-Ref: The dialog for starting a new match_27039
-Node: Rolling the dice28465
-Ref: Click in the red rectangle to roll the dice_28832
-Node: Moving the checkers29044
-Node: Moving by drag and drop29324
-Node: Moving checkers by clicking29892
-Node: Undo a move30766
-Node: Some shortcuts31214
-Node: Using the doubling cube32047
-Node: Offering a double32289
-Node: Accepting or declining a cube32634
-Ref: The toolbar double buttons_33200
-Node: Resigning33550
-Node: Offering a resignation33748
-Node: Accepting or declining a resignation34322
-Node: Getting hints and Tutor Mode35323
-Node: Getting hints manually35558
-Node: Getting checker play hints while playing35845
-Ref: The hint window36258
-Node: Getting cube decision hints while playing39171
-Ref: The cube hint window39736
-Node: The hint tool buttons41316
-Node: Tutor mode43620
-Ref: The tutor window43965
-Ref: The tutor warning window44668
-Node: Setting up a position45457
-Node: Entering Edit mode46371
-Node: Editing47329
-Node: Clearing the board47659
-Ref: Click in the one of the areas marked with a red ellipse to clear the board_48090
-Ref: Click in the one of the areas marked with a red ellipse to get to the initial position_48381
-Node: Quick edit48594
-Node: Editing by drag and drop49628
-Node: Setting the player on turn50474
-Ref: Clicking the White checker image will set White on turn; clicking the Black image will set Black in turn_50780
-Node: Setting the dice51341
-Ref: Click inside the red rectangle to set the dice for Black_ Click inside the green rectangle to set the dice for White_51963
-Node: Setting the cube52488
-Node: Setting the score53095
-Node: Exiting Edit mode54052
-Node: Analyzing the position54514
-Node: Working with matches55772
-Node: Retrieving and storing backgammon files56060
-Node: The Smart Game Format56457
-Node: Opening and importing matches57034
-Node: Saving and exporting positions; games or matches58727
-Node: HTML export61126
-Node: LaTeX export63689
-Node: Entering live tournament matches64534
-Node: Entering illegal moves67117
-Node: Analyzing matches68132
-Node: Analysis settings69284
-Ref: Analyze settings dialog69563
-Node: Reviewing matches71089
-Node: Game record71293
-Ref: The Game record pane71843
-Node: Analysis panel74633
-Ref: The Analyze pane75196
-Node: Statistics77855
-Node: Checker play statistics78410
-Node: Luck analysis80189
-Node: Cube statistics82025
-Node: Overall rating84748
-Node: Rollouts88366
-Node: Introduction to rollouts88570
-Node: Rollouts in GNU Backgammon90779
-Node: Quasi-Random Dice93514
-Node: Customizing GNU Backgammon96751
-Node: Evaluation settings96965
-Node: Introduction to evaluation settings97447
-Node: The depth to search and plies98525
-Node: Defining evaluation settings101339
-Node: Playing skill;101705
-Node: Hints;102074
-Node: Analysis;102818
-Node: Rollouts;103354
-Node: Changing evaluation settings104302
-Ref: The evaluation settings dialog104565
-Node: Predefined settings105916
-Node: Move filters107419
-Node: Introduction to move filters107653
-Ref: Example of move filter settings108851
-Node: Defining move filters112542
-Ref: Move filter 1113183
-Ref: Move filter 2114700
-Ref: Move filter 3114773
-Node: Cubeful vs_ Cubeless115723
-Ref: Cubeful example116178
-Ref: Cubeful example 2116866
-Node: Pruning neural networks117668
-Node: Noise118355
-Node: Appearance119601
-Ref: The appearance dialog120066
-Node: Technical Notes121228
-Node: Obtaining bearoff databases121631
-Node: Generate your own122139
-Node: Download124870
-Node: Verification of databases125515
-Node: One-sided bearoff databases [compressed]125886
-Node: Two-sided bearoff databases [with cubeless and cubeful equities]127796
-Node: Two-sided databases for Hypergammon129464
-Ref: Random position from hypergammon database130185
-Node: Match Equity Tables131634
-Node: Python scripting131897
-Node: gnubg module functions132338
-Node: Match description133590
-Node: Match info133957
-Node: Python game135476
-Node: Game actions136085
-Node: Equities explained136239
-Node: Introduction to equities136557
-Node: Money equity137091
-Node: Match Winning Chance137959
-Node: Normalized equity139464
-Node: Cubeful equities141290
-Node: Basic formula for cubeful equities141871
-Node: Live cube equities142809
-Ref: Cubeful example 1143471
-Ref: mgtp144126
-Ref: mptp147250
-Node: 0-ply Cubeful equities149061
-Node: n-ply Cubeful equities149775
-Node: The cube efficiency151132
-Node: Cube decisions152983
-Ref: mgcd153595
-Node: Beyond the simple model155906
-Node: A technical description of the Position ID156734
-Node: A technical description of the Match ID162210
-Node: Description of the CSS style sheet166762
-Node: Frequently Asked Questions171736
-Node: General questions172071
-Node: What is GNU Backgammon?172767
-Node: What operating systems are supported?173179
-Node: Where do I get it?173838
-Node: What do I have to pay for GNU Backgammon?174303
-Node: This GNU stuff sounds interesting_175034
-Node: I want to learn more about backgammon_175409
-Node: Though I really read all the documentation I still have questions_175874
-Node: I want to make a few proposals_ I have new ideas_176525
-Node: How to install176933
-Node: Do I need some other software to run GNU Backgammon?177564
-Node: I want to install a newer version_178097
-Node: I would like to compile it from the source code_178426
-Node: What software do I need for compiling under GNU/Linux?178845
-Node: What software do I need for compiling under MS Windows?179283
-Node: It does not compile_179720
-Node: On what CPU will GNU Backgammon run fastest?180152
-Node: Running GNU Backgammon183972
-Node: I get an error message when starting_184959
-Node: GNU Backgammon complains about missing files_185361
-Node: Starting from the WinXP menu it plays like a beginner_187131
-Node: My screen mixes up while starting GNU Backgammon_187710
-Node: I only get a command-line interface_ Where is the nice board?188332
-Node: When I restart GNU Backgammon all my settings are gone_188968
-Node: I do not need this graphical stuff_ Where is the terminal for commands?189429
-Node: Playing backgammon190100
-Node: What is the difference of a new game or match or session?190743
-Node: What the heck is a beaver in Backgammon?191385
-Node: How do I move the checkers?191928
-Node: Why am I allowed to place more than 5 checkers on a point?192713
-Node: GNU Backgammon plays poorly_193238
-Node: GNU Backgammon is too strong for me_193823
-Node: I think the bot is cheating_ It always gets good dice_194236
-Node: Settings194774
-Node: Where can I change the name of the human player?195091
-Node: How do I change the colors?195457
-Node: How do I stop the annoying beeps?"195815
-Node: What are Plies?196165
-Node: What is noise?198061
-Node: Analyzing198315
-Node: What are these funny letters at the right bottom?198776
-Node: How do I set up a position manually?199318
-Node: Which formats must I use to import matches and positions?200224
-Node: How can I switch the players sides?200857
-Node: What do ! and ? mean?201172
-Node: How is the error rate determined?201974
-Node: What does Pips mean?202831
-Node: What does epc mean?203640
-Node: Abbreviations205836
-Node: GWC206028
-Node: MWC?206168
-Node: DP?206323
-Node: CP?206724
-Ref: The double line207357
-Node: TG?207771
-Node: epc?208109
-Node: GNU Free Documentation License208364
+Node: Introduction2351
+Node: GPL copying/warranty info6541
+Node: Rules of the game7036
+Node: Setup7621
+Ref: A board with the checkers in their initial position_8169
+Node: Object of the Game9723
+Ref: Direction of movement of White's checkers_ Red's checkers move in the opposite direction_10068
+Node: Movement of the Checkers10826
+Ref: White opens the game with 53_12130
+Node: Hitting and Entering13543
+Ref: White rolls 64 with a checker on the bar_14328
+Node: Bearing Off15536
+Ref: White rolls 64 and bears off two checkers_16412
+Node: Doubling17055
+Node: Gammons and Backgammons18080
+Node: Optional Rules18761
+Node: Rules for Match Play19729
+Node: Starting GNU Backgammon21975
+Node: Linux and Unix22228
+Node: Microsoft Windows22727
+Node: Mac OS X23470
+Node: Command line options24423
+Ref: GNU Backgammon startup options24821
+Node: Playing a game26215
+Node: Starting a new match or session26505
+Ref: The dialog for starting a new match_26898
+Node: Rolling the dice28324
+Ref: Click in the red rectangle to roll the dice_28691
+Node: Moving the checkers28903
+Node: Moving by drag and drop29183
+Node: Moving checkers by clicking29751
+Node: Undo a move30625
+Node: Some shortcuts31073
+Node: Using the doubling cube31906
+Node: Offering a double32148
+Node: Accepting or declining a cube32493
+Ref: The toolbar double buttons_33059
+Node: Resigning33409
+Node: Offering a resignation33607
+Node: Accepting or declining a resignation34181
+Node: Getting hints and Tutor Mode35182
+Node: Getting hints manually35417
+Node: Getting checker play hints while playing35704
+Ref: The hint window36117
+Node: Getting cube decision hints while playing39030
+Ref: The cube hint window39595
+Node: The hint tool buttons41175
+Node: Tutor mode43479
+Ref: The tutor window43824
+Ref: The tutor warning window44527
+Node: Setting up a position45316
+Node: Entering Edit mode46230
+Node: Editing47188
+Node: Clearing the board47518
+Ref: Click in the one of the areas marked with a red ellipse to clear the board_47949
+Ref: Click in the one of the areas marked with a red ellipse to get to the initial position_48240
+Node: Quick edit48453
+Node: Editing by drag and drop49487
+Node: Setting the player on turn50333
+Ref: Clicking the White checker image will set White on turn; clicking the Black image will set Black in turn_50639
+Node: Setting the dice51200
+Ref: Click inside the red rectangle to set the dice for Black_ Click inside the green rectangle to set the dice for White_51822
+Node: Setting the cube52347
+Node: Setting the score52954
+Node: Exiting Edit mode53911
+Node: Analyzing the position54373
+Node: Working with matches55631
+Node: Retrieving and storing backgammon files55919
+Node: The Smart Game Format56316
+Node: Opening and importing matches56893
+Node: Saving and exporting positions; games or matches58525
+Node: HTML export60924
+Node: LaTeX export63487
+Node: Entering live tournament matches64332
+Node: Entering illegal moves66915
+Node: Analyzing matches67930
+Node: Analysis settings69082
+Ref: Analyze settings dialog69361
+Node: Reviewing matches70887
+Node: Game record71091
+Ref: The Game record pane71641
+Node: Analysis panel74431
+Ref: The Analyze pane74994
+Node: Statistics77653
+Node: Checker play statistics78208
+Node: Luck analysis79987
+Node: Cube statistics81823
+Node: Overall rating84546
+Node: Rollouts88164
+Node: Introduction to rollouts88368
+Node: Rollouts in GNU Backgammon90577
+Node: Quasi-Random Dice93312
+Node: Customizing GNU Backgammon96549
+Node: Evaluation settings96763
+Node: Introduction to evaluation settings97223
+Node: The depth to search and plies98301
+Node: Defining evaluation settings101115
+Node: Playing skill;101481
+Node: Hints;101850
+Node: Analysis;102594
+Node: Rollouts;103130
+Node: Changing evaluation settings104078
+Ref: The evaluation settings dialog104341
+Node: Predefined settings105692
+Node: Move filters107400
+Node: Introduction to move filters107633
+Ref: Example of move filter settings108831
+Node: Defining move filters112522
+Ref: Move filter 1113163
+Ref: Move filter 2114680
+Ref: Move filter 3114753
+Node: Cubeful vs Cubeless115703
+Ref: Cubeful example116155
+Ref: Cubeful example 2116843
+Node: Pruning neural networks117645
+Node: Noise118327
+Node: Appearance119573
+Ref: The appearance dialog120038
+Node: Technical Notes121200
+Node: Obtaining bearoff databases121603
+Node: Generate your own122149
+Node: Download124880
+Node: Installation of the databases125529
+Node: Verification of the databases125919
+Node: One-sided bearoff databases [compressed]126323
+Node: Two-sided bearoff databases [with cubeless and cubeful equities]128237
+Node: Two-sided databases for Hypergammon129905
+Ref: Random position from hypergammon database130626
+Node: Match Equity Tables132075
+Node: Python scripting133567
+Node: gnubg module functions134008
+Node: Match description135260
+Node: Match info135627
+Node: Python game137146
+Node: Game actions137755
+Node: Equities explained137909
+Node: Introduction to equities138227
+Node: Money equity138761
+Node: Match Winning Chance139629
+Node: Normalized equity141134
+Node: Cubeful equities142960
+Node: Basic formula for cubeful equities143541
+Node: Live cube equities144479
+Ref: Cubeful example 1145141
+Ref: mgtp145796
+Ref: mptp148920
+Node: 0-ply Cubeful equities150731
+Node: n-ply Cubeful equities151445
+Node: The cube efficiency152802
+Node: Cube decisions154653
+Ref: mgcd155265
+Node: Beyond the simple model157576
+Node: A technical description of the Position ID158404
+Node: A technical description of the Match ID163880
+Node: Description of the CSS style sheet168432
+Node: Frequently Asked Questions173406
+Node: General questions173741
+Node: What is GNU Backgammon?174291
+Node: What operating systems are supported?174703
+Node: Where do I get it?175548
+Node: What do I have to pay for GNU Backgammon?176013
+Node: This GNU stuff sounds interesting176742
+Node: I want to learn more about backgammon177113
+Node: Though I really read all the documentation I still have questions177573
+Node: I want to make a few proposals; I have new ideas178219
+Node: How to install178623
+Node: Do I need some other software to run GNU Backgammon?179146
+Node: I want to install a newer version179678
+Node: I would like to compile it from the source code180003
+Node: What software do I need for compiling under GNU/Linux?180418
+Node: What software do I need for compiling under MS Windows?180855
+Node: It does not compile181291
+Node: On what CPU will GNU Backgammon run fastest?181720
+Node: Running GNU Backgammon187023
+Node: I get an error message when starting187563
+Node: GNU Backgammon complains about missing files187961
+Node: Starting from the WinXP menu it plays like a beginner189726
+Node: My screen mixes up while starting GNU Backgammon190300
+Node: I only get a command-line interface190892
+Node: When I restart GNU Backgammon all my settings are gone191448
+Node: I do not need this graphical stuff191843
+Node: Playing backgammon192400
+Node: What is the difference of a new game or match or session?192884
+Node: What is a beaver in Backgammon?193517
+Node: How do I move the checkers?194033
+Node: Why am I allowed to place more than 5 checkers on a point?194809
+Node: GNU Backgammon plays poorly195333
+Node: GNU Backgammon is too strong for me195912
+Node: I think the bot is cheating196294
+Node: Settings196750
+Node: Where can I change the name of the human player?197066
+Node: How do I change the colors?197432
+Node: How do I stop the annoying beeps?197789
+Node: What are Plies?198136
+Node: What is noise?200031
+Node: Analyzing200285
+Node: What are these funny letters at the right bottom?200745
+Node: How do I set up a position manually?201596
+Node: Which formats can I use to import matches and positions?202501
+Node: How can I switch the players sides?203096
+Node: What do ! and ? mean?203410
+Node: How is the error rate determined?204212
+Node: What does Pips mean?205069
+Node: What does EPC mean?205878
+Node: Abbreviations208023
+Node: GWC?208216
+Node: MWC?208359
+Node: DP?208515
+Node: CP?208916
+Ref: The double line209549
+Node: TG?209963
+Node: EPC?210301
+Node: GNU Free Documentation License210556
 
 End Tag Table
 
