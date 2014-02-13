@@ -34,7 +34,8 @@
 #define gtk_combo_box_text_append_text gtk_combo_box_append_text
 #define gtk_combo_box_text_remove gtk_combo_box_remove_text
 #define gtk_combo_box_text_insert_text gtk_combo_box_insert_text
-#define GTK_COMBO_BOX_TEXT  GTK_COMBO_BOX
+#define GtkComboBoxText GtkComboBox
+#define GTK_COMBO_BOX_TEXT GTK_COMBO_BOX
 #endif
 
 #if ! GTK_CHECK_VERSION(2,22,0)
