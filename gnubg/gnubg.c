@@ -980,8 +980,8 @@ ParsePosition(TanBoard an, char **ppch, char *pchDesc)
 
         for (i = 0; i < 10; ++i) {
             if (pch[2 * i + 0] >= 'A' && pch[2 * i + 0] <= 'P' && pch[2 * i + 1] >= 'A' && pch[2 * i + 1] <= 'P')
-                key.auch[i] = (unsigned char) ((pch[2 * i + 0] - 'A') << 4)
-                    + (pch[2 * i + 1] - 'A');
+                key.auch[i] = (unsigned char) (((pch[2 * i + 0] - 'A') << 4)
+                    + (pch[2 * i + 1] - 'A'));
             else {
                 outputl(_("Illegal position."));
                 return -1;
@@ -4930,8 +4930,8 @@ CommandMWC2Eq(char *sz)
     if (rMwc == ERR_VAL)
         rMwc = eq2mwc(0.0, &ci);
 
-    if (rMwc > 1.0)
-        rMwc /= 100.0;
+    if (rMwc > 1.0f)
+        rMwc /= 100.0f;
 
     outputf("%s = %6.2f%%: %+6.3f\n", _("Equity for MWC"), 100.0 * eq2mwc(-1.0, &ci), -1.0);
     outputf("%s = %6.2f%%: %+6.3f\n", _("Equity for MWC"), 100.0 * eq2mwc(+1.0, &ci), +1.0);
