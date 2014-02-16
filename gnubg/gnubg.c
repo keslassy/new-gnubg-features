@@ -682,7 +682,6 @@ NextTokenGeneral(char **ppch, const char *szTokens)
                 *pchSave++ = **ppch;
         } else {
             switch (**ppch) {
-            case '\'':
             case '"':
                 /* quote mark */
                 if (!chQuote)
