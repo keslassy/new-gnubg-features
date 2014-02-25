@@ -535,7 +535,7 @@ PythonCubeInfo(PyObject * UNUSED(self), PyObject * args)
         return NULL;
 
     if (SetCubeInfo(&ci, nCube, fCubeOwner, fMove, nMatchTo, anScore, fCrawford, fJacoby, fBeavers, bgv)) {
-        printf(_("error in SetCubeInfo\n"));
+        PyErr_SetString(PyExc_StandardError, _("error in SetCubeInfo\n"));
         return NULL;
     }
 
@@ -560,7 +560,7 @@ PythonPosInfo(PyObject * UNUSED(self), PyObject * args)
         return NULL;
 
     if (SetPosInfo(&pi, fTurn, fResigned, fDoubled, gs, anDice)) {
-        printf(_("error in SetPosInfo\n"));
+        PyErr_SetString(PyExc_StandardError, _("error in SetPosInfo\n"));
         return NULL;
     }
 
@@ -684,7 +684,11 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
         prochint.avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS] = (void *)(long)0;
         prochint.avInputData[PROCREC_HINT_ARGIN_MAXMOVES] = (void *)(long)nMaxMoves;
         hint_move (szNumber, FALSE, (void *)&prochint);
-
+        if (fInterrupt) {
+            ResetInterrupt();
+            PyErr_SetString(PyExc_StandardError, _("interrupted/errno in hint_move"));
+            return NULL;
+        }
         szHintType = "chequer";
         retval = prochint.pvUserData;
     }
@@ -965,6 +969,7 @@ PythonEvaluate(PyObject * UNUSED(self), PyObject * args)
         return NULL;
 
     if (GeneralEvaluationE(arOutput, (ConstTanBoard) anBoard, &ci, &ec)) {
+        ResetInterrupt();
         PyErr_SetString(PyExc_StandardError, _("interrupted/errno in GeneralEvaluateE"));
         return NULL;
     }
@@ -1010,6 +1015,7 @@ PythonEvaluateCubeful(PyObject * UNUSED(self), PyObject * args)
         return NULL;
 
     if (GeneralCubeDecisionE(aarOutput, (ConstTanBoard) anBoard, &ci, &ec, 0) < 0) {
+        ResetInterrupt();
         PyErr_SetString(PyExc_StandardError, _("interrupted/errno in GeneralCubeDecisionE"));
         return NULL;
     }
@@ -1043,6 +1049,9 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
     int anMove[8];
     cubeinfo ci;
     evalcontext ec;
+    movelist ml;
+    findData fd;
+    int fSaveShowProg;
 
     memcpy (&ec, &GetEvalChequer()->ec, sizeof (evalcontext));
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
@@ -1055,7 +1064,7 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
         return NULL;
 
     if (anDice[0] == 0) {
-        printf(_("What? No dice?\n"));
+        PyErr_SetString(PyExc_StandardError, _("What? No dice?\n"));
         return NULL;
     }
 
@@ -1072,18 +1081,48 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
      * FIXME: The function will use the eval movefilter. The function
      * should take a movefilter as an argument.
      */
+    fd.pml = &ml;
+    fd.pboard = (ConstTanBoard) anBoard;
+    fd.keyMove = NULL;
+    fd.rThr = 0.0f;
+    fd.pci = &ci;
+    fd.pec = &ec;
+    fd.anDice[0] = anDice[0];
+    fd.anDice[1] = anDice[1];
+    fd.aamf = *GetEvalMoveFilter();
 
-    if (FindBestMove(anMove, anDice[0], anDice[1], anBoard, &ci, &ec, aamfEval) < 0)
+    fSaveShowProg = fShowProgress;
+    fShowProgress = FALSE;
+    if ((RunAsyncProcess((AsyncFun) asyncFindBestMoves, &fd, _("Considering move...")) != 0) || fInterrupt) {
+        fShowProgress = fSaveShowProg;
+        ResetInterrupt();
+        PyErr_SetString(PyExc_StandardError, _("interrupted/errno in asyncFindBestMoves"));
         return NULL;
+    }
+    fShowProgress = fSaveShowProg;
+    
     {
-        PyObject *p = PyTuple_New(8);
-        int k;
-        for (k = 0; k < 8; ++k) {
-            PyTuple_SET_ITEM(p, k, PyInt_FromLong(anMove[k] + 1));
+        PyObject *p;
+        Py_ssize_t k;
+        int nMove;
+        
+        if (fd.pml->cMoves <= 0)
+            p = PyTuple_New(0);
+        else {
+            p = PyTuple_New(8);
+            for (k = 0; k < 8; ++k) {
+                nMove = ml.amMoves[0].anMove[k];
+                if (nMove == -1) 
+                    break;
+                
+                PyTuple_SET_ITEM(p, k, PyInt_FromLong(nMove + 1));
+            }
+            if (k < 8)
+                _PyTuple_Resize (&p, k);
         }
+        
         return p;
     }
-
 }
 
 static PyObject *

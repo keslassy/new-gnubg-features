@@ -5438,6 +5438,16 @@ SetupLanguage(const char *newLangCode)
 #endif
 
 void
+asyncFindBestMoves(findData * pfd)
+{
+    if (FindnSaveBestMoves(pfd->pml, pfd->anDice[0], pfd->anDice[1], pfd->pboard,
+                           pfd->keyMove, pfd->rThr, pfd->pci, pfd->pec, pfd->aamf) < 0)
+        MT_SetResultFailed();
+        
+    RefreshMoveList (pfd->pml, NULL);
+}
+
+void
 asyncFindMove(findData * pfd)
 {
     if (FindnSaveBestMoves(pfd->pml, ms.anDice[0], ms.anDice[1], pfd->pboard,

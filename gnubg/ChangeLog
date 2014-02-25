@@ -1,3 +1,11 @@
+2014-02-25  Michael Petch  <mpetch@gnubg.org>
+
+	* gnubgmodule.c, backgammon.h, gnubg.c: Convert error related 
+	printf's to Python Errors. If a user interrupt occurs during 
+	a Python operation then reset the interrupt handling. Modify 
+	gnubg.findbestmove function to utilize asynchronous processing
+	to help avoid thread issues when called from Python.
+	
 2014-02-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* html.c: Clean up headers in positions copied as GammOnLine HTML.

@@ -245,6 +245,7 @@ typedef struct _findData {
     float rThr;
     const cubeinfo *pci;
     const evalcontext *pec;
+    unsigned int anDice[2];
      movefilter(*aamf)[MAX_FILTER_PLIES];
 } findData;
 
@@ -257,6 +258,7 @@ typedef struct _scoreData {
 typedef void (*AsyncFun) (void *);
 
 void asyncDumpDecision(decisionData * pdd);
+void asyncFindBestMoves(findData * pfd);
 void asyncFindMove(findData * pfd);
 void asyncScoreMove(scoreData * psd);
 void asyncEvalRoll(decisionData * pcdd);
