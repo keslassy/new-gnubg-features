@@ -1112,7 +1112,7 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
             p = PyTuple_New(8);
             for (k = 0; k < 8; ++k) {
                 nMove = ml.amMoves[0].anMove[k];
-                if (nMove == -1) 
+                if ((nMove == -1) && ((k % 2) == 0)) 
                     break;
                 
                 PyTuple_SET_ITEM(p, k, PyInt_FromLong(nMove + 1));
