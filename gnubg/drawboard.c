@@ -967,7 +967,6 @@ ParseFIBSBoard(char *pch, TanBoard anBoard,
 
     int i, c, n, fCanDouble, fOppCanDouble, anOppDice[2];
     int nTmp, fNonCrawford, fPostCrawford;
-    char *szTmp;
     int nTurn, nColor, nDirection;
     int anFIBSBoard[26];
     int fMustSwap = 0;
@@ -1046,9 +1045,6 @@ ParseFIBSBoard(char *pch, TanBoard anBoard,
 
     /* Opponent's turn? */
     if (fMustSwap) {
-        szTmp = szPlayer;
-        szPlayer = szOpp;
-        szOpp = szTmp;
         nTmp = *pnScore;
         *pnScore = *pnScoreOpp;
         *pnScoreOpp = nTmp;
