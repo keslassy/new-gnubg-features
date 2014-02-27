@@ -1,3 +1,11 @@
+2014-02-26  Michael Petch  <mpetch@gnubg.org>
+
+	* gnubgmodule.c, backgammon.h, gnubg.c: More Python module cleanup.
+	Add basic support for move filters. Initial support for eval/hint 
+	filters. Modify findbestmove to use a user supplied move filter. 
+	TODO: Create a method to retrieve a filter by name.
+		  Create a method to get/set analysis filter
+
 2014-02-25  Michael Petch  <mpetch@gnubg.org>
 
 	* gnubgmodule.c, backgammon.h, gnubg.c: Convert error related 

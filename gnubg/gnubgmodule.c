@@ -47,6 +47,20 @@
 
 #if USE_PYTHON
 
+#if (PY_VERSION_HEX < 0x02050000)
+typedef int Py_ssize_t;
+#endif
+
+#if (PY_VERSION_HEX < 0x02030000)
+/* Bool introduced in 2.3 */
+#define PyBool_FromLong PyInt_FromLong
+
+/* Fix incorrect prototype in early python */
+#define CHARP_HACK (char*)
+#else
+#define CHARP_HACK
+#endif
+
 static PyObject *RolloutContextToPy(const rolloutcontext * rc);
 static PyObject *PythonGnubgID(PyObject * self, PyObject * args);
 
@@ -82,21 +96,17 @@ Board1ToPy(unsigned int anBoard[25])
     return b;
 }
 
-/* Convert Move tuple to an anMove structure. 
+/* Convert Move tuple to an anMove structure.
  * A tuple can be expressed in two forms.
  * form returned by findbestmove ie. (21,18,11,5)
  * form returned by parsemove ie. ((21,18),(11,5))
- * 
+ *
  * on return populates the passed anMove structure
  */
 static int
 PyToMove(PyObject * p, signed int anMove[8])
 {
-#if PY_MAJOR_VERSION < 2 || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 5)
-    int tuplelen;
-#else
     Py_ssize_t tuplelen;
-#endif
 
     if (!PySequence_Check(p))
         return 0;
@@ -260,7 +270,8 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
         if (iKey < 0) {
             /* unknown dict value */
             PyErr_SetString(PyExc_ValueError,
-                            _("invalid dict value in cubeinfo " "(see gnubg.cubeinfo() for an example)"));
+                            _("invalid dict value in cubeinfo "
+                              "(see gnubg.cubeinfo() for an example)"));
             return -1;
         }
 
@@ -277,7 +288,8 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
             if (!PyInt_Check(pyValue)) {
                 /* unknown dict value */
                 PyErr_SetString(PyExc_ValueError,
-                                _("invalid value cubeinfo " "(see gnubg.setcubeinfo() for an example)"));
+                                _("invalid value cubeinfo "
+                                  "(see gnubg.setcubeinfo() for an example)"));
                 return -1;
             }
 
@@ -308,6 +320,190 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
 
     return 0;
 
+}
+
+static int
+PyToMoveFilter(PyObject * p, movefilter * pmf, int * ply, int * level)
+{
+
+    PyObject *pyKey, *pyValue;
+    Py_ssize_t iPos = 0;
+    char *pchKey;
+    static const char *aszKeys[] = {
+        "ply", "level", "acceptmoves", "extramoves", "threshold", NULL
+    };
+
+    int iKey;
+    void *ap[5];
+    int i = 0;
+    ap[i++] = ply;
+    ap[i++] = level;
+    ap[i++] = &pmf->Accept;
+    ap[i++] = &pmf->Extra;
+    ap[i++] = &pmf->Threshold;
+
+    if (!PyDict_Check(p))
+        return -1;
+
+    while (PyDict_Next(p, &iPos, &pyKey, &pyValue)) {
+
+        if (!(pchKey = PyString_AsString(pyKey)))
+            return -1;
+
+        iKey = -1;
+
+        for (i = 0; aszKeys[i] && iKey < 0; ++i)
+            if (!strcmp(aszKeys[i], pchKey))
+                iKey = i;
+
+        if (iKey < 0) {
+            /* unknown dict value */
+            PyErr_SetString(PyExc_ValueError,
+                            _("invalid dict value in movefilter "
+                              "(see gnubg.getevalhintfilter() for an example)"));
+            return -1;
+        }
+
+        switch (iKey) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+            /* simple integer */
+            if (!PyInt_Check(pyValue)) {
+                /* unknown dict value */
+                PyErr_SetString(PyExc_ValueError, _("invalid value in movefilter "
+                                                    "(see gnubg.getevalhintfilter() for an example)"));
+                return -1;
+            }
+            *((int *) ap[iKey]) = (int) PyInt_AsLong(pyValue);
+            break;
+
+        case 4:
+            /* simple unsigned integer (gamestate) */
+            if (!PyFloat_Check(pyValue)) {
+                /* unknown dict value */
+                PyErr_SetString(PyExc_ValueError, _("invalid value in movefilter"
+                                                    "(see gnubg.getevalhintfilter() for an example)"));
+                return -1;
+            }
+            *((float *) ap[iKey]) = (float) PyFloat_AsDouble(pyValue);
+            break;
+
+        default:
+            g_assert_not_reached();
+
+        }
+
+    }
+
+    return 0;
+
+}
+
+static int
+PyToMoveFilters(PyObject * p, TmoveFilter aamf)
+{
+    Py_ssize_t iSeqLen;
+    PyObject *pObj;
+    movefilter  newFilter;
+    TmoveFilter aamftmp;
+    movefilter  defaultFilter = { -1, 0, 0.0 };
+    int iPly, iLevel;
+    int entry, i, j;
+
+    if (!PySequence_Check(p)) {
+        PyErr_SetString(PyExc_ValueError, _("invalid movefilter list"
+                                            "(see gnubg.getevalhintfilter() for an example)"));
+        return -1;
+    }
+
+    /* Set the defaults for each filter */
+    for (i = 0; i < MAX_FILTER_PLIES; ++i)
+        for (j = 0; j < MAX_FILTER_PLIES; ++j) {
+            aamftmp[i][j] = defaultFilter;
+        }
+
+    iSeqLen = PySequence_Size(p);
+    for (entry = 0; entry < iSeqLen; ++entry) {
+        pObj = PySequence_Fast_GET_ITEM(p, entry);
+        iPly = iLevel = 0;
+        if (PyToMoveFilter(pObj, &newFilter, &iPly, &iLevel) < 0) {
+            PyErr_SetString(PyExc_ValueError, _("invalid movefilter in list"
+                                                "(see gnubg.getevalhintfilter() for an example)"));
+            return -1;
+        }
+        if ((iPly < 1 || iPly > MAX_FILTER_PLIES) || (iLevel < 0 || iLevel >= iPly )) {
+            PyErr_SetString(PyExc_ValueError, _("invalid movefilter list"
+                                                "(see gnubg.getevalhintfilter() for an example)"));
+            return -1;
+        }
+
+        aamftmp[iPly-1][iLevel] = newFilter;
+    }
+
+    /* If success then copy the temporary filter to the original */
+    memcpy (*aamf, *aamftmp, sizeof (TmoveFilter));
+    return 0;
+}
+
+static PyObject *
+MoveFilterToPy(int ply, int level, const movefilter * pmf)
+{
+    return Py_BuildValue("{s:i,s:i,s:i,s:i,s:f}",
+                         "ply", ply, "level", level,
+                         "acceptmoves", pmf->Accept, "extramoves", pmf->Extra,
+                         "threshold", pmf->Threshold);
+}
+
+static PyObject *
+MoveFiltersToPy(const TmoveFilter aamf)
+{
+    int ply, level;
+    PyObject *pyMoveFilterList = PyList_New(0);
+    PyObject *pyMoveFilter = NULL;
+
+    for (ply = 0; ply < MAX_FILTER_PLIES; ++ply)
+        for (level = 0; level <= ply; ++level) {
+            pyMoveFilter = MoveFilterToPy(ply + 1, level, &aamf[ply][level]);
+            PyList_Append (pyMoveFilterList, pyMoveFilter);
+            Py_DECREF(pyMoveFilter);
+        }
+
+    return pyMoveFilterList;
+}
+
+static PyObject *
+PythonGetEvalHintFilter(PyObject * UNUSED(self), PyObject * args)
+{
+    if (!PyArg_ParseTuple(args, ":movefilter"))
+        return NULL;
+
+    return MoveFiltersToPy((ConstTmoveFilter)(*GetEvalMoveFilter()));
+}
+
+static PyObject *
+PythonSetEvalHintFilter(PyObject * UNUSED(self), PyObject * args)
+{
+    TmoveFilter *aamf = GetEvalMoveFilter();
+    PyObject *pyMoveFilters = NULL;
+
+    if (!PyArg_ParseTuple(args, "|O", &pyMoveFilters)) {
+        return NULL;
+    }
+
+    if (!pyMoveFilters) {
+        PyErr_SetString(PyExc_StandardError, _("requires 1 argument: a list of move filters "
+                                               "(see gnubg.getevalhintfilter() for an example))"));
+        return NULL;
+    }
+
+    if (!PyToMoveFilters(pyMoveFilters, *aamf)) {
+        return NULL;
+    }
+
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static int
@@ -387,7 +583,8 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
             /* simple integer */
             if (!PyInt_Check(pyValue)) {
                 /* unknown dict value */
-                PyErr_SetString(PyExc_ValueError, _("invalid value posinfo " "(see gnubg.posinfo() for an example)"));
+                PyErr_SetString(PyExc_ValueError, _("invalid value posinfo "
+                                                    "(see gnubg.posinfo() for an example)"));
                 return -1;
             }
             *((int *) ap[iKey]) = (int) PyInt_AsLong(pyValue);
@@ -397,7 +594,8 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
             /* simple unsigned integer (gamestate) */
             if (!PyInt_Check(pyValue)) {
                 /* unknown dict value */
-                PyErr_SetString(PyExc_ValueError, _("invalid value posinfo " "(see gnubg.posinfo() for an example)"));
+                PyErr_SetString(PyExc_ValueError, _("invalid value posinfo "
+                                                    "(see gnubg.posinfo() for an example)"));
                 return -1;
             }
             *((gamestate *) ap[iKey]) = (gamestate) PyInt_AsLong(pyValue);
@@ -426,7 +624,7 @@ EvalContextToPy(const evalcontext * pec)
 {
     return Py_BuildValue("{s:i,s:i,s:i,s:i,s:f}",
                          "cubeful", pec->fCubeful,
-                         "plies", pec->nPlies, "deterministic", pec->fDeterministic, 
+                         "plies", pec->nPlies, "deterministic", pec->fDeterministic,
                          "prune", pec->fUsePrune, "noise", pec->rNoise);
 }
 
@@ -458,7 +656,8 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
         if (iKey < 0) {
             /* unknown dict value */
             PyErr_SetString(PyExc_ValueError,
-                            _("invalid dict value in evalcontext " "(see gnubg.evalcontext() for an example)"));
+                            _("invalid dict value in evalcontext "
+                              "(see gnubg.evalcontext() for an example)"));
             return -1;
         }
 
@@ -471,7 +670,8 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
             if (!PyInt_Check(pyValue)) {
                 /* not an integer */
                 PyErr_SetString(PyExc_ValueError,
-                                _("invalid value evalcontext " "(see gnubg.evalcontext() for an example)"));
+                                _("invalid value evalcontext "
+                                  "(see gnubg.evalcontext() for an example)"));
                 return -1;
             }
 
@@ -493,7 +693,8 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
             if (!PyFloat_Check(pyValue)) {
                 /* not a float */
                 PyErr_SetString(PyExc_ValueError,
-                                _("invalid value in evalcontext " "(see gnubg.evalcontext() for an example)"));
+                                _("invalid value in evalcontext "
+                                  "(see gnubg.evalcontext() for an example)"));
                 return -1;
             }
 
@@ -583,7 +784,7 @@ PythonNextTurn(PyObject * UNUSED(self), PyObject * UNUSED(args))
 
 }
 
-static int 
+static int
 PythonHint_Callback (procrecorddata *pr)
 {
     char szMove[25];
@@ -609,8 +810,8 @@ PythonHint_Callback (procrecorddata *pr)
         details = Py_BuildValue("{s:(fffff),s:f}", "probs", mi->arEvalMove[0], mi->arEvalMove[1],
                                 mi->arEvalMove[2], mi->arEvalMove[3], mi->arEvalMove[4], "score", mi->rScore);
 
-        ctxdict = EvalContextToPy(&pes->ec); 
-        hintdict = Py_BuildValue("{s:i,s:s,s:s,s:f,s:f,s:N,s:N}", "movenum", index + 1, "type", "eval", "move", szMove, 
+        ctxdict = EvalContextToPy(&pes->ec);
+        hintdict = Py_BuildValue("{s:i,s:s,s:s,s:f,s:f,s:N,s:N}", "movenum", index + 1, "type", "eval", "move", szMove,
                                  "equity", rEq, "eqdiff", rEqDiff, "context", ctxdict, "details", details);
         break;
         }
@@ -624,10 +825,10 @@ PythonHint_Callback (procrecorddata *pr)
                                         "probs-std", s[0], s[1], s[2], s[3], s[4],
                                         "match-eq", p[OUTPUT_EQUITY],
                                         "cubeful-eq", p[OUTPUT_CUBEFUL_EQUITY],
-                                        "score", mi->rScore, "score2", mi->rScore2, "trials", pes->rc.nGamesDone, 
+                                        "score", mi->rScore, "score2", mi->rScore2, "trials", pes->rc.nGamesDone,
                                         "stopped-on-jsd", pes->rc.rStoppedOnJSD);
 
-        ctxdict = RolloutContextToPy(&pes->rc); 
+        ctxdict = RolloutContextToPy(&pes->rc);
         hintdict = Py_BuildValue("{s:i,s:s,s:s,s:f,s:f,s:N,s:N}", "movenum", index + 1, "type", "rollout", "move", szMove,
                                  "equity", rEq, "eqdiff", rEqDiff, "context", ctxdict, "details", details);
         break;
@@ -640,7 +841,7 @@ PythonHint_Callback (procrecorddata *pr)
         PyList_Append (list, hintdict);
         Py_DECREF(hintdict);
     }
-        
+
     return TRUE;
 }
 
@@ -658,7 +859,7 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
 
     if (nMaxMoves < 0)
         nMaxMoves = MAX_MOVES;
-        
+
     if ((ms.gs != GAME_PLAYING)) {
         PyErr_SetString(PyExc_StandardError, _("You must set up a board first."));
     } else
@@ -677,7 +878,7 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
         PyErr_SetString(PyExc_StandardError, _("Hints for take actions not yet implemented"));
 /*        hint_take(TRUE, -1);*/
     } else if (ms.anDice[0]){
-        sprintf (szNumber, "%d", nMaxMoves) ; 
+        sprintf (szNumber, "%d", nMaxMoves) ;
         memset(&prochint, 0, sizeof(prochint));
         prochint.pvUserData = PyList_New(0);
         prochint.pfProcessRecord = PythonHint_Callback;
@@ -700,7 +901,7 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
 
         retval = tmpobj;
     }
-    
+
     return retval;
 }
 
@@ -759,7 +960,7 @@ PythonCommand(PyObject * UNUSED(self), PyObject * args)
     /* this is what the cl interface does. Let's try that. */
     while (fNextTurn)
         NextTurn(TRUE);
-    /* before we had 
+    /* before we had
      * if( ms.gs != GAME_NONE )
      * PythonNextTurn(0, 0);
      * which always run NextTurn(TRUE), and that isn't right */
@@ -826,7 +1027,6 @@ PythonParseMove(PyObject * UNUSED(self), PyObject * args)
     return pyMoves;
 }
 
-
 static PyObject *
 PythonBoard(PyObject * UNUSED(self), PyObject * args)
 {
@@ -892,11 +1092,11 @@ PythonErrorRating(PyObject * UNUSED(self), PyObject * args)
 
 }
 
-/* Convert Move tuple to a string 
+/* Convert Move tuple to a string
  * A tuple can be expressed in two forms.
  * form returned by findbestmove ie. (21,18,11,5)
  * form returned by parsemove ie. ((21,18),(11,5))
- * 
+ *
  * returns a string representing the move tuple.
  */
 
@@ -1043,10 +1243,9 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
     PyObject *pyBoard = NULL;
     PyObject *pyCubeInfo = NULL;
     PyObject *pyEvalContext = NULL;
+    PyObject *pyMoveFilters = NULL;
 
     TanBoard anBoard;
-    int anDice[2];
-    int anMove[8];
     cubeinfo ci;
     evalcontext ec;
     movelist ml;
@@ -1055,15 +1254,17 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
 
     memcpy (&ec, &GetEvalChequer()->ec, sizeof (evalcontext));
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
-    memcpy(anDice, ms.anDice, sizeof (ms.anDice));
+    memcpy(&fd.anDice, ms.anDice, sizeof (ms.anDice));
+    fd.aamf = *GetEvalMoveFilter();
+
     GetMatchStateCubeInfo(&ci, &ms);
-    if (!PyArg_ParseTuple(args, "|OOOO", &pyBoard, &pyCubeInfo, &pyEvalContext, &pyDice))
+    if (!PyArg_ParseTuple(args, "|OOOOO", &pyBoard, &pyCubeInfo, &pyEvalContext, &pyDice, &pyMoveFilters))
         return NULL;
 
-    if (pyDice && !PyToDice(pyDice, anDice))
+    if (pyDice && !PyToDice(pyDice, fd.anDice))
         return NULL;
 
-    if (anDice[0] == 0) {
+    if (fd.anDice[0] == 0) {
         PyErr_SetString(PyExc_StandardError, _("What? No dice?\n"));
         return NULL;
     }
@@ -1077,19 +1278,15 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
     if (pyEvalContext && PyToEvalContext(pyEvalContext, &ec))
         return NULL;
 
-    /* 
-     * FIXME: The function will use the eval movefilter. The function
-     * should take a movefilter as an argument.
-     */
+    if (pyMoveFilters && PyToMoveFilters(pyMoveFilters, fd.aamf))
+        return NULL;
+
     fd.pml = &ml;
     fd.pboard = (ConstTanBoard) anBoard;
     fd.keyMove = NULL;
     fd.rThr = 0.0f;
     fd.pci = &ci;
     fd.pec = &ec;
-    fd.anDice[0] = anDice[0];
-    fd.anDice[1] = anDice[1];
-    fd.aamf = *GetEvalMoveFilter();
 
     fSaveShowProg = fShowProgress;
     fShowProgress = FALSE;
@@ -1100,27 +1297,27 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
         return NULL;
     }
     fShowProgress = fSaveShowProg;
-    
+
     {
         PyObject *p;
         Py_ssize_t k;
         int nMove;
-        
+
         if (fd.pml->cMoves <= 0)
             p = PyTuple_New(0);
         else {
             p = PyTuple_New(8);
             for (k = 0; k < 8; ++k) {
                 nMove = ml.amMoves[0].anMove[k];
-                if ((nMove == -1) && ((k % 2) == 0)) 
+                if ((nMove == -1) && ((k % 2) == 0))
                     break;
-                
+
                 PyTuple_SET_ITEM(p, k, PyInt_FromLong(nMove + 1));
             }
             if (k < 8)
                 _PyTuple_Resize (&p, k);
         }
-        
+
         return p;
     }
 }
@@ -1607,17 +1804,6 @@ PythonPositionFromBearoff(PyObject * UNUSED(self), PyObject * args)
     return Board1ToPy(anBoard[0]);
 }
 
-#if PY_MAJOR_VERSION < 2 || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION < 3)
-
-/* Bool introduced in 2.3 */
-#define PyBool_FromLong PyInt_FromLong
-
-/* Fix incorrect prototype in early python */
-#define CHARP_HACK (char*)
-#else
-#define CHARP_HACK
-#endif
-
 static void
 DictSetItemSteal(PyObject * dict, const char *key, PyObject * val)
 {
@@ -1737,7 +1923,7 @@ diffRolloutContext(const rolloutcontext * c, PyMatchState * ms)
         if (c->nTrials != s->nTrials) {
             DictSetItemSteal(context, "trials", PyInt_FromLong(c->nTrials));
         }
-        
+
         if (c->nSeed != s->nSeed) {
             DictSetItemSteal(context, "seed", PyInt_FromLong(c->nSeed));
         }
@@ -1774,7 +1960,7 @@ diffRolloutContext(const rolloutcontext * c, PyMatchState * ms)
 static PyObject *
 RolloutContextToPy(const rolloutcontext * rc)
 {
-    PyObject *dict = Py_BuildValue("{s:i,s:i,s:i,s:i,s:i,s:i,s:i,s:i,s:i,s:i," 
+    PyObject *dict = Py_BuildValue("{s:i,s:i,s:i,s:i,s:i,s:i,s:i,s:i,s:i,s:i,"
                                     "s:i,s:i,s:i,s:i,s:i,s:i,s:f,s:f}",
                                    "cubeful", rc->fCubeful,
                                    "variance-reduction", rc->fVarRedn,
@@ -1811,8 +1997,8 @@ PythonRolloutContext(PyObject * UNUSED(self), PyObject * args)
     float rStdLimit = (float) grc->rStdLimit, rJsdLimit = (float) grc->rJsdLimit;
 
     if (!PyArg_ParseTuple(args, "|iiiiiiiiiiiiiiiiff", &fCubeful, &fVarRedn, &fInitial,
-                          &fRotate, &fLateEvals, &fDoTruncate, &nTruncate, &fTruncBearoff2, 
-                          &fTruncBearoffOS, &fStopOnSTD, &nTrials, &nSeed, &nMinimumGames, 
+                          &fRotate, &fLateEvals, &fDoTruncate, &nTruncate, &fTruncBearoff2,
+                          &fTruncBearoffOS, &fStopOnSTD, &nTrials, &nSeed, &nMinimumGames,
                           &fStopOnJsd, &nLate, &nMinimumJsdGames, &rStdLimit, &rJsdLimit))
         return NULL;
 
@@ -1824,7 +2010,7 @@ PythonRolloutContext(PyObject * UNUSED(self), PyObject * args)
     rc.fDoTruncate = fDoTruncate ? 1 : 0;
     rc.nTruncate = (unsigned short) nTruncate;
     rc.fTruncBearoff2 = fTruncBearoff2 ? 1 : 0;
-    rc.fTruncBearoffOS = fTruncBearoffOS? 1 : 0; 
+    rc.fTruncBearoffOS = fTruncBearoffOS? 1 : 0;
     rc.fStopOnSTD = fStopOnSTD ? 1 : 0;
     rc.nTrials = nTrials;
     rc.nSeed = nSeed;
@@ -2655,7 +2841,7 @@ PythonMatch(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
     }
     g_assert(g->i == 0);
 
-    /* W,X,0 
+    /* W,X,0
      * B,O,1 */
     {
         int side;
@@ -2878,7 +3064,7 @@ PythonNavigate(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
         Py_DECREF(tmpobj);
         Py_DECREF(Py_None);
     }
-    
+
     return r;
 }
 
@@ -2888,12 +3074,12 @@ PyMethodDef gnubgMethods[] = {
     {"board", PythonBoard, METH_VARARGS,
      "Get the current board\n"
      "    arguments: none\n"
-     "    returns: tuple of two lists of 25 ints:\n" 
+     "    returns: tuple of two lists of 25 ints:\n"
      "        pieces on points 1..24 and the bar"}
     ,
     {"command", PythonCommand, METH_VARARGS,
-     "Execute a command\n" 
-     "    arguments: string containing command\n" 
+     "Execute a command\n"
+     "    arguments: string containing command\n"
      "    returns: nothing"}
     ,
     {"cfevaluate", PythonEvaluateCubeful, METH_VARARGS,
@@ -2910,12 +3096,12 @@ PyMethodDef gnubgMethods[] = {
     ,
     {"classifypos", (PyCFunction) PythonClassifyPosition, METH_VARARGS,
      "classify a position for a given backammon variant and board\n"
-     "    arguments: [board], [int variant]\n" 
+     "    arguments: [board], [int variant]\n"
      "    returns: int posclass"}
     ,
     {"dicerolls", PythonDiceRolls, METH_VARARGS,
      "return a list of dice rolls from current RNG\n"
-     "   arguments: number of rolls\n" 
+     "   arguments: number of rolls\n"
      "    returns: list of tuples (2 elements each, one for each die)\n"}
     ,
     {"evaluate", PythonEvaluate, METH_VARARGS,
@@ -2926,60 +3112,60 @@ PyMethodDef gnubgMethods[] = {
      "         P(lose gammon), P(lose backgammon), cubeless equity)"}
     ,
     {"evalcontext", PythonEvalContext, METH_VARARGS,
-     "make an evalcontext\n" 
-     "    argument: [tuple ( 5 int, float )]\n" 
+     "make an evalcontext\n"
+     "    argument: [tuple ( 5 int, float )]\n"
      "    returns:  eval-context ( see 'cfevaluate' )"}
     ,
     {"rolloutcontext", PythonRolloutContext, METH_VARARGS,
-     "make a rolloutcontext\n" 
-     "    argument: [tuple ( 16 int, 2 float )]\n" 
+     "make a rolloutcontext\n"
+     "    argument: [tuple ( 16 int, 2 float )]\n"
      "    returns:  rollout-context"}
     ,
     {"eq2mwc", PythonEq2mwc, METH_VARARGS,
      "convert equity to MWC\n"
      "    argument: [float equity], [cube-info]\n"
-     "         defaults equity = 0.0, cube-info see 'cfevaluate'\n" 
+     "         defaults equity = 0.0, cube-info see 'cfevaluate'\n"
      "    return float mwc"}
     ,
     {"eq2mwc_stderr", PythonEq2mwcStdErr, METH_VARARGS,
      "convert equity standard error to MWC\n"
      "    argument: [float equity], [cube-info]\n"
-     "         defaults equity = 0.0, cube-info see 'cfevaluate'\n" 
+     "         defaults equity = 0.0, cube-info see 'cfevaluate'\n"
      "    return float mwc"}
     ,
     {"findbestmove", PythonFindBestMove, METH_VARARGS,
      "Find the best move\n"
      "    arguments: [board] [cube-info] [eval-context]\n"
      "        see 'cfevaluate'\n"
-     "    returns: tuple( ints point from, point to, \n" 
+     "    returns: tuple( ints point from, point to, \n"
      "        unused moves are set to zero"}
     ,
     {"hint", PythonHint, METH_VARARGS,
-     "    arguments: [max moves]\n" 
+     "    arguments: [max moves]\n"
      "    returns: hint dictionary\n"}
     ,
     {"mwc2eq", PythonMwc2eq, METH_VARARGS,
      "convert MWC to equity\n"
      "    argument: [float match-winning-chance], [cube-info]\n"
-     "         defaults mwc = 0.0, cube-info see 'cfevaluate'\n" 
+     "         defaults mwc = 0.0, cube-info see 'cfevaluate'\n"
      "    returns: float equity"}
     ,
     {"mwc2eq_stderr", PythonMwc2eqStdErr, METH_VARARGS,
      "convert standard error MWC to equity\n"
      "    argument: [float match-winning-chance], [cube-info]\n"
-     "         defaults mwc = 0.0, cube-info see 'cfevaluate'\n" 
+     "         defaults mwc = 0.0, cube-info see 'cfevaluate'\n"
      "    returns: float equity"}
     ,
     {"matchchecksum", PythonMatchChecksum, METH_VARARGS,
-     "Calculate checksum for current match\n" 
-     "    arguments: none\n" 
+     "Calculate checksum for current match\n"
+     "    arguments: none\n"
      "    returns: MD5 digest as 32 char hex string"}
     ,
     {"cubeinfo", PythonCubeInfo, METH_VARARGS,
      "Make a cubeinfo\n"
      "    arguments: [cube value, cube owner = 0/1, player on move = 0/1, \n"
      "        match length (0 = money), score (tuple int, int), \n"
-     "        is crawford = 0/1, bg variant = 0/5]\n" 
+     "        is crawford = 0/1, bg variant = 0/5]\n"
      "    returns pos-info dictionary ( see 'cfevaluate' )"}
     ,
     {"posinfo", PythonPosInfo, METH_VARARGS,
@@ -2998,26 +3184,36 @@ PyMethodDef gnubgMethods[] = {
     ,
     {"positionid", PythonPositionID, METH_VARARGS,
      "return position ID from board\n"
-     "    arguments: [board] ( see 'cfevaluate' )\n" 
+     "    arguments: [board] ( see 'cfevaluate' )\n"
      "    returns: position ID as string"}
     ,
     {"matchid", PythonMatchID, METH_VARARGS,
      "return MatchID from current position, or from cube-info, pos-info\n"
      "    arguments: [cube-info dictionary], [pos-info dictionary] \n"
-     "        cube-info: see 'cfevaluate'\n" 
-     "        pos-info: see 'posinfo'\n" 
+     "        cube-info: see 'cfevaluate'\n"
+     "        pos-info: see 'posinfo'\n"
      "    returns: Match ID as string"}
+    ,
+    {"getevalhintfilter", PythonGetEvalHintFilter, METH_VARARGS,
+     "return hint/eval move filters \n"
+     "    arguments: none\n"
+     "    returns: list of movefilters"}
+    ,
+    {"setevalhintfilter", PythonSetEvalHintFilter, METH_VARARGS,
+     "return none \n"
+     "    arguments: a list of movefilters\n"
+     "    returns: none"}
     ,
     {"gnubgid", PythonGnubgID, METH_VARARGS,
      "return GNUBGID from current position, or from board, cube-info, pos-info\n"
      "    arguments: [board, cube-info dictionary, pos-info dictionary]\n"
      "        board, cube-info: see 'cfevaluate'\n"
-     "        pos-info: see 'posinfo'\n" 
+     "        pos-info: see 'posinfo'\n"
      "    returns: GNUBGID as string"}
     ,
     {"movetupletostring", PythonMoveTuple2String, METH_VARARGS,
      "Convert a move tuple to a move string\n"
-     "    arguments: tuple of 8 ints\n" 
+     "    arguments: tuple of 8 ints\n"
      "    returns: String representation of move"}
     ,
     {"parsemove", PythonParseMove, METH_VARARGS,
@@ -3027,7 +3223,7 @@ PyMethodDef gnubgMethods[] = {
     ,
     {"positionfromid", PythonPositionFromID, METH_VARARGS,
      "return board from position ID\n"
-     "    arguments: [position ID as string]\n" 
+     "    arguments: [position ID as string]\n"
      "    returns: board ( see 'cfevaluate' )"}
     ,
     {"positionbearoff", PythonPositionBearoff, METH_VARARGS,
@@ -3035,17 +3231,17 @@ PyMethodDef gnubgMethods[] = {
     ,
     {"positionfrombearoff", PythonPositionFromBearoff, METH_VARARGS,
      "return the board from the given bearoff id\n"
-     "    arguments: [bearoff id] [no. chequers] [no. points]\n" 
+     "    arguments: [bearoff id] [no. chequers] [no. points]\n"
      "    returns: board ( see 'cfevaluate' )"}
     ,
     {"positionkey", PythonPositionKey, METH_VARARGS,
-     "return key for position\n" 
-     "    arguments: [ board ] ( see 'cfevaluate' )\n" 
+     "return key for position\n"
+     "    arguments: [ board ] ( see 'cfevaluate' )\n"
      "    returns: tuple (10 ints)"}
     ,
     {"positionfromkey", PythonPositionFromKey, METH_VARARGS,
-     "return position from key\n" 
-     "    arguments: [ list of 10 ints] \n" 
+     "return position from key\n"
+     "    arguments: [ list of 10 ints] \n"
      "    returns: board ( see 'cfevaluate' )"}
     ,
     {"match", (PyCFunction) PythonMatch, METH_VARARGS | METH_KEYWORDS,
@@ -3116,7 +3312,7 @@ PyMethodDef gnubgMethods[] = {
      "            'cubeful'=>0/1, 'prune'=>0/1\n"
      "          'match_length' = int\n"
      "          'result' =>0/1\n"
-     "          'rules' = 'Crawford'/whatever\n" 
+     "          'rules' = 'Crawford'/whatever\n"
      "          'variation' => 'Standard' or whatever\n"}
     ,
     {"navigate", (PyCFunction) PythonNavigate, METH_VARARGS | METH_KEYWORDS,
@@ -3127,23 +3323,23 @@ PyMethodDef gnubgMethods[] = {
      "    returns: None if no change, tuple( games moved, records moved)"}
     ,
     {"nextturn", (PyCFunction) PythonNextTurn, METH_VARARGS,
-     "play one turn\n" 
-     "    arguments: none\n" 
+     "play one turn\n"
+     "    arguments: none\n"
      "    returns: None"}
     ,
     {"luckrating", (PyCFunction) PythonLuckRating, METH_VARARGS,
      "convert a luck per move amount into a rating 0..5 for very unlucky to very lucky\n"
-     "    arguments: float luck per move\n" 
+     "    arguments: float luck per move\n"
      "    returns: int 0..5"}
     ,
     {"errorrating", (PyCFunction) PythonErrorRating, METH_VARARGS,
      "convert an error per move amount to a rating 0 = awful..7=supernatural\n"
-     "    arguments: float error per move\n" 
+     "    arguments: float error per move\n"
      "    returns: int\n"}
     ,
     {"updateui", (PyCFunction) PythonUpdateUI, METH_VARARGS,
-     "Allows the UI to update itself\n" 
-     "    arguments: none\n" 
+     "Allows the UI to update itself\n"
+     "    arguments: none\n"
      "    returns: None"}
     ,
 

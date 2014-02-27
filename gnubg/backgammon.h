@@ -165,7 +165,7 @@ typedef struct _movesetcubepos {
 } xmovesetcubepos;
 
 typedef struct _moverecord {
-    /* 
+    /*
      * Common variables
      */
     /* type of the move */
@@ -187,7 +187,7 @@ typedef struct _moverecord {
     /* evaluation of the moves */
     movelist ml;
     /* cube analysis (shared between MOVE_NORMAL and MOVE_DOUBLE) */
-    /* 0 in match play, even numbers are doubles, raccoons 
+    /* 0 in match play, even numbers are doubles, raccoons
      * odd numbers are beavers, aardvarken, etc. */
     int nAnimals;
     /* the evaluation and settings */
@@ -245,7 +245,7 @@ typedef struct _findData {
     float rThr;
     const cubeinfo *pci;
     const evalcontext *pec;
-    unsigned int anDice[2];
+    int anDice[2];
      movefilter(*aamf)[MAX_FILTER_PLIES];
 } findData;
 
@@ -380,6 +380,8 @@ extern ConstTanBoard msBoard(void);
 extern movefilter aamfAnalysis[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
 extern movefilter aamfEval[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
 typedef movefilter TmoveFilter[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
+typedef const movefilter (*ConstTmoveFilter)[MAX_FILTER_PLIES];
+
 extern TmoveFilter *GetEvalMoveFilter(void);
 extern player ap[2];
 extern char default_names[2][31];
