@@ -3102,7 +3102,7 @@ PyMethodDef gnubgMethods[] = {
      "        pieces on points 1..24 and the bar"}
     ,
     {"calcgammonprice", (PyCFunction) PythonCalculateGammonPrice, METH_O,
-     "return cube-info with updated gammon values\n"
+     "return cube-info with updated gammon prices\n"
      "    arguments: [cube-info dictionary]\n"
      "        cube-info: see 'cfevaluate'\n"
      "    returns: cube-info dictionary"}
