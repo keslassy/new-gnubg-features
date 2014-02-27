@@ -64,6 +64,19 @@ typedef int Py_ssize_t;
 static PyObject *RolloutContextToPy(const rolloutcontext * rc);
 static PyObject *PythonGnubgID(PyObject * self, PyObject * args);
 
+static void
+DictSetItemSteal(PyObject * dict, const char *key, PyObject * val)
+{
+    int const s = PyDict_SetItemString(dict, CHARP_HACK key, val);
+    {
+        g_assert(s == 0);
+    }
+    (void) dict;                /* silence compiler warning */
+    (void) key;                 /* when assertions are disabled */
+    (void) s;
+    Py_DECREF(val);
+}
+
 static PyObject *
 BoardToPy(const TanBoard anBoard)
 {
@@ -380,7 +393,7 @@ PyToMoveFilter(PyObject * p, movefilter * pmf, int * ply, int * level)
             break;
 
         case 4:
-            /* simple unsigned integer (gamestate) */
+            /* simple float */
             if (!PyFloat_Check(pyValue)) {
                 /* unknown dict value */
                 PyErr_SetString(PyExc_ValueError, _("invalid value in movefilter"
@@ -1140,6 +1153,29 @@ PythonMoveTuple2String(PyObject * UNUSED(self), PyObject * args)
     return PyString_FromString(szMove);
 }
 
+static PyObject *
+PythonCalculateGammonPrice(PyObject * UNUSED(self), PyObject * pyCubeInfo)
+{
+    cubeinfo ci;
+    PyObject *gvObj = NULL;
+
+    if (PyToCubeInfo(pyCubeInfo, &ci) < 0)
+        return NULL;
+        
+    if (SetCubeInfo(&ci, ci.nCube, ci.fCubeOwner, ci.fMove, ci.nMatchTo, ci.anScore, 
+                    ci.fCrawford, ci.fJacoby, ci.fBeavers, ci.bgv)) {
+        PyErr_SetString(PyExc_StandardError, _("error in SetCubeInfo\n"));
+        return NULL;
+    }
+
+    gvObj = Py_BuildValue("(ff)(ff)", ci.arGammonPrice[0], ci.arGammonPrice[2], 
+                          ci.arGammonPrice[1], ci.arGammonPrice[3]);
+    DictSetItemSteal(pyCubeInfo, "gammonprice", gvObj);
+
+    Py_INCREF(pyCubeInfo);
+    return (pyCubeInfo);
+}
+
 SIMD_STACKALIGN static PyObject *
 PythonEvaluate(PyObject * UNUSED(self), PyObject * args)
 {
@@ -1804,18 +1840,6 @@ PythonPositionFromBearoff(PyObject * UNUSED(self), PyObject * args)
     return Board1ToPy(anBoard[0]);
 }
 
-static void
-DictSetItemSteal(PyObject * dict, const char *key, PyObject * val)
-{
-    int const s = PyDict_SetItemString(dict, CHARP_HACK key, val);
-    {
-        g_assert(s == 0);
-    }
-    (void) dict;                /* silence compiler warning */
-    (void) key;                 /* when assertions are disabled */
-    (void) s;
-    Py_DECREF(val);
-}
 
 typedef struct {
     const evalcontext *ec;
@@ -3077,6 +3101,12 @@ PyMethodDef gnubgMethods[] = {
      "    returns: tuple of two lists of 25 ints:\n"
      "        pieces on points 1..24 and the bar"}
     ,
+    {"calcgammonprice", (PyCFunction) PythonCalculateGammonPrice, METH_O,
+     "return cube-info with updated gammon values\n"
+     "    arguments: [cube-info dictionary]\n"
+     "        cube-info: see 'cfevaluate'\n"
+     "    returns: cube-info dictionary"}
+     ,
     {"command", PythonCommand, METH_VARARGS,
      "Execute a command\n"
      "    arguments: string containing command\n"
