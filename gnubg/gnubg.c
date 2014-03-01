@@ -2695,7 +2695,7 @@ CommandLoadCommands(char *sz)
      * to allow proper support for filenames with spaces */
     char *szQuoted = NULL;
     char *szQuotedTemp = NULL;
-    if (sz[0] != '"' && sz[0] != '\'') {
+    if (sz[0] != '"') {
         szQuoted = szQuotedTemp = g_strdup_printf("\"%s\"", sz);
         sz = NextToken(&szQuoted);
     } else
@@ -4317,7 +4317,7 @@ setup_readline(void)
     gnubg_histfile = g_build_filename(szHomeDirectory, "history", NULL);
     rl_readline_name = "gnubg";
     rl_basic_word_break_characters = rl_filename_quote_characters = szCommandSeparators;
-    rl_completer_quote_characters = "\"'";
+    rl_completer_quote_characters = "\"";
     /* assume readline 4.2 or later */
     rl_completion_entry_function = NullGenerator;
     rl_attempted_completion_function = CompleteKeyword;
@@ -4576,17 +4576,17 @@ matchfile_from_argv(char *sz)
     gchar *utf8fn;
 
     if (g_path_is_absolute(sz))
-        pchMatch = g_strdup_printf("'%s'", sz);
+        pchMatch = g_strdup_printf("\"%s\"", sz);
     else {
         char *tmp = g_build_filename(g_get_current_dir(), sz, NULL);
-        pchMatch = g_strdup_printf("'%s'", tmp);
+        pchMatch = g_strdup_printf("\"%s\"", tmp);
         g_free(tmp);
     }
     utf8fn = g_locale_to_utf8(pchMatch, -1, &br, &bw, NULL);
     g_free(pchMatch);
     pchMatch = utf8fn;
 #else
-    pchMatch = g_strdup_printf("'%s'", sz);
+    pchMatch = g_strdup_printf("\"%s\"", sz);
 #endif
     return pchMatch;
 }
