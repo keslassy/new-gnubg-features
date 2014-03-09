@@ -524,7 +524,7 @@ static char szDICE[] = N_("<die> <die>"),
     szMATCHID[] = N_("<matchid>"),
     szGNUBGID[] = N_("<gnubgid>"),
     szXGID[] = N_("<xgid>"),
-    szURL[] = N_("<URL>"),
+    szURL[] = "<URL>",
     szMAXERR[] = N_("<fraction>"), szMINGAMES[] = N_("<minimum games to rollout>"), szFOLDER[] = N_("<folder>"),
 #if USE_GTK
     szWARN[] = N_("[<warning>]"), szWARNYN[] = N_("<warning> on|off"),
@@ -4787,7 +4787,7 @@ main(int argc, char *argv[])
 #endif
 
 #if USE_PYTHON
-    PushSplash(pwSplash, _("Initialising"), _("Python"));
+    PushSplash(pwSplash, _("Initialising"), "Python");
     PythonInitialise(argv[0]);
 #endif
 
