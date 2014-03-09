@@ -1441,8 +1441,7 @@ CopyIDs(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         return;
     }
 
-    sprintf(buffer, "%s %s\n%s %s\n", _("Position ID:"),
-            PositionID(msBoard()), _("Match ID:"), MatchIDFromMatchState(&ms));
+    sprintf(buffer, "%s:%s\n", PositionID(msBoard()), MatchIDFromMatchState(&ms));
 
     GTKTextToClipboard(buffer);
 
@@ -3292,17 +3291,17 @@ static GtkActionEntry actionEntries[] = {
 static GtkToggleActionEntry toggleActionEntries[] = {
     {"EditPositionAction", GTK_STOCK_EDIT, N_("_Edit Position"), NULL, NULL, G_CALLBACK(ToggleEdit), FALSE},
 
-    {"PanelGameRecordAction", NULL, N_("_Game record"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_GAMELIST), FALSE},   /* TOGGLE */
-    {"PanelAnalysisAction", NULL, N_("_Analysis"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_ANALYSIS), FALSE},        /* TOGGLE */
-    {"PanelCommentaryAction", NULL, N_("_Commentary"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMENTARY), FALSE},  /* TOGGLE */
-    {"PanelMessageAction", NULL, N_("_Message"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_MESSAGE), FALSE},   /* TOGGLE */
-    {"PanelTheoryAction", NULL, N_("_Theory"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_THEORY), FALSE},      /* TOGGLE */
-    {"PanelCommandAction", NULL, N_("Command"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMAND), FALSE},    /* TOGGLE */
+    {"PanelGameRecordAction", NULL, N_("_Game record"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_GAMELIST), FALSE},    /* TOGGLE */
+    {"PanelAnalysisAction", NULL, N_("_Analysis"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_ANALYSIS), FALSE}, /* TOGGLE */
+    {"PanelCommentaryAction", NULL, N_("_Commentary"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMENTARY), FALSE},   /* TOGGLE */
+    {"PanelMessageAction", NULL, N_("_Message"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_MESSAGE), FALSE},    /* TOGGLE */
+    {"PanelTheoryAction", NULL, N_("_Theory"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_THEORY), FALSE},       /* TOGGLE */
+    {"PanelCommandAction", NULL, N_("Command"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMAND), FALSE},     /* TOGGLE */
 
     {"DockPanelsAction", NULL, N_("_Dock panels"), NULL, NULL, G_CALLBACK(ToggleDockPanels), FALSE},
-    {"ShowIDStatusBarAction", NULL, N_("Show _ID in status bar"), NULL, NULL, G_CALLBACK(ToggleShowingIDs), FALSE},    /* TOGGLE */
-    {"FullScreenAction", NULL, N_("Full screen"), "F11", NULL, G_CALLBACK(DoFullScreenMode), FALSE},   /* TOGGLE */
-    {"PlayClockwiseAction", NULL, N_("Play _Clockwise"), NULL, NULL, G_CALLBACK(ToggleClockwise), FALSE}       /* TOGGLE */
+    {"ShowIDStatusBarAction", NULL, N_("Show _ID in status bar"), NULL, NULL, G_CALLBACK(ToggleShowingIDs), FALSE},     /* TOGGLE */
+    {"FullScreenAction", NULL, N_("Full screen"), "F11", NULL, G_CALLBACK(DoFullScreenMode), FALSE},    /* TOGGLE */
+    {"PlayClockwiseAction", NULL, N_("Play _Clockwise"), NULL, NULL, G_CALLBACK(ToggleClockwise), FALSE}        /* TOGGLE */
 };
 
 static GtkRadioActionEntry toolbarRadioActionEntries[] = {
