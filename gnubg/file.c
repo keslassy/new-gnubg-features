@@ -28,7 +28,7 @@ ExportFormat export_format[] = {
     {EXPORT_SGF, ".sgf", N_("Gnu Backgammon File"), "sgf", {TRUE, TRUE, TRUE}
      }
     ,                           /*must be the first element */
-    {EXPORT_HTML, ".html", N_("HTML"), "html", {TRUE, TRUE, TRUE}
+    {EXPORT_HTML, ".html", "HTML", "html", {TRUE, TRUE, TRUE}
      }
     ,
     {EXPORT_GAM, ".gam", N_("Jellyfish Game"), "gam", {FALSE, TRUE, FALSE}
@@ -40,11 +40,11 @@ ExportFormat export_format[] = {
     {EXPORT_POS, ".pos", N_("Jellyfish Position"), "pos", {FALSE, FALSE, TRUE}
      }
     ,
-    {EXPORT_LATEX, ".tex", N_("LaTeX"), "latex", {TRUE, TRUE, FALSE}
+    {EXPORT_LATEX, ".tex", "LaTeX", "latex", {TRUE, TRUE, FALSE}
      }
     ,
 #if HAVE_PANGOCAIRO
-    {EXPORT_PDF, ".pdf", N_("PDF"), "pdf", {TRUE, TRUE, TRUE}
+    {EXPORT_PDF, ".pdf", "PDF", "pdf", {TRUE, TRUE, TRUE}
      }
     ,
 #endif
@@ -52,12 +52,12 @@ ExportFormat export_format[] = {
      }
     ,
 #if HAVE_LIBPNG
-    {EXPORT_PNG, ".png", N_("Portable Network Graphics"), "png", {FALSE, FALSE, TRUE}
+    {EXPORT_PNG, ".png", "PNG", "png", {FALSE, FALSE, TRUE}
      }
     ,
 #endif
 #if HAVE_PANGOCAIRO
-    {EXPORT_PS, ".ps", N_("Postscript"), "ps", {TRUE, TRUE, TRUE}
+    {EXPORT_PS, ".ps", "PostScript", "ps", {TRUE, TRUE, TRUE}
      }
     ,
 #endif
@@ -65,7 +65,7 @@ ExportFormat export_format[] = {
      }
     ,
 #if HAVE_PANGOCAIRO
-    {EXPORT_SVG, ".svg", N_("SVG"), "svg", {FALSE, FALSE, TRUE}
+    {EXPORT_SVG, ".svg", "SVG", "svg", {FALSE, FALSE, TRUE}
      }
     ,
 #endif
