@@ -161,7 +161,7 @@ ExportGetValues(exportwidget * pew, exportsetup * pexs)
         }
     }
 
-    /* html */
+    /* HTML */
 
     pexs->szHTMLPictureURL = g_strdup(gtk_entry_get_text(GTK_ENTRY(pew->pwHTMLPictureURL)));
 
@@ -363,7 +363,7 @@ ExportSet(exportwidget * pew)
         }
     }
 
-    /* html */
+    /* HTML */
 
     if (pexs->szHTMLPictureURL)
         gtk_entry_set_text(GTK_ENTRY(pew->pwHTMLPictureURL), pexs->szHTMLPictureURL);
@@ -400,7 +400,7 @@ ExportHTMLImages(void)
     gchar *message, *expfolder, *folder, *command;
     gint ok = FALSE;
     fc = gtk_file_chooser_dialog_new(_
-                                     ("Select top folder for html export"),
+                                     ("Select top folder for HTML export"),
                                      NULL,
                                      GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
@@ -446,7 +446,7 @@ ExportHTMLImages(void)
 
 static void
 GenHtmlImages(GtkWidget * UNUSED(widget), gpointer data)
-{                               /* Temporariarly set html size and create images */
+{                               /* Temporarily set HTML size and create images */
     int temp = exsExport.nHtmlSize;
     exsExport.nHtmlSize = (int) gtk_adjustment_get_value(GTK_ADJUSTMENT(data));
     ExportHTMLImages();
@@ -626,7 +626,7 @@ GTKShowExport(exportsetup * pexs)
 
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwTable, gtk_label_new(_("Style")));
 
-    /* html */
+    /* HTML */
 
     pwFrame = gtk_frame_new(_("HTML export options"));
 
@@ -699,12 +699,12 @@ GTKShowExport(exportsetup * pexs)
 
     g_signal_connect(G_OBJECT(pew->adjPNGSize), "value-changed", G_CALLBACK(SizeChanged), pew->pwPNGSize);
 
-    /* Html size */
+    /* HTML size */
     pwHBox = gtk_hbox_new(FALSE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwHBox), 4);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHBox, FALSE, FALSE, 0);
 
-    gtk_box_pack_start(GTK_BOX(pwHBox), gtk_label_new(_("Size of Html images:")), TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(pwHBox), gtk_label_new(_("Size of HTML images:")), TRUE, TRUE, 0);
 
     gtk_box_pack_start(GTK_BOX(pwHBox), pew->pwHtmlSize = gtk_label_new(""), TRUE, TRUE, 0);
 
@@ -713,7 +713,7 @@ GTKShowExport(exportsetup * pexs)
     gtk_scale_set_digits(GTK_SCALE(pwHScale), 0);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHScale, FALSE, FALSE, 0);
 
-    genHtml = gtk_button_new_with_label(_("Generate Html images..."));
+    genHtml = gtk_button_new_with_label(_("Generate HTML images..."));
     pwHBox = gtk_hbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwHBox), genHtml, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHBox, FALSE, FALSE, 0);

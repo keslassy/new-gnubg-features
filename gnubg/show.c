@@ -1890,7 +1890,7 @@ CommandShowExport(char *UNUSED(sz))
     outputf(_("- URL to pictures used in export\n"
               "\t%s\n"), exsExport.szHTMLPictureURL ? exsExport.szHTMLPictureURL : _("not defined"));
 
-    outputf(_("- size of exported Html pictures: %dx%d\n"),
+    outputf(_("- size of exported HTML pictures: %dx%d\n"),
             exsExport.nHtmlSize * BOARD_WIDTH, exsExport.nHtmlSize * BOARD_HEIGHT);
 
     /* PNG options */

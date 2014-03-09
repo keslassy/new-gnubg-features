@@ -4123,7 +4123,7 @@ CommandSetExportHtmlSize(char *sz)
 
     exsExport.nHtmlSize = n;
 
-    outputf(_("Size of generated Html images are %dx%d pixels\n"), n * BOARD_WIDTH, n * BOARD_HEIGHT);
+    outputf(_("Size of generated HTML images is %dx%d pixels\n"), n * BOARD_WIDTH, n * BOARD_HEIGHT);
 
 
 }

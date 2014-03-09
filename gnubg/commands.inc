@@ -847,7 +847,7 @@ command cER = {
     N_("set type of HTML boards used in HTML export"), NULL, 
     acSetExportHTMLType },
   { "size", CommandSetExportHtmlSize, 
-      N_("Set size of board for Html image export"), 
+      N_("Set size of board for HTML image export"), 
       szVALUE, NULL },
   { NULL, NULL, NULL, NULL, NULL }    
 }, acSetExportMovesDisplay[] = {

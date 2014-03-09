@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 ExportFormat export_format[] = {
-    {EXPORT_SGF, ".sgf", N_("Gnu Backgammon File"), "sgf", {TRUE, TRUE, TRUE}
+    {EXPORT_SGF, ".sgf", N_("GNU Backgammon File"), "sgf", {TRUE, TRUE, TRUE}
      }
     ,                           /*must be the first element */
     {EXPORT_HTML, ".html", "HTML", "html", {TRUE, TRUE, TRUE}
@@ -72,7 +72,7 @@ ExportFormat export_format[] = {
 };
 
 ImportFormat import_format[] = {
-    {IMPORT_SGF, ".sgf", N_("Gnu Backgammon File"), "sgf"}
+    {IMPORT_SGF, ".sgf", N_("GNU Backgammon File"), "sgf"}
     ,                           /*must be the first element */
     {IMPORT_SGG, ".sgg", N_("GamesGrid Save Game"), "sgg"}
     ,
