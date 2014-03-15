@@ -4794,7 +4794,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     pwPage = gtk_vbox_new(FALSE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwPage), 8);
 
-    prpw->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new(labs(prw->rcRollout.nSeed), 0, INT_MAX, 1, 1, 0));
+    prpw->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nSeed, 0, INT_MAX, 1, 1, 0));
 
     prpw->padjTrials = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nTrials, 1, 1296 * 1296, 36, 36, 0));
     pw = gtk_hbox_new(FALSE, 0);
@@ -5291,7 +5291,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
                 UserCommand(sz);
             }
 
-            if (labs(rw.rcRollout.nSeed) != labs(rcRollout.nSeed)) {
+            if (rw.rcRollout.nSeed != rcRollout.nSeed) {
                 sprintf(sz, "set rollout seed %lu", rw.rcRollout.nSeed);
                 UserCommand(sz);
             }
