@@ -572,7 +572,7 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
         result = SIMD_Supported();
         switch (result) {
         case -1:
-            outputerrf(_("Can't check for SIMD support - non pentium cpu\n"));
+            outputerrf(_("Can't check for SIMD support\n"));
             break;
         case -2:
             outputerrf(_("No cpuid check available\n"));
