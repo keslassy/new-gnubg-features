@@ -1789,7 +1789,7 @@ CommandShowExport(char *UNUSED(sz))
     output(_("\n"
              "Export settings: \n\n"
              "WARNING: not all settings are honoured in the export!\n"
-             "         Do not expect to much!\n\n" "Include: \n\n"));
+             "         Do not expect too much!\n\n" "Include: \n\n"));
 
     output(_("- annotations"));
     outputf("\r\t\t\t\t\t\t: %s\n", exsExport.fIncludeAnnotation ? _("yes") : _("no"));
