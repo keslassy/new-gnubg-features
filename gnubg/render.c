@@ -1547,7 +1547,7 @@ RenderBoard(renderdata * prd, unsigned char *puch, int nStride)
         for (ix = 0; ix < CHEQUER_WIDTH * prd->nSize; ix++) {
             /* <= 0 is board; >= 20 is on a point; interpolate in between */
             antialias = 2 * (DISPLAY_POINT_HEIGHT * prd->nSize - iy)
-                + 1 - (BEAROFF_WIDTH + 2 * CHEQUER_WIDTH - 1) * abs(BORDER_WIDTH * prd->nSize - ix);
+                + 1 - (BEAROFF_WIDTH + 2 * CHEQUER_WIDTH - 1) * abs(BORDER_WIDTH * (int)prd->nSize - (int)ix);
 
             if (antialias < 0)
                 antialias = 0;
