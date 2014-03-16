@@ -350,7 +350,7 @@ ParseJF(FILE * fp, int *pnMatchTo, int *pfJacoby, int *pfTurn, char aszPlayer[2]
     return 0;
 
   read_failed:
-    outputerr(_("Failed reading jellyfish file"));
+    outputerr(_("Failed reading Jellyfish file"));
     fclose(fp);
     return -2;
 }
