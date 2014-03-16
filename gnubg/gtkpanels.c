@@ -292,7 +292,7 @@ CreateMessageWindow(void)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
     gtk_widget_set_size_request(psw, -1, 150);
     gtk_container_add(GTK_CONTAINER(psw), pwMessageText);
-    CreatePanel(WINDOW_MESSAGE, psw, _("Messages - GNU Backgammon"), "messages");
+    CreatePanel(WINDOW_MESSAGE, psw, _("GNU Backgammon - Messages"), "messages");
 }
 
 static GtkWidget *pwTheoryView = NULL;
@@ -403,7 +403,7 @@ CreateTheoryWindow(void)
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(pwTheoryView), -1, NULL, renderer, "text", 1, NULL);
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pwTheoryView), FALSE);
 
-    CreatePanel(WINDOW_THEORY, pwTheoryView, _("Theory - GNU Backgammon"), "theory");
+    CreatePanel(WINDOW_THEORY, pwTheoryView, _("GNU Backgammon - Theory"), "theory");
     return woPanel[WINDOW_THEORY].pwWin;
 }
 
@@ -625,7 +625,7 @@ CreateCommandWindow(void)
     GtkWidget *pwvbox = gtk_vbox_new(FALSE, 0);
     GtkWidget *pwShowHelp;
 
-    CreatePanel(WINDOW_COMMAND, pwvbox, _("Command - GNU Backgammon"), "command");
+    CreatePanel(WINDOW_COMMAND, pwvbox, _("GNU Backgammon - Command"), "command");
 
     cedPanel.cmdString = NULL;
     cedPanel.pwHelpText = pwMessageText;
@@ -665,7 +665,7 @@ CreateAnalysisWindow(void)
 
         woPanel[WINDOW_ANALYSIS].pwWin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-        gtk_window_set_title(GTK_WINDOW(woPanel[WINDOW_ANALYSIS].pwWin), _("Annotation - GNU Backgammon"));
+        gtk_window_set_title(GTK_WINDOW(woPanel[WINDOW_ANALYSIS].pwWin), _("GNU Backgammon - Annotation"));
         gtk_window_set_role(GTK_WINDOW(woPanel[WINDOW_ANALYSIS].pwWin), "annotation");
         gtk_window_set_type_hint(GTK_WINDOW(woPanel[WINDOW_ANALYSIS].pwWin), GDK_WINDOW_TYPE_HINT_UTILITY);
 
@@ -796,7 +796,7 @@ CreateGameWindow(void)
     if (!woPanel[WINDOW_GAME].docked) {
         woPanel[WINDOW_GAME].pwWin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-        gtk_window_set_title(GTK_WINDOW(woPanel[WINDOW_GAME].pwWin), _("Game record - GNU Backgammon"));
+        gtk_window_set_title(GTK_WINDOW(woPanel[WINDOW_GAME].pwWin), _("GNU Backgammon - Game record"));
         gtk_window_set_role(GTK_WINDOW(woPanel[WINDOW_GAME].pwWin), "game record");
         gtk_window_set_type_hint(GTK_WINDOW(woPanel[WINDOW_GAME].pwWin), GDK_WINDOW_TYPE_HINT_UTILITY);
 
