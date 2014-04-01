@@ -662,10 +662,10 @@ gtk_color_button_set_from_array(GtkColorButton * button, double colarray[4])
     GdkColor color;
     guint16 alpha;
 
-    color.red = (guint16) (colarray[0] * 65535);
-    color.green = (guint16) (colarray[1] * 65535);
-    color.blue = (guint16) (colarray[2] * 65535);
-    alpha = (guint16) (colarray[3] * 65535);
+    color.red = (colarray[0]==1)?0xffff : (guint16) (colarray[0] * 65536);
+    color.green = (colarray[1]==1)?0xffff : (guint16) (colarray[1] * 65536);
+    color.blue = (colarray[2]==1)?0xffff : (guint16) (colarray[2] * 65536);
+    alpha = (colarray[3]==1)?0xffff : (guint16) (colarray[3] * 65536);
 
     gtk_color_button_set_color(button, &color);
     gtk_color_button_set_alpha(button, alpha);
@@ -2666,11 +2666,11 @@ GetPrefs(renderdata * prd)
             prd->arCubeColour[i] = ar[i];
 
         /* board colour */
-
         for (j = 0; j < 4; j++) {
             gtk_color_button_get_array(GTK_COLOR_BUTTON(apwBoard[j]), ar);
+
             for (i = 0; i < 3; i++)
-                prd->aanBoardColour[j][i] = (unsigned char) (ar[i] * 0xFF);
+                prd->aanBoardColour[j][i] = (ar[i]==1) ? 0xff : (unsigned char) (ar[i] * 0x100);
         }
 
         prd->aSpeckle[0] = (int) (gtk_adjustment_get_value(apadjBoard[0]) * 0x80);

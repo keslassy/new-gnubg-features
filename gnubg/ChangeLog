@@ -1,3 +1,10 @@
+2014-03-31  Michael Petch  <mpetch@gnubg.org>
+
+	* gtkprefs.c: Fix problem with some build environments that 
+	incorrectly encoded and decoded some board appearance colours. 
+	This fix was provided by Jon Kinsey via Tom Martin to fix problems
+	changing between 2D board designs on the MinGW(Win32) builds.
+
 2014-03-09  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gtkgame.c: Use terser format (one line only) when copying GNUbg
