@@ -1607,9 +1607,9 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
 {
     int i, j, nciq, ac[2], anBack[2], anCross[2], anGammonCross[2], anBackgammonCross[2], anMaxTurns[2], fContact;
 
-    if (arOutput[OUTPUT_WIN] < 0.0f)
+    if (unlikely(arOutput[OUTPUT_WIN] < 0.0f))
         arOutput[OUTPUT_WIN] = 0.0f;
-    else if (arOutput[OUTPUT_WIN] > 1.0f)
+    else if (unlikely(arOutput[OUTPUT_WIN] > 1.0f))
         arOutput[OUTPUT_WIN] = 1.0f;
 
     ac[0] = ac[1] = anBack[0] = anBack[1] = anCross[0] = anCross[1] = anBackgammonCross[0] = anBackgammonCross[1] = 0;
@@ -1662,26 +1662,26 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
 
     fContact = anBack[0] + anBack[1] >= 24;
 
-    if (!fContact) {
+    if (unlikely(!fContact)) {
         for (i = 0; i < 2; i++)
             if (anBack[i] < 6 && pbc1)
                 anMaxTurns[i] = MaxTurns(PositionBearoff(anBoard[i], pbc1->nPoints, pbc1->nChequers));
             else
                 anMaxTurns[i] = anCross[i] * 2;
 
-        if (!anMaxTurns[1])
+        if (unlikely(!anMaxTurns[1]))
             anMaxTurns[1] = 1;
 
     }
 
-    if (!fContact && anCross[0] > 4 * (anMaxTurns[1] - 1))
+    if (unlikely(!fContact) && anCross[0] > 4 * (anMaxTurns[1] - 1))
         /* Certain win */
         arOutput[OUTPUT_WIN] = 1.0f;
 
-    if (ac[0] < 15)
+    if (unlikely(ac[0] < 15))
         /* Opponent has borne off; no gammons or backgammons possible */
         arOutput[OUTPUT_WINGAMMON] = arOutput[OUTPUT_WINBACKGAMMON] = 0.0f;
-    else if (!fContact) {
+    else if (unlikely(!fContact)) {
         if (anCross[1] > 8 * anGammonCross[0])
             /* Gammon impossible */
             arOutput[OUTPUT_WINGAMMON] = 0.0f;
@@ -1697,14 +1697,14 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
             arOutput[OUTPUT_WINGAMMON] = arOutput[OUTPUT_WINBACKGAMMON] = 1.0f;
     }
 
-    if (!fContact && anCross[1] > 4 * anMaxTurns[0])
+    if (unlikely(!fContact) && anCross[1] > 4 * anMaxTurns[0])
         /* Certain loss */
         arOutput[OUTPUT_WIN] = 0.0f;
 
-    if (ac[1] < 15)
+    if (unlikely(ac[1] < 15))
         /* Player has borne off; no gammon or backgammon losses possible */
         arOutput[OUTPUT_LOSEGAMMON] = arOutput[OUTPUT_LOSEBACKGAMMON] = 0.0f;
-    else if (!fContact) {
+    else if (unlikely(!fContact)) {
         if (anCross[0] > 8 * anGammonCross[1] - 4)
             /* Gammon loss impossible */
             arOutput[OUTPUT_LOSEGAMMON] = 0.0f;
@@ -1721,29 +1721,29 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
     }
 
     /* gammons must be less than wins */
-    if (arOutput[OUTPUT_WINGAMMON] > arOutput[OUTPUT_WIN]) {
+    if (unlikely(arOutput[OUTPUT_WINGAMMON] > arOutput[OUTPUT_WIN])) {
         arOutput[OUTPUT_WINGAMMON] = arOutput[OUTPUT_WIN];
     }
 
     {
         float lose = 1.0f - arOutput[OUTPUT_WIN];
-        if (arOutput[OUTPUT_LOSEGAMMON] > lose) {
+        if (unlikely(arOutput[OUTPUT_LOSEGAMMON] > lose)) {
             arOutput[OUTPUT_LOSEGAMMON] = lose;
         }
     }
 
     /* Backgammons cannot exceed gammons */
-    if (arOutput[OUTPUT_WINBACKGAMMON] > arOutput[OUTPUT_WINGAMMON])
+    if (unlikely(arOutput[OUTPUT_WINBACKGAMMON] > arOutput[OUTPUT_WINGAMMON]))
         arOutput[OUTPUT_WINBACKGAMMON] = arOutput[OUTPUT_WINGAMMON];
 
-    if (arOutput[OUTPUT_LOSEBACKGAMMON] > arOutput[OUTPUT_LOSEGAMMON])
+    if (unlikely(arOutput[OUTPUT_LOSEBACKGAMMON] > arOutput[OUTPUT_LOSEGAMMON]))
         arOutput[OUTPUT_LOSEBACKGAMMON] = arOutput[OUTPUT_LOSEGAMMON];
 
     {
         float noise = 1 / 10000.0f;
 
         for (i = OUTPUT_WINGAMMON; i < 5; ++i) {
-            if (arOutput[i] < noise) {
+            if (unlikely(arOutput[i] < noise)) {
                 arOutput[i] = 0.0;
             }
         }
@@ -1768,7 +1768,7 @@ ClassifyPosition(const TanBoard anBoard, const bgvariation bgv)
         }
     }
 
-    if (nBack < 0 || nOppBack < 0)
+    if (unlikely(nBack < 0 || nOppBack < 0))
         return CLASS_OVER;
 
     /* special classes for hypergammon variants */
@@ -1805,19 +1805,19 @@ ClassifyPosition(const TanBoard anBoard, const bgvariation bgv)
                     tot += board[i];
                 }
 
-                if (tot <= N) {
+                if (unlikely(tot <= N)) {
                     return CLASS_CRASHED;
                 } else {
-                    if (board[0] > 1) {
-                        if (tot <= (N + board[0])) {
+                    if (unlikely(board[0] > 1)) {
+                        if (unlikely(tot <= (N + board[0]))) {
                             return CLASS_CRASHED;
                         } else {
-                            if (board[1] > 1 && (1 + tot - (board[0] + board[1])) <= N) {
+                            if (unlikely((1 + tot - (board[0] + board[1])) <= N) && board[1] > 1) {
                                 return CLASS_CRASHED;
                             }
                         }
                     } else {
-                        if (tot <= (N + (board[1] - 1))) {
+                        if (unlikely(tot <= (N + (board[1] - 1)))) {
                             return CLASS_CRASHED;
                         }
                     }
@@ -1827,16 +1827,16 @@ ClassifyPosition(const TanBoard anBoard, const bgvariation bgv)
             return CLASS_CONTACT;
         } else {
 
-            if (isBearoff(pbc2, anBoard))
+            if (unlikely(isBearoff(pbc2, anBoard)))
                 return CLASS_BEAROFF2;
 
-            if (isBearoff(pbcTS, anBoard))
+            if (unlikely(isBearoff(pbcTS, anBoard)))
                 return CLASS_BEAROFF_TS;
 
-            if (isBearoff(pbc1, anBoard))
+            if (unlikely(isBearoff(pbc1, anBoard)))
                 return CLASS_BEAROFF1;
 
-            if (isBearoff(pbcOS, anBoard))
+            if (unlikely(isBearoff(pbcOS, anBoard)))
                 return CLASS_BEAROFF_OS;
 
             return CLASS_RACE;
@@ -6134,7 +6134,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                         rCf = Cl2CfMoney(arOutput, &ciMoney, rCubeX);
                         rCfMoney = CFHYPER(arEquity, &ciMoney);
 
-                        if (fabs(rCl - rCf) > 0.0001)
+                        if (fabsf(rCl - rCf) > 0.0001f)
                             rCubeX = (rCfMoney - rCl) / (rCf - rCl);
 
                         arCf[ici] = Cl2CfMatch(arOutput, &aci[ici], rCubeX);
@@ -6154,7 +6154,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                         rCf = Cl2CfMoney(arOutput, &ciMoney, rCubeX);
                         rCfMoney = CFMONEY(arEquity, &ciMoney);
 
-                        if (fabs(rCl - rCf) > 0.0001)
+                        if (fabsf(rCl - rCf) > 0.0001f)
                             rCubeX = (rCfMoney - rCl) / (rCf - rCl);
                         else
                             rCubeX = X;
