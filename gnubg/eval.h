@@ -422,7 +422,6 @@ extern int ApplyMove(TanBoard anBoard, const int anMove[8], const int fCheckLega
 extern positionclass ClassifyPosition(const TanBoard anBoard, const bgvariation bgv);
 
 /* internal use only */
-extern int EvalBearoff1Full(const TanBoard anBoard, float arOutput[]);
 extern void EvalRaceBG(const TanBoard anBoard, float arOutput[], const bgvariation bgv);
 
 extern float

@@ -1901,16 +1901,6 @@ EvalHypergammon3(const TanBoard anBoard, float arOutput[], const bgvariation UNU
 
 }
 
-
-
-extern int
-EvalBearoff1Full(const TanBoard anBoard, float arOutput[])
-{
-
-    return BearoffEval(pbc1, anBoard, arOutput);
-
-}
-
 extern int
 EvalBearoff1(const TanBoard anBoard, float arOutput[], const bgvariation UNUSED(bgv), NNState * UNUSED(nnStates))
 {
