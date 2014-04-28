@@ -44,6 +44,10 @@
 
 #ifdef WIN32
 #define GStatBuf struct _g_stat_struct
+#else
+#if !GLIB_CHECK_VERSION (2,26,0)
+typedef struct stat GStatBuf;
+#endif
 #endif
 
 static int
