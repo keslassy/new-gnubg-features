@@ -56,7 +56,7 @@ extern void GTKRunDialog(GtkWidget * dialog);
 extern int GTKGetInputYN(char *szPrompt);
 extern char *GTKGetInput(char *title, char *prompt, GtkWidget * parent);
 
-extern int GTKMessage(char *sz, dialogtype dt);
+extern int GTKMessage(const char *sz, dialogtype dt);
 extern void GTKSetCurrentParent(GtkWidget * parent);
 extern GtkWidget *GTKGetCurrentParent(void);
 

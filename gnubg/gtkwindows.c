@@ -267,7 +267,7 @@ GTKGetCurrentParent(void)
 }
 
 extern int
-GTKMessage(char *sz, dialogtype dt)
+GTKMessage(const char *sz, dialogtype dt)
 {
 #define MAXWINSIZE 400
 #define MAXSTRLEN 200

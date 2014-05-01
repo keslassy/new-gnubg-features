@@ -4215,7 +4215,7 @@ GTKOutputErr(const char *sz)
 
     GtkTextBuffer *buffer;
     GtkTextIter iter;
-    GTKMessage((char *) sz, DT_ERROR);
+    GTKMessage(sz, DT_ERROR);
 
     if (PanelShowing(WINDOW_MESSAGE)) {
         buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(pwMessageText));
