@@ -4228,8 +4228,8 @@ static int
 CompareRollEquity(const void *p1, const void *p2)
 {
 
-    const rollequity *per1 = (rollequity *) p1;
-    const rollequity *per2 = (rollequity *) p2;
+    const rollequity *per1 = (const rollequity *) p1;
+    const rollequity *per2 = (const rollequity *) p2;
 
     if (per1->r > per2->r)
         return -1;
