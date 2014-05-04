@@ -4288,12 +4288,12 @@ EvaluateRoll(float ar[NUM_ROLLOUT_OUTPUTS], int nDie1, int nDie2, const TanBoard
 
     memcpy(&anBoardTemp[0][0], &anBoard[0][0], 2 * 25 * sizeof(int));
 
-    if (FindBestMove(NULL, nDie1, nDie2, anBoardTemp, (cubeinfo *) pci, NULL, defaultFilters) < 0)
+    if (FindBestMove(NULL, nDie1, nDie2, anBoardTemp, pci, NULL, defaultFilters) < 0)
         g_assert_not_reached();
 
     SwapSides(anBoardTemp);
 
-    GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, &ciOpp, (evalcontext *) pec);
+    GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, &ciOpp, pec);
 
     return;
 }

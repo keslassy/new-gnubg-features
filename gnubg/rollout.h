@@ -89,7 +89,7 @@ GeneralEvaluation(float arOutput[NUM_ROLLOUT_OUTPUTS],
                   float arStdDev[NUM_ROLLOUT_OUTPUTS],
                   rolloutstat arsStatistics[2],
                   TanBoard anBoard,
-                  const cubeinfo * pci, const evalsetup * pes,
+                  cubeinfo * const pci, const evalsetup * pes,
                   rolloutprogressfunc * pfRolloutProgress, void *pUserData);
 
 extern int
@@ -130,7 +130,7 @@ extern int
 
 
 getResignation(float arResign[NUM_ROLLOUT_OUTPUTS],
-               TanBoard anBoard, const cubeinfo * pci, const evalsetup * pesResign);
+               TanBoard anBoard, cubeinfo * const pci, const evalsetup * pesResign);
 
 extern void
  getResignEquities(float arResign[NUM_ROLLOUT_OUTPUTS], cubeinfo * pci, int nResigned, float *prBefore, float *prAfter);

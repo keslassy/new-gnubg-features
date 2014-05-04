@@ -228,7 +228,7 @@ f_GeneralEvaluationE GeneralEvaluationE = GeneralEvaluationENoLocking;
 #define CacheLookup CacheLookupNoLocking
 
 static int EvaluatePositionCache(NNState * nnStates, const TanBoard anBoard, float arOutput[],
-                                 const cubeinfo * pci, const evalcontext * pecx, int nPlies, positionclass pc);
+                                 cubeinfo * const pci, const evalcontext * pecx, int nPlies, positionclass pc);
 
 static int FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
                              TanBoard anBoard, const cubeinfo * pci,
@@ -5212,7 +5212,7 @@ DoubleType(const int fDoubled, const int fMove, const int fTurn)
 #define CacheLookup CacheLookupWithLocking
 
 static int EvaluatePositionCache(NNState * nnStates, const TanBoard anBoard, float arOutput[],
-                                 const cubeinfo * pci, const evalcontext * pecx, int nPlies, positionclass pc);
+                                 cubeinfo * const pci, const evalcontext * pecx, int nPlies, positionclass pc);
 
 static int FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
                              TanBoard anBoard, const cubeinfo * pci,
@@ -5227,9 +5227,9 @@ extern evalcontext ecBasic;
 #endif
 
 static int GeneralEvaluationEPlied(NNState * nnStates, float arOutput[NUM_ROLLOUT_OUTPUTS],
-                                   const TanBoard anBoard, const cubeinfo * pci, const evalcontext * pec, int nPlies);
+                                   const TanBoard anBoard, cubeinfo * const pci, const evalcontext * pec, int nPlies);
 static int EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard, float arOutput[NUM_OUTPUTS],
-                                    float arCubeful[], const cubeinfo aciCubePos[], int cci, const cubeinfo * pciMove,
+                                    float arCubeful[], const cubeinfo aciCubePos[], int cci, cubeinfo * const pciMove,
                                     const evalcontext * pec, int nPlies, int fTop);
 
 /* Functions that have both locking and non-locking versions below here */
@@ -5241,7 +5241,7 @@ static int ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcont
 
 static SIMD_AVX_STACKALIGN void
 FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const TanBoard anBoardIn,
-                   TanBoard anBoardOut, const cubeinfo * const pci, const evalcontext * pec)
+                   TanBoard anBoardOut, cubeinfo * const pci, const evalcontext * pec)
 {
     unsigned int i;
     movelist ml;
@@ -5268,7 +5268,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
         return;
     }
 
-    ((cubeinfo *) pci)->fMove = !pci->fMove;
+    pci->fMove = !pci->fMove;
 
     for (i = 0; i < ml.cMoves; i++) {
         positionclass pc;
@@ -5337,7 +5337,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
         }
     }
 
-    ((cubeinfo *) pci)->fMove = !pci->fMove;
+    pci->fMove = !pci->fMove;
 
     if (i == ml.cMoves)
         ScoreMovesPruned(&ml, pci, pec, bmovesi);
@@ -5349,7 +5349,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
 
 static int
 EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[],
-                     const cubeinfo * pci, const evalcontext * pec, unsigned int nPlies, positionclass pc)
+                     cubeinfo * const pci, const evalcontext * pec, unsigned int nPlies, positionclass pc)
 {
     int i, n0, n1;
     SSE_ALIGN(float arVariationOutput[NUM_OUTPUTS]);
@@ -5443,7 +5443,7 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
 
 static int
 EvaluatePositionCache(NNState * nnStates, const TanBoard anBoard, float arOutput[],
-                      const cubeinfo * pci, const evalcontext * pecx, int nPlies, positionclass pc)
+                      cubeinfo * const pci, const evalcontext * pecx, int nPlies, positionclass pc)
 {
     evalcache ec;
     uint32_t l;
@@ -5472,7 +5472,7 @@ EvaluatePositionCache(NNState * nnStates, const TanBoard anBoard, float arOutput
 
 extern int
 EvaluatePosition(NNState * nnStates, const TanBoard anBoard, float arOutput[],
-                 const cubeinfo * pci, const evalcontext * pec)
+                 cubeinfo * const pci, const evalcontext * pec)
 {
 
     positionclass pc = ClassifyPosition(anBoard, pci->bgv);
@@ -5635,7 +5635,7 @@ FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
 extern
     int
 FindBestMove(int anMove[8], int nDice0, int nDice1,
-             TanBoard anBoard, cubeinfo * pci, evalcontext * pec, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+             TanBoard anBoard, const cubeinfo * pci, evalcontext * pec, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
     return FindBestMovePlied(anMove, nDice0, nDice1, anBoard, pci, pec ? pec : &ecBasic, pec ? pec->nPlies : 0, aamf);
@@ -5796,7 +5796,7 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
 extern int
 GeneralCubeDecisionE(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
                      const TanBoard anBoard,
-                     const cubeinfo * pci, const evalcontext * pec, const evalsetup * UNUSED(pes))
+                     cubeinfo * const pci, const evalcontext * pec, const evalsetup * UNUSED(pes))
 {
 
     SSE_ALIGN(float arOutput[NUM_OUTPUTS]);
@@ -5840,7 +5840,7 @@ GeneralCubeDecisionE(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
 extern int
 GeneralEvaluationE(float arOutput[NUM_ROLLOUT_OUTPUTS],
-                   const TanBoard anBoard, const cubeinfo * pci, const evalcontext * pec)
+                   const TanBoard anBoard, cubeinfo * const pci, const evalcontext * pec)
 {
 
     return GeneralEvaluationEPlied(NULL, arOutput, anBoard, pci, pec, pec->nPlies);
@@ -5850,7 +5850,7 @@ GeneralEvaluationE(float arOutput[NUM_ROLLOUT_OUTPUTS],
 
 static int
 GeneralEvaluationEPliedCubeful(NNState * nnStates, float arOutput[NUM_ROLLOUT_OUTPUTS],
-                               const TanBoard anBoard, const cubeinfo * pci, const evalcontext * pec, int nPlies)
+                               const TanBoard anBoard, cubeinfo * const pci, const evalcontext * pec, int nPlies)
 {
 
     float rCubeful;
@@ -5867,7 +5867,7 @@ GeneralEvaluationEPliedCubeful(NNState * nnStates, float arOutput[NUM_ROLLOUT_OU
 
 extern int
 GeneralEvaluationEPlied(NNState * nnStates, float arOutput[NUM_ROLLOUT_OUTPUTS],
-                        const TanBoard anBoard, const cubeinfo * pci, const evalcontext * pec, int nPlies)
+                        const TanBoard anBoard, cubeinfo * const pci, const evalcontext * pec, int nPlies)
 {
 
     if (pec->fCubeful) {
@@ -5893,7 +5893,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                          float arOutput[NUM_OUTPUTS],
                          float arCubeful[],
                          const cubeinfo aciCubePos[], int cci,
-                         const cubeinfo * pciMove, const evalcontext * pec, unsigned int nPlies, int fTop)
+                         cubeinfo * const pciMove, const evalcontext * pec, unsigned int nPlies, int fTop)
 {
 
 
@@ -6200,7 +6200,7 @@ EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard,
                          float arOutput[NUM_OUTPUTS],
                          float arCubeful[],
                          const cubeinfo aciCubePos[], int cci,
-                         const cubeinfo * pciMove, const evalcontext * pec, int nPlies, int fTop)
+                         cubeinfo * const pciMove, const evalcontext * pec, int nPlies, int fTop)
 {
 
     int ici;

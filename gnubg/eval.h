@@ -362,7 +362,7 @@ extern int EvalSave(const char *szWeights);
 
 
 EXP_LOCK_FUN(int, EvaluatePosition, NNState * nnStates, const TanBoard anBoard, float arOutput[],
-             const cubeinfo * pci, const evalcontext * pec);
+             cubeinfo * const pci, const evalcontext * pec);
 
 extern void
  InvertEvaluationR(float ar[NUM_ROLLOUT_OUTPUTS], const cubeinfo * pci);
@@ -371,7 +371,7 @@ extern void
  InvertEvaluation(float ar[NUM_OUTPUTS]);
 
 EXP_LOCK_FUN(int, FindBestMove, int anMove[8], int nDice0, int nDice1,
-             TanBoard anBoard, cubeinfo * pci, evalcontext * pec, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES]);
+             TanBoard anBoard, const cubeinfo * pci, evalcontext * pec, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES]);
 
 EXP_LOCK_FUN(int, FindnSaveBestMoves, movelist * pml,
              int nDice0, int nDice1, const TanBoard anBoard,
@@ -483,10 +483,10 @@ extern char
 extern cubedecision FindCubeDecision(float arDouble[], float aarOutput[][NUM_ROLLOUT_OUTPUTS], const cubeinfo * pci);
 
 EXP_LOCK_FUN(int, GeneralCubeDecisionE, float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
-             const TanBoard anBoard, const cubeinfo * pci, const evalcontext * pec, const evalsetup * pes);
+             const TanBoard anBoard, cubeinfo * const pci, const evalcontext * pec, const evalsetup * pes);
 
 EXP_LOCK_FUN(int, GeneralEvaluationE, float arOutput[NUM_ROLLOUT_OUTPUTS],
-             const TanBoard anBoard, const cubeinfo * pci, const evalcontext * pec);
+             const TanBoard anBoard, cubeinfo * const pci, const evalcontext * pec);
 
 extern int
  cmp_evalsetup(const evalsetup * pes1, const evalsetup * pes2);
