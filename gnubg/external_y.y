@@ -194,8 +194,8 @@ main( int argc, char *argv[] ) {
           "cubeful %d\n"
           "prune %d\n"
           "fibsboard %s\n"
-          "crawfordrule %s\n"
-          "jacobyrule %s\n",
+          "crawfordrule %d\n"
+          "jacobyrule %d\n",
           ec.ct, ec.nPlies, ec.rNoise, ec.fDeterministic, ec.fCubeful,
           ec.fUsePrune, ec.szFIBSBoard, ec.fCrawfordRule, ec.fJacobyRule );
 
