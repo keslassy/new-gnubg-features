@@ -84,10 +84,12 @@ extern void *md5_finish_ctx(struct md5_ctx *ctx, void *resbuf);
 extern void *md5_read_ctx(const struct md5_ctx *ctx, void *resbuf);
 
 
+#if 0
 /* Compute MD5 message digest for bytes read from STREAM.  The
  * resulting message digest number will be written into the 16 bytes
  * beginning at RESBLOCK.  */
 extern int md5_stream(FILE * stream, void *resblock);
+#endif
 
 /* Compute MD5 message digest for LEN bytes beginning at BUFFER.  The
  * result is always in little endian byte order, so that a byte-wise

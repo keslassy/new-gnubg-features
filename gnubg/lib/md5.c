@@ -1,5 +1,5 @@
 /*
- * md5.h
+ * md5.c
  *
  * by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
  *
@@ -116,6 +116,7 @@ md5_finish_ctx(struct md5_ctx *ctx, void *resbuf)
     return md5_read_ctx(ctx, resbuf);
 }
 
+#if 0
 /* Compute MD5 message digest for bytes read from STREAM.  The
  * resulting message digest number will be written into the 16 bytes
  * beginning at RESBLOCK.  */
@@ -167,6 +168,7 @@ md5_stream(FILE * stream, void *resblock)
     md5_finish_ctx(&ctx, resblock);
     return 0;
 }
+#endif
 
 /* Compute MD5 message digest for LEN bytes beginning at BUFFER.  The
  * result is always in little endian byte order, so that a byte-wise
