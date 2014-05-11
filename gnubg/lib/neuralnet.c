@@ -34,42 +34,6 @@
 #include "simd.h"
 #include "sigmoid.h"
 
-/* separate context for race, crashed, contact
- * -1: regular eval
- * 0: save base
- * 1: from base
- */
-
-static inline NNEvalType
-NNevalAction(NNState * pnState)
-{
-    if (!pnState)
-        return NNEVAL_NONE;
-
-    switch (pnState->state) {
-    case NNSTATE_NONE:
-        {
-            /* incremental evaluation not useful */
-            return NNEVAL_NONE;
-        }
-    case NNSTATE_INCREMENTAL:
-        {
-            /* next call should return FROMBASE */
-            pnState->state = NNSTATE_DONE;
-
-            /* starting a new context; save base in the hope it will be useful */
-            return NNEVAL_SAVE;
-        }
-    case NNSTATE_DONE:
-        {
-            /* context hit!  use the previously computed base */
-            return NNEVAL_FROMBASE;
-        }
-    }
-    /* never reached */
-    return NNEVAL_NONE;         /* for the picky compiler */
-}
-
 extern int
 NeuralNetCreate(neuralnet * pnn, unsigned int cInput, unsigned int cHidden,
                 unsigned int cOutput, float rBetaHidden, float rBetaOutput)
@@ -119,6 +83,44 @@ NeuralNetDestroy(neuralnet * pnn)
         sse_free(pnn->arOutputThreshold);
         pnn->arOutputThreshold = 0;
     }
+}
+
+#if !USE_SIMD_INSTRUCTIONS
+
+/* separate context for race, crashed, contact
+ * -1: regular eval
+ * 0: save base
+ * 1: from base
+ */
+
+static inline NNEvalType
+NNevalAction(NNState * pnState)
+{
+    if (!pnState)
+        return NNEVAL_NONE;
+
+    switch (pnState->state) {
+    case NNSTATE_NONE:
+        {
+            /* incremental evaluation not useful */
+            return NNEVAL_NONE;
+        }
+    case NNSTATE_INCREMENTAL:
+        {
+            /* next call should return FROMBASE */
+            pnState->state = NNSTATE_DONE;
+
+            /* starting a new context; save base in the hope it will be useful */
+            return NNEVAL_SAVE;
+        }
+    case NNSTATE_DONE:
+        {
+            /* context hit!  use the previously computed base */
+            return NNEVAL_FROMBASE;
+        }
+    }
+    /* never reached */
+    return NNEVAL_NONE;         /* for the picky compiler */
 }
 
 static void
@@ -230,9 +232,7 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
         }
     case NNEVAL_SAVE:
         {
-#if !USE_SIMD_INSTRUCTIONS
             pnState->cSavedIBase = pnn->cInput;
-#endif
             memcpy(pnState->savedIBase, arInput, pnn->cInput * sizeof(*ar));
             Evaluate(pnn, arInput, ar, arOutput, pnState->savedBase);
             break;
@@ -240,12 +240,10 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
     case NNEVAL_FROMBASE:
         {
             unsigned int i;
-#if !USE_SIMD_INSTRUCTIONS
             if (pnState->cSavedIBase != (int)pnn->cInput){
                 Evaluate(pnn, arInput, ar, arOutput, 0);
                 break;
             }
-#endif
             memcpy(ar, pnState->savedBase, pnn->cHidden * sizeof(*ar));
 
             {
@@ -266,6 +264,7 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
     }
     return 0;
 }
+#endif
 
 extern int
 NeuralNetLoad(neuralnet * pnn, FILE * pf)
@@ -565,4 +564,3 @@ SIMD_Supported(void)
 
 #endif
 #endif
-
