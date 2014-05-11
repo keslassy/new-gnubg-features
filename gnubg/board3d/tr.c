@@ -165,7 +165,7 @@ trTileSize(TRcontext * tr, GLint width, GLint height, GLint border)
 }
 
 
-
+#if 0
 void
 trTileBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image)
 {
@@ -176,7 +176,7 @@ trTileBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image)
     tr->TileType = type;
     tr->TileBuffer = image;
 }
-
+#endif
 
 
 void
@@ -202,7 +202,7 @@ trImageBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image)
     tr->ImageBuffer = image;
 }
 
-
+#if 0
 GLint
 trGet(const TRcontext * tr, TRenum param)
 {
@@ -259,7 +259,7 @@ trRowOrder(TRcontext * tr, TRenum order)
     if (order == TR_TOP_TO_BOTTOM || order == TR_BOTTOM_TO_TOP)
         tr->RowOrder = order;
 }
-
+#endif
 
 void
 trOrtho(TRcontext * tr, GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble znear, GLdouble zfar)
@@ -292,7 +292,7 @@ trFrustum(TRcontext * tr, GLdouble left, GLdouble right, GLdouble bottom, GLdoub
     tr->Far = zfar;
 }
 
-
+#if 0
 void
 trPerspective(TRcontext * tr, GLdouble fovy, GLdouble aspect, GLdouble znear, GLdouble zfar)
 {
@@ -303,7 +303,7 @@ trPerspective(TRcontext * tr, GLdouble fovy, GLdouble aspect, GLdouble znear, GL
     xmax = ymax * aspect;
     trFrustum(tr, xmin, xmax, ymin, ymax, znear, zfar);
 }
-
+#endif
 
 void
 trBeginTile(TRcontext * tr)
@@ -438,7 +438,7 @@ trEndTile(TRcontext * tr)
         return 1;
 }
 
-
+#if 0
 /*
  * Replacement for glRastePos3f() which avoids the problem with invalid
  * raster pos.
@@ -492,3 +492,4 @@ trRasterPos3d(const TRcontext * tr, GLdouble x, GLdouble y, GLdouble z)
 #endif
     }
 }
+#endif

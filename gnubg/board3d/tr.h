@@ -125,19 +125,20 @@ extern "C" {
 
     extern void trTileSize(TRcontext * tr, GLint width, GLint height, GLint border);
 
+#if 0
     extern void trTileBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image);
-
+#endif
 
     extern void trImageSize(TRcontext * tr, GLuint width, GLuint height);
 
     extern void trImageBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image);
 
-
+#if 0
     extern void trRowOrder(TRcontext * tr, TRenum order);
 
 
     extern GLint trGet(const TRcontext * tr, TRenum param);
-
+#endif
 
     extern void trOrtho(TRcontext * tr,
                         GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNearx, GLdouble zFarx);
@@ -146,16 +147,17 @@ extern "C" {
                           GLdouble left, GLdouble right,
                           GLdouble bottom, GLdouble top, GLdouble zNearx, GLdouble zFarx);
 
+#if 0
     extern void trPerspective(TRcontext * tr, GLdouble fovy, GLdouble aspect, GLdouble zNearx, GLdouble zFarx);
-
+#endif
 
     extern void trBeginTile(TRcontext * tr);
 
     extern int trEndTile(TRcontext * tr);
 
-
+#if 0
     extern void trRasterPos3d(const TRcontext * tr, GLdouble x, GLdouble y, GLdouble z);
-
+#endif
 
 
 #ifdef __cplusplus
