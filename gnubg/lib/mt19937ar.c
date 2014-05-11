@@ -155,7 +155,7 @@ genrand_int32(int *mti, unsigned long mt[N])
     return y;
 }
 
-#ifdef UNDEF
+#if 0
 
 /* generates a random number on [0,0x7fffffff]-interval */
 long
@@ -219,4 +219,4 @@ main(void)
     return 0;
 }
 
-#endif                          /* UNDEF */
+#endif
