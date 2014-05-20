@@ -1306,8 +1306,8 @@ ComputerTurn(void)
                     case OPTIONAL_DOUBLE_PASS:
                     case OPTIONAL_REDOUBLE_PASS:
 
-                        if (ap[ms.fTurn].esCube.et == EVAL_EVAL && ap[ms.fTurn].esCube.ec.nPlies == 0) {
-                            /* double if 0-ply */
+                        if (ap[ms.fTurn].esCube.et == EVAL_EVAL && ap[ms.fTurn].esCube.ec.nPlies == 0 && arOutput[0] > 0.001f ) {
+                            /* double if 0-ply except when about to lose game */
                             if (fTutor && fTutorCube)
                                 current_pmr_cubedata_update(dd.pes, dd.aarOutput, dd.aarStdDev);
                             fComputerDecision = TRUE;
