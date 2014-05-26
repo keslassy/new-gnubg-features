@@ -962,11 +962,11 @@ ImportGame(FILE * fp, int iGame, int nLength, bgvariation bgVariation, int *warn
                  * CommandSetCubeOwner() needs its argument to be writable
                  * CommandSetCubeOwner("1") coredumps
                  */
-                sprintf(szco, "1");
+                sprintf(szco, "0");
                 CommandSetCubeOwner(szco);
             } else {
                 sprintf(szcv, "%d", 1 << (szLine[37] - '0'));
-                sprintf(szco, "0");
+                sprintf(szco, "1");
                 CommandSetCubeOwner(szco);
             }
 

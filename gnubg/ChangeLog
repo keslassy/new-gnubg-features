@@ -1,7 +1,12 @@
+2014-05-26  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* import.c: Fix interpretation of eXtreme Gammon's "; Set Pos=..."
+	extension to mat format. Non-centered cubes were set to the wrong side.
+
 2014-03-31  Michael Petch  <mpetch@gnubg.org>
 
-	* gtkprefs.c: Fix problem with some build environments that 
-	incorrectly encoded and decoded some board appearance colours. 
+	* gtkprefs.c: Fix problem with some build environments that
+	incorrectly encoded and decoded some board appearance colours.
 	This fix was provided by Jon Kinsey via Tom Martin to fix problems
 	changing between 2D board designs on the MinGW(Win32) builds.
 
