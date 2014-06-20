@@ -76,6 +76,8 @@ gnubg_SOURCES = \
 		formatgs.c \
 		formatgs.h \
 		format.h \
+		glib-ext.c \
+		glib-ext.h \
 		gnubg.c \
 		gnubgmodule.c \
 		gnubgmodule.h \

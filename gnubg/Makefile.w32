@@ -20,7 +20,8 @@ SOURCE = analysis bearoff bearoffgammon non-src/copying non-src/credits \
 	timer mec relational \
 	gnubgmodule non-src/external_l non-src/external_y \
 	file simpleboard mtsupport \
-	util dbprovider gnubgstock
+	util dbprovider gnubgstock \
+	glib-ext
 
 GTKSOURCE = gtk-multiview gtkboard gtkcube gtkchequer gtkexport gtkgame gtkmet \
 	gtkprefs gtkmovefilter gtkrace gtktheory gtksplash \

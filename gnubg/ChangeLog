@@ -1,3 +1,9 @@
+2014-06-21  Michael Petch  <mpetch@gnubg.org>
+
+	* +glib-ext.c, +glib-ext.h, Makefile.am Makefile.w32: Add GLIB 
+	utility functions and macros to provide extra list functionality and 
+	string to GValue maps.
+
 2014-05-26  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* import.c: Fix interpretation of eXtreme Gammon's "; Set Pos=..."
