@@ -4686,6 +4686,10 @@ main(int argc, char *argv[])
     putenv("LIBOVERLAY_SCROLLBAR=0");
 #endif
 
+#if ! GLIB_CHECK_VERSION(2,36,0)
+    g_type_init();
+#endif
+
     output_initialize();
 
     /* set language */
