@@ -71,31 +71,31 @@ board:                  {   BEGIN(SBOARDP1);
                             return FIBSBOARD;
                         }
 
-version{EOT}            {   return EXTVERSION; }
+version{EOT}            {   return INTERFACEVERSION; }
 (quit|exit){EOT}        {   return EXIT; }
 evaluation{EOT}         {   return EVALUATION; }
 fibsboard{EOT}          {   return FIBSBOARD; }
 
 <*>(yes|on|true){EOT}   {   yylval->bool = 1; 
-                            return (EXTBOOLEAN);
+                            return (E_BOOLEAN);
                         }
 <*>(no|off|false){EOT}  {   yylval->bool = 0; 
-                            return (EXTBOOLEAN);
+                            return (E_BOOLEAN);
                         }
 
 
 {QSTRING}               {
                             PROCESS_YYTEXT_STRING;
-                            return EXTSTRING;
+                            return E_STRING;
                         }
 		
 <*>{FLOATSTR}           {
                             yylval->floatnum = atof(yytext);
-                            return EXTFLOAT;
+                            return E_FLOAT;
                         }
 		
 <*>{SIGNEDINTSTR}       {   yylval->intnum = atoi(yytext); 
-                            return EXTINTEGER; 
+                            return E_INTEGER; 
                         }
                         
 [\[\],\(\)\{\}]         return (yytext[0]);
@@ -124,12 +124,12 @@ prune{EOT}              {   return PRUNE; }
 <SBOARDP1>{PLAYERSTR}|{QSTRING}   {
                             PROCESS_YYTEXT_STRING;
                             BEGIN(SBOARDP2);
-                            return EXTSTRING;
+                            return E_STRING;
                         }
 <SBOARDP2>{PLAYERSTR}|{QSTRING}   {
                             PROCESS_YYTEXT_STRING;
                             BEGIN(VALLIST);
-                            return EXTSTRING;
+                            return E_STRING;
                         }
 
 <*>[\t\r\n ]+             ; /* ignore whitespace */
@@ -140,7 +140,7 @@ prune{EOT}              {   return PRUNE; }
 
 <*>.                    {   BEGIN(INITIAL);
                             yylval->character = yytext[0]; 
-                            return (EXTCHARACTER);
+                            return (E_CHARACTER);
                         }
 
 %%

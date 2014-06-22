@@ -79,6 +79,14 @@
 #include "backgammon.h"
 #include "external_y.h"
 
+#define KEY_STR_DETERMINISTIC "deterministic"
+#define KEY_STR_JACOBYRULE "jacobyrule"
+#define KEY_STR_CRAWFORDRULE "crawfordrule"
+#define KEY_STR_PRUNE "prune"
+#define KEY_STR_NOISE "noise"
+#define KEY_STR_CUBEFUL "cubeful"
+#define KEY_STR_PLIES "plies"
+
 #define extcmd ext_get_extra(scanner)  
 
 int YY_PREFIX(get_column)  (void * yyscanner );
@@ -122,17 +130,17 @@ void yyerror(scancontext *scanner, const char *str)
 %{
 %}
 
-%token EOL EXIT DISABLED EXTVERSION
-%token EXTSTRING EXTCHARACTER EXTINTEGER EXTFLOAT EXTBOOLEAN
+%token EOL EXIT DISABLED INTERFACEVERSION
+%token E_STRING E_CHARACTER E_INTEGER E_FLOAT E_BOOLEAN
 %token FIBSBOARD FIBSBOARDEND EVALUATION
 %token CRAWFORDRULE JACOBYRULE
 %token CUBE CUBEFUL CUBELESS DETERMINISTIC NOISE PLIES PRUNE
 
-%type <bool>        EXTBOOLEAN
-%type <str>         EXTSTRING
-%type <character>   EXTCHARACTER
-%type <intnum>      EXTINTEGER
-%type <floatnum>    EXTFLOAT
+%type <bool>        E_BOOLEAN
+%type <str>         E_STRING
+%type <character>   E_CHARACTER
+%type <intnum>      E_INTEGER
+%type <floatnum>    E_FLOAT
 
 %type <gv>          float_type
 %type <gv>          integer_type
@@ -172,7 +180,7 @@ commands:
         YYACCEPT;
     }
     |
-    EXTVERSION EOL
+    INTERFACEVERSION EOL
         {
             extcmd->ct = COMMAND_VERSION;
             YYACCEPT;
@@ -210,13 +218,13 @@ commands:
                         curbrdpos = g_list_next(curbrdpos);
                     }
 
-                    extcmd->nPlies = g_value_get_int(str2gv_map_get_key_value(optionsmap, "plies", gvfalse));
-                    extcmd->fCrawfordRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, "crawfordrule", gvfalse));
-                    extcmd->fJacobyRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, "jacobyrule", gvfalse));
-                    extcmd->fUsePrune = g_value_get_int(str2gv_map_get_key_value(optionsmap, "prune", gvfalse));
-                    extcmd->fCubeful =  g_value_get_int(str2gv_map_get_key_value(optionsmap, "cubeful", gvfalse));
-                    extcmd->rNoise = g_value_get_double(str2gv_map_get_key_value(optionsmap, "noise", gvfloatzero));
-                    extcmd->fDeterministic = g_value_get_int(str2gv_map_get_key_value(optionsmap, "deterministic", gvtrue));
+                    extcmd->nPlies = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_PLIES, gvfalse));
+                    extcmd->fCrawfordRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_CRAWFORDRULE, gvfalse));
+                    extcmd->fJacobyRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_JACOBYRULE, gvfalse));
+                    extcmd->fUsePrune = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_PRUNE, gvfalse));
+                    extcmd->fCubeful =  g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_CUBEFUL, gvfalse));
+                    extcmd->rNoise = g_value_get_double(str2gv_map_get_key_value(optionsmap, KEY_STR_NOISE, gvfloatzero));
+                    extcmd->fDeterministic = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_DETERMINISTIC, gvtrue));
 
                     g_value_unsetfree(gvtrue);
                     g_value_unsetfree(gvfalse);
@@ -286,67 +294,67 @@ endboard:
 sessionoption:
     JACOBYRULE boolean_type 
         { 
-            $$ = create_str2gvalue_tuple ("jacobyrule", $2); 
+            $$ = create_str2gvalue_tuple (KEY_STR_JACOBYRULE, $2); 
         }
     | 
     CRAWFORDRULE boolean_type
         { 
-            $$ = create_str2gvalue_tuple ("crawfordrule", $2);
+            $$ = create_str2gvalue_tuple (KEY_STR_CRAWFORDRULE, $2);
         }
     ;
     
 evaloption:
     PLIES integer_type
         { 
-            $$ = create_str2gvalue_tuple ("plies", $2); 
+            $$ = create_str2gvalue_tuple (KEY_STR_PLIES, $2); 
         }
     | 
     NOISE float_type
         {
-            $$ = create_str2gvalue_tuple ("noise", $2); 
+            $$ = create_str2gvalue_tuple (KEY_STR_NOISE, $2); 
         }
     |
     NOISE integer_type
         {
             double doubleval = g_value_get_int($2) / 10000.0L;
             GVALUE_CREATE(G_TYPE_DOUBLE, double, doubleval, gvdouble); 
-            $$ = create_str2gvalue_tuple ("noise", gvdouble); 
+            $$ = create_str2gvalue_tuple (KEY_STR_NOISE, gvdouble); 
             g_value_unsetfree($2);
         }
     |
     PRUNE
         { 
-            $$ = create_str2int_tuple ("prune", TRUE);
+            $$ = create_str2int_tuple (KEY_STR_PRUNE, TRUE);
         }
     |
     PRUNE boolean_type 
         { 
-            $$ = create_str2gvalue_tuple ("prune", $2);
+            $$ = create_str2gvalue_tuple (KEY_STR_PRUNE, $2);
         }
     |
     DETERMINISTIC
         { 
-            $$ = create_str2int_tuple ("deterministic", TRUE);
+            $$ = create_str2int_tuple (KEY_STR_DETERMINISTIC, TRUE);
         }
     |
     DETERMINISTIC boolean_type 
         { 
-            $$ = create_str2gvalue_tuple ("deterministic", $2);
+            $$ = create_str2gvalue_tuple (KEY_STR_DETERMINISTIC, $2);
         }
     |
     CUBE boolean_type 
         { 
-            $$ = create_str2gvalue_tuple ("cubeful", $2);
+            $$ = create_str2gvalue_tuple (KEY_STR_CUBEFUL, $2);
         }
     |
     CUBEFUL 
         { 
-            $$ = create_str2int_tuple ("cubeful", TRUE); 
+            $$ = create_str2int_tuple (KEY_STR_CUBEFUL, TRUE); 
         }
     |
     CUBELESS
         { 
-            $$ = create_str2int_tuple ("cubeful", FALSE); 
+            $$ = create_str2int_tuple (KEY_STR_CUBEFUL, FALSE); 
         }
     ;
 
@@ -354,9 +362,9 @@ sessionoptions:
     /* Empty */
         { 
             /* Setup the defaults */
-            STR2GV_MAPENTRY_CREATE("jacobyrule", fJacoby, G_TYPE_INT, 
+            STR2GV_MAPENTRY_CREATE(KEY_STR_JACOBYRULE, fJacoby, G_TYPE_INT, 
                                     int, jacobyentry);
-            STR2GV_MAPENTRY_CREATE("crawfordrule", TRUE, G_TYPE_INT, 
+            STR2GV_MAPENTRY_CREATE(KEY_STR_CRAWFORDRULE, TRUE, G_TYPE_INT, 
                                     int, crawfordentry);
 
             GList *defaults = 
@@ -375,10 +383,10 @@ evaloptions:
         { 
             /* Setup the defaults */
 
-            STR2GV_MAPENTRY_CREATE("jacobyrule", fJacoby, G_TYPE_INT, 
+            STR2GV_MAPENTRY_CREATE(KEY_STR_JACOBYRULE, fJacoby, G_TYPE_INT, 
                                     int, jacobyentry);
             
-            STR2GV_MAPENTRY_CREATE("crawfordrule", TRUE, G_TYPE_INT, 
+            STR2GV_MAPENTRY_CREATE(KEY_STR_CRAWFORDRULE, TRUE, G_TYPE_INT, 
                                     int, crawfordentry);
 
             GList *defaults = 
@@ -429,7 +437,7 @@ evalcommand:
     ;
         
 board:
-    FIBSBOARD EXTSTRING ':' EXTSTRING ':' board_elements endboard
+    FIBSBOARD E_STRING ':' E_STRING ':' board_elements endboard
         {
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, $4, gvstr1); 
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, $2, gvstr2); 
@@ -441,7 +449,7 @@ board:
     ;
     
 float_type:
-    EXTFLOAT 
+    E_FLOAT 
         { 
             GVALUE_CREATE(G_TYPE_DOUBLE, double, $1, gvfloat); 
             $$ = gvfloat; 
@@ -449,7 +457,7 @@ float_type:
     ;
 
 string_type:
-    EXTSTRING 
+    E_STRING 
         { 
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, $1, gvstr); 
             g_string_free ($1, TRUE); 
@@ -458,7 +466,7 @@ string_type:
     ;
 
 integer_type:
-    EXTINTEGER 
+    E_INTEGER 
         { 
             GVALUE_CREATE(G_TYPE_INT, int, $1, gvint); 
             $$ = gvint; 
@@ -466,7 +474,7 @@ integer_type:
     ;
 
 boolean_type:
-    EXTBOOLEAN 
+    E_BOOLEAN 
         { 
             GVALUE_CREATE(G_TYPE_INT, int, $1, gvint); 
             $$ = gvint; 
