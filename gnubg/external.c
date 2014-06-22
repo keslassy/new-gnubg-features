@@ -23,8 +23,6 @@
 
 #if HAVE_SOCKETS
 
-#define EXTERNAL_INTERFACE_VERSION "2"
-
 #include <signal.h>
 #include <glib.h>
 #include <glib/gstdio.h>
@@ -673,7 +671,9 @@ CommandExternal(char *sz)
 
                 switch (scanctx.ct) {
                 case COMMAND_VERSION:
-                    szResponse = g_strdup(EXTERNAL_INTERFACE_VERSION "\n");
+                    szResponse = g_strdup("Interface: " EXTERNAL_INTERFACE_VERSION "\n"
+                                           "RFBF: " RFBF_VERSION_SUPPORTED "\n"
+                                           "Software: " VERSION_STRING "\n");
                     break;
 
                 case COMMAND_NONE:

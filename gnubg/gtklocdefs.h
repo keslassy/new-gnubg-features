@@ -27,10 +27,6 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#if ! GLIB_CHECK_VERSION(2,28,0)
-extern void g_list_free_full(GList *list, GDestroyNotify free_func);
-#endif
-
 #if (USE_GTK)
 #include <gtk/gtk.h>
 

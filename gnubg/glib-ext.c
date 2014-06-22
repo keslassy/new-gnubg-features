@@ -26,8 +26,17 @@
 #include "glib-ext.h"
 
 GLIBEXT_DEFINE_BOXED_TYPE(GListBoxed, g_list_boxed, g_list_copy, g_list_gv_boxed_free)
-    GLIBEXT_DEFINE_BOXED_TYPE(GMapBoxed, g_map_boxed, g_list_copy, g_list_gv_boxed_free)
-    GLIBEXT_DEFINE_BOXED_TYPE(GMapEntryBoxed, g_mapentry_boxed, g_list_copy, g_list_gv_boxed_free)
+GLIBEXT_DEFINE_BOXED_TYPE(GMapBoxed, g_map_boxed, g_list_copy, g_list_gv_boxed_free)
+GLIBEXT_DEFINE_BOXED_TYPE(GMapEntryBoxed, g_mapentry_boxed, g_list_copy, g_list_gv_boxed_free)
+
+#if ! GLIB_CHECK_VERSION(2,28,0)
+void
+g_list_free_full(GList *list, GDestroyNotify free_func)
+{
+    g_list_foreach(list, (GFunc) free_func, NULL);
+    g_list_free(list);
+}
+#endif
 
 void
 g_value_unsetfree(GValue * gv)

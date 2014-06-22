@@ -40,6 +40,9 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#define EXTERNAL_INTERFACE_VERSION "2"
+#define RFBF_VERSION_SUPPORTED "0"
+
 typedef enum _cmdtype {
     COMMAND_NONE = 0,
     COMMAND_FIBSBOARD = 1,

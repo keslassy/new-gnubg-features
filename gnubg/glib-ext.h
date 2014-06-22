@@ -30,6 +30,10 @@
 #define GLIBEXT_MERGE(a,b)  a##b
 #define GLIBEXT_LABEL_(a,b) GLIBEXT_MERGE(a, b)
 
+#if ! GLIB_CHECK_VERSION(2,28,0)
+extern void g_list_free_full(GList *list, GDestroyNotify free_func);
+#endif
+
 typedef GList GMap;
 typedef GList GMapEntry;
 

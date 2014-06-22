@@ -24,15 +24,6 @@
 #include "gtkgame.h"
 #include "gtklocdefs.h"
 
-#if ! GLIB_CHECK_VERSION(2,28,0)
-void
-g_list_free_full(GList *list, GDestroyNotify free_func)
-{
-    g_list_foreach(list, (GFunc) free_func, NULL);
-    g_list_free(list);
-}
-#endif
-
 #if (USE_GTK)
 #include <gtk/gtk.h>
 
