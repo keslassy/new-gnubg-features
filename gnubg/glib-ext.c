@@ -42,7 +42,7 @@ str2gv_map_has_key(GMap * map, GString * key)
     int item;
 
     for (item = 0; item < g_list_length(map); item++) {
-        GString *cmpkey = g_value_get_gstring(g_list_nth_data(g_list_nth_data(map, item), 1));
+        GString *cmpkey = g_value_get_gstring(g_list_nth_data(g_value_get_boxed(g_list_nth_data(map, item)), 0));
         if (g_string_equal(cmpkey, key))
             return g_list_nth(map, item);
     }
