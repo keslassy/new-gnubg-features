@@ -150,9 +150,12 @@
 
 #define extcmd ext_get_extra(scanner)  
 
+int YY_PREFIX(get_column)  (void * yyscanner );
+void YY_PREFIX(set_column) (int column_no, void * yyscanner );
 extern int YY_PREFIX(lex) (YYSTYPE * yylval_param, scancontext *scanner);         
 extern scancontext *YY_PREFIX(get_extra) (void *yyscanner );
 extern void StartParse(void *scancontext);
+extern void yyerror(scancontext *scanner, const char *str);
 
 void yyerror(scancontext *scanner, const char *str)
 {
@@ -167,7 +170,7 @@ void yyerror(scancontext *scanner, const char *str)
 
 
 /* Line 268 of yacc.c  */
-#line 171 "external_y.c"
+#line 174 "external_y.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -198,11 +201,11 @@ void yyerror(scancontext *scanner, const char *str)
      EXIT = 259,
      DISABLED = 260,
      EXTVERSION = 261,
-     STRING = 262,
-     CHARACTER = 263,
-     INTEGER = 264,
-     FLOAT = 265,
-     BOOLEAN = 266,
+     EXTSTRING = 262,
+     EXTCHARACTER = 263,
+     EXTINTEGER = 264,
+     EXTFLOAT = 265,
+     EXTBOOLEAN = 266,
      FIBSBOARD = 267,
      FIBSBOARDEND = 268,
      EVALUATION = 269,
@@ -222,11 +225,11 @@ void yyerror(scancontext *scanner, const char *str)
 #define EXIT 259
 #define DISABLED 260
 #define EXTVERSION 261
-#define STRING 262
-#define CHARACTER 263
-#define INTEGER 264
-#define FLOAT 265
-#define BOOLEAN 266
+#define EXTSTRING 262
+#define EXTCHARACTER 263
+#define EXTINTEGER 264
+#define EXTFLOAT 265
+#define EXTBOOLEAN 266
 #define FIBSBOARD 267
 #define FIBSBOARDEND 268
 #define EVALUATION 269
@@ -248,7 +251,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 108 "external_y.y"
+#line 111 "external_y.y"
 
     gboolean bool;
     gchar character;
@@ -262,7 +265,7 @@ typedef union YYSTYPE
 
 
 /* Line 293 of yacc.c  */
-#line 266 "external_y.c"
+#line 269 "external_y.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -273,12 +276,12 @@ typedef union YYSTYPE
 /* Copy the second part of user declarations.  */
 
 /* Line 343 of yacc.c  */
-#line 119 "external_y.y"
+#line 122 "external_y.y"
 
 
 
 /* Line 343 of yacc.c  */
-#line 282 "external_y.c"
+#line 285 "external_y.c"
 
 #ifdef short
 # undef short
@@ -581,11 +584,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   166,   166,   172,   178,   184,   236,   244,   252,   264,
-     268,   273,   280,   284,   289,   296,   301,   306,   314,   319,
-     324,   329,   334,   339,   344,   352,   364,   372,   388,   393,
-     400,   414,   429,   441,   449,   458,   466,   474,   484,   484,
-     484,   484,   489,   496,   496,   501,   505,   510
+       0,   169,   169,   175,   181,   187,   239,   247,   255,   267,
+     271,   276,   283,   287,   292,   299,   304,   309,   317,   322,
+     327,   332,   337,   342,   347,   355,   367,   375,   391,   396,
+     403,   417,   432,   444,   452,   461,   469,   477,   487,   487,
+     487,   487,   492,   499,   499,   504,   508,   513
 };
 #endif
 
@@ -595,14 +598,15 @@ static const yytype_uint16 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "EOL", "EXIT", "DISABLED", "EXTVERSION",
-  "STRING", "CHARACTER", "INTEGER", "FLOAT", "BOOLEAN", "FIBSBOARD",
-  "FIBSBOARDEND", "EVALUATION", "CRAWFORDRULE", "JACOBYRULE", "CUBE",
-  "CUBEFUL", "CUBELESS", "DETERMINISTIC", "NOISE", "PLIES", "PRUNE", "':'",
-  "'('", "')'", "','", "$accept", "commands", "command", "board_element",
-  "board_elements", "endboard", "sessionoption", "evaloption",
-  "sessionoptions", "evaloptions", "boardcommand", "evalcommand", "board",
-  "float_type", "string_type", "integer_type", "boolean_type", "list_type",
-  "basic_types", "list", "list_element", "list_elements", 0
+  "EXTSTRING", "EXTCHARACTER", "EXTINTEGER", "EXTFLOAT", "EXTBOOLEAN",
+  "FIBSBOARD", "FIBSBOARDEND", "EVALUATION", "CRAWFORDRULE", "JACOBYRULE",
+  "CUBE", "CUBEFUL", "CUBELESS", "DETERMINISTIC", "NOISE", "PLIES",
+  "PRUNE", "':'", "'('", "')'", "','", "$accept", "commands", "command",
+  "board_element", "board_elements", "endboard", "sessionoption",
+  "evaloption", "sessionoptions", "evaloptions", "boardcommand",
+  "evalcommand", "board", "float_type", "string_type", "integer_type",
+  "boolean_type", "list_type", "basic_types", "list", "list_element",
+  "list_elements", 0
 };
 #endif
 
@@ -1263,185 +1267,185 @@ yydestruct (yymsg, yytype, yyvaluep, scanner)
 
   switch (yytype)
     {
-      case 7: /* "STRING" */
+      case 7: /* "EXTSTRING" */
 
 /* Line 1391 of yacc.c  */
-#line 158 "external_y.y"
+#line 161 "external_y.y"
 	{ if ((yyvaluep->str)) g_string_free((yyvaluep->str), TRUE); };
 
 /* Line 1391 of yacc.c  */
-#line 1274 "external_y.c"
+#line 1278 "external_y.c"
 	break;
       case 30: /* "command" */
 
 /* Line 1391 of yacc.c  */
-#line 161 "external_y.y"
+#line 164 "external_y.y"
 	{ if ((yyvaluep->cmd)) { g_free((yyvaluep->cmd)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1283 "external_y.c"
+#line 1287 "external_y.c"
 	break;
       case 31: /* "board_element" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1292 "external_y.c"
+#line 1296 "external_y.c"
 	break;
       case 32: /* "board_elements" */
 
 /* Line 1391 of yacc.c  */
-#line 159 "external_y.y"
+#line 162 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1301 "external_y.c"
+#line 1305 "external_y.c"
 	break;
       case 34: /* "sessionoption" */
 
 /* Line 1391 of yacc.c  */
-#line 159 "external_y.y"
+#line 162 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1310 "external_y.c"
+#line 1314 "external_y.c"
 	break;
       case 35: /* "evaloption" */
 
 /* Line 1391 of yacc.c  */
-#line 159 "external_y.y"
+#line 162 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1319 "external_y.c"
+#line 1323 "external_y.c"
 	break;
       case 36: /* "sessionoptions" */
 
 /* Line 1391 of yacc.c  */
-#line 159 "external_y.y"
+#line 162 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1328 "external_y.c"
+#line 1332 "external_y.c"
 	break;
       case 37: /* "evaloptions" */
 
 /* Line 1391 of yacc.c  */
-#line 159 "external_y.y"
+#line 162 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1337 "external_y.c"
+#line 1341 "external_y.c"
 	break;
       case 38: /* "boardcommand" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1346 "external_y.c"
+#line 1350 "external_y.c"
 	break;
       case 39: /* "evalcommand" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1355 "external_y.c"
+#line 1359 "external_y.c"
 	break;
       case 40: /* "board" */
 
 /* Line 1391 of yacc.c  */
-#line 159 "external_y.y"
+#line 162 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1364 "external_y.c"
+#line 1368 "external_y.c"
 	break;
       case 41: /* "float_type" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1373 "external_y.c"
+#line 1377 "external_y.c"
 	break;
       case 42: /* "string_type" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1382 "external_y.c"
+#line 1386 "external_y.c"
 	break;
       case 43: /* "integer_type" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1391 "external_y.c"
+#line 1395 "external_y.c"
 	break;
       case 44: /* "boolean_type" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1400 "external_y.c"
+#line 1404 "external_y.c"
 	break;
       case 45: /* "list_type" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1409 "external_y.c"
+#line 1413 "external_y.c"
 	break;
       case 46: /* "basic_types" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1418 "external_y.c"
+#line 1422 "external_y.c"
 	break;
       case 47: /* "list" */
 
 /* Line 1391 of yacc.c  */
-#line 159 "external_y.y"
+#line 162 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1427 "external_y.c"
+#line 1431 "external_y.c"
 	break;
       case 48: /* "list_element" */
 
 /* Line 1391 of yacc.c  */
-#line 160 "external_y.y"
+#line 163 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1436 "external_y.c"
+#line 1440 "external_y.c"
 	break;
       case 49: /* "list_elements" */
 
 /* Line 1391 of yacc.c  */
-#line 159 "external_y.y"
+#line 162 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1445 "external_y.c"
+#line 1449 "external_y.c"
 	break;
 
       default:
@@ -1743,7 +1747,7 @@ yyreduce:
         case 2:
 
 /* Line 1806 of yacc.c  */
-#line 167 "external_y.y"
+#line 170 "external_y.y"
     {
         extcmd->ct = COMMAND_NONE;
         YYACCEPT;
@@ -1753,7 +1757,7 @@ yyreduce:
   case 3:
 
 /* Line 1806 of yacc.c  */
-#line 173 "external_y.y"
+#line 176 "external_y.y"
     {
             extcmd->ct = COMMAND_VERSION;
             YYACCEPT;
@@ -1763,7 +1767,7 @@ yyreduce:
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 179 "external_y.y"
+#line 182 "external_y.y"
     {
             extcmd->ct = COMMAND_EXIT;
             YYACCEPT;
@@ -1773,7 +1777,7 @@ yyreduce:
   case 5:
 
 /* Line 1806 of yacc.c  */
-#line 185 "external_y.y"
+#line 188 "external_y.y"
     {
             if ((yyvsp[(1) - (2)].cmd)->cmdType == COMMAND_LIST) {
                 g_value_unsetfree((yyvsp[(1) - (2)].cmd)->pvData);
@@ -1827,7 +1831,7 @@ yyreduce:
   case 6:
 
 /* Line 1806 of yacc.c  */
-#line 237 "external_y.y"
+#line 240 "external_y.y"
     {
             commandinfo *cmdInfo = g_malloc0(sizeof(commandinfo));
             cmdInfo->pvData = (yyvsp[(1) - (1)].gv);
@@ -1839,7 +1843,7 @@ yyreduce:
   case 7:
 
 /* Line 1806 of yacc.c  */
-#line 245 "external_y.y"
+#line 248 "external_y.y"
     {
             commandinfo *cmdInfo = g_malloc0(sizeof(commandinfo));
             cmdInfo->pvData = (yyvsp[(1) - (1)].gv);
@@ -1851,7 +1855,7 @@ yyreduce:
   case 8:
 
 /* Line 1806 of yacc.c  */
-#line 253 "external_y.y"
+#line 256 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_BOXED_GLIST_GV, boxed, (yyvsp[(2) - (2)].list), gvptr);
             g_list_free((yyvsp[(2) - (2)].list));
@@ -1865,7 +1869,7 @@ yyreduce:
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 269 "external_y.y"
+#line 272 "external_y.y"
     { 
             (yyval.list) = g_list_prepend(NULL, (yyvsp[(1) - (1)].gv)); 
         }
@@ -1874,7 +1878,7 @@ yyreduce:
   case 11:
 
 /* Line 1806 of yacc.c  */
-#line 274 "external_y.y"
+#line 277 "external_y.y"
     { 
             (yyval.list) = g_list_prepend((yyvsp[(1) - (3)].list), (yyvsp[(3) - (3)].gv)); 
         }
@@ -1883,7 +1887,7 @@ yyreduce:
   case 13:
 
 /* Line 1806 of yacc.c  */
-#line 285 "external_y.y"
+#line 288 "external_y.y"
     { 
             (yyval.list) = create_str2gvalue_tuple ("jacobyrule", (yyvsp[(2) - (2)].gv)); 
         }
@@ -1892,7 +1896,7 @@ yyreduce:
   case 14:
 
 /* Line 1806 of yacc.c  */
-#line 290 "external_y.y"
+#line 293 "external_y.y"
     { 
             (yyval.list) = create_str2gvalue_tuple ("crawfordrule", (yyvsp[(2) - (2)].gv));
         }
@@ -1901,7 +1905,7 @@ yyreduce:
   case 15:
 
 /* Line 1806 of yacc.c  */
-#line 297 "external_y.y"
+#line 300 "external_y.y"
     { 
             (yyval.list) = create_str2gvalue_tuple ("plies", (yyvsp[(2) - (2)].gv)); 
         }
@@ -1910,7 +1914,7 @@ yyreduce:
   case 16:
 
 /* Line 1806 of yacc.c  */
-#line 302 "external_y.y"
+#line 305 "external_y.y"
     {
             (yyval.list) = create_str2gvalue_tuple ("noise", (yyvsp[(2) - (2)].gv)); 
         }
@@ -1919,7 +1923,7 @@ yyreduce:
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 307 "external_y.y"
+#line 310 "external_y.y"
     {
             double doubleval = g_value_get_int((yyvsp[(2) - (2)].gv)) / 10000.0L;
             GVALUE_CREATE(G_TYPE_DOUBLE, double, doubleval, gvdouble); 
@@ -1931,7 +1935,7 @@ yyreduce:
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 315 "external_y.y"
+#line 318 "external_y.y"
     { 
             (yyval.list) = create_str2int_tuple ("prune", TRUE);
         }
@@ -1940,7 +1944,7 @@ yyreduce:
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 320 "external_y.y"
+#line 323 "external_y.y"
     { 
             (yyval.list) = create_str2gvalue_tuple ("prune", (yyvsp[(2) - (2)].gv));
         }
@@ -1949,7 +1953,7 @@ yyreduce:
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 325 "external_y.y"
+#line 328 "external_y.y"
     { 
             (yyval.list) = create_str2int_tuple ("deterministic", TRUE);
         }
@@ -1958,7 +1962,7 @@ yyreduce:
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 330 "external_y.y"
+#line 333 "external_y.y"
     { 
             (yyval.list) = create_str2gvalue_tuple ("deterministic", (yyvsp[(2) - (2)].gv));
         }
@@ -1967,7 +1971,7 @@ yyreduce:
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 335 "external_y.y"
+#line 338 "external_y.y"
     { 
             (yyval.list) = create_str2gvalue_tuple ("cubeful", (yyvsp[(2) - (2)].gv));
         }
@@ -1976,7 +1980,7 @@ yyreduce:
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 340 "external_y.y"
+#line 343 "external_y.y"
     { 
             (yyval.list) = create_str2int_tuple ("cubeful", TRUE); 
         }
@@ -1985,7 +1989,7 @@ yyreduce:
   case 24:
 
 /* Line 1806 of yacc.c  */
-#line 345 "external_y.y"
+#line 348 "external_y.y"
     { 
             (yyval.list) = create_str2int_tuple ("cubeful", FALSE); 
         }
@@ -1994,7 +1998,7 @@ yyreduce:
   case 25:
 
 /* Line 1806 of yacc.c  */
-#line 352 "external_y.y"
+#line 355 "external_y.y"
     { 
             /* Setup the defaults */
             STR2GV_MAPENTRY_CREATE("jacobyrule", fJacoby, G_TYPE_INT, 
@@ -2011,7 +2015,7 @@ yyreduce:
   case 26:
 
 /* Line 1806 of yacc.c  */
-#line 365 "external_y.y"
+#line 368 "external_y.y"
     { 
             STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
         }
@@ -2020,7 +2024,7 @@ yyreduce:
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 372 "external_y.y"
+#line 375 "external_y.y"
     { 
             /* Setup the defaults */
 
@@ -2041,7 +2045,7 @@ yyreduce:
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 389 "external_y.y"
+#line 392 "external_y.y"
     { 
             STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
         }
@@ -2050,7 +2054,7 @@ yyreduce:
   case 29:
 
 /* Line 1806 of yacc.c  */
-#line 394 "external_y.y"
+#line 397 "external_y.y"
     { 
             STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
         }
@@ -2059,7 +2063,7 @@ yyreduce:
   case 30:
 
 /* Line 1806 of yacc.c  */
-#line 401 "external_y.y"
+#line 404 "external_y.y"
     {
             GVALUE_CREATE(G_TYPE_BOXED_GLIST_GV, boxed, (yyvsp[(1) - (2)].list), gvptr1);
             GVALUE_CREATE(G_TYPE_BOXED_MAP_GV, boxed, (yyvsp[(2) - (2)].list), gvptr2);
@@ -2075,7 +2079,7 @@ yyreduce:
   case 31:
 
 /* Line 1806 of yacc.c  */
-#line 415 "external_y.y"
+#line 418 "external_y.y"
     {
             GVALUE_CREATE(G_TYPE_BOXED_GLIST_GV, boxed, (yyvsp[(3) - (4)].list), gvptr1);
             GVALUE_CREATE(G_TYPE_BOXED_MAP_GV, boxed, (yyvsp[(4) - (4)].list), gvptr2);
@@ -2092,7 +2096,7 @@ yyreduce:
   case 32:
 
 /* Line 1806 of yacc.c  */
-#line 430 "external_y.y"
+#line 433 "external_y.y"
     {
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, (yyvsp[(4) - (7)].str), gvstr1); 
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, (yyvsp[(2) - (7)].str), gvstr2); 
@@ -2106,7 +2110,7 @@ yyreduce:
   case 33:
 
 /* Line 1806 of yacc.c  */
-#line 442 "external_y.y"
+#line 445 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_DOUBLE, double, (yyvsp[(1) - (1)].floatnum), gvfloat); 
             (yyval.gv) = gvfloat; 
@@ -2116,7 +2120,7 @@ yyreduce:
   case 34:
 
 /* Line 1806 of yacc.c  */
-#line 450 "external_y.y"
+#line 453 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, (yyvsp[(1) - (1)].str), gvstr); 
             g_string_free ((yyvsp[(1) - (1)].str), TRUE); 
@@ -2127,7 +2131,7 @@ yyreduce:
   case 35:
 
 /* Line 1806 of yacc.c  */
-#line 459 "external_y.y"
+#line 462 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_INT, int, (yyvsp[(1) - (1)].intnum), gvint); 
             (yyval.gv) = gvint; 
@@ -2137,7 +2141,7 @@ yyreduce:
   case 36:
 
 /* Line 1806 of yacc.c  */
-#line 467 "external_y.y"
+#line 470 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_INT, int, (yyvsp[(1) - (1)].bool), gvint); 
             (yyval.gv) = gvint; 
@@ -2147,7 +2151,7 @@ yyreduce:
   case 37:
 
 /* Line 1806 of yacc.c  */
-#line 475 "external_y.y"
+#line 478 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_BOXED_GLIST_GV, boxed, (yyvsp[(1) - (1)].list), gvptr);
             g_list_free((yyvsp[(1) - (1)].list));
@@ -2158,7 +2162,7 @@ yyreduce:
   case 42:
 
 /* Line 1806 of yacc.c  */
-#line 490 "external_y.y"
+#line 493 "external_y.y"
     { 
             (yyval.list) = g_list_reverse((yyvsp[(2) - (3)].list));
         }
@@ -2167,7 +2171,7 @@ yyreduce:
   case 45:
 
 /* Line 1806 of yacc.c  */
-#line 501 "external_y.y"
+#line 504 "external_y.y"
     { 
             (yyval.list) = NULL; 
         }
@@ -2176,7 +2180,7 @@ yyreduce:
   case 46:
 
 /* Line 1806 of yacc.c  */
-#line 506 "external_y.y"
+#line 509 "external_y.y"
     { 
             (yyval.list) = g_list_prepend(NULL, (yyvsp[(1) - (1)].gv));
         }
@@ -2185,7 +2189,7 @@ yyreduce:
   case 47:
 
 /* Line 1806 of yacc.c  */
-#line 511 "external_y.y"
+#line 514 "external_y.y"
     { 
             (yyval.list) = g_list_prepend((yyvsp[(1) - (3)].list), (yyvsp[(3) - (3)].gv)); 
         }
@@ -2194,7 +2198,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 2198 "external_y.c"
+#line 2202 "external_y.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2425,7 +2429,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 515 "external_y.y"
+#line 518 "external_y.y"
 
 
 #ifdef EXTERNAL_TEST

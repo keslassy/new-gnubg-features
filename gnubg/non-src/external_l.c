@@ -694,11 +694,11 @@ static yyconst flex_int16_t yy_chk[698] =
 #define EXTERNAL_Y_H
 #include "external_y.h"
 
-#ifndef _MSC_VER
-extern int fileno(FILE *stream); /* declared in stdio.h (forgotten by lex) */
-#endif
-void escapes(const char *cp, char *tp);
+extern int ext_get_column (yyscan_t yyscanner );
+extern void ext_set_column (int column_no, yyscan_t yyscanner );
 extern int ext_parse(yyscan_t scanner);
+
+void escapes(const char *cp, char *tp);
 
 #define PROCESS_YYTEXT_STRING \
         if (yytext[0] == '\'' || yytext[0] == '\"') { \
@@ -1082,7 +1082,7 @@ case 6:
 YY_RULE_SETUP
 #line 79 "external_l.l"
 {   yylval->bool = 1; 
-                            return (BOOLEAN);
+                            return (EXTBOOLEAN);
                         }
 	YY_BREAK
 case 7:
@@ -1090,7 +1090,7 @@ case 7:
 YY_RULE_SETUP
 #line 82 "external_l.l"
 {   yylval->bool = 0; 
-                            return (BOOLEAN);
+                            return (EXTBOOLEAN);
                         }
 	YY_BREAK
 case 8:
@@ -1098,7 +1098,7 @@ YY_RULE_SETUP
 #line 87 "external_l.l"
 {
                             PROCESS_YYTEXT_STRING;
-                            return STRING;
+                            return EXTSTRING;
                         }
 	YY_BREAK
 case 9:
@@ -1106,14 +1106,14 @@ YY_RULE_SETUP
 #line 92 "external_l.l"
 {
                             yylval->floatnum = atof(yytext);
-                            return FLOAT;
+                            return EXTFLOAT;
                         }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 97 "external_l.l"
 {   yylval->intnum = atoi(yytext); 
-                            return INTEGER; 
+                            return EXTINTEGER; 
                         }
 	YY_BREAK
 case 11:
@@ -1199,7 +1199,7 @@ YY_RULE_SETUP
 {
                             PROCESS_YYTEXT_STRING;
                             BEGIN(SBOARDP2);
-                            return STRING;
+                            return EXTSTRING;
                         }
 	YY_BREAK
 case 24:
@@ -1208,7 +1208,7 @@ YY_RULE_SETUP
 {
                             PROCESS_YYTEXT_STRING;
                             BEGIN(VALLIST);
-                            return STRING;
+                            return EXTSTRING;
                         }
 	YY_BREAK
 case 25:
@@ -1232,7 +1232,7 @@ YY_RULE_SETUP
 #line 141 "external_l.l"
 {   BEGIN(INITIAL);
                             yylval->character = yytext[0]; 
-                            return (CHARACTER);
+                            return (EXTCHARACTER);
                         }
 	YY_BREAK
 case 27:

@@ -41,11 +41,11 @@
      EXIT = 259,
      DISABLED = 260,
      EXTVERSION = 261,
-     STRING = 262,
-     CHARACTER = 263,
-     INTEGER = 264,
-     FLOAT = 265,
-     BOOLEAN = 266,
+     EXTSTRING = 262,
+     EXTCHARACTER = 263,
+     EXTINTEGER = 264,
+     EXTFLOAT = 265,
+     EXTBOOLEAN = 266,
      FIBSBOARD = 267,
      FIBSBOARDEND = 268,
      EVALUATION = 269,
@@ -65,11 +65,11 @@
 #define EXIT 259
 #define DISABLED 260
 #define EXTVERSION 261
-#define STRING 262
-#define CHARACTER 263
-#define INTEGER 264
-#define FLOAT 265
-#define BOOLEAN 266
+#define EXTSTRING 262
+#define EXTCHARACTER 263
+#define EXTINTEGER 264
+#define EXTFLOAT 265
+#define EXTBOOLEAN 266
 #define FIBSBOARD 267
 #define FIBSBOARDEND 268
 #define EVALUATION 269
@@ -91,7 +91,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 108 "external_y.y"
+#line 111 "external_y.y"
 
     gboolean bool;
     gchar character;
