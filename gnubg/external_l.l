@@ -27,11 +27,11 @@
 #define EXTERNAL_Y_H
 #include "external_y.h"
 
-#ifndef _MSC_VER
-extern int fileno(FILE *stream); /* declared in stdio.h (forgotten by lex) */
-#endif
-void escapes(const char *cp, char *tp);
+extern int ext_get_column (yyscan_t yyscanner );
+extern void ext_set_column (int column_no, yyscan_t yyscanner );
 extern int ext_parse(yyscan_t scanner);
+
+void escapes(const char *cp, char *tp);
 
 #define PROCESS_YYTEXT_STRING \
         if (yytext[0] == '\'' || yytext[0] == '\"') { \
@@ -77,25 +77,25 @@ evaluation{EOT}         {   return EVALUATION; }
 fibsboard{EOT}          {   return FIBSBOARD; }
 
 <*>(yes|on|true){EOT}   {   yylval->bool = 1; 
-                            return (BOOLEAN);
+                            return (EXTBOOLEAN);
                         }
 <*>(no|off|false){EOT}  {   yylval->bool = 0; 
-                            return (BOOLEAN);
+                            return (EXTBOOLEAN);
                         }
 
 
 {QSTRING}               {
                             PROCESS_YYTEXT_STRING;
-                            return STRING;
+                            return EXTSTRING;
                         }
 		
 <*>{FLOATSTR}           {
                             yylval->floatnum = atof(yytext);
-                            return FLOAT;
+                            return EXTFLOAT;
                         }
 		
 <*>{SIGNEDINTSTR}       {   yylval->intnum = atoi(yytext); 
-                            return INTEGER; 
+                            return EXTINTEGER; 
                         }
                         
 [\[\],\(\)\{\}]         return (yytext[0]);
@@ -124,12 +124,12 @@ prune{EOT}              {   return PRUNE; }
 <SBOARDP1>{PLAYERSTR}|{QSTRING}   {
                             PROCESS_YYTEXT_STRING;
                             BEGIN(SBOARDP2);
-                            return STRING;
+                            return EXTSTRING;
                         }
 <SBOARDP2>{PLAYERSTR}|{QSTRING}   {
                             PROCESS_YYTEXT_STRING;
                             BEGIN(VALLIST);
-                            return STRING;
+                            return EXTSTRING;
                         }
 
 <*>[\t\r\n ]+             ; /* ignore whitespace */
@@ -140,7 +140,7 @@ prune{EOT}              {   return PRUNE; }
 
 <*>.                    {   BEGIN(INITIAL);
                             yylval->character = yytext[0]; 
-                            return (CHARACTER);
+                            return (EXTCHARACTER);
                         }
 
 %%

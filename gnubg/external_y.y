@@ -81,9 +81,12 @@
 
 #define extcmd ext_get_extra(scanner)  
 
+int YY_PREFIX(get_column)  (void * yyscanner );
+void YY_PREFIX(set_column) (int column_no, void * yyscanner );
 extern int YY_PREFIX(lex) (YYSTYPE * yylval_param, scancontext *scanner);         
 extern scancontext *YY_PREFIX(get_extra) (void *yyscanner );
 extern void StartParse(void *scancontext);
+extern void yyerror(scancontext *scanner, const char *str);
 
 void yyerror(scancontext *scanner, const char *str)
 {
@@ -96,8 +99,8 @@ void yyerror(scancontext *scanner, const char *str)
 #endif
 
 %}
+%pure-parser
 %file-prefix "y"
-%define api.pure true
 %lex-param   {void *scanner}
 %parse-param {scancontext *scanner}
      
@@ -120,16 +123,16 @@ void yyerror(scancontext *scanner, const char *str)
 %}
 
 %token EOL EXIT DISABLED EXTVERSION
-%token STRING CHARACTER INTEGER FLOAT BOOLEAN
+%token EXTSTRING EXTCHARACTER EXTINTEGER EXTFLOAT EXTBOOLEAN
 %token FIBSBOARD FIBSBOARDEND EVALUATION
 %token CRAWFORDRULE JACOBYRULE
 %token CUBE CUBEFUL CUBELESS DETERMINISTIC NOISE PLIES PRUNE
 
-%type <bool>        BOOLEAN
-%type <str>         STRING
-%type <character>   CHARACTER
-%type <intnum>      INTEGER
-%type <floatnum>    FLOAT
+%type <bool>        EXTBOOLEAN
+%type <str>         EXTSTRING
+%type <character>   EXTCHARACTER
+%type <intnum>      EXTINTEGER
+%type <floatnum>    EXTFLOAT
 
 %type <gv>          float_type
 %type <gv>          integer_type
@@ -426,7 +429,7 @@ evalcommand:
     ;
         
 board:
-    FIBSBOARD STRING ':' STRING ':' board_elements endboard
+    FIBSBOARD EXTSTRING ':' EXTSTRING ':' board_elements endboard
         {
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, $4, gvstr1); 
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, $2, gvstr2); 
@@ -438,7 +441,7 @@ board:
     ;
     
 float_type:
-    FLOAT 
+    EXTFLOAT 
         { 
             GVALUE_CREATE(G_TYPE_DOUBLE, double, $1, gvfloat); 
             $$ = gvfloat; 
@@ -446,7 +449,7 @@ float_type:
     ;
 
 string_type:
-    STRING 
+    EXTSTRING 
         { 
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, $1, gvstr); 
             g_string_free ($1, TRUE); 
@@ -455,7 +458,7 @@ string_type:
     ;
 
 integer_type:
-    INTEGER 
+    EXTINTEGER 
         { 
             GVALUE_CREATE(G_TYPE_INT, int, $1, gvint); 
             $$ = gvint; 
@@ -463,7 +466,7 @@ integer_type:
     ;
 
 boolean_type:
-    BOOLEAN 
+    EXTBOOLEAN 
         { 
             GVALUE_CREATE(G_TYPE_INT, int, $1, gvint); 
             $$ = gvint; 
