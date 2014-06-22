@@ -27,6 +27,15 @@
 #if (USE_GTK)
 #include <gtk/gtk.h>
 
+#if ! GTK_CHECK_VERSION(2,28,0)
+void
+g_list_free_full(GList *list, GDestroyNotify free_func)
+{
+    g_list_foreach(list, (GFunc) free_func, NULL);
+    g_list_free(list);
+}
+#endif
+
 #if ! GTK_CHECK_VERSION(2,22,0)
 gint
 gdk_visual_get_depth(GdkVisual * visual)
