@@ -480,7 +480,7 @@ player ap[2] = {
 
 char default_names[2][31] = { "gnubg", "user" };
 
-char aliases[64] = "";
+char aliases[256] = "";
 
 /* Usage strings */
 static char szDICE[] = N_("<die> <die>"),

@@ -795,7 +795,6 @@ CommandSetCubeCentre(char *UNUSED(sz))
 extern void
 CommandSetCubeOwner(char *sz)
 {
-
     moverecord *pmr;
 
     int i;
@@ -1617,10 +1616,10 @@ CommandSetDefaultNames(char *sz)
 extern void
 CommandSetAliases(char *sz)
 {
-        if (strlen(sz) > 63)
-            outputl(_("Aliases list limited to 63 characters, truncating.\n"));
+        if (strlen(sz) >= sizeof(aliases) )
+            outputf("%s %lu %s.\n", _("Aliases list limited to"), sizeof(aliases)-1, _("characters, truncating"));
 
-	strncpy(aliases, sz, 63);
+	strncpy(aliases, sz, sizeof(aliases)-1);
 
     outputf(_("Aliases for player 1 when importing MAT files set to \"%s\".\n "), aliases);
 }

@@ -385,7 +385,7 @@ typedef const movefilter (*ConstTmoveFilter)[MAX_FILTER_PLIES];
 extern TmoveFilter *GetEvalMoveFilter(void);
 extern player ap[2];
 extern char default_names[2][31];
-extern char aliases[64];
+extern char aliases[256];
 extern rolloutcontext rcRollout;
 extern skilltype TutorSkill;
 extern statcontext scMatch;
