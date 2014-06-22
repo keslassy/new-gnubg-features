@@ -25,6 +25,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include "glib-ext.h"
 
 #define GLIBEXT_MERGE(a,b)  a##b
 #define GLIBEXT_LABEL_(a,b) GLIBEXT_MERGE(a, b)

@@ -1,5 +1,10 @@
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 
+	* gtklocdefs.c, gtklocdefs.h, glib-ext.h: add g_list_free_full 
+	function for environments using glib < 2.28.
+
+2014-06-21  Michael Petch  <mpetch@gnubg.org>
+
 	* drawboard.c, drawboard.h, external.c, external.h, external_l.l,
 	  external_y.y, non-src/external_l.c, non-src/external_y.c, 
 	  non-src/external_y.h	
