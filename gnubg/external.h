@@ -37,14 +37,57 @@
 #include <winsock2.h>
 #endif                          /* #ifndef WIN32 */
 
+#include <glib.h>
+#include <glib-object.h>
+
 typedef enum _cmdtype {
     COMMAND_NONE = 0,
     COMMAND_FIBSBOARD = 1,
-    COMMAND_EVALUATION = 2
+    COMMAND_EVALUATION = 2,
+    COMMAND_EXIT = 3,
+    COMMAND_VERSION = 4,
+    COMMAND_LIST = 5
 } cmdtype;
 
+typedef struct _commandinfo {
+    cmdtype cmdType;
+    void *pvData;
+} commandinfo;
 
-typedef struct _extcmd {
+typedef struct _FIBSBoardInfo {
+    /* These must be in the same order of the fibs board string definition */
+    int nMatchTo;
+    int nScore;
+    int nScoreOpp;
+    int anFIBSBoard[26];
+    int nTurn;
+    int anDice[2];
+    int anOppDice[2];
+    int nCube;
+    int fCanDouble;
+    int fOppCanDouble;
+    int fDoubled;
+    int nColor;
+    int nDirection;
+    int fNonCrawford;
+    int fPostCrawford;
+    int unused[8];
+    int nVersion;
+    int padding[51];
+
+    /* These must be last */
+    GString *gsName;
+    GString *gsOpp;
+} FIBSBoardInfo;
+
+typedef struct _scancontext {
+    /* scanner ptr must be first element in structure */
+    void *scanner;
+    void (*ExtErrorHandler) (struct _scancontext *, const char *);
+    int fError;
+    char *szError;
+
+    /* command type */
     cmdtype ct;
 
     /* evalcontext */
@@ -55,12 +98,20 @@ typedef struct _extcmd {
     int fUsePrune;
 
     /* session rules */
-    int fCrawfordRule;
     int fJacobyRule;
+    int fCrawfordRule;
 
     /* fibs board */
-    char *szFIBSBoard;
-} extcmd;
+    union {
+        FIBSBoardInfo bi;
+        int anList[50];
+    };
+} scancontext;
+
+/* Stuff for the yacc/lex parser */
+extern void ExtStartParse(void *scanner, const char *szCommand);
+extern int ExtInitParse(void **scancontext);
+extern void ExtDestroyParse(void *scancontext);
 
 extern int ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz);
 extern int ExternalRead(int h, char *pch, size_t cch);
@@ -71,10 +122,6 @@ extern void OutputWin32SocketError(const char *action);
 #else
 #define SockErr outputerr
 #endif
-
-/* Parser functions */
-
-extern void (*ExtErrorHandler) (const char *szMessage, const char *szNear, const int fParseError);
 
 #endif                          /* #if HAVE_SOCKETS */
 

@@ -1,5 +1,26 @@
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 
+	* drawboard.c, drawboard.h, external.c, external.h, external_l.l,
+	  external_y.y, non-src/external_l.c, non-src/external_y.c, 
+	  non-src/external_y.h	
+	Replace the external interface with a reentrant version that is
+	more extensible for storing more complex datatypes in the future.
+	Yacc will no longer compile, as it uses Bison extensions. The
+	external interface is compatible with the previous version although
+	the error messages have changed. Added new command "quit" that allows
+	a remote session to close the connection. A new "Version" command will
+	return the version of the external interface. The "Noise" option was
+	broken. Noise can work with an integer (divide by 10000 to get a
+	noise value). Noise also supports a float type where the value
+	represents the actual noise value. The evaluation and session options 
+	can now appear in any order. Player names can now be quoted strings.
+	When a remote session is connected a single control-c rather than 2 
+	will return to the gnubg command line. A bug that made a blank line
+	execute the previous command has been fixed. Now an error message is
+	displayed.
+
+2014-06-21  Michael Petch  <mpetch@gnubg.org>
+
 	* +glib-ext.c, +glib-ext.h, Makefile.am Makefile.w32: Add GLIB 
 	utility functions and macros to provide extra list functionality and 
 	string to GValue maps.

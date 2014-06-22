@@ -23,6 +23,7 @@
 #define DRAWBOARD_H
 
 #include "gnubg-types.h"
+#include "external.h"
 
 extern int fClockwise;          /* Player 1 moves clockwise */
 
@@ -40,9 +41,17 @@ extern char *FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
                        int nScore, int nOpponent, int nDice0, int nDice1,
                        int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers);
 /* Read a FIBS "boardstyle 3" description from pch. */
-extern int ParseFIBSBoard(char *pch, TanBoard anBoard,
-                          char *szPlayer, char *szOpp, int *pnMatchTo,
-                          int *pnScore, int *pnScoreOpponent,
-                          int anDice[2], int *pnCube, int *pfCubeOwner, int *pfDoubled, int *pfCrawford);
+extern int ProcessFIBSBoardString(char *pch, TanBoard anBoard,
+                                  char *szPlayer, char *szOpp, int *pnMatchTo,
+                                  int *pnScore, int *pnScoreOpponent,
+                                  int anDice[2], int *pnCube, int *pfCubeOwner, int *pfDoubled, int *pfCrawford);
+
+/* Process a board info structure from external interface */
+extern int ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, TanBoard anBoard,
+                                char *szPlayer, char *szOpp, int *pnMatchTo,
+                                int *pnScore, int *pnScoreOpponent,
+                                int anDice[2], int *pnCube, int *pfCubeOwner, int *pfDoubled, int *pfCrawford);
+
+extern int ParseFIBSBoardString(char *pch, FIBSBoardInfo * brdInfo);
 
 #endif

@@ -23,6 +23,8 @@
 
 #if HAVE_SOCKETS
 
+#define EXTERNAL_INTERFACE_VERSION "2"
+
 #include <signal.h>
 #include <glib.h>
 #include <glib/gstdio.h>
@@ -106,13 +108,6 @@
 #include "rollout.h"
 
 #if HAVE_SOCKETS
-/* Stuff for the yacc/lex parser */
-
-extern extcmd ec;
-static int fError = FALSE;
-static char *szError = NULL;
-extern void ExtStartParse(const char *s);
-
 
 #if defined(AF_UNIX) && !defined(AF_LOCAL)
 #define AF_LOCAL AF_UNIX
@@ -204,7 +199,7 @@ ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz)
 
         /* yuck... there's no portable way to obtain the necessary
          * sockaddr_un size, but this is a conservative estimate */
-        psun = malloc(*pcb = 16 + (int)strlen(sz));
+        psun = malloc(*pcb = 16 + (int) strlen(sz));
 
         psun->sun_family = AF_LOCAL;
         strcpy(psun->sun_path, sz);
@@ -249,7 +244,7 @@ ExternalRead(int h, char *pch, size_t cch)
         ProcessEvents();
 
         if (fInterrupt)
-            return -1;
+            return -2;
 
 #ifndef WIN32
         PortableSignal(SIGPIPE, SIG_IGN, &sh, FALSE);
@@ -349,33 +344,50 @@ ExternalWrite(int h, char *pch, size_t cch)
 
 #if HAVE_SOCKETS
 static void
-ErrorHandler(const char *szMessage, const char *szNear, const int UNUSED(fParseError))
+unset_scan_context(scancontext * pScanCtx, int bFreeScanner)
 {
+    if (pScanCtx->bi.gsName)
+        g_string_free(pScanCtx->bi.gsName, TRUE);
+    if (pScanCtx->bi.gsOpp)
+        g_string_free(pScanCtx->bi.gsOpp, TRUE);
+    if (pScanCtx->szError)
+        g_free(pScanCtx->szError);
 
-    fError = TRUE;
+    pScanCtx->bi.gsName = NULL;
+    pScanCtx->bi.gsOpp = NULL;
+    pScanCtx->szError = NULL;
+    pScanCtx->fError = 0;
 
-    g_free(szError);
-    szError = g_strdup_printf("Error (%s) near '%s'\n", szMessage, szNear);
-
+    if (bFreeScanner) {
+        ExtDestroyParse(pScanCtx->scanner);
+        pScanCtx->scanner = NULL;
+    }
 }
 
-static extcmd *
-ExtParse(const char *szCommand)
+static void
+ErrorHandler(scancontext * pScanCtx, const char *szMessage)
 {
+    pScanCtx->fError = TRUE;
+    if (pScanCtx->szError)
+        g_free(pScanCtx->szError);
 
-    ExtErrorHandler = ErrorHandler;
-    fError = FALSE;
-    szError = NULL;
-    ExtStartParse(szCommand);
+    pScanCtx->szError = g_strdup_printf("Error: %s\n", szMessage);
+}
 
-    return fError ? NULL : &ec;
+static scancontext *
+ExtParse(scancontext * scanctx, const char *szCommand)
+{
+    scanctx->ExtErrorHandler = ErrorHandler;
+    scanctx->fError = FALSE;
+    scanctx->szError = NULL;
 
+    ExtStartParse(scanctx->scanner, szCommand);
+    return scanctx->fError ? NULL : scanctx;
 }
 
 static char *
-ExtEvaluation(extcmd * pec)
+ExtEvaluation(scancontext * pec)
 {
-
     char szName[MAX_NAME_LEN], szOpp[MAX_NAME_LEN];
     int nMatchTo, anScore[2], anDice[2], nCube, fCubeOwner, fDoubled, fCrawford, fJacoby;
     TanBoard anBoard;
@@ -386,10 +398,10 @@ ExtEvaluation(extcmd * pec)
     float r;
     evalcontext ec;
 
-    if (ParseFIBSBoard(pec->szFIBSBoard, anBoard, szName, szOpp, &nMatchTo,
-                       &nScore, &nScoreOpponent, anDice, &nCube, &fCubeOwner, &fDoubled, &fCrawford)) {
+    if (ProcessFIBSBoardInfo(&pec->bi, anBoard, szName, szOpp, &nMatchTo,
+                             &nScore, &nScoreOpponent, anDice, &nCube, &fCubeOwner, &fDoubled, &fCrawford)) {
         outputl(_("Warning: badly formed board from external controller."));
-        szResponse = g_strdup_printf("Error: badly formed board ('%s')\n", pec->szFIBSBoard);
+        szResponse = g_strdup_printf("Error: badly formed board\n");
     } else {
 
         anScore[0] = nScoreOpponent;
@@ -430,7 +442,7 @@ ExtEvaluation(extcmd * pec)
 }
 
 static char *
-ExtFIBSBoard(extcmd * pec)
+ExtFIBSBoard(scancontext * pec)
 {
 
     char szName[MAX_NAME_LEN], szOpp[MAX_NAME_LEN];
@@ -442,10 +454,10 @@ ExtFIBSBoard(extcmd * pec)
     int nScore, nScoreOpponent;
     char *szResponse;
 
-    if (ParseFIBSBoard(pec->szFIBSBoard, anBoard, szName, szOpp, &nMatchTo,
-                       &nScore, &nScoreOpponent, anDice, &nCube, &fCubeOwner, &fDoubled, &fCrawford)) {
+    if (ProcessFIBSBoardInfo(&pec->bi, anBoard, szName, szOpp, &nMatchTo,
+                             &nScore, &nScoreOpponent, anDice, &nCube, &fCubeOwner, &fDoubled, &fCrawford)) {
         outputl(_("Warning: badly formed board from external controller."));
-        szResponse = g_strdup_printf("Error: badly formed board ('%s')\n", pec->szFIBSBoard);
+        szResponse = g_strdup_printf("Error: badly formed board\n");
     } else {
 
         anScore[0] = nScoreOpponent;
@@ -574,7 +586,10 @@ CommandExternal(char *sz)
     char *szResponse = NULL;
     struct sockaddr_in saRemote;
     socklen_t saLen;
-    extcmd *pec;
+    scancontext scanctx;
+    int fExit;
+    int fRestart = TRUE;
+    int retval;
 
     sz = NextToken(&sz);
 
@@ -583,11 +598,16 @@ CommandExternal(char *sz)
         return;
     }
 
+    memset(&scanctx, 0, sizeof(scanctx));
+    ExtInitParse(&scanctx.scanner);
+
   listenloop:
     {
+        fExit = FALSE;
 
         if ((h = ExternalSocket(&psa, &cb, sz)) < 0) {
             SockErr(sz);
+            ExtDestroyParse(scanctx.scanner);
             return;
         }
 
@@ -595,6 +615,7 @@ CommandExternal(char *sz)
             SockErr(sz);
             closesocket(h);
             free(psa);
+            ExtDestroyParse(scanctx.scanner);
             return;
         }
 
@@ -604,6 +625,7 @@ CommandExternal(char *sz)
             SockErr("listen");
             closesocket(h);
             ExternalUnbind(sz);
+            ExtDestroyParse(scanctx.scanner);
             return;
         }
         outputf(_("Waiting for a connection from %s...\n"), sz);
@@ -619,6 +641,7 @@ CommandExternal(char *sz)
                 if (fInterrupt) {
                     closesocket(h);
                     ExternalUnbind(sz);
+                    ExtDestroyParse(scanctx.scanner);
                     return;
                 }
 
@@ -628,6 +651,7 @@ CommandExternal(char *sz)
             SockErr("accept");
             closesocket(h);
             ExternalUnbind(sz);
+            ExtDestroyParse(scanctx.scanner);
             return;
         }
 
@@ -640,30 +664,39 @@ CommandExternal(char *sz)
         outputx();
         ProcessEvents();
 
-        while (!ExternalRead(hPeer, szCommand, sizeof(szCommand))) {
+        while (!fExit && !(retval = ExternalRead(hPeer, szCommand, sizeof(szCommand)))) {
 
-            if ((pec = ExtParse(szCommand)) == 0) {
+            if ((ExtParse(&scanctx, szCommand)) == 0) {
                 /* parse error */
-                szResponse = szError;
+                szResponse = scanctx.szError;
             } else {
 
-                switch (pec->ct) {
+                switch (scanctx.ct) {
+                case COMMAND_VERSION:
+                    szResponse = g_strdup(EXTERNAL_INTERFACE_VERSION "\n");
+                    break;
+
                 case COMMAND_NONE:
                     szResponse = g_strdup("Error: no command given\n");
                     break;
 
                 case COMMAND_FIBSBOARD:
-
-                    szResponse = ExtFIBSBoard(pec);
+                    szResponse = ExtFIBSBoard(&scanctx);
                     break;
 
                 case COMMAND_EVALUATION:
-
-                    szResponse = ExtEvaluation(pec);
+                    szResponse = ExtEvaluation(&scanctx);
                     break;
 
-                }
+                case COMMAND_EXIT:
+                    closesocket(hPeer);
+                    fExit = TRUE;
+                    break;
 
+                default:
+                    szResponse = g_strdup("Unsupported Command\n");
+                }
+                unset_scan_context(&scanctx, FALSE);
             }
 
             if (szResponse) {
@@ -671,11 +704,26 @@ CommandExternal(char *sz)
                     break;
 
                 g_free(szResponse);
+                szResponse = NULL;
             }
 
         }
+        if (retval == -2) {
+            ProcessEvents();
+            fExit = TRUE;
+            fRestart = FALSE;
+        }
+
         closesocket(hPeer);
+        if (szResponse)
+            g_free(szResponse);
+
+        szResponse = NULL;
+        scanctx.szError = NULL;
     }
-    goto listenloop;
+    if (fRestart)
+        goto listenloop;
+
+    unset_scan_context(&scanctx, TRUE);
 #endif
 }

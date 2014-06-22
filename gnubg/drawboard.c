@@ -27,8 +27,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glib/gi18n.h>
 
+#include "backgammon.h"
 #include "drawboard.h"
 #include "positionid.h"
 #include "matchequity.h"
@@ -959,24 +959,96 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
 }
 
 extern int
-ParseFIBSBoard(char *pch, TanBoard anBoard,
-               char *szPlayer, char *szOpp, int *pnMatchTo,
-               int *pnScore, int *pnScoreOpp,
-               int anDice[2], int *pnCube, int *pfCubeOwner, int *pfDoubled, int *pfCrawford)
+ProcessFIBSBoardString(char *pch, TanBoard anBoard,
+                       char *szPlayer, char *szOpp, int *pnMatchTo,
+                       int *pnScore, int *pnScoreOpp,
+                       int anDice[2], int *pnCube, int *pfCubeOwner, int *pfDoubled, int *pfCrawford)
+{
+    FIBSBoardInfo brdInfo;
+
+    if (ParseFIBSBoardString(pch, &brdInfo))
+        return -1;
+
+    if (ProcessFIBSBoardInfo(&brdInfo, anBoard, szPlayer, szOpp, pnMatchTo, pnScore, pnScoreOpp,
+                             anDice, pnCube, pfCubeOwner, pfDoubled, pfCrawford))
+        return -1;
+
+    return 0;
+}
+
+extern int
+ParseFIBSBoardString(char *pch, FIBSBoardInfo * brdInfo)
+{
+    int i, c, n;
+    char szPlayer[MAX_NAME_LEN];
+    char szOpp[MAX_NAME_LEN];
+
+    /* Names and match length/score */
+    c = -1;
+    sscanf(pch, "board:%31[^:]:%31[^:]:%d:%d:%d:%n", szPlayer, szOpp, &brdInfo->nMatchTo, &brdInfo->nScore,
+           &brdInfo->nScoreOpp, &c);
+    if (c < 0)
+        return -1;
+    pch += c;
+
+    brdInfo->gsName = g_string_new(szPlayer);
+    brdInfo->gsOpp = g_string_new(szOpp);
+
+    /* Board */
+    for (i = 0; i < 26; ++i) {
+        c = -1;
+        sscanf(pch, "%d:%n", &n, &c);
+        if (c < 0)
+            return -1;
+        pch += c;
+        brdInfo->anFIBSBoard[i] = n;
+    }
+
+    c = -1;
+    sscanf(pch, "%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%*d:%*d:%*d:%*d:%*d:%*d:"
+           "%*d:%d:%d:%n", &brdInfo->nTurn, &brdInfo->anDice[0], &brdInfo->anDice[1], &brdInfo->anOppDice[0],
+           &brdInfo->anOppDice[1], &brdInfo->nCube, &brdInfo->fCanDouble, &brdInfo->fOppCanDouble,
+           &brdInfo->fDoubled, &brdInfo->nColor, &brdInfo->nDirection, &brdInfo->fNonCrawford, &brdInfo->fPostCrawford,
+           &c);
+    if (c < 0)
+        return -1;
+
+    return 0;
+}
+
+extern int
+ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, TanBoard anBoard,
+                     char *szPlayer, char *szOpp, int *pnMatchTo,
+                     int *pnScore, int *pnScoreOpp,
+                     int anDice[2], int *pnCube, int *pfCubeOwner, int *pfDoubled, int *pfCrawford)
 {
 
-    int i, c, n, fCanDouble, fOppCanDouble, anOppDice[2];
+    int i, n, fCanDouble, fOppCanDouble, anOppDice[2];
     int nTmp, fNonCrawford, fPostCrawford;
     int nTurn, nColor, nDirection;
     int anFIBSBoard[26];
     int fMustSwap = 0;
 
-    /* Names and match length/score */
-    c = -1;
-    sscanf(pch, "board:%31[^:]:%31[^:]:%d:%d:%d:%n", szPlayer, szOpp, pnMatchTo, pnScore, pnScoreOpp, &c);
-    if (c < 0)
-        return -1;
-    pch += c;
+    *pnMatchTo = brdInfo->nMatchTo;
+    *pnScore = brdInfo->nScore;
+    *pnScoreOpp = brdInfo->nScoreOpp;
+    nTurn = brdInfo->nTurn;
+    nColor = brdInfo->nColor;
+    nDirection = brdInfo->nDirection;
+    *pfDoubled = brdInfo->fDoubled;
+    *pnCube = brdInfo->nCube;
+    fCanDouble = brdInfo->fCanDouble;
+    fOppCanDouble = brdInfo->fOppCanDouble;
+    memcpy(anDice, brdInfo->anDice, sizeof(brdInfo->anDice));
+    memcpy(anOppDice, brdInfo->anOppDice, sizeof(brdInfo->anOppDice));
+    memcpy(anFIBSBoard, brdInfo->anFIBSBoard, sizeof(brdInfo->anFIBSBoard));
+    fNonCrawford = brdInfo->fNonCrawford;
+    fPostCrawford = brdInfo->fPostCrawford;
+    g_strlcpy(szPlayer, brdInfo->gsName->str, MAX_NAME_LEN);
+    g_strlcpy(szOpp, brdInfo->gsOpp->str, MAX_NAME_LEN);
+
+    for (i = 0; i < 26; ++i)
+        anFIBSBoard[i] = -anFIBSBoard[i];
 
     /* FIBS has a maximum match length of 99.  Unlimited matches are 
      * encoded with a match length of 9999.
@@ -1003,24 +1075,6 @@ ParseFIBSBoard(char *pch, TanBoard anBoard,
 
         *pnMatchTo = MAXSCORE;
     }
-
-    /* Board */
-    for (i = 0; i < 26; ++i) {
-        c = -1;
-        sscanf(pch, "%d:%n", &n, &c);
-        if (c < 0)
-            return -1;
-        pch += c;
-        anFIBSBoard[i] = -n;
-    }
-
-    c = -1;
-    sscanf(pch, "%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%*d:%*d:%*d:%*d:%*d:%*d:"
-           "%*d:%d:%d:%n", &nTurn, anDice, anDice + 1, anOppDice,
-           anOppDice + 1, pnCube, &fCanDouble, &fOppCanDouble,
-           pfDoubled, &nColor, &nDirection, &fNonCrawford, &fPostCrawford, &c);
-    if (c < 0)
-        return -1;
 
     /* Consistency check: 0 is a valid value for nColor but signifies
      * end of game which is invalid for our purposes here.

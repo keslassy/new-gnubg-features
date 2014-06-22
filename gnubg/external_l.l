@@ -1,9 +1,8 @@
 %{
-
 /*
  * external_l.l -- lexer for external interface
  *
- * by Jørn Thyssen <jth@gnubg.org>, 2003.
+ * by Michael Petch <mpetch@gnubg.org>, 2014.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
@@ -22,73 +21,127 @@
  */
 
 #include "config.h"
-#include <string.h>
+#include "external.h"
+#include <stdio.h>
 
+#define EXTERNAL_Y_H
 #include "external_y.h"
 
-extern int extparse(void);
-
-int prc_lineno = 1;
+#ifndef _MSC_VER
+extern int fileno(FILE *stream); /* declared in stdio.h (forgotten by lex) */
+#endif
 void escapes(const char *cp, char *tp);
+extern int ext_parse(yyscan_t scanner);
+
+#define PROCESS_YYTEXT_STRING \
+        if (yytext[0] == '\'' || yytext[0] == '\"') { \
+            yytext[strlen(yytext) - 1] = '\0'; \
+            escapes(yytext+1, yytext); \
+        } \
+        yylval->str = g_string_new(yytext);
+
+#define BUFFERSIZE 2048
+
 %}
 
-%option noyywrap
-%option prefix="ext"
-%option nounput
-%option 7bit
-%option case-insensitive
+%option prefix="ext_"
 %option outfile="lex.yy.c"
+%option reentrant
+%option bison-bridge
+%option noyywrap
 %option noinput
+%option nounput
+%option 8bit
+%option case-insensitive
 
-NUMSTR -?[0-9]+
+%x SBOARDP1 
+%x SBOARDP2
+%x OPTIONS
+%x VALLIST
 
+QSTRING                 (\"[^\"\n]*\")|(\'[^\'\n]*\')
+EOT                     [\t\r\n ]+
+PLAYERSTR               [[:alnum:]_]+
+FLOATSTR                [-+]?([0-9]*\.[0-9]+([eE][-+]?[0-9]+)?)
+SIGNEDINTSTR            [-+]?[0-9]+
+UNSIGNEDINTSTR          [0-9]+
 %%
 
-(\"[^\"]*\")|(\'[^\']*\')	{
-			char *buf = malloc( strlen( exttext ) + 1 );
-			exttext[strlen(exttext)-1] = '\0';
-			escapes(exttext+1, buf);
-			extlval.sval = buf;
-			BEGIN(INITIAL);
-			return STRING;
-		}
+board:                  {   BEGIN(SBOARDP1);
+                            return FIBSBOARD;
+                        }
+
+version{EOT}            {   return EXTVERSION; }
+(quit|exit){EOT}        {   return EXIT; }
+evaluation{EOT}         {   return EVALUATION; }
+fibsboard{EOT}          {   return FIBSBOARD; }
+
+<*>(yes|on|true){EOT}   {   yylval->bool = 1; 
+                            return (BOOLEAN);
+                        }
+<*>(no|off|false){EOT}  {   yylval->bool = 0; 
+                            return (BOOLEAN);
+                        }
 
 
-jacobyrule      { return JACOBYRULE; }
-crawfordrule    { return CRAWFORDRULE; }
-evaluation      { return EVALUATION; }
-fibsboard       { return FIBSBOARD; }
-cubeful         { return CUBEFUL; }
-cubeless        { return CUBELESS; }
-cube            { return CUBE; }
-plies           { return PLIES; }
-noise           { return NOISE; }
-prune           { return PRUNE; }
-yes             { return ON; }
-on              { return ON; }
-no              { return OFF; }
-off             { return OFF; }
+{QSTRING}               {
+                            PROCESS_YYTEXT_STRING;
+                            return STRING;
+                        }
+		
+<*>{FLOATSTR}           {
+                            yylval->floatnum = atof(yytext);
+                            return FLOAT;
+                        }
+		
+<*>{SIGNEDINTSTR}       {   yylval->intnum = atoi(yytext); 
+                            return INTEGER; 
+                        }
+                        
+[\[\],\(\)\{\}]         return (yytext[0]);
 
-board:[[:alnum:]_]+:[[:alnum:]_]+(:{NUMSTR})+  { 
-			char *buf = malloc( strlen( exttext ) + 1 );
-			escapes(exttext, buf);
-			extlval.sval = buf;
-			return AFIBSBOARD; 
-		}
+<OPTIONS>{
+crawfordrule{EOT}       {   return CRAWFORDRULE; }
+cube{EOT}               {   return CUBE; }
+cubeful{EOT}            {   return CUBEFUL; }
+cubeless{EOT}           {   return CUBELESS; }
+deterministic{EOT}      {   return DETERMINISTIC; }
+jacobyrule{EOT}         {   return JACOBYRULE; }
+noise{EOT}              {   return NOISE; }
+plies{EOT}              {   return PLIES; }
+prune{EOT}              {   return PRUNE; }
+}
+                        
+<VALLIST,SBOARDP1,SBOARDP2>: {
+                            return (yytext[0]);
+                        }
+                        
+<VALLIST,SBOARDP1,SBOARDP2>{EOT} {
+                            BEGIN(OPTIONS);
+                            return FIBSBOARDEND;
+                        }
 
+<SBOARDP1>{PLAYERSTR}|{QSTRING}   {
+                            PROCESS_YYTEXT_STRING;
+                            BEGIN(SBOARDP2);
+                            return STRING;
+                        }
+<SBOARDP2>{PLAYERSTR}|{QSTRING}   {
+                            PROCESS_YYTEXT_STRING;
+                            BEGIN(VALLIST);
+                            return STRING;
+                        }
 
-(#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
+<*>[\t\r\n ]+             ; /* ignore whitespace */
 
-{NUMSTR}	{ extlval.number = atoi(exttext); return NUMBER; }
+<<EOF>>                 {   BEGIN(INITIAL); 
+                            return (EOL); 
+                        }
 
-[^=;:, \t\r\n]+	{
-			char *buf = malloc( strlen( exttext ) + 1 );
-			escapes(exttext, buf);
-			extlval.sval = buf;
-			return STRING;
-		}
-
-[ \t\r]+	;	/* whitespace */
+<*>.                    {   BEGIN(INITIAL);
+                            yylval->character = yytext[0]; 
+                            return (CHARACTER);
+                        }
 
 %%
 
@@ -134,11 +187,23 @@ void escapes(const char *cp, char *tp)
     *tp = '\0';
 }
 
-extern void ExtStartParse(const char* szCommand);
-void ExtStartParse(const char* szCommand)
+void ExtStartParse(yyscan_t scanner, const char* szCommand)
 {
-	YY_BUFFER_STATE buf_state;
-	buf_state = ext_scan_string(szCommand);
-	extparse();
-	ext_delete_buffer(buf_state);
+    struct yyguts_t * yyg = (struct yyguts_t *) scanner;
+    BEGIN(INITIAL);    
+	YY_BUFFER_STATE buf_state = NULL;
+	buf_state = yy_scan_string(szCommand, scanner);
+	ext_parse(scanner);
+    yy_flush_buffer(buf_state, scanner);
+	yy_delete_buffer(buf_state, scanner);
+}
+
+int ExtInitParse(yyscan_t *scancontext)
+{
+    return ext_lex_init_extra(scancontext, scancontext);
+}
+
+void ExtDestroyParse(yyscan_t scancontext)
+{
+    yylex_destroy(scancontext);
 }
