@@ -24,12 +24,15 @@
 
 #include "config.h"
 
-#if (USE_GTK)
-#include <gtk/gtk.h>
+#include <glib.h>
+#include <glib-object.h>
 
 #if ! GLIB_CHECK_VERSION(2,28,0)
 extern void g_list_free_full(GList *list, GDestroyNotify free_func);
 #endif
+
+#if (USE_GTK)
+#include <gtk/gtk.h>
 
 #if ! GTK_CHECK_VERSION(2,24,0)
 #define gtk_combo_box_text_new_with_entry gtk_combo_box_entry_new_text
