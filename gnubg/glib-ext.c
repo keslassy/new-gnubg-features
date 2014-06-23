@@ -129,40 +129,40 @@ free_strmap_tuple(GList * tuple)
 }
 
 void
-g_value_print_list(GList * list, int depth)
+g_value_list_tostring (GString * str, GList * list, int depth)
 {
     GList *cur = list;
     while (cur != NULL) {
-        g_value_print(cur->data, depth);
+        g_value_tostring(str, cur->data, depth);
         if ((cur = g_list_next(cur)))
-            printf(", ");
+            g_string_append(str, ", ");
     }
 }
 
 void
-g_value_print(GValue * gv, int depth)
+g_value_tostring(GString * str, GValue * gv, int depth)
 {
     if (!gv)
         return;
     g_assert(G_IS_VALUE(gv));
 
     if (G_VALUE_HOLDS_INT(gv)) {
-        printf("%d", g_value_get_int(gv));
+        g_string_append_printf(str, "%d", g_value_get_int(gv));
     } else if (G_VALUE_HOLDS_DOUBLE(gv)) {
-        printf("%lf", g_value_get_double(gv));
+        g_string_append_printf(str, "%lf", g_value_get_double(gv));
     } else if (G_VALUE_HOLDS_GSTRING(gv)) {
-        printf("\"%s\"", g_value_get_gstring_gchar(gv));
+        g_string_append_printf(str, "\"%s\"", g_value_get_gstring_gchar(gv));
     } else if (G_VALUE_HOLDS_BOXED_GLIST_GV(gv)) {
-        printf("(");
-        g_value_print_list(g_value_get_boxed(gv), depth + 1);
-        printf(")");
+        g_string_append_c(str, '(');
+        g_value_list_tostring(str, g_value_get_boxed(gv), depth + 1);
+        g_string_append_c(str, ')');
     } else if (G_VALUE_HOLDS_BOXED_MAP_GV(gv)) {
-        printf("[");
-        g_value_print_list(g_value_get_boxed(gv), depth + 1);
-        printf("]");
+        g_string_append_c(str, '[');
+        g_value_list_tostring(str, g_value_get_boxed(gv), depth + 1);
+        g_string_append_c(str, ']');
     } else if (G_VALUE_HOLDS_BOXED_MAPENTRY_GV(gv)) {
-        g_value_print(g_list_nth_data(g_value_get_boxed(gv), 0), depth + 1);
-        printf(" : ");
-        g_value_print(g_list_nth_data(g_value_get_boxed(gv), 1), depth + 1);
+        g_value_tostring(str, g_list_nth_data(g_value_get_boxed(gv), 0), depth + 1);
+        g_string_append(str, " : ");
+        g_value_tostring(str, g_list_nth_data(g_value_get_boxed(gv), 1), depth + 1);
     }
 }
