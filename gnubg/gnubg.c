@@ -4531,9 +4531,6 @@ getDiceRandomDotOrg(void)
     }
 
 }
-
-#else
-static int (*getRandomDiceDotOrg) (void) = NULL;
 #endif                          /* HAVE_SOCKETS */
 
 static void
