@@ -1,3 +1,8 @@
+2014-06-23  Michael Petch  <mpetch@gnubg.org>
+
+	* external_y.y, external_l.l, external.c, external.h : Added debug 
+	command to the external interface limtied debugging output support
+
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 
 	* gtklocdefs.c, gtklocdefs.h, glib-ext.h: add g_list_free_full 

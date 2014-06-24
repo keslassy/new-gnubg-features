@@ -26,6 +26,7 @@
 #include <signal.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include "glib-ext.h"
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -454,7 +455,6 @@ ExtFIBSBoard(scancontext * pec)
 
     if (ProcessFIBSBoardInfo(&pec->bi, anBoard, szName, szOpp, &nMatchTo,
                              &nScore, &nScoreOpponent, anDice, &nCube, &fCubeOwner, &fDoubled, &fCrawford)) {
-        outputl(_("Warning: badly formed board from external controller."));
         szResponse = g_strdup_printf("Error: badly formed board\n");
     } else {
 
@@ -668,12 +668,24 @@ CommandExternal(char *sz)
                 /* parse error */
                 szResponse = scanctx.szError;
             } else {
-
+                GValue *optionsmapgv;
+                GValue *boarddatagv;
+                GString *dbgStr;
+                
                 switch (scanctx.ct) {
+                case COMMAND_DEBUG:
+                    if (scanctx.fDebug)
+                        szResponse = g_strdup("Debug output ON\n");
+                    else
+                        szResponse = g_strdup("Debug Output OFF\n");
+    
+                    break;
+
                 case COMMAND_VERSION:
                     szResponse = g_strdup("Interface: " EXTERNAL_INTERFACE_VERSION "\n"
                                            "RFBF: " RFBF_VERSION_SUPPORTED "\n"
                                            "Software: " VERSION_STRING "\n");
+
                     break;
 
                 case COMMAND_NONE:
@@ -681,11 +693,25 @@ CommandExternal(char *sz)
                     break;
 
                 case COMMAND_FIBSBOARD:
-                    szResponse = ExtFIBSBoard(&scanctx);
-                    break;
-
                 case COMMAND_EVALUATION:
-                    szResponse = ExtEvaluation(&scanctx);
+                    if (scanctx.fDebug){
+                        optionsmapgv = (GValue *)g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 1);
+                        boarddatagv = (GValue *)g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 0);
+                        dbgStr = g_string_new("DBG: ");
+                        g_value_tostring(dbgStr, optionsmapgv, 0);
+                        g_string_append(dbgStr, "\nDBG: ");
+                        g_value_tostring(dbgStr, boarddatagv, 0);
+                        g_string_append(dbgStr, "\n");
+                        ExternalWrite(hPeer, dbgStr->str, strlen(dbgStr->str))
+                        g_string_free(dbgStr, TRUE);
+                    }
+                    g_value_unsetfree(scanctx.pCmdData);
+
+                    if (scanctx.ct == COMMAND_EVALUATION)
+                        szResponse = ExtEvaluation(&scanctx);
+                    else
+                        szResponse = ExtFIBSBoard(&scanctx);
+
                     break;
 
                 case COMMAND_EXIT:

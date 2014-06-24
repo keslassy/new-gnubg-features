@@ -79,6 +79,8 @@
 #include "backgammon.h"
 #include "external_y.h"
 
+#define MAX_RFBF_ELEMENTS 53
+
 #define KEY_STR_DETERMINISTIC "deterministic"
 #define KEY_STR_JACOBYRULE "jacobyrule"
 #define KEY_STR_CRAWFORDRULE "crawfordrule"
@@ -130,7 +132,7 @@ void yyerror(scancontext *scanner, const char *str)
 %{
 %}
 
-%token EOL EXIT DISABLED INTERFACEVERSION
+%token EOL EXIT DISABLED INTERFACEVERSION DEBUG
 %token E_STRING E_CHARACTER E_INTEGER E_FLOAT E_BOOLEAN
 %token FIBSBOARD FIBSBOARDEND EVALUATION
 %token CRAWFORDRULE JACOBYRULE
@@ -173,12 +175,28 @@ void yyerror(scancontext *scanner, const char *str)
 %%
 
 commands:
-    /* Empty */
     EOL
-    {
-        extcmd->ct = COMMAND_NONE;
-        YYACCEPT;
-    }
+        {
+            extcmd->ct = COMMAND_NONE;
+            YYACCEPT;
+        }
+    |
+    DEBUG EOL
+        {
+            extcmd->fDebug = 1;
+            extcmd->ct = COMMAND_DEBUG;
+
+            YYACCEPT;
+        }
+    |
+    DEBUG boolean_type EOL
+        {
+            extcmd->fDebug = g_value_get_int($2);
+            extcmd->ct = COMMAND_DEBUG;
+            g_value_unsetfree($2);                
+
+            YYACCEPT;
+        }
     |
     INTERFACEVERSION EOL
         {
@@ -202,8 +220,9 @@ commands:
                 GMap *optionsmap = (GMap *)g_value_get_boxed((GValue *)g_list_nth_data(g_value_get_boxed($1->pvData), 1));
                 GList *boarddata = (GList *)g_value_get_boxed((GValue *)g_list_nth_data(g_value_get_boxed($1->pvData), 0));
                 extcmd->ct = $1->cmdType;
+                extcmd->pCmdData = $1->pvData;
 
-                if (g_list_length(boarddata) <= 52) {
+                if (g_list_length(boarddata) < MAX_RFBF_ELEMENTS) {
                     GVALUE_CREATE(G_TYPE_INT, int, 0, gvfalse); 
                     GVALUE_CREATE(G_TYPE_INT, int, 1, gvtrue); 
                     GVALUE_CREATE(G_TYPE_DOUBLE, double, 0.0, gvfloatzero); 
@@ -229,7 +248,6 @@ commands:
                     g_value_unsetfree(gvtrue);
                     g_value_unsetfree(gvfalse);
                     g_value_unsetfree(gvfloatzero);
-                    g_value_unsetfree($1->pvData);                
                     g_free($1);
                     
                     YYACCEPT;
@@ -527,14 +545,43 @@ list_elements:
 
 #ifdef EXTERNAL_TEST
 
+/* 
+ * Test code can be built by configuring GNUBG with --without-gtk option and doing the following:
+ *
+ * ./ylwrap external_l.l lex.yy.c external_l.c -- flex 
+ * ./ylwrap external_y.y y.tab.c external_y.c y.tab.h test1_y.h -- bison 
+ * gcc -Ilib -I. -Wall `pkg-config  gobject-2.0 --cflags --libs` external_l.c external_y.c  glib-ext.c -DEXTERNAL_TEST -o exttest
+ *
+ */
+ 
+#define BUFFERSIZE 1024
+
+int fJacoby = TRUE;
+
 int main()
 {
+    char buffer[BUFFERSIZE];
     scancontext scanctx;
+
     memset(&scanctx, 0, sizeof(scanctx));
     g_type_init ();
-    StartParse(&scanctx);
-    g_string_free(scanctx.bi.gsName, TRUE);
-    g_string_free(scanctx.bi.gsOpp, TRUE);
+    ExtInitParse((void **)&scanctx);
+
+    while(fgets(buffer, BUFFERSIZE, stdin) != NULL) {
+        ExtStartParse(scanctx.scanner, buffer);
+        if(scanctx.ct == COMMAND_EXIT)
+            return 0;
+        
+        if (scanctx.bi.gsName)
+            g_string_free(scanctx.bi.gsName, TRUE);
+        if (scanctx.bi.gsOpp)
+            g_string_free(scanctx.bi.gsOpp, TRUE);
+
+        scanctx.bi.gsName = NULL;
+        scanctx.bi.gsOpp = NULL;
+    }
+
+    ExtDestroyParse(scanctx.scanner);
     return 0;
 }
 

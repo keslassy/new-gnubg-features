@@ -49,7 +49,8 @@ typedef enum _cmdtype {
     COMMAND_EVALUATION = 2,
     COMMAND_EXIT = 3,
     COMMAND_VERSION = 4,
-    COMMAND_LIST = 5
+    COMMAND_DEBUG = 5,
+    COMMAND_LIST = 6
 } cmdtype;
 
 typedef struct _commandinfo {
@@ -88,11 +89,13 @@ typedef struct _scancontext {
     void *scanner;
     void (*ExtErrorHandler) (struct _scancontext *, const char *);
     int fError;
+    int fDebug;
     char *szError;
 
     /* command type */
     cmdtype ct;
-
+    void *pCmdData;
+    
     /* evalcontext */
     int nPlies;
     float rNoise;

@@ -71,6 +71,7 @@ board:                  {   BEGIN(SBOARDP1);
                             return FIBSBOARD;
                         }
 
+debug{EOT}              {   return DEBUG; }
 version{EOT}            {   return INTERFACEVERSION; }
 (quit|exit){EOT}        {   return EXIT; }
 evaluation{EOT}         {   return EVALUATION; }
