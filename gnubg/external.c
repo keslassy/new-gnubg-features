@@ -702,7 +702,7 @@ CommandExternal(char *sz)
                         g_string_append(dbgStr, "\nDBG: ");
                         g_value_tostring(dbgStr, boarddatagv, 0);
                         g_string_append(dbgStr, "\n");
-                        ExternalWrite(hPeer, dbgStr->str, strlen(dbgStr->str))
+                        ExternalWrite(hPeer, dbgStr->str, strlen(dbgStr->str));
                         g_string_free(dbgStr, TRUE);
                     }
                     g_value_unsetfree(scanctx.pCmdData);
