@@ -356,6 +356,7 @@ unset_scan_context(scancontext * pScanCtx, int bFreeScanner)
     pScanCtx->bi.gsOpp = NULL;
     pScanCtx->szError = NULL;
     pScanCtx->fError = 0;
+    pScanCtx->fDebug = 0;
 
     if (bFreeScanner) {
         ExtDestroyParse(pScanCtx->scanner);
