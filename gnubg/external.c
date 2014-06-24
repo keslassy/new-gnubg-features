@@ -356,7 +356,6 @@ unset_scan_context(scancontext * pScanCtx, int bFreeScanner)
     pScanCtx->bi.gsOpp = NULL;
     pScanCtx->szError = NULL;
     pScanCtx->fError = 0;
-    pScanCtx->fDebug = 0;
 
     if (bFreeScanner) {
         ExtDestroyParse(pScanCtx->scanner);
@@ -603,6 +602,7 @@ CommandExternal(char *sz)
   listenloop:
     {
         fExit = FALSE;
+        scanctx.fDebug = FALSE;
 
         if ((h = ExternalSocket(&psa, &cb, sz)) < 0) {
             SockErr(sz);
