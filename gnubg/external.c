@@ -23,6 +23,8 @@
 
 #if HAVE_SOCKETS
 
+#define DEBUG_PREFIX "DBG: "
+
 #include <signal.h>
 #include <glib.h>
 #include <glib/gstdio.h>
@@ -105,6 +107,9 @@
 #include "drawboard.h"
 #include "external.h"
 #include "rollout.h"
+#include "eval.h"
+#include "matchid.h"
+#include "lib/gnubg-types.h"
 
 #if HAVE_SOCKETS
 
@@ -387,33 +392,31 @@ ExtParse(scancontext * scanctx, const char *szCommand)
 static char *
 ExtEvaluation(scancontext * pec)
 {
-    char szName[MAX_NAME_LEN], szOpp[MAX_NAME_LEN];
-    int nMatchTo, anScore[2], anDice[2], nCube, fCubeOwner, fDoubled, fCrawford, fJacoby;
-    TanBoard anBoard;
+    ProcessedFIBSBoard processedBoard;
     float arOutput[NUM_ROLLOUT_OUTPUTS];
     cubeinfo ci;
-    int nScore, nScoreOpponent;
+    int anScore[2];
     char *szResponse;
     float r;
     evalcontext ec;
 
-    if (ProcessFIBSBoardInfo(&pec->bi, anBoard, szName, szOpp, &nMatchTo,
-                             &nScore, &nScoreOpponent, anDice, &nCube, &fCubeOwner, &fDoubled, &fCrawford)) {
+    if (ProcessFIBSBoardInfo(&pec->bi, &processedBoard)) {
         outputl(_("Warning: badly formed board from external controller."));
         szResponse = g_strdup_printf("Error: badly formed board\n");
     } else {
 
-        anScore[0] = nScoreOpponent;
-        anScore[1] = nScore;
+        anScore[0] = processedBoard.nScoreOpp;
+        anScore[1] = processedBoard.nScore;
         /* If the session isn't using Crawford rule, set crawford flag to false */
-        fCrawford = pec->fCrawfordRule ? fCrawford : FALSE;
+        processedBoard.fCrawford = pec->fCrawfordRule ? processedBoard.fCrawford : FALSE;
         /* Set the Jacoby flag appropriately from the external interface settings */
-        fJacoby = pec->fJacobyRule;
+        processedBoard.fJacoby = pec->fJacobyRule;
 
         /* printf ("Jacoby Setting: %d\n", fJacoby); */
         /* printf ("Crawford Setting: %d\n", fCrawford); */
 
-        SetCubeInfo(&ci, nCube, fCubeOwner, 1, nMatchTo, anScore, fCrawford, fJacoby, nBeavers, bgvDefault);
+        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, 1, processedBoard.nMatchTo, 
+                    anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
 
         ec.fCubeful = pec->fCubeful;
         ec.nPlies = pec->nPlies;
@@ -421,10 +424,10 @@ ExtEvaluation(scancontext * pec)
         ec.fDeterministic = pec->fDeterministic;
         ec.rNoise = pec->rNoise;
 
-        if (GeneralEvaluationE(arOutput, (ConstTanBoard) anBoard, &ci, &ec))
+        if (GeneralEvaluationE(arOutput, (ConstTanBoard) processedBoard.anBoard, &ci, &ec))
             return NULL;
 
-        if (nMatchTo) {
+        if (processedBoard.nMatchTo) {
             if (ec.fCubeful)
                 r = arOutput[OUTPUT_CUBEFUL_EQUITY];
             else
@@ -443,34 +446,32 @@ ExtEvaluation(scancontext * pec)
 static char *
 ExtFIBSBoard(scancontext * pec)
 {
-
-    char szName[MAX_NAME_LEN], szOpp[MAX_NAME_LEN];
-    int nMatchTo, anScore[2], anDice[2], nCube, fCubeOwner, fDoubled, fCrawford, fJacoby, anMove[8], fTurn;
-    TanBoard anBoard, anBoardOrig;
+    ProcessedFIBSBoard processedBoard;
+    TanBoard anBoardOrig;    
+    int anScore[2], anMove[8], fTurn;
     float arDouble[NUM_CUBEFUL_OUTPUTS], aarOutput[2][NUM_ROLLOUT_OUTPUTS], aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
     rolloutstat aarsStatistics[2][2];
     cubeinfo ci;
-    int nScore, nScoreOpponent;
     char *szResponse;
 
-    if (ProcessFIBSBoardInfo(&pec->bi, anBoard, szName, szOpp, &nMatchTo,
-                             &nScore, &nScoreOpponent, anDice, &nCube, &fCubeOwner, &fDoubled, &fCrawford)) {
+    if (ProcessFIBSBoardInfo(&pec->bi, &processedBoard)) {
         szResponse = g_strdup_printf("Error: badly formed board\n");
     } else {
 
-        anScore[0] = nScoreOpponent;
-        anScore[1] = nScore;
+        anScore[0] = processedBoard.nScoreOpp;
+        anScore[1] = processedBoard.nScore;
 
         /* If the session isn't using Crawford rule, set crawford flag to false */
-        fCrawford = pec->fCrawfordRule ? fCrawford : FALSE;
+        processedBoard.fCrawford = pec->fCrawfordRule ? processedBoard.fCrawford : FALSE;
         /* Set the Jacoby flag appropriately from the external interface settings */
-        fJacoby = pec->fJacobyRule;
+        processedBoard.fJacoby = pec->fJacobyRule;
 
         /* printf ("Crawford Setting: %d\n", fCrawford); */
         /* printf ("Jacoby Setting: %d\n", fJacoby); */
 
         fTurn = 1;
-        SetCubeInfo(&ci, nCube, fCubeOwner, fTurn, nMatchTo, anScore, fCrawford, fJacoby, nBeavers, bgvDefault);
+        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo, 
+                    anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
 
 #if 0
         {
@@ -485,13 +486,13 @@ ExtFIBSBoard(scancontext * pec)
         }
 #endif
 
-        memcpy(anBoardOrig, anBoard, sizeof(anBoard));
+        memcpy(anBoardOrig, processedBoard.anBoard, sizeof(processedBoard.anBoard));
 
-        if (fDoubled) {
+        if (processedBoard.fDoubled) {
 
             /* take decision */
             if (GeneralCubeDecision(aarOutput, aarStdDev,
-                                    aarsStatistics, (ConstTanBoard) anBoard, &ci, GetEvalCube(), NULL, NULL) < 0)
+                                    aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(), NULL, NULL) < 0)
                 return NULL;
 
             switch (FindCubeDecision(arDouble, aarOutput, &ci)) {
@@ -515,7 +516,7 @@ ExtFIBSBoard(scancontext * pec)
 #if 0
             /* this code is broken as the sign of fDoubled 
              * indicates who doubled */
-        } else if (fDoubled < 0) {
+        } else if (processedBoard.fDoubled < 0) {
 
             /* if opp wants to resign (extension to FIBS board) */
 
@@ -523,9 +524,9 @@ ExtFIBSBoard(scancontext * pec)
             float rEqBefore, rEqAfter;
             const float epsilon = 1.0e-6;
 
-            getResignation(arOutput, anBoard, &ci, &esEvalCube);
+            getResignation(arOutput, processedBoard.anBoard, &ci, &esEvalCube);
 
-            getResignEquities(arOutput, &ci, -fDoubled, &rEqBefore, &rEqAfter);
+            getResignEquities(arOutput, &ci, -processedBoard.fDoubled, &rEqBefore, &rEqAfter);
 
             /* if opponent gives up equity by resigning */
             if ((rEqAfter - epsilon) < rEqBefore)
@@ -534,11 +535,11 @@ ExtFIBSBoard(scancontext * pec)
                 szResponse = g_strdup("reject\n");
 
 #endif                          /* broken */
-        } else if (anDice[0]) {
+        } else if (processedBoard.anDice[0]) {
             /* move */
             char szMove[64];
-            if (FindBestMove(anMove, anDice[0], anDice[1],
-                             anBoard, &ci, &GetEvalChequer()->ec, *GetEvalMoveFilter()) < 0)
+            if (FindBestMove(anMove, processedBoard.anDice[0], processedBoard.anDice[1],
+                             processedBoard.anBoard, &ci, &GetEvalChequer()->ec, *GetEvalMoveFilter()) < 0)
                 return NULL;
 
             FormatMovePlain(szMove, anBoardOrig, anMove);
@@ -546,7 +547,8 @@ ExtFIBSBoard(scancontext * pec)
         } else {
             /* double decision */
             if (GeneralCubeDecision(aarOutput, aarStdDev,
-                                    aarsStatistics, (ConstTanBoard) anBoard, &ci, GetEvalCube(), NULL, NULL) < 0)
+                                    aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(), 
+                                    NULL, NULL) < 0)
                 return NULL;
 
             switch (FindCubeDecision(arDouble, aarOutput, &ci)) {
@@ -669,12 +671,20 @@ CommandExternal(char *sz)
                 /* parse error */
                 szResponse = scanctx.szError;
             } else {
+                ProcessedFIBSBoard processedBoard;
                 GValue *optionsmapgv;
                 GValue *boarddatagv;
                 GString *dbgStr;
+                int anScore[2];
+                int fCrawford, fJacoby;
+                char *asz[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+                char szBoard[10000];
+                char **aszLines;
+                char **aszLinesOrig;
+                char *szMatchID;
                 
                 switch (scanctx.ct) {
-                case COMMAND_DEBUG:
+                case COMMAND_SET_DEBUG:
                     if (scanctx.fDebug)
                         szResponse = g_strdup("Debug output ON\n");
                     else
@@ -685,7 +695,8 @@ CommandExternal(char *sz)
                 case COMMAND_VERSION:
                     szResponse = g_strdup("Interface: " EXTERNAL_INTERFACE_VERSION "\n"
                                            "RFBF: " RFBF_VERSION_SUPPORTED "\n"
-                                           "Software: " VERSION_STRING "\n");
+                                           "Engine: " WEIGHTS_VERSION "\n"
+                                           "Software: " VERSION "\n");
 
                     break;
 
@@ -698,13 +709,37 @@ CommandExternal(char *sz)
                     if (scanctx.fDebug){
                         optionsmapgv = (GValue *)g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 1);
                         boarddatagv = (GValue *)g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 0);
-                        dbgStr = g_string_new("DBG: ");
+                        dbgStr = g_string_new(DEBUG_PREFIX);
                         g_value_tostring(dbgStr, optionsmapgv, 0);
-                        g_string_append(dbgStr, "\nDBG: ");
+                        g_string_append(dbgStr, "\n" DEBUG_PREFIX);
                         g_value_tostring(dbgStr, boarddatagv, 0);
-                        g_string_append(dbgStr, "\n");
+                        g_string_append(dbgStr, "\n" DEBUG_PREFIX "\n");
                         ExternalWrite(hPeer, dbgStr->str, strlen(dbgStr->str));
+                        ProcessFIBSBoardInfo(&scanctx.bi, &processedBoard);
+
+                        anScore[0] = processedBoard.nScore;
+                        anScore[1] = processedBoard.nScoreOpp;
+                        /* If the session isn't using Crawford rule, set crawford flag to false */
+                        fCrawford = scanctx.fCrawfordRule ? processedBoard.fCrawford : FALSE;
+                        /* Set the Jacoby flag appropriately from the external interface settings */
+                        fJacoby = scanctx.fJacobyRule;
+                        
+                        szMatchID = MatchID((unsigned int *)processedBoard.anDice, 1, processedBoard.fResignation, 
+                                processedBoard.fDoubled, 1, processedBoard.fCubeOwner, fCrawford, processedBoard.nMatchTo, 
+                                anScore, processedBoard.nCube, fJacoby, GAME_PLAYING);
+        
+                        DrawBoard(szBoard, (ConstTanBoard)&processedBoard.anBoard, 1, asz, szMatchID, 15);
+                        
+                        aszLines = g_strsplit(&szBoard[0], "\n", 32);
+                        aszLinesOrig = aszLines;
+                        while (*aszLines){
+                            ExternalWrite(hPeer, DEBUG_PREFIX, strlen(DEBUG_PREFIX));
+                            ExternalWrite(hPeer, *aszLines, strlen(*aszLines));
+                            ExternalWrite(hPeer, "\n", 1);
+                            aszLines++;
+                        }
                         g_string_free(dbgStr, TRUE);
+                        g_strfreev (aszLinesOrig);
                     }
                     g_value_unsetfree(scanctx.pCmdData);
 
@@ -735,6 +770,7 @@ CommandExternal(char *sz)
             }
 
         }
+        /* Interrupted */
         if (retval == -2) {
             ProcessEvents();
             fExit = TRUE;

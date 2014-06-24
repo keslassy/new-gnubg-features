@@ -81,6 +81,7 @@
 
 #define MAX_RFBF_ELEMENTS 53
 
+#define KEY_STR_RESIGNATION "resignation"
 #define KEY_STR_DETERMINISTIC "deterministic"
 #define KEY_STR_JACOBYRULE "jacobyrule"
 #define KEY_STR_CRAWFORDRULE "crawfordrule"
@@ -132,7 +133,7 @@ void yyerror(scancontext *scanner, const char *str)
 %{
 %}
 
-%token EOL EXIT DISABLED INTERFACEVERSION DEBUG
+%token EOL EXIT DISABLED INTERFACEVERSION DEBUG SET
 %token E_STRING E_CHARACTER E_INTEGER E_FLOAT E_BOOLEAN
 %token FIBSBOARD FIBSBOARDEND EVALUATION
 %token CRAWFORDRULE JACOBYRULE
@@ -181,19 +182,11 @@ commands:
             YYACCEPT;
         }
     |
-    DEBUG EOL
+    SET DEBUG boolean_type EOL
         {
-            extcmd->fDebug = 1;
-            extcmd->ct = COMMAND_DEBUG;
-
-            YYACCEPT;
-        }
-    |
-    DEBUG boolean_type EOL
-        {
-            extcmd->fDebug = g_value_get_int($2);
-            extcmd->ct = COMMAND_DEBUG;
-            g_value_unsetfree($2);                
+            extcmd->fDebug = g_value_get_int($3);
+            extcmd->ct = COMMAND_SET_DEBUG;
+            g_value_unsetfree($3);                
 
             YYACCEPT;
         }
@@ -244,6 +237,7 @@ commands:
                     extcmd->fCubeful =  g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_CUBEFUL, gvfalse));
                     extcmd->rNoise = g_value_get_double(str2gv_map_get_key_value(optionsmap, KEY_STR_NOISE, gvfloatzero));
                     extcmd->fDeterministic = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_DETERMINISTIC, gvtrue));
+                    extcmd->fResignation = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_RESIGNATION, gvfalse));
 
                     g_value_unsetfree(gvtrue);
                     g_value_unsetfree(gvfalse);

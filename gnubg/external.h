@@ -22,26 +22,14 @@
 #ifndef EXTERNAL_H
 #define EXTERNAL_H
 
-#if HAVE_SOCKETS
-
-#ifndef WIN32
-
-#define closesocket close
-
-#if HAVE_SYS_SOCKET_H
-#include <sys/types.h>
-#include <sys/socket.h>
-#endif                          /* #if HAVE_SYS_SOCKET_H */
-
-#else                           /* #ifndef WIN32 */
-#include <winsock2.h>
-#endif                          /* #ifndef WIN32 */
-
 #include <glib.h>
 #include <glib-object.h>
+#include "backgammon.h"
 
-#define EXTERNAL_INTERFACE_VERSION "2"
-#define RFBF_VERSION_SUPPORTED "0"
+/* Stuff for the yacc/lex parser */
+extern void ExtStartParse(void *scanner, const char *szCommand);
+extern int ExtInitParse(void **scancontext);
+extern void ExtDestroyParse(void *scancontext);
 
 typedef enum _cmdtype {
     COMMAND_NONE = 0,
@@ -49,7 +37,7 @@ typedef enum _cmdtype {
     COMMAND_EVALUATION = 2,
     COMMAND_EXIT = 3,
     COMMAND_VERSION = 4,
-    COMMAND_DEBUG = 5,
+    COMMAND_SET_DEBUG = 5,
     COMMAND_LIST = 6
 } cmdtype;
 
@@ -84,6 +72,22 @@ typedef struct _FIBSBoardInfo {
     GString *gsOpp;
 } FIBSBoardInfo;
 
+typedef struct _ProcessedFIBSBoard {
+    char szPlayer[MAX_NAME_LEN];
+    char szOpp[MAX_NAME_LEN];
+    int nMatchTo;
+    int nScore;
+    int nScoreOpp;
+    int anDice[2];
+    int nCube;
+    int fCubeOwner;
+    int fDoubled;
+    int fCrawford;
+    int fJacoby;
+    int fResignation;
+    TanBoard anBoard;
+} ProcessedFIBSBoard;
+
 typedef struct _scancontext {
     /* scanner ptr must be first element in structure */
     void *scanner;
@@ -106,6 +110,7 @@ typedef struct _scancontext {
     /* session rules */
     int fJacobyRule;
     int fCrawfordRule;
+    int fResignation;
 
     /* fibs board */
     union {
@@ -114,10 +119,23 @@ typedef struct _scancontext {
     };
 } scancontext;
 
-/* Stuff for the yacc/lex parser */
-extern void ExtStartParse(void *scanner, const char *szCommand);
-extern int ExtInitParse(void **scancontext);
-extern void ExtDestroyParse(void *scancontext);
+#if HAVE_SOCKETS
+
+#ifndef WIN32
+
+#define closesocket close
+
+#if HAVE_SYS_SOCKET_H
+#include <sys/types.h>
+#include <sys/socket.h>
+#endif                          /* #if HAVE_SYS_SOCKET_H */
+
+#else                           /* #ifndef WIN32 */
+#include <winsock2.h>
+#endif                          /* #ifndef WIN32 */
+
+#define EXTERNAL_INTERFACE_VERSION "2"
+#define RFBF_VERSION_SUPPORTED "0"
 
 extern int ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz);
 extern int ExternalRead(int h, char *pch, size_t cch);

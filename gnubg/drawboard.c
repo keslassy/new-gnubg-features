@@ -959,18 +959,14 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
 }
 
 extern int
-ProcessFIBSBoardString(char *pch, TanBoard anBoard,
-                       char *szPlayer, char *szOpp, int *pnMatchTo,
-                       int *pnScore, int *pnScoreOpp,
-                       int anDice[2], int *pnCube, int *pfCubeOwner, int *pfDoubled, int *pfCrawford)
+ProcessFIBSBoardString(char *pch, ProcessedFIBSBoard * procBrd)
 {
     FIBSBoardInfo brdInfo;
 
     if (ParseFIBSBoardString(pch, &brdInfo))
         return -1;
 
-    if (ProcessFIBSBoardInfo(&brdInfo, anBoard, szPlayer, szOpp, pnMatchTo, pnScore, pnScoreOpp,
-                             anDice, pnCube, pfCubeOwner, pfDoubled, pfCrawford))
+    if (ProcessFIBSBoardInfo(&brdInfo, procBrd))
         return -1;
 
     return 0;
@@ -1017,10 +1013,7 @@ ParseFIBSBoardString(char *pch, FIBSBoardInfo * brdInfo)
 }
 
 extern int
-ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, TanBoard anBoard,
-                     char *szPlayer, char *szOpp, int *pnMatchTo,
-                     int *pnScore, int *pnScoreOpp,
-                     int anDice[2], int *pnCube, int *pfCubeOwner, int *pfDoubled, int *pfCrawford)
+ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
 {
 
     int i, n, fCanDouble, fOppCanDouble, anOppDice[2];
@@ -1029,51 +1022,54 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, TanBoard anBoard,
     int anFIBSBoard[26];
     int fMustSwap = 0;
 
-    *pnMatchTo = brdInfo->nMatchTo;
-    *pnScore = brdInfo->nScore;
-    *pnScoreOpp = brdInfo->nScoreOpp;
+    procBrd->nMatchTo = brdInfo->nMatchTo;
+    procBrd->nScore = brdInfo->nScore;
+    procBrd->nScoreOpp = brdInfo->nScoreOpp;
     nTurn = brdInfo->nTurn;
     nColor = brdInfo->nColor;
     nDirection = brdInfo->nDirection;
-    *pfDoubled = brdInfo->fDoubled;
-    *pnCube = brdInfo->nCube;
+    procBrd->fDoubled = brdInfo->fDoubled;
+    procBrd->nCube = brdInfo->nCube;
     fCanDouble = brdInfo->fCanDouble;
     fOppCanDouble = brdInfo->fOppCanDouble;
-    memcpy(anDice, brdInfo->anDice, sizeof(brdInfo->anDice));
+    memcpy(procBrd->anDice, brdInfo->anDice, sizeof(brdInfo->anDice));
     memcpy(anOppDice, brdInfo->anOppDice, sizeof(brdInfo->anOppDice));
     memcpy(anFIBSBoard, brdInfo->anFIBSBoard, sizeof(brdInfo->anFIBSBoard));
     fNonCrawford = brdInfo->fNonCrawford;
     fPostCrawford = brdInfo->fPostCrawford;
-    g_strlcpy(szPlayer, brdInfo->gsName->str, MAX_NAME_LEN);
-    g_strlcpy(szOpp, brdInfo->gsOpp->str, MAX_NAME_LEN);
+    g_strlcpy(procBrd->szPlayer, brdInfo->gsName->str, MAX_NAME_LEN);
+    g_strlcpy(procBrd->szOpp, brdInfo->gsOpp->str, MAX_NAME_LEN);
 
+    /* Not yet supported set to zero */
+    procBrd->fResignation = 0;
+    
     for (i = 0; i < 26; ++i)
         anFIBSBoard[i] = -anFIBSBoard[i];
 
     /* FIBS has a maximum match length of 99.  Unlimited matches are 
      * encoded with a match length of 9999.
      */
-    if (*pnMatchTo == 9999)
-        *pnMatchTo = 0;
+    if (procBrd->nMatchTo == 9999)
+        procBrd->nMatchTo = 0;
 
-    if (*pnMatchTo && (*pnMatchTo <= *pnScore || *pnMatchTo <= *pnScoreOpp))
+    if (procBrd->nMatchTo && (procBrd->nMatchTo <= procBrd->nScore || procBrd->nMatchTo <= procBrd->nScoreOpp))
         return -1;
 
     /* If the match length exceeds MAXSCORE we correct the match length
      * to MAXSCORE and the scores to the closest equivalents.
      */
-    if (*pnMatchTo > MAXSCORE) {
-        if (*pnMatchTo - *pnScore > MAXSCORE)
-            *pnScore = 0;
+    if (procBrd->nMatchTo > MAXSCORE) {
+        if (procBrd->nMatchTo - procBrd->nScore > MAXSCORE)
+            procBrd->nScore = 0;
         else
-            *pnScore -= *pnMatchTo - MAXSCORE;
+            procBrd->nScore -= procBrd->nMatchTo - MAXSCORE;
 
-        if (*pnMatchTo - *pnScoreOpp > MAXSCORE)
-            *pnScoreOpp = 0;
+        if (procBrd->nMatchTo - procBrd->nScoreOpp > MAXSCORE)
+            procBrd->nScoreOpp = 0;
         else
-            *pnScoreOpp -= *pnMatchTo - MAXSCORE;
+            procBrd->nScoreOpp -= procBrd->nMatchTo - MAXSCORE;
 
-        *pnMatchTo = MAXSCORE;
+        procBrd->nMatchTo = MAXSCORE;
     }
 
     /* Consistency check: 0 is a valid value for nColor but signifies
@@ -1089,19 +1085,19 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, TanBoard anBoard,
      * still help, when processing data from other sources than
      * fibs.com.
      */
-    if (!*pfDoubled && !fCanDouble && !fOppCanDouble)
-        *pfDoubled = 1;
+    if (!procBrd->fDoubled && !fCanDouble && !fOppCanDouble)
+        procBrd->fDoubled = 1;
 
-    if (*pfDoubled)
+    if (procBrd->fDoubled)
         fMustSwap = !fMustSwap;
     if (nTurn * nColor < 0)
         fMustSwap = !fMustSwap;
 
     /* Opponent's turn? */
     if (fMustSwap) {
-        nTmp = *pnScore;
-        *pnScore = *pnScoreOpp;
-        *pnScoreOpp = nTmp;
+        nTmp = procBrd->nScore;
+        procBrd->nScore = procBrd->nScoreOpp;
+        procBrd->nScoreOpp = nTmp;
         nTmp = fCanDouble;
         fCanDouble = fOppCanDouble;
         fOppCanDouble = nTmp;
@@ -1114,35 +1110,35 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, TanBoard anBoard,
     for (i = 0; i < 24; ++i) {
         n = nDirection < 0 ? anFIBSBoard[i + 1] : anFIBSBoard[25 - i - 1];
         if (nColor * n < 0) {
-            anBoard[1][i] = n < 0 ? -n : n;
-            anBoard[0][23 - i] = 0;
+            procBrd->anBoard[1][i] = n < 0 ? -n : n;
+            procBrd->anBoard[0][23 - i] = 0;
         } else if (nColor * n > 0) {
-            anBoard[1][i] = 0;
-            anBoard[0][23 - i] = n < 0 ? -n : n;
+            procBrd->anBoard[1][i] = 0;
+            procBrd->anBoard[0][23 - i] = n < 0 ? -n : n;
         } else {
-            anBoard[1][i] = anBoard[0][23 - i] = 0;
+            procBrd->anBoard[1][i] = procBrd->anBoard[0][23 - i] = 0;
         }
     }
 
     if (nDirection < 0) {
         n = anFIBSBoard[25];
-        anBoard[1][24] = n < 0 ? -n : n;
+        procBrd->anBoard[1][24] = n < 0 ? -n : n;
         n = anFIBSBoard[0];
-        anBoard[0][24] = n < 0 ? -n : n;
+        procBrd->anBoard[0][24] = n < 0 ? -n : n;
     } else {
         n = anFIBSBoard[0];
-        anBoard[1][24] = n < 0 ? -n : n;
+        procBrd->anBoard[1][24] = n < 0 ? -n : n;
         n = anFIBSBoard[25];
-        anBoard[0][24] = n < 0 ? -n : n;
+        procBrd->anBoard[0][24] = n < 0 ? -n : n;
     }
 
     /* See https://savannah.gnu.org/bugs/?36485 for this.  */
-    if (*pfDoubled)
-        SwapSides(anBoard);
+    if (procBrd->fDoubled)
+        SwapSides(procBrd->anBoard);
 
-    if (!anDice[0] && anOppDice[0]) {
-        anDice[0] = anOppDice[0];
-        anDice[1] = anOppDice[1];
+    if (!procBrd->anDice[0] && anOppDice[0]) {
+        procBrd->anDice[0] = anOppDice[0];
+        procBrd->anDice[1] = anOppDice[1];
     }
 
     /*
@@ -1167,21 +1163,21 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, TanBoard anBoard,
      * with the Crawford rule and we assume usage of the Crawford rule
      * as a default, the bias is negligible.
      */
-    if (!*pnMatchTo) {
-        *pfCrawford = 0;
+    if (!procBrd->nMatchTo) {
+        procBrd->fCrawford = 0;
     } else {
-        if (*pnMatchTo - *pnScore == 1 || *pnMatchTo - *pnScoreOpp == 1) {
+        if (procBrd->nMatchTo - procBrd->nScore == 1 || procBrd->nMatchTo - procBrd->nScoreOpp == 1) {
             if (fNonCrawford || fPostCrawford) {
-                *pfCrawford = 0;
+                procBrd->fCrawford = 0;
             } else {
-                *pfCrawford = 1;
+                procBrd->fCrawford = 1;
             }
         } else {
-            *pfCrawford = 0;
+            procBrd->fCrawford = 0;
         }
     }
 
-    *pfCubeOwner = fCanDouble != fOppCanDouble ? fCanDouble : -1;
+    procBrd->fCubeOwner = fCanDouble != fOppCanDouble ? fCanDouble : -1;
 
     return 0;
 }
