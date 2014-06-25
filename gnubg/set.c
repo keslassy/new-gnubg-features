@@ -1617,7 +1617,7 @@ extern void
 CommandSetAliases(char *sz)
 {
         if (strlen(sz) >= sizeof(aliases) )
-            outputf("%s %lu %s.\n", _("Aliases list limited to"), sizeof(aliases)-1, _("characters, truncating"));
+            outputf("%s %lu %s.\n", _("Aliases list limited to"), (long unsigned int)(sizeof(aliases)-1), _("characters, truncating"));
 
 	strncpy(aliases, sz, sizeof(aliases)-1);
 
