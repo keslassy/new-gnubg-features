@@ -681,10 +681,9 @@ CommandExternal(char *sz)
                         scanctx.fAdvOutput = g_value_get_int(g_list_nth_data(scanctx.pCmdData, 1));
                         szResponse = g_strdup_printf("Advanced output %s\n", scanctx.fAdvOutput ? "ON" : "OFF");                        
                     } else {
-                        szResponse = g_strdup("Error: set option not supported\n");
+                        szResponse = g_strdup_printf("Error: set option '%s' not supported\n", szOptStr);
                     }
                     g_list_gv_boxed_free(scanctx.pCmdData);
-                    g_list_free(scanctx.pCmdData);
 
                     break;
 
