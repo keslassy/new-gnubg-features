@@ -393,9 +393,7 @@ void
 playSoundFile(char *file, gboolean UNUSED(sync))
 {
     GError *error = NULL;
-#if HAVE_CANBERRA
-    static ca_context *canberracontext = NULL;
-#endif
+
     if (!g_file_test(file, G_FILE_TEST_EXISTS)) {
         outputf(_("The sound file (%s) doesn't exist.\n"), file);
         return;
@@ -436,16 +434,19 @@ playSoundFile(char *file, gboolean UNUSED(sync))
 #elif HAVE_APPLE_COREAUDIO
     CoreAudio_PlayFile(file);
 #elif HAVE_CANBERRA
-    if (!canberracontext) {
+    {
+        static ca_context *canberracontext = NULL;
+        if (!canberracontext) {
 #if USE_GTK
-        if (fX)
-            canberracontext = ca_gtk_context_get();
-        else
+            if (fX)
+                canberracontext = ca_gtk_context_get();
+            else
 #endif
-            ca_context_create(&canberracontext);
-	ca_context_change_props(canberracontext, CA_PROP_CANBERRA_ENABLE, "1", NULL);
+                ca_context_create(&canberracontext);
+            ca_context_change_props(canberracontext, CA_PROP_CANBERRA_ENABLE, "1", NULL);
+        }
+        ca_context_play(canberracontext, 0, CA_PROP_MEDIA_FILENAME, file, NULL);
     }
-    ca_context_play(canberracontext, 0, CA_PROP_MEDIA_FILENAME, file, NULL);
 #endif
 }
 
