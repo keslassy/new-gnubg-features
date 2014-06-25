@@ -717,8 +717,8 @@ CommandExternal(char *sz)
                         ExternalWrite(hPeer, dbgStr->str, strlen(dbgStr->str));
                         ProcessFIBSBoardInfo(&scanctx.bi, &processedBoard);
 
-                        anScore[0] = processedBoard.nScore;
-                        anScore[1] = processedBoard.nScoreOpp;
+                        anScore[0] = processedBoard.nScoreOpp;
+                        anScore[1] = processedBoard.nScore;
                         /* If the session isn't using Crawford rule, set crawford flag to false */
                         fCrawford = scanctx.fCrawfordRule ? processedBoard.fCrawford : FALSE;
                         /* Set the Jacoby flag appropriately from the external interface settings */
