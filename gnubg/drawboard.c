@@ -1041,7 +1041,7 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
     g_strlcpy(procBrd->szOpp, brdInfo->gsOpp->str, MAX_NAME_LEN);
 
     /* Not yet supported set to zero */
-    procBrd->fResignation = 0;
+    procBrd->nResignation = 0;
     
     for (i = 0; i < 26; ++i)
         anFIBSBoard[i] = -anFIBSBoard[i];

@@ -133,7 +133,8 @@ void yyerror(scancontext *scanner, const char *str)
 %{
 %}
 
-%token EOL EXIT DISABLED INTERFACEVERSION DEBUG SET
+%token EOL EXIT DISABLED INTERFACEVERSION 
+%token DEBUG SET ADVANCED NORMAL OUTPUT HELP PROMPT
 %token E_STRING E_CHARACTER E_INTEGER E_FLOAT E_BOOLEAN
 %token FIBSBOARD FIBSBOARDEND EVALUATION
 %token CRAWFORDRULE JACOBYRULE
@@ -164,6 +165,7 @@ void yyerror(scancontext *scanner, const char *str)
 %type <list>        evaloption
 %type <list>        sessionoption
 %type <list>        sessionoptions
+%type <list>        setcommand
 
 %type <gv>          evalcommand
 %type <gv>          boardcommand
@@ -182,18 +184,22 @@ commands:
             YYACCEPT;
         }
     |
-    SET DEBUG boolean_type EOL
+    SET setcommand EOL
         {
-            extcmd->fDebug = g_value_get_int($3);
-            extcmd->ct = COMMAND_SET_DEBUG;
-            g_value_unsetfree($3);                
-
+            extcmd->pCmdData = $2;
+            extcmd->ct = COMMAND_SET;
             YYACCEPT;
         }
     |
     INTERFACEVERSION EOL
         {
             extcmd->ct = COMMAND_VERSION;
+            YYACCEPT;
+        }
+    |
+    HELP EOL
+        {
+            extcmd->ct = COMMAND_HELP;
             YYACCEPT;
         }
     |
@@ -237,7 +243,7 @@ commands:
                     extcmd->fCubeful =  g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_CUBEFUL, gvfalse));
                     extcmd->rNoise = g_value_get_double(str2gv_map_get_key_value(optionsmap, KEY_STR_NOISE, gvfloatzero));
                     extcmd->fDeterministic = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_DETERMINISTIC, gvtrue));
-                    extcmd->fResignation = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_RESIGNATION, gvfalse));
+                    extcmd->nResignation = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_RESIGNATION, gvfalse));
 
                     g_value_unsetfree(gvtrue);
                     g_value_unsetfree(gvfalse);
@@ -255,6 +261,30 @@ commands:
         }
         ;
         
+setcommand:
+    DEBUG boolean_type
+        {
+            $$ = create_str2gvalue_tuple ("debug", $2);
+        }
+    |
+    OUTPUT ADVANCED
+        {
+            GVALUE_CREATE(G_TYPE_INT, int, 1, gvint); 
+            $$ = create_str2gvalue_tuple ("advoutput", gvint);
+        }
+    |
+    OUTPUT NORMAL
+        {
+            GVALUE_CREATE(G_TYPE_INT, int, 0, gvint); 
+            $$ = create_str2gvalue_tuple ("advoutput", gvint);
+        }
+    |
+    PROMPT string_type
+        {
+            $$ = create_str2gvalue_tuple ("prompt", $2);
+        }
+    ;
+    
 command:
     boardcommand
         {

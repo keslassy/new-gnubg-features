@@ -401,7 +401,6 @@ ExtEvaluation(scancontext * pec)
     evalcontext ec;
 
     if (ProcessFIBSBoardInfo(&pec->bi, &processedBoard)) {
-        outputl(_("Warning: badly formed board from external controller."));
         szResponse = g_strdup_printf("Error: badly formed board\n");
     } else {
 
@@ -473,19 +472,6 @@ ExtFIBSBoard(scancontext * pec)
         SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo, 
                     anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
 
-#if 0
-        {
-            char *asz[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-            char szBoard[10000];
-            outputl(DrawBoard(szBoard, anBoard, 1, asz, "no matchid", 15));
-
-            printf("score %d-%d to %d ", anScore[0], anScore[1], nMatchTo);
-            printf("dice %d %d ", anDice[0], anDice[1]);
-            printf("cubeowner %d cube %d turn %d crawford %d doubled %d\n",
-                   fCubeOwner, nCube, fTurn, fCrawford, fDoubled);
-        }
-#endif
-
         memcpy(anBoardOrig, processedBoard.anBoard, sizeof(processedBoard.anBoard));
 
         if (processedBoard.fDoubled) {
@@ -513,10 +499,7 @@ ExtFIBSBoard(scancontext * pec)
                 szResponse = g_strdup("take\n");
             }
 
-#if 0
-            /* this code is broken as the sign of fDoubled 
-             * indicates who doubled */
-        } else if (processedBoard.fDoubled < 0) {
+        } else if (pec->nResignation) {
 
             /* if opp wants to resign (extension to FIBS board) */
 
@@ -526,7 +509,7 @@ ExtFIBSBoard(scancontext * pec)
 
             getResignation(arOutput, processedBoard.anBoard, &ci, &esEvalCube);
 
-            getResignEquities(arOutput, &ci, -processedBoard.fDoubled, &rEqBefore, &rEqAfter);
+            getResignEquities(arOutput, &ci, pec->nResignation, &rEqBefore, &rEqAfter);
 
             /* if opponent gives up equity by resigning */
             if ((rEqAfter - epsilon) < rEqBefore)
@@ -534,7 +517,6 @@ ExtFIBSBoard(scancontext * pec)
             else
                 szResponse = g_strdup("reject\n");
 
-#endif                          /* broken */
         } else if (processedBoard.anDice[0]) {
             /* move */
             char szMove[64];
@@ -605,6 +587,7 @@ CommandExternal(char *sz)
     {
         fExit = FALSE;
         scanctx.fDebug = FALSE;
+        scanctx.fAdvOutput = FALSE;
 
         if ((h = ExternalSocket(&psa, &cb, sz)) < 0) {
             SockErr(sz);
@@ -682,14 +665,30 @@ CommandExternal(char *sz)
                 char **aszLines;
                 char **aszLinesOrig;
                 char *szMatchID;
+                gchar *szOptStr;
                 
                 switch (scanctx.ct) {
-                case COMMAND_SET_DEBUG:
-                    if (scanctx.fDebug)
-                        szResponse = g_strdup("Debug output ON\n");
-                    else
-                        szResponse = g_strdup("Debug Output OFF\n");
-    
+                case COMMAND_HELP:
+                    szResponse = g_strdup("\tNo help information available\n");
+                    break;
+                    
+                case COMMAND_SET:
+                    szOptStr = g_value_get_gstring_gchar(g_list_nth_data(scanctx.pCmdData, 0));
+                    if (g_ascii_strcasecmp(szOptStr, "debug") == 0) {
+                        if ((scanctx.fDebug = g_value_get_int(g_list_nth_data(scanctx.pCmdData, 1))))
+                            szResponse = g_strdup("Debug output ON\n");
+                        else
+                            szResponse = g_strdup("Debug Output OFF\n");
+                    } else if (g_ascii_strcasecmp(szOptStr, "advoutput") == 0) {
+                        if ((scanctx.fAdvOutput = g_value_get_int(g_list_nth_data(scanctx.pCmdData, 1))))
+                            szResponse = g_strdup("Advanced output ON\n");
+                        else
+                            szResponse = g_strdup("Advanced Output OFF\n");
+                        
+                    } else {
+                        szResponse = g_strdup("Error: set option not supported\n");
+                    }
+                    g_list_gv_boxed_free(scanctx.pCmdData);
                     break;
 
                 case COMMAND_VERSION:
@@ -724,7 +723,7 @@ CommandExternal(char *sz)
                         /* Set the Jacoby flag appropriately from the external interface settings */
                         fJacoby = scanctx.fJacobyRule;
                         
-                        szMatchID = MatchID((unsigned int *)processedBoard.anDice, 1, processedBoard.fResignation, 
+                        szMatchID = MatchID((unsigned int *)processedBoard.anDice, 1, processedBoard.nResignation, 
                                 processedBoard.fDoubled, 1, processedBoard.fCubeOwner, fCrawford, processedBoard.nMatchTo, 
                                 anScore, processedBoard.nCube, fJacoby, GAME_PLAYING);
         
@@ -738,6 +737,24 @@ CommandExternal(char *sz)
                             ExternalWrite(hPeer, "\n", 1);
                             aszLines++;
                         }
+
+                        dbgStr = g_string_assign(dbgStr, "");
+                        if (processedBoard.nMatchTo){
+                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Match Play %s Crawford Rule\n", scanctx.fCrawfordRule ? "with" : "without");
+                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Score: %d-%d/%d%s, ", processedBoard.nScore, 
+                                                   processedBoard.nScoreOpp, processedBoard.nMatchTo, processedBoard.fCrawford ? "*" : "");
+                        } else {
+                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Money Session %s Jacoby Rule\n", scanctx.fJacobyRule ? "with" : "without");
+                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Score: %d-%d, ", processedBoard.nScore, processedBoard.nScoreOpp);
+                        }
+                        g_string_append_printf(dbgStr, "Roll: %d%d\n", 
+                                               processedBoard.anDice[0], processedBoard.anDice[1]);
+                        g_string_append_printf(dbgStr, DEBUG_PREFIX "CubeOwner: %d, Cube: %d, Turn: %c, Doubled: %d, Resignation: %d\n",
+                                               processedBoard.fCubeOwner, processedBoard.nCube, 'X', processedBoard.fDoubled, 
+                                               processedBoard.nResignation);
+                        g_string_append(dbgStr, DEBUG_PREFIX "\n");
+                        ExternalWrite(hPeer, dbgStr->str, strlen(dbgStr->str));
+
                         g_string_free(dbgStr, TRUE);
                         g_strfreev (aszLinesOrig);
                     }

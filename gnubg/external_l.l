@@ -71,6 +71,11 @@ board:                  {   BEGIN(SBOARDP1);
                             return FIBSBOARD;
                         }
 
+prompt{EOT}             {   return PROMPT; }
+advanced{EOT}           {   return ADVANCED; }
+normal{EOT}             {   return NORMAL; }
+output{EOT}             {   return OUTPUT; }
+help{EOT}               {   return HELP; }
 set{EOT}                {   return SET; }
 debug{EOT}              {   return DEBUG; }
 version{EOT}            {   return INTERFACEVERSION; }
