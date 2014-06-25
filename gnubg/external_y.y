@@ -79,16 +79,6 @@
 #include "backgammon.h"
 #include "external_y.h"
 
-#define MAX_RFBF_ELEMENTS 53
-
-#define KEY_STR_RESIGNATION "resignation"
-#define KEY_STR_DETERMINISTIC "deterministic"
-#define KEY_STR_JACOBYRULE "jacobyrule"
-#define KEY_STR_CRAWFORDRULE "crawfordrule"
-#define KEY_STR_PRUNE "prune"
-#define KEY_STR_NOISE "noise"
-#define KEY_STR_CUBEFUL "cubeful"
-#define KEY_STR_PLIES "plies"
 
 #define extcmd ext_get_extra(scanner)  
 
@@ -264,24 +254,24 @@ commands:
 setcommand:
     DEBUG boolean_type
         {
-            $$ = create_str2gvalue_tuple ("debug", $2);
+            $$ = create_str2gvalue_tuple (KEY_STR_DEBUG, $2);
         }
     |
     OUTPUT ADVANCED
         {
             GVALUE_CREATE(G_TYPE_INT, int, 1, gvint); 
-            $$ = create_str2gvalue_tuple ("advoutput", gvint);
+            $$ = create_str2gvalue_tuple (KEY_STR_ADVOUTPUT, gvint);
         }
     |
     OUTPUT NORMAL
         {
             GVALUE_CREATE(G_TYPE_INT, int, 0, gvint); 
-            $$ = create_str2gvalue_tuple ("advoutput", gvint);
+            $$ = create_str2gvalue_tuple (KEY_STR_ADVOUTPUT, gvint);
         }
     |
     PROMPT string_type
         {
-            $$ = create_str2gvalue_tuple ("prompt", $2);
+            $$ = create_str2gvalue_tuple (KEY_STR_PROMPT, $2);
         }
     ;
     

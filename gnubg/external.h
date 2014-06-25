@@ -31,6 +31,20 @@ extern void ExtStartParse(void *scanner, const char *szCommand);
 extern int ExtInitParse(void **scancontext);
 extern void ExtDestroyParse(void *scancontext);
 
+#define MAX_RFBF_ELEMENTS 53
+
+#define KEY_STR_RESIGNATION "resignation"
+#define KEY_STR_DETERMINISTIC "deterministic"
+#define KEY_STR_JACOBYRULE "jacobyrule"
+#define KEY_STR_CRAWFORDRULE "crawfordrule"
+#define KEY_STR_PRUNE "prune"
+#define KEY_STR_NOISE "noise"
+#define KEY_STR_CUBEFUL "cubeful"
+#define KEY_STR_PLIES "plies"
+#define KEY_STR_ADVOUTPUT "advoutput"
+#define KEY_STR_DEBUG "debug"
+#define KEY_STR_PROMPT "prompt"
+
 typedef enum _cmdtype {
     COMMAND_NONE = 0,
     COMMAND_FIBSBOARD = 1,
