@@ -124,10 +124,10 @@ void yyerror(scancontext *scanner, const char *str)
 %}
 
 %token EOL EXIT DISABLED INTERFACEVERSION 
-%token DEBUG SET ADVANCED NORMAL OUTPUT HELP PROMPT
+%token DEBUG SET NEW OLD OUTPUT INTERFACE HELP PROMPT
 %token E_STRING E_CHARACTER E_INTEGER E_FLOAT E_BOOLEAN
 %token FIBSBOARD FIBSBOARDEND EVALUATION
-%token CRAWFORDRULE JACOBYRULE
+%token CRAWFORDRULE JACOBYRULE RESIGNATION BEAVERS
 %token CUBE CUBEFUL CUBELESS DETERMINISTIC NOISE PLIES PRUNE
 
 %type <bool>        E_BOOLEAN
@@ -234,6 +234,7 @@ commands:
                     extcmd->rNoise = g_value_get_double(str2gv_map_get_key_value(optionsmap, KEY_STR_NOISE, gvfloatzero));
                     extcmd->fDeterministic = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_DETERMINISTIC, gvtrue));
                     extcmd->nResignation = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_RESIGNATION, gvfalse));
+                    extcmd->fBeavers = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_BEAVERS, gvtrue));
 
                     g_value_unsetfree(gvtrue);
                     g_value_unsetfree(gvfalse);
@@ -257,16 +258,16 @@ setcommand:
             $$ = create_str2gvalue_tuple (KEY_STR_DEBUG, $2);
         }
     |
-    OUTPUT ADVANCED
+    INTERFACE NEW
         {
             GVALUE_CREATE(G_TYPE_INT, int, 1, gvint); 
-            $$ = create_str2gvalue_tuple (KEY_STR_ADVOUTPUT, gvint);
+            $$ = create_str2gvalue_tuple (KEY_STR_NEWINTERFACE, gvint);
         }
     |
-    OUTPUT NORMAL
+    INTERFACE OLD
         {
             GVALUE_CREATE(G_TYPE_INT, int, 0, gvint); 
-            $$ = create_str2gvalue_tuple (KEY_STR_ADVOUTPUT, gvint);
+            $$ = create_str2gvalue_tuple (KEY_STR_NEWINTERFACE, gvint);
         }
     |
     PROMPT string_type
@@ -333,6 +334,16 @@ sessionoption:
         { 
             $$ = create_str2gvalue_tuple (KEY_STR_CRAWFORDRULE, $2);
         }
+    | 
+    RESIGNATION integer_type
+        { 
+            $$ = create_str2gvalue_tuple (KEY_STR_RESIGNATION, $2);
+        }
+    | 
+    BEAVERS boolean_type
+        { 
+            $$ = create_str2gvalue_tuple (KEY_STR_BEAVERS, $2);
+        }
     ;
     
 evaloption:
@@ -398,9 +409,14 @@ sessionoptions:
                                     int, jacobyentry);
             STR2GV_MAPENTRY_CREATE(KEY_STR_CRAWFORDRULE, TRUE, G_TYPE_INT, 
                                     int, crawfordentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_RESIGNATION, FALSE, G_TYPE_INT, 
+                                    int, resignentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_BEAVERS, TRUE, G_TYPE_INT, 
+                                    int, beaversentry);
 
             GList *defaults = 
-                g_list_prepend(g_list_prepend(NULL, jacobyentry), crawfordentry);
+                g_list_prepend(g_list_prepend(g_list_prepend(g_list_prepend(NULL, jacobyentry), crawfordentry), \
+                               resignentry), beaversentry);
             $$ = defaults;
         }
     |
@@ -414,18 +430,19 @@ evaloptions:
     /* Empty */
         { 
             /* Setup the defaults */
-
             STR2GV_MAPENTRY_CREATE(KEY_STR_JACOBYRULE, fJacoby, G_TYPE_INT, 
                                     int, jacobyentry);
-            
             STR2GV_MAPENTRY_CREATE(KEY_STR_CRAWFORDRULE, TRUE, G_TYPE_INT, 
                                     int, crawfordentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_RESIGNATION, FALSE, G_TYPE_INT, 
+                                    int, resignentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_BEAVERS, TRUE, G_TYPE_INT, 
+                                    int, beaversentry);
 
             GList *defaults = 
-                g_list_prepend(g_list_prepend(NULL, jacobyentry), crawfordentry);
-
+                g_list_prepend(g_list_prepend(g_list_prepend(g_list_prepend(NULL, jacobyentry), crawfordentry), \
+                               resignentry), beaversentry);
             $$ = defaults;
-            
         }
     |
     evaloptions evaloption

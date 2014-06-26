@@ -72,9 +72,9 @@ board:                  {   BEGIN(SBOARDP1);
                         }
 
 prompt{EOT}             {   return PROMPT; }
-advanced{EOT}           {   return ADVANCED; }
-normal{EOT}             {   return NORMAL; }
-output{EOT}             {   return OUTPUT; }
+new{EOT}                {   return NEW; }
+old{EOT}                {   return OLD; }
+interface{EOT}          {   return INTERFACE; }
 help{EOT}               {   return HELP; }
 set{EOT}                {   return SET; }
 debug{EOT}              {   return DEBUG; }
@@ -108,6 +108,8 @@ fibsboard{EOT}          {   return FIBSBOARD; }
 [\[\],\(\)\{\}]         return (yytext[0]);
 
 <OPTIONS>{
+resignation{EOT}        {   return RESIGNATION; }
+beavers{EOT}            {   return BEAVERS; }
 crawfordrule{EOT}       {   return CRAWFORDRULE; }
 cube{EOT}               {   return CUBE; }
 cubeful{EOT}            {   return CUBEFUL; }
