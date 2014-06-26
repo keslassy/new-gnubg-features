@@ -1,7 +1,16 @@
+2014-06-26  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* import.c, show.c, gnubg.c, backgammon.h, set.c, commands.inc:
+	Minor changes to the "set aliases" feature from 2014-02-03 after
+	users feedback :
+	- command is now "set player1aliases"
+	- separator is now ';'
+	* doc/gnubgdb.xml: Document the above.
+
 2014-06-23  Michael Petch  <mpetch@gnubg.org>
 
-	* external_y.y, external_l.l, external.c, external.h : Added debug 
-	command to the external interface limtied debugging output support
+	* external_y.y, external_l.l, external.c, external.h : Added debug
+	command to the external interface limited debugging output support
 
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 

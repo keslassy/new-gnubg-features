@@ -1153,7 +1153,7 @@ ImportMatVariation(FILE * fp, char *szFilename, bgvariation bgVariation, int war
         gchar **token;
         int i = 0;
 
-        token = g_strsplit_set(aliases, ";", -1);
+        token = g_strsplit_set(player1aliases, ";", -1);
 
         while (token[i] != NULL)
             if (!strcmp(token[i++], ap[0].szName)) {

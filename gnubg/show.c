@@ -518,7 +518,7 @@ CommandShowDelay(char *UNUSED(sz))
 extern void
 CommandShowAliases(char *UNUSED(sz))
 {
-    outputf(_("Aliases for player 1 when importing MAT files is set to \"%s\".\n "), aliases);
+    outputf(_("Aliases for player 1 when importing MAT files is set to \"%s\".\n "), player1aliases);
 }
 
 extern void
