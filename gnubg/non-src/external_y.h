@@ -40,48 +40,68 @@
      EOL = 258,
      EXIT = 259,
      DISABLED = 260,
-     EXTVERSION = 261,
-     EXTSTRING = 262,
-     EXTCHARACTER = 263,
-     EXTINTEGER = 264,
-     EXTFLOAT = 265,
-     EXTBOOLEAN = 266,
-     FIBSBOARD = 267,
-     FIBSBOARDEND = 268,
-     EVALUATION = 269,
-     CRAWFORDRULE = 270,
-     JACOBYRULE = 271,
-     CUBE = 272,
-     CUBEFUL = 273,
-     CUBELESS = 274,
-     DETERMINISTIC = 275,
-     NOISE = 276,
-     PLIES = 277,
-     PRUNE = 278
+     INTERFACEVERSION = 261,
+     DEBUG = 262,
+     SET = 263,
+     NEW = 264,
+     OLD = 265,
+     OUTPUT = 266,
+     INTERFACE = 267,
+     HELP = 268,
+     PROMPT = 269,
+     E_STRING = 270,
+     E_CHARACTER = 271,
+     E_INTEGER = 272,
+     E_FLOAT = 273,
+     E_BOOLEAN = 274,
+     FIBSBOARD = 275,
+     FIBSBOARDEND = 276,
+     EVALUATION = 277,
+     CRAWFORDRULE = 278,
+     JACOBYRULE = 279,
+     RESIGNATION = 280,
+     BEAVERS = 281,
+     CUBE = 282,
+     CUBEFUL = 283,
+     CUBELESS = 284,
+     DETERMINISTIC = 285,
+     NOISE = 286,
+     PLIES = 287,
+     PRUNE = 288
    };
 #endif
 /* Tokens.  */
 #define EOL 258
 #define EXIT 259
 #define DISABLED 260
-#define EXTVERSION 261
-#define EXTSTRING 262
-#define EXTCHARACTER 263
-#define EXTINTEGER 264
-#define EXTFLOAT 265
-#define EXTBOOLEAN 266
-#define FIBSBOARD 267
-#define FIBSBOARDEND 268
-#define EVALUATION 269
-#define CRAWFORDRULE 270
-#define JACOBYRULE 271
-#define CUBE 272
-#define CUBEFUL 273
-#define CUBELESS 274
-#define DETERMINISTIC 275
-#define NOISE 276
-#define PLIES 277
-#define PRUNE 278
+#define INTERFACEVERSION 261
+#define DEBUG 262
+#define SET 263
+#define NEW 264
+#define OLD 265
+#define OUTPUT 266
+#define INTERFACE 267
+#define HELP 268
+#define PROMPT 269
+#define E_STRING 270
+#define E_CHARACTER 271
+#define E_INTEGER 272
+#define E_FLOAT 273
+#define E_BOOLEAN 274
+#define FIBSBOARD 275
+#define FIBSBOARDEND 276
+#define EVALUATION 277
+#define CRAWFORDRULE 278
+#define JACOBYRULE 279
+#define RESIGNATION 280
+#define BEAVERS 281
+#define CUBE 282
+#define CUBEFUL 283
+#define CUBELESS 284
+#define DETERMINISTIC 285
+#define NOISE 286
+#define PLIES 287
+#define PRUNE 288
 
 
 
@@ -91,7 +111,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 111 "external_y.y"
+#line 112 "external_y.y"
 
     gboolean bool;
     gchar character;
@@ -105,7 +125,7 @@ typedef union YYSTYPE
 
 
 /* Line 2068 of yacc.c  */
-#line 109 "external_y.h"
+#line 129 "external_y.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

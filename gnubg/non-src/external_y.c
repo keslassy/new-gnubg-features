@@ -148,6 +148,7 @@
 #include "backgammon.h"
 #include "external_y.h"
 
+
 #define extcmd ext_get_extra(scanner)  
 
 int YY_PREFIX(get_column)  (void * yyscanner );
@@ -170,7 +171,7 @@ void yyerror(scancontext *scanner, const char *str)
 
 
 /* Line 268 of yacc.c  */
-#line 174 "external_y.c"
+#line 175 "external_y.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -200,48 +201,68 @@ void yyerror(scancontext *scanner, const char *str)
      EOL = 258,
      EXIT = 259,
      DISABLED = 260,
-     EXTVERSION = 261,
-     EXTSTRING = 262,
-     EXTCHARACTER = 263,
-     EXTINTEGER = 264,
-     EXTFLOAT = 265,
-     EXTBOOLEAN = 266,
-     FIBSBOARD = 267,
-     FIBSBOARDEND = 268,
-     EVALUATION = 269,
-     CRAWFORDRULE = 270,
-     JACOBYRULE = 271,
-     CUBE = 272,
-     CUBEFUL = 273,
-     CUBELESS = 274,
-     DETERMINISTIC = 275,
-     NOISE = 276,
-     PLIES = 277,
-     PRUNE = 278
+     INTERFACEVERSION = 261,
+     DEBUG = 262,
+     SET = 263,
+     NEW = 264,
+     OLD = 265,
+     OUTPUT = 266,
+     INTERFACE = 267,
+     HELP = 268,
+     PROMPT = 269,
+     E_STRING = 270,
+     E_CHARACTER = 271,
+     E_INTEGER = 272,
+     E_FLOAT = 273,
+     E_BOOLEAN = 274,
+     FIBSBOARD = 275,
+     FIBSBOARDEND = 276,
+     EVALUATION = 277,
+     CRAWFORDRULE = 278,
+     JACOBYRULE = 279,
+     RESIGNATION = 280,
+     BEAVERS = 281,
+     CUBE = 282,
+     CUBEFUL = 283,
+     CUBELESS = 284,
+     DETERMINISTIC = 285,
+     NOISE = 286,
+     PLIES = 287,
+     PRUNE = 288
    };
 #endif
 /* Tokens.  */
 #define EOL 258
 #define EXIT 259
 #define DISABLED 260
-#define EXTVERSION 261
-#define EXTSTRING 262
-#define EXTCHARACTER 263
-#define EXTINTEGER 264
-#define EXTFLOAT 265
-#define EXTBOOLEAN 266
-#define FIBSBOARD 267
-#define FIBSBOARDEND 268
-#define EVALUATION 269
-#define CRAWFORDRULE 270
-#define JACOBYRULE 271
-#define CUBE 272
-#define CUBEFUL 273
-#define CUBELESS 274
-#define DETERMINISTIC 275
-#define NOISE 276
-#define PLIES 277
-#define PRUNE 278
+#define INTERFACEVERSION 261
+#define DEBUG 262
+#define SET 263
+#define NEW 264
+#define OLD 265
+#define OUTPUT 266
+#define INTERFACE 267
+#define HELP 268
+#define PROMPT 269
+#define E_STRING 270
+#define E_CHARACTER 271
+#define E_INTEGER 272
+#define E_FLOAT 273
+#define E_BOOLEAN 274
+#define FIBSBOARD 275
+#define FIBSBOARDEND 276
+#define EVALUATION 277
+#define CRAWFORDRULE 278
+#define JACOBYRULE 279
+#define RESIGNATION 280
+#define BEAVERS 281
+#define CUBE 282
+#define CUBEFUL 283
+#define CUBELESS 284
+#define DETERMINISTIC 285
+#define NOISE 286
+#define PLIES 287
+#define PRUNE 288
 
 
 
@@ -251,7 +272,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 111 "external_y.y"
+#line 112 "external_y.y"
 
     gboolean bool;
     gchar character;
@@ -265,7 +286,7 @@ typedef union YYSTYPE
 
 
 /* Line 293 of yacc.c  */
-#line 269 "external_y.c"
+#line 290 "external_y.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -276,12 +297,12 @@ typedef union YYSTYPE
 /* Copy the second part of user declarations.  */
 
 /* Line 343 of yacc.c  */
-#line 122 "external_y.y"
+#line 123 "external_y.y"
 
 
 
 /* Line 343 of yacc.c  */
-#line 285 "external_y.c"
+#line 306 "external_y.c"
 
 #ifdef short
 # undef short
@@ -498,22 +519,22 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  18
+#define YYFINAL  25
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   55
+#define YYLAST   74
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  28
+#define YYNTOKENS  38
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  22
+#define YYNNTS  23
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  47
+#define YYNRULES  55
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  69
+#define YYNSTATES  85
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   278
+#define YYMAXUTOK   288
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -525,8 +546,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      25,    26,     2,     2,    27,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    24,     2,
+      35,    36,     2,     2,    37,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    34,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -548,7 +569,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,    23
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    31,    32,    33
 };
 
 #if YYDEBUG
@@ -556,39 +578,43 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     5,     8,    11,    14,    16,    18,    21,
-      23,    25,    29,    31,    34,    37,    40,    43,    46,    48,
-      51,    53,    56,    59,    61,    63,    64,    67,    68,    71,
-      74,    77,    82,    90,    92,    94,    96,    98,   100,   102,
-     104,   106,   108,   112,   114,   116,   117,   119
+       0,     0,     3,     5,     9,    12,    15,    18,    21,    24,
+      27,    30,    33,    35,    37,    40,    42,    44,    48,    50,
+      53,    56,    59,    62,    65,    68,    71,    73,    76,    78,
+      81,    84,    86,    88,    89,    92,    93,    96,    99,   102,
+     107,   115,   117,   119,   121,   123,   125,   127,   129,   131,
+     133,   137,   139,   141,   142,   144
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      29,     0,    -1,     3,    -1,     6,     3,    -1,     4,     3,
-      -1,    30,     3,    -1,    38,    -1,    39,    -1,     5,    47,
-      -1,    43,    -1,    31,    -1,    32,    24,    31,    -1,    13,
-      -1,    16,    44,    -1,    15,    44,    -1,    22,    43,    -1,
-      21,    41,    -1,    21,    43,    -1,    23,    -1,    23,    44,
-      -1,    20,    -1,    20,    44,    -1,    17,    44,    -1,    18,
-      -1,    19,    -1,    -1,    36,    34,    -1,    -1,    37,    35,
-      -1,    37,    34,    -1,    40,    36,    -1,    14,    12,    40,
-      37,    -1,    12,     7,    24,     7,    24,    32,    33,    -1,
-      10,    -1,     7,    -1,     9,    -1,    11,    -1,    47,    -1,
-      44,    -1,    42,    -1,    41,    -1,    43,    -1,    25,    49,
-      26,    -1,    46,    -1,    45,    -1,    -1,    48,    -1,    49,
-      27,    48,    -1
+      39,     0,    -1,     3,    -1,     8,    40,     3,    -1,     6,
+       3,    -1,    13,     3,    -1,     4,     3,    -1,    41,     3,
+      -1,     7,    55,    -1,    12,     9,    -1,    12,    10,    -1,
+      14,    53,    -1,    49,    -1,    50,    -1,     5,    58,    -1,
+      54,    -1,    42,    -1,    43,    34,    42,    -1,    21,    -1,
+      24,    55,    -1,    23,    55,    -1,    25,    54,    -1,    26,
+      55,    -1,    32,    54,    -1,    31,    52,    -1,    31,    54,
+      -1,    33,    -1,    33,    55,    -1,    30,    -1,    30,    55,
+      -1,    27,    55,    -1,    28,    -1,    29,    -1,    -1,    47,
+      45,    -1,    -1,    48,    46,    -1,    48,    45,    -1,    51,
+      47,    -1,    22,    20,    51,    48,    -1,    20,    15,    34,
+      15,    34,    43,    44,    -1,    18,    -1,    15,    -1,    17,
+      -1,    19,    -1,    58,    -1,    55,    -1,    53,    -1,    52,
+      -1,    54,    -1,    35,    60,    36,    -1,    57,    -1,    56,
+      -1,    -1,    59,    -1,    60,    37,    59,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   169,   169,   175,   181,   187,   239,   247,   255,   267,
-     271,   276,   283,   287,   292,   299,   304,   309,   317,   322,
-     327,   332,   337,   342,   347,   355,   367,   375,   391,   396,
-     403,   417,   432,   444,   452,   461,   469,   477,   487,   487,
-     487,   487,   492,   499,   499,   504,   508,   513
+       0,   171,   171,   177,   184,   190,   196,   202,   256,   261,
+     267,   273,   280,   288,   296,   308,   312,   317,   324,   328,
+     333,   338,   343,   350,   355,   360,   368,   373,   378,   383,
+     388,   393,   398,   406,   423,   431,   448,   453,   460,   474,
+     489,   501,   509,   518,   526,   534,   544,   544,   544,   544,
+     549,   556,   556,   561,   565,   570
 };
 #endif
 
@@ -597,16 +623,17 @@ static const yytype_uint16 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "EOL", "EXIT", "DISABLED", "EXTVERSION",
-  "EXTSTRING", "EXTCHARACTER", "EXTINTEGER", "EXTFLOAT", "EXTBOOLEAN",
-  "FIBSBOARD", "FIBSBOARDEND", "EVALUATION", "CRAWFORDRULE", "JACOBYRULE",
-  "CUBE", "CUBEFUL", "CUBELESS", "DETERMINISTIC", "NOISE", "PLIES",
-  "PRUNE", "':'", "'('", "')'", "','", "$accept", "commands", "command",
-  "board_element", "board_elements", "endboard", "sessionoption",
-  "evaloption", "sessionoptions", "evaloptions", "boardcommand",
-  "evalcommand", "board", "float_type", "string_type", "integer_type",
-  "boolean_type", "list_type", "basic_types", "list", "list_element",
-  "list_elements", 0
+  "$end", "error", "$undefined", "EOL", "EXIT", "DISABLED",
+  "INTERFACEVERSION", "DEBUG", "SET", "NEW", "OLD", "OUTPUT", "INTERFACE",
+  "HELP", "PROMPT", "E_STRING", "E_CHARACTER", "E_INTEGER", "E_FLOAT",
+  "E_BOOLEAN", "FIBSBOARD", "FIBSBOARDEND", "EVALUATION", "CRAWFORDRULE",
+  "JACOBYRULE", "RESIGNATION", "BEAVERS", "CUBE", "CUBEFUL", "CUBELESS",
+  "DETERMINISTIC", "NOISE", "PLIES", "PRUNE", "':'", "'('", "')'", "','",
+  "$accept", "commands", "setcommand", "command", "board_element",
+  "board_elements", "endboard", "sessionoption", "evaloption",
+  "sessionoptions", "evaloptions", "boardcommand", "evalcommand", "board",
+  "float_type", "string_type", "integer_type", "boolean_type", "list_type",
+  "basic_types", "list", "list_element", "list_elements", 0
 };
 #endif
 
@@ -617,28 +644,31 @@ static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,    58,    40,    41,    44
+     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
+     285,   286,   287,   288,    58,    40,    41,    44
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    28,    29,    29,    29,    29,    30,    30,    30,    31,
-      32,    32,    33,    34,    34,    35,    35,    35,    35,    35,
-      35,    35,    35,    35,    35,    36,    36,    37,    37,    37,
-      38,    39,    40,    41,    42,    43,    44,    45,    46,    46,
-      46,    46,    47,    48,    48,    49,    49,    49
+       0,    38,    39,    39,    39,    39,    39,    39,    40,    40,
+      40,    40,    41,    41,    41,    42,    43,    43,    44,    45,
+      45,    45,    45,    46,    46,    46,    46,    46,    46,    46,
+      46,    46,    46,    47,    47,    48,    48,    48,    49,    50,
+      51,    52,    53,    54,    55,    56,    57,    57,    57,    57,
+      58,    59,    59,    60,    60,    60
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     2,     2,     2,     1,     1,     2,     1,
-       1,     3,     1,     2,     2,     2,     2,     2,     1,     2,
-       1,     2,     2,     1,     1,     0,     2,     0,     2,     2,
-       2,     4,     7,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     3,     1,     1,     0,     1,     3
+       0,     2,     1,     3,     2,     2,     2,     2,     2,     2,
+       2,     2,     1,     1,     2,     1,     1,     3,     1,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     1,     2,
+       2,     1,     1,     0,     2,     0,     2,     2,     2,     4,
+       7,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+       3,     1,     1,     0,     1,     3
 };
 
 /* YYDEFACT[STATE-NAME] -- Default reduction number in state STATE-NUM.
@@ -646,43 +676,47 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     2,     0,     0,     0,     0,     0,     0,     0,     6,
-       7,    25,     4,    45,     8,     3,     0,     0,     1,     5,
-      30,    34,    35,    33,    36,    40,    39,    41,    38,    44,
-      43,    37,    46,     0,     0,    27,     0,     0,    26,    42,
-       0,     0,    31,    14,    13,    47,     0,     0,    23,    24,
-      20,     0,     0,    18,    29,    28,    10,     0,     9,    22,
-      21,    16,    17,    15,    19,    12,     0,    32,    11
+       0,     2,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,    12,    13,    33,     6,    53,    14,     4,     0,     0,
+       0,     0,     5,     0,     0,     1,     7,    38,    42,    43,
+      41,    44,    48,    47,    49,    46,    52,    51,    45,    54,
+       0,     8,     9,    10,    11,     3,     0,    35,     0,     0,
+       0,     0,    34,    50,     0,     0,    39,    20,    19,    21,
+      22,    55,     0,     0,    31,    32,    28,     0,     0,    26,
+      37,    36,    16,     0,    15,    30,    29,    24,    25,    23,
+      27,    18,     0,    40,    17
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     7,     8,    56,    57,    67,    38,    55,    20,    42,
-       9,    10,    11,    25,    26,    27,    28,    29,    30,    31,
-      32,    33
+      -1,     9,    21,    10,    72,    73,    83,    52,    71,    27,
+      56,    11,    12,    13,    32,    33,    34,    35,    36,    37,
+      38,    39,    40
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -47
+#define YYPACT_NINF -49
 static const yytype_int8 yypact[] =
 {
-      18,   -47,     5,   -21,    10,    12,    21,    31,    40,   -47,
-     -47,   -47,   -47,     0,   -47,   -47,    20,    33,   -47,   -47,
-       1,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,
-     -47,   -47,   -47,     2,    39,   -47,    36,    36,   -47,   -47,
-       0,    24,    19,   -47,   -47,   -47,    41,    36,   -47,   -47,
-      36,    17,    41,    36,   -47,   -47,   -47,   -10,   -47,   -47,
-     -47,   -47,   -47,   -47,   -47,   -47,    41,   -47,   -47
+       3,   -49,     7,   -23,    15,    10,    26,     0,    19,    32,
+      41,   -49,   -49,   -49,   -49,   -14,   -49,   -49,    27,    18,
+      34,    44,   -49,    16,    43,   -49,   -49,    12,   -49,   -49,
+     -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,   -49,
+       4,   -49,   -49,   -49,   -49,   -49,    49,   -49,    27,    27,
+      48,    27,   -49,   -49,   -14,    33,    29,   -49,   -49,   -49,
+     -49,   -49,    48,    27,   -49,   -49,    27,    25,    48,    27,
+     -49,   -49,   -49,    -8,   -49,   -49,   -49,   -49,   -49,   -49,
+     -49,   -49,    48,   -49,   -49
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -47,   -47,   -47,   -17,   -47,   -47,     9,   -47,   -47,   -47,
-     -47,   -47,    35,     3,   -47,   -46,   -35,   -47,   -47,    50,
-      15,   -47
+     -49,   -49,   -49,   -49,   -16,   -49,   -49,    13,   -49,   -49,
+     -49,   -49,   -49,    46,     1,    51,   -48,   -18,   -49,   -49,
+      69,    20,   -49
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -691,41 +725,47 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      58,    43,    44,    65,    13,    62,    63,    21,    12,    22,
-      23,    24,    59,    15,    66,    60,    36,    37,    64,    16,
-      58,     1,     2,     3,     4,    13,    22,    23,    39,    40,
-       5,    18,     6,    17,    36,    37,    47,    48,    49,    50,
-      51,    52,    53,    19,    34,     5,    41,    24,    46,    68,
-      22,    54,    35,    14,    61,    45
+      41,    28,    59,    29,    30,    31,     1,     2,     3,     4,
+      14,     5,    15,    81,    74,    23,     6,    18,    17,    78,
+      79,    15,    19,     7,    20,     8,    82,    42,    43,    22,
+      57,    58,    25,    60,    74,    48,    49,    50,    51,    24,
+      53,    54,    29,    30,    26,    75,    31,    45,    76,    28,
+      46,    80,    48,    49,    50,    51,    63,    64,    65,    66,
+      67,    68,    69,     7,    55,    29,    84,    62,    77,    70,
+      47,    44,    16,     0,    61
 };
 
 #define yypact_value_is_default(yystate) \
-  ((yystate) == (-47))
+  ((yystate) == (-49))
 
 #define yytable_value_is_error(yytable_value) \
   YYID (0)
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-      46,    36,    37,    13,    25,    51,    52,     7,     3,     9,
-      10,    11,    47,     3,    24,    50,    15,    16,    53,     7,
-      66,     3,     4,     5,     6,    25,     9,    10,    26,    27,
-      12,     0,    14,    12,    15,    16,    17,    18,    19,    20,
-      21,    22,    23,     3,    24,    12,     7,    11,    24,    66,
-       9,    42,    17,     3,    51,    40
+      18,    15,    50,    17,    18,    19,     3,     4,     5,     6,
+       3,     8,    35,    21,    62,    15,    13,     7,     3,    67,
+      68,    35,    12,    20,    14,    22,    34,     9,    10,     3,
+      48,    49,     0,    51,    82,    23,    24,    25,    26,    20,
+      36,    37,    17,    18,     3,    63,    19,     3,    66,    15,
+      34,    69,    23,    24,    25,    26,    27,    28,    29,    30,
+      31,    32,    33,    20,    15,    17,    82,    34,    67,    56,
+      24,    20,     3,    -1,    54
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     4,     5,     6,    12,    14,    29,    30,    38,
-      39,    40,     3,    25,    47,     3,     7,    12,     0,     3,
-      36,     7,     9,    10,    11,    41,    42,    43,    44,    45,
-      46,    47,    48,    49,    24,    40,    15,    16,    34,    26,
-      27,     7,    37,    44,    44,    48,    24,    17,    18,    19,
-      20,    21,    22,    23,    34,    35,    31,    32,    43,    44,
-      44,    41,    43,    43,    44,    13,    24,    33,    31
+       0,     3,     4,     5,     6,     8,    13,    20,    22,    39,
+      41,    49,    50,    51,     3,    35,    58,     3,     7,    12,
+      14,    40,     3,    15,    20,     0,     3,    47,    15,    17,
+      18,    19,    52,    53,    54,    55,    56,    57,    58,    59,
+      60,    55,     9,    10,    53,     3,    34,    51,    23,    24,
+      25,    26,    45,    36,    37,    15,    48,    55,    55,    54,
+      55,    59,    34,    27,    28,    29,    30,    31,    32,    33,
+      45,    46,    42,    43,    54,    55,    55,    52,    54,    54,
+      55,    21,    34,    44,    42
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1267,185 +1307,194 @@ yydestruct (yymsg, yytype, yyvaluep, scanner)
 
   switch (yytype)
     {
-      case 7: /* "EXTSTRING" */
-
-/* Line 1391 of yacc.c  */
-#line 161 "external_y.y"
-	{ if ((yyvaluep->str)) g_string_free((yyvaluep->str), TRUE); };
-
-/* Line 1391 of yacc.c  */
-#line 1278 "external_y.c"
-	break;
-      case 30: /* "command" */
+      case 15: /* "E_STRING" */
 
 /* Line 1391 of yacc.c  */
 #line 164 "external_y.y"
+	{ if ((yyvaluep->str)) g_string_free((yyvaluep->str), TRUE); };
+
+/* Line 1391 of yacc.c  */
+#line 1318 "external_y.c"
+	break;
+      case 40: /* "setcommand" */
+
+/* Line 1391 of yacc.c  */
+#line 165 "external_y.y"
+	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
+
+/* Line 1391 of yacc.c  */
+#line 1327 "external_y.c"
+	break;
+      case 41: /* "command" */
+
+/* Line 1391 of yacc.c  */
+#line 167 "external_y.y"
 	{ if ((yyvaluep->cmd)) { g_free((yyvaluep->cmd)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1287 "external_y.c"
+#line 1336 "external_y.c"
 	break;
-      case 31: /* "board_element" */
+      case 42: /* "board_element" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1296 "external_y.c"
+#line 1345 "external_y.c"
 	break;
-      case 32: /* "board_elements" */
+      case 43: /* "board_elements" */
 
 /* Line 1391 of yacc.c  */
-#line 162 "external_y.y"
+#line 165 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1305 "external_y.c"
+#line 1354 "external_y.c"
 	break;
-      case 34: /* "sessionoption" */
+      case 45: /* "sessionoption" */
 
 /* Line 1391 of yacc.c  */
-#line 162 "external_y.y"
+#line 165 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1314 "external_y.c"
+#line 1363 "external_y.c"
 	break;
-      case 35: /* "evaloption" */
+      case 46: /* "evaloption" */
 
 /* Line 1391 of yacc.c  */
-#line 162 "external_y.y"
+#line 165 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1323 "external_y.c"
+#line 1372 "external_y.c"
 	break;
-      case 36: /* "sessionoptions" */
+      case 47: /* "sessionoptions" */
 
 /* Line 1391 of yacc.c  */
-#line 162 "external_y.y"
+#line 165 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1332 "external_y.c"
+#line 1381 "external_y.c"
 	break;
-      case 37: /* "evaloptions" */
+      case 48: /* "evaloptions" */
 
 /* Line 1391 of yacc.c  */
-#line 162 "external_y.y"
+#line 165 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1341 "external_y.c"
+#line 1390 "external_y.c"
 	break;
-      case 38: /* "boardcommand" */
+      case 49: /* "boardcommand" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1350 "external_y.c"
+#line 1399 "external_y.c"
 	break;
-      case 39: /* "evalcommand" */
+      case 50: /* "evalcommand" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1359 "external_y.c"
+#line 1408 "external_y.c"
 	break;
-      case 40: /* "board" */
+      case 51: /* "board" */
 
 /* Line 1391 of yacc.c  */
-#line 162 "external_y.y"
+#line 165 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1368 "external_y.c"
+#line 1417 "external_y.c"
 	break;
-      case 41: /* "float_type" */
+      case 52: /* "float_type" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1377 "external_y.c"
+#line 1426 "external_y.c"
 	break;
-      case 42: /* "string_type" */
+      case 53: /* "string_type" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1386 "external_y.c"
+#line 1435 "external_y.c"
 	break;
-      case 43: /* "integer_type" */
+      case 54: /* "integer_type" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1395 "external_y.c"
+#line 1444 "external_y.c"
 	break;
-      case 44: /* "boolean_type" */
+      case 55: /* "boolean_type" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1404 "external_y.c"
+#line 1453 "external_y.c"
 	break;
-      case 45: /* "list_type" */
+      case 56: /* "list_type" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1413 "external_y.c"
+#line 1462 "external_y.c"
 	break;
-      case 46: /* "basic_types" */
+      case 57: /* "basic_types" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1422 "external_y.c"
+#line 1471 "external_y.c"
 	break;
-      case 47: /* "list" */
+      case 58: /* "list" */
 
 /* Line 1391 of yacc.c  */
-#line 162 "external_y.y"
+#line 165 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1431 "external_y.c"
+#line 1480 "external_y.c"
 	break;
-      case 48: /* "list_element" */
+      case 59: /* "list_element" */
 
 /* Line 1391 of yacc.c  */
-#line 163 "external_y.y"
+#line 166 "external_y.y"
 	{ if ((yyvaluep->gv)) { g_value_unsetfree((yyvaluep->gv)); }};
 
 /* Line 1391 of yacc.c  */
-#line 1440 "external_y.c"
+#line 1489 "external_y.c"
 	break;
-      case 49: /* "list_elements" */
+      case 60: /* "list_elements" */
 
 /* Line 1391 of yacc.c  */
-#line 162 "external_y.y"
+#line 165 "external_y.y"
 	{ if ((yyvaluep->list)) g_list_free((yyvaluep->list)); };
 
 /* Line 1391 of yacc.c  */
-#line 1449 "external_y.c"
+#line 1498 "external_y.c"
 	break;
 
       default:
@@ -1747,19 +1796,20 @@ yyreduce:
         case 2:
 
 /* Line 1806 of yacc.c  */
-#line 170 "external_y.y"
+#line 172 "external_y.y"
     {
-        extcmd->ct = COMMAND_NONE;
-        YYACCEPT;
-    }
+            extcmd->ct = COMMAND_NONE;
+            YYACCEPT;
+        }
     break;
 
   case 3:
 
 /* Line 1806 of yacc.c  */
-#line 176 "external_y.y"
+#line 178 "external_y.y"
     {
-            extcmd->ct = COMMAND_VERSION;
+            extcmd->pCmdData = (yyvsp[(2) - (3)].list);
+            extcmd->ct = COMMAND_SET;
             YYACCEPT;
         }
     break;
@@ -1767,9 +1817,9 @@ yyreduce:
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 182 "external_y.y"
+#line 185 "external_y.y"
     {
-            extcmd->ct = COMMAND_EXIT;
+            extcmd->ct = COMMAND_VERSION;
             YYACCEPT;
         }
     break;
@@ -1777,7 +1827,27 @@ yyreduce:
   case 5:
 
 /* Line 1806 of yacc.c  */
-#line 188 "external_y.y"
+#line 191 "external_y.y"
+    {
+            extcmd->ct = COMMAND_HELP;
+            YYACCEPT;
+        }
+    break;
+
+  case 6:
+
+/* Line 1806 of yacc.c  */
+#line 197 "external_y.y"
+    {
+            extcmd->ct = COMMAND_EXIT;
+            YYACCEPT;
+        }
+    break;
+
+  case 7:
+
+/* Line 1806 of yacc.c  */
+#line 203 "external_y.y"
     {
             if ((yyvsp[(1) - (2)].cmd)->cmdType == COMMAND_LIST) {
                 g_value_unsetfree((yyvsp[(1) - (2)].cmd)->pvData);
@@ -1787,8 +1857,9 @@ yyreduce:
                 GMap *optionsmap = (GMap *)g_value_get_boxed((GValue *)g_list_nth_data(g_value_get_boxed((yyvsp[(1) - (2)].cmd)->pvData), 1));
                 GList *boarddata = (GList *)g_value_get_boxed((GValue *)g_list_nth_data(g_value_get_boxed((yyvsp[(1) - (2)].cmd)->pvData), 0));
                 extcmd->ct = (yyvsp[(1) - (2)].cmd)->cmdType;
+                extcmd->pCmdData = (yyvsp[(1) - (2)].cmd)->pvData;
 
-                if (g_list_length(boarddata) <= 52) {
+                if (g_list_length(boarddata) < MAX_RFBF_ELEMENTS) {
                     GVALUE_CREATE(G_TYPE_INT, int, 0, gvfalse); 
                     GVALUE_CREATE(G_TYPE_INT, int, 1, gvtrue); 
                     GVALUE_CREATE(G_TYPE_DOUBLE, double, 0.0, gvfloatzero); 
@@ -1803,18 +1874,19 @@ yyreduce:
                         curbrdpos = g_list_next(curbrdpos);
                     }
 
-                    extcmd->nPlies = g_value_get_int(str2gv_map_get_key_value(optionsmap, "plies", gvfalse));
-                    extcmd->fCrawfordRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, "crawfordrule", gvfalse));
-                    extcmd->fJacobyRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, "jacobyrule", gvfalse));
-                    extcmd->fUsePrune = g_value_get_int(str2gv_map_get_key_value(optionsmap, "prune", gvfalse));
-                    extcmd->fCubeful =  g_value_get_int(str2gv_map_get_key_value(optionsmap, "cubeful", gvfalse));
-                    extcmd->rNoise = g_value_get_double(str2gv_map_get_key_value(optionsmap, "noise", gvfloatzero));
-                    extcmd->fDeterministic = g_value_get_int(str2gv_map_get_key_value(optionsmap, "deterministic", gvtrue));
+                    extcmd->nPlies = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_PLIES, gvfalse));
+                    extcmd->fCrawfordRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_CRAWFORDRULE, gvfalse));
+                    extcmd->fJacobyRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_JACOBYRULE, gvfalse));
+                    extcmd->fUsePrune = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_PRUNE, gvfalse));
+                    extcmd->fCubeful =  g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_CUBEFUL, gvfalse));
+                    extcmd->rNoise = g_value_get_double(str2gv_map_get_key_value(optionsmap, KEY_STR_NOISE, gvfloatzero));
+                    extcmd->fDeterministic = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_DETERMINISTIC, gvtrue));
+                    extcmd->nResignation = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_RESIGNATION, gvfalse));
+                    extcmd->fBeavers = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_BEAVERS, gvtrue));
 
                     g_value_unsetfree(gvtrue);
                     g_value_unsetfree(gvfalse);
                     g_value_unsetfree(gvfloatzero);
-                    g_value_unsetfree((yyvsp[(1) - (2)].cmd)->pvData);                
                     g_free((yyvsp[(1) - (2)].cmd));
                     
                     YYACCEPT;
@@ -1828,10 +1900,48 @@ yyreduce:
         }
     break;
 
-  case 6:
+  case 8:
 
 /* Line 1806 of yacc.c  */
-#line 240 "external_y.y"
+#line 257 "external_y.y"
+    {
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_DEBUG, (yyvsp[(2) - (2)].gv));
+        }
+    break;
+
+  case 9:
+
+/* Line 1806 of yacc.c  */
+#line 262 "external_y.y"
+    {
+            GVALUE_CREATE(G_TYPE_INT, int, 1, gvint); 
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_NEWINTERFACE, gvint);
+        }
+    break;
+
+  case 10:
+
+/* Line 1806 of yacc.c  */
+#line 268 "external_y.y"
+    {
+            GVALUE_CREATE(G_TYPE_INT, int, 0, gvint); 
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_NEWINTERFACE, gvint);
+        }
+    break;
+
+  case 11:
+
+/* Line 1806 of yacc.c  */
+#line 274 "external_y.y"
+    {
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_PROMPT, (yyvsp[(2) - (2)].gv));
+        }
+    break;
+
+  case 12:
+
+/* Line 1806 of yacc.c  */
+#line 281 "external_y.y"
     {
             commandinfo *cmdInfo = g_malloc0(sizeof(commandinfo));
             cmdInfo->pvData = (yyvsp[(1) - (1)].gv);
@@ -1840,10 +1950,10 @@ yyreduce:
         }
     break;
 
-  case 7:
+  case 13:
 
 /* Line 1806 of yacc.c  */
-#line 248 "external_y.y"
+#line 289 "external_y.y"
     {
             commandinfo *cmdInfo = g_malloc0(sizeof(commandinfo));
             cmdInfo->pvData = (yyvsp[(1) - (1)].gv);
@@ -1852,10 +1962,10 @@ yyreduce:
         }
     break;
 
-  case 8:
+  case 14:
 
 /* Line 1806 of yacc.c  */
-#line 256 "external_y.y"
+#line 297 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_BOXED_GLIST_GV, boxed, (yyvsp[(2) - (2)].list), gvptr);
             g_list_free((yyvsp[(2) - (2)].list));
@@ -1866,204 +1976,228 @@ yyreduce:
         }
     break;
 
-  case 10:
-
-/* Line 1806 of yacc.c  */
-#line 272 "external_y.y"
-    { 
-            (yyval.list) = g_list_prepend(NULL, (yyvsp[(1) - (1)].gv)); 
-        }
-    break;
-
-  case 11:
-
-/* Line 1806 of yacc.c  */
-#line 277 "external_y.y"
-    { 
-            (yyval.list) = g_list_prepend((yyvsp[(1) - (3)].list), (yyvsp[(3) - (3)].gv)); 
-        }
-    break;
-
-  case 13:
-
-/* Line 1806 of yacc.c  */
-#line 288 "external_y.y"
-    { 
-            (yyval.list) = create_str2gvalue_tuple ("jacobyrule", (yyvsp[(2) - (2)].gv)); 
-        }
-    break;
-
-  case 14:
-
-/* Line 1806 of yacc.c  */
-#line 293 "external_y.y"
-    { 
-            (yyval.list) = create_str2gvalue_tuple ("crawfordrule", (yyvsp[(2) - (2)].gv));
-        }
-    break;
-
-  case 15:
-
-/* Line 1806 of yacc.c  */
-#line 300 "external_y.y"
-    { 
-            (yyval.list) = create_str2gvalue_tuple ("plies", (yyvsp[(2) - (2)].gv)); 
-        }
-    break;
-
   case 16:
 
 /* Line 1806 of yacc.c  */
-#line 305 "external_y.y"
-    {
-            (yyval.list) = create_str2gvalue_tuple ("noise", (yyvsp[(2) - (2)].gv)); 
+#line 313 "external_y.y"
+    { 
+            (yyval.list) = g_list_prepend(NULL, (yyvsp[(1) - (1)].gv)); 
         }
     break;
 
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 310 "external_y.y"
-    {
-            double doubleval = g_value_get_int((yyvsp[(2) - (2)].gv)) / 10000.0L;
-            GVALUE_CREATE(G_TYPE_DOUBLE, double, doubleval, gvdouble); 
-            (yyval.list) = create_str2gvalue_tuple ("noise", gvdouble); 
-            g_value_unsetfree((yyvsp[(2) - (2)].gv));
-        }
-    break;
-
-  case 18:
-
-/* Line 1806 of yacc.c  */
 #line 318 "external_y.y"
     { 
-            (yyval.list) = create_str2int_tuple ("prune", TRUE);
+            (yyval.list) = g_list_prepend((yyvsp[(1) - (3)].list), (yyvsp[(3) - (3)].gv)); 
         }
     break;
 
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 323 "external_y.y"
+#line 329 "external_y.y"
     { 
-            (yyval.list) = create_str2gvalue_tuple ("prune", (yyvsp[(2) - (2)].gv));
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_JACOBYRULE, (yyvsp[(2) - (2)].gv)); 
         }
     break;
 
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 328 "external_y.y"
+#line 334 "external_y.y"
     { 
-            (yyval.list) = create_str2int_tuple ("deterministic", TRUE);
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_CRAWFORDRULE, (yyvsp[(2) - (2)].gv));
         }
     break;
 
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 333 "external_y.y"
+#line 339 "external_y.y"
     { 
-            (yyval.list) = create_str2gvalue_tuple ("deterministic", (yyvsp[(2) - (2)].gv));
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_RESIGNATION, (yyvsp[(2) - (2)].gv));
         }
     break;
 
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 338 "external_y.y"
+#line 344 "external_y.y"
     { 
-            (yyval.list) = create_str2gvalue_tuple ("cubeful", (yyvsp[(2) - (2)].gv));
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_BEAVERS, (yyvsp[(2) - (2)].gv));
         }
     break;
 
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 343 "external_y.y"
+#line 351 "external_y.y"
     { 
-            (yyval.list) = create_str2int_tuple ("cubeful", TRUE); 
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_PLIES, (yyvsp[(2) - (2)].gv)); 
         }
     break;
 
   case 24:
 
 /* Line 1806 of yacc.c  */
-#line 348 "external_y.y"
-    { 
-            (yyval.list) = create_str2int_tuple ("cubeful", FALSE); 
+#line 356 "external_y.y"
+    {
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_NOISE, (yyvsp[(2) - (2)].gv)); 
         }
     break;
 
   case 25:
 
 /* Line 1806 of yacc.c  */
-#line 355 "external_y.y"
-    { 
-            /* Setup the defaults */
-            STR2GV_MAPENTRY_CREATE("jacobyrule", fJacoby, G_TYPE_INT, 
-                                    int, jacobyentry);
-            STR2GV_MAPENTRY_CREATE("crawfordrule", TRUE, G_TYPE_INT, 
-                                    int, crawfordentry);
-
-            GList *defaults = 
-                g_list_prepend(g_list_prepend(NULL, jacobyentry), crawfordentry);
-            (yyval.list) = defaults;
+#line 361 "external_y.y"
+    {
+            double doubleval = g_value_get_int((yyvsp[(2) - (2)].gv)) / 10000.0L;
+            GVALUE_CREATE(G_TYPE_DOUBLE, double, doubleval, gvdouble); 
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_NOISE, gvdouble); 
+            g_value_unsetfree((yyvsp[(2) - (2)].gv));
         }
     break;
 
   case 26:
 
 /* Line 1806 of yacc.c  */
-#line 368 "external_y.y"
+#line 369 "external_y.y"
     { 
-            STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
+            (yyval.list) = create_str2int_tuple (KEY_STR_PRUNE, TRUE);
         }
     break;
 
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 375 "external_y.y"
+#line 374 "external_y.y"
     { 
-            /* Setup the defaults */
-
-            STR2GV_MAPENTRY_CREATE("jacobyrule", fJacoby, G_TYPE_INT, 
-                                    int, jacobyentry);
-            
-            STR2GV_MAPENTRY_CREATE("crawfordrule", TRUE, G_TYPE_INT, 
-                                    int, crawfordentry);
-
-            GList *defaults = 
-                g_list_prepend(g_list_prepend(NULL, jacobyentry), crawfordentry);
-
-            (yyval.list) = defaults;
-            
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_PRUNE, (yyvsp[(2) - (2)].gv));
         }
     break;
 
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 392 "external_y.y"
+#line 379 "external_y.y"
     { 
-            STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
+            (yyval.list) = create_str2int_tuple (KEY_STR_DETERMINISTIC, TRUE);
         }
     break;
 
   case 29:
 
 /* Line 1806 of yacc.c  */
-#line 397 "external_y.y"
+#line 384 "external_y.y"
     { 
-            STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_DETERMINISTIC, (yyvsp[(2) - (2)].gv));
         }
     break;
 
   case 30:
 
 /* Line 1806 of yacc.c  */
-#line 404 "external_y.y"
+#line 389 "external_y.y"
+    { 
+            (yyval.list) = create_str2gvalue_tuple (KEY_STR_CUBEFUL, (yyvsp[(2) - (2)].gv));
+        }
+    break;
+
+  case 31:
+
+/* Line 1806 of yacc.c  */
+#line 394 "external_y.y"
+    { 
+            (yyval.list) = create_str2int_tuple (KEY_STR_CUBEFUL, TRUE); 
+        }
+    break;
+
+  case 32:
+
+/* Line 1806 of yacc.c  */
+#line 399 "external_y.y"
+    { 
+            (yyval.list) = create_str2int_tuple (KEY_STR_CUBEFUL, FALSE); 
+        }
+    break;
+
+  case 33:
+
+/* Line 1806 of yacc.c  */
+#line 406 "external_y.y"
+    { 
+            /* Setup the defaults */
+            STR2GV_MAPENTRY_CREATE(KEY_STR_JACOBYRULE, fJacoby, G_TYPE_INT, 
+                                    int, jacobyentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_CRAWFORDRULE, TRUE, G_TYPE_INT, 
+                                    int, crawfordentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_RESIGNATION, FALSE, G_TYPE_INT, 
+                                    int, resignentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_BEAVERS, TRUE, G_TYPE_INT, 
+                                    int, beaversentry);
+
+            GList *defaults = 
+                g_list_prepend(g_list_prepend(g_list_prepend(g_list_prepend(NULL, jacobyentry), crawfordentry), \
+                               resignentry), beaversentry);
+            (yyval.list) = defaults;
+        }
+    break;
+
+  case 34:
+
+/* Line 1806 of yacc.c  */
+#line 424 "external_y.y"
+    { 
+            STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
+        }
+    break;
+
+  case 35:
+
+/* Line 1806 of yacc.c  */
+#line 431 "external_y.y"
+    { 
+            /* Setup the defaults */
+            STR2GV_MAPENTRY_CREATE(KEY_STR_JACOBYRULE, fJacoby, G_TYPE_INT, 
+                                    int, jacobyentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_CRAWFORDRULE, TRUE, G_TYPE_INT, 
+                                    int, crawfordentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_RESIGNATION, FALSE, G_TYPE_INT, 
+                                    int, resignentry);
+            STR2GV_MAPENTRY_CREATE(KEY_STR_BEAVERS, TRUE, G_TYPE_INT, 
+                                    int, beaversentry);
+
+            GList *defaults = 
+                g_list_prepend(g_list_prepend(g_list_prepend(g_list_prepend(NULL, jacobyentry), crawfordentry), \
+                               resignentry), beaversentry);
+            (yyval.list) = defaults;
+        }
+    break;
+
+  case 36:
+
+/* Line 1806 of yacc.c  */
+#line 449 "external_y.y"
+    { 
+            STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
+        }
+    break;
+
+  case 37:
+
+/* Line 1806 of yacc.c  */
+#line 454 "external_y.y"
+    { 
+            STR2GV_MAP_ADD_ENTRY((yyvsp[(1) - (2)].list), (yyvsp[(2) - (2)].list), (yyval.list)); 
+        }
+    break;
+
+  case 38:
+
+/* Line 1806 of yacc.c  */
+#line 461 "external_y.y"
     {
             GVALUE_CREATE(G_TYPE_BOXED_GLIST_GV, boxed, (yyvsp[(1) - (2)].list), gvptr1);
             GVALUE_CREATE(G_TYPE_BOXED_MAP_GV, boxed, (yyvsp[(2) - (2)].list), gvptr2);
@@ -2076,10 +2210,10 @@ yyreduce:
         }
     break;
 
-  case 31:
+  case 39:
 
 /* Line 1806 of yacc.c  */
-#line 418 "external_y.y"
+#line 475 "external_y.y"
     {
             GVALUE_CREATE(G_TYPE_BOXED_GLIST_GV, boxed, (yyvsp[(3) - (4)].list), gvptr1);
             GVALUE_CREATE(G_TYPE_BOXED_MAP_GV, boxed, (yyvsp[(4) - (4)].list), gvptr2);
@@ -2093,10 +2227,10 @@ yyreduce:
         }
     break;
 
-  case 32:
+  case 40:
 
 /* Line 1806 of yacc.c  */
-#line 433 "external_y.y"
+#line 490 "external_y.y"
     {
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, (yyvsp[(4) - (7)].str), gvstr1); 
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, (yyvsp[(2) - (7)].str), gvstr2); 
@@ -2107,20 +2241,20 @@ yyreduce:
         }
     break;
 
-  case 33:
+  case 41:
 
 /* Line 1806 of yacc.c  */
-#line 445 "external_y.y"
+#line 502 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_DOUBLE, double, (yyvsp[(1) - (1)].floatnum), gvfloat); 
             (yyval.gv) = gvfloat; 
         }
     break;
 
-  case 34:
+  case 42:
 
 /* Line 1806 of yacc.c  */
-#line 453 "external_y.y"
+#line 510 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_GSTRING, boxed, (yyvsp[(1) - (1)].str), gvstr); 
             g_string_free ((yyvsp[(1) - (1)].str), TRUE); 
@@ -2128,30 +2262,30 @@ yyreduce:
         }
     break;
 
-  case 35:
+  case 43:
 
 /* Line 1806 of yacc.c  */
-#line 462 "external_y.y"
+#line 519 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_INT, int, (yyvsp[(1) - (1)].intnum), gvint); 
             (yyval.gv) = gvint; 
         }
     break;
 
-  case 36:
+  case 44:
 
 /* Line 1806 of yacc.c  */
-#line 470 "external_y.y"
+#line 527 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_INT, int, (yyvsp[(1) - (1)].bool), gvint); 
             (yyval.gv) = gvint; 
         }
     break;
 
-  case 37:
+  case 45:
 
 /* Line 1806 of yacc.c  */
-#line 478 "external_y.y"
+#line 535 "external_y.y"
     { 
             GVALUE_CREATE(G_TYPE_BOXED_GLIST_GV, boxed, (yyvsp[(1) - (1)].list), gvptr);
             g_list_free((yyvsp[(1) - (1)].list));
@@ -2159,37 +2293,37 @@ yyreduce:
         }
     break;
 
-  case 42:
+  case 50:
 
 /* Line 1806 of yacc.c  */
-#line 493 "external_y.y"
+#line 550 "external_y.y"
     { 
             (yyval.list) = g_list_reverse((yyvsp[(2) - (3)].list));
         }
     break;
 
-  case 45:
+  case 53:
 
 /* Line 1806 of yacc.c  */
-#line 504 "external_y.y"
+#line 561 "external_y.y"
     { 
             (yyval.list) = NULL; 
         }
     break;
 
-  case 46:
+  case 54:
 
 /* Line 1806 of yacc.c  */
-#line 509 "external_y.y"
+#line 566 "external_y.y"
     { 
             (yyval.list) = g_list_prepend(NULL, (yyvsp[(1) - (1)].gv));
         }
     break;
 
-  case 47:
+  case 55:
 
 /* Line 1806 of yacc.c  */
-#line 514 "external_y.y"
+#line 571 "external_y.y"
     { 
             (yyval.list) = g_list_prepend((yyvsp[(1) - (3)].list), (yyvsp[(3) - (3)].gv)); 
         }
@@ -2198,7 +2332,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 2202 "external_y.c"
+#line 2336 "external_y.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2429,19 +2563,48 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 518 "external_y.y"
+#line 575 "external_y.y"
 
 
 #ifdef EXTERNAL_TEST
 
+/* 
+ * Test code can be built by configuring GNUBG with --without-gtk option and doing the following:
+ *
+ * ./ylwrap external_l.l lex.yy.c external_l.c -- flex 
+ * ./ylwrap external_y.y y.tab.c external_y.c y.tab.h test1_y.h -- bison 
+ * gcc -Ilib -I. -Wall `pkg-config  gobject-2.0 --cflags --libs` external_l.c external_y.c  glib-ext.c -DEXTERNAL_TEST -o exttest
+ *
+ */
+ 
+#define BUFFERSIZE 1024
+
+int fJacoby = TRUE;
+
 int main()
 {
+    char buffer[BUFFERSIZE];
     scancontext scanctx;
+
     memset(&scanctx, 0, sizeof(scanctx));
     g_type_init ();
-    StartParse(&scanctx);
-    g_string_free(scanctx.bi.gsName, TRUE);
-    g_string_free(scanctx.bi.gsOpp, TRUE);
+    ExtInitParse((void **)&scanctx);
+
+    while(fgets(buffer, BUFFERSIZE, stdin) != NULL) {
+        ExtStartParse(scanctx.scanner, buffer);
+        if(scanctx.ct == COMMAND_EXIT)
+            return 0;
+        
+        if (scanctx.bi.gsName)
+            g_string_free(scanctx.bi.gsName, TRUE);
+        if (scanctx.bi.gsOpp)
+            g_string_free(scanctx.bi.gsOpp, TRUE);
+
+        scanctx.bi.gsName = NULL;
+        scanctx.bi.gsOpp = NULL;
+    }
+
+    ExtDestroyParse(scanctx.scanner);
     return 0;
 }
 
