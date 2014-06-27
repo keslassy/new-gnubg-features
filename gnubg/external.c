@@ -182,12 +182,7 @@ ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz)
                 free(psin);
                 return -1;
             }
-#ifdef WIN32
-            memcpy(&(psin->sin_addr), (struct in_addr *) (phe->h_addr), phe->h_length);
-#else
-            psin->sin_addr = *(struct in_addr *) phe->h_addr;
-#endif                          /* WIN32 */
-
+			memcpy(&(psin->sin_addr), phe->h_addr, phe->h_length); 
         }
 
         *pch++ = ':';
