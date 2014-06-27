@@ -111,7 +111,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 112 "external_y.y"
+#line 116 "external_y.y"
 
     gboolean bool;
     gchar character;

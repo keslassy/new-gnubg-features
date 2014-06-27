@@ -414,7 +414,7 @@ ExtEvaluation(scancontext * pec)
         /* printf ("Jacoby Setting: %d\n", fJacoby); */
         /* printf ("Crawford Setting: %d\n", fCrawford); */
 
-        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, 1, processedBoard.nMatchTo, 
+        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, 1, processedBoard.nMatchTo,
                     anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
 
         ec.fCubeful = pec->fCubeful;
@@ -446,7 +446,7 @@ static char *
 ExtFIBSBoard(scancontext * pec)
 {
     ProcessedFIBSBoard processedBoard;
-    TanBoard anBoardOrig;    
+    TanBoard anBoardOrig;
     int anScore[2], anMove[8], fTurn;
     float arDouble[NUM_CUBEFUL_OUTPUTS], aarOutput[2][NUM_ROLLOUT_OUTPUTS], aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
     rolloutstat aarsStatistics[2][2];
@@ -469,7 +469,7 @@ ExtFIBSBoard(scancontext * pec)
         /* printf ("Jacoby Setting: %d\n", fJacoby); */
 
         fTurn = 1;
-        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo, 
+        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo,
                     anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
 
         memcpy(anBoardOrig, processedBoard.anBoard, sizeof(processedBoard.anBoard));
@@ -478,7 +478,8 @@ ExtFIBSBoard(scancontext * pec)
 
             /* take decision */
             if (GeneralCubeDecision(aarOutput, aarStdDev,
-                                    aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(), NULL, NULL) < 0)
+                                    aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(), NULL,
+                                    NULL) < 0)
                 return NULL;
 
             switch (FindCubeDecision(arDouble, aarOutput, &ci)) {
@@ -529,7 +530,7 @@ ExtFIBSBoard(scancontext * pec)
         } else {
             /* double decision */
             if (GeneralCubeDecision(aarOutput, aarStdDev,
-                                    aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(), 
+                                    aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(),
                                     NULL, NULL) < 0)
                 return NULL;
 
@@ -666,12 +667,12 @@ CommandExternal(char *sz)
                 char **aszLinesOrig;
                 char *szMatchID;
                 gchar *szOptStr;
-                
+
                 switch (scanctx.ct) {
                 case COMMAND_HELP:
                     szResponse = g_strdup("\tNo help information available\n");
                     break;
-                    
+
                 case COMMAND_SET:
                     szOptStr = g_value_get_gstring_gchar(g_list_nth_data(scanctx.pCmdData, 0));
                     if (g_ascii_strcasecmp(szOptStr, KEY_STR_DEBUG) == 0) {
@@ -679,7 +680,7 @@ CommandExternal(char *sz)
                         szResponse = g_strdup_printf("Debug output %s\n", scanctx.fDebug ? "ON" : "OFF");
                     } else if (g_ascii_strcasecmp(szOptStr, KEY_STR_NEWINTERFACE) == 0) {
                         scanctx.fNewInterface = g_value_get_int(g_list_nth_data(scanctx.pCmdData, 1));
-                        szResponse = g_strdup_printf("New interface %s\n", scanctx.fNewInterface ? "ON" : "OFF");                        
+                        szResponse = g_strdup_printf("New interface %s\n", scanctx.fNewInterface ? "ON" : "OFF");
                     } else {
                         szResponse = g_strdup_printf("Error: set option '%s' not supported\n", szOptStr);
                     }
@@ -689,9 +690,8 @@ CommandExternal(char *sz)
 
                 case COMMAND_VERSION:
                     szResponse = g_strdup("Interface: " EXTERNAL_INTERFACE_VERSION "\n"
-                                           "RFBF: " RFBF_VERSION_SUPPORTED "\n"
-                                           "Engine: " WEIGHTS_VERSION "\n"
-                                           "Software: " VERSION "\n");
+                                          "RFBF: " RFBF_VERSION_SUPPORTED "\n"
+                                          "Engine: " WEIGHTS_VERSION "\n" "Software: " VERSION "\n");
 
                     break;
 
@@ -701,9 +701,9 @@ CommandExternal(char *sz)
 
                 case COMMAND_FIBSBOARD:
                 case COMMAND_EVALUATION:
-                    if (scanctx.fDebug){
-                        optionsmapgv = (GValue *)g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 1);
-                        boarddatagv = (GValue *)g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 0);
+                    if (scanctx.fDebug) {
+                        optionsmapgv = (GValue *) g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 1);
+                        boarddatagv = (GValue *) g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 0);
                         dbgStr = g_string_new(DEBUG_PREFIX);
                         g_value_tostring(dbgStr, optionsmapgv, 0);
                         g_string_append(dbgStr, "\n" DEBUG_PREFIX);
@@ -718,16 +718,17 @@ CommandExternal(char *sz)
                         fCrawford = scanctx.fCrawfordRule ? processedBoard.fCrawford : FALSE;
                         /* Set the Jacoby flag appropriately from the external interface settings */
                         fJacoby = scanctx.fJacobyRule;
-                        
-                        szMatchID = MatchID((unsigned int *)processedBoard.anDice, 1, processedBoard.nResignation, 
-                                processedBoard.fDoubled, 1, processedBoard.fCubeOwner, fCrawford, processedBoard.nMatchTo, 
-                                anScore, processedBoard.nCube, fJacoby, GAME_PLAYING);
-        
-                        DrawBoard(szBoard, (ConstTanBoard)&processedBoard.anBoard, 1, asz, szMatchID, 15);
-                        
+
+                        szMatchID = MatchID((unsigned int *) processedBoard.anDice, 1, processedBoard.nResignation,
+                                            processedBoard.fDoubled, 1, processedBoard.fCubeOwner, fCrawford,
+                                            processedBoard.nMatchTo, anScore, processedBoard.nCube, fJacoby,
+                                            GAME_PLAYING);
+
+                        DrawBoard(szBoard, (ConstTanBoard) & processedBoard.anBoard, 1, asz, szMatchID, 15);
+
                         aszLines = g_strsplit(&szBoard[0], "\n", 32);
                         aszLinesOrig = aszLines;
-                        while (*aszLines){
+                        while (*aszLines) {
                             ExternalWrite(hPeer, DEBUG_PREFIX, strlen(DEBUG_PREFIX));
                             ExternalWrite(hPeer, *aszLines, strlen(*aszLines));
                             ExternalWrite(hPeer, "\n", 1);
@@ -735,26 +736,33 @@ CommandExternal(char *sz)
                         }
 
                         dbgStr = g_string_assign(dbgStr, "");
-                        g_string_append_printf(dbgStr, DEBUG_PREFIX "X is %s, O is %s\n", processedBoard.szPlayer, processedBoard.szOpp);
-                        if (processedBoard.nMatchTo){
-                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Match Play %s Crawford Rule\n", scanctx.fCrawfordRule ? "with" : "without");
-                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Score: %d-%d/%d%s, ", processedBoard.nScore, 
-                                                   processedBoard.nScoreOpp, processedBoard.nMatchTo, processedBoard.fCrawford ? "*" : "");
+                        g_string_append_printf(dbgStr, DEBUG_PREFIX "X is %s, O is %s\n", processedBoard.szPlayer,
+                                               processedBoard.szOpp);
+                        if (processedBoard.nMatchTo) {
+                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Match Play %s Crawford Rule\n",
+                                                   scanctx.fCrawfordRule ? "with" : "without");
+                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Score: %d-%d/%d%s, ", processedBoard.nScore,
+                                                   processedBoard.nScoreOpp, processedBoard.nMatchTo,
+                                                   processedBoard.fCrawford ? "*" : "");
                         } else {
-                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Money Session %s Jacoby Rule, %s Beavers\n", 
-                                                   scanctx.fJacobyRule ? "with" : "without", scanctx.fBeavers ? "with" : "without");
-                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Score: %d-%d, ", processedBoard.nScore, processedBoard.nScoreOpp);
+                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Money Session %s Jacoby Rule, %s Beavers\n",
+                                                   scanctx.fJacobyRule ? "with" : "without",
+                                                   scanctx.fBeavers ? "with" : "without");
+                            g_string_append_printf(dbgStr, DEBUG_PREFIX "Score: %d-%d, ", processedBoard.nScore,
+                                                   processedBoard.nScoreOpp);
                         }
-                        g_string_append_printf(dbgStr, "Roll: %d%d\n", 
+                        g_string_append_printf(dbgStr, "Roll: %d%d\n",
                                                processedBoard.anDice[0], processedBoard.anDice[1]);
-                        g_string_append_printf(dbgStr, DEBUG_PREFIX "CubeOwner: %d, Cube: %d, Turn: %c, Doubled: %d, Resignation: %d\n",
-                                               processedBoard.fCubeOwner, processedBoard.nCube, 'X', processedBoard.fDoubled, 
-                                               processedBoard.nResignation);
+                        g_string_append_printf(dbgStr,
+                                               DEBUG_PREFIX
+                                               "CubeOwner: %d, Cube: %d, Turn: %c, Doubled: %d, Resignation: %d\n",
+                                               processedBoard.fCubeOwner, processedBoard.nCube, 'X',
+                                               processedBoard.fDoubled, processedBoard.nResignation);
                         g_string_append(dbgStr, DEBUG_PREFIX "\n");
                         ExternalWrite(hPeer, dbgStr->str, strlen(dbgStr->str));
 
                         g_string_free(dbgStr, TRUE);
-                        g_strfreev (aszLinesOrig);
+                        g_strfreev(aszLinesOrig);
                     }
                     g_value_unsetfree(scanctx.pCmdData);
 
