@@ -124,6 +124,7 @@ dnl check for pkg-config controlled libs
 dnl
 
 PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.6.0], have_glib="yes", AC_MSG_ERROR([You need to have glib2 to compile GNU backgammon]))
+PKG_CHECK_MODULES(GOBJECT, [gobject-2.0], have_gobject="yes", AC_MSG_WARN([no gobject support in glib]))
 PKG_CHECK_MODULES(GTHREAD, [gthread-2.0], have_gthread="yes", AC_MSG_WARN([no thread support in glib]))
 PKG_CHECK_MODULES(FREETYPE2, [freetype2], have_freetype="yes", AC_MSG_WARN([no freetype support]))
 PKG_CHECK_MODULES(LIBPNG, [libpng >= 1.2], have_libpng="yes", AC_MSG_WARN([no png support]))
