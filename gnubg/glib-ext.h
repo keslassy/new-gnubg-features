@@ -29,7 +29,7 @@
 
 #if ! GLIB_CHECK_VERSION(2,14,0)
 
-/* This code has been backported from the latest GLib
+/* This code has been backported from GLIB 2.16
  *
  * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
  *
