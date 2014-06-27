@@ -2,9 +2,7 @@
 
 	* import.c, show.c, gnubg.c, backgammon.h, set.c, commands.inc:
 	Minor changes to the "set aliases" feature from 2014-02-03 after
-	users feedback :
-	- command is now "set player1aliases"
-	- separator is now ';'
+	users feedback : separator is now ';'
 	* doc/gnubgdb.xml: Document the above.
 
 2014-06-23  Michael Petch  <mpetch@gnubg.org>

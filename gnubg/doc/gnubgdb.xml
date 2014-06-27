@@ -1405,7 +1405,7 @@ To roll the dice the CL version type 'roll'.
         </para>
         <para>Online sites do not always create their .mat files with the you as player 1, the one playing towards the bottom of the board.
           To have these matches converted to be displayed in the natural way, you can use de CLI command
-          <command>set player1aliases &lt;player name 1&gt;;&lt;player name 2&gt;;[&lt;etc...&gt;]</command>
+          <command>set aliases &lt;player name 1&gt;;&lt;player name 2&gt;;[&lt;etc...&gt;]</command>
           <application>GNU Backgammon</application> will swap the players as needed so that player names matching these aliases are always imported as player 1.
         </para>
       </sect3>

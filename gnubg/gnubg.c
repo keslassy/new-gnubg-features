@@ -3183,7 +3183,7 @@ SavePlayerSettings(FILE * pf)
 
     fprintf(pf, "set defaultnames \"%s\" \"%s\"\n", default_names[0], default_names[1]);
     if (strlen(player1aliases) > 0)
-        fprintf(pf, "set player1aliases %s\n", player1aliases);
+        fprintf(pf, "set aliases %s\n", player1aliases);
 
     for (i = 0; i < 2; i++) {
         fprintf(pf, "set player %d name %s\n", i, ap[i].szName);
