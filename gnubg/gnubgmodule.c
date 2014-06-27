@@ -1186,9 +1186,10 @@ PythonEvaluate(PyObject * UNUSED(self), PyObject * args)
 
     TanBoard anBoard;
     cubeinfo ci;
-    evalcontext ec = { 0, 0, 0, 1, 0.0f };
+    evalcontext ec;
     float arOutput[7];
 
+    memcpy (&ec, &GetEvalChequer()->ec, sizeof (evalcontext));
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
     GetMatchStateCubeInfo(&ci, &ms);
 
@@ -1231,11 +1232,11 @@ PythonEvaluateCubeful(PyObject * UNUSED(self), PyObject * args)
     TanBoard anBoard;
     float aarOutput[2][NUM_ROLLOUT_OUTPUTS], arCube[NUM_CUBEFUL_OUTPUTS];
     cubeinfo ci;
-    evalcontext ec = { 0, 0, 0, 1, 0.0f };
+    evalcontext ec;
     int cp;
 
+    memcpy (&ec, &GetEvalCube()->ec, sizeof (evalcontext));
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
-
     GetMatchStateCubeInfo(&ci, &ms);
 
     if (!PyArg_ParseTuple(args, "|OOO", &pyBoard, &pyCubeInfo, &pyEvalContext))
