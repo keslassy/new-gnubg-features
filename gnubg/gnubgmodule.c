@@ -1189,7 +1189,7 @@ PythonEvaluate(PyObject * UNUSED(self), PyObject * args)
     evalcontext ec;
     float arOutput[7];
 
-    memcpy (&ec, &GetEvalChequer()->ec, sizeof (evalcontext));
+    memcpy (&ec, &GetEvalCube()->ec, sizeof (evalcontext));
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
     GetMatchStateCubeInfo(&ci, &ms);
 
