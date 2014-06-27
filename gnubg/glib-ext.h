@@ -27,11 +27,40 @@
 #include <glib-object.h>
 #include "gtklocdefs.h"
 
+#if ! GLIB_CHECK_VERSION(2,14,0)
+
+/* This code has been backported from the latest GLib
+ *
+ * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
+ *
+ * gthread.c: MT safety related functions
+ * Copyright 1998 Sebastian Wilhelmi; University of Karlsruhe
+ *                Owen Taylor
+ */
+
+/* initialize-once guards, keyed by value_location */
+G_INLINE_FUNC gboolean g_once_init_enter(volatile gsize * value_location);
+gboolean g_once_init_enter_impl(volatile gsize * value_location);
+void g_once_init_leave(volatile gsize * value_location, gsize initialization_value);
+#if defined (G_CAN_INLINE) || defined (__G_THREAD_C__)
+G_INLINE_FUNC gboolean
+g_once_init_enter(volatile gsize * value_location)
+{
+    if G_LIKELY
+        (g_atomic_pointer_get((void *volatile *) value_location) != NULL)
+            return FALSE;
+    else
+        return g_once_init_enter_impl(value_location);
+}
+#endif                          /* G_CAN_INLINE || __G_THREAD_C__ */
+#endif
+
+
 #define GLIBEXT_MERGE(a,b)  a##b
 #define GLIBEXT_LABEL_(a,b) GLIBEXT_MERGE(a, b)
 
 #if ! GLIB_CHECK_VERSION(2,28,0)
-extern void g_list_free_full(GList *list, GDestroyNotify free_func);
+extern void g_list_free_full(GList * list, GDestroyNotify free_func);
 #endif
 
 typedef GList GMap;

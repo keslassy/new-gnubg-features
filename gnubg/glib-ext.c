@@ -25,13 +25,68 @@
 #include <string.h>
 #include "glib-ext.h"
 
-GLIBEXT_DEFINE_BOXED_TYPE(GListBoxed, g_list_boxed, g_list_copy, g_list_gv_boxed_free)
-GLIBEXT_DEFINE_BOXED_TYPE(GMapBoxed, g_map_boxed, g_list_copy, g_list_gv_boxed_free)
-GLIBEXT_DEFINE_BOXED_TYPE(GMapEntryBoxed, g_mapentry_boxed, g_list_copy, g_list_gv_boxed_free)
 
+#if ! GLIB_CHECK_VERSION(2,14,0)
+
+/* This code has been backported from the latest GLib
+ *
+ * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
+ *
+ * gthread.c: MT safety related functions
+ * Copyright 1998 Sebastian Wilhelmi; University of Karlsruhe
+ *                Owen Taylor
+ */
+
+
+static GMutex *g_once_mutex = NULL;
+static GCond *g_once_cond = NULL;
+static GSList *g_once_init_list = NULL;
+
+gboolean
+g_once_init_enter_impl(volatile gsize * value_location)
+{
+    gboolean need_init = FALSE;
+    /* mutex and cond creation works without g_threads_got_initialized */
+    if (!g_once_mutex)
+        g_once_mutex = g_mutex_new();
+    if (!g_once_cond)
+        g_once_cond = g_cond_new();
+
+    g_mutex_lock(g_once_mutex);
+    if (g_atomic_pointer_get((void **) value_location) == NULL) {
+        if (!g_slist_find(g_once_init_list, (void *) value_location)) {
+            need_init = TRUE;
+            g_once_init_list = g_slist_prepend(g_once_init_list, (void *) value_location);
+        } else
+            do
+                g_cond_wait(g_once_cond, g_once_mutex);
+            while (g_slist_find(g_once_init_list, (void *) value_location));
+    }
+    g_mutex_unlock(g_once_mutex);
+    return need_init;
+}
+
+void
+g_once_init_leave(volatile gsize * value_location, gsize initialization_value)
+{
+    g_return_if_fail(g_atomic_pointer_get((void **) value_location) == NULL);
+    g_return_if_fail(initialization_value != 0);
+    g_return_if_fail(g_once_init_list != NULL);
+
+    g_atomic_pointer_set((void **) value_location, (void *) initialization_value);
+    g_mutex_lock(g_once_mutex);
+    g_once_init_list = g_slist_remove(g_once_init_list, (void *) value_location);
+    g_cond_broadcast(g_once_cond);
+    g_mutex_unlock(g_once_mutex);
+}
+#endif
+
+GLIBEXT_DEFINE_BOXED_TYPE(GListBoxed, g_list_boxed, g_list_copy, g_list_gv_boxed_free)
+    GLIBEXT_DEFINE_BOXED_TYPE(GMapBoxed, g_map_boxed, g_list_copy, g_list_gv_boxed_free)
+    GLIBEXT_DEFINE_BOXED_TYPE(GMapEntryBoxed, g_mapentry_boxed, g_list_copy, g_list_gv_boxed_free)
 #if ! GLIB_CHECK_VERSION(2,28,0)
 void
-g_list_free_full(GList *list, GDestroyNotify free_func)
+g_list_free_full(GList * list, GDestroyNotify free_func)
 {
     g_list_foreach(list, (GFunc) free_func, NULL);
     g_list_free(list);
@@ -129,7 +184,7 @@ free_strmap_tuple(GList * tuple)
 }
 
 void
-g_value_list_tostring (GString * str, GList * list, int depth)
+g_value_list_tostring(GString * str, GList * list, int depth)
 {
     GList *cur = list;
     while (cur != NULL) {
