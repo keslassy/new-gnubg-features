@@ -4687,7 +4687,6 @@ main(int argc, char *argv[])
 #if ! GLIB_CHECK_VERSION(2,36,0)
     g_type_init();
 #endif
-    glib_ext_init();
     
     output_initialize();
 
@@ -4783,6 +4782,7 @@ main(int argc, char *argv[])
 
     PushSplash(pwSplash, _("Initialising"), _("initialising thread data"));
     MT_InitThreads();
+    glib_ext_init();
 
 #if defined(WIN32) && HAVE_SOCKETS
     PushSplash(pwSplash, _("Initialising"), _("Windows sockets"));
