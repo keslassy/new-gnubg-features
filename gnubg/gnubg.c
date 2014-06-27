@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include "gnubgmodule.h"
+#include "glib-ext.h"
 
 #include <sys/types.h>
 #include <stdlib.h>
@@ -4686,7 +4687,8 @@ main(int argc, char *argv[])
 #if ! GLIB_CHECK_VERSION(2,36,0)
     g_type_init();
 #endif
-
+    glib_ext_init();
+    
     output_initialize();
 
     /* set language */

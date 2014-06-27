@@ -66,6 +66,7 @@ extern void g_list_free_full(GList * list, GDestroyNotify free_func);
 typedef GList GMap;
 typedef GList GMapEntry;
 
+extern void glib_ext_init(void);
 extern GType g_list_boxed_get_type(void);
 extern GType g_map_boxed_get_type(void);
 extern GType g_mapentry_boxed_get_type(void);
