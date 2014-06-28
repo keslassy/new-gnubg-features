@@ -18,7 +18,7 @@ BEGIN {
   print "/* Do not modify this file!  It is created automatically by";
   print "   copying.awk.  Modify copying.awk instead. */";
   print "";
-  print "#include \"config.h\""
+  print "#include \"backgammon.h\""
   print "char *aszCopying[] = {";
 }
 
