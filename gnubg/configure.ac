@@ -273,7 +273,7 @@ dnl
 dnl Checks for declarations 	 
 dnl
 
-AC_CHECK_DECLS(signbit, , , [#include <math.h>])
+AC_CHECK_DECLS([signbit], , , [#include <math.h>])
 
 dnl *******************
 dnl optional components
