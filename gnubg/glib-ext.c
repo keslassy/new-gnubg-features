@@ -182,7 +182,7 @@ GList *
 create_str2double_tuple(char *str, double value)
 {
     GString *tmpstr = g_string_new(str);
-    GVALUE_CREATE(G_TYPE_DOUBLE, float, value, gvdouble);
+    GVALUE_CREATE(G_TYPE_DOUBLE, double, value, gvdouble);
     GVALUE_CREATE(G_TYPE_GSTRING, boxed, tmpstr, gvstr);
     g_string_free(tmpstr, TRUE);
     return g_list_prepend(g_list_prepend(NULL, gvdouble), gvstr);
