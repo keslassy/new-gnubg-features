@@ -98,7 +98,7 @@ static void ToolbarStyle(guint iType, guint iActionID, GtkRadioAction * action,
                          GtkRadioAction * alt, gpointer user_data);
 #endif
 
-char *newLang;
+static char *newLang;
 
 /* Hack this for now to stop re-entering - should be fixed when menu switched to actions */
 int inCallback = FALSE;
@@ -529,11 +529,12 @@ GtkWidget *pwOldGrab;
 
 GtkWidget *pwBoard;
 GtkWidget *pwMain = NULL;
-GtkWidget *pwMenuBar;
+static GtkWidget *pwMenuBar;
 GtkWidget *pwToolbar;
 
 static GtkWidget *pwStatus;
-GtkWidget *pwIDBox, *pwGnubgID;
+static GtkWidget *pwIDBox;
+GtkWidget *pwGnubgID;
 static GtkWidget *pwProgress;
 GtkWidget *pwMessageText;
 GtkWidget *pwPanelVbox;
@@ -560,7 +561,7 @@ static int fullScreenOnStartup = FALSE;
 static guint nStdin, nDisabledCount = 1;
 
 /* Save state of windows for full screen */
-int showingPanels, showingIDs, maximised;
+static int showingPanels, showingIDs, maximised;
 
 
 static gulong grabIdSignal;
@@ -1366,7 +1367,7 @@ ToolbarStyle(gpointer UNUSED(callback_data), guint callback_action, GtkWidget * 
 }
 #endif
 
-GtkClipboard *clipboard = NULL;
+static GtkClipboard *clipboard = NULL;
 
 static void
 PasteIDs(void)
@@ -3314,7 +3315,7 @@ static GtkRadioActionEntry setTurnRadioActionEntries[] = {
 };
 
 #else
-GtkItemFactoryEntry aife[] = {
+static GtkItemFactoryEntry aife[] = {
     {N_("/_File"), NULL, NULL, 0, "<Branch>", NULL},
     {N_("/_File/_New..."), "<control>N", NewClicked, 0,
      "<StockItem>", GTK_STOCK_NEW},
@@ -3892,7 +3893,7 @@ InitGTK(int *argc, char ***argv)
 
 enum { RE_NONE, RE_LANGUAGE_CHANGE };
 
-int reasonExited;
+static int reasonExited;
 
 extern void
 RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
@@ -5597,8 +5598,6 @@ GTKProgressEnd(void)
     SetMouseCursor(0);
 }
 
-int colWidth;
-
 extern void
 GTKShowScoreSheet(void)
 {
@@ -5789,7 +5788,7 @@ GTKShowBuildInfo(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
 }
 
 /* Stores names in credits so not duplicated in list at bottom */
-listOLD names;
+static listOLD names;
 
 static void
 AddTitle(GtkWidget * pwBox, char *Title)
@@ -6452,7 +6451,7 @@ GTKSet(void *p)
 /* Match stats variables */
 #define FORMATGS_ALL -1
 #define NUM_STAT_TYPES 4
-char *aszStatHeading[NUM_STAT_TYPES] = {
+static char *aszStatHeading[NUM_STAT_TYPES] = {
     N_("Chequer Play Statistics:"),
     N_("Cube Statistics:"),
     N_("Luck Statistics:"),
@@ -6461,10 +6460,10 @@ char *aszStatHeading[NUM_STAT_TYPES] = {
 
 static GtkWidget *statViews[NUM_STAT_TYPES], *statView;
 static int numStatGames;
-GtkWidget *pwStatDialog;
+static GtkWidget *pwStatDialog;
 int fGUIUseStatsPanel = TRUE;
-GtkWidget *pswList;
-GtkWidget *pwNotebook;
+static GtkWidget *pswList;
+static GtkWidget *pwNotebook;
 
 static void
 AddList(char *pStr, GtkWidget * view, const char *pTitle)
@@ -6929,8 +6928,8 @@ UpdateMatchinfo(const char *pch, const char *szParam, char **ppch)
 }
 
 /* Variables for match info dialog */
-GtkWidget *apwRating[2], *pwDate, *pwEvent, *pwRound, *pwPlace, *pwAnnotator;
-GtkTextBuffer *buffer;
+static GtkWidget *apwRating[2], *pwDate, *pwEvent, *pwRound, *pwPlace, *pwAnnotator;
+static GtkTextBuffer *buffer;
 
 static void
 MatchInfoOK(GtkWidget * pw, int *UNUSED(pf))
