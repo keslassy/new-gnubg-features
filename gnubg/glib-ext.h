@@ -76,7 +76,6 @@ extern GMapEntry *str2gv_map_has_key(GMap * map, GString * key);
 extern GValue *str2gv_map_get_key_value(GMap * map, gchar * key, GValue * defaultgv);
 extern void g_list_gv_boxed_free(GList * list);
 extern void g_list_gv_free_full(gpointer data);
-extern void g_list_gv_boxed_free(GList * list);
 extern GList *create_str2int_tuple(char *str, int value);
 extern GList *create_str2gvalue_tuple(char *str, GValue * gv);
 extern GList *create_str2double_tuple(char *str, double value);
