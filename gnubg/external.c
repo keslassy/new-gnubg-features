@@ -738,7 +738,7 @@ CommandExternal(char *sz)
                                                    scanctx.fCrawfordRule ? "with" : "without");
                             g_string_append_printf(dbgStr, DEBUG_PREFIX "Score: %d-%d/%d%s, ", processedBoard.nScore,
                                                    processedBoard.nScoreOpp, processedBoard.nMatchTo,
-                                                   processedBoard.fCrawford ? "*" : "");
+                                                   fCrawford ? "*" : "");
                         } else {
                             g_string_append_printf(dbgStr, DEBUG_PREFIX "Money Session %s Jacoby Rule, %s Beavers\n",
                                                    scanctx.fJacobyRule ? "with" : "without",
