@@ -230,7 +230,7 @@ copying.c: copying.awk
 	$(AWK) -f $(srcdir)/copying.awk < $(srcdir)/COPYING > $@
 
 copying.$(OBJEXT): copying.c
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(COMPILE) -c $< -o $@
 else
 copying.c: COPYING copying.awk
 	$(AWK) -f $(srcdir)/copying.awk < $(srcdir)/COPYING > $@
