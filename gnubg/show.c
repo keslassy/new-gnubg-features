@@ -2074,6 +2074,12 @@ CommandShowCheat(char *UNUSED(sz))
 
 }
 
+extern void
+CommandShowRatingOffset(char *UNUSED(sz))
+{
+    outputf(_("The rating offset for estimating absolute ratings is: %.1f\n"), rRatingOffset);
+}
+
 
 extern void
 CommandShowCubeEfficiency(char *UNUSED(sz))

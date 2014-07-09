@@ -1327,6 +1327,8 @@ command cER = {
       N_("See if this is post-Crawford play"), NULL, NULL },
     { "prompt", CommandShowPrompt, N_("Show the prompt that will be printed "
       "when ready for commands"), NULL, NULL },
+    { "ratingoffset", CommandShowRatingOffset, N_("Show the rating offset "
+      "used for estimating abs. rating"), NULL, NULL },
     { "rng", CommandShowRNG, N_("Display which random number generator "
       "is being used"), NULL, NULL },
     { "rollout", CommandShowRollout, N_("Display the evaluation settings used "

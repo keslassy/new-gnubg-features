@@ -969,6 +969,7 @@ extern void CommandShowPipCount(char *);
 extern void CommandShowPlayer(char *);
 extern void CommandShowPostCrawford(char *);
 extern void CommandShowPrompt(char *);
+extern void CommandShowRatingOffset(char *);
 extern void CommandShowRNG(char *);
 extern void CommandShowRollout(char *);
 extern void CommandShowRolls(char *);
@@ -1020,7 +1021,7 @@ extern int fMatchCancelled;
 extern int fJustSwappedPlayers;
 
 extern void ProcessEvents(void);
-#if !USE_MULTITHREAD
+#if !defined(USE_MULTITHREAD)
 extern void CallbackProgress(void);
 #endif
 extern void SetRNG(rng * prng, rngcontext * rngctx, rng rngNew, char *szSeed);
