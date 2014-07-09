@@ -396,6 +396,7 @@ int asyncRet;
 void
 MT_AddTask(Task * pt, gboolean lock)
 {
+    (void) lock;                /* silence compiler warning */
     td.result = 0;              /* Reset result for new tasks */
     td.tasks = g_list_append(td.tasks, pt);
 }
@@ -424,6 +425,8 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
 {
     GList *member;
     guint as_source, cb_source = 0;
+
+    (void) callbackTime;        /* silence compiler warning */
     td.doneTasks = 0;
 
 #if USE_GTK
