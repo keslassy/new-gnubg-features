@@ -87,6 +87,9 @@ main(int argc, char **argv)
         printf("Position number : %d\n", id);
     }
 
+    /* This is needed since we call ReadBearoffFile() from bearoff.c */
+    MT_InitThreads();
+
     if (!(pbc = BearoffInit(filename, BO_NONE, NULL))) {
         printf("Failed to initialise bearoff database %s\n", filename);
         exit(-1);
