@@ -429,7 +429,7 @@ CommandSetStyledGameList(char *sz)
 extern void
 CommandSetFullScreen(char *sz)
 {
-    int newValue;
+    int newValue = fFullScreen;
     SetToggle("fullscreen", &newValue, sz, _("Show board in full screen mode"), _("Show board in normal screen mode."));
 
     if (newValue != fFullScreen) {      /* Value has changed */
