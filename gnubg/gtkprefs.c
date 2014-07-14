@@ -2229,7 +2229,7 @@ DesignAdd(GtkWidget * pw, gpointer data)
     plBoardDesigns = g_list_append(plBoardDesigns, (gpointer) pbde);
     AddDesignRow(pbde, pwDesignList);
 
-    DesignSave(pw, data);
+    DesignSave(pw, plBoardDesigns);
 
     pbdeSelected = pbde;
 
@@ -2366,7 +2366,7 @@ RemoveDesign(GtkWidget * pw, gpointer data)
 
     RemoveListDesign(pbdeSelected);
 
-    DesignSave(pw, data);
+    DesignSave(pw, plBoardDesigns);
 
     SetTitle();
 }
