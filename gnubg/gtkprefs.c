@@ -662,10 +662,10 @@ gtk_color_button_set_from_array(GtkColorButton * button, double colarray[4])
     GdkColor color;
     guint16 alpha;
 
-    color.red = (colarray[0]==1)?0xffff : (guint16) (colarray[0] * 65536);
-    color.green = (colarray[1]==1)?0xffff : (guint16) (colarray[1] * 65536);
-    color.blue = (colarray[2]==1)?0xffff : (guint16) (colarray[2] * 65536);
-    alpha = (colarray[3]==1)?0xffff : (guint16) (colarray[3] * 65536);
+    color.red = (colarray[0] == 1) ? 0xffff : (guint16) (colarray[0] * 65536);
+    color.green = (colarray[1] == 1) ? 0xffff : (guint16) (colarray[1] * 65536);
+    color.blue = (colarray[2] == 1) ? 0xffff : (guint16) (colarray[2] * 65536);
+    alpha = (colarray[3] == 1) ? 0xffff : (guint16) (colarray[3] * 65536);
 
     gtk_color_button_set_color(button, &color);
     gtk_color_button_set_alpha(button, alpha);
@@ -2044,68 +2044,70 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
                      (int) (prd->arCubeColour[1] * 0xFF), (int) (prd->arCubeColour[2] * 0xFF));
 
 
-    pTemp += sprintf(pTemp, "         points0=#%02X%02X%02X;%s\n" "         points1=#%02X%02X%02X;%s\n",
-                     /* points0 */
-                     prd->aanBoardColour[2][0], prd->aanBoardColour[2][1],
-                     prd->aanBoardColour[2][2],
-                     g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", prd->aSpeckle[2] / 128.0f),
-                     /* points1 */
-                     prd->aanBoardColour[3][0], prd->aanBoardColour[3][1],
-                     prd->aanBoardColour[3][2],
-                     g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", prd->aSpeckle[3] / 128.0f));
+#if USE_BOARD3D
+    pTemp +=
+#endif
+        sprintf(pTemp, "         points0=#%02X%02X%02X;%s\n" "         points1=#%02X%02X%02X;%s\n",
+                /* points0 */
+                prd->aanBoardColour[2][0], prd->aanBoardColour[2][1],
+                prd->aanBoardColour[2][2],
+                g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", prd->aSpeckle[2] / 128.0f),
+                /* points1 */
+                prd->aanBoardColour[3][0], prd->aanBoardColour[3][1],
+                prd->aanBoardColour[3][2],
+                g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", prd->aSpeckle[3] / 128.0f));
 
 #if USE_BOARD3D
-    pTemp += sprintf(pTemp,
-                     "         hinges3d=%c\n"
-                     "         piecetype=%d\n"
-                     "         piecetexturetype=%d\n"
-                     "         roundededges=%c\n"
-                     "         bgintrays=%c\n"
-                     "         roundedpoints=%c\n"
-                     "         lighttype=%c\n"
-                     "         lightposx=%s lightposy=%s lightposz=%s\n"
-                     "         lightambient=%d lightdiffuse=%d lightspecular=%d\n"
-                     "         chequers3d0=%s\n"
-                     "         chequers3d1=%s\n"
-                     "         dice3d0=%s\n"
-                     "         dice3d1=%s\n"
-                     "         dot3d0=%s\n"
-                     "         dot3d1=%s\n"
-                     "         cube3d=%s\n"
-                     "         cubetext3d=%s\n"
-                     "         base3d=%s\n"
-                     "         points3d0=%s\n"
-                     "         points3d1=%s\n"
-                     "         border3d=%s\n"
-                     "         hinge3d=%s\n"
-                     "         numbers3d=%s\n"
-                     "         background3d=%s\n"
-                     "\n",
-                     prd->fHinges3d ? 'y' : 'n',
-                     prd->pieceType,
-                     prd->pieceTextureType,
-                     prd->roundedEdges ? 'y' : 'n',
-                     prd->bgInTrays ? 'y' : 'n',
-                     prd->roundedPoints ? 'y' : 'n',
-                     prd->lightType == LT_POSITIONAL ? 'p' : 'd',
-                     g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[0]),
-                     g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[1]),
-                     g_ascii_formatd(buf3, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[2]),
-                     prd->lightLevels[0], prd->lightLevels[1], prd->lightLevels[2],
-                     WriteMaterial(&prd->ChequerMat[0]),
-                     WriteMaterial(&prd->ChequerMat[1]),
-                     WriteMaterialDice(prd, 0),
-                     WriteMaterialDice(prd, 1),
-                     WriteMaterial(&prd->DiceDotMat[0]),
-                     WriteMaterial(&prd->DiceDotMat[1]),
-                     WriteMaterial(&prd->CubeMat),
-                     WriteMaterial(&prd->CubeNumberMat),
-                     WriteMaterial(&prd->BaseMat),
-                     WriteMaterial(&prd->PointMat[0]),
-                     WriteMaterial(&prd->PointMat[1]),
-                     WriteMaterial(&prd->BoxMat),
-                     WriteMaterial(&prd->HingeMat),
-                     WriteMaterial(&prd->PointNumberMat), WriteMaterial(&prd->BackGroundMat));
+    sprintf(pTemp,
+            "         hinges3d=%c\n"
+            "         piecetype=%d\n"
+            "         piecetexturetype=%d\n"
+            "         roundededges=%c\n"
+            "         bgintrays=%c\n"
+            "         roundedpoints=%c\n"
+            "         lighttype=%c\n"
+            "         lightposx=%s lightposy=%s lightposz=%s\n"
+            "         lightambient=%d lightdiffuse=%d lightspecular=%d\n"
+            "         chequers3d0=%s\n"
+            "         chequers3d1=%s\n"
+            "         dice3d0=%s\n"
+            "         dice3d1=%s\n"
+            "         dot3d0=%s\n"
+            "         dot3d1=%s\n"
+            "         cube3d=%s\n"
+            "         cubetext3d=%s\n"
+            "         base3d=%s\n"
+            "         points3d0=%s\n"
+            "         points3d1=%s\n"
+            "         border3d=%s\n"
+            "         hinge3d=%s\n"
+            "         numbers3d=%s\n"
+            "         background3d=%s\n"
+            "\n",
+            prd->fHinges3d ? 'y' : 'n',
+            prd->pieceType,
+            prd->pieceTextureType,
+            prd->roundedEdges ? 'y' : 'n',
+            prd->bgInTrays ? 'y' : 'n',
+            prd->roundedPoints ? 'y' : 'n',
+            prd->lightType == LT_POSITIONAL ? 'p' : 'd',
+            g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[0]),
+            g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[1]),
+            g_ascii_formatd(buf3, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[2]),
+            prd->lightLevels[0], prd->lightLevels[1], prd->lightLevels[2],
+            WriteMaterial(&prd->ChequerMat[0]),
+            WriteMaterial(&prd->ChequerMat[1]),
+            WriteMaterialDice(prd, 0),
+            WriteMaterialDice(prd, 1),
+            WriteMaterial(&prd->DiceDotMat[0]),
+            WriteMaterial(&prd->DiceDotMat[1]),
+            WriteMaterial(&prd->CubeMat),
+            WriteMaterial(&prd->CubeNumberMat),
+            WriteMaterial(&prd->BaseMat),
+            WriteMaterial(&prd->PointMat[0]),
+            WriteMaterial(&prd->PointMat[1]),
+            WriteMaterial(&prd->BoxMat),
+            WriteMaterial(&prd->HingeMat), WriteMaterial(&prd->PointNumberMat), WriteMaterial(&prd->BackGroundMat));
 #endif
 
     pbde->szBoardDesign = g_malloc(strlen(szTemp) + 1);
@@ -2670,7 +2672,7 @@ GetPrefs(renderdata * prd)
             gtk_color_button_get_array(GTK_COLOR_BUTTON(apwBoard[j]), ar);
 
             for (i = 0; i < 3; i++)
-                prd->aanBoardColour[j][i] = (ar[i]==1) ? 0xff : (unsigned char) (ar[i] * 0x100);
+                prd->aanBoardColour[j][i] = (ar[i] == 1) ? 0xff : (unsigned char) (ar[i] * 0x100);
         }
 
         prd->aSpeckle[0] = (int) (gtk_adjustment_get_value(apadjBoard[0]) * 0x80);

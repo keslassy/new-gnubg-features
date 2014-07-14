@@ -501,7 +501,7 @@ ExtFIBSBoard(scancontext * pec)
 
             float arOutput[NUM_ROLLOUT_OUTPUTS];
             float rEqBefore, rEqAfter;
-            const float epsilon = 1.0e-6;
+            const float epsilon = 1.0e-6f;
 
             getResignation(arOutput, processedBoard.anBoard, &ci, &esEvalCube);
 
@@ -788,10 +788,9 @@ CommandExternal(char *sz)
             }
 
         }
-        /* Interrupted */
+        /* Interrupted : get out of listen loop */
         if (retval == -2) {
             ProcessEvents();
-            fExit = TRUE;
             fRestart = FALSE;
         }
 
