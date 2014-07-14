@@ -63,23 +63,24 @@ static GtkWidget *apwColour[2], *apwBoard[4],
     *pwWoodF, *pwNotebook, *pwLabels, *pwDynamicLabels;
 static GList *plBoardDesigns = NULL;
 #if USE_BOARD3D
-GtkWidget *pwBoardType, *pwShowShadows, *pwAnimateRoll, *pwAnimateFlag, *pwCloseBoard,
+static GtkWidget *pwBoardType, *pwShowShadows, *pwAnimateRoll, *pwAnimateFlag, *pwCloseBoard,
     *pwDarkness, *lightLab, *darkLab, *pwLightSource, *pwDirectionalSource, *pwQuickDraw,
     *pwTestPerformance, *pmHingeCol, *frame3dOptions, *dtTextureTypeFrame,
     *pwPlanView, *pwBoardAngle, *pwSkewFactor, *skewLab, *anglelab, *pwBgTrays, *pwRoundPoints,
     *dtLightPositionFrame, *dtLightLevelsFrame, *pwRoundedEdges, *pwRoundedPiece, *pwFlatPiece,
     *pwTextureTopPiece, *pwTextureAllPiece;
 
-GtkAdjustment *padjDarkness, *padjAccuracy, *padjBoardAngle, *padjSkewFactor, *padjLightPosX,
+static GtkAdjustment *padjDarkness, *padjAccuracy, *padjBoardAngle, *padjSkewFactor, *padjLightPosX,
     *padjLightLevelAmbient, *padjLightLevelDiffuse, *padjLightLevelSpecular,
     *padjLightPosY, *padjLightPosZ, *padjDiceSize;
-int redrawChange;
 
-int pc3dDiceId[2], pcChequer2;
+static int redrawChange;
+
+static int pc3dDiceId[2], pcChequer2;
 #endif
 
 GtkWidget *pwPrevBoard;
-renderdata rdPrefs;
+static renderdata rdPrefs;
 
 static GtkWidget *pwDesignAdd, *pwDesignRemove, *pwDesignUpdate;
 static GtkWidget *pwDesignImport, *pwDesignExport;
@@ -87,7 +88,8 @@ static GtkWidget *pwDesignList;
 static GtkWidget *pwDesignAddAuthor;
 static GtkWidget *pwDesignAddTitle;
 
-GtkListStore *designListStore;
+static GtkListStore *designListStore;
+
 enum { NAME_COL = 0, DATA_COL = 1 };
 
 static GtkWidget *apwDiceColour[2];
