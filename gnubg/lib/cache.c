@@ -336,8 +336,8 @@ CacheFlush(const evalCache * pc)
 {
     unsigned int k;
     for (k = 0; k < pc->size / 2; ++k) {
-        pc->entries[k].nd_primary.nEvalContext = -1;
-        pc->entries[k].nd_secondary.nEvalContext = -1;
+        pc->entries[k].nd_primary.key.data[0] = -1;
+        pc->entries[k].nd_secondary.key.data[0] = -1;
 #if USE_MULTITHREAD
         pc->entries[k].lock = 0;
 #endif
