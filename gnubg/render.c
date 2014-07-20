@@ -51,9 +51,13 @@
 static randctx rc;
 #define RAND irand( &rc )
 
+#if HAVE_FREETYPE
 #define FONT_VERA "fonts/Vera.ttf"
 #define FONT_VERA_SERIF_BOLD "fonts/VeraSeBd.ttf"
+#if 0 /* unused for now */
 #define FONT_VERA_BOLD "fonts/VeraBd.ttf"
+#endif
+#endif
 
 /* aaanPositions[Clockwise][x][point number][x, y. deltay] */
 int positions[2][30][3] = { {
