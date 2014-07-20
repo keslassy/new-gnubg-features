@@ -3647,7 +3647,7 @@ CommandImportAuto(char *sz)
 }
 
 #define BGR_STRING "BGF version"
-int moveNum;
+static int moveNum;
 
 static void
 OutputMove(FILE * fpOut, int side, const char *outBuf)

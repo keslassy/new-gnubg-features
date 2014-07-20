@@ -43,7 +43,7 @@ const char *aszWoodName[] = {
     "oak", "pine", "redwood", "walnut", "willow", "paint"
 };
 
-renderdata rdAppearance;
+static renderdata rdAppearance;
 
 /* Limit use of global... */
 extern renderdata *
