@@ -818,8 +818,8 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
     }
 }
 
-#define START_STRING " Game "
-#define START_STRING_LEN 6
+#define START_STRING "Game "
+#define START_STRING_LEN 5
 
 static char *
 GetMatLine(FILE * fp)
@@ -934,7 +934,7 @@ ImportGame(FILE * fp, int iGame, int nLength, bgvariation bgVariation, int *warn
     IniStatcontext(&pmr->g.sc);
     AddMoveRecord(pmr);
 
-    while ((szLine = GetMatLine(fp)) && strncmp(szLine, START_STRING, START_STRING_LEN)) {
+    while ((szLine = GetMatLine(fp)) && strncmp(g_strchug(szLine), START_STRING, START_STRING_LEN)) {
         pchRight = pchLeft = NULL;
 
         if ((pch = strpbrk(szLine, "\n\r")) != 0)
@@ -1134,8 +1134,8 @@ ImportMatVariation(FILE * fp, char *szFilename, bgvariation bgVariation, int war
 
     szLine = GetMatLine(fp);
     while (szLine) {
-        if (!strncmp(szLine, START_STRING, START_STRING_LEN)) {
-            game = atoi(szLine + START_STRING_LEN);
+        if (!strncmp(g_strchug(szLine), START_STRING, START_STRING_LEN)) {
+            game = atoi(g_strchug(szLine) + START_STRING_LEN);
             if (!game)
                 outputf(_("WARNING! Unrecognized line in mat file: '%s'\n"), szLine);
             {
