@@ -122,10 +122,10 @@ int positions[2][30][3] = { {
 };
 
 #if HAVE_FREETYPE
-FT_Library ftl;
+static FT_Library ftl;
 #endif
 
-renderdata rdDefault = {
+static renderdata rdDefault = {
     WOOD_ALDER,                 /* wt */
     {{0xF1 / 255.0, 0x25 / 255.0, 0x25 / 255.0, 0.9}, {0, 0, 0xB / 255.0, 0.5}},        /* aarColour */
     {{0xF1 / 255.0, 0x25 / 255.0, 0x25 / 255.0, 0.9}, {0, 0, 0xB / 255.0, 0.5}},        /* aarDiceColour */
