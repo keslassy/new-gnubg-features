@@ -80,9 +80,6 @@
 #include "sound.h"
 #include "openurl.h"
 
-
-#include "sound.h"
-
 #if USE_BOARD3D
 #include "fun3d.h"
 #endif
@@ -2967,12 +2964,6 @@ CommandSetMET(char *sz)
 extern void
 CommandSetEvalParamType(char *sz)
 {
-    const char *aszEvalType[] = {
-        N_("No evaluation"),
-        N_("Neural net evaluation"),
-        N_("Rollout")
-    };
-
     switch (sz[0]) {
 
     case 'r':
