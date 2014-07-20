@@ -46,7 +46,7 @@
 #include "fun3d.h"
 #endif
 
-moverecord *pmr_hint = NULL;
+static moverecord *pmr_hint = NULL;
 
 const char *aszGameResult[] = {
     N_("single game"),
@@ -148,7 +148,7 @@ static int
 #if USE_GTK
 #include "gtkgame.h"
 
-int anLastMove[8], fLastMove, fLastPlayer;
+static int anLastMove[8], fLastMove, fLastPlayer;
 #endif
 
 static void

@@ -37,7 +37,7 @@ typedef float float_vector[4];
 
 typedef SSE_ALIGN(float float_vec_aligned[sizeof(float_vector)/sizeof(float)]);
 
-SSE_ALIGN (float_vec_aligned inpvec[16]) = {
+SSE_ALIGN (static float_vec_aligned inpvec[16]) = {
     /*  0 */  {
     0.0, 0.0, 0.0, 0.0},
         /*  1 */  {
@@ -71,7 +71,7 @@ SSE_ALIGN (float_vec_aligned inpvec[16]) = {
         /* 15 */  {
 0.0, 0.0, 1.0, 6.0}};
 
-SSE_ALIGN(float_vec_aligned inpvecb[16]) = {
+SSE_ALIGN(static float_vec_aligned inpvecb[16]) = {
     /*  0 */  {
     0.0, 0.0, 0.0, 0.0},
         /*  1 */  {

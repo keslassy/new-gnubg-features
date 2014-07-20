@@ -544,7 +544,7 @@ char *default_sgf_folder = NULL;
 
 const char *szHomeDirectory;
 
-char const *aszBuildInfo[] = {
+static char const *aszBuildInfo[] = {
 #if USE_PYTHON
     N_("Python supported."),
 #endif

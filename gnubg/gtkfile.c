@@ -235,9 +235,9 @@ SaveCommon(guint f, gchar * prompt)
     gtk_widget_destroy(so.fc);
 }
 
-ImportType lastOpenType;
-GtkWidget *openButton, *selFileType;
-int autoOpen;
+static ImportType lastOpenType;
+static GtkWidget *openButton, *selFileType;
+static int autoOpen;
 
 static void
 selection_changed_cb(GtkFileChooser * file_chooser, void *UNUSED(notused))

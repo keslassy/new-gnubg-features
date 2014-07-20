@@ -40,7 +40,7 @@ typedef struct _Warning {
     int isWarningQuestion;
 } Warning;
 
-Warning warnings[WARN_NUM_WARNINGS] = {
+static Warning warnings[WARN_NUM_WARNINGS] = {
     {
      N_("Press escape to exit full screen mode"),
      "fullscreenexit", TRUE, FALSE},
@@ -247,7 +247,7 @@ DialogArea(GtkWidget * pw, dialogarea da)
 
 /* Use to temporarily set the parent dialog for nested dialogs
  * Note that passing a control of a window is ok (and common) */
-GtkWidget *pwCurrentParent = NULL;
+static GtkWidget *pwCurrentParent = NULL;
 
 extern void
 GTKSetCurrentParent(GtkWidget * parent)
@@ -325,7 +325,8 @@ GTKGetInputYN(char *szPrompt)
     return GTKMessage(szPrompt, DT_AREYOUSURE);
 }
 
-char *inputString;
+static char *inputString;
+
 static void
 GetInputOk(GtkWidget * pw, GtkWidget * pwEntry)
 {
@@ -353,9 +354,9 @@ GTKGetInput(char *title, char *prompt, GtkWidget * parent)
     return inputString;
 }
 
-GtkWidget *pwTick;
+static GtkWidget *pwTick;
 
-int warningResult;
+static int warningResult;
 
 static void
 WarningOK(GtkWidget * pw, warningType warning)

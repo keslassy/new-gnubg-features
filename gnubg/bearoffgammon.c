@@ -7080,7 +7080,7 @@ static unsigned char x55[] = {
     3,
 };
 
-struct GroupInfo info[63] = {
+static struct GroupInfo info[63] = {
     /*  1 100000 */
     {{0, 0, 0, 36}, 0, 0, 0},
     /*  2 010000 */

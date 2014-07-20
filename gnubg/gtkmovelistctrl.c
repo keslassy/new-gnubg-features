@@ -231,7 +231,7 @@ custom_cell_renderer_invalidate_size(void)
  * (Y - space)
  * (m - minus)
  */
-int _s_A, _s_A2, _s_B, _s_C, _s_D, _s_E, _s_Y, _s_Z, _s_ZP, _s_a, _s_b, _s_c, _s_cP, _s_d, _s_s, _s_m;
+static int _s_A, _s_A2, _s_B, _s_C, _s_D, _s_E, _s_Y, _s_Z, _s_ZP, _s_a, _s_b, _s_c, _s_cP, _s_d, _s_s, _s_m;
 
 static void
 custom_cell_renderer_movelist_get_size(GtkCellRenderer * cell,

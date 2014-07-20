@@ -123,8 +123,10 @@ typedef struct _optionswidget {
 typedef struct _SoundDetail {
     int Enabled;
     char *Path;
-} SoundDeatil;
-SoundDeatil soundDetails[NUM_SOUNDS];
+} SoundDetail;
+
+static SoundDetail soundDetails[NUM_SOUNDS];
+
 static GtkWidget *soundFrame;
 static GtkWidget *soundEnabled;
 static GtkWidget *soundPath;
@@ -1296,8 +1298,8 @@ OptionsPages(optionswidget * pow)
     return pow->pwNoteBook;
 }
 
-char checkupdate_sz[128];
-int checkupdate_n;
+static char checkupdate_sz[128];
+static int checkupdate_n;
 
 #define CHECKUPDATE(button,flag,string) \
    checkupdate_n = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( (button) ) ); \

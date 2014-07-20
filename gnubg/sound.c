@@ -491,7 +491,7 @@ SoundWait(void)
 #endif
 }
 
-char *sound_file[NUM_SOUNDS] = { 0 };
+static char *sound_file[NUM_SOUNDS] = { 0 };
 
 extern char *
 GetDefaultSoundFile(gnubgsound sound)

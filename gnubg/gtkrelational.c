@@ -70,11 +70,11 @@ static GtkWidget *pwQueryText;
 static GtkWidget *pwQueryResult = NULL;
 static GtkWidget *pwQueryBox;
 
-GtkListStore *playerStore;
-GtkListStore *dbStore;
-GtkTreeIter selected_iter;
-int optionsValid;
-GtkWidget *playerTreeview, *adddb, *deldb, *gameStats, *dbList, *dbtype, *user, *password, *hostname, *login, *helptext;
+static GtkListStore *playerStore;
+static GtkListStore *dbStore;
+static GtkTreeIter selected_iter;
+static int optionsValid;
+static GtkWidget *playerTreeview, *adddb, *deldb, *gameStats, *dbList, *dbtype, *user, *password, *hostname, *login, *helptext;
 
 void CheckDatabase(const char *database);
 static void DBListSelected(GtkTreeView * treeview, gpointer userdata);

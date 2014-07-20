@@ -82,7 +82,7 @@ typedef struct _SetDiceData {
     manualDiceType mdt;
 } SetDiceData;
 /*todo - tidy set cube like above */
-unsigned char *TTachCube, *TTachCubeFaces;
+static unsigned char *TTachCube, *TTachCubeFaces;
 
 #define RAND irand( &rc )
 

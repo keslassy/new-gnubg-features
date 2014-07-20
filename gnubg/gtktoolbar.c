@@ -207,7 +207,7 @@ ToolbarToggleClockwise(GtkWidget * pw, toolbarwidget * UNUSED(ptw))
 }
 #endif
 
-int editing = FALSE;
+static int editing = FALSE;
 
 extern void
 click_edit(void)

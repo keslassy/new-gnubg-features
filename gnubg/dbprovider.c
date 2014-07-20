@@ -66,7 +66,7 @@ static void SQLiteCommit(void);
 #if NUM_PROVIDERS
 static int SQLiteDeleteDatabase(const char *dbfilename, const char *user, const char *password, const char *hostname);
 static GList *SQLiteGetDatabaseList(const char *user, const char *password, const char *hostname);
-DBProvider providers[NUM_PROVIDERS] = {
+static DBProvider providers[NUM_PROVIDERS] = {
 #if USE_SQLITE
     {SQLiteConnect, SQLiteDisconnect, SQLiteSelect, SQLiteUpdateCommand, SQLiteCommit, SQLiteGetDatabaseList,
      SQLiteDeleteDatabase,
@@ -567,7 +567,7 @@ PyPostgreDeleteDatabase(const char *dbfilename, const char *user, const char *pa
 
 #include <sqlite3.h>
 
-sqlite3 *connection;
+static sqlite3 *connection;
 
 int
 SQLiteConnect(const char *dbfilename, const char *UNUSED(user), const char *UNUSED(password),

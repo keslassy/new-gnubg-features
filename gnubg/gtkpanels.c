@@ -87,7 +87,7 @@ typedef struct _windowobject {
 } windowobject;
 
 /* Set up window and panel details */
-windowobject woPanel[NUM_WINDOWS] = {
+static windowobject woPanel[NUM_WINDOWS] = {
     /* main window */
     {
      "main",
@@ -1451,7 +1451,7 @@ CommandSetAnalysisWindows(char *sz)
               _("Show window with analysis"), _("Do not show window with analysis."));
 }
 
-gnubgwindow pwoSetPanel;
+static gnubgwindow pwoSetPanel;
 
 extern void
 CommandSetGeometryAnalysis(char *sz)

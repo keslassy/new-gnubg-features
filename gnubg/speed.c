@@ -38,8 +38,8 @@
 
 #define EVALS_PER_ITERATION 1024
 
-randctx rc;
-double timeTaken;
+static randctx rc;
+static double timeTaken;
 
 extern void
 RunEvals(void *UNUSED(notused))
