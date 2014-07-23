@@ -62,8 +62,6 @@ enum _bearoffoptions {
 
 extern bearoffcontext *BearoffInit(const char *szFilename, const int bo, void (*p) (unsigned int));
 
-extern bearoffcontext *BearoffInitBuiltin(void);
-
 extern int
  BearoffEval(const bearoffcontext * pbc, const TanBoard anBoard, float arOutput[]);
 

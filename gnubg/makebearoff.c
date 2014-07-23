@@ -1442,12 +1442,3 @@ main(int argc, char **argv)
     return 0;
 
 }
-
-extern bearoffcontext *
-BearoffInitBuiltin(void)
-{
-
-    printf("Make makebearoff build (avoid resursive rules Makefile :-)\n");
-    return NULL;
-
-}
