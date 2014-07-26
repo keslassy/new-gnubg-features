@@ -315,9 +315,9 @@ InitMutex(Mutex * pMutex)
 }
 
 extern void
-FreeMutex(Mutex mutex)
+FreeMutex(Mutex * mutex)
 {
-    CloseHandle(mutex);
+    CloseHandle(*mutex);
 }
 
 #ifdef DEBUG_MULTITHREADED
