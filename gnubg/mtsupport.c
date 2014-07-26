@@ -350,12 +350,10 @@ Mutex_Release(Mutex mutex)
 extern void
 MT_InitThreads(void)
 {
-#if 0
 #if !GLIB_CHECK_VERSION (2,32,0)
     if (!g_thread_supported())
         g_thread_init(NULL);
     g_assert(g_thread_supported());
-#endif
 #endif
     td.tasks = NULL;
     td.doneTasks = td.addedTasks = 0;
