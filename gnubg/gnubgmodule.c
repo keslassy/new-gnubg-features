@@ -1184,12 +1184,13 @@ PythonEvaluate(PyObject * UNUSED(self), PyObject * args)
     PyObject *pyCubeInfo = NULL;
     PyObject *pyEvalContext = NULL;
 
+    int fSaveShowProg;
+    decisionData dd;
     TanBoard anBoard;
     cubeinfo ci;
     evalcontext ec;
-    float arOutput[7];
-
-    memcpy (&ec, &GetEvalCube()->ec, sizeof (evalcontext));
+  
+    memcpy (&ec, &GetEvalChequer()->ec, sizeof (evalcontext));
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
     GetMatchStateCubeInfo(&ci, &ms);
 
@@ -1205,17 +1206,25 @@ PythonEvaluate(PyObject * UNUSED(self), PyObject * args)
     if (pyEvalContext && PyToEvalContext(pyEvalContext, &ec))
         return NULL;
 
-    if (GeneralEvaluationE(arOutput, (ConstTanBoard) anBoard, &ci, &ec)) {
+    dd.pboard = (ConstTanBoard) anBoard;
+    dd.pci = &ci;
+    dd.pec = &ec;
+
+    fSaveShowProg = fShowProgress;
+    fShowProgress = FALSE;
+    if ((RunAsyncProcess((AsyncFun) asyncMoveDecisionE, &dd, _("Considering move...")) != 0) || fInterrupt) {
+        fShowProgress = fSaveShowProg;
         ResetInterrupt();
-        PyErr_SetString(PyExc_StandardError, _("interrupted/errno in GeneralEvaluateE"));
+        PyErr_SetString(PyExc_StandardError, _("interrupted/errno in asyncMoveDecisionE"));
         return NULL;
     }
+    fShowProgress = fSaveShowProg;
 
     {
         PyObject *p = PyTuple_New(6);
         int k;
         for (k = 0; k < 6; ++k) {
-            PyTuple_SET_ITEM(p, k, PyFloat_FromDouble(arOutput[k]));
+            PyTuple_SET_ITEM(p, k, PyFloat_FromDouble(dd.aarOutput[0][k]));
         }
         return p;
     }
@@ -1229,8 +1238,10 @@ PythonEvaluateCubeful(PyObject * UNUSED(self), PyObject * args)
     PyObject *pyCubeInfo = NULL;
     PyObject *pyEvalContext = NULL;
 
+    int fSaveShowProg;
+    decisionData dd;
     TanBoard anBoard;
-    float aarOutput[2][NUM_ROLLOUT_OUTPUTS], arCube[NUM_CUBEFUL_OUTPUTS];
+    float arCube[NUM_CUBEFUL_OUTPUTS];
     cubeinfo ci;
     evalcontext ec;
     int cp;
@@ -1251,13 +1262,22 @@ PythonEvaluateCubeful(PyObject * UNUSED(self), PyObject * args)
     if (pyEvalContext && PyToEvalContext(pyEvalContext, &ec))
         return NULL;
 
-    if (GeneralCubeDecisionE(aarOutput, (ConstTanBoard) anBoard, &ci, &ec, 0) < 0) {
+    dd.pboard = (ConstTanBoard) anBoard;
+    dd.pci = &ci;
+    dd.pec = &ec;
+    dd.pes = NULL;
+
+    fSaveShowProg = fShowProgress;
+    fShowProgress = FALSE;
+    if ((RunAsyncProcess((AsyncFun) asyncCubeDecisionE, &dd, _("Considering cube decision...")) != 0) || fInterrupt) {
+        fShowProgress = fSaveShowProg;
         ResetInterrupt();
-        PyErr_SetString(PyExc_StandardError, _("interrupted/errno in GeneralCubeDecisionE"));
+        PyErr_SetString(PyExc_StandardError, _("interrupted/errno in asyncCubeDecisionE"));
         return NULL;
     }
+    fShowProgress = fSaveShowProg;
 
-    cp = FindCubeDecision(arCube, aarOutput, &ci);
+    cp = FindCubeDecision(arCube, dd.aarOutput, &ci);
 
     {
         PyObject *p = PyTuple_New(NUM_CUBEFUL_OUTPUTS + 2);

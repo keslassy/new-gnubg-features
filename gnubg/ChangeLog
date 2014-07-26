@@ -1,5 +1,12 @@
 2014-07-26  Michael Petch  <mpetch@gnubg.org>
 
+	* gnubgmodule.c: cfevaluate and evaluate now make asynchronous
+	calls to retrieve cube and move results. This allows Python to
+	to call these functions from any of its own threads. Fix bug
+	with the eval context in PythonEvaluate.
+
+2014-07-25  Michael Petch  <mpetch@gnubg.org>
+
 	* Makefile.am, glib-ext.c, glib-ext.h, gnubg.c, makebearoff.c, 
 	  makehyper.c: Modify code to properly compile on systems
 	with GLIB < 2.14. Make sure glib threading is initialized
