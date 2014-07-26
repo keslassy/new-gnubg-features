@@ -142,8 +142,8 @@ extern ThreadData td;
 
 #if defined(GLIB_THREADS)
 extern void ResetManualEvent(ManualEvent ME);
-extern void Mutex_Lock(Mutex mutex, const char *reason);
-extern void Mutex_Release(Mutex mutex);
+extern void Mutex_Lock(Mutex *mutex, const char *reason);
+extern void Mutex_Release(Mutex *mutex);
 extern void WaitForManualEvent(ManualEvent ME);
 extern void SetManualEvent(ManualEvent ME);
 extern void TLSSetValue(TLSItem pItem, size_t value);
@@ -152,7 +152,7 @@ extern void TLSFree(TLSItem pItem);
 extern void InitManualEvent(ManualEvent * pME);
 extern void FreeManualEvent(ManualEvent ME);
 extern void InitMutex(Mutex * pMutex);
-extern void FreeMutex(Mutex mutex);
+extern void FreeMutex(Mutex * mutex);
 
 #define UI_UPDATETIME 250
 

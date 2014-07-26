@@ -4781,8 +4781,8 @@ main(int argc, char *argv[])
     init_nets(fNoBearoff);
 
     PushSplash(pwSplash, _("Initialising"), _("initialising thread data"));
-    MT_InitThreads();
     glib_ext_init();
+    MT_InitThreads();
 
 #if defined(WIN32) && HAVE_SOCKETS
     PushSplash(pwSplash, _("Initialising"), _("Windows sockets"));

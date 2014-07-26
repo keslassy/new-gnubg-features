@@ -21,8 +21,6 @@
 
 #include "config.h"
 
-#include <glib.h>
-#include <glib/gstdio.h>
 #include <stdio.h>
 #ifdef WIN32
 #include <io.h>
@@ -39,6 +37,8 @@
 #include "bearoff.h"
 #include "util.h"
 #include "backgammon.h"
+#include <glib/gstdio.h>
+#include "glib-ext.h"
 #include "multithread.h"
 
 void
@@ -1273,6 +1273,7 @@ main(int argc, char **argv)
     static char *szTwoSided = NULL;
     static int show_version = 0;
 
+    glib_ext_init();
     MT_InitThreads();
     bearoffcontext *pbc = NULL;
     FILE *output;

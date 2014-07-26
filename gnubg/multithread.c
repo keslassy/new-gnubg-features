@@ -74,7 +74,7 @@ MT_GetTask(void)
 {
     Task *task = NULL;
 
-    Mutex_Lock(td.queueLock, "get task");
+    Mutex_Lock(&td.queueLock, "get task");
 
     if (g_list_length(td.tasks) > 0) {
         task = (Task *) g_list_first(td.tasks)->data;
@@ -85,7 +85,7 @@ MT_GetTask(void)
     }
 
     multi_debug("get task: release");
-    Mutex_Release(td.queueLock);
+    Mutex_Release(&td.queueLock);
 
     return task;
 }
@@ -232,7 +232,7 @@ void
 MT_AddTask(Task * pt, gboolean lock)
 {
     if (lock) {
-        Mutex_Lock(td.queueLock, "add task");
+        Mutex_Lock(&td.queueLock, "add task");
     }
     if (td.addedTasks == 0)
         td.result = 0;          /* Reset result for new tasks */
@@ -243,7 +243,7 @@ MT_AddTask(Task * pt, gboolean lock)
     }
     if (lock) {
         multi_debug("add task: release");
-        Mutex_Release(td.queueLock);
+        Mutex_Release(&td.queueLock);
     }
 }
 
@@ -255,9 +255,9 @@ mt_add_tasks(unsigned int num_tasks, AsyncFun pFun, void *taskData, gpointer lin
 #ifdef DEBUG_MULTITHREADED
         char buf[20];
         sprintf(buf, "add %u tasks", num_tasks);
-        Mutex_Lock(td.queueLock, buf);
+        Mutex_Lock(&td.queueLock, buf);
 #else
-        Mutex_Lock(td.queueLock, NULL);
+        Mutex_Lock(&td.queueLock, NULL);
 #endif
     }
     for (i = 0; i < num_tasks; i++) {
@@ -268,7 +268,7 @@ mt_add_tasks(unsigned int num_tasks, AsyncFun pFun, void *taskData, gpointer lin
         MT_AddTask(pt, FALSE);
     }
     multi_debug("add many release: lock");
-    Mutex_Release(td.queueLock);
+    Mutex_Release(&td.queueLock);
 }
 
 static gboolean

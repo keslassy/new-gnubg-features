@@ -75,6 +75,16 @@ g_once_init_leave(volatile gsize * value_location, gsize initialization_value)
     g_cond_broadcast(g_once_cond);
     g_mutex_unlock(g_once_mutex);
 }
+gboolean 
+g_once_init_enter(volatile gsize * value_location)
+{
+    if G_LIKELY
+        (g_atomic_pointer_get((void *volatile *) value_location) != 
+NULL)
+            return FALSE;
+    else
+        return g_once_init_enter_impl(value_location);
+}
 #endif
 
 void glib_ext_init(void)

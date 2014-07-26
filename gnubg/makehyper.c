@@ -39,6 +39,7 @@
 #include "drawboard.h"
 #include "multithread.h"
 #include "lib/simd.h"
+#include "glib-ext.h"
 #include "multithread.h"
 
 static cubeinfo ci;
@@ -607,6 +608,7 @@ main(int argc, char **argv)
 
     /* i18n */
 
+    glib_ext_init();
     MT_InitThreads();
     setlocale(LC_ALL, "");
     bindtextdomain(PACKAGE, LOCALEDIR);

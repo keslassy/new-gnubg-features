@@ -117,7 +117,7 @@ TLSSetValue(TLSItem pItem, size_t value)
 extern void
 InitManualEvent(ManualEvent * pME)
 {
-    ManualEvent pNewME = malloc(sizeof(*pNewME));
+    ManualEvent pNewME = g_malloc(sizeof(*pNewME));
 #if GLIB_CHECK_VERSION (2,32,0)
     g_cond_init(&pNewME->cond);
 #else
@@ -135,7 +135,7 @@ FreeManualEvent(ManualEvent ME)
 #else
     g_cond_free(ME->cond);
 #endif
-    free(ME);
+    g_free(ME);
 }
 
 extern void
@@ -218,9 +218,9 @@ InitMutex(Mutex * pMutex)
 }
 
 extern void
-FreeMutex(Mutex mutex)
+FreeMutex(Mutex * mutex)
 {
-    g_mutex_clear(&mutex);
+    g_mutex_clear(mutex);
 }
 #else
 extern void
@@ -230,14 +230,14 @@ InitMutex(Mutex * pMutex)
 }
 
 extern void
-FreeMutex(Mutex mutex)
+FreeMutex(Mutex * mutex)
 {
-    g_mutex_free(mutex);
+    g_mutex_free(*mutex);
 }
 #endif
 
 extern void
-Mutex_Lock(Mutex mutex, const char *reason)
+Mutex_Lock(Mutex *mutex, const char *reason)
 {
 #ifdef DEBUG_MULTITHREADED
     multi_debug(reason);
@@ -245,22 +245,22 @@ Mutex_Lock(Mutex mutex, const char *reason)
     (void) reason;
 #endif
 #if GLIB_CHECK_VERSION (2,32,0)
-    g_mutex_lock(&mutex);
-#else
     g_mutex_lock(mutex);
+#else
+    g_mutex_lock(*mutex);
 #endif
 }
 
 extern void
-Mutex_Release(Mutex mutex)
+Mutex_Release(Mutex *mutex)
 {
 #ifdef DEBUG_MULTITHREADED
     multi_debug("Releasing lock");
 #endif
 #if GLIB_CHECK_VERSION (2,32,0)
-    g_mutex_unlock(&mutex);
-#else
     g_mutex_unlock(mutex);
+#else
+    g_mutex_unlock(*mutex);
 #endif
 }
 
@@ -350,12 +350,13 @@ Mutex_Release(Mutex mutex)
 extern void
 MT_InitThreads(void)
 {
+#if 0
 #if !GLIB_CHECK_VERSION (2,32,0)
     if (!g_thread_supported())
         g_thread_init(NULL);
     g_assert(g_thread_supported());
 #endif
-
+#endif
     td.tasks = NULL;
     td.doneTasks = td.addedTasks = 0;
     td.totalTasks = -1;
@@ -412,8 +413,8 @@ MT_Close(void)
     MT_CloseThreads();
 
     FreeManualEvent(td.activity);
-    FreeMutex(td.multiLock);
-    FreeMutex(td.queueLock);
+    FreeMutex(&td.multiLock);
+    FreeMutex(&td.queueLock);
 
     FreeManualEvent(td.syncStart);
     FreeManualEvent(td.syncEnd);
@@ -423,13 +424,13 @@ MT_Close(void)
 extern void
 MT_Exclusive(void)
 {
-    Mutex_Lock(td.multiLock, "Exclusive lock");
+    Mutex_Lock(&td.multiLock, "Exclusive lock");
 }
 
 extern void
 MT_Release(void)
 {
-    Mutex_Release(td.multiLock);
+    Mutex_Release(&td.multiLock);
 }
 
 #ifdef DEBUG_MULTITHREADED

@@ -1,3 +1,17 @@
+2014-07-26  Michael Petch  <mpetch@gnubg.org>
+
+	* Makefile.am, glib-ext.c, glib-ext.h, gnubg.c, makebearoff.c, 
+	  makehyper.c: Modify code to properly compile on systems
+	with GLIB < 2.14. Make sure glib threading is initialized
+	in enviornments where it is needed. This includes makebearoff
+	and makehyper.
+	* mtsupport.c, multithread.c, multithread.h: Fix problem with
+	mutexes being incorrectly initialized/freed/locked/unlocked
+	on environemnts with GLIB >= 2.32. This bug was identified
+	with recent GLIB builds with extra runtime checks. See 
+	crash reported by Chris Fahlman using unstable Ubuntu. See
+	https://bugs.launchpad.net/ubuntu/+source/gnubg/+bug/1346567
+
 2014-06-26  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* import.c, show.c, gnubg.c, backgammon.h, set.c, commands.inc:
