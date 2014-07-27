@@ -84,7 +84,7 @@ GAsyncQueue *async_queue = NULL;        /* Needed for async waiting */
 
 #if GLIB_CHECK_VERSION (2,32,0)
 /* Dynamic allocation of GPrivate is deprecated */
-GPrivate private_item;
+GPrivate private_item = G_PRIVATE_INIT (free);
 
 extern void
 TLSCreate(TLSItem * pItem)
@@ -383,7 +383,11 @@ CloseThread(void *UNUSED(unused))
     NNState *pnnState = ((ThreadLocalData *) TLSGet(td.tlsItem))->pnnState;
 
     g_assert(td.closingThreads);
-    free(((ThreadLocalData *) TLSGet(td.tlsItem))->aMoves);
+
+    ThreadLocalData *pTLD = (ThreadLocalData *) TLSGet(td.tlsItem);
+    if (pTLD->aMoves)
+        free(pTLD->aMoves);
+
     for (i = 0; i < 3; i++) {
         free(pnnState[i].savedBase);
         free(pnnState[i].savedIBase);
@@ -416,7 +420,6 @@ MT_Close(void)
 
     FreeManualEvent(td.syncStart);
     FreeManualEvent(td.syncEnd);
-    TLSFree(td.tlsItem);
 }
 
 extern void

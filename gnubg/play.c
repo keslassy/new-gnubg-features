@@ -413,8 +413,10 @@ FreeMoveRecord(moverecord * pmr)
 
     switch (pmr->mt) {
     case MOVE_NORMAL:
-        if (pmr->ml.cMoves)
+        if (pmr->ml.cMoves && pmr->ml.amMoves) {
             free(pmr->ml.amMoves);
+            pmr->ml.amMoves = NULL;
+        }
         break;
 
     default:

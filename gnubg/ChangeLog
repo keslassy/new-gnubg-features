@@ -1,5 +1,12 @@
 2014-07-26  Michael Petch  <mpetch@gnubg.org>
 
+    * analysis.c mtsupport.c play.c: Fix problem with aMoves
+    data structures being double freed. This bug would cause
+    prgram to crash on termination or crash after stopping an
+    analysis.
+
+2014-07-26  Michael Petch  <mpetch@gnubg.org>
+
 	* gnubgmodule.c: cfevaluate and evaluate now make asynchronous
 	calls to retrieve cube and move results. This allows Python to
 	to call these functions from any of its own threads. Fix bug
