@@ -1748,8 +1748,8 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
     if (prd->roundedEdges) {
         if (prd->BoxMat.pTexture) {
             tuv = (TEXTURE_SCALE) / prd->BoxMat.pTexture->width;
-            st = sinf((2 * G_PI) / prd->curveAccuracy) * BOARD_FILLET;
-            ct = (cosf((2 * G_PI) / prd->curveAccuracy) - 1) * BOARD_FILLET;
+            st = sinf((2 * (float)G_PI) / prd->curveAccuracy) * BOARD_FILLET;
+            ct = (cosf((2 * (float)G_PI) / prd->curveAccuracy) - 1) * BOARD_FILLET;
             dInc = sqrtf(st * st + ct * ct);
             curveTextOff = (int) (prd->curveAccuracy / 4) * dInc;
         }
@@ -2699,7 +2699,7 @@ drawPointPick(const BoardData * UNUSED(bd), void *data)
 
 /* 20 allows for 5 hit records (more than enough) */
 #define BUFSIZE 20
-GLuint selectBuf[BUFSIZE];
+static GLuint selectBuf[BUFSIZE];
 
 typedef void (*PickDrawFun) (const BoardData * bd, void *data);
 
