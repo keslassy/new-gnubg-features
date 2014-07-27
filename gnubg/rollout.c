@@ -48,7 +48,7 @@ f_BasicCubefulRollout BasicCubefulRollout = BasicCubefulRolloutNoLocking;
 
 int log_rollouts = 0;
 char *log_file_name = 0;
-unsigned int initial_game_count;
+static unsigned int initial_game_count;
 
 /* make sgf files of rollouts if log_rollouts is true and we have a file 
  * name template to work with
@@ -283,7 +283,7 @@ ClosedBoard(int afClosedBoard[2], const TanBoard anBoard)
 
 #define BasicCubefulRollout BasicCubefulRolloutWithLocking
 
-extern unsigned int initial_game_count;
+static unsigned int initial_game_count;
 
 #endif
 
@@ -902,28 +902,28 @@ comp_jsdinfo_order(const void *a, const void *b)
 }
 
 /* Lots of shared variables - should probably not be globals... */
-unsigned int cGames;
-cubeinfo *aciLocal;
-int show_jsds;
+static unsigned int cGames;
+static cubeinfo *aciLocal;
+static int show_jsds;
 
-float (*aarMu)[NUM_ROLLOUT_OUTPUTS];
-float (*aarSigma)[NUM_ROLLOUT_OUTPUTS];
-double (*aarResult)[NUM_ROLLOUT_OUTPUTS];
-double (*aarVariance)[NUM_ROLLOUT_OUTPUTS];
-int *fNoMore;
-jsdinfo *ajiJSD;
+static float (*aarMu)[NUM_ROLLOUT_OUTPUTS];
+static float (*aarSigma)[NUM_ROLLOUT_OUTPUTS];
+static double (*aarResult)[NUM_ROLLOUT_OUTPUTS];
+static double (*aarVariance)[NUM_ROLLOUT_OUTPUTS];
+static int *fNoMore;
+static jsdinfo *ajiJSD;
 
-int ro_alternatives = -1;
-evalsetup **ro_apes;
-ConstTanBoard *ro_apBoard;
-const cubeinfo **ro_apci;
-int **ro_apCubeDecTop;
-rolloutstat(*ro_aarsStatistics)[2];
-int ro_fCubeRollout;
-int ro_fInvert;
-int ro_NextTrial;
-unsigned int *altGameCount;
-int *altTrialCount;
+static int ro_alternatives = -1;
+static evalsetup **ro_apes;
+static ConstTanBoard *ro_apBoard;
+static const cubeinfo **ro_apci;
+static int **ro_apCubeDecTop;
+static rolloutstat(*ro_aarsStatistics)[2];
+static int ro_fCubeRollout;
+static int ro_fInvert;
+static int ro_NextTrial;
+static unsigned int *altGameCount;
+static int *altTrialCount;
 
 static void
 check_jsds(int *active)
@@ -1244,8 +1244,8 @@ RolloutLoopMT(void *UNUSED(unused))
     free(rngctxMTRollout);
 }
 
-rolloutprogressfunc *ro_pfProgress;
-void *ro_pUserData;
+static rolloutprogressfunc *ro_pfProgress;
+static void *ro_pUserData;
 
 static gboolean
 UpdateProgress(gpointer UNUSED(unused))
