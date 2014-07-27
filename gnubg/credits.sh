@@ -73,6 +73,7 @@ Akif Dinc,Turkish
 EOF
 
 cat > $credit <<EOF
+Russ Allbery
 Misja Alma
 Kazuaki Asai
 Eric Augustine
@@ -80,6 +81,8 @@ Erik Barfoed
 Ron Barry
 Steve Baedke
 Stefan van den Berg
+Frank Berger
+Jim Borror
 Chuck Bower
 Adrian Bunk
 Nick Bratby
@@ -120,6 +123,7 @@ Martin Krainer
 Elias Kritikos
 Corrin Lakeland
 Tim Laursen
+Myshkin LeVine
 Eli Liang
 Ege Lundgren
 Kevin Maguire
@@ -162,6 +166,7 @@ Mark Spencer
 Scott Steiner
 Maik Stiebler
 W. Stroop (Rob)
+Daisuke Takahashi
 Yoshito Takeuchi
 Jacques Thiriat
 Malene Thyssen
@@ -173,6 +178,7 @@ Jeff White
 JP White
 Mike Whitton
 Chris Wilson
+Simon Woodhead
 Kit Woolsey
 Frank Worrell
 Christopher D. Yep
