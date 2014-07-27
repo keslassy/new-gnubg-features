@@ -443,7 +443,7 @@ extern char *NextToken(char **ppch);
 extern char *NextTokenGeneral(char **ppch, const char *szTokens);
 extern char *SetupLanguage(const char *newLangCode);
 extern command *FindHelpCommand(command * pcBase, char *sz, char *pchCommand, char *pchUsage);
-extern double ParseReal(char **ppch);
+extern float ParseReal(char **ppch);
 extern int AnalyzeMove(moverecord * pmr, matchstate * pms,
                        const listOLD * plGame, statcontext * psc,
                        const evalsetup * pesChequer, evalsetup * pesCube,

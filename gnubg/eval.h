@@ -138,11 +138,11 @@ typedef struct {
     rng rngRollout;
     unsigned long nSeed;
     unsigned int nMinimumGames; /* but always do at least this many */
-    double rStdLimit;           /* stop when abs( value / std ) < this */
+    float rStdLimit;           /* stop when abs( value / std ) < this */
     unsigned int nMinimumJsdGames;
-    double rJsdLimit;
+    float rJsdLimit;
     unsigned int nGamesDone;
-    double rStoppedOnJSD;
+    float rStoppedOnJSD;
     int nSkip;
 } rolloutcontext;
 

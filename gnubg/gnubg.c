@@ -294,9 +294,9 @@ rolloutcontext rcRollout = {
     RNG_MERSENNE,               /* RNG */
     0,                          /* seed */
     324,                        /* minimum games  */
-    0.01,                       /* stop when std's are lower than 0.01 */
+    0.01f,                      /* stop when std's are lower than 0.01 */
     324,                        /* minimum games  */
-    2.33,                       /* stop when best has j.s.d. for 99% confidence */
+    2.33f,                      /* stop when best has j.s.d. for 99% confidence */
     0,                          /* nGamesDone */
     0.0,                        /* rStoppedOnJSD */
     0,                          /* nSkip */
@@ -348,9 +348,9 @@ rolloutcontext rcRollout = {
   RNG_MERSENNE, /* RNG */ \
   0,  /* seed */ \
   324,    /* minimum games  */ \
-  0.01,	  /* stop when std's are lower than 0.01 */ \
+  0.01f,  /* stop when std's are lower than 0.01 */ \
   324,    /* minimum games  */ \
-  2.33,   /* stop when best has j.s.d. for 99% confidence */ \
+  2.33f,  /* stop when best has j.s.d. for 99% confidence */ \
   0, \
   0.0, \
   0 \
@@ -403,9 +403,9 @@ rolloutcontext rcRollout = {
   RNG_MERSENNE, /* RNG */ \
   0,  /* seed */ \
   324,    /* minimum games  */ \
-  0.01,	  /* stop when std's are lower than 0.01 */ \
+  0.01f,  /* stop when std's are lower than 0.01 */ \
   324,    /* minimum games  */ \
-  2.33,   /* stop when best has j.s.d. for 99% confidence */ \
+  2.33f,  /* stop when best has j.s.d. for 99% confidence */ \
   0, \
   0.0, \
   0 \
@@ -804,17 +804,17 @@ CountTokens(char *pch)
  * ERR_VAL (a very large negative double.
  */
 
-extern double
+extern float
 ParseReal(char **ppch)
 {
 
     char *pch, *pchOrig;
-    double r;
+    float r;
 
     if (!ppch || !(pchOrig = NextToken(ppch)))
         return ERR_VAL;
 
-    r = g_ascii_strtod(pchOrig, &pch);
+    r = (float)g_ascii_strtod(pchOrig, &pch);
 
     return *pch ? ERR_VAL : r;
 }
@@ -4884,7 +4884,7 @@ CommandEq2MWC(char *sz)
     }
 
 
-    rEq = (float) ParseReal(&sz);
+    rEq = ParseReal(&sz);
 
     if (rEq == ERR_VAL)
         rEq = 0.0;
@@ -4928,7 +4928,7 @@ CommandMWC2Eq(char *sz)
 
     GetMatchStateCubeInfo(&ci, &ms);
 
-    rMwc = (float) ParseReal(&sz);
+    rMwc = ParseReal(&sz);
 
     if (rMwc == ERR_VAL)
         rMwc = eq2mwc(0.0, &ci);

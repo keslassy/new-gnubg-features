@@ -647,7 +647,7 @@ RestoreRolloutRolloutContext(rolloutcontext * prc, const char *sz)
     prc->fStopOnSTD = 0;
     prc->nLate = 0;
     prc->nMinimumGames = 144;
-    prc->rStdLimit = 0.01;
+    prc->rStdLimit = 0.01f;
 
     if (!pc)
         return;
@@ -799,7 +799,7 @@ RestoreExtendedRolloutContext(rolloutcontext * prc, const char *sz)
     prc->fTruncBearoffOS = fTruncBearoffOS;
     prc->rngRollout = RNG_MERSENNE;
     prc->nMinimumGames = 144;
-    prc->rStdLimit = 0.01;
+    prc->rStdLimit = 0.01f;
 
     for (i = 0; i < 2; ++i) {
         sprintf(szTemp, "latecube%d ", i);

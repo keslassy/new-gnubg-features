@@ -4609,12 +4609,12 @@ GetRolloutSettings(GtkWidget * pw, rolloutwidget * prw)
     prw->rcRollout.fStopOnSTD = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoSTDStop));
     prw->rcRollout.nMinimumGames =
         (unsigned int) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(prw->prwGeneral->pwMinGames));
-    prw->rcRollout.rStdLimit = gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwMaxError));
+    prw->rcRollout.rStdLimit = (float)gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwMaxError));
 
     prw->rcRollout.fStopOnJsd = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop));
     prw->rcRollout.nMinimumJsdGames =
         (unsigned int) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdMinGames));
-    prw->rcRollout.rJsdLimit = gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdAdjLimit));
+    prw->rcRollout.rJsdLimit = (float)gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdAdjLimit));
 
     /* if the players are the same, copy player 0 settings to player 1 */
     if (fPlayersAreSame) {

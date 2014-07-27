@@ -271,7 +271,7 @@ SetMoveFilter(char *sz, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
         return;
     }
 
-    if (((extras = ParseNumber(&sz)) < 0) || ((tolerance = (float) ParseReal(&sz)) < 0.0)) {
+    if (((extras = ParseNumber(&sz)) < 0) || ((tolerance = ParseReal(&sz)) < 0.0)) {
         outputf(_("You must set a count of extra moves and a search tolerance "
                   "(see `help set %s movefilter')."), szSetCommand);
         return;
@@ -676,7 +676,7 @@ CommandSetCalibration(char *sz)
         return;
     }
 
-    if ((r = (float) ParseReal(&sz)) <= 2.0f) {
+    if ((r = ParseReal(&sz)) <= 2.0f) {
         outputl(_("If you give a parameter to `set calibration', it must "
                   "be a legal number of evaluations per second."));
         return;
@@ -1030,15 +1030,15 @@ extern void
 CommandSetEvalNoise(char *sz)
 {
 
-    double r = ParseReal(&sz);
+    float r = ParseReal(&sz);
 
-    if (r < 0.0) {
+    if (r < 0.0f) {
         outputf(_("You must specify a valid amount of noise to use " "(see `help set\n%s noise').\n"), szSetCommand);
 
         return;
     }
 
-    pecSet->rNoise = (float) r;
+    pecSet->rNoise = r;
 
     if (pecSet->rNoise)
         outputf(_("%s will use noise with standard deviation %5.3f.\n"), szSet, pecSet->rNoise);
@@ -1840,9 +1840,9 @@ extern void
 CommandSetRolloutMaxError(char *sz)
 {
 
-    double r = ParseReal(&sz);
+    float r = ParseReal(&sz);
 
-    if (r < 0.0001) {
+    if (r < 0.0001f) {
         outputl(_("You must set a valid fraction for the ratio "
                   "STD/value where rollouts can stop " "(see `help set rollout limit maxerror')."));
         return;
@@ -1895,9 +1895,9 @@ extern void
 CommandSetRolloutJsdLimit(char *sz)
 {
 
-    double r = ParseReal(&sz);
+    float r = ParseReal(&sz);
 
-    if (r < 0.0001) {
+    if (r < 0.0001f) {
         outputl(_("You must set a number of joint standard deviations for the equity"
                   " difference with the best move being rolled out " "(see `help set rollout jsd limit')."));
         return;
@@ -4209,7 +4209,7 @@ static void
 SetEfficiency(const char *szText, char *sz, float *prX)
 {
 
-    float r = (float) ParseReal(&sz);
+    float r = ParseReal(&sz);
 
     if (r >= 0.0f && r <= 1.0f) {
         *prX = r;
@@ -4247,7 +4247,7 @@ extern void
 CommandSetCubeEfficiencyRaceFactor(char *sz)
 {
 
-    float r = (float) ParseReal(&sz);
+    float r = ParseReal(&sz);
 
     if (r >= 0) {
         rRaceFactorX = r;
@@ -4277,7 +4277,7 @@ extern void
 CommandSetCubeEfficiencyRaceCoefficient(char *sz)
 {
 
-    float r = (float) ParseReal(&sz);
+    float r = ParseReal(&sz);
 
     if (r >= 0) {
         rRaceCoefficientX = r;
@@ -4292,7 +4292,7 @@ extern void
 CommandSetRatingOffset(char *sz)
 {
 
-    float r = (float) ParseReal(&sz);
+    float r = ParseReal(&sz);
 
     if (r < 0) {
         outputl(_("Please provide a positive rating offset\n"));
@@ -4343,7 +4343,7 @@ extern void
 CommandSetOutputErrorRateFactor(char *sz)
 {
 
-    float r = (float) ParseReal(&sz);
+    float r = ParseReal(&sz);
 
     if (r < 0) {
         outputl(_("Please provide a positive number\n"));

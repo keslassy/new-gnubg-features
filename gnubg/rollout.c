@@ -908,8 +908,8 @@ static int show_jsds;
 
 static float (*aarMu)[NUM_ROLLOUT_OUTPUTS];
 static float (*aarSigma)[NUM_ROLLOUT_OUTPUTS];
-static double (*aarResult)[NUM_ROLLOUT_OUTPUTS];
-static double (*aarVariance)[NUM_ROLLOUT_OUTPUTS];
+static float (*aarResult)[NUM_ROLLOUT_OUTPUTS];
+static float (*aarVariance)[NUM_ROLLOUT_OUTPUTS];
 static int *fNoMore;
 static jsdinfo *ajiJSD;
 
@@ -976,7 +976,7 @@ check_jsds(int *active)
             ajiJSD[alt].nRank = alt;
             ajiJSD[alt].rEquity = v - ajiJSD[alt].rEquity;
 
-            denominator = (float) sqrt(s + ajiJSD[alt].rJSD * ajiJSD[alt].rJSD);
+            denominator = sqrtf(s + ajiJSD[alt].rJSD * ajiJSD[alt].rJSD);
 
             if (denominator < 1e-8f)
                 denominator = 1e-8f;
@@ -1024,21 +1024,21 @@ check_jsds(int *active)
             denominator = ajiJSD[0].rJSD;
             if (denominator < 1e-8f)
                 denominator = 1e-8f;
-            ajiJSD[0].rJSD = (float) fabs(ajiJSD[0].rEquity / denominator);
+            ajiJSD[0].rJSD = fabsf(ajiJSD[0].rEquity / denominator);
         } else {
             /* compare nd to dt */
             ajiJSD[0].rEquity = ajiJSD[0].rEquity - ajiJSD[1].rEquity;
-            denominator = (float) sqrt(ajiJSD[0].rJSD * ajiJSD[0].rJSD + ajiJSD[1].rJSD * ajiJSD[1].rJSD);
+            denominator = sqrtf(ajiJSD[0].rJSD * ajiJSD[0].rJSD + ajiJSD[1].rJSD * ajiJSD[1].rJSD);
             if (denominator < 1e-8f)
                 denominator = 1e-8f;
-            ajiJSD[0].rJSD = (float) fabs(ajiJSD[0].rEquity / denominator);
+            ajiJSD[0].rJSD = fabsf(ajiJSD[0].rEquity / denominator);
         }
         /* compare dt to dp */
         ajiJSD[1].rEquity = ajiJSD[1].rEquity - eq_dp;
         denominator = ajiJSD[1].rJSD;
         if (denominator < 1e-8f)
             denominator = 1e-8f;
-        ajiJSD[1].rJSD = (float) fabs(ajiJSD[1].rEquity / denominator);
+        ajiJSD[1].rJSD = fabsf(ajiJSD[1].rEquity / denominator);
         if (rcRollout.fStopOnJsd &&
             (altGameCount[0] >= (rcRollout.nMinimumJsdGames)) &&
             rcRollout.rJsdLimit < MIN(ajiJSD[0].rJSD, ajiJSD[1].rJSD)) {
@@ -1056,7 +1056,7 @@ check_sds(int *active)
 {
     int alt;
     for (alt = 0; alt < ro_alternatives; ++alt) {
-        double s;
+        float s;
         int output;
         int err_too_big = 0;
         rolloutcontext *prc;
@@ -1066,12 +1066,12 @@ check_sds(int *active)
         for (output = OUTPUT_EQUITY; output < NUM_ROLLOUT_OUTPUTS; output++) {
             if (output == OUTPUT_EQUITY) {      /* cubeless */
                 if (!ms.nMatchTo) {     /* money game */
-                    s = fabs(aarSigma[alt][output]);
+                    s = fabsf(aarSigma[alt][output]);
                     if (ro_fCubeRollout) {
                         s *= aciLocal[alt].nCube / aciLocal[0].nCube;
                     }
                 } else {        /* match play */
-                    s = fabs(se_mwc2eq(se_eq2mwc(aarSigma[alt][output],
+                    s = fabsf(se_mwc2eq(se_eq2mwc(aarSigma[alt][output],
                                                  &aciLocal[alt]), &aciLocal[(ro_fCubeRollout ? 0 : alt)]));
                 }
             } else {
@@ -1079,9 +1079,9 @@ check_sds(int *active)
                     continue;
                 /* cubeful */
                 if (!ms.nMatchTo) {     /* money game */
-                    s = fabs(aarSigma[alt][output]);
+                    s = fabsf(aarSigma[alt][output]);
                 } else {
-                    s = fabs(se_mwc2eq(aarSigma[alt][output], &aciLocal[(ro_fCubeRollout ? 0 : alt)]));
+                    s = fabsf(se_mwc2eq(aarSigma[alt][output], &aciLocal[(ro_fCubeRollout ? 0 : alt)]));
                 }
             }
 
@@ -1180,14 +1180,14 @@ RolloutLoopMT(void *UNUSED(unused))
                 float rMuNew, rDelta;
 
                 aarResult[alt][j] += aar[j];
-                rMuNew = (float) aarResult[alt][j] / (altGameCount[alt]);
+                rMuNew = aarResult[alt][j] / (altGameCount[alt]);
 
                 if (altGameCount[alt] > 1) {    /* for i == 0 aarVariance is not defined */
 
                     rDelta = rMuNew - aarMu[alt][j];
 
                     aarVariance[alt][j] =
-                        aarVariance[alt][j] * (1.0 - 1.0 / (altGameCount[alt] - 1)) +
+                        aarVariance[alt][j] * (1.0f - 1.0f / (altGameCount[alt] - 1)) +
                         (altGameCount[alt]) * rDelta * rDelta;
                 }
 
@@ -1200,7 +1200,7 @@ RolloutLoopMT(void *UNUSED(unused))
                         aarMu[alt][j] = 1.0f;
                 }
 
-                aarSigma[alt][j] = (float) sqrt(aarVariance[alt][j] / (altGameCount[alt]));
+                aarSigma[alt][j] = sqrtf(aarVariance[alt][j] / (altGameCount[alt]));
             }                   /* for (j = 0; j < NUM_ROLLOUT_OUTPUTS; j++ ) */
 
             /* For normal alternatives nGamesDone and altGameCount will be equal. For cube decisions,
@@ -1308,8 +1308,8 @@ RolloutGeneral(ConstTanBoard * apBoard,
 
     aarMu = g_alloca(alternatives * NUM_ROLLOUT_OUTPUTS * sizeof(float));
     aarSigma = g_alloca(alternatives * NUM_ROLLOUT_OUTPUTS * sizeof(float));
-    aarResult = g_alloca(alternatives * NUM_ROLLOUT_OUTPUTS * sizeof(double));
-    aarVariance = g_alloca(alternatives * NUM_ROLLOUT_OUTPUTS * sizeof(double));
+    aarResult = g_alloca(alternatives * NUM_ROLLOUT_OUTPUTS * sizeof(float));
+    aarVariance = g_alloca(alternatives * NUM_ROLLOUT_OUTPUTS * sizeof(float));
 
     if (ms.nMatchTo == 0)
         fOutputMWC = 0;
@@ -1380,7 +1380,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
             }
         } else {
             int nGames = prc->nGamesDone;
-            double r;
+            float r;
 
             previous_rollouts++;
 
