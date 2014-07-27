@@ -26,7 +26,6 @@
 #include <locale.h>
 #include <string.h>
 #include <errno.h>
-#include <cache.h>
 #include <fcntl.h>
 #include "isaac.h"
 #include <md5.h>
@@ -39,8 +38,6 @@
 #include "multithread.h"
 #include "util.h"
 #include "lib/simd.h"
-
-typedef int (*classevalfunc) (const TanBoard anBoard, float arOutput[], const bgvariation bgv, NNState * nnStates);
 
 typedef void (*classstatusfunc) (char *szOutput);
 typedef int (*cfunc) (const void *, const void *);
@@ -370,7 +367,7 @@ const char *aszDoubleTypes[NUM_DOUBLE_TYPES] = {
 
 /* parameters for EvalEfficiency */
 
-float rTSCubeX = 0.6f;          /* for match play only */
+static float rTSCubeX = 0.6f;          /* for match play only */
 float rOSCubeX = 0.6f;
 float rRaceFactorX = 0.00125f;
 float rRaceCoefficientX = 0.55f;
@@ -5214,12 +5211,6 @@ static int FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
                              TanBoard anBoard, const cubeinfo * pci,
                              const evalcontext * pec, int nPlies, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES]);
 
-extern neuralnet nnpContact, nnpRace, nnpCrashed;
-extern evalCache cEval;
-extern evalCache cpEval;
-extern classevalfunc acef[N_CLASSES];
-extern unsigned int cCache;
-extern evalcontext ecBasic;
 #endif
 
 static int GeneralEvaluationEPlied(NNState * nnStates, float arOutput[NUM_ROLLOUT_OUTPUTS],

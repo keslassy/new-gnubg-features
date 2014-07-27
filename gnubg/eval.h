@@ -25,6 +25,7 @@
 #include "dice.h"
 #include "bearoff.h"
 #include "neuralnet.h"
+#include "cache.h"
 
 #define EXP_LOCK_FUN(ret, name, ...) \
 	typedef ret (*f_##name)( __VA_ARGS__); \
@@ -262,6 +263,7 @@ extern const char *aszDoubleTypes[NUM_DOUBLE_TYPES];
 #define SETTINGS_BEGINNER       0
 
 extern evalcontext aecSettings[NUM_SETTINGS];
+extern evalcontext ecBasic;
 extern int aiSettingsMoveFilter[NUM_SETTINGS];
 extern const char *aszSettings[NUM_SETTINGS];
 
@@ -337,6 +339,10 @@ typedef enum {
 
 #define CLASS_PERFECT CLASS_BEAROFF_TS
 
+typedef int (*classevalfunc) (const TanBoard anBoard, float arOutput[], const bgvariation bgv, NNState * nnStates);
+
+extern classevalfunc acef[N_CLASSES];
+
 /* Evaluation cache size is 2^SIZE entries */
 #define CACHE_SIZE_DEFAULT 19
 #define CACHE_SIZE_GUIMAX 23
@@ -398,19 +404,17 @@ extern void
 extern int
  GameStatus(const TanBoard anBoard, const bgvariation bgv);
 
-extern void
- EvalCacheFlush(void);
-
-extern int
- EvalCacheResize(unsigned int cNew);
-
-extern int
- EvalCacheStats(unsigned int *pcUsed, unsigned int *pcLookup, unsigned int *pcHit);
-
+extern void EvalCacheFlush(void);
+extern int EvalCacheResize(unsigned int cNew);
+extern int EvalCacheStats(unsigned int *pcUsed, unsigned int *pcLookup, unsigned int *pcHit);
 extern double GetEvalCacheSize(void);
 void SetEvalCacheSize(unsigned int size);
 extern unsigned int GetEvalCacheEntries(void);
 extern int GetCacheMB(int size);
+
+extern evalCache cEval;
+extern evalCache cpEval;
+extern unsigned int cCache;
 
 extern int
  GenerateMoves(movelist * pml, const TanBoard anBoard, int n0, int n1, int fPartial);
@@ -575,5 +579,6 @@ extern void GetECF3(float arCubeful[], int cci, float arCf[], cubeinfo aci[]);
 extern int EvaluatePerfectCubeful(const TanBoard anBoard, float arEquity[], const bgvariation bgv);
 
 extern neuralnet nnContact, nnRace, nnCrashed;
+extern neuralnet nnpContact, nnpRace, nnpCrashed;
 
 #endif
