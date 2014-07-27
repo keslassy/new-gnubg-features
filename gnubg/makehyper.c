@@ -73,8 +73,7 @@ MT_CloseThreads(void)
     return;
 }
 
-int aiNorm[10];
-
+static int aiNorm[10];
 
 static hyperclass
 ClassifyHyper(TanBoard anBoard)
