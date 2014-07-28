@@ -329,16 +329,16 @@ static void
 SetLuckThreshold(lucktype lt, char *sz)
 {
 
-    double r = ParseReal(&sz);
+    float r = ParseReal(&sz);
     char *szCommand = gettext(aszLuckTypeCommand[lt]);
 
-    if (r <= 0.0) {
+    if (r <= 0.0f) {
         outputf(_("You must specify a positive number for the threshold (see "
                   "`help set analysis\nthreshold %s').\n"), szCommand);
         return;
     }
 
-    arLuckLevel[lt] = (float) r;
+    arLuckLevel[lt] = r;
 
     outputf(_("`%s' threshold set to %.3f.\n"), szCommand, r);
 }
@@ -347,16 +347,16 @@ static void
 SetSkillThreshold(skilltype lt, char *sz)
 {
 
-    double r = ParseReal(&sz);
+    float r = ParseReal(&sz);
     char *szCommand = gettext(aszSkillTypeCommand[lt]);
 
-    if (r < 0.0) {
+    if (r < 0.0f) {
         outputf(_("You must specify a semi-positive number for the threshold (see "
                   "`help set analysis\nthreshold %s').\n"), szCommand);
         return;
     }
 
-    arSkillLevel[lt] = (float) r;
+    arSkillLevel[lt] = r;
 
     outputf(_("`%s' threshold set to %.3f.\n"), szCommand, r);
 }
