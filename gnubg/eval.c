@@ -3574,9 +3574,6 @@ MoneyLive(const float rW, const float rL, const float p, const cubeinfo * pci)
 
     }
 
-    g_assert_not_reached();
-    return 0;
-
 }
 
 
