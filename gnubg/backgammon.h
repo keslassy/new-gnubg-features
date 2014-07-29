@@ -418,7 +418,7 @@ extern command cOnOff;
 
 extern int fInteractive;
 
-#ifdef _LIBINTL_H
+#if defined(_LIBINTL_H) && defined(__MINGW32__)
 #warning "libintl.h already included expect warnings under mingw"
 #endif
 
