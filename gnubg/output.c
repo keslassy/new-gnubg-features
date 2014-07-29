@@ -21,6 +21,7 @@
 
 #include "config.h"
 #include "output.h"
+#include "backgammon.h"
 
 #include <sys/types.h>
 #include <stdlib.h>
@@ -45,8 +46,6 @@
 #if USE_GTK
 #include "gtkgame.h"
 #endif
-
-#include "backgammon.h"
 
 int cOutputDisabled;
 int cOutputPostponed;
