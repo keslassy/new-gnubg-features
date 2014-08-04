@@ -1486,6 +1486,17 @@ PartyGammon Game                     `import party <filepath>'
 Snowie Text                          `import snowietxt <filepath>'
 TrueMoneyGames                       `import tmg <filepath>'
 
+   Jellyfish Match is not formally defined and software exporting
+matches to this format often produce minor discrepancies.  GNU
+Backgammon tries to cater to most of them automatically.
+
+   Online sites do not always create their .mat files with the you as
+player 1, the one playing towards the bottom of the board.  To have
+these matches converted to be displayed in the natural way, you can use
+de CLI command `set aliases <player name 1>;<player name 2>;[<etc...>]'
+GNU Backgammon will swap the players as needed so that player names
+matching these aliases are always imported as player 1.
+
 
 File: gnubg.info,  Node: Saving and exporting positions; games or matches,  Prev: Opening and importing matches,  Up: Retrieving and storing backgammon files
 
@@ -4386,6 +4397,10 @@ Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
            Core       Optiplex                                    
            i5-2400    790                                         
            3.10 GHz                                               
+197700     Intel      Lenovo     4 GB       Win XP SP3 1.02       2 threads
+           Core       T430                                        
+           i5-3320M                                               
+           2.60 GHz                                               
 131400     Intel      Dell       4 GB       CentOS 6   1.02       1 thread
            Core       Optiplex                                    
            i5-2400    790                                         
@@ -4394,6 +4409,10 @@ Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
            Core 2     Latitude                                    
            Duo P8400  E6400                                       
            2.26 GHz                                               
+100100     Intel      Lenovo     4 GB       Win XP SP3 1.02       1 thread
+           Core       T430                                        
+           i5-3320M                                               
+           2.60 GHz                                               
 64300      Intel      Dell       4 GB       FreeBSD    1.02       1 thread
            Core 2     Latitude              9.2                   
            Duo T7500  D630                                        
@@ -5574,149 +5593,149 @@ Node: Working with matches55631
 Node: Retrieving and storing backgammon files55919
 Node: The Smart Game Format56316
 Node: Opening and importing matches56893
-Node: Saving and exporting positions; games or matches58525
-Node: HTML export60924
-Node: LaTeX export63487
-Node: Entering live tournament matches64332
-Node: Entering illegal moves66915
-Node: Analyzing matches67930
-Node: Analysis settings69082
-Ref: Analyze settings dialog69361
-Node: Reviewing matches70887
-Node: Game record71091
-Ref: The Game record pane71641
-Node: Analysis panel74431
-Ref: The Analyze pane74994
-Node: Statistics77653
-Node: Checker play statistics78208
-Node: Luck analysis79987
-Node: Cube statistics81823
-Node: Overall rating84546
-Node: Rollouts88164
-Node: Introduction to rollouts88368
-Node: Rollouts in GNU Backgammon90577
-Node: Quasi-Random Dice93312
-Node: Customizing GNU Backgammon96549
-Node: Evaluation settings96763
-Node: Introduction to evaluation settings97223
-Node: The depth to search and plies98301
-Node: Defining evaluation settings101115
-Node: Playing skill;101481
-Node: Hints;101850
-Node: Analysis;102594
-Node: Rollouts;103130
-Node: Changing evaluation settings104078
-Ref: The evaluation settings dialog104341
-Node: Predefined settings105692
-Node: Move filters107400
-Node: Introduction to move filters107633
-Ref: Example of move filter settings108831
-Node: Defining move filters112522
-Ref: Move filter 1113163
-Ref: Move filter 2114680
-Ref: Move filter 3114753
-Node: Cubeful vs Cubeless115703
-Ref: Cubeful example116155
-Ref: Cubeful example 2116843
-Node: Pruning neural networks117645
-Node: Noise118327
-Node: Appearance119573
-Ref: The appearance dialog120038
-Node: Technical Notes121200
-Node: Obtaining bearoff databases121603
-Node: Generate your own122149
-Node: Download124880
-Node: Installation of the databases125529
-Node: Verification of the databases125919
-Node: One-sided bearoff databases [compressed]126323
-Node: Two-sided bearoff databases [with cubeless and cubeful equities]128237
-Node: Two-sided databases for Hypergammon129905
-Ref: Random position from hypergammon database130626
-Node: Match Equity Tables132075
-Node: Python scripting133567
-Node: gnubg module functions134008
-Node: Match description135260
-Node: Match info135627
-Node: Python game137146
-Node: Game actions137755
-Node: Equities explained137909
-Node: Introduction to equities138227
-Node: Money equity138761
-Node: Match Winning Chance139629
-Node: Normalized equity141134
-Node: Cubeful equities142960
-Node: Basic formula for cubeful equities143541
-Node: Live cube equities144479
-Ref: Cubeful example 1145141
-Ref: mgtp145796
-Ref: mptp148920
-Node: 0-ply Cubeful equities150731
-Node: n-ply Cubeful equities151445
-Node: The cube efficiency152802
-Node: Cube decisions154653
-Ref: mgcd155265
-Node: Beyond the simple model157576
-Node: A technical description of the Position ID158404
-Node: A technical description of the Match ID163880
-Node: Description of the CSS style sheet168432
-Node: Frequently Asked Questions173406
-Node: General questions173741
-Node: What is GNU Backgammon?174291
-Node: What operating systems are supported?174703
-Node: Where do I get it?175548
-Node: What do I have to pay for GNU Backgammon?176013
-Node: This GNU stuff sounds interesting176742
-Node: I want to learn more about backgammon177113
-Node: Though I really read all the documentation I still have questions177573
-Node: I want to make a few proposals; I have new ideas178219
-Node: How to install178623
-Node: Do I need some other software to run GNU Backgammon?179146
-Node: I want to install a newer version179678
-Node: I would like to compile it from the source code180003
-Node: What software do I need for compiling under GNU/Linux?180418
-Node: What software do I need for compiling under MS Windows?180855
-Node: It does not compile181291
-Node: On what CPU will GNU Backgammon run fastest?181720
-Node: Running GNU Backgammon187023
-Node: I get an error message when starting187563
-Node: GNU Backgammon complains about missing files187961
-Node: Starting from the WinXP menu it plays like a beginner189726
-Node: My screen mixes up while starting GNU Backgammon190300
-Node: I only get a command-line interface190892
-Node: When I restart GNU Backgammon all my settings are gone191448
-Node: I do not need this graphical stuff191843
-Node: Playing backgammon192400
-Node: What is the difference of a new game or match or session?192884
-Node: What is a beaver in Backgammon?193517
-Node: How do I move the checkers?194033
-Node: Why am I allowed to place more than 5 checkers on a point?194809
-Node: GNU Backgammon plays poorly195333
-Node: GNU Backgammon is too strong for me195912
-Node: I think the bot is cheating196294
-Node: Settings196750
-Node: Where can I change the name of the human player?197066
-Node: How do I change the colors?197432
-Node: How do I stop the annoying beeps?197789
-Node: What are Plies?198136
-Node: What is noise?200031
-Node: Analyzing200285
-Node: What are these funny letters at the right bottom?200745
-Node: How do I set up a position manually?201596
-Node: Which formats can I use to import matches and positions?202501
-Node: How can I switch the players sides?203096
-Node: What do ! and ? mean?203410
-Node: How is the error rate determined?204212
-Node: What does Pips mean?205069
-Node: What does EPC mean?205878
-Node: Abbreviations208023
-Node: GWC?208216
-Node: MWC?208359
-Node: DP?208515
-Node: CP?208916
-Ref: The double line209549
-Node: TG?209963
-Node: EPC?210301
-Node: GNU Free Documentation License210556
+Node: Saving and exporting positions; games or matches59119
+Node: HTML export61518
+Node: LaTeX export64081
+Node: Entering live tournament matches64926
+Node: Entering illegal moves67509
+Node: Analyzing matches68524
+Node: Analysis settings69676
+Ref: Analyze settings dialog69955
+Node: Reviewing matches71481
+Node: Game record71685
+Ref: The Game record pane72235
+Node: Analysis panel75025
+Ref: The Analyze pane75588
+Node: Statistics78247
+Node: Checker play statistics78802
+Node: Luck analysis80581
+Node: Cube statistics82417
+Node: Overall rating85140
+Node: Rollouts88758
+Node: Introduction to rollouts88962
+Node: Rollouts in GNU Backgammon91171
+Node: Quasi-Random Dice93906
+Node: Customizing GNU Backgammon97143
+Node: Evaluation settings97357
+Node: Introduction to evaluation settings97817
+Node: The depth to search and plies98895
+Node: Defining evaluation settings101709
+Node: Playing skill;102075
+Node: Hints;102444
+Node: Analysis;103188
+Node: Rollouts;103724
+Node: Changing evaluation settings104672
+Ref: The evaluation settings dialog104935
+Node: Predefined settings106286
+Node: Move filters107994
+Node: Introduction to move filters108227
+Ref: Example of move filter settings109425
+Node: Defining move filters113116
+Ref: Move filter 1113757
+Ref: Move filter 2115274
+Ref: Move filter 3115347
+Node: Cubeful vs Cubeless116297
+Ref: Cubeful example116749
+Ref: Cubeful example 2117437
+Node: Pruning neural networks118239
+Node: Noise118921
+Node: Appearance120167
+Ref: The appearance dialog120632
+Node: Technical Notes121794
+Node: Obtaining bearoff databases122197
+Node: Generate your own122743
+Node: Download125474
+Node: Installation of the databases126123
+Node: Verification of the databases126513
+Node: One-sided bearoff databases [compressed]126917
+Node: Two-sided bearoff databases [with cubeless and cubeful equities]128831
+Node: Two-sided databases for Hypergammon130499
+Ref: Random position from hypergammon database131220
+Node: Match Equity Tables132669
+Node: Python scripting134161
+Node: gnubg module functions134602
+Node: Match description135854
+Node: Match info136221
+Node: Python game137740
+Node: Game actions138349
+Node: Equities explained138503
+Node: Introduction to equities138821
+Node: Money equity139355
+Node: Match Winning Chance140223
+Node: Normalized equity141728
+Node: Cubeful equities143554
+Node: Basic formula for cubeful equities144135
+Node: Live cube equities145073
+Ref: Cubeful example 1145735
+Ref: mgtp146390
+Ref: mptp149514
+Node: 0-ply Cubeful equities151325
+Node: n-ply Cubeful equities152039
+Node: The cube efficiency153396
+Node: Cube decisions155247
+Ref: mgcd155859
+Node: Beyond the simple model158170
+Node: A technical description of the Position ID158998
+Node: A technical description of the Match ID164474
+Node: Description of the CSS style sheet169026
+Node: Frequently Asked Questions174000
+Node: General questions174335
+Node: What is GNU Backgammon?174885
+Node: What operating systems are supported?175297
+Node: Where do I get it?176142
+Node: What do I have to pay for GNU Backgammon?176607
+Node: This GNU stuff sounds interesting177336
+Node: I want to learn more about backgammon177707
+Node: Though I really read all the documentation I still have questions178167
+Node: I want to make a few proposals; I have new ideas178813
+Node: How to install179217
+Node: Do I need some other software to run GNU Backgammon?179740
+Node: I want to install a newer version180272
+Node: I would like to compile it from the source code180597
+Node: What software do I need for compiling under GNU/Linux?181012
+Node: What software do I need for compiling under MS Windows?181449
+Node: It does not compile181885
+Node: On what CPU will GNU Backgammon run fastest?182314
+Node: Running GNU Backgammon188170
+Node: I get an error message when starting188710
+Node: GNU Backgammon complains about missing files189108
+Node: Starting from the WinXP menu it plays like a beginner190873
+Node: My screen mixes up while starting GNU Backgammon191447
+Node: I only get a command-line interface192039
+Node: When I restart GNU Backgammon all my settings are gone192595
+Node: I do not need this graphical stuff192990
+Node: Playing backgammon193547
+Node: What is the difference of a new game or match or session?194031
+Node: What is a beaver in Backgammon?194664
+Node: How do I move the checkers?195180
+Node: Why am I allowed to place more than 5 checkers on a point?195956
+Node: GNU Backgammon plays poorly196480
+Node: GNU Backgammon is too strong for me197059
+Node: I think the bot is cheating197441
+Node: Settings197897
+Node: Where can I change the name of the human player?198213
+Node: How do I change the colors?198579
+Node: How do I stop the annoying beeps?198936
+Node: What are Plies?199283
+Node: What is noise?201178
+Node: Analyzing201432
+Node: What are these funny letters at the right bottom?201892
+Node: How do I set up a position manually?202743
+Node: Which formats can I use to import matches and positions?203648
+Node: How can I switch the players sides?204243
+Node: What do ! and ? mean?204557
+Node: How is the error rate determined?205359
+Node: What does Pips mean?206216
+Node: What does EPC mean?207025
+Node: Abbreviations209170
+Node: GWC?209363
+Node: MWC?209506
+Node: DP?209662
+Node: CP?210063
+Ref: The double line210696
+Node: TG?211110
+Node: EPC?211448
+Node: GNU Free Documentation License211703
 
 End Tag Table
 

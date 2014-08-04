@@ -1527,6 +1527,14 @@ Snowie Text@tab @code{import snowietxt <filepath>}
 TrueMoneyGames@tab @code{import tmg <filepath>}
 @end multitable
 
+Jellyfish Match is not formally defined and software exporting matches to this format often produce minor discrepancies.
+GNU Backgammon tries to cater to most of them automatically.
+
+Online sites do not always create their .mat files with the you as player 1, the one playing towards the bottom of the board.
+To have these matches converted to be displayed in the natural way, you can use de CLI command
+@code{set aliases <player name 1>;<player name 2>;[<etc...>]}
+GNU Backgammon will swap the players as needed so that player names matching these aliases are always imported as player 1.
+
 @node Saving and exporting positions; games or matches, , Opening and importing matches, Retrieving and storing backgammon files
 @subsection Saving and exporting positions, games or matches
 
@@ -4628,9 +4636,13 @@ Evals/sec@tab CPU@tab System/Main board@tab RAM@tab OS @tab GNUBG-Version@tab
 @item
 258600@tab Intel Core i5-2400 3.10 GHz@tab Dell Optiplex 790@tab 4 GB@tab CentOS 6@tab 1.02@tab 2 threads
 @item
+197700@tab Intel Core i5-3320M 2.60 GHz@tab Lenovo T430@tab 4 GB@tab Win XP SP3@tab 1.02@tab 2 threads
+@item
 131400@tab Intel Core i5-2400 3.10 GHz@tab Dell Optiplex 790@tab 4 GB@tab CentOS 6@tab 1.02@tab 1 thread
 @item
 125100@tab Intel Core 2 Duo P8400 2.26 GHz@tab Dell Latitude E6400@tab 2 GB@tab Win XP SP3@tab 1.02@tab 2 threads
+@item
+100100@tab Intel Core i5-3320M 2.60 GHz@tab Lenovo T430@tab 4 GB@tab Win XP SP3@tab 1.02@tab 1 thread
 @item
 64300@tab Intel Core 2 Duo T7500 2.2 GHz@tab Dell Latitude D630@tab 4 GB@tab FreeBSD 9.2@tab 1.02@tab 1 thread
 @item
