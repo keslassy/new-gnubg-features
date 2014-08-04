@@ -1,9 +1,13 @@
+2014-08-04  Michael Petch  <mpetch@gnubg.org>
+
+	Version 1.03 released.
+
 2014-07-26  Michael Petch  <mpetch@gnubg.org>
 
-    * analysis.c mtsupport.c play.c: Fix problem with aMoves
-    data structures being double freed. This bug would cause
-    prgram to crash on termination or crash after stopping an
-    analysis.
+	* analysis.c mtsupport.c play.c: Fix problem with aMoves
+	data structures being double freed. This bug would cause
+	prgram to crash on termination or crash after stopping an
+	analysis.
 
 2014-07-26  Michael Petch  <mpetch@gnubg.org>
 
