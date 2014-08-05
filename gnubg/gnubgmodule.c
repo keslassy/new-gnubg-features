@@ -47,10 +47,6 @@
 
 #if USE_PYTHON
 
-#if (PY_VERSION_HEX < 0x02050000)
-typedef int Py_ssize_t;
-#endif
-
 #if (PY_VERSION_HEX < 0x02030000)
 /* Bool introduced in 2.3 */
 #define PyBool_FromLong PyInt_FromLong
