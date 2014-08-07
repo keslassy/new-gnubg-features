@@ -46,6 +46,15 @@
 typedef int Py_ssize_t;
 #endif
 
+#if PY_VERSION_HEX < 0x02060000
+    #define PyBytes_FromStringAndSize PyString_FromStringAndSize
+    #define PyBytes_FromString PyString_FromString
+    #define PyBytes_AsString PyString_AsString
+    #define PyBytes_Size PyString_Size
+    #define PyBytes_Check PyString_Check
+    #define PyUnicode_FromString PyString_FromString
+#endif
+
 #if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
 #define PY_SSIZE_T_MAX INT_MAX
 #define PY_SSIZE_T_MIN INT_MIN
