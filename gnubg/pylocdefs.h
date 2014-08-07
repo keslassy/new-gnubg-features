@@ -1,7 +1,7 @@
 /*
  * pylocdefs.h
  *
- * by Michael Petch <mpetch@capp-sysware.com>, 2011.
+ * by Michael Petch <mpetch@capp-sysware.com>, 2014.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
