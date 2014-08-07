@@ -19,8 +19,8 @@
  * $Id$
  */
 
-#ifndef PYTHONLOCDEFS_H
-#define PYTHONLOCDEFS_H
+#ifndef PYLOCDEFS_H
+#define PYLOCDEFS_H
 
 #include "config.h"
 
