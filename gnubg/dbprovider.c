@@ -35,6 +35,8 @@ DBProviderType dbProviderType = (DBProviderType) 0;
 int storeGameStats = TRUE;
 
 #if USE_PYTHON
+#include "pythonlocdefs.h"
+
 PyObject *pdict;
 RowSet *ConvertPythonToRowset(PyObject * v);
 
@@ -291,7 +293,7 @@ PyMySQLConnect(const char *dbfilename, const char *user, const char *password, c
     /* Connect to database */
     ret = PyRun_String(buf, Py_eval_input, pdict, pdict);
     g_free(buf);
-    if (ret == NULL || !PyInt_Check(ret) || (iret = PyInt_AsLong(ret)) < 0) {
+    if (ret == NULL || !PyLong_Check(ret) || (iret = PyLong_AsLong(ret)) < 0) {
         PyErr_Print();
         return -1;
     } else if (iret == 0L) {     /* New database - populate */
@@ -312,7 +314,7 @@ PyPostgreConnect(const char *dbfilename, const char *user, const char *password,
     /* Connect to database */
     ret = PyRun_String(buf, Py_eval_input, pdict, pdict);
     g_free(buf);
-    if (ret == NULL || !PyInt_Check(ret) || (iret = PyInt_AsLong(ret)) < 0) {
+    if (ret == NULL || !PyLong_Check(ret) || (iret = PyLong_AsLong(ret)) < 0) {
         PyErr_Print();
         return -1;
     } else if (iret == 0L) {     /* New database - populate */
@@ -414,8 +416,8 @@ ConvertPythonToRowset(PyObject * v)
     RowSet *pRow;
     Py_ssize_t row, col;
     int i, j;
-    if (PyInt_Check(v)) {
-        if (PyInt_AsLong(v) != 0)
+    if (PyLong_Check(v)) {
+        if (PyLong_AsLong(v) != 0)
             outputerrf(_("unexpected rowset error"));
         return NULL;
     }
@@ -455,12 +457,12 @@ ConvertPythonToRowset(PyObject * v)
                     continue;
                 }
                 if (PyUnicode_Check(e2))
-                    strcpy(buf, PyString_AsString(PyUnicode_AsUTF8String(e2)));
-                else if (PyString_Check(e2))
-                    strcpy(buf, PyString_AsString(e2));
-                else if (PyInt_Check(e2) || PyLong_Check(e2)
+                    strcpy(buf, PyBytes_AsString(PyUnicode_AsUTF8String(e2)));
+                else if (PyBytes_Check(e2))
+                    strcpy(buf, PyBytes_AsString(e2));
+                else if (PyLong_Check(e2) || PyLong_Check(e2)
                          || !StrCaseCmp(e2->ob_type->tp_name, "Decimal"))       /* Not sure how to check for decimal type directly */
-                    sprintf(buf, "%d", (int) PyInt_AsLong(e2));
+                    sprintf(buf, "%ld", (long) PyLong_AsLong(e2));
                 else if (PyFloat_Check(e2))
                     sprintf(buf, "%.4f", PyFloat_AsDouble(e2));
                 else if (e2 == Py_None)

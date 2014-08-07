@@ -30,18 +30,9 @@
 #endif
 
 #include <Python.h>
+#include "pythonlocdefs.h"
+
 extern PyObject *PythonGnubgModule(void);
-
-#if PY_VERSION_HEX < 0x02050000
-typedef int Py_ssize_t;
-#endif
-
-#if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
-#define PY_SSIZE_T_MAX INT_MAX
-#define PY_SSIZE_T_MIN INT_MIN
-#endif                          /* PY_VERSION_CHK */
-
-#endif                          /* USE_PYTHON */
 
 #include "lib/simd.h"
 
@@ -52,5 +43,8 @@ extern void PythonShutdown(void);
 extern void PythonRun(const char *sz);
 extern int LoadPythonFile(const char *sz, int fQuiet);
 extern gint python_run_file(gpointer file);
+extern MOD_INIT(gnubg);
+
+#endif                          /* USE_PYTHON */
 
 #endif                          /* GNUBGMODULE_H */
