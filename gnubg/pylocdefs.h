@@ -1,5 +1,5 @@
 /*
- * pythonlocdefs.h
+ * pylocdefs.h
  *
  * by Michael Petch <mpetch@capp-sysware.com>, 2011.
  *
