@@ -35,7 +35,7 @@ DBProviderType dbProviderType = (DBProviderType) 0;
 int storeGameStats = TRUE;
 
 #if USE_PYTHON
-#include "pythonlocdefs.h"
+#include "pylocdefs.h"
 
 PyObject *pdict;
 RowSet *ConvertPythonToRowset(PyObject * v);

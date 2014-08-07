@@ -30,7 +30,7 @@
 #endif
 
 #include <Python.h>
-#include "pythonlocdefs.h"
+#include "pylocdefs.h"
 
 extern PyObject *PythonGnubgModule(void);
 
