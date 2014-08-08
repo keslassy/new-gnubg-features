@@ -27,19 +27,19 @@
 #if USE_PYTHON
 
 #if PY_MAJOR_VERSION >= 3
-  #define MOD_ERROR_VAL NULL
-  #define MOD_SUCCESS_VAL(val) val
-  #define MOD_INIT(name) PyMODINIT_FUNC PyInit_##name(void)
-  #define MOD_DEF(ob, name, doc, methods) \
-          static struct PyModuleDef moduledef = { \
-            PyModuleDef_HEAD_INIT, name, doc, -1, methods, }; \
-          ob = PyModule_Create(&moduledef);
+    #define MOD_ERROR_VAL NULL
+    #define MOD_SUCCESS_VAL(val) val
+    #define MOD_INIT(name) PyMODINIT_FUNC PyInit_##name(void)
+    #define MOD_DEF(ob, name, doc, methods) \
+            static struct PyModuleDef moduledef = { \
+              PyModuleDef_HEAD_INIT, name, doc, -1, methods, }; \
+            ob = PyModule_Create(&moduledef);
 #else
-  #define MOD_ERROR_VAL
-  #define MOD_SUCCESS_VAL(val)
-  #define MOD_INIT(name) void init##name(void)
-  #define MOD_DEF(ob, name, doc, methods) \
-          ob = Py_InitModule3(name, methods, doc);
+    #define MOD_ERROR_VAL
+    #define MOD_SUCCESS_VAL(val)
+    #define MOD_INIT(name) void init##name(void)
+    #define MOD_DEF(ob, name, doc, methods) \
+            ob = Py_InitModule3(name, methods, doc);
 #endif
 
 #if PY_VERSION_HEX < 0x02050000
@@ -60,8 +60,10 @@ typedef int Py_ssize_t;
 #define PY_SSIZE_T_MIN INT_MIN
 #endif                          /* PY_VERSION_CHK */
 
-#if PY_MAJOR_VERSION < 3
-    #define PyLong_FromLong PyInt_FromLong
+#if PY_MAJOR_VERSION >= 3
+    #define PyInt_Check PyLong_Check
+    #define PyInt_AsLong PyLong_AsLong
+    #define PyInt_FromLong PyLong_FromLong
     #define PyExc_StandardError PyExc_Exception
 #endif
 
