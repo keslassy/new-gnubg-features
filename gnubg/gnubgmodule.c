@@ -3475,8 +3475,6 @@ PythonInitialise(char *argv0)
 extern void
 PythonShutdown(void)
 {
-    Py_Finalize();
-
 #ifdef WIN32
     if (python_dir) {
         g_free(python_dir);
@@ -3488,6 +3486,11 @@ PythonShutdown(void)
     }
 
     py_gnubg_module = NULL;
+   /* With versions < 2.4 Py_finalize has garbage collection bugs
+      so we skip it to prevent problems */
+#if (PY_VERSION_HEX >= 0x02040000)
+    Py_Finalize();
+#endif
 }
 
 extern void
