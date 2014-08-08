@@ -49,7 +49,7 @@ case "$host" in
     ;;
   *-*-darwin*)
     darwin=yes
-    LDFLAGS="$LDFLAGS -dylib_file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib `/opt/local/bin/pkg-config --libs glib-2.0`"
+    LDFLAGS="$LDFLAGS -dylib_file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
     AC_DEFINE(USE_APPLE_OPENGL, 1, [Define if using Apple OpenGL])
     ;;
 esac
