@@ -132,12 +132,16 @@ PKG_CHECK_MODULES(CAIRO, [cairo >= 1.2], have_cairo="yes", [AC_MSG_WARN([no cair
 PKG_CHECK_MODULES(PANGOCAIRO, [pangocairo >= 1.0], have_pangocairo="yes", [AC_MSG_WARN([no pangocairo support])])
 PKG_CHECK_MODULES(SQLITE, [sqlite3], have_sqlite="yes", AC_MSG_WARN([no sqlite support]))
 
-if test "x$win32" != "xyes"; then
-    PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk support]))
-    PKG_CHECK_MODULES(GLU, [glu], have_glu="yes", AC_MSG_WARN([no glu support]))
-else
+if test "x$win32" == "xyes"; then
     have_canberra="no"
     have_glu="yes"
+else
+    if test "x$darwin" == "xyes"; then
+        have_canberra="no"
+    else
+        PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk support]))
+    fi
+    PKG_CHECK_MODULES(GLU, [glu], have_glu="yes", AC_MSG_WARN([no glu support]))
 fi
 
 PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= 2.6.0], have_gtk="yes" , AC_MSG_WARN([no gtk support]))
