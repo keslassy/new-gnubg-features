@@ -106,7 +106,7 @@ def formatMatchInfo(matchInfo):
         score[winner] += pw
 
         cube = getCube(game)
-        print 'cube: ', cube
+        print ('cube: ', cube)
 
         if pw == cube:
             gammon = ''

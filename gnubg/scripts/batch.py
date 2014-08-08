@@ -33,6 +33,12 @@
 
 import os
 
+if sys.version_info >= (3, 0):
+    def python3_raw_input(prompt):
+        return input(prompt)
+
+    raw_input = python3_raw_input
+
 # file extensions, names and gnubg import commands
 extensions = ['mat', 'pos', 'sgg', 'tmg', 'txt']
 extTypes = ['.mat', '.pos', 'Games grid', 'True money game', 'Snowie text']
@@ -62,7 +68,7 @@ def CheckFiles(files, dir, destDir):
     if foundFile:
         return fileList
     else:
-        print "  ** All files in directory already processed **"
+        print("  ** All files in directory already processed **")
 
 
 def GetFiles(dir):
@@ -70,7 +76,7 @@ def GetFiles(dir):
     try:
         files = os.listdir(dir)
     except:
-        print "  ** Directory not found **"
+        print("  ** Directory not found **")
         return 0
 
     fileList = [[], [], [], [], []]
@@ -94,16 +100,16 @@ def GetFiles(dir):
         return fileList
     else:
         if not foundAnyFile:
-            print "  ** No files in directory **"
+            print ("  ** No files in directory **")
         else:
-            print "  ** No valid files found in directory **"
+            print ("  ** No valid files found in directory **")
         return 0
 
 
 def AnalyzeFile(prompt, file, dir, destDir, type):
     "Run commands to analyze file in gnubg"
     gnubg.command('import ' + extCmds[type] + ' "' + dir + file + '"')
-    print prompt + " Analysing " + file
+    print (prompt + " Analysing " + file)
     gnubg.command('analyze match')
     file = file[:-len(extensions[type])] + "sgf"
     gnubg.command('save match "' + destDir + file + '"')
@@ -137,7 +143,7 @@ def BatchImport():
         dirs[0] = dirs[0][:-1]
         dirs[1] = dirs[1][:-1]
         if os.path.isdir(dirs[0]) and os.path.isdir(dirs[1]):
-            print "Last used dirs:\n from:", dirs[0][:-1], "\n   to:", dirs[1][:-1]
+            print ("Last used dirs:\n from:", dirs[0][:-1], "\n   to:", dirs[1][:-1])
             if GetYN("Reuse") == 'n':
                 dirs = [0, 0]
         else:
@@ -167,7 +173,7 @@ def BatchImport():
 
                 if os.path.isdir(dirs[1]):
                     break
-                print "  ** Directory not found **"
+                print ("  ** Directory not found **")
 
         # Make sure files are new
         files = CheckFiles(inFiles, dirs[0], dirs[1])
@@ -180,13 +186,13 @@ def BatchImport():
     for eType in extTypes:
         numType = extTypes.index(eType)
         if len(files[numType]):
-            print "\n" + eType + " files:"
+            print ("\n" + eType + " files:")
             for file in files[numType]:
-                print "    " + file
+                print ("    " + file)
                 numFound = numFound + 1
 
     if (numFound > 1):
-        print "\n", numFound, "files found\n"
+        print ("\n", numFound, "files found\n")
 
     # Check user wants to continue
     if GetYN("Continue") == 'n':
@@ -202,19 +208,19 @@ def BatchImport():
     num = 0
     for eType in extTypes:
         if len(files[extTypes.index(eType)]):
-            print "\n" + eType + " files:"
+            print ("\n" + eType + " files:")
             numType = extTypes.index(eType)
             for file in files[numType]:
                 num = num + 1
                 prompt = "\n(%d/%d)" % (num, numFound)
                 AnalyzeFile(prompt, file, dirs[0], dirs[1], numType)
 
-    print "\n** Finished **"
+    print ("\n** Finished **")
     return
 
 # Run batchimport on load
 try:
-    print __doc__
+    print (__doc__)
     BatchImport()
-except Exception, (e):
-    print "Error:", e
+except Exception as e:
+    print ("Error:", e)
