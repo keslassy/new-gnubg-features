@@ -126,5 +126,6 @@ def BatchImport():
 try:
     print (__doc__)
     BatchImport()
-except Exception as e:
-    print ("Error:", e)
+except Exception:
+    e = sys.exc_info()[1].args[0]
+    print ("Error: " + e)
