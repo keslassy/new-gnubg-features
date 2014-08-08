@@ -1,7 +1,15 @@
+2014-08-08  Michael Petch  <mpetch@gnubg.org>
+
+    * configure.ac: modify configure to properly support an argument 
+    to --with-python. Supplying a python interpreter as an argument
+    will force configure to use the specified one. General Python 
+    checking cleanup
+
 2014-08-07  Michael Petch  <mpetch@gnubg.org>
 
 	* configure.ac dbprovider.c gnubgmodule.c gnubgmodule.h 
-	m4/az_python.m4 scripts/gnubg.py +pylocdefs.h: Support 
+	m4/az_python.m4 scripts/gnubg.py scripts/db_import.py
+    scripts/batch.py scripts/matchseries.py +pylocdefs.h: Support 
 	compiling with Python 3.x and modify Python modules to
 	support Python 2.x and 3.x.
 
