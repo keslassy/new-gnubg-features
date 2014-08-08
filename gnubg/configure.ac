@@ -340,14 +340,24 @@ AM_CONDITIONAL(FOUND_GDK_PIXBUF_CSOURCE, test "x$GDK_PIXBUF_CSOURCE" != "xno" )
 dnl
 dnl Check for Python
 dnl
-have_python="no"
-AC_ARG_WITH(python,[  --with-python           use python (Default if found)])
-AM_PATH_PYTHON(2.2)
-AM_CHECK_PYTHON_HEADERS(have_python="yes", have_python="no")
-if test "$with_python" != "no" && test "x$have_python" = "xyes"; then
+
+AC_ARG_WITH([python],
+AC_HELP_STRING([--with-python=program],
+        [specify the python interpreter to use: (default=yes)]),
+    [
+        if [ test x"$with_python" != x"no" && test x"$with_python" != x"yes" ]; then
+    	    PYTHON="$with_python"
+        fi
+    ])
+
+if test "x$with_python" != "xno"; then
+    AM_PATH_PYTHON(2.2)
+    AM_CHECK_PYTHON_HEADERS(have_python="yes", have_python="no")
+    if test "x$have_python" = "xyes"; then
         AC_DEFINE(USE_PYTHON,1,[Define if you want to use Python inside gnubg])
+    fi
 fi
-AM_CONDITIONAL(USE_PYTHON, test "$with_python" != "no" && test "$have_python" != "no" )
+AM_CONDITIONAL(USE_PYTHON, test x"$with_python" != x"no" && test x"$have_python" != x"no" )
 
 dnl
 dnl SIMD
