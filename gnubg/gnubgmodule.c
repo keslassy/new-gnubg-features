@@ -3395,18 +3395,20 @@ extern gint
 python_run_file(gpointer file)
 {
     char *pch;
-    PyObject *py_dict, *py_ret;
+    PyObject *py_dict = NULL, *py_ret = NULL;
 
     g_assert(file);
 
     pch = g_strdup_printf("gnubg_InteractivePyShell_gui(['','-n', '%s'])\n", (char *) file);
     py_dict = PyModule_GetDict(PythonGnubgModule());
+    Py_INCREF(py_dict);
+
     py_ret = PyRun_String(pch, Py_eval_input, PythonGnubgModule(), py_dict);
 
     if (py_ret) {
         Py_DECREF(py_ret);
     }
-    if (py_ret) {
+    if (py_dict) {
         Py_DECREF(py_dict);
     }
     g_free(pch);
@@ -3481,16 +3483,9 @@ PythonShutdown(void)
         python_dir = NULL;
     }
 #endif
-    if (py_gnubg_module) {
-        Py_DECREF(py_gnubg_module);
-    }
 
     py_gnubg_module = NULL;
-   /* With versions < 2.4 Py_finalize has garbage collection bugs
-      so we skip it to prevent problems */
-#if (PY_VERSION_HEX >= 0x02040000)
     Py_Finalize();
-#endif
 }
 
 extern void
@@ -3509,6 +3504,7 @@ PythonRun(const char *sz)
          */
 #if USE_GTK
         py_dict = PyModule_GetDict(PythonGnubgModule());
+        Py_INCREF(py_dict);
 
         if (fX && (py_ret = PyRun_String("gnubg_InteractivePyShell_gui()",
                                          Py_eval_input, PythonGnubgModule(), py_dict)))
@@ -3555,10 +3551,7 @@ LoadPythonFile(const char *sz, int fQuiet)
         return FALSE;
     }
     escpath = g_strescape(path, NULL);
-//exec(open(filename).read())
-//    exec(compile(open('%s', "rb").read(), '%s', 'exec'))
     cmd = g_strdup_printf("exec(compile(open('%s', 'rb').read(), '%s', 'exec'))", escpath, escpath);
-//    cmd = g_strdup_printf("execfile('%s')", escpath);
     PyRun_SimpleString(cmd);
     g_free(escpath);
     g_free(path);
