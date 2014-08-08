@@ -4,9 +4,15 @@ dnl function also defines PYTHON_INCLUDES
 AC_DEFUN([AM_CHECK_PYTHON_HEADERS],
 [AC_REQUIRE([AM_PATH_PYTHON])
 dnl deduce PYTHON_INCLUDES
-AC_MSG_CHECKING([for python headers using $PYTHON-config --includes])
-PYTHON_LIBS=`$PYTHON-config --libs 2>/dev/null`
-PYTHON_INCLUDES=`$PYTHON-config --includes 2>/dev/null`
+if test -x "$PYTHON-config"; then
+  PYTHON_CONFIG="$PYTHON-config"
+else
+  PYTHON_CONFIG="$PYTHON ./python-config"
+fi
+AC_MSG_CHECKING([for python headers using $PYTHON_CONFIG --includes])
+
+PYTHON_LIBS=`$PYTHON_CONFIG --libs 2>/dev/null`
+PYTHON_INCLUDES=`$PYTHON_CONFIG  --includes 2>/dev/null`
 if test $? = 0; then
   AC_MSG_RESULT([$PYTHON_INCLUDES])
 else
