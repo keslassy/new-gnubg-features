@@ -11,7 +11,7 @@ else
 fi
 AC_MSG_CHECKING([for python headers using $PYTHON_CONFIG --includes])
 
-PYTHON_LIBS=`$PYTHON_CONFIG --libs 2>/dev/null`
+PYTHON_LIBS=`$PYTHON_CONFIG --ldflags 2>/dev/null`
 PYTHON_INCLUDES=`$PYTHON_CONFIG  --includes 2>/dev/null`
 if test $? = 0; then
   AC_MSG_RESULT([$PYTHON_INCLUDES])
