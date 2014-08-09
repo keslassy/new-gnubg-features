@@ -283,7 +283,7 @@ ClosedBoard(int afClosedBoard[2], const TanBoard anBoard)
 
 #define BasicCubefulRollout BasicCubefulRolloutWithLocking
 
-static unsigned int initial_game_count;
+static volatile unsigned int initial_game_count;
 
 #endif
 

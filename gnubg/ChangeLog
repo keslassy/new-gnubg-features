@@ -1,3 +1,9 @@
+2014-08-09  Michael Petch  <mpetch@gnubg.org>
+
+	* rollout.c: declare initial_game_count as volatile. It may be
+	updated from multiple threads when multithreading is enabled.
+	We don't want an optimizing compiler to optimize this variable away.
+
 2014-08-08  Michael Petch  <mpetch@gnubg.org>
 
 	* configure.ac: modify configure to properly support an argument 
