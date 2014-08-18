@@ -372,7 +372,7 @@ CubeAnalysis(cubehintdata * pchd)
 
     cd = FindCubeDecision(arDouble, cdec->aarOutput, &ci);
 
-    if (!GetDPEq(NULL, NULL, &ci) && !pchd->pmr->mt == MOVE_DOUBLE)
+    if (!GetDPEq(NULL, NULL, &ci) && !(pchd->pmr->mt == MOVE_DOUBLE))
         /* No cube action possible */
         return NULL;
 
@@ -501,7 +501,7 @@ CubeAnalysis(cubehintdata * pchd)
 
         if (pes->et == EVAL_ROLLOUT && (ai[i] == OUTPUT_TAKE || ai[i] == OUTPUT_NODOUBLE)) {
 
-            /* FIXME: output cubeless euqities and percentages for rollout */
+            /* FIXME: output cubeless equities and percentages for rollout */
             /*        probably along with rollout details */
 
             pw = gtk_label_new(OutputPercents(cdec->aarOutput[ai[i] - 1], TRUE));
