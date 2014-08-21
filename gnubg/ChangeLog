@@ -1,3 +1,8 @@
+2014-08-21  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* import.c: fix a bug introduced July 20th in mat files import
+	where some games could have the wrong player set as winner.
+
 2014-08-09  Michael Petch  <mpetch@gnubg.org>
 
 	* rollout.c: declare initial_game_count as volatile. It may be
