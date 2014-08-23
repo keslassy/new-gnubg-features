@@ -74,11 +74,6 @@ typedef enum {
 #define MAX_INCOMPLETE_MOVES 3875
 #define MAX_MOVES 3060
 
-/* If this is increased, the nSearchCandidates member in struct _evalcontext
- * must also be enlarged. */
-#define MAX_SEARCH_CANDIDATES 127
-
-
 typedef struct movefilter_s {
     int Accept;                 /* always allow this many moves. 0 means don't use this */
     /* level, since at least 1 is needed when used. */
