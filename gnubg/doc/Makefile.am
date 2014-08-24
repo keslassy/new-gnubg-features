@@ -82,7 +82,7 @@ gnubg.texi: gnubgdb.xml
 	cp $(srcdir)/gnubg/gnubg.texi .
 
 gnubg.info: gnubg.texi
-	makeinfo $< -o $@ || \
+	makeinfo --force $< -o $@ || \
 	cp $(srcdir)/gnubg/gnubg.info .
 
 html_node: gnubg.texi
