@@ -73,8 +73,8 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
   </sect1>
   <sect1 id="Introduction" xreflabel="Introduction">
     <title>Introduction</title>
-    <para>By now, it's fairly common knowledge that just about all the top players make use of the neural-net backgammon programs such as Snowie, or the older Jellyfish. The impact these programs have had on the way the game is understood and played cannot be overstated. Players of all levels have the option of purchasing these revolutionary <emphasis>bots</emphasis> (short for robots) in order to not only have the pleasure of getting a drubbing by a world-class opponent as many times as they want, but also have it analyze their moves, games, and matches. The program will point out our mistakes, tell us how big a blunder our move was, and list the best moves. It is still up to us to understand why our move or cube action was wrong, however there is no question such a tool is priceless. </para>
-    <para>Perhaps <emphasis>priceless</emphasis> is a poor choice of words as the price is by no means a given. Though the programs come with different options depending on how much one is willing to spend, a version with all the trimmings, such as importing one's matches, analyzing the games, grading your play, allowing rollouts, etc. will set you back no less than $380 for Snowie or <emphasis>only</emphasis> $220 for the older, and less sophisticated Jellyfish. This would seem to indicate that a top-quality aide is only in reach of someone with deep pockets or a deep commitment. If not, one has to look at some of the free offerings available on the Internet.</para>
+    <para>By now, it's fairly common knowledge that just about all the top players make use of the neural-net backgammon programs such as Snowie, or the older Jellyfish. The impact these programs have had on the way the game is understood and played cannot be overstated. Players of all levels have the option of purchasing these revolutionary <emphasis>bots</emphasis> (short for robots) in order to not only have the pleasure of getting a drubbing by a world-class opponent as many times as they want, but also have it analyse their moves, games, and matches. The program will point out our mistakes, tell us how big a blunder our move was, and list the best moves. It is still up to us to understand why our move or cube action was wrong, however there is no question such a tool is priceless. </para>
+    <para>Perhaps <emphasis>priceless</emphasis> is a poor choice of words as the price is by no means a given. Though the programs come with different options depending on how much one is willing to spend, a version with all the trimmings, such as importing one's matches, analysing the games, grading your play, allowing rollouts, etc. will set you back no less than $380 for Snowie or <emphasis>only</emphasis> $220 for the older, and less sophisticated Jellyfish. This would seem to indicate that a top-quality aide is only in reach of someone with deep pockets or a deep commitment. If not, one has to look at some of the free offerings available on the Internet.</para>
     <para>Personally, when I first heard of GNU Backgammon, I immediately remembered with a grimace my first experience with an old version of GNU Chess several years earlier: an engine that barely played at an expert level, as opposed to other master-level programs, an absolute bare minimum in functions, and graphics that reminded me of my first Atari video game system from back in 1977. The surprise that awaited me couldn't have been greater.</para>
     <para>GNU Backgammon is first of all a neural-net program of World-Class strength. It is based on the same technology from which Jellyfish and Snowie originated. </para>
     <informaltable frame="all">
@@ -106,7 +106,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <para>Import and export one's games and matches from other sources such as FIBS, Gamesgrid (it imports comments as well), and TrueMoneyGames.</para>
         </listitem>
         <listitem>
-          <para>Analyze a game or entire match with a detailed report, including your rating and even the equivalent Snowie error rate.</para>
+          <para>Analyse a game or entire match with a detailed report, including your rating and even the equivalent Snowie error rate.</para>
         </listitem>
         <listitem>
           <para>Keeps track of your results in the Player Record</para>
@@ -181,7 +181,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <imagedata align="center" fileref="images/51394706.png"/>
         </imageobject>
       </mediaobject>
-      <para>uncheck the box Show pip count below board. If you want to only refer to it on occasion, for example to test your own estimation, go to the Analyze menu, select Pip count, and the count will appear at the bottom left.</para>
+      <para>uncheck the box Show pip count below board. If you want to only refer to it on occasion, for example to test your own estimation, go to the Analyse menu, select Pip count, and the count will appear at the bottom left.</para>
       <sect3 id="Rolling_dice_and_doubling" xreflabel="Rolling dice and doubling">
         <title>Rolling dice and doubling</title>
         <para>To roll the dice, simply click on the empty space of the board on the right side. The same goes for doubling, where you can just click on the cube on the board.</para>
@@ -196,7 +196,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
             <imagedata align="center" fileref="images/m3a7e4f1b.png"/>
           </imageobject>
         </mediaobject>
-        <para>If you would like the programs analysis of a move or cube decision while playing, go to the Analyze menu and select Hint, or press the keyboard shortcut Ctrl-H. For details on the Hint/Annotation window, see below. </para>
+        <para>If you would like the programs analysis of a move or cube decision while playing, go to the Analyse menu and select Hint, or press the keyboard shortcut Ctrl-H. For details on the Hint/Annotation window, see below. </para>
         <tip>
           <para>You can also play GNU with a full-screen 3D board and 3D dice rolling. See <xref linkend="Board_designs___2D_and_3D"/> and <xref linkend="Full_Screen_Board"/> for more on that.</para>
         </tip>
@@ -248,7 +248,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
             <para>Direction – to change the direction the checkers move.</para>
           </listitem>
           <listitem>
-            <para>Stop – to stop the program if it is analyzing or doing a rollout. </para>
+            <para>Stop – to stop the program if it is analysing or doing a rollout. </para>
           </listitem>
         </orderedlist>
       </sect3>
@@ -294,30 +294,30 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
       <sect3 id="Move_Filter" xreflabel="Move Filter">
         <title>Move Filter</title>
         <para>The move filter allows you to control exactly how many moves GNU is examining at each ply. A ply is basically one move played by one side, thus if both sides played a move, it would be one whole move, but two plies, one for each side. To change the specific settings, press the Modify... button.</para>
-        <para>Although the level presets, such as World Class, Supremo, etc. are tested and good, you may want to know or control how GNU filters its moves to analyze and how many. </para>
+        <para>Although the level presets, such as World Class, Supremo, etc. are tested and good, you may want to know or control how GNU filters its moves to analyse and how many. </para>
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="images/e613071.png"/>
           </imageobject>
         </mediaobject>
         <para>If you are playing Expert level (this is what GGRaccoon is set at) or another 0-ply setting, the Move Filter settings will not change a thing, as Expert level automatically examines all moves. At Supremo level, this changes though, as it takes a selection of the best moves from 0-ply and examines them at 2-ply. This means that for those selected moves it will calculate all the possibilities 2 plies ahead and evaluate them, allowing it to find better moves. Since Supremo is a 2-ply setting, we are only interested in the 2-ply settings of Large as in the figure above. 3-ply or 4-ply settings will have no effect here because Supremo doesn't examine at that depth. </para>
-        <para>In the figure above, we can see it first will Always accept 0 moves. This first line means that it won't force any moves to be analyzed at 2-ply, it will only analyze moves according to the second line. If it had said it would always analyze 2 moves, this would mean that no matter how ridiculously bad the 2nd move was compared to the 1st, it would analyze both at 2-ply. </para>
-        <para>The second line says it will Add extra 16 moves within 0.320. This means that provided they aren't more than 0.320 equity worse than the top move, it will select a maximum of 16 moves to analyze at 2-ply. For example, in the diagram below</para>
+        <para>In the figure above, we can see it first will Always accept 0 moves. This first line means that it won't force any moves to be analysed at 2-ply, it will only analyse moves according to the second line. If it had said it would always analyse 2 moves, this would mean that no matter how ridiculously bad the 2nd move was compared to the 1st, it would analyse both at 2-ply. </para>
+        <para>The second line says it will Add extra 16 moves within 0.320. This means that provided they aren't more than 0.320 equity worse than the top move, it will select a maximum of 16 moves to analyse at 2-ply. For example, in the diagram below</para>
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="images/m4149eeab.png"/>
           </imageobject>
         </mediaobject>
-        <para>the 2nd best move is no less than 0.453 equity worse than the top choice, so it didn't bother analyzing them at 2-ply as it is unlikely to change its mind on what the best move is. </para>
+        <para>the 2nd best move is no less than 0.453 equity worse than the top choice, so it didn't bother analysing them at 2-ply as it is unlikely to change its mind on what the best move is. </para>
         <para>Take a look at the figure below now:</para>
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="images/m4ed24f10.png"/>
           </imageobject>
         </mediaobject>
-        <para>Here, the exact same settings were maintained, but the 1-ply filter was activated. This just means that those 16 moves selected from the 0-ply are sent instead to be analyzed at 1-ply, and then up to 5 moves from 1-ply will be sent to be analyzed at 2-ply. So this would actually be faster than the previous setting (and weaker), since a maximum of only 5 moves would be analyzed at 2-ply depth.</para>
+        <para>Here, the exact same settings were maintained, but the 1-ply filter was activated. This just means that those 16 moves selected from the 0-ply are sent instead to be analysed at 1-ply, and then up to 5 moves from 1-ply will be sent to be analysed at 2-ply. So this would actually be faster than the previous setting (and weaker), since a maximum of only 5 moves would be analysed at 2-ply depth.</para>
         <tip>
-          <para>Feel free to experiment with the settings, as you can always reset them by simply choosing one of the level presets. One setting change I'd recommend is that of the 4-ply. The default setting only considers 2 moves if they are within 0.040 equity of each other. While I trust the program's analysis, there is often more than one move within that range, and I wouldn't want it to miss analyzing one because it is instructed to only look at two moves. I set the filter as in the diagram below: </para>
+          <para>Feel free to experiment with the settings, as you can always reset them by simply choosing one of the level presets. One setting change I'd recommend is that of the 4-ply. The default setting only considers 2 moves if they are within 0.040 equity of each other. While I trust the program's analysis, there is often more than one move within that range, and I wouldn't want it to miss analysing one because it is instructed to only look at two moves. I set the filter as in the diagram below: </para>
         </tip>
         <mediaobject>
           <imageobject>
@@ -330,7 +330,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     <sect2 id="Playing_options_and_Tutor" xreflabel="Playing options and Tutor">
       <title>Playing options and Tutor</title>
       <para>In the Settings menu, select Options, and a small window opens. Here, you can activate automatic bear-off (it will automatically take off the most checkers if it can sparing you the effort of playing obvious moves), choose the equity table to be used (Woolsey's, Snowie's, etc.), select Nackgammon, choose to play with manual dice (you play with your own personal dice instead of the computer's) AND a great teaching tool: the Tutor Mode.</para>
-      <para>When activated, the Tutor mode has GNU analyzing your moves and/or cube decisions and comparing them with its choices. You set the threshold for its alerts, so if you set it for bad, it will only warn you when you make a bad mistake. It will then allow you to re-examine your choice, go right ahead with it, or provide a <emphasis>hint</emphasis> essentially showing you its analysis. </para>
+      <para>When activated, the Tutor mode has GNU analysing your moves and/or cube decisions and comparing them with its choices. You set the threshold for its alerts, so if you set it for bad, it will only warn you when you make a bad mistake. It will then allow you to re-examine your choice, go right ahead with it, or provide a <emphasis>hint</emphasis> essentially showing you its analysis. </para>
       <mediaobject>
         <imageobject>
           <imagedata align="center" fileref="images/58c77df2.png"/>
@@ -363,7 +363,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     <para>For players seeking more advanced information on the position, GNU also provides information on the Match Equity Table (MET), race theory (Kleinman count, Thorp count), a powerful Market Window/Gammon value viewer, and a new tool called the Temperature Map courtesy of <ulink url="http://www46.pair.com/sengoku/TempMap/English/TempMap.html">Sho Sengoku</ulink>.</para>
     <sect2 id="Match_Equity_Table" xreflabel="Match Equity Table">
       <title>Match Equity Table</title>
-      <para>The Match Equity Table can be viewed at any moment by entering the Analyze menu and selecting Match Equity Table. There you will see table values including Pre-Crawford and Post-Crawford scores. The table used by GNU is by no means imposed, and you can select any of a number of provided ones, including the Snowie MET, Woolsey's, Jacob and Trice's, etc. by selecting Load Table. </para>
+      <para>The Match Equity Table can be viewed at any moment by entering the Analyse menu and selecting Match Equity Table. There you will see table values including Pre-Crawford and Post-Crawford scores. The table used by GNU is by no means imposed, and you can select any of a number of provided ones, including the Snowie MET, Woolsey's, Jacob and Trice's, etc. by selecting Load Table. </para>
       <mediaobject>
         <imageobject>
           <imagedata align="center" fileref="images/33d3487.png"/>
@@ -394,7 +394,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     </sect2>
     <sect2 id="Market_Window_Gammon_value" xreflabel="Market Window Gammon value">
       <title>Market Window/Gammon value</title>
-      <para>GNU offers a powerful Market Window/Gammon values tool (<menuchoice><guimenu>Analyze</guimenu><guimenuitem>Market Window</guimenuitem></menuchoice>) to the advanced or aspiring player. This tool will answer all questions on a position's take point, double point, etc. for both players at any match situation, including side-by-side dead-cube/live-cube scores. If you wish to see how other match scores would affect the figures, you can simply use the arrows, and you can change the cube value. And if it is a money game, then the respective double, beaver, raccoon, redouble values will be shown instead.</para>
+      <para>GNU offers a powerful Market Window/Gammon values tool (<menuchoice><guimenu>Analyse</guimenu><guimenuitem>Market Window</guimenuitem></menuchoice>) to the advanced or aspiring player. This tool will answer all questions on a position's take point, double point, etc. for both players at any match situation, including side-by-side dead-cube/live-cube scores. If you wish to see how other match scores would affect the figures, you can simply use the arrows, and you can change the cube value. And if it is a money game, then the respective double, beaver, raccoon, redouble values will be shown instead.</para>
       <mediaobject>
         <imageobject>
           <imagedata align="center" fileref="images/234924dc.png"/>
@@ -431,7 +431,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     <para>GNU allows users to import matches from a variety of formats, including the Jellyfish formats, the FIBS oldmoves format, the Snowie GamesGrid format (.sgg), the TrueMoneyGames format (.tmg), and even Snowie's Standard Text Format among others. It also allows you to export your games and positions into the Jellyfish format (.mat), HTML (including easily customizable graphics), a readable text format with diagrams (.txt), and even a PDF document. If you'd like to share a position and some analysis in text format, you can have GNU send this directly to the Windows clipboard for pasting.</para>
     <sect2 id="Importing_games" xreflabel="Importing games">
       <title>Importing games</title>
-      <para>Since many players who play online will want to make use of this to analyze their matches, or at the very least see how they did, below are step-by-step instructions on how to do this whether you play at <ulink url="http://www.fibs.com/">FIBS</ulink>, <ulink url="http://www.gamesgrid.com/">GamesGrid</ulink>, or <ulink url="http://www.truemoneygames.com/">TrueMoneyGames</ulink>. Essentially, you just want to save the games in a format that GNU can read and then import them.</para>
+      <para>Since many players who play online will want to make use of this to analyse their matches, or at the very least see how they did, below are step-by-step instructions on how to do this whether you play at <ulink url="http://www.fibs.com/">FIBS</ulink>, <ulink url="http://www.gamesgrid.com/">GamesGrid</ulink>, or <ulink url="http://www.truemoneygames.com/">TrueMoneyGames</ulink>. Essentially, you just want to save the games in a format that GNU can read and then import them.</para>
       <para>To import a match or position, just press the <inlinegraphic fileref="images/m46788d89.png"/> button on the toolbar. Then select the type of file you wish to import, locate the file, and that's that.</para>
       <tip>
         <para>For those who take online classes, please note that it imports the commentary saved on a move-by-move basis at GamesGrid, so you can see comments in the annotation window when going over the moves. I tested this with an online class and it was all there, neatly saved at every move.</para>
@@ -442,15 +442,15 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
         </imageobject>
       </mediaobject>
     </sect2>
-    <sect2 id="FIBS_-_Importing_and_analyzing" xreflabel="FIBS - Importing and analyzing">
-      <title>FIBS - Importing and analyzing</title>
+    <sect2 id="FIBS_-_Importing_and_analysing" xreflabel="FIBS - Importing and analysing">
+      <title>FIBS - Importing and analysing</title>
       <para>These instructions are for use with <ulink url="http://www.fibs.com/~cthulhu/">JavaFIBS</ulink>, my preferred FIBS client.</para>
       <orderedlist>
         <listitem>
           <para>After your match or game is finished, in the JavaFIBS client, go to the Tools menu and select Match Converter.</para>
         </listitem>
         <listitem>
-          <para>In the window that opens, click on the match you want to analyze, and press the Convert button. I'd recommend deleting the match after this (pressing the Delete button) so the list doesn't grow too big.</para>
+          <para>In the window that opens, click on the match you want to analyse, and press the Convert button. I'd recommend deleting the match after this (pressing the Delete button) so the list doesn't grow too big.</para>
         </listitem>
       </orderedlist>
       <mediaobject>
@@ -466,12 +466,12 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <para>Locate the match and import it. You'll find it in the main JavaFIBS directory, in the subdirectory Match and then Jellyfish. See the <xref linkend="remember"/> below to avoid having to do this everytime.</para>
         </listitem>
         <listitem>
-          <para>Go to the Analyze menu and select Analyze match. See <xref linkend="Analyzing_matches"/> to learn how to change the analysis settings.</para>
+          <para>Go to the Analyse menu and select Analyse match. See <xref linkend="Analysing_matches"/> to learn how to change the analysis settings.</para>
         </listitem>
       </orderedlist>
     </sect2>
-    <sect2 id="GamesGrid___Importing_and_analyzing" xreflabel="GamesGrid   Importing and analyzing">
-      <title>GamesGrid – Importing and analyzing</title>
+    <sect2 id="GamesGrid___Importing_and_analysing" xreflabel="GamesGrid   Importing and analysing">
+      <title>GamesGrid – Importing and analysing</title>
       <orderedlist>
         <listitem>
           <para>When playing or watching a match at Gamesgrid, be certain to activate the Record button <inlinegraphic fileref="images/m2c37a1e7.png"/> so it will save the game when you are done.</para>
@@ -493,12 +493,12 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <para>Locate the match and import it. You'll probably find it in the Gamesgrid directory in a subdirectory called SaveGame. See the <xref linkend="remember"/> below to avoid having to do this everytime.</para>
         </listitem>
         <listitem>
-          <para>Go to the Analyze menu and select Analyze match. See <xref linkend="Analyzing_matches"/> to learn how to change the analysis settings.</para>
+          <para>Go to the Analyse menu and select Analyse match. See <xref linkend="Analysing_matches"/> to learn how to change the analysis settings.</para>
         </listitem>
       </orderedlist>
     </sect2>
-    <sect2 id="TrueMoneyGames___Importing_and_Analyzing" xreflabel="TrueMoneyGames   Importing and Analyzing">
-      <title>TrueMoneyGames – Importing and Analyzing</title>
+    <sect2 id="TrueMoneyGames___Importing_and_Analysing" xreflabel="TrueMoneyGames   Importing and Analysing">
+      <title>TrueMoneyGames – Importing and Analysing</title>
       <orderedlist>
         <listitem>
           <para>I'd first suggest changing the option in the TrueMoneyGames client so that it always saves matches by default. Note that you cannot save a match that you are only watching. After opening the program, go to the Tools menu and select Options. In the window that opens, click on the Table tab at the top and then set the options as in the figure below.</para>
@@ -517,7 +517,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <para>Locate the match and import it. You'll probably find it in the TrueMoneyGames directory, called TMG, in a subdirectory called SavedGames. See the <xref linkend="remember"/>" below to avoid having to do this everytime.</para>
         </listitem>
         <listitem>
-          <para>Go to the Analyze menu and select Analyze match. See <xref linkend="Analyzing_matches"/> to learn how to change the analysis settings. </para>
+          <para>Go to the Analyse menu and select Analyse match. See <xref linkend="Analysing_matches"/> to learn how to change the analysis settings. </para>
         </listitem>
       </orderedlist>
       <tip id="remember" xreflabel="remember">
@@ -526,7 +526,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     </sect2>
     <sect2 id="Exporting_games_positions" xreflabel="Exporting games positions">
       <title>Exporting games/positions</title>
-      <para>GNU allows users to Export their games and matches into a variety of formats such as the Jellyfish formats, text format, not to mention PDF, LaTex, PostScript, and even HTML. Note that when exporting to these formats you get the moves, diagrams at each move, the analysis, and even the game/match statistics. In text format you'll see the boards in ASCII art, and in PDF, you'll literally get an instant e-book of the match. It also can export board positions and Gammonline HTML to the Windows clipboard for easy pasting.</para>
+      <para>GNU allows users to Export their games and matches into a variety of formats such as the Jellyfish formats, text format, not to mention PDF, LaTeX, PostScript, and even HTML. Note that when exporting to these formats you get the moves, diagrams at each move, the analysis, and even the game/match statistics. In text format you'll see the boards in ASCII art, and in PDF, you'll literally get an instant e-book of the match. It also can export board positions and Gammonline HTML to the Windows clipboard for easy pasting.</para>
     </sect2>
     <sect2 id="Windows_Clipboard_export" xreflabel="Windows Clipboard export">
       <title>Windows Clipboard export</title>
@@ -580,7 +580,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     </sect2>
     <sect2 id="HTML_export" xreflabel="HTML export">
       <title>HTML export</title>
-      <para>GNU is capable of creating elegant HTML files so that you can publish your games on the web. It will create them exactly according to your specifications, including the number of moves, what it analyzed, the board design of your choice, and even the match/game statistics. Here is a sample of what it looks like:</para>
+      <para>GNU is capable of creating elegant HTML files so that you can publish your games on the web. It will create them exactly according to your specifications, including the number of moves, what it analysed, the board design of your choice, and even the match/game statistics. Here is a sample of what it looks like:</para>
       <para>Move number 3: mamabear to play 31</para>
       <para>
         <inlinegraphic fileref="images/20d56757.png"/>
@@ -628,10 +628,10 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
       <para>3) Once you see the board and image in front of you, still in IE, go to the View menu and select Source... This will open a small window with a lot of code. Copy the entire contents to the body of the post you are writing, and the board and analysis should appear in the forum without any problems.</para>
     </sect2>
   </sect1>
-  <sect1 id="Analyzing_matches" xreflabel="Analyzing matches">
-    <title>Analyzing matches</title>
-    <para>GNU also comes with a set of functions that allow it to analyze a game or match, provide a detailed graded report, and allow you to navigate through the moves to quickly see the mistakes made.</para>
-    <para>Before starting, you'll want to configure the settings first, though this will only need to be done once. Go to Settings and select Analysis. A fairly large window will open, allowing you to play with as many settings as you could want. This is also where you set the thresholds for the Tutor mode (dubious, bad, etc.). Feel free to look around, but I simply set this to analyze checker play, cube decisions, and luck, and set the level of analysis at World Class for both checker play and cube decisions. The Move limit setting is to set the maximum number of moves it will display in the Hint window and the Analysis pane.</para>
+  <sect1 id="Analysing_matches" xreflabel="Analysing matches">
+    <title>Analysing matches</title>
+    <para>GNU also comes with a set of functions that allow it to analyse a game or match, provide a detailed graded report, and allow you to navigate through the moves to quickly see the mistakes made.</para>
+    <para>Before starting, you'll want to configure the settings first, though this will only need to be done once. Go to Settings and select Analysis. A fairly large window will open, allowing you to play with as many settings as you could want. This is also where you set the thresholds for the Tutor mode (dubious, bad, etc.). Feel free to look around, but I simply set this to analyse checker play, cube decisions, and luck, and set the level of analysis at World Class for both checker play and cube decisions. The Move limit setting is to set the maximum number of moves it will display in the Hint window and the Analysis pane.</para>
     <mediaobject>
       <imageobject>
         <imagedata align="center" fileref="images/3b2e620f.png"/>
@@ -640,11 +640,11 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     <tip>
       <para>Once more, please do not forget to save (Settings|Save settings) after making changes in the settings, or you will be forced to change them again the next time you start the program.</para>
     </tip>
-    <para>If you just played a match at an online server, import it first, then go to the Analyze menu and select Analyze match. If you only want to analyze a specific game, open it and then select Analyze game. Once started, you will see a bar in the bottom right corner showing the progress made in both the number of moves and percentage completed.</para>
+    <para>If you just played a match at an online server, import it first, then go to the Analyse menu and select Analyse match. If you only want to analyse a specific game, open it and then select Analyse game. Once started, you will see a bar in the bottom right corner showing the progress made in both the number of moves and percentage completed.</para>
   </sect1>
   <sect1 id="Analysis_Results_and_Grade" xreflabel="Analysis Results and Grade">
     <title>Analysis Results and Grade</title>
-    <para>Once GNU has finished analyzing your games, you'll want to see the report and then go over the bloopers. In the Analyze menu, select Match statistics, and a window will open. Feel free to resize it (clicking and dragging the edges) to show more information. It will show you the results of both players side by side, allowing you to quickly compare notes. </para>
+    <para>Once GNU has finished analysing your games, you'll want to see the report and then go over the bloopers. In the Analyse menu, select Match statistics, and a window will open. Feel free to resize it (clicking and dragging the edges) to show more information. It will show you the results of both players side by side, allowing you to quickly compare notes. </para>
     <mediaobject>
       <imageobject>
         <imagedata align="center" fileref="images/m3fd7ee24.png"/>
@@ -725,7 +725,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
         <imagedata align="center" fileref="images/m7bf4f29.png"/>
       </imageobject>
     </mediaobject>
-    <para>To add results to an existing account, or simply create a new account in which to add the results (of course you must first have an analyzed match open), go to the Analyze menu, and select Add to Player Records and Match statistics. If the account doesn't already exist, GNU will create it automatically and add the results. If you wish to remove an account, then click on the name in the Player Records, and press the Erase button.</para>
+    <para>To add results to an existing account, or simply create a new account in which to add the results (of course you must first have an analysed match open), go to the Analyse menu, and select Add to Player Records and Match statistics. If the account doesn't already exist, GNU will create it automatically and add the results. If you wish to remove an account, then click on the name in the Player Records, and press the Erase button.</para>
   </sect1>
   <sect1 id="Reviewing_moves_and_mistakes" xreflabel="Reviewing moves and mistakes">
     <title>Reviewing moves and mistakes</title>
@@ -738,7 +738,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <imagedata align="center" fileref="images/4b13a0e7.png"/>
         </imageobject>
       </mediaobject>
-      <para>It always shows the last move of the last game when you open or import a match. You can navigate backwards and forwards move-by-move with the green arrows, and game-by-game with the red arrows. If you use the buttons with the question marks on the green arrows, it will go from mistake-to-mistake. The side-by-side list with colored commentary (note that you must first analyze the match or move before) allows you to quickly overview who made more mistakes in a game, and identify what mistakes and how bad they were. Remember you can set the limits of what is considered a mistake by GNU in the Analysis options in the Settings menu.</para>
+      <para>It always shows the last move of the last game when you open or import a match. You can navigate backwards and forwards move-by-move with the green arrows, and game-by-game with the red arrows. If you use the buttons with the question marks on the green arrows, it will go from mistake-to-mistake. The side-by-side list with colored commentary (note that you must first analyse the match or move before) allows you to quickly overview who made more mistakes in a game, and identify what mistakes and how bad they were. Remember you can set the limits of what is considered a mistake by GNU in the Analysis options in the Settings menu.</para>
       <para>Here is a summary of what the colors and codes mean. The early versions of GNU didn't have the color coding, so they used punctuation marks, standard in chess notation, to describe the moves.</para>
       <para>!? indicates a dubious move</para>
       <para>? indicates a bad move, and</para>
@@ -758,7 +758,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     </sect2>
     <sect2 id="Hint_window__Analysis_pane" xreflabel="Hint window  Analysis pane">
       <title>Hint window &amp; Analysis pane</title>
-      <para>You can see the program's analysis either in the Hint window by pressing the <inlinegraphic fileref="images/m6e32590b.png"/> button on the toolbar, or in the Analysis pane after a game or move has been analyzed (see <xref linkend="Analyzing_matches"/> above). You will see a window open showing the best to worst moves from top to bottom or an analysis of the cube decision. </para>
+      <para>You can see the program's analysis either in the Hint window by pressing the <inlinegraphic fileref="images/m6e32590b.png"/> button on the toolbar, or in the Analysis pane after a game or move has been analysed (see <xref linkend="Analysing_matches"/> above). You will see a window open showing the best to worst moves from top to bottom or an analysis of the cube decision. </para>
       <tip>
         <para>GNU allows one to see the analysis in several forms, such as the GWC (Game winning chances) or MWC. In order to see it as shown below go to the Settings menu, select Options, then select the Display tab at the top. Set the last 3 choices as below:</para>
       </tip>
@@ -781,7 +781,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
             <para>Rank – As it's ranked 5th we know that GNU thinks it is only the 5th best move.</para>
           </listitem>
           <listitem>
-            <para>Type – It says Cubeful which means that it is taking into account the possibility that someone may double. This means that occasionally you may see several moves with an equity of -1.000 (see Equity below), despite significantly different winning percentiles, because it thinks that if they are played then the opponent will double, and you should pass. The 2-ply is the depth GNU analyzed the move.</para>
+            <para>Type – It says Cubeful which means that it is taking into account the possibility that someone may double. This means that occasionally you may see several moves with an equity of -1.000 (see Equity below), despite significantly different winning percentiles, because it thinks that if they are played then the opponent will double, and you should pass. The 2-ply is the depth GNU analysed the move.</para>
           </listitem>
           <listitem>
             <para>Win - This number is the percentage the move has to win the game. Thus the move played gives the player a 29.7% chance to win (including gammons and backgammons). </para>
@@ -812,7 +812,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           </listitem>
         </orderedlist>
         <para>As you can see, it shows the best moves considered, with the move actually played in red, plus the various equity scores for gammons, etc. Most players will focus on the last three, which are the total equity of the move, the difference in equity between the move played and the program's top choice, and what move is being evaluated. However, since GNU can't explain why one move is better than another, looking at the win percentage, and the respective percentages of gammon wins and gammon losses can help.</para>
-        <para>That's all nice and well for the Hint window, however the Analysis pane, if activated, will appear below the Game Record a bit differently. If you don't see it at all, be sure it is activated in the View menu. Remember also that you must first have analyzed moves or games (<menuchoice><guimenu>Analyze</guimenu><guimenuitem>Analyze match</guimenuitem></menuchoice>) for it to display anything.</para>
+        <para>That's all nice and well for the Hint window, however the Analysis pane, if activated, will appear below the Game Record a bit differently. If you don't see it at all, be sure it is activated in the View menu. Remember also that you must first have analysed moves or games (<menuchoice><guimenu>Analyse</guimenu><guimenuitem>Analyse match</guimenuitem></menuchoice>) for it to display anything.</para>
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="images/5308d35c.png"/>
@@ -837,15 +837,15 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
       <sect3 id="Other_analysis_functions" xreflabel="Other analysis functions">
         <title>Other analysis functions</title>
         <para>If you'd like to copy the analysis of a move(s) or cube decision to a document, highlight the moves that interest you, and press Copy. If you want to highlight more than one, keep the Ctrl key pressed while selecting the moves. Then paste it where you wish. Don't forget to change the font to Courier New size 9 or 10 if you wish to maintain the formatting.</para>
-        <para>If you'd like to see how the different moves it analyzed appear on the board, press the Show button. </para>
+        <para>If you'd like to see how the different moves it analysed appear on the board, press the Show button. </para>
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="images/m1921b4.png"/>
           </imageobject>
         </mediaobject>
-        <para>Now just click on a move you want to see in the list of analyzed moves and the board will display it. To see another move, just click on it. This allows you to quickly see and compare the moves it analyzed. To exit Show mode to be able to analyze the moves or run rollouts, click on the Show button again.</para>
+        <para>Now just click on a move you want to see in the list of analysed moves and the board will display it. To see another move, just click on it. This allows you to quickly see and compare the moves it analysed. To exit Show mode to be able to analyse the moves or run rollouts, click on the Show button again.</para>
         <para>You'll also note a button called the Temp. Map <inlinegraphic fileref="images/m707a2772.png"/>. This is a powerful tool conceived and developed by Sho Sengoku. Please refer to the <xref linkend="Temperature_Map"/> section for details.</para>
-        <para>You may also want to have GNU analyze a few select moves a bit deeper. To do this you can have it go a 3rd ply, a 4th ply, or even do a rollout. To do a 3-ply or 4-ply analysis, select the moves you want analyzed, and then press the <inlinegraphic fileref="images/m22b92249.png"/> or <inlinegraphic fileref="images/3117171e.png"/>. Let's have it do a 3-ply analysis of the three moves highlighted above. Just click on the number <emphasis>3</emphasis> and it will do a 3-ply analysis. Be a little patient as 3 plies is considerably slower than 2 plies, but it shouldn't be too long. If you want to customize the evaluator, click on the button indicated with a small red circle <inlinegraphic fileref="images/m2a94f4ab.png"/>, and change the parameters you want. Now just click on the Eval button, and let it compute its results. You may also prefer to see the Match Winning Chances of the moves instead of the equity. This shows the chances of winning the match as opposed to the evaluation according to a single game. To do so, press the MWC button:</para>
+        <para>You may also want to have GNU analyse a few select moves a bit deeper. To do this you can have it go a 3rd ply, a 4th ply, or even do a rollout. To do a 3-ply or 4-ply analysis, select the moves you want analysed, and then press the <inlinegraphic fileref="images/m22b92249.png"/> or <inlinegraphic fileref="images/3117171e.png"/>. Let's have it do a 3-ply analysis of the three moves highlighted above. Just click on the number <emphasis>3</emphasis> and it will do a 3-ply analysis. Be a little patient as 3 plies is considerably slower than 2 plies, but it shouldn't be too long. If you want to customize the evaluator, click on the button indicated with a small red circle <inlinegraphic fileref="images/m2a94f4ab.png"/>, and change the parameters you want. Now just click on the Eval button, and let it compute its results. You may also prefer to see the Match Winning Chances of the moves instead of the equity. This shows the chances of winning the match as opposed to the evaluation according to a single game. To do so, press the MWC button:</para>
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="images/53ce0fa6.png"/>
@@ -909,7 +909,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <imagedata align="center" fileref="images/m19f9a2cc.png"/>
         </imageobject>
       </mediaobject>
-      <para>In the above figure the setting is 11 plies, so GNU will play out 11 moves, stop and evaluate the resulting position, and then start the next trial. This is far faster of course, and is particularly desirable if you want to analyze using a 2-ply playing strength which might be too slow for a full rollout.</para>
+      <para>In the above figure the setting is 11 plies, so GNU will play out 11 moves, stop and evaluate the resulting position, and then start the next trial. This is far faster of course, and is particularly desirable if you want to analyse using a 2-ply playing strength which might be too slow for a full rollout.</para>
     </sect2>
     <sect2 id="Evaluation_for_later_plies" xreflabel="Evaluation for later plies">
       <title>Evaluation for later plies</title>
@@ -1134,7 +1134,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     </sect2>
     <sect2 id="Stopping_and_continuing_rollouts" xreflabel="Stopping and continuing rollouts">
       <title>Stopping and continuing rollouts</title>
-      <para>If you are running a rollout but must stop it before reaching a satisfactory answer, you can stop the rollout and then continue it later. After stopping the rollout, save it. When you open it and go back to the move, if it is a checker play, select the moves you had been analyzing (or only the ones you want to continue) and just press the Rollout button. There is no need to reset the settings, as GNU will remember the exact same settings it had been using when it first began the rollout.</para>
+      <para>If you are running a rollout but must stop it before reaching a satisfactory answer, you can stop the rollout and then continue it later. After stopping the rollout, save it. When you open it and go back to the move, if it is a checker play, select the moves you had been analysing (or only the ones you want to continue) and just press the Rollout button. There is no need to reset the settings, as GNU will remember the exact same settings it had been using when it first began the rollout.</para>
     </sect2>
     <sect2 id="Copy_and_Paste_results" xreflabel="Copy and Paste results">
       <title>Copy and Paste results</title>
@@ -1248,7 +1248,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
         </imageobject>
       </mediaobject>
       <para>if you have 5 white checkers on the 19-point and only want to have 3, click with the right mouse button on the 3rd checker where the yellow arrow indicates and the top two will be removed. Adding checkers is the same, so if you wanted to add a red checker to the 6-point you would place the cursor where the green arrow indicates and left-click. If you want to quickly get the starting position, you can click on the area indicated by the blue ellipses on the left, and if you want to quickly clear the board of all checkers, click instead on the right side on the area indicated by the pink ellipses. Try it and experiment a little. It's much easier to do than to explain.</para>
-      <para>Once the position is set up, press the Edit button again to exit Edit mode. Now just go to the Analyze menu and select Hint (suggested even for rollouts). Attention, this isn't a suggestion, you must exit the Edit mode before asking for GNU to evaluate the position otherwise you will get odd results.</para>
+      <para>Once the position is set up, press the Edit button again to exit Edit mode. Now just go to the Analyse menu and select Hint (suggested even for rollouts). Attention, this isn't a suggestion, you must exit the Edit mode before asking for GNU to evaluate the position otherwise you will get odd results.</para>
     </sect2>
   </sect1>
   <sect1 id="Appearance" xreflabel="Appearance">

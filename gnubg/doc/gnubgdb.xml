@@ -84,10 +84,10 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     </sect1info>
     <title>Introduction</title>
     <para>This manual describes how to use <application moreinfo="none">GNU
-        Backgammon</application> to play and analyze backgammon games and
+        Backgammon</application> to play and analyse backgammon games and
       matches. It corresponds to version 1.00.0 (updated in August, 2013).</para>
     <para><application moreinfo="none">GNU Backgammon</application> (gnubg)
-      plays and analyzes both money game sessions and tournament matches. It
+      plays and analyses both money game sessions and tournament matches. It
       evaluates and rolls out positions, and much more. Driven by a command-line
       interface, it displays an ASCII rendering of a board on text-only terminals,
       but also allows the user to play games and manipulate positions with a
@@ -166,7 +166,7 @@ gnubg moves 8/5 6/5.
         <para>Record keeping of player statistics in games and matches using relational databases (SQLite, MySQL, and PostgreSQL are supported).</para>
       </listitem>
       <listitem>
-        <para>Loading and saving analyzed games and matches as .sgf files (Smart
+        <para>Loading and saving analysed games and matches as .sgf files (Smart
           Game Format).</para>
       </listitem>
       <listitem>
@@ -721,7 +721,7 @@ To start a new match in the CL version type 'new match' or
         </listitem>
         <listitem>
           <para><application>GNU Backgammon</application> comes with a tutor
-            mode. If this mode is active, GNU Backgammon analyzes each move you
+            mode. If this mode is active, GNU Backgammon analyses each move you
             do, and warn you each time you make a mistake. More about tutor mode
             later.</para>
         </listitem>
@@ -870,7 +870,7 @@ To roll the dice the CL version type 'roll'.
       <title>Getting checker play hints while playing</title>
       <para>If you want to get a hint of the best move or the best cube action
               press the Hint button in the tool bar or the menu option
-              <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Hint</guimenuitem></menuchoice>.
+              <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Hint</guimenuitem></menuchoice>.
               This will open a hint window.</para>
       <figure float="0" id="gnubg-fig_hint">
         <title>The hint window</title>
@@ -912,7 +912,7 @@ To roll the dice the CL version type 'roll'.
             different winning percentiles. This is because it thinks that if any
             of these moves are played then the opponent will double and you
             should pass. The n-ply is the depth to which <application>GNU
-              Backgammon</application> analyzed the move. </para>
+              Backgammon</application> analysed the move. </para>
         </listitem>
         <listitem>
           <para><emphasis>Win</emphasis> is the fractions of games that
@@ -1089,7 +1089,7 @@ To roll the dice the CL version type 'roll'.
         </mediaobject>
       </figure>
       <para>In Tutor Mode, <application>GNU Backgammon</application> will
-        analyze your moves and/or cube decisions and compare them with its
+        analyse your moves and/or cube decisions and compare them with its
         choices. You set the threshold for its alerts, for example, if you set
         it for bad then it will only warn you when you make a bad mistake. It
         will then allow you to re-examine your choice, go right ahead with it,
@@ -1300,22 +1300,22 @@ To roll the dice the CL version type 'roll'.
     </sect2>
     <sect2 id="gnubg-edit_exit">
       <title>Exiting Edit mode</title>
-      <para>Before you can start analyzing the position you have to exit edit
+      <para>Before you can start analysing the position you have to exit edit
         mode. This is done by releasing the Edit button in the toolbar by
         clicking it. Note that editing a position destroys your game record with
         no warning, so it might be an idea to save your match if you want to
         keep it.</para>
     </sect2>
-    <sect2 id="gnubg-edit_analyze">
-      <title>Analyzing the position</title>
+    <sect2 id="gnubg-edit_analyse">
+      <title>Analysing the position</title>
       <para>After you have successfully set up the position you desire, you can
-        now analyze the position. You can click Hint in the toolbar to get the
+        now analyse the position. You can click Hint in the toolbar to get the
         best move of cube decision in the same way as described in the chapter
         called <xref linkend="gnubg-playing"/>. Hint, rollouts and evaluations done
         from the hint window will not be saved if you try to save the position.
-        If you want to analyze the position and then be able to save the
+        If you want to analyse the position and then be able to save the
         position and the analysis results you should rather do a move and then
-        click back to the move and then choose <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Analyze move</guimenuitem></menuchoice> for the menu. You can then work in the analysis pane on
+        click back to the move and then choose <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Analyse move</guimenuitem></menuchoice> for the menu. You can then work in the analysis pane on
         the right side instead of in the hint window.</para>
       <para>You can enter checkers on a point by clicking on the point. Notice
         the amount of checkers you add on a point, depends on where on that
@@ -1607,7 +1607,7 @@ To roll the dice the CL version type 'roll'.
           Backgammon</application>'s opinion while you are entering the moves,
         play the move on the board and press the Hint button in the tool bar. In
         the latest builds, if you have done this, the results will then be
-        placed with the move so that it means it is already analyzed when you
+        placed with the move so that it means it is already analysed when you
         run the full match analysis. Mind you, it will preserve the information
         even if you ran a deeper 3-ply or 4-ply from the Hint window. After
         playing the move and confirming the dice, go back in the move list and
@@ -1652,26 +1652,26 @@ To roll the dice the CL version type 'roll'.
       </sect3>
     </sect2>
     <sect2 id="gnubg-matches_analysing">
-      <title>Analyzing matches</title>
-      <para><application>GNU Backgammon</application> can analyze your matches
+      <title>Analysing matches</title>
+      <para><application>GNU Backgammon</application> can analyse your matches
         for skill and luck. If you have an open match (as a result of playing,
-        loading or importing), the analysis is started by choosing <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Analyze match</guimenuitem></menuchoice>. You should now see a progress bar at the bottom right
+        loading or importing), the analysis is started by choosing <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Analyse match</guimenuitem></menuchoice>. You should now see a progress bar at the bottom right
         corner of the main interface window while the computer is busy
-        analyzing. During this time you won't be able to interact with the
+        analysing. During this time you won't be able to interact with the
         program other than to quit the analysis. The analysis is complete when
         the progress bar disappears and you hear a small sound. Now, you would
         probably like to view the result of the analysis. This can be done in
-        terms of overall statistics by choosing <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Match statistics</guimenuitem></menuchoice>, or in detail by browsing through the match. More on these
+        terms of overall statistics by choosing <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Match statistics</guimenuitem></menuchoice>, or in detail by browsing through the match. More on these
         subjects in the upcoming sections.</para>
-      <para>You can also analyze just the current game, by choosing <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Analyze game</guimenuitem></menuchoice>. If you're only interested in the analysis of the current
-        move, you can select <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Analyze move</guimenuitem></menuchoice>.</para>
+      <para>You can also analyse just the current game, by choosing <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Analyse game</guimenuitem></menuchoice>. If you're only interested in the analysis of the current
+        move, you can select <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Analyse move</guimenuitem></menuchoice>.</para>
       <sect3 id="gnubg-matches_analysing_settings">
         <title>Analysis settings</title>
         <para>You can configure how <application>GNU Backgammon</application>
         analysis the match or game for you. This can be configured in the dialog
         box that appears when choose <menuchoice><guimenu>Settings</guimenu><guimenuitem>Analysis</guimenuitem></menuchoice>.</para>
-        <figure float="0" id="gnubg-fig_analyze">
-          <title>Analyze settings dialog</title>
+        <figure float="0" id="gnubg-fig_analyse">
+          <title>Analyse settings dialog</title>
           <mediaobject>
             <imageobject>
               <imagedata fileref="images/analysesettings.png"/>
@@ -1682,7 +1682,7 @@ To roll the dice the CL version type 'roll'.
           </mediaobject>
         </figure>
         <para>In the top left frame in this dialog box, you can select what to
-        analyze. <application>GNU Backgammon</application> is able to analyze
+        analyse. <application>GNU Backgammon</application> is able to analyse
         three different properties in a match.</para>
         <orderedlist continuation="restarts" inheritnum="ignore">
           <listitem>
@@ -1695,13 +1695,13 @@ To roll the dice the CL version type 'roll'.
             <para>Luck of each roll </para>
           </listitem>
         </orderedlist>
-        <para>In addition you can have the analysis to analyze just one of the
+        <para>In addition you can have the analysis to analyse just one of the
         players, or both. There is also possible to set a limit of how many
-        moves to be analyzed at each position. When you're reviewing your match,
-        the number of analyzed moves will be limited to number in this field.
-        However, if you want to analyze further moves in a particular position,
+        moves to be analysed at each position. When you're reviewing your match,
+        the number of analysed moves will be limited to number in this field.
+        However, if you want to analyse further moves in a particular position,
         it's not a problem to do that later. The move that was actually done in
-        the match will be analyzed even if it is ranked below the number of
+        the match will be analysed even if it is ranked below the number of
         moves limit.</para>
         <para><application>GNU Backgammon</application> will also mark each move
         or cube decision with Doubtful, Bad and Very bad. You can adjust the
@@ -1723,7 +1723,7 @@ To roll the dice the CL version type 'roll'.
       <title>Reviewing matches</title>
       <sect3 id="gnubg-matches_review_record">
         <title>Game record</title>
-        <para>When a match is analyzed in <application>GNU
+        <para>When a match is analysed in <application>GNU
           Backgammon</application> you should open the <emphasis>game
           record</emphasis> window. Open this by checking <menuchoice><guimenu>Window</guimenu><guimenuitem>Game record</guimenuitem></menuchoice> on from the main menu. The game record window can also
           be docked into the right side panel. If you want it docked into the
@@ -1850,8 +1850,8 @@ To roll the dice the CL version type 'roll'.
           appear under the game record. The analysis window is basically the
           same as the Hint window described in the "[[Playing a game or match]]"
           chapter.</para>
-        <figure float="0" id="gnubg-fig_analyzepane">
-          <title>The Analyze pane</title>
+        <figure float="0" id="gnubg-fig_analysepane">
+          <title>The Analyse pane</title>
           <mediaobject>
             <imageobject>
               <imagedata fileref="images/analysepane.png"/>
@@ -1911,7 +1911,7 @@ To roll the dice the CL version type 'roll'.
           session analysis. The game analysis is a summary for the current game
           whereas the match or session statistics is a summary of all the games
           in the match or session. The match analysis is available in the GUI
-          from <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Match Statistics</guimenuitem></menuchoice> or at the bottom of exported files.</para>
+          from <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Match Statistics</guimenuitem></menuchoice> or at the bottom of exported files.</para>
         <sect4 id="gnubg-matches_review_stat_check">
           <title>Checker play statistics</title>
           <para>This section provides a summary of the checker play statistics.
@@ -2203,7 +2203,7 @@ To roll the dice the CL version type 'roll'.
                 he due to the extra luck has the possibly to give up even more
                 MWC. However, <application>GNU Backgammon</application> will
                 report this number as 100%, and 0% for the opposite situation.
-                Note that this number is biased towards the analyzing bot, e.g.,
+                Note that this number is biased towards the analysing bot, e.g.,
                 a 0-ply analysis a game between GNU Backgammon 2-ply and 0-ply
                 will suggest that 0-ply is a favorite, which it is clearly not.
                 For an unbiased measure use the <emphasis>luck adjusted
@@ -2528,11 +2528,11 @@ To roll the dice the CL version type 'roll'.
       </sect3>
       <sect3 id="gnubg-custom_eval_analysis">
         <title>Analysis:</title>
-        <para><menuchoice><guimenu>Settings</guimenu><guimenuitem>Analysis</guimenuitem></menuchoice> - these settings are used by the Analyze Move/Game/Match
+        <para><menuchoice><guimenu>Settings</guimenu><guimenuitem>Analysis</guimenuitem></menuchoice> - these settings are used by the Analyse Move/Game/Match
           or Session command. Note that this is totally different to what is
           used in the Hint command, which uses the above settings. You probably
           want at least World Class here. My experience on a 700MHz PC is that a
-          7 point match takes about 15 to 20 minutes to analyze on the Supremo
+          7 point match takes about 15 to 20 minutes to analyse on the Supremo
           settings. But the results tend to be very accurate.</para>
       </sect3>
       <sect3 id="gnubg-custom_eval_rollout">
@@ -2643,12 +2643,12 @@ To roll the dice the CL version type 'roll'.
           <title>Introduction to move filters</title>
           <para><application>GNU Backgammon</application> uses a technique
             called move filters in order to prune the complete list of legal
-            moves when analyzing checker play decisions.</para>
+            moves when analysing checker play decisions.</para>
           <para>A move filter for a given ply, say, 2-ply, consists of four
             parameters for each sub ply:</para>
           <orderedlist continuation="restarts" inheritnum="ignore">
             <listitem>
-              <para>whether to analyze at all at this sub ply, </para>
+              <para>whether to analyse at all at this sub ply, </para>
             </listitem>
             <listitem>
               <para>the number of moves always accepted at the given level,
@@ -2663,7 +2663,7 @@ To roll the dice the CL version type 'roll'.
           </orderedlist>
           <para>A move filter for a given ply, say, 2-ply, consists of four
             parameters for each sub ply:</para>
-          <para>whether to analyze at all at this sub ply, the number of moves
+          <para>whether to analyse at all at this sub ply, the number of moves
             always accepted at the given level, the number of extra moves to
             add, the threshold for adding extra moves. For example, for 2-ply
             checker play decisions there are two move filters: one for pruning
@@ -2922,7 +2922,7 @@ To roll the dice the CL version type 'roll'.
             facilitate fast decisions and analysis, i.e., no need to waste much
             time over obvious moves.</para>
           <para>For post-mortem analysis it may be worthwhile to ensure that GNU
-            Backgammon analyzes at least two moves at the specified ply. To do
+            Backgammon analyses at least two moves at the specified ply. To do
             this, specify accept 2 moves in the move filters you use for
             analysis. However, do note that <application>GNU
             Backgammon</application> will force evaluation at the specified ply
@@ -2938,7 +2938,7 @@ To roll the dice the CL version type 'roll'.
             press the Modify... button.</para>
           <para>Although the predefined levels, such as World Class, Supremo,
             etc. are tested and good, you may want to know or control how GNU
-            filters its moves to analyze and how many.</para>
+            filters its moves to analyse and how many.</para>
           <figure float="0" id="gnubg-fig_movefilter1">
             <title>Move filter 1</title>
             <mediaobject>
@@ -2963,16 +2963,16 @@ To roll the dice the CL version type 'roll'.
             that depth.</para>
           <para>In the figure above, we can see it first will Always accept 0
             moves. This first line means that it won't force any moves to be
-            analyzed at 2-ply, it will only analyze moves according to the
-            second line. If it had said it would always analyze 2 moves, this
+            analysed at 2-ply, it will only analyse moves according to the
+            second line. If it had said it would always analyse 2 moves, this
             would mean that no matter how ridiculously bad the 2nd move was
-            compared to the 1st, it would analyze both at 2-ply.</para>
+            compared to the 1st, it would analyse both at 2-ply.</para>
           <para>The second line says it will Add extra 16 moves within 0.320.
             This means that provided they aren't more than 0.320 equity worse
-            than the top move, it will select a maximum of 16 moves to analyze
+            than the top move, it will select a maximum of 16 moves to analyse
             at 2-ply. For example, in the figure below, the 2nd best move is no
             less than 0.453 equity worse than the top choice, so it didn't
-            bother analyzing them at 2-ply as it is unlikely to change its mind
+            bother analysing them at 2-ply as it is unlikely to change its mind
             on what the best move is.</para>
           <figure float="0" id="gnubg-fig_movefilter2">
             <title>Move filter 2</title>
@@ -2999,10 +2999,10 @@ To roll the dice the CL version type 'roll'.
           </figure>
           <para>Here, the exact same settings were maintained, but the 1-ply
             filter was activated. This just means that those 16 moves selected
-            from the 0-ply are sent instead to be analyzed at 1-ply, and then up
-            to 5 moves from 1-ply will be sent to be analyzed at 2-ply. So this
+            from the 0-ply are sent instead to be analysed at 1-ply, and then up
+            to 5 moves from 1-ply will be sent to be analysed at 2-ply. So this
             would actually be faster than the previous setting (and weaker),
-            since a maximum of only 5 moves would be analyzed at 2-ply depth.</para>
+            since a maximum of only 5 moves would be analysed at 2-ply depth.</para>
           <para>Tip: Feel free to experiment with the settings, as you can
             always reset them by simply choosing one of the predefined levels.
             In order to see if they are better, or as good but faster, I'd
@@ -3606,7 +3606,7 @@ Correct cube action: No double, beaver
         <para>game</para>
         <para>A Sequence of actions.</para>
         <para>stats (optional)</para>
-        <para>Game statistics. Similar entries to <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Game statistics</guimenuitem></menuchoice> from the GUI. </para>
+        <para>Game statistics. Similar entries to <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Game statistics</guimenuitem></menuchoice> from the GUI. </para>
       </sect3>
       <sect3 id="gnubg-tech_python_gameaction">
         <title>Game actions</title>
@@ -3842,7 +3842,7 @@ Equity
         <para>For match play there is no simple formula, since redoubles can
           only occur a limited number of times.</para>
         <para>The live cube take point is generally calculated as</para>
-        <para>TP(live, n Cube)=TP(dead, n cube) * (1 - TP(live, 2n cube))</para>
+        <para>TP(live, n Cube)=TP(effective, n cube) * (1 - TP(live, 2n cube))</para>
         <para>So to calculate the live cube take points for a 1-cube at 3-0 to 7
           we need the live cube take points for the 4-cube and the 2-cube. For
           the position above and using Woolsey's match equity table the live
@@ -4413,7 +4413,7 @@ Equity
           </listitem>
           <listitem>
             <para>Bit 22 to 36 is the match length. The maximum value for the
-              match length is 32767. A match score of zero indicates that the
+              match length is 32767. A match length of zero indicates that the
               game is a money game. </para>
           </listitem>
           <listitem>
@@ -4592,7 +4592,7 @@ Equity
       <sect3 id="gnubg-faq_general_gnubg">
         <title>What is <application>GNU Backgammon</application>?</title>
         <para><application>GNU Backgammon</application> (gnubg) is a program for
-          playing and analyzing backgammon positions, games and matches. It's
+          playing and analysing backgammon positions, games and matches. It's
           based on a neural network. You may play <application>GNU
           Backgammon</application> using the command line or a graphical
           interface based on GTK+.</para>
@@ -4709,7 +4709,7 @@ Equity
         CPU only. It doesn't need much memory (any machine not totally obsolete
         will have enough) and does little or no I/O (a fast disk or a SSD won't make any difference).
         </para>
-        <para>The table below lists CPUs and the result of the command <menuchoice><guimenu>Analyze</guimenu><guimenuitem>Evaluation Speed</guimenuitem></menuchoice>, showing the relative speed of various processors.
+        <para>The table below lists CPUs and the result of the command <menuchoice><guimenu>Analyse</guimenu><guimenuitem>Evaluation speed</guimenuitem></menuchoice>, showing the relative speed of various processors.
         Note that these numbers are not directly comparable with those given by the similar command from <application>eXtreme Gammon</application>.
         </para>
         <informaltable frame="all">
@@ -5070,9 +5070,9 @@ Equity
         <para>It's possible that Snowie's is a <emphasis>playing</emphasis> ply
           while gnubg's is a <emphasis>position evaluation</emphasis> ply. When
           playing at 1-ply Snowie will make each possible move for the player's
-          roll (that's 1 ply) and analyze the resulting positions. Playing at
+          roll (that's 1 ply) and analyse the resulting positions. Playing at
           2-ply it will take each of those positions and make all the opponent
-          moves for all possible rolls (the 2nd ply) and then analyze the
+          moves for all possible rolls (the 2nd ply) and then analyse the
           resulting positions. In <application>GNU Backgammon</application> the
           initial set of possible moves is taken for granted, i.e. not counted
           as a ply, because gnubg's plies are position evaluation plies. Thus,
@@ -5080,11 +5080,11 @@ Equity
           discounting of the first set of moves perhaps makes the counting seem
           funny.</para>
         <para>Looking at it a different way, if you give <application>GNU
-            Backgammon</application> a position and analyze it at 1-ply, it will
+            Backgammon</application> a position and analyse it at 1-ply, it will
           make all the moves for all possible rolls (the 1st ply) and then
-          analyze the resulting positions. With Snowie it will assume that the
+          analyse the resulting positions. With Snowie it will assume that the
           position arose from a move (that's a pretend 1st ply) then make all
-          the moves for all possible rolls (the 2nd ply) and analyze them. This
+          the moves for all possible rolls (the 2nd ply) and analyse them. This
           time it's Snowie that seems to be counting strangely.</para>
       </sect3>
       <sect3 id="gnubg-faq_settings_noise">
@@ -5095,7 +5095,7 @@ Equity
       </sect3>
     </sect2>
     <sect2 id="gnubg-faq_analysing">
-      <title>Analyzing</title>
+      <title>Analysing</title>
       <sect3 id="gnubg-faq_analysing_id">
         <title>What are these funny letters at the right bottom?</title>
         <para>You will find a small window titled `GNUbg ID'
@@ -5134,7 +5134,7 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_analysing_error">
         <title>What do <emphasis>!</emphasis> and <emphasis>?</emphasis> mean?</title>
-        <para>After analyzing a game or a match <application>GNU
+        <para>After analysing a game or a match <application>GNU
           Backgammon</application> is able to do some comments on checker play
           or cube decisions. Open the menu `Window, Game record' and you will
           see a list of the moves. If the actual move or cube decision differs
@@ -5212,8 +5212,8 @@ Equity
             </tbody>
           </tgroup>
         </informaltable>
-        <para>After analyzing a game, match or session you can see the summary
-          in the menu `Analyze, ... statistics'. Note that you can't change the
+        <para>After analysing a game, match or session you can see the summary
+          in the menu `Analyse, ... statistics'. Note that you can't change the
           ranges of these values.</para>
       </sect3>
       <sect3 id="gnubg-faq_analysing_pips">
@@ -5302,7 +5302,7 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_abbr_dp">
         <title>DP?</title>
-        <para>In the menu `Analyze, Game/Match/Session statistics' you will see
+        <para>In the menu `Analyse, Game/Match/Session statistics' you will see
           a window with some statistics. Near the bottom, you'll see four lines
           beginning with `Missed ... and Wrong ...'. <emphasis>dp</emphasis>
           means <emphasis>doubling point</emphasis> and describes a situation in
