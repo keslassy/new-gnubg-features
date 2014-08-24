@@ -34,8 +34,8 @@
     <para>
             <application moreinfo="none">GNU Backgammon</application> <citerefentry> <refentrytitle> gnubg </refentrytitle>
                     <manvolnum>6</manvolnum> </citerefentry>
-            plays and analyzes backgammon games and matches. It is able to play and
-            analyze both money games and tournament matches, evaluate and roll out
+            plays and analyses backgammon games and matches. It is able to play and
+            analyse both money games and tournament matches, evaluate and roll out
             positions, and more.
     </para>
 </refsect1>

@@ -415,11 +415,11 @@ CommandRelationalAddMatch(char *sz)
         return;
     }
 
-    /* Warn if match is not finished or fully analyzed */
+    /* Warn if match is not finished or fully analysed */
     if (!quiet && !GameOver())
         strcat(warnings, _("The match is not finished\n"));
     if (!quiet && !MatchAnalysed())
-        strcat(warnings, _("All of the match is not analyzed\n"));
+        strcat(warnings, _("All of the match is not analysed\n"));
 
     if (*warnings) {
         strcat(warnings, _("\nAdd match anyway?"));
