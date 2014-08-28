@@ -530,7 +530,7 @@ CommandShowCache(char *UNUSED(sz))
 
     EvalCacheStats(&c, &cLookup, &cHit);
 
-    outputf(_("%d cache entries have been used. %d lookups, %d hits"), c, cLookup, cHit);
+    outputf(_("%u cache entries have been used. %u lookups, %u hits"), c, cLookup, cHit);
 
     if (cLookup)
         outputf(" (%4.1f%%).", (float)cHit * 100.0f / (float)cLookup);
