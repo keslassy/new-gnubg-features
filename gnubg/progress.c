@@ -736,7 +736,10 @@ GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
     rolloutprogress *prp = (rolloutprogress *) g_malloc(sizeof(rolloutprogress));
     *pp = prp;
     prp->prs = (rolloutstat *) aars;
+    if (aars)
+        memset(aars, 0, 2 * n * sizeof(rolloutstat));
     prp->n = n;
+    prp->nGamesDone = 0;
     prp->stopped = 0;
     fInterrupt = FALSE;
 
@@ -786,8 +789,6 @@ GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
 
     gtk_box_pack_start(GTK_BOX(pwVbox), prp->pwRolloutResult, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(pwVbox), prp->pwRolloutProgress, FALSE, FALSE, 0);
-
-
 
     /* time elapsed and left */
 
