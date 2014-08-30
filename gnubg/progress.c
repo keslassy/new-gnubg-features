@@ -238,7 +238,7 @@ create_win_model(const rolloutstat * prs, int cGames, int *cGamesCount)
         *cGamesCount += anTotal[j];
     }
     gtk_list_store_append(store, &iter);
-    gtk_list_store_set(store, &iter, 0, "%%", 1, s[0], 2, s[1], 3, s[2], 4, s[3], 5, s[4], 6, s[5], -1);
+    gtk_list_store_set(store, &iter, 0, "", 1, s[0], 2, s[1], 3, s[2], 4, s[3], 5, s[4], 6, s[5], -1);
     for (j = 0; j < 6; j++)
         g_free(s[j]);
 
@@ -270,7 +270,17 @@ GTKStatPageWin(const rolloutstat * prs, const int cGames)
 
     gtk_box_pack_start(GTK_BOX(pw), treeview, TRUE, TRUE, 0);
 
-    sz = g_strdup_printf(_("%d/%d games truncated"), (cGames - cGamesCount), cGames);
+    /* Truncated should be the number of games truncated at the
+     * 2-sided bearoff database, but there is another possible
+     * discrepancy between cGames and cGamesCount for cube rollouts :
+     * one of the double/no-double branch could have had up to
+     * nthreads less trials than the other, leading to a negative
+     * number here if there is no truncation, like in match play.
+     * Don't display this but a 0 instead.
+     */
+    sz = g_strdup_printf(_("%d/%d games truncated"), ((cGames - cGamesCount) >= 0 ? (cGames - cGamesCount) : 0),
+                         cGames);
+
     pwLabel = gtk_label_new(sz);
     gtk_box_pack_start(GTK_BOX(pw), pwLabel, FALSE, FALSE, 4);
     g_free(sz);
@@ -319,7 +329,7 @@ create_cube_model(const rolloutstat * prs, int cGames, int *anTotal)
     for (j = 0; j < 4; j++)
         s[j] = g_strdup_printf("%6.2f%%", 100.0 * (float) anTotal[j] / (float) cGames);
     gtk_list_store_append(store, &iter);
-    gtk_list_store_set(store, &iter, 0, "%%", 1, s[0], 2, s[1], 3, s[2], 4, s[3], -1);
+    gtk_list_store_set(store, &iter, 0, "", 1, s[0], 2, s[1], 3, s[2], 4, s[3], -1);
     for (j = 0; j < 4; j++)
         g_free(s[j]);
 
