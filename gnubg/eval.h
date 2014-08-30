@@ -89,7 +89,7 @@ typedef struct {
     /* FIXME expand this... e.g. different settings for different position
      * classes */
     unsigned int fCubeful:1;    /* cubeful evaluation */
-    unsigned int nPlies:3;
+    unsigned int nPlies:4;
     unsigned int fUsePrune:1;
     unsigned int fDeterministic:1;
     float rNoise;               /* standard deviation */
@@ -108,7 +108,6 @@ typedef struct {
 #define SGF_FORMAT_VER 3
 
 typedef struct {
-
     evalcontext aecCube[2], aecChequer[2];      /* evaluation parameters */
     evalcontext aecCubeLate[2], aecChequerLate[2];      /* ... for later moves */
     evalcontext aecCubeTrunc, aecChequerTrunc;  /* ... at truncation point */
@@ -141,7 +140,6 @@ typedef struct {
     int nSkip;
 } rolloutcontext;
 
-
 typedef struct {
     float rEquity;
     float rJSD;
@@ -153,17 +151,14 @@ typedef enum {
     EVAL_NONE, EVAL_EVAL, EVAL_ROLLOUT
 } evaltype;
 
-
 /* enumeration of variations of backgammon
  * (starting position and/or special rules) */
-
 
 extern bgvariation bgvDefault;
 
 extern int anChequers[NUM_VARIATIONS];
 extern const char *aszVariations[NUM_VARIATIONS];
 extern const char *aszVariationCommands[NUM_VARIATIONS];
-
 
 /*
  * Cubeinfo contains the information necesary for evaluation
@@ -190,12 +185,10 @@ typedef struct {
     bgvariation bgv;
 } cubeinfo;
 
-
 typedef struct {
     evaltype et;
     evalcontext ec;
     rolloutcontext rc;
-
 } evalsetup;
 
 typedef enum {
@@ -241,7 +234,6 @@ typedef enum {
 
 extern const char *aszDoubleTypes[NUM_DOUBLE_TYPES];
 
-
 /*
  * prefined settings
  */
@@ -261,7 +253,6 @@ extern evalcontext aecSettings[NUM_SETTINGS];
 extern evalcontext ecBasic;
 extern int aiSettingsMoveFilter[NUM_SETTINGS];
 extern const char *aszSettings[NUM_SETTINGS];
-
 
 #define NUM_MOVEFILTER_SETTINGS 5
 
@@ -429,7 +420,6 @@ extern float
 extern float
  UtilityME(float ar[NUM_OUTPUTS], const cubeinfo * pci);
 
-
 extern int
  SetCubeInfoMoney(cubeinfo * pci, const int nCube, const int fCubeOwner,
                  const int fMove, const int fJacoby, const int fBeavers, const bgvariation bgv);
@@ -550,7 +540,6 @@ extern int
  equal_movefilters(movefilter aamf1[MAX_FILTER_PLIES][MAX_FILTER_PLIES],
                   movefilter aamf2[MAX_FILTER_PLIES][MAX_FILTER_PLIES]);
 
-
 extern doubletype DoubleType(const int fDoubled, const int fMove, const int fTurn);
 
 extern int
@@ -561,7 +550,6 @@ extern void
 
 extern void
  CalculateRaceInputs(const TanBoard anBoard, float inputs[]);
-
 
 extern int CompareMoves(const move * pm0, const move * pm1);
 extern float EvalEfficiency(const TanBoard anBoard, positionclass pc);
