@@ -58,9 +58,6 @@
 #include "model.h"
 #include "drawboard.h"          /* for fClockwise decl */
 
-/* float versions (to quiet compiler warnings) */
-#define powi(arg1, arg2) (int)pow((double)(arg1), (double)(arg2))
-
 /* Clipping planes */
 #define zNear .1
 #define zFar 70.0
