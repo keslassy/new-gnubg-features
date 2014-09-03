@@ -261,16 +261,16 @@ CacheLookupWithLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, 
         }
     }
     /* Cache hit */
-#if CACHE_STATS
-    ++pc->cHit;
-#endif
-
     memcpy(arOut, pc->entries[l].nd_primary.ar, sizeof(float) * 5 /*NUM_OUTPUTS */ );
     if (arCubeful)
         *arCubeful = pc->entries[l].nd_primary.ar[5];   /* Cubeful equity stored in slot 5 */
 
 #if USE_MULTITHREAD
     cache_unlock(pc, l);
+#endif
+
+#if CACHE_STATS
+    ++pc->cHit;
 #endif
 
     return CACHEHIT;
@@ -294,14 +294,15 @@ CacheLookupNoLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, fl
             pc->entries[l].nd_secondary = tmp;
         }
     }
-    /* Cache hit */
-#if CACHE_STATS
-    ++pc->cHit;
-#endif
 
+    /* Cache hit */
     memcpy(arOut, pc->entries[l].nd_primary.ar, sizeof(float) * 5 /*NUM_OUTPUTS */ );
     if (arCubeful)
         *arCubeful = pc->entries[l].nd_primary.ar[5];   /* Cubeful equity stored in slot 5 */
+
+#if CACHE_STATS
+    ++pc->cHit;
+#endif
 
     return CACHEHIT;
 }
