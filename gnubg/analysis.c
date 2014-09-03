@@ -32,7 +32,6 @@
 #include "gtkgame.h"
 #endif
 #include "positionid.h"
-#include "rollout.h"
 #include "analysis.h"
 #include "sound.h"
 #include "matchequity.h"
@@ -238,10 +237,10 @@ LuckAnalysis(const TanBoard anBoard, int n0, int n1, matchstate * pms)
     InitBoard(init_board, pms->bgv);
     is_init_board = !memcmp(init_board, pms->anBoard, 2 * 25 * sizeof(int));
 
-    if (n0-- < n1--)
+    if (n0-- < n1--)            /* -- because as input n0 and n1 are dice [1..6] but in calls to LuckXX() they are array indexes [0..5] */
         swap(&n0, &n1);
 
-    if (is_init_board && n0 != n1)
+    if (is_init_board && n0 != n1)      /* FIXME: this fails if we return to the inital position after a few moves */
         return LuckFirst(anBoard, n0, n1, &ci, &ecLuck);
     else
         return LuckNormal(anBoard, n0, n1, &ci, &ecLuck);
@@ -2218,7 +2217,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
     move **ppm;
     void *p;
     GSList *list = NULL;
-    positionkey key = { {0, 0, 0, 0, 0, 0} };
+    positionkey key = { {0, 0, 0, 0, 0, 0, 0} };
 
     g_return_val_if_fail(pmr, -1);
 
