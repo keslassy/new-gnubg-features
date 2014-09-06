@@ -4116,8 +4116,8 @@ Equity
                 ending at the bar): </para>
             </listitem>
             <listitem>
-              <para>append as many 1s as the player on roll has on that point
-                (if any). </para>
+              <para>append as many 1s as the player not on roll
+                (the opponent) has on that point (if any). </para>
             </listitem>
             <listitem>
               <para>append a 0. </para>
@@ -4128,8 +4128,8 @@ Equity
                 and ending at the bar): </para>
             </listitem>
             <listitem>
-              <para>append as many 1s as the opponent has on that point (if
-                any). </para>
+              <para>append as many 1s as the the player on roll has
+                on that point (if any). </para>
             </listitem>
             <listitem>
               <para>append a 0. </para>
@@ -4157,7 +4157,7 @@ Equity
               <tbody>
                 <row>
                   <entry>0 0 0 0 0</entry>
-                  <entry>player on roll has no checkers on ace to 5 points</entry>
+                  <entry>opponent has no checkers on his ace to 5 points</entry>
                 </row>
                 <row>
                   <entry>11111 0</entry>
@@ -4173,47 +4173,7 @@ Equity
                 </row>
                 <row>
                   <entry>0 0 0 0</entry>
-                  <entry>no others in our outfield</entry>
-                </row>
-                <row>
-                  <entry>11111 0</entry>
-                  <entry>5 on the midpoint</entry>
-                </row>
-                <row>
-                  <entry>0 0 0 0 0</entry>
-                  <entry>none in the opponent's outfield</entry>
-                </row>
-                <row>
-                  <entry>0 0 0 0 0</entry>
-                  <entry>or in opponent's board, until...</entry>
-                </row>
-                <row>
-                  <entry>11 0</entry>
-                  <entry>two on the 24 point</entry>
-                </row>
-                <row>
-                  <entry>0</entry>
-                  <entry>none on the bar</entry>
-                </row>
-                <row>
-                  <entry>0 0 0 0 0</entry>
-                  <entry>opponent has no checkers on ace to 5 points</entry>
-                </row>
-                <row>
-                  <entry>11111 0</entry>
-                  <entry>5 checkers on the 6 point</entry>
-                </row>
-                <row>
-                  <entry>0</entry>
-                  <entry>empty bar</entry>
-                </row>
-                <row>
-                  <entry>111 0</entry>
-                  <entry>3 on the 8</entry>
-                </row>
-                <row>
-                  <entry>0 0 0 0</entry>
-                  <entry>no others in opponent's outfield</entry>
+                  <entry>no others in his outfield</entry>
                 </row>
                 <row>
                   <entry>11111 0</entry>
@@ -4226,6 +4186,46 @@ Equity
                 <row>
                   <entry>0 0 0 0 0</entry>
                   <entry>or in our board, until...</entry>
+                </row>
+                <row>
+                  <entry>11 0</entry>
+                  <entry>two on the 24 point</entry>
+                </row>
+                <row>
+                  <entry>0</entry>
+                  <entry>none on the bar</entry>
+                </row>
+                <row>
+                  <entry>0 0 0 0 0</entry>
+                  <entry>player on roll has no checkers on his ace to 5 points</entry>
+                </row>
+                <row>
+                  <entry>11111 0</entry>
+                  <entry>5 checkers on the 6 point</entry>
+                </row>
+                <row>
+                  <entry>0</entry>
+                  <entry>empty bar</entry>
+                </row>
+                <row>
+                  <entry>111 0</entry>
+                  <entry>3 on the 8</entry>
+                </row>
+                <row>
+                  <entry>0 0 0 0</entry>
+                  <entry>no others in his outfield</entry>
+                </row>
+                <row>
+                  <entry>11111 0</entry>
+                  <entry>5 on the midpoint</entry>
+                </row>
+                <row>
+                  <entry>0 0 0 0 0</entry>
+                  <entry>none in opponent's outfield</entry>
+                </row>
+                <row>
+                  <entry>0 0 0 0 0</entry>
+                  <entry>or in opponent's board, until...</entry>
                 </row>
                 <row>
                   <entry>11 0</entry>
@@ -4526,7 +4526,7 @@ Equity
               </row>
               <row>
                 <entry>.result</entry>
-                <entry>Style for the text indicating the outcome of the game or match, e.g., Jørn<emphasis> Thyssen wins 16 points</emphasis>.</entry>
+                <entry>Style for the text indicating the outcome of the game or match, e.g., <emphasis>Jørn Thyssen wins 16 points</emphasis>.</entry>
               </row>
               <row>
                 <entry>.tiny</entry>
