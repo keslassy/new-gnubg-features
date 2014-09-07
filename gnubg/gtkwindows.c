@@ -55,7 +55,7 @@ static Warning warnings[WARN_NUM_WARNINGS] = {
      N_("No hardware accelerated graphics card found, performance may be slow"),
      "unaccelerated", TRUE, FALSE},
     {
-     N_("Interupt the current process?"),
+     N_("Interrupt the current process?"),
      "stop", TRUE, TRUE},
     {
      N_("Play to the end of the game automatically?"),
