@@ -2211,8 +2211,6 @@ find_skills(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         pmr->stCube = drop_skill(pmr, &ci);
     else if (did_take == TRUE)
         pmr->stCube = take_skill(pmr, &ci);
-    else
-        pmr->stCube = SKILL_NONE;
 
     if (pmr->mt == MOVE_NORMAL && pmr->ml.cMoves > 0 && pmr->n.iMove < pmr->ml.cMoves)
         pmr->n.stMove = move_skill(pmr);
