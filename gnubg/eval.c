@@ -367,7 +367,7 @@ const char *aszDoubleTypes[NUM_DOUBLE_TYPES] = {
 
 /* parameters for EvalEfficiency */
 
-static float rTSCubeX = 0.6f;          /* for match play only */
+static float rTSCubeX = 0.6f;   /* for match play only */
 float rOSCubeX = 0.6f;
 float rRaceFactorX = 0.00125f;
 float rRaceCoefficientX = 0.55f;
@@ -5416,8 +5416,8 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
             for (i = 0; i < NUM_OUTPUTS; i++)
                 arOutput[i] += Noise(pec, anBoard, i);
 
-        if (pc > CLASS_PERFECT)
-            /* no sanity check needed for exact evaluations */
+        if (pc > CLASS_GOOD)
+            /* no sanity check needed for accurate evaluations */
             SanityCheck(anBoard, arOutput);
     }
 
@@ -5619,7 +5619,8 @@ FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
 extern
     int
 FindBestMove(int anMove[8], int nDice0, int nDice1,
-             TanBoard anBoard, const cubeinfo * pci, evalcontext * pec, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+             TanBoard anBoard, const cubeinfo * pci, evalcontext * pec,
+             movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
     return FindBestMovePlied(anMove, nDice0, nDice1, anBoard, pci, pec ? pec : &ecBasic, pec ? pec->nPlies : 0, aamf);
@@ -6035,7 +6036,8 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                 for (i = 0; i < NUM_OUTPUTS; i++)
                     arOutput[i] += Noise(pec, anBoard, i);
 
-            if (pc > CLASS_PERFECT)
+            if (pc > CLASS_GOOD)
+                /* no sanity check needed for accurate evaluations */
                 SanityCheck(anBoard, arOutput);
 
         }
