@@ -1598,14 +1598,14 @@ MaxTurns(int id)
 extern void
 SanityCheck(const TanBoard anBoard, float arOutput[])
 {
-    int i, j, nciq, ac[2], anBack[2], anCross[2], anGammonCross[2], anBackgammonCross[2], anMaxTurns[2], fContact;
+    int i, j, nciq, ac[2], anBack[2], anCross[2], anGammonCross[2], anMaxTurns[2], fContact;
 
     if (unlikely(arOutput[OUTPUT_WIN] < 0.0f))
         arOutput[OUTPUT_WIN] = 0.0f;
     else if (unlikely(arOutput[OUTPUT_WIN] > 1.0f))
         arOutput[OUTPUT_WIN] = 1.0f;
 
-    ac[0] = ac[1] = anBack[0] = anBack[1] = anCross[0] = anCross[1] = anBackgammonCross[0] = anBackgammonCross[1] = 0;
+    ac[0] = ac[1] = anBack[0] = anBack[1] = anCross[0] = anCross[1] = 0;
     anGammonCross[0] = anGammonCross[1] = 1;
 
     for (j = 0; j < 2; j++) {
@@ -1642,14 +1642,12 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
         ac[j] += nciq;
         anCross[j] += 4 * nciq;
         anGammonCross[j] += 3 * nciq;
-        anBackgammonCross[j] = nciq;
 
         if (anBoard[j][24]) {
             anBack[j] = 24;
             ac[j] += anBoard[j][24];
             anCross[j] += 5 * anBoard[j][24];
             anGammonCross[j] += 4 * anBoard[j][24];
-            anBackgammonCross[j] += 2 * anBoard[j][24];
         }
     }
 
@@ -1681,13 +1679,9 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
         else if (anGammonCross[0] > 4 * (anMaxTurns[1] - 1))
             /* Certain gammon */
             arOutput[OUTPUT_WINGAMMON] = 1.0f;
-
-        if (anCross[1] > 8 * anBackgammonCross[0])
+        if (anBack[0] < 18)
             /* Backgammon impossible */
             arOutput[OUTPUT_WINBACKGAMMON] = 0.0f;
-        else if (anBackgammonCross[0] > 4 * (anMaxTurns[1] - 1))
-            /* Certain backgammon */
-            arOutput[OUTPUT_WINGAMMON] = arOutput[OUTPUT_WINBACKGAMMON] = 1.0f;
     }
 
     if (unlikely(!fContact) && anCross[1] > 4 * anMaxTurns[0])
@@ -1704,13 +1698,9 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
         else if (anGammonCross[1] > 4 * anMaxTurns[0])
             /* Certain gammon loss */
             arOutput[OUTPUT_LOSEGAMMON] = 1.0f;
-
-        if (anCross[0] > 8 * anBackgammonCross[1] - 4)
-            /* Backgammon loss impossible */
+        if (anBack[1] < 18)
+            /* Backgammon impossible */
             arOutput[OUTPUT_LOSEBACKGAMMON] = 0.0f;
-        else if (anBackgammonCross[1] > 4 * anMaxTurns[0])
-            /* Certain backgammon loss */
-            arOutput[OUTPUT_LOSEGAMMON] = arOutput[OUTPUT_LOSEBACKGAMMON] = 1.0f;
     }
 
     /* gammons must be less than wins */
@@ -1907,10 +1897,8 @@ enum {
     G_POSSIBLE = 0x1,
     /* backgammon possible by side on roll */
     BG_POSSIBLE = 0x2,
-
     /* gammon possible by side not on roll */
     OG_POSSIBLE = 0x4,
-
     /* backgammon possible by side not on roll */
     OBG_POSSIBLE = 0x8
 };
