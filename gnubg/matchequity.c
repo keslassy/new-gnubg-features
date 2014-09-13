@@ -430,7 +430,7 @@ GetPoints(float arOutput[5], const cubeinfo * pci, float arCP[2])
 
         /* arOutput evaluated for player 0 */
 
-        if (arOutput[OUTPUT_WIN] > 0.0) {
+        if (arOutput[OUTPUT_WIN] > 0.0f) {
             arG[0] = (arOutput[OUTPUT_WINGAMMON] - arOutput[OUTPUT_WINBACKGAMMON]) / arOutput[OUTPUT_WIN];
             arBG[0] = arOutput[OUTPUT_WINBACKGAMMON] / arOutput[OUTPUT_WIN];
         } else {
@@ -438,7 +438,7 @@ GetPoints(float arOutput[5], const cubeinfo * pci, float arCP[2])
             arBG[0] = 0.0;
         }
 
-        if (arOutput[OUTPUT_WIN] < 1.0) {
+        if (arOutput[OUTPUT_WIN] < 1.0f) {
             arG[1] = (arOutput[OUTPUT_LOSEGAMMON] - arOutput[OUTPUT_LOSEBACKGAMMON]) / (1.0f - arOutput[OUTPUT_WIN]);
             arBG[1] = arOutput[OUTPUT_LOSEBACKGAMMON] / (1.0f - arOutput[OUTPUT_WIN]);
         } else {
@@ -450,7 +450,7 @@ GetPoints(float arOutput[5], const cubeinfo * pci, float arCP[2])
 
         /* arOutput evaluated for player 1 */
 
-        if (arOutput[OUTPUT_WIN] > 0.0) {
+        if (arOutput[OUTPUT_WIN] > 0.0f) {
             arG[1] = (arOutput[OUTPUT_WINGAMMON] - arOutput[OUTPUT_WINBACKGAMMON]) / arOutput[OUTPUT_WIN];
             arBG[1] = arOutput[OUTPUT_WINBACKGAMMON] / arOutput[OUTPUT_WIN];
         } else {
@@ -458,7 +458,7 @@ GetPoints(float arOutput[5], const cubeinfo * pci, float arCP[2])
             arBG[1] = 0.0;
         }
 
-        if (arOutput[OUTPUT_WIN] < 1.0) {
+        if (arOutput[OUTPUT_WIN] < 1.0f) {
             arG[0] = (arOutput[OUTPUT_LOSEGAMMON] - arOutput[OUTPUT_LOSEBACKGAMMON]) / (1.0f - arOutput[OUTPUT_WIN]);
             arBG[0] = arOutput[OUTPUT_LOSEBACKGAMMON] / (1.0f - arOutput[OUTPUT_WIN]);
         } else {
@@ -579,12 +579,12 @@ GetDoublePointDeadCube(float arOutput[5], cubeinfo * pci)
 
         float rW, rL;
 
-        if (arOutput[0] > 0.0)
+        if (arOutput[0] > 0.0f)
             rW = 1.0f + (arOutput[1] + arOutput[2]) / arOutput[0];
         else
             rW = 1.0f;
 
-        if (arOutput[0] < 1.0)
+        if (arOutput[0] < 1.0f)
             rL = 1.0f + (arOutput[3] + arOutput[4]) / (1.0f - arOutput[0]);
         else
             rL = 1.0f;
@@ -617,7 +617,7 @@ GetDoublePointDeadCube(float arOutput[5], cubeinfo * pci)
         float rRisk, rGain;
 
         /* FIXME: avoid division by zero */
-        if (arOutput[OUTPUT_WIN] > 0.0) {
+        if (arOutput[OUTPUT_WIN] > 0.0f) {
             rG1 = (arOutput[OUTPUT_WINGAMMON] - arOutput[OUTPUT_WINBACKGAMMON]) / arOutput[OUTPUT_WIN];
             rBG1 = arOutput[OUTPUT_WINBACKGAMMON] / arOutput[OUTPUT_WIN];
         } else {
@@ -625,7 +625,7 @@ GetDoublePointDeadCube(float arOutput[5], cubeinfo * pci)
             rBG1 = 0.0;
         }
 
-        if (arOutput[OUTPUT_WIN] < 1.0) {
+        if (arOutput[OUTPUT_WIN] < 1.0f) {
             rG2 = (arOutput[OUTPUT_LOSEGAMMON] - arOutput[OUTPUT_LOSEBACKGAMMON]) / (1.0f - arOutput[OUTPUT_WIN]);
             rBG2 = arOutput[OUTPUT_LOSEBACKGAMMON] / (1.0f - arOutput[OUTPUT_WIN]);
         } else {
@@ -1459,23 +1459,18 @@ getGammonPrice(float arGammonPrice[4],
         arGammonPrice[3] = (rCenter - rLoseBG) / (rWin - rCenter) - (arGammonPrice[1] + 1.0f);
 
     } else
-        arGammonPrice[0] = arGammonPrice[1] = arGammonPrice[2] = arGammonPrice[3] = 0.0;
+        arGammonPrice[0] = arGammonPrice[1] = arGammonPrice[2] = arGammonPrice[3] = 0.0f;
 
 
     /* Correct numerical problems */
-    if (arGammonPrice[0] <= 0)
-        arGammonPrice[0] = 0.0;
-    if (arGammonPrice[1] <= 0)
-        arGammonPrice[1] = 0.0;
-    if (arGammonPrice[2] <= 0)
-        arGammonPrice[2] = 0.0;
-    if (arGammonPrice[3] <= 0)
-        arGammonPrice[3] = 0.0;
-
-    g_assert(arGammonPrice[0] >= 0);
-    g_assert(arGammonPrice[1] >= 0);
-    g_assert(arGammonPrice[2] >= 0);
-    g_assert(arGammonPrice[3] >= 0);
+    if (arGammonPrice[0] < 0.0f)
+        arGammonPrice[0] = 0.0f;
+    if (arGammonPrice[1] < 0.0f)
+        arGammonPrice[1] = 0.0f;
+    if (arGammonPrice[2] < 0.0f)
+        arGammonPrice[2] = 0.0f;
+    if (arGammonPrice[3] < 0.0f)
+        arGammonPrice[3] = 0.0f;
 
 }
 
