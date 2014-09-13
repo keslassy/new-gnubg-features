@@ -1653,9 +1653,6 @@ getME(const int nScore0, const int nScore1, const int nMatchTo,
         /* non-post-Crawford games */
         return (fPlayer) ? 1.0f - aafMET[n0][n1] : aafMET[n0][n1];
 
-    g_assert_not_reached();
-    return 0.0f;
-
 }
 
 
@@ -1694,9 +1691,6 @@ getMEAtScore(const int nScore0, const int nScore1, const int nMatchTo,
     } else
         /* non-post-Crawford games */
         return (fPlayer) ? 1.0f - aafMET[n0][n1] : aafMET[n0][n1];
-
-    g_assert_not_reached();
-    return 0.0f;
 
 }
 
