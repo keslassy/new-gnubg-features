@@ -3672,7 +3672,7 @@ Cl2CfMatchCentered(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
 
         return rMWCDead * (1.0f - rCubeX) + rMWCLive * rCubeX;
 
-    } else if (rOppTG < arOutput[OUTPUT_WIN] && arOutput[OUTPUT_WIN] < rTG) {
+    } else if (arOutput[OUTPUT_WIN] < rTG) {
 
         /* In double window */
 
@@ -3897,11 +3897,8 @@ Cl2CfMatchUnavailable(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
             + rG0 * aarMETResult[pci->fMove][NDWG]
             + rBG0 * aarMETResult[pci->fMove][NDWB];
 
-        if (arOutput[OUTPUT_WIN] != rOppTG)
-            rMWCLive = rMWCOppCash + (rMWCWin - rMWCOppCash) * (arOutput[OUTPUT_WIN] - rOppTG)
-                / (1.0f - rOppTG);
-        else
-            rMWCLive = rMWCWin;
+    rMWCLive = rMWCOppCash
+      + (rMWCWin - rMWCOppCash) * (arOutput[OUTPUT_WIN] - rOppTG) / (1.0f - rOppTG);
 
         /* (1-x) MWC(dead) + x MWC(live) */
 
