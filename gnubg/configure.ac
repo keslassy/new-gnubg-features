@@ -257,14 +257,6 @@ dnl
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
-# Check for __builtin_expect()
-AC_MSG_CHECKING([for __builtin_expect()])
-AC_LINK_IFELSE([AC_LANG_PROGRAM(, return __builtin_expect(main != 0, 1))],
-	[AC_DEFINE(HAVE_BUILTIN_EXPECT, 1,
-		Define to 1 if compiler supports __builtin_expect)
-		AC_MSG_RESULT([yes])],
-		[AC_MSG_RESULT([no])])
-
 dnl
 dnl Checks for library functions.
 dnl
@@ -278,6 +270,12 @@ dnl Checks for declarations
 dnl
 
 AC_CHECK_DECLS([signbit], , , [#include <math.h>])
+
+dnl
+dnl Checks for compiler builtins
+dnl
+
+AX_GCC_BUILTIN(__builtin_expect)
 
 dnl *******************
 dnl optional components

@@ -74,7 +74,7 @@ typedef void (*psighandler) (int);
 #endif
 
 /* Helper macros for __builtin_expect */
-#ifdef HAVE_BUILTIN_EXPECT
+#ifdef HAVE___BUILTIN_EXPECT
 #define likely(expression)	__builtin_expect(!!(expression), 1)
 #define unlikely(expression)	__builtin_expect(!!(expression), 0)
 #else
