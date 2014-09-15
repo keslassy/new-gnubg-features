@@ -5401,7 +5401,7 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
             for (i = 0; i < NUM_OUTPUTS; i++)
                 arOutput[i] += Noise(pec, anBoard, i);
 
-        if (pc > CLASS_GOOD)
+        if (pc > CLASS_GOOD || pec->rNoise)
             /* no sanity check needed for accurate evaluations */
             SanityCheck(anBoard, arOutput);
     }
@@ -6021,7 +6021,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                 for (i = 0; i < NUM_OUTPUTS; i++)
                     arOutput[i] += Noise(pec, anBoard, i);
 
-            if (pc > CLASS_GOOD)
+            if (pc > CLASS_GOOD || pec->rNoise)
                 /* no sanity check needed for accurate evaluations */
                 SanityCheck(anBoard, arOutput);
 
