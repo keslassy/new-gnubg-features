@@ -881,13 +881,14 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
     {
         int t = 0;
-
         int no = 0;
+
+	int m = (nOppBack >= 11 ) ? nOppBack : 11;
 
         t += 24 * anBoard[24];
         no += anBoard[24];
 
-        for (i = 23; i >= 12 && i > nOppBack; --i) {
+        for (i = 23; i > m; --i) {
             if (anBoard[i] && anBoard[i] != 2) {
                 int n = ((anBoard[i] > 2) ? (anBoard[i] - 2) : 1);
                 no += n;
