@@ -265,12 +265,6 @@ AC_CHECK_FUNCS(sigaction sigvec,break)
 AC_CHECK_FUNCS(strptime random setpriority)
 AC_CHECK_FUNCS(mtrace)
 
-dnl 	 
-dnl Checks for declarations 	 
-dnl
-
-AC_CHECK_DECLS([signbit], , , [#include <math.h>])
-
 dnl
 dnl Checks for compiler builtins
 dnl
