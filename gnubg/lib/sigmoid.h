@@ -126,14 +126,6 @@ static float e[101] = {
     1993.0370438230298f         /* one extra :-) */
 };
 
-/* signbit() is used below in a somewhat performance sensitive place
- * If HAVE_DECL_SIGNBIT is false, maybe we should juste compare to 0
- * instead of using this */
-#if !HAVE_DECL_SIGNBIT
-/* copysign() caters for special IEEE 754 numbers */
-#define signbit(x) (copysign(1, (x)) < 0)
-#endif
-
 /* Calculate an approximation to the sigmoid function 1 / ( 1 + e^x ).
  * This is executed very frequently during neural net evaluation, so
  * careful optimisation here pays off.
@@ -149,7 +141,7 @@ static float e[101] = {
 static inline float
 sigmoid(float const xin)
 {
-    if (!signbit(xin)) {        /* signbit() can be faster than a compare to 0.0 */
+    if (xin >= 0.0f) { 
         /* xin is almost always positive; we place this branch of the `if'
          * first, in the hope that the compiler/processor will predict the
          * conditional branch will not be taken. */
