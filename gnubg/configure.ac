@@ -269,6 +269,7 @@ dnl
 dnl Checks for compiler builtins
 dnl
 
+AX_GCC_BUILTIN(__builtin_clz)
 AX_GCC_BUILTIN(__builtin_expect)
 
 dnl *******************
