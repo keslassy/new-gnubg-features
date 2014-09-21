@@ -376,6 +376,30 @@ float rRaceMin = 0.6f;
 float rCrashedX = 0.68f;
 float rContactX = 0.68f;
 
+
+#ifdef HAVE___BUILTIN_CLZ
+static inline int
+msb32(int n)
+{
+    return 31 - __builtin_clz(n);
+}
+#else
+/* from rosettacode.org */
+static inline int
+msb32(int n)
+{
+    int b = 0;
+#define step(x) if (n >= 1 << x) b += x, n >>= x
+    step(16);
+    step(8);
+    step(4);
+    step(2);
+    step(1);
+#undef step
+    return b;
+}
+#endif
+
 static void
 ComputeTable0(void)
 {
@@ -1050,28 +1074,24 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
                 if (pi->nFaces == 1) {
                     /* direct shot */
-                    for (k = 23; k > 0; k--) {
-                        if (aHit[r] & (1 << k)) {
-                            /* select the most advanced blot; if we still have
-                             * a chequer that can hit there */
+                    k = msb32(aHit[r]);
+                    /* select the most advanced blot; if we still have
+                     * a chequer that can hit there */
 
-                            if (n != k || anBoard[k] > 1)
-                                aRoll[i].nChequers++;
+                    if (n != k || anBoard[k] > 1)
+                        aRoll[i].nChequers++;
 
-                            n = k;
+                    n = k;
 
-                            if (k - pi->nPips + 1 > aRoll[i].nPips)
-                                aRoll[i].nPips = k - pi->nPips + 1;
+                    if (k - pi->nPips + 1 > aRoll[i].nPips)
+                        aRoll[i].nPips = k - pi->nPips + 1;
 
-                            /* if rolling doubles, check for multiple
-                             * direct shots */
+                    /* if rolling doubles, check for multiple
+                     * direct shots */
 
-                            if (aaRoll[i][3] >= 0 && aHit[r] & ~(1 << k))
-                                aRoll[i].nChequers++;
+                    if (aaRoll[i][3] >= 0 && aHit[r] & ~(1 << k))
+                        aRoll[i].nChequers++;
 
-                            break;
-                        }
-                    }
                 } else {
                     /* indirect shot */
                     if (!aRoll[i].nChequers)
@@ -1079,9 +1099,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
                     /* find the most advanced hitter */
 
-                    for (k = 23; k >= 0; k--)
-                        if (aHit[r] & (1 << k))
-                            break;
+                    k = msb32(aHit[r]);
 
                     if (k - pi->nPips + 1 > aRoll[i].nPips)
                         aRoll[i].nPips = k - pi->nPips + 1;
@@ -1116,8 +1134,16 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
                 if (pi->nFaces == 1) {
                     /* direct shot */
-
+                    
+                    /* FIXME: There must be a more profitable way to use
+                              the possibility of finding the msb quickly,
+                              but I don't understand the code below. */
+#ifdef HAVE___BUILTIN_CLZ
+                    /* This shortcut is worthwhile only if msb32 is fast */
+                    for (k = msb32(aHit[r]); k > 0; k--) {
+#else
                     for (k = 24; k > 0; k--) {
+#endif
                         if (aHit[r] & (1 << k)) {
                             /* if we need this die to enter, we can't hit elsewhere */
 
@@ -3898,8 +3924,7 @@ Cl2CfMatchUnavailable(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
             + rG0 * aarMETResult[pci->fMove][NDWG]
             + rBG0 * aarMETResult[pci->fMove][NDWB];
 
-    rMWCLive = rMWCOppCash
-      + (rMWCWin - rMWCOppCash) * (arOutput[OUTPUT_WIN] - rOppTG) / (1.0f - rOppTG);
+        rMWCLive = rMWCOppCash + (rMWCWin - rMWCOppCash) * (arOutput[OUTPUT_WIN] - rOppTG) / (1.0f - rOppTG);
 
         /* (1-x) MWC(dead) + x MWC(live) */
 
