@@ -868,11 +868,11 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
     /* One roll stat */
 
     struct {
-        /* count of pips this roll hits */
-        int nPips;
-
         /* number of chequers this roll hits */
         int nChequers;
+
+        /* count of pips this roll hits */
+        int nPips;
     } aRoll[21];
 
     for (nOppBack = 24; nOppBack >= 0; --nOppBack) {
