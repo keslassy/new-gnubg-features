@@ -1,13 +1,18 @@
+2014-10-05  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* cache.c: Use MurmurHash3 for evaluations cache addressing
+	instead of the current hashing function. Key computation is faster
+	and hit rate (very slightly) better.
+
 2013-06-22  Michael Petch  <mpetch@gnubg.org>
 
-    * ChangeLog Makefile.am inputs.c neuralnet.c neuralnet.h
-      neuralnetsse.c, +simd.h -sse.h. Rename sse.h to
-    simd.h. Rename USE_SSE_VECTORIZE to USE_SIMD_INSTRUCTIONS,
-    rename SSE_Supported to SIMD_Supported,
-    rename DISABLE_SSE_TEST to DISABLE_SIMD_TEST,
-    rename SSE_CFLAGS to SIMD_CFLAGS, rename file sse.h to simd.h
+	* ChangeLog, Makefile.am, inputs.c, neuralnet.c, neuralnet.h,
+	neuralnetsse.c, +simd.h, -sse.h. Rename sse.h to simd.h. Rename
+	USE_SSE_VECTORIZE to USE_SIMD_INSTRUCTIONS, rename SSE_Supported
+	to SIMD_Supported, rename DISABLE_SSE_TEST to DISABLE_SIMD_TEST,
+	rename SSE_CFLAGS to SIMD_CFLAGS, rename file sse.h to simd.h
 
-    Make sse/simd usage more consistent
+	Make sse/simd usage more consistent
 
 2013-06-15  Philippe Michel  <philippe.michel7@sfr.fr>
 
@@ -62,27 +67,27 @@
 Tue Feb 20 21:25:01 GMT 2007  Jim Segrave <jes@j-e-s.net>
 
 	* neuralnet.c: skip sse check if __x86_64 is defined
-	
+
 Fri Apr 29 21:16:41 CEST 2004  Jon Kinsey
 
 	* neuralnetsse.c: Split out SSE code to seperate file
 
 Wed May  4 18:10:43 GMT  2005  Jim Segrave <jes@jes-2.demon.nl>
 
-	* sse.h: add CVS tag 
-	
+	* sse.h: add CVS tag
+
 Fri Apr 29 21:16:41 CEST 2004  Jon Kinsey
 
 	* neuralnet.c: Minor improvments to new code
 	* sse.h: New file with sse specific defines
-	
+
 Thu Apr 28 22:35:53 2005  Øystein Johansen <oysteim@gnubg.org>
 
 	* neuralnet.c (Evaluate128, EvaluateFromBase128, NeuralNetEvaluate128):
-	
+
 	New functions for vectorized evaluation of neural networks
 	with 128 hidden	nodes.
-	
+
 Fri Feb 25 11:16:41 CEST 2004  Jon Kinsey
 
 	* neuralnet.c Relegate BLAS code as proved slower
@@ -92,14 +97,14 @@ Mon May  3 15:16:41 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 	* mt19937ar.c (init_genrand): add mti as parameter to init_genrand.
 
 Thu Apr 22 21:14:32 CEST 2004  Joern Thyssen  <jth@gnubg.org>
-	
+
 	* mt19937int.[ch]: replaced by mt19937ar.[ch]
 	* mt19937ar.[ch]: upgrade Mersenne-Twister from
 	<URL:http://www.math.keio.ac.jp/matumoto/emt.html>.
 
 Thu Dec 18 23:35:48 2003  Joern Thyssen  <jth@gnubg.org>
 
-	* neuralnet.c: implement Olivier Baur's faster sigmoid 
+	* neuralnet.c: implement Olivier Baur's faster sigmoid
 	(note that it should probably not be used until the net
 	has been retrained)
 	* neuralnet.c (Evaluate, EvaluateFromBase): implement
@@ -122,7 +127,7 @@ Mon Aug  5 13:48:34 2002  Gary Wong  <gtw@gnu.org>
 Mon Jul 29 13:15:22 2002  Gary Wong  <gtw@gnu.org>
 
 	* mt19937int.c (sgenrand): Upgrade to Makoto Matsumoto's
-	latest initialisation code.  Reported by Eli 
+	latest initialisation code.  Reported by Eli
 	Liang <elientzeliang@hotmail.com>.
 
 Thu Jul  4 18:50:27 2002  Jørn Thyssen  <jthyssen@dk.ibm.com>
@@ -142,7 +147,7 @@ Sat May  4 13:33:14 2002  Joseph Heled  <pepster@users.sourceforge.net>
 Fri Apr 26 19:23:53 2002  Øystein Johansen <oeysteij@online.no>
 
         * neuralnet.c: Add neural net speedup from fibs2html
- 
+
 Wed Feb  6 10:03:53 2002  Gary Wong  <gtw@research.att.com>
 
 	* neuralnet.c (CheckRC): Use time() as a seed for irandinit().
@@ -196,7 +201,7 @@ Fri Sep 29 14:08:05 2000  Joseph Heled  <pepe@internet.co.nz>
 Wed Aug  2 13:26:08 2000  Joseph Heled  <pepe@internet.co.nz>
 
 	* neuralnet.c: Improve sigmoid accuracy by using a table lookup for
-	the first two digits and using (exp(x) = 1 + x) for x < 0.1. 
+	the first two digits and using (exp(x) = 1 + x) for x < 0.1.
 
 Thu Jul 27 18:20:58 2000  Gary Wong  <gary@cs.arizona.edu>
 
@@ -207,7 +212,7 @@ Thu Jul 27 18:20:58 2000  Gary Wong  <gary@cs.arizona.edu>
 Sat Mar 11 20:09:10 2000  Gary Wong  <gary@cs.arizona.edu>
 
 	* neuralnet.c (NeuralNetDifferentiate): New function.
-	
+
 Fri Jan 14 09:34:52 2000  Gary Wong  <gary@cs.arizona.edu>
 
 	* fifo.c: replaced bcopy with memcpy.

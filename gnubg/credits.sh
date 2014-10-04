@@ -413,8 +413,9 @@ cat >> AUTHORS <<'EOF'
 
   Library code from the following authors has been included in GNU Backgammon:
 
+               Austin Appleby (the MurmurHash3 hashing function)
      Ulrich Drepper (an implementation of the public domain MD5 algorithm)
-   Bob Jenkins (the ISAAC pseudo random number generator, hashing functions)
+            Bob Jenkins (the ISAAC pseudo random number generator)
        Takuji Nishimura and Makoto Matsumoto (the Mersenne Twister PRNG)
                    Brian Paul (the TR tile rendering library)
              Claes Tornberg (the mec match equity table generator)
