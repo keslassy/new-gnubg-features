@@ -36,6 +36,7 @@ extern
 unsigned int PositionBearoff(const unsigned int anBoard[], unsigned int nPoints, unsigned int nChequers);
 
 extern void PositionFromKey(TanBoard anBoard, const positionkey * pkey);
+extern void PositionFromKeySwapped(TanBoard anBoard, const positionkey * pkey);
 
 /* Return 1 for success, 0 for invalid id */
 extern int PositionFromID(TanBoard anBoard, const char *szID);

@@ -5275,8 +5275,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
          * on some gcc systems. Remove with great care. */
         move *const volatile pm = &ml.amMoves[i];
 
-        PositionFromKey(anBoardOut, &pm->key);
-        SwapSides(anBoardOut);
+        PositionFromKeySwapped(anBoardOut, &pm->key);
 
         pc = ClassifyPosition((ConstTanBoard) anBoardOut, VARIATION_STANDARD);
         if (i == 0) {
@@ -5483,9 +5482,7 @@ ScoreMove(NNState * nnStates, move * pm, const cubeinfo * pci, const evalcontext
     SSE_ALIGN(float arEval[NUM_ROLLOUT_OUTPUTS]);
     cubeinfo ci;
 
-    PositionFromKey(anBoardTemp, &pm->key);
-
-    SwapSides(anBoardTemp);
+    PositionFromKeySwapped(anBoardTemp, &pm->key);
 
     /* swap fMove in cubeinfo */
     memcpy(&ci, pci, sizeof(ci));
