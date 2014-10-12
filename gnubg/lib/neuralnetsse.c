@@ -166,6 +166,41 @@ sigmoid_ps(float_vector xin)
 
 #endif                          // USE_SSE2 or USE_AVX
 
+#if defined(USE_SSE2)
+#define INPUT_ADD() \
+for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) { \
+    vec0 = _mm_load_ps(pr); \
+    vec1 = _mm_load_ps(prWeight); \
+    sum = _mm_add_ps(vec0, vec1); \
+    _mm_store_ps(pr, sum); \
+}
+#define INPUT_MULTADD() \
+for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) { \
+    vec0 = _mm_load_ps(pr); \
+    vec1 = _mm_load_ps(prWeight); \
+    vec3 = _mm_mul_ps(vec1, scalevec); \
+    sum = _mm_add_ps(vec0, vec3); \
+    _mm_store_ps(pr, sum); \
+}
+#endif
+#if defined(USE_AVX)
+#define INPUT_ADD() \
+for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) { \
+    vec0 = _mm256_load_ps(pr); \
+    vec1 = _mm256_load_ps(prWeight); \
+    sum = _mm256_add_ps(vec0, vec1); \
+    _mm256_store_ps(pr, sum); \
+}
+#define INPUT_MULTADD() \
+for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) { \
+    vec0 = _mm256_load_ps(pr); \
+    vec1 = _mm256_load_ps(prWeight); \
+    vec3 = _mm256_mul_ps(vec1, scalevec); \
+    sum = _mm256_add_ps(vec0, vec3); \
+    _mm256_store_ps(pr, sum); \
+}
+#endif
+
 static void
 EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOutput[])
 {
@@ -183,51 +218,100 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
     prWeight = pnn->arHiddenWeight;
 
-    for (i = 0; i < pnn->cInput; i++) {
-        float const ari = arInput[i];
+    if (pnn->cInput != 214) {   /* everything but the racing net */
+        for (i = 0; i < 200;) { /* base inputs */
+            float ari = arInput[i++];
 
-        if (!ari)
-            prWeight += cHidden;
-        else {
-            float *pr = ar;
-            if (ari == 1.0f) {
-                for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) {
-#if defined(USE_AVX)
-                    vec0 = _mm256_load_ps(pr);
-                    vec1 = _mm256_load_ps(prWeight);
-                    sum = _mm256_add_ps(vec0, vec1);
-                    _mm256_store_ps(pr, sum);
-#else
-                    vec0 = _mm_load_ps(pr);
-                    vec1 = _mm_load_ps(prWeight);
-                    sum = _mm_add_ps(vec0, vec1);
-                    _mm_store_ps(pr, sum);
-#endif
-                }
+            /* 3 binaries, 1 float */
+
+            if (!ari)
+                prWeight += cHidden;
+            else {
+                float *pr = ar;
+                INPUT_ADD();
+            }
+
+            ari = arInput[i++];
+
+            if (!ari)
+                prWeight += cHidden;
+            else {
+                float *pr = ar;
+                INPUT_ADD();
+            }
+
+            ari = arInput[i++];
+
+            if (!ari) {
+                prWeight += cHidden;
+                /* If 3rd element is 0, so is 4th. Skip it */
+                prWeight += cHidden;
+                i++;
+                continue;
             } else {
+                float *pr = ar;
+                INPUT_ADD();
+            }
+
+            ari = arInput[i++];
+
+            if (!ari)
+                prWeight += cHidden;
+            else {
+                float *pr = ar;
+
+                if (ari == 1.0f) {
+                    INPUT_ADD();
+                } else {
 #if defined(USE_AVX)
-                scalevec = _mm256_set1_ps(ari);
+                    scalevec = _mm256_set1_ps(ari);
 #else
-                scalevec = _mm_set1_ps(ari);
+                    scalevec = _mm_set1_ps(ari);
 #endif
-                for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) {
+                    INPUT_MULTADD();
+                }
+            }                   /* base inputs are done */
+        }
+
+        if (pnn->cInput == 250) /* Pruning nets are over, contact/crashed still have 2 * 25 floats */
+            for (i = 200; i < 250; i++) {
+                float const ari = arInput[i];
+
+                if (!ari)
+                    prWeight += cHidden;
+                else {
+                    float *pr = ar;
+
 #if defined(USE_AVX)
-                    vec0 = _mm256_load_ps(pr);
-                    vec1 = _mm256_load_ps(prWeight);
-                    vec3 = _mm256_mul_ps(vec1, scalevec);
-                    sum = _mm256_add_ps(vec0, vec3);
-                    _mm256_store_ps(pr, sum);
+                    scalevec = _mm256_set1_ps(ari);
 #else
-                    vec0 = _mm_load_ps(pr);
-                    vec1 = _mm_load_ps(prWeight);
-                    vec3 = _mm_mul_ps(vec1, scalevec);
-                    sum = _mm_add_ps(vec0, vec3);
-                    _mm_store_ps(pr, sum);
+                    scalevec = _mm_set1_ps(ari);
 #endif
+                    INPUT_MULTADD();
+                }
+            }
+    }
+
+    else                        /* racing net */
+        for (i = 0; i < pnn->cInput; i++) {
+            float const ari = arInput[i];
+
+            if (!ari)
+                prWeight += cHidden;
+            else {
+                float *pr = ar;
+                if (ari == 1.0f) {
+                    INPUT_ADD();
+                } else {
+#if defined(USE_AVX)
+                    scalevec = _mm256_set1_ps(ari);
+#else
+                    scalevec = _mm_set1_ps(ari);
+#endif
+                    INPUT_MULTADD();
                 }
             }
         }
-    }
 
 #if defined(USE_SSE2) || defined(USE_AVX)
 #if defined(USE_AVX)

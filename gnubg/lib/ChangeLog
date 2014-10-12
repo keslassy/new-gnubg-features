@@ -1,3 +1,8 @@
+2014-10-12  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* neuralnetsse.c: Use knowledge of the limited range of possible
+	values for base inputs to accelerate neural networks computations.
+
 2014-10-05  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* cache.c: Use MurmurHash3 for evaluations cache addressing
