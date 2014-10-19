@@ -167,7 +167,7 @@ extern void FreeImages(renderimages * pri);
 
 extern void CalculateArea(renderdata * prd, unsigned char *puch, int nStride,
                           renderimages * pri, TanBoard anBoard,
-                          int anOff[2], int anDice[2],
+                          int anOff[2], const unsigned int anDice[2],
                           int anDicePosition[2][2],
                           int fDiceColour, int anCubePosition[2],
                           int nLogCube, int nCubeOrientation,

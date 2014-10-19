@@ -607,7 +607,7 @@ GenerateImage(renderimages * pri, renderdata * prd,
     color = fMove;
 
     CalculateArea(prd, puch, BOARD_WIDTH * nSize * 3, pri, anBoardTemp, NULL,
-                  (int *) anDice, anDicePosition,
+                  anDice, anDicePosition,
                   color, anCubePosition,
                   LogCube(nCube) + (doubled != 0),
                   nOrient,

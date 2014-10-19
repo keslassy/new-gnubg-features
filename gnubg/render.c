@@ -147,7 +147,7 @@ static renderdata rdDefault = {
     {3.0, 30.0},                /* arDiceExponent */
     {-0.55667f, 0.32139f, 0.76604f},    /* arLight */
     0.5,                        /* rRound */
-    -1,                         /* nSize */
+    (unsigned int)-1,           /* nSize */
     TRUE,                       /* fHinges */
     TRUE,                       /* fLabels */
     FALSE,                      /* fClockwise */
@@ -2352,7 +2352,7 @@ DrawChequers(renderdata * prd, unsigned char *puch, int nStride,
 extern void
 CalculateArea(renderdata * prd, unsigned char *puch, int nStride,
               renderimages * pri, TanBoard anBoard,
-              int *anOff, int anDice[2],
+              int *anOff, const unsigned int anDice[2],
               int anDicePosition[2][2],
               int fDiceColour, int anCubePosition[2],
               int nLogCube, int nCubeOrientation,

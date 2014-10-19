@@ -260,7 +260,8 @@ RenderArea(BoardData * bd, unsigned char *puch, int x, int y, int
 {
 
     TanBoard anBoard;
-    int anOff[2], anDice[2], anDicePosition[2][2], anCubePosition[2], anArrowPosition[2], nOrient;
+    unsigned int anDice[2];
+    int anOff[2], anDicePosition[2][2], anCubePosition[2], anArrowPosition[2], nOrient;
     int anResignPosition[2], nResignOrientation;
 
     read_board(bd, anBoard);
@@ -336,7 +337,7 @@ board_expose(GtkWidget * drawing_area, GdkEventExpose * event, BoardData * bd)
 extern void
 stop_board_expose(BoardData * bd)
 {
-    g_signal_handlers_disconnect_by_func(G_OBJECT(bd->drawing_area), G_CALLBACK(board_expose), bd);
+    g_signal_handlers_disconnect_by_func(G_OBJECT(bd->drawing_area), (gpointer)G_CALLBACK(board_expose), bd);
 }
 
 static void
@@ -2258,9 +2259,9 @@ SetCrawfordToggle(BoardData * bd)
 {
     if (bd->crawford && (bd->crawford_game != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(bd->crawford)))) {
         /* Block handler to stop warning message in click handler */
-        g_signal_handlers_block_by_func(G_OBJECT(bd->crawford), G_CALLBACK(board_set_crawford), bd);
+        g_signal_handlers_block_by_func(G_OBJECT(bd->crawford), (gpointer)G_CALLBACK(board_set_crawford), bd);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(bd->crawford), bd->crawford_game);
-        g_signal_handlers_unblock_by_func(G_OBJECT(bd->crawford), G_CALLBACK(board_set_crawford), bd);
+        g_signal_handlers_unblock_by_func(G_OBJECT(bd->crawford), (gpointer)G_CALLBACK(board_set_crawford), bd);
     }
 }
 
@@ -2269,9 +2270,9 @@ SetJacobyToggle(BoardData * bd)
 {
     if (bd->jacoby && (bd->jacoby_flag != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(bd->jacoby)))) {
         /* Block handler to stop warning message in click handler */
-        g_signal_handlers_block_by_func(G_OBJECT(bd->jacoby), G_CALLBACK(board_set_jacoby), bd);
+        g_signal_handlers_block_by_func(G_OBJECT(bd->jacoby), (gpointer)G_CALLBACK(board_set_jacoby), bd);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(bd->jacoby), bd->jacoby_flag);
-        g_signal_handlers_unblock_by_func(G_OBJECT(bd->jacoby), G_CALLBACK(board_set_jacoby), bd);
+        g_signal_handlers_unblock_by_func(G_OBJECT(bd->jacoby), (gpointer)G_CALLBACK(board_set_jacoby), bd);
     }
 }
 
