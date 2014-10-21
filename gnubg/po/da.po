@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-04 13:41-0600\n"
+"POT-Creation-Date: 2014-10-21 12:28-0600\n"
 "PO-Revision-Date: 2010-01-02 16:50+0100\n"
 "Last-Translator: Christian Anthon <christian.anthon@gmail.com>\n"
 "Language-Team: American English <kde-i18n-doc@lists.kde.org>\n"
@@ -38,115 +38,115 @@ msgstr ""
 "X-Poedit-Country: DENMARK\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: analysis.c:47
+#: analysis.c:46
 msgid "rating|Awful!"
 msgstr "Forfærdelig"
 
-#: analysis.c:48
+#: analysis.c:47
 msgid "rating|Beginner"
 msgstr "Begynder"
 
-#: analysis.c:49
+#: analysis.c:48
 msgid "rating|Casual player"
 msgstr "Fritidsspiller"
 
-#: analysis.c:50
+#: analysis.c:49
 msgid "rating|Intermediate"
 msgstr "Mellemklasse"
 
-#: analysis.c:51
+#: analysis.c:50
 msgid "rating|Advanced"
 msgstr "Avanceret"
 
-#: analysis.c:52
+#: analysis.c:51
 msgid "rating|Expert"
 msgstr "Ekspert"
 
-#: analysis.c:53
+#: analysis.c:52
 msgid "rating|World class"
 msgstr "Verdensklasse"
 
-#: analysis.c:54
+#: analysis.c:53
 msgid "rating|Supernatural"
 msgstr "Overjordisk"
 
-#: analysis.c:55
+#: analysis.c:54
 msgid "rating|N/A"
 msgstr "Ukendt"
 
-#: analysis.c:59
+#: analysis.c:58
 msgid "luck|Go to bed"
 msgstr "Gå i seng"
 
-#: analysis.c:60
+#: analysis.c:59
 msgid "luck|Bad dice, man!"
 msgstr "Elendige terninger, mand!"
 
-#: analysis.c:61
+#: analysis.c:60
 msgid "luck|None"
 msgstr "Ingen"
 
-#: analysis.c:62
+#: analysis.c:61
 msgid "luck|Good dice, man!"
 msgstr "Gode terninger, mand!"
 
-#: analysis.c:63
+#: analysis.c:62
 msgid "luck|Go to Las Vegas"
 msgstr "Tag til Las Vegas"
 
-#: analysis.c:1117
+#: analysis.c:1116
 msgid ""
 "No analysis selected, you must specify at least one type of analysis to "
 "perform"
 msgstr "Ingen analyse valgt. Du skal angive mindst en slags analyse."
 
-#: analysis.c:1154
+#: analysis.c:1153
 msgid "Analysing game; move:"
 msgstr "Analyserer parti; træk:"
 
-#: analysis.c:1188
+#: analysis.c:1187
 msgid "Analysing match; move:"
 msgstr "Analyserer kamp; træk:"
 
 #. header
-#: analysis.c:1404 bearoff.c:561 bearoff.c:597 bearoff.c:600 bearoff.c:639
+#: analysis.c:1403 bearoff.c:561 bearoff.c:597 bearoff.c:600 bearoff.c:639
 #: bearoff.c:665 bearoff.c:695 format.c:269 html.c:2485 show.c:1310
 msgid "Player"
 msgstr "Spiller"
 
-#: analysis.c:1410
+#: analysis.c:1409
 msgid "Chequerplay statistics"
 msgstr "Statistic for briktræk:"
 
-#: analysis.c:1432 html.c:2515
+#: analysis.c:1431 html.c:2515
 msgid "Luck statistics"
 msgstr "Statistik for held"
 
-#: analysis.c:1454 html.c:2536 progress.c:342
+#: analysis.c:1453 html.c:2536 progress.c:352
 msgid "Cube statistics"
 msgstr "Statistik for cuben"
 
-#: analysis.c:1476 html.c:2557
+#: analysis.c:1475 html.c:2557
 msgid "Overall statistics"
 msgstr "Samlet statistik"
 
-#: analysis.c:1561
+#: analysis.c:1560
 msgid "Please use 'analyse move' on the double decision"
 msgstr "Anvend 'analyse move' på doblingen"
 
-#: analysis.c:1570
+#: analysis.c:1569
 msgid "Analysing move..."
 msgstr "Analyserer træk..."
 
-#: analysis.c:1577
+#: analysis.c:1576
 msgid "Please use `hint' on unfinished moves"
 msgstr "Brug `hint' på ufærdige træk"
 
-#: analysis.c:1765
+#: analysis.c:1764
 msgid "Cannot clear analysis on this move"
 msgstr "Kan ikke slette dette træks analyse"
 
-#: analysis.c:2015
+#: analysis.c:2014
 #, c-format
 msgid ""
 "Move %d\n"
@@ -155,52 +155,52 @@ msgstr ""
 "Træk %d\n"
 "Cube markeret\n"
 
-#: analysis.c:2041
+#: analysis.c:2040
 #, c-format
 msgid "Move %d\n"
 msgstr "Træk %d\n"
 
-#: analysis.c:2043
+#: analysis.c:2042
 #, c-format
 msgid "%i (%s) marked\n"
 msgstr "%i (%s) markeret\n"
 
-#: analysis.c:2062
+#: analysis.c:2061
 #, c-format
 msgid "Game %d\n"
 msgstr "Parti %d\n"
 
-#: analysis.c:2424
+#: analysis.c:2423
 #, c-format
 msgid "No moverecord stored for this cube."
 msgstr "Ingen trækoplysinger gemt for denne cube."
 
-#: analysis.c:2429
+#: analysis.c:2428
 #, c-format
 msgid "This move doesn't imply a cubeaction. Cannot mark."
 msgstr "Dette træk implicerer ikke in dobbelbeslutning. Kan ikke markere."
 
-#: analysis.c:2441
+#: analysis.c:2440
 #, c-format
 msgid "No moverecord stored for this move."
 msgstr "Ingen trækdetaljer gemt for dette træk."
 
-#: analysis.c:2446
+#: analysis.c:2445
 #, c-format
 msgid "This is not a normal chequer move. Cannot mark."
 msgstr "Dette er ikke et normalt brikflyt. Kan ikke markere."
 
-#: analysis.c:2451
+#: analysis.c:2450
 #, c-format
 msgid "No moves to analyse"
 msgstr "Ingen træk at analysere"
 
-#: analysis.c:2534
+#: analysis.c:2533
 #, c-format
 msgid "`cmark move set none' requires a list of moves to set"
 msgstr "`cmark move set none' forventer en liste af træk"
 
-#: analysis.c:2548
+#: analysis.c:2547
 #, c-format
 msgid "`cmark move set rollout' requires a list of moves to set"
 msgstr "`cmark move set rollout' forventer en liste af træk"
@@ -297,9 +297,9 @@ msgstr "Antal rul"
 
 #: bearoff.c:631 bearoff.c:648 bearoff.c:657 format.c:792 formatgs.c:201
 #: formatgs.c:307 formatgs.c:354 formatgs.c:368 formatgs.c:416 formatgs.c:430
-#: formatgs.c:460 formatgs.c:486 formatgs.c:501 formatgs.c:516 gtkboard.c:600
-#: gtkboard.c:601 html.c:1861 html.c:2671 progress.c:798 progress.c:800
-#: progress.c:808
+#: formatgs.c:460 formatgs.c:486 formatgs.c:501 formatgs.c:516 gtkboard.c:601
+#: gtkboard.c:602 html.c:1861 html.c:2671 progress.c:809 progress.c:811
+#: progress.c:819
 #, c-format
 msgid "n/a"
 msgstr "i/t"
@@ -318,7 +318,7 @@ msgid "Mean"
 msgstr "Gennemsnit"
 
 #. std. dev
-#: bearoff.c:652 progress.c:687
+#: bearoff.c:652 progress.c:697
 msgid "Std dev"
 msgstr "std afv"
 
@@ -424,7 +424,7 @@ msgstr "Preview:"
 msgid "3d Colour selection"
 msgstr "3d farve udvalg"
 
-#: board3d/inc3d.h:209
+#: board3d/inc3d.h:206
 msgid "No texture"
 msgstr "Ingen overflade"
 
@@ -508,43 +508,43 @@ msgstr "Oversættelser"
 msgid "Support"
 msgstr "Support"
 
-#: dbprovider.c:260
+#: dbprovider.c:262
 msgid "Error importing 'main' module"
 msgstr "Fejl under indhendtning af \"main\" modulet"
 
-#: dbprovider.c:348
+#: dbprovider.c:350
 msgid "Error connecting to database"
 msgstr "Fejl under tilslutning til databasen"
 
-#: dbprovider.c:419
+#: dbprovider.c:421
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr "Windows socket fejl"
 
-#: dbprovider.c:424 dbprovider.c:433
+#: dbprovider.c:426 dbprovider.c:435
 #, c-format
 msgid "invalid Python return"
 msgstr "ulovlig Python tilbagemelding"
 
-#: dbprovider.c:444
+#: dbprovider.c:446
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Fejl under hentning af %zu\n"
 
-#: dbprovider.c:454
+#: dbprovider.c:456
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Fejl under hentning af (%zu, %zu)\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:469
 msgid "none"
 msgstr "Ingen"
 
-#: dbprovider.c:469
+#: dbprovider.c:471
 msgid "unknown type"
 msgstr "ukendt type"
 
-#: dbprovider.c:476
+#: dbprovider.c:478
 #, fuzzy, c-format
 msgid "Item %d is not a list\n"
 msgstr "%zu er ikke en liste\n"
@@ -678,7 +678,7 @@ msgstr ""
 msgid "Rewinding dice file (%s)"
 msgstr "Spoler terningefilen (%s) tilbage."
 
-#: drawboard.c:72 drawboard.c:295 gnubg.c:5102 gtkexport.c:651 gtkgame.c:2746
+#: drawboard.c:72 drawboard.c:295 gnubg.c:5100 gtkexport.c:651 gtkgame.c:2746
 #: gtkgame.c:3651 gtkgame.c:6119
 msgid "GNU Backgammon"
 msgstr "GNU Backgammon"
@@ -720,7 +720,7 @@ msgstr "Ingen evaluering"
 msgid "Neural net evaluation"
 msgstr "Neural net-evaluering"
 
-#: eval.c:286 eval.c:4046 format.c:798 gtkchequer.c:465 gtkcube.c:824
+#: eval.c:286 eval.c:4057 format.c:798 gtkchequer.c:465 gtkcube.c:824
 #: gtkgame.c:3228 gtkrace.c:231 html.c:1867
 msgid "Rollout"
 msgstr "Rollout"
@@ -794,32 +794,32 @@ msgstr "Bæver"
 msgid "doubletype|Raccoon"
 msgstr "Vaskebjørn"
 
-#: eval.c:513 eval.c:542
+#: eval.c:537 eval.c:566
 #, c-format
 msgid "%s is not a weights file"
 msgstr "%s er en  ugyldig vægte-fil"
 
-#: eval.c:524 eval.c:547
+#: eval.c:548 eval.c:571
 #, c-format
 msgid "weights file %s, has incorrect version (%s), expected (%s)"
 msgstr "NN vægtfilen %s har den ukorrekte version (%s), forventede (%s)"
 
-#: eval.c:572
+#: eval.c:596
 #, c-format
 msgid "Can't check for SIMD support\n"
 msgstr ""
 
-#: eval.c:575
+#: eval.c:599
 #, c-format
 msgid "No cpuid check available\n"
 msgstr ""
 
-#: eval.c:585
+#: eval.c:609
 #, c-format
 msgid "Unknown error while doing SIMD support test\n"
 msgstr ""
 
-#: eval.c:591
+#: eval.c:615
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -829,7 +829,7 @@ msgstr ""
 "Denne installation af GNU Backgammon understøtter SSE, men maskinen gør det "
 "ikke."
 
-#: eval.c:594
+#: eval.c:618
 #, fuzzy, c-format
 msgid ""
 "\n"
@@ -839,128 +839,128 @@ msgstr ""
 "Denne installation af GNU Backgammon understøtter SSE, men maskinen gør det "
 "ikke."
 
-#: eval.c:2988
+#: eval.c:3003
 msgid "neural network evaluator"
 msgstr "Neural net-evaluater"
 
-#: eval.c:2989
+#: eval.c:3004
 #, c-format
 msgid "version %s, %d inputs, %d hidden units"
 msgstr "version %s, %d inputs, %d gemte enheder"
 
-#: eval.c:2997 format.c:1084
+#: eval.c:3012 format.c:1084
 msgid "Race"
 msgstr "Løbespil"
 
-#: eval.c:3004 format.c:1085
+#: eval.c:3019 format.c:1085
 msgid "Crashed"
 msgstr "Sammenfaldet"
 
-#: eval.c:3011 format.c:1086
+#: eval.c:3026 format.c:1086
 msgid "Contact"
 msgstr "Kontakt"
 
-#: eval.c:3046
+#: eval.c:3061
 #, c-format
 msgid ""
 " * Weights file and databases installed in:\n"
 "   - %s\n"
 msgstr ""
 
-#: eval.c:3056 format.c:774 gtkcube.c:359 html.c:1700
+#: eval.c:3071 format.c:774 gtkcube.c:359 html.c:1700
 msgid "Double, take"
 msgstr "Dobling, take"
 
-#: eval.c:3058 format.c:775 gtkcube.c:360 html.c:1701
+#: eval.c:3073 format.c:775 gtkcube.c:360 html.c:1701
 msgid "Double, pass"
 msgstr "Dobling, pas"
 
-#: eval.c:3060
+#: eval.c:3075
 msgid "No double, take"
 msgstr "Ingen dobling, take"
 
-#: eval.c:3062
+#: eval.c:3077
 msgid "Too good to double, take"
 msgstr "For god, take"
 
-#: eval.c:3064
+#: eval.c:3079
 msgid "Too good to double, pass"
 msgstr "For god, pas"
 
-#: eval.c:3066
+#: eval.c:3081
 msgid "Double, beaver"
 msgstr "Dobling, bæver"
 
-#: eval.c:3068
+#: eval.c:3083
 msgid "No double, beaver"
 msgstr "Ingen dobling, bæver"
 
-#: eval.c:3070
+#: eval.c:3085
 msgid "Redouble, take"
 msgstr "Redobling, take"
 
-#: eval.c:3072
+#: eval.c:3087
 msgid "Redouble, pass"
 msgstr "Redobling, pas"
 
-#: eval.c:3074
+#: eval.c:3089
 msgid "No redouble, take"
 msgstr "Ingen redobling, take"
 
-#: eval.c:3076
+#: eval.c:3091
 msgid "Too good to redouble, take"
 msgstr "For god, take"
 
-#: eval.c:3078
+#: eval.c:3093
 msgid "Too good to redouble, pass"
 msgstr "For god, pas"
 
-#: eval.c:3080
+#: eval.c:3095
 msgid "No redouble, beaver"
 msgstr "Ingen redobling, bæver"
 
-#: eval.c:3082
+#: eval.c:3097
 msgid "Never double, take (dead cube)"
 msgstr "Ingen dobling, take (død terning)"
 
-#: eval.c:3084
+#: eval.c:3099
 msgid "Never redouble, take (dead cube)"
 msgstr "Ingen redobling, take (død terning)"
 
-#: eval.c:3086
+#: eval.c:3101
 msgid "Optional double, beaver"
 msgstr "Valgfri dobling, bæver"
 
-#: eval.c:3088
+#: eval.c:3103
 msgid "Optional double, take"
 msgstr "Valgfri dobling, take"
 
-#: eval.c:3090
+#: eval.c:3105
 msgid "Optional redouble, take"
 msgstr "Valgfri redobling, take"
 
-#: eval.c:3092
+#: eval.c:3107
 msgid "Optional double, pass"
 msgstr "Valgfri dobling, pas"
 
-#: eval.c:3094
+#: eval.c:3109
 msgid "Optional redouble, pass"
 msgstr "Valgfri redobling, pas"
 
-#: eval.c:3096
+#: eval.c:3111
 msgid "Unknown cube decision"
 msgstr "Ukendt cubeaction"
 
-#: eval.c:4043 format.c:1111 gtkgame.c:4949 html.c:296 progress.c:686
+#: eval.c:4054 format.c:1111 gtkgame.c:4949 html.c:296 progress.c:696
 #: show.c:121
 msgid "Cubeful"
 msgstr "Cubeful"
 
-#: eval.c:4043 gtkmovelistctrl.c:289 html.c:293 progress.c:685 show.c:121
+#: eval.c:4054 gtkmovelistctrl.c:289 html.c:293 progress.c:695 show.c:121
 msgid "Cubeless"
 msgstr "Cubefri"
 
-#: eval.c:4043 format.c:116 format.c:795 format.c:1129
+#: eval.c:4054 format.c:116 format.c:795 format.c:1129
 msgid "ply"
 msgstr "ply"
 
@@ -1118,9 +1118,9 @@ msgstr "og tilføj ind til %d yderelige træk inden for en equity af %0.3g"
 msgid "Play"
 msgstr "Spil"
 
-#: format.c:296 gnubg.c:1482 gnubg.c:1490 gnubg.c:2767 gnubg.c:2775
+#: format.c:296 gnubg.c:1482 gnubg.c:1490 gnubg.c:2765 gnubg.c:2773
 #: gtkgame.c:3215 gtkgame.c:3229 gtkoptions.c:420 gtkprefs.c:2737
-#: gtkprefs.c:2747 gtktheory.c:670 progress.c:269 progress.c:350
+#: gtkprefs.c:2747 gtktheory.c:670 progress.c:269 progress.c:360
 msgid "Cube"
 msgstr "Cube"
 
@@ -1258,7 +1258,7 @@ msgid "Player %s owns %d-cube"
 msgstr "Spiller %s ejer %d-cuben"
 
 #: format.c:935 format.c:1110 gtkcube.c:61 gtkmovelist.c:57 gtkrace.c:222
-#: html.c:293 progress.c:680
+#: html.c:293 progress.c:690
 msgid "Win"
 msgstr "Sejre"
 
@@ -1832,22 +1832,22 @@ msgstr "Ukomplet kommando "
 msgid "Unknown keyword `%s'.\n"
 msgstr "Ukendt nøgleord `%s'.\n"
 
-#: gnubg.c:1366 gnubg.c:1397 gnubg.c:1470 gnubg.c:2755 play.c:2475
+#: gnubg.c:1366 gnubg.c:1397 gnubg.c:1470 gnubg.c:2753 play.c:2475
 msgid "Rolled"
 msgstr "Rullede"
 
-#: gnubg.c:1428 gnubg.c:5566 gtkgame.c:1438 gtkgame.c:1456 gtkgame.c:1474
+#: gnubg.c:1428 gnubg.c:5564 gtkgame.c:1438 gtkgame.c:1456 gtkgame.c:1474
 msgid "No game in progress."
 msgstr "Intet parti i igang."
 
-#: gnubg.c:1453 gnubg.c:1455 gnubg.c:2738 gnubg.c:2740 text.c:61 text.c:66
+#: gnubg.c:1453 gnubg.c:1455 gnubg.c:2736 gnubg.c:2738 text.c:61 text.c:66
 #, c-format
 msgid "%d point"
 msgid_plural "%d points"
 msgstr[0] "%d point"
 msgstr[1] "%d point"
 
-#: gnubg.c:1462 gnubg.c:2747 text.c:75
+#: gnubg.c:1462 gnubg.c:2745 text.c:75
 #, c-format
 msgid "Cube offered at %d"
 msgstr "Cuben tilbudt på %d"
@@ -1857,16 +1857,16 @@ msgstr "Cuben tilbudt på %d"
 msgid "%s %d%d"
 msgstr "%s %d%d"
 
-#: gnubg.c:1472 gnubg.c:2757 text.c:85
+#: gnubg.c:1472 gnubg.c:2755 text.c:85
 msgid "On roll"
 msgstr "På rul"
 
-#: gnubg.c:1480 gnubg.c:2765 text.c:93
+#: gnubg.c:1480 gnubg.c:2763 text.c:93
 #, c-format
 msgid "%d point match (Cube: %d)"
 msgstr "%d-point kamp (Cube: %d)"
 
-#: gnubg.c:1495 gnubg.c:2780 gtkgame.c:5617 text.c:108
+#: gnubg.c:1495 gnubg.c:2778 gtkgame.c:5617 text.c:108
 #, c-format
 msgid "%d point match"
 msgstr "%d point kamp"
@@ -1888,7 +1888,7 @@ msgstr "Intet parti"
 msgid "Game over"
 msgstr "Parti forbi"
 
-#: gnubg.c:1617 gnubg.c:2607 show.c:453 show.c:483 show.c:801 show.c:1112
+#: gnubg.c:1617 gnubg.c:2605 show.c:453 show.c:483 show.c:801 show.c:1112
 #: show.c:1166 show.c:1213 show.c:1260 show.c:1375
 msgid "No position specified and no game in progress."
 msgstr "Ingen position angivet og intet parti i gang."
@@ -1952,41 +1952,41 @@ msgstr "Afvis"
 msgid "Considering cube action..."
 msgstr "Overvejer cubeaction..."
 
-#: gnubg.c:2231 gnubg.c:2277
+#: gnubg.c:2229 gnubg.c:2275
 #, c-format
 msgid "This decision is part of beaver/raccoon sequence and cannot be hinted"
 msgstr ""
 "Denne beslutning er del af en beaver/raccoon sekvens og kan ikke hint'es"
 
-#: gnubg.c:2238
+#: gnubg.c:2236
 #, c-format
 msgid "You cannot double."
 msgstr "Du kan ikke doble."
 
-#: gnubg.c:2342 gnubgmodule.c:1215 gnubgmodule.c:1350 play.c:1371
+#: gnubg.c:2340 gnubgmodule.c:1201 gnubgmodule.c:1336 play.c:1371
 msgid "Considering move..."
 msgstr "Overvejer træk..."
 
-#: gnubg.c:2386
+#: gnubg.c:2384
 msgid "There are no legal moves."
 msgstr "Der er ikke nogen lovlige træk"
 
-#: gnubg.c:2416 gnubgmodule.c:877
+#: gnubg.c:2414 gnubgmodule.c:863
 msgid "You must set up a board first."
 msgstr "Du skal først sætte et bræt op."
 
-#: gnubg.c:2581
+#: gnubg.c:2579
 msgid "That command is not yet implemented."
 msgstr "Denne kommando er endnu ikke implementeret."
 
-#: gnubg.c:2603
+#: gnubg.c:2601
 msgid ""
 "The rollout command takes no arguments and only rollouts the current position"
 msgstr ""
 "'rollout' kommandoen tager ikke nogen argumenter og ruller kun den nuværende "
 "stilling ud"
 
-#: gnubg.c:2614
+#: gnubg.c:2612
 #, c-format
 msgid "Current Position"
 msgstr "Nuværende position"
@@ -1994,28 +1994,28 @@ msgstr "Nuværende position"
 #. Python escape.
 #. Ideally we should be able to handle both > print 1+1 sys.exit() and > print 1+1
 #. * currently we only handle the latter...
-#: gnubg.c:2656
+#: gnubg.c:2654
 msgid "Only Python commands supported, not multiline code"
 msgstr "Kun Python kommandoer understøttet, ikke flerlinjet kode"
 
-#: gnubg.c:2683
+#: gnubg.c:2681
 msgid "This build of GNU Backgammon does not support Python"
 msgstr "Denne installation af GNU Backgammon understøtter ikke python"
 
-#: gnubg.c:2686 gnubg.c:2709
+#: gnubg.c:2684 gnubg.c:2707
 msgid "You must specify a file to load from."
 msgstr "Du skal angive hvilken fil, du ønsker at indlæse."
 
-#: gnubg.c:3381
+#: gnubg.c:3379
 #, c-format
 msgid "Settings saved to %s."
 msgstr "Indstillinger gemt i %s."
 
-#: gnubg.c:3381
+#: gnubg.c:3379
 msgid "standard output stream"
 msgstr "Standard uddata "
 
-#: gnubg.c:3855 makebearoff.c:1352 makebearoff.c:1353 makebearoff.c:1354
+#: gnubg.c:3853 makebearoff.c:1352 makebearoff.c:1353 makebearoff.c:1354
 #: makebearoff.c:1355 makebearoff.c:1357 makebearoff.c:1411 makebearoff.c:1416
 #: show.c:386 show.c:1795 show.c:1797 show.c:1799 show.c:1802 show.c:1827
 #: show.c:1831 show.c:1835 show.c:1844 show.c:1852 show.c:1856 show.c:1860
@@ -2023,7 +2023,7 @@ msgstr "Standard uddata "
 msgid "yes"
 msgstr "ja"
 
-#: gnubg.c:3855 makebearoff.c:1352 makebearoff.c:1353 makebearoff.c:1354
+#: gnubg.c:3853 makebearoff.c:1352 makebearoff.c:1353 makebearoff.c:1354
 #: makebearoff.c:1355 makebearoff.c:1357 makebearoff.c:1411 makebearoff.c:1416
 #: show.c:386 show.c:1795 show.c:1797 show.c:1799 show.c:1802 show.c:1827
 #: show.c:1831 show.c:1835 show.c:1844 show.c:1852 show.c:1856 show.c:1860
@@ -2031,186 +2031,186 @@ msgstr "ja"
 msgid "no"
 msgstr "nej"
 
-#: gnubg.c:3885 gnubg.c:5160
+#: gnubg.c:3883 gnubg.c:5158
 msgid "Please answer `y' or `n'."
 msgstr "Svar venligst y eller n."
 
-#: gnubg.c:3913
+#: gnubg.c:3911
 msgid "output will be shown"
 msgstr "output vises"
 
-#: gnubg.c:3913
+#: gnubg.c:3911
 msgid "output will not be shown"
 msgstr "output vises ikke"
 
-#: gnubg.c:4375
+#: gnubg.c:4373
 msgid "Enter dice: "
 msgstr "Indtast terninger: "
 
-#: gnubg.c:4393
+#: gnubg.c:4391
 msgid "You must enter two numbers between 1 and 6."
 msgstr "Du skal indtaste to numre mellem 1 og 6."
 
-#: gnubg.c:4457
+#: gnubg.c:4455
 #, c-format
 msgid "Fetching %d random numbers from <%s>\n"
 msgstr "Henter %d tilfældige tal fra <%s>\n"
 
 #. parse string
-#: gnubg.c:4509
+#: gnubg.c:4507
 msgid "Done."
 msgstr "Færdig."
 
-#: gnubg.c:4541
+#: gnubg.c:4539
 msgid "Failure setting up RNG"
 msgstr "Fejl under opsætningen af RNG"
 
-#: gnubg.c:4545
+#: gnubg.c:4543
 msgid "Failure setting up RNG for rollout."
 msgstr "Ude af stand til at sætte RNG op for udrulningen."
 
-#: gnubg.c:4642
+#: gnubg.c:4640
 msgid "Do not use bearoff database"
 msgstr "Benyt ikke bearoffdatabase"
 
-#: gnubg.c:4644
+#: gnubg.c:4642
 msgid "Evaluate commands in FILE and exit"
 msgstr "Evaluer kommandoerne i FILE og luk programmet."
 
-#: gnubg.c:4646
+#: gnubg.c:4644
 msgid "Set language to LANG"
 msgstr "Sæt sprog til LANG"
 
-#: gnubg.c:4648
+#: gnubg.c:4646
 msgid "Evaluate Python code in FILE and exit"
 msgstr "Evaluer Python koden i FILE og luk programmet"
 
-#: gnubg.c:4650
+#: gnubg.c:4648
 msgid "Disable sound effects"
 msgstr "Slå lydeffekter fra"
 
-#: gnubg.c:4652
+#: gnubg.c:4650
 msgid "Do not read .gnubgrc and .gnubgautorc commands"
 msgstr "Læs ikke kommandoer fra .gnubgrc og .gnubgautorc."
 
-#: gnubg.c:4655
+#: gnubg.c:4653
 msgid "Show gtk splash screen"
 msgstr "Vis gtk opstartskærm"
 
-#: gnubg.c:4657
+#: gnubg.c:4655
 msgid "Start the command line instead of using the graphical interface"
 msgstr "Start i kommandolinieinterfacet i stedet for det grafiske interface"
 
-#: gnubg.c:4659
+#: gnubg.c:4657
 msgid "Show version information and exit"
 msgstr "Vis versionsoplysninger og afslut"
 
-#: gnubg.c:4661
+#: gnubg.c:4659
 msgid "Ignore tty input when using the graphical interface"
 msgstr "Ignore tty-input når det grafiske interface anvendes"
 
-#: gnubg.c:4663
+#: gnubg.c:4661
 msgid "Turn on debug"
 msgstr "Aktivér fejlsøgning"
 
-#: gnubg.c:4665
+#: gnubg.c:4663
 msgid "Specify location of general data"
 msgstr "Angiv placering af generelle data"
 
-#: gnubg.c:4667
+#: gnubg.c:4665
 msgid "Specify location of program specific data"
 msgstr "Angiv placering af programspecifikke data"
 
-#: gnubg.c:4669
+#: gnubg.c:4667
 msgid "Specify location of program documentation"
 msgstr "Angiv placering af dokumentation"
 
-#: gnubg.c:4671
+#: gnubg.c:4669
 #, fuzzy
 msgid "Specify location of user's preferences directory"
 msgstr "Angiv placering af programspecifikke data"
 
-#: gnubg.c:4772 gnubg.c:4775 gnubg.c:4780 gnubg.c:4783 gnubg.c:4788
-#: gnubg.c:4793
+#: gnubg.c:4770 gnubg.c:4773 gnubg.c:4778 gnubg.c:4781 gnubg.c:4786
+#: gnubg.c:4791
 msgid "Initialising"
 msgstr "Initialiserer"
 
-#: gnubg.c:4772 gtkoptions.c:981
+#: gnubg.c:4770 gtkoptions.c:981
 msgid "Random number generator"
 msgstr "Generatorer af tilfældige tal(RNG)"
 
-#: gnubg.c:4775
+#: gnubg.c:4773
 msgid "match equity table"
 msgstr "Matchequity-tabel"
 
-#: gnubg.c:4780
+#: gnubg.c:4778
 msgid "neural nets"
 msgstr "neuralenet"
 
-#: gnubg.c:4783
+#: gnubg.c:4781
 #, fuzzy
 msgid "initialising thread data"
 msgstr "Fejl under initialisering af gammel bearoffdatabase!\n"
 
-#: gnubg.c:4788
+#: gnubg.c:4786
 msgid "Windows sockets"
 msgstr "Windows-sockets"
 
-#: gnubg.c:4801
+#: gnubg.c:4799
 msgid "Loading"
 msgstr "Indlæser"
 
-#: gnubg.c:4801
+#: gnubg.c:4799
 msgid "User Settings"
 msgstr "Brugerindstillinger"
 
-#: gnubg.c:4850
+#: gnubg.c:4848
 #, c-format
 msgid "GNU Backgammon build without Python."
 msgstr "Denne installation af GNU Backgammon understøtter ikke Python."
 
-#: gnubg.c:4882 gnubg.c:4925
+#: gnubg.c:4880 gnubg.c:4923
 msgid "Command only valid in match play"
 msgstr "Kommandoen er ikke gyldig under moneygames."
 
-#: gnubg.c:4894 gnubg.c:4895 gnubg.c:4897
+#: gnubg.c:4892 gnubg.c:4893 gnubg.c:4895
 msgid "MWC for equity"
 msgstr "MWC fra equity"
 
-#: gnubg.c:4896 gnubg.c:4941
+#: gnubg.c:4894 gnubg.c:4939
 msgid "By linear interpolation"
 msgstr "Ved linear interpolation:"
 
-#: gnubg.c:4939 gnubg.c:4940 gnubg.c:4942
+#: gnubg.c:4937 gnubg.c:4938 gnubg.c:4940
 msgid "Equity for MWC"
 msgstr "Equity fra MWC"
 
-#: gnubg.c:5083
+#: gnubg.c:5081
 #, c-format
 msgid "File \"%s\" exists. Overwrite? "
 msgstr "Filen \"%s\" eksisterer. Overskriv?"
 
-#: gnubg.c:5178
+#: gnubg.c:5176
 msgid "You may be about to make a very bad play"
 msgstr "Du er muligvis igang med at udføre et meget dårligt træk"
 
-#: gnubg.c:5182
+#: gnubg.c:5180
 msgid "You may be about to make a bad play"
 msgstr "Du er muligvis igang med at udføre et dårligt træk"
 
-#: gnubg.c:5186
+#: gnubg.c:5184
 msgid "You may be about to make a doubtful play"
 msgstr "Du er muligvis igang med at udføre et tvivlsomt træk"
 
-#: gnubg.c:5198
+#: gnubg.c:5196
 msgid "Are you sure?"
 msgstr "Er du sikker?"
 
-#: gnubg.c:5260
+#: gnubg.c:5258
 msgid "Analysis used for `hint' has been cleared"
 msgstr "Analysedata for `hint' nulstillet"
 
-#: gnubg.c:5427
+#: gnubg.c:5425
 #, c-format
 msgid ""
 "Locale in your environment not supported by C library. Falling back to C "
@@ -2219,26 +2219,26 @@ msgstr ""
 "Regionaldata i miljøet er ikke understøttet af C biblioteket. Falder tilbage "
 "til C regionaldata.\n"
 
-#: gnubg.c:5629
+#: gnubg.c:5627
 msgid ""
 "Are you sure you want to discard the current match and your existing "
 "autosave? "
 msgstr "Er du sikker på du vil smide den nuværende kamp og dit autosave væk?"
 
-#: gnubg.c:5637
+#: gnubg.c:5635
 msgid "Are you sure you want to discard the current match? "
 msgstr "Er du sikker på at smide resten af matchen væk?"
 
-#: gnubgmodule.c:286
+#: gnubgmodule.c:272
 #, fuzzy
 msgid "invalid dict value in cubeinfo (see gnubg.cubeinfo() for an example)"
 msgstr "ulovlig dict værdi i cubeinfo (se gnubg.setcubeinfo() for et eksempel)"
 
-#: gnubgmodule.c:304
+#: gnubgmodule.c:290
 msgid "invalid value cubeinfo (see gnubg.setcubeinfo() for an example)"
 msgstr "ulovlig værdi cubeinfo (se gnubg.setcubeinfo() for et eksempel)"
 
-#: gnubgmodule.c:375
+#: gnubgmodule.c:361
 #, fuzzy
 msgid ""
 "invalid dict value in movefilter (see gnubg.getevalhintfilter() for an "
@@ -2247,170 +2247,170 @@ msgstr ""
 "ulovlig dict værdi i evalcontext (se gnubg.evalcontext() for et eksempel)"
 
 #. unknown dict value
-#: gnubgmodule.c:388
+#: gnubgmodule.c:374
 #, fuzzy
 msgid ""
 "invalid value in movefilter (see gnubg.getevalhintfilter() for an example)"
 msgstr "ulovlig værdi i evalcontext (se gnubg.evalcontext() for et eksempel)"
 
 #. unknown dict value
-#: gnubgmodule.c:399
+#: gnubgmodule.c:385
 #, fuzzy
 msgid ""
 "invalid value in movefilter(see gnubg.getevalhintfilter() for an example)"
 msgstr "ulovlig værdi i evalcontext (se gnubg.evalcontext() for et eksempel)"
 
-#: gnubgmodule.c:429 gnubgmodule.c:450
+#: gnubgmodule.c:415 gnubgmodule.c:436
 #, fuzzy
 msgid "invalid movefilter list(see gnubg.getevalhintfilter() for an example)"
 msgstr "ulovlig værdi evalcontext (se gnubg.evalcontext() for et eksempel)"
 
-#: gnubgmodule.c:445
+#: gnubgmodule.c:431
 #, fuzzy
 msgid ""
 "invalid movefilter in list(see gnubg.getevalhintfilter() for an example)"
 msgstr "ulovlig værdi i evalcontext (se gnubg.evalcontext() for et eksempel)"
 
-#: gnubgmodule.c:509
+#: gnubgmodule.c:495
 #, fuzzy
 msgid ""
 "requires 1 argument: a list of move filters (see gnubg.getevalhintfilter() "
 "for an example))"
 msgstr "ulovlig værdi i evalcontext (se gnubg.evalcontext() for et eksempel)"
 
-#: gnubgmodule.c:588
+#: gnubgmodule.c:574
 #, fuzzy
 msgid "invalid dict value in posinfo (see gnubg.posinfo() for an example)"
 msgstr "ulovlig dict værdi i cubeinfo (se gnubg.setcubeinfo() for et eksempel)"
 
 #. unknown dict value
-#: gnubgmodule.c:599 gnubgmodule.c:610
+#: gnubgmodule.c:585 gnubgmodule.c:596
 #, fuzzy
 msgid "invalid value posinfo (see gnubg.posinfo() for an example)"
 msgstr "ulovlig værdi cubeinfo (se gnubg.setcubeinfo() for et eksempel)"
 
-#: gnubgmodule.c:672
+#: gnubgmodule.c:658
 msgid ""
 "invalid dict value in evalcontext (see gnubg.evalcontext() for an example)"
 msgstr ""
 "ulovlig dict værdi i evalcontext (se gnubg.evalcontext() for et eksempel)"
 
-#: gnubgmodule.c:686
+#: gnubgmodule.c:672
 msgid "invalid value evalcontext (see gnubg.evalcontext() for an example)"
 msgstr "ulovlig værdi evalcontext (se gnubg.evalcontext() for et eksempel)"
 
-#: gnubgmodule.c:709
+#: gnubgmodule.c:695
 msgid "invalid value in evalcontext (see gnubg.evalcontext() for an example)"
 msgstr "ulovlig værdi i evalcontext (se gnubg.evalcontext() for et eksempel)"
 
-#: gnubgmodule.c:752 gnubgmodule.c:1167
+#: gnubgmodule.c:738 gnubgmodule.c:1153
 msgid "error in SetCubeInfo\n"
 msgstr ""
 
-#: gnubgmodule.c:777
+#: gnubgmodule.c:763
 msgid "error in SetPosInfo\n"
 msgstr ""
 
-#: gnubgmodule.c:881
+#: gnubgmodule.c:867
 #, fuzzy
 msgid "Hints for cube actions not yet implemented"
 msgstr "Denne kommando er endnu ikke implementeret."
 
-#: gnubgmodule.c:886
+#: gnubgmodule.c:872
 #, fuzzy
 msgid "Hints for resignations not yet implemented"
 msgstr "Denne kommando er endnu ikke implementeret."
 
-#: gnubgmodule.c:891
+#: gnubgmodule.c:877
 #, fuzzy
 msgid "Hints for take actions not yet implemented"
 msgstr "Denne kommando er endnu ikke implementeret."
 
-#: gnubgmodule.c:903
+#: gnubgmodule.c:889
 #, fuzzy
 msgid "interrupted/errno in hint_move"
 msgstr "afbrudt/errno i GeneralEvaluateE"
 
-#: gnubgmodule.c:1084 gnubgmodule.c:1146
+#: gnubgmodule.c:1070 gnubgmodule.c:1132
 #, fuzzy
 msgid "Invalid board as argument "
 msgstr "Ugyldigt argument\n"
 
-#: gnubgmodule.c:1089
+#: gnubgmodule.c:1075
 #, fuzzy
 msgid "Variation unknown "
 msgstr "variationer"
 
-#: gnubgmodule.c:1135
+#: gnubgmodule.c:1121
 msgid ""
 "requires 2 arguments (MoveTuple, Board). (see gnubg.findbestmove() and gnubg."
 "board() for examples)"
 msgstr ""
 
-#: gnubgmodule.c:1141
+#: gnubgmodule.c:1127
 #, fuzzy
 msgid "Invalid move tuple as argument"
 msgstr "Ugyldigt argument\n"
 
-#: gnubgmodule.c:1218
+#: gnubgmodule.c:1204
 #, fuzzy
 msgid "interrupted/errno in asyncMoveDecisionE"
 msgstr "afbrudt/errno i GeneralCubeDecionsE"
 
-#: gnubgmodule.c:1272
+#: gnubgmodule.c:1258
 #, fuzzy
 msgid "Considering cube decision..."
 msgstr "Overvejer cubeaction..."
 
-#: gnubgmodule.c:1275
+#: gnubgmodule.c:1261
 #, fuzzy
 msgid "interrupted/errno in asyncCubeDecisionE"
 msgstr "afbrudt/errno i GeneralCubeDecionsE"
 
-#: gnubgmodule.c:1325
+#: gnubgmodule.c:1311
 msgid "What? No dice?\n"
 msgstr ""
 
-#: gnubgmodule.c:1353
+#: gnubgmodule.c:1339
 #, fuzzy
 msgid "interrupted/errno in asyncFindBestMoves"
 msgstr "afbrudt/errno i GeneralEvaluateE"
 
-#: gnubgmodule.c:1446
+#: gnubgmodule.c:1432
 #, fuzzy
 msgid "number of rolls must be greater than 0"
 msgstr "Cubeeffektivitetsfaktoren for ræs skal være større end 0."
 
-#: gnubgmodule.c:1488
+#: gnubgmodule.c:1474
 msgid "invalid matchlength"
 msgstr " Ugyldig kamplængde"
 
-#: gnubgmodule.c:1657
+#: gnubgmodule.c:1643
 msgid ""
 "requires 0 or exactly 3 arguments (Board, Cube-Info dict, Pos-Info dict). "
 "(see gnubg.board(), gnubg.cubeinfo(), gnubg.posinfo() for examples)"
 msgstr ""
 
-#: gnubgmodule.c:1666 gnubgmodule.c:1704
+#: gnubgmodule.c:1652 gnubgmodule.c:1690
 #, fuzzy
 msgid "no current position available"
 msgstr "Nøværende position."
 
-#: gnubgmodule.c:1716
+#: gnubgmodule.c:1702
 msgid ""
 "a cube-info argument requires a pos-info dictionary as an argument (see "
 "gnubg.matchid() for an example)"
 msgstr ""
 
-#: gnubgmodule.c:1741
+#: gnubgmodule.c:1727
 msgid "invalid positionid"
 msgstr " Ugyldigt positionsid"
 
-#: gnubgmodule.c:1847
+#: gnubgmodule.c:1833
 msgid "invalid number of chequers or points"
 msgstr "ugyldigt antal brikker eller punkter"
 
-#: gnubgmodule.c:1854
+#: gnubgmodule.c:1840
 msgid "invalid position number"
 msgstr "Ugyldigt positionsnummer"
 
@@ -2479,32 +2479,32 @@ msgstr "_Afvis"
 msgid "_Resign"
 msgstr "_Resigner"
 
-#: gtkboard.c:589
+#: gtkboard.c:590
 #, c-format
 msgid "(no hit: %d roll)"
 msgid_plural "(no hit: %d rolls)"
 msgstr[0] "(ingen hit: %d rul"
 msgstr[1] "(ingen hit: %d rul"
 
-#: gtkboard.c:602 gtkboard.c:603 gtkboard.c:615 gtkboard.c:616
+#: gtkboard.c:603 gtkboard.c:604 gtkboard.c:616 gtkboard.c:617
 #, c-format
 msgid "Pips: "
 msgstr "Pips:"
 
-#: gtkboard.c:631 gtkboard.c:632 gtkboard.c:651 gtkboard.c:652
+#: gtkboard.c:632 gtkboard.c:633 gtkboard.c:652 gtkboard.c:653
 #, c-format
 msgid "EPC: "
 msgstr "EPC:"
 
-#: gtkboard.c:694
+#: gtkboard.c:695
 msgid "Illegal move"
 msgstr "ulovligt træk"
 
-#: gtkboard.c:707
+#: gtkboard.c:708
 msgid "(Editing)"
 msgstr "(Redigerer)"
 
-#: gtkboard.c:734
+#: gtkboard.c:735
 #, c-format
 msgid "Return hits: %s\n"
 msgstr "Returhit: %s\n"
@@ -2512,65 +2512,65 @@ msgstr "Returhit: %s\n"
 #. calling CommandPlay here may lead to crashes if
 #. * the click is in the small time frame between end
 #. * of player turn and next computer turn
-#: gtkboard.c:1808 play.c:1879 play.c:2241 play.c:2297 play.c:2398 play.c:2564
+#: gtkboard.c:1809 play.c:1879 play.c:2241 play.c:2297 play.c:2398 play.c:2564
 #: play.c:3653 play.c:3708 play.c:3775 play.c:3879
 msgid ""
 "It is the computer's turn -- type `play' to force it to move immediately."
 msgstr ""
 "Det er computerens tur -- skriv `play' for at tvinge den til at trække."
 
-#: gtkboard.c:2191 gtkboard.c:2197
+#: gtkboard.c:2192 gtkboard.c:2198
 #, c-format
 msgid "%d (won match)"
 msgstr "%d (vundet kamp)"
 
-#: gtkboard.c:2193 gtkboard.c:2199
+#: gtkboard.c:2194 gtkboard.c:2200
 #, c-format
 msgid "%d (%d-away)"
 msgstr "%d (%d-væk)"
 
-#: gtkboard.c:2429
+#: gtkboard.c:2430
 msgid "unlimited"
 msgstr "ubegrænset"
 
-#: gtkboard.c:3268
+#: gtkboard.c:3269
 msgid "You can only change whether this is the Crawford game when editing"
 msgstr "Du kan kun ændre hvorvidt dette er Crawfordpartiet i rettemode."
 
-#: gtkboard.c:3279
+#: gtkboard.c:3280
 msgid "You can only enable Jacoby while editing a position"
 msgstr ""
 
-#: gtkboard.c:3531
+#: gtkboard.c:3532
 #, c-format
 msgid "Set player %d on roll."
 msgstr "Sæt spiller %d på rul"
 
 #. score label
-#: gtkboard.c:3643 gtkboard.c:3710
+#: gtkboard.c:3644 gtkboard.c:3711
 msgid "Score:"
 msgstr "Score:"
 
-#: gtkboard.c:3758
+#: gtkboard.c:3759
 msgid "Match:"
 msgstr "Kamp:"
 
 #. crawford and jacoby flag
-#: gtkboard.c:3773 gtktheory.c:666
+#: gtkboard.c:3774 gtktheory.c:666
 msgid "Crawford game"
 msgstr "Crawford parti"
 
-#: gtkboard.c:3774
+#: gtkboard.c:3775
 #, fuzzy
 msgid "Jacoby"
 msgstr "Jacoby-regel"
 
-#: gtkboard.c:4029 gtkboard.c:4044
+#: gtkboard.c:4030 gtkboard.c:4045
 #, c-format
 msgid "%s wins opening roll"
 msgstr "%s vinder åbningsrullet"
 
-#: gtkboard.c:4036 gtkboard.c:4048
+#: gtkboard.c:4037 gtkboard.c:4049
 #, c-format
 msgid "%s to roll"
 msgstr "%s på rul"
@@ -2596,8 +2596,8 @@ msgstr "Eval"
 msgid "..."
 msgstr "..."
 
-#: gtkchequer.c:468 gtkgame.c:3207 gtkgame.c:3218 gtkgame.c:3230
-#: gtkmovelist.c:65 gtkrolls.c:197 html.c:2165 sound.c:353
+#: gtkchequer.c:468 gtkgame.c:3207 gtkgame.c:3218 gtkmovelist.c:65
+#: gtkrolls.c:197 html.c:2165 sound.c:353
 msgid "Move"
 msgstr "Træk"
 
@@ -3065,7 +3065,7 @@ msgstr "Batchanalysefiler"
 msgid "Skip"
 msgstr "Spring over"
 
-#: gtkfile.c:709 progress.c:749
+#: gtkfile.c:709 progress.c:762
 msgid "Stop"
 msgstr "Stop"
 
@@ -3628,8 +3628,8 @@ msgstr "Neural net-evaluater"
 
 #: gtkgame.c:3200
 #, fuzzy
-msgid "_Rollout"
-msgstr "Rollout"
+msgid "_Rollout position"
+msgstr "Rollout som startposition"
 
 #: gtkgame.c:3201
 #, fuzzy
@@ -3665,13 +3665,27 @@ msgstr ""
 msgid "Clear"
 msgstr "Slet slag"
 
-#: gtkgame.c:3221 gtkgame.c:3231 gtkoptions.c:338 show.c:2169
+#: gtkgame.c:3221 gtkoptions.c:338 show.c:2169
 msgid "Game"
 msgstr "Parti"
 
-#: gtkgame.c:3224 gtkgame.c:3232 gtkoptions.c:781
+#: gtkgame.c:3224 gtkoptions.c:781
 msgid "Match"
 msgstr "Kamp"
+
+#: gtkgame.c:3230
+#, fuzzy
+msgid "CMarked from Move"
+msgstr "læs fra fil"
+
+#: gtkgame.c:3231
+#, fuzzy
+msgid "CMarked from Game"
+msgstr "læs fra fil"
+
+#: gtkgame.c:3232
+msgid "CMarked from Match"
+msgstr ""
 
 #: gtkgame.c:3234
 #, fuzzy
@@ -4174,7 +4188,8 @@ msgid "/_Analyse/_Hint"
 msgstr "/_Analyse/_Hint"
 
 #: gtkgame.c:3428
-msgid "/_Analyse/_Rollout"
+#, fuzzy
+msgid "/_Analyse/_Rollout position"
 msgstr "/_Analyse/_Rollout"
 
 #: gtkgame.c:3429 gtkgame.c:3436 gtkgame.c:3447 gtkgame.c:3461 gtkgame.c:3467
@@ -4272,15 +4287,18 @@ msgid "/_Analyse/Rollout/Cube"
 msgstr "/_Analyse/Rollout/Cube"
 
 #: gtkgame.c:3464
-msgid "/_Analyse/Rollout/Move"
+#, fuzzy
+msgid "/_Analyse/Rollout/CMarked from Move"
 msgstr "/_Analyse/Rollout/Træk"
 
 #: gtkgame.c:3465
-msgid "/_Analyse/Rollout/Game"
+#, fuzzy
+msgid "/_Analyse/Rollout/CMarked from Game"
 msgstr "/_Analyse/Rollout/Parti"
 
 #: gtkgame.c:3466
-msgid "/_Analyse/Rollout/Match"
+#, fuzzy
+msgid "/_Analyse/Rollout/CMarked from Match"
 msgstr "/_Analyse/Rollout/Match"
 
 #: gtkgame.c:3468
@@ -5040,7 +5058,7 @@ msgstr "Trækfilter"
 msgid "Modify..."
 msgstr "Rediger..."
 
-#: gtkmovelist.c:55 progress.c:678
+#: gtkmovelist.c:55 progress.c:688
 msgid "Rank"
 msgstr "Rang"
 
@@ -7373,7 +7391,8 @@ msgid "No hardware accelerated graphics card found, performance may be slow"
 msgstr "Intet 3d grafikkort fundet, ydelsen kan være lav"
 
 #: gtkwindows.c:58
-msgid "Interupt the current process?"
+#, fuzzy
+msgid "Interrupt the current process?"
 msgstr "Stop den nuværende process?"
 
 #: gtkwindows.c:61
@@ -8177,12 +8196,12 @@ msgstr ""
 msgid "%d nets converted\n"
 msgstr "%d net blev konverteret\n"
 
-#: matchequity.c:1557
+#: matchequity.c:1552
 #, c-format
 msgid "Error generating post-Crawford MET\n"
 msgstr "post-Crawford-MET kunne ikke dannes\n"
 
-#: matchequity.c:1574
+#: matchequity.c:1569
 #, c-format
 msgid "Error generating pre-Crawford MET\n"
 msgstr "pre-Crawford-MET kunne ikke dannes\n"
@@ -8690,17 +8709,17 @@ msgstr "Resignerer"
 msgid "There must be a game in progress to set a player on roll."
 msgstr "Der skal være et spil i gang før du kan sætte en spiller på rul."
 
-#: progress.c:215 progress.c:300
+#: progress.c:215 progress.c:310
 #, c-format
 msgid "%d-cube"
 msgstr "%d-cube"
 
-#: progress.c:215 progress.c:300
+#: progress.c:215 progress.c:310
 #, c-format
 msgid ">= %d-cube"
 msgstr ">= %d-cube"
 
-#: progress.c:232 progress.c:315
+#: progress.c:232 progress.c:325
 msgid "Total"
 msgstr "Samlet"
 
@@ -8720,148 +8739,156 @@ msgstr "Vinder bg\n"
 msgid "Win statistics"
 msgstr "Sejrstatistik"
 
-#: progress.c:273
+#. Truncated should be the number of games truncated at the
+#. * 2-sided bearoff database, but there is another possible
+#. * discrepancy between cGames and cGamesCount for cube rollouts :
+#. * one of the double/no-double branch could have had up to
+#. * nthreads less trials than the other, leading to a negative
+#. * number here if there is no truncation, like in match play.
+#. * Don't display this but a 0 instead.
+#.
+#: progress.c:281
 #, c-format
 msgid "%d/%d games truncated"
 msgstr "%d/%d partier trunkeret"
 
-#: progress.c:336
+#: progress.c:346
 msgid "Double, take\n"
 msgstr "Dobling, take\n"
 
-#: progress.c:336
+#: progress.c:346
 msgid "Double, pass\n"
 msgstr "Dobling, pas\n"
 
-#: progress.c:355 progress.c:361
+#: progress.c:365 progress.c:371
 #, c-format
 msgid "Cube efficiency for %s: %7.4f"
 msgstr "Effektivitet af doblinger for %s: %7.4f"
 
-#: progress.c:380
+#: progress.c:390
 msgid "Moves with bearoff"
 msgstr "Antal træk med bearoff"
 
-#: progress.c:387
+#: progress.c:397
 msgid "Pips lost"
 msgstr "Ubrugte pip"
 
-#: progress.c:401
+#: progress.c:411
 msgid "Average Pips lost"
 msgstr "Gennemsnitlig antal pips spildt"
 
-#: progress.c:419
+#: progress.c:429
 msgid "Bearoff statistics"
 msgstr "Bearoffstatistik"
 
-#: progress.c:447
+#: progress.c:457
 msgid "Number of close-outs"
 msgstr "Antal closeouts"
 
-#: progress.c:460
+#: progress.c:470
 msgid "Average move number for close out"
 msgstr "Gennemsnitligt antal træk før closeout"
 
-#: progress.c:478
+#: progress.c:488
 msgid "Closed out statistics"
 msgstr "Closeoutstatistik"
 
-#: progress.c:505
+#: progress.c:515
 msgid "Number of games with hit(s)"
 msgstr "Antal spil med hit(s)"
 
-#: progress.c:512
+#: progress.c:522
 msgid "Percent games with hits"
 msgstr "Andel af partier med hits"
 
-#: progress.c:526
+#: progress.c:536
 msgid "Average move number for first hit"
 msgstr "Gennemsnitligt antal træk for første hit"
 
-#: progress.c:544
+#: progress.c:554
 msgid "Hit statistics"
 msgstr "Hitstatistik"
 
 #. Create dialog
-#: progress.c:623
+#: progress.c:633
 msgid "Rollout statistics"
 msgstr "Statistic for udrulning"
 
-#: progress.c:679
+#: progress.c:689
 msgid "Trials"
 msgstr "Partier"
 
-#: progress.c:681
+#: progress.c:691
 msgid "Win (g)"
 msgstr "Sejre (g) "
 
-#: progress.c:682
+#: progress.c:692
 msgid "Win (bg)"
 msgstr "Sejre (bg)"
 
-#: progress.c:683
+#: progress.c:693
 msgid "Lose (g)"
 msgstr "Nederlag (g)"
 
-#: progress.c:684
+#: progress.c:694
 msgid "Lose (bg)"
 msgstr "Nederlag (bg)"
 
-#: progress.c:688
+#: progress.c:698
 msgid "JSDs"
 msgstr ""
 
-#: progress.c:745
+#: progress.c:758
 msgid "GNU Backgammon - Rollout"
 msgstr "GNU Backgammon - Udrulning"
 
-#: progress.c:748
+#: progress.c:761
 msgid "View statistics"
 msgstr "Vis statistik"
 
-#: progress.c:751
+#: progress.c:764
 msgid "Stop All"
 msgstr "Stop alle"
 
-#: progress.c:797
+#: progress.c:808
 msgid "Time elapsed"
 msgstr "Tid gået:"
 
-#: progress.c:799
+#: progress.c:810
 msgid "Estimated time left"
 msgstr "Estimeret tid tilbage"
 
-#: progress.c:802
+#: progress.c:813
 #, c-format
 msgid "Estimated SE for \"%s\" after %d trials "
 msgstr "Estimateret SF for \"%s\" efter %d partier "
 
-#: progress.c:804
+#: progress.c:815
 #, c-format
 msgid "Estimated SE after %d trials "
 msgstr "Estimeret SF efter %d partier "
 
-#: progress.c:946
+#: progress.c:957
 #, c-format
 msgid "Finished (%d trials)"
 msgstr "Færdig (%d partier)"
 
-#: progress.c:1075
+#: progress.c:1086
 #, c-format
 msgid "Time elapsed %s"
 msgstr "Tid gået %s"
 
-#: progress.c:1076
+#: progress.c:1087
 #, c-format
 msgid " Estimated time left %s\n"
 msgstr "Estimeret tid tilbage %s\n"
 
-#: progress.c:1091
+#: progress.c:1102
 #, c-format
 msgid "Estimated SE for \"%s\" after %d trials %s\n"
 msgstr "Estimateret SF for \"%s\" efter %d partier %s\n"
 
-#: progress.c:1093
+#: progress.c:1104
 #, c-format
 msgid "Estimated SE after %d trials %s\n"
 msgstr "Estimeret SF efter %d partier %s\n"
@@ -8875,7 +8902,8 @@ msgid "The match is not finished\n"
 msgstr "Kampen er ikke færdig\n"
 
 #: relational.c:422
-msgid "All of the match is not analyzed\n"
+#, fuzzy
+msgid "All of the match is not analysed\n"
 msgstr "Kun en del af kampen er analyseret\n"
 
 #: relational.c:425
@@ -11259,7 +11287,7 @@ msgstr ""
 
 #: show.c:533
 #, fuzzy, c-format
-msgid "%d cache entries have been used. %d lookups, %d hits"
+msgid "%u cache entries have been used. %u lookups, %u hits"
 msgstr "%d cacheposter anvendt.  %d opslag. %d hits"
 
 #: show.c:555
@@ -12527,6 +12555,10 @@ msgid "You must specify a file to export to (see `help export position text')."
 msgstr ""
 "Du skal angive hvilken fil, du ønsker at eksportere til (se `help export "
 "position text')."
+
+#, fuzzy
+#~ msgid "_Rollout"
+#~ msgstr "Rollout"
 
 #~ msgid "number of reads: %lu"
 #~ msgstr "antal læsninger: %lu"
