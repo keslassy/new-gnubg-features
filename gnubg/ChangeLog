@@ -1,3 +1,7 @@
+2014-10-21  Michael Petch  <mpetch@gnubg.org>
+
+	Version 1.04 released.
+
 2014-09-08  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* eval.c, eval.h: Don't use SanityCheck() on positions evaluated
