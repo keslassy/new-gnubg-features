@@ -4743,6 +4743,15 @@ Equity
                 <entry>2 threads</entry>
               </row>
               <row>
+                <entry>237600</entry>
+                <entry>Intel Core i5-3320M 2.60 GHz</entry>
+                <entry>Lenovo T430</entry>
+                <entry>4 GB</entry>
+                <entry>Win XP SP3</entry>
+                <entry>1.04</entry>
+                <entry>2 threads</entry>
+              </row>
+              <row>
                 <entry>197700</entry>
                 <entry>Intel Core i5-3320M 2.60 GHz</entry>
                 <entry>Lenovo T430</entry>
@@ -4768,6 +4777,15 @@ Equity
                 <entry>Win XP SP3</entry>
                 <entry>1.02</entry>
                 <entry>2 threads</entry>
+              </row>
+              <row>
+                <entry>119700</entry>
+                <entry>Intel Core i5-3320M 2.60 GHz</entry>
+                <entry>Lenovo T430</entry>
+                <entry>4 GB</entry>
+                <entry>Win XP SP3</entry>
+                <entry>1.04</entry>
+                <entry>1 thread</entry>
               </row>
               <row>
                 <entry>100100</entry>
@@ -4875,6 +4893,14 @@ Equity
                 <entry>256 MB</entry>
                 <entry>Win XP SP2</entry>
                 <entry>0.16-mingw</entry>
+              </row>
+              <row>
+                <entry>9170</entry>
+                <entry>Intel Celeron 750 MHz</entry>
+                <entry>Toshiba Satellite 4600</entry>
+                <entry>256 MB</entry>
+                <entry>Win XP SP1</entry>
+                <entry>1.04</entry>
               </row>
               <row>
                 <entry>8520</entry>
