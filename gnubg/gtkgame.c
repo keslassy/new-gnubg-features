@@ -1326,7 +1326,7 @@ MainSize(GtkWidget * pw, GtkRequisition * preq, gpointer p)
     int width;
 
     if (gtk_widget_get_realized(pw))
-        g_signal_handlers_disconnect_by_func(G_OBJECT(pw), G_CALLBACK(MainSize), p);
+        g_signal_handlers_disconnect_by_func(G_OBJECT(pw), (gpointer) G_CALLBACK(MainSize), p);
 
     else if (!SetMainWindowSize())
         gtk_window_set_default_size(GTK_WINDOW(pw),
@@ -3227,9 +3227,12 @@ static GtkActionEntry actionEntries[] = {
 
     {"RolloutMenuAction", NULL, N_("Rollout"), NULL, NULL, G_CALLBACK(NULL)},
     {"RolloutCubeAction", NULL, N_("Cube"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_CUBE)},
-    {"RolloutMoveAction", NULL, N_("CMarked from Move"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_MOVE)},
-    {"RolloutGameAction", NULL, N_("CMarked from Game"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_GAME)},
-    {"RolloutMatchAction", NULL, N_("CMarked from Match"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_MATCH)},
+    {"RolloutMoveAction", NULL, N_("CMarked from Move"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_MOVE)},
+    {"RolloutGameAction", NULL, N_("CMarked from Game"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_GAME)},
+    {"RolloutMatchAction", NULL, N_("CMarked from Match"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_MATCH)},
 
     {"BatchAnalyseAction", NULL, N_("Batch analyse..."), NULL, NULL, G_CALLBACK(GTKBatchAnalyse)},
     {"MatchOrSessionStatsAction", NULL, N_("Match or session statistics"), NULL, NULL,
@@ -4609,12 +4612,12 @@ GetRolloutSettings(GtkWidget * pw, rolloutwidget * prw)
     prw->rcRollout.fStopOnSTD = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoSTDStop));
     prw->rcRollout.nMinimumGames =
         (unsigned int) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(prw->prwGeneral->pwMinGames));
-    prw->rcRollout.rStdLimit = (float)gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwMaxError));
+    prw->rcRollout.rStdLimit = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwMaxError));
 
     prw->rcRollout.fStopOnJsd = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop));
     prw->rcRollout.nMinimumJsdGames =
         (unsigned int) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdMinGames));
-    prw->rcRollout.rJsdLimit = (float)gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdAdjLimit));
+    prw->rcRollout.rJsdLimit = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdAdjLimit));
 
     /* if the players are the same, copy player 0 settings to player 1 */
     if (fPlayersAreSame) {
@@ -6134,7 +6137,7 @@ GTKBearoffProgress(int i)
     g_free(gsz);
 
     if (i >= 54000) {
-        g_signal_handlers_disconnect_by_func(G_OBJECT(pwDialog), G_CALLBACK(GTKBearoffProgressCancel), NULL);
+        g_signal_handlers_disconnect_by_func(G_OBJECT(pwDialog), (gpointer) G_CALLBACK(GTKBearoffProgressCancel), NULL);
 
         gtk_widget_destroy(pwDialog);
     }
