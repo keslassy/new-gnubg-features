@@ -611,7 +611,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
 
                         }
 
-                    if (prc->fInitial && !iTurn && j == i)
+                    if (prc->fInitial && !iTurn)
                         /* no doubles ... */
                         for (i = 0; i < NUM_ROLLOUT_OUTPUTS; i++)
                             arMean[i] /= 30.0f;
@@ -1072,7 +1072,7 @@ check_sds(int *active)
                     }
                 } else {        /* match play */
                     s = fabsf(se_mwc2eq(se_eq2mwc(aarSigma[alt][output],
-                                                 &aciLocal[alt]), &aciLocal[(ro_fCubeRollout ? 0 : alt)]));
+                                                  &aciLocal[alt]), &aciLocal[(ro_fCubeRollout ? 0 : alt)]));
                 }
             } else {
                 if (!prc->fCubeful)
