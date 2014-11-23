@@ -128,7 +128,7 @@ CommandCalibrate(char *sz)
         pcc = GTKCalibrationStart();
 #endif
 
-    timeTaken = 0;
+    timeTaken = 0.0;
     for (iIter = 0; n < 0 || iIter < (unsigned int) n;) {
         double spd;
         if (fInterrupt)
@@ -143,8 +143,8 @@ CommandCalibrate(char *sz)
         iIter++;
 #endif
 
-        if (timeTaken == 0)
-            spd = 0;
+        if (timeTaken <= 0.0)
+            spd = 0.0;
         else
             spd = iIter * (EVALS_PER_ITERATION * 1000 / timeTaken);
 #if USE_GTK
@@ -163,7 +163,7 @@ CommandCalibrate(char *sz)
         GTKCalibrationEnd(pcc);
 #endif
 
-    if (timeTaken) {
+    if (timeTaken > 0.0) {
         rEvalsPerSec = iIter * (float) (EVALS_PER_ITERATION * 1000 / timeTaken);
         outputf("\rCalibration result: %.0f static evaluations/second.\n", rEvalsPerSec);
     } else
