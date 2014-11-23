@@ -1748,8 +1748,8 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
     if (prd->roundedEdges) {
         if (prd->BoxMat.pTexture) {
             tuv = (TEXTURE_SCALE) / prd->BoxMat.pTexture->width;
-            st = sinf((2 * (float)G_PI) / prd->curveAccuracy) * BOARD_FILLET;
-            ct = (cosf((2 * (float)G_PI) / prd->curveAccuracy) - 1) * BOARD_FILLET;
+            st = sinf((2 * (float) G_PI) / prd->curveAccuracy) * BOARD_FILLET;
+            ct = (cosf((2 * (float) G_PI) / prd->curveAccuracy) - 1) * BOARD_FILLET;
             dInc = sqrtf(st * st + ct * ct);
             curveTextOff = (int) (prd->curveAccuracy / 4) * dInc;
         }
@@ -3936,7 +3936,6 @@ drawBoard(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd
     drawBoardTop(bd, bd3d, prd);
 }
 
-extern int renderingBase;
 #ifdef WIN32
 extern void
 drawBasePreRender(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd)

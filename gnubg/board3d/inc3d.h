@@ -63,6 +63,7 @@
 #define zFar 70.0
 
 extern int numRestrictFrames;
+extern int renderingBase;
 
 typedef enum _BoardState {
     BOARD_CLOSED, BOARD_CLOSING, BOARD_OPENING, BOARD_OPEN
