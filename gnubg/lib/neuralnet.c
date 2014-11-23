@@ -44,7 +44,6 @@ NeuralNetCreate(neuralnet * pnn, unsigned int cInput, unsigned int cHidden,
     pnn->rBetaHidden = rBetaHidden;
     pnn->rBetaOutput = rBetaOutput;
     pnn->nTrained = 0;
-    pnn->fDirect = FALSE;
 
     if ((pnn->arHiddenWeight = sse_malloc(cHidden * cInput * sizeof(float))) == NULL)
         return -1;
@@ -73,19 +72,17 @@ NeuralNetCreate(neuralnet * pnn, unsigned int cInput, unsigned int cHidden,
 extern void
 NeuralNetDestroy(neuralnet * pnn)
 {
-    if (!pnn->fDirect) {
-        sse_free(pnn->arHiddenWeight);
-        pnn->arHiddenWeight = 0;
-        sse_free(pnn->arOutputWeight);
-        pnn->arOutputWeight = 0;
-        sse_free(pnn->arHiddenThreshold);
-        pnn->arHiddenThreshold = 0;
-        sse_free(pnn->arOutputThreshold);
-        pnn->arOutputThreshold = 0;
-    }
+    sse_free(pnn->arHiddenWeight);
+    pnn->arHiddenWeight = 0;
+    sse_free(pnn->arOutputWeight);
+    pnn->arOutputWeight = 0;
+    sse_free(pnn->arHiddenThreshold);
+    pnn->arHiddenThreshold = 0;
+    sse_free(pnn->arOutputThreshold);
+    pnn->arOutputThreshold = 0;
 }
 
-#if !USE_SIMD_INSTRUCTIONS
+#if !defined(USE_SIMD_INSTRUCTIONS)
 
 /* separate context for race, crashed, contact
  * -1: regular eval
@@ -240,7 +237,7 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
     case NNEVAL_FROMBASE:
         {
             unsigned int i;
-            if (pnState->cSavedIBase != (int)pnn->cInput){
+            if (pnState->cSavedIBase != (int) pnn->cInput) {
                 Evaluate(pnn, arInput, ar, arOutput, 0);
                 break;
             }
@@ -365,7 +362,7 @@ NeuralNetSaveBinary(const neuralnet * pnn, FILE * pf)
 }
 
 
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
 
 #if defined(DISABLE_SIMD_TEST)
 

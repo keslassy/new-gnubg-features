@@ -28,7 +28,6 @@ typedef struct _neuralnet {
     unsigned int cInput;
     unsigned int cHidden;
     unsigned int cOutput;
-    unsigned int fDirect;
     int nTrained;
     float rBetaHidden;
     float rBetaOutput;
