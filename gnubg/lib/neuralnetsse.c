@@ -224,7 +224,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
             /* 3 binaries, 1 float */
 
-            if (!ari)
+            if (ari == 0.0f)
                 prWeight += cHidden;
             else {
                 float *pr = ar;
@@ -233,7 +233,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
             ari = arInput[i++];
 
-            if (!ari)
+            if (ari == 0.0f)
                 prWeight += cHidden;
             else {
                 float *pr = ar;
@@ -242,7 +242,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
             ari = arInput[i++];
 
-            if (!ari) {
+            if (ari == 0.0f) {
                 prWeight += cHidden;
                 /* If 3rd element is 0, so is 4th. Skip it */
                 prWeight += cHidden;
@@ -255,7 +255,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
             ari = arInput[i++];
 
-            if (!ari)
+            if (ari == 0.0f)
                 prWeight += cHidden;
             else {
                 float *pr = ar;
@@ -277,7 +277,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
             for (i = 200; i < 250; i++) {
                 float const ari = arInput[i];
 
-                if (!ari)
+                if (ari == 0.0f)
                     prWeight += cHidden;
                 else {
                     float *pr = ar;
@@ -296,7 +296,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
         for (i = 0; i < pnn->cInput; i++) {
             float const ari = arInput[i];
 
-            if (!ari)
+            if (ari == 0.0f)
                 prWeight += cHidden;
             else {
                 float *pr = ar;
