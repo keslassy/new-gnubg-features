@@ -169,15 +169,13 @@ OSLookup(const unsigned int iPos,
          unsigned short int aProb[64], const int fGammon, const int fCompress, FILE * pfOutput, FILE * pfTmp)
 {
 
-    int i, j;
+    unsigned int i, j;
     unsigned char ac[128];
 
     g_assert(pfOutput != stdin);
 
     if (fCompress) {
 
-        unsigned char ac[128];
-        unsigned int i, j;
         long iOffset;
         size_t nBytes;
         unsigned int ioff, nz, ioffg = 0, nzg = 0;
@@ -1320,7 +1318,7 @@ main(int argc, char **argv)
 
 
     if (szTwoSided)
-        sscanf(szTwoSided, "%dx%d", &nTSP, &nTSC);
+        sscanf(szTwoSided, "%2dx%2d", &nTSP, &nTSC);
 
     if (show_version) {
         version();
@@ -1348,7 +1346,7 @@ main(int argc, char **argv)
         fprintf(stderr, "%-37s\n", _("One-sided database"));
         fprintf(stderr, "%-37s: %12d\n", _("Number of points"), nOS);
         fprintf(stderr, "%-37s: %12d\n", _("Number of chequers"), 15);
-        fprintf(stderr, "%-37s: %12d\n", _("Number of positions"), Combination(nOS + 15, nOS));
+        fprintf(stderr, "%-37s: %12u\n", _("Number of positions"), Combination(nOS + 15, nOS));
         fprintf(stderr, "%-37s: %12s\n", _("Approximate by normal distribution"), fND ? _("yes") : _("no"));
         fprintf(stderr, "%-37s: %12s\n", _("Include gammon distributions"), fGammon ? _("yes") : _("no"));
         fprintf(stderr, "%-37s: %12s\n", _("Use compression scheme"), fCompress ? _("yes") : _("no"));
