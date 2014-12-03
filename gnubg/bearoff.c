@@ -566,7 +566,7 @@ BearoffDumpTwoSided(const bearoffcontext * pbc, const TanBoard anBoard, char *sz
         for (i = 0; i < 4; ++i)
             sprintf(sz + strlen(sz), "%-30.30s: %+7.4f\n", gettext(aszEquity[i]), ar[i]);
     else
-        sprintf(sz + strlen(sz), "%-30.30s: %+7.4f\n", gettext(aszEquity[0]), 2.0 * ar[0] - 1.0f);
+        sprintf(sz + strlen(sz), "%-30.30s: %+7.4f\n", gettext(aszEquity[0]), 2.0f * ar[0] - 1.0f);
 
     strcat(sz, "\n");
 
