@@ -3150,6 +3150,10 @@ To roll the dice the CL version type 'roll'.
           with a size less than 2GB, i.e., the 13pt one-sided database and the
           11 checker two-sided database are the largest databases that can be
           generated with makebearoff. </para>
+        <para>On current (2014) hardware the creation of the 11 checker
+          two-sided database will take a few hours.
+          It is approximately 3 times longer for each additional checker
+          or each additional point.</para>
         <para>To generate one sided database issue </para>
         <para>makebearoff -o 10 -f gnubg_os.bd</para>
         <para>to generate the one sided 10 point database. The program
@@ -3180,14 +3184,14 @@ To roll the dice the CL version type 'roll'.
           for Hypergammon. For example, to generate the 3-checker database issue
           the command </para>
         <para>makehyper -c 3 -f hyper3.bd</para>
-        <para>Since the generation is <emphasis>very</emphasis> time consuming
+        <para>Since the generation can be  time consuming,
           makehyper will generate a checkpoint file (in the example above:
-          hyper1.bd.tmp) that can be used to restart the calculation if needed
+          hyper3.bd.tmp) that can be used to restart the calculation if needed
           by using the -r option. You can also change the default convergence
           threshold of 0.00001 if you're happy with less accurate equities. To
           generate the 3 checker database you need approximately 400 MB of free
-          memory. On a 2.4 GHz box with 512 MB of RAM the calculation ran for 58
-          iterations of 3000 seconds each, i.e., a total of 48 hours! </para>
+          memory. On current (2014) hardware the calculation for the 3-checker
+          database will take a few hours (1- and 2-checker are much faster).</para>
         <para>See makehyper --help for the complete set of available options.
         </para>
       </sect3>
@@ -3386,7 +3390,7 @@ To roll the dice the CL version type 'roll'.
               <row>
                 <entry>11 </entry>
                 <entry>6 </entry>
-                <entry>not available </entry>
+                <entry>68a0fa972bdde7b14a6b911d1dc80a30 </entry>
               </row>
               <row>
                 <entry>12 </entry>
