@@ -1463,8 +1463,10 @@ ComputerTurn(void)
             return ms.fTurn == fTurnOrig ? -1 : 0;
         }
 #endif
+#define OLD_ERROR_START "Error ("
 #define ERROR_START "Error: "
-        if (!strncmp(szResponse, ERROR_START, strlen(ERROR_START))) {
+        if (!strncmp(szResponse, ERROR_START, strlen(ERROR_START)) ||
+            !strncmp(szResponse, OLD_ERROR_START, strlen(OLD_ERROR_START))) {
             outputl(szResponse);
             fComputerDecision = FALSE;
             return -1;
