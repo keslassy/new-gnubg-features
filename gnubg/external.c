@@ -645,6 +645,9 @@ CommandExternal(char *sz)
         ProcessEvents();
 
         while (!fExit && !(retval = ExternalRead(hPeer, szCommand, sizeof(szCommand)))) {
+            /* To keep lexer happy terminate each line with \n */
+            if (szCommand[strlen(szCommand)] != '\n')
+                strcat(szCommand, "\n");
 
             if ((ExtParse(&scanctx, szCommand)) == 0) {
                 /* parse error */
