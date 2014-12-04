@@ -1,3 +1,11 @@
+2014-12-04  Michael Petch  <mpetch@gnubg.org>
+
+	* play.c. external.c : Fix external interface bug that prevented
+	external socket players from working. Fix bug that prevented
+	external socket interface errors being displayed. 
+	Reported by Philippe Michel. See bug report: 
+	https://savannah.gnu.org/bugs/?43747
+
 2014-10-21  Michael Petch  <mpetch@gnubg.org>
 
 	Version 1.04 released.
