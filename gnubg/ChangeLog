@@ -1,5 +1,9 @@
 2014-12-04  Michael Petch  <mpetch@gnubg.org>
 
+	Version 1.04.001 released.
+
+2014-12-04  Michael Petch  <mpetch@gnubg.org>
+
 	* play.c. external.c : Fix external interface bug that prevented
 	external socket players from working. Fix bug that prevented
 	external socket interface errors being displayed. 
