@@ -1791,7 +1791,7 @@ WriteTheDesign(boarddesign * pbde, FILE * pf)
             "         <title>%s</title>\n"
             "         <author>%s</author>\n"
             "      </about>\n\n"
-            "      <design>%s   </design>\n\n", title, author, pbde->szBoardDesign ? pbde->szBoardDesign : "");
+            "      <design>%s      </design>\n\n", title, author, pbde->szBoardDesign ? pbde->szBoardDesign : "\n");
 
     fputs("   </board-design>\n\n\n", pf);
 
@@ -2084,8 +2084,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
             "         border3d=%s\n"
             "         hinge3d=%s\n"
             "         numbers3d=%s\n"
-            "         background3d=%s\n"
-            "\n",
+            "         background3d=%s\n",
             prd->fHinges3d ? 'y' : 'n',
             prd->pieceType,
             prd->pieceTextureType,
