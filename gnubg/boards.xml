@@ -49,33 +49,33 @@
          cube=#D7D7D7
          points0=#FF5F5F;0.20
          points1=#BFBFBF;0.20
-		hinges3d=y
-		piecetype=0
-		piecetexturetype=1
-		roundededges=y
-		bgintrays=n
-		roundedpoints=n
-		lighttype=p
-		lightposx=0.200000 lightposy=1.900000 lightposz=3.300000
-		lightambient=45 lightdiffuse=75 lightspecular=95
-		chequers3d0=#D83F3F;#CC3333;#FF0000;60;80
-		chequers3d1=#333333;#4C4C4C;#3F3F3F;70;80
-		dice3d0=#F22626;#CC3333;#FF0000;100;100;n
-		dice3d1=#333333;#4C4C4C;#3F3F3F;70;100;n
-		dot3d0=#A5A5A5;#BFBFBF;#4C4F4C;128;100
-		dot3d1=#C6C6C6;#D1D898;#1B1B1B;128;100
-		cube3d=#B2B2BF;#A5A5B2;#CBCCCB;80;0
-		cubetext3d=#000066;#00007F;#00008C;98;100
-		base3d=#007F00;#007200;#000000;128;0;felt.png
-		points3d0=#FF3233;#DB4C5A;#49181D;128;100;felt.png
-		points3d1=#F3FBFB;#FDEDF9;#47514A;128;100;felt.png
-		border3d=#D87226;#D85630;#37465C;128;100;alder.png
-		hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
-		numbers3d=#AB78CC;#E7E675;#010101;116;100
-		background3d=#D45588;#933E98;#CA41C7;116;0;felt.png
-	</design>
-   </board-design>
+         hinges3d=y
+         piecetype=0
+         piecetexturetype=1
+         roundededges=y
+         bgintrays=n
+         roundedpoints=n
+         lighttype=p
+         lightposx=0.200000 lightposy=1.900000 lightposz=3.300000
+         lightambient=45 lightdiffuse=75 lightspecular=95
+         chequers3d0=#D83F3F;#CC3333;#FF0000;60;80
+         chequers3d1=#333333;#4C4C4C;#3F3F3F;70;80
+         dice3d0=#F22626;#CC3333;#FF0000;100;100;n
+         dice3d1=#333333;#4C4C4C;#3F3F3F;70;100;n
+         dot3d0=#A5A5A5;#BFBFBF;#4C4F4C;128;100
+         dot3d1=#C6C6C6;#D1D898;#1B1B1B;128;100
+         cube3d=#B2B2BF;#A5A5B2;#CBCCCB;80;0
+         cubetext3d=#000066;#00007F;#00008C;98;100
+         base3d=#007F00;#007200;#000000;128;0;felt.png
+         points3d0=#FF3233;#DB4C5A;#49181D;128;100;felt.png
+         points3d1=#F3FBFB;#FDEDF9;#47514A;128;100;felt.png
+         border3d=#D87226;#D85630;#37465C;128;100;alder.png
+         hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
+         numbers3d=#AB78CC;#E7E675;#010101;116;100
+         background3d=#D45588;#933E98;#CA41C7;116;0;felt.png
+      </design>
 
+   </board-design>
 
    <board-design>
 
@@ -175,7 +175,7 @@
          hinge3d=#895B49;#7D613D;#EACE8E;100;0;hinge.png
          numbers3d=#FFFFFF;#FFFFFF;#E5E5E5;100;100
          background3d=#FBFFB5;#FEFFAA;#FEFF7E;100;0;pine.png
-       </design>
+      </design>
 
    </board-design>
 
@@ -794,7 +794,7 @@
          hinge3d=#F2D05B;#BF9664;#E9C944;63;0;hinge.png
          numbers3d=#C4CCBC;#E7E0D5;#010101;116;100
          background3d=#30D427;#51D2BA;#CA41C7;116;0;felt.png
-   </design>
+      </design>
 
    </board-design>
 
@@ -804,25 +804,24 @@
       <about>
          <title>España</title> 
          <author>Ian Shaw</author>     
-     </about>
+      </about>
 
-     <design>
-
-        board=#FFD772;0.09 
-        border=#003F00 
-        wood=oak  
-        hinges=y 
-        light=150;50
-        shape=0.5 
-        chequers0=#EBD765;1.00;3.40;0.90;20.50
-        chequers1=#8E211F;1.00;3.00;1.00;20.10 
-        dice0=#F7E26B;0.00;20.50;y
-        dice1=#8E211F;1.00;20.10;y 
-        dot0=#701515 
-        dot1=#EDD3A6 
-        cube=#E5C997
-        points0=#AD2323;0.20 
-        points1=#D4A527;0.09
+      <design>
+         board=#FFD772;0.09 
+         border=#003F00 
+         wood=oak  
+         hinges=y 
+         light=150;50
+         shape=0.5 
+         chequers0=#EBD765;1.00;3.40;0.90;20.50
+         chequers1=#8E211F;1.00;3.00;1.00;20.10 
+         dice0=#F7E26B;0.00;20.50;y
+         dice1=#8E211F;1.00;20.10;y 
+         dot0=#701515 
+         dot1=#EDD3A6 
+         cube=#E5C997
+         points0=#AD2323;0.20 
+         points1=#D4A527;0.09
          hinges3d=y
          piecetype=0
          piecetexturetype=0
@@ -847,9 +846,9 @@
          hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
          numbers3d=#7A7889;#E7E675;#010101;116;100
          background3d=#D45588;#933E98;#CA41C7;116;0;redwood.png
-     </design>
+      </design>
 
-  </board-design>
+   </board-design>
 
    <board-design>
 
@@ -898,7 +897,7 @@
          hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
          numbers3d=#8CA46F;#A0B586;#010101;116;100
          background3d=#8C6ED4;#682C6C;#CA41C7;116;0;maple.png
-   </design>
+      </design>
 
    </board-design>
 
@@ -1050,7 +1049,6 @@
          hinge3d=#895B49;#7D613D;#EACE8E;100;0;hinge.png
          numbers3d=#FFFFFF;#FFFFFF;#E5E5E5;100;100
          background3d=#FBFFB5;#FEFFAA;#FEFF7E;100;0;oak.png
-
    </design>
 
    </board-design>
@@ -1102,7 +1100,6 @@
          hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
          numbers3d=#AB78CC;#E7E675;#010101;116;100
          background3d=#D45588;#933E98;#CA41C7;116;0;felt.png
-
    </design>
 
    </board-design>
@@ -1154,7 +1151,6 @@
          hinge3d=#CC975B;#DAB056;#FFEFC6;100;0
          numbers3d=#070707;#030303;#E5E5E5;100;100
          background3d=#E06A35;#AA5344;#515151;100;0;Grass01.png
-
    </design>
 
    </board-design>
@@ -1167,19 +1163,19 @@
       </about>
 
       <design>
-         board=#F5F9EC;0.20f
+         board=#F5F9D3;0.20f
          border=#CEA567
-         wood=paint
+         wood=beech
          hinges=n
          light=150;50
          shape=0.5
          chequers0=#FFFFFF;1.00;1.40;0.30;31.90
-         chequers1=#B10B0B;1.00;1.40;0.30;31.90
+         chequers1=#AF0000;1.00;1.40;0.30;31.90
          dice0=#FFFEFE;0.30;31.90;n
-         dice1=#FF2626;0.30;87.10;n
-         dot0=#0D0D0D
+         dice1=#FF2525;0.30;87.10;n
+         dot0=#000000
          dot1=#F4F4EC
-         cube=#FFFEFE
+         cube=#DFF147
          points0=#D11717;0.20
          points1=#007800;0.20
          hinges3d=n
@@ -1189,28 +1185,26 @@
          bgintrays=n
          roundedpoints=n
          lighttype=p
-         lightposx=0.000000 lightposy=1.000000 lightposz=3.000000
+         lightposx=0.200000 lightposy=1.900000 lightposz=3.30
          lightambient=45 lightdiffuse=75 lightspecular=95
          chequers3d0=#FFFFFF;#FFFFFF;#FF0000;60;100
-         chequers3d1=#910000;#D11616;#AA412A;128;100
+         chequers3d1=#AF0000;#AF0000;#3F3F3F;70;100
          dice3d0=#FFFEFE;#FFFEFE;#FF0000;100;100;n
-         dice3d1=#FF2626;#FF2626;#3F3F3F;70;100;n
-         dot3d0=#0D0D0D;#0D0D0D;#4C4F4C;128;100
-         dot3d1=#F3F3EA;#F5F5EE;#1B1B1B;128;100
-         cube3d=#FFFEFE;#FFFEFE;#FF0000;80;0
+         dice3d1=#FF2525;#FF2525;#3F3F3F;70;100;n
+         dot3d0=#000000;#000000;#4C4F4C;128;100
+         dot3d1=#F4F4EC;#F4F4EC;#1B1B1B;128;100
+         cube3d=#E0F248;#E0F248;#CBCCCB;80;100
          cubetext3d=#000066;#00007F;#00008C;98;100
-         base3d=#FAFCE9;#F1F7F0;#000000;128;0;redwood.png
+         base3d=#F5F9D3;#F5F9D3;#000000;128;100;felt.png
          points3d0=#D11717;#D11717;#49181D;128;100;felt.png
-         points3d1=#007F00;#007200;#47514A;128;100;felt.png
-         border3d=#E9AE66;#B39D69;#606060;101;100;maple.png
+         points3d1=#007800;#007800;#47514A;128;100;felt.png
+         border3d=#CEA567;#CEA567;#37465C;128;100;alder.png
          hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
-         numbers3d=#0E0713;#030303;#010101;103;100
-         background3d=#FFE5BC;#FFDBC9;#CA41C7;116;0;checkered.png
-
+         numbers3d=#AB78CC;#E7E675;#010101;116;100
+         background3d=#D45588;#933E98;#CA41C7;116;0;felt.png
       </design>
 
    </board-design>
-
 
    <board-design>
 
@@ -1259,8 +1253,7 @@
          hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
          numbers3d=#AB78CC;#E7E675;#010101;116;100
          background3d=#D45588;#933E98;#CA41C7;116;0;felt.png
-
-   </design>
+      </design>
 
    </board-design>
 
@@ -1311,8 +1304,7 @@
          hinge3d=#895B49;#E3CB1A;#EACE8E;100;0;hinge2.png
          numbers3d=#FFFFFF;#FCCFCF;#E5E5E5;100;100
          background3d=#8FCFEF;#8FCFEF;#FEFF7E;100;0
-
-   </design>
+      </design>
 
    </board-design>
 
