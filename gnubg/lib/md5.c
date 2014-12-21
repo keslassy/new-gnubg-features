@@ -43,10 +43,10 @@
       ( (unsigned char *) (p) )[ 3 ] = ( (n) & 0xFF000000 ) >> 24 )
 
 #define READ( p ) \
-    ( ( (unsigned char *) (p) )[ 0 ] | \
-      ( (unsigned int)((unsigned char *) (p) )[ 1 ]) << 8 | \
-      ( (unsigned int)((unsigned char *) (p) )[ 2 ]) << 16 | \
-      ( (unsigned int)((unsigned char *) (p) )[ 3 ]) << 24 )
+    ( ( (const unsigned char *) (p) )[ 0 ] | \
+      ( (unsigned int)((const unsigned char *) (p) )[ 1 ]) << 8 | \
+      ( (unsigned int)((const unsigned char *) (p) )[ 2 ]) << 16 | \
+      ( (unsigned int)((const unsigned char *) (p) )[ 3 ]) << 24 )
 
 /* This array contains the bytes used to pad the buffer to the next
  * 64-byte boundary.  (RFC 1321, 3.1: Step 1)  */
