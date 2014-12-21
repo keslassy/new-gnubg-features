@@ -562,12 +562,12 @@ static int
 CompareMovesSimple(const void *p0, const void *p1)
 {
 
-    int n0 = *((int *) p0), n1 = *((int *) p1);
+    int n0 = *((const int *) p0), n1 = *((const int *) p1);
 
     if (n0 != n1)
         return n1 - n0;
     else
-        return *((int *) p1 + 1) - *((int *) p0 + 1);
+        return *((const int *) p1 + 1) - *((const int *) p0 + 1);
 }
 
 extern void
