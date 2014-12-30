@@ -1389,7 +1389,7 @@ RenderGlyph(unsigned char *puch, int nStride, FT_Glyph pftg,
 
     FT_BitmapGlyph pftbg;
     FT_Bitmap *pb;
-    int x, y, x0 = 0, y0 = 0;
+    unsigned int x, y, x0 = 0, y0 = 0;
 
     g_assert(pftg->format == FT_GLYPH_FORMAT_BITMAP);
 
