@@ -132,11 +132,11 @@ static FT_Library ftl;
 
 static renderdata rdDefault = {
     WOOD_ALDER,                 /* wt */
-    {{0xF1 / 255.0, 0x25 / 255.0, 0x25 / 255.0, 0.9}, {0, 0, 0xB / 255.0, 0.5}},        /* aarColour */
-    {{0xF1 / 255.0, 0x25 / 255.0, 0x25 / 255.0, 0.9}, {0, 0, 0xB / 255.0, 0.5}},        /* aarDiceColour */
+    {{0xF1 / 255.0f, 0x25 / 255.0f, 0x25 / 255.0f, 0.9f}, {0, 0, 0xB / 255.0f, 0.5f}},        /* aarColour */
+    {{0xF1 / 255.0f, 0x25 / 255.0f, 0x25 / 255.0f, 0.9f}, {0, 0, 0xB / 255.0f, 0.5f}},        /* aarDiceColour */
     {TRUE, TRUE},               /* afDieColour */
-    {{0xA4 / 255.0, 0xA4 / 255.0, 0xA4 / 255.0, 1.0}, {0xA4 / 255.0, 0xA4 / 255.0, 0xA4 / 255.0, 1.0}}, /* aarDiceDotColour */
-    {0xD7 / 255.0, 0xD7 / 255.0, 0xD7 / 255.0, 1.0},    /* arCubeColour */
+    {{0xA4 / 255.0f, 0xA4 / 255.0f, 0xA4 / 255.0f, 1.0f}, {0xA4 / 255.0f, 0xA4 / 255.0f, 0xA4 / 255.0f, 1.0f}}, /* aarDiceDotColour */
+    {0xD7 / 255.0f, 0xD7 / 255.0f, 0xD7 / 255.0f, 1.0f},    /* arCubeColour */
     {{0x2F, 0x5F, 0x2F, 0xFF}, {0x00, 0x3F, 0x00, 0xFF},
      {0xFF, 0x5F, 0x5F, 0xFF}, {0xBF, 0xBF, 0xBF, 0xFF}},       /* aanBoardC */
     {25, 25, 25, 25},           /* aSpeckle */
@@ -720,7 +720,7 @@ WoodHash(float r)
     int n;
     float x;
 
-    if (!r)
+    if (r == 0.0f)
         return 0;
 
     x = frexpf(r, &n);
@@ -773,7 +773,7 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         if (grain > 40)
             grain = 120 - 2 * grain;
 
-        grain *= WoodHash((int) r / 60) * 0.7 + 0.3;
+        grain *= WoodHash((int) r / 60) * 0.7f + 0.3f;
 
         auch[0] = (unsigned char) (230 - grain);
         auch[1] = (unsigned char) (125 - grain / 2);
@@ -921,7 +921,7 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         if (grain > 40)
             grain = 120 - 2 * grain;
 
-        grain *= WoodHash((int) r / 60) * 0.7 + 0.3;
+        grain *= WoodHash((int) r / 60) * 0.7f + 0.3f;
 
         auch[0] = (unsigned char) (230 + grain / 2);
         auch[1] = (unsigned char) (125 + grain / 3);
@@ -981,7 +981,7 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         if (grain > 40)
             grain = 120 - 2 * grain;
 
-        grain *= WoodHash((int) r / 60) * 0.7 + 0.3;
+        grain *= WoodHash((int) r / 60) * 0.7f + 0.3f;
 
         auch[0] = (unsigned char) (80 + (grain * 3 / 2));
         auch[1] = (unsigned char) (40 + grain);
@@ -1268,7 +1268,7 @@ HingePixel(renderdata * prd, float xNorm, float yNorm, float xEye, float yEye, u
             zEye = ssqrt(1.0f - xEye * xEye - yEye * yEye);
             cos_theta = arReflection[0] * xEye + arReflection[1] * yEye + arReflection[2] * zEye;
 
-            specular += pow(cos_theta, 30) * 0.7;
+            specular += powf(cos_theta, 30) * 0.7f;
         }
     }
 
@@ -1676,14 +1676,14 @@ RenderChequers(renderdata * prd, unsigned char *puch0,
                             > 0) {
                             diffuse += cos_theta;
                             if ((cos_theta = 2 * z * cos_theta / len - prd->arLight[2]) > 0) {
-                                specular_x += pow(cos_theta, prd->arExponent[0]) * prd->arCoefficient[0];
-                                specular_o += pow(cos_theta, prd->arExponent[1]) * prd->arCoefficient[1];
+                                specular_x += powf(cos_theta, prd->arExponent[0]) * prd->arCoefficient[0];
+                                specular_o += powf(cos_theta, prd->arExponent[1]) * prd->arCoefficient[1];
                             }
                         }
                     }
-                    x += 1.0 / (size);
+                    x += 1.0f / (size);
                 } while (!fx++);
-                y += 1.0 / (size);
+                y += 1.0f / (size);
             } while (!fy++);
 
             if (!in) {
@@ -1744,9 +1744,9 @@ RenderChequers(renderdata * prd, unsigned char *puch0,
                 BUFX(iy, ix, 3) = clamp(0xFF * 0.25f * ((4 - in) + ((1.0f - (float) prd->aarColour[0][3]) * diffuse)));
                 BUFO(iy, ix, 3) = clamp(0xFF * 0.25f * ((4 - in) + ((1.0f - (float) prd->aarColour[1][3]) * diffuse)));
             }
-            x_loop += 2.0 / (size);
+            x_loop += 2.0f / (size);
         }
-        y_loop += 2.0 / (size);
+        y_loop += 2.0f / (size);
     }
 #undef BUFX
 #undef BUFO
@@ -1833,7 +1833,7 @@ RenderChequerLabels(renderdata * prd, unsigned char *puch, int nStride)
 }
 
 static void
-RenderBasicCube(const float arLight[3], const int nSize, const double arColour[4], unsigned char *puch, int nStride)
+RenderBasicCube(const float arLight[3], const int nSize, const float arColour[4], unsigned char *puch, int nStride)
 {
 
     int ix, iy, in, fx, fy, i;
@@ -1854,8 +1854,8 @@ RenderBasicCube(const float arLight[3], const int nSize, const double arColour[4
                     if (fabsf(x) < 7.0f / 8.0f && fabsf(y) < 7.0f / 8.0f) {
                         /* flat surface */
                         in++;
-                        diffuse += arLight[2] * 0.8 + 0.2;
-                        specular += pow(arLight[2], 10) * 0.4;
+                        diffuse += arLight[2] * 0.8f + 0.2f;
+                        specular += powf(arLight[2], 10) * 0.4f;
                     } else {
                         if (fabsf(x) < 7.0f / 8.0f) {
                             /* top/bottom edge */
@@ -1871,33 +1871,33 @@ RenderBasicCube(const float arLight[3], const int nSize, const double arColour[4
                             /* corner */
                             x_norm = 7.0f * x + (x > 0.0f ? -6.0f : 6.0f);
                             y_norm = -7.0f * y - (y > 0.0f ? -6.0f : 6.0f);
-                            if ((z_norm = 1 - x_norm * x_norm - y_norm * y_norm) < 0.0)
+                            if ((z_norm = 1 - x_norm * x_norm - y_norm * y_norm) < 0.0f)
                                 goto missed;
                             z_norm = sqrtf(z_norm);
                         }
 
                         in++;
-                        diffuse += 0.2;
-                        if ((cos_theta = arLight[0] * x_norm + arLight[1] * y_norm + arLight[2] * z_norm) > 0.0) {
-                            diffuse += cos_theta * 0.8;
+                        diffuse += 0.2f;
+                        if ((cos_theta = arLight[0] * x_norm + arLight[1] * y_norm + arLight[2] * z_norm) > 0.0f) {
+                            diffuse += cos_theta * 0.8f;
                             cos_theta = 2 * z_norm * cos_theta - arLight[2];
-                            specular += pow(cos_theta, 10) * 0.4;
+                            specular += powf(cos_theta, 10) * 0.4f;
                         }
                     }
                   missed:
-                    x += 1.0 / (CUBE_WIDTH * nSize);
+                    x += 1.0f / (CUBE_WIDTH * nSize);
                 } while (!fx++);
-                y += 1.0 / (CUBE_HEIGHT * nSize);
+                y += 1.0f / (CUBE_HEIGHT * nSize);
             } while (!fy++);
 
             for (i = 0; i < 3; i++)
-                *puch++ = clamp((diffuse * (float) arColour[i] + specular) * 64.0f);
+                *puch++ = clamp((diffuse * arColour[i] + specular) * 64.0f);
 
             *puch++ = (unsigned char) (255 * (4 - in) / 4);     /* alpha channel */
 
-            x_loop += 2.0 / (CUBE_WIDTH * nSize);
+            x_loop += 2.0f / (CUBE_WIDTH * nSize);
         }
-        y_loop += 2.0 / (CUBE_HEIGHT * nSize);
+        y_loop += 2.0f / (CUBE_HEIGHT * nSize);
         puch += nStride;
     }
 }
@@ -1908,7 +1908,7 @@ static void
 RenderResign(renderdata * prd, unsigned char *puch, int nStride)
 {
 
-    const double arColour[4] = { 1.0, 1.0, 1.0, 0.0 };  /* white */
+    const float arColour[4] = { 1.0f, 1.0f, 1.0f, 0.0f };  /* white */
 
     RenderBasicCube(prd->arLight, prd->nSize, arColour, puch, nStride);
 
@@ -2067,7 +2067,7 @@ RenderDice(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
     unsigned int ix, iy;
     int in, fx, fy, i;
     float x, y, x_loop, y_loop, diffuse, specular_x, specular_o, cos_theta, x_norm, y_norm, z_norm;
-    double *aarDiceColour[2];
+    float *aarDiceColour[2];
     float arDiceCoefficient[2], arDiceExponent[2];
 
     nStride -= 4 * DIE_WIDTH * prd->nSize;
@@ -2095,12 +2095,12 @@ RenderDice(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
                 fx = 0;
                 x = x_loop;
                 do {
-                    if (circ(x, y) < 1.0) {
+                    if (circ(x, y) < 1.0f) {
                         /* flat surface */
                         in++;
-                        diffuse += prd->arLight[2] * 0.8 + 0.2;
-                        specular_x += pow(prd->arLight[2], arDiceExponent[0]) * arDiceCoefficient[0];
-                        specular_o += pow(prd->arLight[2], arDiceExponent[1]) * arDiceCoefficient[1];
+                        diffuse += prd->arLight[2] * 0.8f + 0.2f;
+                        specular_x += powf(prd->arLight[2], arDiceExponent[0]) * arDiceCoefficient[0];
+                        specular_o += powf(prd->arLight[2], arDiceExponent[1]) * arDiceCoefficient[1];
                     } else {
                         /* corner */
                         x_norm = 0.707f * x;    /* - ( x > 0.0 ? 1.0 : 1.0);  */
@@ -2109,34 +2109,34 @@ RenderDice(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
                         z_norm = ssqrt(z_norm);
 
                         in++;
-                        diffuse += 0.2;
+                        diffuse += 0.2f;
                         if ((cos_theta = prd->arLight[0] * x_norm +
-                             prd->arLight[1] * y_norm + prd->arLight[2] * z_norm) > 0.0) {
-                            diffuse += cos_theta * 0.8;
-                            if ((cos_theta = 2 * z_norm * cos_theta - prd->arLight[2]) > 0.0) {
-                                specular_x += pow(cos_theta, arDiceExponent[0]) * arDiceCoefficient[0];
-                                specular_o += pow(cos_theta, arDiceExponent[1]) * arDiceCoefficient[1];
+                             prd->arLight[1] * y_norm + prd->arLight[2] * z_norm) > 0.0f) {
+                            diffuse += cos_theta * 0.8f;
+                            if ((cos_theta = 2 * z_norm * cos_theta - prd->arLight[2]) > 0.0f) {
+                                specular_x += powf(cos_theta, arDiceExponent[0]) * arDiceCoefficient[0];
+                                specular_o += powf(cos_theta, arDiceExponent[1]) * arDiceCoefficient[1];
                             }
                         }
                     }
-                    x += 1.0 / (DIE_WIDTH * prd->nSize);
+                    x += 1.0f / (DIE_WIDTH * prd->nSize);
                 } while (!fx++);
-                y += 1.0 / (DIE_HEIGHT * prd->nSize);
+                y += 1.0f / (DIE_HEIGHT * prd->nSize);
             } while (!fy++);
 
             for (i = 0; i < 3; i++)
-                *puch0++ = clamp((diffuse * (float) aarDiceColour[0][i] + specular_x) * 64.0f);
+                *puch0++ = clamp((diffuse * aarDiceColour[0][i] + specular_x) * 64.0f);
             if (alpha)
                 *puch0++ = (unsigned char) (255 * (4 - in) / 4);        /* alpha channel */
 
             for (i = 0; i < 3; i++)
-                *puch1++ = clamp((diffuse * (float) aarDiceColour[1][i] + specular_o) * 64.0f);
+                *puch1++ = clamp((diffuse * aarDiceColour[1][i] + specular_o) * 64.0f);
             if (alpha)
                 *puch1++ = (unsigned char) (255 * (4 - in) / 4);        /* alpha channel */
 
-            x_loop += 2.0 / (DIE_WIDTH * prd->nSize);
+            x_loop += 2.0f / (DIE_WIDTH * prd->nSize);
         }
-        y_loop += 2.0 / (DIE_HEIGHT * prd->nSize);
+        y_loop += 2.0f / (DIE_HEIGHT * prd->nSize);
         puch0 += nStride;
         puch1 += nStride;
     }
@@ -2149,7 +2149,7 @@ RenderPips(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
     unsigned int ix, iy;
     int in, fx, fy, i;
     float x, y, z, x_loop, y_loop, diffuse, specular_x, specular_o, cos_theta, dice_top[2][3];
-    double *aarDiceColour[2];
+    float *aarDiceColour[2];
     float arDiceCoefficient[2], arDiceExponent[2];
 
     nStride -= 3 * prd->nSize;
@@ -2170,12 +2170,12 @@ RenderPips(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
     diffuse = prd->arLight[2] * 0.8f + 0.2f;
     specular_x = powf(prd->arLight[2], arDiceExponent[0]) * arDiceCoefficient[0];
     specular_o = powf(prd->arLight[2], arDiceExponent[1]) * arDiceCoefficient[1];
-    dice_top[0][0] = (diffuse * (float) aarDiceColour[0][0] + specular_x) * 64.0f;
-    dice_top[0][1] = (diffuse * (float) aarDiceColour[0][1] + specular_x) * 64.0f;
-    dice_top[0][2] = (diffuse * (float) aarDiceColour[0][2] + specular_x) * 64.0f;
-    dice_top[1][0] = (diffuse * (float) aarDiceColour[1][0] + specular_o) * 64.0f;
-    dice_top[1][1] = (diffuse * (float) aarDiceColour[1][1] + specular_o) * 64.0f;
-    dice_top[1][2] = (diffuse * (float) aarDiceColour[1][2] + specular_o) * 64.0f;
+    dice_top[0][0] = (diffuse * aarDiceColour[0][0] + specular_x) * 64.0f;
+    dice_top[0][1] = (diffuse * aarDiceColour[0][1] + specular_x) * 64.0f;
+    dice_top[0][2] = (diffuse * aarDiceColour[0][2] + specular_x) * 64.0f;
+    dice_top[1][0] = (diffuse * aarDiceColour[1][0] + specular_o) * 64.0f;
+    dice_top[1][1] = (diffuse * aarDiceColour[1][1] + specular_o) * 64.0f;
+    dice_top[1][2] = (diffuse * aarDiceColour[1][2] + specular_o) * 64.0f;
 
     for (iy = 0, y_loop = -1.0; iy < prd->nSize; iy++) {
         for (ix = 0, x_loop = -1.0; ix < prd->nSize; ix++) {
@@ -2189,21 +2189,21 @@ RenderPips(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
                 do {
                     if ((z = 1.0f - x * x - y * y) > 0.0f) {
                         in++;
-                        diffuse += 0.2;
+                        diffuse += 0.2f;
                         z = sqrtf(z) * 5.0f;
                         if ((cos_theta = (-prd->arLight[0] * x +
                                           prd->arLight[1] * y +
                                           prd->arLight[2] * z) / sqrtf(x * x + y * y + z * z)) > 0) {
-                            diffuse += cos_theta * 0.8;
-                            if ((cos_theta = 2 * z / 5 * cos_theta - prd->arLight[2]) > 0.0) {
-                                specular_x += pow(cos_theta, arDiceExponent[0]) * arDiceCoefficient[0];
-                                specular_o += pow(cos_theta, arDiceExponent[1]) * arDiceCoefficient[1];
+                            diffuse += cos_theta * 0.8f;
+                            if ((cos_theta = 2 * z / 5 * cos_theta - prd->arLight[2]) > 0.0f) {
+                                specular_x += powf(cos_theta, arDiceExponent[0]) * arDiceCoefficient[0];
+                                specular_o += powf(cos_theta, arDiceExponent[1]) * arDiceCoefficient[1];
                             }
                         }
                     }
-                    x += 1.0 / (prd->nSize);
+                    x += 1.0f / (prd->nSize);
                 } while (!fx++);
-                y += 1.0 / (prd->nSize);
+                y += 1.0f / (prd->nSize);
             } while (!fy++);
 
             for (i = 0; i < 3; i++)
@@ -2216,9 +2216,9 @@ RenderPips(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
                     clamp((diffuse * (float) prd->aarDiceDotColour[1][i] + specular_o) * 64.0f +
                           (4 - in) * dice_top[1][i]);
 
-            x_loop += 2.0 / (prd->nSize);
+            x_loop += 2.0f / (prd->nSize);
         }
-        y_loop += 2.0 / (prd->nSize);
+        y_loop += 2.0f / (prd->nSize);
         puch0 += nStride;
         puch1 += nStride;
     }
@@ -2249,17 +2249,17 @@ Copy_RGB_to_RGBA(unsigned char *puchDest, int nDestStride,
 }
 
 #if USE_GTK && HAVE_CAIRO
-static double
-Highlight(double c)
+static float
+Highlight(float c)
 {
-    if (c < .75)
-        return c + .25;
+    if (c < .75f)
+        return c + .25f;
     else
-        return c - .25;
+        return c - .25f;
 }
 
 static void
-RenderArrow(unsigned char *puch, double arColour[4], int nSize, int left)
+RenderArrow(unsigned char *puch, float arColour[4], int nSize, int left)
 {
     cairo_surface_t *surface = cairo_image_surface_create_for_data(puch, CAIRO_FORMAT_ARGB32,
                                                                    nSize * ARROW_WIDTH,
@@ -2298,9 +2298,9 @@ RenderArrow(unsigned char *puch, double arColour[4], int nSize, int left)
     cairo_line_to(cr, (1 - AR_WIDTH) / 2, AR_HEAD_SIZE);
     cairo_close_path(cr);
 
-    cairo_set_source_rgba(cr, arColour[2], arColour[1], arColour[0], 1);
+    cairo_set_source_rgba(cr, (double) arColour[2], (double) arColour[1], (double) arColour[0], 1);
     cairo_fill_preserve(cr);
-    cairo_set_source_rgba(cr, Highlight(arColour[2]), Highlight(arColour[1]), Highlight(arColour[0]), 1);
+    cairo_set_source_rgba(cr, (double) Highlight(arColour[2]), (double) Highlight(arColour[1]), (double) Highlight(arColour[0]), 1);
     cairo_stroke(cr);
 
     cairo_destroy(cr);
@@ -2687,13 +2687,13 @@ RenderFinalise(void)
 }
 
 static int
-TolComp(double f1, double f2)
+TolComp(float f1, float f2)
 {
-    return fabs(f1 - f2) < .005;
+    return fabsf(f1 - f2) < .005f;
 }
 
 static int
-ColourCompare(double c1[4], double c2[4])
+ColourCompare(float c1[4], float c2[4])
 {
     return TolComp(c1[0], c2[0]) && TolComp(c1[1], c2[1]) && TolComp(c1[2], c2[2]) && TolComp(c1[3], c2[3]);
 }

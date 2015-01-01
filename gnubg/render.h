@@ -45,11 +45,11 @@ typedef enum _woodtype {
 
 typedef struct _renderdata {
     woodtype wt;
-    double aarColour[2][4];     /* RGBA for each player */
-    double aarDiceColour[2][4]; /* RGB(A) of dice for each player */
+    float aarColour[2][4];     /* RGBA for each player */
+    float aarDiceColour[2][4];  /* RGB(A) of dice for each player */
     int afDieColour[2];         /* TRUE means same colour as chequers */
-    double aarDiceDotColour[2][4];      /* RGB(A) of dice dot for each player */
-    double arCubeColour[4];     /* RGB(A) of cube */
+    float aarDiceDotColour[2][4];      /* RGB(A) of dice dot for each player */
+    float arCubeColour[4];     /* RGB(A) of cube */
     unsigned char aanBoardColour[4][4]; /* RGB(A) backgr., border, pts */
     int aSpeckle[4];            /* speckle for background, border, pts */
     float arRefraction[2], arCoefficient[2], arExponent[2];     /* Phong parameters for chequers */

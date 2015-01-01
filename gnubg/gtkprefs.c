@@ -643,7 +643,7 @@ BorderPage3d(BoardData * bd)
 #endif
 
 extern void
-gtk_color_button_get_array(GtkColorButton * button, double array[4])
+gtk_color_button_get_array(GtkColorButton * button, float array[4])
 {
     GdkColor color;
     guint16 alpha;
@@ -651,23 +651,22 @@ gtk_color_button_get_array(GtkColorButton * button, double array[4])
     gtk_color_button_get_color(button, &color);
     alpha = gtk_color_button_get_alpha(button);
 
-    array[0] = (gdouble) color.red / 65535.0;
-    array[1] = (gdouble) color.green / 65535.0;
-    array[2] = (gdouble) color.blue / 65535.0;
-    array[3] = (gdouble) alpha / 65535.0;
-
+    array[0] = (float) color.red / 65535.0f;
+    array[1] = (float) color.green / 65535.0f;
+    array[2] = (float) color.blue / 65535.0f;
+    array[3] = (float) alpha / 65535.0f;
 }
 
 extern void
-gtk_color_button_set_from_array(GtkColorButton * button, double colarray[4])
+gtk_color_button_set_from_array(GtkColorButton * button, float colarray[4])
 {
     GdkColor color;
     guint16 alpha;
 
-    color.red = (colarray[0] == 1) ? 0xffff : (guint16) (colarray[0] * 65536);
-    color.green = (colarray[1] == 1) ? 0xffff : (guint16) (colarray[1] * 65536);
-    color.blue = (colarray[2] == 1) ? 0xffff : (guint16) (colarray[2] * 65536);
-    alpha = (colarray[3] == 1) ? 0xffff : (guint16) (colarray[3] * 65536);
+    color.red = (colarray[0] == 1.0f) ? 0xffff : (guint16) (colarray[0] * 65536);
+    color.green = (colarray[1] == 1.0f) ? 0xffff : (guint16) (colarray[1] * 65536);
+    color.blue = (colarray[2] == 1.0f) ? 0xffff : (guint16) (colarray[2] * 65536);
+    alpha = (colarray[3] == 1.0f) ? 0xffff : (guint16) (colarray[3] * 65536);
 
     gtk_color_button_set_color(button, &color);
     gtk_color_button_set_alpha(button, alpha);
@@ -841,7 +840,7 @@ BoardPage(BoardData * bd)
 {
 
     GtkWidget *pw, *pwhbox;
-    gdouble ar[4];
+    float ar[4];
     int i, j;
     GtkWidget *pwx;
     static const char *asz[4] = {
@@ -862,7 +861,7 @@ BoardPage(BoardData * bd)
         apadjBoard[j] = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->aSpeckle[j] / 128.0, 0, 1, 0.1, 0.1, 0));
 
         for (i = 0; i < 4; i++)
-            ar[i] = bd->rd->aanBoardColour[j][i] / 255.0;
+            ar[i] = bd->rd->aanBoardColour[j][i] / 255.0f;
 
         gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
         gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(gettext(asz[j])), FALSE, FALSE, 4);
@@ -897,7 +896,7 @@ BorderPage(BoardData * bd)
 {
 
     GtkWidget *pw;
-    gdouble ar[4];
+    float ar[4];
     int i;
     static const char *aszWood[] = {
         N_("Alder"),
@@ -943,8 +942,8 @@ BorderPage(BoardData * bd)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(bd->rd->wt != WOOD_PAINT ? pwWood : pwWoodF), TRUE);
 
     for (i = 0; i < 3; i++)
-        ar[i] = bd->rd->aanBoardColour[1][i] / 255.0;
-    ar[3] = 0;
+        ar[i] = bd->rd->aanBoardColour[1][i] / 255.0f;
+    ar[3] = 0.0f;
 
     apwBoard[1] = gtk_color_button_new();
     g_signal_connect(G_OBJECT(apwBoard[1]), "color-set", UpdatePreview, NULL);
@@ -1617,7 +1616,7 @@ static void
 UseDesign(void)
 {
     int i, j;
-    gdouble ar[4];
+    float ar[4];
     gfloat rAzimuth, rElevation;
     renderdata newPrefs;
 #if USE_BOARD3D
@@ -1725,7 +1724,7 @@ UseDesign(void)
                 gtk_adjustment_set_value(GTK_ADJUSTMENT(apadjBoard[i]), newPrefs.aSpeckle[i] / 128.0);
 
             for (j = 0; j < 4; j++)
-                ar[j] = newPrefs.aanBoardColour[i][j] / 255.0;
+                ar[j] = newPrefs.aanBoardColour[i][j] / 255.0f;
 
             gtk_color_button_set_from_array(GTK_COLOR_BUTTON(apwBoard[i]), ar);
         }
@@ -2118,7 +2117,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
 #if USE_BOARD3D
 
 static void
-Set2dColour(double newcol[4], Material * pMat)
+Set2dColour(float newcol[4], Material * pMat)
 {
     newcol[0] = (pMat->ambientColour[0] + pMat->diffuseColour[0]) / 2;
     newcol[1] = (pMat->ambientColour[1] + pMat->diffuseColour[1]) / 2;
@@ -2136,11 +2135,11 @@ Set2dColourChar(unsigned char newcol[4], Material * pMat)
 }
 
 static void
-Set3dColour(Material * pMat, double col[4])
+Set3dColour(Material * pMat, float col[4])
 {
-    pMat->ambientColour[0] = pMat->diffuseColour[0] = (float) col[0];
-    pMat->ambientColour[1] = pMat->diffuseColour[1] = (float) col[1];
-    pMat->ambientColour[2] = pMat->diffuseColour[2] = (float) col[2];
+    pMat->ambientColour[0] = pMat->diffuseColour[0] = col[0];
+    pMat->ambientColour[1] = pMat->diffuseColour[1] = col[1];
+    pMat->ambientColour[2] = pMat->diffuseColour[2] = col[2];
     pMat->ambientColour[3] = pMat->diffuseColour[3] = 1;
 }
 
@@ -2578,7 +2577,7 @@ GetPrefs(renderdata * prd)
 {
 
     int i, j;
-    gdouble ar[4];
+    float ar[4];
 
 #if USE_BOARD3D
     prd->fDisplayType = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwBoardType)) ? DT_2D : DT_3D;
