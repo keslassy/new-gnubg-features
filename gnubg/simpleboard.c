@@ -28,7 +28,6 @@
 #include "positionid.h"
 #include "matchid.h"
 #include "simpleboard.h"
-#include <glib.h>
 
 /*! \brief get number of checkers from a backgammon variation
  *
@@ -160,7 +159,7 @@ draw_centered_text(cairo_t * cr, float color[3], gfloat text_size, const char *t
                              "foreground=\"#%.2x%.2x%.2x\" >"
                              "%s"
                              "</span>",
-                             buf, (int) (color[0] * 255.), (int) (color[1] * 255.), (int) (color[2] * 255.), text);
+                             buf, (int) (color[0] * 255.0f), (int) (color[1] * 255.0f), (int) (color[2] * 255.0f), text);
     pango_layout_set_markup(layout, f_text, -1);
     pango_layout_get_size(layout, &width, &height);
     cairo_rel_move_to(cr, -((double) width / PANGO_SCALE) / 2, -((double) height / PANGO_SCALE) / 2);
@@ -469,7 +468,7 @@ simple_board_draw(SimpleBoard * board)
 
     cairo_save(cr);
     draw_header_text(board);
-    if (board->surface_x && board->size)
+    if (board->surface_x != 0.0 && board->size > 0.0)
         cairo_translate(cr, board->surface_x / 2.0 - board->size / 2.0, 0);
     cairo_scale(cr, board->size / 300.0, board->size / 300.0);
     draw_borders(cr);
