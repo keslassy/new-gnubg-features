@@ -785,7 +785,7 @@ CommandRelationalSelect(char *sz)
             if (i == 1) {       /* Underline headings */
                 char *line, *p;
                 unsigned int k;
-                int totalwidth = 0;
+                size_t totalwidth = 0;
                 for (k = 0; k < rs->cols; k++) {
                     totalwidth += rs->widths[k] + 1;
                     if (k != 0)
