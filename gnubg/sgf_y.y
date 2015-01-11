@@ -58,7 +58,7 @@ static listOLD *NewList( void ) {
 
 static char *Concatenate( listOLD *pl ) {
 
-    int cch = 0;
+    size_t cch = 0;
     char *sz, *pchDest, *pchSrc;
     
     for( pl = pl->plNext; pl->p; pl = pl->plNext )
