@@ -29,15 +29,13 @@
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
-#include <multithread.h>
-#include "backgammon.h"
+#include <locale.h>
 
+#include "backgammon.h"
 #include "eval.h"
 #include "positionid.h"
-#include <locale.h>
 #include "bearoff.h"
 #include "drawboard.h"
-#include "multithread.h"
 #include "lib/simd.h"
 #include "glib-ext.h"
 #include "multithread.h"
