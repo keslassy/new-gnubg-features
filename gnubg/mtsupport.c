@@ -480,6 +480,8 @@ multi_debug(const char *str, ...)
     printf("%s: %s\n", tn, buf);
 #endif
 
+    va_end(vl);
+
 #ifdef WIN32
     ReleaseMutex(td.multiLock);
 #endif
