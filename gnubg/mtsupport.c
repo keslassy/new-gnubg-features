@@ -1,9 +1,9 @@
 /*
- * multithread.c
+ * mtsupport.c
  *
  * by Jon Kinsey, 2008
  *
- * Multithreaded operations
+ * Multithreaded support functions, moved out of multithread.c
  *
  *
  * This program is free software; you can redistribute it and/or modify
