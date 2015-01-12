@@ -75,16 +75,16 @@ unsigned int mainThreadID;
 #if GLIB_CHECK_VERSION (2,32,0)
 static GMutex condMutex;        /* Extra mutex needed for waiting */
 #else
-GMutex *condMutex = NULL;       /* Extra mutex needed for waiting */
+static GMutex *condMutex = NULL;        /* Extra mutex needed for waiting */
 #endif
-GAsyncQueue *async_queue = NULL;        /* Needed for async waiting */
+static GAsyncQueue *async_queue = NULL; /* Needed for async waiting */
 #endif
 
 #ifdef GLIB_THREADS
 
 #if GLIB_CHECK_VERSION (2,32,0)
 /* Dynamic allocation of GPrivate is deprecated */
-GPrivate private_item = G_PRIVATE_INIT (free);
+static GPrivate private_item = G_PRIVATE_INIT(free);
 
 extern void
 TLSCreate(TLSItem * pItem)
@@ -237,7 +237,7 @@ FreeMutex(Mutex * mutex)
 #endif
 
 extern void
-Mutex_Lock(Mutex *mutex, const char *reason)
+Mutex_Lock(Mutex * mutex, const char *reason)
 {
 #ifdef DEBUG_MULTITHREADED
     multi_debug(reason);
@@ -252,7 +252,7 @@ Mutex_Lock(Mutex *mutex, const char *reason)
 }
 
 extern void
-Mutex_Release(Mutex *mutex)
+Mutex_Release(Mutex * mutex)
 {
 #ifdef DEBUG_MULTITHREADED
     multi_debug("Releasing lock");
