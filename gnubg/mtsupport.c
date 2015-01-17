@@ -77,7 +77,6 @@ static GMutex condMutex;        /* Extra mutex needed for waiting */
 #else
 static GMutex *condMutex = NULL;        /* Extra mutex needed for waiting */
 #endif
-static GAsyncQueue *async_queue = NULL; /* Needed for async waiting */
 #endif
 
 #ifdef GLIB_THREADS
