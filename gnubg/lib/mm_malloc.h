@@ -27,6 +27,8 @@
 #ifndef MM_MALLOC_H_INCLUDED
 #define MM_MALLOC_H_INCLUDED
 
+#if !defined(__MINGW32__) || !defined(__GNUC__) || !defined( _CRT_ALLOCATION_DEFINED)
+
 #include <stdlib.h>
 #include <errno.h>
 
@@ -72,5 +74,5 @@ _mm_free(void *aligned_ptr)
     if (aligned_ptr)
         free(((void **) aligned_ptr)[-1]);
 }
-
+#endif
 #endif                          /* MM_MALLOC_H_INCLUDED */

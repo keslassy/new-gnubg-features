@@ -35,6 +35,7 @@
 
 #if defined(WIN32)
 /* MS gl.h needs windows.h to be included first */
+#include <winsock2.h>
 #include <windows.h>
 #endif
 

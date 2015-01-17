@@ -36,6 +36,7 @@
 #include <signal.h>
 #include <ctype.h>
 #ifdef WIN32
+#include <direct.h>
 #include <io.h>
 #endif
 

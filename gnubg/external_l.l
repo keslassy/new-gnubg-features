@@ -74,7 +74,7 @@ board:                  {   BEGIN(SBOARDP1);
 prompt{EOT}             {   return PROMPT; }
 new{EOT}                {   return NEW; }
 old{EOT}                {   return OLD; }
-interface{EOT}          {   return INTERFACE; }
+interface{EOT}          {   return E_INTERFACE; }
 help{EOT}               {   return HELP; }
 set{EOT}                {   return SET; }
 debug{EOT}              {   return DEBUG; }

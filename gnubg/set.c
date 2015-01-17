@@ -24,6 +24,7 @@
 
 #ifdef WIN32
 /* Needed for thread priority defines */
+#include <winsock2.h>
 #include <windows.h>
 #endif
 

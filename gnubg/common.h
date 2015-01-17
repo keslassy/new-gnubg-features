@@ -59,9 +59,17 @@ typedef void (*psighandler) (int);
 /* Do we need to use g_utf8_casefold() for utf8 anywhere? */
 #define StrCaseCmp(s1, s2) g_ascii_strcasecmp(s1, s2)
 #define StrNCaseCmp(s1, s2, n) g_ascii_strncasecmp(s1, s2, (gsize)n)
+/* if the following are defined as macros undefine them */
+#ifdef strcasecmp
+#undef strcasecmp
+#endif
+#ifdef strncasecmp
+#undef strncasecmp
+#endif
 /* Avoid new code using strcase functions */
 #define strcasecmp strcasecmp_error_use_StrCaseCmp
 #define strncasecmp strncasecmp_error_use_StrNCaseCmp
+
 
 /* Macro to mark parameters that aren't used in the function */
 #ifdef UNUSED

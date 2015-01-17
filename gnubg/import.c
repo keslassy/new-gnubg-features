@@ -41,11 +41,12 @@
 #include "file.h"
 #include "positionid.h"
 #include "matchequity.h"
+#include <glib/gstdio.h>
 
+#if !GLIB_CHECK_VERSION (2,26,0)
 #ifdef WIN32
 #define GStatBuf struct _g_stat_struct
 #else
-#if !GLIB_CHECK_VERSION (2,26,0)
 typedef struct stat GStatBuf;
 #endif
 #endif
