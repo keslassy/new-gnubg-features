@@ -100,6 +100,7 @@ AC_ARG_VAR([DOCBOOK2MAN], [path for docbook2man from docbook2x package])
 AC_ARG_VAR([DBLATEX], [path for dblatex used to build pdf documentation])
 AC_ARG_VAR([XSLTPROC], [path for xsltproc used to build html documentation])
 AC_ARG_VAR([GMSGFMT], [path for msgfmt used to compile message catalogs])
+LIBCURL_CHECK_CONFIG( , , , )
 
 dnl
 dnl Setup libtool
