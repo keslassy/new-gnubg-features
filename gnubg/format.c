@@ -155,6 +155,10 @@ GetPredefinedChequerplaySetting(const evalcontext * pec, const movefilter aamf[M
     int nPreset;
     int Accept;
 
+    if (nPlies > MAX_FILTER_PLIES) {
+        return -1;
+    }
+
     for (nEval = 0; nEval < NUM_SETTINGS; ++nEval) {
         if (cmp_evalcontext(aecSettings + nEval, pec) == 0) {
             /* eval matches and it's 0 ply, we have a predefined one */
