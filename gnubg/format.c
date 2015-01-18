@@ -144,7 +144,7 @@ OutputEvalContext(const evalcontext * pec, const int fChequer)
  * if the eval context matches and it's 0 ply
  */
 static int
-GetPredefinedChequerplaySetting(const evalcontext * pec, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+GetPredefinedChequerplaySetting(const evalcontext * pec, const movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
     int nEval;
@@ -205,7 +205,7 @@ GetPredefinedChequerplaySetting(const evalcontext * pec, movefilter aamf[MAX_FIL
 }
 
 static char *
-OutputMoveFilterPly(const char *szIndent, const int nPlies, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+OutputMoveFilterPly(const char *szIndent, const int nPlies, const movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
     static char sz[1024];
@@ -218,7 +218,7 @@ OutputMoveFilterPly(const char *szIndent, const int nPlies, movefilter aamf[MAX_
 
     for (i = 0; i < nPlies; ++i) {
 
-        movefilter *pmf = &aamf[nPlies - 1][i];
+        const movefilter *pmf = &aamf[nPlies - 1][i];
 
         if (szIndent && *szIndent)
             strcat(sz, szIndent);
@@ -247,7 +247,7 @@ OutputMoveFilterPly(const char *szIndent, const int nPlies, movefilter aamf[MAX_
 static void
 OutputEvalContextsForRollout(char *sz, const char *szIndent,
                              const evalcontext aecCube[2],
-                             const evalcontext aecChequer[2], movefilter aaamf[2][MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+                             const evalcontext aecChequer[2], const movefilter aaamf[2][MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
     int fCube = !cmp_evalcontext(&aecCube[0], &aecCube[1]);
@@ -369,7 +369,7 @@ OutputRolloutContext(const char *szIndent, const rolloutcontext * prc)
 
     /* first play */
 
-    OutputEvalContextsForRollout(sz, szIndent, prc->aecCube, prc->aecChequer, ((rolloutcontext *) prc)->aaamfChequer);
+    OutputEvalContextsForRollout(sz, szIndent, prc->aecCube, prc->aecChequer, prc->aaamfChequer);
 
     /* later play */
 
@@ -382,7 +382,7 @@ OutputRolloutContext(const char *szIndent, const rolloutcontext * prc)
         strcat(sz, "\n");
 
         OutputEvalContextsForRollout(sz, szIndent,
-                                     prc->aecCubeLate, prc->aecChequerLate, ((rolloutcontext *) prc)->aaamfLate);
+                                     prc->aecCubeLate, prc->aecChequerLate, prc->aaamfLate);
 
 
     }

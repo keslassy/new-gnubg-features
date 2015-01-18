@@ -535,7 +535,7 @@ extern int
  MoveKey(const TanBoard anBoard, const int anMove[8], positionkey * pkey);
 
 extern int
- equal_movefilter(const int i, movefilter amf1[MAX_FILTER_PLIES], movefilter amf2[MAX_FILTER_PLIES]);
+ equal_movefilter(const int i, const movefilter amf1[MAX_FILTER_PLIES], const movefilter amf2[MAX_FILTER_PLIES]);
 
 extern int
  equal_movefilters(movefilter aamf1[MAX_FILTER_PLIES][MAX_FILTER_PLIES],
