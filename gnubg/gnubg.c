@@ -74,6 +74,10 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #include "neuralnet.h"
 #include "util.h"
 
+#if defined(LIBCURL_PROTOCOL_HTTPS)
+#include <curl/curl.h>
+#endif
+
 #if HAVE_SOCKETS
 #if HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
@@ -2483,6 +2487,11 @@ Shutdown(void)
     PythonShutdown();
 #endif
 
+#if defined(LIBCURL_PROTOCOL_HTTPS)
+    /* Cleanup curl */
+    curl_global_cleanup();
+#endif
+
 #if HAVE_SOCKETS
 #ifdef WIN32
     WSACleanup();
@@ -4402,137 +4411,6 @@ GetManualDice(unsigned int anDice[2])
     }
 }
 
-/* 
- * Fetch random numbers from www.random.org
- *
- */
-
-#if HAVE_SOCKETS
-
-extern unsigned int
-getDiceRandomDotOrg(void)
-{
-
-#define RANDOMORGSITEPORT 80
-#define RANDOMORGSITE "www.random.org"
-#define BUFLENGTH 500
-
-#define BUFLENGTH_STR STRINGIZE(BUFLENGTH)
-#define RANDOMORGSITEPORT_STR STRINGIZE(RANDOMORGSITEPORT)
-#define EOH "\r\n\r\n"
-
-    static int nCurrent = -1;
-    static unsigned int anBuf[BUFLENGTH];
-    static int nRead;
-
-    int h;
-    int cb;
-
-    ssize_t nBytesRead;
-    int i;
-    struct sockaddr *psa;
-    char szHostname[80];
-    char szHTTP[] =
-        "GET http://" RANDOMORGSITE "/integers/?num=" BUFLENGTH_STR
-        "&min=0&max=5&col=1&base=10&format=plain&rnd=new HTTP/1.0\n" "User-Agent: GNUBG/" VERSION " (email: "
-        PACKAGE_BUGREPORT ")\n\n";
-
-    char acBuf[4096];
-    char *startOfNums;
-
-    /* 
-     * Suggestions for improvements:
-     * - use proxy
-     */
-
-    /*
-     * Return random number
-     */
-
-    if ((nCurrent >= 0) && (nCurrent < nRead))
-        return anBuf[nCurrent++];
-    else {
-
-        outputf(_("Fetching %d random numbers from <%s>\n"), BUFLENGTH, RANDOMORGSITE);
-        outputx();
-
-        /* fetch new numbers */
-
-        /* open socket */
-
-        strcpy(szHostname, RANDOMORGSITE ":" RANDOMORGSITEPORT_STR);
-
-        if ((h = ExternalSocket(&psa, &cb, szHostname)) < 0) {
-            SockErr(szHostname);
-            return -1;
-        }
-
-        /* connect */
-
-#ifdef WIN32
-        if (connect((SOCKET) h, (const struct sockaddr *) psa, cb)
-            < 0) {
-#else
-        if ((connect(h, psa, cb)) < 0) {
-#endif                          /* WIN32 */
-            SockErr(szHostname);
-            return -1;
-        }
-
-        /* read next set of numbers */
-
-        if (ExternalWrite(h, szHTTP, strlen(szHTTP) + 1) < 0) {
-            SockErr(szHTTP);
-            closesocket(h);
-            return -1;
-        }
-
-        /* read data from web-server */
-
-#ifdef WIN32
-        /* reading from sockets doesn't work on Windows
-         * use recv instead */
-        if (!(nBytesRead = recv((SOCKET) h, acBuf, sizeof(acBuf) - 1, 0))) {
-#else
-        if (!(nBytesRead = read(h, acBuf, sizeof(acBuf) - 1))) {
-#endif
-            SockErr("reading data");
-            closesocket(h);
-            return -1;
-        }
-
-        /* close socket */
-        closesocket(h);
-
-        /* parse string */
-        outputl(_("Done."));
-        outputx();
-
-        /* Skip over the HTTP headers if they exist */
-        acBuf[nBytesRead] = '\0';
-        startOfNums = strstr(acBuf, EOH);
-        if (startOfNums)
-            startOfNums = startOfNums + (sizeof(EOH) - 1);
-        else
-            startOfNums = acBuf;
-
-        nRead = 0;
-        for (i = 0; i < nBytesRead && nRead < BUFLENGTH; i++) {
-
-            if ((startOfNums[i] >= '0') && (startOfNums[i] <= '5')) {
-                anBuf[nRead] = 1 + (unsigned int) (startOfNums[i] - '0');
-                nRead++;
-            }
-
-        }
-
-        nCurrent = 1;
-        return anBuf[0];
-    }
-
-}
-#endif                          /* HAVE_SOCKETS */
-
 static void
 init_rng(void)
 {
@@ -4686,7 +4564,11 @@ main(int argc, char *argv[])
 #if ! GLIB_CHECK_VERSION(2,36,0)
     g_type_init();
 #endif
-    
+
+#if defined(LIBCURL_PROTOCOL_HTTPS)
+    curl_global_init(CURL_GLOBAL_ALL);
+#endif
+
     output_initialize();
 
     /* set language */

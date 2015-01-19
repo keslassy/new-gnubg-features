@@ -21,6 +21,7 @@
 
 #include "config.h"
 #include "backgammon.h"
+#include "randomorg.h"
 
 #include <fcntl.h>
 #if HAVE_LIBGMP
@@ -853,11 +854,14 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
         break;
 
     case RNG_RANDOM_DOT_ORG:
-#if HAVE_SOCKETS
-
+#if defined(LIBCURL_PROTOCOL_HTTPS)
         anDice[0] = getDiceRandomDotOrg();
-        anDice[1] = getDiceRandomDotOrg();
-#endif                          /* !HAVE_SOCKETS */
+        if (anDice[0] > 0){
+            anDice[1] = getDiceRandomDotOrg();
+		}
+        else
+            anDice[1] = anDice[0];
+#endif
         break;
 
     case RNG_FILE:
