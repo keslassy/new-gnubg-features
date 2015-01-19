@@ -856,10 +856,9 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
     case RNG_RANDOM_DOT_ORG:
 #if defined(LIBCURL_PROTOCOL_HTTPS)
         anDice[0] = getDiceRandomDotOrg();
-        if (anDice[0] > 0){
+        if (anDice[0] > 0) {
             anDice[1] = getDiceRandomDotOrg();
-		}
-        else
+        } else
             anDice[1] = anDice[0];
 #endif
         break;

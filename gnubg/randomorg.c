@@ -43,13 +43,19 @@ RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserDa
     int iNumRead = 0;
     char *szRawData = (char *) pvRawData;
 
+#if defined(RANDOMORG_DEBUG)
+    output("Random rolls received: ");
+#endif
     for (i = 0; i < nNewDataLen; i++) {
         if ((szRawData[i] >= '0') && (szRawData[i] <= '5')) {
             /* Get a number */
             randomData->anBuf[iNumRead] = 1 + (unsigned int) (szRawData[i] - '0');
+#if defined(RANDOMORG_DEBUG)
+            outputf("%d", randomData->anBuf[iNumRead]);
+#endif
             iNumRead++;
         } else if (isspace(szRawData[i])) {
-            /* Skip spaces */
+            /* Skip white space */
             continue;
         } else {
             /* Any other characters suggest invalid data
@@ -69,10 +75,9 @@ getDiceRandomDotOrg(void)
 {
     CURL *curl_handle;
     CURLcode nRetVal;
-    static char szHTTP[] =
-        "https://" RANDOMORGSITE "/integers/?num=" BUFLENGTH_STR "&min=0&max=5&col=1&base=10&format=plain&rnd=new";
-    static char szUserAgent[] = "GNUBG/" VERSION " (email: " SUPPORT_EMAIL ")";
-
+#ifdef WIN32
+    gchar *szWIN32_cert_path = NULL;
+#endif
     if ((randomData.nCurrent >= 0) && (randomData.nCurrent < randomData.nNumRolls)) {
         return randomData.anBuf[randomData.nCurrent++];
     }
@@ -86,16 +91,27 @@ getDiceRandomDotOrg(void)
 
 #ifdef WIN32
     /* Set location of certificate bundle */
-    curl_easy_setopt(curl_handle, CURLOPT_CAINFO, ".\\etc\\ssl\\ca-bundle.crt");
+    szWIN32_cert_path = g_build_filename(RANDOMORG_CERTPATH, RANDOMORG_CABUNDLE, NULL);
+    curl_easy_setopt(curl_handle, CURLOPT_CAINFO, szWIN32_cert_path);
 #endif
 
+#if defined(RANDOMORG_DEBUG)
+    curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
+#endif
     curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl_handle, CURLOPT_URL, szHTTP);
+    curl_easy_setopt(curl_handle, CURLOPT_URL, RANDOMORG_URL);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, RandomOrgCallBack);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *) &randomData);
-    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, szUserAgent);
+    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, RANDOMORG_USERAGENT);
 
     nRetVal = curl_easy_perform(curl_handle);
+#if defined(RANDOMORG_DEBUG)
+    outputf("\n\n");
+#endif
+
+#ifdef WIN32
+    g_free(szWIN32_cert_path);
+#endif
 
     /* check if an error condition exists */
     if (nRetVal != CURLE_OK) {

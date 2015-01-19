@@ -1724,7 +1724,7 @@ CommandSetRNGRandomDotOrg(char *sz)
     SetRNG(rngSet, rngctxSet, RNG_RANDOM_DOT_ORG, sz);
 #else
     outputl(_("This installation of GNU Backgammon was compiled without\n"
-              "support for HTTPS(libcurl) that is needed for fetching\n" "random numbers from <www.random.org>"));
+              "support for HTTPS(libcurl) which is needed for fetching\n" "random numbers from <www.random.org>"));
 #endif
 
 }
