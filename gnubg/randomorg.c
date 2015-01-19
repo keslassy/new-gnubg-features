@@ -68,7 +68,7 @@ RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserDa
     return nNewDataLen;
 }
 
-static RandomData randomData = { 0, -1 };
+static RandomData randomData = { 0, -1, { 0 } };
 
 unsigned int
 getDiceRandomDotOrg(void)
