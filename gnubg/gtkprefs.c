@@ -1978,7 +1978,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
         rAzimuth = 360 - rAzimuth;
 
     pTemp = szTemp;
-    pTemp += sprintf(pTemp, "\n" "         board=#%02X%02X%02X;%sf\n" "         border=#%02X%02X%02X\n",
+    pTemp += sprintf(pTemp, "\n" "         board=#%02X%02X%02X;%s\n" "         border=#%02X%02X%02X\n",
                      /* board */
                      prd->aanBoardColour[0][0], prd->aanBoardColour[0][1],
                      prd->aanBoardColour[0][2],

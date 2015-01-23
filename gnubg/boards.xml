@@ -599,7 +599,7 @@
       </about>
   
       <design>
-         board=#6C9856;0.0
+         board=#6C9856;0.00
          border=#004000
          wood=walnut
          hinges=n
@@ -1163,7 +1163,7 @@
       </about>
 
       <design>
-         board=#F5F9D3;0.20f
+         board=#F5F9D3;0.20
          border=#CEA567
          wood=beech
          hinges=n
@@ -1265,7 +1265,7 @@
       </about>
 
       <design>
-         board=#577457;0.00f
+         board=#577457;0.00
          border=#5A3B3B
          wood=paint
          hinges=n
