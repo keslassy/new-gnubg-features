@@ -102,7 +102,6 @@ typedef enum _movetype {
 } movetype;
 
 typedef struct _movegameinfo {
-
     /* ordinal number of the game within a match */
     int i;
     /* match length */
@@ -1002,9 +1001,7 @@ extern int getMoveNumber(const listOLD * plGame, const void *p);
 extern int CheckGameExists(void);
 extern void pmr_cubedata_set(moverecord * pmr, evalsetup * es, float output[2][NUM_ROLLOUT_OUTPUTS],
                              float stddev[2][NUM_ROLLOUT_OUTPUTS]);
-extern void pmr_cubedata_copy(const moverecord * source, moverecord * target);
 extern void pmr_movelist_set(moverecord * pmr, evalsetup * pes, movelist * pml);
-extern void pmr_movelist_copy(const moverecord * source, moverecord * target);
 extern void current_pmr_cubedata_update(evalsetup * pes, float output[][NUM_ROLLOUT_OUTPUTS],
                                         float stddev[][NUM_ROLLOUT_OUTPUTS]);
 extern listOLD *game_add_pmr_hint(listOLD * plGame);
