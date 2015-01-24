@@ -716,7 +716,7 @@ extern int
 ParseMove(char *pch, int an[8])
 {
 
-    int i, j, iBegin, iEnd, n, c = 0, anUser[8];
+    int i, j, iBegin, iEnd, n, c = 0, anUser[12];
     unsigned fl = 0;
 
     while (*pch) {
