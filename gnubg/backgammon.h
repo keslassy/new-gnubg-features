@@ -395,7 +395,6 @@ extern unsigned int nDefaultLength;
 extern rngcontext *rngctxRollout;
 
 extern command acAnnotateMove[];
-extern command acSet[];
 extern command acSetAnalysisPlayer[];
 extern command acSetCheatPlayer[];
 extern command acSetEvalParam[];
@@ -412,8 +411,6 @@ extern command acSetRolloutLimit[];
 extern command acSetRolloutPlayer[];
 extern command acSetTruncation[];
 extern command acTop[];
-extern command cFilename;
-extern command cOnOff;
 
 extern int fInteractive;
 

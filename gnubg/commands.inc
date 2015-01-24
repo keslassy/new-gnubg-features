@@ -2,7 +2,7 @@
 
 /* All the commands are in this file */
 
-command cER = {
+static command cER = {
     /* dummy command used for evaluation/rollout parameters */
     NULL, NULL, NULL, NULL, &cER
 }, cFilename = {
@@ -40,7 +40,6 @@ command cER = {
     { "cube", CommandAnalyseRolloutCube, 
       N_("Rollout an analysed cube"),
 	      NULL, NULL },
-	
     { "move", CommandAnalyseRolloutMove, 
       N_("Rollout choices in the analysis movelist.\n"
 	 "\"analyse rollout move 1 2 3\" will rollout the first three choices.\n"
@@ -123,7 +122,9 @@ command cER = {
       N_("Erase skill annotations for a move"),
       NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, acAnnotateMove[] = {
+};
+
+command acAnnotateMove[] = {
     { "comment", CommandAnnotateAddComment, N_("Add commentary about a move"), szCOMMENT, NULL },
     { "bad", CommandAnnotateBad, N_("Mark as bad"), NULL, NULL },
     { "clear", CommandAnnotateClearSkill, 
@@ -131,7 +132,9 @@ command cER = {
     { "doubtful", CommandAnnotateDoubtful, N_("Mark as doubtful"), NULL, NULL },
     { "verybad", CommandAnnotateVeryBad, N_("Mark as very bad"), NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, acAnnotateRoll[] = {
+};
+
+static command acAnnotateRoll[] = {
     { "clear", CommandAnnotateClearLuck, 
       N_("Remove annotations"), NULL, NULL },
     { "lucky", CommandAnnotateLucky, 
@@ -369,11 +372,15 @@ command cER = {
     { "settings", CommandSaveSettings, N_("Use the current settings in future "
       "sessions"), NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, acSetAnalysisPlayer[] = {
+};
+
+command acSetAnalysisPlayer[] = {
     { "analyse", CommandSetAnalysisPlayerAnalyse, 
       N_("Specify if this player is to be analysed"), szONOFF, &cOnOff },
     { NULL, NULL, NULL, NULL, NULL }
-}, acSetAnalysisThreshold[] = {
+};
+
+static command acSetAnalysisThreshold[] = {
     { "bad", CommandSetAnalysisThresholdBad, 
       N_("Specify the equity loss for a bad move"), szVALUE, NULL },
     { "doubtful", CommandSetAnalysisThresholdDoubtful, 
@@ -393,7 +400,9 @@ command cER = {
     { "veryunlucky", CommandSetAnalysisThresholdVeryUnlucky, N_("Specify the "
       "equity loss for a very unlucky roll"), szVALUE, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, acSetEvaluation[] = {
+};
+
+command acSetEvaluation[] = {
     { "cubeful", CommandSetEvalCubeful, N_("Cubeful evaluations"), szONOFF,
       &cOnOff },
     { "deterministic", CommandSetEvalDeterministic, N_("Specify whether added "
@@ -433,7 +442,9 @@ command cER = {
     N_("Specify parameters for rollout"), NULL,
     acSetRollout },
   { NULL, NULL, NULL, NULL, NULL }
-}, acSetAnalysis[] = {
+};
+
+static command acSetAnalysis[] = {
     { "chequerplay", CommandSetAnalysisChequerplay, N_("Specify parameters "
       "for the analysis of chequerplay"), NULL, acSetEvalParam },
     { "cube", CommandSetAnalysisCube, N_("Select whether cube action will be "
@@ -460,7 +471,9 @@ command cER = {
       szONOFF, &cOnOff },
 #endif
     { NULL, NULL, NULL, NULL, NULL }    
-}, acSetAutomatic[] = {
+};
+
+static command acSetAutomatic[] = {
     { "bearoff", CommandSetAutoBearoff, N_("Automatically bear off as many "
       "chequers as possible"), szONOFF, &cOnOff },
     { "crawford", CommandSetAutoCrawford, N_("Enable the Crawford game "
@@ -523,7 +536,9 @@ command cER = {
       szVALUE, acSetCubeEfficiencyRace },
     { NULL, NULL, NULL, NULL, NULL }
 #if USE_GTK
-}, acSetGeometryValues[] = {
+};
+
+command  acSetGeometryValues[] = {
     { "width", CommandSetGeometryWidth, N_("set width of window"), 
       szVALUE, NULL },
     { "height", CommandSetGeometryHeight, N_("set height of window"),
@@ -535,7 +550,9 @@ command cER = {
     { "max", CommandSetGeometryMax, N_("set maximised state of window"),
       szVALUE, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, acSetGeometry[] = {
+};
+
+static command acSetGeometry[] = {
     { "analysis", CommandSetGeometryAnalysis,
       N_("set geometry of analysis window"), NULL, acSetGeometryValues },
     { "command", CommandSetGeometryCommand,
@@ -636,7 +653,9 @@ command cER = {
     { "errorratefactor", CommandSetOutputErrorRateFactor,
       N_("The factor used for multiplying error rates"), szVALUE, NULL},
     { NULL, NULL, NULL, NULL, NULL }
-}, acSetRNG[] = {
+};
+
+command acSetRNG[] = {
     { "ansi", CommandSetRNGAnsi, N_("Use the ANSI C rand() (usually linear "
       "congruential) generator"), szOPTSEED, NULL },
     { "bbs", CommandSetRNGBBS, N_("Use the Blum, Blum and Shub generator"),
@@ -703,7 +722,9 @@ command cER = {
       N_("Set parameters for choosing moves to evaluate"), 
       szFILTER, NULL},
     { NULL, NULL, NULL, NULL, NULL }
-}, acSetRolloutBearoffTruncation[] = {
+};
+
+static command acSetRolloutBearoffTruncation[] = {
     { "exact", CommandSetRolloutBearoffTruncationExact, 
       N_("Truncate *cubeless* rollouts at exact bearoff database"),
       NULL, &cOnOff },
@@ -712,7 +733,9 @@ command cER = {
          "one-sided bearoff database"),
       NULL, &cOnOff },
     { NULL, NULL, NULL, NULL, NULL }
-}, acSetRolloutLate[] = {
+};
+
+command acSetRolloutLate[] = {
   { "chequerplay", CommandSetRolloutLateChequerplay, 
     N_("Specify parameters for chequerplay during later plies of rollouts"), 
     NULL, acSetEvaluation },
@@ -803,7 +826,9 @@ command cER = {
     { "plies", CommandSetRolloutTruncationPlies,
 	N_("End rollouts at a particular depth"), szPLIES, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, acSetEval[] = {
+};
+
+static command acSetEval[] = {
   { "chequerplay", CommandSetEvalChequerplay,
     N_("Set evaluation parameters for chequer play"), NULL,
     acSetEvalParam },
@@ -816,13 +841,17 @@ command cER = {
   { "sameasanalysis", CommandSetEvalSameAsAnalysis, N_("Select if evaluation settings should be the "
 	"same as the analysis setting"), szONOFF, &cOnOff },
   { NULL, NULL, NULL, NULL, NULL }    
-}, acSetExportParameters[] = {
+};
+
+command acSetExportParameters[] = {
   { "evaluation", CommandSetExportParametersEvaluation,
     N_("show detailed parameters for evaluations"), szONOFF, &cOnOff },
   { "rollout", CommandSetExportParametersRollout,
     N_("show detailed parameters for rollouts"), szONOFF, &cOnOff },
   { NULL, NULL, NULL, NULL, NULL }    
-}, acSetExportHTMLType[] = {
+};
+
+static command acSetExportHTMLType[] = {
   { "bbs", CommandSetExportHTMLTypeBBS,
     N_("Use BBS-type images for posting to, e.g., GammOnLine"), NULL, NULL },
   { "fibs2html", CommandSetExportHTMLTypeFibs2html,
@@ -986,7 +1015,7 @@ command cER = {
   { "drop", CommandSetSoundSoundDrop, 
     N_("Drop"), szOPTFILENAME, &cFilename },
   { "exit", CommandSetSoundSoundExit, 	 
-	N_("Exiting of GNU Backgammon"), szOPTFILENAME, &cFilename },
+    N_("Exiting of GNU Backgammon"), szOPTFILENAME, &cFilename },
   { "humanfans", CommandSetSoundSoundHumanDance, 
     N_("Human fans"), szOPTFILENAME, &cFilename },
   { "humanwinsgame", CommandSetSoundSoundHumanWinGame, 
@@ -1040,12 +1069,16 @@ command cER = {
   { "player", CommandSetCheatPlayer,
    N_("Parameters for the dice manipulation"), szPLAYER, acSetCheatPlayer },
   { NULL, NULL, NULL, NULL, NULL }    
-}, acSetCheatPlayer[] = {
+};
+
+command acSetCheatPlayer[] = {
   { "roll", CommandSetCheatPlayerRoll,
    N_("Which roll should GNU Backgammon choose (1=Best and 21=Worst)"), 
     szVALUE, NULL },
   { NULL, NULL, NULL, NULL, NULL }    
-}, acSetVariation[] = {
+};
+
+static command acSetVariation[] = {
   { "1-chequer-hypergammon", CommandSetVariation1ChequerHypergammon,
     N_("Play 1-chequer hypergammon"), NULL, NULL },
   { "2-chequer-hypergammon", CommandSetVariation2ChequerHypergammon,
@@ -1371,7 +1404,9 @@ command cER = {
 }, acSwap[] = {
     { "players", CommandSwapPlayers, N_("Swap players"), NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, acTop[] = {
+};
+
+command acTop[] = {
     { "accept", CommandAccept, N_("Accept a cube or resignation"),
       NULL, NULL },
     { "agree", CommandAgree, N_("Agree to a resignation"), NULL, NULL },
@@ -1453,4 +1488,6 @@ command cER = {
     { "take", CommandTake, N_("Agree to an offered double"), NULL, NULL },
     { "?", CommandHelp, N_("Describe commands"), szOPTCOMMAND, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, cTop = { NULL, NULL, NULL, NULL, acTop };
+};
+
+static command cTop = { NULL, NULL, NULL, NULL, acTop };
