@@ -125,7 +125,7 @@ ParseULong(char **ppch, unsigned long *pretVal)
     /* Check for various possible errors */
     if ((errno == ERANGE && (*pretVal == LONG_MAX || *pretVal == (unsigned long)
  LONG_MIN))
-        || (errno != 0 && pretVal == 0))
+        || (errno != 0 && *pretVal == 0))
         return FALSE;
 
     return TRUE;
