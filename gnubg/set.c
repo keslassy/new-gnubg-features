@@ -1023,7 +1023,7 @@ CommandSetEvalDeterministic(char *sz)
     SetToggle(szCommand, &f, sz, asz[0], asz[1]);
     pecSet->fDeterministic = f;
 
-    if (!pecSet->rNoise)
+    if (pecSet->rNoise == 0.0f)
         outputl(_("(Note that this setting will have no effect unless you " "set noise to some non-zero value.)"));
 }
 
@@ -1041,7 +1041,7 @@ CommandSetEvalNoise(char *sz)
 
     pecSet->rNoise = r;
 
-    if (pecSet->rNoise)
+    if (pecSet->rNoise > 0.0f)
         outputf(_("%s will use noise with standard deviation %5.3f.\n"), szSet, pecSet->rNoise);
     else
         outputf(_("%s will use noiseless evaluations.\n"), szSet);
