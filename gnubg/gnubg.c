@@ -568,9 +568,6 @@ static char const *aszBuildInfo[] = {
 #if USE_BOARD3D
     N_("3d Boards supported."),
 #endif
-#if HAVE_SOCKETS
-    N_("External commands supported."),
-#endif
 #if defined(WIN32)
     N_("Windows sound system supported."),
 #elif HAVE_APPLE_COREAUDIO
