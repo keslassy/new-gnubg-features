@@ -98,6 +98,40 @@ static evalsetup *pesSet;
 static rng *rngSet;
 static rngcontext *rngctxSet;
 
+#if !HAVE_LIBGMP
+
+/* get the next token from the input and convert as an
+ * integer. Returns 0 on empty input or non-numerics found, and
+ * 1 on success. On failure, one token (if any were available)
+ * will have been consumed, it is not pushed back into the input.
+ * Unsigned long is returned in pretVal
+ */
+static gboolean
+ParseULong(char **ppch, unsigned long *pretVal)
+{
+
+    char *pch, *pchOrig;
+
+    if (!ppch || !(pchOrig = NextToken(ppch)))
+        return FALSE;
+
+    for (pch = pchOrig; *pch; pch++)
+        if (!isdigit(*pch))
+            return FALSE;
+
+    errno = 0;                  /* To distinguish success/failure after call */
+    *pretVal = strtol(pchOrig, NULL, 10);
+
+    /* Check for various possible errors */
+    if ((errno == ERANGE && (*pretVal == LONG_MAX || *pretVal == (unsigned long)
+ LONG_MIN))
+        || (errno != 0 && pretVal == 0))
+        return FALSE;
+
+    return TRUE;
+}
+#endif
+
 static void
 SetSeed(const rng rngx, void *rngctx, char *sz)
 {
