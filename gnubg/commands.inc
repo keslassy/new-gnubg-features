@@ -538,7 +538,7 @@ static command acSetAutomatic[] = {
 #if USE_GTK
 };
 
-command  acSetGeometryValues[] = {
+command acSetGeometryValues[] = {
     { "width", CommandSetGeometryWidth, N_("set width of window"), 
       szVALUE, NULL },
     { "height", CommandSetGeometryHeight, N_("set height of window"),
@@ -568,7 +568,6 @@ static command acSetGeometry[] = {
     { "theory", CommandSetGeometryTheory,
       N_("set geometry of theory window"), NULL, acSetGeometryValues },
     { NULL, NULL, NULL, NULL, NULL }
-#endif
 }, acSetGUIAnimation[] = {
     { "blink", CommandSetGUIAnimationBlink,
       N_("Blink chequers being moves"), NULL, NULL },
@@ -596,7 +595,6 @@ static command acSetGeometry[] = {
       szONOFF, NULL },
     { "dicearea", CommandSetGUIDiceArea,
       N_("Show dice icon when human player on roll"), szONOFF, NULL },
-#if USE_GTK
     { "dragtargethelp", CommandSetGUIDragTargetHelp,
       N_("Show target help while dragging a chequer"), szONOFF, NULL },
     { "usestatspanel", CommandSetGUIUseStatsPanel,
@@ -605,7 +603,6 @@ static command acSetGeometry[] = {
       N_("Show win/loss stats in move list"), szONOFF, NULL },
     { "grayedit", CommandSetGUIGrayEdit,
       N_("Gray board in edit mode"), szONOFF, NULL },
-#endif
     { "highdiefirst", CommandSetGUIHighDieFirst,
       N_("Show the higher die on the left"), szONOFF, NULL },
     { "illegal", CommandSetGUIIllegal,
@@ -617,6 +614,7 @@ static command acSetGeometry[] = {
     { "windowpositions", CommandSetGUIWindowPositions,
       N_("Save and restore window positions and sizes"), szONOFF, NULL },
     { NULL, NULL, NULL, NULL, NULL }
+#endif
 }, acSetMatchInfo[] = {
     { "annotator", CommandSetMatchAnnotator,
       N_("Record the name of the match commentator"), szOPTNAME, NULL },
@@ -1241,8 +1239,8 @@ static command acSetVariation[] = {
     { "vsync3d", CommandSetVsync3d, N_("Turn vertical sync on/off"), szONOFF, &cOnOff },
 #if USE_GTK
     { "warning", CommandSetWarning, N_("Turn warnings on or off"), szWARNYN, NULL},
-    { "autosave", NULL, N_("Control autosave"), NULL, acSetAutoSave },
 #endif
+    { "autosave", NULL, N_("Control autosave"), NULL, acSetAutoSave },
     { NULL, NULL, NULL, NULL, NULL }
 }, acShowStatistics[] = {
     { "game", CommandShowStatisticsGame, 
