@@ -151,8 +151,7 @@ static float
 estimatedSE(const float rSE, const int iGame, const int nTrials)
 {
 
-    return rSE * (float) sqrt((1.0 * iGame) / (1.0 * (nTrials - 1)));
-
+    return rSE * sqrtf((float) iGame / (nTrials - 1));
 
 }
 
@@ -234,7 +233,7 @@ create_win_model(const rolloutstat * prs, int cGames, int *cGamesCount)
         g_free(s[j]);
 
     for (j = 0; j < 6; j++) {
-        s[j] = g_strdup_printf("%6.2f%%", 100.0 * (float) anTotal[j] / (float) cGames);
+        s[j] = g_strdup_printf("%6.2f%%", 100.0f * (float) anTotal[j] / (float) cGames);
         *cGamesCount += anTotal[j];
     }
     gtk_list_store_append(store, &iter);
@@ -327,7 +326,7 @@ create_cube_model(const rolloutstat * prs, int cGames, int *anTotal)
         g_free(s[j]);
 
     for (j = 0; j < 4; j++)
-        s[j] = g_strdup_printf("%6.2f%%", 100.0 * (float) anTotal[j] / (float) cGames);
+        s[j] = g_strdup_printf("%6.2f%%", 100.0f * (float) anTotal[j] / (float) cGames);
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store, &iter, 0, "", 1, s[0], 2, s[1], 3, s[2], 4, s[3], -1);
     for (j = 0; j < 4; j++)
@@ -524,12 +523,12 @@ create_hit_model(const rolloutstat * prs, int cGames)
     g_free(s2);
 
     if (prs->nOpponentHit)
-        s1 = g_strdup_printf("%7.2f", 1.0f + prs->rOpponentHitMove / (1.0 * prs->nOpponentHit));
+        s1 = g_strdup_printf("%7.2f", 1.0f + prs->rOpponentHitMove / (1.0f * prs->nOpponentHit));
     else
         s1 = g_strdup_printf("n/a");
 
     if ((prs + 1)->nOpponentHit)
-        s2 = g_strdup_printf("%7.2f", 1.0f + (prs + 1)->rOpponentHitMove / (1.0 * (prs + 1)->nOpponentHit));
+        s2 = g_strdup_printf("%7.2f", 1.0f + (prs + 1)->rOpponentHitMove / (1.0f * (prs + 1)->nOpponentHit));
     else
         s2 = g_strdup_printf("n/a");
     gtk_list_store_append(store, &iter);
@@ -844,7 +843,7 @@ GTKRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
     char sz[32];
     int i;
     gchar *gsz;
-    double frac;
+    float frac;
     GtkTreeIter iter;
 
     if (!prp || !prp->pwRolloutResult)
