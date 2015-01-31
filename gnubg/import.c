@@ -1815,7 +1815,6 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
 
                                 AddMoveRecord(pmr);
                                 szComment = NULL;
-                                fBeaver = FALSE;
                             }
 
                             pmr = NewMoveRecord();
@@ -1864,7 +1863,6 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
 
                                 AddMoveRecord(pmr);
                                 szComment = NULL;
-                                fBeaver = FALSE;
                             }
 
                             pmr = NewMoveRecord();
