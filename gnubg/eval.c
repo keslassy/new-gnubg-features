@@ -2817,9 +2817,6 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
     if (i)
         return -i;              /* sort descending */
 
-    if (pm0->rScore != pm1->rScore || pm0->rScore2 != pm1->rScore2)
-        return CompareMoves(pm0, pm1);
-
     /* find the "back" chequer */
     PositionFromKey(board[0], &pm0->key);
     PositionFromKey(board[1], &pm1->key);
@@ -2831,7 +2828,24 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
             }
         }
     }
-    /* "back" chequer at high point bad */
+
+    /* Rounding errors when collating evaluations with lookahead make
+     * comaparing for equality unreliable. The first check below catches
+     * situations that would be obvious and puzzling to a human opponent.
+     * In general, the third check is probably not reached as often as it
+     * should and, among equal moves, the most "natural" one may not
+     * always be chosen. */
+
+    /* Winning now is always at least as good as winning later */
+    if (back[0] == -1)
+        return -1;
+    if (back[1] == -1)
+        return 1;
+
+    if (pm0->rScore != pm1->rScore || pm0->rScore2 != pm1->rScore2)
+        return CompareMoves(pm0, pm1);
+
+    /* If everything else is equal "back" chequer at high point bad */
     return (back[0] > back[1] ? 1 : -1);
 }
 
