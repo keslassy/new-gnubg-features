@@ -146,7 +146,7 @@ void shadowDisplay(void (*drawScene) (const BoardData *, const BoardData3d *, co
 
 /* font functions */
 void glPrintPointNumbers(const OGLFont * numberFont, const char *text);
-void glPrintCube(const OGLFont * cubeFont, const char *text);
+void glPrintCube(OGLFont * cubeFont, const char *text);
 void glPrintNumbersRA(const OGLFont * numberFont, const char *text);
 int CreateFonts(BoardData3d * bd3d);
 float GetFontHeight3d(const OGLFont * font);

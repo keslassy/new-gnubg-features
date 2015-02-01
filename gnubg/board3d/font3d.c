@@ -602,21 +602,21 @@ glPrintPointNumbers(const OGLFont * numberFont, const char *text)
 }
 
 extern void
-glPrintCube(const OGLFont * cubeFont, const char *text)
+glPrintCube(OGLFont * cubeFont, const char *text)
 {
     /* Align horizontally and vertically */
     float saveScale = 0;
     float heightOffset = -cubeFont->height;
     if (strlen(text) > 1) {     /* Make font smaller for 2 digit cube numbers */
         saveScale = cubeFont->scale;
-        ((OGLFont *) cubeFont)->scale *= CUBE_TWODIGIT_FACTOR;
+        cubeFont->scale *= CUBE_TWODIGIT_FACTOR;
         heightOffset *= CUBE_TWODIGIT_FACTOR;
     }
     glTranslatef(-getTextLen3d(cubeFont, text) / 2.0f, heightOffset / 2.0f, 0.f);
     RenderString3d(cubeFont, text);
 
     if (strlen(text) > 1)
-        ((OGLFont *) cubeFont)->scale = saveScale;
+        cubeFont->scale = saveScale;
 }
 
 extern void
