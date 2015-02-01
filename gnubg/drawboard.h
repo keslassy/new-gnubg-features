@@ -40,12 +40,8 @@ extern char *FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
                        const char *szPlayer, const char *szOpp, int nMatchTo,
                        int nScore, int nOpponent, int nDice0, int nDice1,
                        int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers);
-/* Read a FIBS "boardstyle 3" description from pch. */
-extern int ProcessFIBSBoardString(char *pch, ProcessedFIBSBoard * procBrd);
 
 /* Process a board info structure from external interface */
 extern int ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd);
-
-extern int ParseFIBSBoardString(char *pch, FIBSBoardInfo * brdInfo);
 
 #endif
