@@ -2832,7 +2832,7 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
         }
     }
     /* "back" chequer at high point bad */
-    return (back[0] < back[1] ? 1 : -1);
+    return (back[0] > back[1] ? 1 : -1);
 }
 
 extern int
