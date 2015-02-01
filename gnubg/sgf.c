@@ -43,7 +43,7 @@
 static const char *szFile;
 static int fError;
 
-static int CheckSGFVersion(const char **sz);
+static int CheckSGFVersion(char **sz);
 static void
 ErrorHandler(const char *sz, int UNUSED(fParseError))
 {
@@ -583,7 +583,7 @@ RestoreEvalContext(evalcontext * pec, char *pc)
 
     int fUsePrune = 0;
     int red __attribute((unused)) = 0;
-    int ver = CheckSGFVersion((const char **) &pc);
+    int ver = CheckSGFVersion(&pc);
 
     InitEvalContext(pec);
     pec->nPlies = (unsigned int)strtol(pc, &pc, 10);
@@ -729,7 +729,7 @@ RestoreRolloutInternals(evalsetup * pes, const char *sz)
 }
 
 static int
-CheckSGFVersion(const char **sz)
+CheckSGFVersion(char **sz)
 {
 
     int n;
@@ -823,7 +823,7 @@ RestoreExtendedRolloutContext(rolloutcontext * prc, const char *sz)
 }
 
 static void
-RestoreExtendedCubeRollout(const char *sz,
+RestoreExtendedCubeRollout(char *sz,
                            float aarOutput[][NUM_ROLLOUT_OUTPUTS],
                            float aarStdDev[][NUM_ROLLOUT_OUTPUTS], evalsetup * pes)
 {
@@ -840,7 +840,7 @@ RestoreExtendedCubeRollout(const char *sz,
 }
 
 static void
-RestoreExtendedRollout(move * pm, const char *sz)
+RestoreExtendedRollout(move * pm, char *sz)
 {
 
     evalsetup *pes = &pm->esMove;
@@ -877,7 +877,7 @@ RestoreDoubleAnalysis(property * pp,
         /* EVAL_EVAL */
         ++pch;
         pes->et = EVAL_EVAL;
-        ver = CheckSGFVersion((const char **) &pch);
+        ver = CheckSGFVersion(&pch);
         nReduced = 0;
         pes->ec.rNoise = 0.0f;
         memset(aarOutput[0], 0, NUM_ROLLOUT_OUTPUTS * sizeof(float));
@@ -1016,7 +1016,7 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
 
         switch (ch) {
         case 'E':
-            ver = CheckSGFVersion((const char **) &pch);
+            ver = CheckSGFVersion(&pch);
             /* EVAL_EVAL */
             pm->esMove.et = EVAL_EVAL;
             nReduced = 0;
@@ -1628,7 +1628,7 @@ WriteMoveFilters(FILE * pf, movefilter mf[MAX_FILTER_PLIES][MAX_FILTER_PLIES], i
 }
 
 static void
-WriteRolloutContext(FILE * pf, const rolloutcontext * prc)
+WriteRolloutContext(FILE * pf, rolloutcontext * prc)
 {
 
     int i;
@@ -1651,7 +1651,7 @@ WriteRolloutContext(FILE * pf, const rolloutcontext * prc)
         WriteEvalContext(pf, &prc->aecChequer[i]);
         if (prc->aecChequer[i].nPlies) {
             fprintf(pf, " filt%d ", i);
-            WriteMoveFilters(pf, (movefilter(*)[4]) prc->aaamfChequer[i], prc->aecChequer[i].nPlies);
+            WriteMoveFilters(pf, prc->aaamfChequer[i], prc->aecChequer[i].nPlies);
         }
     }
 
@@ -1664,7 +1664,7 @@ WriteRolloutContext(FILE * pf, const rolloutcontext * prc)
         WriteEvalContext(pf, &prc->aecChequerLate[i]);
         if (prc->aecChequerLate[i].nPlies) {
             fprintf(pf, " latefilt%d ", i);
-            WriteMoveFilters(pf, (movefilter(*)[4]) prc->aaamfLate[i], prc->aecChequerLate[i].nPlies);
+            WriteMoveFilters(pf, prc->aaamfLate[i], prc->aecChequerLate[i].nPlies);
         }
     }
 
