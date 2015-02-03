@@ -524,16 +524,23 @@ CommandShowAliases(char *UNUSED(sz))
 extern void
 CommandShowCache(char *UNUSED(sz))
 {
+    unsigned int c[2], cHit[2], cLookup[2];
 
-    unsigned int c, cHit;
-    unsigned int cLookup;
+    EvalCacheStats(c, cLookup, cHit);
 
-    EvalCacheStats(&c, &cLookup, &cHit);
+    outputf("%10u regular eval entries used %10u lookups %10u hits", c[0], cLookup[0], cHit[0]);
 
-    outputf(_("%u cache entries have been used. %u lookups, %u hits"), c, cLookup, cHit);
+    if (cLookup[0])
+        outputf(" (%4.1f%%).", (float)cHit[0] * 100.0f / (float)cLookup[0]);
+    else
+        outputc('.');
 
-    if (cLookup)
-        outputf(" (%4.1f%%).", (float)cHit * 100.0f / (float)cLookup);
+    outputc('\n');
+ 
+    outputf("%10u pruning eval entries used %10u lookups %10u hits", c[1], cLookup[1], cHit[1]);
+
+    if (cLookup[1])
+        outputf(" (%4.1f%%).", (float)cHit[1] * 100.0f / (float)cLookup[1]);
     else
         outputc('.');
 

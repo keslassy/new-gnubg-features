@@ -2233,7 +2233,6 @@ classevalfunc acef[N_CLASSES] = {
 extern float
 Noise(const evalcontext * pec, const TanBoard anBoard, int iOutput)
 {
-
     float r;
 
     if (pec->fDeterministic) {
@@ -3189,6 +3188,7 @@ extern int
 EvalCacheStats(unsigned int *pcUsed, unsigned int *pcLookup, unsigned int *pcHit)
 {
     CacheStats(&cEval, pcLookup, pcHit, pcUsed);
+    CacheStats(&cpEval, pcLookup+1, pcHit+1, pcUsed+1);
     return 0;
 }
 
