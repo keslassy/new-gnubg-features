@@ -5150,8 +5150,8 @@ equal_movefilter(const int i, const movefilter amf1[MAX_FILTER_PLIES], const mov
 
 
 extern int
-equal_movefilters(movefilter aamf1[MAX_FILTER_PLIES][MAX_FILTER_PLIES],
-                  movefilter aamf2[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+equal_movefilters(const movefilter aamf1[MAX_FILTER_PLIES][MAX_FILTER_PLIES],
+                  const movefilter aamf2[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
     int i;

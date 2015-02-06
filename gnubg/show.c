@@ -90,7 +90,7 @@ ShowMoveFilter(const movefilter * pmf, const int ply)
 
 
 static void
-ShowMoveFilters(movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+ShowMoveFilters(const movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
     int i, j;
@@ -120,7 +120,7 @@ ShowEvaluation(const evalcontext * pec)
             (pec->fUsePrune) ? _("Using pruning neural nets.") :
             _("Not using pruning neural nets."), pec->fCubeful ? _("Cubeful") : _("Cubeless"));
 
-    if (pec->rNoise)
+    if (pec->rNoise > 0.0f)
         outputf("%s%s %5.3f", ("        "), _("Noise standard deviation"), pec->rNoise);
     else
         outputf("%s%s", "        ", _("Noiseless evaluations"));
@@ -139,7 +139,7 @@ EvalCmp(const evalcontext * E1, const evalcontext * E2, const int nElements)
         return 0;
 
     for (i = 0; i < nElements; ++i, ++E1, ++E2) {
-        cmp = memcmp((void *) E1, (void *) E2, sizeof(evalcontext));
+        cmp = memcmp((const void *) E1, (const void *) E2, sizeof(evalcontext));
         if (cmp != 0)
             break;
     }
@@ -188,10 +188,10 @@ show_evals(const char *text,
 
 
 static void
-show_movefilters(movefilter aaamf[2][MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+show_movefilters(const movefilter aaamf[2][MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
-    if (equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) aaamf[0], (movefilter(*)[MAX_FILTER_PLIES]) aaamf[1]))
+    if (equal_movefilters(aaamf[0], aaamf[1]))
         ShowMoveFilters(aaamf[0]);
     else {
         int i;
@@ -275,12 +275,12 @@ ShowRollout(const rolloutcontext * prc)
 
     if (fLateEvals) {
         outputf(_("Move filter for first %d plies:\n"), nLate);
-        show_movefilters((movefilter(*)[4][4]) prc->aaamfChequer);
+        show_movefilters(prc->aaamfChequer);
         outputf(_("Move filter after %d plies:\n"), nLate);
-        show_movefilters((movefilter(*)[4][4]) prc->aaamfLate);
+        show_movefilters(prc->aaamfLate);
     } else {
         outputf(_("Move filter:\n"));
-        show_movefilters((movefilter(*)[4][4]) prc->aaamfChequer);
+        show_movefilters(prc->aaamfChequer);
     }
 
     if (fDoTruncate) {
@@ -1543,30 +1543,30 @@ CommandShowMarketWindow(char *sz)
         /* If one of the ratios are larger than 1 we assume the user
          * has entered 25.1 instead of 0.251 */
 
-        if (aarRates[0][0] > 1.0 || aarRates[1][0] > 1.0 || aarRates[0][1] > 1.0 || aarRates[1][1] > 1.0) {
-            aarRates[0][0] /= 100.0;
-            aarRates[1][0] /= 100.0;
-            aarRates[0][1] /= 100.0;
-            aarRates[1][1] /= 100.0;
+        if (aarRates[0][0] > 1.0f || aarRates[1][0] > 1.0f || aarRates[0][1] > 1.0f || aarRates[1][1] > 1.0f) {
+            aarRates[0][0] /= 100.0f;
+            aarRates[1][0] /= 100.0f;
+            aarRates[0][1] /= 100.0f;
+            aarRates[1][1] /= 100.0f;
         }
 
         /* Check that ratios are 0 <= ratio <= 1 */
 
         for (i = 0; i < 2; i++) {
-            if (aarRates[i][0] > 1.0) {
+            if (aarRates[i][0] > 1.0f) {
                 outputf(_("illegal gammon ratio for player %i: %f\n"), i, aarRates[i][0]);
                 return;
             }
-            if (aarRates[i][1] > 1.0) {
+            if (aarRates[i][1] > 1.0f) {
                 outputf(_("illegal backgammon ratio for player %i: %f\n"), i, aarRates[i][1]);
                 return;
             }
         }
 
-        /* Transfer rations to arOutput
+        /* Transfer ratios to arOutput
          * (used in call to GetPoints below) */
 
-        arOutput[OUTPUT_WIN] = 0.5;
+        arOutput[OUTPUT_WIN] = 0.5f;
         arOutput[OUTPUT_WINGAMMON] = (aarRates[ms.fMove][0] + aarRates[ms.fMove][1]) * 0.5f;
         arOutput[OUTPUT_LOSEGAMMON] = (aarRates[!ms.fMove][0] + aarRates[!ms.fMove][1]) * 0.5f;
         arOutput[OUTPUT_WINBACKGAMMON] = aarRates[ms.fMove][1] * 0.5f;
@@ -2036,7 +2036,7 @@ CommandShowTemperatureMap(char *sz)
                     FormatCubePosition(asz[i], &ci);
                 }
 
-                GTKShowTempMap(ams, 2, (const gchar **) asz, FALSE);
+                GTKShowTempMap(ams, 2, asz, FALSE);
 
                 for (i = 0; i < 2; ++i)
                     g_free(asz[i]);

@@ -538,8 +538,8 @@ extern int
  equal_movefilter(const int i, const movefilter amf1[MAX_FILTER_PLIES], const movefilter amf2[MAX_FILTER_PLIES]);
 
 extern int
- equal_movefilters(movefilter aamf1[MAX_FILTER_PLIES][MAX_FILTER_PLIES],
-                  movefilter aamf2[MAX_FILTER_PLIES][MAX_FILTER_PLIES]);
+ equal_movefilters(const movefilter aamf1[MAX_FILTER_PLIES][MAX_FILTER_PLIES],
+                   const movefilter aamf2[MAX_FILTER_PLIES][MAX_FILTER_PLIES]);
 
 extern doubletype DoubleType(const int fDoubled, const int fMove, const int fTurn);
 

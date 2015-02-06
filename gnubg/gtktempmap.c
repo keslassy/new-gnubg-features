@@ -513,7 +513,7 @@ DestroyDialog(gpointer p, GObject * UNUSED(obj))
 }
 
 extern void
-GTKShowTempMap(const matchstate ams[], const int n, const gchar * aszTitle[], const int fInvert)
+GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const int fInvert)
 {
 
     evalcontext ec = { TRUE, 0, FALSE, TRUE, 0.0 };
