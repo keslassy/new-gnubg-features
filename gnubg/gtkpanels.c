@@ -586,19 +586,15 @@ CommandKeyPress(GtkWidget * UNUSED(widget), GdkEventKey * event, CommandEntryDat
     short k = (short) event->keyval;
 
     if (k == KEY_TAB) {         /* Tab press - auto complete */
-        command *pc;
         char szCommand[128], szUsage[128];
         command cTop = { NULL, NULL, NULL, NULL, acTop };
-        if ((pc =
-             FindHelpCommand(&cTop,
-                             gtk_editable_get_chars(GTK_EDITABLE
-                                                    (pData->pwEntry), 0, -1), szCommand, szUsage)) != NULL) {
+        if (FindHelpCommand(&cTop, gtk_editable_get_chars(GTK_EDITABLE(pData->pwEntry), 0, -1), szCommand, szUsage) != NULL) {
             Capitalize(szCommand);
             gtk_entry_set_text(GTK_ENTRY(pData->pwEntry), szCommand);
             gtk_editable_set_position(GTK_EDITABLE(pData->pwEntry), -1);
             return TRUE;
         }
-        /* Gtk 1 not good at stoping focus moving - so just move back later */
+        /* Gtk 1 not good at stopping focus moving - so just move back later */
         pData->completing = 1;
     }
     return FALSE;
