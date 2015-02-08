@@ -25,14 +25,12 @@
 #include "gnubgmodule.h"
 #endif
 
-#include "backgammon.h"
-#include "positionid.h"
-#include "drawboard.h"
-
 #include <signal.h>
 #include <glib.h>
 #include <glib/gstdio.h>
 
+#include "backgammon.h"
+#include "drawboard.h"
 #include "eval.h"
 #include "matchequity.h"
 #include "positionid.h"
@@ -153,8 +151,6 @@ PyToMove(PyObject * p, signed int anMove[8])
         /* No tuples equivalent to no legal moves */
         return 1;
     }
-
-    return 0;
 }
 
 static int
