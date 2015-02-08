@@ -96,7 +96,6 @@ void
 PlaySound_QuickTime(const char *cSoundFilename)
 {
     int err;
-    Str255 pSoundFilename;      /* file pathname in Pascal-string format */
     FSSpec fsSoundFile;         /* movie file location descriptor */
     short resRefNum;            /* open movie file reference */
 
@@ -206,7 +205,6 @@ CoreAudio_PlayFile_Thread(void *auGraph)
 void
 CoreAudio_PlayFile(char *const fileName)
 {
-    const char *inputFile = fileName;
     pthread_t CAThread;
 
     /* first time through initialise the mutex */
