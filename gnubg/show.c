@@ -120,13 +120,11 @@ ShowEvaluation(const evalcontext * pec)
             (pec->fUsePrune) ? _("Using pruning neural nets.") :
             _("Not using pruning neural nets."), pec->fCubeful ? _("Cubeful") : _("Cubeless"));
 
-    if (pec->rNoise > 0.0f)
+    if (pec->rNoise > 0.0f) {
         outputf("%s%s %5.3f", ("        "), _("Noise standard deviation"), pec->rNoise);
-    else
-        outputf("%s%s", "        ", _("Noiseless evaluations"));
-
-    outputl(pec->fDeterministic ? _(" (deterministic noise).\n") : _(" (pseudo-random noise).\n"));
-
+        outputl(pec->fDeterministic ? _(" (deterministic noise).\n") : _(" (pseudo-random noise).\n"));
+    } else
+        outputf("%s%s", "        ", _("Noiseless evaluations.\n"));
 }
 
 extern int
@@ -531,16 +529,16 @@ CommandShowCache(char *UNUSED(sz))
     outputf("%10u regular eval entries used %10u lookups %10u hits", c[0], cLookup[0], cHit[0]);
 
     if (cLookup[0])
-        outputf(" (%4.1f%%).", (float)cHit[0] * 100.0f / (float)cLookup[0]);
+        outputf(" (%4.1f%%).", (float) cHit[0] * 100.0f / (float) cLookup[0]);
     else
         outputc('.');
 
     outputc('\n');
- 
+
     outputf("%10u pruning eval entries used %10u lookups %10u hits", c[1], cLookup[1], cHit[1]);
 
     if (cLookup[1])
-        outputf(" (%4.1f%%).", (float)cHit[1] * 100.0f / (float)cLookup[1]);
+        outputf(" (%4.1f%%).", (float) cHit[1] * 100.0f / (float) cLookup[1]);
     else
         outputc('.');
 
