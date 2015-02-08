@@ -45,6 +45,8 @@
 #include "boarddim.h"
 #include "credits.h"
 #include "util.h"
+#include "openurl.h"
+#include "multithread.h"
 
 #if USE_GTK
 #include "gtkboard.h"
@@ -56,11 +58,7 @@
 #include "gtkrolls.h"
 #include "gtktempmap.h"
 #include "gtkoptions.h"
-#else
-#include <glib.h>
 #endif
-#include "openurl.h"
-#include "multithread.h"
 
 #ifdef WIN32
 #include <io.h>

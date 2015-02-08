@@ -23,16 +23,17 @@
 #include "util.h"
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include "common.h"
 
 char *prefsdir = NULL;
 char *datadir = NULL;
 char *pkg_datadir = NULL;
 char *docdir = NULL;
+
 #ifdef WIN32
 #include <io.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <windows.h>
 
 extern void
@@ -51,8 +52,6 @@ PrintSystemError(const char *message)
     }
 }
 #else
-#include <errno.h>
-
 extern void
 PrintSystemError(const char *message)
 {
