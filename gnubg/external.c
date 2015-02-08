@@ -25,6 +25,7 @@
 
 #define DEBUG_PREFIX "DBG: "
 
+#include <stdlib.h>
 #include <signal.h>
 #include <glib.h>
 #include <glib/gstdio.h>
@@ -36,8 +37,8 @@
 
 #ifndef WIN32
 
+#include <stdio.h>
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 
 #if HAVE_SYS_SOCKET_H
@@ -49,10 +50,8 @@
 #include <sys/un.h>
 #endif                          /* #if HAVE_SYS_SOCKET_H */
 
-#include <stdio.h>
-
 #else                           /* #ifndef WIN32 */
-#include <stdlib.h>
+
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
