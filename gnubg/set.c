@@ -74,7 +74,6 @@
 #include "positionid.h"
 #include "matchid.h"
 #include "renderprefs.h"
-#include "export.h"
 #include "drawboard.h"
 #include "format.h"
 #include "boarddim.h"
@@ -124,7 +123,7 @@ ParseULong(char **ppch, unsigned long *pretVal)
 
     /* Check for various possible errors */
     if ((errno == ERANGE && (*pretVal == LONG_MAX || *pretVal == (unsigned long)
- LONG_MIN))
+                             LONG_MIN))
         || (errno != 0 && *pretVal == 0))
         return FALSE;
 
@@ -1757,6 +1756,7 @@ CommandSetRNGRandomDotOrg(char *sz)
 #if defined(LIBCURL_PROTOCOL_HTTPS)
     SetRNG(rngSet, rngctxSet, RNG_RANDOM_DOT_ORG, sz);
 #else
+    (void) sz;                  /* suppress unused parameter compiler warning */
     outputl(_("This installation of GNU Backgammon was compiled without\n"
               "support for HTTPS(libcurl) which is needed for fetching\n" "random numbers from <www.random.org>"));
 #endif
