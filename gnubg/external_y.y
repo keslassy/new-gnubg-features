@@ -116,7 +116,7 @@ void yyerror(scancontext *scanner, const char *str)
 %union {
     gboolean bool;
     gchar character;
-    gdouble floatnum;
+    gfloat floatnum;
     gint intnum;
     GString *str;
     GValue *gv;
@@ -218,7 +218,7 @@ commands:
                 if (g_list_length(boarddata) < MAX_RFBF_ELEMENTS) {
                     GVALUE_CREATE(G_TYPE_INT, int, 0, gvfalse); 
                     GVALUE_CREATE(G_TYPE_INT, int, 1, gvtrue); 
-                    GVALUE_CREATE(G_TYPE_DOUBLE, double, 0.0, gvfloatzero); 
+                    GVALUE_CREATE(G_TYPE_FLOAT, float, 0.0, gvfloatzero); 
 
                     extcmd->bi.gsName = g_string_new(g_value_get_gstring_gchar(boarddata->data));
                     extcmd->bi.gsOpp = g_string_new(g_value_get_gstring_gchar(g_list_nth_data(boarddata, 1)));
@@ -235,7 +235,7 @@ commands:
                     extcmd->fJacobyRule = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_JACOBYRULE, gvfalse));
                     extcmd->fUsePrune = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_PRUNE, gvfalse));
                     extcmd->fCubeful =  g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_CUBEFUL, gvfalse));
-                    extcmd->rNoise = g_value_get_double(str2gv_map_get_key_value(optionsmap, KEY_STR_NOISE, gvfloatzero));
+                    extcmd->rNoise = g_value_get_float(str2gv_map_get_key_value(optionsmap, KEY_STR_NOISE, gvfloatzero));
                     extcmd->fDeterministic = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_DETERMINISTIC, gvtrue));
                     extcmd->nResignation = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_RESIGNATION, gvfalse));
                     extcmd->fBeavers = g_value_get_int(str2gv_map_get_key_value(optionsmap, KEY_STR_BEAVERS, gvtrue));
@@ -363,9 +363,9 @@ evaloption:
     |
     NOISE integer_type
         {
-            double doubleval = g_value_get_int($2) / 10000.0L;
-            GVALUE_CREATE(G_TYPE_DOUBLE, double, doubleval, gvdouble); 
-            $$ = create_str2gvalue_tuple (KEY_STR_NOISE, gvdouble); 
+            float floatval = (float) g_value_get_int($2) / 10000.0f;
+            GVALUE_CREATE(G_TYPE_FLOAT, float, floatval, gvfloat); 
+            $$ = create_str2gvalue_tuple (KEY_STR_NOISE, gvfloat); 
             g_value_unsetfree($2);
         }
     |
@@ -504,7 +504,7 @@ board:
 float_type:
     E_FLOAT 
         { 
-            GVALUE_CREATE(G_TYPE_DOUBLE, double, $1, gvfloat); 
+            GVALUE_CREATE(G_TYPE_FLOAT, float, $1, gvfloat); 
             $$ = gvfloat; 
         }
     ;
