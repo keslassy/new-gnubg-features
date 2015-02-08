@@ -35,7 +35,6 @@
 #include "eval.h"
 #include "positionid.h"
 #include "bearoff.h"
-#include "drawboard.h"
 #include "lib/simd.h"
 #include "glib-ext.h"
 #include "multithread.h"
