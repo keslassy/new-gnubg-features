@@ -622,7 +622,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
                     /* Find best move */
 
                     if (pecChequer[pci->fMove]->nPlies ||
-                        prc->fCubeful != pecChequer[pci->fMove]->fCubeful || pecChequer[pci->fMove]->rNoise)
+                        prc->fCubeful != pecChequer[pci->fMove]->fCubeful || pecChequer[pci->fMove]->rNoise > 0.0f)
 
                         /* the user requested n-ply (n>0). Another call to
                          * FindBestMove is required */
@@ -1802,7 +1802,7 @@ getResignEquities(float arResign[NUM_ROLLOUT_OUTPUTS], cubeinfo * pci, int nResi
 
 
 extern int
-ScoreMoveRollout(move ** ppm, const cubeinfo ** ppci, int cMoves, rolloutprogressfunc * pf, void *p)
+ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc * pf, void *p)
 {
 
     const cubeinfo *pci;

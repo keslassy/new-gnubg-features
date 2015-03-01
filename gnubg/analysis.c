@@ -86,7 +86,7 @@ GetRating(const float rError)
 }
 
 static float
-LuckFirst(const TanBoard anBoard, const int n0, const int n1, const cubeinfo * pci, const evalcontext * pec)
+LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, const evalcontext * pec)
 {
 
     TanBoard anBoardTemp;
@@ -106,14 +106,14 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, const cubeinfo * p
 
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
-                                   (cubeinfo *) pci, (evalcontext *) pec, defaultFilters) < 0)
+                                   pci, pec, defaultFilters) < 0)
                 return (float) ERR_VAL;
 
             if (!ml.cMoves) {
 
                 SwapSides(anBoardTemp);
 
-                if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, &ciOpp, (evalcontext *) pec) < 0)
+                if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, &ciOpp, pec) < 0)
                     return (float) ERR_VAL;
 
                 if (pec->fCubeful) {
@@ -142,14 +142,14 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, const cubeinfo * p
 
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
-                                   &ciOpp, (evalcontext *) pec, defaultFilters) < 0)
+                                   &ciOpp, pec, defaultFilters) < 0)
                 return (float) ERR_VAL;
 
             if (!ml.cMoves) {
 
                 SwapSides(anBoardTemp);
 
-                if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, (cubeinfo *) pci, (evalcontext *) pec) < 0)
+                if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, pci, pec) < 0)
                     return (float) ERR_VAL;
 
                 if (pec->fCubeful) {
@@ -195,14 +195,14 @@ LuckNormal(const TanBoard anBoard, const int n0, const int n1, const cubeinfo * 
 
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
-                                   (cubeinfo *) pci, (evalcontext *) pec, defaultFilters) < 0)
+                                   pci, pec, defaultFilters) < 0)
                 return (float) ERR_VAL;
 
             if (!ml.cMoves) {
 
                 SwapSides(anBoardTemp);
 
-                if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, &ciOpp, (evalcontext *) pec) < 0)
+                if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, &ciOpp, pec) < 0)
                     return (float) ERR_VAL;
 
                 if (pec->fCubeful) {
@@ -945,7 +945,7 @@ AnalyzeGame(listOLD * plGame, int wait)
     g_assert(pmr->mt == MOVE_GAMEINFO);
     if (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
                     &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, NULL) < 0)
-        return -1;              /* Interupted */
+        return -1;              /* Interrupted */
 
     numMoves--;                 /* Done one - the gameinfo */
 
@@ -2245,7 +2245,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
     }
 
     RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
-    ScoreMoveRollout(ppm, (const cubeinfo **) ppci, c, RolloutProgress, p);
+    ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
     res = RolloutProgressEnd(&p, destroy);
 
     g_free(asz);

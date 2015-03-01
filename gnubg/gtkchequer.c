@@ -68,7 +68,7 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
     /* setup rollout dialog */
     {
         move **ppm = (move **) malloc(c * sizeof(move *));
-        const cubeinfo **ppci = (const cubeinfo **) malloc(c * sizeof(cubeinfo *));
+        cubeinfo **ppci = (cubeinfo **) malloc(c * sizeof(cubeinfo *));
         char (*asz)[40] = (char (*)[40]) malloc(40 * c);
 
         for (i = 0, pl = plSelList; i < c; pl = pl->next, i++) {
@@ -81,7 +81,7 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
         GTKSetCurrentParent(pw);
         RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, FALSE, &p);
 
-        res = ScoreMoveRollout(ppm, (const cubeinfo **) ppci, c, RolloutProgress, p);
+        res = ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
 
         RolloutProgressEnd(&p, FALSE);
 

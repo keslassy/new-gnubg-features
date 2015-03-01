@@ -138,7 +138,7 @@ extern void
 extern int
 
 
-ScoreMoveRollout(move ** ppm, const cubeinfo ** ppci, int cMoves,
+ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves,
                  rolloutprogressfunc * pfRolloutProgress, void *pUserData);
 
 extern void RolloutLoopMT(void *unused);
