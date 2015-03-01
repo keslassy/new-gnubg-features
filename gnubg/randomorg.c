@@ -39,7 +39,7 @@ RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserDa
 {
     size_t nNewDataLen = nSize * nNumMemb;
     RandomData *randomData = (RandomData *) pvUserData;
-    int i;
+    unsigned int i;
     int iNumRead = 0;
     char *szRawData = (char *) pvRawData;
 
@@ -68,7 +68,7 @@ RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserDa
     return nNewDataLen;
 }
 
-static RandomData randomData = { 0, -1, { 0 } };
+static RandomData randomData = { 0, -1, {0} };
 
 unsigned int
 getDiceRandomDotOrg(void)
@@ -78,7 +78,7 @@ getDiceRandomDotOrg(void)
 #ifdef WIN32
     gchar *szWIN32_cert_path = NULL;
 #endif
-    if ((randomData.nCurrent >= 0) && (randomData.nCurrent < randomData.nNumRolls)) {
+    if ((randomData.nCurrent >= 0) && ((unsigned int) randomData.nCurrent < randomData.nNumRolls)) {
         return randomData.anBuf[randomData.nCurrent++];
     }
 
