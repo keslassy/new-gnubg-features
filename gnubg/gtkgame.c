@@ -2112,7 +2112,12 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     gtk_container_add(GTK_CONTAINER(pwFrame2),
                       pew->pwUsePrune = gtk_check_button_new_with_label(_("Use neural net pruning")));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwUsePrune), pec->fUsePrune);
-    /* FIXME This needs a tool tip */
+
+    gtk_widget_set_tooltip_text(pew->pwUsePrune,
+                                _("Instruct GNU Backgammon to use a set of neural networks "
+                                  "just to prune away move candidates within a deeper ply search. "
+                                  "This increases the speed considerably at a negligible cost in playing strength. "
+                                  "It is recommended to enable this option"));
 
     /* cubeful */
 
@@ -4055,7 +4060,7 @@ GtkChangeLanguage(void)
     setlocale(LC_ALL, "");
     if (pwMain && gtk_widget_get_realized(pwMain)) {
         reasonExited = RE_LANGUAGE_CHANGE;
-        custom_cell_renderer_invalidate_size(); /* Recalulate widget sizes */
+        custom_cell_renderer_invalidate_size(); /* Recalculate widget sizes */
         ClosePanels();
         getWindowGeometry(WINDOW_MAIN);
         DestroyPanel(WINDOW_MAIN);
