@@ -163,8 +163,7 @@ draw_simple_board_on_cairo(matchstate * sb_pms,
 
     simple_board_draw(board);
     g_free(board);
-    if (header)
-        g_string_free(header, TRUE);
+    g_string_free(header, TRUE);
     if (annotation)
         g_string_free(annotation, TRUE);
     return 1;
@@ -1168,7 +1167,7 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
 
         if ((n = GameStatus((ConstTanBoard) anBoard, ms.bgv))) {
             fprintf(pf, "%sWins %d point%s%s\n\n",
-                    i & 1 ? "                                  " : "\n      ",
+                    (i & 1) ? "                                  " : "\n      ",
                     n * nFileCube, n * nFileCube > 1 ? "s" : "", "" /* FIXME " and the match" if appropriate */ );
         }
         i++;
