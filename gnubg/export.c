@@ -1262,8 +1262,20 @@ ExportMatchMat(char *sz, int fSst)
             fprintf(pf, "; [Round \"%s\"]\n", mi.pchRound);
         if (mi.nYear > 1900)
             fprintf(pf, "; [EventDate \"%4u.%02u.%02u\"]\n", mi.nYear, mi.nMonth, mi.nDay);
-        if (ms.bgv == VARIATION_NACKGAMMON)
+        switch (ms.bgv) {
+        case VARIATION_NACKGAMMON:
             fprintf(pf, "; [Variation \"NackGammon\"]\n");
+            break;
+        case VARIATION_HYPERGAMMON_1:
+            fprintf(pf, "; [Variation \"HyperGammon (1)\"]\n");
+            break;
+        case VARIATION_HYPERGAMMON_2:
+            fprintf(pf, "; [Variation \"HyperGammon (2)\"]\n");
+            break;
+        case VARIATION_HYPERGAMMON_3:
+            fprintf(pf, "; [Variation \"HyperGammon (3)\"]\n");
+            break;
+        }
         if (mi.pchAnnotator)
             fprintf(pf, "; [Transcriber \"%s\"]\n", mi.pchAnnotator);
         if (mi.pchComment) {

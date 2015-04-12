@@ -1,3 +1,8 @@
+2015-04-12  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* export.c, import.c: Add a comment in .mat exports of hypergammon
+	sessions to indicate variation. Use it on import.
+
 2014-12-04  Michael Petch  <mpetch@gnubg.org>
 
 	Version 1.04.001 released.
@@ -6,8 +11,8 @@
 
 	* play.c. external.c : Fix external interface bug that prevented
 	external socket players from working. Fix bug that prevented
-	external socket interface errors being displayed. 
-	Reported by Philippe Michel. See bug report: 
+	external socket interface errors being displayed.
+	Reported by Philippe Michel. See bug report:
 	https://savannah.gnu.org/bugs/?43747
 
 2014-10-21  Michael Petch  <mpetch@gnubg.org>
