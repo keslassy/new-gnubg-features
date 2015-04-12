@@ -4,7 +4,7 @@
 .\" other parameters are allowed: see man(7), man(1)
 .ad l
 .nh
-.TH MAKEHYPER 6 "2006-01-15"
+.TH MAKEHYPER 6 "2015-04-12"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -22,7 +22,7 @@ makehyper \- generate a GNU Backgammon Hypergammon position database
 .SH SYNOPSIS
 \fBmakehyper\fR
 [\fB\-nvh\fR]
-\fB\-f\fR \fIfilename\fR
+[\fB\-f\fR \fIfilename\fR]
 [\fB\-r\fR \fIfilename\fR]
 [\fB\-c\fR \fIchequers\fR]
 [\fB\-t\fR \fIthreshold\fR]
@@ -46,7 +46,8 @@ option.
 \fB\-f\fR \fIfilename\fR, \fB\-\-outfile\fR \fIfilename\fR
 Write the hypergammon database to
 .IR filename .
-This option must be given.
+Default is "hyper<number of chequers>.bd", the name expected by
+GNU Backgammon when using the database.
 .TP
 \fB\-r\fR \fIfilename\fR, \fB\-\-restart\fR \fIfilename\fR
 Restart calculation of the database from the given file, which should be a

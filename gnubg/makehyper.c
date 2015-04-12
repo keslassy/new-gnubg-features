@@ -595,7 +595,7 @@ main(int argc, char **argv)
         {"version", 'v', 0, G_OPTION_ARG_NONE, &show_version,
          "Print version info and exit", NULL},
         {"outfile", 'f', 0, G_OPTION_ARG_STRING, &szOutput,
-         "Required output filename", "filename"},
+         "Output filename. Default is hyper<C>.bd.", "filename"},
         {NULL, 0, 0, 0, NULL, NULL, NULL}
     };
 
@@ -633,10 +633,13 @@ main(int argc, char **argv)
         exit(1);
     }
 
-    if (!szOutput || nC < 1 || nC > 3) {
+    if (nC < 1 || nC > 3) {
         g_printerr("Illegal options. Try `makehyper --help' for usage " "information\n");
         exit(1);
     }
+
+    if (!szOutput)
+        szOutput = g_strdup_printf("hyper%d.bd", nC);
 
     /* start calculation */
 
