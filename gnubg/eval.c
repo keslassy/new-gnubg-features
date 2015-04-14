@@ -682,7 +682,7 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
             char sz[10];
             sprintf(sz, "hyper%1d.bd", i + 1);
             fn = BuildFilename(sz);
-            apbcHyper[i] = BearoffInit(fn, BO_NONE, NULL);
+            apbcHyper[i] = BearoffInit(fn, BO_IN_MEMORY, NULL);
             g_free(fn);
         }
 
