@@ -37,7 +37,7 @@ int storeGameStats = TRUE;
 #if USE_PYTHON
 #include "pylocdefs.h"
 
-PyObject *pdict;
+static PyObject *pdict;
 RowSet *ConvertPythonToRowset(PyObject * v);
 
 #if !USE_SQLITE

@@ -3096,7 +3096,7 @@ PythonNavigate(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
 }
 
 
-PyMethodDef gnubgMethods[] = {
+static PyMethodDef gnubgMethods[] = {
 
     {"board", PythonBoard, METH_VARARGS,
      "Get the current board\n"
