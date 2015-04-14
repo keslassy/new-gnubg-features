@@ -1754,7 +1754,7 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
 
         for (i = OUTPUT_WINGAMMON; i < NUM_OUTPUTS; ++i) {
             if (unlikely(arOutput[i] < noise)) {
-                arOutput[i] = 0.0;
+                arOutput[i] = 0.0f;
             }
         }
     }
@@ -2414,10 +2414,10 @@ GameStatus(const TanBoard anBoard, const bgvariation bgv)
 
     EvalOver(anBoard, ar, bgv, NULL);
 
-    if (ar[OUTPUT_WINBACKGAMMON] || ar[OUTPUT_LOSEBACKGAMMON])
+    if (ar[OUTPUT_WINBACKGAMMON] > 0.0f || ar[OUTPUT_LOSEBACKGAMMON] > 0.0f)
         return 3;
 
-    if (ar[OUTPUT_WINGAMMON] || ar[OUTPUT_LOSEGAMMON])
+    if (ar[OUTPUT_WINGAMMON] > 0.0f || ar[OUTPUT_LOSEGAMMON] > 0.0f)
         return 2;
 
     return 1;
@@ -2829,7 +2829,7 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
     }
 
     /* Rounding errors when collating evaluations with lookahead make
-     * comaparing for equality unreliable. The first check below catches
+     * comparing for equality unreliable. The first check below catches
      * situations that would be obvious and puzzling to a human opponent.
      * In general, the third check is probably not reached as often as it
      * should and, among equal moves, the most "natural" one may not
@@ -5370,7 +5370,7 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
         TanBoard anBoardNew;
         /* int anMove[ 8 ]; */
         cubeinfo ciOpp;
-        int const usePrune = pec->fUsePrune && !pec->rNoise && pci->bgv == VARIATION_STANDARD;
+        int const usePrune = pec->fUsePrune && pec->rNoise == 0.0f && pci->bgv == VARIATION_STANDARD;
 
         for (i = 0; i < NUM_OUTPUTS; i++)
             arOutput[i] = 0.0;
@@ -5436,11 +5436,11 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
         if (acef[pc] (anBoard, arOutput, pci->bgv, nnStates))
             return -1;
 
-        if (pec->rNoise && pc != CLASS_OVER)
+        if (pec->rNoise > 0.0f && pc != CLASS_OVER)
             for (i = 0; i < NUM_OUTPUTS; i++)
                 arOutput[i] += Noise(pec, anBoard, i);
 
-        if (pc > CLASS_GOOD || pec->rNoise)
+        if (pc > CLASS_GOOD || pec->rNoise > 0.0f)
             /* no sanity check needed for accurate evaluations */
             SanityCheck(anBoard, arOutput);
     }
@@ -5928,7 +5928,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
 
         TanBoard anBoardNew;
 
-        int const usePrune = pec->fUsePrune && !pec->rNoise && pciMove->bgv == VARIATION_STANDARD;
+        int const usePrune = pec->fUsePrune && pec->rNoise == 0.0f && pciMove->bgv == VARIATION_STANDARD;
 
         for (i = 0; i < NUM_OUTPUTS; i++)
             arOutput[i] = 0.0;
@@ -6053,11 +6053,11 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
             if (EvaluatePosition(nnStates, anBoard, arOutput, pciMove, NULL))
                 return -1;
 
-            if (pec->rNoise && pc != CLASS_OVER)
+            if (pec->rNoise > 0.0f && pc != CLASS_OVER)
                 for (i = 0; i < NUM_OUTPUTS; i++)
                     arOutput[i] += Noise(pec, anBoard, i);
 
-            if (pc > CLASS_GOOD || pec->rNoise)
+            if (pc > CLASS_GOOD || pec->rNoise > 0.0f)
                 /* no sanity check needed for accurate evaluations */
                 SanityCheck(anBoard, arOutput);
 
