@@ -1749,7 +1749,7 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
     if (unlikely(arOutput[OUTPUT_LOSEBACKGAMMON] > arOutput[OUTPUT_LOSEGAMMON]))
         arOutput[OUTPUT_LOSEBACKGAMMON] = arOutput[OUTPUT_LOSEGAMMON];
 
-    {
+    if (fContact) {
         float noise = 1 / 10000.0f;
 
         for (i = OUTPUT_WINGAMMON; i < NUM_OUTPUTS; ++i) {
@@ -1758,6 +1758,7 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
             }
         }
     }
+
 }
 
 
@@ -3188,7 +3189,7 @@ extern int
 EvalCacheStats(unsigned int *pcUsed, unsigned int *pcLookup, unsigned int *pcHit)
 {
     CacheStats(&cEval, pcLookup, pcHit, pcUsed);
-    CacheStats(&cpEval, pcLookup+1, pcHit+1, pcUsed+1);
+    CacheStats(&cpEval, pcLookup + 1, pcHit + 1, pcUsed + 1);
     return 0;
 }
 
