@@ -77,13 +77,13 @@ Setting up a position
 * Setting the cube::
 * Setting the score::
 * Exiting Edit mode::
-* Analyzing the position::
+* Analysing the position::
 
 Working with matches
 
 * Retrieving and storing backgammon files::
 * Entering live tournament matches::
-* Analyzing matches::
+* Analysing matches::
 * Reviewing matches::
 
 Rollouts
@@ -113,7 +113,7 @@ Frequently Asked Questions
 * Running GNU Backgammon::
 * Playing backgammon::
 * Settings::
-* Analyzing::
+* Analysing::
 * Abbreviations::
 
 
@@ -122,11 +122,11 @@ File: gnubg.info,  Node: Introduction,  Next: Rules of the game,  Prev: Top,  Up
 1 Introduction
 **************
 
-This manual describes how to use GNU Backgammon to play and analyze
+This manual describes how to use GNU Backgammon to play and analyse
 backgammon games and matches. It corresponds to version 1.00.0 (updated
 in August, 2013).
 
-   GNU Backgammon (gnubg) plays and analyzes both money game sessions
+   GNU Backgammon (gnubg) plays and analyses both money game sessions
 and tournament matches. It evaluates and rolls out positions, and much
 more. Driven by a command-line interface, it displays an ASCII
 rendering of a board on text-only terminals, but also allows the user
@@ -188,7 +188,7 @@ Backgammon.
    * Record keeping of player statistics in games and matches using
      relational databases (SQLite, MySQL, and PostgreSQL are supported).
 
-   * Loading and saving analyzed games and matches as .sgf files (Smart
+   * Loading and saving analysed games and matches as .sgf files (Smart
      Game Format).
 
    * Importing of positions, games, and matches from a number of
@@ -734,7 +734,7 @@ will start a new match of the specified length.
      Backgammon will prompt for the dice roll before each roll.
 
   4. GNU Backgammon comes with a tutor mode. If this mode is active,
-     GNU Backgammon analyzes each move you do, and warn you each time
+     GNU Backgammon analyses each move you do, and warn you each time
      you make a mistake. More about tutor mode later.
 
   5. By clicking on the Modify player settings... button, you will see
@@ -958,7 +958,7 @@ File: gnubg.info,  Node: Getting checker play hints while playing,  Next: Gettin
 ----------------------------------------------
 
 If you want to get a hint of the best move or the best cube action
-press the Hint button in the tool bar or the menu option Analyze->Hint.
+press the Hint button in the tool bar or the menu option Analyse->Hint.
 This will open a hint window.
 
 *The hint window*
@@ -989,7 +989,7 @@ learn what each number means, it isn't really that bad.
      below), despite significantly different winning percentiles. This
      is because it thinks that if any of these moves are played then
      the opponent will double and you should pass. The n-ply is the
-     depth to which GNU Backgammon analyzed the move.
+     depth to which GNU Backgammon analysed the move.
 
   3. _Win_ is the fractions of games that GNU Backgammon thinks will be
      won by a single game, gammon or backgammon.
@@ -1133,7 +1133,7 @@ Tutor flag. Activate Tutor Mode by checking the Tutor mode check box.
 
    [[tutor.png]]
 
-   In Tutor Mode, GNU Backgammon will analyze your moves and/or cube
+   In Tutor Mode, GNU Backgammon will analyse your moves and/or cube
 decisions and compare them with its choices. You set the threshold for
 its alerts, for example, if you set it for bad then it will only warn
 you when you make a bad mistake. It will then allow you to re-examine
@@ -1188,7 +1188,7 @@ in that way give you a better understanding of the game.
 * Setting the cube::
 * Setting the score::
 * Exiting Edit mode::
-* Analyzing the position::
+* Analysing the position::
 
 
 File: gnubg.info,  Node: Entering Edit mode,  Next: Editing,  Up: Setting up a position
@@ -1377,31 +1377,31 @@ to tick whenever the position is from a Crawford game.
 position, you should set the match score to 0 (zero).
 
 
-File: gnubg.info,  Node: Exiting Edit mode,  Next: Analyzing the position,  Prev: Setting the score,  Up: Setting up a position
+File: gnubg.info,  Node: Exiting Edit mode,  Next: Analysing the position,  Prev: Setting the score,  Up: Setting up a position
 
 6.10 Exiting Edit mode
 ======================
 
-Before you can start analyzing the position you have to exit edit mode.
+Before you can start analysing the position you have to exit edit mode.
 This is done by releasing the Edit button in the toolbar by clicking
 it. Note that editing a position destroys your game record with no
 warning, so it might be an idea to save your match if you want to keep
 it.
 
 
-File: gnubg.info,  Node: Analyzing the position,  Prev: Exiting Edit mode,  Up: Setting up a position
+File: gnubg.info,  Node: Analysing the position,  Prev: Exiting Edit mode,  Up: Setting up a position
 
-6.11 Analyzing the position
+6.11 Analysing the position
 ===========================
 
 After you have successfully set up the position you desire, you can now
-analyze the position. You can click Hint in the toolbar to get the best
+analyse the position. You can click Hint in the toolbar to get the best
 move of cube decision in the same way as described in the chapter
 called *note Playing a game::. Hint, rollouts and evaluations done from
 the hint window will not be saved if you try to save the position.  If
-you want to analyze the position and then be able to save the position
+you want to analyse the position and then be able to save the position
 and the analysis results you should rather do a move and then click
-back to the move and then choose Analyze->Analyze move for the menu.
+back to the move and then choose Analyse->Analyse move for the menu.
 You can then work in the analysis pane on the right side instead of in
 the hint window.
 
@@ -1425,7 +1425,7 @@ File: gnubg.info,  Node: Working with matches,  Next: Rollouts,  Prev: Setting u
 
 * Retrieving and storing backgammon files::
 * Entering live tournament matches::
-* Analyzing matches::
+* Analysing matches::
 * Reviewing matches::
 
 
@@ -1624,7 +1624,7 @@ However, you can export a position to EPS and include this EPS file in
 your LaTeX document.
 
 
-File: gnubg.info,  Node: Entering live tournament matches,  Next: Analyzing matches,  Prev: Retrieving and storing backgammon files,  Up: Working with matches
+File: gnubg.info,  Node: Entering live tournament matches,  Next: Analysing matches,  Prev: Retrieving and storing backgammon files,  Up: Working with matches
 
 7.2 Entering live tournament matches
 ====================================
@@ -1666,7 +1666,7 @@ not very difficult. Presuming you're using the GUI, do this:
 opinion while you are entering the moves, play the move on the board
 and press the Hint button in the tool bar. In the latest builds, if you
 have done this, the results will then be placed with the move so that
-it means it is already analyzed when you run the full match analysis.
+it means it is already analysed when you run the full match analysis.
 Mind you, it will preserve the information even if you ran a deeper
 3-ply or 4-ply from the Hint window. After playing the move and
 confirming the dice, go back in the move list and click on the move,
@@ -1707,33 +1707,33 @@ makes an illegal move as the dice showed 31.
   8. Continue to enter the rest of the game.
 
 
-File: gnubg.info,  Node: Analyzing matches,  Next: Reviewing matches,  Prev: Entering live tournament matches,  Up: Working with matches
+File: gnubg.info,  Node: Analysing matches,  Next: Reviewing matches,  Prev: Entering live tournament matches,  Up: Working with matches
 
-7.3 Analyzing matches
+7.3 Analysing matches
 =====================
 
-GNU Backgammon can analyze your matches for skill and luck. If you have
+GNU Backgammon can analyse your matches for skill and luck. If you have
 an open match (as a result of playing, loading or importing), the
-analysis is started by choosing Analyze->Analyze match. You should now
+analysis is started by choosing Analyse->Analyse match. You should now
 see a progress bar at the bottom right corner of the main interface
-window while the computer is busy analyzing. During this time you won't
+window while the computer is busy analysing. During this time you won't
 be able to interact with the program other than to quit the analysis.
 The analysis is complete when the progress bar disappears and you hear
 a small sound. Now, you would probably like to view the result of the
 analysis. This can be done in terms of overall statistics by choosing
-Analyze->Match statistics, or in detail by browsing through the match.
+Analyse->Match statistics, or in detail by browsing through the match.
 More on these subjects in the upcoming sections.
 
-   You can also analyze just the current game, by choosing
-Analyze->Analyze game. If you're only interested in the analysis of the
-current move, you can select Analyze->Analyze move.
+   You can also analyse just the current game, by choosing
+Analyse->Analyse game. If you're only interested in the analysis of the
+current move, you can select Analyse->Analyse move.
 
 * Menu:
 
 * Analysis settings::
 
 
-File: gnubg.info,  Node: Analysis settings,  Up: Analyzing matches
+File: gnubg.info,  Node: Analysis settings,  Up: Analysing matches
 
 7.3.1 Analysis settings
 -----------------------
@@ -1742,12 +1742,12 @@ You can configure how GNU Backgammon analysis the match or game for
 you. This can be configured in the dialog box that appears when choose
 Settings->Analysis.
 
-*Analyze settings dialog*
+*Analyse settings dialog*
 
    [[analysesettings.png]]
 
    In the top left frame in this dialog box, you can select what to
-analyze. GNU Backgammon is able to analyze three different properties
+analyse. GNU Backgammon is able to analyse three different properties
 in a match.
 
   1. Checker play
@@ -1756,13 +1756,13 @@ in a match.
 
   3. Luck of each roll
 
-   In addition you can have the analysis to analyze just one of the
+   In addition you can have the analysis to analyse just one of the
 players, or both. There is also possible to set a limit of how many
-moves to be analyzed at each position. When you're reviewing your match,
-the number of analyzed moves will be limited to number in this field.
-However, if you want to analyze further moves in a particular position,
+moves to be analysed at each position. When you're reviewing your match,
+the number of analysed moves will be limited to number in this field.
+However, if you want to analyse further moves in a particular position,
 it's not a problem to do that later. The move that was actually done in
-the match will be analyzed even if it is ranked below the number of
+the match will be analysed even if it is ranked below the number of
 moves limit.
 
    GNU Backgammon will also mark each move or cube decision with
@@ -1781,7 +1781,7 @@ explanation of this settings, see the chapter called "[[Evaluation
 settings]]".
 
 
-File: gnubg.info,  Node: Reviewing matches,  Prev: Analyzing matches,  Up: Working with matches
+File: gnubg.info,  Node: Reviewing matches,  Prev: Analysing matches,  Up: Working with matches
 
 7.4 Reviewing matches
 =====================
@@ -1798,7 +1798,7 @@ File: gnubg.info,  Node: Game record,  Next: Analysis panel,  Up: Reviewing matc
 7.4.1 Game record
 -----------------
 
-When a match is analyzed in GNU Backgammon you should open the _game
+When a match is analysed in GNU Backgammon you should open the _game
 record_ window. Open this by checking Window->Game record on from the
 main menu. The game record window can also be docked into the right
 side panel. If you want it docked into the right side panel you should
@@ -1878,7 +1878,7 @@ appear under the game record. The analysis window is basically the same
 as the Hint window described in the "[[Playing a game or match]]"
 chapter.
 
-*The Analyze pane*
+*The Analyse pane*
 
    [[analasyepane.png]]
 
@@ -1939,7 +1939,7 @@ You can get a summary of the analysis from the game, match, or session
 analysis. The game analysis is a summary for the current game whereas
 the match or session statistics is a summary of all the games in the
 match or session. The match analysis is available in the GUI from
-Analyze->Match Statistics or at the bottom of exported files.
+Analyse->Match Statistics or at the bottom of exported files.
 
 * Menu:
 
@@ -2145,7 +2145,7 @@ The last section is the overall summary.
      than 100%, since he due to the extra luck has the possibly to give
      up even more MWC. However, GNU Backgammon will report this number
      as 100%, and 0% for the opposite situation.  Note that this number
-     is biased towards the analyzing bot, e.g., a 0-ply analysis a game
+     is biased towards the analysing bot, e.g., a 0-ply analysis a game
      between GNU Backgammon 2-ply and 0-ply will suggest that 0-ply is
      a favorite, which it is clearly not.  For an unbiased measure use
      the _luck adjusted result_ above.
@@ -2487,11 +2487,11 @@ File: gnubg.info,  Node: Analysis;,  Next: Rollouts;,  Prev: Hints;,  Up: Evalua
 9.1.6 Analysis:
 ---------------
 
-Settings->Analysis - these settings are used by the Analyze
+Settings->Analysis - these settings are used by the Analyse
 Move/Game/Match or Session command. Note that this is totally different
 to what is used in the Hint command, which uses the above settings. You
 probably want at least World Class here. My experience on a 700MHz PC
-is that a 7 point match takes about 15 to 20 minutes to analyze on the
+is that a 7 point match takes about 15 to 20 minutes to analyse on the
 Supremo settings. But the results tend to be very accurate.
 
 
@@ -2612,12 +2612,12 @@ File: gnubg.info,  Node: Introduction to move filters,  Next: Defining move filt
 .....................................
 
 GNU Backgammon uses a technique called move filters in order to prune
-the complete list of legal moves when analyzing checker play decisions.
+the complete list of legal moves when analysing checker play decisions.
 
    A move filter for a given ply, say, 2-ply, consists of four
 parameters for each sub ply:
 
-  1. whether to analyze at all at this sub ply,
+  1. whether to analyse at all at this sub ply,
 
   2. the number of moves always accepted at the given level,
 
@@ -2628,7 +2628,7 @@ parameters for each sub ply:
    A move filter for a given ply, say, 2-ply, consists of four
 parameters for each sub ply:
 
-   whether to analyze at all at this sub ply, the number of moves
+   whether to analyse at all at this sub ply, the number of moves
 always accepted at the given level, the number of extra moves to add,
 the threshold for adding extra moves. For example, for 2-ply checker
 play decisions there are two move filters: one for pruning at 0-ply,
@@ -2701,7 +2701,7 @@ facilitate fast decisions and analysis, i.e., no need to waste much
 time over obvious moves.
 
    For post-mortem analysis it may be worthwhile to ensure that GNU
-Backgammon analyzes at least two moves at the specified ply. To do
+Backgammon analyses at least two moves at the specified ply. To do
 this, specify accept 2 moves in the move filters you use for analysis.
 However, do note that GNU Backgammon will force evaluation at the
 specified ply if the actual move made is doubtful. This ensures that
@@ -2721,7 +2721,7 @@ Modify... button.
 
    Although the predefined levels, such as World Class, Supremo, etc.
 are tested and good, you may want to know or control how GNU filters
-its moves to analyze and how many.
+its moves to analyse and how many.
 
 *Move filter 1*
 
@@ -2739,17 +2739,17 @@ as in the figure above. 3-ply or 4-ply settings will have no effect
 here because Supremo doesn't examine at that depth.
 
    In the figure above, we can see it first will Always accept 0 moves.
-This first line means that it won't force any moves to be analyzed at
-2-ply, it will only analyze moves according to the second line. If it
-had said it would always analyze 2 moves, this would mean that no
+This first line means that it won't force any moves to be analysed at
+2-ply, it will only analyse moves according to the second line. If it
+had said it would always analyse 2 moves, this would mean that no
 matter how ridiculously bad the 2nd move was compared to the 1st, it
-would analyze both at 2-ply.
+would analyse both at 2-ply.
 
    The second line says it will Add extra 16 moves within 0.320.  This
 means that provided they aren't more than 0.320 equity worse than the
-top move, it will select a maximum of 16 moves to analyze at 2-ply. For
+top move, it will select a maximum of 16 moves to analyse at 2-ply. For
 example, in the figure below, the 2nd best move is no less than 0.453
-equity worse than the top choice, so it didn't bother analyzing them at
+equity worse than the top choice, so it didn't bother analysing them at
 2-ply as it is unlikely to change its mind on what the best move is.
 
 *Move filter 2*
@@ -2764,10 +2764,10 @@ equity worse than the top choice, so it didn't bother analyzing them at
 
    Here, the exact same settings were maintained, but the 1-ply filter
 was activated. This just means that those 16 moves selected from the
-0-ply are sent instead to be analyzed at 1-ply, and then up to 5 moves
-from 1-ply will be sent to be analyzed at 2-ply. So this would actually
+0-ply are sent instead to be analysed at 1-ply, and then up to 5 moves
+from 1-ply will be sent to be analysed at 2-ply. So this would actually
 be faster than the previous setting (and weaker), since a maximum of
-only 5 moves would be analyzed at 2-ply depth.
+only 5 moves would be analysed at 2-ply depth.
 
    Tip: Feel free to experiment with the settings, as you can always
 reset them by simply choosing one of the predefined levels.  In order
@@ -2954,6 +2954,10 @@ possible to generate bearoff databases with a size less than 2GB, i.e.,
 the 13pt one-sided database and the 11 checker two-sided database are
 the largest databases that can be generated with makebearoff.
 
+   On current (2014) hardware the creation of the 11 checker two-sided
+database will take a few hours.  It is approximately 3 times longer for
+each additional checker or each additional point.
+
    To generate one sided database issue
 
    makebearoff -o 10 -f gnubg_os.bd
@@ -2999,14 +3003,14 @@ command
 
    makehyper -c 3 -f hyper3.bd
 
-   Since the generation is _very_ time consuming makehyper will
-generate a checkpoint file (in the example above: hyper1.bd.tmp) that
-can be used to restart the calculation if needed by using the -r
-option. You can also change the default convergence threshold of
-0.00001 if you're happy with less accurate equities. To generate the 3
-checker database you need approximately 400 MB of free memory. On a 2.4
-GHz box with 512 MB of RAM the calculation ran for 58 iterations of
-3000 seconds each, i.e., a total of 48 hours!
+   Since the generation can be  time consuming, makehyper will generate
+a checkpoint file (in the example above: hyper3.bd.tmp) that can be
+used to restart the calculation if needed by using the -r option. You
+can also change the default convergence threshold of 0.00001 if you're
+happy with less accurate equities. To generate the 3 checker database
+you need approximately 400 MB of free memory. On current (2014)
+hardware the calculation for the 3-checker database will take a few
+hours (1- and 2-checker are much faster).
 
    See makehyper -help for the complete set of available options.
 
@@ -3096,7 +3100,7 @@ Checkers                 Points                   MD5 checksum
 8                        6                        fcdbbc80b7ef84ddc81b839d0f26bed1
 9                        6                        a11b2d410d51401143d05e73f9ffac15
 10                       6                        12dc70c86f356d06bc96ee38dee40c62
-11                       6                        not available
+11                       6                        68a0fa972bdde7b14a6b911d1dc80a30
 12                       6                        not available
 13                       6                        not available
 14                       6                        not available
@@ -3391,7 +3395,7 @@ A dictionary containing the following items:
 
    stats (optional)
 
-   Game statistics. Similar entries to Analyze->Game statistics from
+   Game statistics. Similar entries to Analyse->Game statistics from
 the GUI.
 
 
@@ -3636,7 +3640,7 @@ occur a limited number of times.
 
    The live cube take point is generally calculated as
 
-   TP(live, n Cube)=TP(dead, n cube) * (1 - TP(live, 2n cube))
+   TP(live, n Cube)=TP(effective, n cube) * (1 - TP(live, 2n cube))
 
    So to calculate the live cube take points for a 1-cube at 3-0 to 7
 we need the live cube take points for the 4-cube and the 2-cube. For
@@ -3881,7 +3885,8 @@ way to build up a sequence that corresponds to a given position is:
      player on roll, continuing around to the 24 point and ending at
      the bar):
 
-  2. append as many 1s as the player on roll has on that point (if any).
+  2. append as many 1s as the player not on roll (the opponent) has on
+     that point (if any).
 
   3. append a 0.
 
@@ -3889,7 +3894,8 @@ way to build up a sequence that corresponds to a given position is:
      opponent, continuing around to the opponent's 24 point and ending
      at the bar):
 
-  5. append as many 1s as the opponent has on that point (if any).
+  5. append as many 1s as the the player on roll has on that point (if
+     any).
 
   6. append a 0.
 
@@ -3908,26 +3914,26 @@ string are stored in the least significant bits of the first byte).
    As an example, here's what the starting position looks like in the
 key format:
 
-0 0 0 0 0                            player on roll has no checkers on
-                                     ace to 5 points
+0 0 0 0 0                            opponent has no checkers on his ace
+                                     to 5 points
 11111 0                              5 checkers on the 6 point
 0                                    empty bar
 111 0                                3 on the 8
-0 0 0 0                              no others in our outfield
-11111 0                              5 on the midpoint
-0 0 0 0 0                            none in the opponent's outfield
-0 0 0 0 0                            or in opponent's board, until...
-11 0                                 two on the 24 point
-0                                    none on the bar
-0 0 0 0 0                            opponent has no checkers on ace to
-                                     5 points
-11111 0                              5 checkers on the 6 point
-0                                    empty bar
-111 0                                3 on the 8
-0 0 0 0                              no others in opponent's outfield
+0 0 0 0                              no others in his outfield
 11111 0                              5 on the midpoint
 0 0 0 0 0                            none in our outfield
 0 0 0 0 0                            or in our board, until...
+11 0                                 two on the 24 point
+0                                    none on the bar
+0 0 0 0 0                            player on roll has no checkers on
+                                     his ace to 5 points
+11111 0                              5 checkers on the 6 point
+0                                    empty bar
+111 0                                3 on the 8
+0 0 0 0                              no others in his outfield
+11111 0                              5 on the midpoint
+0 0 0 0 0                            none in opponent's outfield
+0 0 0 0 0                            or in opponent's board, until...
 11 0                                 two on the 24 point
 0                                    none on the bar
 
@@ -4044,7 +4050,7 @@ Cube      CubeOwner DiceOwner Crawford  GameState TurnOwner Double    ResignDice
      of the dice, e.g., if 5-2 was rolled bit 16-21 will be 101-010.
 
  10. Bit 22 to 36 is the match length. The maximum value for the match
-     length is 32767. A match score of zero indicates that the game is
+     length is 32767. A match length of zero indicates that the game is
      a money game.
 
  11. Bit 37-51 and bit 52-66 is the score for player 0 and player 1
@@ -4139,7 +4145,7 @@ Class                                Description
                                      table
 .result                              Style for the text indicating the
                                      outcome of the game or match, e.g.,
-                                     Jørn_ Thyssen wins 16 points_.
+                                     _Jørn Thyssen wins 16 points_.
 .tiny                                Currently unused.
 .cubedecision                        The style applied to the entire
                                      cube decision table
@@ -4183,7 +4189,7 @@ File: gnubg.info,  Node: Frequently Asked Questions,  Next: GNU Free Documentati
 * Running GNU Backgammon::
 * Playing backgammon::
 * Settings::
-* Analyzing::
+* Analysing::
 * Abbreviations::
 
 
@@ -4209,7 +4215,7 @@ File: gnubg.info,  Node: What is GNU Backgammon?,  Next: What operating systems 
 11.1.1 What is GNU Backgammon?
 ------------------------------
 
-GNU Backgammon (gnubg) is a program for playing and analyzing
+GNU Backgammon (gnubg) is a program for playing and analysing
 backgammon positions, games and matches. It's based on a neural
 network. You may play GNU Backgammon using the command line or a
 graphical interface based on GTK+.
@@ -4383,7 +4389,7 @@ memory (any machine not totally obsolete will have enough) and does
 little or no I/O (a fast disk or a SSD won't make any difference).
 
    The table below lists CPUs and the result of the command
-Analyze->Evaluation Speed, showing the relative speed of various
+Analyse->Evaluation speed, showing the relative speed of various
 processors.  Note that these numbers are not directly comparable with
 those given by the similar command from eXtreme Gammon.
 
@@ -4397,6 +4403,10 @@ Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
            Core       Optiplex                                    
            i5-2400    790                                         
            3.10 GHz                                               
+237600     Intel      Lenovo     4 GB       Win XP SP3 1.04       2 threads
+           Core       T430                                        
+           i5-3320M                                               
+           2.60 GHz                                               
 197700     Intel      Lenovo     4 GB       Win XP SP3 1.02       2 threads
            Core       T430                                        
            i5-3320M                                               
@@ -4409,6 +4419,10 @@ Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
            Core 2     Latitude                                    
            Duo P8400  E6400                                       
            2.26 GHz                                               
+119700     Intel      Lenovo     4 GB       Win XP SP3 1.04       1 thread
+           Core       T430                                        
+           i5-3320M                                               
+           2.60 GHz                                               
 100100     Intel      Lenovo     4 GB       Win XP SP3 1.02       1 thread
            Core       T430                                        
            i5-3320M                                               
@@ -4457,6 +4471,9 @@ Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
 14400      Intel      Sony Vaio  256 MB     Win XP SP2 0.16-mingw 
            Pentium    PCG-R600HFPD                                 
            III-M 1GHz                                             
+9170       Intel      Toshiba    256 MB     Win XP SP1 1.04       
+           Celeron    Satellite                                   
+           750 MHz    4600                                        
 8520       Intel      Toshiba    256 MB     Win XP SP1 1.02       
            Celeron    Satellite                                   
            750 MHz    4600                                        
@@ -4677,7 +4694,7 @@ generators. If you still think GNU Backgammon is cheating, program your
 own dice generator or roll manually. It doesn't cheat!
 
 
-File: gnubg.info,  Node: Settings,  Next: Analyzing,  Prev: Playing backgammon,  Up: Frequently Asked Questions
+File: gnubg.info,  Node: Settings,  Next: Analysing,  Prev: Playing backgammon,  Up: Frequently Asked Questions
 
 11.5 Settings
 =============
@@ -4738,10 +4755,10 @@ _1-ply_ evaluation of Snowie.
 
    It's possible that Snowie's is a _playing_ ply while gnubg's is a
 _position evaluation_ ply. When playing at 1-ply Snowie will make each
-possible move for the player's roll (that's 1 ply) and analyze the
+possible move for the player's roll (that's 1 ply) and analyse the
 resulting positions. Playing at 2-ply it will take each of those
 positions and make all the opponent moves for all possible rolls (the
-2nd ply) and then analyze the resulting positions. In GNU Backgammon the
+2nd ply) and then analyse the resulting positions. In GNU Backgammon the
 initial set of possible moves is taken for granted, i.e. not counted as
 a ply, because gnubg's plies are position evaluation plies. Thus, for
 each of those possible moves a 0-ply analysis is done. gnubg's
@@ -4749,11 +4766,11 @@ discounting of the first set of moves perhaps makes the counting seem
 funny.
 
    Looking at it a different way, if you give GNU Backgammon a position
-and analyze it at 1-ply, it will make all the moves for all possible
-rolls (the 1st ply) and then analyze the resulting positions. With
+and analyse it at 1-ply, it will make all the moves for all possible
+rolls (the 1st ply) and then analyse the resulting positions. With
 Snowie it will assume that the position arose from a move (that's a
 pretend 1st ply) then make all the moves for all possible rolls (the
-2nd ply) and analyze them. This time it's Snowie that seems to be
+2nd ply) and analyse them. This time it's Snowie that seems to be
 counting strangely.
 
 
@@ -4766,9 +4783,9 @@ Noise is a facility for disturbing GNU Backgammon's 0-ply evaluation.
 Raising the noise level decreases its playing strength.
 
 
-File: gnubg.info,  Node: Analyzing,  Next: Abbreviations,  Prev: Settings,  Up: Frequently Asked Questions
+File: gnubg.info,  Node: Analysing,  Next: Abbreviations,  Prev: Settings,  Up: Frequently Asked Questions
 
-11.6 Analyzing
+11.6 Analysing
 ==============
 
 * Menu:
@@ -4783,7 +4800,7 @@ File: gnubg.info,  Node: Analyzing,  Next: Abbreviations,  Prev: Settings,  Up: 
 * What does EPC mean?::
 
 
-File: gnubg.info,  Node: What are these funny letters at the right bottom?,  Next: How do I set up a position manually?,  Up: Analyzing
+File: gnubg.info,  Node: What are these funny letters at the right bottom?,  Next: How do I set up a position manually?,  Up: Analysing
 
 11.6.1 What are these funny letters at the right bottom?
 --------------------------------------------------------
@@ -4802,7 +4819,7 @@ Position ID::.
 is recognized as well.
 
 
-File: gnubg.info,  Node: How do I set up a position manually?,  Next: Which formats can I use to import matches and positions?,  Prev: What are these funny letters at the right bottom?,  Up: Analyzing
+File: gnubg.info,  Node: How do I set up a position manually?,  Next: Which formats can I use to import matches and positions?,  Prev: What are these funny letters at the right bottom?,  Up: Analysing
 
 11.6.2 How do I set up a position manually?
 -------------------------------------------
@@ -4822,7 +4839,7 @@ on it.
 player on roll. The dice will then disappear.
 
 
-File: gnubg.info,  Node: Which formats can I use to import matches and positions?,  Next: How can I switch the players sides?,  Prev: How do I set up a position manually?,  Up: Analyzing
+File: gnubg.info,  Node: Which formats can I use to import matches and positions?,  Next: How can I switch the players sides?,  Prev: How do I set up a position manually?,  Up: Analysing
 
 11.6.3 Which formats can I use to import matches and positions?
 ---------------------------------------------------------------
@@ -4833,7 +4850,7 @@ Jellyfish Match, (.pos) Jellyfish Position, (.sgf) Gnu Backgammon File,
 (.sgg) GamesGrid Save Game, (.tmg) TrueMoneyGames, (.txt) Snowie Text
 
 
-File: gnubg.info,  Node: How can I switch the players sides?,  Next: What do ! and ? mean?,  Prev: Which formats can I use to import matches and positions?,  Up: Analyzing
+File: gnubg.info,  Node: How can I switch the players sides?,  Next: What do ! and ? mean?,  Prev: Which formats can I use to import matches and positions?,  Up: Analysing
 
 11.6.4 How can I switch the players sides?
 ------------------------------------------
@@ -4841,12 +4858,12 @@ File: gnubg.info,  Node: How can I switch the players sides?,  Next: What do ! a
 Go to the menu `Game' and click on `Swap players'.
 
 
-File: gnubg.info,  Node: What do ! and ? mean?,  Next: How is the error rate determined?,  Prev: How can I switch the players sides?,  Up: Analyzing
+File: gnubg.info,  Node: What do ! and ? mean?,  Next: How is the error rate determined?,  Prev: How can I switch the players sides?,  Up: Analysing
 
 11.6.5 What do ! and ? mean?
 ----------------------------
 
-After analyzing a game or a match GNU Backgammon is able to do some
+After analysing a game or a match GNU Backgammon is able to do some
 comments on checker play or cube decisions. Open the menu `Window, Game
 record' and you will see a list of the moves. If the actual move or
 cube decision differs from the best, GNU Backgammon will put a comment
@@ -4862,7 +4879,7 @@ on it.
 choosing another comment for moves and/or double
 
 
-File: gnubg.info,  Node: How is the error rate determined?,  Next: What does Pips mean?,  Prev: What do ! and ? mean?,  Up: Analyzing
+File: gnubg.info,  Node: How is the error rate determined?,  Next: What does Pips mean?,  Prev: What do ! and ? mean?,  Up: Analysing
 
 11.6.6 How is the error rate determined?
 ----------------------------------------
@@ -4879,12 +4896,12 @@ Average Error                        Skill Level
 0.025 .. 0.030                       Beginner
 0.030 ..                             Novice
 
-   After analyzing a game, match or session you can see the summary in
-the menu `Analyze, ... statistics'. Note that you can't change the
+   After analysing a game, match or session you can see the summary in
+the menu `Analyse, ... statistics'. Note that you can't change the
 ranges of these values.
 
 
-File: gnubg.info,  Node: What does Pips mean?,  Next: What does EPC mean?,  Prev: How is the error rate determined?,  Up: Analyzing
+File: gnubg.info,  Node: What does Pips mean?,  Next: What does EPC mean?,  Prev: How is the error rate determined?,  Up: Analysing
 
 11.6.7 What does Pips mean?
 ---------------------------
@@ -4902,7 +4919,7 @@ that when you roll a six and a five, the total pips of that roll is
 eleven.)
 
 
-File: gnubg.info,  Node: What does EPC mean?,  Prev: What does Pips mean?,  Up: Analyzing
+File: gnubg.info,  Node: What does EPC mean?,  Prev: What does Pips mean?,  Up: Analysing
 
 11.6.8 What does EPC mean?
 --------------------------
@@ -4954,7 +4971,7 @@ heuristics (please see the aforementioned post by Douglas Zare, _and do
 get back here and explain it!_)
 
 
-File: gnubg.info,  Node: Abbreviations,  Prev: Analyzing,  Up: Frequently Asked Questions
+File: gnubg.info,  Node: Abbreviations,  Prev: Analysing,  Up: Frequently Asked Questions
 
 11.7 Abbreviations
 ==================
@@ -4990,7 +5007,7 @@ File: gnubg.info,  Node: DP?,  Next: CP?,  Prev: MWC?,  Up: Abbreviations
 11.7.3 DP?
 ----------
 
-In the menu `Analyze, Game/Match/Session statistics' you will see a
+In the menu `Analyse, Game/Match/Session statistics' you will see a
 window with some statistics. Near the bottom, you'll see four lines
 beginning with `Missed ... and Wrong ...'. _dp_ means _doubling point_
 and describes a situation in the game, where you probably should have
@@ -5588,7 +5605,7 @@ Ref: Click inside the red rectangle to set the dice for Black_ Click inside the 
 Node: Setting the cube52347
 Node: Setting the score52954
 Node: Exiting Edit mode53911
-Node: Analyzing the position54373
+Node: Analysing the position54373
 Node: Working with matches55631
 Node: Retrieving and storing backgammon files55919
 Node: The Smart Game Format56316
@@ -5598,14 +5615,14 @@ Node: HTML export61518
 Node: LaTeX export64081
 Node: Entering live tournament matches64926
 Node: Entering illegal moves67509
-Node: Analyzing matches68524
+Node: Analysing matches68524
 Node: Analysis settings69676
-Ref: Analyze settings dialog69955
+Ref: Analyse settings dialog69955
 Node: Reviewing matches71481
 Node: Game record71685
 Ref: The Game record pane72235
 Node: Analysis panel75025
-Ref: The Analyze pane75588
+Ref: The Analyse pane75588
 Node: Statistics78247
 Node: Checker play statistics78802
 Node: Luck analysis80581
@@ -5644,98 +5661,98 @@ Ref: The appearance dialog120632
 Node: Technical Notes121794
 Node: Obtaining bearoff databases122197
 Node: Generate your own122743
-Node: Download125474
-Node: Installation of the databases126123
-Node: Verification of the databases126513
-Node: One-sided bearoff databases [compressed]126917
-Node: Two-sided bearoff databases [with cubeless and cubeful equities]128831
-Node: Two-sided databases for Hypergammon130499
-Ref: Random position from hypergammon database131220
-Node: Match Equity Tables132669
-Node: Python scripting134161
-Node: gnubg module functions134602
-Node: Match description135854
-Node: Match info136221
-Node: Python game137740
-Node: Game actions138349
-Node: Equities explained138503
-Node: Introduction to equities138821
-Node: Money equity139355
-Node: Match Winning Chance140223
-Node: Normalized equity141728
-Node: Cubeful equities143554
-Node: Basic formula for cubeful equities144135
-Node: Live cube equities145073
-Ref: Cubeful example 1145735
-Ref: mgtp146390
-Ref: mptp149514
-Node: 0-ply Cubeful equities151325
-Node: n-ply Cubeful equities152039
-Node: The cube efficiency153396
-Node: Cube decisions155247
-Ref: mgcd155859
-Node: Beyond the simple model158170
-Node: A technical description of the Position ID158998
-Node: A technical description of the Match ID164474
-Node: Description of the CSS style sheet169026
-Node: Frequently Asked Questions174000
-Node: General questions174335
-Node: What is GNU Backgammon?174885
-Node: What operating systems are supported?175297
-Node: Where do I get it?176142
-Node: What do I have to pay for GNU Backgammon?176607
-Node: This GNU stuff sounds interesting177336
-Node: I want to learn more about backgammon177707
-Node: Though I really read all the documentation I still have questions178167
-Node: I want to make a few proposals; I have new ideas178813
-Node: How to install179217
-Node: Do I need some other software to run GNU Backgammon?179740
-Node: I want to install a newer version180272
-Node: I would like to compile it from the source code180597
-Node: What software do I need for compiling under GNU/Linux?181012
-Node: What software do I need for compiling under MS Windows?181449
-Node: It does not compile181885
-Node: On what CPU will GNU Backgammon run fastest?182314
-Node: Running GNU Backgammon188170
-Node: I get an error message when starting188710
-Node: GNU Backgammon complains about missing files189108
-Node: Starting from the WinXP menu it plays like a beginner190873
-Node: My screen mixes up while starting GNU Backgammon191447
-Node: I only get a command-line interface192039
-Node: When I restart GNU Backgammon all my settings are gone192595
-Node: I do not need this graphical stuff192990
-Node: Playing backgammon193547
-Node: What is the difference of a new game or match or session?194031
-Node: What is a beaver in Backgammon?194664
-Node: How do I move the checkers?195180
-Node: Why am I allowed to place more than 5 checkers on a point?195956
-Node: GNU Backgammon plays poorly196480
-Node: GNU Backgammon is too strong for me197059
-Node: I think the bot is cheating197441
-Node: Settings197897
-Node: Where can I change the name of the human player?198213
-Node: How do I change the colors?198579
-Node: How do I stop the annoying beeps?198936
-Node: What are Plies?199283
-Node: What is noise?201178
-Node: Analyzing201432
-Node: What are these funny letters at the right bottom?201892
-Node: How do I set up a position manually?202743
-Node: Which formats can I use to import matches and positions?203648
-Node: How can I switch the players sides?204243
-Node: What do ! and ? mean?204557
-Node: How is the error rate determined?205359
-Node: What does Pips mean?206216
-Node: What does EPC mean?207025
-Node: Abbreviations209170
-Node: GWC?209363
-Node: MWC?209506
-Node: DP?209662
-Node: CP?210063
-Ref: The double line210696
-Node: TG?211110
-Node: EPC?211448
-Node: GNU Free Documentation License211703
+Node: Download125672
+Node: Installation of the databases126321
+Node: Verification of the databases126711
+Node: One-sided bearoff databases [compressed]127115
+Node: Two-sided bearoff databases [with cubeless and cubeful equities]129029
+Node: Two-sided databases for Hypergammon130716
+Ref: Random position from hypergammon database131437
+Node: Match Equity Tables132886
+Node: Python scripting134378
+Node: gnubg module functions134819
+Node: Match description136071
+Node: Match info136438
+Node: Python game137957
+Node: Game actions138566
+Node: Equities explained138720
+Node: Introduction to equities139038
+Node: Money equity139572
+Node: Match Winning Chance140440
+Node: Normalized equity141945
+Node: Cubeful equities143771
+Node: Basic formula for cubeful equities144352
+Node: Live cube equities145290
+Ref: Cubeful example 1145952
+Ref: mgtp146607
+Ref: mptp149736
+Node: 0-ply Cubeful equities151547
+Node: n-ply Cubeful equities152261
+Node: The cube efficiency153618
+Node: Cube decisions155469
+Ref: mgcd156081
+Node: Beyond the simple model158392
+Node: A technical description of the Position ID159220
+Node: A technical description of the Match ID164732
+Node: Description of the CSS style sheet169285
+Node: Frequently Asked Questions174259
+Node: General questions174594
+Node: What is GNU Backgammon?175144
+Node: What operating systems are supported?175556
+Node: Where do I get it?176401
+Node: What do I have to pay for GNU Backgammon?176866
+Node: This GNU stuff sounds interesting177595
+Node: I want to learn more about backgammon177966
+Node: Though I really read all the documentation I still have questions178426
+Node: I want to make a few proposals; I have new ideas179072
+Node: How to install179476
+Node: Do I need some other software to run GNU Backgammon?179999
+Node: I want to install a newer version180531
+Node: I would like to compile it from the source code180856
+Node: What software do I need for compiling under GNU/Linux?181271
+Node: What software do I need for compiling under MS Windows?181708
+Node: It does not compile182144
+Node: On what CPU will GNU Backgammon run fastest?182573
+Node: Running GNU Backgammon189183
+Node: I get an error message when starting189723
+Node: GNU Backgammon complains about missing files190121
+Node: Starting from the WinXP menu it plays like a beginner191886
+Node: My screen mixes up while starting GNU Backgammon192460
+Node: I only get a command-line interface193052
+Node: When I restart GNU Backgammon all my settings are gone193608
+Node: I do not need this graphical stuff194003
+Node: Playing backgammon194560
+Node: What is the difference of a new game or match or session?195044
+Node: What is a beaver in Backgammon?195677
+Node: How do I move the checkers?196193
+Node: Why am I allowed to place more than 5 checkers on a point?196969
+Node: GNU Backgammon plays poorly197493
+Node: GNU Backgammon is too strong for me198072
+Node: I think the bot is cheating198454
+Node: Settings198910
+Node: Where can I change the name of the human player?199226
+Node: How do I change the colors?199592
+Node: How do I stop the annoying beeps?199949
+Node: What are Plies?200296
+Node: What is noise?202191
+Node: Analysing202445
+Node: What are these funny letters at the right bottom?202905
+Node: How do I set up a position manually?203756
+Node: Which formats can I use to import matches and positions?204661
+Node: How can I switch the players sides?205256
+Node: What do ! and ? mean?205570
+Node: How is the error rate determined?206372
+Node: What does Pips mean?207229
+Node: What does EPC mean?208038
+Node: Abbreviations210183
+Node: GWC?210376
+Node: MWC?210519
+Node: DP?210675
+Node: CP?211076
+Ref: The double line211709
+Node: TG?212123
+Node: EPC?212461
+Node: GNU Free Documentation License212716
 
 End Tag Table
 
