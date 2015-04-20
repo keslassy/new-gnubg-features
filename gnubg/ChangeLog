@@ -1,7 +1,21 @@
+2015-04-20  Michael Petch  <mpetch@gnubg.org>
+
+	* doc/gnubg/*, po/*
+	Update static documentation files and translation files
+	Version 1.05.000 released	
+ 
 2015-04-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* export.c, import.c: Add a comment in .mat exports of hypergammon
 	sessions to indicate variation. Use it on import.
+
+2015-01-19  Michael Petch  <mpetch@gnubg.org>
+
+	* configure.ac, Makefile.am, Makefile.w32, backgammon.h, dice.c,
+	  gnubg.c, +randomorg.c, +randomorg.h, set.c, +m4/libcurl.m4
+	Add https support for random.org using libcurl. Libcurl is 
+    an optional dependency that is required to use ranom.org as
+    a dice source.
 
 2014-12-04  Michael Petch  <mpetch@gnubg.org>
 
