@@ -1279,6 +1279,7 @@ ExportMatchMat(char *sz, int fSst)
             break;
         default:
             g_assert_not_reached();
+            break;
         }
 
         if (mi.pchAnnotator)
