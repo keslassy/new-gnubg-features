@@ -1275,7 +1275,12 @@ ExportMatchMat(char *sz, int fSst)
         case VARIATION_HYPERGAMMON_3:
             fprintf(pf, "; [Variation \"HyperGammon (3)\"]\n");
             break;
+        case VARIATION_STANDARD:
+            break;
+        default:
+            g_assert_not_reached();
         }
+
         if (mi.pchAnnotator)
             fprintf(pf, "; [Transcriber \"%s\"]\n", mi.pchAnnotator);
         if (mi.pchComment) {

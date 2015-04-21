@@ -1,5 +1,10 @@
 2015-04-20  Michael Petch  <mpetch@gnubg.org>
 
+	* export.c: Fix code to avoid compiler warnings when using a
+	switch statement keyed on an enum.
+
+2015-04-20  Michael Petch  <mpetch@gnubg.org>
+
 	* doc/gnubg/*, po/*
 	Update static documentation files and translation files
 	Version 1.05.000 released	
