@@ -22,6 +22,8 @@
 #ifndef FORMAT_H
 #define FORMAT_H
 
+#define MAX_OUTPUT_DIGITS 6
+
 extern int fOutputMWC, fOutputWinPC, fOutputMatchPC;
 extern unsigned int fOutputDigits;
 extern float rErrorRateFactor;

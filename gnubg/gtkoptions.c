@@ -738,7 +738,7 @@ append_display_options(optionswidget * pow)
     pw = gtk_label_new(_("Number of digits in output:"));
     gtk_box_pack_start(GTK_BOX(pwhbox), pw, FALSE, FALSE, 0);
 
-    pow->padjDigits = GTK_ADJUSTMENT(gtk_adjustment_new(1, 0, 6, 1, 1, 0));
+    pow->padjDigits = GTK_ADJUSTMENT(gtk_adjustment_new(1, 0, MAX_OUTPUT_DIGITS, 1, 1, 0));
     pow->pwDigits = gtk_spin_button_new(GTK_ADJUSTMENT(pow->padjDigits), 1, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), pow->pwDigits, TRUE, TRUE, 0);
     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(pow->pwDigits), TRUE);

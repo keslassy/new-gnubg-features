@@ -2903,8 +2903,8 @@ CommandSetOutputDigits(char *sz)
 
     int n = ParseNumber(&sz);
 
-    if (n < 0 || n > 6) {
-        outputl(_("You must specify a number between 1 and 6.\n"));
+    if (n < 0 || n > MAX_OUTPUT_DIGITS) {
+        outputf(_("You must specify a number between 1 and %d.\n"), MAX_OUTPUT_DIGITS);
         return;
     }
 

@@ -36,8 +36,7 @@ int fOutputMWC = FALSE;
 int fOutputWinPC = FALSE;
 int fOutputMatchPC = TRUE;
 
-/* Maximum fOutputDigits is 6 (see set.c:CommandSetOutputDigits() */
-#define OUTPUT_SZ_LENGTH (5 + 6)
+#define OUTPUT_SZ_LENGTH (5 + MAX_OUTPUT_DIGITS)
 unsigned int fOutputDigits = 3;
 
 float rErrorRateFactor = 1000.0f;
