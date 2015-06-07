@@ -372,7 +372,7 @@ set(float const wpf, float const gr)
   
   set(e);
   
-  delete e;
+  delete[] e;
 }
 
 void

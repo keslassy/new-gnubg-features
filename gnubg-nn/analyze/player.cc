@@ -40,16 +40,16 @@ Player::Player(void) :
 
 Player::~Player(void)
 {
-  delete xwpfEtable;
-  delete owpfEtable;
+  delete[] xwpfEtable;
+  delete[] owpfEtable;
 }
 
 void 
 Player::setEqTables(float const xwpf) const
 {
   if( lastXwpf != xwpf ) {
-    delete xwpfEtable;
-    delete owpfEtable;
+    delete[] xwpfEtable;
+    delete[] owpfEtable;
     
     xwpfEtable = Equities::getTable(xwpf, 0.26);
     owpfEtable = Equities::getTable(1 - xwpf, 0.26);
