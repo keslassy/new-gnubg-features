@@ -942,10 +942,6 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             }
         }
 
-        if (t < 0) {
-            t = 0;
-        }
-
         afInput[I_TIMING] = t / 100.0f;
     }
 
