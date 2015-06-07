@@ -2258,10 +2258,6 @@ CalculateCrashedHalfInputs(CONST int anBoard[25], CONST int anBoardOpp[25],
       }
     }
 
-    if( t < 0 ) {
-      t = 0;
-    }
-
     afInput[ I_TIMING ] = t / 100.0;
   }
 
