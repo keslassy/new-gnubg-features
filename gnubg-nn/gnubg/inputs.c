@@ -2090,10 +2090,8 @@ iEscapesContainment(CONST int* anBoard, CONST int* anBoardOpp, BoardCache* t,
     
     for(i = 23 - opBack; i >= 25 - myBack; --i) {
       c += anBoardOpp[i];
-      if( c >= 6 ) {
-	i = myBack;
+      if( c >= 6 )
 	break;
-      }
     }
 
     /* magic - 6 or more checkers needed to contain */
@@ -2812,7 +2810,7 @@ baseInputs(CONST int anBoard[2][25], float arInput[])
   }
 }
 
-void
+static void
 mbaseInputs(CONST int anBoard[2][25], float arInput[])
 {
   int j, i;
@@ -2843,7 +2841,7 @@ mbaseInputs(CONST int anBoard[2][25], float arInput[])
   }
 }
 
-void
+static void
 mxbaseInputs(CONST int anBoard[2][25], float arInput[])
 {
   int j, i;
