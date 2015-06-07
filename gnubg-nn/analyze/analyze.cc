@@ -187,14 +187,14 @@ Analyze::init(const char* netFile, bool const shortCuts)
       initalNetName = string(envHome) + '/' + "gnubg.weights";
     } else {
       cerr << "GNUBGHOME/GNUBGWEIGHTS not set?" << endl;
-      return false;
+      return 0;
     }
   }
   
 #if defined( LOADED_BO )
   if( ! envHome ) {
     cerr << "GNUBGHOME not set" << endl;
-    return false;
+    return 0;
   }
 #ifdef WIN32
   string const os = string(envHome) + '\\' + "gnubg_os0.bd";
@@ -487,7 +487,7 @@ Analyze::analyze(Result&                r,
   
     for(uint i = 0; i < r.nMoves; i++) {
       Result::Move& mi = r.moves[i];
-      move& gmi = ml.amMoves[i];
+      ::move& gmi = ml.amMoves[i];
       
       mi.probs = gmi.pEval;
 
