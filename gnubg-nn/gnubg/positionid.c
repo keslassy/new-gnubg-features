@@ -165,6 +165,8 @@ PositionFromID(int anBoard[2][25], CONST char* pchEnc)
   unsigned char auchKey[ 10 ], ach[ 15 ], *pch = ach, *puch = auchKey;
   int i;
 
+  memset(ach, 0, 15);
+
   for( i = 0; i < 14 && pchEnc[ i ]; i++ )
     pch[ i ] = Base64( pchEnc[ i ] );
 
