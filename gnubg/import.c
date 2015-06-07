@@ -170,11 +170,11 @@ ParseJF(FILE * fp, int *pnMatchTo, int *pfJacoby, int *pfTurn, char aszPlayer[2]
     if (nVersion == 125 || nVersion == 126) {
         /* 1.6 or newer */
         /* 3 variables not used by older version */
-        if (!ReadInt16(fp, &*pfCubeUse))
+        if (!ReadInt16(fp, pfCubeUse))
             goto read_failed;
-        if (!ReadInt16(fp, &*pfJacoby))
+        if (!ReadInt16(fp, pfJacoby))
             goto read_failed;
-        if (!ReadInt16(fp, &*pfBeavers))
+        if (!ReadInt16(fp, pfBeavers))
             goto read_failed;
 
         if (nVersion == 125) {
@@ -187,7 +187,7 @@ ParseJF(FILE * fp, int *pnMatchTo, int *pfJacoby, int *pfTurn, char aszPlayer[2]
         /* use cube = jacoby = beaver = use caution = */
     }
 
-    if (!ReadInt16(fp, &*pnCube))
+    if (!ReadInt16(fp, pnCube))
         goto read_failed;
     if (!ReadInt16(fp, &nCubeOwner))
         goto read_failed;
@@ -222,7 +222,7 @@ ParseJF(FILE * fp, int *pnMatchTo, int *pfJacoby, int *pfTurn, char aszPlayer[2]
     if (!ReadInt16(fp, &nLevel))
         goto read_failed;
 
-    if (!ReadInt16(fp, &*pnMatchTo))
+    if (!ReadInt16(fp, pnMatchTo))
         goto read_failed;
     /* 0 if single game */
 
