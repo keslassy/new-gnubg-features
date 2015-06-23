@@ -960,9 +960,7 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
                     movelist * pml, unsigned int *piMove, evalsetup * pesChequer, const matchstate * pms)
 {
     listOLD *pl = pp->pl->plNext;
-    const char *pc;
-    char *pch;
-    char ch;
+    char *pc, *pch, ch;
     move *pm;
     int i;
     int fDeterministic __attribute((unused));
@@ -1009,7 +1007,7 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
         ApplyMove(anBoardMove, pm->anMove, FALSE);
         PositionKey((ConstTanBoard) anBoardMove, &pm->key);
 
-        pch = (char *) pc;
+        pch = pc;
         while (isspace(ch = *pch++)) {
         };
         pch++;
