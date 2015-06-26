@@ -1,3 +1,10 @@
+2015-06-26  Michael Petch  <mpetch@gnubg.org>
+
+	* drawboard.c, drawboard.h, external.c, gnubg.c,
+	  gtkboard.c play.c : Fix problem with erroneous decisions
+	generated when using the external interface. Reported by
+	Philippe Michel.
+
 2015-04-21  Michael Petch  <mpetch@gnubg.org>
 
 	* export.c: Fix code to avoid compiler warnings when using a

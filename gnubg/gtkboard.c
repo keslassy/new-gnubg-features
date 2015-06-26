@@ -2914,7 +2914,8 @@ game_set(Board * board, TanBoard points, int roll,
         memcpy(bd->old_board, points, sizeof(bd->old_board));
 
     FIBSBoard(board_str, points, roll, name, opp_name, match, score,
-              opp_score, die0, die1, ms.nCube, ms.fCubeOwner, ms.fDoubled, ms.fTurn, ms.fCrawford, nchequers);
+              opp_score, die0, die1, ms.nCube, ms.fCubeOwner, ms.fDoubled, ms.fTurn, ms.fCrawford, nchequers,
+              ms.fPostCrawford);
 
     if (gtk_widget_get_realized(pwMain))
         board_set(board, board_str, ms.fResigned == -1 ? 0 : -bd->turn * ms.fResigned, ms.fCubeUse);

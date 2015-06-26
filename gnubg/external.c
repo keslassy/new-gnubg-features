@@ -298,6 +298,7 @@ ExternalWrite(int h, char *pch, size_t cch)
 #else
     int n;
 #endif
+	outputf("%s", pch);
 
     while (cch) {
         ProcessEvents();
@@ -398,8 +399,8 @@ ExtEvaluation(scancontext * pec)
         szResponse = g_strdup_printf("Error: badly formed board\n");
     } else {
 
-        anScore[0] = processedBoard.nScoreOpp;
-        anScore[1] = processedBoard.nScore;
+        anScore[0] = processedBoard.nScore;
+        anScore[1] = processedBoard.nScoreOpp;
         /* If the session isn't using Crawford rule, set crawford flag to false */
         processedBoard.fCrawford = pec->fCrawfordRule ? processedBoard.fCrawford : FALSE;
         /* Set the Jacoby flag appropriately from the external interface settings */
@@ -451,8 +452,8 @@ ExtFIBSBoard(scancontext * pec)
         szResponse = g_strdup_printf("Error: badly formed board\n");
     } else {
 
-        anScore[0] = processedBoard.nScoreOpp;
-        anScore[1] = processedBoard.nScore;
+        anScore[0] = processedBoard.nScore;
+        anScore[1] = processedBoard.nScoreOpp;
 
         /* If the session isn't using Crawford rule, set crawford flag to false */
         processedBoard.fCrawford = pec->fCrawfordRule ? processedBoard.fCrawford : FALSE;
@@ -782,6 +783,7 @@ CommandExternal(char *sz)
             }
 
             if (szResponse) {
+				/* outputf("%s", szResponse);*/
                 if (ExternalWrite(hPeer, szResponse, strlen(szResponse)))
                     break;
 

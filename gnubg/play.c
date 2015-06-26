@@ -1434,7 +1434,7 @@ ComputerTurn(void)
                   ap[ms.fMove].szName, ap[!ms.fMove].szName,
                   ms.nMatchTo, ms.anScore[ms.fMove], ms.anScore[!ms.fMove],
                   ms.anDice[0], ms.anDice[1], ms.nCube, ms.fCubeOwner, ms.fDoubled, 0 /* turn */ , ms.fCrawford,
-                  anChequers[ms.bgv]);
+                  anChequers[ms.bgv], ms.fPostCrawford);
         strcat(szBoard, "\n");
 
         if (ExternalWrite(ap[ms.fTurn].h, szBoard, strlen(szBoard) + 1) < 0)

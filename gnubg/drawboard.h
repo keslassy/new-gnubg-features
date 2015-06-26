@@ -39,7 +39,8 @@ extern void CanonicalMoveOrder(int an[]);
 extern char *FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
                        const char *szPlayer, const char *szOpp, int nMatchTo,
                        int nScore, int nOpponent, int nDice0, int nDice1,
-                       int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers);
+                       int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers,
+					   int fPostCrawford);
 
 /* Process a board info structure from external interface */
 extern int ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd);

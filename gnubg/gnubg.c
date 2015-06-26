@@ -1406,7 +1406,8 @@ ShowBoard(void)
                               ap[0].szName, ms.nMatchTo, ms.anScore[1],
                               ms.anScore[0], ms.anDice[0],
                               ms.anDice[1], ms.nCube,
-                              ms.fCubeOwner, ms.fDoubled, ms.fTurn, ms.fCrawford, anChequers[ms.bgv]));
+                              ms.fCubeOwner, ms.fDoubled, ms.fTurn, ms.fCrawford, anChequers[ms.bgv],
+                              ms.fPostCrawford));
 
             return;
         }

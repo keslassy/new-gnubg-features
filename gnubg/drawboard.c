@@ -913,10 +913,12 @@ extern char *
 FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
           const char *szPlayer, const char *szOpp, int nMatchTo,
           int nScore, int nOpponent, int nDice0, int nDice1,
-          int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers)
+          int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers, 
+          int fPostCrawford)
 {
     char *sz = pch;
     int i, anOff[2];
+    int fNonCrawford = !(!fPostCrawford && (nScore == nMatchTo - 1 || nOpponent == nMatchTo - 1));
 
     /* Names and match length/score */
     strcpy(sz, "board:");
@@ -950,10 +952,11 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
         anOff[1] -= anBoard[1][i];
     }
 
-    sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:0:25:%d:%d:0:0:0:"
+    sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:%d:%d:%d:%d:0:0:0:"
             "0:%d:0", nDice0, nDice1, nDice0, nDice1, fTurn < 0 ? 1 : nCube,
             fTurn < 0 || fCubeOwner != 0, fTurn < 0 || fCubeOwner != 1,
-            fDoubled ? (fTurn ? -1 : 1) : 0, anOff[1], anOff[0], fCrawford);
+            fDoubled ? (fTurn ? -1 : 1) : 0, fNonCrawford, fPostCrawford, 
+            anOff[1], anOff[0], fCrawford);
 
     return pch;
 }
