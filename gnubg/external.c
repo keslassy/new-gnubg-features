@@ -298,7 +298,7 @@ ExternalWrite(int h, char *pch, size_t cch)
 #else
     int n;
 #endif
-	outputf("%s", pch);
+	/* outputf("%s", pch); */
 
     while (cch) {
         ProcessEvents();
@@ -783,7 +783,7 @@ CommandExternal(char *sz)
             }
 
             if (szResponse) {
-				/* outputf("%s", szResponse);*/
+                /* outputf("%s", szResponse);*/
                 if (ExternalWrite(hPeer, szResponse, strlen(szResponse)))
                     break;
 
