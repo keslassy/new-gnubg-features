@@ -1,3 +1,9 @@
+2015-07-04  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* ax_check_compile_flag.m4, ax_ext.m4: Update from Autoconf
+	archive. Not necessarily to the latest version since to support
+	RHEL5 we must not require an autoconf version higher than 2.59.
+
 2007-06-05  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* gettext.m4: Upgrade to gettext-0.16.1.

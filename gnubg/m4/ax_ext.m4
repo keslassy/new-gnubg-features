@@ -10,8 +10,8 @@
 #
 #   Find supported SIMD extensions by requesting cpuid. When an SIMD
 #   extension is found, the -m"simdextensionname" is added to SIMD_FLAGS if
-#   compiler supports it. For example, if "sse2" is available, then
-#   "-msse2" is added to SIMD_FLAGS.
+#   compiler supports it. For example, if "sse2" is available, then "-msse2"
+#   is added to SIMD_FLAGS.
 #
 #   This macro calls:
 #
@@ -24,14 +24,14 @@
 # LICENSE
 #
 #   Copyright (c) 2007 Christophe Tournayre <turn3r@users.sourceforge.net>
-#   Copyright (c) 2013 Michael Petch <mpetch@capp-sysware.com>, <mpetch@gnubg.org>
+#   Copyright (c) 2013 Michael Petch <mpetch@capp-sysware.com>
 #
 #   Copying and distribution of this file, with or without modification, are
 #   permitted in any medium without royalty provided the copyright notice
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 12
+#serial 13
 
 AC_DEFUN([AX_EXT],
 [
@@ -61,8 +61,13 @@ AC_DEFUN([AX_EXT],
       AC_REQUIRE([AX_GCC_X86_AVX_XGETBV])
 
       AX_GCC_X86_CPUID(0x00000001)
-      ecx=`echo $ax_cv_gcc_x86_cpuid_0x00000001 | cut -d ":" -f 3`
-      edx=`echo $ax_cv_gcc_x86_cpuid_0x00000001 | cut -d ":" -f 4`
+      ecx=0
+      edx=0
+      if test "$ax_cv_gcc_x86_cpuid_0x00000001" != "unknown";
+      then
+        ecx=`echo $ax_cv_gcc_x86_cpuid_0x00000001 | cut -d ":" -f 3`
+        edx=`echo $ax_cv_gcc_x86_cpuid_0x00000001 | cut -d ":" -f 4`
+      fi
 
       AC_CACHE_CHECK([whether mmx is supported], [ax_cv_have_mmx_ext],
       [
@@ -139,7 +144,7 @@ AC_DEFUN([AX_EXT],
         AC_CACHE_CHECK([whether avx is supported by operating system], [ax_cv_have_avx_ext],
         [
           ax_cv_have_avx_ext=no
- 
+
           if test "$((0x$ecx>>27&0x01))" = 1; then
             if test "$((0x$xgetbv_eax&0x6))" = 6; then
               ax_cv_have_avx_ext=yes
