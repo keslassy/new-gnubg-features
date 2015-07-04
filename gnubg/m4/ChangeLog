@@ -4,6 +4,8 @@
 	archive. Not necessarily to the latest version since to support
 	RHEL5 we must not require an autoconf version higher than 2.59.
 
+	* ax_append_flag.m4, Makefile.am: New file.
+
 2007-06-05  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* gettext.m4: Upgrade to gettext-0.16.1.
