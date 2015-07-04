@@ -1,4 +1,3 @@
-
 dnl To rebuild the `configure' script from this, execute the command
 dnl     autoconf
 dnl in the directory containing this script.
@@ -75,6 +74,7 @@ if test "${CFLAGS+set}" = set; then
 fi
 AC_PROG_CC
 AM_PROG_CC_C_O
+AC_PROG_CC_STDC
 
 # the following needs to come after the expansion of AC_PROG_CC
 if $cflags_were_set; then :; else
