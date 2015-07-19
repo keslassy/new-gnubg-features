@@ -2587,7 +2587,7 @@ HTMLPrintComment(FILE * pf, const moverecord * pmr, const htmlexportcss hecss)
 
         fputs("<!-- Annotation -->\n\n", pf);
 
-        fprintf(pf, "<br />\n" "<div %s>", GetStyle(CLASS_COMMENTHEADER, hecss));
+        fprintf(pf, "<p></p>\n" "<div %s>", GetStyle(CLASS_COMMENTHEADER, hecss));
         fputs(_("Annotation"), pf);
         fputs("</div>\n", pf);
 
