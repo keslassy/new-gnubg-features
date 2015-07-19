@@ -1619,14 +1619,14 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
     fprintf(pf,
             "</address>\n"
             "<p>\n"
-            "<a href=\"http://validator.w3.org/check/referer\">"
-            "<img style=\"border: 0\" width=\"88\" height=\"31\" "
+            "<a href=\"http://validator.w3.org/check?uri=referer\">"
+            "<img style=\"border:0;width:88px;height:31px\" "
             "src=\"http://www.w3.org/Icons/valid-xhtml10\" "
             "alt=\"%s\" /></a>\n"
             "<a href=\"http://jigsaw.w3.org/css-validator/check/referer\">"
-            "<img style=\"border: 0\" width=\"88\" height=\"31\" "
+            "<img style=\"border:0;width=88px;height:31px\" "
             "src=\"http://jigsaw.w3.org/css-validator/images/vcss\" "
-            "alt=\"%s\" />" "</a>\n" "</p>\n" "</body>\n" "</html>\n", _("Valid XHTML 1.0!"), _("Valid CSS!"));
+            "alt=\"%s\" />" "</a>\n" "</p>\n" "</body>\n" "</html>\n", _("Valid XHTML 1.0 Strict!"), _("Valid CSS!"));
 
 
 }
