@@ -500,17 +500,7 @@ if test x"$enable_gasserts" != x"yes"; then
 fi
 AS_IF( [test x"$enable_gasserts" != x"yes"], [AC_MSG_RESULT($gasserts)], [AC_MSG_RESULT(yes)] )
 
-dnl Compiling with -O3 makes a useful difference with gcc, clang and Sun's
-dnl compiler ; -ffast-math helps as well when available.
-dnl For instance, some match analysis on a Core i5 CPU (gcc 4.4.7, -mavx) :
-dnl -O2             1:23
-dnl -O3             1:14
-dnl -O3 -ffast-math 1:11
-
-AC_SUBST(AM_CFLAGS, "-g -O3")
-if test x"$GCC" = "xyes"; then
-    AX_APPEND_FLAG("-ffast-math", AM_CFLAGS)
-fi
+AC_SUBST(AM_CFLAGS)
 
 dnl *************
 dnl Misc. settings
