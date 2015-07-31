@@ -27,6 +27,7 @@
 #include <glib/gprintf.h>
 #include <stdlib.h>
 #include <string.h>
+#include "glib-ext.h"
 
 #if HAVE_LIBPNG
 #include <png.h>
@@ -469,7 +470,7 @@ WritePNG(const char *sz, unsigned char *puch, unsigned int nStride, unsigned int
     png_text atext[3];
     unsigned int i;
 
-    if (!(pf = g_fopen(sz, "wb")))
+    if (!(pf = gnubg_g_fopen(sz, "wb")))
         return -1;
 
     if (!(ppng = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL))) {
@@ -796,7 +797,7 @@ CommandExportPositionSnowieTxt(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -851,7 +852,7 @@ CommandExportPositionJF(char *sz)
 
     if (!strcmp(sz, "-"))
         fp = stdout;
-    else if (!(fp = g_fopen(sz, "wb"))) {
+    else if (!(fp = gnubg_g_fopen(sz, "wb"))) {
         outputerr(sz);
         return;
     }
@@ -1196,7 +1197,7 @@ ExportGameGam(char *sz, int fSst)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -1248,7 +1249,7 @@ ExportMatchMat(char *sz, int fSst)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }

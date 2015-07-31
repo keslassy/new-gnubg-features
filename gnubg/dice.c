@@ -47,6 +47,7 @@
 #include "mt19937ar.h"
 #include "isaac.h"
 #include <glib/gstdio.h>
+#include "glib-ext.h"
 
 #if USE_GTK
 #include "gtkgame.h"
@@ -887,7 +888,7 @@ OpenDiceFile(rngcontext * rngctx, const char *sz)
     g_free(rngctx->szDiceFilename);     /* initialized to NULL */
     rngctx->szDiceFilename = g_strdup(sz);
 
-    return (rngctx->fDice = g_fopen(sz, "r"));
+    return (rngctx->fDice = gnubg_g_fopen(sz, "r"));
 }
 
 extern void

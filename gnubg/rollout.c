@@ -30,6 +30,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <time.h>
+#include "glib-ext.h"
 
 #include "backgammon.h"
 #if USE_GTK
@@ -140,7 +141,7 @@ log_game_start(const char *name, const cubeinfo * pci, int fCubeful, TanBoard an
         }
     }
 
-    if ((logfp = g_fopen(name, "w")) == 0)
+    if ((logfp = gnubg_g_fopen(name, "w")) == 0)
         return NULL;
 
     fprintf(logfp, "(;FF[4]GM[6]CA[UTF-8]AP[GNU Backgammon:%s]MI"

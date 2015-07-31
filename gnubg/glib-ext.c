@@ -25,6 +25,44 @@
 #include <string.h>
 #include "glib-ext.h"
 
+/*  Based on glib's g_fopen to work around issues with WIN32 
+ *  versions of g_fopen 
+ */
+
+FILE *
+gnubg_g_fopen(const gchar * filename, const gchar * mode)
+{
+#if defined(WIN32)
+    wchar_t *wfilename = g_utf8_to_utf16(filename, -1, NULL, NULL, NULL);
+    wchar_t *wmode;
+    FILE *retval;
+    int save_errno;
+
+    if (wfilename == NULL) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    wmode = g_utf8_to_utf16(mode, -1, NULL, NULL, NULL);
+
+    if (wmode == NULL) {
+        g_free(wfilename);
+        errno = EINVAL;
+        return NULL;
+    }
+
+    retval = _wfopen(wfilename, wmode);
+    save_errno = errno;
+
+    g_free(wfilename);
+    g_free(wmode);
+
+    errno = save_errno;
+    return retval;
+#else
+    return fopen(filename, mode);
+#endif
+}
 
 #if ! GLIB_CHECK_VERSION(2,14,0)
 
@@ -75,19 +113,20 @@ g_once_init_leave(volatile gsize * value_location, gsize initialization_value)
     g_cond_broadcast(g_once_cond);
     g_mutex_unlock(g_once_mutex);
 }
-gboolean 
+
+gboolean
 g_once_init_enter(volatile gsize * value_location)
 {
     if G_LIKELY
-        (g_atomic_pointer_get((void *volatile *) value_location) != 
-NULL)
+        (g_atomic_pointer_get((void *volatile *) value_location) != NULL)
             return FALSE;
     else
         return g_once_init_enter_impl(value_location);
 }
 #endif
 
-void glib_ext_init(void)
+void
+glib_ext_init(void)
 {
 #if !GLIB_CHECK_VERSION (2,32,0)
     if (!g_thread_supported())

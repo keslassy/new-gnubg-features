@@ -1,3 +1,20 @@
+2015-07-31  Michael Petch  <mpetch@gnubg.org>
+
+	* doc/gnubg/*, po/*
+	Update static documentation files and translation files
+	Version 1.05.001 released	
+
+2015-07-31  Michael Petch  <mpetch@gnubg.org>
+
+	* Makefile.am bearoff.c configure.ac dice.c eval.c,
+	  export.c file.c glib-ext.c glib-ext.h gnubg.c gtkgame.c,
+	  gtkprefs.c html.c import.c latex.c makebearoff.c makehyper.c,
+	  makeweights.c relational.c rollout.c sgf.c text.c,
+	  board3d/matrix.c board3d/misc3d.c
+	Workaround problem with g_fopen & Unicdoe on some WIN32 build 
+	environments that produce "Invalid Argument" errors when a file
+	is opened.
+
 2015-06-26  Michael Petch  <mpetch@gnubg.org>
 
 	* drawboard.c, drawboard.h, external.c, gnubg.c,
@@ -26,8 +43,8 @@
 	* configure.ac, Makefile.am, Makefile.w32, backgammon.h, dice.c,
 	  gnubg.c, +randomorg.c, +randomorg.h, set.c, +m4/libcurl.m4
 	Add https support for random.org using libcurl. Libcurl is 
-    an optional dependency that is required to use ranom.org as
-    a dice source.
+	an optional dependency that is required to use ranom.org as
+	a dice source.
 
 2014-12-04  Michael Petch  <mpetch@gnubg.org>
 
@@ -274,8 +291,8 @@
 2013-08-20  Michael Petch  <mpetch@gnubg.org>
 
 	* boards.xml, gnubg.gtkrc, gnubg.sql, met/met.dtd, met/met.xsl,
-      scripts/batch.py, scripts/batch_win.py, scripts/database.py,
-      scripts/db_import.py, scripts/gnubg.py, scripts/matchseries.py:
+	  scripts/batch.py, scripts/batch_win.py, scripts/database.py,
+	  scripts/db_import.py, scripts/gnubg.py, scripts/matchseries.py:
 	Update license information.
 
 2013-08-20  Michael Petch  <mpetch@gnubg.org>
@@ -2783,7 +2800,7 @@ Sun Jul 13 21:07:17 CEST 2008 Christian Anthon <anthon@kiku.dk>
 	* bearoff.c, eval.c, export.c, file.c, gnubg.c, gnubgmodule.c,
 	gtkprefs.c, html.c, import.c, latex.c, makebearoff.c, makehyper.c,
 	makeweights.c, relational.c, rollout.c, sgf.c, text.c,
-	board3d/matrix.c, board3d/misc3d.c: replace fopen with g_fopen to
+	board3d/matrix.c, board3d/misc3d.c: replace fopen with gnubg_g_fopen to
 	avoid problems with special characters in filenames
 
 Sat Jul 12 09:10:43 CEST 2008 Christian Anthon <anthon@kiku.dk>
@@ -4058,7 +4075,7 @@ Fri Mar 16 00:04:29 CET 2007 Christian Anthon <anthon@kiku.dk>
 Fri 15 Mar 21:47:53 2007 GMT Jim Segrave <jes@j-e-s.net>
 
 	* rollout.c: was using the 'this is a cube rollout' flag to
-          decide whether to calculate JSDs from cubeful or cubeless equities
+	  decide whether to calculate JSDs from cubeful or cubeless equities
 
 Sun 25 Feb 12:11:40 2007 GMT Jim Segrave <jes@j-e-s.net>
 

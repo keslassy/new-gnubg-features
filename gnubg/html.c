@@ -40,6 +40,8 @@
 
 #include <glib.h>
 #include <glib/gstdio.h>
+#include "glib-ext.h"
+
 #ifdef WIN32
 #include <io.h>
 #endif
@@ -2871,7 +2873,7 @@ OpenCSS(const char *sz)
     if (g_file_test(pchCSS, G_FILE_TEST_EXISTS)) {
         outputf(_("gnubg.css is not written since it already exist in \"%s\"\n"), pchBase);
         pf = NULL;
-    } else if (!(pf = g_fopen(pchCSS, "w"))) {
+    } else if (!(pf = gnubg_g_fopen(pchCSS, "w"))) {
         outputerr(pchCSS);
     }
 
@@ -2928,7 +2930,7 @@ CommandExportGameHtml(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -3019,7 +3021,7 @@ CommandExportMatchHtml(char *sz)
 
         if (!strcmp(szCurrent, "-"))
             pf = stdout;
-        else if (!(pf = g_fopen(szCurrent, "w"))) {
+        else if (!(pf = gnubg_g_fopen(szCurrent, "w"))) {
             outputerr(szCurrent);
             for (j = 0; j < 4; j++)
                 g_free(filenames[j]);
@@ -3078,7 +3080,7 @@ CommandExportPositionHtml(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -3197,7 +3199,7 @@ CommandExportPositionGammOnLine(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }

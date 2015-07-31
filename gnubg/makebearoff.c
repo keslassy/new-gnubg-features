@@ -1330,7 +1330,7 @@ main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    if (!(output = g_fopen(szOutput, "w+b"))) {
+    if (!(output = gnubg_g_fopen(szOutput, "w+b"))) {
         perror(szOutput);
         return EXIT_FAILURE;
     }

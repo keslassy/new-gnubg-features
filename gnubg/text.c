@@ -28,6 +28,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <stdarg.h>
+#include "glib-ext.h"
 
 #include "backgammon.h"
 #include "drawboard.h"
@@ -814,7 +815,7 @@ CommandExportGameText(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if ((pf = g_fopen(sz, "w")) == 0) {
+    else if ((pf = gnubg_g_fopen(sz, "w")) == 0) {
         outputerr(sz);
         return;
     }
@@ -864,7 +865,7 @@ CommandExportMatchText(char *sz)
 
         if (!strcmp(szCurrent, "-"))
             pf = stdout;
-        else if ((pf = g_fopen(szCurrent, "w")) == 0) {
+        else if ((pf = gnubg_g_fopen(szCurrent, "w")) == 0) {
             outputerr(szCurrent);
             return;
         }
@@ -908,7 +909,7 @@ CommandExportPositionText(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if ((pf = g_fopen(sz, "w")) == 0) {
+    else if ((pf = gnubg_g_fopen(sz, "w")) == 0) {
         outputerr(sz);
         return;
     }

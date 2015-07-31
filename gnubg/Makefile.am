@@ -196,7 +196,7 @@ makehyper_LDADD =  -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@ @GOBJECT_LIB
 bearoffdump_SOURCES = bearoffdump.c $(UTILSOURCES)
 bearoffdump_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@ @GOBJECT_LIBS@
 
-makeweights_SOURCES = makeweights.c
+makeweights_SOURCES = makeweights.c glib-ext.c
 makeweights_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@ @GOBJECT_LIBS@
 
 

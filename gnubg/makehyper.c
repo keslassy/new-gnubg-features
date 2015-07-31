@@ -206,7 +206,7 @@ StartFromDatabase(hyperequity ahe[], const int nC, const char *szFilename)
     int i, j, k;
     float r;
 
-    if (!(pf = g_fopen(szFilename, "r+b"))) {
+    if (!(pf = gnubg_g_fopen(szFilename, "r+b"))) {
         perror(szFilename);
         exit(2);
     }
@@ -531,7 +531,7 @@ WriteHyperFile(const char *szFilename, const hyperequity ahe[], const int nC)
     FILE *pf;
 
 
-    if (!(pf = g_fopen(szFilename, "w+b"))) {
+    if (!(pf = gnubg_g_fopen(szFilename, "w+b"))) {
         perror(szFilename);
         return;
     }

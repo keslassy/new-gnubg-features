@@ -23,6 +23,7 @@
 #ifndef GLIB_EXT_H
 #define GLIB_EXT_H
 
+#include <stdio.h>
 #include <glib.h>
 #include <glib-object.h>
 #include "gtklocdefs.h"
@@ -50,6 +51,8 @@ void g_once_init_leave(volatile gsize * value_location, gsize initialization_val
 #if ! GLIB_CHECK_VERSION(2,28,0)
 extern void g_list_free_full(GList * list, GDestroyNotify free_func);
 #endif
+
+extern FILE *gnubg_g_fopen(const gchar * filename, const gchar * mode);
 
 typedef GList GMap;
 typedef GList GMapEntry;

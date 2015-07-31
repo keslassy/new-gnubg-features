@@ -36,6 +36,7 @@
 #include "util.h"
 #include <glib/gstdio.h>
 #include "gtklocdefs.h"
+#include "glib-ext.h"
 
 #define MAX_FRAMES 10
 #define DOT_SIZE 32
@@ -462,7 +463,7 @@ LoadTextureInfo(void)
     textures = NULL;
 
     szFile = BuildFilename(TEXTURE_FILE);
-    fp = g_fopen(szFile, "r");
+    fp = gnubg_g_fopen(szFile, "r");
     g_free(szFile);
 
     if (!fp) {

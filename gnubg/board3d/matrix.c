@@ -191,9 +191,9 @@ dumpMatrix(const float m[4][4])
 
     if (create) {
         create = 0;
-        fp = g_fopen("test.txt", "w");
+        fp = gnubg_g_fopen("test.txt", "w");
     } else {
-        fp = g_fopen("test.txt", "a");
+        fp = gnubg_g_fopen("test.txt", "a");
     }
     if (!fp)
         return;

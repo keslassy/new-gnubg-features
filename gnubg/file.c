@@ -23,6 +23,7 @@
 #include <glib/gstdio.h>
 #include "file.h"
 #include <stdlib.h>
+#include "glib-ext.h"
 
 ExportFormat export_format[] = {
     {EXPORT_SGF, ".sgf", N_("GNU Backgammon File"), "sgf", {TRUE, TRUE, TRUE}
@@ -112,7 +113,7 @@ OpenFileHelper(const char *filename)
         return NULL;            /* File not found */
 
     fh = g_new(FileHelper, 1);
-    fh->fp = g_fopen(filename, "r");
+    fh->fp = gnubg_g_fopen(filename, "r");
     if (!fh->fp) {              /* Failed to open file */
         g_free(fh);
         return NULL;
