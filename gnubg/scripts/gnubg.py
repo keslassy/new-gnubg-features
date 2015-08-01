@@ -25,11 +25,14 @@
 # $Id$
 #
 
-# Add the scrpts directory to the module path to allow
-# for modules from this directory to be improted
+# Add the scripts directory to the module path to allow
+# for modules from this directory to be imported
 import sys
+import os
+
 sys.path.insert(1, './scripts')
-#import site
+if sys.platform == 'win32':
+    os.environ['TCL_LIBRARY']='PythonLib/lib/tcl8'
 
 if sys.version_info >= (3, 0):
     import builtins as bi
