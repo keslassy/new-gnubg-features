@@ -783,21 +783,21 @@ moveAlong(float d, PathType type, const float start[3], const float end[3], floa
             if (type == PATH_CURVE_9TO12) {
                 xCent = end[0];
                 zCent = start[2];
-                yOff = yDiff * cosf((G_PI / 2.0f) * per);
+                yOff = yDiff * cosf((float)G_PI_2 * per);
             } else {
                 xCent = start[0];
                 zCent = end[2];
-                yOff = yDiff * sinf((G_PI / 2.0f) * per);
+                yOff = yDiff * sinf((float)G_PI_2 * per);
             }
 
             if (type == PATH_CURVE_9TO12) {
-                v[0] = xCent - xRad * cosf((G_PI / 2.0f) * per);
+                v[0] = xCent - xRad * cosf((float)G_PI_2 * per);
                 v[1] = end[1] - yOff;
-                v[2] = zCent + zRad * sinf((G_PI / 2.0f) * per);
+                v[2] = zCent + zRad * sinf((float)G_PI_2 * per);
             } else {
-                v[0] = xCent + xRad * sinf((G_PI / 2.0f) * per);
+                v[0] = xCent + xRad * sinf((float)G_PI_2 * per);
                 v[1] = start[1] + yOff;
-                v[2] = zCent - zRad * cosf((G_PI / 2.0f) * per);
+                v[2] = zCent - zRad * cosf((float)G_PI_2 * per);
             }
             return -1;
         }
@@ -1447,12 +1447,12 @@ QuarterCylinder(float radius, float len, unsigned int accuracy, const Texture * 
     /* texture unit value */
     float tuv;
     if (texture) {
-        float st = sinf((2 * G_PI) / accuracy) * radius;
-        float ct = (cosf((2 * G_PI) / accuracy) - 1) * radius;
+        float st = sinf((2 * (float)G_PI) / accuracy) * radius;
+        float ct = (cosf((2 * (float)G_PI) / accuracy) - 1) * radius;
         dInc = sqrtf(st * st + ct * ct);
         tuv = (TEXTURE_SCALE) / texture->width;
     } else
-        tuv = 0;
+        tuv = 0.0f;
 
     d = 0;
     glBegin(GL_QUAD_STRIP);
@@ -1463,11 +1463,11 @@ QuarterCylinder(float radius, float len, unsigned int accuracy, const Texture * 
         sar = sinf(angle) * radius;
         car = cosf(angle) * radius;
 
-        if (tuv)
+        if (tuv != 0.0f)
             glTexCoord2f(len * tuv, d * tuv);
         glVertex3f(sar, len, car);
 
-        if (tuv) {
+        if (tuv != 0.0f) {
             glTexCoord2f(0.f, d * tuv);
             d -= dInc;
         }
@@ -1488,8 +1488,8 @@ QuarterCylinderSplayedRev(float radius, float len, unsigned int accuracy, const 
     /* texture unit value */
     float tuv;
     if (texture) {
-        float st = sinf((2 * G_PI) / accuracy) * radius;
-        float ct = (cosf((2 * G_PI) / accuracy) - 1) * radius;
+        float st = sinf((2 * (float)G_PI) / accuracy) * radius;
+        float ct = (cosf((2 * (float)G_PI) / accuracy) - 1) * radius;
         dInc = sqrtf(st * st + ct * ct);
         tuv = (TEXTURE_SCALE) / texture->width;
     } else
@@ -1504,11 +1504,11 @@ QuarterCylinderSplayedRev(float radius, float len, unsigned int accuracy, const 
         sar = sinf(angle) * radius;
         car = cosf(angle) * radius;
 
-        if (tuv)
+        if (tuv != 0.0f)
             glTexCoord2f((len + car) * tuv, d * tuv);
         glVertex3f(sar, len + car, car);
 
-        if (tuv) {
+        if (tuv != 0.0f) {
             glTexCoord2f(-car * tuv, d * tuv);
             d -= dInc;
         }
@@ -1529,8 +1529,8 @@ QuarterCylinderSplayed(float radius, float len, unsigned int accuracy, const Tex
     /* texture unit value */
     float tuv;
     if (texture) {
-        float st = sinf((2 * G_PI) / accuracy) * radius;
-        float ct = (cosf((2 * G_PI) / accuracy) - 1) * radius;
+        float st = sinf((2 * (float)G_PI) / accuracy) * radius;
+        float ct = (cosf((2 * (float)G_PI) / accuracy) - 1) * radius;
         dInc = sqrtf(st * st + ct * ct);
         tuv = (TEXTURE_SCALE) / texture->width;
     } else
@@ -1545,11 +1545,11 @@ QuarterCylinderSplayed(float radius, float len, unsigned int accuracy, const Tex
         sar = sinf(angle) * radius;
         car = cosf(angle) * radius;
 
-        if (tuv)
+        if (tuv != 0.0f)
             glTexCoord2f((len - car) * tuv, d * tuv);
         glVertex3f(sar, len - car, car);
 
-        if (tuv) {
+        if (tuv != 0.0f) {
             glTexCoord2f(car * tuv, d * tuv);
             d -= dInc;
         }
