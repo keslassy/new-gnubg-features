@@ -918,7 +918,7 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
 {
     char *sz = pch;
     int i, anOff[2];
-    int fNonCrawford = !(!fPostCrawford && (nScore == nMatchTo - 1 || nOpponent == nMatchTo - 1));
+    /* int fNonCrawford = !(!fPostCrawford && (nScore == nMatchTo - 1 || nOpponent == nMatchTo - 1));*/
 
     /* Names and match length/score */
     strcpy(sz, "board:");
