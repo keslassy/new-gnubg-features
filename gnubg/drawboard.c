@@ -952,11 +952,20 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
         anOff[1] -= anBoard[1][i];
     }
 
+    sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:0:25:%d:%d:0:0:0:"
+            "0:%d:0", nDice0, nDice1, nDice0, nDice1, fTurn < 0 ? 1 : nCube,
+            fTurn < 0 || fCubeOwner != 0, fTurn < 0 || fCubeOwner != 1,
+            fDoubled ? (fTurn ? -1 : 1) : 0, anOff[1], anOff[0], fCrawford);
+
+/*  Temporarily remove this code as it breaks the GUI by preventing a player
+    from hitting am opponents blot. It appears to the suer as an illegal play
+    Reported by Wolfgang Nelles
+
     sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:%d:%d:%d:%d:0:0:0:"
             "0:%d:0", nDice0, nDice1, nDice0, nDice1, fTurn < 0 ? 1 : nCube,
             fTurn < 0 || fCubeOwner != 0, fTurn < 0 || fCubeOwner != 1,
-            fDoubled ? (fTurn ? -1 : 1) : 0, fNonCrawford, fPostCrawford, 
-            anOff[1], anOff[0], fCrawford);
+            fDoubled ? (fTurn ? -1 : 1) : 0, fNonCrawford, fPostCrawford,
+            anOff[1], anOff[0], fCrawford);*/
 
     return pch;
 }
