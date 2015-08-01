@@ -97,7 +97,12 @@ def gnubg_InteractivePyShell_tui(argv=[''], banner=None):
         sys.argv = argv
 
         # Check for IPython as it is generally the best cmdline interpreter
-        from IPython.frontend.terminal.embed import InteractiveShellEmbed
+        from IPython import version_info as ipy_version_info
+        if ipy_version_info[0] >= 1:
+            from IPython.terminal.embed import InteractiveShellEmbed
+        else:
+            from IPython.frontend.terminal.embed import InteractiveShellEmbed
+
         from IPython import __version__ as ipyversion
         from IPython.config.loader import Config
     except:
