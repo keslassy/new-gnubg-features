@@ -184,7 +184,7 @@ extern void ProcessInput(char *sz);
 
 #if USE_BOARD3D
 extern void SetSwitchModeMenuText(void);
-extern gboolean gtk_gl_init_success;
+#include "inc3d.h"
 #endif
 
 #endif

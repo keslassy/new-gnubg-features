@@ -66,6 +66,8 @@
 extern int numRestrictFrames;
 extern int renderingBase;
 
+extern gboolean gtk_gl_init_success;
+
 typedef enum _BoardState {
     BOARD_CLOSED, BOARD_CLOSING, BOARD_OPENING, BOARD_OPEN
 } BoardState;
