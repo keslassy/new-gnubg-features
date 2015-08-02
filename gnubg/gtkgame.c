@@ -3541,8 +3541,6 @@ static GtkItemFactoryEntry aife[] = {
 };
 #endif
 
-extern int automaticTask;
-
 static void
 Stop(GtkWidget * pw, gpointer UNUSED(unused))
 {
