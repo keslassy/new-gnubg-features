@@ -958,7 +958,7 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
             fDoubled ? (fTurn ? -1 : 1) : 0, anOff[1], anOff[0], fCrawford);
 
 /*  Temporarily remove this code as it breaks the GUI by preventing a player
-    from hitting am opponents blot. It appears to the suer as an illegal play
+    from hitting an opponents blot. It appears to the user as an illegal play
     Reported by Wolfgang Nelles
 
     sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:%d:%d:%d:%d:0:0:0:"
