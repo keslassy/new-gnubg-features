@@ -1588,62 +1588,62 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 }
 
 /* Macros to make texture specification easier */
-#define M_X(x, y, z) if (tuv) glTexCoord2f((z) * tuv, (y) * tuv); glVertex3f(x, y, z);
-#define M_Z(x, y, z) if (tuv) glTexCoord2f((x) * tuv, (y) * tuv); glVertex3f(x, y, z);
+#define M_X(x, y, z) if (tuv != 0.0f) glTexCoord2f((z) * tuv, (y) * tuv); glVertex3f(x, y, z);
+#define M_Z(x, y, z) if (tuv != 0.0f) glTexCoord2f((x) * tuv, (y) * tuv); glVertex3f(x, y, z);
 
 #define DrawBottom(x, y, z, w, h)\
 	glNormal3f(0.f, -1.f, 0.f);\
 	glBegin(GL_QUADS);\
-	if (tuv) glTexCoord2f((x) * tuv, ((y) + BOARD_FILLET - curveTextOff - (h)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f((x) * tuv, ((y) + BOARD_FILLET - curveTextOff - (h)) * tuv);\
 	glVertex3f(x, y, z);\
-	if (tuv) glTexCoord2f(((x) + (w)) * tuv, ((y) + BOARD_FILLET - curveTextOff - (h)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) + BOARD_FILLET - curveTextOff - (h)) * tuv);\
 	glVertex3f((x) + (w), y, z);\
-	if (tuv) glTexCoord2f(((x) + (w)) * tuv, ((y) + BOARD_FILLET - curveTextOff) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) + BOARD_FILLET - curveTextOff) * tuv);\
 	glVertex3f((x) + (w), y, z + (h));\
-	if (tuv) glTexCoord2f((x) * tuv, ((y) + BOARD_FILLET - curveTextOff) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f((x) * tuv, ((y) + BOARD_FILLET - curveTextOff) * tuv);\
 	glVertex3f(x, y, z + (h));\
 	glEnd();
 
 #define DrawTop(x, y, z, w, h)\
 	glNormal3f(0.f, 1.f, 0.f);\
 	glBegin(GL_QUADS);\
-	if (tuv) glTexCoord2f((x) * tuv, ((y) - (BOARD_FILLET - curveTextOff) + (h)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f((x) * tuv, ((y) - (BOARD_FILLET - curveTextOff) + (h)) * tuv);\
 	glVertex3f(x, y, z);\
-	if (tuv) glTexCoord2f((x) * tuv, ((y) - (BOARD_FILLET - curveTextOff)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f((x) * tuv, ((y) - (BOARD_FILLET - curveTextOff)) * tuv);\
 	glVertex3f(x, y, z + (h));\
-	if (tuv) glTexCoord2f(((x) + (w)) * tuv, ((y) - (BOARD_FILLET - curveTextOff)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) - (BOARD_FILLET - curveTextOff)) * tuv);\
 	glVertex3f((x) + (w), y, z + (h));\
-	if (tuv) glTexCoord2f(((x) + (w)) * tuv, ((y) - (BOARD_FILLET - curveTextOff) + (h)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) - (BOARD_FILLET - curveTextOff) + (h)) * tuv);\
 	glVertex3f((x) + (w), y, z);\
 	glEnd();
 
 #define DrawLeft(x, y, z, w, h)\
 	glNormal3f(-1.f, 0.f, 0.f);\
 	glBegin(GL_QUADS);\
-	if (tuv) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff - (h)) * tuv, (y) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff - (h)) * tuv, (y) * tuv);\
 	glVertex3f(x, y, z);\
-	if (tuv) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff) * tuv, (y) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff) * tuv, (y) * tuv);\
 	glVertex3f(x, y, (z) + (h));\
-	if (tuv) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff) * tuv, ((y) + (w)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff) * tuv, ((y) + (w)) * tuv);\
 	glVertex3f(x, (y) + (w), (z) + (h));\
-	if (tuv) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff - (h)) * tuv, ((y) + (w)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff - (h)) * tuv, ((y) + (w)) * tuv);\
 	glVertex3f(x, (y) + (w), z);\
 	glEnd();
 
 #define DrawRight(x, y, z, w, h)\
 	glNormal3f(1.f, 0.f, 0.f);\
 	glBegin(GL_QUADS);\
-	if (tuv) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff) + (h)) * tuv, (y) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff) + (h)) * tuv, (y) * tuv);\
 	glVertex3f(x, y, z);\
-	if (tuv) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff) + (h)) * tuv, ((y) + (w)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff) + (h)) * tuv, ((y) + (w)) * tuv);\
 	glVertex3f(x, (y) + (w), z);\
-	if (tuv) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff)) * tuv, ((y) + (w)) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff)) * tuv, ((y) + (w)) * tuv);\
 	glVertex3f(x, (y) + (w), z + (h));\
-	if (tuv) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff)) * tuv, (y) * tuv);\
+	if (tuv != 0.0f) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff)) * tuv, (y) * tuv);\
 	glVertex3f(x, y, z + (h));\
 	glEnd();
 
-#define TextureOffset(s, t) if (tuv)\
+#define TextureOffset(s, t) if (tuv != 0.0f)\
 {\
 	glMatrixMode(GL_TEXTURE);\
 	glPushMatrix();\
@@ -1651,7 +1651,7 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 	glMatrixMode(GL_MODELVIEW);\
 }
 
-#define TextureReset if (tuv)\
+#define TextureReset if (tuv != 0.0f)\
 {\
 	glMatrixMode(GL_TEXTURE);\
 	glPopMatrix();\
@@ -1674,7 +1674,7 @@ InsideFillet(float x, float y, float z, float w, float h, float radius, unsigned
         /* Right */
         DrawLeft(x + w + BOARD_FILLET, y + BOARD_FILLET, BASE_DEPTH + LIFT_OFF, h, EDGE_DEPTH - BOARD_FILLET);
 
-    if (tuv) {
+    if (tuv != 0.0f) {
         glMatrixMode(GL_TEXTURE);
         glPushMatrix();
         glTranslatef((x + curveTextOff) * tuv, (y + h + radius * 2) * tuv, 0.f);
@@ -1694,7 +1694,7 @@ InsideFillet(float x, float y, float z, float w, float h, float radius, unsigned
     glRotatef(-90.f, 0.f, 0.f, 1.f);
     QuarterCylinderSplayed(radius, w + radius * 2, accuracy, texture);
     glPopMatrix();
-    TextureReset if (tuv) {
+    TextureReset if (tuv != 0.0f) {
         glMatrixMode(GL_TEXTURE);
         glPushMatrix();
         glTranslatef((x + w + radius * 2 - curveTextOff) * tuv, y * tuv, 0.f);
@@ -1772,7 +1772,7 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
         DrawRight(TOTAL_WIDTH, BOARD_FILLET, 0.f, TOTAL_HEIGHT - BOARD_FILLET * 2,
                   BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET);
 
-        if (tuv) {
+        if (tuv != 0.0f) {
             glMatrixMode(GL_TEXTURE);
             glPushMatrix();
             glTranslatef((TOTAL_WIDTH - BOARD_FILLET) * tuv,
@@ -1785,7 +1785,7 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
         glRotatef(90.f, 1.f, 0.f, 0.f);
         QuarterCylinder(BOARD_FILLET, BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET, prd->curveAccuracy, prd->BoxMat.pTexture);
         glPopMatrix();
-        TextureReset if (tuv) {
+        TextureReset if (tuv != 0.0f) {
             glMatrixMode(GL_TEXTURE);
             glPushMatrix();
             glTranslatef((TOTAL_WIDTH - BOARD_FILLET) * tuv, (TOTAL_HEIGHT - (BOARD_FILLET - curveTextOff)) * tuv, 0.f);
@@ -1797,7 +1797,7 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
         glRotatef(-90.f, 1.f, 0.f, 0.f);
         QuarterCylinder(BOARD_FILLET, BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET, prd->curveAccuracy, prd->BoxMat.pTexture);
         glPopMatrix();
-        TextureReset if (tuv) {
+        TextureReset if (tuv != 0.0f) {
             glMatrixMode(GL_TEXTURE);
             glPushMatrix();
             glTranslatef((TOTAL_WIDTH - BOARD_FILLET + curveTextOff) * tuv, (TOTAL_HEIGHT - BOARD_FILLET) * tuv, 0.f);
@@ -2112,7 +2112,7 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
         /* Left Face */
         DrawLeft(0.f, BOARD_FILLET, 0.f, TOTAL_HEIGHT - BOARD_FILLET * 2, BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET);
 
-        if (tuv) {
+        if (tuv != 0.0f) {
             glMatrixMode(GL_TEXTURE);
             glPushMatrix();
             glTranslatef(BOARD_FILLET * tuv, (BOARD_FILLET - curveTextOff) * tuv, 0.f);
@@ -2125,7 +2125,7 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
         glRotatef(180.f, 0.f, 1.f, 0.f);
         QuarterCylinder(BOARD_FILLET, BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET, prd->curveAccuracy, prd->BoxMat.pTexture);
         glPopMatrix();
-        TextureReset if (tuv) {
+        TextureReset if (tuv != 0.0f) {
             glMatrixMode(GL_TEXTURE);
             glPushMatrix();
             glTranslatef((BOARD_FILLET - curveTextOff) * tuv, (TOTAL_HEIGHT - (BOARD_FILLET - curveTextOff)) * tuv,
@@ -2139,7 +2139,7 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
         glRotatef(-90.f, 0.f, 1.f, 0.f);
         QuarterCylinder(BOARD_FILLET, BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET, prd->curveAccuracy, prd->BoxMat.pTexture);
         glPopMatrix();
-        TextureReset if (tuv) {
+        TextureReset if (tuv != 0.0f) {
             glMatrixMode(GL_TEXTURE);
             glPushMatrix();
             glTranslatef((BOARD_FILLET - curveTextOff) * tuv, BOARD_FILLET * tuv, 0.f);
