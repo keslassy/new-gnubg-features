@@ -128,8 +128,6 @@ getDiceSize(const renderdata * prd)
     return prd->diceSize * base_unit;
 }
 
-extern Flag3d flag;
-
 static void
 TidyShadows(BoardData3d * bd3d)
 {

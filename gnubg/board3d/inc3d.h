@@ -192,6 +192,8 @@ struct _Flag3d {
     float ctlpoints[S_NUMPOINTS][T_NUMPOINTS][3];
 };
 
+extern struct _Flag3d flag;
+
 /* Define relative sizes of objects from arbitrary unit .05 */
 #define base_unit .05f
 
