@@ -2178,7 +2178,7 @@ score_changed(GtkAdjustment * adj, BoardData * bd)
 
     if ((bd->match_to != nMatchLen) && (adj == bd->amatch)) {
         /* reset limits for scores if match length is changed */
-        gfloat upper = (gfloat) (nMatchLen == 0) ? 32767 : nMatchLen - 1;
+        gdouble upper = (gdouble) ((nMatchLen == 0) ? 32767 : nMatchLen - 1);
         gtk_adjustment_set_upper(bd->ascore0, upper);
         gtk_adjustment_set_upper(bd->ascore1, upper);
     }
