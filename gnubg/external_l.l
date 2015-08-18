@@ -97,7 +97,7 @@ fibsboard{EOT}          {   return FIBSBOARD; }
                         }
 		
 <*>{FLOATSTR}           {
-                            yylval->floatnum = atof(yytext);
+                            yylval->floatnum = (float) atof(yytext);
                             return E_FLOAT;
                         }
 		
@@ -158,7 +158,7 @@ void escapes(const char *cp, char *tp)
 {
     while (*cp)
     {
-	int	cval = 0;
+	int cval = 0;
 
 	if (*cp == '\\' && strchr("0123456789xX", cp[1]))
 	{
@@ -168,7 +168,7 @@ void escapes(const char *cp, char *tp)
 
 	    if (*++cp == 'x' || *cp == 'X')
 		for (++cp; (dp = strchr(hex, *cp)) && (dcount++ < 2); cp++)
-		    cval = (cval * 16) + (dp - hex) / 2;
+		    cval = (cval * 16) + (int) (dp - hex) / 2;
 	    else if (*cp == '0')
 		while (strchr("01234567",*cp) != (char*)NULL && (dcount++ < 3))
 		    cval = (cval * 8) + (*cp++ - '0');
@@ -191,7 +191,7 @@ void escapes(const char *cp, char *tp)
 	}
 	else
 	    cval = *cp++;
-	*tp++ = cval;
+	*tp++ = (char) cval;
     }
     *tp = '\0';
 }
