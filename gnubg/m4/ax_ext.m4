@@ -13,9 +13,15 @@
 #   compiler supports it. For example, if "sse2" is available, then "-msse2"
 #   is added to SIMD_FLAGS.
 #
+#   Find other supported CPU extensions by requesting cpuid. When a processor
+#   extension is found, the -m"simdextensionname" is added to CPUEXT_FLAGS if
+#   compiler supports it. For example, if "bm2" is available, then "-mbmi2"
+#   is added to CPUEXT_FLAGS.
+#
 #   This macro calls:
 #
 #     AC_SUBST(SIMD_FLAGS)
+#     AC_SUBST(CPUEXT_FLAGS)
 #
 #   And defines:
 #
@@ -42,6 +48,9 @@
 AC_DEFUN([AX_EXT],
 [
   AC_REQUIRE([AC_CANONICAL_HOST])
+
+  CPUEXT_FLAGS=""
+  SIMD_FLAGS=""
 
   case $host_cpu in
     powerpc*)
@@ -171,37 +180,37 @@ AC_DEFUN([AX_EXT],
       ])
 
       for ac_instr_info dnl
-      in "mmx;mmx;MMX;edx_cpuid1,23;-mmmx;HAVE_MMX" dnl
-         "none;rdrnd;RDRND;ecx_cpuid1,30;-mrdrnd;HAVE_RDRND" dnl
-         "none;bmi1;BMI1;ebx_cpuid7,3;-mbmi;HAVE_BMI1" dnl
-         "none;bmi2;BMI2;ebx_cpuid7,8;-mbmi2;HAVE_BMI2" dnl
-         "none;adx;ADX;ebx_cpuid7,19;-madx;HAVE_ADX" dnl
-         "none;mpx;MPX;ebx_cpuid7,14;-mmpx;HAVE_MPX" dnl
-         "none;prefetchwt1;PREFETCHWT1;ecx_cpuid7,0;-mprefetchwt1;HAVE_PREFETCHWT1" dnl
-         "none;abm;ABM;ecx_cpuid80000001,5;-mabm;HAVE_ABM" dnl
-         "sse;sse;SSE;edx_cpuid1,25;-msse;HAVE_SSE" dnl
-         "sse;sse2;SSE2;edx_cpuid1,26;-msse2;HAVE_SSE2" dnl
-         "sse;sse3;SSE3;ecx_cpuid1,1;-msse3;HAVE_SSE3" dnl
-         "sse;ssse3;SSSE3;ecx_cpuid1,9;-mssse3;HAVE_SSSE3" dnl
-         "sse;sse41;SSE4.1;ecx_cpuid1,19;-msse4.1;HAVE_SSE4_1" dnl
-         "sse;sse42;SSE4.2;ecx_cpuid1,20;-msse4.2;HAVE_SSE4_2" dnl
-         "sse;sse4a;SSE4a;ecx_cpuid80000001,6;-maes;HAVE_SSE4a" dnl
-         "sse;sha;SHA;ebx_cpuid7,29;-msha;HAVE_SHA" dnl
-         "sse;aes;AES;ecx_cpuid1,25;-maes;HAVE_AES" dnl
-         "avx;avx;AVX;ecx_cpuid1,28;-mavx;HAVE_AVX" dnl
-         "avx;fma3;FMA3;ecx_cpuid1,12;-mfma;HAVE_FMA3" dnl
-         "avx;fma4;FMA4;ecx_cpuid80000001,16;-mfma4;HAVE_FMA4" dnl
-         "avx;xop;XOP;ecx_cpuid80000001,11;-mxop;HAVE_XOP" dnl
-         "avx;avx2;AVX2;ebx_cpuid7,5;-mavx2;HAVE_AVX2" dnl
-         "avx512;avx512f;AVX512-F;ebx_cpuid7,16;-mavx512f;HAVE_AVX512_F" dnl
-         "avx512;avx512cd;AVX512-CD;ebx_cpuid7,28;-mavx512cd;HAVE_AVX512_CD" dnl
-         "avx512;avx512pf;AVX512-PF;ebx_cpuid7,26;-mavx512pf;HAVE_AVX512_PF" dnl
-         "avx512;avx512er;AVX512-ER;ebx_cpuid7,27;-mavx512er;HAVE_AVX512_ER" dnl
-         "avx512;avx512vl;AVX512-VL;ebx_cpuid7,31;-mavx512vl;HAVE_AVX512_VL" dnl
-         "avx512;avx512bw;AVX512-BW;ebx_cpuid7,30;-mavx512bw;HAVE_AVX512_BW" dnl
-         "avx512;avx512dq;AVX512-DQ;ebx_cpuid7,17;-mavx512dq;HAVE_AVX512_DQ" dnl
-         "avx512;avx512ifma;AVX512-IFMA;ebx_cpuid7,21;-mavx512ifma;HAVE_AVX512_IFMA;" dnl
-         "avx512;avx512vbmi;AVX512-VBMI;ecx_cpuid7,1;-mavx512vbmi;HAVE_AVX512_VBMI" dnl
+      in "none;rdrnd;RDRND;ecx_cpuid1,30;-mrdrnd;HAVE_RDRND;CPUEXT_FLAGS" dnl
+         "none;bmi1;BMI1;ebx_cpuid7,3;-mbmi;HAVE_BMI1;CPUEXT_FLAGS" dnl
+         "none;bmi2;BMI2;ebx_cpuid7,8;-mbmi2;HAVE_BMI2;CPUEXT_FLAGS" dnl
+         "none;adx;ADX;ebx_cpuid7,19;-madx;HAVE_ADX;CPUEXT_FLAGS" dnl
+         "none;mpx;MPX;ebx_cpuid7,14;-mmpx;HAVE_MPX;CPUEXT_FLAGS" dnl
+         "none;prefetchwt1;PREFETCHWT1;ecx_cpuid7,0;-mprefetchwt1;HAVE_PREFETCHWT1;CPUEXT_FLAGS" dnl
+         "none;abm;ABM;ecx_cpuid80000001,5;-mabm;HAVE_ABM;CPUEXT_FLAGS" dnl
+         "mmx;mmx;MMX;edx_cpuid1,23;-mmmx;HAVE_MMX;SIMD_FLAGS" dnl
+         "sse;sse;SSE;edx_cpuid1,25;-msse;HAVE_SSE;SIMD_FLAGS" dnl
+         "sse;sse2;SSE2;edx_cpuid1,26;-msse2;HAVE_SSE2;SIMD_FLAGS" dnl
+         "sse;sse3;SSE3;ecx_cpuid1,1;-msse3;HAVE_SSE3;SIMD_FLAGS" dnl
+         "sse;ssse3;SSSE3;ecx_cpuid1,9;-mssse3;HAVE_SSSE3;SIMD_FLAGS" dnl
+         "sse;sse41;SSE4.1;ecx_cpuid1,19;-msse4.1;HAVE_SSE4_1;SIMD_FLAGS" dnl
+         "sse;sse42;SSE4.2;ecx_cpuid1,20;-msse4.2;HAVE_SSE4_2;SIMD_FLAGS" dnl
+         "sse;sse4a;SSE4a;ecx_cpuid80000001,6;-maes;HAVE_SSE4a;SIMD_FLAGS" dnl
+         "sse;sha;SHA;ebx_cpuid7,29;-msha;HAVE_SHA;SIMD_FLAGS" dnl
+         "sse;aes;AES;ecx_cpuid1,25;-maes;HAVE_AES;SIMD_FLAGS" dnl
+         "avx;avx;AVX;ecx_cpuid1,28;-mavx;HAVE_AVX;SIMD_FLAGS" dnl
+         "avx;fma3;FMA3;ecx_cpuid1,12;-mfma;HAVE_FMA3;SIMD_FLAGS" dnl
+         "avx;fma4;FMA4;ecx_cpuid80000001,16;-mfma4;HAVE_FMA4;SIMD_FLAGS" dnl
+         "avx;xop;XOP;ecx_cpuid80000001,11;-mxop;HAVE_XOP;SIMD_FLAGS" dnl
+         "avx;avx2;AVX2;ebx_cpuid7,5;-mavx2;HAVE_AVX2;SIMD_FLAGS" dnl
+         "avx512;avx512f;AVX512-F;ebx_cpuid7,16;-mavx512f;HAVE_AVX512_F;SIMD_FLAGS" dnl
+         "avx512;avx512cd;AVX512-CD;ebx_cpuid7,28;-mavx512cd;HAVE_AVX512_CD;SIMD_FLAGS" dnl
+         "avx512;avx512pf;AVX512-PF;ebx_cpuid7,26;-mavx512pf;HAVE_AVX512_PF;SIMD_FLAGS" dnl
+         "avx512;avx512er;AVX512-ER;ebx_cpuid7,27;-mavx512er;HAVE_AVX512_ER;SIMD_FLAGS" dnl
+         "avx512;avx512vl;AVX512-VL;ebx_cpuid7,31;-mavx512vl;HAVE_AVX512_VL;SIMD_FLAGS" dnl
+         "avx512;avx512bw;AVX512-BW;ebx_cpuid7,30;-mavx512bw;HAVE_AVX512_BW;SIMD_FLAGS" dnl
+         "avx512;avx512dq;AVX512-DQ;ebx_cpuid7,17;-mavx512dq;HAVE_AVX512_DQ;SIMD_FLAGS" dnl
+         "avx512;avx512ifma;AVX512-IFMA;ebx_cpuid7,21;-mavx512ifma;HAVE_AVX512_IFMA;SIMD_FLAGS" dnl
+         "avx512;avx512vbmi;AVX512-VBMI;ecx_cpuid7,1;-mavx512vbmi;HAVE_AVX512_VBMI;SIMD_FLAGS" dnl
          #
       do ac_instr_os_support=$(eval echo \$ax_cv_have_$(echo $ac_instr_info | cut -d ";" -f 1)_os_support_ext)
          ac_instr_acvar=$(echo $ac_instr_info | cut -d ";" -f 2)
@@ -211,7 +220,7 @@ AC_DEFUN([AX_EXT],
          ac_instr_chk_bit=$(echo $ac_instr_chk_loc | cut -d "," -f 2)
          ac_instr_compiler_flags=$(echo $ac_instr_info | cut -d ";" -f 5)
          ac_instr_have_define=$(echo $ac_instr_info | cut -d ";" -f 6)
-         ac_instr_description=$(echo $ac_instr_info | cut -d ";" -f 7)
+         ac_instr_flag_type=$(echo $ac_instr_info | cut -d ";" -f 7)
 
          AC_CACHE_CHECK([whether ${ac_instr_shortname} is supported by the processor], [ax_cv_have_${ac_instr_acvar}_cpu_ext],
          [
@@ -234,8 +243,8 @@ AC_DEFUN([AX_EXT],
              AX_CHECK_COMPILE_FLAG(${ac_instr_compiler_flags}, eval ax_cv_support_${ac_instr_acvar}_ext=yes,
                                                                eval ax_cv_support_${ac_instr_acvar}_ext=no)
              if test x"$(eval echo \$ax_cv_support_${ac_instr_acvar}_ext)" = x"yes"; then
-               SIMD_FLAGS="$SIMD_FLAGS ${ac_instr_compiler_flags}"
-                AC_DEFINE_UNQUOTED([${ac_instr_have_define}])
+               eval ${ac_instr_flag_type}=\"\$${ac_instr_flag_type} ${ac_instr_compiler_flags}\"
+               AC_DEFINE_UNQUOTED([${ac_instr_have_define}])
              else
                AC_MSG_WARN([Your processor and OS supports ${ac_instr_shortname} instructions but not your compiler, can you try another compiler?])
              fi
@@ -285,4 +294,5 @@ AC_DEFUN([AX_EXT],
   AH_TEMPLATE([HAVE_AVX512_IFMA],[Define to 1 to support AVX-512 Integer Fused Multiply Add Instructions])
   AH_TEMPLATE([HAVE_AVX512_VBMI],[Define to 1 to support AVX-512 Vector Byte Manipulation Instructions])
   AC_SUBST(SIMD_FLAGS)
+  AC_SUBST(CPUEXT_FLAGS)
 ])
