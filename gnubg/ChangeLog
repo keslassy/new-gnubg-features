@@ -1,3 +1,17 @@
+2015-08-25  Michael Petch  <mpetch@gnubg.org>
+
+	* m4/ax_ext.h : Update this autconf script to detect
+	all currently known supplemental instruction sets and
+	extensions for the x86 processors. Includes 
+	HAVE_MMX, HAVE_RDRND, HAVE_BMI1,HAVE_BMI2, 
+	HAVE_ADX, HAVE_MPX, HAVE_PREFETCHWT1, HAVE_ABM, 
+	HAVE_SSE, HAVE_SSE2, HAVE_SSE3, HAVE_SSSE3, HAVE_SSE4_1, 
+	HAVE_SSE4_2, HAVE_SSE4a, HAVE_SHA, HAVE_AES, HAVE_AVX, 
+	HAVE_FMA3, HAVE_FMA4, HAVE_XOP, HAVE_AVX2, HAVE_AVX512_F, 
+	HAVE_AVX512_CD, HAVE_AVX512_PF, HAVE_AVX512_ER, 
+	HAVE_AVX512_VL, HAVE_AVX512_BW, HAVE_AVX512_DQ, 
+	HAVE_AVX512_IFMA, HAVE_AVX512_VBMI
+
 2015-07-31  Michael Petch  <mpetch@gnubg.org>
 
 	* doc/gnubg/*, po/*
