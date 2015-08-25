@@ -8,14 +8,14 @@
 #
 # DESCRIPTION
 #
-#   Find supported SIMD extensions by requesting cpuid. When an SIMD
+#   Find supported SIMD extensions by requesting cpuid. When a SIMD
 #   extension is found, the -m"simdextensionname" is added to SIMD_FLAGS if
-#   compiler supports it. For example, if "sse2" is available, then "-msse2"
+#   compiler supports it. For example, if "sse2" is available then "-msse2"
 #   is added to SIMD_FLAGS.
 #
 #   Find other supported CPU extensions by requesting cpuid. When a processor
 #   extension is found, the -m"extensionname" is added to CPUEXT_FLAGS if
-#   compiler supports it. For example, if "bmi2" is available, then "-mbmi2"
+#   compiler supports it. For example, if "bmi2" is available then "-mbmi2"
 #   is added to CPUEXT_FLAGS.
 #
 #   This macro calls:
@@ -281,7 +281,7 @@ AC_DEFUN([AX_EXT],
   AH_TEMPLATE([HAVE_AES],[Define to 1 to support Advanced Encryption Standard New Instruction Set (AES-NI)])
   AH_TEMPLATE([HAVE_AVX],[Define to 1 to support Advanced Vector Extensions])
   AH_TEMPLATE([HAVE_FMA3],[Define to 1 to support  Fused Multiply-Add Extensions 3])
-  AH_TEMPLATE([HAVE_FMA4],[Define to 1 to support Fused Multiply-Add Extensions 3])
+  AH_TEMPLATE([HAVE_FMA4],[Define to 1 to support Fused Multiply-Add Extensions 4])
   AH_TEMPLATE([HAVE_XOP],[Define to 1 to support eXtended Operations Extensions])
   AH_TEMPLATE([HAVE_AVX2],[Define to 1 to support Advanced Vector Extensions 2])
   AH_TEMPLATE([HAVE_AVX512_F],[Define to 1 to support AVX-512 Foundation Extensions])
