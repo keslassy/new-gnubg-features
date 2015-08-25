@@ -25,13 +25,13 @@
 #
 #   And defines:
 #
-#     HAVE_MMX / HAVE_RDRND / HAVE_BMI1 / HAVE_BMI2 / HAVE_ADX / HAVE_MPX
-#     HAVE_PREFETCHWT1 / HAVE_ABM / HAVE_SSE / HAVE_SSE2 / HAVE_SSE3
-#     HAVE_SSSE3 / HAVE_SSE4_1 / HAVE_SSE4_2 / HAVE_SSE4a / HAVE_SHA
-#     HAVE_AES / HAVE_AVX / HAVE_FMA3 / HAVE_FMA4 / HAVE_XOP / HAVE_AVX2
-#     HAVE_AVX512_F / HAVE_AVX512_CD / HAVE_AVX512_PF / HAVE_AVX512_ER
-#     HAVE_AVX512_VL / HAVE_AVX512_BW / HAVE_AVX512_DQ / HAVE_AVX512_IFMA
-#     HAVE_AVX512_VBMI
+#     HAVE_RDRND / HAVE_BMI1 / HAVE_BMI2 / HAVE_ADX / HAVE_MPX
+#     HAVE_PREFETCHWT1 / HAVE_ABM / HAV_MMX / HAVE_SSE / HAVE_SSE2
+#     HAVE_SSE3 / HAVE_SSSE3 / HAVE_SSE4_1 / HAVE_SSE4_2 / HAVE_SSE4a
+#     HAVE_SHA / HAVE_AES / HAVE_AVX / HAVE_FMA3 / HAVE_FMA4 / HAVE_XOP
+#     HAVE_AVX2 / HAVE_AVX512_F / HAVE_AVX512_CD / HAVE_AVX512_PF
+#     HAVE_AVX512_ER / HAVE_AVX512_VL / HAVE_AVX512_BW / HAVE_AVX512_DQ
+#     HAVE_AVX512_IFMA / HAVE_AVX512_VBMI
 #
 # LICENSE
 #
@@ -262,7 +262,6 @@ AC_DEFUN([AX_EXT],
   ;;
   esac
 
-  AH_TEMPLATE([HAVE_MMX],[Define to 1 to support Multimedia Extensions])
   AH_TEMPLATE([HAVE_RDRND],[Define to 1 to support Digital Random Number Generator])
   AH_TEMPLATE([HAVE_BMI1],[Define to 1 to support Bit Manipulation Instruction Set 1])
   AH_TEMPLATE([HAVE_BMI2],[Define to 1 to support Bit Manipulation Instruction Set 2])
@@ -270,6 +269,7 @@ AC_DEFUN([AX_EXT],
   AH_TEMPLATE([HAVE_MPX],[Define to 1 to support Memory Protection Extensions])
   AH_TEMPLATE([HAVE_PREFETCHWT1],[Define to 1 to support Prefetch Vector Data Into Caches WT1])
   AH_TEMPLATE([HAVE_ABM],[Define to 1 to support Advanced Bit Manipulation])
+  AH_TEMPLATE([HAVE_MMX],[Define to 1 to support Multimedia Extensions])
   AH_TEMPLATE([HAVE_SSE],[Define to 1 to support Streaming SIMD Extensions])
   AH_TEMPLATE([HAVE_SSE2],[Define to 1 to support Streaming SIMD Extensions])
   AH_TEMPLATE([HAVE_SSE3],[Define to 1 to support Streaming SIMD Extensions 3])
