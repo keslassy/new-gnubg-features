@@ -101,7 +101,7 @@ AC_DEFUN([AX_EXT],
 
       ebx_cpuid7=0
       ecx_cpuid7=0
-      if test "$((0x$eax_cpuid0))" -ge 1 ; then
+      if test "$((0x$eax_cpuid0))" -ge 7 ; then
         AX_GCC_X86_CPUID(0x00000007)
         if test "$ax_cv_gcc_x86_cpuid_0x00000007" != "unknown";
         then
