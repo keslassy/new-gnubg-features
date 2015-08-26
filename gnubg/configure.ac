@@ -136,11 +136,11 @@ PKG_CHECK_MODULES(CAIRO, [cairo >= 1.2], have_cairo="yes", [AC_MSG_WARN([no cair
 PKG_CHECK_MODULES(PANGOCAIRO, [pangocairo >= 1.0], have_pangocairo="yes", [AC_MSG_WARN([no pangocairo support])])
 PKG_CHECK_MODULES(SQLITE, [sqlite3], have_sqlite="yes", AC_MSG_WARN([no sqlite support]))
 
-if test "x$win32" == "xyes"; then
+if test "x$win32" = "xyes"; then
     have_canberra="no"
     have_glu="yes"
 else
-    if test "x$darwin" == "xyes"; then
+    if test "x$darwin" = "xyes"; then
         have_canberra="no"
     elif test "x$with_gtk" != "xno"; then
         PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk support]))
@@ -426,7 +426,7 @@ dnl
 AC_MSG_CHECKING([for threading])
 AC_ARG_ENABLE( threads, [  --enable-threads=TYPE   enable multithread support (TYPE=yes,glib,win32,no) (Default glib)], threads=$enableval, threads="glib")
 AM_CONDITIONAL(USE_MULTITHREAD, test "x$enable_threads" != "xno" )
-if test "x$enable_threads" == "xyes"; then
+if test "x$enable_threads" = "xyes"; then
 	threads=glib
 fi
 if test "x$enable_threads" != "xno"; then
@@ -436,7 +436,7 @@ if test "x$enable_threads" != "xno"; then
         if test "x$have_gthread" != "xyes" && test "x$win32" != "xyes"; then
                 AC_MSG_ERROR([Threads enabled but glib doesn't seem to have gthread support])
         fi
-        if test "x$enable_threads" == "xwin32" && test "x$win32" != "xyes" ; then
+        if test "x$enable_threads" = "xwin32" && test "x$win32" != "xyes" ; then
                 AC_MSG_ERROR([Win32 Threads only available on Win32 platforms])
 	fi
 	
@@ -475,16 +475,16 @@ dnl
 dnl Check for program to open browser
 dnl
 
-if test x"$win32" == x"no"; then
+if test x"$win32" = x"no"; then
     AC_CHECK_PROGS([DEFAULT_WWW_PROG], [sensible-browser xdg-open firefox], [xdg-open])
     AC_MSG_CHECKING([for program to open URLs])
     AC_ARG_WITH([default_browser],
     AC_HELP_STRING([--with-default-browser=program],
 	    	[specify the program to open URLs: (default=xdg-open, or default=sensible-browser on Debian distros)]),
     [
-        if [test x"$with_default_browser" == x"no"]; then
+        if [test x"$with_default_browser" = x"no"]; then
     	    OPENWWW_PROG="xdg-open"
-        elif [test x"$with_default_browser" == x"yes"]; then
+        elif [test x"$with_default_browser" = x"yes"]; then
             OPENWWW_PROG="$DEFAULT_WWW_PROG"
         else
         	OPENWWW_PROG="$with_default_browser"
