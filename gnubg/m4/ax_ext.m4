@@ -72,6 +72,7 @@ AC_DEFUN([AX_EXT],
     i[[3456]]86*|x86_64*|amd64*)
 
       AC_REQUIRE([AX_GCC_X86_CPUID])
+      AC_REQUIRE([AX_GCC_X86_CPUID_COUNT])
       AC_REQUIRE([AX_GCC_X86_AVX_XGETBV])
 
       eax_cpuid0=0
@@ -102,7 +103,7 @@ AC_DEFUN([AX_EXT],
       ebx_cpuid7=0
       ecx_cpuid7=0
       if test "$((0x$eax_cpuid0))" -ge 7 ; then
-        AX_GCC_X86_CPUID(0x00000007)
+        AX_GCC_X86_CPUID_COUNT(0x00000007, 0x00)
         if test "$ax_cv_gcc_x86_cpuid_0x00000007" != "unknown";
         then
           ebx_cpuid7=`echo $ax_cv_gcc_x86_cpuid_0x00000007 | cut -d ":" -f 2`
