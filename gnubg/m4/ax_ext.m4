@@ -197,7 +197,7 @@ AC_DEFUN([AX_EXT],
          "sse;ssse3;SSSE3;ecx_cpuid1,9;-mssse3;HAVE_SSSE3;SIMD_FLAGS" dnl
          "sse;sse41;SSE4.1;ecx_cpuid1,19;-msse4.1;HAVE_SSE4_1;SIMD_FLAGS" dnl
          "sse;sse42;SSE4.2;ecx_cpuid1,20;-msse4.2;HAVE_SSE4_2;SIMD_FLAGS" dnl
-         "sse;sse4a;SSE4a;ecx_cpuid80000001,6;-maes;HAVE_SSE4a;SIMD_FLAGS" dnl
+         "sse;sse4a;SSE4a;ecx_cpuid80000001,6;-msse4a;HAVE_SSE4a;SIMD_FLAGS" dnl
          "sse;sha;SHA;ebx_cpuid7,29;-msha;HAVE_SHA;SIMD_FLAGS" dnl
          "sse;aes;AES;ecx_cpuid1,25;-maes;HAVE_AES;SIMD_FLAGS" dnl
          "avx;avx;AVX;ecx_cpuid1,28;-mavx;HAVE_AVX;SIMD_FLAGS" dnl
