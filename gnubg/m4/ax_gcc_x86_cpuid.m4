@@ -65,23 +65,25 @@ AC_DEFUN([AX_GCC_X86_CPUID],
 ])
 
 AC_DEFUN([AX_GCC_X86_CPUID_COUNT],
-[AC_REQUIRE([AC_PROG_CC])
-AC_LANG_PUSH([C])
-AC_CACHE_CHECK(for x86 cpuid $1 output, ax_cv_gcc_x86_cpuid_$1,
- [AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>], [
-     int op = $1, level = $2, eax, ebx, ecx, edx;
-     FILE *f;
-      __asm__ __volatile__ ("cpuid"
-        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-        : "a" (op), "2" (level));
+[if test x"$1" != x"" ; then
+  AC_REQUIRE([AC_PROG_CC])
+  AC_LANG_PUSH([C])
+  AC_CACHE_CHECK(for x86 cpuid $1 output, ax_cv_gcc_x86_cpuid_$1,
+   [AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>], [
+       int op = $1, level = $2, eax, ebx, ecx, edx;
+       FILE *f;
+        __asm__ __volatile__ ("cpuid"
+          : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
+          : "a" (op), "2" (level));
 
-     f = fopen("conftest_cpuid", "w"); if (!f) return 1;
-     fprintf(f, "%x:%x:%x:%x\n", eax, ebx, ecx, edx);
-     fclose(f);
-     return 0;
-])],
+       f = fopen("conftest_cpuid", "w"); if (!f) return 1;
+       fprintf(f, "%x:%x:%x:%x\n", eax, ebx, ecx, edx);
+       fclose(f);
+       return 0;
+  ])],
      [ax_cv_gcc_x86_cpuid_$1=`cat conftest_cpuid`; rm -f conftest_cpuid],
      [ax_cv_gcc_x86_cpuid_$1=unknown; rm -f conftest_cpuid],
      [ax_cv_gcc_x86_cpuid_$1=unknown])])
-AC_LANG_POP([C])
+  AC_LANG_POP([C])
+fi
 ])
