@@ -13,10 +13,10 @@
 #   compiler supports it. For example, if "sse2" is available then "-msse2"
 #   is added to SIMD_FLAGS.
 #
-#   Find other supported CPU extensions by requesting cpuid. When a processor
-#   extension is found, the -m"extensionname" is added to CPUEXT_FLAGS if
-#   compiler supports it. For example, if "bmi2" is available then "-mbmi2"
-#   is added to CPUEXT_FLAGS.
+#   Find other supported CPU extensions by requesting cpuid. When a
+#   processor extension is found, the -m"extensionname" is added to
+#   CPUEXT_FLAGS if compiler supports it. For example, if "bmi2" is
+#   available then "-mbmi2" is added to CPUEXT_FLAGS.
 #
 #   This macro calls:
 #
@@ -43,7 +43,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 14
+#serial 15
 
 AC_DEFUN([AX_EXT],
 [

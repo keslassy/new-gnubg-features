@@ -1,3 +1,6 @@
+# ===========================================================================
+#   http://www.gnu.org/software/autoconf-archive/ax_gcc_x86_avx_xgetbv.html
+# ===========================================================================
 #
 # SYNOPSIS
 #
@@ -5,18 +8,18 @@
 #
 # DESCRIPTION
 #
-#   On later x86 processors with AVX SIMD support, with gcc or a compiler 
-#   that has a compatible syntax for inline assembly instructions, run a 
+#   On later x86 processors with AVX SIMD support, with gcc or a compiler
+#   that has a compatible syntax for inline assembly instructions, run a
 #   small program that executes the xgetbv instruction with input OP. This
 #   can be used to detect if the OS supports AVX instruction usage.
 #
-#   On output, the values of the eax and edx registers are stored
-#   as hexadecimal strings as "eax:edx" in the cache variable
+#   On output, the values of the eax and edx registers are stored as
+#   hexadecimal strings as "eax:edx" in the cache variable
 #   ax_cv_gcc_x86_avx_xgetbv.
 #
 #   If the xgetbv instruction fails (because you are running a
 #   cross-compiler, or because you are not using gcc, or because you are on
-#   a processor that doesn't have this instruction), 
+#   a processor that doesn't have this instruction),
 #   ax_cv_gcc_x86_avx_xgetbv_OP is set to the string "unknown".
 #
 #   This macro mainly exists to be used in AX_EXT.
@@ -24,7 +27,6 @@
 # LICENSE
 #
 #   Copyright (c) 2013 Michael Petch <mpetch@capp-sysware.com>
-#                                    <mpetch@gnubg.org>
 #
 #   This program is free software: you can redistribute it and/or modify it
 #   under the terms of the GNU General Public License as published by the
@@ -52,7 +54,7 @@
 #   modified version of the Autoconf Macro, you may extend this special
 #   exception to the GPL to apply to your modified version as well.
 
-#serial 1
+#serial 2
 
 AC_DEFUN([AX_GCC_X86_AVX_XGETBV],
 [AC_REQUIRE([AC_PROG_CC])
