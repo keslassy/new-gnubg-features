@@ -57,8 +57,8 @@
 #serial 2
 
 AC_DEFUN([AX_GCC_X86_AVX_XGETBV],
-[if test x"$1" != x"" ; then
-  AC_REQUIRE([AC_PROG_CC])
+[AC_REQUIRE([AC_PROG_CC])
+if test x"$1" != x"" ; then
   AC_LANG_PUSH([C])
   AC_CACHE_CHECK(for x86-AVX xgetbv $1 output, ax_cv_gcc_x86_avx_xgetbv_$1,
    [AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>], [

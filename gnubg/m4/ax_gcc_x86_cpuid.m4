@@ -61,12 +61,13 @@
 #serial 8
 
 AC_DEFUN([AX_GCC_X86_CPUID],
-[AX_GCC_X86_CPUID_COUNT($1, 0)
+[AC_REQUIRE([AX_GCC_X86_CPUID_COUNT])
+AX_GCC_X86_CPUID_COUNT($1, 0)
 ])
 
 AC_DEFUN([AX_GCC_X86_CPUID_COUNT],
-[if test x"$1" != x"" ; then
-  AC_REQUIRE([AC_PROG_CC])
+[AC_REQUIRE([AC_PROG_CC])
+if test x"$1" != x"" ; then
   AC_LANG_PUSH([C])
   AC_CACHE_CHECK(for x86 cpuid $1 output, ax_cv_gcc_x86_cpuid_$1,
    [AC_RUN_IFELSE([AC_LANG_PROGRAM([#include <stdio.h>], [
