@@ -63,7 +63,7 @@ OSRQuasiRandomDice(const unsigned int iTurn, const unsigned int iGame, const uns
 /* Fill aaProb with one sided bearoff probabilities for position with */
 /* bearoff id n.                                                      */
 
-static inline void
+static void
 getBearoffProbs(const unsigned int n, unsigned short int aaProb[32])
 {
     g_assert(pbc1);
