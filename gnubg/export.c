@@ -1047,8 +1047,7 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
                 fprintf(pf, " %-31s%s\n", ap[0].szName, ap[1].szName);
             msExport.fCubeOwner = -1;
             /* FIXME what about automatic doubles? */
-            continue;
-            break;
+            continue;	/* branch out of the switch and continue for (pl ...) */
         case MOVE_NORMAL:
             diceRolled = 0;
             sprintf(sz, "%u%u: ", pmr->anDice[0], pmr->anDice[1]);
