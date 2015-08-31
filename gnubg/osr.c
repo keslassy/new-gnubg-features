@@ -38,8 +38,8 @@
 #define MAX_PROBS        32
 #define MAX_GAMMON_PROBS 15
 
-static unsigned long mt[N];
-static int mti = N + 1;
+static unsigned long mt[MT_ARRAY_N];
+static int mti = MT_ARRAY_N + 1;
 
 static unsigned int
 OSRQuasiRandomDice(const unsigned int iTurn, const unsigned int iGame, const unsigned int cGames,

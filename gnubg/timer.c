@@ -29,7 +29,7 @@
 #endif
 
 #ifdef WIN32
-#include "windows.h"
+#include <windows.h>
 
 static double perFreq = 0;
 

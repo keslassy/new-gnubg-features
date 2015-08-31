@@ -1,8 +1,15 @@
+2015-08-31  Michael Petch  <mpetch@gnubg.org>
+
+	* dice.c, multithread.h, openurl.c, osr.c, sound.c,
+      timer.c, lib/mt19937ar.c, lib/mt19937ar.h:
+	Resolve #define conflict in Mersenne twister under Win32.
+    Resolve other minor Win32 warnings.
+
 2015-08-30  Michael Petch  <mpetch@gnubg.org>
 
 	* Makefile.am configure.ac m4/ChangeLog m4/Makefile.am,
-	+m4/ax_python_devel.m4, 
-	-python-config -m4/az_python.m4: Modernize Python 
+	  +m4/ax_python_devel.m4, 
+	  -python-config -m4/az_python.m4: Modernize Python 
 	detection of development requirements.
 
 2015-08-25  Michael Petch  <mpetch@gnubg.org>

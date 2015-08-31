@@ -22,6 +22,7 @@
 
 #if defined(WIN32)
 #include <process.h>
+#include <winsock2.h>
 #include <windows.h>
 #endif
 

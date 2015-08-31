@@ -58,15 +58,15 @@
 #define LOWER_MASK 0x7fffffffUL /* least significant r bits */
 
 
-                                                                   /* static unsigned long mt[N]; *//* the array for the state vector  */
-                                                   /* static int mti=N+1; *//* mti==N+1 means mt[N] is not initialized */
+                                                                   /* static unsigned long mt[MT_ARRAY_N]; *//* the array for the state vector  */
+                                                   /* static int mti=N+1; *//* mti==N+1 means mt[MT_ARRAY_N] is not initialized */
 
-/* initializes mt[N] with a seed */
+/* initializes mt[MT_ARRAY_N] with a seed */
 void
-init_genrand(unsigned long s, int *mti, unsigned long mt[N])
+init_genrand(unsigned long s, int *mti, unsigned long mt[MT_ARRAY_N])
 {
     mt[0] = s & 0xffffffffUL;
-    for (*mti = 1; *mti < N; (*mti)++) {
+    for (*mti = 1; *mti < MT_ARRAY_N; (*mti)++) {
         mt[*mti] =
             /*lint --e(737) */ (1812433253UL * (mt[*mti - 1] ^ (mt[*mti - 1] >> 30)) + *mti);
         /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
@@ -82,33 +82,33 @@ init_genrand(unsigned long s, int *mti, unsigned long mt[N])
 /* init_key is the array for initializing keys */
 /* key_length is its length */
 void
-init_by_array(unsigned long init_key[], int key_length, int *mti, unsigned long mt[N])
+init_by_array(unsigned long init_key[], int key_length, int *mti, unsigned long mt[MT_ARRAY_N])
 {
     int i, j, k;
     init_genrand(19650218UL, mti, mt);
     i = 1;
     j = 0;
-    k = (N > key_length ? N : key_length);
+    k = (MT_ARRAY_N > key_length ? MT_ARRAY_N : key_length);
     for (; k; k--) {
         mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 30)) * 1664525UL))
             + init_key[j] + j;  /* non linear */
         mt[i] &= 0xffffffffUL;  /* for WORDSIZE > 32 machines */
         i++;
         j++;
-        if (i >= N) {
-            mt[0] = mt[N - 1];
+        if (i >= MT_ARRAY_N) {
+            mt[0] = mt[MT_ARRAY_N - 1];
             i = 1;
         }
         if (j >= key_length)
             j = 0;
     }
-    for (k = N - 1; k; k--) {
+    for (k = MT_ARRAY_N - 1; k; k--) {
         mt[i] = (mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 30)) * 1566083941UL))
             - i;                /* non linear */
         mt[i] &= 0xffffffffUL;  /* for WORDSIZE > 32 machines */
         i++;
-        if (i >= N) {
-            mt[0] = mt[N - 1];
+        if (i >= MT_ARRAY_N) {
+            mt[0] = mt[MT_ARRAY_N - 1];
             i = 1;
         }
     }
@@ -118,28 +118,28 @@ init_by_array(unsigned long init_key[], int key_length, int *mti, unsigned long 
 
 /* generates a random number on [0,0xffffffff]-interval */
 unsigned long
-genrand_int32(int *mti, unsigned long mt[N])
+genrand_int32(int *mti, unsigned long mt[MT_ARRAY_N])
 {
     unsigned long y;
     static unsigned long mag01[2] = { 0x0UL, MATRIX_A };
     /* mag01[x] = x * MATRIX_A  for x=0,1 */
 
-    if (*mti >= N) {            /* generate N words at one time */
+    if (*mti >= MT_ARRAY_N) {            /* generate N words at one time */
         int kk;
 
-        if (*mti == N + 1)      /* if init_genrand() has not been called, */
+        if (*mti == MT_ARRAY_N + 1)      /* if init_genrand() has not been called, */
             init_genrand(5489UL, mti, mt);      /* a default initial seed is used */
 
-        for (kk = 0; kk < N - M; kk++) {
+        for (kk = 0; kk < MT_ARRAY_N - M; kk++) {
             y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
             mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
         }
-        for (; kk < N - 1; kk++) {
+        for (; kk < MT_ARRAY_N - 1; kk++) {
             y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
-            mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
+            mt[kk] = mt[kk + (M - MT_ARRAY_N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
         }
-        y = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK);
-        mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
+        y = (mt[MT_ARRAY_N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK);
+        mt[MT_ARRAY_N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
 
         *mti = 0;
     }

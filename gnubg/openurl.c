@@ -25,8 +25,8 @@
 #include "backgammon.h"
 #include "openurl.h"
 #ifdef WIN32
-#include "windows.h"
-#include "shellapi.h"
+#include <windows.h>
+#include <shellapi.h>
 #else
 #include <string.h>
 #endif                          /* WIN32 */

@@ -37,7 +37,7 @@
 
 #if defined(WIN32)
 /* for PlaySound */
-#include "windows.h"
+#include <windows.h>
 #include <mmsystem.h>
 
 #elif HAVE_APPLE_QUICKTIME
