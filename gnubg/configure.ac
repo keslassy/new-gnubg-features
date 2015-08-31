@@ -348,13 +348,18 @@ AC_HELP_STRING([--with-python=program],
     [
         if [ test x"$with_python" != x"no" && test x"$with_python" != x"yes" ]; then
     	    PYTHON="$with_python"
+            AC_PATH_PROG([PYTHON],[$PYTHON])
+            if test -z "$PYTHON"; then
+               AC_MSG_ERROR([Cannot find user specified Python interpreter: $with_python])
+            fi
         fi
     ])
 
 if test "x$with_python" != "xno"; then
     AM_PATH_PYTHON(2.2)
-    AM_CHECK_PYTHON_HEADERS(have_python="yes", have_python="no")
-    if test "x$have_python" = "xyes"; then
+    AX_PYTHON_DEVEL()
+    have_python=$ac_python_version
+    if test "x$have_python" != "x"; then
         AC_DEFINE(USE_PYTHON,1,[Define if you want to use Python inside gnubg])
     fi
 fi

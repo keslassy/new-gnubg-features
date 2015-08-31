@@ -1,3 +1,10 @@
+2015-08-30  Michael Petch  <mpetch@gnubg.org>
+
+	* Makefile.am configure.ac m4/ChangeLog m4/Makefile.am,
+	+m4/ax_python_devel.m4, 
+	-python-config -m4/az_python.m4: Modernize Python 
+	detection of development requirements.
+
 2015-08-25  Michael Petch  <mpetch@gnubg.org>
 
 	* m4/ax_ext.h : Update this autconf script to detect

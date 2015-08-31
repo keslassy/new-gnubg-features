@@ -25,7 +25,7 @@ if USE_SQLITE
 AM_CPPFLAGS += @SQLITE_CFLAGS@
 endif
 if USE_PYTHON
-AM_CPPFLAGS += @PYTHON_INCLUDES@ 
+AM_CPPFLAGS += @PYTHON_CPPFLAGS@ 
 endif
 
 AM_CPPFLAGS += -DAC_DOCDIR='"$(docdir)"' -DAC_DATADIR='"$(datadir)"' -DAC_PKGDATADIR='"$(datadir)/gnubg"'
@@ -164,7 +164,7 @@ if USE_SQLITE
 gnubg_LDADD += @SQLITE_LIBS@
 endif
 if USE_PYTHON
-gnubg_LDADD += @PYTHON_LIBS@ 
+gnubg_LDADD += @PYTHON_LDFLAGS@ 
 endif
 if USE_BOARD3D
 gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS)

@@ -1,3 +1,9 @@
+2015-08-30  Michael Petch  <mpetch@capp-sysware.com>
+
+	* -az_python.m4, +ax_python_devel.m4: No longer use the macros
+	in az_python.m4 to configure Python. Use ax_python_devel.m4
+    instead.
+
 2015-07-04  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* ax_check_compile_flag.m4, ax_ext.m4: Update from Autoconf
