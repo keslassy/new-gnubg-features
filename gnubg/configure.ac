@@ -247,7 +247,7 @@ AC_CHECK_LIB(readline,readline,
               READLINELIB="-lreadline $TERMLIB";bcrl=y)],
               READLINELIB="")
 if test "$bcrl" = "y" ; then
-    AC_DEFINE([HAVE_LIBREADLINE],1,Define if you have libreadline)
+    AC_DEFINE([HAVE_LIB_READLINE],1,Define if you have libreadline)
     fi
 LDFLAGS="$LDSAVE $READLINELIB"
 

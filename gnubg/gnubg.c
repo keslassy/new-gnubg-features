@@ -41,7 +41,7 @@
 #include <io.h>
 #endif
 
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
 static char *gnubg_histfile;
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -117,7 +117,7 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 int fX = FALSE;                 /* use X display */
 unsigned int nDelay = 300;
 int fNeedPrompt = FALSE;
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
 int fReadingCommand;
 #endif
 #endif
@@ -2528,9 +2528,9 @@ PromptForExit(void)
 #endif
 #endif
 
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
     write_history(gnubg_histfile);
-#endif                          /* HAVE_READLINE */
+#endif                          /* HAVE_LIB_READLINE */
 
 #if USE_GTK
     if (gtk_main_level() == 1)
@@ -3358,7 +3358,7 @@ CommandSaveSettings(char *szParam)
 
 }
 
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
 static command *pcCompleteContext;
 
 static char *
@@ -3597,7 +3597,7 @@ extern void
 Prompt(void)
 {
 
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
     if (!fInteractive || !isatty(STDIN_FILENO))
         return;
 #endif
@@ -3607,7 +3607,7 @@ Prompt(void)
 }
 
 #if USE_GTK
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
 extern void
 ProcessInput(char *sz)
 {
@@ -3685,7 +3685,7 @@ UserCommand(const char *szCommand)
 
     /* Note that the command is always echoed to stdout; the output*()
      * functions are bypassed. */
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
     rl_end = 0;                 /* crashes without this line */
     rl_redisplay();
     g_print("%s\n", sz);
@@ -3716,7 +3716,7 @@ NextTurnNotify(gpointer UNUSED(p))
     ResetInterrupt();
 
     if (fNeedPrompt) {
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
         if (fInteractive) {
             char *sz = locale_from_utf8(FormatPrompt());
             rl_callback_handler_install(sz, ProcessInput);
@@ -3750,7 +3750,7 @@ GetInput(char *szPrompt)
     g_assert(fTTY && !fX);
 #endif
 
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
     if (fInteractive) {
         char *prompt;
         /* Using readline, but not X. */
@@ -4151,7 +4151,7 @@ VersionMessage(void)
     g_print("%s", _(intro_string));
 }
 
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
 static char *
 get_readline(void)
 {
@@ -4225,7 +4225,7 @@ run_cl(void)
 {
     char *line;
     for (;;) {
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
         if (fInteractive) {
             line = get_readline();
             HandleCommand(line, acTop);
@@ -4280,7 +4280,7 @@ init_language(char **lang)
 static void
 setup_readline(void)
 {
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
     char *pch;
     int i;
     gnubg_histfile = g_build_filename(szHomeDirectory, "history", NULL);
@@ -5076,7 +5076,7 @@ CommandDiceRolls(char *sz)
 }
 
 
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
 extern void
 CommandHistory(char *UNUSED(sz))
 {
@@ -5092,7 +5092,7 @@ CommandHistory(char *UNUSED(sz))
 
 }
 
-#endif                          /* HAVE_LIBREADLINE */
+#endif                          /* HAVE_LIB_READLINE */
 
 extern void
 CommandClearHint(char *UNUSED(sz))
@@ -5206,7 +5206,7 @@ EPC(const TanBoard anBoard, float *arEPC, float *arMu, float *arSigma, int *pfSo
     return -1;
 }
 
-#if HAVE_LIBREADLINE
+#if HAVE_LIB_READLINE
 extern char *
 locale_from_utf8(const char *sz)
 {
