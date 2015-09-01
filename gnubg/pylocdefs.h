@@ -32,7 +32,8 @@
     #define MOD_INIT(name) PyMODINIT_FUNC PyInit_##name(void)
     #define MOD_DEF(ob, name, doc, methods) \
             static struct PyModuleDef moduledef = { \
-              PyModuleDef_HEAD_INIT, name, doc, -1, methods, }; \
+              PyModuleDef_HEAD_INIT, name, doc, -1, methods, \
+              NULL, NULL, NULL, NULL, }; \
             ob = PyModule_Create(&moduledef);
 #else
     #define MOD_ERROR_VAL
