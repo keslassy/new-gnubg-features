@@ -1,3 +1,11 @@
+2015-09-01  Michael Petch  <mpetch@gnubg.org>
+
+	* commands.inc, configure.ac, gnubg.c, gtkgame.c,
+	  gtkgame.h, pylocdefs.h: Change autoconf use of
+	HAVE_LIBREADLINE to HAVE_LIB_READLINE. pyconfig.h may
+	define it even if the readline header files aren't
+	installed on a distro.
+
 2015-08-31  Michael Petch  <mpetch@gnubg.org>
 
 	* dice.c, multithread.h, openurl.c, osr.c, sound.c,
@@ -9,7 +17,7 @@
 
 	* Makefile.am configure.ac m4/ChangeLog m4/Makefile.am,
 	  +m4/ax_python_devel.m4, 
-	  -python-config -m4/az_python.m4: Modernize Python 
+	-python-config -m4/az_python.m4: Modernize Python 
 	detection of development requirements.
 
 2015-08-25  Michael Petch  <mpetch@gnubg.org>
