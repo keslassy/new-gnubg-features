@@ -11,6 +11,7 @@ AM_CPPFLAGS = -I$(srcdir)/.. $(COMMON_INCS) @GTK_CFLAGS@ $(SOUND_INCS) \
 
 if USE_BOARD3D
 noinst_LTLIBRARIES = libboard3d.la
+libboard3d_la_LIBADD = @FREETYPE2_LIBS@ 
 endif
 
 EXTRA_DIST = wglBuffer.c wglBuffer.h

@@ -1,3 +1,8 @@
+2015-09-03  Michael Petch  <mpetch@gnubg.org>
+
+	* board3d/Makefile.am: Include FREETYPE2_LIBS linker 
+    flags to libboard3d. Fixes issue with build using  MinGW
+
 2015-09-01  Michael Petch  <mpetch@gnubg.org>
 
 	* commands.inc, configure.ac, gnubg.c, gtkgame.c,
