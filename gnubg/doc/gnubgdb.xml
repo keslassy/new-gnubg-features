@@ -2455,18 +2455,18 @@ To roll the dice the CL version type 'roll'.
       <sect3 id="gnubg-custom_eval_depth">
         <title>The depth to search and plies</title>
         <para>A <emphasis>ply</emphasis> is simply considered to be one turn by
-          a player. Any position can be evaluated at 0-ply. That means that GNU
-          Backgammon does not look ahead in the game to evaluate the position.
-          When GNU Backgammon is evaluating a checker play decision, it looks at
+          a player. Any position can be evaluated at 0-ply. That means that <application>GNU
+          Backgammon</application> does not look ahead in the game to evaluate the position.
+          When <application>GNU Backgammon</application> is evaluating a checker play decision, it looks at
           all resulting positions after all the legal moves with the given dice
           roll, and evaluates these position at the given ply. It's possible to
           set the search depth by specifying the plies lookahead in any
           evaluation settings dialog.</para>
-        <para>Snowie users: <application>GNU Backgammon</application> differs
-          from some other software, notably Snowie in that <application>GNU
-            Backgammon</application> zero ply is the same as Snowie 1 ply. In
+        <para>Snowie and XG users: <application>GNU Backgammon</application> differs
+          from most other software, notably Snowie and eXtreme Gammon in that <application>GNU
+            Backgammon</application> starts counting plies at 0 (no lookahead) while other start at 1 ply. In
           the same way what is called 2-ply in <application>GNU
-          Backgammon</application> will therefore be similar to a Snowie 3-ply.</para>
+          Backgammon</application> will be similar to a Snowie 3-ply.</para>
         <para>For <application>GNU Backgammon</application>, a 0-ply evaluation
           of a move would be done by:</para>
         <para>Build a list of all legal moves. For each move, take the resulting
@@ -2495,11 +2495,11 @@ To roll the dice the CL version type 'roll'.
           evaluations by about 400 odd, which explains the huge difference in
           playing speed/analysis speed between 0 ply and 2 ply settings. I don't
           think many people would enjoy playing against <application>GNU
-            Backgammon</application> at 3 ply settings, where moves could take
-          minutes to be selected. It's also not clear that using much deeper
-          lookahead actually gains a lot in terms of playing strength - if you
-          really need better answers than 2 ply, rollouts are probably a lot
-          better.</para>
+            Backgammon</application> at 4 ply settings, where moves could take
+          tens of seconds to be selected. Deeper
+          lookahead than 2 ply actually gains relatively little in terms of playing strength and are not very interesting as settings for <application>GNU Backgammon</application> as an opponent or for rollouts (although 3 ply is quite fast on current computers).
+          On the other hand, 4 ply analysis is reasonably fast on modern multi-cores machines.
+          </para>
       </sect3>
       <sect3 id="gnubg-custom_eval_define">
         <title>Defining evaluation settings</title>
@@ -2510,45 +2510,36 @@ To roll the dice the CL version type 'roll'.
       <sect3 id="gnubg-custom_eval_skill">
         <title>Playing skill:</title>
         <para><menuchoice><guimenu>Settings</guimenu><guimenuitem>Players</guimenuitem><guimenuitem>Player 0</guimenuitem></menuchoice> - choose Supremo or World Class. GNU Backgammon will
-          take longer choosing its moves, but they will be very strong. At this
-          setting, it is much stronger than Jellyfish level 7.</para>
+          take at most a few seconds choosing its moves and they will be very strong. At this
+          setting, it is significantly stronger than any human player (on average, some classes of positions are evaluated less accurately).</para>
       </sect3>
       <sect3 id="gnubg-custom_eval_hint">
         <title>Hints:</title>
         <para><menuchoice><guimenu>Settings</guimenu><guimenuitem>Evaluation</guimenuitem></menuchoice> - choose Supremo or World Class if you want hints to be
-          very accurate, but, like the playing skill setting, you may find that
-          it can take as long as 15 seconds to get an answer on a 1GHz PC.
-          Expert will be very fast, but for some positions where you need to
-          consider what your opponent may do on his roll and how you will follow
-          it up, the results will be less accurate. A wild guess would be
-          somewhere around 2 or 3 percent of the time, World Class or stronger
-          settings would give a different best move and maybe less than 1/2
-          percent of the time, the Expert result would be seriously
-        wrong.</para>
+          accurate and fast. Anything lower doesn't really makes sense
+          on current PCs.</para>
       </sect3>
       <sect3 id="gnubg-custom_eval_analysis">
         <title>Analysis:</title>
         <para><menuchoice><guimenu>Settings</guimenu><guimenuitem>Analysis</guimenuitem></menuchoice> - these settings are used by the Analyse Move/Game/Match
           or Session command. Note that this is totally different to what is
           used in the Hint command, which uses the above settings. You probably
-          want at least World Class here. My experience on a 700MHz PC is that a
-          7 point match takes about 15 to 20 minutes to analyse on the Supremo
-          settings. But the results tend to be very accurate.</para>
+          want at least Supremo here. A 7 point match will take at most 1 minute to analyse on the Supremo settings. This could be used to get immediate feedback after completing a match.
+          An alternative is to use the more accurate 4 ply level. The same analysis would take maybe 15 minutes on a 4-cores computer and longer on more limited hardware. This would be more suitable to delayed, overnight for instance, processing of a batch of matches.</para>
       </sect3>
       <sect3 id="gnubg-custom_eval_rollout">
         <title>Rollouts:</title>
         <para><menuchoice><guimenu>Settings</guimenu><guimenuitem>Rollouts</guimenuitem><guimenuitem>General Settings</guimenuitem></menuchoice> tick the boxes for 'Cube decisions use same settings
           same as checker play' and 'Use same settings for both players'</para>
-        <para><menuchoice><guimenu>Settings</guimenu><guimenuitem>Rollouts</guimenuitem><guimenuitem>First Play Both</guimenuitem></menuchoice> - select Expert here (this is my opinion). When doing
+        <para><menuchoice><guimenu>Settings</guimenu><guimenuitem>Rollouts</guimenuitem><guimenuitem>First Play Both</guimenuitem></menuchoice> - select Expert here for fast rollouts or World Class for slower but more accurate ones. When doing
           rollouts, most of the time Expert play will be more than strong enough
           if you do say 1296 trials with no truncation. The rollout function has
           an enormous number of options, most of which are only useful when
-          trying to investigate special positions. The simple expert setting for
-          both players is probably more accurate than any of the Analysis
+          trying to investigate special positions. The simple Expert setting for
+          both players is more accurate than any of the Analysis
           functions. The downside is that rolling out 1296 trials of an early
-          move in a game can take a couple of hours. On World Class or Supremo
-          rollout settings, it can take more than 24 hours of computing
-        time.</para>
+          move in a game can take from a couple of minutes at Expert level to hours at World Class or Supremo
+          rollout settings.</para>
       </sect3>
       <sect3 id="gnubg-custom_eval_dialog">
         <title>Changing evaluation settings</title>
@@ -2582,7 +2573,7 @@ To roll the dice the CL version type 'roll'.
           smart if you think the program plays to strong. You can use the Noise
           box option to introduce noise or errors in the evaluations. This is
           useful for introducing levels below 0-ply. The lower rated bots (e.g.,
-          GGotter) on the GamesGrid backgammon server uses this technique. The
+          BlunderBot on FIBS) use this technique. The
           introduced noise can be deterministic, i.e., always the same noise for
           the same position, or it can be random.</para>
       </sect3>
@@ -2950,8 +2941,8 @@ To roll the dice the CL version type 'roll'.
 	  </textobject>
             </mediaobject>
           </figure>
-          <para>If you are playing Expert level (this is what GGRaccoon is set
-            at) or another 0-ply setting, the Move Filter settings will not
+          <para>If you are playing Expert level
+            or another 0-ply setting, the Move Filter settings will not
             change a thing, as Expert level automatically examines all moves. At
             Supremo level, this changes though, as it takes a selection of the
             best moves from 0-ply and examines them at 2-ply. This means that
@@ -3071,7 +3062,7 @@ To roll the dice the CL version type 'roll'.
           networks just to prune away move candidates within a deeper ply
           search. This increases the speed considerably and it doesn't lose much
           playing strength compared to evaluation without these pruning neural
-          nets. Jim Segrave has just done an analysis of this and found that
+          nets. Jim Segrave did an analysis of this and found that
           less than 1% of all moves come out different with the pruning nets
           activated. In most of these positions the move would not have made any
           difference to the game at all.</para>
@@ -3132,10 +3123,6 @@ To roll the dice the CL version type 'roll'.
         option. You can here select between the 2D board or the 3D board. You
         can also choose between different other settings. Most of the settings
         here are self explanatory.</para>
-      <warning>
-        <para>Don't forget to save your settings!! A lovely and painstakingly
-          crafted board setup can be lost if you don't faithfully do your <menuchoice><guimenu>Settings</guimenu><guimenuitem>Save settings</guimenuitem></menuchoice>.</para>
-      </warning>
     </sect2>
   </sect1>
   <sect1 id="gnubg-technotes">
@@ -3685,10 +3672,9 @@ Correct cube action: No double, beaver
         <para>For example, suppose the score is 3-1 to 5 with the cube on 2:
           MWC(l)=0% and MWC(w)=50%:</para>
         <informaltable frame="all">
-          <tgroup cols="3">
+          <tgroup cols="2">
             <colspec colname="c1" colnum="1" colwidth="1*"/>
             <colspec colname="c2" colnum="2" colwidth="1*"/>
-            <colspec colname="c3" colnum="3" colwidth="1*"/>
             <tbody>
               <row>
                 <entry>MWC</entry>
@@ -3861,9 +3847,7 @@ Equity
                 <entry>Cube value </entry>
                 <entry>TP for Black </entry>
                 <entry>TP for White</entry>
-                <entry> </entry>
-<entry> </entry>
-</row>
+              </row>
               <row>
                 <entry>4</entry>
                 <entry>0%</entry>
@@ -3981,8 +3965,8 @@ MWC
               <row>
                 <entry>Position Class </entry>
                 <entry>x (Cube efficiency)</entry>
-                <entry> </entry>
-</row> <row>
+              </row>
+              <row>
                 <entry>Two-sided (exact) bearoff</entry>
                 <entry>n/a</entry>
               </row>
@@ -4675,11 +4659,9 @@ Equity
       <sect3 id="gnubg-faq_install_other">
         <title>Do I need some other software to run <application>GNU
           Backgammon</application>?</title>
-        <para>No. Everything you need is included in the binaries.</para>
-        <para>If you want to use the 3D board version on Linux, you might have
-          to install the additional libraries that can be found as well on
-            <ulink url="http://www.gnubg.org/index.php?itemid=24">this
-          page</ulink>. (acepoint's directory)</para>
+	<para>On MS Windows everything you need is included in the installer.</para>
+	<para>On Mac OS/X you will need the XQuartz Window System.</para>
+        <para>On Linux there are prerequisites as well but your package manager (apt, yum, etc...) will take care of them.</para>
       </sect3>
       <sect3 id="gnubg-faq_install_new">
         <title>I want to install a newer version</title>
@@ -4692,13 +4674,21 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_install_compilelinux">
         <title>What software do I need for compiling under GNU/Linux?</title>
-        <para>Unpack the <application>GNU Backgammon</application> snapshots and
-          follow the instructions of the file `INSTALL'. </para>
+        <para>Unpack a <application>GNU Backgammon</application> snapshot and
+          follow the instructions at <ulink url="http://www.gnubg.org/index.php?itemid=100">this page</ulink>.</para>
+        <para>Details like the exact names of the prerequisite packages will vary
+          from a distribution to another but the general process will remain
+          identical. If you are remotely familiar with open source software
+          set up with <application>autoconf</application>, you will see that
+	  <application>GNU Backgammon</application> is straightforward to build.
+	</para>
       </sect3>
+<!-- link is dead!
       <sect3 id="gnubg-faq_install_compilems">
         <title>What software do I need for compiling under MS Windows?</title>
         <para>Follow the instructions at <ulink url="http://www.gnubg.org/index.php?itemid=50">http://www.gnubg.org/index.php?itemid=50</ulink>.</para>
-      </sect3>
+      </sect3>A
+-->
       <sect3 id="gnubg-faq_install_nocompile">
         <title>It does not compile</title>
         <para>Check that you have installed all necessary development packages.</para>
@@ -4946,9 +4936,8 @@ Equity
             <application>GNU Backgammon</application> will search for a weights
           file called gnubg.weights. This file also contains the neural net
           weights, but is stored in ASCII format. If none of these files are
-          found, <application>GNU Backgammon</application> will start, but it
-          will give you a warning about these missing files, and it will play
-            <emphasis>very</emphasis> poorly.</para>
+          found, <application>GNU Backgammon</application> will not start.
+	</para>
         <para><application>GNU Backgammon</application> will also read the
           bearoff databases at start-up. There are usually two bearoff
           databases. The first is called gnubg_os0.bd, and has stored data about
@@ -4987,11 +4976,6 @@ Equity
           still doesn't work, check whether `c:\[path-to-your-gnubg]\gnubg.exe'
           exists or not.</para>
         <para>GNU/Linux users should check if <ulink url="http://www.gtk.org/">GTK+</ulink> is installed.</para>
-      </sect3>
-      <sect3 id="gnubg-faq_start_settings">
-        <title>When I restart <application>GNU Backgammon</application> all my
-          settings are gone</title>
-        <para>Did you save your settings <menuchoice><guimenu>Settings</guimenu><guimenuitem>Save settings</guimenuitem></menuchoice> before you quit?</para>
       </sect3>
       <sect3 id="gnubg-faq_start_cl">
         <title>I do not need this graphical stuff</title>
