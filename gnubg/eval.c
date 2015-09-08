@@ -527,11 +527,13 @@ binary_weights_failed(char *filename, FILE * weights)
     float r;
 
     if (!weights) {
-        g_print("%s", filename);
+        g_print(_("couldn't open %s"), filename);
+        g_print("\n");
         return -1;
     }
     if (fread(&r, sizeof r, 1, weights) < 1) {
-        g_print("%s", filename);
+        g_print(_("couldn't read %s"), filename);
+        g_print("\n");
         return -2;
     }
     if (r != WEIGHTS_MAGIC_BINARY) {
@@ -540,7 +542,8 @@ binary_weights_failed(char *filename, FILE * weights)
         return -3;
     }
     if (fread(&r, sizeof r, 1, weights) < 1) {
-        g_print("%s", filename);
+        g_print(_("couldn't read %s"), filename);
+        g_print("\n");
         return -4;
     }
     if (r != WEIGHTS_VERSION_BINARY) {
@@ -559,7 +562,8 @@ weights_failed(char *filename, FILE * weights)
 {
     char file_version[16];
     if (!weights) {
-        g_print("%s", filename);
+        g_print(_("couldn't open %s"), filename);
+        g_print("\n");
         return -1;
     }
 
@@ -716,7 +720,8 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
                   !NeuralNetLoad(&nnRace, pfWeights) &&
                   !NeuralNetLoad(&nnCrashed, pfWeights) &&
                   !NeuralNetLoad(&nnpContact, pfWeights) &&
-                  !NeuralNetLoad(&nnpCrashed, pfWeights) && !NeuralNetLoad(&nnpRace, pfWeights)
+                  !NeuralNetLoad(&nnpCrashed, pfWeights) &&
+                  !NeuralNetLoad(&nnpRace, pfWeights)
                 ))
                 perror(szWeights);
             setlocale(LC_ALL, "");
@@ -735,6 +740,12 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
     g_assert(nnpContact.cInput == NUM_PRUNING_INPUTS && nnpContact.cOutput == NUM_OUTPUTS);
     g_assert(nnpCrashed.cInput == NUM_PRUNING_INPUTS && nnpCrashed.cOutput == NUM_OUTPUTS);
     g_assert(nnpRace.cInput == NUM_PRUNING_INPUTS && nnpRace.cOutput == NUM_OUTPUTS);
+
+    if (!fReadWeights) {
+        outputerrf(_("GNU Backgammon couldn't find a weights file."));
+        exit(EXIT_FAILURE);
+   }
+
 }
 
 /* Calculates inputs for any contact position, for one player only. */
