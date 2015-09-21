@@ -135,8 +135,8 @@ static void
 SetSeed(const rng rngx, void *rngctx, char *sz)
 {
 
-    if (rngx == RNG_MANUAL || rngx == RNG_RANDOM_DOT_ORG) {
-        outputl(_("You can't set a seed " "if you're using manual dice generation or random.org"));
+    if (rngx == RNG_MANUAL || rngx == RNG_RANDOM_DOT_ORG || rngx == RNG_FILE) {
+        outputf(_("You can't set a seed if you're using %s as RNG\n"), aszRNG[rngx]);
         return;
     }
 
