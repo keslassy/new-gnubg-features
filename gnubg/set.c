@@ -1878,15 +1878,13 @@ CommandSetRolloutMaxError(char *sz)
     float r = ParseReal(&sz);
 
     if (r < 0.0001f) {
-        outputl(_("You must set a valid fraction for the ratio "
-                  "STD/value where rollouts can stop " "(see `help set rollout limit maxerror')."));
+        outputl(_("You must set a valid STD where rollouts can stop " "(see `help set rollout limit maxerror')."));
         return;
     }
 
     prcSet->rStdLimit = r;
 
-    outputf(_("Rollouts can stop when the ratio |STD/value| is less than "
-              "%5.4f for every value (win/gammon/backgammon/...equity)\n"), r);
+    outputf(_("Rollouts can stop when the estimated equities' STD are less than " "%5.4f)\n"), r);
 }
 
 extern void
@@ -2860,7 +2858,7 @@ CommandShowWarning(char *sz)
         sz++;
 
     if (!*sz) {                 /* Show all warnings */
-        for (warning = 0; warning < WARN_NUM_WARNINGS; warning++)
+        for (warning = (warningType) 0; warning < WARN_NUM_WARNINGS; warning++)
             PrintWarning(warning);
     } else {                    /* Show specific warning */
         warning = ParseWarning(sz);

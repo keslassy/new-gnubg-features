@@ -695,12 +695,12 @@ command acSetRNG[] = {
       N_("Always rollout at least this many games"),
       szMINGAMES, NULL},
     { "maxerror", CommandSetRolloutMaxError,
-      N_("Stop when all ratios |std/value| are less than this "),
+      N_("Stop rollouts when STD's are less than this "),
       szMAXERR, NULL},
     { NULL, NULL, NULL, NULL, NULL }
 },acSetRolloutJsd[] = {
   { "limit", CommandSetRolloutJsdLimit, 
-    N_("Stop when equities differ by this many j.s.d.s"),
+    N_("Stop when equities differ by this many J.S.D.s"),
     szJSDS, NULL},
   { "minimumgames", CommandSetRolloutJsdMinGames,
       N_("Always rollout at least this many games"),
