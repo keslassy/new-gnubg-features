@@ -175,6 +175,12 @@ SetRNG(rng * prng, rngcontext * rngctx, rng rngNew, char *szSeed)
         return;
     }
 
+    if (prng == &prcSet->rngRollout &&
+	(rngNew == RNG_MANUAL || rngNew == RNG_RANDOM_DOT_ORG || rngNew == RNG_FILE)) {
+        outputf(_("The %s RNG is not suitable for rollouts\n"), aszRNG[rngNew]);
+        return;
+    }
+
     /* Dispose internal paremeters for RNG */
 
     CloseRNG(*prng, rngctx);
