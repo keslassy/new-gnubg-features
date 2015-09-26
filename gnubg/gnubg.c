@@ -1238,37 +1238,26 @@ extern void
 InitBoard(TanBoard anBoard, const bgvariation bgv)
 {
 
-    unsigned int i;
-    unsigned int j;
-
-    for (i = 0; i < 25; i++)
-        anBoard[0][i] = anBoard[1][i] = 0;
-
     switch (bgv) {
+
     case VARIATION_STANDARD:
+        PositionFromID(anBoard, "4HPwATDgc/ABMA");
+        break;
     case VARIATION_NACKGAMMON:
-
-        anBoard[0][5] = anBoard[1][5] = anBoard[0][12] = anBoard[1][12] = (bgv == VARIATION_NACKGAMMON) ? 4 : 5;
-        anBoard[0][7] = anBoard[1][7] = 3;
-        anBoard[0][23] = anBoard[1][23] = 2;
-
-        if (bgv == VARIATION_NACKGAMMON)
-            anBoard[0][22] = anBoard[1][22] = 2;
-
+        PositionFromID(anBoard, "4Dl4ADbgOXgANg");
         break;
 
     case VARIATION_HYPERGAMMON_1:
+        PositionFromID(anBoard, "AACAAAAAAgAAAA");
+	break;
     case VARIATION_HYPERGAMMON_2:
+        PositionFromID(anBoard, "AABAAQAACgAAAA");      
+	break;
     case VARIATION_HYPERGAMMON_3:
-
-        for (i = 0; i < 2; ++i)
-            for (j = 0; j < (unsigned int) (bgv - VARIATION_HYPERGAMMON_1 + 1); ++j)
-                anBoard[i][23 - j] = 1;
-
+        PositionFromID(anBoard, "AACgAgAAKgAAAA");
         break;
 
     default:
-
         g_assert_not_reached();
 
     }
