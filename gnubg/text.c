@@ -408,7 +408,7 @@ TextPrintMoveAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 
         g_string_append_printf(gsz, _("Alert: %s move"), gettext(aszSkillType[pmr->n.stMove]));
 
-        if (!pms->nMatchTo || (pms->nMatchTo && !fOutputMWC))
+        if (!pms->nMatchTo || !fOutputMWC)
             g_string_append_printf(gsz, " (%+7.3f)\n",
                                    pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore);
         else
@@ -425,7 +425,7 @@ TextPrintMoveAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 
         g_string_append_printf(gsz, _("Alert: %s roll!"), gettext(aszLuckType[pmr->lt]));
 
-        if (!pms->nMatchTo || (pms->nMatchTo && !fOutputMWC))
+        if (!pms->nMatchTo || !fOutputMWC)
             g_string_append_printf(gsz, " (%+7.3f)\n", pmr->rLuck);
         else
             g_string_append_printf(gsz, " (%+6.3f%%)\n", 100.0f * eq2mwc(pmr->rLuck, &ci) - 100.0f * eq2mwc(0.0f, &ci));

@@ -417,7 +417,7 @@ OutputEquity(const float r, const cubeinfo * pci, const int f)
 
     static char sz[OUTPUT_SZ_LENGTH];
 
-    if (!pci->nMatchTo || (pci->nMatchTo && !fOutputMWC)) {
+    if (!pci->nMatchTo || !fOutputMWC) {
         if (f)
             sprintf(sz, "%+*.*f", fOutputDigits + 4, fOutputDigits, r);
         else
@@ -525,7 +525,7 @@ OutputEquityDiff(const float r1, const float r2, const cubeinfo * pci)
 
     static char sz[OUTPUT_SZ_LENGTH];
 
-    if (!pci->nMatchTo || (pci->nMatchTo && !fOutputMWC)) {
+    if (!pci->nMatchTo || !fOutputMWC) {
         sprintf(sz, "%+*.*f", fOutputDigits + 4, fOutputDigits, r1 - r2);
     } else {
         if (fOutputMatchPC) {
@@ -808,7 +808,7 @@ OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
     if (pci->nMatchTo)
         sprintf(strchr(sz, 0), " %s %s (%s: %s)\n",
-                (!pci->nMatchTo || (pci->nMatchTo && !fOutputMWC)) ?
+                (!pci->nMatchTo || !fOutputMWC) ?
                 _("cubeless equity") : _("cubeless MWC"),
                 OutputEquity(aarOutput[0][OUTPUT_EQUITY], pci, TRUE),
                 _("Money"), OutputMoneyEquity(aarOutput[0], TRUE));
@@ -1115,7 +1115,7 @@ DumpPosition(const TanBoard anBoard, char *szOutput,
             "\n"
             "        %-7s %-7s %-7s %-7s %-7s %-9s %-9s\n",
             _("Win"), _("W(g)"), _("W(bg)"), _("L(g)"), _("L(bg)"),
-            (!pci->nMatchTo || (pci->nMatchTo && !fOutputMWC)) ? _("Equity") : _("MWC"), _("Cubeful"));
+            (!pci->nMatchTo || !fOutputMWC) ? _("Equity") : _("MWC"), _("Cubeful"));
 
     nPlies = pec->nPlies > 9 ? 9 : pec->nPlies;
 

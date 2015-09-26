@@ -241,7 +241,7 @@ TakeAnalysis(cubehintdata * pchd)
 
         /* equity */
 
-        if (!ci.nMatchTo || (ci.nMatchTo && !fOutputMWC))
+        if (!ci.nMatchTo || !fOutputMWC)
             sz = g_strdup_printf("%+7.3f", -arDouble[ai[i]]);
         else
             sz = g_strdup_printf("%7.3f%%", 100.0f * (1.0f - eq2mwc(arDouble[ai[i]], &ci)));
@@ -257,7 +257,7 @@ TakeAnalysis(cubehintdata * pchd)
 
         if (i) {
 
-            if (!ci.nMatchTo || (ci.nMatchTo && !fOutputMWC))
+            if (!ci.nMatchTo || !fOutputMWC)
                 sz = g_strdup_printf("%+7.3f", arDouble[ai[0]] - arDouble[ai[i]]);
             else
                 sz = g_strdup_printf("%+7.3f%%",

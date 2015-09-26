@@ -1877,7 +1877,7 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
                 "</span> %s</td>"
                 "<td %s>%s</td>"
                 "<td %s>(%s: <span %s>%s</span>)</td>\n",
-                (!pci->nMatchTo || (pci->nMatchTo && !fOutputMWC)) ?
+                (!pci->nMatchTo || !fOutputMWC) ?
                 _("cubeless equity") : _("cubeless MWC"),
                 GetStyle(CLASS_CUBE_EQUITY, hecss),
                 OutputEquity(aarOutput[0][OUTPUT_EQUITY], pci, TRUE),
@@ -2132,7 +2132,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
         fprintf(pf, "<p><span %s>", GetStyle(CLASS_BLUNDER, hecss));
         fprintf(pf, _("Alert: %s move"), gettext(aszSkillType[pmr->n.stMove]));
 
-        if (!pms->nMatchTo || (pms->nMatchTo && !fOutputMWC))
+        if (!pms->nMatchTo || !fOutputMWC)
             fprintf(pf, " (%+7.3f)</span></p>\n", pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore);
         else
             fprintf(pf, " (%+6.3f%%)</span></p>\n",
@@ -2149,7 +2149,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
         fprintf(pf, "<p><span %s>", GetStyle(CLASS_JOKER, hecss));
         fprintf(pf, _("Alert: %s roll!"), gettext(aszLuckType[pmr->lt]));
 
-        if (!pms->nMatchTo || (pms->nMatchTo && !fOutputMWC))
+        if (!pms->nMatchTo || !fOutputMWC)
             fprintf(pf, " (%+7.3f)</span></p>\n", pmr->rLuck);
         else
             fprintf(pf, " (%+6.3f%%)</span></p>\n", 100.0f * eq2mwc(pmr->rLuck, &ci) - 100.0f * eq2mwc(0.0f, &ci));
@@ -2168,7 +2168,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
     fprintf(pf,
             "<th %s>%s</th>\n" "</tr>\n",
             GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVEEQUITY, -1),
-            (!pms->nMatchTo || (pms->nMatchTo && !fOutputMWC)) ? _("Equity") : _("MWC"));
+            (!pms->nMatchTo || !fOutputMWC) ? _("Equity") : _("MWC"));
 
 
     if (pmr->ml.cMoves) {

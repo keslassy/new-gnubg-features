@@ -1768,7 +1768,7 @@ FormatMoveHint(char *sz, const matchstate * pms, movelist * pml,
             FormatEval(szTemp, &pml->amMoves[i].esMove),
             FormatMove(szMove, pms->anBoard,
                        pml->amMoves[i].anMove),
-            (!pms->nMatchTo || (pms->nMatchTo && !fOutputMWC)) ? _("Eq.") : _("MWC"));
+            (!pms->nMatchTo || !fOutputMWC) ? _("Eq.") : _("MWC"));
 
     /* equity or mwc for move */
 
@@ -1984,7 +1984,7 @@ HintResigned(void)
     }
 #endif
 
-    if (!ms.nMatchTo || (ms.nMatchTo && !fOutputMWC)) {
+    if (!ms.nMatchTo || !fOutputMWC) {
 
         outputf("%s : %+6.3f\n", _("Equity before resignation"), -rEqBefore);
         outputf("%s : %+6.3f (%+6.3f)\n\n", _("Equity after resignation"), -rEqAfter, rEqBefore - rEqAfter);
