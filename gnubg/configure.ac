@@ -270,7 +270,7 @@ dnl Checks for library functions.
 dnl
 
 AC_CHECK_FUNCS(sigaction sigvec,break)
-AC_CHECK_FUNCS(strptime random setpriority)
+AC_CHECK_FUNCS(strptime setpriority)
 AC_CHECK_FUNCS(mtrace)
 
 dnl

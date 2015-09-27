@@ -1664,7 +1664,6 @@ CommandSetAliases(char *sz)
 extern void
 CommandSetPrompt(char *szParam)
 {
-
     static char sz[128];        /* FIXME check overflow */
 
     szPrompt = (szParam && *szParam) ? strcpy(sz, szParam) : szDefaultPrompt;
@@ -1675,7 +1674,6 @@ CommandSetPrompt(char *szParam)
 extern void
 CommandSetRecord(char *sz)
 {
-
     SetToggle("record", &fRecord, sz,
               _("All games in a session will be recorded."), _("Only the active game in a session will be recorded."));
 }
@@ -1683,24 +1681,14 @@ CommandSetRecord(char *sz)
 extern void
 CommandSetRNG(char *sz)
 {
-
     rngSet = &rngCurrent;
     rngctxSet = rngctxCurrent;
     HandleCommand(sz, acSetRNG);
-
-}
-
-extern void
-CommandSetRNGAnsi(char *sz)
-{
-
-    SetRNG(rngSet, rngctxSet, RNG_ANSI, sz);
 }
 
 extern void
 CommandSetRNGFile(char *sz)
 {
-
     SetRNG(rngSet, rngctxSet, RNG_FILE, sz);
 }
 
@@ -1718,40 +1706,26 @@ CommandSetRNGBBS(char *UNUSED(sz))
 }
 
 extern void
-CommandSetRNGBsd(char *sz)
-{
-#if HAVE_RANDOM
-    SetRNG(rngSet, rngctxSet, RNG_BSD, sz);
-#else
-    outputl(_("This installation of GNU Backgammon was compiled without the " "BSD generator."));
-#endif                          /* HAVE_RANDOM */
-}
-
-extern void
 CommandSetRNGIsaac(char *sz)
 {
-
     SetRNG(rngSet, rngctxSet, RNG_ISAAC, sz);
 }
 
 extern void
 CommandSetRNGManual(char *sz)
 {
-
     SetRNG(rngSet, rngctxSet, RNG_MANUAL, sz);
 }
 
 extern void
 CommandSetRNGMD5(char *sz)
 {
-
     SetRNG(rngSet, rngctxSet, RNG_MD5, sz);
 }
 
 extern void
 CommandSetRNGMersenne(char *sz)
 {
-
     SetRNG(rngSet, rngctxSet, RNG_MERSENNE, sz);
 }
 

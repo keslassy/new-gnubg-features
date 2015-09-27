@@ -1,6 +1,14 @@
+2015-09-27  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* backgammon.h, commands.inc, set.c, gtkoptions.c, gnubg.c,
+	dice.h, dice.c, configure.ac: Remove availability of ANSI and BSD
+	random number generators. They are mediocre algorithms and not
+	thread-safe.  Much better alternatives like Mersenne twister and
+	BBS are implemented in GNU Backgammon (and used by default).
+
 2015-09-03  Michael Petch  <mpetch@gnubg.org>
 
-	* board3d/Makefile.am: Include FREETYPE2_LIBS linker 
+	* board3d/Makefile.am: Include FREETYPE2_LIBS linker
 	flags to libboard3d. Fixes issue with build using MinGW
 
 2015-09-01  Michael Petch  <mpetch@gnubg.org>
@@ -43,7 +51,7 @@
 
 	* doc/gnubg/*, po/*
 	Update static documentation files and translation files
-	Version 1.05.001 released	
+	Version 1.05.001 released
 
 2015-07-31  Michael Petch  <mpetch@gnubg.org>
 
@@ -52,7 +60,7 @@
 	  gtkprefs.c html.c import.c latex.c makebearoff.c makehyper.c,
 	  makeweights.c relational.c rollout.c sgf.c text.c,
 	  board3d/matrix.c board3d/misc3d.c
-	Workaround problem with g_fopen & Unicdoe on some WIN32 build 
+	Workaround problem with g_fopen & Unicode on some WIN32 build
 	environments that produce "Invalid Argument" errors when a file
 	is opened.
 
@@ -72,8 +80,8 @@
 
 	* doc/gnubg/*, po/*
 	Update static documentation files and translation files
-	Version 1.05.000 released	
- 
+	Version 1.05.000 released
+
 2015-04-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* export.c, import.c: Add a comment in .mat exports of hypergammon

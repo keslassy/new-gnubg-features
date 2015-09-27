@@ -941,16 +941,12 @@ append_dice_options(optionswidget * pow)
     GtkWidget *pwp, *pwvbox, *pwhbox, *pwvbox2, *pwvbox3, *pw, *frame;
     unsigned int i;
     unsigned long nRandom;
+#if HAVE_LIBGMP
     int blumblum = TRUE;
-    int bsd = TRUE;
+#else
+    int blumblum = FALSE;
+#endif
     int rngsAdded = 0, rngSelected = -1;
-
-#if !HAVE_LIBGMP
-    blumblum = FALSE;
-#endif
-#if !HAVE_RANDOM
-    bsd = FALSE;
-#endif
 
     InitRNG(&nRandom, NULL, FALSE, rngCurrent);
 
@@ -1016,7 +1012,7 @@ append_dice_options(optionswidget * pow)
 
             }
 
-            if (!((i == RNG_BSD && !bsd) || (i == RNG_BBS && !blumblum))) {
+            if (!(i == RNG_BBS && !blumblum)) {
                 gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pow->pwRngComboBox), aszRNG[i]);
                 if (i == rngCurrent)
                     rngSelected = rngsAdded;
@@ -1335,9 +1331,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     gchar *filename, *command, *tmp, *newfolder;
     const gchar *new_browser;
     static const char *set_rng_cmds[NUM_RNGS] = {
-        "set rng ansi",
         "set rng bbs",
-        "set rng bsd",
         "set rng isaac",
         "set rng md5",
         "set rng mersenne",

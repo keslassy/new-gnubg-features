@@ -654,12 +654,8 @@ static command acSetGeometry[] = {
 };
 
 command acSetRNG[] = {
-    { "ansi", CommandSetRNGAnsi, N_("Use the ANSI C rand() (usually linear "
-      "congruential) generator"), szOPTSEED, NULL },
     { "bbs", CommandSetRNGBBS, N_("Use the Blum, Blum and Shub generator"),
       szOPTMODULUSOPTSEED, NULL },
-    { "bsd", CommandSetRNGBsd, N_("Use the BSD random() non-linear additive "
-      "feedback generator"), szOPTSEED, NULL },
     { "file", CommandSetRNGFile, 
       N_("Read dice from file"), szFILENAME, NULL },
     { "isaac", CommandSetRNGIsaac, N_("Use the I.S.A.A.C. generator"), 

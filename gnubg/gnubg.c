@@ -2792,14 +2792,8 @@ SaveRNGSettings(FILE * pf, const char *sz, rng rngCurrent, rngcontext * rngctx)
 {
 
     switch (rngCurrent) {
-    case RNG_ANSI:
-        fprintf(pf, "%s rng ansi\n", sz);
-        break;
     case RNG_BBS:
         fprintf(pf, "%s rng bbs\n", sz);        /* FIXME save modulus */
-        break;
-    case RNG_BSD:
-        fprintf(pf, "%s rng bsd\n", sz);
         break;
     case RNG_ISAAC:
         fprintf(pf, "%s rng isaac\n", sz);

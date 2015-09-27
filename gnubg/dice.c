@@ -54,9 +54,7 @@
 #endif
 
 const char *aszRNG[NUM_RNGS] = {
-    "ANSI",
     N_("Blum, Blum and Shub"),
-    "BSD",
     "ISAAC",
     "MD5",
     N_("Mersenne Twister"),
@@ -66,9 +64,7 @@ const char *aszRNG[NUM_RNGS] = {
 };
 
 const char *aszRNGTip[NUM_RNGS] = {
-    N_("The rand() generator specified by ANSI C (typically linear congruential)"),
     N_("Blum, Blum and Shub's verifiably strong generator"),
-    N_("The random() non-linear additive feedback generator from 4.3 BSD Unix"),
     N_("Bob Jenkins' Indirection, Shift, Accumulate, Add and Count " "cryptographic generator"),
     N_("A generator based on the Message Digest 5 algorithm"),
     N_("Makoto Matsumoto and Takuji Nishimura's generator"),
@@ -350,13 +346,6 @@ PrintRNGCounter(const rng rngx, rngcontext * rngctx)
 {
 
     switch (rngx) {
-    case RNG_ANSI:
-    case RNG_BSD:
-        g_print(_("Number of calls since last seed: %lu."), rngctx->c);
-        g_print("\n");
-        g_print(_("This number may not be correct if the same " "RNG is used for rollouts and interactive play."));
-        g_print("\n");
-        break;
 
     case RNG_BBS:
     case RNG_ISAAC:
@@ -456,15 +445,6 @@ PrintRNGSeed(const rng rngx, rngcontext * rngctx)
 #endif
         return;
 
-    case RNG_BSD:
-    case RNG_ANSI:
-#if HAVE_LIBGMP
-        PrintRNGSeedMP(rngctx->nz);
-#else
-        PrintRNGSeedNormal(rngctx->n);
-#endif
-        return;
-
     default:
         break;
     }
@@ -480,23 +460,12 @@ InitRNGSeed(unsigned int n, const rng rngx, rngcontext * rngctx)
     rngctx->c = 0;
 
     switch (rngx) {
-    case RNG_ANSI:
-        srand(n);
-        break;
 
     case RNG_BBS:
 #if HAVE_LIBGMP
         g_assert(rngctx->fZInit);
         mpz_set_ui(rngctx->zSeed, (unsigned long) n);
         BBSCheckInitialSeed(rngctx);
-        break;
-#else
-        abort();
-#endif
-
-    case RNG_BSD:
-#if HAVE_RANDOM
-        srandom(n);
         break;
 #else
         abort();
@@ -566,8 +535,6 @@ InitRNGSeedMP(mpz_t n, rng rng, rngcontext * rngctx)
             }
             break;
         }
-    case RNG_ANSI:
-    case RNG_BSD:
     case RNG_MD5:
         InitRNGSeed((unsigned int) (mpz_get_ui(n) % UINT_MAX), rng, rngctx);
         break;
@@ -772,21 +739,12 @@ extern int
 RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
 {
     unsigned long tmprnd;
-    const unsigned long rand_max_q = RAND_MAX / 6;
-    const unsigned long rand_max_l = rand_max_q * 6;
     const unsigned long exp232_q = 715827882;
     const unsigned long exp232_l = 4294967292U;
 
     anDice[0] = anDice[1] = 0;
 
     switch (*prng) {
-    case RNG_ANSI:
-        while ((tmprnd = rand()) >= rand_max_l);        /* Try again */
-        anDice[0] = 1 + (unsigned int) (tmprnd / rand_max_q);
-        while ((tmprnd = rand()) >= rand_max_l);
-        anDice[1] = 1 + (unsigned int) (tmprnd / rand_max_q);
-        rngctx->c += 2;
-        break;
 
     case RNG_BBS:
 #if HAVE_LIBGMP
@@ -796,18 +754,6 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
         }
         anDice[0] = BBSGetTrit(rngctx) + BBSGetBit(rngctx) * 3 + 1;
         anDice[1] = BBSGetTrit(rngctx) + BBSGetBit(rngctx) * 3 + 1;
-        rngctx->c += 2;
-        break;
-#else
-        abort();
-#endif
-
-    case RNG_BSD:
-#if HAVE_RANDOM
-        while ((tmprnd = random()) >= rand_max_l);      /* Try again */
-        anDice[0] = 1 + (unsigned int) (tmprnd / rand_max_q);
-        while ((tmprnd = random()) >= rand_max_l);
-        anDice[1] = 1 + (unsigned int) (tmprnd / rand_max_q);
         rngctx->c += 2;
         break;
 #else
