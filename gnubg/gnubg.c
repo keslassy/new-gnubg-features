@@ -4512,6 +4512,10 @@ main(int argc, char *argv[])
     curl_global_init(CURL_GLOBAL_ALL);
 #endif
 
+    default_import_folder = g_strdup(".");
+    default_export_folder = g_strdup(".");
+    default_sgf_folder = g_strdup(".");
+
     output_initialize();
 
     /* set language */

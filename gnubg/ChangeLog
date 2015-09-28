@@ -1,3 +1,9 @@
+2015-09-28  Michael Petch  <mpetch@gnubg.org>
+
+	* gnubg.c: Set export default paths to "." rather than NULL
+	to fix problem with GTK crashes on some platforms. Reported by
+	Tom Meyer. See bug report https://savannah.gnu.org/bugs/?46069
+
 2015-09-27  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* backgammon.h, commands.inc, set.c, gtkoptions.c, gnubg.c,
