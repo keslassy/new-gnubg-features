@@ -254,7 +254,8 @@ OutputMoveFilterPly(const char *szIndent, const int nPlies, const movefilter aam
 static void
 OutputEvalContextsForRollout(char *sz, const char *szIndent,
                              const evalcontext aecCube[2],
-                             const evalcontext aecChequer[2], const movefilter aaamf[2][MAX_FILTER_PLIES][MAX_FILTER_PLIES])
+                             const evalcontext aecChequer[2],
+                             const movefilter aaamf[2][MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 {
 
     int fCube = !cmp_evalcontext(&aecCube[0], &aecCube[1]);
@@ -361,7 +362,7 @@ OutputRolloutContext(const char *szIndent, const rolloutcontext * prc)
 
     if (prc->fStopOnSTD && !prc->fStopOnJsd) {
         sprintf(strchr(sz, 0),
-                _("Stop when std.errs. are small enough: ratio "
+                _("Stop when std.errs. are small enough: limit "
                   "%.4g (min. %d games)"), prc->rStdLimit, prc->nMinimumGames);
         strcat(sz, "\n");
     }
@@ -388,8 +389,7 @@ OutputRolloutContext(const char *szIndent, const rolloutcontext * prc)
         sprintf(strchr(sz, 0), _("Different evaluations after %d plies:"), prc->nLate);
         strcat(sz, "\n");
 
-        OutputEvalContextsForRollout(sz, szIndent,
-                                     prc->aecCubeLate, prc->aecChequerLate, prc->aaamfLate);
+        OutputEvalContextsForRollout(sz, szIndent, prc->aecCubeLate, prc->aecChequerLate, prc->aaamfLate);
 
 
     }
