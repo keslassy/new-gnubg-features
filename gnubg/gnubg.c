@@ -809,7 +809,7 @@ ParseReal(char **ppch)
     if (!ppch || !(pchOrig = NextToken(ppch)))
         return ERR_VAL;
 
-    r = (float)g_ascii_strtod(pchOrig, &pch);
+    r = (float) g_ascii_strtod(pchOrig, &pch);
 
     return *pch ? ERR_VAL : r;
 }
@@ -946,7 +946,7 @@ ParsePosition(TanBoard an, char **ppch, char *pchDesc)
         for (i = 0; i < 10; ++i) {
             if (pch[2 * i + 0] >= 'A' && pch[2 * i + 0] <= 'P' && pch[2 * i + 1] >= 'A' && pch[2 * i + 1] <= 'P')
                 key.auch[i] = (unsigned char) (((pch[2 * i + 0] - 'A') << 4)
-                    + (pch[2 * i + 1] - 'A'));
+                                               + (pch[2 * i + 1] - 'A'));
             else {
                 outputl(_("Illegal position."));
                 return -1;
@@ -1249,10 +1249,10 @@ InitBoard(TanBoard anBoard, const bgvariation bgv)
 
     case VARIATION_HYPERGAMMON_1:
         PositionFromID(anBoard, "AACAAAAAAgAAAA");
-	break;
+        break;
     case VARIATION_HYPERGAMMON_2:
-        PositionFromID(anBoard, "AABAAQAACgAAAA");      
-	break;
+        PositionFromID(anBoard, "AABAAQAACgAAAA");
+        break;
     case VARIATION_HYPERGAMMON_3:
         PositionFromID(anBoard, "AACgAgAAKgAAAA");
         break;
@@ -1756,8 +1756,7 @@ FormatMoveHint(char *sz, const matchstate * pms, movelist * pml,
             "%-14s   %-28s %s: ",
             FormatEval(szTemp, &pml->amMoves[i].esMove),
             FormatMove(szMove, pms->anBoard,
-                       pml->amMoves[i].anMove),
-            (!pms->nMatchTo || !fOutputMWC) ? _("Eq.") : _("MWC"));
+                       pml->amMoves[i].anMove), (!pms->nMatchTo || !fOutputMWC) ? _("Eq.") : _("MWC"));
 
     /* equity or mwc for move */
 
@@ -3115,11 +3114,11 @@ SaveGUISettings(FILE * pf)
 static void
 SaveSoundSettings(FILE * pf)
 {
-    int i;
+    gnubgsound i;
     fprintf(pf, "set sound enable %s\n", fSound ? "yes" : "no");
     fprintf(pf, "set sound system command %s\n", sound_get_command());
 
-    for (i = 0; i < NUM_SOUNDS; ++i) {
+    for (i = (gnubgsound) 0; i < NUM_SOUNDS; ++i) {
         char *file = GetSoundFile(i);
         fprintf(pf, "set sound sound %s \"%s\"\n", sound_command[i], file);
         g_free(file);
@@ -4489,7 +4488,7 @@ main(int argc, char *argv[])
          N_("Specify location of program documentation"), NULL},
         {"prefsdir", 's', 0, G_OPTION_ARG_STRING, &prefsdir,
          N_("Specify location of user's preferences directory"), NULL},
-        {NULL, 0, 0, 0, NULL, NULL, NULL}
+        {NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL}
     };
     GError *error = NULL;
     GOptionContext *context;
@@ -5274,8 +5273,8 @@ asyncFindBestMoves(findData * pfd)
     if (FindnSaveBestMoves(pfd->pml, pfd->anDice[0], pfd->anDice[1], pfd->pboard,
                            pfd->keyMove, pfd->rThr, pfd->pci, pfd->pec, pfd->aamf) < 0)
         MT_SetResultFailed();
-        
-    RefreshMoveList (pfd->pml, NULL);
+
+    RefreshMoveList(pfd->pml, NULL);
 }
 
 void
