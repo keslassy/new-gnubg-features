@@ -286,10 +286,10 @@ ShowRollout(rolloutcontext * prc)
 
     if (prc->fStopOnSTD) {
         if (prc->fCubeful)
-            outputf(_("Rollouts may stop after %d games if both ratios |equity/STD|\n"
+            outputf(_("Rollouts may stop after %d games if both equities STD\n"
                       "\t(cubeful and cubeless) are less than %5.4f\n"), prc->nMinimumGames, prc->rStdLimit);
         else
-            outputf(_("Rollouts may stop after %d games if the ratio |equity/STD|"
+            outputf(_("Rollouts may stop after %d games if equity STD"
                       " is less than %5.4f\n"), prc->nMinimumGames, prc->rStdLimit);
     }
 }
@@ -1947,13 +1947,13 @@ extern void
 CommandShowSound(char *UNUSED(sz))
 {
 
-    int i;
+    gnubgsound i;
 
     outputf(_("Sounds are enabled          : %s\n"), fSound ? _("yes") : _("no"));
 
     outputl(_("Sounds for:"));
 
-    for (i = 0; i < NUM_SOUNDS; ++i) {
+    for (i = (gnubgsound) 0; i < NUM_SOUNDS; ++i) {
         char *sound = GetSoundFile(i);
         if (!*sound)
             outputf(_("   %-30.30s : no sound\n"), gettext(sound_description[i]));
