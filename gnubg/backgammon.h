@@ -22,6 +22,8 @@
 #ifndef BACKGAMMON_H
 #define BACKGAMMON_H
 
+#include "config.h"
+
 #include "output.h"
 #include "analysis.h"
 #include "eval.h"
