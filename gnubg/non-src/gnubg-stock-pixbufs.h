@@ -1,5 +1,7 @@
 /* GdkPixbuf RGBA C-Source image dump */
 
+#include "common.h"
+
 #ifdef __SUNPRO_C
 #pragma align 4 (cancel_16)
 #endif

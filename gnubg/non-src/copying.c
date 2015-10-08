@@ -2,6 +2,7 @@
    copying.awk.  Modify copying.awk instead. */
 
 #include "backgammon.h"
+#include "common.h"
 char *aszCopying[] = {
   "                    GNU GENERAL PUBLIC LICENSE",
   "                       Version 3, 29 June 2007",

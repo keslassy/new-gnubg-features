@@ -124,7 +124,7 @@ AC_SUBST(AM_YFLAGS)
 
 
 dnl
-dnl check for pkg-config controlled libs
+dnl check for compiler support
 dnl
 
 PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.6.0], have_glib="yes", AC_MSG_ERROR([You need to have glib2 to compile GNU backgammon]))
@@ -219,6 +219,13 @@ if test x"$LSB_CHECK" = x"yes" ; then
 fi
 
 dnl have_gthread, have_gtk and have_gtk are handled later, not having glib is fatal
+
+AX_C___ATTRIBUTE__()
+
+dnl
+dnl check for pkg-config controlled libs
+dnl
+
 
 dnl
 dnl Checks for libraries.

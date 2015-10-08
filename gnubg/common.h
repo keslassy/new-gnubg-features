@@ -22,12 +22,13 @@
 #ifndef COMMON_H
 #define COMMON_H
 #include <math.h>
+#include "config.h"
 
-#if !_GNU_SOURCE && !defined (__attribute__)
-/*! \brief GNU C specific attributes, e.g. unused
- * // */
-#define __attribute__(X)
-#endif
+
+#ifndef HAVE___ATTRIBUTE__
+#define __attribute__(Spec) /* Empty */
+#endif /* HAVE___ATTRIBUTE__ */
+
 
 /*! \brief Safe double error value (and float with a cast)
  */

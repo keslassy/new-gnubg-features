@@ -21,6 +21,7 @@
 #if USE_SIMD_INSTRUCTIONS
 
 #include <stdlib.h>
+#include "common.h"
 
 #ifdef USE_AVX
 #define ALIGN_SIZE 32

@@ -22,6 +22,7 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 #include <stdarg.h>
+#include "common.h"
 
 /* Initialize output module */
 extern void output_initialize(void);

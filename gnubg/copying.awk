@@ -19,6 +19,7 @@ BEGIN {
   print "   copying.awk.  Modify copying.awk instead. */";
   print "";
   print "#include \"backgammon.h\""
+  print "#include \"common.h\""
   print "char *aszCopying[] = {";
 }
 

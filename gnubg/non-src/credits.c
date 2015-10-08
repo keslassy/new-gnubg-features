@@ -14,12 +14,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "config.h"
+#include "common.h"
 #include <glib/gi18n.h>
 #include "credits.h"
 
 const char aszCOPYRIGHT[] = N_("Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-                               "Copyright (C) 2014 by Gary Wong and the AUTHORS; for details type `show version'.");
+                               "Copyright (C) 2015 by Gary Wong and the AUTHORS; for details type `show version'.");
 
 credEntry ceAuthors[] = {
   {"Joseph Heled", 0},
@@ -289,8 +289,9 @@ const char aszAUTHORS[] =
 "\n"
 "  Library code from the following authors has been included in GNU Backgammon:\n"
 "\n"
+"               Austin Appleby (the MurmurHash3 hashing function)\n"
 "     Ulrich Drepper (an implementation of the public domain MD5 algorithm)\n"
-"   Bob Jenkins (the ISAAC pseudo random number generator, hashing functions)\n"
+"            Bob Jenkins (the ISAAC pseudo random number generator)\n"
 "       Takuji Nishimura and Makoto Matsumoto (the Mersenne Twister PRNG)\n"
 "                   Brian Paul (the TR tile rendering library)\n"
 "             Claes Tornberg (the mec match equity table generator)\n"
