@@ -2,10 +2,10 @@
 
 	* common.h, configure.ac, copying.awk, credits.sh,
 	  output.h, lib/simd.h, m4/Makefile.am, non-src/copying.c,
-	  non-src/credits.c, non-src/gnubg-stock-pixbufs.h:
-	Fix problem identified by Mike Frysinger where __attribute__ 
-	may not be properly defined in some situations that may
-	result in an infinite loop.
+	  non-src/credits.c, non-src/gnubg-stock-pixbufs.h,
+	  +m4/ax_c___attribute__.m4: Fix problem identified by 
+	Mike Frysinger where __attribute__ may not be properly defined
+	in some situations that may result in an infinite loop.
 	
 2015-09-28  Michael Petch  <mpetch@gnubg.org>
 
