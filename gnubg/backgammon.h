@@ -22,7 +22,7 @@
 #ifndef BACKGAMMON_H
 #define BACKGAMMON_H
 
-#include "config.h"
+#include "common.h"
 
 #include "output.h"
 #include "analysis.h"

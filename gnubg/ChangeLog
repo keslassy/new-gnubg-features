@@ -6,9 +6,9 @@
 	  +m4/ax_c___attribute__.m4, external_l.l, external_y.y,
 	  sgf_l.l, sgf_y.y, non-src/external_l.c, non-src/external_y.c,
 	  non-src/external_y.h, non-src/sgf_l.c, non-src/sgf_y.c,
-	  non-src/sgf_y.h : Fix problem identified by Mike Frysinger
-	where __attribute__ may not be properly defined in some
-	situations. This may result in an infinite loop.
+	  non-src/sgf_y.h, backgammon.h : Fix problem identified by 
+	Mike Frysinger where __attribute__ may not be properly defined
+	in some situations. This may result in an infinite loop.
 
 2015-09-28  Michael Petch  <mpetch@gnubg.org>
 
