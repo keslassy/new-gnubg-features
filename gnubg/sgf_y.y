@@ -22,7 +22,7 @@
  */
 
 %{
-#include "config.h"
+#include "common.h"
 #include "list.h"
 #include <glib.h>
 #include <stdio.h>

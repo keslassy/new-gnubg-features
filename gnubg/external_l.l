@@ -20,7 +20,7 @@
  * $Id$
  */
 
-#include "config.h"
+#include "common.h"
 #include "external.h"
 #include <stdio.h>
 

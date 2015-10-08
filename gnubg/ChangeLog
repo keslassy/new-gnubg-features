@@ -3,10 +3,13 @@
 	* common.h, configure.ac, copying.awk, credits.sh,
 	  output.h, lib/simd.h, m4/Makefile.am, non-src/copying.c,
 	  non-src/credits.c, non-src/gnubg-stock-pixbufs.h,
-	  +m4/ax_c___attribute__.m4: Fix problem identified by 
-	Mike Frysinger where __attribute__ may not be properly defined
-	in some situations that may result in an infinite loop.
-	
+	  +m4/ax_c___attribute__.m4, external_l.l, external_y.y,
+	  sgf_l.l, sgf_y.y, non-src/external_l.c, non-src/external_y.c,
+	  non-src/external_y.h, non-src/sgf_l.c, non-src/sgf_y.c,
+	  non-src/sgf_y.h : Fix problem identified by Mike Frysinger
+	where __attribute__ may not be properly defined in some
+	situations. This may result in an infinite loop.
+
 2015-09-28  Michael Petch  <mpetch@gnubg.org>
 
 	* gnubg.c: Set export default paths to "." rather than NULL

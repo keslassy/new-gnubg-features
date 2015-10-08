@@ -73,7 +73,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
+#include "common.h"
 #include "glib-ext.h"
 #include "external.h"
 #include "backgammon.h"
