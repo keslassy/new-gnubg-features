@@ -103,7 +103,7 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #include "gtkwindows.h"
 #endif
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 #include "multithread.h"
@@ -212,7 +212,7 @@ unsigned int cAutoDoubles = 0;
 unsigned int nBeavers = 3;
 unsigned int nDefaultLength = 7;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
 int fResetSync = FALSE;         /* May need to wait for main window */
 #endif
@@ -558,16 +558,16 @@ static char const *aszBuildInfo[] = {
 #if HAVE_LIBGMP
     N_("Long RNG seeds supported."),
 #endif
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     N_("3d Boards supported."),
 #endif
 #if defined(WIN32)
     N_("Windows sound system supported."),
-#elif HAVE_APPLE_COREAUDIO
+#elif defined(HAVE_APPLE_COREAUDIO)
     N_("Apple CoreAudio sound system supported."),
-#elif HAVE_APPLE_QUICKTIME
+#elif defined(HAVE_APPLE_QUICKTIME)
     N_("Apple QuickTime sound system supported."),
-#elif HAVE_CANBERRA
+#elif defined(HAVE_CANBERRA)
     N_("libcanberra sound system supported."),
 #endif
 #if USE_MULTITHREAD
@@ -1029,7 +1029,7 @@ UpdateSettings(void)
 
     ShowBoard();
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
 }
@@ -1735,7 +1735,6 @@ FormatMoveHint(char *sz, const matchstate * pms, movelist * pml,
 
     cubeinfo ci;
     char szTemp[2048], szMove[32];
-    char *pc;
     float *ar, *arStdDev;
     float rEq, rEqTop;
 
@@ -1748,11 +1747,11 @@ FormatMoveHint(char *sz, const matchstate * pms, movelist * pml,
     if (i && !fRankKnown)
         strcat(sz, "   ??  ");
     else
-        sprintf(pc = strchr(sz, 0), " %4i. ", i + 1);
+        sprintf(strchr(sz, 0), " %4i. ", i + 1);
 
     /* eval */
 
-    sprintf(pc = strchr(sz, 0),
+    sprintf(strchr(sz, 0),
             "%-14s   %-28s %s: ",
             FormatEval(szTemp, &pml->amMoves[i].esMove),
             FormatMove(szMove, pms->anBoard,
@@ -1770,7 +1769,7 @@ FormatMoveHint(char *sz, const matchstate * pms, movelist * pml,
     /* difference */
 
     if (i)
-        sprintf(pc = strchr(sz, 0), " (%s)\n", OutputEquityDiff(rEq, rEqTop, &ci));
+        sprintf(strchr(sz, 0), " (%s)\n", OutputEquityDiff(rEq, rEqTop, &ci));
     else
         strcat(sz, "\n");
 
@@ -1945,7 +1944,7 @@ HintResigned(void)
 
     GetMatchStateCubeInfo(&ci, &ms);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (fX) {                   /* Stop waving flag, otherwise hangs */
         BoardData *bd = BOARD(pwBoard)->board_data;
         StopIdle3d(bd, bd->bd3d);
@@ -2479,7 +2478,7 @@ PromptForExit(void)
             return;
         }
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (fX && bd && (display_is_3d(bd->rd))) {  /* Stop any 3d animations */
         StopIdle3d(bd, bd->bd3d);
     }
@@ -2494,7 +2493,7 @@ PromptForExit(void)
 
     playSound(SOUND_EXIT);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (fX && bd && display_is_3d(bd->rd) && bd->rd->closeBoardOnExit && bd->rd->fHinges3d)
         CloseBoard3d(bd, bd->bd3d, bd->rd);
 #endif
@@ -2510,7 +2509,7 @@ PromptForExit(void)
         stop_board_expose(bd);
         board_free_pixmaps(bd);
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (fX && gtk_gl_init_success && bd)
         Tidy3dObjects(bd->bd3d, bd->rd);
 #endif
@@ -3104,7 +3103,7 @@ SaveGUISettings(FILE * pf)
     if (!fToolbarShowing)
         fputs("set toolbar off\n", pf);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (fSync != -1)
         fprintf(pf, "set vsync3d %s\n", fSync ? "yes" : "no");
 #endif
@@ -4493,7 +4492,7 @@ main(int argc, char *argv[])
     GError *error = NULL;
     GOptionContext *context;
 
-#if NO_OVERLAYSCROLLBARS
+#if defined(NO_OVERLAYSCROLLBARS)
     /* This hack exists for those platforms like Debian Ubuntu
      * that have problems with Overlay Scrollbars freezing
      * when clicking on analysed position. The real solution
