@@ -53,7 +53,6 @@ OutputRolloutResult(const char *szIndent,
 
     static char sz[1024];
     int ici;
-    char *pc;
 
     strcpy(sz, "");
 
@@ -64,7 +63,7 @@ OutputRolloutResult(const char *szIndent,
         if (asz && *asz[ici]) {
             if (szIndent && *szIndent)
                 strcat(sz, szIndent);
-            sprintf(pc = strchr(sz, 0), "%s:\n", asz[ici]);
+            sprintf(strchr(sz, 0), "%s:\n", asz[ici]);
         }
 
         /* output */
@@ -113,13 +112,12 @@ OutputEvalContext(const evalcontext * pec, const int fChequer)
 {
 
     static char sz[1024];
-    char *pc;
     int i;
 
     sprintf(sz, "%u-%s %s", pec->nPlies, _("ply"), (!fChequer || pec->fCubeful) ? _("cubeful") : _("cubeless"));
 
     if (pec->fUsePrune) {
-        sprintf(pc = strchr(sz, 0), " prune");
+        sprintf(strchr(sz, 0), " prune");
     }
 
     if (fChequer && pec->nPlies) {
@@ -127,12 +125,12 @@ OutputEvalContext(const evalcontext * pec, const int fChequer)
     }
 
     if (pec->rNoise > 0.0f)
-        sprintf(pc = strchr(sz, 0), ", noise %0.3g (%s)", pec->rNoise, pec->fDeterministic ? "d" : "nd");
+        sprintf(strchr(sz, 0), ", noise %0.3g (%s)", pec->rNoise, pec->fDeterministic ? "d" : "nd");
 
     for (i = 0; i < NUM_SETTINGS; i++)
 
         if (!cmp_evalcontext(&aecSettings[i], pec)) {
-            sprintf(pc = strchr(sz, 0), " [%s]", Q_(aszSettings[i]));
+            sprintf(strchr(sz, 0), " [%s]", Q_(aszSettings[i]));
             break;
         }
 
@@ -657,7 +655,6 @@ OutputCubeAnalysisFull(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
     float arDouble[4];
 
     static char sz[4096];
-    char *pc;
 
 
     strcpy(sz, "");
@@ -681,14 +678,14 @@ OutputCubeAnalysisFull(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
         /* missed double */
 
-        sprintf(pc = strchr(sz, 0), "%s (%s)!\n",
+        sprintf(strchr(sz, 0), "%s (%s)!\n",
                 _("Alert: missed double"),
                 OutputEquityDiff(arDouble[OUTPUT_NODOUBLE],
                                  (arDouble[OUTPUT_TAKE] >
                                   arDouble[OUTPUT_DROP]) ? arDouble[OUTPUT_DROP] : arDouble[OUTPUT_TAKE], pci));
 
         if (badSkill(stDouble))
-            sprintf(pc = strchr(sz, 0), " [%s]", gettext(aszSkillType[stDouble]));
+            sprintf(strchr(sz, 0), " [%s]", gettext(aszSkillType[stDouble]));
 
     }
 
@@ -700,11 +697,11 @@ OutputCubeAnalysisFull(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
         /* wrong take */
 
-        sprintf(pc = strchr(sz, 0), "%s (%s)!\n",
+        sprintf(strchr(sz, 0), "%s (%s)!\n",
                 _("Alert: wrong take"), OutputEquityDiff(arDouble[OUTPUT_DROP], arDouble[OUTPUT_TAKE], pci));
 
         if (badSkill(stTake))
-            sprintf(pc = strchr(sz, 0), " [%s]", gettext(aszSkillType[stTake]));
+            sprintf(strchr(sz, 0), " [%s]", gettext(aszSkillType[stTake]));
 
     }
 
@@ -716,11 +713,11 @@ OutputCubeAnalysisFull(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
         /* wrong pass */
 
-        sprintf(pc = strchr(sz, 0), "%s (%s)!\n",
+        sprintf(strchr(sz, 0), "%s (%s)!\n",
                 _("Alert: wrong pass"), OutputEquityDiff(arDouble[OUTPUT_TAKE], arDouble[OUTPUT_DROP], pci));
 
         if (badSkill(stTake))
-            sprintf(pc = strchr(sz, 0), " [%s]", gettext(aszSkillType[stTake]));
+            sprintf(strchr(sz, 0), " [%s]", gettext(aszSkillType[stTake]));
 
     }
 
@@ -736,26 +733,26 @@ OutputCubeAnalysisFull(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
         /* wrong double */
 
-        sprintf(pc = strchr(sz, 0), "%s (%s)!\n",
+        sprintf(strchr(sz, 0), "%s (%s)!\n",
                 _("Alert: wrong double"),
                 OutputEquityDiff((arDouble[OUTPUT_TAKE] >
                                   arDouble[OUTPUT_DROP]) ?
                                  arDouble[OUTPUT_DROP] : arDouble[OUTPUT_TAKE], arDouble[OUTPUT_NODOUBLE], pci));
 
         if (badSkill(stDouble))
-            sprintf(pc = strchr(sz, 0), " [%s]", gettext(aszSkillType[stDouble]));
+            sprintf(strchr(sz, 0), " [%s]", gettext(aszSkillType[stDouble]));
 
     }
 
     if ((badSkill(stDouble) || badSkill(stTake)) && !fAnno) {
 
         if (badSkill(stDouble)) {
-            sprintf(pc = strchr(sz, 0), _("Alert: double decision marked %s"), gettext(aszSkillType[stDouble]));
+            sprintf(strchr(sz, 0), _("Alert: double decision marked %s"), gettext(aszSkillType[stDouble]));
             strcat(sz, "\n");
         }
 
         if (badSkill(stTake)) {
-            sprintf(pc = strchr(sz, 0), _("Alert: take decision marked %s"), gettext(aszSkillType[stTake]));
+            sprintf(strchr(sz, 0), _("Alert: take decision marked %s"), gettext(aszSkillType[stTake]));
             strcat(sz, "\n");
         }
 
