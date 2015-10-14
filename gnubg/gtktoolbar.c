@@ -43,8 +43,6 @@
 #include "fun3d.h"
 #endif
 
-extern void NewDialog(gpointer * p, guint n, GtkWidget * pw);
-
 typedef struct _toolbarwidget {
 
     GtkWidget *pwNew;           /* button for "New" */
