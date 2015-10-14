@@ -6457,8 +6457,8 @@ GTKSet(void *p)
 
 
 /* Match stats variables */
-#define FORMATGS_ALL -1
-#define NUM_STAT_TYPES 4
+#define NUM_STAT_TYPES (FORMATGS_OVERALL - FORMATGS_ALL)
+
 static char *aszStatHeading[NUM_STAT_TYPES] = {
     N_("Chequer Play Statistics:"),
     N_("Cube Statistics:"),

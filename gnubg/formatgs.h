@@ -27,7 +27,8 @@
 #include "analysis.h"
 
 enum _formatgs {
-    FORMATGS_CHEQUER,
+    FORMATGS_ALL = -1,
+    FORMATGS_CHEQUER = 0,
     FORMATGS_CUBE,
     FORMATGS_LUCK,
     FORMATGS_OVERALL
