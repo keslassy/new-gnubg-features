@@ -39,7 +39,7 @@
 #include "drawboard.h"
 #include "renderprefs.h"
 #include "gnubgstock.h"
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 
@@ -69,7 +69,7 @@ typedef struct _toolbarwidget {
 
 } toolbarwidget;
 
-#if (!USE_GTKUIMANAGER)
+#if !defined(USE_GTKUIMANAGER)
 static void
 ButtonClicked(GtkWidget * UNUSED(pw), char *sz)
 {
@@ -141,14 +141,14 @@ ToolbarSetClockwise(GtkWidget * pwToolbar, const int f)
     toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
                                            "toolbarwidget");
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_toggle_tool_button_set_active(GTK_TOGGLE_TOOL_BUTTON(ptw->pwButtonClockwise), f);
 #else
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ptw->pwButtonClockwise), f);
 #endif
 }
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 extern void
 ToggleClockwise(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
@@ -173,7 +173,7 @@ extern void
 click_swapdirection(void)
 {
     if (!inCallback) {
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(puim,
                                                                                  "/MainMenu/ViewMenu/PlayClockwise")),
                                      TRUE);
@@ -211,7 +211,7 @@ extern void
 click_edit(void)
 {
     if (!inCallback) {
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(puim,
                                                                                  "/MainMenu/EditMenu/EditPosition")),
                                      TRUE);
@@ -222,7 +222,7 @@ click_edit(void)
     }
 }
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 extern void
 ToggleEdit(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
@@ -321,7 +321,7 @@ ToolbarUpdate(GtkWidget * pwToolbar,
     return c;
 }
 
-#if (!USE_GTKUIMANAGER)
+#if !defined(USE_GTKUIMANAGER)
 static GtkWidget *
 ToolbarAddButton(GtkToolbar * pwToolbar, const char *stockID, const char *label, const char *tooltip,
                  GCallback callback, void *data)
@@ -350,7 +350,7 @@ ToolbarAddWidget(GtkToolbar * pwToolbar, GtkWidget * pWidget, const char *toolti
     return GTK_WIDGET(ti);
 }
 
-#if (!USE_GTKUIMANAGER)
+#if !defined(USE_GTKUIMANAGER)
 static void
 ToolbarAddSeparator(GtkToolbar * pwToolbar)
 {
@@ -362,7 +362,7 @@ ToolbarAddSeparator(GtkToolbar * pwToolbar)
 extern GtkWidget *
 ToolbarNew(void)
 {
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     GtkWidget *pwToolbar;
     toolbarwidget *ptw = (toolbarwidget *) g_malloc(sizeof(toolbarwidget));
 
@@ -565,7 +565,7 @@ ToolbarNew(void)
 #endif
 }
 
-#if (!USE_GTKUIMANAGER)
+#if !defined(USE_GTKUIMANAGER)
 static GtkWidget *
 firstChild(GtkWidget * widget)
 {
@@ -609,7 +609,7 @@ SetToolbarItemStyle(gpointer data, gpointer user_data)
 extern void
 SetToolbarStyle(int value)
 {
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
     GtkWidget *img = gtk_image_new_from_stock(fClockwise ? GNUBG_STOCK_CLOCKWISE : GNUBG_STOCK_ANTI_CLOCKWISE,
                                               GTK_ICON_SIZE_SMALL_TOOLBAR);
@@ -618,7 +618,7 @@ SetToolbarStyle(int value)
 #endif
 
     if (value != nToolbarStyle) {
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         gtk_toolbar_set_style(GTK_TOOLBAR(pwToolbar), (GtkToolbarStyle) value);
 #else
         toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
@@ -631,7 +631,7 @@ SetToolbarStyle(int value)
         /* Resize handle box parent */
         gtk_widget_queue_resize(pwToolbar);
         nToolbarStyle = value;
-#if !(USE_GTKUIMANAGER)
+#if !defined(USE_GTKUIMANAGER)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
                                        (gtk_item_factory_get_widget_by_action(pif, value + TOOLBAR_ACTION_OFFSET)),
                                        TRUE);
