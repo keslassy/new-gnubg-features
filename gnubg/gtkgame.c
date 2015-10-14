@@ -79,19 +79,19 @@
 #include "gtkmovelistctrl.h"
 #include "rollout.h"
 #include "util.h"
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 #include "gnubgstock.h"
 
 #define KEY_ESCAPE -229
 
-#if (USE_BOARD3D && !USE_GTKUIMANAGER)
+#if defined(USE_BOARD3D) && !defined(USE_GTKUIMANAGER)
 /* Offset action to avoid predefined values */
 #define MENU_OFFSET 50
 #endif
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 static void TogglePanel(guint iType, guint iActionID, GtkToggleAction * action,
                         GtkToggleAction * alt, gpointer user_data);
 
@@ -191,7 +191,7 @@ typedef enum _gnubgcommand {
 /* TRUE if gnubg is automatically setting the state of a menu item. */
 static int fAutoCommand;
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 static void
 ExecToggleActionCommand_internal(guint UNUSED(iWidgetType), guint UNUSED(iCommand), gchar * szCommand,
                                  gpointer * widget, gpointer * UNUSED(widgetalt), gpointer UNUSED(user_data))
@@ -546,7 +546,7 @@ GtkAccelGroup *pagMain;
 #if ! GTK_CHECK_VERSION(2,12,0)
 GtkTooltips *ptt;
 #endif
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 GtkUIManager *puim = NULL;
 #else
 GtkItemFactory *pif;
@@ -1059,7 +1059,7 @@ SetAnnotation(moverecord * pmr)
                 char sz[64], *pch;
                 cubeinfo ci;
 
-                pch = sz + sprintf(sz, _("Rolled %d%d"), pmr->anDice[0], pmr->anDice[1]);
+                pch = sz + sprintf(sz, _("Rolled %u%u"), pmr->anDice[0], pmr->anDice[1]);
 
                 if (pmr->rLuck != ERR_VAL) {
                     if (fOutputMWC && ms.nMatchTo) {
@@ -1341,7 +1341,7 @@ MainSize(GtkWidget * pw, GtkRequisition * preq, gpointer p)
 }
 
 
-#if !(USE_GTKUIMANAGER)
+#if !defined(USE_GTKUIMANAGER)
 static gchar *
 GTKTranslate(const gchar * path, gpointer UNUSED(func_data))
 {
@@ -1349,7 +1349,7 @@ GTKTranslate(const gchar * path, gpointer UNUSED(func_data))
 }
 #endif
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 static void
 ToolbarStyle(guint UNUSED(iType), guint UNUSED(iActionID), GtkRadioAction * action, GtkRadioAction * UNUSED(alt),
              gpointer UNUSED(user_data))
@@ -1484,13 +1484,13 @@ CopyPositionID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Position ID copied to the clipboard"));
 }
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 static void
 TogglePanel(guint UNUSED(iType), guint iActionID, GtkToggleAction * action, GtkToggleAction * UNUSED(alt),
             gpointer UNUSED(user_data))
 {
     int f;
-    gnubgwindow panel = 0;
+    gnubgwindow panel = WINDOW_MAIN;
 
     f = gtk_toggle_action_get_active(action);
     switch (iActionID) {
@@ -1529,7 +1529,7 @@ static void
 TogglePanel(gpointer UNUSED(p), guint n, GtkWidget * pw)
 {
     int f;
-    gnubgwindow panel = 0;
+    gnubgwindow panel = WINDOW_MAIN;
 
     g_assert(GTK_IS_CHECK_MENU_ITEM(pw));
 
@@ -1571,7 +1571,7 @@ GTKUndo(void)
 {
     BoardData *bd = BOARD(pwBoard)->board_data;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
 
@@ -1586,12 +1586,12 @@ GTKUndo(void)
     UpdateTheoryData(bd, TT_RETURNHITS, msBoard());
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 extern void
 SetSwitchModeMenuText(void)
 {                               /* Update menu text */
     BoardData *bd = BOARD(pwBoard)->board_data;
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     GtkWidget *pMenuItem = gtk_ui_manager_get_widget(puim,
                                                      "/MainMenu/ViewMenu/SwitchMode");
 #else
@@ -1602,7 +1602,7 @@ SetSwitchModeMenuText(void)
         text = _("Switch to 3D view");
     else
         text = _("Switch to 2D view");
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_label_set_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(pMenuItem))), text);
 #else
     gtk_label_set_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(pMenuItem))), text);
@@ -1648,7 +1648,7 @@ SwitchDisplayMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
 #endif
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 static void
 ToggleShowingIDs(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
@@ -1679,7 +1679,7 @@ ShowToolbar(void)
     gtk_widget_show(pwToolbar);
     gtk_widget_show(pwHandle);
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_widget_show((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/HideToolBar")));
     gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/ShowToolBar")));
     gtk_widget_set_sensitive((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/TextOnly")), TRUE);
@@ -1702,7 +1702,7 @@ HideToolbar(void)
     gtk_widget_hide(pwToolbar);
     gtk_widget_hide(pwHandle);
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/HideToolBar")));
     gtk_widget_show((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/ShowToolBar")));
     gtk_widget_set_sensitive((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/TextOnly")), FALSE);
@@ -1748,7 +1748,7 @@ DoFullScreenMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     static gulong id;
     static int changedRP, changedDP;
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     GtkWidget *pmiRP = gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/RestorePanels");
     GtkWidget *pmiDP = gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/DockPanels");
 #else
@@ -1756,13 +1756,13 @@ DoFullScreenMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     GtkWidget *pmiDP = gtk_item_factory_get_widget(pif, "/View/Dock panels");
 #endif
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {        /* Stop any 3d animations */
         StopIdle3d(bd, bd->bd3d);
     }
 #endif
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     fFullScreen = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                                "/MainMenu/ViewMenu/FullScreen")));
 #else
@@ -1822,7 +1822,7 @@ DoFullScreenMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
             gtk_widget_show(pwHandle);
         }
         gtk_widget_show(GTK_WIDGET(bd->table));
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         /* Only show 2d dice below board if in 2d */
         if (display_is_2d(bd->rd))
 #endif
@@ -1861,7 +1861,7 @@ extern void
 FullScreenMode(int state)
 {
     BoardData *bd = BOARD(pwBoard)->board_data;
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     GtkWidget *pw = gtk_ui_manager_get_widget(puim,
                                               "/MainMenu/ViewMenu/FullScreen");
 #else
@@ -2783,13 +2783,14 @@ static void
 PlayersOK(GtkWidget * pw, playerswidget * pplw)
 {
 
-    int i, j;
+    int i;
+    playertype j;
     *pplw->pfOK = TRUE;
 
     for (i = 0; i < 2; i++) {
         strcpyn(pplw->ap[i].szName, gtk_entry_get_text(GTK_ENTRY(pplw->apwName[i])), MAX_NAME_LEN);
 
-        for (j = 0; j < 3; j++)
+        for (j = (playertype) 0; j < (playertype) 3; j++)
             if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pplw->apwRadio[i][j]))) {
                 pplw->ap[i].pt = j;
                 break;
@@ -3089,7 +3090,7 @@ AddLangWidgets(GtkWidget * cont)
         GtkWidget *flag = GetFlagWidget(aaszLang[i + 1][0], aaszLang[i + 1][1], aaszLang[i + 1][2]);
         int row = i / NUM_COLS;
         int col = i - row * NUM_COLS;
-        gtk_table_attach(GTK_TABLE(pwLangTable), flag, col, col + 1, row, row + 1, 0, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(pwLangTable), flag, col, col + 1, row, row + 1, (GtkAttachOptions) 0, (GtkAttachOptions) 0, 0, 0);
         if (!StrCaseCmp(szLang, aaszLang[i + 1][1]))
             selLang = flag;
     }
@@ -3140,7 +3141,7 @@ ReportBug(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
     OpenURL("http://savannah.gnu.org/bugs/?func=additem&group=gnubg");
 }
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 
 static GtkActionEntry actionEntries[] = {
     {"FileMenuAction", NULL, N_("_File"), NULL, NULL, G_CALLBACK(NULL)},
@@ -3178,7 +3179,7 @@ static GtkActionEntry actionEntries[] = {
     {"HideToolBarAction", NULL, N_("_Hide Toolbar"), NULL, NULL, G_CALLBACK(HideToolbar)},
     {"ShowToolBarAction", NULL, N_("_Show Toolbar"), NULL, NULL, G_CALLBACK(ShowToolbar)},
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     {"SwitchModeAction", NULL, N_("Switch to xD view"), NULL, NULL, G_CALLBACK(SwitchDisplayMode)},
 #endif
 
@@ -3401,7 +3402,7 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_View/Full screen"), "F11", DoFullScreenMode, 0, "<CheckItem>", NULL},
     {N_("/_View/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_View/Play _Clockwise"), NULL, click_swapdirection, 0, "<CheckItem>", NULL},
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     {N_("/_View/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_View/Switch to xD view"), NULL, SwitchDisplayMode, TOOLBAR_ACTION_OFFSET + MENU_OFFSET, NULL, NULL},
 #endif
@@ -3550,7 +3551,7 @@ Stop(GtkWidget * pw, gpointer UNUSED(unused))
         return;
 
     fInterrupt = TRUE;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     {
         BoardData *bd = BOARD(pwBoard)->board_data;
         if (display_is_3d(bd->rd)) {
@@ -3565,7 +3566,7 @@ Stop(GtkWidget * pw, gpointer UNUSED(unused))
 static gboolean
 StopAnyAnimations(void)
 {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     BoardData *bd = BOARD(pwBoard)->board_data;
 
     if (display_is_3d(bd->rd)) {
@@ -3662,7 +3663,7 @@ CreateMainWindow(void)
 
     gtk_container_add(GTK_CONTAINER(pwMain), pwVbox = gtk_vbox_new(FALSE, 0));
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     GError *error = NULL;
     GtkActionGroup *action_group;
 
@@ -3684,7 +3685,7 @@ CreateMainWindow(void)
         g_error_free(error);
         error = NULL;
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     gtk_ui_manager_add_ui_from_string(puim, UIADDITIONS3D, -1, &error);
     if (error) {
         g_warning("Cannot load UI: %s", error->message);
@@ -3711,7 +3712,7 @@ CreateMainWindow(void)
     gtk_window_add_accel_group(GTK_WINDOW(pwMain), pagMain);
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle = gtk_handle_box_new(), FALSE, FALSE, 0);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     pwMenuBar = gtk_ui_manager_get_widget(puim, "/MainMenu");
     gtk_container_add(GTK_CONTAINER(pwHandle), pwMenuBar);
 
@@ -3738,7 +3739,7 @@ CreateMainWindow(void)
     gtk_box_pack_start(GTK_BOX(pwPanelHbox), pwPanelVbox = gtk_vbox_new(FALSE, 1), TRUE, TRUE, 0);
 
     /* Do this so that the menu is packed now instead of in the idle loop */
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_ui_manager_ensure_update(puim);
 #endif
 
@@ -3875,7 +3876,7 @@ InitGTK(int *argc, char ***argv)
 
     gnubg_stock_init();
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     InitGTK3d(argc, argv);
 #endif
 
@@ -3905,7 +3906,7 @@ static int reasonExited;
 extern void
 RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     /* Use 1st predefined board settings if none have been loaded */
     Default3dSettings(BOARD(pwBoard)->board_data);
 #endif
@@ -3947,7 +3948,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
             int style = nToolbarStyle;
             nToolbarStyle = 2;  /* Default style is fine */
             SetToolbarStyle(style);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
             gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                          "/MainMenu/ViewMenu/ToolBarMenu/Both")),
                                            nToolbarStyle);
@@ -3955,7 +3956,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 
         }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         {
             BoardData *bd = BOARD(pwBoard)->board_data;
             BoardData3d *bd3d = bd->bd3d;
@@ -3975,7 +3976,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
         /* Make sure some things stay hidden */
         if (!ArePanelsDocked()) {
             gtk_widget_hide(hpaned);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
             gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Commentary")));
             gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/HidePanels")));
             gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/RestorePanels")));
@@ -3986,14 +3987,14 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 #endif
         } else {
             if (ArePanelsShowing()) {
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
                 gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/RestorePanels")));
 #else
                 gtk_widget_hide(gtk_item_factory_get_widget(pif, "/View/Restore panels"));
 #endif
                 gtk_widget_hide(pwGameBox);
             } else
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
                 gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/HidePanels")));
 #else
                 gtk_widget_hide(gtk_item_factory_get_widget(pif, "/View/Hide panels"));
@@ -4008,7 +4009,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
         ShowBoard();
 
         if (fToolbarShowing)
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
             gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/ShowToolBar")));
 #else
             gtk_widget_hide(gtk_item_factory_get_widget(pif, "/View/Toolbar/Show Toolbar"));
@@ -4122,7 +4123,7 @@ static void
 TutorRethink(GtkWidget * pw, void *UNUSED(unused))
 {
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
@@ -5112,20 +5113,20 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
         gtk_box_pack_start(GTK_BOX(pwVBox), pwTable, FALSE, FALSE, 0);
         rw.analysisDetails[0] = RolloutPage(rw.prpwPages[0], _("First Play (0) "), TRUE, &rw.frame[0]);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[0]->pwSettingWidgets), 0, 1, 0, 1,
-                         0, 0, 4, 4);
+                         (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
         rw.analysisDetails[1] = RolloutPage(rw.prpwPages[1], _("First Play (1) "), TRUE, NULL);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[1]->pwSettingWidgets), 1, 2, 0, 1,
-                         0, 0, 4, 4);
+                         (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
         rw.analysisDetails[2] = RolloutPage(rw.prpwPages[2], _("Later Play (0) "), TRUE, &rw.frame[1]);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[2]->pwSettingWidgets), 0, 1, 1, 2,
-                         0, 0, 4, 4);
+                       (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
         rw.analysisDetails[3] = RolloutPage(rw.prpwPages[3], _("Later Play (1) "), TRUE, NULL);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[3]->pwSettingWidgets), 1, 2, 1, 2,
-                         0, 0, 4, 4);
+                         (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
         rw.prpwTrunc->pmf = NULL;
         rw.analysisDetails[4] = RolloutPage(rw.prpwTrunc, _("Truncation Pt."), FALSE, NULL);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[4]->pwSettingWidgets), 0, 1, 2, 3,
-                         0, 0, 4, 4);
+                         (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
 
         RPGeneral.pwPlayersAreSame = gtk_check_button_new_with_label(_("Use same settings for both players"));
         gtk_box_pack_start(GTK_BOX(pwVBox), RPGeneral.pwPlayersAreSame, FALSE, FALSE, 0);
@@ -5340,7 +5341,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
 }
 
 void
-GTKTextWindow(const char *szOutput, const char *title, const int type, GtkWidget * parent)
+GTKTextWindow(const char *szOutput, const char *title, const dialogtype type, GtkWidget * parent)
 {
 
     GtkWidget *pwDialog = GTKCreateDialog(title, type, parent, 0, NULL, NULL);
@@ -5602,7 +5603,7 @@ GTKProgressEnd(void)
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(pwProgress), " ");
     gtk_statusbar_pop(GTK_STATUSBAR(pwStatus), idProgress);
 
-    SetMouseCursor(0);
+    SetMouseCursor(GDK_X_CURSOR);
 }
 
 extern void
@@ -6180,7 +6181,7 @@ GTKSet(void *p)
 
     if (p == ap) {
         /* Handle the player names. */
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         gtk_label_set_text(GTK_LABEL
                            (gtk_bin_get_child
                             (GTK_BIN(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu/SetTurnMenu/SetTurnPlayer0")
@@ -6209,7 +6210,7 @@ GTKSet(void *p)
     } else if (p == &ms.fTurn) {
         /* Handle the player on roll. */
         fAutoCommand = TRUE;
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         if (ms.fTurn >= 0) {
             if (ms.fTurn)
                 gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
@@ -6241,7 +6242,7 @@ GTKSet(void *p)
         board_set_playing(BOARD(pwBoard), plGame != NULL);
         ToolbarSetPlaying(pwToolbar, plGame != NULL);
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/FileMenu/Save"), plGame != NULL);
         enable_menu(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu"), ms.gs == GAME_PLAYING);
         if (ms.fTurn >= 0)
@@ -6412,7 +6413,7 @@ GTKSet(void *p)
         ShowHidePanel(WINDOW_COMMAND);
     } else if (p == &bd->rd->fDiceArea) {
         if (gtk_widget_get_realized(pwBoard)) {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
             /* If in 3d mode may need to update sizes */
             if (display_is_3d(bd->rd))
                 SetupViewingVolume3d(bd, bd->bd3d, bd->rd);
@@ -6429,7 +6430,7 @@ GTKSet(void *p)
         }
     } else if (p == &fShowIDs) {
         inCallback = TRUE;
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                      "/MainMenu/ViewMenu/ShowIDStatusBar")),
                                        fShowIDs);
@@ -6788,7 +6789,7 @@ GTKDumpStatcontext(int game)
 {
     GtkWidget *copyMenu, *menu_item, *pvbox, *pwUsePanels;
     GtkWidget *navi_combo;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     int i;
     GtkWidget *pw;
     listOLD *pl;
@@ -6825,7 +6826,7 @@ GTKDumpStatcontext(int game)
     navi_combo = AddNavigation(pvbox);
     gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_MAIN)), pvbox);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     SetNumGames(gd, numStatGames);
 
     pl = lMatch.plNext;
@@ -6897,7 +6898,7 @@ GTKDumpStatcontext(int game)
 
     GTKRunDialog(pwStatDialog);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     TidyGraphData(gd);
 #endif
 }
@@ -7007,7 +7008,7 @@ GTKMatchInfo(void)
     AddToTable(pwTable, _("Place:"), 0, 5);
     AddToTable(pwTable, _("Annotator:"), 0, 6);
 
-    gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("Comments:")), 2, 3, 0, 1, 0, 0, 0, 0);
+    gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("Comments:")), 2, 3, 0, 1, (GtkAttachOptions)0, (GtkAttachOptions)0, 0, 0);
 
     apwRating[0] = gtk_entry_new();
     if (mi.pchRating[0])

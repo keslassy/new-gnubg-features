@@ -24,12 +24,13 @@
 
 #include <gtk/gtk.h>
 #include "backgammon.h"
+#include "gtkwindows.h"
 #include "gtkpanels.h"
 #include "gtkchequer.h"
 
 #define TOOLBAR_ACTION_OFFSET 10000
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 extern GtkUIManager *puim;
 #endif
 
@@ -136,7 +137,7 @@ extern void GTKShowScoreSheet(void);
 extern void GTKShowVersion(void);
 extern void GTKSuspendInput(void);
 extern void GTKTextToClipboard(const char *sz);
-extern void GTKTextWindow(const char *szOutput, const char *title, const int type, GtkWidget * parent);
+extern void GTKTextWindow(const char *szOutput, const char *title, const dialogtype type, GtkWidget * parent);
 extern void GTKThaw(void);
 extern void HideAllPanels(gpointer p, guint n, GtkWidget * pw);
 extern void HintDoubleClick(GtkTreeView * treeview, GtkTreePath * path, GtkTreeViewColumn * col, hintdata * phd);
@@ -164,7 +165,7 @@ extern void ShowList(char *asz[], const char *szTitle, GtkWidget * parent);
 extern void ShowMove(hintdata * phd, const int f);
 extern void SwapBoardToPanel(int ToPanel, int updateEvents);
 extern void DoHideAllPanels(int updateEvents);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 extern void ToggleEdit(GtkToggleAction * action, gpointer user_data);
 extern void ToggleClockwise(GtkToggleAction * action, gpointer user_data);
 extern void ToggleDockPanels(GtkToggleAction * action, gpointer user_data);
@@ -182,7 +183,7 @@ extern int fReadingCommand;
 extern void ProcessInput(char *sz);
 #endif
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 extern void SetSwitchModeMenuText(void);
 #include "inc3d.h"
 #endif
