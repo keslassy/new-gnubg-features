@@ -267,7 +267,7 @@ OSLookup(const unsigned int iPos,
 
         /* read distribution */
 
-        if (fread(ac, 1, fGammon ? 128 : 64, pfOutput) < (fGammon ? 128 : 64)) {
+        if (fread(ac, 1, fGammon ? 128U : 64U, pfOutput) < (fGammon ? 128U : 64U)) {
             fprintf(stderr, "error readung from pfOutput\n");
             exit(-1);
         }
@@ -657,13 +657,13 @@ generate_os(const int nOS, const int fHeader,
     if (fCompress) {
 
         char ac[256];
-        size_t n;
+        size_t u;
         /* write contents of pfTmp to output */
 
         rewind(pfTmp);
 
-        while (!feof(pfTmp) && (n = fread(ac, 1, sizeof(ac), pfTmp))) {
-            if (fwrite(ac, 1, n, output) != n) {
+        while (!feof(pfTmp) && (u = fread(ac, 1, sizeof(ac), pfTmp))) {
+            if (fwrite(ac, 1, u, output) != u) {
                 fprintf(stderr, "failed writing to '%s'\n", tmpfile);
                 exit(3);
             }
@@ -986,7 +986,9 @@ BearOff2(int nUs, int nThem,
     unsigned int i;
     TanBoard anBoard, anBoardTemp;
     movelist ml;
+#if !defined(G_DISABLE_ASSERT)
     int aiBest[4];
+#endif
     int asiBest[4];
     int aiTotal[4];
     short int k;
@@ -1041,7 +1043,9 @@ BearOff2(int nUs, int nThem,
             GenerateMoves(&ml, (ConstTanBoard) anBoard, anRoll[0], anRoll[1], FALSE);
 
             asiBest[0] = asiBest[1] = asiBest[2] = asiBest[3] = -0xFFFF;
+#if !defined(G_DISABLE_ASSERT)
             aiBest[0] = aiBest[1] = aiBest[2] = aiBest[3] = -1;
+#endif
 
             for (i = 0; i < ml.cMoves; i++) {
                 PositionFromKey(anBoardTemp, &ml.amMoves[i].key);
@@ -1066,7 +1070,9 @@ BearOff2(int nUs, int nThem,
                 /* cubeless */
 
                 if (psij[0] < -asiBest[0]) {
+#if !defined(G_DISABLE_ASSERT)
                     aiBest[0] = j;
+#endif
                     asiBest[0] = ~psij[0];
                 }
 
@@ -1076,7 +1082,9 @@ BearOff2(int nUs, int nThem,
                      * from opponent's view he doesn't own cube */
 
                     if (psij[3] < -asiBest[1]) {
+#if !defined(G_DISABLE_ASSERT)
                         aiBest[1] = j;
+#endif
                         asiBest[1] = ~psij[3];
                     }
 
@@ -1084,7 +1092,9 @@ BearOff2(int nUs, int nThem,
 
                     k = CubeEquity(psij[2], psij[3], EQUITY_P1);
                     if (~k > asiBest[2]) {
+#if !defined(G_DISABLE_ASSERT)
                         aiBest[2] = j;
+#endif
                         asiBest[2] = ~k;
                     }
 
@@ -1093,7 +1103,9 @@ BearOff2(int nUs, int nThem,
 
                     k = CubeEquity(psij[1], psij[3], EQUITY_P1);
                     if (~k > asiBest[3]) {
+#if !defined(G_DISABLE_ASSERT)
                         aiBest[3] = j;
+#endif
                         asiBest[3] = ~k;
                     }
 
@@ -1301,7 +1313,7 @@ main(int argc, char **argv)
          "Prints version and exits", NULL},
         {"outfile", 'f', 0, G_OPTION_ARG_STRING, &szOutput,
          "Required output filename", "filename"},
-        {NULL, 0, 0, 0, NULL, NULL, NULL}
+        {NULL, 0, 0, (GOptionArg) 0, NULL, NULL, NULL}
     };
 
     GError *error = NULL;
