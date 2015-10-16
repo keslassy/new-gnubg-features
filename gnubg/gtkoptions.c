@@ -42,7 +42,7 @@
 #include "renderprefs.h"
 #include "gtkwindows.h"
 #include "openurl.h"
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 #include "multithread.h"
@@ -138,7 +138,7 @@ static GtkWidget *soundBeepIllegal;
 static GtkWidget *soundsEnabled;
 static GtkWidget *soundList;
 static GtkWidget *pwSoundCommand;
-static int selSound;
+static gnubgsound selSound;
 static int SoundSkipUpdate;
 static int relPage, relPageActivated;
 
@@ -209,8 +209,8 @@ SoundDefaultClicked(GtkWidget * UNUSED(widget), gpointer UNUSED(userdata))
 static void
 SoundAllDefaultClicked(GtkWidget * UNUSED(widget), gpointer UNUSED(userdata))
 {
-    int i;
-    for (i = 0; i < NUM_SOUNDS; i++) {
+    gnubgsound i;
+    for (i = (gnubgsound)0; i < NUM_SOUNDS; i++) {
         g_free(soundDetails[i].Path);
         soundDetails[i].Path = GetDefaultSoundFile(i);
     }
@@ -263,7 +263,7 @@ SoundSelected(GtkTreeView * treeview, gpointer UNUSED(userdata))
 {
     GtkTreePath *path;
     gtk_tree_view_get_cursor(GTK_TREE_VIEW(treeview), &path, NULL);
-    selSound = gtk_tree_path_get_indices(path)[0];
+    selSound = (gnubgsound) gtk_tree_path_get_indices(path)[0];
 
     gtk_frame_set_label(GTK_FRAME(soundFrame), sound_description[selSound]);
     SoundSkipUpdate = TRUE;
@@ -836,7 +836,7 @@ append_sound_options(optionswidget * pow)
     GtkWidget *pwhbox;
     GtkWidget *pwvboxDetails;
     GtkWidget *pwLabel;
-    gint i;
+    gnubgsound i;
     GtkTreeIter iter;
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
@@ -868,7 +868,7 @@ append_sound_options(optionswidget * pow)
                                 _("Have GNU Backgammon make " "sound effects when various events occur."));
     g_signal_connect(G_OBJECT(soundsEnabled), "toggled", G_CALLBACK(SoundToggled), NULL);
 #define SOUND_COL 0
-    for (i = 0; i < NUM_SOUNDS; i++) {
+    for (i = (gnubgsound) 0; i < NUM_SOUNDS; i++) {
         /* Copy sound path data to be used in dialog */
         soundDetails[i].Path = GetSoundFile(i);
 
@@ -941,7 +941,7 @@ append_dice_options(optionswidget * pow)
     GtkWidget *pwp, *pwvbox, *pwhbox, *pwvbox2, *pwvbox3, *pw, *frame;
     unsigned int i;
     unsigned long nRandom;
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
     int blumblum = TRUE;
 #else
     int blumblum = FALSE;
@@ -1217,7 +1217,7 @@ append_other_options(optionswidget * pow)
                                   "Increasing the size may help evaluations "
                                   "complete more quickly, but decreasing " "the size will use less memory."));
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
@@ -1307,12 +1307,12 @@ static int checkupdate_n;
 static void
 SetSoundSettings(void)
 {
-    int i;
+    gnubgsound i;
     outputoff();
     fGUIBeep = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(soundBeepIllegal));
     CHECKUPDATE(soundBeepIllegal, fGUIBeep, "set gui beep %s");
     CHECKUPDATE(soundsEnabled, fSound, "set sound enable %s");
-    for (i = 0; i < NUM_SOUNDS; i++) {
+    for (i = (gnubgsound)0; i < NUM_SOUNDS; i++) {
         if (*soundDetails[i].Path)
             SetSoundFile(i, soundDetails[i].Path);
         else
@@ -1326,8 +1326,8 @@ static void
 OptionsOK(GtkWidget * pw, optionswidget * pow)
 {
     char sz[128];
-    unsigned int n;
-    unsigned int i;
+    int n;
+    unsigned int u, i;
     gchar *filename, *command, *tmp, *newfolder;
     const gchar *new_browser;
     static const char *set_rng_cmds[NUM_RNGS] = {
@@ -1395,8 +1395,8 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s")
         CHECKUPDATE(pow->pwOutputMWCpst, fOutputMatchPC, "set output matchpc %s")
 
-        if ((n = (unsigned int) gtk_adjustment_get_value(pow->padjDigits)) != fOutputDigits) {
-        sprintf(sz, "set output digits %u", n);
+        if ((n = (int) gtk_adjustment_get_value(pow->padjDigits)) != fOutputDigits) {
+        sprintf(sz, "set output digits %d", n);
         UserCommand(sz);
     }
 
@@ -1406,18 +1406,18 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwConfStart, fConfirmNew, "set confirm new %s")
         CHECKUPDATE(pow->pwConfOverwrite, fConfirmSave, "set confirm save %s")
 
-        if ((n = (unsigned int) gtk_adjustment_get_value(pow->padjCubeAutomatic)) != cAutoDoubles) {
-        sprintf(sz, "set automatic doubles %u", n);
+        if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjCubeAutomatic)) != cAutoDoubles) {
+        sprintf(sz, "set automatic doubles %u", u);
         UserCommand(sz);
     }
 
-    if ((n = (unsigned int) gtk_adjustment_get_value(pow->padjCubeBeaver)) != nBeavers) {
-        sprintf(sz, "set beavers %u", n);
+    if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjCubeBeaver)) != nBeavers) {
+        sprintf(sz, "set beavers %u", u);
         UserCommand(sz);
     }
 
-    if ((n = (unsigned int) gtk_adjustment_get_value(pow->padjLength)) != nDefaultLength) {
-        sprintf(sz, "set matchlength %u", n);
+    if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjLength)) != nDefaultLength) {
+        sprintf(sz, "set matchlength %u", u);
         UserCommand(sz);
     }
 
@@ -1449,12 +1449,12 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwRecordGames, fRecord, "set record %s")
         CHECKUPDATE(pow->pwDisplay, fDisplay, "set display %s")
 
-        if ((n = (unsigned int) gtk_adjustment_get_value(pow->padjCache)) != GetEvalCacheSize()) {
-        SetEvalCacheSize(n);
+        if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjCache)) != GetEvalCacheSize()) {
+        SetEvalCacheSize(u);
     }
-#if USE_MULTITHREAD
-    if ((n = (unsigned int) gtk_adjustment_get_value(pow->padjThreads)) != MT_GetNumThreads()) {
-        sprintf(sz, "set threads %u", n);
+#if defined(USE_MULTITHREAD)
+    if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjThreads)) != MT_GetNumThreads()) {
+        sprintf(sz, "set threads %u", u);
         UserCommand(sz);
     }
 #endif
@@ -1468,14 +1468,14 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwAutoSaveRollout, fAutoSaveRollout, "set autosave rollout %s");
     CHECKUPDATE(pow->pwAutoSaveConfirmDelete, fAutoSaveConfirmDelete, "set autosave confirm %s");
 
-    if ((n = (unsigned int) gtk_adjustment_get_value(pow->padjDelay)) != nDelay) {
-        sprintf(sz, "set delay %u", n);
+    if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjDelay)) != nDelay) {
+        sprintf(sz, "set delay %u", u);
         UserCommand(sz);
     }
 
     if (pow->fChanged == 1) {
-        n = (unsigned int) gtk_adjustment_get_value(pow->padjSeed);
-        sprintf(sz, "set seed %u", n);
+        u = (unsigned int) gtk_adjustment_get_value(pow->padjSeed);
+        sprintf(sz, "set seed %u", u);
         UserCommand(sz);
     }
 
@@ -1488,7 +1488,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         CHECKUPDATE(pow->pwSetWindowPos, fGUISetWindowPos, "set gui windowpositions %s")
         CHECKUPDATE(pow->pwGrayEdit, fGUIGrayEdit, "set gui grayedit %s")
         CHECKUPDATE(pow->pwDragTargetHelp, fGUIDragTargetHelp, "set gui dragtargethelp %s") {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd))
             updateDiceOccPos(bd, bd->bd3d);
         else
@@ -1530,8 +1530,8 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
              && animGUI != ANIMATE_SLIDE)
         UserCommand("set gui animation slide");
 
-    if ((n = (unsigned int) gtk_adjustment_get_value(pow->padjSpeed)) != nGUIAnimSpeed) {
-        sprintf(sz, "set gui animation speed %u", n);
+    if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjSpeed)) != nGUIAnimSpeed) {
+        sprintf(sz, "set gui animation speed %u", u);
         UserCommand(sz);
     }
 
@@ -1539,15 +1539,15 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
 
     n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->pwCheat));
 
-    if ((int) n != fCheat) {
+    if (n != fCheat) {
         sprintf(sz, "set cheat enable %s", n ? "on" : "off");
         UserCommand(sz);
     }
 
     for (i = 0; i < 2; ++i) {
-        n = gtk_combo_box_get_active(GTK_COMBO_BOX(pow->apwCheatRoll[i]));
-        if (n != afCheatRoll[i]) {
-            sprintf(sz, "set cheat player %u roll %d", i, n + 1);
+        u = gtk_combo_box_get_active(GTK_COMBO_BOX(pow->apwCheatRoll[i]));
+        if (u != afCheatRoll[i]) {
+            sprintf(sz, "set cheat player %d roll %u", i, u + 1);
             UserCommand(sz);
         }
     }

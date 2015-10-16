@@ -570,13 +570,13 @@ static char const *aszBuildInfo[] = {
 #elif defined(HAVE_CANBERRA)
     N_("libcanberra sound system supported."),
 #endif
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     N_("Multiple threads supported."),
 #endif
-#if USE_SIMD_INSTRUCTIONS
-#if USE_SSE2
+#if defined(USE_SIMD_INSTRUCTIONS)
+#if defined(USE_SSE2)
     N_("SSE/SSE2 supported."),
-#elif USE_AVX
+#elif defined(USE_AVX)
     N_("AVX supported."),
 #else
     N_("SSE supported."),
@@ -3193,7 +3193,7 @@ SaveEvaluationSettings(FILE * pf)
     fprintf(pf, "set cache %u\n", GetEvalCacheEntries());
     fprintf(pf, "set matchequitytable \"%s\"\n", miCurrent.szFileName);
     fprintf(pf, "set invert matchequitytable %s\n", fInvertMET ? "on" : "off");
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     fprintf(pf, "set threads %u\n", MT_GetNumThreads());
 #endif
 }
@@ -3241,7 +3241,7 @@ SaveMiscSettings(FILE * pf)
     fprintf(pf, "set output mwc %s\n", fOutputMWC ? "on" : "off");
     fprintf(pf, "set output rawboard %s\n", fOutputRawboard ? "on" : "off");
     fprintf(pf, "set output winpc %s\n", fOutputWinPC ? "on" : "off");
-    fprintf(pf, "set output digits %u\n", fOutputDigits);
+    fprintf(pf, "set output digits %d\n", fOutputDigits);
     fprintf(pf, "set output errorratefactor %s\n",
             g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rErrorRateFactor));
     fprintf(pf, "set prompt %s\n", szPrompt);
@@ -4634,7 +4634,7 @@ main(int argc, char *argv[])
     fflush(stdout);
     fflush(stderr);
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     /* Make sure threads started */
     MT_StartThreads();
 #endif
@@ -5345,7 +5345,7 @@ extern int
 RunAsyncProcess(AsyncFun fn, void *data, const char *msg)
 {
     int ret;
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     Task *pt = (Task *) malloc(sizeof(Task));
     pt->pLinkedTask = NULL;
     pt->fun = fn;
@@ -5355,7 +5355,7 @@ RunAsyncProcess(AsyncFun fn, void *data, const char *msg)
 
     ProgressStart(msg);
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     ret = MT_WaitForTasks(Progress, 100, FALSE);
 #else
     asyncRet = 0;

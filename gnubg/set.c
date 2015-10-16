@@ -33,14 +33,14 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#if HAVE_SYS_RESOURCE_H
+#if defined(HAVE_SYS_RESOURCE_H)
 #include <sys/resource.h>
 #endif                          /* HAVE_SYS_RESOURCE_H */
 
-#if HAVE_SOCKETS
+#if defined(HAVE_SOCKETS)
 #ifndef WIN32
 
-#if HAVE_SYS_SOCKET_H
+#if defined(HAVE_SYS_SOCKET_H)
 #include <sys/types.h>
 #include <sys/socket.h>
 #endif                          /* HAVE_SYS_SOCKET_H */
@@ -53,7 +53,7 @@
 #endif                          /* #ifndef WIN32 */
 #endif                          /* #if HAVE_SOCKETS */
 
-#if HAVE_UNISTD_H
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif                          /* HAVE_UNISTD_H */
 
@@ -63,7 +63,7 @@
 #include "external.h"
 #include "export.h"
 
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkgame.h"
 #include "gtkprefs.h"
 #include "gtkchequer.h"
@@ -80,7 +80,7 @@
 #include "sound.h"
 #include "openurl.h"
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 #include "multithread.h"
@@ -97,7 +97,7 @@ static evalsetup *pesSet;
 static rng *rngSet;
 static rngcontext *rngctxSet;
 
-#if !HAVE_LIBGMP
+#if !defined(HAVE_LIBGMP)
 
 /* get the next token from the input and convert as an
  * integer. Returns 0 on empty input or non-numerics found, and
@@ -141,7 +141,7 @@ SetSeed(const rng rngx, void *rngctx, char *sz)
     }
 
     if (sz && *sz) {
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
         if (InitRNGSeedLong(sz, rngx, rngctx))
             outputl(_("You must specify a valid seed (see `help set " "seed')."));
         else
@@ -187,7 +187,7 @@ SetRNG(rng * prng, rngcontext * rngctx, rng rngNew, char *szSeed)
 
     switch (rngNew) {
     case RNG_BBS:
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
         {
             char *sz, *sz1;
             int fInit;
@@ -457,7 +457,7 @@ CommandSetStyledGameList(char *sz)
     SetToggle("styledgamelist", &fStyledGamelist, sz,
               _("Show colours in game window"), _("Do not show colours in game window."));
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -471,7 +471,7 @@ CommandSetFullScreen(char *sz)
 
     if (newValue != fFullScreen) {      /* Value has changed */
         fFullScreen = newValue;
-#if USE_GTK
+#if defined(USE_GTK)
         if (fX)
             FullScreenMode(fFullScreen);
 #endif
@@ -652,7 +652,7 @@ CommandSetCache(char *sz)
         outputerr("EvalCacheResize");
 }
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
 extern void
 CommandSetThreads(char *sz)
 {
@@ -736,9 +736,9 @@ CommandSetClockwise(char *sz)
                 "player 0 moves anticlockwise)."),
               _("Player 1 moves anticlockwise (and " "player 0 moves clockwise)."));
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         BoardData *bd = BOARD(pwBoard)->board_data;
         ShowBoard();
         if (display_is_3d(bd->rd)) {
@@ -755,7 +755,7 @@ CommandSetClockwise(char *sz)
 extern void
 CommandSetAppearance(char *sz)
 {
-#if USE_GTK
+#if defined(USE_GTK)
     SetBoardPreferences(pwBoard, sz);
 #else
     char *apch[2];
@@ -821,7 +821,7 @@ CommandSetCubeCentre(char *UNUSED(sz))
 
     outputl(_("The cube has been centred."));
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowBoard();
 #endif                          /* USE_GTK */
@@ -862,7 +862,7 @@ CommandSetCubeOwner(char *sz)
 
     outputf(_("%s now owns the cube.\n"), ap[ms.fCubeOwner].szName);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowBoard();
 #endif                          /* USE_GTK */
@@ -894,7 +894,7 @@ CommandSetCubeUse(char *sz)
 
     ms.fCubeUse = fCubeUse;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowBoard();
 #endif                          /* USE_GTK */
@@ -924,7 +924,7 @@ CommandSetCubeValue(char *sz)
 
             outputf(_("The cube has been set to %d.\n"), n);
 
-#if USE_GTK
+#if defined(USE_GTK)
             if (fX)
                 ShowBoard();
 #endif                          /* USE_GTK */
@@ -937,7 +937,7 @@ CommandSetCubeValue(char *sz)
 extern void
 CommandSetDelay(char *sz)
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         int n;
 
@@ -1004,10 +1004,10 @@ CommandSetDice(char *sz)
 
     outputf(_("The dice have been set to %d and %d.\n"), n0, n1);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowBoard();
 #endif
@@ -1100,7 +1100,7 @@ CommandSetEvalPlies(char *sz)
     outputf(_("%s will use %d ply evaluation.\n"), szSet, pecSet->nPlies);
 }
 
-#if USE_GTK
+#if defined(USE_GTK)
 extern void
 CommandSetGUIAnimationBlink(char *UNUSED(sz))
 {
@@ -1136,7 +1136,7 @@ CommandSetGUIAnimationSpeed(char *sz)
 
     nGUIAnimSpeed = n;
 
-    outputf(_("Animation speed set to %d.\n"), n);
+    outputf(_("Animation speed set to %u.\n"), n);
 }
 
 extern void
@@ -1413,7 +1413,8 @@ extern void
 CommandSetPlayerExternal(char *sz)
 {
 
-#if !HAVE_SOCKETS
+#if !defined(HAVE_SOCKETS)
+    (void) sz;		/* suppress unused parameter compiler warning */
     outputl(_("This installation of GNU Backgammon was compiled without\n"
               "socket support, and does not implement external players."));
 #else
@@ -1472,7 +1473,7 @@ extern void
 CommandSetPlayerGNU(char *UNUSED(sz))
 {
 
-#if HAVE_SOCKETS
+#if defined(HAVE_SOCKETS)
     if (ap[iPlayerSet].pt == PLAYER_EXTERNAL)
         closesocket(ap[iPlayerSet].h);
 #endif
@@ -1481,7 +1482,7 @@ CommandSetPlayerGNU(char *UNUSED(sz))
 
     outputf(_("Moves for %s will now be played by GNU Backgammon.\n"), ap[iPlayerSet].szName);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         /* The "play" button might now be required; update the board. */
         ShowBoard();
@@ -1492,7 +1493,7 @@ extern void
 CommandSetPlayerHuman(char *UNUSED(sz))
 {
 
-#if HAVE_SOCKETS
+#if defined(HAVE_SOCKETS)
     if (ap[iPlayerSet].pt == PLAYER_EXTERNAL)
         closesocket(ap[iPlayerSet].h);
 #endif
@@ -1537,7 +1538,7 @@ CommandSetPlayerName(char *sz)
 
     outputf(_("Player %d is now known as `%s'.\n"), iPlayerSet, sz);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowBoard();
 #endif                          /* USE_GTK */
@@ -1692,7 +1693,7 @@ CommandSetRNGFile(char *sz)
     SetRNG(rngSet, rngctxSet, RNG_FILE, sz);
 }
 
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
 extern void
 CommandSetRNGBBS(char *sz)
 {
@@ -2576,7 +2577,7 @@ CommandSetScore(char *sz)
         pmgi->anScore[0] = ms.anScore[0];
         pmgi->anScore[1] = ms.anScore[1];
         pmgi->fCrawfordGame = ms.fCrawford;
-#if USE_GTK
+#if defined(USE_GTK)
         /* The score this game was started at is displayed in the option
          * menu, and is now out of date. */
         if (fX)
@@ -2586,7 +2587,7 @@ CommandSetScore(char *sz)
 
     CommandShowScore(NULL);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowBoard();
 #endif                          /* USE_GTK */
@@ -2602,7 +2603,7 @@ extern void
 CommandSetToolbar(char *sz)
 {
     if (!StrCaseCmp("on", sz) || !StrCaseCmp("off", sz)) {
-#if USE_GTK
+#if defined(USE_GTK)
         if (!StrCaseCmp("on", sz)) {
             if (!fToolbarShowing)
                 ShowToolbar();
@@ -2618,7 +2619,7 @@ CommandSetToolbar(char *sz)
             outputl(_("You must specify either 0, 1 or 2"));
             return;
         }
-#if USE_GTK
+#if defined(USE_GTK)
         if (fX)
             SetToolbarStyle(n);
 #endif
@@ -2635,7 +2636,7 @@ SetTurn(int i)
     CancelCubeAction();
     pmr_hint_destroy();
     fNextTurn = FALSE;
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
 
         BoardData *bd = BOARD(pwBoard)->board_data;
@@ -2648,7 +2649,7 @@ SetTurn(int i)
 
     UpdateSetting(&ms.fTurn);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowBoard();
 #endif                          /* USE_GTK */
@@ -2792,7 +2793,7 @@ CommandSetPostCrawford(char *sz)
 
 }
 
-#if USE_GTK
+#if defined(USE_GTK)
 extern void
 CommandSetWarning(char *sz)
 {
@@ -2886,12 +2887,12 @@ CommandSetOutputDigits(char *sz)
         return;
     }
 
-    fOutputDigits = (unsigned int) n;
+    fOutputDigits = n;
 
     outputf(_("Probabilities and equities will be shown with %d digits "
               "after the decimal separator\n"), fOutputDigits);
 
-#if USE_GTK
+#if defined(USE_GTK)
     MoveListRefreshSize();
 #endif
 }
@@ -3261,7 +3262,7 @@ CommandSetMatchLength(char *sz)
 
     nDefaultLength = n;
 
-    outputf(ngettext("New matches default to %d point.\n", "New matches default to %d points.\n", nDefaultLength),
+    outputf(ngettext("New matches default to %u point.\n", "New matches default to %u points.\n", nDefaultLength),
             nDefaultLength);
 
 }
@@ -3914,7 +3915,7 @@ static void
 SetPriority(int n)
 {
 
-#if HAVE_SETPRIORITY
+#if defined(HAVE_SETPRIORITY)
     if (setpriority(PRIO_PROCESS, getpid(), n))
         outputerr("setpriority");
     else {
@@ -3956,6 +3957,7 @@ SetPriority(int n)
     } else
         outputerrf(_("Changing priority failed (trying to set priority " "%s)\n"), pch);
 #else
+    (void) n;			/* suppress unused parameter compiler warning */
     outputerrf(_("Priority changes are not supported on this platform.\n"));
 #endif                          /* HAVE_SETPRIORITY */
 }
@@ -4159,7 +4161,7 @@ SetVariation(const bgvariation bgvx)
 
     outputf(_("Please start a new match or session to play `%s'\n"), gettext(aszVariations[bgvDefault]));
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX && ms.gs == GAME_NONE)
         ShowBoard();
 #endif                          /* USE_GTK */
@@ -4327,7 +4329,7 @@ CommandSetLang(char *sz)
     result = SetupLanguage(szLang);
 
     if (result) {
-#if USE_GTK
+#if defined(USE_GTK)
         if (fX)
             GtkChangeLanguage();
         else
@@ -4346,7 +4348,7 @@ CommandSetPanelWidth(char *sz)
         outputl(_("You must specify a number greater than 50"));
         return;
     }
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         SetPanelWidth(n);
 #endif

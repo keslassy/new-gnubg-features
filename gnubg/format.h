@@ -25,7 +25,7 @@
 #define MAX_OUTPUT_DIGITS 6
 
 extern int fOutputMWC, fOutputWinPC, fOutputMatchPC;
-extern unsigned int fOutputDigits;
+extern int fOutputDigits;
 extern float rErrorRateFactor;
 
 /* misc. output routines used by text and HTML export */
