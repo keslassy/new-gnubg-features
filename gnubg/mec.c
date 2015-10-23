@@ -46,13 +46,13 @@ struct dp {
 
 typedef struct dp dp;
 
-void post_crawford(double, double, int, double **, double, double);
+static void post_crawford(double, double, int, double **, double, double);
 
-void crawford(double, double, int, double **);
+static void crawford(double, double, int, double **);
 
-void pre_crawford(double, double, int, double **);
+static void pre_crawford(double, double, int, double **);
 
-dp dpt(int, int, int, double, double, double **);
+static dp dpt(int, int, int, double, double, double **);
 
 /*
  * Arguments are (in this order):
@@ -343,7 +343,7 @@ mec(const float rGammonRate, const float rWinRate,
 /* sq returns x if x is greater than zero, else it returns zero. */
 #define sq(x) ((x)>0?(x):0)
 
-void
+static void
 post_crawford(double gr, double wpf, int ml, /*lint -e{818} */ double **E,
               double fd2, double fd4)
 {
@@ -380,7 +380,7 @@ post_crawford(double gr, double wpf, int ml, /*lint -e{818} */ double **E,
     }
 }
 
-void
+static void
 crawford(double gr, double wpf, int ml, /*lint -e{818} */ double **E)
 {
     int i;
@@ -402,7 +402,7 @@ crawford(double gr, double wpf, int ml, /*lint -e{818} */ double **E)
     }
 }
 
-void
+static void
 pre_crawford(double gr, double wpf, int ml, double **E)
 {
     int i, j;
@@ -439,7 +439,7 @@ pre_crawford(double gr, double wpf, int ml, double **E)
  * p wins wpp % of games, and equities E for favorite.  At this
  * point o does equally well passing the double as taking it. */
 
-dp
+static dp
 dpt(int p, int o, int c, double gr, double wpp, double **E)
 {
     dp dpo, dpp;
