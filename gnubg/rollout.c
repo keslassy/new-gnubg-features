@@ -33,7 +33,7 @@
 #include "glib-ext.h"
 
 #include "backgammon.h"
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkgame.h"
 #endif
 #include "matchid.h"
@@ -42,7 +42,7 @@
 #include "multithread.h"
 #include "rollout.h"
 
-#if !LOCKING_VERSION
+#if !defined(LOCKING_VERSION)
 
 f_BasicCubefulRollout BasicCubefulRollout = BasicCubefulRolloutNoLocking;
 #define BasicCubefulRollout BasicCubefulRolloutNoLocking
@@ -288,7 +288,9 @@ static volatile unsigned int initial_game_count;
 
 #endif
 
-extern void initRolloutstat(rolloutstat * prs);
+#if !defined(LOCKING_VERSION)
+static void initRolloutstat(rolloutstat * prs);
+#endif
 
 /* called with 
  * cube decision                  move rollout
@@ -826,7 +828,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
     return 0;
 }
 
-#if !LOCKING_VERSION
+#if !defined(LOCKING_VERSION)
 
 /* called with a collection of moves or a cube decision to be rolled out.
  * when called with a cube decision, the number of alternatives is always 2
@@ -1221,7 +1223,7 @@ RolloutLoopMT(void *UNUSED(unused))
         /* Stop rolling out moves whose Equity is more than a user selected multiple of the joint standard
          * deviation of the equity difference with the best move in the list. */
 
-#if !USE_MULTITHREAD
+#if !defined(USE_MULTITHREAD)
         ProcessEvents();
 #endif
 
@@ -1467,8 +1469,8 @@ RolloutGeneral(ConstTanBoard * apBoard,
         multi_debug("rollout finished waiting for tasks to complete");
     }
 
-    /* Make sure final output is upto date */
-#if USE_GTK
+    /* Make sure final output is up to date */
+#if defined(USE_GTK)
     if (!fX)
 #endif
         if (!fInterrupt)
@@ -1506,7 +1508,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
     }
 
     if (fShowProgress && !fInterrupt
-#if USE_GTK
+#if defined(USE_GTK)
         && !fX
 #endif
         ) {
@@ -1709,7 +1711,7 @@ GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
  *
  */
 
-extern void
+static void
 initRolloutstat(rolloutstat * prs)
 {
 
@@ -1837,7 +1839,6 @@ ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc 
 
         /* swap fMove in cubeinfo */
         aci[i].fMove = !aci[i].fMove;
-
     }
 
     nGamesDone = RolloutGeneral(apBoard,
