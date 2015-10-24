@@ -21,12 +21,12 @@
 
 #include "config.h"
 
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkgame.h"
 #else
 #include "backgammon.h"
 #endif
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
 #include "multithread.h"
 #endif
 #ifndef WIN32
@@ -35,6 +35,7 @@
 
 #include <isaac.h>
 #include "speed.h"
+#include "lib/simd.h"
 
 #define EVALS_PER_ITERATION 1024
 
@@ -47,9 +48,9 @@ RunEvals(void *UNUSED(notused))
     int aanBoard[EVALS_PER_ITERATION][2][25];
     int i, j, k;
     double t;
-    float ar[NUM_OUTPUTS];
+    SSE_ALIGN(float ar[NUM_OUTPUTS]);
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     MT_Exclusive();
 #endif
     for (i = 0; i < EVALS_PER_ITERATION; i++) {
@@ -72,7 +73,7 @@ RunEvals(void *UNUSED(notused))
         }
     }
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     MT_Release();
     MT_SyncStart();
 #else
@@ -83,7 +84,7 @@ RunEvals(void *UNUSED(notused))
         (void) EvaluatePosition(NULL, (ConstTanBoard) aanBoard[i], ar, &ciCubeless, NULL);
     }
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     if ((t = MT_SyncEnd()) != 0)
         timeTaken += t;
 #else
@@ -95,12 +96,15 @@ extern void
 CommandCalibrate(char *sz)
 {
     int n = -1;
-    unsigned int i, iIter;
-#if USE_GTK
+    unsigned int i, iIter, iCacheSize;
+#if defined(USE_GTK)
     void *pcc = NULL;
 #endif
 
-#if USE_MULTITHREAD
+    iCacheSize = GetEvalCacheEntries();
+    EvalCacheResize(0);
+
+#if defined(USE_MULTITHREAD)
     MT_SyncInit();
 #endif
 
@@ -123,7 +127,7 @@ CommandCalibrate(char *sz)
         rc.randrsl[i] = rc.randrsl[0];
     irandinit(&rc, TRUE);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         pcc = GTKCalibrationStart();
 #endif
@@ -134,7 +138,7 @@ CommandCalibrate(char *sz)
         if (fInterrupt)
             break;
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
         mt_add_tasks(MT_GetNumThreads(), RunEvals, NULL, NULL);
         (void) MT_WaitForTasks(NULL, 0, FALSE);
         iIter += MT_GetNumThreads();
@@ -147,7 +151,7 @@ CommandCalibrate(char *sz)
             spd = 0.0;
         else
             spd = iIter * (EVALS_PER_ITERATION * 1000 / timeTaken);
-#if USE_GTK
+#if defined(USE_GTK)
         if (fX)
             GTKCalibrationUpdate(pcc, (float) spd);
         else
@@ -158,7 +162,9 @@ CommandCalibrate(char *sz)
         }
     }
 
-#if USE_GTK
+    EvalCacheResize(iCacheSize);
+
+#if defined(USE_GTK)
     if (fX)
         GTKCalibrationEnd(pcc);
 #endif
