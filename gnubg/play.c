@@ -38,11 +38,13 @@
 #include "sound.h"
 #include "renderprefs.h"
 #include "md5.h"
-#if USE_GTK
+#include "lib/simd.h"
+
+#if defined (USE_GTK)
 #include "gtkboard.h"
 #include "gtkwindows.h"
 #endif
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 
@@ -113,7 +115,7 @@ NewMoveRecord(void)
 
     memset(pmr, 0, sizeof *pmr);
 
-    pmr->mt = -1;
+    pmr->mt = (movetype) - 1;
     pmr->sz = NULL;
     pmr->fPlayer = 0;
     pmr->anDice[0] = pmr->anDice[1] = 0;
@@ -145,7 +147,7 @@ static int
  CheatDice(unsigned int anDice[2], matchstate * pms, const int fBest);
 
 
-#if USE_GTK
+#if defined (USE_GTK)
 #include "gtkgame.h"
 
 static int anLastMove[8], fLastMove, fLastPlayer;
@@ -156,7 +158,7 @@ PlayMove(matchstate * pms, int const anMove[8], int const fPlayer)
 {
     int i, nSrc, nDest;
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (pms == &ms) {
         memcpy(anLastMove, anMove, sizeof anLastMove);
         CanonicalMoveOrder(anLastMove);
@@ -232,7 +234,7 @@ ApplyMoveRecord(matchstate * pms, const listOLD * plGame, const moverecord * pmr
     pms->gs = GAME_PLAYING;
     pms->fResigned = pms->fResignationDeclined = 0;
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (pms == &ms)
         fLastMove = FALSE;
 #endif
@@ -400,7 +402,7 @@ CalculateBoard(void)
 
     } while (pl != plLastMove);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
 }
@@ -459,7 +461,7 @@ PopGame(listOLD * plDelete, int fInclusive)
         /* couldn't find node to delete to */
         return -1;
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         GTKPopGame(i);
 #endif
@@ -486,7 +488,7 @@ PopMoveRecord(listOLD * plDelete)
         /* couldn't find node to delete to */
         return -1;
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         GTKPopMoveRecord(pl->p);
         GTKSetMoveRecord(pl->plPrev->p);
@@ -634,7 +636,7 @@ AddMoveRecord(void *pv)
     if (pmr->mt >= MOVE_SETBOARD && (pmrOld = plLastMove->p)->mt == pmr->mt && pmrOld->fPlayer == pmr->fPlayer) {
         PopMoveRecord(plLastMove);
     }
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         GTKAddMoveRecord(pmr);
 #endif
@@ -670,7 +672,7 @@ extern void
 SetMoveRecord(void *pv)
 {
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         GTKSetMoveRecord(pv);
 #else
@@ -682,7 +684,7 @@ extern void
 ClearMoveRecord(void)
 {
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         GTKClearMoveRecord();
 #endif
@@ -691,7 +693,7 @@ ClearMoveRecord(void)
     ListCreate(plGame);
 }
 
-#if USE_GTK
+#if defined (USE_GTK)
 static guint nTimeout, fDelaying;
 
 static gint
@@ -726,7 +728,7 @@ AddGame(moverecord * pmr)
 {
     g_assert(pmr->mt == MOVE_GAMEINFO);
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         GTKAddGame(pmr);
 #else
@@ -739,7 +741,7 @@ DiceRolled(void)
 {
     playSound(SOUND_ROLL);
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         BoardData *bd = BOARD(pwBoard)->board_data;
         /* Make sure dice are updated */
@@ -800,7 +802,7 @@ NewGame(void)
     UpdateSetting(&ms.fCubeOwner);
     UpdateSetting(&ms.fTurn);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (fX) {
         BoardData *bd = BOARD(pwBoard)->board_data;
         InitBoardData(bd);
@@ -829,7 +831,7 @@ NewGame(void)
 
     if (fDisplay) {
         outputnew();
-        outputf(_("%s rolls %d, %s rolls %d.\n"), ap[0].szName, ms.anDice[0], ap[1].szName, ms.anDice[1]);
+        outputf(_("%s rolls %u, %s rolls %u.\n"), ap[0].szName, ms.anDice[0], ap[1].szName, ms.anDice[1]);
     }
 
     if (ms.anDice[0] == ms.anDice[1]) {
@@ -858,7 +860,7 @@ NewGame(void)
 
     AddMoveRecord(pmr);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
 
@@ -866,7 +868,7 @@ NewGame(void)
     UpdateSetting(&ms.gs);
     /* Play sound after initial dice decided */
     DiceRolled();
-#if USE_GTK
+#if defined (USE_GTK)
     ResetDelayTimer();
 #endif
 
@@ -989,7 +991,7 @@ ComputerTurn(void)
     moverecord *pmr;
     cubeinfo ci;
     float arDouble[4], rDoublePoint;
-#if HAVE_SOCKETS
+#if defined(HAVE_SOCKETS)
     char szBoard[256], szResponse[256];
     int fTurnOrig;
     TanBoard anBoardTemp;
@@ -1242,7 +1244,7 @@ ComputerTurn(void)
 
             if (ms.fCubeUse && !ms.anDice[0] && ms.nCube < MAX_CUBE && GetDPEq(NULL, NULL, &ci)) {
                 evalcontext ecDH;
-                float arOutput[NUM_ROLLOUT_OUTPUTS];
+                SSE_ALIGN(float arOutput[NUM_ROLLOUT_OUTPUTS]);
                 memcpy(&ecDH, &ap[ms.fTurn].esCube.ec, sizeof ecDH);
                 ecDH.fCubeful = FALSE;
                 if (ecDH.nPlies)
@@ -1308,7 +1310,8 @@ ComputerTurn(void)
                     case OPTIONAL_DOUBLE_PASS:
                     case OPTIONAL_REDOUBLE_PASS:
 
-                        if (ap[ms.fTurn].esCube.et == EVAL_EVAL && ap[ms.fTurn].esCube.ec.nPlies == 0 && arOutput[0] > 0.001f ) {
+                        if (ap[ms.fTurn].esCube.et == EVAL_EVAL && ap[ms.fTurn].esCube.ec.nPlies == 0
+                            && arOutput[0] > 0.001f) {
                             /* double if 0-ply except when about to lose game */
                             if (fTutor && fTutorCube)
                                 current_pmr_cubedata_update(dd.pes, dd.aarOutput, dd.aarStdDev);
@@ -1338,11 +1341,11 @@ ComputerTurn(void)
 
                 DiceRolled();
                 /* write line to status bar if using GTK */
-#if USE_GTK
+#if defined (USE_GTK)
                 if (fX) {
 
                     outputnew();
-                    outputf(_("%s rolls %1i and %1i.\n"), ap[ms.fTurn].szName, ms.anDice[0], ms.anDice[1]);
+                    outputf(_("%s rolls %1u and %1u.\n"), ap[ms.fTurn].szName, ms.anDice[0], ms.anDice[1]);
                     outputx();
 
                 }
@@ -1399,7 +1402,7 @@ ComputerTurn(void)
         }
 
     case PLAYER_EXTERNAL:
-#if HAVE_SOCKETS
+#if defined(HAVE_SOCKETS)
         fTurnOrig = ms.fTurn;
 
 #if 1
@@ -1551,7 +1554,7 @@ static void
 TurnDone(void)
 {
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         if (!nNextTurn)
             nNextTurn = g_idle_add(NextTurnNotify, NULL);
@@ -1585,7 +1588,7 @@ StartAutomaticPlay(void)
 {
     if (ap[0].pt == PLAYER_GNU && ap[1].pt == PLAYER_GNU) {
         automaticTask = TRUE;
-#if USE_GTK
+#if defined (USE_GTK)
         GTKSuspendInput();
         ProcessEvents();
 #endif
@@ -1596,7 +1599,7 @@ extern void
 StopAutomaticPlay(void)
 {
     if (automaticTask) {
-#if USE_GTK
+#if defined (USE_GTK)
         GTKResumeInput();
 #endif
         automaticTask = FALSE;
@@ -1656,7 +1659,7 @@ NextTurn(int fPlayNext)
 
     g_assert(!fComputing);
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         if (nNextTurn) {
             g_source_remove(nNextTurn);
@@ -1675,7 +1678,7 @@ NextTurn(int fPlayNext)
 
     fComputing = TRUE;
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX && fDisplay) {
         if (nDelay && nTimeout) {
             fDelaying = TRUE;
@@ -1725,10 +1728,10 @@ NextTurn(int fPlayNext)
                          pmgi->nPoints), ap[pmgi->fWinner].szName, gettext(aszGameResult[n - 1]), pmgi->nPoints);
 
 
-#if USE_GTK
+#if defined (USE_GTK)
         if (fX) {
             if (fDisplay) {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
                 BoardData *bd = BOARD(pwBoard)->board_data;
                 if (ms.fResigned && display_is_3d(bd->rd))
                     StopIdle3d(bd, bd->bd3d);   /* Stop flag waving */
@@ -1748,7 +1751,7 @@ NextTurn(int fPlayNext)
             ms.fCrawford = !ms.fPostCrawford && !ms.fCrawford &&
                 ms.anScore[pmgi->fWinner] == ms.nMatchTo - 1 && ms.anScore[!pmgi->fWinner] != ms.nMatchTo - 1;
         }
-#if USE_GTK
+#if defined (USE_GTK)
         if (!fX || fDisplay)
 #endif
             CommandShowScore(NULL);
@@ -1817,7 +1820,7 @@ NextTurn(int fPlayNext)
         fComputing = FALSE;
         return -1;
     }
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         if (!ComputerTurn() && !nNextTurn)
             nNextTurn = g_idle_add(NextTurnNotify, NULL);
@@ -1829,7 +1832,7 @@ NextTurn(int fPlayNext)
     return 0;
 }
 
-#if USE_GTK
+#if defined (USE_GTK)
 extern int
 quick_roll(void)
 {
@@ -2008,7 +2011,7 @@ AnnotateMove(skilltype st)
     else
         outputf(_("Move marked as %s.\n"), gettext(aszSkillType[st]));
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -2045,7 +2048,7 @@ AnnotateRoll(lucktype lt)
     else
         outputf(_("Roll marked as %s.\n"), gettext(aszLuckType[lt]));
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -2141,7 +2144,7 @@ CommandAnnotateAddComment(char *sz)
 
     outputl(_("Commentary for this move added."));
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -2166,7 +2169,7 @@ CommandAnnotateClearComment(char *UNUSED(sz))
 
     outputl(_("Commentary for this move cleared."));
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -2357,7 +2360,7 @@ CommandDouble(char *UNUSED(sz))
     if (fDisplay)
         outputf(_("%s doubles.\n"), ap[ms.fTurn].szName);
 
-#if USE_GTK
+#if defined (USE_GTK)
     /* There's no point delaying here. */
     if (nTimeout) {
         g_source_remove(nTimeout);
@@ -2453,7 +2456,7 @@ DumpGameList(GString * gsz, listOLD * plGame)
             column = 0;
             break;
         case MOVE_NORMAL:
-            g_string_append_printf(gsz, "%d%d%-5s: ", pmr->anDice[0], pmr->anDice[1], aszLuckTypeAbbr[pmr->lt]);
+            g_string_append_printf(gsz, "%u%u%-5s: ", pmr->anDice[0], pmr->anDice[1], aszLuckTypeAbbr[pmr->lt]);
             FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove);
             g_string_append_printf(gsz, "%-15s", tmp);
             g_string_append_printf(gsz, "%-10s%-10s", aszSkillTypeAbbr[pmr->n.stMove], aszSkillTypeAbbr[pmr->stCube]);
@@ -2473,11 +2476,11 @@ DumpGameList(GString * gsz, listOLD * plGame)
             g_string_append(gsz, _("Resigns\n"));
             break;
         case MOVE_SETDICE:
-            g_string_append_printf(gsz, "%d%d%-5s: %-33s",
+            g_string_append_printf(gsz, "%u%u%-5s: %-33s",
                                    pmr->anDice[0], pmr->anDice[1], aszLuckTypeAbbr[pmr->lt], _("Rolled"));
             break;
         default:
-            g_string_append_printf(gsz, _("Unhandled movetype %d                      \n"), pmr->mt);
+            g_string_append_printf(gsz, _("Unhandled movetype %d                      \n"), (int) pmr->mt);
             break;
         }
     }
@@ -2495,7 +2498,7 @@ CommandListGame(char *UNUSED(sz))
         return;
     }
     DumpGameList(gsz, plGame);
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         GTKTextWindow(gsz->str, _("Game dump"), DT_INFO, NULL);
     else
@@ -2510,7 +2513,7 @@ CommandListGame(char *UNUSED(sz))
 extern void
 CommandListMatch(char *UNUSED(sz))
 {
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         ShowGameWindow();
         return;
@@ -2656,7 +2659,7 @@ CommandMove(char *sz)
             return;
         }
     }
-#if USE_GTK
+#if defined (USE_GTK)
     /* There's no point delaying here. */
     if (nTimeout) {
         g_source_remove(nTimeout);
@@ -2672,7 +2675,7 @@ CommandMove(char *sz)
 
     AddMoveRecord(pmr);
 
-#if USE_GTK
+#if defined (USE_GTK)
     /* Don't animate this move. */
     fLastMove = FALSE;
 #endif
@@ -2815,9 +2818,9 @@ CommandNewMatch(char *sz)
     UpdateSetting(&ms.fJacoby);
     UpdateSetting(&ms.gs);
 
-    outputf(_("A new %d point match has been started.\n"), n);
+    outputf(_("A new %u point match has been started.\n"), n);
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         GTKSet(ap);
 #endif
@@ -2849,7 +2852,7 @@ CommandNewSession(char *UNUSED(sz))
 
     outputl(_("A new session has been started."));
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         ShowBoard();
 #endif
@@ -2867,7 +2870,7 @@ UpdateGame(int fShowBoard)
     UpdateSetting(&ms.gs);
     UpdateSetting(&ms.fCrawford);
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX || (fShowBoard && fDisplay))
         ShowBoard();
 #else
@@ -2876,7 +2879,7 @@ UpdateGame(int fShowBoard)
 #endif
 }
 
-#if USE_GTK
+#if defined (USE_GTK)
 static int
 GameIndex(listOLD * plGame)
 {
@@ -2901,7 +2904,7 @@ ChangeGame(listOLD * plGameNew)
     movetype reallastmt;
     int reallastplayer;
 
-#if USE_GTK
+#if defined (USE_GTK)
     listOLD *pl;
 #endif
 
@@ -2917,7 +2920,7 @@ ChangeGame(listOLD * plGameNew)
             dice_rolled = TRUE;
     }
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         GTKFreeze();
         GTKClearMoveRecord();
@@ -2946,7 +2949,8 @@ ChangeGame(listOLD * plGameNew)
         reallastmt = pmr_cur->mt;
         reallastplayer = pmr_cur->fPlayer;
     } else {
-        reallastmt = reallastplayer = -1;
+        reallastmt = (movetype) - 1;
+        reallastplayer = -1;
     }
 
     pmr_cur = get_current_moverecord(NULL);
@@ -3016,7 +3020,7 @@ CommandNextRoll(char *UNUSED(sz))
 {
     moverecord *pmr;
 
-#if USE_GTK
+#if defined (USE_GTK)
     BoardData *bd = NULL;
 
     if (fX) {
@@ -3047,7 +3051,7 @@ CommandNextRoll(char *UNUSED(sz))
     ms.anDice[0] = pmr->anDice[0];
     ms.anDice[1] = pmr->anDice[1];
 
-#if USE_GTK
+#if defined (USE_GTK)
     /* Make sure dice are shown */
     if (fX) {
         bd->diceRoll[0] = !ms.anDice[0];
@@ -3128,7 +3132,7 @@ static void
 ShowMark(moverecord * pmr)
 {
 
-#if USE_GTK
+#if defined (USE_GTK)
     BoardData *bd = NULL;
 
     if (fX)
@@ -3143,7 +3147,7 @@ ShowMark(moverecord * pmr)
         ms.anDice[0] = pmr->anDice[0];
         ms.anDice[1] = pmr->anDice[1];
     }
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         /* Don't roll dice */
         bd->diceShown = DICE_ON_BOARD;
@@ -3161,7 +3165,7 @@ InternalCommandNext(int mark, int cmark, int n)
 
     if (mark || cmark) {
         listOLD *pgame;
-        moverecord *pmr;
+        moverecord *pmr = NULL;
         listOLD *p = plLastMove->plNext;
 
         for (pgame = lMatch.plNext; pgame->p != plGame && pgame != &lMatch; pgame = pgame->plNext);
@@ -3191,8 +3195,12 @@ InternalCommandNext(int mark, int cmark, int n)
                 p = ((listOLD *) pgame->p)->plNext;
             }
         }
+
         if (p->p == 0)
             return 0;
+
+        g_assert(pmr);
+
         if (pgame->p != plGame)
             ChangeGame(pgame->p);
 
@@ -3231,7 +3239,7 @@ CommandNext(char *sz)
         outputl(_("No game in progress (type `new game' to start one)."));
         return;
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
     n = 1;
@@ -3286,7 +3294,7 @@ CommandEndGame(char *UNUSED(sz))
     int manual_dice = (rngCurrent == RNG_MANUAL);
     evalcontext ec_cheq_store[2];
     evalcontext ec_cube_store[2];
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     BoardData *bd = NULL;
     if (fX && pwBoard)
         bd = BOARD(pwBoard)->board_data;
@@ -3304,7 +3312,7 @@ CommandEndGame(char *UNUSED(sz))
     if (!move_not_last_in_match_ok())
         return;
 
-#if USE_GTK
+#if defined (USE_GTK)
     else if (!GTKShowWarning(WARN_ENDGAME, NULL))
         return;
 #endif
@@ -3320,7 +3328,7 @@ CommandEndGame(char *UNUSED(sz))
         SetRNG(&rngCurrent, rngctxCurrent, RNG_MERSENNE, "");
         outputon();
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (fX && bd)
         SuspendDiceRolling(bd->rd);
 #endif
@@ -3333,7 +3341,7 @@ CommandEndGame(char *UNUSED(sz))
     outputnew();
 
     do {
-#if USE_GTK
+#if defined (USE_GTK)
         UserCommand("play");
         while (nNextTurn && automaticTask)
             NextTurnNotify(NULL);
@@ -3374,7 +3382,7 @@ CommandEndGame(char *UNUSED(sz))
         SetRNG(&rngCurrent, rngctxCurrent, RNG_MANUAL, "");
         outputon();
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (fX && bd)
         ResumeDiceRolling(bd->rd);
 #endif
@@ -3408,7 +3416,7 @@ CommandPlay(char *UNUSED(sz))
         TurnDone();
 
     fComputing = FALSE;
-#if USE_GTK
+#if defined (USE_GTK)
     NextTurnNotify(NULL);
 #endif
 }
@@ -3475,7 +3483,7 @@ CommandPreviousRoll(char *UNUSED(sz))
 
         ms.anDice[0] = 0;
         ms.anDice[1] = 0;
-#if USE_GTK
+#if defined (USE_GTK)
         if (fX) {
             BoardData *bd = BOARD(pwBoard)->board_data;
             bd->diceRoll[0] = bd->diceRoll[1] = -1;
@@ -3522,7 +3530,7 @@ CommandPrevious(char *sz)
         outputl(_("No game in progress (type `new game' to start one)."));
         return;
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
 
@@ -3640,7 +3648,7 @@ CommandRedouble(char *UNUSED(sz))
         if (nBeavers == 1)
             outputl(_("Only one beaver is permitted (see `help set " "beavers')."));
         else
-            outputf(_("Only %d beavers are permitted (see `help set " "beavers').\n"), nBeavers);
+            outputf(_("Only %u beavers are permitted (see `help set " "beavers').\n"), nBeavers);
 
         return;
     }
@@ -3817,11 +3825,11 @@ CommandRoll(char *UNUSED(sz))
 
     DiceRolled();
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
 
         outputnew();
-        outputf(_("%s rolls %1i and %1i.\n"), ap[ms.fTurn].szName, ms.anDice[0], ms.anDice[1]);
+        outputf(_("%s rolls %1u and %1u.\n"), ap[ms.fTurn].szName, ms.anDice[0], ms.anDice[1]);
         outputx();
 
     }
@@ -3939,7 +3947,7 @@ SetMatchID(const char *szMatchID)
     if (MatchFromID(anDice, &fTurn, &fResigned, &fDoubled, &fMove, &fCubeOwner, &fCrawford,
                     &nMatchTo, anScore, &nCube, &lfJacoby, &gs, szMatchID) < 0) {
         outputf(_("Illegal match ID '%s'\n"), szMatchID);
-        outputf(_("Dice %d %d, "), anDice[0], anDice[1]);
+        outputf(_("Dice %u %u, "), anDice[0], anDice[1]);
         outputf(_("player on roll %d (turn %d), "), fMove, fTurn);
         outputf(_("resigned %d,\n"), fResigned);
         outputf(_("doubled %d, "), fDoubled);
@@ -4427,7 +4435,7 @@ GetMoveString(moverecord * pmr, int *pPlayer, gboolean addSkillMarks)
 
     case MOVE_SETDICE:
         *pPlayer = pmr->fPlayer;
-        sprintf(sz, _("Rolled %d%d"), MAX(pmr->anDice[0], pmr->anDice[1]), MIN(pmr->anDice[0], pmr->anDice[1]));
+        sprintf(sz, _("Rolled %u%u"), MAX(pmr->anDice[0], pmr->anDice[1]), MIN(pmr->anDice[0], pmr->anDice[1]));
         pch = sz;
         break;
 
@@ -4617,7 +4625,7 @@ CommandClearTurn(char *UNUSED(sz))
 
     pmr_hint_destroy();
     fNextTurn = FALSE;
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX) {
         BoardData *bd = BOARD(pwBoard)->board_data;
         bd->diceRoll[0] = bd->diceRoll[1] = -1;
@@ -4627,7 +4635,7 @@ CommandClearTurn(char *UNUSED(sz))
 
     UpdateSetting(&ms.fTurn);
 
-#if USE_GTK
+#if defined (USE_GTK)
     if (fX)
         ShowBoard();
 #endif                          /* USE_GTK */
