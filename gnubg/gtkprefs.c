@@ -44,7 +44,7 @@
 #include "gtkwindows.h"
 #include "util.h"
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #define NUM_NONPREVIEW_PAGES 2
 #else
@@ -63,7 +63,7 @@ static GtkWidget *apwColour[2], *apwBoard[4],
     *pwWood, *pwWoodType, *pwHinges, *pwLightTable, *pwMoveIndicator,
     *pwWoodF, *pwNotebook, *pwLabels, *pwDynamicLabels;
 static GList *plBoardDesigns = NULL;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static GtkWidget *pwBoardType, *pwShowShadows, *pwAnimateRoll, *pwAnimateFlag, *pwCloseBoard,
     *pwDarkness, *lightLab, *darkLab, *pwLightSource, *pwDirectionalSource, *pwQuickDraw,
     *pwTestPerformance, *pmHingeCol, *frame3dOptions, *dtTextureTypeFrame,
@@ -101,7 +101,7 @@ static GtkWidget *apwDiceColourBox[2];
 static int /*fWood, */ fUpdate;
 
 static void GetPrefs(renderdata * prd);
-void AddPages(BoardData * bd, GtkWidget * pwNotebook, GList * plBoardDesigns);
+static void AddPages(BoardData * bd, GtkWidget * pwNotebook, GList * plBoardDesigns);
 
 static void AddDesignRow(gpointer data, gpointer user_data);
 static void AddDesignRowIfNew(gpointer data, gpointer user_data);
@@ -291,7 +291,7 @@ UpdatePreview(void)
         return;
     {
         BoardData *bd = BOARD(pwPrevBoard)->board_data;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         BoardData3d *bd3d = bd->bd3d;
         renderdata *prd = bd->rd;
 
@@ -340,7 +340,7 @@ DieColourChanged(GtkWidget * pw, gpointer pf)
     if (!fUpdate)
         return;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(&rdPrefs)) {
         BoardData *bd = BOARD(pwPrevBoard)->board_data;
         bd->rd->afDieColour3d[f] = set;
@@ -364,7 +364,7 @@ option_changed(GtkWidget * UNUSED(widget), GtkWidget * UNUSED(pw))
         return;
 
     {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         BoardData3d *bd3d = bd->bd3d;
         renderdata *prd = bd->rd;
 
@@ -387,7 +387,7 @@ option_changed(GtkWidget * UNUSED(widget), GtkWidget * UNUSED(pw))
     UpdatePreview();
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 
 static void
 redraw_changed(GtkWidget * UNUSED(widget), GtkWidget ** UNUSED(ppw))
@@ -971,7 +971,7 @@ BoardPrefsOK(GtkWidget * pw, GtkWidget * mainBoard)
     BoardData *bd = BOARD(mainBoard)->board_data;
     GetPrefs(&rdPrefs);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (gtk_gl_init_success) {
         redrawChange = FALSE;
         rdPrefs.quickDraw = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwQuickDraw));
@@ -997,7 +997,7 @@ BoardPrefsOK(GtkWidget * pw, GtkWidget * mainBoard)
     /* Copy new settings to main board */
     *bd->rd = rdPrefs;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     {
         BoardData3d *bd3d = bd->bd3d;
         renderdata *prd = bd->rd;
@@ -1058,7 +1058,7 @@ LabelsToggled(GtkWidget * UNUSED(pwWidget), void *UNUSED(data))
         return;
     bd->rd->fLabels = showLabels;
     bd->rd->fDynamicLabels = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwDynamicLabels));
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_2d(bd->rd))
 #endif
     {
@@ -1076,7 +1076,7 @@ MoveIndicatorToggled(GtkWidget * UNUSED(pwWidget), void *UNUSED(data))
     if (!fUpdate)
         return;
     bd->rd->showMoveIndicator = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwMoveIndicator));
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_2d(bd->rd))
 #endif
     {
@@ -1086,7 +1086,7 @@ MoveIndicatorToggled(GtkWidget * UNUSED(pwWidget), void *UNUSED(data))
     UpdatePreview();
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 
 static void
 toggle_display_type(GtkWidget * widget, BoardData * bd)
@@ -1113,7 +1113,7 @@ toggle_display_type(GtkWidget * widget, BoardData * bd)
     AddPages(bd, pwNotebook, plBoardDesigns);
     gtk_widget_set_sensitive(pwTestPerformance, (display_is_3d(&rdPrefs)));
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     DisplayCorrectBoardType(bd, bd->bd3d, bd->rd);
 #endif
     /* Make sure everything is correctly sized */
@@ -1249,7 +1249,7 @@ Add2dLightOptions(GtkWidget * pwx, renderdata * prd)
     /* FIXME add settings for ambient light */
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static GtkWidget *
 LightingPage(BoardData * bd)
 {
@@ -1397,7 +1397,7 @@ LightingPage(BoardData * bd)
 
 #endif
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static GtkWidget *
 GeneralPage(BoardData * bd, GtkWidget * bdMain)
 {
@@ -1408,7 +1408,7 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 #endif
 
     GtkWidget *pw, *pwx;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     GtkWidget *dtBox, *button, *dtFrame, *hBox, *lab, *pwev, *pwhbox, *pwvbox, *pwAccuracy, *pwDiceSize;
     pwQuickDraw = 0;
 #endif
@@ -1418,7 +1418,7 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     pw = gtk_vbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwx), pw, FALSE, FALSE, 0);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     dtFrame = gtk_frame_new(_("Display Type"));
     gtk_container_set_border_width(GTK_CONTAINER(dtFrame), 4);
     gtk_box_pack_start(GTK_BOX(pw), dtFrame, FALSE, FALSE, 0);
@@ -1459,7 +1459,7 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMoveIndicator), bd->rd->showMoveIndicator);
     g_signal_connect(G_OBJECT(pwMoveIndicator), "toggled", G_CALLBACK(MoveIndicatorToggled), 0);
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     pwvbox = gtk_vbox_new(FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwx), pwvbox, FALSE, FALSE, 0);
 
@@ -1620,20 +1620,20 @@ UseDesign(void)
     float ar[4];
     gfloat rAzimuth, rElevation;
     renderdata newPrefs;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     BoardData *bd = BOARD(pwPrevBoard)->board_data;
 #endif
 
     fUpdate = FALSE;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(&rdPrefs))
         ClearTextures(bd->bd3d);
 #endif
 
     ParsePreferences(pbdeSelected, &newPrefs);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 
     /* Set only 2D or 3D options */
     if (display_is_3d(&rdPrefs)) {
@@ -2046,7 +2046,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
                      (int) (prd->arCubeColour[1] * 0xFF), (int) (prd->arCubeColour[2] * 0xFF));
 
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     pTemp +=
 #endif
         sprintf(pTemp, "         points0=#%02X%02X%02X;%s\n" "         points1=#%02X%02X%02X;%s\n",
@@ -2059,7 +2059,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
                 prd->aanBoardColour[3][2],
                 g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", prd->aSpeckle[3] / 128.0f));
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     sprintf(pTemp,
             "         hinges3d=%c\n"
             "         piecetype=%d\n"
@@ -2115,7 +2115,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
     strcpy(pbde->szBoardDesign, szTemp);
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 
 static void
 Set2dColour(float newcol[4], Material * pMat)
@@ -2217,7 +2217,7 @@ DesignAdd(GtkWidget * pw, gpointer data)
     /* get board design */
     GetPrefs(&rdPrefs);
     rdNew = rdPrefs;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     CopyNewSettingsToOtherDimension(&rdNew);
 #endif
 
@@ -2270,7 +2270,7 @@ ExportDesign(GtkWidget * UNUSED(pw), gpointer UNUSED(data))
         pbde->szAuthor = g_strdup(_("User"));
         GetPrefs(&rdPrefs);
         rdNew = rdPrefs;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         CopyNewSettingsToOtherDimension(&rdNew);
 #endif
     }
@@ -2375,7 +2375,7 @@ UpdateDesign(GtkWidget * pw, gpointer data)
 {
     renderdata newPrefs;
     char prompt[200];
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(&rdPrefs))
         sprintf(prompt, _("Permanently overwrite 3d settings for design %s?"), pbdeModified->szTitle);
     else
@@ -2388,7 +2388,7 @@ UpdateDesign(GtkWidget * pw, gpointer data)
 
     gtk_widget_set_sensitive(GTK_WIDGET(pwDesignUpdate), FALSE);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(&rdPrefs)) {
         /* Get current (2d) settings for design */
         ParsePreferences(pbdeModified, &newPrefs);
@@ -2398,7 +2398,7 @@ UpdateDesign(GtkWidget * pw, gpointer data)
     } else
 #endif
     {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         /* Get current (3d) design settings */
         renderdata designPrefs;
         ParsePreferences(pbdeModified, &designPrefs);
@@ -2408,7 +2408,7 @@ UpdateDesign(GtkWidget * pw, gpointer data)
         GetPrefs(&rdPrefs);
         newPrefs = rdPrefs;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         /* Overwrite 3d design settings */
         Set3dSettings(&newPrefs, &designPrefs);
 #endif
@@ -2580,7 +2580,7 @@ GetPrefs(renderdata * prd)
     int i, j;
     float ar[4];
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     prd->fDisplayType = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwBoardType)) ? DT_2D : DT_3D;
     if (display_is_3d(&rdPrefs)) {
         int newCurveAccuracy;
@@ -2716,7 +2716,7 @@ append_preview_page(GtkWidget * pwNotebook, GtkWidget * pwPage, char *szLabel, p
 void
 AddPages(BoardData * bd, GtkWidget * pwNotebook, GList * plBoardDesigns)
 {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), LightingPage(bd), gtk_label_new(_("Lighting")));
 
     gtk_widget_set_sensitive(frame3dOptions, display_is_3d(&rdPrefs));
@@ -2725,7 +2725,7 @@ AddPages(BoardData * bd, GtkWidget * pwNotebook, GList * plBoardDesigns)
 
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), DesignPage(plBoardDesigns, bd), gtk_label_new(_("Designs")));
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(&rdPrefs)) {
         ResetPreviews();
         append_preview_page(pwNotebook, ChequerPrefs3d(bd), _("Chequers"), PI_CHEQUERS0);
@@ -2756,7 +2756,7 @@ ChangePage(GtkNotebook * UNUSED(notebook), GtkNotebook * UNUSED(page), guint pag
     if (!fUpdate)
         return;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(&rdPrefs))
         dicePage -= 1;
 #endif
@@ -2764,7 +2764,7 @@ ChangePage(GtkNotebook * UNUSED(notebook), GtkNotebook * UNUSED(page), guint pag
 
     if ((page_num == dicePage && bd->turn == 1) || (page_num == dicePage + 1 && bd->turn == -1)) {
         bd->turn = -bd->turn;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(&rdPrefs))
             setDicePos(bd, bd->bd3d);
         else
@@ -2773,7 +2773,7 @@ ChangePage(GtkNotebook * UNUSED(notebook), GtkNotebook * UNUSED(page), guint pag
 
         option_changed(0, 0);
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(&rdPrefs) && redrawChange) {
         redraw_changed(NULL, NULL);
         redrawChange = FALSE;
@@ -2784,7 +2784,7 @@ ChangePage(GtkNotebook * UNUSED(notebook), GtkNotebook * UNUSED(page), guint pag
 static void
 pref_dialog_map(GtkWidget * UNUSED(window), BoardData * bd)
 {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     DisplayCorrectBoardType(bd, bd->bd3d, bd->rd);
     redrawChange = FALSE;
     bd->rd->quickDraw = FALSE;
@@ -2810,7 +2810,7 @@ BoardPreferences(GtkWidget * pwBoard)
     pwPrevBoard = board_new(&rdPrefs);
 
     bd = BOARD(pwPrevBoard)->board_data;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     InitColourSelectionDialog();
 #endif
     InitBoardPreview(bd);
@@ -2820,7 +2820,7 @@ BoardPreferences(GtkWidget * pwBoard)
         GTKCreateDialog(_("GNU Backgammon - Appearance"), DT_QUESTION, NULL,
                         DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, G_CALLBACK(BoardPrefsOK), pwBoard);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (gtk_gl_init_success) {
         SetPreviewLightLevel(bd->rd->lightLevels);
         setDicePos(bd, bd->bd3d);
@@ -2835,7 +2835,7 @@ BoardPreferences(GtkWidget * pwBoard)
     gtk_notebook_popup_enable(GTK_NOTEBOOK(pwNotebook));
 
     gtk_container_set_border_width(GTK_CONTAINER(pwNotebook), 4);
-#if !USE_BOARD3D
+#if !defined(USE_BOARD3D)
     /* Make sure preview is big enough in 2d mode */
     gtk_widget_set_size_request(GTK_WIDGET(pwNotebook), -1, 360);
 #endif
@@ -2877,7 +2877,7 @@ SetBoardPreferences(GtkWidget * pwBoard, char *sz)
 
         if (gtk_widget_get_realized(pwBoard)) {
             board_create_pixmaps(pwBoard, bd);
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
             DisplayCorrectBoardType(bd, bd->bd3d, bd->rd);
             if (display_is_3d(bd->rd))
                 UpdateShadows(bd->bd3d);
@@ -2895,7 +2895,7 @@ SetBoardPreferences(GtkWidget * pwBoard, char *sz)
     }
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 
 static int
 IsWhiteColour3d(Material * pMat)
