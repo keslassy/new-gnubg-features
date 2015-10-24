@@ -24,6 +24,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "lib/simd.h"
+
 #include "gtkgame.h"
 #include "drawboard.h"
 #include "format.h"
@@ -53,7 +55,7 @@ add_level(GtkTreeStore * model, GtkTreeIter * iter,
     GtkTreeIter child_iter;
     cubeinfo ci;
     TanBoard an;
-    float ar[NUM_ROLLOUT_OUTPUTS];
+    SSE_ALIGN(float ar[NUM_ROLLOUT_OUTPUTS]);
     int anMove[8];
     int i;
 
