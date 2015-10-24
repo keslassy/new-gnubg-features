@@ -47,7 +47,7 @@ enum {
     NUM_COLUMNS
 };
 
-static gchar *titles[] = {
+static const gchar *titles[] = {
     N_("Nick"),
     N_("Gnu\nErr"),
     N_("Gnu\nMove"),
@@ -76,7 +76,7 @@ static GtkTreeIter selected_iter;
 static int optionsValid;
 static GtkWidget *playerTreeview, *adddb, *deldb, *gameStats, *dbList, *dbtype, *user, *password, *hostname, *login, *helptext;
 
-void CheckDatabase(const char *database);
+static void CheckDatabase(const char *database);
 static void DBListSelected(GtkTreeView * treeview, gpointer userdata);
 
 #define PACK_OFFSET 4
