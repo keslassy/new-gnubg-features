@@ -135,6 +135,7 @@ EvalCmp(const evalcontext * E1, const evalcontext * E2, const int nElements)
         return 0;
 
     for (i = 0; i < nElements; ++i, ++E1, ++E2) {
+        /* FIXME: an evalcontext is a padded struct, using memcmp on it is unsound */
         cmp = memcmp((const void *) E1, (const void *) E2, sizeof(evalcontext));
         if (cmp != 0)
             break;
@@ -215,8 +216,8 @@ ShowRollout(rolloutcontext * prc)
     if (prc->fLateEvals && (!fDoTruncate || ((nTruncate > nLate) && (nLate > 2))))
         fLateEvals = 1;
 
-    outputf(ngettext("%d game will be played per rollout.\n",
-                     "%d games will be played per rollout.\n", prc->nTrials), prc->nTrials);
+    outputf(ngettext("%u game will be played per rollout.\n",
+                     "%u games will be played per rollout.\n", prc->nTrials), prc->nTrials);
 
     if (!fDoTruncate || nTruncate < 1)
         outputl(_("No truncation."));
@@ -286,10 +287,10 @@ ShowRollout(rolloutcontext * prc)
 
     if (prc->fStopOnSTD) {
         if (prc->fCubeful)
-            outputf(_("Rollouts may stop after %d games if both equities STD\n"
+            outputf(_("Rollouts may stop after %u games if both equities STD\n"
                       "\t(cubeful and cubeless) are less than %5.4f\n"), prc->nMinimumGames, prc->rStdLimit);
         else
-            outputf(_("Rollouts may stop after %d games if equity STD"
+            outputf(_("Rollouts may stop after %u games if equity STD"
                       " is less than %5.4f\n"), prc->nMinimumGames, prc->rStdLimit);
     }
 }
@@ -425,7 +426,7 @@ CommandShowAutomatic(char *UNUSED(sz))
 
     outputf(_("bearoff \t(Play certain non-contact bearoff moves):      \t%s\n"
               "crawford\t(Enable the Crawford rule as appropriate):     \t%s\n"
-              "doubles \t(Turn the cube when opening roll is a double): \t%d\n"
+              "doubles \t(Turn the cube when opening roll is a double): \t%u\n"
               "game    \t(Start a new game after each one is completed):\t%s\n"
               "move    \t(Play the forced move when there is no choice):\t%s\n"
               "roll    \t(Roll the dice if no double is possible):      \t%s\n"),
@@ -503,7 +504,7 @@ CommandShowDelay(char *UNUSED(sz))
 {
 #if USE_GTK
     if (nDelay)
-        outputf(_("The delay is set to %d ms.\n"), nDelay);
+        outputf(_("The delay is set to %u ms.\n"), nDelay);
     else
         outputl(_("No delay is being used."));
 #else
@@ -686,7 +687,7 @@ CommandShowDice(char *UNUSED(sz))
     if (ms.anDice[0] < 1)
         outputf(_("%s has not yet rolled the dice.\n"), ap[ms.fMove].szName);
     else
-        outputf(_("%s has rolled %d and %d.\n"), ap[ms.fMove].szName, ms.anDice[0], ms.anDice[1]);
+        outputf(_("%s has rolled %u and %u.\n"), ap[ms.fMove].szName, ms.anDice[0], ms.anDice[1]);
 }
 
 extern void
@@ -766,7 +767,7 @@ CommandShowMatchInfo(char *UNUSED(sz))
             ap[1].szName, mi.pchRating[1] ? mi.pchRating[1] : _("unknown rating"));
 
     if (mi.nYear)
-        outputf(", %04d-%02d-%02d\n", mi.nYear, mi.nMonth, mi.nDay);
+        outputf(", %04u-%02u-%02u\n", mi.nYear, mi.nMonth, mi.nDay);
     else
         outputc('\n');
 
@@ -790,7 +791,7 @@ extern void
 CommandShowMatchLength(char *UNUSED(sz))
 {
 
-    outputf(ngettext("New matches default to %d point.\n", "New matches default to %d points.\n", nDefaultLength),
+    outputf(ngettext("New matches default to %u point.\n", "New matches default to %u points.\n", nDefaultLength),
             nDefaultLength);
 }
 
@@ -810,7 +811,7 @@ CommandShowPipCount(char *sz)
 
     PipCount((ConstTanBoard) an, anPips);
 
-    outputf(_("The pip counts are: %s %d, %s %d.\n"), ap[ms.fMove].szName, anPips[1], ap[!ms.fMove].szName, anPips[0]);
+    outputf(_("The pip counts are: %s %u, %s %u.\n"), ap[ms.fMove].szName, anPips[1], ap[!ms.fMove].szName, anPips[0]);
 
 #if USE_GTK
     if (fX && fFullScreen) {    /* Display in dialog box in full screen mode (urgh) */
@@ -1088,8 +1089,8 @@ show_kleinman(TanBoard an, char *sz)
     int diff, sum;
 
     PipCount((ConstTanBoard) an, anPips);
-    sprintf(sz, _("Leader Pip Count : %d\n"), anPips[1]);
-    sprintf(strchr(sz, 0), _("Trailer Pip Count: %d\n\n"), anPips[0]);
+    sprintf(sz, _("Leader Pip Count : %u\n"), anPips[1]);
+    sprintf(strchr(sz, 0), _("Trailer Pip Count: %u\n\n"), anPips[0]);
 
     sum = anPips[0] + anPips[1];
     diff = anPips[0] - anPips[1];
@@ -1190,8 +1191,8 @@ show_8912(TanBoard anBoard, char *sz)
     unsigned int anPips[2];
     float ahead;
     PipCount((ConstTanBoard) anBoard, anPips);
-    sprintf(sz, _("Leader Pip Count : %d\n"), anPips[1]);
-    sprintf(strchr(sz, 0), _("Trailer Pip Count: %d\n\n"), anPips[0]);
+    sprintf(sz, _("Leader Pip Count : %u\n"), anPips[1]);
+    sprintf(strchr(sz, 0), _("Trailer Pip Count: %u\n\n"), anPips[0]);
     ahead = ((float) anPips[0] - (float) anPips[1]) / (float) anPips[1] * 100.0f;
     sprintf(strchr(sz, 0), _("Leader is %.1f percent ahead\n"), ahead);
 
@@ -1282,7 +1283,7 @@ CommandShowBeavers(char *UNUSED(sz))
 {
 
     if (nBeavers > 1)
-        outputf(_("%d beavers/raccoons allowed in money sessions.\n"), nBeavers);
+        outputf(_("%u beavers/raccoons allowed in money sessions.\n"), nBeavers);
     else if (nBeavers == 1)
         outputl(_("1 beaver allowed in money sessions."));
     else
@@ -1823,7 +1824,7 @@ CommandShowExport(char *UNUSED(sz))
 
     output(_("- show at most"));
     output("\r\t\t\t\t\t\t: ");
-    outputf(_("%d moves\n"), exsExport.nMoves);
+    outputf(_("%u moves\n"), exsExport.nMoves);
 
     output(_("- show detailed probabilities"));
     output("\r\t\t\t\t\t\t: ");
