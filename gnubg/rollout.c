@@ -41,6 +41,7 @@
 #include "format.h"
 #include "multithread.h"
 #include "rollout.h"
+#include "lib/simd.h"
 
 #if !defined(LOCKING_VERSION)
 
@@ -363,7 +364,12 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
     float arMean[NUM_ROLLOUT_OUTPUTS];
     unsigned int aaanBoard[6][6][2][25];
     int aanMoves[6][6][8];
+#if defined(USE_SIMD_INSTRUCTIONS)
+#define NUM_ROLLOUT_OUTPUTS_PADDED (NUM_ROLLOUT_OUTPUTS + VEC_SIZE - (NUM_ROLLOUT_OUTPUTS % VEC_SIZE))
+    SSE_ALIGN(float aaar[6][6][NUM_ROLLOUT_OUTPUTS_PADDED]);
+#else
     float aaar[6][6][NUM_ROLLOUT_OUTPUTS];
+#endif
 
     evalcontext ecCubeless0ply = { FALSE, 0, FALSE, TRUE, 0.0 };
     evalcontext ecCubeful0ply = { TRUE, 0, FALSE, TRUE, 0.0 };
