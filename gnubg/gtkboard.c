@@ -49,7 +49,7 @@
 #include "matchequity.h"
 #include "gtktoolbar.h"
 #include "boarddim.h"
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 
@@ -127,7 +127,7 @@ InitialPos(BoardData * bd)
 {                               /* Set up initial board position */
     int ip[] = { 0, -2, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, -5, 5, 0, 0, 0, -3, 0, -5, 0, 0, 0, 0, 2, 0, 0, 0 };
     memcpy(bd->points, ip, sizeof(bd->points));
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (gtk_gl_init_success && ShadowsInitilised(bd->bd3d))
         updatePieceOccPos(bd, bd->bd3d);
 #endif
@@ -611,8 +611,8 @@ show_pip_pip(BoardData * bd, const TanBoard points, GString * gst[4])
     int f;
     PipCount(points, anPip);
     f = (bd->turn > 0);
-    g_string_append_printf(gst[0], "%d (%+d)", anPip[!f], anPip[!f] - anPip[f]);
-    g_string_append_printf(gst[1], "%d (%+d)", anPip[f], anPip[f] - anPip[!f]);
+    g_string_append_printf(gst[0], "%u (%+d)", anPip[!f], (int) (anPip[!f] - anPip[f]));
+    g_string_append_printf(gst[1], "%u (%+d)", anPip[f], (int) (anPip[f] - anPip[!f]));
     g_string_append_printf(gst[2], _("Pips: "));
     g_string_append_printf(gst[3], _("Pips: "));
 }
@@ -645,9 +645,9 @@ show_pip_pwe(BoardData * bd, const TanBoard points, GString * gst[4])
     }
     PipCount(points, anPip);
     f = (bd->turn > 0);
-    g_string_append_printf(gst[0], " %d + %.2f = %.2f(%+.2f)", anPip[!f],
+    g_string_append_printf(gst[0], " %u + %.2f = %.2f(%+.2f)", anPip[!f],
                            arEPC[!f] - anPip[!f], arEPC[!f], arEPC[!f] - arEPC[f]);
-    g_string_append_printf(gst[1], " %d + %.2f = %.2f(%+.2f)", anPip[f],
+    g_string_append_printf(gst[1], " %u + %.2f = %.2f(%+.2f)", anPip[f],
                            arEPC[f] - anPip[f], arEPC[f], arEPC[f] - arEPC[!f]);
     g_string_append_printf(gst[2], _("EPC: "));
     g_string_append_printf(gst[3], _("EPC: "));
@@ -781,7 +781,7 @@ board_start_drag(GtkWidget * UNUSED(widget), BoardData * bd, int
 
     bd->points[drag_point] -= bd->drag_colour;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         SetMovingPieceRotation(bd, bd->bd3d, bd->drag_point);
         updatePieceOccPos(bd, bd->bd3d);
@@ -935,7 +935,7 @@ legal_dest_points(BoardData * bd, int dest_points[4])
     return count ? TRUE : FALSE;
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static void
 board_drag(GtkWidget * widget, BoardData * bd, int x, int y)
 #else
@@ -947,7 +947,7 @@ board_drag(GtkWidget * UNUSED(widget), BoardData * bd, int x, int y)
     unsigned char *puch, *puchNew, *puchChequer;
     int s = bd->rd->nSize;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         if (MouseMove3d(bd, bd->bd3d, bd->rd, x, y))
             gtk_widget_queue_draw(widget);
@@ -1216,7 +1216,7 @@ place_chequer_or_revert(BoardData * bd, int dest)
 
     board_invalidate_point(bd, placed ? dest : source);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd) && bd->rd->quickDraw) {
         if (placed)
             RestrictiveEndMouseMove(dest, abs(bd->points[dest]));
@@ -1333,7 +1333,7 @@ board_chequer_number(GtkWidget * UNUSED(board), BoardData * bd, int point, int x
     return 0;
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static void
 updateBoard(GtkWidget * board, BoardData * bd)
 #else
@@ -1346,7 +1346,7 @@ updateBoard(GtkWidget * UNUSED(board), BoardData * bd)
     update_gnubg_id(bd, (ConstTanBoard) points);
     update_pipcount(bd, (ConstTanBoard) points);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         gtk_widget_queue_draw(board);
         updatePieceOccPos(bd, bd->bd3d);
@@ -1374,7 +1374,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
 
     int colour = bd->drag_button == 1 ? 1 : -1;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd))
         n = BoardPoint3d(bd, x, y);
     else
@@ -1397,7 +1397,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
             InitBoard(anBoard, ms.bgv);
             write_board(bd, anBoard);
         }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd))
             RestrictiveRedraw();
         else
@@ -1434,7 +1434,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
     current = abs(bd->points[n]);
 
     /* Given n, map (x, y) to the ith checker position on point n */
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd))
         i = BoardSubPoint3d(bd, x, y, n);
     else
@@ -1455,7 +1455,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
         bd->points[n] = 0;
         current = 0;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd)) {
             gtk_widget_queue_draw(board);
             updatePieceOccPos(bd, bd->bd3d);
@@ -1488,7 +1488,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
         bd->points[n] += mv * colour;
     }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd))
         RestrictiveRedraw();
     else
@@ -1551,7 +1551,7 @@ GreadyBearoff(TanBoard anBoard, unsigned int anDice[2])
 
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static void
 RestrictiveDrawTargetHelp(BoardData * bd)
 {
@@ -1585,7 +1585,7 @@ UpdateMove(BoardData * bd, TanBoard anBoard)
         memcpy(bd->points, old_points, sizeof old_points);
 
     /* Show move */
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         if (bd->rd->quickDraw) {
             int k;
@@ -1652,7 +1652,7 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
             board_beep(bd);
         return TRUE;
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {        /* Ignore clicks when animating */
         GtkAllocation allocation;
 
@@ -1731,7 +1731,7 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
         return TRUE;
 
     case POINT_RESIGN:
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd)) {
             StopIdle3d(bd, bd->bd3d);
             /* clicked on resignation symbol */
@@ -1746,7 +1746,7 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
         return TRUE;
 
     case POINT_DICE:
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd) && bd->diceShown == DICE_BELOW_BOARD) {       /* Click on dice (below board) - shake */
             bd->drag_point = -1;
             if (quick_roll() != 0)
@@ -1765,7 +1765,7 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
             swap_us(bd->diceRoll, bd->diceRoll + 1);
 
             /* Display swapped dice */
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
             if (display_is_3d(bd->rd))
                 gtk_widget_queue_draw(board);
             else
@@ -1914,7 +1914,7 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
                 PositionKey((ConstTanBoard) points, &key);
 
                 if (!update_move(bd)) { /* Show Move */
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
                     if (display_is_3d(bd->rd)) {
                         if (bd->rd->quickDraw) {        /* Redraw 2 start positions, end position and perhaps bar */
                             RestrictiveDrawPiece(n[0], abs(bd->points[n[0]]) + 1);
@@ -1997,7 +1997,7 @@ board_button_release(GtkWidget * board, GdkEventButton * event, BoardData * bd)
     if (bd->drag_point < 0)
         return TRUE;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {        /* Reverse screen y coords for OpenGL */
         GtkAllocation allocation;
         gtk_widget_get_allocation(board, &allocation);
@@ -2055,13 +2055,13 @@ board_button_release(GtkWidget * board, GdkEventButton * event, BoardData * bd)
     else {
         board_invalidate_point(bd, release_point);
         board_beep(bd);
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd) && bd->rd->quickDraw)
             RestrictiveEndMouseMove(bd->drag_point, abs(bd->points[bd->drag_point]));
 #endif
     }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         /* Update 3d Display */
         updatePieceOccPos(bd, bd->bd3d);
@@ -2095,7 +2095,7 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
     int y = (int) event->y;
     int editing = ToolbarIsEditing(pwToolbar);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {        /* Reverse screen y coords for openGL */
         GtkAllocation allocation;
         gtk_widget_get_allocation(board, &allocation);
@@ -2120,13 +2120,13 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
             &&gdk_event_get_time((GdkEvent *) event) - bd->click_time > HINT_TIME) {
             bd->DragTargetHelp = legal_dest_points(bd, bd->iTargetHelpPoints);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
             if (bd->rd->quickDraw && fGUIDragTargetHelp && bd->DragTargetHelp)
                 RestrictiveDrawTargetHelp(bd);
 #endif
         }
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_2d(bd->rd))
 #endif
     {
@@ -2458,7 +2458,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
         redrawNeeded = 1;
 
         if (bd->x_dice[0] > 0
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
             && display_is_2d(bd->rd)
 #endif
             ) {
@@ -2489,7 +2489,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
             } else
                 bd->diceShown = DICE_NOT_SHOWN;
         } else {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
             if (display_is_3d(bd->rd)) {
                 /* Has been shaken, so roll dice */
                 if (bd->diceShown == DICE_ROLLING) {
@@ -2506,7 +2506,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
             }
             bd->diceShown = DICE_ON_BOARD;
         }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd) && bd->rd->quickDraw)
             RestrictiveDrawDice(bd);
 #endif
@@ -2528,7 +2528,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
         return 0;
 
     if (bd->turn != old_turn) {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd)) {
             /* Make sure flag shadow is correct if players are swapped when resigned */
             if (bd->resigned)
@@ -2550,7 +2550,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
         bd->cube_owner != bd->opponent_can_double - bd->can_double ||
         cube_use != bd->cube_use || bd->crawford_game != old_crawford || bd->jacoby_flag != old_jacoby) {
         int xCube, yCube;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         int old_cube_owner = bd->cube_owner;
 #endif
         redrawNeeded = 1;
@@ -2558,7 +2558,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
         bd->cube_owner = bd->opponent_can_double - bd->can_double;
         bd->cube_use = cube_use;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd)) {
             SetupViewingVolume3d(bd, bd->bd3d, bd->rd); /* Cube may be out of top of screen */
             if (bd->rd->quickDraw)
@@ -2592,7 +2592,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
         board_invalidate_rect(bd->drawing_area,
                               xResign * bd->rd->nSize,
                               yResign * bd->rd->nSize, 8 * bd->rd->nSize, 8 * bd->rd->nSize, bd);
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd))
             ShowFlag3d(bd, bd->bd3d, bd->rd);
 #endif
@@ -2611,7 +2611,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
 
         return 0;
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         if (redrawNeeded)
             DrawScene3d(bd->bd3d);
@@ -2830,7 +2830,7 @@ extern void
 board_animate(Board * board, int move[8], int player)
 {
     if (animGUI == ANIMATE_NONE || ms.fResigned) {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         RestrictiveRedraw();
 #endif
         return;
@@ -2841,7 +2841,7 @@ board_animate(Board * board, int move[8], int player)
 
     animation_finished = FALSE;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     {
         BoardData *bd = board->board_data;
         if (display_is_3d(bd->rd)) {
@@ -2881,7 +2881,7 @@ update_buttons(BoardData * bd)
     c = ToolbarUpdate(pwToolbar, &ms, bd->diceShown, bd->computer_turn, bd->playing);
 
     if (bd->rd->fDiceArea
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         && (display_is_2d(bd->rd))
 #endif
         ) {
@@ -2933,7 +2933,7 @@ game_set(Board * board, TanBoard points, int roll,
 
     update_buttons(bd);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         UpdateShadows(bd->bd3d);
         DrawScene3d(bd->bd3d);
@@ -2952,6 +2952,7 @@ game_set(Board * board, TanBoard points, int roll,
 }
 
 int showingGray;
+
 void
 GrayScaleColC(unsigned char *pCols)
 {
@@ -2976,7 +2977,7 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
     int i, nSizeReal;
 
     unsigned char aanBoardTemp[4][4];
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     int j;
     double aarColourTemp[2][4];
     unsigned char aanBoardColourTemp[4];
@@ -3035,7 +3036,7 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
         gdk_draw_rgb_image(bd->appmKey[i], bd->gc_copy, 0, 0, 20, 20, GDK_RGB_DITHER_MAX, auch, 20 * 3);
 
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {        /* Restore 2d colours */
         memcpy(bd->rd->aarColour, aarColourTemp, sizeof(bd->rd->aarColour));
         memcpy(bd->rd->aanBoardColour[0], aanBoardColourTemp, sizeof(aanBoardColourTemp));
@@ -3059,7 +3060,7 @@ board_free_pixmaps(BoardData * bd)
     FreeImages(&bd->ri);
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 
 extern void
 DisplayCorrectBoardType(BoardData * bd, BoardData3d * UNUSED(bd3d), renderdata * UNUSED(prd))
@@ -3104,7 +3105,7 @@ board_size_allocate(GtkWidget * board, GtkAllocation * allocation)
     /* ensure there is room for the dice area or the move, whichever is
      * bigger */
     if (bd->rd->fDiceArea
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         && (display_is_2d(bd->rd))
 #endif
         ) {
@@ -3124,7 +3125,7 @@ board_size_allocate(GtkWidget * board, GtkAllocation * allocation)
         board_free_pixmaps(bd);
         board_create_pixmaps(board, bd);
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     child_allocation.width = allocation->width;
     child_allocation.height = allocation->height;
     child_allocation.x = allocation->x;
@@ -3142,7 +3143,7 @@ board_size_allocate(GtkWidget * board, GtkAllocation * allocation)
     /* allocation for dice area */
 
     if (bd->rd->fDiceArea
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         && (display_is_2d(bd->rd))
 #endif
         ) {
@@ -3303,7 +3304,7 @@ board_edit(BoardData * bd)
     else
         bd->grayBoard = FALSE;
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         RerenderBase(bd->bd3d);
         DrawScene3d(bd->bd3d);
@@ -3589,7 +3590,7 @@ board_init(Board * board)
                           GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK);
     gtk_container_add(GTK_CONTAINER(board), bd->drawing_area);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     /* 3d board drawing area */
     gtk_gl_init_success = gtk_gl_init_success ? CreateGLWidget(bd) : FALSE;
     if (gtk_gl_init_success) {
@@ -3904,7 +3905,7 @@ board_cube_widget(Board * board)
     renderdata rd;
     CopyAppearance(&rd);
     rd.nSize = setSize;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
         for (x = 0; x < 4; x++)
             rd.arCubeColour[x] = bd->rd->CubeMat.ambientColour[x];
@@ -3992,7 +3993,7 @@ DestroySetDice(GtkWidget * po, void *data)
     gtk_widget_destroy(gtk_widget_get_toplevel(po));
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 extern void
 Copy3dDiceColour(renderdata * prd)
 {
@@ -4059,7 +4060,7 @@ board_dice_widget(Board * board, manualDiceType mdt)
 
     CopyAppearance(&rd);
     rd.nSize = setSize;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     Copy3dDiceColour(&rd);
 #endif
     sdd->TTachDice[0] = malloc(diceStride * setSize * DIE_HEIGHT);
@@ -4106,7 +4107,7 @@ board_dice_widget(Board * board, manualDiceType mdt)
     return main_table;
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 extern void
 InitBoardData(BoardData * bd)
 {                               /* Initialize some BoardData settings on new game start */

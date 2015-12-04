@@ -29,7 +29,7 @@
 #include "common.h"
 #include "render.h"
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "types3d.h"
 #endif
 
@@ -111,7 +111,7 @@ struct _BoardData {
     int iTargetHelpPoints[4];   /* Drag target position */
     int grayBoard;              /* Show board grayed when editing */
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     BoardData3d *bd3d;          /* extra members for 3d board */
 #endif
     renderdata *rd;             /* The board colour settings */
