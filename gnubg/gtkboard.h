@@ -165,14 +165,7 @@ enum TheoryTypes { TT_PIPCOUNT = 1, TT_EPC = 2, TT_RETURNHITS = 4, TT_KLEINCOUNT
 void UpdateTheoryData(BoardData * bd, int UpdateTypes, const TanBoard points);
 
 extern void read_board(BoardData * bd, TanBoard points);
-extern void update_gnubg_id(BoardData * bd, const TanBoard points);
 extern void update_pipcount(BoardData * bd, const TanBoard points);
-extern void write_board(BoardData * bd, TanBoard anBoard);
-extern void board_beep(BoardData * bd);
-extern void Confirm(BoardData * bd);
-extern int update_move(BoardData * bd);
-extern gboolean place_chequer_or_revert(BoardData * bd, int dest);
-extern gboolean LegalDestPoints(BoardData * bd, int iDestPoints[4]);
 extern void InitBoardData(BoardData * bd);
 extern gboolean board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd);
 extern gboolean board_motion_notify(GtkWidget * widget, GdkEventMotion * event, BoardData * bd);
@@ -180,8 +173,6 @@ extern gboolean board_button_release(GtkWidget * board, GdkEventButton * event, 
 extern void RollDice2d(BoardData * bd);
 extern void DestroyPanel(gnubgwindow window);
 extern void
-
-
 DrawDie(GdkDrawable * pd,
         unsigned char *achDice[2], unsigned char *achPip[2],
         const int s, GdkGC * gc, int x, int y, int fColour, int n, int alpha);

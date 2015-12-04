@@ -157,7 +157,7 @@ intersects(int x0, int y0, int cx0, int cy0, int x1, int y1, int
     return (y1 + cy1 > y0) && (y1 < y0 + cy0) && (x1 + cx1 > x0) && (x1 < x0 + cx0);
 }
 
-extern void
+static void
 board_beep(BoardData * UNUSED(bd))
 {
     if (fGUIBeep)
@@ -221,7 +221,7 @@ write_points(gint points[28], const gint turn, const gint nchequers, TanBoard an
 
 }
 
-extern void
+static void
 write_board(BoardData * bd, TanBoard anBoard)
 {
 
@@ -500,7 +500,7 @@ board_point(GtkWidget * UNUSED(board), BoardData * bd, int x0, int y0)
     return -1;
 }
 
-extern void
+static void
 update_gnubg_id(BoardData * bd, const TanBoard points)
 {
 
@@ -689,7 +689,7 @@ update_pipcount(BoardData * bd, const TanBoard points)
 
 /* A chequer has been moved or the board has been updated -- update the
  * move and position ID labels. */
-int
+static int
 update_move(BoardData * bd)
 {
     char *move = _("Illegal move"), move_buf[40];
@@ -750,7 +750,7 @@ update_move(BoardData * bd)
     return (fIllegal && !fGUIIllegal) ? -1 : 0;
 }
 
-extern void
+static void
 Confirm(BoardData * bd)
 {
 
@@ -1028,7 +1028,7 @@ board_end_drag(GtkWidget * UNUSED(widget), BoardData * bd)
  * has been picked up.  If the move fails, that pickup will be reverted.
  */
 
-gboolean
+static gboolean
 place_chequer_or_revert(BoardData * bd, int dest)
 {
     /* This procedure has grown more complicated than I like
