@@ -747,7 +747,7 @@ PythonPosInfo(PyObject * UNUSED(self), PyObject * args)
     int fTurn = ms.fTurn;
     int fResigned = ms.fResigned;
     int fDoubled = ms.fDoubled;
-    int gs = ms.gs;
+    gamestate gs = ms.gs;
     int anDice[2];
     anDice[0] = ms.anDice[0];
     anDice[1] = ms.anDice[1];
@@ -846,7 +846,7 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
     PyObject *retval = NULL, *gnubgid = NULL, *tmpobj;
     procrecorddata prochint;
     char szNumber[6];
-    char *szHintType;
+    char *szHintType = NULL;
     int nMaxMoves = -1;
 
     if (!PyArg_ParseTuple(args, "|i", &nMaxMoves))
@@ -1055,7 +1055,7 @@ PythonClassifyPosition(PyObject * UNUSED(self), PyObject * args)
 {
     PyObject *pyBoard = NULL;
     TanBoard anBoard;
-    int iVariant = ms.bgv;
+    bgvariation iVariant = ms.bgv;
 
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
 
@@ -1067,7 +1067,7 @@ PythonClassifyPosition(PyObject * UNUSED(self), PyObject * args)
         return NULL;
     }
 
-    if (iVariant < 0 || iVariant >= NUM_VARIATIONS) {
+    if (iVariant >= NUM_VARIATIONS) {
         PyErr_SetString(PyExc_StandardError, _("Variation unknown "));
         return NULL;
     }
@@ -1226,7 +1226,7 @@ PythonEvaluateCubeful(PyObject * UNUSED(self), PyObject * args)
     float arCube[NUM_CUBEFUL_OUTPUTS];
     cubeinfo ci;
     evalcontext ec;
-    int cp;
+    cubedecision cp;
 
     memcpy (&ec, &GetEvalCube()->ec, sizeof (evalcontext));
     memcpy(anBoard, msBoard(), sizeof(TanBoard));
@@ -2246,8 +2246,8 @@ PyMoveAnalysis(const movelist * pml, PyMatchState * ms)
 
 SIMD_STACKALIGN static PyObject *
 PyDoubleAnalysis(const evalsetup * pes,
-                 float aarOutput[][NUM_ROLLOUT_OUTPUTS],
-                 float aarStdDev[][NUM_ROLLOUT_OUTPUTS], PyMatchState * ms, int const verbose)
+                 float const aarOutput[][NUM_ROLLOUT_OUTPUTS],
+                 float const aarStdDev[][NUM_ROLLOUT_OUTPUTS], PyMatchState * ms, int const verbose)
 {
     PyObject *dict = 0;
 
@@ -2634,8 +2634,8 @@ PythonGame(const listOLD * plGame,
                     if (analysis) {
                         if (pmr->CubeDecPtr->esDouble.et != EVAL_NONE) {
                             PyObject *d = PyDoubleAnalysis(&pmr->CubeDecPtr->esDouble,
-                                                           (float (*)[NUM_ROLLOUT_OUTPUTS]) pmr->CubeDecPtr->aarOutput,
-                                                           (float (*)[NUM_ROLLOUT_OUTPUTS]) pmr->CubeDecPtr->aarStdDev,
+                                                           pmr->CubeDecPtr->aarOutput,
+                                                           pmr->CubeDecPtr->aarStdDev,
                                                            ms, verbose);
                             {
                                 int s = PyDict_Merge(analysis, d, 1);
@@ -2675,8 +2675,8 @@ PythonGame(const listOLD * plGame,
                     if (analysis) {
                         const cubedecisiondata *c = pmr->CubeDecPtr;
                         if (c->esDouble.et != EVAL_NONE) {
-                            PyObject *d = PyDoubleAnalysis(&c->esDouble, (float (*)[NUM_ROLLOUT_OUTPUTS]) c->aarOutput,
-                                                           (float (*)[NUM_ROLLOUT_OUTPUTS]) c->aarStdDev, ms, verbose);
+                            PyObject *d = PyDoubleAnalysis(&c->esDouble, c->aarOutput,
+                                                           c->aarStdDev, ms, verbose);
                             {
                                 int s = PyDict_Merge(analysis, d, 1);
                                 g_assert(s != -1);
