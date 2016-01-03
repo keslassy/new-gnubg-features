@@ -2,7 +2,7 @@
  * neuralnetsse.c
  * by Jon Kinsey, 2006
  *
- * SSE (Intel) specific code
+ * SIMD (Intel) specific code
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
@@ -23,7 +23,7 @@
 #include "config.h"
 #include "common.h"
 
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
 
 #define DEBUG_SSE 0
 
@@ -136,8 +136,12 @@ sigmoid_positive_ps(float_vector xin)
 #else
     x1 = _mm_sub_ps(x1, _mm_cvtepi32_ps(i.i));
     x1 = _mm_add_ps(x1, tens.ps);
+#if defined(USE_FMA3)
+    x1 = _mm256_fmadd_ps(x1, ex, ones.ps);
+#else
     x1 = _mm_mul_ps(x1, ex);
     x1 = _mm_add_ps(x1, ones.ps);
+#endif
 #ifdef __FAST_MATH__
     return _mm_rcp_ps(x1);
 #else
@@ -191,6 +195,15 @@ for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE
     sum = _mm256_add_ps(vec0, vec1); \
     _mm256_store_ps(pr, sum); \
 }
+#if defined(USE_FMA3)
+#define INPUT_MULTADD() \
+for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) { \
+    vec0 = _mm256_load_ps(pr); \
+    vec1 = _mm256_load_ps(prWeight); \
+    sum = _mm256_fmadd_ps(vec1, scalevec, vec0); \
+    _mm256_store_ps(pr, sum); \
+}
+#else
 #define INPUT_MULTADD() \
 for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) { \
     vec0 = _mm256_load_ps(pr); \
@@ -199,6 +212,7 @@ for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE
     sum = _mm256_add_ps(vec0, vec3); \
     _mm256_store_ps(pr, sum); \
 }
+#endif
 #endif
 
 static void
@@ -210,8 +224,12 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
     float *prWeight;
 #if defined(USE_SSE2) || defined(USE_AVX)
     float *par;
-#endif
+#if defined(USE_FMA3)
+    float_vector vec0, vec1, scalevec, sum;
+#else
     float_vector vec0, vec1, vec3, scalevec, sum;
+#endif
+#endif
 
     /* Calculate activity at hidden nodes */
     memcpy(ar, pnn->arHiddenThreshold, cHidden * sizeof(float));
@@ -260,6 +278,10 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
             else {
                 float *pr = ar;
 
+#if defined(USE_FMA3)
+                scalevec = _mm256_set1_ps(ari);
+                INPUT_MULTADD();
+#else
                 if (ari == 1.0f) {
                     INPUT_ADD();
                 } else {
@@ -270,6 +292,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 #endif
                     INPUT_MULTADD();
                 }
+#endif
             }                   /* base inputs are done */
         }
 
@@ -300,6 +323,10 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
                 prWeight += cHidden;
             else {
                 float *pr = ar;
+#if defined(USE_FMA3)
+                scalevec = _mm256_set1_ps(ari);
+                INPUT_MULTADD();
+#else
                 if (ari == 1.0f) {
                     INPUT_ADD();
                 } else {
@@ -310,6 +337,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 #endif
                     INPUT_MULTADD();
                 }
+#endif
             }
         }
 
@@ -357,8 +385,12 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 #if defined(USE_AVX)
             vec0 = _mm256_load_ps(pr);  /* Eight floats into vec0 */
             vec1 = _mm256_load_ps(prWeight);    /* Eight weights into vec1 */
+#if defined(USE_FMA3)
+            sum = _mm256_fmadd_ps(vec0, vec1, sum);
+#else
             vec3 = _mm256_mul_ps(vec0, vec1);   /* Multiply */
             sum = _mm256_add_ps(sum, vec3);     /* Add */
+#endif
 #else
             vec0 = _mm_load_ps(pr);     /* Four floats into vec0 */
             vec1 = _mm_load_ps(prWeight);       /* Four weights into vec1 */

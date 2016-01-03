@@ -1,3 +1,8 @@
+2016-01-03  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* neuralnetsse.c: Use FMA3 instructions in a few places if
+	available and enabled. The speed gain is modest.
+
 2014-10-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* neuralnetsse.c: Use knowledge of the limited range of possible
