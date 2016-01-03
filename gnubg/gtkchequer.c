@@ -21,8 +21,6 @@
 
 #include "config.h"
 
-#include <gtk/gtk.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,7 +38,7 @@
 #include "gtkwindows.h"
 #include "progress.h"
 #include "format.h"
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 #include "gtklocdefs.h"
@@ -147,7 +145,7 @@ ShowMove(hintdata * phd, const int f)
         g_free(sz);
 
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
 }
@@ -206,7 +204,7 @@ MoveListTempMapClicked(GtkWidget * pw, hintdata * phd)
 static void
 MoveListCmarkClicked(GtkWidget * UNUSED(pw), hintdata * phd)
 {
-    guint new_mark;
+    CMark new_mark;
     guint all_marked = TRUE;
     GList *pl;
     GList *plSelList = MoveListGetSelectionList(phd);
@@ -218,7 +216,7 @@ MoveListCmarkClicked(GtkWidget * UNUSED(pw), hintdata * phd)
         if (m->cmark == CMARK_NONE)
             all_marked = FALSE;
     }
-    new_mark = all_marked ? 0 : 1;
+    new_mark = all_marked ? CMARK_NONE : CMARK_ROLLOUT;
     for (pl = plSelList; pl; pl = pl->next) {
 
         move *m = MoveListGetMove(phd, pl);
@@ -431,7 +429,7 @@ MoveListMove(GtkWidget * pw, hintdata * phd)
     FormatMove(szMove, msBoard(), m.anMove);
     UserCommand(szMove);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     RestrictiveRedraw();
 #endif
 }

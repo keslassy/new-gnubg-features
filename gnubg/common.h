@@ -30,12 +30,12 @@
 #endif /* HAVE___ATTRIBUTE__ */
 
 
-/*! \brief Safe double error value (and float with a cast)
+/*! \brief Safe error value
  */
 #if defined(HUGE_VAL)
-#define ERR_VAL (-HUGE_VAL)
+#define ERR_VAL (float)(-HUGE_VAL)
 #else
-#define ERR_VAL (-FLT_MAX)
+#define ERR_VAL (float)(-FLT_MAX)
 #endif
 
 /*! \brief Macro to extract sign

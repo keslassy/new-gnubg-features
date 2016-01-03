@@ -29,12 +29,11 @@
 #include <glib.h>
 #include "render.h"
 #include "renderprefs.h"
-#if USE_GTK
-#include <gtk/gtk.h>
+#if defined(USE_GTK)
 #include "gtkboard.h"
 #include "gtkgame.h"
 #endif
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 
@@ -132,7 +131,7 @@ SetColourX(float arColour[4], const char *sz)
     return -1;
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static int
 SetColourF(float arColour[4], const char *sz)
 {
@@ -154,7 +153,7 @@ SetColourF(float arColour[4], const char *sz)
 }
 #endif                          /* USE_BOARD3D */
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static int
 SetMaterialCommon(Material * pMat, const char *sz, const char **arg)
 {
@@ -350,7 +349,7 @@ SetWood(const char *sz, woodtype * pbw)
     woodtype bw;
     size_t cch = strlen(sz);
 
-    for (bw = 0; bw <= WOOD_PAINT; bw++)
+    for (bw = WOOD_ALDER; bw <= WOOD_PAINT; bw++)
         if (!StrNCaseCmp(sz, aszWoodName[bw], cch)) {
             *pbw = bw;
             return 0;
@@ -359,7 +358,7 @@ SetWood(const char *sz, woodtype * pbw)
     return -1;
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 static displaytype
 check_for_board3d(char *szValue)
 {
@@ -403,7 +402,7 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         prd->fDiceArea = toupper(*szValue) == 'Y';
     else if (!StrNCaseCmp(szParam, "show pips", c)) {
         /* FIXME deprecated in favour of "set gui animation ..." */
-#if USE_GTK
+#if defined(USE_GTK)
         switch (toupper(*szValue)) {
         case 'N':
             gui_show_pips = GUI_SHOW_PIPS_NONE;
@@ -423,7 +422,7 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         }
 #endif
     }
-#if USE_GTK
+#if defined(USE_GTK)
     else if (!StrNCaseCmp(szParam, "illegal", c))
         /* FIXME deprecated in favour of "set gui illegal" */
         fGUIIllegal = toupper(*szValue) == 'Y';
@@ -440,7 +439,7 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         prd->fHinges = toupper(*szValue) == 'Y';
     else if (!StrNCaseCmp(szParam, "animate", c)) {
         /* FIXME deprecated in favour of "set gui animation ..." */
-#if USE_GTK
+#if defined(USE_GTK)
         switch (toupper(*szValue)) {
         case 'B':
             animGUI = ANIMATE_BLINK;
@@ -460,7 +459,7 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         if (n < 0 || n > 7)
             fValueError = TRUE;
         else {
-#if USE_GTK
+#if defined(USE_GTK)
             nGUIAnimSpeed = n;
 #endif
         }
@@ -488,7 +487,7 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         prd->rRound = 1.0f - rRound;
     } else if (!StrNCaseCmp(szParam, "moveindicator", c))
         prd->showMoveIndicator = toupper(*szValue) == 'Y';
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     else if (!StrNCaseCmp(szParam, "boardtype", c))
         prd->fDisplayType = check_for_board3d(szValue);
     else if (!StrNCaseCmp(szParam, "hinges3d", c))
@@ -596,7 +595,7 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         outputf(_("`%s' is not a legal value for parameter `%s'.\n"), szValue, szParam);
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 
 char *
 WriteMaterial(Material * pMat)
@@ -657,7 +656,7 @@ SaveRenderingSettings(FILE * pf)
             prd->aanBoardColour[1][1], prd->aanBoardColour[1][2]);
     fprintf(pf, "moveindicator=%c ", prd->showMoveIndicator ? 'y' : 'n');
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     fprintf(pf, "boardtype=%c ", display_is_2d(prd) ? '2' : '3');
     fprintf(pf, "hinges3d=%c ", prd->fHinges3d ? 'y' : 'n');
     fprintf(pf, "boardshadows=%c ", prd->showShadows ? 'y' : 'n');
