@@ -32,7 +32,6 @@
 #include <string.h>
 #include <glib.h>
 #if USE_GTK
-#include <gtk/gtk.h>
 #include <gtkgame.h>
 #endif
 
