@@ -6788,6 +6788,7 @@ GTKDumpStatcontext(int game)
 {
     GtkWidget *copyMenu, *menu_item, *pvbox, *pwUsePanels;
     GtkWidget *navi_combo;
+    GtkWidget *addToDbButton;
 #if defined(USE_BOARD3D)
     int i;
     GtkWidget *pw;
@@ -6795,6 +6796,10 @@ GTKDumpStatcontext(int game)
     GraphData *gd = CreateGraphData();
 #endif
     pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
+                      addToDbButton = gtk_button_new_with_label(_("Add to DB")));
+    g_signal_connect(addToDbButton, "clicked", G_CALLBACK(GtkRelationalAddMatch), pwStatDialog);
 
     pwNotebook = gtk_notebook_new();
     gtk_notebook_set_scrollable(GTK_NOTEBOOK(pwNotebook), TRUE);
