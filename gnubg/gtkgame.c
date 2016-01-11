@@ -36,10 +36,10 @@
 #include <locale.h>
 #include "glib-ext.h"
 
-#if HAVE_UNISTD_H
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
 #include <readline/history.h>
 #include <readline/readline.h>
 #endif
@@ -628,7 +628,7 @@ GTKResumeInput(void)
 static gboolean
 StdinReadNotify(GIOChannel * UNUSED(source), GIOCondition UNUSED(cond), gpointer UNUSED(p))
 {
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
     /* Handle "next turn" processing before more input (otherwise we might
      * not even have a readline handler installed!) */
     while (nNextTurn)
@@ -952,7 +952,7 @@ luck_label(lucktype lt)
     GtkWidget *label;
     gchar *markup;
     const gchar *skill;
-    gchar *color[N_LUCKS] = { "red", "orange", "black", "green", "white" };
+    const gchar *color[N_LUCKS] = { "red", "orange", "black", "green", "white" };
 
     label = gtk_label_new(NULL);
     skill = aszLuckType[lt] ? gettext(aszLuckType[lt]) : "";
@@ -969,7 +969,7 @@ skill_label(skilltype st)
     GtkWidget *label;
     gchar *markup;
     const gchar *skill;
-    gchar *color[] = { "red", "orange", "yellow", "black" };
+    const gchar *color[N_SKILLS] = { "red", "orange", "yellow", "black" };
 
     label = gtk_label_new(NULL);
     skill = aszSkillType[st] ? gettext(aszSkillType[st]) : "";
@@ -2795,7 +2795,6 @@ PlayersOK(GtkWidget * pw, playerswidget * pplw)
                 pplw->ap[i].pt = j;
                 break;
             }
-        g_assert(j < 4);
 
         strcpyn(pplw->aszSocket[i], gtk_entry_get_text(GTK_ENTRY(pplw->apwSocket[i])), 128);
     }
@@ -3926,7 +3925,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
         GTKAllowStdin();
 
         if (fTTY) {
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
             fReadingCommand = TRUE;
             rl_callback_handler_install(FormatPrompt(), ProcessInput);
             atexit(rl_callback_handler_remove);
@@ -5247,7 +5246,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
             }
 
             if (rw.rcRollout.nTruncate != rcRollout.nTruncate) {
-                sprintf(sz, "set rollout truncation plies %d", rw.rcRollout.nTruncate);
+                sprintf(sz, "set rollout truncation plies %u", rw.rcRollout.nTruncate);
                 UserCommand(sz);
             }
 
@@ -5294,7 +5293,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
 
 
             if (rw.rcRollout.nLate != rcRollout.nLate) {
-                sprintf(sz, "set rollout late plies %d", rw.rcRollout.nLate);
+                sprintf(sz, "set rollout late plies %u", rw.rcRollout.nLate);
                 UserCommand(sz);
             }
 

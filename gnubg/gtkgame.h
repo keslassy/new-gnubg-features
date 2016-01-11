@@ -178,7 +178,7 @@ extern void ShowToolbar(void);
 extern void HideToolbar(void);
 extern void MoveListDestroy(void);
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
 extern int fReadingCommand;
 extern void ProcessInput(char *sz);
 #endif
