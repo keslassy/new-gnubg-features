@@ -3367,7 +3367,7 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
         for (i = 0, pl = g_list_first(games); i < g_list_length(games); i++, pl = g_list_next(pl)) {
             int pts;
             PartyGame *pGame = (PartyGame *) (pl->data);
-            fprintf(matFP, "\n Game %d\n", i + 1);
+            fprintf(matFP, "\n Game %u\n", i + 1);
             fprintf(matFP, " %s : %d %14s %s : %d\n", p1, s1, " ", p2, s2);
             pts = pGame->s2 - s2 - pGame->s1 + s1;
             WritePartyGame(matFP, pGame->gameStr, pts);
@@ -3376,6 +3376,7 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
             free(pGame->gameStr);
             free(pGame);
         }
+        free(pg.gameStr);
         fclose(matFP);
         fclose(partyFP);
         g_list_free(pl);
@@ -3383,6 +3384,7 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
     }
     if (ferror(partyFP))
         outputerr("tomat");
+    free(pg.gameStr);
     fclose(partyFP);
     return FALSE;
 }
