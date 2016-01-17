@@ -476,9 +476,9 @@ RestoreRootNode(listOLD * pl)
             RestoreText(pp->pl->plNext->p, &mi.pchRating[1]);
         else if (pp->ach[0] == 'D' && pp->ach[1] == 'T') {
             /* DT - Date */
-            int nYear, nMonth, nDay;
+            unsigned int nYear, nMonth, nDay;
 
-            if (pp->pl->plNext->p && sscanf(pp->pl->plNext->p, "%d-%d-%d", &nYear, &nMonth, &nDay) == 3) {
+            if (pp->pl->plNext->p && sscanf(pp->pl->plNext->p, "%u-%u-%u", &nYear, &nMonth, &nDay) == 3) {
                 mi.nYear = nYear;
                 mi.nMonth = nMonth;
                 mi.nDay = nDay;
@@ -1632,7 +1632,7 @@ WriteRolloutContext(FILE * pf, rolloutcontext * prc)
 
     int i;
 
-    fprintf(pf, "RC %u %u %u %u %u %u %d %u %u %d \"%s\" %lu ",
+    fprintf(pf, "RC %u %u %u %u %u %u %u %u %u %u \"%s\" %lu ",
             prc->fCubeful,
             prc->fVarRedn,
             prc->fInitial,
@@ -1852,7 +1852,7 @@ WriteMoveAnalysis(FILE * pf, int fPlayer, movelist * pml, unsigned int iMove)
     fprintf(pf, "MR[");
     for (i = 0; i < pml->cMoves; i++) {
         if (pml->amMoves[i].cmark)
-            fprintf(pf, "%d ", i + 1);
+            fprintf(pf, "%u ", i + 1);
     }
     fputc(']', pf);
 }
@@ -2242,7 +2242,7 @@ SaveGame(FILE * pf, listOLD * plGame)
                 fputs("AW", pf);
                 for (i = 0; i < 25; i++)
                     for (j = 0; j < anBoard[1][i]; j++)
-                        fprintf(pf, "[%c]", 'a' + i);
+                        fprintf(pf, "[%c]", (char) ('a' + i));
             }
 
             for (i = 0, j = 0; i < 25; ++i)
@@ -2252,7 +2252,7 @@ SaveGame(FILE * pf, listOLD * plGame)
                 fputs("AB", pf);
                 for (i = 0; i < 25; i++)
                     for (j = 0; j < anBoard[0][i]; j++)
-                        fprintf(pf, "[%c]", i == 24 ? 'y' : 'x' - i);
+                        fprintf(pf, "[%c]", i == 24 ? 'y' : (char) ('x' - i));
             }
 
             break;
