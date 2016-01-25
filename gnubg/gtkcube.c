@@ -1,4 +1,3 @@
-
 /*
  * gtkcube.c
  *
@@ -21,7 +20,6 @@
  */
 
 #include "config.h"
-#include <gtk/gtk.h>
 
 #include <stdio.h>
 #include <stdlib.h>
