@@ -27,11 +27,6 @@
 #include <glib.h>
 #include <math.h>
 
-#if USE_GTK
-#include <gtk/gtk.h>
-#endif                          /* USE_GTK */
-
-
 #include "eval.h"
 #include "rollout.h"
 #include "progress.h"
@@ -39,27 +34,24 @@
 #include "format.h"
 #include "time.h"
 
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkgame.h"
 #include "gtkwindows.h"
 typedef enum _rollout_colls {
     TITLE_C, RANK_C, TRIALS_C, WIN_C, WIN_G_C, WIN_BG_C, LOSE_G_C, LOSE_BG_C, CLESS_C, CFUL_C, CFUL_S_C, JSD_C,
     N_ROLLOUT_COLS
 } rollout_cols;
-
 #endif                          /* USE_GTK */
 
 
 typedef struct _rolloutprogress {
-
     void *p;
     int n;
     char **ppch;
     int iNextAlternative;
     int iNextGame;
     time_t tStart;
-
-#if USE_GTK
+#if defined(USE_GTK)
     rolloutstat *prs;
     GtkWidget *pwRolloutDialog;
     GtkWidget *pwRolloutResult;
@@ -77,10 +69,9 @@ typedef struct _rolloutprogress {
     char ***pListText;
     int stopped;
 #endif
-
 } rolloutprogress;
 
-#if USE_GTK
+#if defined(USE_GTK)
 static void
 AllocTextList(rolloutprogress * prp)
 {                               /* 2d array to cache displayed widget text */
@@ -108,13 +99,7 @@ FreeTextList(rolloutprogress * prp)
     }
     free(prp->pListText);
 }
-
 #endif
-
-
-/*
- *
- */
 
 static time_t
 time_left(unsigned int n_games_todo, unsigned int n_games_done, unsigned int initial_game_count, time_t t_start)
@@ -155,8 +140,7 @@ estimatedSE(const float rSE, const int iGame, const int nTrials)
 
 }
 
-#if USE_GTK
-
+#if defined(USE_GTK)
 /*
  * Make pages with statistics.
  */
@@ -809,9 +793,9 @@ GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Estimated time left")), FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwhbox), prp->pwLeft = gtk_label_new(_("n/a")), FALSE, FALSE, 4);
     if (asz && asz[0] && *asz[0])
-        sz = g_strdup_printf(_("Estimated SE for \"%s\" after %d trials "), asz[0], prc->nTrials);
+        sz = g_strdup_printf(_("Estimated SE for \"%s\" after %u trials "), asz[0], prc->nTrials);
     else
-        sz = g_strdup_printf(_("Estimated SE after %d trials "), prc->nTrials);
+        sz = g_strdup_printf(_("Estimated SE after %u trials "), prc->nTrials);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(sz), FALSE, FALSE, 4);
     g_free(sz);
@@ -893,7 +877,7 @@ GTKRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
     }
     if (iAlternative == (prp->n - 1)) {
         frac = ((float) min_games_done) / prc->nTrials;
-        gsz = g_strdup_printf("%d/%d (%d%%)", min_games_done, prc->nTrials, (int) (100.0f * frac));
+        gsz = g_strdup_printf("%d/%u (%d%%)", min_games_done, prc->nTrials, (int) (100.0f * frac));
         gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(prp->pwRolloutProgress), frac);
         gtk_progress_bar_set_text(GTK_PROGRESS_BAR(prp->pwRolloutProgress), gsz);
         g_free(gsz);
@@ -970,8 +954,6 @@ GTKRolloutProgressEnd(void **pp, gboolean destroy)
     g_free(*pp);
     return stopped;
 }
-
-
 #endif                          /* USE_GTK */
 
 static void
@@ -1098,9 +1080,9 @@ TextRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
         pc = OutputEquityScale(estimatedSE(aarStdDev[0][OUTPUT_EQUITY], iGame, prc->nTrials), &aci[0], &aci[0], FALSE);
 
     if (prp->ppch && prp->ppch[0] && *prp->ppch[0])
-        outputf(_("Estimated SE for \"%s\" after %d trials %s\n"), prp->ppch[0], prc->nTrials, pc);
+        outputf(_("Estimated SE for \"%s\" after %u trials %s\n"), prp->ppch[0], prc->nTrials, pc);
     else
-        outputf(_("Estimated SE after %d trials %s\n"), prc->nTrials, pc);
+        outputf(_("Estimated SE after %u trials %s\n"), prc->nTrials, pc);
 
 }
 
@@ -1113,7 +1095,7 @@ RolloutProgressStart(const cubeinfo * pci, const int n,
     if (!fShowProgress)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKRolloutProgressStart(pci, n, aars, prc, asz, multiple, pp);
         return;
@@ -1140,7 +1122,7 @@ RolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
     if (!fShowProgress)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKRolloutProgress(aarOutput, aarStdDev, prc, aci, initial_game_count, iGame, iAlternative,
                            nRank, rJsd, fStopped, fShowRanks, fCubeRollout, pUserData);
@@ -1160,7 +1142,7 @@ RolloutProgressEnd(void **pp, gboolean destroy)
     if (!fShowProgress)
         return 0;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         return GTKRolloutProgressEnd(pp, destroy);
     }
