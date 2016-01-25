@@ -20,7 +20,6 @@
  */
 
 #include "config.h"
-#include <gtk/gtk.h>
 
 #include <stdio.h>
 #include <glib/gstdio.h>
@@ -231,7 +230,7 @@ SetExportCommands(const exportsetup * pexsOrig, const exportsetup * pexsNew)
 
     /* moves */
 
-    CHECKVALUE(pexsOrig, pexsNew, nMoves, "moves number", "%d");
+    CHECKVALUE(pexsOrig, pexsNew, nMoves, "moves number", "%u");
     CHECKFLAG(pexsOrig, pexsNew, fMovesDetailProb, "moves probabilities");
     CHECKFLAG(pexsOrig, pexsNew, afMovesParameters[0], "moves parameters evaluation");
     CHECKFLAG(pexsOrig, pexsNew, afMovesParameters[1], "moves parameters rollout");
