@@ -1088,7 +1088,7 @@ readMET(metdata * met, const char *filename)
     parser->i = 0;
     parser->j = 0;
 
-    if (!(context = g_markup_parse_context_new(&markup_parser, 0, parser, met_parser_destroy))) {
+    if (!(context = g_markup_parse_context_new(&markup_parser, (GMarkupParseFlags) 0, parser, met_parser_destroy))) {
         g_warning("Can't create XML parser\n");
         g_free(parser);
         return -1;
@@ -1380,7 +1380,7 @@ static void
 met_parser_error(GMarkupParseContext * UNUSED(context), GError * UNUSED(error), gpointer user_data)
 {
     MatchEquityParser *parser = (MatchEquityParser *) user_data;
-    g_warning("An error occured while parsing file: %s\n", parser->filename);
+    g_warning("An error occurred while parsing file: %s\n", parser->filename);
 }
 
 /*
