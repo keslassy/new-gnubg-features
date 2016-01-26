@@ -3111,7 +3111,7 @@ static void
 design_parser_error(GMarkupParseContext * UNUSED(context), GError * UNUSED(error), gpointer user_data)
 {
     DesignParser *parser = (DesignParser *) user_data;
-    g_warning("An error occured while parsing file: %s\n", parser->filename);
+    g_warning("An error occurred while parsing file: %s\n", parser->filename);
 }
 
 static GList *
@@ -3146,7 +3146,7 @@ ParseBoardDesigns(const char *szFile, const int fDeletable)
         return NULL;
     }
 
-    context = g_markup_parse_context_new(&markup_parser, 0, parser, NULL);
+    context = g_markup_parse_context_new(&markup_parser, (GMarkupParseFlags) 0, parser, NULL);
     if (!context) {
         g_free(parser->filename);
         g_free(parser);
