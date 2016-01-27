@@ -32,6 +32,11 @@
 
 #include "sgf.h"
 
+/* Resolve a warning on older GLIBC/GNU systems that have stpcpy */
+#if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
+extern char *stpcpy(char *s1, const char *s2);
+#endif
+
 static listOLD *plCollection;    
     
 extern int sgflex( void );
