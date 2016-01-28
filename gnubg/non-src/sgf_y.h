@@ -58,7 +58,7 @@ extern int sgfdebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 93 "sgf_y.y" /* yacc.c:1909  */
+#line 98 "sgf_y.y" /* yacc.c:1909  */
 
     char ach[ 2 ]; /* property identifier */
     char *pch; /* property value */

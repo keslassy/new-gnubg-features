@@ -189,8 +189,8 @@ void yyerror(scancontext *scanner, const char *str)
 
 /* In a future release of Bison, this section will be replaced
    by #include "y.tab.h".  */
-#ifndef YY_YY_EXTERNAL_Y_H_INCLUDED
-# define YY_YY_EXTERNAL_Y_H_INCLUDED
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -296,7 +296,7 @@ union YYSTYPE
 
 int yyparse (scancontext *scanner);
 
-#endif /* !YY_YY_EXTERNAL_Y_H_INCLUDED  */
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 #line 127 "external_y.y" /* yacc.c:358  */
