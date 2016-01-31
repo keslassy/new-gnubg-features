@@ -121,7 +121,6 @@ typedef struct _optionswidget {
 } optionswidget;
 
 typedef struct _SoundDetail {
-    int Enabled;
     char *Path;
 } SoundDetail;
 
@@ -1547,7 +1546,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     for (i = 0; i < 2; ++i) {
         u = gtk_combo_box_get_active(GTK_COMBO_BOX(pow->apwCheatRoll[i]));
         if (u != afCheatRoll[i]) {
-            sprintf(sz, "set cheat player %d roll %u", i, u + 1);
+            sprintf(sz, "set cheat player %u roll %u", i, u + 1);
             UserCommand(sz);
         }
     }
