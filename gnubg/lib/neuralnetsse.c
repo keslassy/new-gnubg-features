@@ -126,8 +126,12 @@ sigmoid_positive_ps(float_vector xin)
 #if defined(USE_AVX)
     x1 = _mm256_sub_ps(x1, _mm256_cvtepi32_ps(i.i));
     x1 = _mm256_add_ps(x1, tens.ps);
+#if defined(USE_FMA3)
+    x1 = _mm256_fmadd_ps(x1, ex, ones.ps);
+#else
     x1 = _mm256_mul_ps(x1, ex);
     x1 = _mm256_add_ps(x1, ones.ps);
+#endif
 #ifdef __FAST_MATH__
     return _mm256_rcp_ps(x1);
 #else
@@ -136,12 +140,8 @@ sigmoid_positive_ps(float_vector xin)
 #else
     x1 = _mm_sub_ps(x1, _mm_cvtepi32_ps(i.i));
     x1 = _mm_add_ps(x1, tens.ps);
-#if defined(USE_FMA3)
-    x1 = _mm256_fmadd_ps(x1, ex, ones.ps);
-#else
     x1 = _mm_mul_ps(x1, ex);
     x1 = _mm_add_ps(x1, ones.ps);
-#endif
 #ifdef __FAST_MATH__
     return _mm_rcp_ps(x1);
 #else
