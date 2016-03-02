@@ -678,7 +678,7 @@ CommandSetThreads(char *sz)
 extern void
 CommandSetVsync3d(char *sz)
 {
-#if defined(WIN32) && USE_BOARD3D
+#if defined(WIN32) && defined(USE_BOARD3D)
     SetToggle("vsync", &fSync, sz, _("Set vsync on."), _("Set vsync off."));
     if (setVSync(fSync) == FALSE) {
         if (gtk_widget_get_realized(pwMain)) {
@@ -2869,7 +2869,7 @@ CommandSetBeavers(char *sz)
     nBeavers = (unsigned int) n;
 
     if (nBeavers > 1)
-        outputf(_("%d beavers/raccoons allowed in money sessions.\n"), nBeavers);
+        outputf(_("%u beavers/raccoons allowed in money sessions.\n"), nBeavers);
     else if (nBeavers == 1)
         outputl(_("1 beaver allowed in money sessions."));
     else
@@ -4334,7 +4334,7 @@ CommandSetLang(char *sz)
             GtkChangeLanguage();
         else
 #endif
-            outputf(_("Locale is now '%s'"), result);
+            outputf(_("Locale is now '%s'\n"), result);
     } else
         outputerrf(_("Locale '%s' not supported by C library.\n"), sz);
 }
