@@ -1,3 +1,9 @@
+2016-03-02  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* po/el.po, configure.ac, gtkgame.c, flags/greece.png,
+	flags/Makefile.am, credits.sh : Greek translation by Vangelis
+	Skarmoutsos.
+
 2015-10-07  Michael Petch  <mpetch@gnubg.org>
 
 	* common.h, configure.ac, copying.awk, credits.sh,
@@ -6,7 +12,7 @@
 	  +m4/ax_c___attribute__.m4, external_l.l, external_y.y,
 	  sgf_l.l, sgf_y.y, non-src/external_l.c, non-src/external_y.c,
 	  non-src/external_y.h, non-src/sgf_l.c, non-src/sgf_y.c,
-	  non-src/sgf_y.h, backgammon.h : Fix problem identified by 
+	  non-src/sgf_y.h, backgammon.h : Fix problem identified by
 	Mike Frysinger where __attribute__ and  _GNU_SOURCE may not
 	be properly defined in some situations. This may result in
 	an infinite loop on newer compilers.
