@@ -20,11 +20,13 @@
 
 <TABLE>
 
-<TR><TH> cs.po <TD> Petr Kadlec
+<TR><TH> cs.po <TD>Petr Kadlec
 
-<TR><TH> da.po <TD> Jørn Thyssen and Morten Juul Henriksen
+<TR><TH> da.po <TD>Jørn Thyssen and Morten Juul Henriksen
 
 <TR><TH> de.po <TD>Achim Mueller
+
+<TR><TH> el.po <TD>Vangelis Skarmoutsos
 
 <TR><TH> en_US.po <TD>Gary Wong
 

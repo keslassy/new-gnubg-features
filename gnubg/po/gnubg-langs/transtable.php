@@ -10,6 +10,8 @@ $langnames = array(
 
     "de" => "German",
 
+    "el" => "Greek",
+
     "en" => "English",
 
     "en_US" => "English US",
