@@ -51,7 +51,7 @@ extern int RNGSystemSeed(const rng rngx, void *p, unsigned long *pnSeed);
 
 extern int RollDice(unsigned int anDice[2], rng * prngx, rngcontext * rngctx);
 
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
 extern int InitRNGSeedLong(char *sz, rng rng, rngcontext * rngctx);
 extern int InitRNGBBSModulus(const char *sz, rngcontext * rngctx);
 extern int InitRNGBBSFactors(char *sz0, char *sz1, rngcontext * rngctx);

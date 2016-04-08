@@ -24,7 +24,7 @@
 #include "randomorg.h"
 
 #include <fcntl.h>
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
 #ifdef sun
 #include <gmp/gmp.h>
 #else
@@ -94,7 +94,7 @@ struct _rngcontext {
 
     /* RNG_BBS */
 
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
     mpz_t zModulus, zSeed, zZero, zOne;
     int fZInit;
 #endif                          /* HAVE_LIBGMP */
@@ -102,7 +102,7 @@ struct _rngcontext {
 
     /* common */
     unsigned long c;            /* counter */
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
     mpz_t nz;                   /* seed */
 #endif
     unsigned int n;             /* seed */
@@ -114,7 +114,7 @@ static unsigned int
  ReadDiceFile(rngcontext * rngctx);
 
 
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
 
 static void
 InitRNGBBS(rngcontext * rngctx)
@@ -373,7 +373,7 @@ PrintRNGCounter(const rng rngx, rngcontext * rngctx)
 }
 
 
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
 
 static void
 PrintRNGSeedMP(mpz_t n)
@@ -406,7 +406,7 @@ PrintRNGSeed(const rng rngx, rngcontext * rngctx)
 
     switch (rngx) {
     case RNG_BBS:
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
         {
             char *pch;
 
@@ -438,7 +438,7 @@ PrintRNGSeed(const rng rngx, rngcontext * rngctx)
 
     case RNG_ISAAC:
     case RNG_MERSENNE:
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
         PrintRNGSeedMP(rngctx->nz);
 #else
         PrintRNGSeedNormal(rngctx->n);
@@ -462,7 +462,7 @@ InitRNGSeed(unsigned int n, const rng rngx, rngcontext * rngctx)
     switch (rngx) {
 
     case RNG_BBS:
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
         g_assert(rngctx->fZInit);
         mpz_set_ui(rngctx->zSeed, (unsigned long) n);
         BBSCheckInitialSeed(rngctx);
@@ -502,7 +502,7 @@ InitRNGSeed(unsigned int n, const rng rngx, rngcontext * rngctx)
     }
 }
 
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
 static void
 InitRNGSeedMP(mpz_t n, rng rng, rngcontext * rngctx)
 {
@@ -622,7 +622,7 @@ RNGSystemSeed(const rng rngx, void *p, unsigned long *pnSeed)
     rngcontext *rngctx = (rngcontext *) p;
     unsigned int n = 0;
 
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
 #if !defined(WIN32)
     int h;
 #endif
@@ -666,7 +666,7 @@ RNGSystemSeed(const rng rngx, void *p, unsigned long *pnSeed)
 
     }
 #else
-#if !defined(WIN32)             /* HAVE_LIBGMP */
+#if !defined(WIN32)
     int h;
     if ((h = open("/dev/urandom", O_RDONLY)) >= 0) {
         f = read(h, &n, sizeof n) == sizeof n;
@@ -683,7 +683,7 @@ RNGSystemSeed(const rng rngx, void *p, unsigned long *pnSeed)
     }
 
     InitRNGSeed(n, rngx, rngctx);
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
     mpz_set_ui(rngctx->nz, (unsigned long) n);
 #endif
 
@@ -697,7 +697,7 @@ RNGSystemSeed(const rng rngx, void *p, unsigned long *pnSeed)
 extern void
 free_rngctx(rngcontext * rngctx)
 {
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
     mpz_clear(rngctx->nz);
 #endif
     g_free(rngctx);
@@ -714,7 +714,7 @@ InitRNG(unsigned long *pnSeed, int *pfInitFrom, const int fSet, const rng rngx)
     /* Mersenne-Twister */
     rngctx->mti = MT_ARRAY_N + 1;
 
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
     /* BBS */
     rngctx->fZInit = FALSE;
     mpz_init(rngctx->nz);
@@ -747,7 +747,7 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
     switch (*prng) {
 
     case RNG_BBS:
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
         if (BBSCheck(rngctx)) {
             BBSInitialSeedFailure(rngctx);
             break;
