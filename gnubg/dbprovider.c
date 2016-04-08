@@ -34,13 +34,13 @@
 DBProviderType dbProviderType = (DBProviderType) 0;
 int storeGameStats = TRUE;
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
 #include "pylocdefs.h"
 
 static PyObject *pdict;
 static RowSet *ConvertPythonToRowset(PyObject * v);
 
-#if !USE_SQLITE
+#if !defined(USE_SQLITE)
 static int PySQLiteConnect(const char *dbfilename, const char *user, const char *password, const char *hostname);
 #endif
 static int PyMySQLConnect(const char *dbfilename, const char *user, const char *password, const char *hostname);
@@ -57,7 +57,7 @@ static int PyPostgreDeleteDatabase(const char *dbfilename, const char *user, con
 static GList *PyMySQLGetDatabaseList(const char *user, const char *password, const char *hostname);
 static int PyMySQLDeleteDatabase(const char *dbfilename, const char *user, const char *password, const char *hostname);
 #endif
-#if USE_SQLITE
+#if defined(USE_SQLITE)
 static int SQLiteConnect(const char *dbfilename, const char *user, const char *password, const char *hostname);
 static void SQLiteDisconnect(void);
 static RowSet *SQLiteSelect(const char *str);
@@ -69,13 +69,13 @@ static void SQLiteCommit(void);
 static int SQLiteDeleteDatabase(const char *dbfilename, const char *user, const char *password, const char *hostname);
 static GList *SQLiteGetDatabaseList(const char *user, const char *password, const char *hostname);
 static DBProvider providers[NUM_PROVIDERS] = {
-#if USE_SQLITE
+#if defined(USE_SQLITE)
     {SQLiteConnect, SQLiteDisconnect, SQLiteSelect, SQLiteUpdateCommand, SQLiteCommit, SQLiteGetDatabaseList,
      SQLiteDeleteDatabase,
      "SQLite", "SQLite", "Direct SQLite3 connection", FALSE, TRUE, "gnubg", "", "", ""},
 #endif
-#if USE_PYTHON
-#if !USE_SQLITE
+#if defined(USE_PYTHON)
+#if !defined(USE_SQLITE)
     {PySQLiteConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, SQLiteGetDatabaseList, SQLiteDeleteDatabase,
      "SQLite (Python)", "PythonSQLite", "SQLite3 connection included in latest Python version", FALSE, TRUE, "gnubg",
      "", "", ""},
@@ -96,7 +96,7 @@ static DBProvider providers[NUM_PROVIDERS] = {
 DBProvider providers[1] = { {0, 0, 0, 0, 0, 0, 0, "No Providers", "No Providers", "No Providers", 0, 0, 0, 0, 0, 0} };
 #endif
 
-#if USE_PYTHON || USE_SQLITE
+#if defined(USE_PYTHON) || defined(USE_SQLITE)
 static RowSet *
 MallocRowset(size_t rows, size_t cols)
 {
@@ -252,7 +252,7 @@ RelationalSaveSettings(FILE * pf)
 extern DBProvider *
 GetDBProvider(DBProviderType dbType)
 {
-#if USE_PYTHON
+#if defined(USE_PYTHON)
     static int setup = FALSE;
     if (!setup) {
         if (LoadPythonFile("database.py", FALSE) == 0) {
@@ -280,7 +280,7 @@ GetDBProvider(DBProviderType dbType)
 #endif
 }
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
 int
 PyMySQLConnect(const char *dbfilename, const char *user, const char *password, const char *hostname)
 {
@@ -324,7 +324,7 @@ PyPostgreConnect(const char *dbfilename, const char *user, const char *password,
 }
 #endif
 
-#if !USE_SQLITE
+#if !defined(USE_SQLITE)
 static int
 PySQLiteConnect(const char *dbfilename, const char *UNUSED(user), const char *UNUSED(password),
                 const char *UNUSED(hostname))
@@ -565,7 +565,7 @@ PyPostgreDeleteDatabase(const char *dbfilename, const char *user, const char *pa
 
 #endif
 
-#if USE_SQLITE
+#if defined(USE_SQLITE)
 
 #include <sqlite3.h>
 
