@@ -38,7 +38,7 @@ int storeGameStats = TRUE;
 #include "pylocdefs.h"
 
 static PyObject *pdict;
-RowSet *ConvertPythonToRowset(PyObject * v);
+static RowSet *ConvertPythonToRowset(PyObject * v);
 
 #if !USE_SQLITE
 static int PySQLiteConnect(const char *dbfilename, const char *user, const char *password, const char *hostname);
@@ -410,7 +410,7 @@ PyCommit(void)
         PyErr_Print();
 }
 
-RowSet *
+static RowSet *
 ConvertPythonToRowset(PyObject * v)
 {
     RowSet *pRow;
