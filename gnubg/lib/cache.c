@@ -36,23 +36,36 @@
 #if defined(__GNUC__) && ( __GNUC__ * 100 + __GNUC_MINOR__ >= 401 ) \
   && (defined (__i386) || defined (__x86_64))
 
-#define cache_lock(pc, k) \
-    while (__sync_lock_test_and_set(&(pc->entries[k].lock), 1)) \
-         while (pc->entries[k].lock) \
-            __asm volatile ("pause" ::: "memory")
+static inline void
+cache_lock(evalCache * pc, uint32_t k)
+{
+    while (__sync_lock_test_and_set(&(pc->entries[k].lock), 1))
+        while (pc->entries[k].lock)
+            __asm volatile ("pause":::"memory");
+}
 
-#define cache_unlock(pc, k) \
+static inline void
+cache_unlock(evalCache * pc, uint32_t k)
+{
     __sync_lock_release(&(pc->entries[k].lock));
+}
 
 #else
 
-#define cache_lock(pc, k) \
-if (MT_SafeIncCheck(&(pc->entries[k].lock))) \
-	WaitForLock(&(pc->entries[k].lock))
+static inline void
+cache_lock(evalCache * pc, uint32_t k)
+{
+    if (MT_SafeIncCheck(&(pc->entries[k].lock)))
+        WaitForLock(&(pc->entries[k].lock));
+}
 
-#define cache_unlock(pc, k) MT_SafeDec(&(pc->entries[k].lock))
+static inline void
+cache_unlock(evalCache * pc, uint32_t k)
+{
+    MT_SafeDec(&(pc->entries[k].lock));
+}
 
-static void
+static inline void
 WaitForLock(volatile int *lock)
 {
     do {
