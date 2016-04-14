@@ -30,7 +30,7 @@
 #include "cache.h"
 #include "positionid.h"
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
 #include "multithread.h"
 
 #if defined(__GNUC__) && ( __GNUC__ * 100 + __GNUC_MINOR__ >= 401 ) \
@@ -141,12 +141,12 @@ CacheLookupWithLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, 
 #if CACHE_STATS
     ++pc->cLookup;
 #endif
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     cache_lock(pc, l);
 #endif
     if (!EqualKeys(pc->entries[l].nd_primary.key, e->key) || pc->entries[l].nd_primary.nEvalContext != e->nEvalContext) {       /* Not in primary slot */
         if (!EqualKeys(pc->entries[l].nd_secondary.key, e->key) || pc->entries[l].nd_secondary.nEvalContext != e->nEvalContext) {       /* Cache miss */
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
             cache_unlock(pc, l);
 #endif
             return l;
@@ -162,7 +162,7 @@ CacheLookupWithLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, 
     if (arCubeful)
         *arCubeful = pc->entries[l].nd_primary.ar[5];   /* Cubeful equity stored in slot 5 */
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     cache_unlock(pc, l);
 #endif
 
@@ -207,14 +207,14 @@ CacheLookupNoLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, fl
 void
 CacheAddWithLocking(evalCache * pc, const cacheNodeDetail * e, uint32_t l)
 {
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     cache_lock(pc, l);
 #endif
 
     pc->entries[l].nd_secondary = pc->entries[l].nd_primary;
     pc->entries[l].nd_primary = *e;
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     cache_unlock(pc, l);
 #endif
 
@@ -236,7 +236,7 @@ CacheFlush(const evalCache * pc)
     for (k = 0; k < pc->size / 2; ++k) {
         pc->entries[k].nd_primary.key.data[0] = (unsigned int) -1;
         pc->entries[k].nd_secondary.key.data[0] = (unsigned int) -1;
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
         pc->entries[k].lock = 0;
 #endif
     }
