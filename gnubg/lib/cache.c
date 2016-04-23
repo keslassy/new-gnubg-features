@@ -53,6 +53,14 @@ cache_unlock(evalCache * pc, uint32_t k)
 #else
 
 static inline void
+WaitForLock(volatile int *lock)
+{
+    do {
+        MT_SafeDec(lock);
+    } while (MT_SafeIncCheck(lock));
+}
+
+static inline void
 cache_lock(evalCache * pc, uint32_t k)
 {
     if (MT_SafeIncCheck(&(pc->entries[k].lock)))
@@ -63,14 +71,6 @@ static inline void
 cache_unlock(evalCache * pc, uint32_t k)
 {
     MT_SafeDec(&(pc->entries[k].lock));
-}
-
-static inline void
-WaitForLock(volatile int *lock)
-{
-    do {
-        MT_SafeDec(lock);
-    } while (MT_SafeIncCheck(lock));
 }
 
 #endif
