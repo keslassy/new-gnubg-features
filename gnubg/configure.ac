@@ -342,8 +342,16 @@ if test "$no_gtk" = "no"; then
   if test "x$GDK_PIXBUF_CSOURCE" = "xno"; then
     AC_MSG_WARN([Could not find gdk-pixbuf-csource in your PATH, cannot rebuild pixmaps])
   fi
+
+  AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources, no)
+  if test "x$GLIB_COMPILE_RESOURCES" = "xno"; then
+    AC_MSG_WARN([Could not find glib-compile-resources in your PATH, will use legacy pixmaps instead])
+  else
+    AC_DEFINE(USE_GRESOURCE, 1, [Define if you want to use GResource to load images])
+  fi
 fi
 AM_CONDITIONAL(FOUND_GDK_PIXBUF_CSOURCE, test "x$GDK_PIXBUF_CSOURCE" != "xno" )
+AM_CONDITIONAL(FOUND_GLIB_COMPILE_RESOURCES, test "x$GLIB_COMPILE_RESOURCES" != "xno" )
 
 dnl
 dnl Check for Python

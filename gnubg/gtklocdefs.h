@@ -106,6 +106,11 @@ extern GtkTooltips *ptt;
 extern GtkWidget *get_statusbar_label(GtkStatusbar * statusbar);
 extern void toolbar_set_orientation(GtkToolbar * toolbar, GtkOrientation orientation);
 
+#ifndef USE_GRESOURCE
+#define gnubg_stock_register_resource()
+extern GdkPixbuf *gdk_pixbuf_new_from_resource(const char *resource_path, GError **error);
+#endif
+
 #ifdef GTK_DISABLE_DEPRECATED
 #define USE_GTKUIMANAGER 1
 #endif

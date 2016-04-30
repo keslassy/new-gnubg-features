@@ -75,6 +75,7 @@ EXTRA_DIST = \
 
 if USE_GTK
 
+CLEANFILES =
 PIXMAPS = gnubg-big.png
 
 stock-icons.list: $(STOCK_IMAGES) Makefile.am
@@ -88,7 +89,7 @@ stock-icons.list: $(STOCK_IMAGES) Makefile.am
 if FOUND_GDK_PIXBUF_CSOURCE
 gnubg-stock-pixbufs.h: stock-icons.list
 	$(GDK_PIXBUF_CSOURCE) --raw --build-list `cat $<` > $(@F)
-CLEANFILES=stock-icons.list gnubg-stock-pixbufs.h
+CLEANFILES+=stock-icons.list gnubg-stock-pixbufs.h
 else
 gnubg-stock-pixbufs.h: stock-icons.list
 	@echo ' ****************************'
@@ -96,6 +97,16 @@ gnubg-stock-pixbufs.h: stock-icons.list
 	@echo ' ****************************'
 endif
 
+stock-icons.xml: $(STOCK_IMAGES) Makefile.am
+	@echo '<?xml version="1.0" encoding="UTF-8"?>' > $@
+	@echo '<gresources>' >> $@
+	@echo ' <gresource prefix="/org/gnubg">' >> $@
+	@for image in $(STOCK_IMAGES); do echo "  <file>$$image</file>" >> $@; done
+	@echo ' </gresource>' >> $@
+	@echo '</gresources>' >> $@
+
+gnubg-stock-resources.c gnubg-stock-resources.h: stock-icons.xml
+	$(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name=gnubg_stock --manual-register $<
 
 nobase_dist_gnubgicons_DATA = \
 			      $(ICONS_16) \
@@ -107,5 +118,13 @@ nobase_dist_gnubgicons_DATA = \
 dist_gnubgpixmaps_DATA = $(PIXMAPS)
 
 noinst_DATA = gnubg-stock-pixbufs.h
+
+if FOUND_GLIB_COMPILE_RESOURCES
+noinst_LTLIBRARIES = libresources.la
+nodist_libresources_la_SOURCES = gnubg-stock-resources.c gnubg-stock-resources.h
+AM_CPPFLAGS = @GLIB_CFLAGS@
+BUILT_SOURCES = gnubg-stock-resources.h
+CLEANFILES += gnubg-stock-resources.c gnubg-stock-resources.h stock-icons.xml
+endif
 
 endif

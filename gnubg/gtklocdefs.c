@@ -130,4 +130,74 @@ toolbar_set_orientation(GtkToolbar * toolbar, GtkOrientation orientation)
 #endif
 }
 
+#ifndef USE_GRESOURCE
+#include <string.h>
+#include "gnubg-stock-pixbufs.h"
+
+static const struct {
+    const char *resource_path;
+    gconstpointer inline_data;
+} resource_to_inline[] = {
+    {"/org/gnubg/16x16/actions/ok_16.png", ok_16},
+    {"/org/gnubg/24x24/actions/ok_24.png", ok_24},
+    {"/org/gnubg/24x24/actions/anti_clockwise_24.png", anti_clockwise_24},
+    {"/org/gnubg/24x24/actions/clockwise_24.png", clockwise_24},
+    {"/org/gnubg/16x16/actions/double_16.png", double_16},
+    {"/org/gnubg/24x24/actions/double_24.png", double_24},
+    {"/org/gnubg/16x16/actions/runit_16.png", runit_16},
+    {"/org/gnubg/24x24/actions/runit_24.png", runit_24},
+    {"/org/gnubg/16x16/actions/go_next_cmarked_16.png", go_next_cmarked_16},
+    {"/org/gnubg/24x24/actions/go_next_cmarked_24.png", go_next_cmarked_24},
+    {"/org/gnubg/16x16/actions/go_next_game_16.png", go_next_game_16},
+    {"/org/gnubg/24x24/actions/go_next_game_24.png", go_next_game_24},
+    {"/org/gnubg/16x16/actions/go_next_16.png", go_next_16},
+    {"/org/gnubg/24x24/actions/go_next_24.png", go_next_24},
+    {"/org/gnubg/16x16/actions/go_next_marked_16.png", go_next_marked_16},
+    {"/org/gnubg/24x24/actions/go_next_marked_24.png", go_next_marked_24},
+    {"/org/gnubg/16x16/actions/go_prev_cmarked_16.png", go_prev_cmarked_16},
+    {"/org/gnubg/24x24/actions/go_prev_cmarked_24.png", go_prev_cmarked_24},
+    {"/org/gnubg/16x16/actions/go_prev_game_16.png", go_prev_game_16},
+    {"/org/gnubg/24x24/actions/go_prev_game_24.png", go_prev_game_24},
+    {"/org/gnubg/16x16/actions/go_prev_16.png", go_prev_16},
+    {"/org/gnubg/24x24/actions/go_prev_24.png", go_prev_24},
+    {"/org/gnubg/16x16/actions/go_prev_marked_16.png", go_prev_marked_16},
+    {"/org/gnubg/24x24/actions/go_prev_marked_24.png", go_prev_marked_24},
+    {"/org/gnubg/16x16/actions/hint_16.png", hint_16},
+    {"/org/gnubg/24x24/actions/hint_24.png", hint_24},
+    {"/org/gnubg/24x24/actions/new0_24.png", new0_24},
+    {"/org/gnubg/24x24/actions/new11_24.png", new11_24},
+    {"/org/gnubg/24x24/actions/new13_24.png", new13_24},
+    {"/org/gnubg/24x24/actions/new15_24.png", new15_24},
+    {"/org/gnubg/24x24/actions/new17_24.png", new17_24},
+    {"/org/gnubg/24x24/actions/new1_24.png", new1_24},
+    {"/org/gnubg/24x24/actions/new3_24.png", new3_24},
+    {"/org/gnubg/24x24/actions/new5_24.png", new5_24},
+    {"/org/gnubg/24x24/actions/new7_24.png", new7_24},
+    {"/org/gnubg/24x24/actions/new9_24.png", new9_24},
+    {"/org/gnubg/16x16/actions/cancel_16.png", cancel_16},
+    {"/org/gnubg/24x24/actions/cancel_24.png", cancel_24},
+    {"/org/gnubg/16x16/actions/resign_16.png", resign_16},
+    {"/org/gnubg/24x24/actions/resign_24.png", resign_24},
+    {"/org/gnubg/24x24/actions/resignsb_24.png", resignsb_24},
+    {"/org/gnubg/24x24/actions/resignsg_24.png", resignsg_24},
+    {"/org/gnubg/24x24/actions/resignsn_24.png", resignsn_24}
+};
+
+GdkPixbuf *
+gdk_pixbuf_new_from_resource(const char *resource_path, GError **error)
+{
+    guint i;
+    GdkPixbuf *pixbuf = NULL;
+
+    for (i = 0; i < G_N_ELEMENTS(resource_to_inline) && !pixbuf; i++) {
+        if (strcmp(resource_path, resource_to_inline[i].resource_path) == 0) {
+            const guchar *inline_data = resource_to_inline[i].inline_data;
+            pixbuf = gdk_pixbuf_new_from_inline(-1, inline_data, FALSE, error);
+        }
+    }
+
+    return pixbuf;
+}
+#endif
+
 #endif

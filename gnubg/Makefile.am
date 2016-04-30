@@ -15,7 +15,7 @@ else
 localeloc=-DLOCALEDIR=\"$(localedir)\"
 endif 
 
-AM_CPPFLAGS = -I$(srcdir)/lib -I$(srcdir)/board3d -I$(srcdir)/pixmaps \
+AM_CPPFLAGS = -I$(srcdir)/lib -I$(srcdir)/board3d -I$(builddir)/pixmaps -I$(srcdir)/pixmaps \
 	   $(localeloc) @FREETYPE2_CFLAGS@ @GLIB_CFLAGS@ \
 	   @LIBPNG_CFLAGS@ @GTK_CFLAGS@ @CAIRO_CFLAGS@ @PANGOCAIRO_CFLAGS@ \
 	   @GTHREAD_CFLAGS@ @GTKGLEXT_CFLAGS@ @CANBERRA_CFLAGS@ @GOBJECT_CFLAGS@ \
@@ -168,6 +168,11 @@ gnubg_LDADD += @PYTHON_LDFLAGS@
 endif
 if USE_BOARD3D
 gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS)
+endif
+if USE_GTK
+if FOUND_GLIB_COMPILE_RESOURCES
+gnubg_LDADD += pixmaps/libresources.la
+endif
 endif
 
 if WIN32

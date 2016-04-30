@@ -24,13 +24,18 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include "gnubgstock.h"
-#include "gnubg-stock-pixbufs.h"
+
+#ifdef USE_GRESOURCE
+#include "gnubg-stock-resources.h"
+#else
+#include "gtklocdefs.h"
+#endif
 
 static GtkIconFactory *gnubg_stock_factory = NULL;
 
 static void
-icon_set_from_inline(GtkIconSet * set,
-                     const guchar * inline_data, GtkIconSize size, GtkTextDirection direction, gboolean fallback)
+icon_set_from_resource_path(GtkIconSet * set,
+                            const char * resource_path, GtkIconSize size, GtkTextDirection direction, gboolean fallback)
 {
     GtkIconSource *source;
     GdkPixbuf *pixbuf;
@@ -45,7 +50,7 @@ icon_set_from_inline(GtkIconSet * set,
     gtk_icon_source_set_size(source, size);
     gtk_icon_source_set_size_wildcarded(source, FALSE);
 
-    pixbuf = gdk_pixbuf_new_from_inline(-1, inline_data, FALSE, NULL);
+    pixbuf = gdk_pixbuf_new_from_resource(resource_path, NULL);
 
     g_assert(pixbuf);
 
@@ -65,8 +70,8 @@ icon_set_from_inline(GtkIconSet * set,
 
 static void
 add_sized_with_same_fallback(GtkIconFactory * factory,
-                             const guchar * inline_data,
-                             const guchar * inline_data_rtl, GtkIconSize size, const gchar * stock_id)
+                             const char * resource_path,
+                             const char * resource_path_rtl, GtkIconSize size, const gchar * stock_id)
 {
     GtkIconSet *set;
     gboolean fallback = FALSE;
@@ -81,10 +86,10 @@ add_sized_with_same_fallback(GtkIconFactory * factory,
         fallback = TRUE;
     }
 
-    icon_set_from_inline(set, inline_data, size, GTK_TEXT_DIR_NONE, fallback);
+    icon_set_from_resource_path(set, resource_path, size, GTK_TEXT_DIR_NONE, fallback);
 
-    if (inline_data_rtl)
-        icon_set_from_inline(set, inline_data_rtl, size, GTK_TEXT_DIR_RTL, fallback);
+    if (resource_path_rtl)
+        icon_set_from_resource_path(set, resource_path_rtl, size, GTK_TEXT_DIR_RTL, fallback);
 }
 
 static const GtkStockItem gnubg_stock_items[] = {
@@ -108,54 +113,54 @@ static const GtkStockItem gnubg_stock_items[] = {
 
 static const struct {
     const gchar *stock_id;
-    gconstpointer ltr;
-    gconstpointer rtl;
+    const char *ltr;
+    const char *rtl;
     GtkIconSize size;
 } gnubg_stock_pixbufs[] = {
     {
-    GNUBG_STOCK_ACCEPT, ok_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_ACCEPT, ok_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_ANTI_CLOCKWISE, anti_clockwise_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_CLOCKWISE, clockwise_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_DOUBLE, double_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_DOUBLE, double_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_END_GAME, runit_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_END_GAME, runit_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_GO_NEXT_CMARKED, go_next_cmarked_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_GO_NEXT_CMARKED, go_next_cmarked_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_GO_NEXT_GAME, go_next_game_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_GO_NEXT_GAME, go_next_game_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_GO_NEXT, go_next_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_GO_NEXT, go_next_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_GO_NEXT_MARKED, go_next_marked_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_GO_NEXT_MARKED, go_next_marked_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_GO_PREV_CMARKED, go_prev_cmarked_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_GO_PREV_CMARKED, go_prev_cmarked_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_GO_PREV_GAME, go_prev_game_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_GO_PREV_GAME, go_prev_game_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_GO_PREV, go_prev_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_GO_PREV, go_prev_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_GO_PREV_MARKED, go_prev_marked_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_GO_PREV_MARKED, go_prev_marked_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_HINT, hint_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_HINT, hint_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW0, new0_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW11, new11_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW13, new13_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW15, new15_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW17, new17_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW1, new1_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW3, new3_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW5, new5_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW7, new7_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_NEW9, new9_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_REJECT, cancel_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_REJECT, cancel_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_RESIGN, resign_16, NULL, GTK_ICON_SIZE_MENU}, {
-    GNUBG_STOCK_RESIGN, resign_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_RESIGNSB, resignsb_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_RESIGNSG, resignsg_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
-    GNUBG_STOCK_RESIGNSN, resignsn_24, NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}
+    GNUBG_STOCK_ACCEPT, "/org/gnubg/16x16/actions/ok_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_ACCEPT, "/org/gnubg/24x24/actions/ok_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_ANTI_CLOCKWISE, "/org/gnubg/24x24/actions/anti_clockwise_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_CLOCKWISE, "/org/gnubg/24x24/actions/clockwise_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_DOUBLE, "/org/gnubg/16x16/actions/double_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_DOUBLE, "/org/gnubg/24x24/actions/double_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_END_GAME, "/org/gnubg/16x16/actions/runit_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_END_GAME, "/org/gnubg/24x24/actions/runit_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_GO_NEXT_CMARKED, "/org/gnubg/16x16/actions/go_next_cmarked_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_GO_NEXT_CMARKED, "/org/gnubg/24x24/actions/go_next_cmarked_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_GO_NEXT_GAME, "/org/gnubg/16x16/actions/go_next_game_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_GO_NEXT_GAME, "/org/gnubg/24x24/actions/go_next_game_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_GO_NEXT, "/org/gnubg/16x16/actions/go_next_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_GO_NEXT, "/org/gnubg/24x24/actions/go_next_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_GO_NEXT_MARKED, "/org/gnubg/16x16/actions/go_next_marked_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_GO_NEXT_MARKED, "/org/gnubg/24x24/actions/go_next_marked_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_GO_PREV_CMARKED, "/org/gnubg/16x16/actions/go_prev_cmarked_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_GO_PREV_CMARKED, "/org/gnubg/24x24/actions/go_prev_cmarked_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_GO_PREV_GAME, "/org/gnubg/16x16/actions/go_prev_game_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_GO_PREV_GAME, "/org/gnubg/24x24/actions/go_prev_game_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_GO_PREV, "/org/gnubg/16x16/actions/go_prev_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_GO_PREV, "/org/gnubg/24x24/actions/go_prev_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_GO_PREV_MARKED, "/org/gnubg/16x16/actions/go_prev_marked_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_GO_PREV_MARKED, "/org/gnubg/24x24/actions/go_prev_marked_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_HINT, "/org/gnubg/16x16/actions/hint_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_HINT, "/org/gnubg/24x24/actions/hint_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW0, "/org/gnubg/24x24/actions/new0_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW11, "/org/gnubg/24x24/actions/new11_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW13, "/org/gnubg/24x24/actions/new13_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW15, "/org/gnubg/24x24/actions/new15_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW17, "/org/gnubg/24x24/actions/new17_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW1, "/org/gnubg/24x24/actions/new1_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW3, "/org/gnubg/24x24/actions/new3_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW5, "/org/gnubg/24x24/actions/new5_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW7, "/org/gnubg/24x24/actions/new7_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_NEW9, "/org/gnubg/24x24/actions/new9_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_REJECT, "/org/gnubg/16x16/actions/cancel_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_REJECT, "/org/gnubg/24x24/actions/cancel_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_RESIGN, "/org/gnubg/16x16/actions/resign_16.png", NULL, GTK_ICON_SIZE_MENU}, {
+    GNUBG_STOCK_RESIGN, "/org/gnubg/24x24/actions/resign_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_RESIGNSB, "/org/gnubg/24x24/actions/resignsb_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_RESIGNSG, "/org/gnubg/24x24/actions/resignsg_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}, {
+    GNUBG_STOCK_RESIGNSN, "/org/gnubg/24x24/actions/resignsn_24.png", NULL, GTK_ICON_SIZE_LARGE_TOOLBAR}
 };
 
 /**
@@ -168,6 +173,7 @@ gnubg_stock_init(void)
 {
     guint i;
     gnubg_stock_factory = gtk_icon_factory_new();
+    gnubg_stock_register_resource();
 
     for (i = 0; i < G_N_ELEMENTS(gnubg_stock_pixbufs); i++) {
         add_sized_with_same_fallback(gnubg_stock_factory,
