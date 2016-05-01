@@ -4,13 +4,13 @@
 ##
 
 
-AM_CPPFLAGS = -DUSE_GTK_UNDEF -I$(srcdir)/.. @GLIB_CFLAGS@
+AM_CPPFLAGS = -I$(srcdir)/.. @GLIB_CFLAGS@
 
 LIBADD = @GLIB_LIBS@
 
 noinst_LTLIBRARIES = libevent.la libsimd.la
 
-libsimd_la_SOURCES = neuralnetsse.c inputs.c ../output.c
+libsimd_la_SOURCES = neuralnetsse.c inputs.c output.c
 libsimd_la_CFLAGS = $(AM_CFLAGS) $(SIMD_CFLAGS)
 
 libevent_la_SOURCES = list.c neuralnet.c mt19937ar.c isaac.c md5.c simd.h mm_malloc.h cache.c \
