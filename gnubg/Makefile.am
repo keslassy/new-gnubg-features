@@ -153,8 +153,13 @@ endif
 ##linkpath for gnubg
 #
 
-gnubg_LDADD = -L$(srcdir)/lib lib/libevent.la \
-          @GTK_LIBS@ @LIBPNG_LIBS@ @CAIRO_LIBS@ @PANGOCAIRO_LIBS@ \
+gnubg_LDADD = -L$(srcdir)/lib lib/libevent.la
+if USE_GTK
+if FOUND_GLIB_COMPILE_RESOURCES
+gnubg_LDADD += pixmaps/libresources.la
+endif
+endif
+gnubg_LDADD += @GTK_LIBS@ @LIBPNG_LIBS@ @CAIRO_LIBS@ @PANGOCAIRO_LIBS@ \
 	      @GTHREAD_LIBS@ @GOBJECT_LIBS@ \
 	      @LTLIBOBJS@ \
 	      @FREETYPE2_LIBS@ @GLIB_LIBS@ @LIBPNG_LIBS@ @CANBERRA_LIBS@ \
@@ -168,11 +173,6 @@ gnubg_LDADD += @PYTHON_LDFLAGS@
 endif
 if USE_BOARD3D
 gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS)
-endif
-if USE_GTK
-if FOUND_GLIB_COMPILE_RESOURCES
-gnubg_LDADD += pixmaps/libresources.la
-endif
 endif
 
 if WIN32
