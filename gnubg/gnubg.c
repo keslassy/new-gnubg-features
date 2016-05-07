@@ -26,7 +26,7 @@
 
 #include <sys/types.h>
 #include <stdlib.h>
-#if HAVE_UNISTD_H
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
 #include <errno.h>
@@ -41,7 +41,7 @@
 #include <io.h>
 #endif
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
 static char *gnubg_histfile;
 #include <readline/history.h>
 #include <readline/readline.h>
@@ -77,8 +77,8 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #include <curl/curl.h>
 #endif
 
-#if HAVE_SOCKETS
-#if HAVE_SYS_SOCKET_H
+#if defined(HAVE_SOCKETS)
+#if defined(HAVE_SYS_SOCKET_H)
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -93,7 +93,7 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #endif                          /* #ifdef WIN32 */
 #endif                          /* #if HAVE_SOCKETS */
 
-#if USE_GTK
+#if defined(USE_GTK)
 #include <gtk/gtk.h>
 #include "gtkboard.h"
 #include "gtkgame.h"
@@ -113,11 +113,11 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #define NO_BACKSLASH_ESCAPES 1
 #endif
 
-#if USE_GTK
+#if defined(USE_GTK)
 int fX = FALSE;                 /* use X display */
 unsigned int nDelay = 300;
 int fNeedPrompt = FALSE;
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
 int fReadingCommand;
 #endif
 #endif
@@ -525,7 +525,7 @@ static char szDICE[] = N_("<die> <die>"),
     szXGID[] = N_("<xgid>"),
     szURL[] = "<URL>",
     szMAXERR[] = N_("<fraction>"), szMINGAMES[] = N_("<minimum games to rollout>"), szFOLDER[] = N_("<folder>"),
-#if USE_GTK
+#if defined(USE_GTK)
     szWARN[] = N_("[<warning>]"), szWARNYN[] = N_("<warning> on|off"),
 #endif
     szJSDS[] = N_("<joint standard deviations>"), szSTDDEV[] = N_("<std dev>");
@@ -543,19 +543,19 @@ char *default_sgf_folder = NULL;
 const char *szHomeDirectory;
 
 static char const *aszBuildInfo[] = {
-#if USE_PYTHON
+#if defined(USE_PYTHON)
     N_("Python supported."),
 #endif
-#if USE_SQLITE
+#if defined(USE_SQLITE)
     N_("SQLite database supported."),
 #endif
-#if USE_GTK
+#if defined(USE_GTK)
     N_("GTK graphical interface supported."),
 #endif
-#if HAVE_SOCKETS
+#if defined(HAVE_SOCKETS)
     N_("External players supported."),
 #endif
-#if HAVE_LIBGMP
+#if defined(HAVE_LIBGMP)
     N_("Long RNG seeds supported."),
 #endif
 #if defined(USE_BOARD3D)
@@ -1007,7 +1007,7 @@ CompareNames(char *sz0, char *sz1)
 extern void
 UpdateSetting(void *p)
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         GTKSet(p);
 #else
@@ -1089,10 +1089,11 @@ SetToggle(const char *szName, int *pf, char *sz, const char *szOn, const char *s
     return -1;
 }
 
+/* FIXME? This is only used with fRestart == FALSE */
 extern void
 PortableSignal(int nSignal, void (*p) (int), psighandler * pOld, int fRestart)
 {
-#if HAVE_SIGACTION
+#if defined(HAVE_SIGACTION)
     struct sigaction sa;
 
     sa.sa_handler = p;
@@ -1106,7 +1107,7 @@ PortableSignal(int nSignal, void (*p) (int), psighandler * pOld, int fRestart)
 #endif
         0;
     sigaction(nSignal, p ? &sa : NULL, pOld);
-#elif HAVE_SIGVEC
+#elif defined(HAVE_SIGVEC)
     struct sigvec sv;
 
     sv.sv_handler = p;
@@ -1125,9 +1126,9 @@ PortableSignal(int nSignal, void (*p) (int), psighandler * pOld, int fRestart)
 extern void
 PortableSignalRestore(int nSignal, psighandler * p)
 {
-#if HAVE_SIGACTION
+#if defined(HAVE_SIGACTION)
     sigaction(nSignal, p, NULL);
-#elif HAVE_SIGVEC
+#elif defined(HAVE_SIGVEC)
     sigvec(nSignal, p, NULL);
 #else
     signal(nSignal, *p);
@@ -1150,7 +1151,7 @@ ResetInterrupt(void)
         /* if  a batch was running signal a cancellation of current match */
         fMatchCancelled = TRUE;
 
-#if USE_GTK
+#if defined(USE_GTK)
         if (nNextTurn) {
             g_source_remove(nNextTurn);
             nNextTurn = 0;
@@ -1185,7 +1186,7 @@ HandleCommand(char *sz, command * ac)
             while (isspace(*sz))
                 ++sz;
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
             PythonRun(sz);
 #else
             outputl(_("This installation of GNU Backgammon was compiled without Python support."));
@@ -1316,7 +1317,7 @@ DisplayAnalysis(moverecord * pmr)
     case MOVE_NORMAL:
         DisplayCubeAnalysis(pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble);
 
-        outputf("%s %d%d", _("Rolled"), pmr->anDice[0], pmr->anDice[1]);
+        outputf("%s %u%u", _("Rolled"), pmr->anDice[0], pmr->anDice[1]);
 
         if (pmr->rLuck != ERR_VAL)
             outputf(" (%s):\n", GetLuckAnalysis(&ms, pmr->rLuck));
@@ -1347,7 +1348,7 @@ DisplayAnalysis(moverecord * pmr)
 
     case MOVE_SETDICE:
         if (pmr->rLuck != ERR_VAL)
-            outputf("%s %d%d (%s):\n", _("Rolled"), pmr->anDice[0], pmr->anDice[1], GetLuckAnalysis(&ms, pmr->rLuck));
+            outputf("%s %u%u (%s):\n", _("Rolled"), pmr->anDice[0], pmr->anDice[1], GetLuckAnalysis(&ms, pmr->rLuck));
         break;
 
     default:
@@ -1369,7 +1370,7 @@ ShowBoard(void)
         return;
 
     if (ms.gs == GAME_NONE) {
-#if USE_GTK
+#if defined(USE_GTK)
         if (fX) {
             TanBoard anBoardTemp;
             InitBoard(anBoardTemp, ms.bgv);
@@ -1387,7 +1388,7 @@ ShowBoard(void)
     if (!ms.fMove)
         SwapSides(an);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (!fX) {
 #endif
         if (fOutputRawboard) {
@@ -1421,7 +1422,7 @@ ShowBoard(void)
             apch[ms.fMove ? 4 : 2] = sz;
 
             if (ms.anDice[0])
-                sprintf(sz, _("%s %d%d"), _("Rolled"), ms.anDice[0], ms.anDice[1]);
+                sprintf(sz, _("%s %u%u"), _("Rolled"), ms.anDice[0], ms.anDice[1]);
             else if (!GameStatus(msBoard(), ms.bgv))
                 strcpy(sz, _("On roll"));
             else
@@ -1450,13 +1451,13 @@ ShowBoard(void)
             }
         }
         if (ms.fResigned > 0)
-            /* FIXME it's not necessarily the player on roll that resigned */
+            /* FIXME it's not necessarily the player on roll who resigned */
             sprintf(strchr(sz, 0), ", %s %s", _("resigns"), gettext(aszGameResult[ms.fResigned - 1]));
 
         outputl(DrawBoard(szBoard, (ConstTanBoard) an, ms.fMove, apch, MatchIDFromMatchState(&ms), anChequers[ms.bgv]));
 
         if (
-#if USE_GTK
+#if defined(USE_GTK)
                PanelShowing(WINDOW_ANALYSIS) &&
 #endif
                plLastMove && (pmr = plLastMove->plNext->p)) {
@@ -1464,7 +1465,7 @@ ShowBoard(void)
             if (pmr->sz)
                 outputl(pmr->sz);       /* FIXME word wrap */
         }
-#if USE_GTK
+#if defined(USE_GTK)
     } else {
         game_set(BOARD(pwBoard), an, ms.fMove, ap[1].szName,
                  ap[0].szName, ms.nMatchTo, ms.anScore[1],
@@ -1592,7 +1593,7 @@ CommandEval(char *sz)
     dd.szOutput = szOutput;
     dd.n = n;
     if (RunAsyncProcess((AsyncFun) asyncDumpDecision, &dd, _("Evaluating position...")) == 0) {
-#if USE_GTK
+#if defined(USE_GTK)
         if (fX)
             GTKEval(szOutput);
         else
@@ -1675,7 +1676,7 @@ CommandHelp(char *sz)
     command *pc, *pcFull;
     char szCommand[128], szUsage[128], *szHelp;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKHelp(sz);
         return;
@@ -1961,7 +1962,7 @@ HintResigned(void)
 
     getResignEquities(dd.aarOutput[0], &ci, ms.fResigned, &rEqBefore, &rEqAfter);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
 
         GTKResignHint(dd.aarOutput[0], rEqBefore, rEqAfter, &ci, ms.nMatchTo && fOutputMWC);
@@ -2202,7 +2203,7 @@ hint_double(int show, int did_double)
 
     find_skills(pmr, &ms, did_double, -1);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         if (hist && show)
             ChangeGame(NULL);
@@ -2240,7 +2241,7 @@ hint_take(int show, int did_take)
 
     find_skills(pmr, &ms, -1, did_take);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         if (hist && show)
             ChangeGame(NULL);
@@ -2297,7 +2298,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
 
         pmr_movelist_set(pmr, GetEvalChequer(), &ml);
     }
-#if USE_GTK
+#if defined(USE_GTK)
     if (!hist && fX)
         GTKGetMove(pmr->n.anMove);
 #endif
@@ -2320,7 +2321,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         pmr_movelist_set(pmr, GetEvalChequer(), &ml);
         find_skills(pmr, &ms, FALSE, -1);
     }
-#if USE_GTK
+#if defined(USE_GTK)
     if (!procdatarec && fX) {
         if (hist && show)
             ChangeGame(NULL);
@@ -2422,7 +2423,7 @@ Shutdown(void)
     FreeMatch();
     ClearMatch();
 
-#if USE_GTK
+#if defined(USE_GTK)
     MoveListDestroy();
 #endif
 
@@ -2430,7 +2431,7 @@ Shutdown(void)
 
     EvalShutdown();
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
     PythonShutdown();
 #endif
 
@@ -2439,7 +2440,7 @@ Shutdown(void)
     curl_global_cleanup();
 #endif
 
-#if HAVE_SOCKETS
+#if defined(HAVE_SOCKETS)
 #ifdef WIN32
     WSACleanup();
 #endif
@@ -2457,7 +2458,7 @@ PromptForExit(void)
 {
 
     static int fExiting = FALSE;
-#if USE_GTK
+#if defined(USE_GTK)
     BoardData *bd = NULL;
 
     if (fX) {
@@ -2483,7 +2484,7 @@ PromptForExit(void)
         StopIdle3d(bd, bd->bd3d);
     }
 #endif
-#if HAVE_SOCKETS
+#if defined(HAVE_SOCKETS)
     /* Close any open connections */
     if (ap[0].pt == PLAYER_EXTERNAL)
         closesocket(ap[0].h);
@@ -2504,7 +2505,7 @@ PromptForExit(void)
     if (fInteractive)
         PortableSignalRestore(SIGINT, &shInterruptOld);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         stop_board_expose(bd);
         board_free_pixmaps(bd);
@@ -2515,11 +2516,11 @@ PromptForExit(void)
 #endif
 #endif
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
     write_history(gnubg_histfile);
 #endif                          /* HAVE_LIB_READLINE */
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (gtk_main_level() == 1)
         gtk_main_quit();
     else
@@ -2562,7 +2563,7 @@ CommandRollout(char *sz)
         outputerrf("%s", _("No position specified and no game in progress."));
         return;
     }
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         GTKShowWarning(WARN_ROLLOUT, NULL);
 #endif
@@ -2599,7 +2600,7 @@ LoadCommands(FILE * pf, char *szFile)
         if (*sz == '#')         /* Comment */
             continue;
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
 
         if (!strcmp(sz, ">")) {
 
@@ -2632,7 +2633,7 @@ CommandLoadPython(char *sz)
     sz = NextToken(&sz);
 
     if (sz && *sz)
-#if USE_PYTHON
+#if defined(USE_PYTHON)
         LoadPythonFile(sz, FALSE);
 #else
         outputl(_("This build of GNU Backgammon does not support Python"));
@@ -2707,7 +2708,7 @@ CommandCopy(char *UNUSED(sz))
         aps[ms.fMove ? 4 : 2] = szRolled;
 
         if (ms.anDice[0])
-            sprintf(szRolled, "%s %d%d", _("Rolled"), ms.anDice[0], ms.anDice[1]);
+            sprintf(szRolled, "%s %u%u", _("Rolled"), ms.anDice[0], ms.anDice[1]);
         else if (!GameStatus(msBoard(), ms.bgv))
             strcpy(szRolled, _("On roll"));
         else
@@ -2873,11 +2874,11 @@ SaveRolloutSettings(FILE * pf, const char *sz, rolloutcontext * prc)
             "%s quasirandom %s\n"
             "%s initial %s\n"
             "%s truncation enable %s\n"
-            "%s truncation plies %d\n"
+            "%s truncation plies %u\n"
             "%s bearofftruncation exact %s\n"
             "%s bearofftruncation onesided %s\n"
             "%s later enable %s\n"
-            "%s later plies %d\n"
+            "%s later plies %u\n"
             "%s trials %u\n"
             "%s cube-equal-chequer %s\n"
             "%s players-are-same %s\n"
@@ -3062,7 +3063,7 @@ SaveImportExportSettings(FILE * pf)
 
 }
 
-#if USE_GTK
+#if defined(USE_GTK)
 static void
 SaveGUISettings(FILE * pf)
 {
@@ -3159,7 +3160,7 @@ SavePlayerSettings(FILE * pf)
     }
     fprintf(pf, "set cheat enable %s\n", fCheat ? "on" : "off");
     for (i = 0; i < 2; ++i)
-        fprintf(pf, "set cheat player %d roll %d\n", i, afCheatRoll[i] + 1);
+        fprintf(pf, "set cheat player %d roll %u\n", i, afCheatRoll[i] + 1);
 
 }
 
@@ -3280,7 +3281,7 @@ CommandSaveSettings(char *szParam)
         g_free(szFile);
         return;
     }
-#if USE_GTK
+#if defined(USE_GTK)
     /* the following may set errno because of a gtk bug so we do it
      * first and reset errno afterwards */
     if (fX)
@@ -3304,7 +3305,7 @@ CommandSaveSettings(char *szParam)
     /* language preference */
     fprintf(pf, "set lang %s\n", szLang);
 
-#if USE_GTK
+#if defined(USE_GTK)
     SaveGUISettings(pf);
 #endif
     SaveAnalysisSettings(pf);
@@ -3339,7 +3340,7 @@ CommandSaveSettings(char *szParam)
 
 }
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
 static command *pcCompleteContext;
 
 static char *
@@ -3578,7 +3579,7 @@ extern void
 Prompt(void)
 {
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
     if (!fInteractive || !isatty(STDIN_FILENO))
         return;
 #endif
@@ -3587,8 +3588,8 @@ Prompt(void)
     fflush(stdout);
 }
 
-#if USE_GTK
-#if HAVE_LIB_READLINE
+#if defined(USE_GTK)
+#if defined(HAVE_LIB_READLINE)
 extern void
 ProcessInput(char *sz)
 {
@@ -3666,7 +3667,7 @@ UserCommand(const char *szCommand)
 
     /* Note that the command is always echoed to stdout; the output*()
      * functions are bypassed. */
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
     rl_end = 0;                 /* crashes without this line */
     rl_redisplay();
     g_print("%s\n", sz);
@@ -3697,7 +3698,7 @@ NextTurnNotify(gpointer UNUSED(p))
     ResetInterrupt();
 
     if (fNeedPrompt) {
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
         if (fInteractive) {
             char *sz = locale_from_utf8(FormatPrompt());
             rl_callback_handler_install(sz, ProcessInput);
@@ -3727,11 +3728,11 @@ GetInput(char *szPrompt)
     char *sz;
     char *pch;
     char *pchConverted;
-#if USE_GTK
+#if defined(USE_GTK)
     g_assert(fTTY && !fX);
 #endif
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
     if (fInteractive) {
         char *prompt;
         /* Using readline, but not X. */
@@ -3808,7 +3809,7 @@ GetInputYN(char *szPrompt)
     if (!fInteractive)
         return TRUE;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         return GTKGetInputYN(szPrompt);
 #endif
@@ -3896,7 +3897,7 @@ ProgressStart(const char *sz)
 
     fInProgress = TRUE;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKProgressStart(sz);
         return;
@@ -3923,7 +3924,7 @@ ProgressStartValue(char *sz, int iMax)
 
     fInProgress = TRUE;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKProgressStartValue(sz, iMax);
         return;
@@ -3949,7 +3950,7 @@ ProgressValue(int iValue)
 
     if (ProgressThrottle())
         return;
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKProgressValue(iValue, iProgressMax);
         return;
@@ -3982,7 +3983,7 @@ Progress(gpointer UNUSED(unused))
 
     if (ProgressThrottle())
         return TRUE;
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKProgress();
         return TRUE;
@@ -3996,11 +3997,11 @@ Progress(gpointer UNUSED(unused))
     return TRUE;
 }
 
-#if !USE_MULTITHREAD
+#if !defined(USE_MULTITHREAD)
 extern void
 CallbackProgress(void)
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKDisallowStdin();
         if (fInProgress)
@@ -4034,7 +4035,7 @@ ProgressEnd(void)
     iProgressValue = 0;
     pcProgress = NULL;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKProgressEnd();
         return;
@@ -4114,7 +4115,7 @@ HandleInterrupt(int UNUSED(idSignal))
 static void
 BearoffProgress(unsigned int i)
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKBearoffProgress(i);
         return;
@@ -4132,7 +4133,7 @@ VersionMessage(void)
     g_print("%s", _(intro_string));
 }
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
 static char *
 get_readline(void)
 {
@@ -4206,7 +4207,7 @@ run_cl(void)
 {
     char *line;
     for (;;) {
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
         if (fInteractive) {
             line = get_readline();
             HandleCommand(line, acTop);
@@ -4261,7 +4262,7 @@ init_language(char **lang)
 static void
 setup_readline(void)
 {
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
     char *pch;
     int i;
     gnubg_histfile = g_build_filename(szHomeDirectory, "history", NULL);
@@ -4279,7 +4280,7 @@ setup_readline(void)
 #endif
 }
 
-#if !USE_GTK
+#if !defined(USE_GTK)
 static void
 PushSplash(char *UNUSED(unused), char *UNUSED(heading), char *UNUSED(message))
 {
@@ -4304,7 +4305,7 @@ GetManualDice(unsigned int anDice[2])
     char *sz = NULL;
     int i;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         if (GTKGetManualDice(anDice)) {
             fInterrupt = 1;
@@ -4370,7 +4371,7 @@ init_rng(void)
     rcRollout.nSeed ^= 0x792A584B;
 }
 
-#if defined(WIN32) && HAVE_SOCKETS
+#if defined(WIN32) && defined(HAVE_SOCKETS)
 static void
 init_winsock()
 {
@@ -4445,7 +4446,7 @@ null_debug(const gchar * UNUSED(dom), GLogLevelFlags UNUSED(logflags), const gch
 int
 main(int argc, char *argv[])
 {
-#if USE_GTK
+#if defined(USE_GTK)
     GtkWidget *pwSplash = NULL;
 #else
     char *pwSplash = NULL;
@@ -4518,7 +4519,7 @@ main(int argc, char *argv[])
 
     /* set language */
     init_defaults();
-#if USE_GTK
+#if defined(USE_GTK)
     gtk_disable_setlocale();
 #endif
     init_language(&lang);
@@ -4529,7 +4530,7 @@ main(int argc, char *argv[])
     /* parse command line options */
     context = g_option_context_new("[file.sgf]");
     g_option_context_add_main_entries(context, ao, PACKAGE);
-#if USE_GTK
+#if defined(USE_GTK)
     g_option_context_add_group(context, gtk_get_option_group(FALSE));
 #endif
 
@@ -4574,7 +4575,7 @@ main(int argc, char *argv[])
 #ifdef WIN32
     fNoTTY = TRUE;
 #endif
-#if USE_GTK
+#if defined(USE_GTK)
     /* -t option not given */
     if (!fNoX)
         InitGTK(&argc, &argv);
@@ -4610,12 +4611,12 @@ main(int argc, char *argv[])
     glib_ext_init();
     MT_InitThreads();
 
-#if defined(WIN32) && HAVE_SOCKETS
+#if defined(WIN32) && defined(HAVE_SOCKETS)
     PushSplash(pwSplash, _("Initialising"), _("Windows sockets"));
     init_winsock();
 #endif
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
     PushSplash(pwSplash, _("Initialising"), "Python");
     PythonInitialise(argv[0]);
 #endif
@@ -4642,7 +4643,7 @@ main(int argc, char *argv[])
     /* start-up sound */
     playSound(SOUND_START);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         if (!fTTY) {
             g_set_print_handler(&GTKOutput);
@@ -4667,7 +4668,7 @@ main(int argc, char *argv[])
 
     /* -p option given */
     if (pchPythonScript) {
-#if USE_PYTHON
+#if defined(USE_PYTHON)
         fInteractive = FALSE;
         LoadPythonFile(pchPythonScript, FALSE);
         Shutdown();
@@ -4878,7 +4879,7 @@ CommandSwapPlayers(char *UNUSED(sz))
     ms.anScore[0] = n;
     SwapSides(ms.anBoard);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         fJustSwappedPlayers = TRUE;
         GTKSet(ap);
@@ -4923,7 +4924,7 @@ setDefaultFileName(char *path)
     g_free(szCurrentFolder);
     g_free(szCurrentFileName);
     DisectPath(path, NULL, &szCurrentFileName, &szCurrentFolder);
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         gchar *title = g_strdup_printf("%s (%s)", _("GNU Backgammon"), szCurrentFileName);
         gtk_window_set_title(GTK_WINDOW(pwMain), title);
@@ -4960,7 +4961,7 @@ GetAdviceAnswer(char *sz)
 {
 
     char *pch;
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         return GtkTutor(sz);
 #endif
@@ -5031,7 +5032,7 @@ GiveAdvice(skilltype Skill)
 extern void
 TextToClipboard(const char *sz)
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         GTKTextToClipboard(sz);
 #else
@@ -5061,7 +5062,7 @@ CommandDiceRolls(char *sz)
 }
 
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
 extern void
 CommandHistory(char *UNUSED(sz))
 {
@@ -5191,7 +5192,7 @@ EPC(const TanBoard anBoard, float *arEPC, float *arMu, float *arSigma, int *pfSo
     return -1;
 }
 
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
 extern char *
 locale_from_utf8(const char *sz)
 {
@@ -5371,7 +5372,7 @@ RunAsyncProcess(AsyncFun fn, void *data, const char *msg)
 extern void
 ProcessEvents(void)
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         while (gtk_events_pending())
             gtk_main_iteration();
