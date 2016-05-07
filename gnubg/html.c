@@ -551,7 +551,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
 
     /* player 0's chequers on the bar */
 
-    sprintf(sz, "b_up_%d", anBoard[0][24]);
+    sprintf(sz, "b_up_%u", anBoard[0][24]);
     printImageClass(pf, szImageDir, sz, szExtension, NULL, hecss, HTML_EXPORT_TYPE_BBS, CLASS_BOARD_IMG);
 
     /* player 0's outer board */
@@ -579,7 +579,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
 
         /* dice rolled */
 
-        sprintf(sz, "b_center%d%d%s",
+        sprintf(sz, "b_center%u%u%s",
                 (pms->anDice[0] < pms->anDice[1]) ?
                 pms->anDice[0] : pms->anDice[1],
                 (pms->anDice[0] < pms->anDice[1]) ? pms->anDice[1] : pms->anDice[0], pms->fMove ? "right" : "left");
@@ -616,7 +616,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
 
     /* player 1's chequers on the bar */
 
-    sprintf(sz, "b_dn_%d", anBoard[1][24]);
+    sprintf(sz, "b_dn_%u", anBoard[1][24]);
     printImageClass(pf, szImageDir, sz, szExtension, NULL, hecss, HTML_EXPORT_TYPE_BBS, CLASS_BOARD_IMG);
 
     /* player 1's outer board */
@@ -790,7 +790,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
 
     if (anBoard[0][24]) {
 
-        sprintf(sz, "b-bar-x%d", (anBoard[0][24] > 4) ? 4 : anBoard[0][24]);
+        sprintf(sz, "b-bar-x%u", (anBoard[0][24] > 4) ? 4 : anBoard[0][24]);
         sprintf(szAlt, "|%1X&nbsp;|", anBoard[0][24]);
         printImage(pf, szImageDir, sz, szExtension, szAlt, hecss, HTML_EXPORT_TYPE_FIBS2HTML);
 
@@ -911,8 +911,8 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
 
     if (anBoard[1][24]) {
 
-        sprintf(sz, "b-bar-o%d", (anBoard[1][24] > 4) ? 4 : anBoard[1][24]);
-        sprintf(szAlt, "|&nbsp;%1dO|", anBoard[1][24]);
+        sprintf(sz, "b-bar-o%u", (anBoard[1][24] > 4) ? 4 : anBoard[1][24]);
+        sprintf(szAlt, "|&nbsp;%1uO|", anBoard[1][24]);
         printImage(pf, szImageDir, sz, szExtension, szAlt, hecss, HTML_EXPORT_TYPE_FIBS2HTML);
 
     } else
@@ -952,7 +952,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
     printImage(pf, szImageDir, "b-indent", szExtension, "", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
 
     PipCount((ConstTanBoard) anBoard, anPips);
-    fprintf(pf, _("Pip counts: %s %d, %s %d<br />\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
+    fprintf(pf, _("Pip counts: %s %u, %s %u<br />\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
 
     /* position ID */
 
@@ -1133,7 +1133,7 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
     fputs("<tr>", pf);
     fputs("<td>", pf);
 
-    sprintf(sz, "b-bar-o%d", anBoard[1][24]);
+    sprintf(sz, "b-bar-o%u", anBoard[1][24]);
     if (anBoard[1][24])
         sprintf(szAlt,
                 "|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
@@ -1173,8 +1173,8 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
 
         /* player has rolled the dice */
 
-        sprintf(sz, "b-midl-x%d%d", pms->anDice[0], pms->anDice[1]);
-        sprintf(szAlt, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%d&nbsp;%d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+        sprintf(sz, "b-midl-x%u%u", pms->anDice[0], pms->anDice[1]);
+        sprintf(szAlt, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%u&nbsp;%u&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                 pms->anDice[0], pms->anDice[1]);
 
         printImage(pf, szImageDir, sz, szExtension, szAlt, hecss, HTML_EXPORT_TYPE_GNU);
@@ -1222,8 +1222,8 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
 
         /* player 1 has rolled the dice */
 
-        sprintf(sz, "b-midr-o%d%d", pms->anDice[0], pms->anDice[1]);
-        sprintf(szAlt, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%d&nbsp;%d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+        sprintf(sz, "b-midr-o%u%u", pms->anDice[0], pms->anDice[1]);
+        sprintf(szAlt, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%u&nbsp;%u&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
                 pms->anDice[0], pms->anDice[1]);
 
         printImage(pf, szImageDir, sz, szExtension, szAlt, hecss, HTML_EXPORT_TYPE_GNU);
@@ -1291,7 +1291,7 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
 
     fputs("<td>", pf);
 
-    sprintf(sz, "b-bar-x%d", anBoard[0][24]);
+    sprintf(sz, "b-bar-x%u", anBoard[0][24]);
     if (pms->fCubeOwner == 1)
         sprintf(szAlt, "|%2d&nbsp;|", pms->nCube);
     else
@@ -1374,7 +1374,7 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
     fputs("<p>", pf);
 
     PipCount((ConstTanBoard) anBoard, anPips);
-    fprintf(pf, _("Pip counts: %s %d, %s %d<br />\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
+    fprintf(pf, _("Pip counts: %s %u, %s %u<br />\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
 
     /* position ID */
 
@@ -1459,7 +1459,7 @@ HTMLBoardHeader(FILE * pf, const matchstate * pms,
 
         /* chequer play decision */
 
-        fprintf(pf, _(" %s to play %d%d"), ap[pms->fMove].szName, pms->anDice[0], pms->anDice[1]
+        fprintf(pf, _(" %s to play %u%u"), ap[pms->fMove].szName, pms->anDice[0], pms->anDice[1]
             );
 
     else if (pms->fDoubled)
@@ -2192,7 +2192,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
             /* move no */
 
             if (i != pmr->n.iMove || i != pmr->ml.cMoves - 1 || pmr->ml.cMoves == 1 || i < exsExport.nMoves)
-                fprintf(pf, "<td %s>%d</td>\n", GetStyle(CLASS_MOVENUMBER, hecss), i + 1);
+                fprintf(pf, "<td %s>%u</td>\n", GetStyle(CLASS_MOVENUMBER, hecss), i + 1);
             else
                 fprintf(pf, "<td %s>\?\?</td>\n", GetStyle(CLASS_MOVENUMBER, hecss));
 
