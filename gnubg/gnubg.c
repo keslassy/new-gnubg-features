@@ -2305,7 +2305,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
     if (pmr->n.anMove[0] == -1) {
         pmr->n.iMove = UINT_MAX;
         pmr->n.stMove = SKILL_NONE;
-    } else if (pmr->n.anMove[0] != -1) {
+    } else {
         pmr->n.iMove = locateMove(msBoard(), pmr->n.anMove, &pmr->ml);
         /* Tutor mode may have called asyncFindMove() above before
          * n.iMove was known. Do it again, ensuring that the actual
