@@ -216,7 +216,7 @@ MoveListUpdate(const hintdata * phd)
     for (i = 0; i < pml->cMoves; i++) {
         float *ar = pml->amMoves[i].arEvalMove;
         int rankKnown;
-        char *highlight_sz;
+        const char *highlight_sz;
 
         if (showWLTree)
             gtk_list_store_set(store, &iter, 0, pml->amMoves + i, -1);
@@ -247,7 +247,7 @@ MoveListUpdate(const hintdata * phd)
         highlight_sz = (phd->piHighlight && *phd->piHighlight == i) ? "*" : "";
 
         if (rankKnown)
-            sprintf(sz, "%s%s%d", pml->amMoves[i].cmark ? "+" : "", highlight_sz, i + 1);
+            sprintf(sz, "%s%s%u", pml->amMoves[i].cmark ? "+" : "", highlight_sz, i + 1);
         else
             sprintf(sz, "%s%s??", pml->amMoves[i].cmark ? "+" : "", highlight_sz);
 
