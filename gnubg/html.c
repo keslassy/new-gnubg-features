@@ -208,7 +208,7 @@ GetStyle(const stylesheetclass ssc, const htmlexportcss hecss)
 
 
 static char *
-GetStyleGeneral(const htmlexportcss hecss, ...)
+GetStyleGeneral(const int hecss, ...)
 {
 
     static char sz[2048];
