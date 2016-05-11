@@ -649,7 +649,7 @@ SetTexture(BoardData3d * bd3d, Material * pMat, const char *filename)
     }
 
     if (LoadTexture(&bd3d->textureList[bd3d->numTextures], filename)) {
-        /* Remeber name */
+        /* Remember name */
         bd3d->textureName[bd3d->numTextures] = (char *) malloc(strlen(nameStart) + 1);
         strcpy(bd3d->textureName[bd3d->numTextures], nameStart);
 
@@ -2377,7 +2377,7 @@ DeleteTextureList(void)
 
 void
 InitBoard3d(BoardData * bd, BoardData3d * bd3d)
-{                               /* Initilize 3d parts of boarddata */
+{                               /* Initialize 3d parts of boarddata */
     int i, j;
     /* Assign random rotation to each board position */
     for (i = 0; i < 28; i++)

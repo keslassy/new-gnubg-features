@@ -822,7 +822,7 @@ raceProbs(const TanBoard anBoard, const unsigned int nGames, float arOutput[NUM_
 
     float w, s;
 
-    /* Seed set to ensure that OSR are reproducable */
+    /* Seed set to ensure that OSR are reproducible */
 
     init_genrand(0, &mti, mt);
 

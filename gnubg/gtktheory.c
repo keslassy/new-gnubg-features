@@ -44,7 +44,7 @@ typedef struct _theorywidget {
 
     GtkWidget *apwRadio[2];
 
-    /* frames ("match score" and "moeny game") */
+    /* frames ("match score" and "money game") */
 
     GtkWidget *apwFrame[2];
 
@@ -569,7 +569,7 @@ PlyClicked(GtkWidget * pw, theorywidget * ptw)
  * - gammon price
  *
  * Input:
- *   fActivePage: with notebook page should recieve focus.
+ *   fActivePage: with notebook page should receive focus.
  *
  */
 

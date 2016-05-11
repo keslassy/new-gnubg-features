@@ -111,7 +111,7 @@ static char *Concatenate( listOLD *pl ) {
 
 %%
 		/* The specification says empty collections are illegal, but
-		   we'll try to be accomodating. */
+		   we'll try to be accommodating. */
 Collection:	GameTreeSeq
 		{ $$ = plCollection = $1; }
 	;

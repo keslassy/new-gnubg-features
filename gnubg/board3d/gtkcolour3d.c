@@ -174,7 +174,7 @@ UpdateColourPreview(void)
     gtk_color_button_get_array(GTK_COLOR_BUTTON(pcpDiffuse), diffuse);
     gtk_color_button_get_array(GTK_COLOR_BUTTON(pcpSpecular), specular);
 
-    tempTexture = col3d.textureInfo;    /* Remeber texture, as setupmat resets it */
+    tempTexture = col3d.textureInfo;    /* Remember texture, as setupmat resets it */
     SetupMat(&col3d, (float) ambient[0], (float) ambient[1], (float) ambient[2],
              (float) diffuse[0], (float) diffuse[1], (float) diffuse[2],
              (float) specular[0], (float) specular[1], (float) specular[2],

@@ -115,7 +115,7 @@ enum {
      * 
      * 1. If board is weak (less than 3 anchors), don't consider hitting on
      * points 22 and 23.
-     * 2. Dont break anchors inside home to hit.
+     * 2. Don't break anchors inside home to hit.
      */
     I_PIPLOSS,
 

@@ -240,7 +240,7 @@ LuckAnalysis(const TanBoard anBoard, int n0, int n1, matchstate * pms)
     if (n0-- < n1--)            /* -- because as input n0 and n1 are dice [1..6] but in calls to LuckXX() they are array indexes [0..5] */
         swap(&n0, &n1);
 
-    if (is_init_board && n0 != n1)      /* FIXME: this fails if we return to the inital position after a few moves */
+    if (is_init_board && n0 != n1)      /* FIXME: this fails if we return to the initial position after a few moves */
         return LuckFirst(anBoard, n0, n1, &ci, &ecLuck);
     else
         return LuckNormal(anBoard, n0, n1, &ci, &ecLuck);

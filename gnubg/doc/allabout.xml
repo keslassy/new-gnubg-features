@@ -463,7 +463,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <para>Open the program, enter the File menu, select Import, and then choose .mat match.</para>
         </listitem>
         <listitem>
-          <para>Locate the match and import it. You'll find it in the main JavaFIBS directory, in the subdirectory Match and then Jellyfish. See the <xref linkend="remember"/> below to avoid having to do this everytime.</para>
+          <para>Locate the match and import it. You'll find it in the main JavaFIBS directory, in the subdirectory Match and then Jellyfish. See the <xref linkend="remember"/> below to avoid having to do this every time.</para>
         </listitem>
         <listitem>
           <para>Go to the Analyse menu and select Analyse match. See <xref linkend="Analysing_matches"/> to learn how to change the analysis settings.</para>
@@ -490,7 +490,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <para>Open the program, enter the File menu, select Import, and then choose Gamesgrid .sgg match.</para>
         </listitem>
         <listitem>
-          <para>Locate the match and import it. You'll probably find it in the Gamesgrid directory in a subdirectory called SaveGame. See the <xref linkend="remember"/> below to avoid having to do this everytime.</para>
+          <para>Locate the match and import it. You'll probably find it in the Gamesgrid directory in a subdirectory called SaveGame. See the <xref linkend="remember"/> below to avoid having to do this every time.</para>
         </listitem>
         <listitem>
           <para>Go to the Analyse menu and select Analyse match. See <xref linkend="Analysing_matches"/> to learn how to change the analysis settings.</para>
@@ -514,7 +514,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
           <para>After saving your game or match, open the program, enter the File menu, select Import, and then choose TrueMoneyGames .tmg match.</para>
         </listitem>
         <listitem>
-          <para>Locate the match and import it. You'll probably find it in the TrueMoneyGames directory, called TMG, in a subdirectory called SavedGames. See the <xref linkend="remember"/>" below to avoid having to do this everytime.</para>
+          <para>Locate the match and import it. You'll probably find it in the TrueMoneyGames directory, called TMG, in a subdirectory called SavedGames. See the <xref linkend="remember"/>" below to avoid having to do this every time.</para>
         </listitem>
         <listitem>
           <para>Go to the Analyse menu and select Analyse match. See <xref linkend="Analysing_matches"/> to learn how to change the analysis settings. </para>

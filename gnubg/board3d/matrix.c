@@ -119,7 +119,7 @@ makeInverseRotateMatrixZ(float m[4][4], float degRot)
 
 /* Test functions */
 #if 0
-/* Generic rotation matrix - for comparisions */
+/* Generic rotation matrix - for comparisons */
 void
 makeInverseRotateMatrix(float m[4][4], float degRot, float x, float y, float z)
 {

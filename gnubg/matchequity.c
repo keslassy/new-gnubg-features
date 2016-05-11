@@ -398,7 +398,7 @@ GetPoints(float arOutput[5], const cubeinfo * pci, float arCP[2])
      *
      * Output:
      * - arCP : cash points with live cube
-     * These points are necesary for the linear
+     * These points are necessary for the linear
      * interpolation used in cubeless -> cubeful equity 
      * transformation.
      */

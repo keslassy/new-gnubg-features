@@ -137,7 +137,7 @@ details.
 ** Optionally merge the game record and annotation windows into one big
   paned window (suggested by Jeremie Petit).
 ** When a long string is displayed in the status bar, the main window
-  grows to accomodate it -- not very pretty.  A Layout or Viewport widget
+  grows to accommodate it -- not very pretty.  A Layout or Viewport widget
   might be able to fix this.  (Fixed under GTK+ 2.0.)
 ** Make GTKDumpStatcontext check psc->fMoves, psc->fDice and psc->fCube,
   and only output the relevant statistics.
@@ -179,7 +179,7 @@ details.
 *** Add buttons to the "help" window to look up the command in the manual,
   or execute it.  Also use gtk_label_set_markup style markup in the help
   window.
-*** Make open/save/import/export dialogs larger to accomodate very long
+*** Make open/save/import/export dialogs larger to accommodate very long
   filenames *and* save the geometry)
 
 ** Deprecated functions:

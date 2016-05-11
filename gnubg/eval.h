@@ -161,7 +161,7 @@ extern const char *aszVariations[NUM_VARIATIONS];
 extern const char *aszVariationCommands[NUM_VARIATIONS];
 
 /*
- * Cubeinfo contains the information necesary for evaluation
+ * Cubeinfo contains the information necessary for evaluation
  * of a position.
  * These structs are placed here so that the move struct can be defined
  */

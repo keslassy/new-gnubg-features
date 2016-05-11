@@ -4587,7 +4587,7 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_general_os">
         <title>What operating systems are supported?</title>
-        <para><application>GNU Backgammon</application> is mostly developped
+        <para><application>GNU Backgammon</application> is mostly developed
           on <emphasis>GNU/Linux</emphasis>. It also builds and runs under
           other Unix operating systems like those derived from
           <emphasis>BSD</emphasis> or
