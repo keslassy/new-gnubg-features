@@ -502,7 +502,9 @@ LoginClicked(GtkButton * UNUSED(button), gpointer dbList)
     if (pdb == NULL)
         return;
 
-    tmpUser = pdb->username, tmpPass = pdb->password, tmpHost = pdb->hostname;
+    tmpUser = pdb->username;
+    tmpPass = pdb->password;
+    tmpHost = pdb->hostname;
 
     pdb->username = gtk_entry_get_text(GTK_ENTRY(user));
     pdb->password = gtk_entry_get_text(GTK_ENTRY(password));
@@ -510,7 +512,9 @@ LoginClicked(GtkButton * UNUSED(button), gpointer dbList)
 
     TryConnection(pdb, dbList);
 
-    pdb->username = tmpUser, pdb->password = tmpPass, pdb->hostname = tmpHost;
+    pdb->username = tmpUser;
+    pdb->password = tmpPass;
+    pdb->hostname = tmpHost;
 }
 
 static void

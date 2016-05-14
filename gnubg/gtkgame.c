@@ -6653,7 +6653,8 @@ AddNavigation(GtkWidget * pvbox)
         sprintf(sz, _("All games: %s %d, %s %d"), ap[0].szName, anFinalScore[0], ap[1].szName, anFinalScore[1]);
     else
         sprintf(sz, _("All games: %s, %s"), ap[0].szName, ap[1].szName);
-    phbox = gtk_hbox_new(FALSE, 0), gtk_box_pack_start(GTK_BOX(pvbox), phbox, FALSE, FALSE, 4);
+    phbox = gtk_hbox_new(FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pvbox), phbox, FALSE, FALSE, 4);
     pw = button_from_image(gtk_image_new_from_stock(GNUBG_STOCK_GO_PREV_GAME, GTK_ICON_SIZE_LARGE_TOOLBAR));
     g_signal_connect(G_OBJECT(pw), "clicked", G_CALLBACK(StatsPreviousGame), box);
     gtk_box_pack_start(GTK_BOX(phbox), pw, FALSE, FALSE, 0);
@@ -6806,7 +6807,8 @@ GTKDumpStatcontext(int game)
     gtk_notebook_set_scrollable(GTK_NOTEBOOK(pwNotebook), TRUE);
     gtk_notebook_popup_disable(GTK_NOTEBOOK(pwNotebook));
 
-    pvbox = gtk_vbox_new(FALSE, 0), gtk_box_pack_start(GTK_BOX(pvbox), pwNotebook, TRUE, TRUE, 0);
+    pvbox = gtk_vbox_new(FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pvbox), pwNotebook, TRUE, TRUE, 0);
 
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), statViews[FORMATGS_OVERALL] = CreateList(),
                              gtk_label_new(_("Overall")));
@@ -6997,8 +6999,8 @@ GTKMatchInfo(void)
     char sz[128];
 
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Match information"),
-                               DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(MatchInfoOK), &fOK),
-        pwTable = gtk_table_new(5, 7, FALSE);
+                               DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(MatchInfoOK), &fOK);
+    pwTable = gtk_table_new(5, 7, FALSE);
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwTable);
 
     sprintf(sz, _("%s's rating:"), ap[0].szName);

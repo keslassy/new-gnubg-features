@@ -71,7 +71,8 @@ configure_event_3d(GtkWidget * widget, GdkEventConfigure * UNUSED(eventDetails),
 
             gdk_gl_drawable_gl_end(gldrawable);
 
-            curWidth = width, curHeight = height;
+            curWidth = width;
+            curHeight = height;
         }
     }
     return TRUE;

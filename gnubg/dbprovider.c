@@ -296,7 +296,7 @@ PyMySQLConnect(const char *dbfilename, const char *user, const char *password, c
     if (ret == NULL || !PyInt_Check(ret) || (iret = PyInt_AsLong(ret)) < 0) {
         PyErr_Print();
         return -1;
-    } else if (iret == 0L) {     /* New database - populate */
+    } else if (iret == 0L) {    /* New database - populate */
         return 0;
     }
     return 1;
@@ -317,7 +317,7 @@ PyPostgreConnect(const char *dbfilename, const char *user, const char *password,
     if (ret == NULL || !PyInt_Check(ret) || (iret = PyInt_AsLong(ret)) < 0) {
         PyErr_Print();
         return -1;
-    } else if (iret == 0L) {     /* New database - populate */
+    } else if (iret == 0L) {    /* New database - populate */
         return 0;
     }
     return 1;
@@ -691,7 +691,8 @@ SQLiteDeleteDatabase(const char *dbfilename, const char *UNUSED(user), const cha
     /* Delete database file */
     ret = g_unlink(filename);
 
-    g_free(name), g_free(filename);
+    g_free(filename);
+    g_free(name);
     return (ret == 0);
 }
 #endif

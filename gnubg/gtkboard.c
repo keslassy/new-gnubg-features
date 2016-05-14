@@ -3952,9 +3952,10 @@ setdice_widget_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), SetDiceD
         int col1, col2;
         if (sdd->mdt == MT_STANDARD)
             col1 = col2 = (sdd->bd->turn == 1) ? 1 : 0;
-        else if (sdd->mdt == MT_EDIT && (n % 6 == n / 6))
-            col1 = 1, col2 = 0;
-        else
+        else if (sdd->mdt == MT_EDIT && (n % 6 == n / 6)) {
+            col1 = 1;
+            col2 = 0;
+        } else
             col1 = col2 = ((n % 6) <= n / 6);
 
         DrawDie(gtk_widget_get_window(dice), sdd->TTachDice, sdd->TTachPip, setSize, sdd->bd->gc_copy,

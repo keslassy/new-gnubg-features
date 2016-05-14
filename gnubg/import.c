@@ -3287,7 +3287,8 @@ WritePartyGame(FILE * fp, char *gameStr, int ns)
                         src += 3;
                     } else {
                         *dest = *src;
-                        dest++, src++;
+                        dest++;
+                        src++;
                     }
                 }
                 *dest = '\0';
