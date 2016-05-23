@@ -2569,11 +2569,11 @@ roll, and evaluates these position at the given ply. It's possible to
 set the search depth by specifying the plies lookahead in any
 evaluation settings dialog.
 
-Snowie users: GNU Backgammon differs
-from some other software, notably Snowie in that GNU
-Backgammon zero ply is the same as Snowie 1 ply. In
+Snowie and XG users: GNU Backgammon differs
+from most other software, notably Snowie and eXtreme Gammon in that GNU
+Backgammon starts counting plies at 0 (no lookahead) while other start at 1 ply. In
 the same way what is called 2-ply in GNU
-Backgammon will therefore be similar to a Snowie 3-ply.
+Backgammon will be similar to a Snowie 3-ply.
 
 For GNU Backgammon, a 0-ply evaluation
 of a move would be done by:
@@ -2609,11 +2609,10 @@ Every additional ply will multiply the previous number of
 evaluations by about 400 odd, which explains the huge difference in
 playing speed/analysis speed between 0 ply and 2 ply settings. I don't
 think many people would enjoy playing against GNU
-Backgammon at 3 ply settings, where moves could take
-minutes to be selected. It's also not clear that using much deeper
-lookahead actually gains a lot in terms of playing strength - if you
-really need better answers than 2 ply, rollouts are probably a lot
-better.
+Backgammon at 4 ply settings, where moves could take
+tens of seconds to be selected. Deeper
+lookahead than 2 ply actually gains relatively little in terms of playing strength and are not very interesting as settings for GNU Backgammon as an opponent or for rollouts (although 3 ply is quite fast on current computers).
+On the other hand, 4 ply analysis is reasonably fast on modern multi-cores machines.
 
 @node Defining evaluation settings, Playing skill;, The depth to search and plies, Evaluation settings
 @subsection Defining evaluation settings
@@ -2626,22 +2625,15 @@ playing or the quality of it's hints and analysis:
 @subsection Playing skill:
 
 Settings->Players->Player 0 - choose Supremo or World Class. GNU Backgammon will
-take longer choosing its moves, but they will be very strong. At this
-setting, it is much stronger than Jellyfish level 7.
+take at most a few seconds choosing its moves and they will be very strong. At this
+setting, it is significantly stronger than any human player (on average, some classes of positions are evaluated less accurately).
 
 @node Hints;, Analysis;, Playing skill;, Evaluation settings
 @subsection Hints:
 
 Settings->Evaluation - choose Supremo or World Class if you want hints to be
-very accurate, but, like the playing skill setting, you may find that
-it can take as long as 15 seconds to get an answer on a 1GHz PC.
-Expert will be very fast, but for some positions where you need to
-consider what your opponent may do on his roll and how you will follow
-it up, the results will be less accurate. A wild guess would be
-somewhere around 2 or 3 percent of the time, World Class or stronger
-settings would give a different best move and maybe less than 1/2
-percent of the time, the Expert result would be seriously
-wrong.
+accurate and fast. Anything lower doesn't really makes sense
+on current PCs.
 
 @node Analysis;, Rollouts;, Hints;, Evaluation settings
 @subsection Analysis:
@@ -2649,9 +2641,8 @@ wrong.
 Settings->Analysis - these settings are used by the Analyse Move/Game/Match
 or Session command. Note that this is totally different to what is
 used in the Hint command, which uses the above settings. You probably
-want at least World Class here. My experience on a 700MHz PC is that a
-7 point match takes about 15 to 20 minutes to analyse on the Supremo
-settings. But the results tend to be very accurate.
+want at least Supremo here. A 7 point match will take at most 1 minute to analyse on the Supremo settings. This could be used to get immediate feedback after completing a match.
+An alternative is to use the more accurate 4 ply level. The same analysis would take maybe 15 minutes on a 4-cores computer and longer on more limited hardware. This would be more suitable to delayed, overnight for instance, processing of a batch of matches.
 
 @node Rollouts;, Changing evaluation settings, Analysis;, Evaluation settings
 @subsection Rollouts:
@@ -2659,16 +2650,15 @@ settings. But the results tend to be very accurate.
 Settings->Rollouts->General Settings tick the boxes for 'Cube decisions use same settings
 same as checker play' and 'Use same settings for both players'
 
-Settings->Rollouts->First Play Both - select Expert here (this is my opinion). When doing
+Settings->Rollouts->First Play Both - select Expert here for fast rollouts or World Class for slower but more accurate ones. When doing
 rollouts, most of the time Expert play will be more than strong enough
 if you do say 1296 trials with no truncation. The rollout function has
 an enormous number of options, most of which are only useful when
-trying to investigate special positions. The simple expert setting for
-both players is probably more accurate than any of the Analysis
+trying to investigate special positions. The simple Expert setting for
+both players is more accurate than any of the Analysis
 functions. The downside is that rolling out 1296 trials of an early
-move in a game can take a couple of hours. On World Class or Supremo
-rollout settings, it can take more than 24 hours of computing
-time.
+move in a game can take from a couple of minutes at Expert level to hours at World Class or Supremo
+rollout settings.
 
 @node Changing evaluation settings, Predefined settings, Rollouts;, Evaluation settings
 @subsection Changing evaluation settings
@@ -2704,7 +2694,7 @@ In the Noise box, you can add noise to the evaluation. This can be
 smart if you think the program plays to strong. You can use the Noise
 box option to introduce noise or errors in the evaluations. This is
 useful for introducing levels below 0-ply. The lower rated bots (e.g.,
-GGotter) on the GamesGrid backgammon server uses this technique. The
+BlunderBot on FIBS) use this technique. The
 introduced noise can be deterministic, i.e., always the same noise for
 the same position, or it can be random.
 
@@ -2933,8 +2923,8 @@ filters its moves to analyse and how many.
 
 [[movefilter1.png]]
 
-If you are playing Expert level (this is what GGRaccoon is set
-at) or another 0-ply setting, the Move Filter settings will not
+If you are playing Expert level
+or another 0-ply setting, the Move Filter settings will not
 change a thing, as Expert level automatically examines all moves. At
 Supremo level, this changes though, as it takes a selection of the
 best moves from 0-ply and examines them at 2-ply. This means that
@@ -3050,7 +3040,7 @@ A feature in the evaluation is the use of a set of neural
 networks just to prune away move candidates within a deeper ply
 search. This increases the speed considerably and it doesn't lose much
 playing strength compared to evaluation without these pruning neural
-nets. Jim Segrave has just done an analysis of this and found that
+nets. Jim Segrave did an analysis of this and found that
 less than 1% of all moves come out different with the pruning nets
 activated. In most of these positions the move would not have made any
 difference to the game at all.
@@ -3116,14 +3106,6 @@ The leftmost tab in the appearance settings notebook is the General
 option. You can here select between the 2D board or the 3D board. You
 can also choose between different other settings. Most of the settings
 here are self explanatory.
-
-@quotation
-
-@strong{Warning}
-
-Don't forget to save your settings!! A lovely and painstakingly
-crafted board setup can be lost if you don't faithfully do your Settings->Save settings.
-@end quotation
 
 @node Technical Notes, Frequently Asked Questions, Customizing GNU Backgammon, Top
 @chapter Technical Notes
@@ -3717,19 +3699,19 @@ points: (MWC(w),+1) and (MWC(l),-1).
 For example, suppose the score is 3-1 to 5 with the cube on 2:
 MWC(l)=0% and MWC(w)=50%:
 
-@multitable @columnfractions 0.333333333333333 0.333333333333333 0.333333333333333
+@multitable @columnfractions 0.5 0.5
 @item
-MWC@tab NEMG@tab 
+MWC@tab NEMG
 @item
-0%@tab -1@tab 
+0%@tab -1
 @item
-25%@tab 0@tab 
+25%@tab 0
 @item
-50%@tab +1@tab 
+50%@tab +1
 @item
-75%@tab +2@tab 
+75%@tab +2
 @item
-100%@tab +3@tab 
+100%@tab +3
 @end multitable
 
 Note that a w/g/bg distribution of 0 100 100 - 0 0 0 gives a NEMG
@@ -4509,7 +4491,7 @@ interface based on GTK+.
 @node What operating systems are supported?, Where do I get it?, What is GNU Backgammon?, General questions
 @subsection What operating systems are supported?
 
-GNU Backgammon is mostly developped
+GNU Backgammon is mostly developed
 on @emph{GNU/Linux}. It also builds and runs under
 other Unix operating systems like those derived from
 @emph{BSD} or
@@ -4578,7 +4560,6 @@ You're welcome! Send an email with your suggestions to @uref{mailto:bug-gnubg@@g
 * I want to install a newer version::
 * I would like to compile it from the source code::
 * What software do I need for compiling under GNU/Linux?::
-* What software do I need for compiling under MS Windows?::
 * It does not compile::
 * On what CPU will GNU Backgammon run fastest?::
 @end menu
@@ -4586,11 +4567,11 @@ You're welcome! Send an email with your suggestions to @uref{mailto:bug-gnubg@@g
 @node Do I need some other software to run GNU Backgammon?, I want to install a newer version, , How to install
 @subsection Do I need some other software to run GNU  Backgammon?
 
-No. Everything you need is included in the binaries.
+On MS Windows everything you need is included in the installer.
 
-If you want to use the 3D board version on Linux, you might have
-to install the additional libraries that can be found as well on
-@uref{http://www.gnubg.org/index.php?itemid=24,this  page}. (acepoint's directory)
+On Mac OS/X you will need the XQuartz Window System.
+
+On Linux there are prerequisites as well but your package manager (apt, yum, etc...) will take care of them.
 
 @node I want to install a newer version, I would like to compile it from the source code, Do I need some other software to run GNU Backgammon?, How to install
 @subsection I want to install a newer version
@@ -4603,18 +4584,19 @@ Go ahead, your settings should be saved.
 Good luck to you! Download the source code and make sure to read
 one of the two following two items.
 
-@node What software do I need for compiling under GNU/Linux?, What software do I need for compiling under MS Windows?, I would like to compile it from the source code, How to install
+@node What software do I need for compiling under GNU/Linux?, It does not compile, I would like to compile it from the source code, How to install
 @subsection What software do I need for compiling under GNU/Linux?
 
-Unpack the GNU Backgammon snapshots and
-follow the instructions of the file `INSTALL'. 
+Unpack a GNU Backgammon snapshot and
+follow the instructions at @uref{http://www.gnubg.org/index.php?itemid=100,this page}.
 
-@node What software do I need for compiling under MS Windows?, It does not compile, What software do I need for compiling under GNU/Linux?, How to install
-@subsection What software do I need for compiling under MS Windows?
+Details like the exact names of the prerequisite packages will vary
+from a distribution to another but the general process will remain
+identical. If you are remotely familiar with open source software
+set up with autoconf, you will see that
+GNU Backgammon is straightforward to build.
 
-Follow the instructions at @uref{http://www.gnubg.org/index.php?itemid=50,http://www.gnubg.org/index.php?itemid=50}.
-
-@node It does not compile, On what CPU will GNU Backgammon run fastest?, What software do I need for compiling under MS Windows?, How to install
+@node It does not compile, On what CPU will GNU Backgammon run fastest?, What software do I need for compiling under GNU/Linux?, How to install
 @subsection It does not compile
 
 Check that you have installed all necessary development packages.
@@ -4693,7 +4675,6 @@ Evals/sec@tab CPU@tab System/Main board@tab RAM@tab OS @tab GNUBG-Version@tab
 * Starting from the WinXP menu it plays like a beginner::
 * My screen mixes up while starting GNU Backgammon::
 * I only get a command-line interface::
-* When I restart GNU Backgammon all my settings are gone::
 * I do not need this graphical stuff::
 @end menu
 
@@ -4715,9 +4696,7 @@ found, or found corrupted or with an incompatible version,
 GNU Backgammon will search for a weights
 file called gnubg.weights. This file also contains the neural net
 weights, but is stored in ASCII format. If none of these files are
-found, GNU Backgammon will start, but it
-will give you a warning about these missing files, and it will play
-@emph{very} poorly.
+found, GNU Backgammon will not start.
 
 GNU Backgammon will also read the
 bearoff databases at start-up. There are usually two bearoff
@@ -4751,7 +4730,7 @@ depth). If your card is a ATI Rage @emph{somewhat} there
 still might be some problems with the graphical interface (GTK+) and
 MS Windows.
 
-@node I only get a command-line interface, When I restart GNU Backgammon all my settings are gone, My screen mixes up while starting GNU Backgammon, Running GNU Backgammon
+@node I only get a command-line interface, I do not need this graphical stuff, My screen mixes up while starting GNU Backgammon, Running GNU Backgammon
 @subsection I only get a command-line interface
 
 Using MS Windows, just click on the correct menu entry
@@ -4761,12 +4740,7 @@ exists or not.
 
 GNU/Linux users should check if @uref{http://www.gtk.org/,GTK+} is installed.
 
-@node When I restart GNU Backgammon all my settings are gone, I do not need this graphical stuff, I only get a command-line interface, Running GNU Backgammon
-@subsection When I restart GNU Backgammon all my  settings are gone
-
-Did you save your settings Settings->Save settings before you quit?
-
-@node I do not need this graphical stuff, , When I restart GNU Backgammon all my settings are gone, Running GNU Backgammon
+@node I do not need this graphical stuff, , I only get a command-line interface, Running GNU Backgammon
 @subsection I do not need this graphical stuff
 
 For @emph{GNU/Linux} users: open a terminal and run
