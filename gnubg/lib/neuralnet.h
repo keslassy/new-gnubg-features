@@ -61,7 +61,7 @@ typedef struct _NNState {
 extern int NeuralNetCreate(neuralnet * pnn, unsigned int cInput, unsigned int cHidden, unsigned int cOutput,
                            float rBetaHidden, float rBetaOutput);
 extern void NeuralNetDestroy(neuralnet * pnn);
-#if !USE_SIMD_INSTRUCTIONS
+#if !defined(USE_SIMD_INSTRUCTIONS)
 extern int NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNState * pnState);
 #else
 extern int NeuralNetEvaluateSSE(const neuralnet * pnn, float arInput[], float arOutput[], NNState * pnState);
@@ -71,17 +71,17 @@ extern int NeuralNetLoadBinary(neuralnet * pnn, FILE * pf);
 extern int NeuralNetSaveBinary(const neuralnet * pnn, FILE * pf);
 extern int SIMD_Supported(void);
 
-/* Try to determine whetehr we are 64-bit or 32-bit */
-#if _WIN32 || _WIN64
-#if _WIN64
+/* Try to determine whether we are 64-bit or 32-bit */
+#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN64)
 #define ENVIRONMENT64
 #else
 #define ENVIRONMENT32
 #endif
 #endif
 
-#if __GNUC__
-#if __x86_64__
+#if defined(__GNUC__)
+#if defined(__x86_64__)
 #define ENVIRONMENT64
 #else
 #define ENVIRONMENT32
