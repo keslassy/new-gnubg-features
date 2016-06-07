@@ -415,7 +415,7 @@ ExposeDie(GtkWidget * pw, GdkEventExpose * pev, tempmapwidget * ptmw)
 
         CopyAppearance(&rd);
         rd.nSize = ptmw->nSizeDie = nSizeDie;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         Copy3dDiceColour(&rd);
 #endif
 
