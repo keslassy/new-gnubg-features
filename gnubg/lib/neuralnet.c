@@ -500,7 +500,6 @@ CheckSSE(void)
 #endif
     if (0 != error)
         result = 0;
-    return result;
 
 #else
 
