@@ -32,7 +32,7 @@
 #include "gtkgame.h"
 #include "gtktoolbar.h"
 #include "positionid.h"
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 
@@ -174,7 +174,7 @@ extern gboolean
 ShowGameWindow(void)
 {
     ShowPanel(WINDOW_GAME);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/GameRecord")),
                                    TRUE);
@@ -188,7 +188,7 @@ ShowGameWindow(void)
 static gboolean
 ShowAnnotation(void)
 {
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Commentary")),
                                    TRUE);
@@ -208,7 +208,7 @@ static gboolean
 ShowMessage(void)
 {
     ShowPanel(WINDOW_MESSAGE);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Message")),
                                    TRUE);
@@ -222,7 +222,7 @@ static gboolean
 ShowAnalysis(void)
 {
     ShowPanel(WINDOW_ANALYSIS);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Analysis")),
                                    TRUE);
@@ -238,7 +238,7 @@ static gboolean
 ShowTheoryWindow(void)
 {
     ShowPanel(WINDOW_THEORY);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Theory")),
                                    TRUE);
@@ -252,7 +252,7 @@ static gboolean
 ShowCommandWindow(void)
 {
     ShowPanel(WINDOW_COMMAND);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Command")),
                                    TRUE);
@@ -743,13 +743,13 @@ GTKAddGame(moverecord * pmr)
 extern void
 GTKRegenerateGames(void)
 {
-    listOLD *pl, *plGame;
+    listOLD *pl;
     int i = gtk_combo_box_get_active(GTK_COMBO_BOX(game_select_combo));
 
     GL_SetNames();
     GTKPopGame(0);
     for (pl = lMatch.plNext; pl->p; pl = pl->plNext) {
-        plGame = pl->p;
+        listOLD *plGame = pl->p;
         GTKAddGame(plGame->plNext->p);
     }
 
@@ -862,7 +862,7 @@ static gboolean
 DeleteMessage(void)
 {
     HidePanel(WINDOW_MESSAGE);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Message")),
                                    FALSE);
@@ -877,7 +877,7 @@ static gboolean
 DeleteAnalysis(void)
 {
     HidePanel(WINDOW_ANALYSIS);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Analysis")),
                                    FALSE);
@@ -892,7 +892,7 @@ static gboolean
 DeleteAnnotation(void)
 {
     HidePanel(WINDOW_ANNOTATION);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Commentary")),
                                    FALSE);
@@ -907,7 +907,7 @@ static gboolean
 DeleteGame(void)
 {
     HidePanel(WINDOW_GAME);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/GameRecord")),
                                    FALSE);
@@ -922,7 +922,7 @@ static gboolean
 DeleteTheoryWindow(void)
 {
     HidePanel(WINDOW_THEORY);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Theory")),
                                    FALSE);
@@ -936,7 +936,7 @@ static gboolean
 DeleteCommandWindow(void)
 {
     HidePanel(WINDOW_COMMAND);
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/PanelsMenu/Command")),
                                    FALSE);
@@ -1043,7 +1043,7 @@ DockPanels(void)
     if (fDockPanels) {
         RefreshGeometries();    /* Get the current window positions */
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         gtk_widget_show((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Commentary")));
 
         if (fDisplayPanels) {
@@ -1078,7 +1078,7 @@ DockPanels(void)
         if (fDisplayPanels)
             SwapBoardToPanel(FALSE, TRUE);
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
         gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Commentary")));
         gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/HidePanels")));
         gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/RestorePanels")));
@@ -1101,7 +1101,7 @@ DockPanels(void)
         CreateTheoryWindow();
         CreateCommandWindow();
     }
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                        "/MainMenu/ViewMenu/PanelsMenu/Message"), !fDockPanels
                              || fDisplayPanels);
@@ -1138,7 +1138,7 @@ DockPanels(void)
         GTKSetGame(currentSelectedGame);
 
     /* Make sure check item is correct */
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                  "/MainMenu/ViewMenu/DockPanels")),
                                    fDockPanels);
@@ -1160,7 +1160,7 @@ ShowAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         return;
 
     /* Hide for smoother appearance */
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd))
         gtk_widget_hide(GetDrawingArea3d(bd->bd3d));
     else
@@ -1174,7 +1174,7 @@ ShowAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
             woPanel[i].showFun();
     }
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_widget_show((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/HidePanels")));
     gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/RestorePanels")));
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Message"), TRUE);
@@ -1196,7 +1196,7 @@ ShowAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
     SwapBoardToPanel(TRUE, TRUE);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd))
         gtk_widget_show(GetDrawingArea3d(bd->bd3d));
     else
@@ -1214,7 +1214,7 @@ DoHideAllPanels(int updateEvents)
         return;
 
     /* Hide for smoother appearance */
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd))
         gtk_widget_hide(GetDrawingArea3d(bd->bd3d));
     else
@@ -1230,7 +1230,7 @@ DoHideAllPanels(int updateEvents)
         }
     }
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
     gtk_widget_show((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/RestorePanels")));
     gtk_widget_set_sensitive((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/RestorePanels")), TRUE);
     gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/HidePanels")));
@@ -1258,7 +1258,7 @@ DoHideAllPanels(int updateEvents)
     /* Resize screen */
     SetMainWindowSize();
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd))
         gtk_widget_show(GetDrawingArea3d(bd->bd3d));
     else
@@ -1272,7 +1272,7 @@ HideAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     DoHideAllPanels(TRUE);
 }
 
-#if (USE_GTKUIMANAGER)
+#if defined(USE_GTKUIMANAGER)
 void
 ToggleDockPanels(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
