@@ -358,8 +358,8 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
     float *ar;
     GdkColor *pFontCol, *fg;
     PangoRectangle logical_rect;
-    char *cmark_sz;
-    char *highlight_sz;
+    const char *cmark_sz;
+    const char *highlight_sz;
     cubeinfo ci;
     GetMatchStateCubeInfo(&ci, &ms);
     /*lint --e(641) */
