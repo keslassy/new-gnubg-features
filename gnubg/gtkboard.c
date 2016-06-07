@@ -1975,7 +1975,6 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
 
         return TRUE;
     }
-    return FALSE;
 }
 
 /*! \brief callback for release of mouse button
