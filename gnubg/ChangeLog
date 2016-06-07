@@ -1,3 +1,10 @@
+2016-06-07  Michael Petch  <mpetch@gnubg.org>
+
+	* doc/gnubg/*, po/*
+	Update static documentation files and translation files
+	Version 1.05.002 released
+
+
 2016-03-02  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* po/el.po, configure.ac, gtkgame.c, flags/greece.png,
