@@ -351,12 +351,12 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
 {
     CustomCellRendererMovelist *cellprogress = CUSTOM_CELL_RENDERER_MOVELIST(cell);
     PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
-    GdkGC *gc;
+    cairo_t *cr;
     hintdata *phd = g_object_get_data(G_OBJECT(widget), "hintdata");
     int i, x, y, selected;
     char buf[100];
     float *ar;
-    GdkColor *pFontCol, *fg;
+    GdkColor *pFontCol;
     PangoRectangle logical_rect;
     const char *cmark_sz;
     const char *highlight_sz;
@@ -365,9 +365,11 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
     /*lint --e(641) */
     selected = (flags & GTK_CELL_RENDERER_SELECTED) && gtk_widget_has_focus(widget);
 
-    gc = gdk_gc_new(window);
-    if (expose_area)
-        gdk_gc_set_clip_rectangle(gc, expose_area);
+    cr = gdk_cairo_create(window);
+    if (expose_area) {
+        cairo_rectangle(cr, expose_area->x, expose_area->y, expose_area->width, expose_area->height);
+        cairo_clip(cr);
+    }
 
     if (phd->piHighlight && cellprogress->rank - 1 == *phd->piHighlight)
         pFontCol = &psHighlight->fg[GTK_STATE_SELECTED];
@@ -375,14 +377,17 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
         pFontCol = NULL;
 
     if (!(flags & GTK_CELL_RENDERER_SELECTED)) {
-        gdk_gc_set_rgb_fg_color(gc, &gtk_widget_get_style(widget)->base[GTK_STATE_NORMAL]);
-        gdk_draw_rectangle(window, gc, TRUE, background_area->x, background_area->y,
-                           background_area->width, background_area->height);
-        gdk_gc_set_rgb_fg_color(gc, &gtk_widget_get_style(widget)->fg[GTK_STATE_NORMAL]);
+        gdk_cairo_set_source_color(cr, &gtk_widget_get_style(widget)->base[GTK_STATE_NORMAL]);
+        cairo_rectangle(cr, background_area->x, background_area->y, background_area->width, background_area->height);
+        cairo_fill(cr);
+        gdk_cairo_set_source_color(cr, &gtk_widget_get_style(widget)->fg[GTK_STATE_NORMAL]);
     } else {                    /* Draw text in reverse colours for highlight cell */
         if (!pFontCol && selected)
             pFontCol = &gtk_widget_get_style(widget)->base[GTK_STATE_NORMAL];
     }
+
+    if (pFontCol)
+        gdk_cairo_set_source_color(cr, pFontCol);
 
     /* First line of control */
     cmark_sz = cellprogress->pml->cmark ? "+" : "";
@@ -398,16 +403,19 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
     x = _s_A + _s_a - logical_rect.width;
     y = _s_B;
 
-    gdk_draw_layout_with_colors(window, gc, cell_area->x + x, cell_area->y + y, layout, pFontCol, 0);
+    cairo_move_to(cr, cell_area->x + x, cell_area->y + y);
+    pango_cairo_show_layout(cr, layout);
 
     x = _s_A + _s_a + _s_Y * 3;
     (void) FormatEval(buf, &cellprogress->pml->esMove);
     pango_layout_set_text(layout, buf, -1);
-    gdk_draw_layout_with_colors(window, gc, cell_area->x + x, cell_area->y + y, layout, pFontCol, 0);
+    cairo_move_to(cr, cell_area->x + x, cell_area->y + y);
+    pango_cairo_show_layout(cr, layout);
 
     x += _s_b + _s_Y;
     pango_layout_set_text(layout, OutputEquity(cellprogress->pml->rScore, &ci, TRUE), -1);
-    gdk_draw_layout_with_colors(window, gc, cell_area->x + x, cell_area->y + y, layout, pFontCol, 0);
+    cairo_move_to(cr, cell_area->x + x, cell_area->y + y);
+    pango_cairo_show_layout(cr, layout);
 
     if (fOutputMWC)
         x += _s_cP + _s_Y * 2;
@@ -415,7 +423,8 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
         x += _s_c + _s_Y * 2;
     if (cellprogress->rank != 1) {
         pango_layout_set_text(layout, OutputEquityDiff(cellprogress->pml->rScore, rBest, &ci), -1);
-        gdk_draw_layout_with_colors(window, gc, cell_area->x + x, cell_area->y + y, layout, pFontCol, 0);
+        cairo_move_to(cr, cell_area->x + x, cell_area->y + y);
+        pango_cairo_show_layout(cr, layout);
     }
 
     if (fOutputMWC)
@@ -429,7 +438,8 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
         pango_layout_set_font_description(layout, pfd);
 
         pango_layout_set_text(layout, FormatMove(buf, msBoard(), cellprogress->pml->anMove), -1);
-        gdk_draw_layout_with_colors(window, gc, cell_area->x + x, cell_area->y + y, layout, pFontCol, 0);
+        cairo_move_to(cr, cell_area->x + x, cell_area->y + y);
+        pango_cairo_show_layout(cr, layout);
 
         pango_font_description_set_weight(pfd, PANGO_WEIGHT_NORMAL);
         pango_layout_set_font_description(layout, pfd);
@@ -443,9 +453,9 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
     ar = cellprogress->pml->arEvalMove;
 
     if (selected)
-        fg = &gtk_widget_get_style(widget)->base[GTK_STATE_NORMAL];
+        gdk_cairo_set_source_color(cr, &gtk_widget_get_style(widget)->base[GTK_STATE_NORMAL]);
     else
-        fg = &wlCol;
+        gdk_cairo_set_source_color(cr, &wlCol);
 
     for (i = 0; i < 6; i++) {
         char *str;
@@ -460,7 +470,8 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
             str++;
 
         pango_layout_set_text(layout, str, -1);
-        gdk_draw_layout_with_colors(window, gc, cell_area->x + x, cell_area->y + y, layout, fg, 0);
+        cairo_move_to(cr, cell_area->x + x, cell_area->y + y);
+        pango_cairo_show_layout(cr, layout);
 
         if (fOutputWinPC)
             x += _s_ZP;
@@ -472,7 +483,8 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
             if (fOutputWinPC)
                 minOff -= _s_Y;
             pango_layout_set_text(layout, "-", -1);
-            gdk_draw_layout_with_colors(window, gc, cell_area->x + x + minOff, cell_area->y + y, layout, fg, 0);
+            cairo_move_to(cr, cell_area->x + x + minOff, cell_area->y + y);
+            pango_cairo_show_layout(cr, layout);
 
             x += _s_s;
         } else
@@ -480,8 +492,5 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
     }
 
     g_object_unref(layout);
-
-    if (expose_area)
-        gdk_gc_set_clip_rectangle(gc, NULL);
-    g_object_unref(gc);
+    cairo_destroy(cr);
 }

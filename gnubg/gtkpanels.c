@@ -1286,7 +1286,7 @@ ToggleDockPanels(GtkToggleAction * action, gpointer UNUSED(user_data))
 extern void
 ToggleDockPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * pw)
 {
-    int newValue = GTK_CHECK_MENU_ITEM(pw)->active;
+    int newValue = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(pw));
     if (fDockPanels != newValue) {
         fDockPanels = newValue;
         DockPanels();

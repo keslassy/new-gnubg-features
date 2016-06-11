@@ -136,6 +136,7 @@ Tom Martin
 William Maslen
 Joachim Matussek
 Thomas Meyer
+Jeremy Moore
 Daniel Murphy
 Magnar Naustdalslid
 Dave Neary

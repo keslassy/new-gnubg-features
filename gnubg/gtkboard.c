@@ -286,10 +286,22 @@ RenderArea(BoardData * bd, unsigned char *puch, int x, int y, int
                   abs(bd->resigned), nResignOrientation, anArrowPosition, bd->playing, bd->turn == 1, x, y, cx, cy);
 }
 
+static void
+draw_rgb_image(cairo_t *cr, unsigned char *data, int x, int y, int width, int height)
+{
+    GdkPixbuf *pixbuf;
+
+    pixbuf = gdk_pixbuf_new_from_data(data, GDK_COLORSPACE_RGB, FALSE, 8, width, height, width * 3, NULL, NULL);
+    gdk_cairo_set_source_pixbuf(cr, pixbuf, x, y);
+    cairo_paint(cr);
+    g_object_unref(pixbuf);
+}
+
 static gboolean
 board_expose(GtkWidget * drawing_area, GdkEventExpose * event, BoardData * bd)
 {
     int x, y, cx, cy;
+    cairo_t *cr;
     unsigned char *puch;
 
     g_assert(GTK_IS_DRAWING_AREA(drawing_area));
@@ -325,9 +337,9 @@ board_expose(GtkWidget * drawing_area, GdkEventExpose * event, BoardData * bd)
 
     RenderArea(bd, puch, x, y, cx, cy);
 
-    /* FIXME use dithalign */
-    gdk_draw_rgb_image(gtk_widget_get_window(drawing_area), bd->gc_copy, x, y, cx, cy,
-                       GDK_RGB_DITHER_MAX, puch, cx * 3);
+    cr = gdk_cairo_create(gtk_widget_get_window(drawing_area));
+    draw_rgb_image(cr, puch, x, y, cx, cy);
+    cairo_destroy(cr);
 
     free(puch);
 
@@ -944,6 +956,7 @@ board_drag(GtkWidget * UNUSED(widget), BoardData * bd, int x, int y)
 #endif
 {
 
+    cairo_t *cr;
     unsigned char *puch, *puchNew, *puchChequer;
     int s = bd->rd->nSize;
 
@@ -971,7 +984,6 @@ board_drag(GtkWidget * UNUSED(widget), BoardData * bd, int x, int y)
                      bd->ri.achChequer[bd->drag_colour > 0], 6 * s * 4, 0,
                      0, bd->ri.asRefract[bd->drag_colour > 0], 6 * s, 6 * s, 6 * s);
 
-    /* FIXME use dithalign */
     {
         GdkRegion *pr;
         GdkRectangle r;
@@ -991,10 +1003,11 @@ board_drag(GtkWidget * UNUSED(widget), BoardData * bd, int x, int y)
         gdk_region_destroy(pr);
     }
 
-    gdk_draw_rgb_image(gtk_widget_get_window(bd->drawing_area), bd->gc_copy,
-                       bd->x_drag - 3 * s, bd->y_drag - 3 * s, 6 * s, 6 * s, GDK_RGB_DITHER_MAX, puch, 6 * s * 3);
-    gdk_draw_rgb_image(gtk_widget_get_window(bd->drawing_area), bd->gc_copy,
-                       x - 3 * s, y - 3 * s, 6 * s, 6 * s, GDK_RGB_DITHER_MAX, puchChequer, 6 * s * 3);
+    cr = gdk_cairo_create(gtk_widget_get_window(bd->drawing_area));
+    draw_rgb_image(cr, puch, bd->x_drag - 3 * s, bd->y_drag - 3 * s, 6 * s, 6 * s);
+    draw_rgb_image(cr, puchChequer, x - 3 * s, y - 3 * s, 6 * s, 6 * s);
+    cairo_destroy(cr);
+
     gdk_window_end_paint(gtk_widget_get_window(bd->drawing_area));
     bd->x_drag = x;
     bd->y_drag = y;
@@ -1004,6 +1017,7 @@ static void
 board_end_drag(GtkWidget * UNUSED(widget), BoardData * bd)
 {
 
+    cairo_t *cr;
     unsigned char *puch;
     int s = bd->rd->nSize;
 
@@ -1016,9 +1030,9 @@ board_end_drag(GtkWidget * UNUSED(widget), BoardData * bd)
 
     RenderArea(bd, puch, bd->x_drag - 3 * s, bd->y_drag - 3 * s, 6 * s, 6 * s);
 
-    /* FIXME use dithalign */
-    gdk_draw_rgb_image(gtk_widget_get_window(bd->drawing_area), bd->gc_copy,
-                       bd->x_drag - 3 * s, bd->y_drag - 3 * s, 6 * s, 6 * s, GDK_RGB_DITHER_MAX, puch, 6 * s * 3);
+    cr = gdk_cairo_create(gtk_widget_get_window(bd->drawing_area));
+    draw_rgb_image(cr, puch, bd->x_drag - 3 * s, bd->y_drag - 3 * s, 6 * s, 6 * s);
+    cairo_destroy(cr);
 }
 
 /* This code is called on a button release event
@@ -2132,6 +2146,7 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
         if (bd->DragTargetHelp) {       /* Display 2d drag target help */
             gint i, ptx, pty, ptcx, ptcy;
             GdkColor *TargetHelpColor;
+            cairo_t *cr;
 
             TargetHelpColor = (GdkColor *) malloc(sizeof(GdkColor));
             /* values of RGB components within GdkColor are
@@ -2143,18 +2158,21 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
                                                 TargetHelpColor->green * 256 + TargetHelpColor->blue);
             /* get the closest color available in the colormap if no 24-bit */
             gdk_colormap_alloc_color(gtk_widget_get_colormap(board), TargetHelpColor, TRUE, TRUE);
-            gdk_gc_set_foreground(bd->gc_copy, TargetHelpColor);
+            cr = gdk_cairo_create(gtk_widget_get_window(board));
+            gdk_cairo_set_source_color(cr, TargetHelpColor);
 
             /* draw help rectangles around target points */
             for (i = 0; i <= 3; ++i) {
                 if (bd->iTargetHelpPoints[i] != -1) {
                     /* calculate region coordinates for point */
                     point_area(bd, bd->iTargetHelpPoints[i], &ptx, &pty, &ptcx, &ptcy);
-                    gdk_draw_rectangle(gtk_widget_get_window(board), bd->gc_copy, FALSE, ptx + 1, pty + 1, ptcx - 2,
-                                       ptcy - 2);
+                    cairo_rectangle(cr, ptx + 1, pty + 1, ptcx - 2, ptcy - 2);
+                    cairo_set_line_width(cr, 1);
+                    cairo_stroke(cr);
                 }
             }
 
+            cairo_destroy(cr);
             free(TargetHelpColor);
         }
     }
@@ -3019,6 +3037,8 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
     bd->rd->nSize = nSizeReal;
 
     for (i = 0; i < 2; i++) {
+        cairo_t *cr;
+
         CopyArea(auch, 20 * 3, auchBoard + 3 * 3 * BOARD_WIDTH * 3 + 3 * 3 * 3, BOARD_WIDTH * 3 * 3, 10, 10);
         CopyArea(auch + 10 * 3, 20 * 3, auchBoard + 3 * 3 * BOARD_WIDTH * 3 + 3 * 3 * 3, BOARD_WIDTH * 3 * 3, 10, 10);
         CopyArea(auch + 10 * 3 * 20, 20 * 3,
@@ -3032,8 +3052,9 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
                      auchChequers[i], CHEQUER_WIDTH * 3 * 4,
                      asRefract[i], CHEQUER_WIDTH * 3, CHEQUER_WIDTH * 3, CHEQUER_HEIGHT * 3);
 
-        gdk_draw_rgb_image(bd->appmKey[i], bd->gc_copy, 0, 0, 20, 20, GDK_RGB_DITHER_MAX, auch, 20 * 3);
-
+        cr = gdk_cairo_create(bd->appmKey[i]);
+        draw_rgb_image(cr, auch, 0, 0, 20, 20);
+        cairo_destroy(cr);
     }
 #if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {        /* Restore 2d colours */
@@ -3424,6 +3445,7 @@ DrawAlphaImage(GdkDrawable * pd, int x, int y, unsigned char *puchSrc, int nStri
 
     unsigned char *puch, *puchDest, *auch = g_alloca(cx * cy * 4);
     int ix, iy;
+    cairo_t *cr;
     GdkPixbuf *ppb;
 
     puchDest = auch;
@@ -3443,24 +3465,30 @@ DrawAlphaImage(GdkDrawable * pd, int x, int y, unsigned char *puchSrc, int nStri
         puch += nStride;
     }
 
+    cr = gdk_cairo_create(pd);
     ppb = gdk_pixbuf_new_from_data(auch, GDK_COLORSPACE_RGB, TRUE, 8, cx, cy, cx * 4, NULL, NULL);
-    gdk_draw_pixbuf(pd, NULL, ppb, 0, 0, x, y, cx, cy, GDK_RGB_DITHER_MAX, 0, 0);
+    gdk_cairo_set_source_pixbuf(cr, ppb, x, y);
+    cairo_paint(cr);
     g_object_unref(G_OBJECT(ppb));
+    cairo_destroy(cr);
 }
 
 extern void
 DrawDie(GdkDrawable * pd, unsigned char *achDice[2], unsigned
-        char *achPip[2], const int s, GdkGC * gc, int x, int y, int
+        char *achPip[2], const int s, int x, int y, int
         fColour, int n, int alpha)
 {
 
     int ix, iy, afPip[9];
+    cairo_t *cr;
+    GdkPixbuf *pixbuf;
+
+    cr = gdk_cairo_create(pd);
 
     if (alpha)
         DrawAlphaImage(pd, x, y, achDice[fColour], DIE_WIDTH * s * 4, DIE_WIDTH * s, DIE_HEIGHT * s);
     else
-        gdk_draw_rgb_image(pd, gc, x, y, DIE_WIDTH * s, DIE_HEIGHT * s, GDK_RGB_DITHER_MAX, achDice[fColour],
-                           DIE_WIDTH * s * 3);
+        draw_rgb_image(cr, achDice[fColour], x, y, DIE_WIDTH * s, DIE_HEIGHT * s);
 
     afPip[0] = afPip[8] = (n == 2) || (n == 3) || (n == 4) || (n == 5) || (n == 6);
     afPip[1] = afPip[7] = 0;
@@ -3468,12 +3496,18 @@ DrawDie(GdkDrawable * pd, unsigned char *achDice[2], unsigned
     afPip[3] = afPip[5] = n == 6;
     afPip[4] = n & 1;
 
+    pixbuf = gdk_pixbuf_new_from_data(achPip[fColour], GDK_COLORSPACE_RGB, FALSE, 8, s, s, s * 3, NULL, NULL);
+
     for (iy = 0; iy < 3; iy++)
         for (ix = 0; ix < 3; ix++)
-            if (afPip[iy * 3 + ix])
-                gdk_draw_rgb_image(pd, gc, (int) (s * 1.5 + x + 1.5 * s * ix),
-                                   (int) (s * 1.5 + y + 1.5 * s * iy), s, s,
-                                   GDK_RGB_DITHER_MAX, achPip[fColour], s * 3);
+            if (afPip[iy * 3 + ix]) {
+                gdk_cairo_set_source_pixbuf(cr, pixbuf, (int) (s * 1.5 + x + 1.5 * s * ix),
+                                            (int) (s * 1.5 + y + 1.5 * s * iy));
+                cairo_paint(cr);
+            }
+
+    g_object_unref(pixbuf);
+    cairo_destroy(cr);
 }
 
 static gboolean
@@ -3484,9 +3518,9 @@ dice_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), BoardData * bd)
         return TRUE;
 
     DrawDie(gtk_widget_get_window(dice), bd->ri.achDice, bd->ri.achPip,
-            bd->rd->nSize, bd->gc_copy, 0, 0, bd->turn > 0, bd->diceRoll[0], TRUE);
+            bd->rd->nSize, 0, 0, bd->turn > 0, bd->diceRoll[0], TRUE);
     DrawDie(gtk_widget_get_window(dice), bd->ri.achDice, bd->ri.achPip,
-            bd->rd->nSize, bd->gc_copy, (DIE_WIDTH + 1) * bd->rd->nSize, 0, bd->turn > 0, bd->diceRoll[1], TRUE);
+            bd->rd->nSize, (DIE_WIDTH + 1) * bd->rd->nSize, 0, bd->turn > 0, bd->diceRoll[1], TRUE);
 
     return TRUE;
 }
@@ -3541,13 +3575,9 @@ board_init(Board * board)
 {
 
     BoardData *bd = g_malloc(sizeof(*bd));
-    GdkColormap *cmap = gtk_widget_get_colormap(GTK_WIDGET(board));
-    GdkVisual *vis = gtk_widget_get_visual(GTK_WIDGET(board));
-    GdkGCValues gcval;
     GtkWidget *pw;
     GtkWidget *pwFrame;
     GtkWidget *pwvbox;
-    GdkColor color;
 
     board->board_data = bd;
     bd->widget = GTK_WIDGET(board);
@@ -3559,22 +3589,6 @@ board_init(Board * board)
     bd->playing = FALSE;
     bd->cube_use = TRUE;
     bd->all_moves = NULL;
-
-    gcval.function = GDK_AND;
-    gcval.foreground.pixel = (guint32) ~ 0L;    /* AllPlanes */
-    gcval.background.pixel = 0;
-    bd->gc_and = gtk_gc_get(gdk_visual_get_depth(vis), cmap, &gcval,
-                            GDK_GC_FOREGROUND | GDK_GC_BACKGROUND | GDK_GC_FUNCTION);
-
-    gcval.function = GDK_OR;
-    bd->gc_or = gtk_gc_get(gdk_visual_get_depth(vis), cmap, &gcval, GDK_GC_FUNCTION);
-
-    bd->gc_copy = gtk_gc_get(gdk_visual_get_depth(vis), cmap, &gcval, 0);
-
-    gdk_color_parse("#000080", &color);
-    gdk_colormap_alloc_color(cmap, &color, TRUE, TRUE);
-    gcval.foreground.pixel = color.pixel;
-    bd->gc_cube = gtk_gc_get(gdk_visual_get_depth(vis), cmap, &gcval, GDK_GC_FOREGROUND);
 
     bd->x_dice[0] = bd->x_dice[1] = -10;
     bd->diceRoll[0] = bd->diceRoll[1] = 0;
@@ -3838,6 +3852,7 @@ cube_widget_expose(GtkWidget * cube, GdkEventExpose * UNUSED(event), BoardData *
     int setSize = bd->rd->nSize;
     int cubeStride = setSize * CUBE_WIDTH * 4;
     int cubeFaceStride = setSize * CUBE_LABEL_WIDTH * 3;
+    cairo_t *cr;
 
     n = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(cube), "user_data"));
     if ((nValue = n % N_CUBES_IN_WIDGET - 1) == -1)
@@ -3854,10 +3869,9 @@ cube_widget_expose(GtkWidget * cube, GdkEventExpose * UNUSED(event), BoardData *
                        CUBE_LABEL_WIDTH * setSize, CUBE_LABEL_HEIGHT * setSize, 2 - n / N_CUBES_IN_WIDGET);
     DrawAlphaImage(gtk_widget_get_window(cube), 0, 0,
                    TTachCube, cubeStride, CUBE_WIDTH * setSize, CUBE_HEIGHT * setSize);
-    gdk_draw_rgb_image(gtk_widget_get_window(cube), bd->gc_copy,
-                       setSize, setSize,
-                       CUBE_LABEL_WIDTH * setSize,
-                       CUBE_LABEL_HEIGHT * setSize, GDK_RGB_DITHER_MAX, puch, cubeFaceStride);
+    cr = gdk_cairo_create(gtk_widget_get_window(cube));
+    draw_rgb_image(cr, puch, setSize, setSize, CUBE_LABEL_WIDTH * setSize, CUBE_LABEL_HEIGHT * setSize);
+    cairo_destroy(cr);
 
     return TRUE;
 }
@@ -3943,9 +3957,9 @@ setdice_widget_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), SetDiceD
     int n = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(dice), "user_data"));
 
     if (sdd->mdt == MT_FIRSTMOVE && (n % 6 == n / 6)) {
-        DrawDie(gtk_widget_get_window(dice), &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize, sdd->bd->gc_copy,
+        DrawDie(gtk_widget_get_window(dice), &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize,
                 0, 0, 0, n % 6 + 1, FALSE);
-        DrawDie(gtk_widget_get_window(dice), &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize, sdd->bd->gc_copy,
+        DrawDie(gtk_widget_get_window(dice), &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize,
                 DIE_WIDTH * setSize, 0, 0, n / 6 + 1, FALSE);
     } else {
         int col1, col2;
@@ -3957,9 +3971,9 @@ setdice_widget_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), SetDiceD
         } else
             col1 = col2 = ((n % 6) <= n / 6);
 
-        DrawDie(gtk_widget_get_window(dice), sdd->TTachDice, sdd->TTachPip, setSize, sdd->bd->gc_copy,
+        DrawDie(gtk_widget_get_window(dice), sdd->TTachDice, sdd->TTachPip, setSize,
                 0, 0, col1, n % 6 + 1, FALSE);
-        DrawDie(gtk_widget_get_window(dice), sdd->TTachDice, sdd->TTachPip, setSize, sdd->bd->gc_copy,
+        DrawDie(gtk_widget_get_window(dice), sdd->TTachDice, sdd->TTachPip, setSize,
                 DIE_WIDTH * setSize, 0, col2, n / 6 + 1, FALSE);
     }
     return TRUE;

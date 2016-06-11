@@ -397,7 +397,6 @@ static void
 ExposeDie(GtkWidget * pw, GdkEventExpose * pev, tempmapwidget * ptmw)
 {
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
-    GdkGC *gc = ((BoardData *) (BOARD(pwBoard))->board_data)->gc_copy;
     int x, y;
     int nSizeDie;
     GtkAllocation allocation;
@@ -436,7 +435,7 @@ ExposeDie(GtkWidget * pw, GdkEventExpose * pev, tempmapwidget * ptmw)
 
     gdk_window_clear_area(gtk_widget_get_window(pw), pev->area.x, pev->area.y, pev->area.width, pev->area.height);
     DrawDie(gtk_widget_get_window(pw), ptmw->achDice, ptmw->achPips, ptmw->nSizeDie,
-            gc, x, y, ptmw->atm[0].pms->fMove, *pi + 1, FALSE);
+            x, y, ptmw->atm[0].pms->fMove, *pi + 1, FALSE);
 }
 
 static void
