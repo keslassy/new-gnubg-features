@@ -198,7 +198,7 @@ enum {
 #define NUM_PRUNING_INPUTS (25 * MINPPERPOINT * 2)
 
 
-#if !LOCKING_VERSION
+#if !defined(LOCKING_VERSION)
 
 f_FindnSaveBestMoves FindnSaveBestMoves = FindnSaveBestMovesNoLocking;
 f_FindBestMove FindBestMove = FindBestMoveNoLocking;
@@ -589,12 +589,12 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
     static int fInitialised = FALSE;
     char *gnubg_bearoff;
     char *gnubg_bearoff_os;
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
     int result, simderror = TRUE;
 #endif
 
     if (!fInitialised) {
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
         result = SIMD_Supported();
         switch (result) {
         case -1:
@@ -615,7 +615,7 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
         }
 
         if (simderror) {
-#if USE_AVX
+#if defined(USE_AVX)
             outputerrf(_
                        ("\nThis version of GNU Backgammon is compiled with AVX support but this machine does not support AVX\n"));
 #else
@@ -1868,7 +1868,7 @@ ClassifyPosition(const TanBoard anBoard, const bgvariation bgv)
 
     }
 
-    return 0;                   /* for fussy compilers */
+    return CLASS_OVER;                   /* for fussy compilers */
 }
 
 static int
@@ -2106,7 +2106,7 @@ EvalRace(const TanBoard anBoard, float arOutput[], const bgvariation bgv, NNStat
 
     CalculateRaceInputs(anBoard, arInput);
 
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
     if (NeuralNetEvaluateSSE(&nnRace, arInput, arOutput, nnStates ? nnStates + (CLASS_RACE - CLASS_RACE) : NULL))
 #else
     if (NeuralNetEvaluate(&nnRace, arInput, arOutput, nnStates ? nnStates + (CLASS_RACE - CLASS_RACE) : NULL))
@@ -2129,7 +2129,7 @@ EvalContact(const TanBoard anBoard, float arOutput[], const bgvariation UNUSED(b
 
     CalculateContactInputs(anBoard, arInput);
 
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
     return NeuralNetEvaluateSSE(&nnContact, arInput, arOutput,
                                 nnStates ? nnStates + (CLASS_CONTACT - CLASS_RACE) : NULL);
 #else
@@ -2144,7 +2144,7 @@ EvalCrashed(const TanBoard anBoard, float arOutput[], const bgvariation UNUSED(b
 
     CalculateCrashedInputs(anBoard, arInput);
 
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
     return NeuralNetEvaluateSSE(&nnCrashed, arInput, arOutput,
                                 nnStates ? nnStates + (CLASS_CRASHED - CLASS_RACE) : NULL);
 #else
@@ -3023,7 +3023,7 @@ StatusNeuralNet(neuralnet * pnn, char *szTitle, char *sz)
 {
     char buf[200];
     sz += sprintf(sz, " * %s %s:\n", szTitle, _("neural network evaluator"));
-    sprintf(buf, _("version %s, %d inputs, %d hidden units"), WEIGHTS_VERSION, pnn->cInput, pnn->cHidden);
+    sprintf(buf, _("version %s, %u inputs, %u hidden units"), WEIGHTS_VERSION, pnn->cInput, pnn->cHidden);
     sprintf(sz, "   - %s.\n\n", buf);
 }
 
@@ -4080,7 +4080,7 @@ FormatEval(char *sz, evalsetup * pes)
         sprintf(sz, "%s", _("Rollout"));
         break;
     default:
-        sprintf(sz, "Unknown (%d)", pes->et);
+        sprintf(sz, "Unknown (%d)", (int) pes->et);
         break;
     }
 
@@ -5263,7 +5263,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
 {
     unsigned int i;
     movelist ml;
-    positionclass evalClass = 0;
+    positionclass evalClass = CLASS_OVER;
     unsigned int bmovesi[PRUNE_MOVES];
 
     GenerateMoves(&ml, anBoardIn, nDice0, nDice1, FALSE);
@@ -5315,7 +5315,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
             {
                 neuralnet *nets[] = { &nnpRace, &nnpCrashed, &nnpContact };
                 neuralnet *n = nets[pc - CLASS_RACE];
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
                 (void) nnStates;        /* silence compiler warning */
                 NeuralNetEvaluateSSE(n, arInput, arOutput, NULL);
 #else
