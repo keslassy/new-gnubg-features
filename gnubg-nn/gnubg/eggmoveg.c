@@ -326,7 +326,7 @@ list_moves_non_double(int board[2][NB_POINTS], emovelist* moves,
             /* dice and no blot was taken with the first dice.         */
 
             replicate = 0;
-            if( (moves[nb_moves].to[0] == moves[nb_moves].from[1]) ) {
+            if( moves[nb_moves].to[0] == moves[nb_moves].from[1] ) {
               for( i = 0; i < nb_moves; ++i) {
 		/* don't compare incomplete move with this complete move. We */
 		/* want the complete move to 'override' an incomplete one.   */
