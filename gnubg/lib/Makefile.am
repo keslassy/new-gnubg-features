@@ -4,7 +4,7 @@
 ##
 
 
-AM_CPPFLAGS = -I$(srcdir)/.. @GLIB_CFLAGS@
+AM_CPPFLAGS = @GLIB_CFLAGS@
 
 LIBADD = @GLIB_LIBS@
 

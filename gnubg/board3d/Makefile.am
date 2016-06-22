@@ -3,7 +3,7 @@
 ## a standalone library, it would be better for them to be installed.
 ##
 
-AM_CPPFLAGS = -I$(srcdir)/.. $(COMMON_INCS) @GTK_CFLAGS@ $(SOUND_INCS) \
+AM_CPPFLAGS = $(COMMON_INCS) @GTK_CFLAGS@ $(SOUND_INCS) \
 	-I$(srcdir)/../lib \
 	-DLOCALEDIR=\"$(localedir)\" \
 	-DAC_DATADIR='"$(datadir)"' -DAC_PKGDATADIR=='"$(datadir)/gnubg"'\
