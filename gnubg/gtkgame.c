@@ -857,7 +857,6 @@ extern void
 GTKFreeze(void)
 {
 
-    GL_Freeze();
     frozen = TRUE;
 }
 
@@ -865,7 +864,6 @@ extern void
 GTKThaw(void)
 {
 
-    GL_Thaw();
     frozen = FALSE;
     /* Make sure analysis window is correct */
     if (plLastMove)

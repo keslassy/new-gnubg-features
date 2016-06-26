@@ -21,9 +21,6 @@
  * $Id$
  */
 
-#undef GDK_DISABLE_DEPRECATED
-#undef GTK_DISABLE_DEPRECATED
-
 #include "config.h"
 #include "gtklocdefs.h"
 
@@ -41,6 +38,7 @@
 #include "fun3d.h"
 #endif
 
+static GtkListStore *plsGameList;
 static GtkWidget *pwGameList;
 static GtkStyle *psGameList, *psCurrent, *psCubeErrors[3], *psChequerErrors[3], *psLucky[N_LUCKS];
 
@@ -57,49 +55,65 @@ gtk_set_font(GtkStyle * psStyle, GtkStyle * psValue)
     psStyle->font_desc = pango_font_description_copy(psValue->font_desc);
 }
 
-typedef struct _gamelistrow {
-    moverecord *apmr[2];        /* moverecord entries for each column */
-    int fCombined;              /* this message's row is combined across both columns */
-} gamelistrow;
+enum ListStoreColumns {
+    GL_COL_MOVE_NUMBER,
+    GL_COL_MOVE_STRING_0,
+    GL_COL_MOVE_STRING_1,
+    GL_COL_MOVE_RECORD_0,
+    GL_COL_MOVE_RECORD_1,
+    GL_COL_STYLE_0,
+    GL_COL_STYLE_1,
+    GL_COL_COMBINED,
+    GL_COL_NUM_COLUMNS
+};
 
 extern void
 GTKClearMoveRecord(void)
 {
-
-    gtk_clist_clear(GTK_CLIST(pwGameList));
+    gtk_list_store_clear(plsGameList);
 }
 
 static void
-GameListSelectRow(GtkCList * pcl, gint y, gint x, GdkEventButton * UNUSED(pev), gpointer UNUSED(p))
+GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
 {
 #if defined(USE_BOARD3D)
     BoardData *bd = BOARD(pwBoard)->board_data;
 #endif
-    gamelistrow *pglr;
-    moverecord *pmr, *pmrPrev = NULL;
+    moverecord *apmr[2], *pmr, *pmrPrev = NULL;
+    gboolean fCombined;
+    GtkTreePath *path;
+    GtkTreeViewColumn *column;
+    GtkTreeIter iter;
+    int *pPlayer;
     listOLD *pl;
 
-    if (x < 1 || x > 2)
+    gtk_tree_view_get_cursor(tree_view, &path, &column);
+    pPlayer = g_object_get_data(G_OBJECT(column), "player");
+    if (!pPlayer) {
+        gtk_tree_path_free(path);
         return;
+    }
 
-    pglr = gtk_clist_get_row_data(pcl, y);
-    if (!pglr)
-        pmr = NULL;
-    else
-        pmr = pglr->apmr[(pglr->fCombined) ? 0 : x - 1];
+    gtk_tree_model_get_iter(GTK_TREE_MODEL(plsGameList), &iter, path);
+    gtk_tree_model_get(GTK_TREE_MODEL(plsGameList), &iter, GL_COL_MOVE_RECORD_0, &apmr[0],
+                       GL_COL_MOVE_RECORD_1, &apmr[1], GL_COL_COMBINED, &fCombined, -1);
+    pmr = apmr[fCombined ? 0 : *pPlayer];
 
     /* Get previous move record */
-    if (pglr && !pglr->fCombined && x == 2)
-        x = 1;
+    if (!fCombined && *pPlayer == 1)
+        pmrPrev = apmr[0];
     else {
-        y--;
-        x = 2;
+        if (!gtk_tree_path_prev(path))
+            pmrPrev = NULL;
+        else {
+            gtk_tree_model_get_iter(GTK_TREE_MODEL(plsGameList), &iter, path);
+            gtk_tree_model_get(GTK_TREE_MODEL(plsGameList), &iter, GL_COL_MOVE_RECORD_0, &apmr[0],
+                               GL_COL_MOVE_RECORD_1, &apmr[1], GL_COL_COMBINED, &fCombined, -1);
+            pmrPrev = apmr[fCombined ? 0 : 1];
+        }
     }
-    pglr = gtk_clist_get_row_data(pcl, y);
-    if (!pglr)
-        pmrPrev = NULL;
-    else
-        pmrPrev = pglr->apmr[(pglr->fCombined) ? 0 : x - 1];
+
+    gtk_tree_path_free(path);
 
     if (!pmr && !pmrPrev)
         return;
@@ -152,8 +166,8 @@ GameListSelectRow(GtkCList * pcl, gint y, gint x, GdkEventButton * UNUSED(pev), 
 extern void
 GL_SetNames(void)
 {
-    gtk_clist_set_column_title(GTK_CLIST(pwGameList), 1, (ap[0].szName));
-    gtk_clist_set_column_title(GTK_CLIST(pwGameList), 2, (ap[1].szName));
+    gtk_tree_view_column_set_title(gtk_tree_view_get_column(GTK_TREE_VIEW(pwGameList), 1), ap[0].szName);
+    gtk_tree_view_column_set_title(gtk_tree_view_get_column(GTK_TREE_VIEW(pwGameList), 2), ap[1].szName);
 }
 
 static void
@@ -222,28 +236,70 @@ GetStyleFromRCFile(GtkStyle ** ppStyle, const char *name, GtkStyle * psBase)
     g_object_unref(G_OBJECT(temp));
 }
 
+static void
+RenderMoveString(GtkTreeViewColumn * tree_column, GtkCellRenderer * cell, GtkTreeModel * tree_model,
+                 GtkTreeIter * iter, gpointer UNUSED(p))
+{
+    gchar *moveString;
+    GtkStyle *style;
+    int *pPlayer = g_object_get_data(G_OBJECT(tree_column), "player");
+
+    gtk_tree_model_get(tree_model, iter, GL_COL_MOVE_STRING_0 + *pPlayer, &moveString,
+                       GL_COL_STYLE_0 + *pPlayer, &style, -1);
+    if (!style) {
+        style = psGameList;
+        g_object_ref(style);
+    }
+
+    g_object_set(cell, "text", moveString, "background-gdk", &style->base[GTK_STATE_NORMAL],
+                 "foreground-gdk", &style->fg[GTK_STATE_NORMAL], "font-desc", style->font_desc, NULL);
+
+    if (moveString)
+        g_free(moveString);
+    g_object_unref(style);
+}
+
 extern GtkWidget *
 GL_Create(void)
 {
+    static int player[] = {0, 1};
+    GtkTreeViewColumn *column;
+    GtkCellRenderer *renderer;
     GtkStyle *ps;
     gint nMaxWidth;
-    char *asz[] = { NULL, NULL, NULL };
     PangoRectangle logical_rect;
     PangoLayout *layout;
+    int i;
 
-    asz[0] = _("#");
-    pwGameList = gtk_clist_new_with_titles(3, asz);
-    gtk_widget_set_can_focus(pwGameList, FALSE);
+    plsGameList = gtk_list_store_new(GL_COL_NUM_COLUMNS, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING,
+                                     G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_OBJECT, G_TYPE_OBJECT, G_TYPE_BOOLEAN);
 
-    gtk_clist_set_selection_mode(GTK_CLIST(pwGameList), GTK_SELECTION_BROWSE);
-    gtk_clist_column_titles_passive(GTK_CLIST(pwGameList));
+    pwGameList = gtk_tree_view_new_with_model(GTK_TREE_MODEL(plsGameList));
+    gtk_tree_view_set_headers_clickable(GTK_TREE_VIEW(pwGameList), FALSE);
+    gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pwGameList)), GTK_SELECTION_NONE);
+    gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pwGameList), TRUE);
+
+    renderer = gtk_cell_renderer_text_new();
+    g_object_set(renderer, "ypad", 0, NULL);
+    gtk_cell_renderer_set_alignment(renderer, 1.0, 0.5);
+    column = gtk_tree_view_column_new_with_attributes("#", renderer, "text", GL_COL_MOVE_NUMBER, NULL);
+    gtk_tree_view_column_set_alignment(column, 1.0);
+    gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(pwGameList), column);
+
+    for (i = 0; i < 2; i++) {
+        renderer = gtk_cell_renderer_text_new();
+        g_object_set(renderer, "ypad", 0, NULL);
+        column = gtk_tree_view_column_new();
+        g_object_set_data(G_OBJECT(column), "player", &player[i]);
+        gtk_tree_view_column_pack_start(column, renderer, FALSE);
+        gtk_tree_view_column_set_cell_data_func(column, renderer, RenderMoveString, NULL, NULL);
+        gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
+        gtk_tree_view_append_column(GTK_TREE_VIEW(pwGameList), column);
+    }
 
     GL_SetNames();
 
-    gtk_clist_set_column_justification(GTK_CLIST(pwGameList), 0, GTK_JUSTIFY_RIGHT);
-    gtk_clist_set_column_resizeable(GTK_CLIST(pwGameList), 0, FALSE);
-    gtk_clist_set_column_resizeable(GTK_CLIST(pwGameList), 1, FALSE);
-    gtk_clist_set_column_resizeable(GTK_CLIST(pwGameList), 2, FALSE);
     gtk_widget_ensure_style(pwGameList);
     GetStyleFromRCFile(&ps, "gnubg", gtk_widget_get_style(pwGameList));
     ps->base[GTK_STATE_SELECTED] =
@@ -276,62 +332,48 @@ GL_Create(void)
     pango_layout_get_pixel_extents(layout, NULL, &logical_rect);
     g_object_unref(layout);
     nMaxWidth = logical_rect.width;
-    gtk_clist_set_column_width(GTK_CLIST(pwGameList), 0, nMaxWidth);
+    gtk_tree_view_column_set_fixed_width(gtk_tree_view_get_column(GTK_TREE_VIEW(pwGameList), 0), nMaxWidth + 8);
 
     layout = gtk_widget_create_pango_layout(pwGameList, " (set board AAAAAAAAAAAAAA)");
     pango_layout_get_pixel_extents(layout, NULL, &logical_rect);
     g_object_unref(layout);
     nMaxWidth = logical_rect.width;
-    gtk_clist_set_column_width(GTK_CLIST(pwGameList), 1, nMaxWidth - 30);
-    gtk_clist_set_column_width(GTK_CLIST(pwGameList), 2, nMaxWidth - 30);
+    gtk_tree_view_column_set_fixed_width(gtk_tree_view_get_column(GTK_TREE_VIEW(pwGameList), 1), nMaxWidth - 22);
+    gtk_tree_view_column_set_fixed_width(gtk_tree_view_get_column(GTK_TREE_VIEW(pwGameList), 2), nMaxWidth - 22);
 
-    g_signal_connect(G_OBJECT(pwGameList), "select-row", G_CALLBACK(GameListSelectRow), NULL);
+    g_signal_connect(G_OBJECT(pwGameList), "cursor-changed", G_CALLBACK(GameListSelectRow), NULL);
 
     return pwGameList;
-}
-
-static int
-AddMoveRecordRow(void)
-{
-    gamelistrow *pglr;
-    static char *aszData[] = { NULL, NULL, NULL };
-    char szIndex[5];
-    int row;
-
-    sprintf(szIndex, "%d", GTK_CLIST(pwGameList)->rows);
-    aszData[0] = szIndex;
-    row = gtk_clist_append(GTK_CLIST(pwGameList), aszData);
-    gtk_clist_set_row_style(GTK_CLIST(pwGameList), row, psGameList);
-
-    pglr = malloc(sizeof(*pglr));
-    pglr->fCombined = FALSE;
-    pglr->apmr[0] = pglr->apmr[1] = NULL;
-    gtk_clist_set_row_data_full(GTK_CLIST(pwGameList), row, pglr, free);
-
-    return row;
 }
 
 static void
 AddStyle(GtkStyle ** ppsComb, GtkStyle * psNew)
 {
-    if (!*ppsComb)
+    if (!*ppsComb) {
         *ppsComb = psNew;
+        g_object_ref(*ppsComb);
+    }
     else {
-        *ppsComb = gtk_style_copy(*ppsComb);
+        GtkStyle *copy = gtk_style_copy(*ppsComb);
+        g_object_unref(*ppsComb);
+        *ppsComb = copy;
         UpdateStyle(*ppsComb, psNew, psGameList);
     }
 }
 
 static void
-SetCellColour(int row, int col, moverecord * pmr)
+SetCellStyle(GtkTreeIter *iter, int fPlayer, moverecord * pmr)
 {
     GtkStyle *pStyle = NULL;
 
     if (fStyledGamelist) {
-        if (pmr->lt == LUCK_VERYGOOD)
+        if (pmr->lt == LUCK_VERYGOOD) {
             pStyle = psLucky[LUCK_VERYGOOD];
-        if (pmr->lt == LUCK_VERYBAD)
+            g_object_ref(pStyle);
+        } else if (pmr->lt == LUCK_VERYBAD) {
             pStyle = psLucky[LUCK_VERYBAD];
+            g_object_ref(pStyle);
+        }
 
         if (pmr->n.stMove == SKILL_DOUBTFUL)
             AddStyle(&pStyle, psChequerErrors[SKILL_DOUBTFUL]);
@@ -349,10 +391,13 @@ SetCellColour(int row, int col, moverecord * pmr)
             AddStyle(&pStyle, psCubeErrors[SKILL_VERYBAD]);
     }
 
-    if (!pStyle)
+    if (!pStyle) {
         pStyle = psGameList;
+        g_object_ref(pStyle);
+    }
 
-    gtk_clist_set_cell_style(GTK_CLIST(pwGameList), row, col, pStyle);
+    gtk_list_store_set(plsGameList, iter, GL_COL_STYLE_0 + fPlayer, pStyle, -1);
+    g_object_unref(pStyle);
 }
 
 /* Add a moverecord to the game list window.  NOTE: This function must be
@@ -361,37 +406,39 @@ SetCellColour(int row, int col, moverecord * pmr)
 extern void
 GTKAddMoveRecord(moverecord * pmr)
 {
-    gamelistrow *pglr;
-    int i, numRows, fPlayer;
+    moverecord *apmr[2] = {NULL, NULL};
+    gboolean fCombined = TRUE;
+    int fPlayer, moveNum = -1;
+    GtkTreeIter iter;
     const char *pch = GetMoveString(pmr, &fPlayer, TRUE);
     if (!pch)
         return;
 
-    i = -1;
-    numRows = GTK_CLIST(pwGameList)->rows;
-    if (numRows > 0) {
-        pglr = gtk_clist_get_row_data(GTK_CLIST(pwGameList), numRows - 1);
-        if (pglr && !(pglr->fCombined || pglr->apmr[1] || (fPlayer != 1 && pglr->apmr[0])))
-            /* Add to second half of current row */
-            i = numRows - 1;
-    }
-    if (i == -1)
-        /* Add new row */
-        i = AddMoveRecordRow();
+    if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(plsGameList), &iter)) {
+        GtkTreeIter next = iter;
+        while (gtk_tree_model_iter_next(GTK_TREE_MODEL(plsGameList), &next))
+            iter = next;
 
-    pglr = gtk_clist_get_row_data(GTK_CLIST(pwGameList), i);
+        gtk_tree_model_get(GTK_TREE_MODEL(plsGameList), &iter, GL_COL_MOVE_NUMBER, &moveNum, GL_COL_MOVE_RECORD_0,
+                           &apmr[0], GL_COL_MOVE_RECORD_1, &apmr[1], GL_COL_COMBINED, &fCombined, -1);
+    }
+
+    if (fCombined || apmr[1] || (fPlayer != 1 && apmr[0])) {
+        /* Add new row */
+        gtk_list_store_append(plsGameList, &iter);
+        ++moveNum;
+    }
 
     if (fPlayer == -1) {
-        pglr->fCombined = TRUE;
+        fCombined = TRUE;
         fPlayer = 0;
     } else
-        pglr->fCombined = FALSE;
+        fCombined = FALSE;
 
-    pglr->apmr[fPlayer] = pmr;
+    gtk_list_store_set(plsGameList, &iter, GL_COL_MOVE_NUMBER, moveNum, GL_COL_MOVE_STRING_0 + fPlayer, pch,
+                       GL_COL_MOVE_RECORD_0 + fPlayer, pmr, GL_COL_COMBINED, fCombined, -1);
 
-    gtk_clist_set_text(GTK_CLIST(pwGameList), i, fPlayer + 1, pch);
-
-    SetCellColour(i, fPlayer + 1, pmr);
+    SetCellStyle(&iter, fPlayer, pmr);
 }
 
 
@@ -402,11 +449,12 @@ GTKSetMoveRecord(moverecord * pmr)
 {
 
     /* highlighted row/col in game record */
-    static int yCurrent = -1, xCurrent = -1;
+    static GtkTreePath *path = NULL;
+    static int fPlayer = -1;
 
-    GtkCList *pcl = GTK_CLIST(pwGameList);
-    gamelistrow *pglr;
-    int i;
+    GtkTreeIter iter;
+    moverecord *apmr[2];
+    gboolean iterValid, lastRow = FALSE;
     /* Avoid lots of screen updates */
     if (!frozen)
         SetAnnotation(pmr);
@@ -422,112 +470,114 @@ GTKSetMoveRecord(moverecord * pmr)
     }
 #endif
 
-    if (yCurrent != -1 && xCurrent != -1) {
+    if (path && fPlayer != -1) {
         moverecord *pmrLast = NULL;
-        pglr = gtk_clist_get_row_data(pcl, yCurrent);
-        if (pglr) {
-            pmrLast = pglr->apmr[xCurrent - 1];
+        if (gtk_tree_model_get_iter(GTK_TREE_MODEL(plsGameList), &iter, path)) {
+            gtk_tree_model_get(GTK_TREE_MODEL(plsGameList), &iter, GL_COL_MOVE_RECORD_0, &apmr[0],
+                               GL_COL_MOVE_RECORD_1, &apmr[1], -1);
+            pmrLast = apmr[fPlayer];
             if (pmrLast)
-                SetCellColour(yCurrent, xCurrent, pmrLast);
+                SetCellStyle(&iter, fPlayer, pmrLast);
+            else
+                gtk_list_store_set(plsGameList, &iter, GL_COL_STYLE_0 + fPlayer, psGameList, -1);
         }
-        if (!pmrLast)
-            gtk_clist_set_cell_style(pcl, yCurrent, xCurrent, psGameList);
     }
 
-    yCurrent = xCurrent = -1;
+    if (path)
+        gtk_tree_path_free(path);
+    path = NULL;
+    fPlayer = -1;
 
     if (!pmr)
         return;
 
     if (pmr == plGame->plNext->p) {
         g_assert(pmr->mt == MOVE_GAMEINFO);
-        yCurrent = 0;
+        path = gtk_tree_path_new_first();
 
         if (plGame->plNext->plNext->p) {
             moverecord *pmrNext = plGame->plNext->plNext->p;
 
             if (pmrNext->mt == MOVE_NORMAL && pmrNext->fPlayer == 1)
-                xCurrent = 2;
+                fPlayer = 1;
             else
-                xCurrent = 1;
+                fPlayer = 0;
         } else
-            xCurrent = 1;
+            fPlayer = 0;
     } else {
-        for (i = pcl->rows - 1; i >= 0; i--) {
-            pglr = gtk_clist_get_row_data(pcl, i);
-            if (pglr->apmr[1] == pmr) {
-                xCurrent = 2;
+        iterValid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(plsGameList), &iter);
+        while (iterValid) {
+            gtk_tree_model_get(GTK_TREE_MODEL(plsGameList), &iter, GL_COL_MOVE_RECORD_0, &apmr[0],
+                               GL_COL_MOVE_RECORD_1, &apmr[1], -1);
+            if (apmr[1] == pmr) {
+                fPlayer = 1;
                 break;
-            } else if (pglr->apmr[0] == pmr) {
-                xCurrent = 1;
+            } else if (apmr[0] == pmr) {
+                fPlayer = 0;
                 break;
             }
+            iterValid = gtk_tree_model_iter_next(GTK_TREE_MODEL(plsGameList), &iter);
         }
 
-        yCurrent = i;
+        if (iterValid) {
+            path = gtk_tree_model_get_path(GTK_TREE_MODEL(plsGameList), &iter);
+            lastRow = !gtk_tree_model_iter_next(GTK_TREE_MODEL(plsGameList), &iter);
+            gtk_tree_model_get_iter(GTK_TREE_MODEL(plsGameList), &iter, path);
+        }
 
-        if (yCurrent >= 0 && !(pmr->mt == MOVE_SETDICE && yCurrent == pcl->rows - 1)) {
+        if (path && !(pmr->mt == MOVE_SETDICE && lastRow)) {
             do {
-                if (++xCurrent > 2) {
-                    xCurrent = 1;
-                    yCurrent++;
+                if (++fPlayer > 1) {
+                    fPlayer = 0;
+                    gtk_tree_path_next(path);
+                    iterValid = gtk_tree_model_iter_next(GTK_TREE_MODEL(plsGameList), &iter);
                 }
 
-                pglr = gtk_clist_get_row_data(pcl, yCurrent);
-            } while (yCurrent < pcl->rows - 1 && !pglr->apmr[xCurrent - 1]);
+                if (iterValid) {
+                    GtkTreeIter tmpIter = iter;
+                    lastRow = !gtk_tree_model_iter_next(GTK_TREE_MODEL(plsGameList), &tmpIter);
+                    gtk_tree_model_get(GTK_TREE_MODEL(plsGameList), &iter, GL_COL_MOVE_RECORD_0, &apmr[0],
+                                       GL_COL_MOVE_RECORD_1, &apmr[1], -1);
+                }
+            } while (iterValid && !lastRow && !apmr[fPlayer]);
 
-            if (yCurrent >= pcl->rows)
-                AddMoveRecordRow();
+            if (!iterValid) {
+                int *moveNum = gtk_tree_path_get_indices(path);
+                gtk_list_store_append(plsGameList, &iter);
+                gtk_list_store_set(plsGameList, &iter, GL_COL_MOVE_NUMBER, *moveNum, -1);
+            }
         }
     }
 
     /* Highlight current move */
-    gtk_clist_set_cell_style(pcl, yCurrent, xCurrent, psCurrent);
-
-    if (gtk_clist_row_is_visible(pcl, yCurrent) != GTK_VISIBILITY_FULL)
-        gtk_clist_moveto(pcl, yCurrent, xCurrent, 0.8f, 0.5f);
+    if (gtk_tree_model_get_iter(GTK_TREE_MODEL(plsGameList), &iter, path)) {
+        gtk_list_store_set(plsGameList, &iter, GL_COL_STYLE_0 + fPlayer, psCurrent, -1);
+        gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pwGameList), path, NULL, TRUE, 0.8f, 0.5f);
+    }
 }
 
 extern void
 GTKPopMoveRecord(moverecord * pmr)
 {
+    GtkTreeIter iter;
+    gboolean iterValid, recordFound = FALSE;
+    moverecord *apmr[2];
 
-    GtkCList *pcl = GTK_CLIST(pwGameList);
-    gamelistrow *pglr = NULL;
-
-    gtk_clist_freeze(pcl);
-
-    while (pcl->rows) {
-        pglr = gtk_clist_get_row_data(pcl, pcl->rows - 1);
-
-        if (pglr->apmr[0] != pmr && pglr->apmr[1] != pmr)
-            gtk_clist_remove(pcl, pcl->rows - 1);
-        else
-            break;
-    }
-
-    if (pcl->rows) {
-        if (pglr->apmr[0] == pmr)
+    iterValid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(plsGameList), &iter);
+    while (iterValid) {
+        gtk_tree_model_get(GTK_TREE_MODEL(plsGameList), &iter, GL_COL_MOVE_RECORD_0, &apmr[0],
+                           GL_COL_MOVE_RECORD_1, &apmr[1], -1);
+        if (apmr[0] == pmr || recordFound) {
             /* the left column matches; delete the row */
-            gtk_clist_remove(pcl, pcl->rows - 1);
-        else {
+            iterValid = gtk_list_store_remove(plsGameList, &iter);
+            recordFound = TRUE;
+        } else if (apmr[1] == pmr) {
             /* the right column matches; delete that column only */
-            gtk_clist_set_text(pcl, pcl->rows - 1, 2, NULL);
-            pglr->apmr[1] = NULL;
-        }
+            gtk_list_store_set(plsGameList, &iter, GL_COL_MOVE_STRING_1, NULL,
+                               GL_COL_MOVE_RECORD_1, NULL, GL_COL_STYLE_1, NULL, -1);
+            iterValid = gtk_tree_model_iter_next(GTK_TREE_MODEL(plsGameList), &iter);
+            recordFound = TRUE;
+        } else
+            iterValid = gtk_tree_model_iter_next(GTK_TREE_MODEL(plsGameList), &iter);
     }
-
-    gtk_clist_thaw(pcl);
-}
-
-extern void
-GL_Freeze(void)
-{
-    gtk_clist_freeze(GTK_CLIST(pwGameList));
-}
-
-extern void
-GL_Thaw(void)
-{
-    gtk_clist_thaw(GTK_CLIST(pwGameList));
 }
