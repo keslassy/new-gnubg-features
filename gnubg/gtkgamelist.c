@@ -37,7 +37,7 @@
 #include "drawboard.h"
 #include "positionid.h"
 #include "gtkgame.h"
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 
@@ -72,7 +72,7 @@ GTKClearMoveRecord(void)
 static void
 GameListSelectRow(GtkCList * pcl, gint y, gint x, GdkEventButton * UNUSED(pev), gpointer UNUSED(p))
 {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     BoardData *bd = BOARD(pwBoard)->board_data;
 #endif
     gamelistrow *pglr;
@@ -132,7 +132,7 @@ GameListSelectRow(GtkCList * pcl, gint y, gint x, GdkEventButton * UNUSED(pev), 
         ms.anDice[0] = pmr->anDice[0];
         ms.anDice[1] = pmr->anDice[1];
     }
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {        /* Make sure dice are shown (and not rolled) */
         bd->diceShown = DICE_ON_BOARD;
         bd->diceRoll[0] = !ms.anDice[0];
