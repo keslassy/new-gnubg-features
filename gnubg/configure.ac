@@ -144,8 +144,8 @@ else
         have_canberra="no"
     elif test "x$with_gtk" != "xno"; then
         PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk support]))
-        PKG_CHECK_MODULES(GLU, [glu], have_glu="yes", AC_MSG_WARN([no glu support]))
     fi
+    PKG_CHECK_MODULES(GLU, [glu], have_glu="yes", AC_MSG_WARN([no glu support]))
 fi
 
 if test "x$with_gtk" != "xno"; then
