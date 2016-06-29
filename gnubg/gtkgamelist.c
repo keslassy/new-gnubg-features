@@ -408,7 +408,7 @@ GTKAddMoveRecord(moverecord * pmr)
 {
     moverecord *apmr[2] = {NULL, NULL};
     gboolean fCombined = TRUE;
-    int fPlayer, moveNum = -1;
+    int fPlayer, moveNum = 0;
     GtkTreeIter iter;
     const char *pch = GetMoveString(pmr, &fPlayer, TRUE);
     if (!pch)
