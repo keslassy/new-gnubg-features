@@ -744,7 +744,7 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
     if (!fReadWeights) {
         outputerrf(_("GNU Backgammon couldn't find a weights file."));
         exit(EXIT_FAILURE);
-   }
+    }
 
 }
 
@@ -1635,10 +1635,11 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
 {
     int i, j, nciq, ac[2], anBack[2], anCross[2], anGammonCross[2], anMaxTurns[2], fContact;
 
-    if (unlikely(arOutput[OUTPUT_WIN] < 0.0f))
-        arOutput[OUTPUT_WIN] = 0.0f;
-    else if (unlikely(arOutput[OUTPUT_WIN] > 1.0f))
-        arOutput[OUTPUT_WIN] = 1.0f;
+    g_assert(arOutput[OUTPUT_WIN] >= 0.0f && arOutput[OUTPUT_WIN] <= 1.0f);
+    g_assert(arOutput[OUTPUT_WINGAMMON] >= 0.0f && arOutput[OUTPUT_WINGAMMON] <= 1.0f);
+    g_assert(arOutput[OUTPUT_WINBACKGAMMON] >= 0.0f && arOutput[OUTPUT_WINBACKGAMMON] <= 1.0f);
+    g_assert(arOutput[OUTPUT_LOSEGAMMON] >= 0.0f && arOutput[OUTPUT_LOSEGAMMON] <= 1.0f);
+    g_assert(arOutput[OUTPUT_LOSEBACKGAMMON] >= 0.0f && arOutput[OUTPUT_LOSEBACKGAMMON] <= 1.0f);
 
     ac[0] = ac[1] = anBack[0] = anBack[1] = anCross[0] = anCross[1] = 0;
     anGammonCross[0] = anGammonCross[1] = 1;
@@ -1868,7 +1869,7 @@ ClassifyPosition(const TanBoard anBoard, const bgvariation bgv)
 
     }
 
-    return CLASS_OVER;                   /* for fussy compilers */
+    return CLASS_OVER;          /* for fussy compilers */
 }
 
 static int
@@ -5445,9 +5446,13 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
         if (acef[pc] (anBoard, arOutput, pci->bgv, nnStates))
             return -1;
 
-        if (pec->rNoise > 0.0f && pc != CLASS_OVER)
-            for (i = 0; i < NUM_OUTPUTS; i++)
+        if (pec->rNoise > 0.0f && pc != CLASS_OVER) {
+            for (i = 0; i < NUM_OUTPUTS; i++) {
                 arOutput[i] += Noise(pec, anBoard, i);
+                arOutput[i] = MAX(arOutput[i], 0.0f);
+                arOutput[i] = MIN(arOutput[i], 1.0f);
+            }
+        }
 
         if (pc > CLASS_GOOD || pec->rNoise > 0.0f)
             /* no sanity check needed for accurate evaluations */
@@ -6062,9 +6067,13 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
             if (EvaluatePosition(nnStates, anBoard, arOutput, pciMove, NULL))
                 return -1;
 
-            if (pec->rNoise > 0.0f && pc != CLASS_OVER)
-                for (i = 0; i < NUM_OUTPUTS; i++)
+            if (pec->rNoise > 0.0f && pc != CLASS_OVER) {
+                for (i = 0; i < NUM_OUTPUTS; i++) {
                     arOutput[i] += Noise(pec, anBoard, i);
+                    arOutput[i] = MAX(arOutput[i], 0.0f);
+                    arOutput[i] = MIN(arOutput[i], 1.0f);
+                }
+            }
 
             if (pc > CLASS_GOOD || pec->rNoise > 0.0f)
                 /* no sanity check needed for accurate evaluations */
