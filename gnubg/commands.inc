@@ -218,7 +218,7 @@ static command acAnnotateRoll[] = {
       N_("Copy the current position in .html format to clipboard"
          "(special for GammOnLine)"), 
       szFILENAME, &cFilename },
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
     { "ps", CommandExportPositionPS, N_("Save the current position in "
       "PostScript format"), szFILENAME, &cFilename },
     { "pdf", CommandExportPositionPDF, N_("Save the current position in "
@@ -229,7 +229,7 @@ static command acAnnotateRoll[] = {
     { "html", CommandExportPositionHtml,
       N_("Save the current position in .html format"), 
       szFILENAME, &cFilename },
-#if HAVE_LIBPNG
+#if defined(HAVE_LIBPNG)
     { "png", CommandExportPositionPNG, N_("Save the current position in "
       "Portable Network Graphics (PNG) format"), szFILENAME, &cFilename },
 #endif /* HAVE_LIBPNG */
@@ -466,7 +466,7 @@ static command acSetAnalysis[] = {
       N_("Player specific options"), szPLAYER, acSetAnalysisPlayer },
     { "threshold", NULL, N_("Specify levels for marking moves"), NULL,
       acSetAnalysisThreshold },
-#if USE_GTK
+#if defined(USE_GTK)
     { "window", CommandSetAnalysisWindows, N_("Display window with analysis"),
       szONOFF, &cOnOff },
 #endif
@@ -535,7 +535,7 @@ static command acSetAutomatic[] = {
       N_("Set cube efficiency parameters for race positions"),
       szVALUE, acSetCubeEfficiencyRace },
     { NULL, NULL, NULL, NULL, NULL }
-#if USE_GTK
+#if defined(USE_GTK)
 };
 
 command acSetGeometryValues[] = {
@@ -1089,7 +1089,7 @@ static command acSetVariation[] = {
 }, acSet[] = {
     { "analysis", NULL, N_("Control parameters used when analysing moves"),
       NULL, acSetAnalysis },
-#if USE_GTK
+#if defined(USE_GTK)
     { "annotation", CommandSetAnnotation, N_("Select whether move analysis and "
       "commentary are shown"), szONOFF, &cOnOff },
 #endif
@@ -1121,7 +1121,7 @@ static command acSetVariation[] = {
       szONOFF, &cOnOff },
     { "colours", CommandSetAppearance, 
       N_("Synonym for `set appearance'"), NULL, NULL },
-#if USE_GTK
+#if defined(USE_GTK)
     { "commandwindow", CommandSetCommandWindow, N_("Display command window"),
       szONOFF, &cOnOff },
 #endif
@@ -1138,7 +1138,7 @@ static command acSetVariation[] = {
     { "display", CommandSetDisplay, 
       N_("Select whether the board is updated on the computer's turn"), 
       szONOFF, &cOnOff },
-#if USE_GTK
+#if defined(USE_GTK)
     { "dockpanels", CommandSetDockPanels, N_("Dock or float windows"),
       szONOFF, &cOnOff },
 #endif
@@ -1147,7 +1147,7 @@ static command acSetVariation[] = {
     { "export", NULL, N_("Set settings for export"), NULL, acSetExport },
     { "fullscreen", CommandSetFullScreen, N_("Change to full screen mode"),
       szONOFF, &cOnOff },
-#if USE_GTK
+#if defined(USE_GTK)
     { "gamelist", CommandSetGameList, N_("Display game window with moves"),
       szONOFF, &cOnOff },
     { "geometry", NULL, N_("Set geometry of windows"), NULL, acSetGeometry },
@@ -1155,7 +1155,7 @@ static command acSetVariation[] = {
     { "gotofirstgame", CommandSetGotoFirstGame, 
       N_("Control whether you want to go to the first or last game "
          "when loading matches or sessions"), NULL, NULL },
-#if USE_GTK
+#if defined(USE_GTK)
     { "gui", NULL, N_("Control parameters for the graphical interface"), NULL,
       acSetGUI },
 #endif
@@ -1178,7 +1178,7 @@ static command acSetVariation[] = {
       acSetMatchInfo },
     { "matchlength", CommandSetMatchLength,
       N_("Specify the default length for new matches"), szLENGTH, NULL },
-#if USE_GTK
+#if defined(USE_GTK)
 	{ "message", CommandSetMessage, N_("Display window with messages"),
       szONOFF, &cOnOff },
 #endif
@@ -1186,7 +1186,7 @@ static command acSetVariation[] = {
       N_("Synonym for `set matchequitytable'"), szFILENAME, &cFilename },
     { "output", NULL, N_("Modify options for formatting results"), NULL,
       acSetOutput },
-#if USE_GTK
+#if defined(USE_GTK)
     { "panels", CommandSetPanels, 
       N_("Display game list, annotation and message panels/windows"), 
 	 szONOFF, &cOnOff },
@@ -1217,11 +1217,11 @@ static command acSetVariation[] = {
       N_("Control audio parameters"), NULL, acSetSound },
     { "styledgamelist", CommandSetStyledGameList, N_("Display colours for marked moves in game window"),
       szONOFF, &cOnOff },
-#if USE_GTK
+#if defined(USE_GTK)
     { "theorywindow", CommandSetTheoryWindow, N_("Display game theory in window"),
       szONOFF, &cOnOff },
 #endif
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     { "threads", CommandSetThreads, N_("Set the number of calculation threads"),
       szSIZE, NULL },
 #endif
@@ -1233,7 +1233,7 @@ static command acSetVariation[] = {
     { "variation", NULL, N_("Set which variation of backgammon is used"), 
       NULL, acSetVariation }, 
     { "vsync3d", CommandSetVsync3d, N_("Turn vertical sync on/off"), szONOFF, &cOnOff },
-#if USE_GTK
+#if defined(USE_GTK)
     { "warning", CommandSetWarning, N_("Turn warnings on or off"), szWARNYN, NULL},
 #endif
     { "autosave", NULL, N_("Control autosave"), NULL, acSetAutoSave },
@@ -1310,7 +1310,7 @@ static command acSetVariation[] = {
       NULL, NULL },
     { "export", CommandShowExport, N_("Show current export settings"), 
       NULL, NULL },
-#if USE_GTK
+#if defined(USE_GTK)
     { "geometry", CommandShowGeometry, N_("Show geometry settings"), 
       NULL, NULL },
 #endif
@@ -1342,7 +1342,7 @@ static command acSetVariation[] = {
       N_("Show misc race theory"), NULL, NULL },
     { "output", CommandShowOutput, N_("Show how results will be formatted"),
       NULL, NULL },
-#if USE_GTK
+#if defined(USE_GTK)
     { "panels", CommandShowPanels, N_("Show if the panels are displayed"),
       NULL, NULL},
 #endif
@@ -1374,7 +1374,7 @@ static command acSetVariation[] = {
     { "temperaturemap", CommandShowTemperatureMap, 
       N_("Show temperature map (graphic overview of dice distribution)"), 
       NULL, NULL },
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
     { "threads", CommandShowThreads, N_("Show number of calculation threads"),
 	NULL, NULL },
 #endif
@@ -1389,7 +1389,7 @@ static command acSetVariation[] = {
     { "variation", CommandShowVariation, 
       N_("Give information about which variation of backgammon is being played"),
       NULL, NULL },
-#if USE_GTK
+#if defined(USE_GTK)
     { "warning", CommandShowWarning, N_("Show warning settings"), szWARN, NULL},
 #endif
     { "warranty", CommandShowWarranty, 
@@ -1438,7 +1438,7 @@ command acTop[] = {
     { "hint", CommandHint,  
       N_("Give hints on cube action or best legal moves"), 
       szOPTVALUE, NULL },
-#if HAVE_LIB_READLINE
+#if defined(HAVE_LIB_READLINE)
     { "history", CommandHistory, N_("Display current history"), NULL, NULL },
 #endif /* HAVE_LIB_READLINE */
     { "invert", NULL, N_("invert match equity tables, etc."), 
