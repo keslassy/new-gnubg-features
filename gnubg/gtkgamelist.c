@@ -282,7 +282,7 @@ GL_Create(void)
     renderer = gtk_cell_renderer_text_new();
     g_object_set(renderer, "ypad", 0, NULL);
     gtk_cell_renderer_set_alignment(renderer, 1.0, 0.5);
-    column = gtk_tree_view_column_new_with_attributes("#", renderer, "text", GL_COL_MOVE_NUMBER, NULL);
+    column = gtk_tree_view_column_new_with_attributes(_("#"), renderer, "text", GL_COL_MOVE_NUMBER, NULL);
     gtk_tree_view_column_set_alignment(column, 1.0);
     gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_view_append_column(GTK_TREE_VIEW(pwGameList), column);
