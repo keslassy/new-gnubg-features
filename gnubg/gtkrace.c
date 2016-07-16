@@ -46,6 +46,8 @@ typedef struct _racewidget {
     int fMove;
 } racewidget;
 
+static gint current_page_num = 0;
+
 static GtkWidget *
 monospace_text(const char *szOutput)
 {
@@ -286,12 +288,16 @@ OSRPage(TanBoard UNUSED(anBoard), racewidget * prw)
 
 }
 
+static void
+set_current_page(GtkWidget * UNUSED(pw), gpointer UNUSED(page), guint page_num, gpointer * UNUSED(data))
+{
+    current_page_num = page_num;
+
+    return;
+}
+
 /*
- * Display widget with misc. race stuff:
- * - kleinman
- * - thorp
- * - one chequer race
- * - one sided rollout
+ * Display widget with various race metrics
  */
 
 extern void
@@ -345,13 +351,16 @@ GTKShowRace(TanBoard anBoard)
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook),
                              TwoSidedPage(anBoard, prw->fMove), gtk_label_new(_("Two-Sided Database")));
 
+    g_signal_connect_after(G_OBJECT(pwNotebook), "switch-page", G_CALLBACK(set_current_page), pwNotebook);
 
     /* show dialog */
 
     /* OSR can take a long time for non-race positions */
     if (ClassifyPosition(msBoard(), ms.bgv) <= CLASS_RACE)
         PerformOSR(NULL, prw);
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(pwNotebook), 0);
+
+    gtk_widget_show_all(pwNotebook);
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(pwNotebook), current_page_num);
 
     GTKRunDialog(pwDialog);
 }
