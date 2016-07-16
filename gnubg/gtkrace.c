@@ -92,6 +92,14 @@ KeithPage(TanBoard anBoard, const int UNUSED(fMove))
 }
 
 static GtkWidget *
+IsightPage(TanBoard anBoard, const int UNUSED(fMove))
+{
+    char sz[500];
+    show_isight(anBoard, sz);
+    return monospace_text(sz);
+}
+
+static GtkWidget *
 Pip8912Page(TanBoard anBoard, const int UNUSED(fMove))
 {
     char sz[500];
@@ -341,6 +349,10 @@ GTKShowRace(TanBoard anBoard)
     /* Keith */
 
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), KeithPage(anBoard, prw->fMove), gtk_label_new(_("Keith Count")));
+
+    /* Isight */
+
+    gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), IsightPage(anBoard, prw->fMove), gtk_label_new(_("Isight Count")));
 
     /* One sided rollout */
 

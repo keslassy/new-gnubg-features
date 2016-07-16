@@ -1314,6 +1314,8 @@ static command acSetVariation[] = {
     { "geometry", CommandShowGeometry, N_("Show geometry settings"), 
       NULL, NULL },
 #endif
+    { "isight", CommandShowIsight, N_("Calculate Isight Count for "
+      "position"), szOPTPOSITION, NULL },
     { "jacoby", CommandShowJacoby, 
       N_("See if the Jacoby rule is used in money sessions"), NULL, NULL },
     { "8912", CommandShow8912, N_("Use 8912 rule to predict cube action"),

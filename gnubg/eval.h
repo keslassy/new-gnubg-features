@@ -131,8 +131,8 @@ typedef struct {
     unsigned short nLate;       /* switch evaluations on move nLate of game */
     rng rngRollout;
     unsigned long nSeed;
-    unsigned int nMinimumGames; /* but always do at least this many */
-    float rStdLimit;           /* stop when abs( value / std ) < this */
+    unsigned int nMinimumGames; /* always do at least this many */
+    float rStdLimit;            /* stop when std < this */
     unsigned int nMinimumJsdGames;
     float rJsdLimit;
     unsigned int nGamesDone;
@@ -379,6 +379,9 @@ extern int
 
 extern int
  KeithCount(const TanBoard anBoard, int pn[2]);
+
+extern int
+ IsightCount(const TanBoard anBoard, int pn[2]);
 
 extern int
  DumpPosition(const TanBoard anBoard, char *szOutput,

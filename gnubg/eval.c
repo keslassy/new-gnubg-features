@@ -2917,6 +2917,38 @@ KeithCount(const TanBoard anBoard, int pn[2])
 }
 
 extern int
+IsightCount(const TanBoard anBoard, int pn[2])
+{
+    unsigned int anPips[2];
+    int anMenLeft[2] = {0, 0}, anCrossOver[2] = {0, 0};
+    int i, x;
+    
+    PipCount(anBoard, anPips);
+
+    for (x = 0; x < 25; x++) {
+        anMenLeft[0] += anBoard[0][x];
+        anMenLeft[1] += anBoard[1][x];
+        anCrossOver[0] += anBoard[0][x] * (x / 6);
+        anCrossOver[1] += anBoard[1][x] * (x / 6);
+    }
+
+    for (i = 0; i < 2; i++) {
+        pn[i] = anPips[i];
+        if (anMenLeft[i] > anMenLeft[1-i])
+	    pn[i] += (anMenLeft[i] - anMenLeft[1-i]);
+        pn[i] += (MAX(2, anBoard[i][0]) - 2) * 2;
+        pn[i] += MAX(2, anBoard[i][1]) - 2;
+        pn[i] += MAX(3, anBoard[i][2]) - 3;
+        for (x = 3; x < 6; x++)
+            if (!anBoard[i][x] && anBoard[1-i][x])
+                pn[i]++;
+        if (anCrossOver[i] > anCrossOver[1-i])
+            pn[i] += (anCrossOver[i] - anCrossOver[1-i]);
+    }
+    return 0;
+}
+
+extern int
 ThorpCount(const TanBoard anBoard, int *pnLeader, float *adjusted, int *pnTrailer)
 {
 
