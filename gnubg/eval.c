@@ -1230,17 +1230,30 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
         int n1 = 0;
         int n2 = 0;
 
-        for (i = 0; i < 21; i++) {
-            int w = aaRoll[i][3] > 0 ? 1 : 2;
+        for (i = 0; i < 6; i++) {
             int nc = aRoll[i].nChequers;
 
-            np += aRoll[i].nPips * w;
+            np += aRoll[i].nPips;
 
             if (nc > 0) {
-                n1 += w;
+                n1 += 1;
 
                 if (nc > 1) {
-                    n2 += w;
+                    n2 += 1;
+                }
+            }
+        }
+
+        for (; i < 21; i++) {
+            int nc = aRoll[i].nChequers;
+
+            np += aRoll[i].nPips * 2;
+
+            if (nc > 0) {
+                n1 += 2;
+
+                if (nc > 1) {
+                    n2 += 2;
                 }
             }
         }
