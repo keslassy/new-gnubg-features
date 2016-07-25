@@ -28,7 +28,7 @@
 #include "backgammon.h"
 #include "drawboard.h"
 #include "eval.h"
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkgame.h"
 #endif
 #include "positionid.h"
@@ -107,14 +107,14 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, co
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
                                    pci, pec, defaultFilters) < 0)
-                return (float) ERR_VAL;
+                return ERR_VAL;
 
             if (!ml.cMoves) {
 
                 SwapSides(anBoardTemp);
 
                 if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, &ciOpp, pec) < 0)
-                    return (float) ERR_VAL;
+                    return ERR_VAL;
 
                 if (pec->fCubeful) {
                     if (pci->nMatchTo)
@@ -143,14 +143,14 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, co
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
                                    &ciOpp, pec, defaultFilters) < 0)
-                return (float) ERR_VAL;
+                return ERR_VAL;
 
             if (!ml.cMoves) {
 
                 SwapSides(anBoardTemp);
 
                 if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, pci, pec) < 0)
-                    return (float) ERR_VAL;
+                    return ERR_VAL;
 
                 if (pec->fCubeful) {
                     if (pci->nMatchTo)
@@ -196,14 +196,14 @@ LuckNormal(const TanBoard anBoard, const int n0, const int n1, const cubeinfo * 
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
                                    pci, pec, defaultFilters) < 0)
-                return (float) ERR_VAL;
+                return ERR_VAL;
 
             if (!ml.cMoves) {
 
                 SwapSides(anBoardTemp);
 
                 if (GeneralEvaluationE(ar, (ConstTanBoard) anBoardTemp, &ciOpp, pec) < 0)
-                    return (float) ERR_VAL;
+                    return ERR_VAL;
 
                 if (pec->fCubeful) {
                     if (pci->nMatchTo)
@@ -380,7 +380,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
         /*
          * update luck statistics for roll
          */
-        if (fAnalyseDice && pmr->rLuck != (float) ERR_VAL) {
+        if (fAnalyseDice && pmr->rLuck != ERR_VAL) {
 
             float r = pms->nMatchTo ? eq2mwc(pmr->rLuck, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * pmr->rLuck;
 
@@ -551,7 +551,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
 
 
         GetMatchStateCubeInfo(&ci, pms);
-        if (fAnalyseDice && pmr->rLuck != (float) ERR_VAL) {
+        if (fAnalyseDice && pmr->rLuck != ERR_VAL) {
 
             float r = pms->nMatchTo ? eq2mwc(pmr->rLuck, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * pmr->rLuck;
 
@@ -753,7 +753,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
 
                 pmr->stCube = Skill(rSkill);
             } else if (doubleError)
-                *doubleError = (float) ERR_VAL;
+                *doubleError = ERR_VAL;
         }
 
         if (psc)
@@ -771,7 +771,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
         if (tt > TT_NORMAL)
             break;
 
-        if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != (float) ERR_VAL)) {
+        if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != ERR_VAL)) {
             GetMatchStateCubeInfo(&ci, pms);
             pmr->stCube = Skill(-*doubleError);
         }
@@ -791,7 +791,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
         if (tt > TT_NORMAL)
             break;
 
-        if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != (float) ERR_VAL)) {
+        if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != ERR_VAL)) {
             GetMatchStateCubeInfo(&ci, pms);
             pmr->stCube = Skill(*doubleError);
         }
@@ -1156,7 +1156,7 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     ProgressEnd();
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -1206,7 +1206,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     ProgressEnd();
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -1395,12 +1395,12 @@ getMWCFromError(const statcontext * psc, float aaaar[3][2][2][2])
 }
 
 extern void
-DumpStatcontext(char *szOutput, const statcontext * psc, const char *pl, const char *op, int nMatchTo)
+DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, const char *op, int nMatchTo)
 {
 
     /* header */
 
-    sprintf(szOutput, "%-40s %-23s %-23s\n\n", _("Player"), pl, op);
+    sprintf(szOutput, "%-40s %-23s %-23s\n\n", _("Player"), player, op);
 
     if (psc->fMoves) {
         GList *list = formatGS(psc, nMatchTo, FORMATGS_CHEQUER);
@@ -1495,7 +1495,7 @@ CommandShowStatisticsMatch(char *UNUSED(sz))
 
     updateStatisticsMatch(&lMatch);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKDumpStatcontext(0);
         return;
@@ -1532,7 +1532,7 @@ CommandShowStatisticsGame(char *UNUSED(sz))
 
     g_assert(pmr->mt == MOVE_GAMEINFO);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKDumpStatcontext(getGameNumber(plGame) + 1);
         return;
@@ -1568,7 +1568,7 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.aamf = aamfAnalysis;
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
 
-#if USE_GTK
+#if defined(USE_GTK)
         if (fX)
             ChangeGame(NULL);
 #endif
@@ -1698,7 +1698,7 @@ AnalyseClearMove(moverecord * pmr)
 
         pmr->CubeDecPtr->esDouble.et = pmr->esChequer.et = EVAL_NONE;
         pmr->n.stMove = pmr->stCube = SKILL_NONE;
-        pmr->rLuck = (float) ERR_VAL;
+        pmr->rLuck = ERR_VAL;
         pmr->lt = LUCK_NONE;
         if (pmr->ml.amMoves) {
             free(pmr->ml.amMoves);
@@ -1724,7 +1724,7 @@ AnalyseClearMove(moverecord * pmr)
     case MOVE_SETDICE:
 
         pmr->lt = LUCK_NONE;
-        pmr->rLuck = (float) ERR_VAL;
+        pmr->rLuck = ERR_VAL;
         break;
 
     default:
@@ -1756,7 +1756,7 @@ CommandAnalyseClearMove(char *UNUSED(sz))
 
     if (plLastMove && plLastMove->plNext && plLastMove->plNext->p) {
         AnalyseClearMove(plLastMove->plNext->p);
-#if USE_GTK
+#if defined(USE_GTK)
         if (fX)
             ChangeGame(NULL);
 #endif
@@ -1774,7 +1774,7 @@ CommandAnalyseClearGame(char *UNUSED(sz))
 
     AnalyseClearGame(plGame);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -1793,7 +1793,7 @@ CommandAnalyseClearMatch(char *UNUSED(sz))
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext)
         AnalyseClearGame(pl->p);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -2039,7 +2039,7 @@ cmark_move_show(GString * gsz, const matchstate * UNUSED(pms), const moverecord 
             if (!found++)
                 g_string_append_printf(gsz, _("Move %d\n"), movenr);
             FormatMove(sz, msBoard(), pmr->ml.amMoves[i].anMove);
-            g_string_append_printf(gsz, _("%i (%s) marked\n"), i + 1, sz);
+            g_string_append_printf(gsz, _("%u (%s) marked\n"), i + 1, sz);
         }
     }
 }
@@ -2261,7 +2261,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
 
                 break;
             }
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
     else
@@ -2322,7 +2322,7 @@ cmark_cube_rollout(moverecord * pmr, gboolean destroy)
 
     pmr->CubeDecPtr->esDouble.et = EVAL_ROLLOUT;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
@@ -2431,10 +2431,10 @@ check_cube_in_pmr(const moverecord * pmr)
     return 1;
 }
 
-static gint
+static guint
 check_cmoves_in_pmr(const moverecord * pmr)
 {
-    gint c;
+    guint c;
 
     if (!pmr) {
         outputerrf(_("No moverecord stored for this move."));
