@@ -247,16 +247,14 @@ dnl
 
 bcrl=n
 AC_CHECK_LIB(ncurses,tparm,TERMLIB=-lncurses, AC_CHECK_LIB(termcap,tgetent,TERMLIB=-ltermcap))
-LDSAVE=$LDFLAGS
-LDFLAGS="$LDFLAGS $TERMLIB"
 AC_CHECK_LIB(readline,readline,
              [AC_CHECK_HEADER(readline/readline.h,
-              READLINELIB="-lreadline $TERMLIB";bcrl=y)],
-              READLINELIB="")
+              READLINE_LIBS="-lreadline $TERMLIB";bcrl=y)],
+              READLINE_LIBS="")
 if test "$bcrl" = "y" ; then
     AC_DEFINE([HAVE_LIB_READLINE],1,Define if you have libreadline)
     fi
-LDFLAGS="$LDSAVE $READLINELIB"
+AC_SUBST(READLINE_LIBS)
 
 dnl
 dnl Checks for header files.
