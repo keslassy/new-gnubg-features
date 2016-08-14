@@ -2410,7 +2410,7 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
     bd->bd3d->fBuffers = FALSE;
 }
 
-#if HAVE_LIBPNG
+#if defined(HAVE_LIBPNG)
 
 void
 GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, unsigned int nSizeY)
