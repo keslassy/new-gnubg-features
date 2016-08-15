@@ -7139,7 +7139,7 @@ GTKShowCalibration(void)
 }
 
 static gboolean
-CalibrationCancel(GtkObject * UNUSED(po), gpointer UNUSED(p))
+CalibrationCancel(GObject * UNUSED(po), gpointer UNUSED(p))
 {
 
     fInterrupt = TRUE;

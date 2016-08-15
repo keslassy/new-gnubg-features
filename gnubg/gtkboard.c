@@ -3898,7 +3898,7 @@ cube_widget_press(GtkWidget * cube, GdkEvent * UNUSED(event), BoardData * UNUSED
 }
 
 extern void
-DestroySetCube(GtkObject * UNUSED(po), GtkWidget * pw)
+DestroySetCube(GObject * UNUSED(po), GtkWidget * pw)
 {
     free(TTachCubeFaces);
     free(TTachCube);

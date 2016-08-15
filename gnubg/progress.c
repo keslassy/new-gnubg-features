@@ -636,7 +636,7 @@ GTKViewRolloutStatistics(GtkWidget * UNUSED(widget), gpointer data)
 }
 
 static void
-RolloutCancel(GtkObject * UNUSED(po), rolloutprogress * prp)
+RolloutCancel(GObject * UNUSED(po), rolloutprogress * prp)
 {
     pwGrab = pwOldGrab;
     prp->pwRolloutDialog = NULL;
@@ -647,7 +647,7 @@ RolloutCancel(GtkObject * UNUSED(po), rolloutprogress * prp)
 }
 
 static void
-RolloutStop(GtkObject * UNUSED(po), rolloutprogress * prp)
+RolloutStop(GObject * UNUSED(po), rolloutprogress * prp)
 {
     fInterrupt = TRUE;
     prp->stopped = -1;
@@ -655,7 +655,7 @@ RolloutStop(GtkObject * UNUSED(po), rolloutprogress * prp)
 
 
 static void
-RolloutStopAll(GtkObject * UNUSED(po), rolloutprogress * prp)
+RolloutStopAll(GObject * UNUSED(po), rolloutprogress * prp)
 {
     fInterrupt = TRUE;
     prp->stopped = -2;
