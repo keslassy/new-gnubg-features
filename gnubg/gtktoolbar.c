@@ -368,6 +368,7 @@ ToolbarNew(void)
 
     pwToolbar = gtk_ui_manager_get_widget(puim, "/MainToolBar");
     g_object_set_data_full(G_OBJECT(pwToolbar), "toolbarwidget", ptw, g_free);
+    gtk_toolbar_set_style(GTK_TOOLBAR(pwToolbar), GTK_TOOLBAR_BOTH);
 
     ptw->pwNew = gtk_ui_manager_get_widget(puim, "/MainToolBar/New");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwNew), TRUE);
