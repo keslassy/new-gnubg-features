@@ -810,6 +810,7 @@ CreateGameWindow(void)
     gtk_container_add(GTK_CONTAINER(pvbox), psw);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
+    gtk_widget_set_size_request(psw, -1, 150);
     gtk_container_add(GTK_CONTAINER(psw), GL_Create());
 
     if (!woPanel[WINDOW_GAME].docked) {
