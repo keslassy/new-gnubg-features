@@ -40,15 +40,25 @@ static void custom_cell_renderer_movelist_finalize(GObject * gobject);
 /* These functions are the heart of our custom cell renderer: */
 static void custom_cell_renderer_movelist_get_size(GtkCellRenderer * cell,
                                                    GtkWidget * widget,
-                                                   GdkRectangle * cell_area,
+                                                   gtk_locdef_cell_area * cell_area,
                                                    gint * x_offset, gint * y_offset, gint * width, gint * height);
 
 static void custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
-                                                 GdkWindow * window,
+                                                 cairo_t * cr,
                                                  GtkWidget * widget,
-                                                 GdkRectangle * background_area,
-                                                 GdkRectangle * cell_area,
-                                                 GdkRectangle * expose_area, GtkCellRendererState flags);
+                                                 const GdkRectangle * background_area,
+                                                 const GdkRectangle * cell_area,
+                                                 GtkCellRendererState flags);
+
+#if ! GTK_CHECK_VERSION(3,0,0)
+static void custom_cell_renderer_movelist_render_window(GtkCellRenderer * cell,
+                                                        GdkWindow * window,
+                                                        GtkWidget * widget,
+                                                        GdkRectangle * background_area,
+                                                        GdkRectangle * cell_area,
+                                                        GdkRectangle * expose_area, GtkCellRendererState flags);
+#endif
+
 static gpointer parent_class;
 
 /***************************************************************************
@@ -136,7 +146,11 @@ custom_cell_renderer_movelist_class_init(CustomCellRendererMovelistClass * klass
     /* Override the two crucial functions that are the heart
      *   of a cell renderer in the parent class */
     cell_class->get_size = custom_cell_renderer_movelist_get_size;
+#if GTK_CHECK_VERSION(3,0,0)
     cell_class->render = custom_cell_renderer_movelist_render;
+#else
+    cell_class->render = custom_cell_renderer_movelist_render_window;
+#endif
 
     /* Install our very own properties */
     g_object_class_install_property(object_class, 1,
@@ -236,7 +250,7 @@ static int _s_A, _s_A2, _s_B, _s_C, _s_D, _s_E, _s_Y, _s_Z, _s_ZP, _s_a, _s_b, _
 static void
 custom_cell_renderer_movelist_get_size(GtkCellRenderer * cell,
                                        GtkWidget * widget,
-                                       GdkRectangle * cell_area,
+                                       gtk_locdef_cell_area * cell_area,
                                        gint * x_offset, gint * y_offset, gint * width, gint * height)
 {
     gint calc_width;
@@ -344,14 +358,14 @@ custom_cell_renderer_movelist_get_size(GtkCellRenderer * cell,
 
 static void
 custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
-                                     GdkWindow * window,
+                                     cairo_t * cr,
                                      GtkWidget * widget,
-                                     GdkRectangle * background_area,
-                                     GdkRectangle * cell_area, GdkRectangle * expose_area, GtkCellRendererState flags)
+                                     const GdkRectangle * background_area,
+                                     const GdkRectangle * cell_area,
+                                     GtkCellRendererState flags)
 {
     CustomCellRendererMovelist *cellprogress = CUSTOM_CELL_RENDERER_MOVELIST(cell);
     PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
-    cairo_t *cr;
     hintdata *phd = g_object_get_data(G_OBJECT(widget), "hintdata");
     int i, x, y, selected;
     char buf[100];
@@ -364,12 +378,6 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
     GetMatchStateCubeInfo(&ci, &ms);
     /*lint --e(641) */
     selected = (flags & GTK_CELL_RENDERER_SELECTED) && gtk_widget_has_focus(widget);
-
-    cr = gdk_cairo_create(window);
-    if (expose_area) {
-        cairo_rectangle(cr, expose_area->x, expose_area->y, expose_area->width, expose_area->height);
-        cairo_clip(cr);
-    }
 
     if (phd->piHighlight && cellprogress->rank - 1 == *phd->piHighlight)
         pFontCol = &psHighlight->fg[GTK_STATE_SELECTED];
@@ -492,5 +500,26 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
     }
 
     g_object_unref(layout);
+}
+
+#if ! GTK_CHECK_VERSION(3,0,0)
+static void
+custom_cell_renderer_movelist_render_window(GtkCellRenderer * cell,
+                                            GdkWindow * window,
+                                            GtkWidget * widget,
+                                            GdkRectangle * background_area,
+                                            GdkRectangle * cell_area,
+                                            GdkRectangle * expose_area, GtkCellRendererState flags)
+{
+    cairo_t *cr;
+
+    cr = gdk_cairo_create(window);
+    if (expose_area) {
+        cairo_rectangle(cr, expose_area->x, expose_area->y, expose_area->width, expose_area->height);
+        cairo_clip(cr);
+    }
+
+    custom_cell_renderer_movelist_render(cell, cr, widget, background_area, cell_area, flags);
     cairo_destroy(cr);
 }
+#endif

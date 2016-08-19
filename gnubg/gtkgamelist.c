@@ -34,6 +34,7 @@
 #include "drawboard.h"
 #include "positionid.h"
 #include "gtkgame.h"
+#include "util.h"
 #if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
@@ -88,6 +89,9 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     listOLD *pl;
 
     gtk_tree_view_get_cursor(tree_view, &path, &column);
+    if (!path)
+        return;
+
     pPlayer = g_object_get_data(G_OBJECT(column), "player");
     if (!pPlayer) {
         gtk_tree_path_free(path);
@@ -259,13 +263,46 @@ RenderMoveString(GtkTreeViewColumn * tree_column, GtkCellRenderer * cell, GtkTre
     g_object_unref(style);
 }
 
+static void
+CreateStyles(GtkWidget * UNUSED(widget), gpointer UNUSED(p))
+{
+    GtkStyle *ps;
+
+    gtk_widget_ensure_style(pwGameList);
+    GetStyleFromRCFile(&ps, "gnubg", gtk_widget_get_style(pwGameList));
+    ps->base[GTK_STATE_SELECTED] =
+        ps->base[GTK_STATE_ACTIVE] =
+        ps->base[GTK_STATE_NORMAL] = gtk_widget_get_style(pwGameList)->base[GTK_STATE_NORMAL];
+    ps->fg[GTK_STATE_SELECTED] =
+        ps->fg[GTK_STATE_ACTIVE] = ps->fg[GTK_STATE_NORMAL] = gtk_widget_get_style(pwGameList)->fg[GTK_STATE_NORMAL];
+    gtk_widget_set_style(pwGameList, ps);
+
+    psGameList = gtk_style_copy(ps);
+    psGameList->bg[GTK_STATE_SELECTED] = psGameList->bg[GTK_STATE_NORMAL] = ps->base[GTK_STATE_NORMAL];
+
+    psCurrent = gtk_style_copy(psGameList);
+    psCurrent->bg[GTK_STATE_SELECTED] = psCurrent->bg[GTK_STATE_NORMAL] =
+        psCurrent->base[GTK_STATE_SELECTED] = psCurrent->base[GTK_STATE_NORMAL] = psGameList->fg[GTK_STATE_NORMAL];
+    psCurrent->fg[GTK_STATE_SELECTED] = psCurrent->fg[GTK_STATE_NORMAL] = psGameList->bg[GTK_STATE_NORMAL];
+
+    GetStyleFromRCFile(&psCubeErrors[SKILL_VERYBAD], "gamelist-cube-blunder", psGameList);
+    GetStyleFromRCFile(&psCubeErrors[SKILL_BAD], "gamelist-cube-error", psGameList);
+    GetStyleFromRCFile(&psCubeErrors[SKILL_DOUBTFUL], "gamelist-cube-doubtful", psGameList);
+
+    GetStyleFromRCFile(&psChequerErrors[SKILL_VERYBAD], "gamelist-chequer-blunder", psGameList);
+    GetStyleFromRCFile(&psChequerErrors[SKILL_BAD], "gamelist-chequer-error", psGameList);
+    GetStyleFromRCFile(&psChequerErrors[SKILL_DOUBTFUL], "gamelist-chequer-doubtful", psGameList);
+
+    GetStyleFromRCFile(&psLucky[LUCK_VERYBAD], "gamelist-luck-bad", psGameList);
+    GetStyleFromRCFile(&psLucky[LUCK_VERYGOOD], "gamelist-luck-good", psGameList);
+}
+
 extern GtkWidget *
 GL_Create(void)
 {
-    static int player[] = {0, 1};
+    static int player[] = { 0, 1 };
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
-    GtkStyle *ps;
     gint nMaxWidth;
     PangoRectangle logical_rect;
     PangoLayout *layout;
@@ -303,34 +340,6 @@ GL_Create(void)
 
     GL_SetNames();
 
-    gtk_widget_ensure_style(pwGameList);
-    GetStyleFromRCFile(&ps, "gnubg", gtk_widget_get_style(pwGameList));
-    ps->base[GTK_STATE_SELECTED] =
-        ps->base[GTK_STATE_ACTIVE] =
-        ps->base[GTK_STATE_NORMAL] = gtk_widget_get_style(pwGameList)->base[GTK_STATE_NORMAL];
-    ps->fg[GTK_STATE_SELECTED] =
-        ps->fg[GTK_STATE_ACTIVE] = ps->fg[GTK_STATE_NORMAL] = gtk_widget_get_style(pwGameList)->fg[GTK_STATE_NORMAL];
-    gtk_widget_set_style(pwGameList, ps);
-
-    psGameList = gtk_style_copy(ps);
-    psGameList->bg[GTK_STATE_SELECTED] = psGameList->bg[GTK_STATE_NORMAL] = ps->base[GTK_STATE_NORMAL];
-
-    psCurrent = gtk_style_copy(psGameList);
-    psCurrent->bg[GTK_STATE_SELECTED] = psCurrent->bg[GTK_STATE_NORMAL] =
-        psCurrent->base[GTK_STATE_SELECTED] = psCurrent->base[GTK_STATE_NORMAL] = psGameList->fg[GTK_STATE_NORMAL];
-    psCurrent->fg[GTK_STATE_SELECTED] = psCurrent->fg[GTK_STATE_NORMAL] = psGameList->bg[GTK_STATE_NORMAL];
-
-    GetStyleFromRCFile(&psCubeErrors[SKILL_VERYBAD], "gamelist-cube-blunder", psGameList);
-    GetStyleFromRCFile(&psCubeErrors[SKILL_BAD], "gamelist-cube-error", psGameList);
-    GetStyleFromRCFile(&psCubeErrors[SKILL_DOUBTFUL], "gamelist-cube-doubtful", psGameList);
-
-    GetStyleFromRCFile(&psChequerErrors[SKILL_VERYBAD], "gamelist-chequer-blunder", psGameList);
-    GetStyleFromRCFile(&psChequerErrors[SKILL_BAD], "gamelist-chequer-error", psGameList);
-    GetStyleFromRCFile(&psChequerErrors[SKILL_DOUBTFUL], "gamelist-chequer-doubtful", psGameList);
-
-    GetStyleFromRCFile(&psLucky[LUCK_VERYBAD], "gamelist-luck-bad", psGameList);
-    GetStyleFromRCFile(&psLucky[LUCK_VERYGOOD], "gamelist-luck-good", psGameList);
-
     layout = gtk_widget_create_pango_layout(pwGameList, "99");
     pango_layout_get_pixel_extents(layout, NULL, &logical_rect);
     g_object_unref(layout);
@@ -345,6 +354,12 @@ GL_Create(void)
     gtk_tree_view_column_set_fixed_width(gtk_tree_view_get_column(GTK_TREE_VIEW(pwGameList), 2), nMaxWidth - 22);
 
     g_signal_connect(G_OBJECT(pwGameList), "cursor-changed", G_CALLBACK(GameListSelectRow), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    /* Set up styles after the widget's base GtkStyleContext has been created */
+    g_signal_connect(G_OBJECT(pwGameList), "style-updated", G_CALLBACK(CreateStyles), NULL);
+#else
+    CreateStyles(pwGameList, NULL);
+#endif
 
     return pwGameList;
 }
@@ -355,8 +370,7 @@ AddStyle(GtkStyle ** ppsComb, GtkStyle * psNew)
     if (!*ppsComb) {
         *ppsComb = psNew;
         g_object_ref(*ppsComb);
-    }
-    else {
+    } else {
         GtkStyle *copy = gtk_style_copy(*ppsComb);
         g_object_unref(*ppsComb);
         *ppsComb = copy;
@@ -365,7 +379,7 @@ AddStyle(GtkStyle ** ppsComb, GtkStyle * psNew)
 }
 
 static void
-SetCellStyle(GtkTreeIter *iter, int fPlayer, moverecord * pmr)
+SetCellStyle(GtkTreeIter * iter, int fPlayer, moverecord * pmr)
 {
     GtkStyle *pStyle = NULL;
 
@@ -409,7 +423,7 @@ SetCellStyle(GtkTreeIter *iter, int fPlayer, moverecord * pmr)
 extern void
 GTKAddMoveRecord(moverecord * pmr)
 {
-    moverecord *apmr[2] = {NULL, NULL};
+    moverecord *apmr[2] = { NULL, NULL };
     gboolean fCombined = TRUE;
     int fPlayer, moveNum = 0;
     GtkTreeIter iter;
@@ -545,15 +559,15 @@ GTKSetMoveRecord(moverecord * pmr)
             } while (iterValid && !lastRow && !apmr[fPlayer]);
 
             if (!iterValid) {
-                int *moveNum = gtk_tree_path_get_indices(path);
+                int *moveIndex = gtk_tree_path_get_indices(path);
                 gtk_list_store_append(plsGameList, &iter);
-                gtk_list_store_set(plsGameList, &iter, GL_COL_MOVE_NUMBER, *moveNum, -1);
+                gtk_list_store_set(plsGameList, &iter, GL_COL_MOVE_NUMBER, *moveIndex + 1, -1);
             }
         }
     }
 
     /* Highlight current move */
-    if (gtk_tree_model_get_iter(GTK_TREE_MODEL(plsGameList), &iter, path)) {
+    if (path && gtk_tree_model_get_iter(GTK_TREE_MODEL(plsGameList), &iter, path)) {
         gtk_list_store_set(plsGameList, &iter, GL_COL_STYLE_0 + fPlayer, psCurrent, -1);
         gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pwGameList), path, NULL, TRUE, 0.8f, 0.5f);
     }

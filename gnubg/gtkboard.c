@@ -287,7 +287,7 @@ RenderArea(BoardData * bd, unsigned char *puch, int x, int y, int
 }
 
 static void
-draw_rgb_image(cairo_t *cr, unsigned char *data, int x, int y, int width, int height)
+draw_rgb_image(cairo_t * cr, unsigned char *data, int x, int y, int width, int height)
 {
     GdkPixbuf *pixbuf;
 
@@ -297,12 +297,34 @@ draw_rgb_image(cairo_t *cr, unsigned char *data, int x, int y, int width, int he
     g_object_unref(pixbuf);
 }
 
+static void
+board_draw_area(cairo_t * cr, gint x, gint y, gint cx, gint cy, BoardData * bd)
+{
+    unsigned char *puch;
+
+    puch = malloc(cx * cy * 3);
+    RenderArea(bd, puch, x, y, cx, cy);
+    draw_rgb_image(cr, puch, x, y, cx, cy);
+    free(puch);
+}
+
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean
+board_draw(GtkWidget * drawing_area, cairo_t * cr, BoardData * bd)
+{
+    if (bd->rd->nSize == 0)
+        return TRUE;
+
+    board_draw_area(cr, 0, 0, gtk_widget_get_allocated_width(drawing_area),
+                    gtk_widget_get_allocated_height(drawing_area), bd);
+    return TRUE;
+}
+#else
 static gboolean
 board_expose(GtkWidget * drawing_area, GdkEventExpose * event, BoardData * bd)
 {
     int x, y, cx, cy;
     cairo_t *cr;
-    unsigned char *puch;
 
     g_assert(GTK_IS_DRAWING_AREA(drawing_area));
 
@@ -333,23 +355,22 @@ board_expose(GtkWidget * drawing_area, GdkEventExpose * event, BoardData * bd)
     if (cx <= 0 || cy <= 0)
         return TRUE;
 
-    puch = malloc(cx * cy * 3);
-
-    RenderArea(bd, puch, x, y, cx, cy);
-
     cr = gdk_cairo_create(gtk_widget_get_window(drawing_area));
-    draw_rgb_image(cr, puch, x, y, cx, cy);
+    board_draw_area(cr, x, y, cx, cy, bd);
     cairo_destroy(cr);
-
-    free(puch);
 
     return TRUE;
 }
+#endif
 
 extern void
 stop_board_expose(BoardData * bd)
 {
-    g_signal_handlers_disconnect_by_func(G_OBJECT(bd->drawing_area), (gpointer)G_CALLBACK(board_expose), bd);
+#if GTK_CHECK_VERSION(3,0,0)
+    g_signal_handlers_disconnect_by_func(G_OBJECT(bd->drawing_area), (gpointer) G_CALLBACK(board_draw), bd);
+#else
+    g_signal_handlers_disconnect_by_func(G_OBJECT(bd->drawing_area), (gpointer) G_CALLBACK(board_expose), bd);
+#endif
 }
 
 static void
@@ -985,22 +1006,22 @@ board_drag(GtkWidget * UNUSED(widget), BoardData * bd, int x, int y)
                      0, bd->ri.asRefract[bd->drag_colour > 0], 6 * s, 6 * s, 6 * s);
 
     {
-        GdkRegion *pr;
-        GdkRectangle r;
+        gtk_locdef_region *pr;
+        gtk_locdef_rectangle r;
 
         r.x = bd->x_drag - 3 * s;
         r.y = bd->y_drag - 3 * s;
         r.width = 6 * s;
         r.height = 6 * s;
-        pr = gdk_region_rectangle(&r);
+        pr = gtk_locdef_create_rectangle(&r);
 
         r.x = x - 3 * s;
         r.y = y - 3 * s;
-        gdk_region_union_with_rect(pr, &r);
+        gtk_locdef_union_rectangle(pr, &r);
 
         gdk_window_begin_paint_region(gtk_widget_get_window(bd->drawing_area), pr);
 
-        gdk_region_destroy(pr);
+        gtk_locdef_region_destroy(pr);
     }
 
     cr = gdk_cairo_create(gtk_widget_get_window(bd->drawing_area));
@@ -2276,9 +2297,9 @@ SetCrawfordToggle(BoardData * bd)
 {
     if (bd->crawford && (bd->crawford_game != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(bd->crawford)))) {
         /* Block handler to stop warning message in click handler */
-        g_signal_handlers_block_by_func(G_OBJECT(bd->crawford), (gpointer)G_CALLBACK(board_set_crawford), bd);
+        g_signal_handlers_block_by_func(G_OBJECT(bd->crawford), (gpointer) G_CALLBACK(board_set_crawford), bd);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(bd->crawford), bd->crawford_game);
-        g_signal_handlers_unblock_by_func(G_OBJECT(bd->crawford), (gpointer)G_CALLBACK(board_set_crawford), bd);
+        g_signal_handlers_unblock_by_func(G_OBJECT(bd->crawford), (gpointer) G_CALLBACK(board_set_crawford), bd);
     }
 }
 
@@ -2287,9 +2308,9 @@ SetJacobyToggle(BoardData * bd)
 {
     if (bd->jacoby && (bd->jacoby_flag != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(bd->jacoby)))) {
         /* Block handler to stop warning message in click handler */
-        g_signal_handlers_block_by_func(G_OBJECT(bd->jacoby), (gpointer)G_CALLBACK(board_set_jacoby), bd);
+        g_signal_handlers_block_by_func(G_OBJECT(bd->jacoby), (gpointer) G_CALLBACK(board_set_jacoby), bd);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(bd->jacoby), bd->jacoby_flag);
-        g_signal_handlers_unblock_by_func(G_OBJECT(bd->jacoby), (gpointer)G_CALLBACK(board_set_jacoby), bd);
+        g_signal_handlers_unblock_by_func(G_OBJECT(bd->jacoby), (gpointer) G_CALLBACK(board_set_jacoby), bd);
     }
 }
 
@@ -3052,7 +3073,7 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
                      auchChequers[i], CHEQUER_WIDTH * 3 * 4,
                      asRefract[i], CHEQUER_WIDTH * 3, CHEQUER_WIDTH * 3, CHEQUER_HEIGHT * 3);
 
-        cr = gdk_cairo_create(bd->appmKey[i]);
+        cr = gtk_locdef_cairo_create_from_surface(bd->appmKey[i]);
         draw_rgb_image(cr, auch, 0, 0, 20, 20);
         cairo_destroy(cr);
     }
@@ -3108,6 +3129,7 @@ board_size_allocate(GtkWidget * board, GtkAllocation * allocation)
     GtkAllocation child_allocation;
     GtkRequisition requisition;
 
+    GTK_WIDGET_CLASS(board_parent_class)->size_allocate(board, allocation);
     gtk_widget_set_allocation(board, allocation);
 
     /* position ID, match ID: just below toolbar */
@@ -3158,6 +3180,15 @@ board_size_allocate(GtkWidget * board, GtkAllocation * allocation)
     child_allocation.x = allocation->x + ((allocation->width - child_allocation.width) >> 1);
     child_allocation.height = BOARD_HEIGHT * bd->rd->nSize;
     child_allocation.y = allocation->y + ((allocation->height - BOARD_HEIGHT * bd->rd->nSize) >> 1);
+#if GTK_CHECK_VERSION(3,0,0)
+    {
+        gint min_width, min_height;
+        gtk_widget_get_preferred_width(bd->drawing_area, &min_width, NULL);
+        gtk_widget_get_preferred_height(bd->drawing_area, &min_height, NULL);
+        g_assert(child_allocation.width >= min_width);
+        g_assert(child_allocation.height >= min_height);
+    }
+#endif
     gtk_widget_size_allocate(bd->drawing_area, &child_allocation);
 
     /* allocation for dice area */
@@ -3212,6 +3243,24 @@ board_size_request(GtkWidget * pw, GtkRequisition * pr)
 
     pr->height += BOARD_HEIGHT + 2;
 }
+
+#if GTK_CHECK_VERSION(3,0,0)
+static void
+board_get_preferred_width(GtkWidget * widget, gint * minimal_width, gint * natural_width)
+{
+    GtkRequisition requisition;
+    board_size_request(widget, &requisition);
+    *minimal_width = *natural_width = requisition.width;
+}
+
+static void
+board_get_preferred_height(GtkWidget * widget, gint * minimal_height, gint * natural_height)
+{
+    GtkRequisition requisition;
+    board_size_request(widget, &requisition);
+    *minimal_height = *natural_height = requisition.height;
+}
+#endif
 
 static void
 board_realize(GtkWidget * board)
@@ -3440,12 +3489,11 @@ board_edit(BoardData * bd)
 }
 
 static void
-DrawAlphaImage(GdkDrawable * pd, int x, int y, unsigned char *puchSrc, int nStride, int cx, int cy)
+DrawAlphaImage(cairo_t * cr, int x, int y, unsigned char *puchSrc, int nStride, int cx, int cy)
 {
 
     unsigned char *puch, *puchDest, *auch = g_alloca(cx * cy * 4);
     int ix, iy;
-    cairo_t *cr;
     GdkPixbuf *ppb;
 
     puchDest = auch;
@@ -3465,28 +3513,23 @@ DrawAlphaImage(GdkDrawable * pd, int x, int y, unsigned char *puchSrc, int nStri
         puch += nStride;
     }
 
-    cr = gdk_cairo_create(pd);
     ppb = gdk_pixbuf_new_from_data(auch, GDK_COLORSPACE_RGB, TRUE, 8, cx, cy, cx * 4, NULL, NULL);
     gdk_cairo_set_source_pixbuf(cr, ppb, x, y);
     cairo_paint(cr);
     g_object_unref(G_OBJECT(ppb));
-    cairo_destroy(cr);
 }
 
 extern void
-DrawDie(GdkDrawable * pd, unsigned char *achDice[2], unsigned
+DrawDie(cairo_t * cr, unsigned char *achDice[2], unsigned
         char *achPip[2], const int s, int x, int y, int
         fColour, int n, int alpha)
 {
 
     int ix, iy, afPip[9];
-    cairo_t *cr;
     GdkPixbuf *pixbuf;
 
-    cr = gdk_cairo_create(pd);
-
     if (alpha)
-        DrawAlphaImage(pd, x, y, achDice[fColour], DIE_WIDTH * s * 4, DIE_WIDTH * s, DIE_HEIGHT * s);
+        DrawAlphaImage(cr, x, y, achDice[fColour], DIE_WIDTH * s * 4, DIE_WIDTH * s, DIE_HEIGHT * s);
     else
         draw_rgb_image(cr, achDice[fColour], x, y, DIE_WIDTH * s, DIE_HEIGHT * s);
 
@@ -3507,23 +3550,35 @@ DrawDie(GdkDrawable * pd, unsigned char *achDice[2], unsigned
             }
 
     g_object_unref(pixbuf);
-    cairo_destroy(cr);
 }
 
 static gboolean
-dice_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), BoardData * bd)
+dice_draw(GtkWidget * UNUSED(dice), cairo_t * cr, BoardData * bd)
 {
 
     if (bd->rd->nSize == 0 || bd->diceShown == DICE_NOT_SHOWN)
         return TRUE;
 
-    DrawDie(gtk_widget_get_window(dice), bd->ri.achDice, bd->ri.achPip,
-            bd->rd->nSize, 0, 0, bd->turn > 0, bd->diceRoll[0], TRUE);
-    DrawDie(gtk_widget_get_window(dice), bd->ri.achDice, bd->ri.achPip,
+    DrawDie(cr, bd->ri.achDice, bd->ri.achPip, bd->rd->nSize, 0, 0, bd->turn > 0, bd->diceRoll[0], TRUE);
+    DrawDie(cr, bd->ri.achDice, bd->ri.achPip,
             bd->rd->nSize, (DIE_WIDTH + 1) * bd->rd->nSize, 0, bd->turn > 0, bd->diceRoll[1], TRUE);
 
     return TRUE;
 }
+
+#if ! GTK_CHECK_VERSION(3,0,0)
+static gboolean
+dice_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), BoardData * bd)
+{
+    cairo_t *cr;
+
+    cr = gdk_cairo_create(gtk_widget_get_window(dice));
+    dice_draw(dice, cr, bd);
+    cairo_destroy(cr);
+
+    return TRUE;
+}
+#endif
 
 static gboolean
 dice_press(GtkWidget * UNUSED(dice), GdkEvent * UNUSED(event), BoardData * UNUSED(bd))
@@ -3549,14 +3604,12 @@ chequer_key_new(int iPlayer, Board * board)
 
     GtkWidget *pw = gtk_event_box_new(), *pwImage;
     BoardData *bd = board->board_data;
-    GdkPixmap *ppm;
     char sz[128];
 
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pw), FALSE);
-    ppm = bd->appmKey[iPlayer] =
-        gdk_pixmap_new(NULL, 20, 20, gdk_visual_get_depth(gtk_widget_get_visual(GTK_WIDGET(board))));
+    bd->appmKey[iPlayer] = gtk_locdef_surface_create(GTK_WIDGET(board), 20, 20);
 
-    pwImage = gtk_image_new_from_pixmap(ppm, NULL);
+    pwImage = gtk_locdef_image_new_from_surface(bd->appmKey[iPlayer]);
 
     gtk_container_add(GTK_CONTAINER(pw), pwImage);
 
@@ -3813,12 +3866,20 @@ board_init(Board * board)
     gtk_widget_set_size_request(bd->dice_area, 2 * DIE_WIDTH + 1, DIE_HEIGHT);
     gtk_widget_add_events(GTK_WIDGET(bd->dice_area), GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    g_signal_connect(G_OBJECT(bd->drawing_area), "draw", G_CALLBACK(board_draw), bd);
+#else
     g_signal_connect(G_OBJECT(bd->drawing_area), "expose_event", G_CALLBACK(board_expose), bd);
+#endif
     g_signal_connect(G_OBJECT(bd->drawing_area), "button_press_event", G_CALLBACK(board_button_press), bd);
     g_signal_connect(G_OBJECT(bd->drawing_area), "button_release_event", G_CALLBACK(board_button_release), bd);
     g_signal_connect(G_OBJECT(bd->drawing_area), "motion_notify_event", G_CALLBACK(board_motion_notify), bd);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    g_signal_connect(G_OBJECT(bd->dice_area), "draw", G_CALLBACK(dice_draw), bd);
+#else
     g_signal_connect(G_OBJECT(bd->dice_area), "expose_event", G_CALLBACK(dice_expose), bd);
+#endif
     g_signal_connect(G_OBJECT(bd->dice_area), "button_press_event", G_CALLBACK(dice_press), bd);
 
     g_signal_connect(G_OBJECT(bd->amatch), "value-changed", G_CALLBACK(score_changed), bd);
@@ -3836,7 +3897,12 @@ board_class_init(BoardClass * c)
     g_assert(parent_class);
 
     ((GtkWidgetClass *) c)->size_allocate = board_size_allocate;
+#if GTK_CHECK_VERSION(3,0,0)
+    ((GtkWidgetClass *) c)->get_preferred_width = board_get_preferred_width;
+    ((GtkWidgetClass *) c)->get_preferred_height = board_get_preferred_height;
+#else
     ((GtkWidgetClass *) c)->size_request = board_size_request;
+#endif
     ((GtkWidgetClass *) c)->realize = board_realize;
     ((GtkWidgetClass *) c)->show_all = board_show_all;
 }
@@ -3844,7 +3910,7 @@ board_class_init(BoardClass * c)
 
 #define N_CUBES_IN_WIDGET 8
 static gboolean
-cube_widget_expose(GtkWidget * cube, GdkEventExpose * UNUSED(event), BoardData * bd)
+cube_widget_draw(GtkWidget * cube, cairo_t * cr, BoardData * bd)
 {
 
     int n, nValue;
@@ -3852,7 +3918,6 @@ cube_widget_expose(GtkWidget * cube, GdkEventExpose * UNUSED(event), BoardData *
     int setSize = bd->rd->nSize;
     int cubeStride = setSize * CUBE_WIDTH * 4;
     int cubeFaceStride = setSize * CUBE_LABEL_WIDTH * 3;
-    cairo_t *cr;
 
     n = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(cube), "user_data"));
     if ((nValue = n % N_CUBES_IN_WIDGET - 1) == -1)
@@ -3867,14 +3932,25 @@ cube_widget_expose(GtkWidget * cube, GdkEventExpose * UNUSED(event), BoardData *
                        cubeFaceStride,
                        0, CUBE_LABEL_HEIGHT * setSize * nValue,
                        CUBE_LABEL_WIDTH * setSize, CUBE_LABEL_HEIGHT * setSize, 2 - n / N_CUBES_IN_WIDGET);
-    DrawAlphaImage(gtk_widget_get_window(cube), 0, 0,
-                   TTachCube, cubeStride, CUBE_WIDTH * setSize, CUBE_HEIGHT * setSize);
-    cr = gdk_cairo_create(gtk_widget_get_window(cube));
+    DrawAlphaImage(cr, 0, 0, TTachCube, cubeStride, CUBE_WIDTH * setSize, CUBE_HEIGHT * setSize);
     draw_rgb_image(cr, puch, setSize, setSize, CUBE_LABEL_WIDTH * setSize, CUBE_LABEL_HEIGHT * setSize);
+
+    return TRUE;
+}
+
+#if ! GTK_CHECK_VERSION(3,0,0)
+static gboolean
+cube_widget_expose(GtkWidget * cube, GdkEventExpose * UNUSED(event), BoardData * bd)
+{
+    cairo_t *cr;
+
+    cr = gdk_cairo_create(gtk_widget_get_window(cube));
+    cube_widget_draw(cube, cr, bd);
     cairo_destroy(cr);
 
     return TRUE;
 }
+#endif
 
 static gboolean
 cube_widget_press(GtkWidget * cube, GdkEvent * UNUSED(event), BoardData * UNUSED(bd))
@@ -3936,7 +4012,11 @@ board_cube_widget(Board * board)
             g_object_set_data(G_OBJECT(pwCube), "user_data", GINT_TO_POINTER((y * N_CUBES_IN_WIDGET + x)));
             gtk_widget_set_size_request(pwCube, CUBE_WIDTH * setSize, CUBE_HEIGHT * setSize);
             gtk_widget_add_events(pwCube, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK);
+#if GTK_CHECK_VERSION(3,0,0)
+            g_signal_connect(G_OBJECT(pwCube), "draw", G_CALLBACK(cube_widget_draw), bd);
+#else
             g_signal_connect(G_OBJECT(pwCube), "expose_event", G_CALLBACK(cube_widget_expose), bd);
+#endif
             g_signal_connect(G_OBJECT(pwCube), "button_press_event", G_CALLBACK(cube_widget_press), bd);
             gtk_table_attach_defaults(GTK_TABLE(pw), pwCube, x, x + 1, y, y + 1);
         }
@@ -3951,16 +4031,14 @@ board_cube_widget(Board * board)
 
 
 static gboolean
-setdice_widget_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), SetDiceData * sdd)
+setdice_widget_draw(GtkWidget * dice, cairo_t * cr, SetDiceData * sdd)
 {
     int setSize = sdd->bd->rd->nSize;
     int n = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(dice), "user_data"));
 
     if (sdd->mdt == MT_FIRSTMOVE && (n % 6 == n / 6)) {
-        DrawDie(gtk_widget_get_window(dice), &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize,
-                0, 0, 0, n % 6 + 1, FALSE);
-        DrawDie(gtk_widget_get_window(dice), &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize,
-                DIE_WIDTH * setSize, 0, 0, n / 6 + 1, FALSE);
+        DrawDie(cr, &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize, 0, 0, 0, n % 6 + 1, FALSE);
+        DrawDie(cr, &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize, DIE_WIDTH * setSize, 0, 0, n / 6 + 1, FALSE);
     } else {
         int col1, col2;
         if (sdd->mdt == MT_STANDARD)
@@ -3971,13 +4049,23 @@ setdice_widget_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), SetDiceD
         } else
             col1 = col2 = ((n % 6) <= n / 6);
 
-        DrawDie(gtk_widget_get_window(dice), sdd->TTachDice, sdd->TTachPip, setSize,
-                0, 0, col1, n % 6 + 1, FALSE);
-        DrawDie(gtk_widget_get_window(dice), sdd->TTachDice, sdd->TTachPip, setSize,
-                DIE_WIDTH * setSize, 0, col2, n / 6 + 1, FALSE);
+        DrawDie(cr, sdd->TTachDice, sdd->TTachPip, setSize, 0, 0, col1, n % 6 + 1, FALSE);
+        DrawDie(cr, sdd->TTachDice, sdd->TTachPip, setSize, DIE_WIDTH * setSize, 0, col2, n / 6 + 1, FALSE);
     }
     return TRUE;
 }
+
+#if ! GTK_CHECK_VERSION(3,0,0)
+static gboolean
+setdice_widget_expose(GtkWidget * dice, GdkEventExpose * UNUSED(event), SetDiceData * sdd)
+{
+    cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(dice));
+    setdice_widget_draw(dice, cr, sdd);
+    cairo_destroy(cr);
+
+    return TRUE;
+}
+#endif
 
 static gboolean
 dice_widget_press(GtkWidget * dice, GdkEvent * UNUSED(event), BoardData * UNUSED(bd))
@@ -4106,7 +4194,11 @@ board_dice_widget(Board * board, manualDiceType mdt)
             g_object_set_data(G_OBJECT(pwDice), "user_data", GINT_TO_POINTER((y * 6 + x)));
             gtk_widget_set_size_request(pwDice, 2 * DIE_WIDTH * setSize, DIE_HEIGHT * setSize);
             gtk_widget_add_events(pwDice, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK);
+#if GTK_CHECK_VERSION(3,0,0)
+            g_signal_connect(G_OBJECT(pwDice), "draw", G_CALLBACK(setdice_widget_draw), sdd);
+#else
             g_signal_connect(G_OBJECT(pwDice), "expose_event", G_CALLBACK(setdice_widget_expose), sdd);
+#endif
             g_signal_connect(G_OBJECT(pwDice), "button_press_event", G_CALLBACK(dice_widget_press), bd);
             gtk_table_attach_defaults(GTK_TABLE(pw), pwDice, x, x + 1, y, y + 1);
         }

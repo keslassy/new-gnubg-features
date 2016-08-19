@@ -1,3 +1,14 @@
+2016-08-20  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* Makefile.am, configure.ac, gnubg.css(+), gtktheory.c,
+	gtktempmap.c, gtkmovelistctrl.c, gtklocdefs.h, gtkgamelist.c,
+	gtkgame.c, gtkboard.h, gtkboard.c, gtk-multiview.c, credits.sh
+
+	Add option to build with gtk3 instead of gtk2 (works with 2D
+	boards only). Use : "./configure --with-gtk3 --without-board3d"
+	to configure.
+	(Contributed by Jeremy Moore)
+
 2016-07-16  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* backgammon.h, commands.inc, eval.c, eval.h, gtkrace.c, show.c

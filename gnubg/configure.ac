@@ -143,13 +143,22 @@ else
     if test "x$darwin" = "xyes"; then
         have_canberra="no"
     elif test "x$with_gtk" != "xno"; then
-        PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk support]))
+        if test "x$with_gtk3" = "xyes"; then
+            PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk3], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk3 support]))
+        else
+            PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk support]))
+        fi
     fi
     PKG_CHECK_MODULES(GLU, [glu], have_glu="yes", AC_MSG_WARN([no glu support]))
 fi
 
 if test "x$with_gtk" != "xno"; then
-    PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= 2.6.0], have_gtk="yes" , AC_MSG_WARN([no gtk support]))
+    if test "x$with_gtk3" = "xyes"; then
+        PKG_CHECK_MODULES(GTK, [gtk+-3.0], have_gtk="yes", AC_MSG_WARN([no gtk3 support]))
+    else
+        PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= 2.6.0], have_gtk="yes", AC_MSG_WARN([no gtk2 support]))
+    fi
+
     if test "x$with_board3d" != "xno"; then
         PKG_CHECK_MODULES(GTKGLEXT, [gtkglext-1.0 >= 1.0], have_gtkglext="yes" , AC_MSG_WARN([no gtkglext support]))
     fi
@@ -311,6 +320,7 @@ no_gtk="yes"
 no_board3d="yes"
 no_gtkglext="yes"
 AC_ARG_WITH(gtk,[  --with-gtk              use GTK+ 2.0 (Default if found)])
+AC_ARG_WITH(gtk3,[  --with-gtk3             use GTK+ 3.0 (Experimental, disabled by default)])
 AC_ARG_WITH(board3d,[  --with-board3d          compile with 3D boards (Default if found)])
 if test "$with_gtk" != "no" && test "x$have_gtk" = "xyes"; then
    AC_DEFINE(USE_GTK, 1, [Define if you want to use the gtk gui])

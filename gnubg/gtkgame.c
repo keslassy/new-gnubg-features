@@ -1288,6 +1288,7 @@ SwapBoardToPanel(int ToPanel, int updateEvents)
         gtk_widget_hide(pwGameBox);
         gtk_paned_set_position(GTK_PANED(hpaned), allocation.width - panelSize);
 
+#if ! GTK_CHECK_VERSION(3,0,0)
         {                       /* Hack to sort out widget positions - may be removed if works in later version of gtk */
             GtkAllocation temp = allocation;
             temp.height++;
@@ -1295,6 +1296,7 @@ SwapBoardToPanel(int ToPanel, int updateEvents)
             temp.height--;
             gtk_widget_size_allocate(pwMain, &temp);
         }
+#endif
     } else {
         /* Need to hide these, as handle box seems to be buggy and gets confused */
         gtk_widget_hide(gtk_widget_get_parent(pwMenuBar));
@@ -1315,6 +1317,7 @@ SwapBoardToPanel(int ToPanel, int updateEvents)
     }
 }
 
+#if ! GTK_CHECK_VERSION(3,0,0)
 static void
 MainSize(GtkWidget * pw, GtkRequisition * preq, gpointer p)
 {
@@ -1337,7 +1340,7 @@ MainSize(GtkWidget * pw, GtkRequisition * preq, gpointer p)
     else
         gtk_paned_set_position(GTK_PANED(hpaned), preq->width - panelSize);
 }
-
+#endif
 
 #if !defined(USE_GTKUIMANAGER)
 static gchar *
@@ -3709,7 +3712,7 @@ CreateMainWindow(void)
                                    TRUE);
     gtk_window_add_accel_group(GTK_WINDOW(pwMain), pagMain);
 #endif
-    gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle = gtk_handle_box_new(), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle = gtk_locdef_handle_box_new(), FALSE, FALSE, 0);
 #if defined(USE_GTKUIMANAGER)
     pwMenuBar = gtk_ui_manager_get_widget(puim, "/MainMenu");
     gtk_container_add(GTK_CONTAINER(pwHandle), pwMenuBar);
@@ -3718,7 +3721,7 @@ CreateMainWindow(void)
     gtk_container_add(GTK_CONTAINER(pwHandle), pwMenuBar = gtk_item_factory_get_widget(pif, "<main>"));
 #endif
 
-    gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle = gtk_handle_box_new(), FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle = gtk_locdef_handle_box_new(), FALSE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(pwHandle), pwToolbar = ToolbarNew());
 
     gtk_box_pack_start(GTK_BOX(pwVbox), pwGameBox = gtk_hbox_new(FALSE, 0), TRUE, TRUE, 0);
@@ -3807,7 +3810,9 @@ CreateMainWindow(void)
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(pwProgress), " ");
 
     g_signal_connect(G_OBJECT(pwMain), "configure_event", G_CALLBACK(configure_event), NULL);
+#if ! GTK_CHECK_VERSION(3,0,0)
     g_signal_connect(G_OBJECT(pwMain), "size-request", G_CALLBACK(MainSize), NULL);
+#endif
     g_signal_connect(G_OBJECT(pwMain), "delete_event", G_CALLBACK(main_delete), NULL);
     g_signal_connect(G_OBJECT(pwMain), "destroy", G_CALLBACK(gtk_main_quit), NULL);
 }
@@ -3847,6 +3852,24 @@ gnubg_set_default_icon(void)
     g_list_foreach(icons, (GFunc) g_object_unref, NULL);
     g_list_free(icons);
 #endif
+}
+
+static void
+ApplyDefaultCss(void)
+{
+    GtkCssProvider *cssProvider;
+    char *cssPath;
+
+    cssProvider = gtk_css_provider_new();
+    cssPath = BuildFilename("gnubg.css");
+    gtk_css_provider_load_from_path(cssProvider, cssPath, NULL);
+    gtk_style_context_add_provider_for_screen(gtk_window_get_screen(GTK_WINDOW(pwMain)),
+                                              GTK_STYLE_PROVIDER(cssProvider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+    g_free(cssPath);
+    if (cssProvider)
+        g_object_unref(G_OBJECT(cssProvider));
 }
 
 extern void
@@ -3889,6 +3912,7 @@ InitGTK(int *argc, char ***argv)
     gnubg_set_default_icon();
 
     CreateMainWindow();
+    ApplyDefaultCss();
 
     /*Create string for handling messages from output* functions */
     output_str = g_string_new(NULL);
@@ -5117,7 +5141,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
         rw.analysisDetails[2] = RolloutPage(rw.prpwPages[2], _("Later Play (0) "), TRUE, &rw.frame[1]);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[2]->pwSettingWidgets), 0, 1, 1, 2,
-                       (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
+                         (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
         rw.analysisDetails[3] = RolloutPage(rw.prpwPages[3], _("Later Play (1) "), TRUE, NULL);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[3]->pwSettingWidgets), 1, 2, 1, 2,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);

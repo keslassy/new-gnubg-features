@@ -27,8 +27,54 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#if (USE_GTK)
+#if defined(USE_GTK)
 #include <gtk/gtk.h>
+
+#if GTK_CHECK_VERSION(3,0,0)
+typedef cairo_region_t gtk_locdef_region;
+typedef cairo_rectangle_int_t gtk_locdef_rectangle;
+typedef cairo_surface_t gtk_locdef_surface;
+typedef const GdkRectangle gtk_locdef_cell_area;
+#define gtk_locdef_surface_create(widget, width, height) cairo_image_surface_create(CAIRO_FORMAT_RGB24, width, height)
+#define gtk_locdef_image_new_from_surface(s) gtk_image_new_from_surface(s)
+#define gtk_locdef_cairo_create_from_surface(s) cairo_create(s)
+#define gtk_locdef_create_rectangle(r) cairo_region_create_rectangle(r)
+#define gtk_locdef_union_rectangle(pr, r) cairo_region_union_rectangle(pr, r)
+#define gtk_locdef_region_destroy(pr) cairo_region_destroy(pr)
+#define gtk_locdef_handle_box_new() gtk_vbox_new(FALSE, 0)
+#define gtk_locdef_paint_vline(style, window, cr, state_type, area, widget, detail, y1, y2, x) \
+    gtk_paint_vline(style, cr, state_type, widget, detail, y1, y2, x)
+#define gtk_locdef_paint_layout(style, window, cr, state_type, use_text, area, widget, detail, x, y, layout) \
+    gtk_paint_layout (style, cr, state_type, use_text, widget, detail, x, y, layout)
+#define gtk_locdef_paint_box(style, window, cr, state_type, shadow_type, area, widget, detail, x, y, width, height) \
+    gtk_paint_box(style, cr, state_type, shadow_type, widget, detail, x, y, width, height)
+#define gdk_colormap_alloc_color(cm, c, w, bm)
+#define gtk_statusbar_set_has_resize_grip(pw, grip)
+#define USE_GTKUIMANAGER 1
+
+#else // GTK2
+typedef GdkRegion gtk_locdef_region;
+typedef GdkRectangle gtk_locdef_rectangle;
+typedef GdkPixmap gtk_locdef_surface;
+typedef GdkRectangle gtk_locdef_cell_area;
+typedef void *GtkCssProvider;
+#define gtk_locdef_surface_create(widget, width, height) gdk_pixmap_new(NULL, width, height, gdk_visual_get_depth(gtk_widget_get_visual(widget)))
+#define gtk_locdef_image_new_from_surface(s) gtk_image_new_from_pixmap(s, NULL)
+#define gtk_locdef_cairo_create_from_surface(s) gdk_cairo_create(s)
+#define gtk_locdef_create_rectangle(r) gdk_region_rectangle(r)
+#define gtk_locdef_union_rectangle(pr, r) gdk_region_union_with_rect(pr, r)
+#define gtk_locdef_region_destroy(pr) gdk_region_destroy(pr)
+#define gtk_locdef_handle_box_new() gtk_handle_box_new()
+#define gtk_locdef_paint_vline(style, window, cr, state_type, area, widget, detail, y1, y2, x) \
+    gtk_paint_vline(style, window, state_type, area, widget, detail, y1, y2, x)
+#define gtk_locdef_paint_layout(style, window, cr, state_type, use_text, area, widget, detail, x, y, layout) \
+    gtk_paint_layout (style, window, state_type, use_text, area, widget, detail, x, y, layout)
+#define gtk_locdef_paint_box(style, window, cr, state_type, shadow_type, area, widget, detail, x, y, width, height) \
+    gtk_paint_box(style, window, state_type, shadow_type, area, widget, detail, x, y, width, height)
+#define gtk_css_provider_new() NULL
+#define gtk_css_provider_load_from_path(pr, path, err)
+#define gtk_style_context_add_provider_for_screen(scr, pr, pri)
+#endif
 
 #if ! GTK_CHECK_VERSION(2,24,0)
 #define gtk_combo_box_text_new_with_entry gtk_combo_box_entry_new_text

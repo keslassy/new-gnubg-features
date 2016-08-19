@@ -209,14 +209,14 @@ makeweights_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@ @GOBJECT_LI
 ##files to be installed in the datadir
 #
 pkgdata_DATA = gnubg_ts0.bd gnubg.wd boards.xml \
-	gnubg_os0.bd textures.txt gnubg.sql gnubg.gtkrc
+	gnubg_os0.bd textures.txt gnubg.sql gnubg.gtkrc gnubg.css
 
 #
 ##files to add to the tarball when 'make dist'
 #
-EXTRA_DIST = config.rpath  copying.awk gnubg.gtkrc credits.sh AUTHORS \
+EXTRA_DIST = config.rpath  copying.awk gnubg.gtkrc gnubg.css credits.sh \
 	$(BUILT_SOURCES) ABOUT-NLS boards.xml gnubg.sql autogen.sh \
-	gnubg.weights textures.txt \
+	gnubg.weights textures.txt AUTHORS \
 	external_y.h sgf_y.h commands.inc movefilters.inc
 
 #

@@ -463,8 +463,8 @@ TheoryUpdated(GtkWidget * UNUSED(pw), theorywidget * ptw)
 
 }
 
-static void
-GraphExpose(GtkWidget * pwGraph, GdkEventExpose * UNUSED(pev), theorywidget * ptw)
+static gboolean
+GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
 {
 
     GtkAllocation allocation;
@@ -489,8 +489,8 @@ GraphExpose(GtkWidget * pwGraph, GdkEventExpose * UNUSED(pev), theorywidget * pt
     iPlayer = pwGraph == ptw->apwGraph[1];
 
     for (i = 0; i <= 20; i++) {
-        gtk_paint_vline(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), GTK_STATE_NORMAL,
-                        NULL, pwGraph, "tick", y - 1, i & 3 ? y - 3 : y - 5, x + cx * i / 20);
+        gtk_locdef_paint_vline(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr, GTK_STATE_NORMAL,
+                               NULL, pwGraph, "tick", y - 1, (i & 3) ? y - 3 : y - 5, x + cx * i / 20);
 
         if (!(i & 3)) {
             int width;
@@ -498,9 +498,9 @@ GraphExpose(GtkWidget * pwGraph, GdkEventExpose * UNUSED(pev), theorywidget * pt
             sprintf(sz, "%d", i * 5);
             pango_layout_set_text(layout, sz, -1);
             pango_layout_get_pixel_size(layout, &width, &height);
-            gtk_paint_layout(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph),
-                             GTK_STATE_NORMAL, TRUE, NULL, pwGraph, "label",
-                             x + cx * i / 20 - width / 2 /* FIXME */ , y - height - 1, layout);
+            gtk_locdef_paint_layout(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr,
+                                    GTK_STATE_NORMAL, TRUE, NULL, pwGraph, "label",
+                                    x + cx * i / 20 - width / 2 /* FIXME */ , y - height - 1, layout);
         }
     }
     g_object_unref(layout);
@@ -508,23 +508,36 @@ GraphExpose(GtkWidget * pwGraph, GdkEventExpose * UNUSED(pev), theorywidget * pt
     for (i = 0; i < 3; i++)
         ax[i] = (int) (x + cx * ptw->aar[iPlayer][i]);
 
-    gtk_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), GTK_STATE_NORMAL,
-                  GTK_SHADOW_IN, NULL, pwGraph, "doubling-window", x, 12, cx, cy);
+    gtk_locdef_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr, GTK_STATE_NORMAL,
+                         GTK_SHADOW_IN, NULL, pwGraph, "doubling-window", x, 12, cx, cy);
 
     /* FIXME it's horrible to abuse the "state" parameters like this */
     if (ptw->aar[iPlayer][1] > ptw->aar[iPlayer][0])
-        gtk_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph),
-                      GTK_STATE_ACTIVE, GTK_SHADOW_OUT, NULL, pwGraph, "take", ax[0], 13, ax[1] - ax[0], cy - 2);
+        gtk_locdef_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr,
+                             GTK_STATE_ACTIVE, GTK_SHADOW_OUT, NULL, pwGraph, "take", ax[0], 13, ax[1] - ax[0], cy - 2);
 
     if (ptw->aar[iPlayer][2] > ptw->aar[iPlayer][1])
-        gtk_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph),
-                      GTK_STATE_PRELIGHT, GTK_SHADOW_OUT, NULL, pwGraph, "drop", ax[1], 13, ax[2] - ax[1], cy - 2);
+        gtk_locdef_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr,
+                             GTK_STATE_PRELIGHT, GTK_SHADOW_OUT, NULL, pwGraph, "drop", ax[1], 13, ax[2] - ax[1], cy - 2);
 
     if (ptw->aar[iPlayer][2] < 1.0)
-        gtk_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph),
-                      GTK_STATE_SELECTED, GTK_SHADOW_OUT, NULL, pwGraph, "too-good", ax[2], 13, x + cx - ax[2], cy - 2);
+        gtk_locdef_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr,
+                             GTK_STATE_SELECTED, GTK_SHADOW_OUT, NULL, pwGraph, "too-good", ax[2], 13, x + cx - ax[2], cy - 2);
+
+    return TRUE;
 }
 
+#if ! GTK_CHECK_VERSION(3,0,0)
+static void
+GraphExpose(GtkWidget * pwGraph, GdkEventExpose * UNUSED(pev), theorywidget * ptw)
+{
+    cairo_t *cr;
+
+    cr = gdk_cairo_create(gtk_widget_get_window(pwGraph));
+    GraphDraw(pwGraph, cr, ptw);
+    cairo_destroy(cr);
+}
+#endif
 
 static void
 PlyClicked(GtkWidget * pw, theorywidget * ptw)
@@ -832,7 +845,11 @@ GTKShowTheory(const int fActivePage)
         gtk_widget_set_name(ptw->apwGraph[i], "gnubg-doubling-window-graph");
         gtk_container_set_border_width(GTK_CONTAINER(pwAlign), 4);
         gtk_widget_set_size_request(ptw->apwGraph[i], -1, 48);
+#if GTK_CHECK_VERSION(3,0,0)
+        g_signal_connect(G_OBJECT(ptw->apwGraph[i]), "draw", G_CALLBACK(GraphDraw), ptw);
+#else
         g_signal_connect(G_OBJECT(ptw->apwGraph[i]), "expose_event", G_CALLBACK(GraphExpose), ptw);
+#endif
     }
 
     /* gammon prices */

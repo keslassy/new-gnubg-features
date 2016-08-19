@@ -43,13 +43,14 @@ EOF
 cat > $contributors <<EOF
 Olivier Baur
 Holger Bochnig
+Guido Flohr
 Nis Joergensen
 Petr Kadlec
 Kaoru Takahashi
 Stein Kulseth
-Rod Roark
 Ingo Macherius
-Guido Flohr
+Jeremy Moore
+Rod Roark
 EOF
 
 cat > $support <<EOF
@@ -136,7 +137,6 @@ Tom Martin
 William Maslen
 Joachim Matussek
 Thomas Meyer
-Jeremy Moore
 Daniel Murphy
 Magnar Naustdalslid
 Dave Neary

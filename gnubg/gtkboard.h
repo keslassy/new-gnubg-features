@@ -28,6 +28,7 @@
 #include "gtkpanels.h"
 #include "common.h"
 #include "render.h"
+#include "gtklocdefs.h"
 
 #if defined(USE_BOARD3D)
 #include "types3d.h"
@@ -72,7 +73,7 @@ struct _BoardData {
     GtkWidget *pipcountlabel0, *pipcountlabel1;
     GtkWidget *pwvboxcnt;
 
-    GdkPixmap *appmKey[2];
+    gtk_locdef_surface *appmKey[2];
 
     gboolean playing, computer_turn;
     gint drag_point, drag_colour, x_drag, y_drag, x_dice[2], y_dice[2], drag_button, click_time, cube_use;      /* roll showing on the off-board dice */
@@ -172,7 +173,7 @@ extern gboolean board_button_release(GtkWidget * board, GdkEventButton * event, 
 extern void RollDice2d(BoardData * bd);
 extern void DestroyPanel(gnubgwindow window);
 extern void
-DrawDie(GdkDrawable * pd,
+DrawDie(cairo_t * pd,
         unsigned char *achDice[2], unsigned char *achPip[2],
         const int s, int x, int y, int fColour, int n, int alpha);
 

@@ -187,6 +187,11 @@ UpdateStyle(GtkWidget * pw, const float r)
 {
 
     GtkStyle *ps = gtk_style_copy(gtk_widget_get_style(pw));
+    double *gbval;
+
+    gbval = g_malloc(sizeof(*gbval));
+    *gbval = 1.0 - r;
+    g_object_set_data_full(G_OBJECT(pw), "gbval", gbval, g_free);
 
     ps->bg[GTK_STATE_NORMAL].red = 0xFFFF;
     ps->bg[GTK_STATE_NORMAL].blue = ps->bg[GTK_STATE_NORMAL].green = (guint16) ((1.0f - r) * 0xFFFF);
@@ -302,8 +307,8 @@ UpdateTempMapEquities(tempmapwidget * ptmw)
     gtk_label_set_text(GTK_LABEL(ptmw->apwGauge[!ptmw->fInvert]), GetEquityString(rMax, &ci, ptmw->fInvert));
 }
 
-static void
-ExposeQuadrant(GtkWidget * pw, GdkEventExpose * UNUSED(pev), tempmapwidget * ptmw)
+static gboolean
+DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
 {
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
     int i = 0;
@@ -319,10 +324,26 @@ ExposeQuadrant(GtkWidget * pw, GdkEventExpose * UNUSED(pev), tempmapwidget * ptm
     GtkAllocation allocation;
     gtk_widget_get_allocation(pw, &allocation);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    {
+        double *gbval = g_object_get_data(G_OBJECT(pw), "gbval");
+        guint width, height;
+
+        width = gtk_widget_get_allocated_width(pw);
+        height = gtk_widget_get_allocated_height(pw);
+
+        cairo_rectangle(cr, 0, 0, width, height);
+        cairo_set_source_rgb(cr, 1.0, *gbval, *gbval);
+        cairo_fill(cr);
+
+        gtk_render_frame(gtk_widget_get_style_context(pw), cr, 0, 0, width, height);
+    }
+#else
     gtk_paint_box(gtk_widget_get_style(pw), gtk_widget_get_window(pw), GTK_STATE_NORMAL,
                   GTK_SHADOW_IN, NULL, NULL, NULL, 0, 0, allocation.width, allocation.height);
+#endif
     if (pi == NULL)
-        return;
+        return TRUE;
 
     if (*pi >= 0) {
         i = (*pi % 100) / 6;
@@ -361,7 +382,7 @@ ExposeQuadrant(GtkWidget * pw, GdkEventExpose * UNUSED(pev), tempmapwidget * ptm
 
     if (str->len == 0) {
         g_string_free(str, TRUE);
-        return;
+        return TRUE;
     }
 
     pch = str->str;
@@ -381,20 +402,32 @@ ExposeQuadrant(GtkWidget * pw, GdkEventExpose * UNUSED(pev), tempmapwidget * ptm
         if (tmp)
             *tmp = 0;
         pango_layout_set_text(layout, pch, -1);
-        gtk_paint_layout(gtk_widget_get_style(pw), gtk_widget_get_window(pw),
-                         GTK_STATE_NORMAL, TRUE, NULL, pw, NULL, 2, (int) y, layout);
+        gtk_locdef_paint_layout(gtk_widget_get_style(pw), gtk_widget_get_window(pw), cr,
+                                GTK_STATE_NORMAL, TRUE, NULL, pw, NULL, 2, (int) y, layout);
         if (tmp) {
-             pch = tmp + 1;
-             y += (allocation.height - 4) / 5.0f;
+            pch = tmp + 1;
+            y += (allocation.height - 4) / 5.0f;
         }
     } while (tmp);
 
     g_object_unref(layout);
     g_string_free(str, TRUE);
+
+    return TRUE;
 }
 
+#if ! GTK_CHECK_VERSION(3,0,0)
 static void
-ExposeDie(GtkWidget * pw, GdkEventExpose * pev, tempmapwidget * ptmw)
+ExposeQuadrant(GtkWidget * pw, GdkEventExpose * UNUSED(pev), tempmapwidget * ptmw)
+{
+    cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(pw));
+    DrawQuadrant(pw, cr, ptmw);
+    cairo_destroy(cr);
+}
+#endif
+
+static void
+ExposeDieArea(GtkWidget * pw, cairo_t * cr, gint area_x, gint area_y, gint area_width, gint area_height, tempmapwidget * ptmw)
 {
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
     int x, y;
@@ -433,10 +466,30 @@ ExposeDie(GtkWidget * pw, GdkEventExpose * pev, tempmapwidget * ptmw)
     x = (allocation.width - ptmw->nSizeDie * 7) / 2;
     y = (allocation.height - ptmw->nSizeDie * 7) / 2;
 
-    gdk_window_clear_area(gtk_widget_get_window(pw), pev->area.x, pev->area.y, pev->area.width, pev->area.height);
-    DrawDie(gtk_widget_get_window(pw), ptmw->achDice, ptmw->achPips, ptmw->nSizeDie,
-            x, y, ptmw->atm[0].pms->fMove, *pi + 1, FALSE);
+    cairo_save(cr);
+    cairo_rectangle(cr, area_x, area_y, area_width, area_height);
+    cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+    cairo_fill(cr);
+    cairo_restore(cr);
+    DrawDie(cr, ptmw->achDice, ptmw->achPips, ptmw->nSizeDie, x, y, ptmw->atm[0].pms->fMove, *pi + 1, FALSE);
 }
+
+#if GTK_CHECK_VERSION(3,0,0)
+static gboolean
+ExposeDie(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
+{
+    ExposeDieArea(pw, cr, 3, 3, gtk_widget_get_allocated_width(pw) - 6, gtk_widget_get_allocated_height(pw) - 6, ptmw);
+    return TRUE;
+}
+#else
+static void
+ExposeDie(GtkWidget * pw, GdkEventExpose * pev, tempmapwidget * ptmw)
+{
+    cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(pw));
+    ExposeDieArea(pw, cr, pev->area.x, pev->area.y, pev->area.width, pev->area.height, ptmw);
+    cairo_destroy(cr);
+}
+#endif
 
 static void
 TempMapPlyToggled(GtkWidget * pw, tempmapwidget * ptmw)
@@ -600,9 +653,12 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
                     *pi = i * 6 + j + m * 100;
 
                     g_object_set_data_full(G_OBJECT(ptm->aapwDA[i][j]), "user_data", pi, g_free);
-
+#if GTK_CHECK_VERSION(3,0,0)
+                    gtk_style_context_add_class(gtk_widget_get_style_context(ptm->aapwDA[i][j]), " gnubg-temp-map-quadrant");
+                    g_signal_connect(G_OBJECT(ptm->aapwDA[i][j]), "draw", G_CALLBACK(DrawQuadrant), ptmw);
+#else
                     g_signal_connect(G_OBJECT(ptm->aapwDA[i][j]), "expose_event", G_CALLBACK(ExposeQuadrant), ptmw);
-
+#endif
                 }
 
                 /* die */
@@ -617,7 +673,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
                 g_object_set_data_full(G_OBJECT(pw), "user_data", pi, g_free);
 
+#if GTK_CHECK_VERSION(3,0,0)
+                g_signal_connect(G_OBJECT(pw), "draw", G_CALLBACK(ExposeDie), ptmw);
+#else
                 g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(ExposeDie), ptmw);
+#endif
                 /* die */
 
                 pw = gtk_drawing_area_new();
@@ -630,7 +690,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
                 g_object_set_data_full(G_OBJECT(pw), "user_data", pi, g_free);
 
+#if GTK_CHECK_VERSION(3,0,0)
+                g_signal_connect(G_OBJECT(pw), "draw", G_CALLBACK(ExposeDie), ptmw);
+#else
                 g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(ExposeDie), ptmw);
+#endif
 
             }
 
@@ -651,7 +715,12 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
             g_object_set_data_full(G_OBJECT(ptm->pwAverage), "user_data", pi, g_free);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_style_context_add_class(gtk_widget_get_style_context(ptm->pwAverage), "gnubg-temp-map-quadrant");
+            g_signal_connect(G_OBJECT(ptm->pwAverage), "draw", G_CALLBACK(DrawQuadrant), ptmw);
+#else
             g_signal_connect(G_OBJECT(ptm->pwAverage), "expose_event", G_CALLBACK(ExposeQuadrant), ptmw);
+#endif
 
         }
 
@@ -673,7 +742,12 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
         g_object_set_data(G_OBJECT(pw), "user_data", NULL);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_style_context_add_class(gtk_widget_get_style_context(pw), "gnubg-temp-map-quadrant");
+        g_signal_connect(G_OBJECT(pw), "draw", G_CALLBACK(DrawQuadrant), NULL);
+#else
         g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(ExposeQuadrant), NULL);
+#endif
 
         UpdateStyle(pw, 1.0f * i / 15.0f);
 
