@@ -1047,7 +1047,7 @@ SetAnnotation(moverecord * pmr)
 
             GetMatchStateCubeInfo(&ci, &ms);
             if (GetDPEq(NULL, NULL, &ci)) {
-                gtk_table_attach_defaults(GTK_TABLE(pwBox), gtk_label_new(_("Didn't double")), 0, 1, 0, 1);
+                gtk_table_attach_defaults(GTK_TABLE(pwBox), gtk_label_new(pmr->stCube == SKILL_NONE ? "" : _("Didn't double")), 0, 1, 0, 1);
                 gtk_table_attach_defaults(GTK_TABLE(pwBox), skill_label(pmr->stCube), 0, 1, 1, 2);
             }
 
@@ -1124,7 +1124,7 @@ SetAnnotation(moverecord * pmr)
 
             pwAnalysis = gtk_vbox_new(FALSE, 0);
 
-            pwBox = gtk_hbox_new(FALSE, 0);
+            pwBox = gtk_vbox_new(FALSE, 0);
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(Q_(aszDoubleTypes[dt])), FALSE, FALSE, 2);
             gtk_box_pack_start(GTK_BOX(pwBox), skill_label(pmr->stCube), FALSE, FALSE, 2);
             gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 0);
@@ -4059,7 +4059,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 #ifdef WIN32
             outputerrf(_("The MS windows GTK interface doesn't support the '-p' option. Use the cl interface instead"));
 #else
-#if USE_PYTHON
+#if defined(USE_PYTHON)
             g_idle_add(python_run_file, g_strdup(python_script));
 #endif
 #endif
