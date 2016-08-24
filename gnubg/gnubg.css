@@ -121,3 +121,11 @@
     border-color: gray;
     border-style: inset;
 }
+
+/*
+ * Style for buttons underneath the move list (Eval, Rollout, etc.)
+ */
+.gnubg-analysis-button {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}

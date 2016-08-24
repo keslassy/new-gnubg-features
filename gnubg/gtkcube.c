@@ -813,8 +813,6 @@ CubeAnalysisCmark(GtkWidget * pw, cubehintdata * pchd)
 static GtkWidget *
 CreateCubeAnalysisTools(cubehintdata * pchd)
 {
-
-
     GtkWidget *pwTools;
     GtkWidget *pwEval = gtk_button_new_with_label(_("Eval"));
     GtkWidget *pwply;
@@ -829,6 +827,17 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     GtkWidget *pw;
     int i;
     char *sz;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwEval), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwEvalSettings), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwRollout), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwRolloutSettings), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwMWC), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwCopy), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwTempMap), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwCmark), "gnubg-analysis-button");
+#endif
 
     /* toolbox on the left with buttons for eval, rollout and more */
 
@@ -847,7 +856,9 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
         sz = g_strdup_printf("%d", i);  /* string is freed by set_data_full */
         pwply = gtk_button_new_with_label(sz);
-
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_style_context_add_class(gtk_widget_get_style_context(pwply), "gnubg-analysis-button");
+#endif
         gtk_box_pack_start(GTK_BOX(pw), pwply, TRUE, TRUE, 0);
 
         g_signal_connect(G_OBJECT(pwply), "clicked", G_CALLBACK(CubeAnalysisEvalPly), pchd);
@@ -883,7 +894,9 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
         GtkWidget *ro_preset;
         sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
         ro_preset = gtk_button_new_with_label(sz);
-
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_style_context_add_class(gtk_widget_get_style_context(ro_preset), "gnubg-analysis-button");
+#endif
         gtk_box_pack_start(GTK_BOX(pwRolloutPresets), ro_preset, TRUE, TRUE, 0);
 
         g_signal_connect(G_OBJECT(ro_preset), "clicked", G_CALLBACK(CubeRolloutPresets), pchd);

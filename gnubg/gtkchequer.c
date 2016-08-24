@@ -483,6 +483,19 @@ CreateMoveListTools(hintdata * phd)
     phd->pwTempMap = pwTempMap;
     phd->pwCmark = pwCmark;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwEval), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwEvalSettings), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwRollout), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwRolloutSettings), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwMWC), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwMove), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwShow), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwCopy), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwTempMap), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwCmark), "gnubg-analysis-button");
+#endif
+
     /* toolbox on the left with buttons for eval, rollout and more */
 
     pwTools = gtk_table_new(2, phd->fDetails ? 6 : 7, FALSE);
@@ -501,7 +514,9 @@ CreateMoveListTools(hintdata * phd)
 
         sz = g_strdup_printf("%d", i);  /* string is freed by set_data_full */
         pwply = gtk_button_new_with_label(sz);
-
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_style_context_add_class(gtk_widget_get_style_context(pwply), "gnubg-analysis-button");
+#endif
         gtk_box_pack_start(GTK_BOX(phd->pwEvalPly), pwply, TRUE, TRUE, 0);
 
         g_signal_connect(G_OBJECT(pwply), "clicked", G_CALLBACK(MoveListEvalPly), phd);
@@ -538,7 +553,9 @@ CreateMoveListTools(hintdata * phd)
         GtkWidget *ro_preset;
         sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
         ro_preset = gtk_button_new_with_label(sz);
-
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_style_context_add_class(gtk_widget_get_style_context(ro_preset), "gnubg-analysis-button");
+#endif
         gtk_box_pack_start(GTK_BOX(phd->pwRolloutPresets), ro_preset, TRUE, TRUE, 0);
 
         g_signal_connect(G_OBJECT(ro_preset), "clicked", G_CALLBACK(MoveListRolloutPresets), phd);
