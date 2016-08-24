@@ -336,9 +336,8 @@ ToolbarAddButton(GtkToolbar * pwToolbar, const char *stockID, const char *label,
 
     return GTK_WIDGET(but);
 }
-#endif
 
-GtkWidget *
+static GtkWidget *
 ToolbarAddWidget(GtkToolbar * pwToolbar, GtkWidget * pWidget, const char *tooltip)
 {
     GtkToolItem *ti = gtk_tool_item_new();
@@ -350,7 +349,6 @@ ToolbarAddWidget(GtkToolbar * pwToolbar, GtkWidget * pWidget, const char *toolti
     return GTK_WIDGET(ti);
 }
 
-#if !defined(USE_GTKUIMANAGER)
 static void
 ToolbarAddSeparator(GtkToolbar * pwToolbar)
 {

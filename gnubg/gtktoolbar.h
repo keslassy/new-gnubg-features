@@ -23,7 +23,7 @@
 #define GTKTOOLBAR_H
 
 #include "gtkboard.h"
-#if !(USE_GTKUIMANAGER)
+#if !defined(USE_GTKUIMANAGER)
 extern GtkItemFactory *pif;
 #endif
 
@@ -57,6 +57,5 @@ extern GtkWidget *image_from_xpm_d(char **xpm, GtkWidget * pw);
 
 extern void click_edit(void);
 extern void click_swapdirection(void);
-extern GtkWidget *ToolbarAddWidget(GtkToolbar * pwToolbar, GtkWidget * pWidget, const char *tooltip);
 
 #endif                          /* GTKTOOLBAR_H */
