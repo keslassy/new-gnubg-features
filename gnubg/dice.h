@@ -59,9 +59,6 @@ extern int InitRNGBBSFactors(char *sz0, char *sz1, rngcontext * rngctx);
 
 extern FILE *OpenDiceFile(rngcontext * rngctx, const char *sz);
 
-extern void
- CloseDiceFile(rngcontext * rngctx);
-
 extern char *GetDiceFileName(rngcontext * rngctx);
 
 #endif

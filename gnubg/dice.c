@@ -596,6 +596,13 @@ InitRNGSeedLong(char *sz, rng rng, rngcontext * rngctx)
 }
 #endif
 
+static void
+CloseDiceFile(rngcontext * rngctx)
+{
+    if (rngctx->fDice)
+        fclose(rngctx->fDice);
+}
+
 extern void
 CloseRNG(const rng rngx, rngcontext * rngctx)
 {
@@ -836,14 +843,6 @@ OpenDiceFile(rngcontext * rngctx, const char *sz)
 
     return (rngctx->fDice = gnubg_g_fopen(sz, "r"));
 }
-
-extern void
-CloseDiceFile(rngcontext * rngctx)
-{
-    if (rngctx->fDice)
-        fclose(rngctx->fDice);
-}
-
 
 static unsigned int
 ReadDiceFile(rngcontext * rngctx)

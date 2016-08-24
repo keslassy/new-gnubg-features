@@ -1,7 +1,7 @@
 /*
  * matchid.c
  *
- * by Jørn Thyssen <jthyssen@dk.ibm.com>, 2002
+ * by Joern Thyssen <jthyssen@dk.ibm.com>, 2002
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
@@ -178,7 +178,7 @@ MatchID(const unsigned int anDice[2],
 
 }
 
-extern int
+static int
 MatchFromKey(int anDice[2],
              int *pfTurn,
              int *pfResigned,
