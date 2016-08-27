@@ -3803,6 +3803,9 @@ CreateMainWindow(void)
 
     gtk_box_pack_start(GTK_BOX(pwHbox), pwProgress = gtk_progress_bar_new(), FALSE, FALSE, 0);
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pwProgress), 0.0);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(pwProgress), TRUE);
+#endif
     /* This is a kludge to work around an ugly bug in GTK: we don't want to
      * show text in the progress bar yet, but we might later.  So we have to
      * pretend we want text in order to be sized correctly, and then set the

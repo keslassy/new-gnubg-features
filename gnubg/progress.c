@@ -779,6 +779,10 @@ GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
     pwVbox = gtk_vbox_new(FALSE, 4);
     create_rollout_list(n, asz, &prp->pwRolloutResult, &prp->pwRolloutResultList, prc->fCubeful);
     prp->pwRolloutProgress = gtk_progress_bar_new();
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_progress_bar_set_show_text(GTK_PROGRESS_BAR(prp->pwRolloutProgress), TRUE);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(prp->pwRolloutProgress), "");
+#endif
 
     gtk_box_pack_start(GTK_BOX(pwVbox), prp->pwRolloutResult, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(pwVbox), prp->pwRolloutProgress, FALSE, FALSE, 0);

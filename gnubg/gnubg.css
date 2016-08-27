@@ -129,3 +129,11 @@
     padding-left: 0.5em;
     padding-right: 0.5em;
 }
+
+/*
+ * Style for the progress bars displayed for game analysis and rollouts.
+ * Applies only to gtk 3.20 or later.
+ */
+progressbar {
+    padding: 10px;
+}
