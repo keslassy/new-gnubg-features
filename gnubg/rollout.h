@@ -71,8 +71,6 @@ typedef void
                         const float rJsd, const int fStopped, const int fShowRanks, int fCubeRollout, void *pUserData);
 
 extern int
-
-
 RolloutGeneral(ConstTanBoard * apBoard,
                float (*apOutput[])[NUM_ROLLOUT_OUTPUTS],
                float (*apStdDev[])[NUM_ROLLOUT_OUTPUTS],
@@ -83,8 +81,6 @@ RolloutGeneral(ConstTanBoard * apBoard,
                int fInvert, int fCubeRollout, rolloutprogressfunc * pfRolloutProgress, void *pUserData);
 
 extern int
-
-
 GeneralEvaluation(float arOutput[NUM_ROLLOUT_OUTPUTS],
                   float arStdDev[NUM_ROLLOUT_OUTPUTS],
                   rolloutstat arsStatistics[2],
@@ -93,8 +89,6 @@ GeneralEvaluation(float arOutput[NUM_ROLLOUT_OUTPUTS],
                   rolloutprogressfunc * pfRolloutProgress, void *pUserData);
 
 extern int
-
-
 GeneralEvaluationR(float arOutput[NUM_ROLLOUT_OUTPUTS],
                    float arStdDev[NUM_ROLLOUT_OUTPUTS],
                    rolloutstat arsStatistics[2],
@@ -103,8 +97,6 @@ GeneralEvaluationR(float arOutput[NUM_ROLLOUT_OUTPUTS],
                    rolloutprogressfunc * pfRolloutProgress, void *pUserData);
 
 extern int
-
-
 GeneralCubeDecision(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
                     float aarStdDev[2][NUM_ROLLOUT_OUTPUTS],
                     rolloutstat aarsStatistics[2][2],
@@ -113,8 +105,6 @@ GeneralCubeDecision(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
 
 extern int
-
-
 GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
                      float aarStdDev[2][NUM_ROLLOUT_OUTPUTS],
                      rolloutstat aarsStatistics[2][2],
@@ -127,8 +117,6 @@ GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 /* Resignations */
 
 extern int
-
-
 getResignation(float arResign[NUM_ROLLOUT_OUTPUTS],
                TanBoard anBoard, cubeinfo * const pci, const evalsetup * pesResign);
 
@@ -136,8 +124,6 @@ extern void
  getResignEquities(float arResign[NUM_ROLLOUT_OUTPUTS], cubeinfo * pci, int nResigned, float *prBefore, float *prAfter);
 
 extern int
-
-
 ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves,
                  rolloutprogressfunc * pfRolloutProgress, void *pUserData);
 
@@ -166,5 +152,4 @@ extern int RolloutDice(int iTurn, int iGame, int fInitial, unsigned int anDice[2
                        const int fRotate, const perArray * dicePerms);
 extern void ClosedBoard(int afClosedBoard[2], const TanBoard anBoard);
 extern void log_game_over(FILE * logfp);
-extern void QuasiRandomSeed(perArray * pArray, int n);
 #endif

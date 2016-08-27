@@ -178,7 +178,7 @@ log_game_over(FILE * logfp)
     fclose(logfp);
 }
 
-extern void
+static void
 QuasiRandomSeed(perArray * pArray, int n)
 {
 
