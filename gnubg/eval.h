@@ -429,10 +429,6 @@ extern int
                  const int fMove, const int fJacoby, const int fBeavers, const bgvariation bgv);
 
 extern int
- SetCubeInfoMatch(cubeinfo * pci, const int nCube, const int fCubeOwner,
-                 const int fMove, const int nMatchTo, const int anScore[2], const int fCrawford, const bgvariation bgv);
-
-extern int
  SetCubeInfo(cubeinfo * pci, const int nCube, const int fCubeOwner,
             const int fMove, const int nMatchTo, const int anScore[2],
             const int fCrawford, const int fJacoby, const int fBeavers, const bgvariation bgv);
@@ -445,9 +441,6 @@ extern void
 
 extern void
  SanityCheck(const TanBoard anBoard, float arOutput[]);
-
-extern int
- EvalBearoff1(const TanBoard anBoard, float arOutput[], const bgvariation bgv, NNState * nnStates);
 
 extern int
  EvalOver(const TanBoard anBoard, float arOutput[], const bgvariation bgv, NNState * nnStates);
@@ -535,9 +528,6 @@ extern unsigned int
  locateMove(const TanBoard anBoard, const int anMove[8], const movelist * pml);
 
 extern int
- MoveKey(const TanBoard anBoard, const int anMove[8], positionkey * pkey);
-
-extern int
  equal_movefilter(const int i, const movefilter amf1[MAX_FILTER_PLIES], const movefilter amf2[MAX_FILTER_PLIES]);
 
 extern int
@@ -551,9 +541,6 @@ extern int
 
 extern void
  baseInputs(const TanBoard anBoard, float arInput[]);
-
-extern void
- CalculateRaceInputs(const TanBoard anBoard, float inputs[]);
 
 extern int CompareMoves(const move * pm0, const move * pm1);
 extern float EvalEfficiency(const TanBoard anBoard, positionclass pc);

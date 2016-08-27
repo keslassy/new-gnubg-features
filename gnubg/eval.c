@@ -1433,7 +1433,7 @@ static int ac[23] = { 11, 11, 11, 11, 11, 11, 11,
 }
 
 
-extern void
+static void
 CalculateRaceInputs(const TanBoard anBoard, float inputs[])
 {
     unsigned int side;
@@ -1933,7 +1933,7 @@ EvalHypergammon3(const TanBoard anBoard, float arOutput[], const bgvariation UNU
 
 }
 
-extern int
+static int
 EvalBearoff1(const TanBoard anBoard, float arOutput[], const bgvariation UNUSED(bgv), NNState * UNUSED(nnStates))
 {
 
@@ -3270,7 +3270,7 @@ SetCubeInfoMoney(cubeinfo * pci, const int nCube, const int fCubeOwner,
     return 0;
 }
 
-extern int
+static int
 SetCubeInfoMatch(cubeinfo * pci, const int nCube, const int fCubeOwner,
                  const int fMove, const int nMatchTo, const int anScore[2], const int fCrawford, const bgvariation bgv)
 {
@@ -4085,7 +4085,7 @@ EvalEfficiency(const TanBoard anBoard, positionclass pc)
 
         /* FIXME: should CLASS_CRASHED be handled differently? */
 
-        /* FIXME: use Øystein's values published in rec.games.backgammon,
+        /* FIXME: use Oystein's values published in rec.games.backgammon,
          * or work some other semiempirical values */
 
         /* FIXME: very important: use opponents inputs as well */
@@ -5138,6 +5138,18 @@ isMissedDouble(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], const 
 }
 
 
+static int
+MoveKey(const TanBoard anBoard, const int anMove[8], positionkey * pkey)
+{
+    TanBoard anBoardMove;
+
+    memcpy(anBoardMove, anBoard, sizeof(anBoardMove));
+    ApplyMove(anBoardMove, anMove, FALSE);
+    PositionKey((ConstTanBoard) anBoardMove, pkey);
+
+    return 0;
+}
+
 
 extern unsigned int
 locateMove(const TanBoard anBoard, const int anMove[8], const movelist * pml)
@@ -5157,21 +5169,6 @@ locateMove(const TanBoard anBoard, const int anMove[8], const movelist * pml)
 
 
     }
-
-    return 0;
-
-}
-
-
-extern int
-MoveKey(const TanBoard anBoard, const int anMove[8], positionkey * pkey)
-{
-
-    TanBoard anBoardMove;
-
-    memcpy(anBoardMove, anBoard, sizeof(anBoardMove));
-    ApplyMove(anBoardMove, anMove, FALSE);
-    PositionKey((ConstTanBoard) anBoardMove, pkey);
 
     return 0;
 
