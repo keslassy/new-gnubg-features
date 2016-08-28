@@ -60,6 +60,8 @@ static idleFunc *pIdleFun;
 static BoardData *pIdleBD;
 Flag3d flag;                    /* Only one flag */
 
+static void SetupSimpleMatAlpha(Material * pMat, float r, float g, float b, float a);
+
 static gboolean
 idle(BoardData3d * bd3d)
 {
@@ -807,7 +809,7 @@ moveAlong(float d, PathType type, const float start[3], const float end[3], floa
 }
 
 /* Return v position, d distance along path p */
-int
+static int
 movePath(Path * p, float d, float *rotate, float v[3])
 {
     float done;
@@ -2310,7 +2312,7 @@ SetupMat(Material * pMat, float r, float g, float b, float dr, float dg, float d
     pMat->pTexture = NULL;
 }
 
-void
+static void
 SetupSimpleMatAlpha(Material * pMat, float r, float g, float b, float a)
 {
     SetupMat(pMat, r, g, b, r, g, b, 0.f, 0.f, 0.f, 0, a);

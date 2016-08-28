@@ -480,9 +480,6 @@ extern int
 extern int
  cmp_evalcontext(const evalcontext * pec1, const evalcontext * pec2);
 
-extern int
- cmp_rolloutcontext(const rolloutcontext * prc1, const rolloutcontext * prc2);
-
 extern char
 *GetCubeRecommendation(const cubedecision cd);
 
@@ -492,9 +489,6 @@ FindBestCubeDecision(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], 
 extern int
  getCurrentGammonRates(float aarRates[2][2],
                       float arOutput[], const TanBoard anBoard, cubeinfo * pci, const evalcontext * pec);
-
-extern void
- calculate_gammon_rates(float aarRates[2][2], float arOutput[], cubeinfo * pci);
 
 extern void
  getMoneyPoints(float aaarPoints[2][7][2], const int fJacoby, const int fBeavers, float aarRates[2][2]);

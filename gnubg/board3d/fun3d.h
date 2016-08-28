@@ -67,7 +67,6 @@ void TidyGraphData(GraphData * pgd);
 GraphData *CreateGraphData(void);
 
 /* Misc functions */
-void SetupSimpleMatAlpha(Material * pMat, float r, float g, float b, float a);
 void SetupSimpleMat(Material * pMat, float r, float g, float b);
 void SetupMat(Material * pMat, float r, float g, float b, float dr, float dg, float db, float sr, float sg, float sb,
               int shin, float a);
@@ -76,7 +75,6 @@ void SetColour3d(float r, float g, float b, float a);
 float randRange(float range);
 void setupPath(const BoardData * bd, Path * p, float *pRotate, unsigned int fromPoint, unsigned int fromDepth,
                unsigned int toPoint, unsigned int toDepth);
-int movePath(Path * p, float d, float *pRotate, float v[3]);
 int finishedPath(const Path * p);
 void getProjectedPieceDragPos(int x, int y, float pos[3]);
 void updateMovingPieceOccPos(const BoardData * bd, BoardData3d * bd3d);

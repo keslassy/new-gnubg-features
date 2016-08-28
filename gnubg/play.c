@@ -984,6 +984,17 @@ parse_move_is_legal(char *sz, const matchstate * pms, int *an)
 }
 
 
+static void
+current_pmr_cubedata_update(evalsetup * pes, float output[][NUM_ROLLOUT_OUTPUTS], float stddev[][NUM_ROLLOUT_OUTPUTS])
+{
+    moverecord *pmr = get_current_moverecord(NULL);
+    if (!pmr)
+        return;
+    if (pmr->CubeDecPtr->esDouble.et == EVAL_NONE)
+        pmr_cubedata_set(pmr, pes, output, stddev);
+}
+
+
 static int
 ComputerTurn(void)
 {
@@ -4110,16 +4121,6 @@ pmr_movelist_set(moverecord * pmr, evalsetup * pes, movelist * pml)
     else
         skill_score = 0.0f;
     pmr->n.stMove = Skill(skill_score);
-}
-
-extern void
-current_pmr_cubedata_update(evalsetup * pes, float output[][NUM_ROLLOUT_OUTPUTS], float stddev[][NUM_ROLLOUT_OUTPUTS])
-{
-    moverecord *pmr = get_current_moverecord(NULL);
-    if (!pmr)
-        return;
-    if (pmr->CubeDecPtr->esDouble.et == EVAL_NONE)
-        pmr_cubedata_set(pmr, pes, output, stddev);
 }
 
 extern moverecord *

@@ -116,7 +116,7 @@ board_to_sgf(FILE * logfp, const unsigned int anBoard[25], int direction)
         fprintf(logfp, "[y]");
 }
 
-extern FILE *
+static FILE *
 log_game_start(const char *name, const cubeinfo * pci, int fCubeful, TanBoard anBoard)
 {
     time_t t = time(0);
@@ -169,7 +169,7 @@ log_game_start(const char *name, const cubeinfo * pci, int fCubeful, TanBoard an
     return logfp;
 }
 
-extern void
+static void
 log_game_over(FILE * logfp)
 {
     if (!logfp)

@@ -3588,6 +3588,38 @@ Prompt(void)
     fflush(stdout);
 }
 
+#if defined(HAVE_LIB_READLINE)
+static char *
+locale_from_utf8(const char *sz)
+{
+    char *ret;
+    GError *error = NULL;
+    g_assert(sz);
+    ret = g_locale_from_utf8(sz, strlen(sz), NULL, NULL, &error);
+    if (error) {
+        g_print("locale_from_utf8 failed: %s\n", error->message);
+        g_error_free(error);
+        ret = g_strdup(sz);
+    }
+    return ret;
+}
+#endif
+
+static char *
+locale_to_utf8(const char *sz)
+{
+    char *ret;
+    GError *error = NULL;
+    g_assert(sz);
+    ret = g_locale_to_utf8(sz, strlen(sz), NULL, NULL, &error);
+    if (error) {
+        g_print("locale_to_utf8 failed: %s\n", error->message);
+        g_error_free(error);
+        ret = g_strdup(sz);
+    }
+    return ret;
+}
+
 #if defined(USE_GTK)
 #if defined(HAVE_LIB_READLINE)
 extern void
@@ -5190,38 +5222,6 @@ EPC(const TanBoard anBoard, float *arEPC, float *arMu, float *arSigma, int *pfSo
 
     /* code not reachable */
     return -1;
-}
-
-#if defined(HAVE_LIB_READLINE)
-extern char *
-locale_from_utf8(const char *sz)
-{
-    char *ret;
-    GError *error = NULL;
-    g_assert(sz);
-    ret = g_locale_from_utf8(sz, strlen(sz), NULL, NULL, &error);
-    if (error) {
-        g_print("locale_from_utf8 failed: %s\n", error->message);
-        g_error_free(error);
-        ret = g_strdup(sz);
-    }
-    return ret;
-}
-#endif
-
-extern char *
-locale_to_utf8(const char *sz)
-{
-    char *ret;
-    GError *error = NULL;
-    g_assert(sz);
-    ret = g_locale_to_utf8(sz, strlen(sz), NULL, NULL, &error);
-    if (error) {
-        g_print("locale_to_utf8 failed: %s\n", error->message);
-        g_error_free(error);
-        ret = g_strdup(sz);
-    }
-    return ret;
 }
 
 #ifdef WIN32
