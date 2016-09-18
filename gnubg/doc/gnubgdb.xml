@@ -3187,7 +3187,7 @@ To roll the dice the CL version type 'roll'.
         <para>You may download the two sided database with 6 checkers on 6
           points from <ulink url="ftp://alpha.gnu.org/gnu/gnubg/gnubg_ts0.bd.gz">ftp://alpha.gnu.org/gnu/gnubg/gnubg_ts0.bd.gz</ulink> and the one
           sided database with 15 checkers 6 points from <ulink url="ftp://alpha.gnu.org/gnu/gnubg/gnubg_os0.bd.gz">ftp://alpha.gnu.org/gnu/gnubg/gnubg_os0.bd.gz</ulink>. </para>
-	  <para>Larger databases are available for download from <ulink url="ftp://ftp.demon.nl/pub/Demon/games/gnubg/databases/">ftp://ftp.demon.nl/pub/Demon/games/gnubg/databases/</ulink>. </para>
+	  <para>Larger databases are available for download from <ulink url="ftp://ftp.demon.nl/pub/Museum/Demon/games/gnubg/databases/">ftp://ftp.demon.nl/pub/Museum/Demon/games/gnubg/databases/</ulink>. </para>
       </sect3>
       <sect3 id="gnubg-tech_databases_install">
         <title>Installation of the databases</title>
@@ -5935,6 +5935,6 @@ being LIST, and with the Back-Cover Texts being LIST.</screen>
 </article>
 <!--
 Local Variables:
-coding: ISO-8859-1
+coding: latin-1
 End:
  -->
