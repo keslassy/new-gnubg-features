@@ -2061,7 +2061,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     gtk_widget_set_tooltip_text(pwev,
                                 _("Select a predefined setting, ranging from "
-                                  "beginner's play to the grandmaster setting " "that will test your patience"));
+                                  "beginner's play to the 4ply setting " "that will test your patience"));
 
     pew->pwOptionMenu = gtk_combo_box_text_new();
 
@@ -2094,7 +2094,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                                 _("Specify how many rolls GNU Backgammon should "
                                   "lookahead. Each ply costs approximately a factor "
                                   "of 21 in computational time. Also note that "
-                                  "2-ply is equivalent to Snowie's 3-ply setting."));
+                                  "2-ply is equivalent to Snowie and XG's 3-ply setting."));
 
     pwFrame2 = gtk_frame_new(_("Lookahead"));
     gtk_container_add(GTK_CONTAINER(pwev), pwFrame2);
@@ -2155,9 +2155,8 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     gtk_widget_set_tooltip_text(pwev,
                                 _("You can use this option to introduce noise "
                                   "or errors in the evaluations. This is useful for "
-                                  "introducing levels below 0-ply. The lower rated "
-                                  "bots (e.g., GGotter) on the GamesGrid backgammon "
-                                  "server uses this technique. "
+                                  "introducing levels below 0-ply. The weaker levels "
+                                  "(beginner to advanced) use this technique. "
                                   "The introduced noise can be "
                                   "deterministic, i.e., always the same noise for "
                                   "the same position, or it can be random"));
@@ -2200,7 +2199,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
         gtk_widget_set_tooltip_text(pwev,
                                     _("GNU Backgammon will evaluate all moves at "
                                       "0-ply. The move filter controls how many "
-                                      "moves to be evaluted at higher plies. "
+                                      "moves will be evaluted at higher plies. "
                                       "A \"smaller\" filter will be faster, but "
                                       "GNU Backgammon may not find the best move. "
                                       "Power users may set up their own filters "
