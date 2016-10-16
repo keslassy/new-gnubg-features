@@ -86,7 +86,7 @@ typedef struct _theorywidget {
 
     /* radio buttons for plies */
 
-    GtkWidget *apwPly[MAXPLY];
+    GtkWidget *apwPly[MAXPLY+1];
 
 } theorywidget;
 
@@ -786,7 +786,7 @@ GTKShowTheory(const int fActivePage)
     pwz = gtk_hbox_new(FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwx), pwz, FALSE, FALSE, 4);
 
-    for (i = 0; i < MAXPLY; ++i) {
+    for (i = 0; i <= MAXPLY; ++i) {
 
         gchar *sz = g_strdup_printf(_("%d ply"), i);
         if (!i)
