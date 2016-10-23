@@ -2357,6 +2357,11 @@ CommandDouble(char *UNUSED(sz))
         return;
     }
 
+    if (ms.nMatchTo && ms.nCube >= (ms.nMatchTo - ms.anScore[ms.fTurn])) {
+        outputf(_("The cube is dead; you can't double any more.\n"));
+        return;
+    }
+
     playSound(SOUND_DOUBLE);
 
     pmr = NewMoveRecord();
