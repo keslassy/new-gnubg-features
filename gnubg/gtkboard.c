@@ -3908,7 +3908,7 @@ board_class_init(BoardClass * c)
 }
 
 
-#define N_CUBES_IN_WIDGET 8
+#define N_CUBES_IN_WIDGET 7
 static gboolean
 cube_widget_draw(GtkWidget * cube, cairo_t * cr, BoardData * bd)
 {
