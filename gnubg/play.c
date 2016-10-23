@@ -2352,8 +2352,8 @@ CommandDouble(char *UNUSED(sz))
         return;
     }
 
-    if (ms.nCube >= MAX_CUBE) {
-        outputf(_("The cube is already at %d; you can't double any more.\n"), MAX_CUBE);
+    if (ms.nCube >= (ms.nMatchTo ? MAXSCORE : MAX_CUBE)) {
+        outputf(_("The cube is already at its highest supported value ; you can't double any more.\n"));
         return;
     }
 
@@ -3676,7 +3676,7 @@ CommandRedouble(char *UNUSED(sz))
     }
 
     if (ms.nCube >= (MAX_CUBE >> 1)) {
-        outputf(_("The cube is already at %d; you can't double any more.\n"), MAX_CUBE);
+        outputf(_("The cube is already at its highest supported value ; you can't double any more.\n"));
         return;
     }
 
