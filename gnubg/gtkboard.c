@@ -3477,6 +3477,13 @@ board_edit(BoardData * bd)
             UserCommand(sz);
             bd->crawford_game = ms.fCrawford = crawford;
         }
+        if (crawford) {
+            ms.fCubeOwner = -1;
+            ms.nCube = 1;
+            bd->cube_owner = 0;
+            bd->cube = 0;
+            bd->doubled = 0;
+        }
 
         outputresume();
 
