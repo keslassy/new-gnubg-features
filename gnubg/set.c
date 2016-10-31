@@ -175,8 +175,7 @@ SetRNG(rng * prng, rngcontext * rngctx, rng rngNew, char *szSeed)
         return;
     }
 
-    if (prng == &prcSet->rngRollout &&
-	(rngNew == RNG_MANUAL || rngNew == RNG_RANDOM_DOT_ORG || rngNew == RNG_FILE)) {
+    if (prng == &prcSet->rngRollout && (rngNew == RNG_MANUAL || rngNew == RNG_RANDOM_DOT_ORG || rngNew == RNG_FILE)) {
         outputf(_("The %s RNG is not suitable for rollouts\n"), aszRNG[rngNew]);
         return;
     }
@@ -1414,7 +1413,7 @@ CommandSetPlayerExternal(char *sz)
 {
 
 #if !defined(HAVE_SOCKETS)
-    (void) sz;		/* suppress unused parameter compiler warning */
+    (void) sz;                  /* suppress unused parameter compiler warning */
     outputl(_("This installation of GNU Backgammon was compiled without\n"
               "socket support, and does not implement external players."));
 #else
@@ -3957,7 +3956,7 @@ SetPriority(int n)
     } else
         outputerrf(_("Changing priority failed (trying to set priority " "%s)\n"), pch);
 #else
-    (void) n;			/* suppress unused parameter compiler warning */
+    (void) n;                   /* suppress unused parameter compiler warning */
     outputerrf(_("Priority changes are not supported on this platform.\n"));
 #endif                          /* HAVE_SETPRIORITY */
 }
@@ -4447,7 +4446,12 @@ SetXGID(char *sz)
     } else
         g_free(s);
 
-    /* atoi(v[0]) is a maximum (money) cube value, unused in gnubg */
+    /* atoi(v[0]) is a maximum (money) cube value, unused in gnubg.
+     * Special case : if it is set to 0, the position is cubeless
+     * with gammons and backgammons counting. See msxg initialization below.
+     * It may not be that useful though, since setting a position is typically
+     * followed by a "hint" or "analyse" command and analysis parameters
+     * will override that. */
 
     nMatchTo = atoi(v[1]);
 
@@ -4547,6 +4551,8 @@ SetXGID(char *sz)
     msxg.nCube = nCube;
     msxg.bgv = bgvDefault;
     msxg.fCubeUse = fCubeUse;
+    if (atoi(v[0]) == 0)
+        msxg.fCubeUse = FALSE;
     msxg.fJacoby = fJacoby;
     msxg.gs = GAME_PLAYING;
 
