@@ -3257,9 +3257,14 @@ extern void
 CommandSetMatchLength(char *sz)
 {
 
-    unsigned int n = ParseNumber(&sz);
+    int n;
 
-    nDefaultLength = n;
+    if ((n = ParseNumber(&sz)) < 0 || n > MAXSCORE) {
+        outputf(_("Match length must be between 0 (unlimited session) and %d\n"), MAXSCORE);
+        return;
+    }
+
+    nDefaultLength = (unsigned) n;
 
     outputf(ngettext("New matches default to %u point.\n", "New matches default to %u points.\n", nDefaultLength),
             nDefaultLength);
