@@ -902,9 +902,9 @@ CommandShowScore(char *UNUSED(sz))
                 ms.nMatchTo, ms.fCrawford ? _(", Crawford game") : (ms.fPostCrawford ? _(", post-Crawford play") : ""));
     } else {
         if (ms.fJacoby)
-            outputl(_(" (money session,\nwith Jacoby rule)."));
+            outputl(_(" (money session, with Jacoby rule)."));
         else
-            outputl(_(" (money session,\nwithout Jacoby rule)."));
+            outputl(_(" (money session, without Jacoby rule)."));
     }
 
 }
