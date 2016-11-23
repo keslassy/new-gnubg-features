@@ -4719,6 +4719,42 @@ Equity
                 <entry> </entry>
               </row>
               <row>
+                <entry>2378000</entry>
+                <entry>Intel Xeon E5-2687W 3.00 GHz</entry>
+                <entry>HP Z840</entry>
+                <entry>64 GB</entry>
+                <entry>CentOS 7</entry>
+                <entry>1.05.002, --enable-simd=fma</entry>
+                <entry>24 threads</entry>
+              </row>
+              <row>
+                <entry>2160000</entry>
+                <entry>Intel Xeon E5-2687W 3.00 GHz</entry>
+                <entry>HP Z840</entry>
+                <entry>64 GB</entry>
+                <entry>CentOS 7</entry>
+                <entry>1.05.002</entry>
+                <entry>24 threads</entry>
+              </row>
+              <row>
+                <entry>1470000</entry>
+                <entry>Intel Xeon E5-2687W 3.00 GHz</entry>
+                <entry>HP Z840</entry>
+                <entry>64 GB</entry>
+                <entry>CentOS 7</entry>
+                <entry>1.05.002</entry>
+                <entry>12 threads</entry>
+              </row>
+              <row>
+                <entry>936000</entry>
+                <entry>Intel Xeon E5-2687W 3.00 GHz</entry>
+                <entry>HP Z840</entry>
+                <entry>64 GB</entry>
+                <entry>CentOS 7</entry>
+                <entry>1.05.002</entry>
+                <entry>6 threads</entry>
+              </row>
+              <row>
                 <entry>449500</entry>
                 <entry>Intel Core i5-2400 3.10 GHz</entry>
                 <entry>Dell Optiplex 790</entry>
@@ -4753,6 +4789,33 @@ Equity
                 <entry>Win XP SP3</entry>
                 <entry>1.02</entry>
                 <entry>2 threads</entry>
+              </row>
+              <row>
+                <entry>182300</entry>
+                <entry>Intel Xeon E5-2687W 3.00 GHz</entry>
+                <entry>HP Z840</entry>
+                <entry>64 GB</entry>
+                <entry>CentOS 7</entry>
+                <entry>1.05.002, --enable-simd=fma</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
+                <entry>161300</entry>
+                <entry>Intel Xeon E5-2687W 3.00 GHz</entry>
+                <entry>HP Z840</entry>
+                <entry>64 GB</entry>
+                <entry>CentOS 7</entry>
+                <entry>1.05.002</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
+                <entry>145700</entry>
+                <entry>Intel Core i5-2400 3.10 GHz</entry>
+                <entry>Dell Optiplex 790</entry>
+                <entry>4 GB</entry>
+                <entry>CentOS 6</entry>
+                <entry>1.05.002</entry>
+                <entry>1 thread</entry>
               </row>
               <row>
                 <entry>131400</entry>
@@ -4791,6 +4854,15 @@ Equity
                 <entry>1 thread</entry>
               </row>
               <row>
+                <entry>76200</entry>
+                <entry>Intel Core 2 Duo T7500 2.2 GHz</entry>
+                <entry>Dell Latitude D630</entry>
+                <entry>4 GB</entry>
+                <entry>FreeBSD 11.0</entry>
+                <entry>1.05.002</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
                 <entry>64300</entry>
                 <entry>Intel Core 2 Duo T7500 2.2 GHz</entry>
                 <entry>Dell Latitude D630</entry>
@@ -4817,76 +4889,12 @@ Equity
                 <entry>1.02</entry>
               </row>
               <row>
-                <entry>28000</entry>
-                <entry>Intel Core Duo 1.66 GHz</entry>
-                <entry>Mac mini Core Duo</entry>
-                <entry>512 MB</entry>
-                <entry>Win XP SP2</entry>
-                <entry>0.14-mingw</entry>
-              </row>
-              <row>
-                <entry>27000</entry>
-                <entry>Intel Pentium M 735 (1.7 GHz)</entry>
-                <entry>AOpen 1557-J</entry>
-                <entry>1024 MB</entry>
-                <entry>Win XP SP2</entry>
-                <entry>0.14-mingw</entry>
-              </row>
-              <row>
-                <entry>26000</entry>
-                <entry>Intel Celeron 331 2.66 GHz</entry>
-                <entry>Dell Dimension 3100</entry>
-                <entry>512 MB</entry>
-                <entry>Win XP SP2</entry>
-                <entry>0.14.3-devel</entry>
-              </row>
-              <row>
-                <entry>24500</entry>
-                <entry>AMD Sempron 2800+ (2000 MHz)</entry>
-                <entry>Asus K8V-X</entry>
-                <entry>768 MB</entry>
-                <entry>Win XP SP2</entry>
-                <entry>0.14.3-devel</entry>
-              </row>
-              <row>
                 <entry>23000</entry>
                 <entry>Intel Pentium 4 2.8 GHz</entry>
                 <entry>Asus P4P800D</entry>
                 <entry>1024 MB</entry>
                 <entry>Win XP SP2</entry>
                 <entry>0.14.3-devel</entry>
-              </row>
-              <row>
-                <entry>21759</entry>
-                <entry>AMD Athlon64 3000+ (32bit mode)</entry>
-                <entry>Acer Aspire 1522</entry>
-                <entry>512 MB</entry>
-                <entry>Kubuntu 5.04</entry>
-                <entry>0.14.3-devel</entry>
-              </row>
-              <row>
-                <entry>20120</entry>
-                <entry>AMD Athlon XP 2500+ (1833 Mhz)</entry>
-                <entry>MSI K7N-Delta2</entry>
-                <entry>1024 MB</entry>
-                <entry>Suse Linux 9.2</entry>
-                <entry>0.14.3-devel</entry>
-              </row>
-              <row>
-                <entry>19200</entry>
-                <entry>Intel Pentium M 1.6 GHz</entry>
-                <entry>IBM ThinkPad X41</entry>
-                <entry>1024 MB</entry>
-                <entry>Win XP SP2</entry>
-                <entry>0.14.3-devel</entry>
-              </row>
-              <row>
-                <entry>14400</entry>
-                <entry>Intel Pentium III-M 1GHz</entry>
-                <entry>Sony Vaio PCG-R600HFPD</entry>
-                <entry>256 MB</entry>
-                <entry>Win XP SP2</entry>
-                <entry>0.16-mingw</entry>
               </row>
               <row>
                 <entry>9170</entry>
