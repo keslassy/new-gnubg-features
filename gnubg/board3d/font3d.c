@@ -95,7 +95,6 @@ int
 CreateFontText(OGLFont ** ppFont, const char *text, const char *fontFile, int pitch, float size, float heightRatio)
 {
     char *filename;
-
     FT_Library ftLib;
     if (FT_Init_FreeType(&ftLib))
         return 0;
@@ -116,15 +115,19 @@ CreateFontText(OGLFont ** ppFont, const char *text, const char *fontFile, int pi
 void
 FreeNumberFont(OGLFont * ppFont)
 {
-    glDeleteLists(ppFont->glyphs, 10);
-    ppFont->glyphs = 0;
+    if (ppFont) {
+        glDeleteLists(ppFont->glyphs, 10);
+        ppFont->glyphs = 0;
+    }
 }
 
 void
 FreeFontText(OGLFont * ppFont)
 {
-    glDeleteLists(ppFont->glyphs, 1);
-    ppFont->glyphs = 0;
+    if (ppFont) {
+        glDeleteLists(ppFont->glyphs, 1);
+        ppFont->glyphs = 0;
+    }
 }
 
 static int
@@ -467,7 +470,7 @@ PopulateContour(GArray * contour, const FT_Vector * points, const char *pointTag
 
 /* Unfortunately the glu library doesn't define this callback type precisely
  * so it may well cause problems on different platforms / opengl implementations */
-#ifdef WIN32
+#if defined(WIN32)
 /* Need to set the callback calling convention for windows */
 #define TESS_CALLBACK APIENTRY
 #else
@@ -477,7 +480,7 @@ PopulateContour(GArray * contour, const FT_Vector * points, const char *pointTag
 #if defined(USE_APPLE_OPENGL)
 #define GLUFUN(X) X
 #elif defined(__GNUC__)
-#if WIN32
+#if defined(WIN32)
 typedef APIENTRY GLvoid (*_GLUfuncptr)();
 #endif
 #define GLUFUN(X) (_GLUfuncptr)X
