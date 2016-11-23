@@ -478,7 +478,7 @@ GetPoints(float arOutput[5], const cubeinfo * pci, float arCP[2])
         nDead *= 2;
     }
 
-    for (nCubeValue = nDead, n = nMax; nCubeValue >= nCube; nCubeValue >>= 1, n--) {
+    for (nCubeValue = nDead, n = nMax; n >= 0; nCubeValue >>= 1, n--) {
 
         /* Calculate dead and live cube cash points.
          * See notes by me (Joern Thyssen) available from the
