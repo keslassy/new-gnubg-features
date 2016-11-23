@@ -51,7 +51,7 @@ case "$host" in
     LDFLAGS="$LDFLAGS -dylib_file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
     AC_DEFINE(USE_APPLE_OPENGL, 1, [Define if using Apple OpenGL])
     ;;
-  *-*-freebsd*)
+  *-*-*bsd*)
     CPPFLAGS="$CPPFLAGS -I${LOCALBASE:-/usr/local}/include"
     LDFLAGS="$LDFLAGS -L${LOCALBASE:-/usr/local}/lib"
     ;;
