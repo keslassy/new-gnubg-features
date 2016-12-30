@@ -957,7 +957,7 @@ fnd(const float x, const float mu, const float sigma)
 
         float xm = (x - mu) / sigma;
 
-        return 1.0f / (sigma * sqrtf(2.0f * (float) G_PI) * expf(-xm * xm / 2.0f));
+        return 1.0f / (sigma * sqrtf(2.0f * (float) G_PI)) * expf(-xm * xm / 2.0f);
 
     }
 
