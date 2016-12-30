@@ -598,7 +598,7 @@ generate_os(const int nOS, const int fHeader,
     xhash h;
     FILE *pfTmp = NULL;
     unsigned int npos;
-    char *tmpfile;
+    char *tmpfile = NULL;
     int fTTY = isatty(STDERR_FILENO);
 
     /* initialise xhash */
