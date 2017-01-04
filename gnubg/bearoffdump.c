@@ -29,6 +29,7 @@
 #include "bearoff.h"
 #include "multithread.h"
 #include "backgammon.h"
+#include "drawboard.h"
 
 extern void
 MT_CloseThreads(void)
@@ -118,6 +119,15 @@ main(int argc, char **argv)
         nThem = id % n;
         PositionFromBearoff(anBoard[0], nThem, pbc->nPoints, pbc->nChequers);
         PositionFromBearoff(anBoard[1], nUs, pbc->nPoints, pbc->nChequers);
+    }
+
+    /* board */
+
+    {
+        char szOut[2048];
+        char *ap[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+
+        puts(DrawBoard(szOut, (ConstTanBoard) anBoard, TRUE, ap, NULL, 15));
     }
 
     /* dump req. position */
