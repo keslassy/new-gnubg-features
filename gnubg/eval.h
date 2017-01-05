@@ -92,6 +92,7 @@ typedef struct {
     unsigned int nPlies:4;
     unsigned int fUsePrune:1;
     unsigned int fDeterministic:1;
+    unsigned int :25;		/* padding */
     float rNoise;               /* standard deviation */
 } evalcontext;
 
