@@ -1,3 +1,8 @@
+2017-01-08  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* gnubg.c, configure.ac: Remove the non-longer-needed
+	LIB_OVERLAYSCROLLBARS hack introduced on 2012-07-01.
+
 2016-08-20  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* Makefile.am, configure.ac, gnubg.css(+), gtktheory.c,
@@ -50,7 +55,7 @@
 
 	* backgammon.h, commands.inc, set.c, gtkoptions.c, gnubg.c,
 	dice.h, dice.c, configure.ac: Remove availability of ANSI and BSD
-	random number generators. They are mediocre algorithms and not
+	random number generators. These are mediocre algorithms and not
 	thread-safe.  Much better alternatives like Mersenne twister and
 	BBS are implemented in GNU Backgammon (and used by default).
 
