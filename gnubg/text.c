@@ -91,7 +91,12 @@ printTextBoard(FILE * pf, const matchstate * pms)
             apch[3] = szCube;
 
             if (pms->nMatchTo)
-                sprintf(szCube, _("%d point match (Cube: %d)"), pms->nMatchTo, pms->nCube);
+                if (pms->nMatchTo == 1)
+                    sprintf(szCube, _("1 point match"));
+                else if (pms->fCrawford)
+                    sprintf(szCube, _("%d point match (Crawford game)"), pms->nMatchTo);
+                else
+                    sprintf(szCube, _("%d point match (Cube: %d)"), pms->nMatchTo, pms->nCube);
             else
                 sprintf(szCube, _("(Cube: %d)"), pms->nCube);
         } else {

@@ -1432,7 +1432,12 @@ ShowBoard(void)
                 apch[3] = szCube;
 
                 if (ms.nMatchTo)
-                    sprintf(szCube, _("%d point match (Cube: %d)"), ms.nMatchTo, ms.nCube);
+                    if (ms.nMatchTo == 1)
+                        sprintf(szCube, _("1 point match"));
+                    else if (ms.fCrawford)
+                        sprintf(szCube, _("%d point match (Crawford game)"), ms.nMatchTo);
+                    else
+                        sprintf(szCube, _("%d point match (Cube: %d)"), ms.nMatchTo, ms.nCube);
                 else
                     sprintf(szCube, "(%s: %d)", _("Cube"), ms.nCube);
             } else {
@@ -2718,7 +2723,12 @@ CommandCopy(char *UNUSED(sz))
             aps[3] = szCube;
 
             if (ms.nMatchTo)
-                sprintf(szCube, _("%d point match (Cube: %d)"), ms.nMatchTo, ms.nCube);
+                if (ms.nMatchTo == 1)
+                    sprintf(szCube, _("1 point match"));
+                else if (ms.fCrawford)
+                    sprintf(szCube, _("%d point match (Crawford game)"), ms.nMatchTo);
+                else
+                    sprintf(szCube, _("%d point match (Cube: %d)"), ms.nMatchTo, ms.nCube);
             else
                 sprintf(szCube, "(%s: %d)", _("Cube"), ms.nCube);
         } else {

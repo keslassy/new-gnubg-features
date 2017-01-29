@@ -1,3 +1,11 @@
+2017-01-29  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* gnubg.c, text.c: In text format, display Crawford games match
+	information as "<n> point match (Crawford game)" to distinguish
+	them from post-Crawford ones ("<n> point match (Cube: 1)". Until
+	now the second form was used in both cases.
+	Issue recently reported in rec.games.backgammon.
+
 2017-01-08  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gnubg.c, configure.ac: Remove the non-longer-needed
