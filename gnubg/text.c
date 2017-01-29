@@ -81,7 +81,7 @@ printTextBoard(FILE * pf, const matchstate * pms)
         apch[pms->fMove ? 4 : 2] = sz;
 
         if (pms->anDice[0])
-            sprintf(sz, _("Rolled %d%d"), pms->anDice[0], pms->anDice[1]);
+            sprintf(sz, _("Rolled %u%u"), pms->anDice[0], pms->anDice[1]);
         else if (!GameStatus((ConstTanBoard) anBoard, pms->bgv))
             strcpy(sz, _("On roll"));
         else
@@ -160,7 +160,7 @@ TextBoardHeader(GString * gsz, const matchstate * pms, const int UNUSED(iGame), 
 
         /* chequer play decision */
 
-        g_string_append_printf(gsz, _(" %s to play %d%d\n\n"), ap[pms->fMove].szName, pms->anDice[0], pms->anDice[1]
+        g_string_append_printf(gsz, _(" %s to play %u%u\n\n"), ap[pms->fMove].szName, pms->anDice[0], pms->anDice[1]
             );
 
     else if (pms->fDoubled)
@@ -434,7 +434,7 @@ TextPrintMoveAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 
     g_string_append(gsz, "\n");
 
-    g_string_append_printf(gsz, _("Rolled %d%d"), pmr->anDice[0], pmr->anDice[1]);
+    g_string_append_printf(gsz, _("Rolled %u%u"), pmr->anDice[0], pmr->anDice[1]);
 
     if (pmr->rLuck != ERR_VAL)
         g_string_append_printf(gsz, " (%s):\n", GetLuckAnalysis(pms, pmr->rLuck));
