@@ -914,7 +914,7 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
           const char *szPlayer, const char *szOpp, int nMatchTo,
           int nScore, int nOpponent, int nDice0, int nDice1,
           int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers, 
-          int fPostCrawford)
+          int UNUSED(fPostCrawford))
 {
     char *sz = pch;
     int i, anOff[2];
@@ -941,7 +941,7 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
     }
 
     /* Player on bar */
-    sprintf(strchr(sz, 0), "%d:", anBoard[1][24]);
+    sprintf(strchr(sz, 0), "%u:", anBoard[1][24]);
 
     /* Whose turn */
     strcat(sz, fRoll ? "1:" : "-1:");
