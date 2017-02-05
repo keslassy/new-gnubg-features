@@ -3226,10 +3226,13 @@ board_size_request(GtkWidget * pw, GtkRequisition * pr)
 
     BoardData *bd;
 
-    if (!pw || !pr)
+    if (!pr)
         return;
 
     pr->width = pr->height = 0;
+
+    if (!pw)
+        return;
 
     bd = BOARD(pw)->board_data;
 
