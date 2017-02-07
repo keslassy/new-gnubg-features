@@ -1603,11 +1603,7 @@ SetSwitchModeMenuText(void)
         text = _("Switch to 3D view");
     else
         text = _("Switch to 2D view");
-#if defined(USE_GTKUIMANAGER)
     gtk_label_set_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(pMenuItem))), text);
-#else
-    gtk_label_set_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(pMenuItem))), text);
-#endif
     gtk_widget_set_sensitive(pMenuItem, gtk_gl_init_success);
 }
 
@@ -5640,7 +5636,6 @@ GTKShowScoreSheet(void)
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
     GtkListStore *store;
-    int numRows = 0;
     char title[100];
     listOLD *pl;
 
@@ -5690,7 +5685,6 @@ GTKShowScoreSheet(void)
         }
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter, 0, score[0], 1, score[1], -1);
-        numRows++;
     }
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
