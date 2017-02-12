@@ -242,7 +242,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
             /* 3 binaries, 1 float */
 
-            if (ari == 0.0f)
+            if (likely(ari == 0.0f))
                 prWeight += cHidden;
             else {
                 float *pr = ar;
@@ -251,7 +251,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
             ari = arInput[i++];
 
-            if (ari == 0.0f)
+            if (likely(ari == 0.0f))
                 prWeight += cHidden;
             else {
                 float *pr = ar;
@@ -260,7 +260,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
             ari = arInput[i++];
 
-            if (ari == 0.0f) {
+            if (likely(ari == 0.0f)) {
                 prWeight += cHidden;
                 /* If 3rd element is 0, so is 4th. Skip it */
                 prWeight += cHidden;
@@ -273,7 +273,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
             ari = arInput[i++];
 
-            if (ari == 0.0f)
+            if (likely(ari == 0.0f))
                 prWeight += cHidden;
             else {
                 float *pr = ar;
@@ -282,7 +282,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
                 scalevec = _mm256_set1_ps(ari);
                 INPUT_MULTADD();
 #else
-                if (ari == 1.0f) {
+                if (unlikely(ari == 1.0f)) {
                     INPUT_ADD();
                 } else {
 #if defined(USE_AVX)
@@ -300,7 +300,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
             for (i = 200; i < 250; i++) {
                 float const ari = arInput[i];
 
-                if (ari == 0.0f)
+                if (unlikely(ari == 0.0f))
                     prWeight += cHidden;
                 else {
                     float *pr = ar;
@@ -319,7 +319,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
         for (i = 0; i < pnn->cInput; i++) {
             float const ari = arInput[i];
 
-            if (ari == 0.0f)
+            if (likely(ari == 0.0f))
                 prWeight += cHidden;
             else {
                 float *pr = ar;
@@ -327,7 +327,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
                 scalevec = _mm256_set1_ps(ari);
                 INPUT_MULTADD();
 #else
-                if (ari == 1.0f) {
+                if (likely(ari == 1.0f)) {
                     INPUT_ADD();
                 } else {
 #if defined(USE_AVX)
