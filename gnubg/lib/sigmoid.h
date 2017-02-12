@@ -134,31 +134,34 @@ static float e[101] = {
  * * >99% of the time, x is positive.
  * *  82% of the time, 3 < abs(x) < 8.
  * 
- * The Intel x87's `f2xm1' instruction makes calculating accurate
- * exponentials comparatively fast, but still about 30% slower than
- * the lookup table used here. */
+ * 02/2017: The numbers above are 10+ years old
+ * (old neural nets, possibly pruning nets not yet in use).
+ * Current stats :
+ * * 85% of the time, x is positive, comprising 80% < 10 and 20% > 10
+ * * 15% of the time, x is negative with 99%+ > -10
+ */
 
 static inline float
 sigmoid(float const xin)
 {
-    if (xin >= 0.0f) { 
+    if (likely(xin >= 0.0f)) { 
         /* xin is almost always positive; we place this branch of the `if'
          * first, in the hope that the compiler/processor will predict the
          * conditional branch will not be taken. */
-        if (xin < 10.0f) {
+        if (likely(xin < 10.0f)) {
             /* again, predict the branch not to be taken */
             const float x1 = 10.0f * xin;
             const int i = (int) x1;
 
-            return 1 / (1 + e[i] * ((10 - i) + x1));
+            return 1.0f / (1.0f + e[i] * ((float)(10 - i) + x1));
         } else
             return 1.0f / 19931.370438230298f;
     } else {
-        if (xin > -10.0f) {
+        if (likely(xin > -10.0f)) {
             const float x1 = -10.0f * xin;
             const int i = (int) x1;
 
-            return 1 - 1 / (1 + e[i] * ((10 - i) + x1));
+            return 1.0f - 1.0f / (1 + e[i] * ((float)(10 - i) + x1));
         } else
             return 19930.370438230298f / 19931.370438230298f;
     }
