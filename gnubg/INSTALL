@@ -23,13 +23,14 @@ png (_Required_)
 freetype2 (_Required_)
 
 gtk2 (GUI)
-cairo2 (graphics)
+cairo (graphics)
 canberra (sound)
 gtkglext (3d boards)
 readline (command line)
 python (extension)
 sqlite3 (database)
-gmp3 (better random numbers)
+gmp (better random numbers)
+curl (3rd party random numbers)
 
 for documentation
 texinfo
