@@ -663,11 +663,10 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
         if (!pbc2)
             fprintf(stderr,
                     "\n***WARNING***\n\n"
-                    "Note that GNU Backgammon does not use the gnubg.bd file.\n"
-                    "You should obtain the file gnubg_ts0.bd or generate\n"
-                    "it yourself using the program 'makebearoff'.\n"
-                    "You can generate the file with the command:\n"
-                    "makebearoff -t 6x6 -f gnubg_ts0.bd\n"
+                    "GNU Backgammon will not use the two-sided bearoff\n"
+                    "database since the gnubg_ts0.bd could not be found.\n"
+                    "You should obtain this file or generate it yourself\n"
+                    "with the command: makebearoff -t 6x6 -f gnubg_ts0.bd\n"
                     "You can also generate other bearoff databases; see\n" "README for more details\n\n");
 
         gnubg_bearoff_os = BuildFilename("gnubg_os.bd");
@@ -887,25 +886,25 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
         int nPips;
     } aRoll[21];
 
-{
-    int n = 0;
+    {
+        int n = 0;
 
-    for (nOppBack = 24; nOppBack >= 0; --nOppBack) {
-        if (anBoardOpp[nOppBack]) {
-            break;
+        for (nOppBack = 24; nOppBack >= 0; --nOppBack) {
+            if (anBoardOpp[nOppBack]) {
+                break;
+            }
         }
+
+        nOppBack = 23 - nOppBack;
+
+        for (i = nOppBack + 1; i < 25; i++)
+            if (anBoard[i])
+                n += (i + 1 - nOppBack) * anBoard[i];
+
+        g_assert(n);
+
+        afInput[I_BREAK_CONTACT] = n / (15 + 152.0f);
     }
-
-    nOppBack = 23 - nOppBack;
-
-    for (i = nOppBack + 1; i < 25; i++)
-        if (anBoard[i])
-            n += (i + 1 - nOppBack) * anBoard[i];
-
-    g_assert(n);
-
-    afInput[I_BREAK_CONTACT] = n / (15 + 152.0f);
-}
     {
         unsigned int p = 0;
 
@@ -1386,9 +1385,10 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
                 {
                     int d = pa - np;
 
-static int ac[23] = { 11, 11, 11, 11, 11, 11, 11,
-                      6, 5, 4, 3, 2,
-                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                    static int ac[23] = { 11, 11, 11, 11, 11, 11, 11,
+                        6, 5, 4, 3, 2,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                    };
 
                     w += ac[d] * anBoard[pa];
                     tot += anBoard[pa];
@@ -2932,9 +2932,9 @@ extern int
 IsightCount(const TanBoard anBoard, int pn[2])
 {
     unsigned int anPips[2];
-    int anMenLeft[2] = {0, 0}, anCrossOver[2] = {0, 0};
+    int anMenLeft[2] = { 0, 0 }, anCrossOver[2] = { 0, 0 };
     int i, x;
-    
+
     PipCount(anBoard, anPips);
 
     for (x = 0; x < 25; x++) {
@@ -2946,16 +2946,16 @@ IsightCount(const TanBoard anBoard, int pn[2])
 
     for (i = 0; i < 2; i++) {
         pn[i] = anPips[i];
-        if (anMenLeft[i] > anMenLeft[1-i])
-	    pn[i] += (anMenLeft[i] - anMenLeft[1-i]);
+        if (anMenLeft[i] > anMenLeft[1 - i])
+            pn[i] += (anMenLeft[i] - anMenLeft[1 - i]);
         pn[i] += (MAX(2, anBoard[i][0]) - 2) * 2;
         pn[i] += MAX(2, anBoard[i][1]) - 2;
         pn[i] += MAX(3, anBoard[i][2]) - 3;
         for (x = 3; x < 6; x++)
-            if (!anBoard[i][x] && anBoard[1-i][x])
+            if (!anBoard[i][x] && anBoard[1 - i][x])
                 pn[i]++;
-        if (anCrossOver[i] > anCrossOver[1-i])
-            pn[i] += (anCrossOver[i] - anCrossOver[1-i]);
+        if (anCrossOver[i] > anCrossOver[1 - i])
+            pn[i] += (anCrossOver[i] - anCrossOver[1 - i]);
     }
     return 0;
 }
@@ -4411,7 +4411,7 @@ cmp_evalsetup(const evalsetup * pes1, const evalsetup * pes2)
     return 0;
 }
 
- 
+
 static void
 calculate_gammon_rates(float aarRates[2][2], float arOutput[], cubeinfo * pci)
 {
