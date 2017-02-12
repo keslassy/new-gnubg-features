@@ -63,17 +63,17 @@ Backgammon.
 * Exporting positions, games and matches to: (.eps) Encapsulated
   Postscript, (.gam) Jellyfish Game, (.html) HTML, (.mat) Jellyfish
   Match, (.pdf) PDF, (.png) Portable Network Graphics, (.pos)
-  Jellyfish Position, (.ps) PostScript, (.sgf) Gnu Backgammon File,
+  Jellyfish Position, (.ps) PostScript, (.sgf) GNU Backgammon File,
   (.tex) LaTeX, (.txt) Plain Text, (.txt) Snowie Text
 
 * Import of matches and positions from a number of file formats:
   (.gam) GammonEmpire Game, (.gam) PartyGammon Game, (.mat) Jellyfish
-  Match, (.pos) Jellyfish Position, (.sgf) Gnu Backgammon File, (.sgg)
+  Match, (.pos) Jellyfish Position, (.sgf) GNU Backgammon File, (.sgg)
   GamesGrid Save Game, (.tmg) TrueMoneyGames, (.txt) Snowie Text
 
 * Python Scripting ability.
 
-* Native language support; 13 languages complete or in progress:
-  cs_CZ, da_DK, en_GB, en_US, fr_FR, de_DE, is_IS, it_IT, ja_JP,
-  ro_RO, ru_RU, es_ES and tr_TR
+* Native language support; 14 languages complete or in progress:
+  cs_CZ, da_DK, en_GB, en_US, fr_FR, de_DE, el_GR, is_IS, it_IT,
+  ja_JP, ro_RO, ru_RU, es_ES and tr_TR
 
