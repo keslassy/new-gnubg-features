@@ -54,7 +54,7 @@ typedef struct _NNState {
     float *savedBase;
     float *savedIBase;
 #if !defined(USE_SIMD_INSTRUCTIONS)
-    int cSavedIBase;
+    unsigned int cSavedIBase;
 #endif
 } NNState;
 

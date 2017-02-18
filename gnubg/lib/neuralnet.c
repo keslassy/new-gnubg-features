@@ -236,7 +236,7 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
     case NNEVAL_FROMBASE:
         {
             unsigned int i;
-            if (pnState->cSavedIBase != (int) pnn->cInput) {
+            if (pnState->cSavedIBase != pnn->cInput) {
                 Evaluate(pnn, arInput, ar, arOutput, 0);
                 break;
             }
