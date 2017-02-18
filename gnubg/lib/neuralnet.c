@@ -33,7 +33,7 @@
 #include "simd.h"
 #include "sigmoid.h"
 
-extern int
+static int
 NeuralNetCreate(neuralnet * pnn, unsigned int cInput, unsigned int cHidden,
                 unsigned int cOutput, float rBetaHidden, float rBetaOutput)
 {

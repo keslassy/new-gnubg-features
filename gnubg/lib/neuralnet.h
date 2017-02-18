@@ -58,8 +58,6 @@ typedef struct _NNState {
 #endif
 } NNState;
 
-extern int NeuralNetCreate(neuralnet * pnn, unsigned int cInput, unsigned int cHidden, unsigned int cOutput,
-                           float rBetaHidden, float rBetaOutput);
 extern void NeuralNetDestroy(neuralnet * pnn);
 #if !defined(USE_SIMD_INSTRUCTIONS)
 extern int NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNState * pnState);
