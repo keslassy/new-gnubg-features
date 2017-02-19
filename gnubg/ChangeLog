@@ -1,3 +1,8 @@
+2017-02-19  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* configure.ac, bearoff.c, bearoff.h: Raise minimum version
+	requirement for GLib to 2.8.
+
 2017-01-29  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gnubg.c, text.c: In text format, display Crawford games match
@@ -235,13 +240,13 @@
 
 	* Makefile.am, glib-ext.c, glib-ext.h, gnubg.c, makebearoff.c,
 	  makehyper.c: Modify code to properly compile on systems
-	with GLIB < 2.14. Make sure glib threading is initialized
+	with GLib < 2.14. Make sure GLib threading is initialized
 	in environments where it is needed. This includes makebearoff
 	and makehyper.
 	* mtsupport.c, multithread.c, multithread.h: Fix problem with
 	mutexes being incorrectly initialized/freed/locked/unlocked
-	on environemnts with GLIB >= 2.32. This bug was identified
-	with recent GLIB builds with extra runtime checks. See
+	on environemnts with GLib >= 2.32. This bug was identified
+	with recent GLib builds with extra runtime checks. See
 	crash reported by Chris Fahlman using unstable Ubuntu. See
 	https://bugs.launchpad.net/ubuntu/+source/gnubg/+bug/1346567
 
@@ -260,13 +265,13 @@
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 
 	* gtklocdefs.c, gtklocdefs.h, glib-ext.h: add g_list_free_full 
-	function for environments using glib < 2.28.
+	function for environments using GLib < 2.28.
 
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 
 	* drawboard.c, drawboard.h, external.c, external.h, external_l.l,
 	  external_y.y, non-src/external_l.c, non-src/external_y.c, 
-	  non-src/external_y.h	
+	  non-src/external_y.h
 	Replace the external interface with a reentrant version that is
 	more extensible for storing more complex datatypes in the future.
 	Yacc will no longer compile, as it uses Bison extensions. The
@@ -276,17 +281,17 @@
 	return the version of the external interface. The "Noise" option was
 	broken. Noise can work with an integer (divide by 10000 to get a
 	noise value). Noise also supports a float type where the value
-	represents the actual noise value. The evaluation and session options 
+	represents the actual noise value. The evaluation and session options
 	can now appear in any order. Player names can now be quoted strings.
-	When a remote session is connected a single control-c rather than 2 
+	When a remote session is connected a single control-c rather than 2
 	will return to the gnubg command line. A bug that made a blank line
 	execute the previous command has been fixed. Now an error message is
 	displayed.
 
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 
-	* +glib-ext.c, +glib-ext.h, Makefile.am Makefile.w32: Add GLIB 
-	utility functions and macros to provide extra list functionality and 
+	* +glib-ext.c, +glib-ext.h, Makefile.am Makefile.w32: Add GLib
+	utility functions and macros to provide extra list functionality and
 	string to GValue maps.
 
 2014-05-26  Philippe Michel  <philippe.michel7@sfr.fr>
@@ -835,8 +840,8 @@
 2012-10-11  Michael Petch  <mpetch@gnubg.org>
 
 	* configure.ac : Configure process modified to support a thread type 
-	with --enable-threads default threading is glib threads. 
-	Supports win32, glib and no threading
+	with --enable-threads default threading is GLib threads. 
+	Supports win32, GLib and no threading
 
 2012-10-08  Philippe Michel  <philippe.michel7@sfr.fr>
 
@@ -2626,7 +2631,7 @@ Mon Dec  8 21:29:12 CET 2008 Christian Anthon <anthon@kiku.dk>:
 
 Dec  5 10:30:38 CET 2008 Christian Anthon <anthon@kiku.dk>: 
 
-	* bearoff.c, bearoff.h: disable gmappedfile code when glib is old, and
+	* bearoff.c, bearoff.h: disable gmappedfile code when GLib is old, and
 	fix a bug causing a crash when mapping of the bearoffdb fails.
 
 Thu Dec  4 23:11:23 CET 2008 Christian Anthon <anthon@kiku.dk>
@@ -2839,7 +2844,7 @@ Sun Aug 10 01:35:06 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
 Thu Aug  7 15:28:33 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
-	* configure.in: add options to disable deprecated glib/gtk functions
+	* configure.in: add options to disable deprecated GLib/GTK functions
 	* gtkgame.c, gtktempmap.c: replace gtk_object_weakref with
 	g_object_weakref
 
@@ -2970,13 +2975,13 @@ Mon Jun 30 23:12:09 CEST 2008 Christian Anthon <anthon@kiku.dk>
 	po/de.po, po/en_US.po, po/fr.po, po/gnubg.pot, po/is.po, po/it.po,
 	po/ja.po, po/ru.po, po/tr.po, po/gnubg-langs/__catstatus.php,
 	mkinstalldirs, po/LINGUAS: fix minor translation problems and update
-	the pot/po files to use glib macros
+	the pot/po files to use GLib macros
 	* gnubgi18n.c, gnubgi18n.h: removed as similar functions are provided by
 	glib/gettext
 
 Mon Jun 30 19:38:38 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
-	* po/* m4/*, configure.in: modify gettext and friends to use glib
+	* po/* m4/*, configure.in: modify gettext and friends to use GLib
 	gettext macros
 
 Sun Jun 29 21:12:45 2008 Jon Kinsey <Jon_Kinsey@hotmail.com>
@@ -3542,7 +3547,7 @@ Tue Dec 18 14:10:55 CET 2007 Christian Anthon <anthon@kiku.dk>
 Mon Dec 17 16:33:01 CET 2007 Christian Anthon <anthon@kiku.dk>
 
 	* lib/cache.c: Fix multithreaded hang when running quad core with four
-	threads. WaitForManualEvent appears to be broken, at least on glib
+	threads. WaitForManualEvent appears to be broken, at least on GLib
 	threads
 
 Mon Dec 17 15:06:44 CET 2007 Christian Anthon <anthon@kiku.dk>
@@ -4468,7 +4473,7 @@ Thu Nov  2 20:56:45 2006 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 Wed Nov  1 00:52:26 CET 2006 Christian Anthon <anthon@kiku.dk>
 
-	* gnubg.c, backgammon.h, Makefile.am: Move option parser to glib
+	* gnubg.c, backgammon.h, Makefile.am: Move option parser to GLib
 	option parser, since it facilitates the integration of gnubg options
 	with gtk options. getopt*.[ch] still needed for utility programs.
 
@@ -4624,7 +4629,7 @@ Sun Jun 18 01:26:05 CEST 2006 Christian Anthon <anthon@kiku.dk>
 Sat Jun 17 19:42:19 2006 Øystein Johansen <oystein@gnubg.org>
 
 	* Many files: Remove i18n functions like PushLocale and PopLocale,
-	use glibs g_ascii_strtod and g_ascii_formatd instead.
+	use GLib's g_ascii_strtod and g_ascii_formatd instead.
 
 	* gnubg.c and others: Remove gdbm database training
 
@@ -7035,7 +7040,7 @@ Mon Aug 25 22:12:56 2003  Joern Thyssen  <jth@gnubg.org>
 
 Tue Aug 26 07:16:35 2003  Joseph Heled  <pepster@users.sourceforge.net>
 
-	* gtkgame.c (SkillMenu): ignore skill "good" in gtk game.
+	* gtkgame.c (SkillMenu): ignore skill "good" in GTK game.
 
 Sun Aug 24 21:22:13 2003  Oystein Johansen  <oystein@gnubg.org>
 
@@ -7904,16 +7909,16 @@ Thu Jul 10 13:55:07 2003  Joern Thyssen  <jth@gnubg.org>
 
 Thu Jul 10 13:10:29 2003  Joern Thyssen  <jth@gnubg.org>
 
-	Improve output of settings for rollout 
+	Improve output of settings for rollout
 	(bug #4243 by Ian Dunstan)
 
 	* text.c (OutputRolloutContext): output more settings
 
 Thu Jul 10 11:14:30 2003  Joern Thyssen  <jth@gnubg.org>
 
-	Trim gtkgame.c: move gtk widget for Settings->Options and
+	Trim gtkgame.c: move GTK widget for Settings->Options and
 	Settings->Path into new files.
-	
+
 	* gtkoptions.c, gtkpath.c: new files
 	* gtkgame.c: rename a few functions and move many to new files.
 
@@ -7922,7 +7927,7 @@ Thu Jul 10 10:35:00 2003  Joern Thyssen  <jth@gnubg.org>
 	Initial experimental support of Hugh Sconyers' full 15x15
 	bearoff database.
 
-	* gnubg.c: new command "show bearoff", 	
+	* gnubg.c: new command "show bearoff",
 	"set bearoff sconyers 15x15 [dvd|disk] [enable|path]".
 	* gnubg.c (ChangeDisk): new function.
 	* gnubg.c (real_main): init sconyers' bearoff databases.
