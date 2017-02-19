@@ -661,7 +661,7 @@ Application Options:
 -p, --python=FILE            Evaluate Python code in FILE and exit
 -q, --quiet                  Disable sound effects
 -r, --no-rc                  Do not read .gnubgrc and .gnubgautorc commands
--S, --splash                 Show gtk splash screen
+-S, --splash                 Show GTK splash screen
 -t, --tty                    Start the command line instead of using the graphical interface
 -v, --version                Show version information and exit
 -w, --window-system-only     Ignore tty input when using the graphical interface
@@ -4592,7 +4592,7 @@ Equity
           other Unix operating systems like those derived from
           <emphasis>BSD</emphasis> or
           <emphasis>Solaris</emphasis>. The main prerequisite is the
-          availability of the GLib library at version 2.6 or later.
+          availability of the GLib library at version 2.8 or later.
 	</para>
 	<para>Installable packages for
           <emphasis>MS Windows</emphasis> and <emphasis>Mac OS X</emphasis> are
@@ -4889,12 +4889,30 @@ Equity
                 <entry>1.02</entry>
               </row>
               <row>
+                <entry>32600</entry>
+                <entry>ARM Cortex-A53  1.2 GHz</entry>
+                <entry>Raspberry Pi 3 Model B</entry>
+                <entry>1024 MB</entry>
+                <entry>Raspbian 8.0</entry>
+                <entry>1.04</entry>
+                <entry>4 threads</entry>
+              </row>
+              <row>
                 <entry>23000</entry>
                 <entry>Intel Pentium 4 2.8 GHz</entry>
                 <entry>Asus P4P800D</entry>
                 <entry>1024 MB</entry>
                 <entry>Win XP SP2</entry>
                 <entry>0.14.3-devel</entry>
+              </row>
+              <row>
+                <entry>10500</entry>
+                <entry>ARM Cortex-A53  1.2 GHz</entry>
+                <entry>Raspberry Pi 3 Model B</entry>
+                <entry>1024 MB</entry>
+                <entry>Raspbian 8.0</entry>
+                <entry>1.04</entry>
+                <entry>1 thread</entry>
               </row>
               <row>
                 <entry>9170</entry>
