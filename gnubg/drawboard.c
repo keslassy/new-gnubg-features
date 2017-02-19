@@ -715,8 +715,13 @@ FormatMove(char *sz, const TanBoard anBoard, int anMove[8])
 extern int
 ParseMove(char *pch, int an[8])
 {
-
-    int i, j, iBegin, iEnd, n, c = 0, anUser[12];
+    /*
+     * anUser[] size had been 8 for years without apparent issues, even
+     * when instrumented by clang's address sanitizer. Gcc 5 complains
+     * ("array subscript is above array bounds") until it is raised to 12
+     * then gcc 6 does the same until the size is 17.
+     */ 
+    int i, j, iBegin, iEnd, n, c = 0, anUser[17];
     unsigned fl = 0;
 
     while (*pch) {
@@ -913,12 +918,11 @@ extern char *
 FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
           const char *szPlayer, const char *szOpp, int nMatchTo,
           int nScore, int nOpponent, int nDice0, int nDice1,
-          int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers, 
-          int UNUSED(fPostCrawford))
+          int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers, int UNUSED(fPostCrawford))
 {
     char *sz = pch;
     int i, anOff[2];
-    /* int fNonCrawford = !(!fPostCrawford && (nScore == nMatchTo - 1 || nOpponent == nMatchTo - 1));*/
+    /* int fNonCrawford = !(!fPostCrawford && (nScore == nMatchTo - 1 || nOpponent == nMatchTo - 1)); */
 
     /* Names and match length/score */
     strcpy(sz, "board:");
@@ -957,15 +961,17 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
             fTurn < 0 || fCubeOwner != 0, fTurn < 0 || fCubeOwner != 1,
             fDoubled ? (fTurn ? -1 : 1) : 0, anOff[1], anOff[0], fCrawford);
 
+#if 0
 /*  Temporarily remove this code as it breaks the GUI by preventing a player
     from hitting an opponents blot. It appears to the user as an illegal play
-    Reported by Wolfgang Nelles
+    Reported by Wolfgang Nelles */
 
     sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:%d:%d:%d:%d:0:0:0:"
             "0:%d:0", nDice0, nDice1, nDice0, nDice1, fTurn < 0 ? 1 : nCube,
             fTurn < 0 || fCubeOwner != 0, fTurn < 0 || fCubeOwner != 1,
             fDoubled ? (fTurn ? -1 : 1) : 0, fNonCrawford, fPostCrawford,
-            anOff[1], anOff[0], fCrawford);*/
+            anOff[1], anOff[0], fCrawford);
+#endif
 
     return pch;
 }
@@ -980,7 +986,7 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
     int anFIBSBoard[26];
     int fMustSwap = 0;
     GString *tmpName;
-    
+
     procBrd->nMatchTo = brdInfo->nMatchTo;
     procBrd->nScore = brdInfo->nScore;
     procBrd->nScoreOpp = brdInfo->nScoreOpp;
@@ -999,7 +1005,7 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
 
     /* Not yet supported set to zero */
     procBrd->nResignation = 0;
-    
+
     for (i = 0; i < 26; ++i)
         anFIBSBoard[i] = -anFIBSBoard[i];
 
@@ -1059,7 +1065,7 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
         fCanDouble = fOppCanDouble;
         fOppCanDouble = nTmp;
         tmpName = brdInfo->gsName;
-        brdInfo->gsName = brdInfo->gsOpp; 
+        brdInfo->gsName = brdInfo->gsOpp;
         brdInfo->gsOpp = tmpName;
     }
 
