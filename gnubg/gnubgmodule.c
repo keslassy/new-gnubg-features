@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
 #include "gnubgmodule.h"
 #endif
 
@@ -38,12 +38,12 @@
 #include "util.h"
 #include "lib/gnubg-types.h"
 
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkgame.h"
 #include <gtk/gtk.h>
 #endif
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
 
 static PyObject *RolloutContextToPy(const rolloutcontext * rc);
 static PyObject *PythonGnubgID(PyObject * self, PyObject * args);
@@ -51,7 +51,7 @@ static PyObject *PythonGnubgID(PyObject * self, PyObject * args);
 static void
 DictSetItemSteal(PyObject * dict, const char *key, PyObject * val)
 {
-    int const s = PyDict_SetItemString(dict, CHARP_HACK key, val);
+    int const s = PyDict_SetItemString(dict, key, val);
     {
         g_assert(s == 0);
     }
@@ -903,7 +903,7 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
 static PyObject *
 PythonUpdateUI(PyObject * UNUSED(self), PyObject * UNUSED(args))
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         while (gtk_events_pending())
             gtk_main_iteration();
@@ -3487,7 +3487,7 @@ PythonShutdown(void)
 extern void
 PythonRun(const char *sz)
 {
-#if USE_GTK
+#if defined(USE_GTK)
     PyObject *py_ret = NULL, *py_dict = NULL;
     int success = FALSE;
 #endif
@@ -3498,7 +3498,7 @@ PythonRun(const char *sz)
         /* Run python interactively with history and auto completion
          * if available
          */
-#if USE_GTK
+#if defined(USE_GTK)
         py_dict = PyModule_GetDict(PythonGnubgModule());
         Py_INCREF(py_dict);
 

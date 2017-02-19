@@ -24,7 +24,7 @@
 
 #include "config.h"
 
-#if USE_PYTHON
+#if defined(USE_PYTHON)
 
 #if PY_MAJOR_VERSION >= 3
     #define MOD_ERROR_VAL NULL
@@ -66,16 +66,6 @@ typedef int Py_ssize_t;
     #define PyInt_AsLong PyLong_AsLong
     #define PyInt_FromLong PyLong_FromLong
     #define PyExc_StandardError PyExc_Exception
-#endif
-
-#if (PY_VERSION_HEX < 0x02030000)
-/* Bool introduced in 2.3 */
-#define PyBool_FromLong PyLong_FromLong
-
-/* Fix incorrect prototype in early python */
-#define CHARP_HACK (char*)
-#else
-#define CHARP_HACK
 #endif
 
 #endif                         /* USE_PYTHON */

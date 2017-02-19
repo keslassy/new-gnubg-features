@@ -367,7 +367,7 @@ AC_HELP_STRING([--with-python=program],
     ])
 
 if test "x$with_python" != "xno"; then
-    AM_PATH_PYTHON(2.2)
+    AM_PATH_PYTHON(2.3)
     AX_PYTHON_DEVEL()
     have_python=$ac_python_version
     if test "x$have_python" != "x"; then
