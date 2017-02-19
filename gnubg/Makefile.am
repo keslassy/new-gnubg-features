@@ -169,7 +169,7 @@ if USE_SQLITE
 gnubg_LDADD += @SQLITE_LIBS@
 endif
 if USE_PYTHON
-gnubg_LDADD += @PYTHON_LDFLAGS@ 
+gnubg_LDADD += @PYTHON_LIBS@ 
 endif
 if USE_BOARD3D
 gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS)
@@ -193,7 +193,7 @@ UTILSOURCES = eval.h eval.c positionid.h positionid.c \
 	mec.h mec.c util.c util.h glib-ext.c glib-ext.h
 
 makebearoff_SOURCES = makebearoff.c $(UTILSOURCES)
-makebearoff_LDADD = -Llib lib/libevent.la  @GLIB_LIBS@ @GTHREAD_LIBS@ @GOBJECT_LIBS@
+makebearoff_LDADD = -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@ @GOBJECT_LIBS@
 
 makehyper_SOURCES = makehyper.c $(UTILSOURCES)
 makehyper_LDADD =  -Llib lib/libevent.la @GLIB_LIBS@ @GTHREAD_LIBS@ @GOBJECT_LIBS@

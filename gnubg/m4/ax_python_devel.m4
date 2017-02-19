@@ -1,5 +1,5 @@
 # ===========================================================================
-#      http://www.gnu.org/software/autoconf-archive/ax_python_devel.html
+#     https://www.gnu.org/software/autoconf-archive/ax_python_devel.html
 # ===========================================================================
 #
 # SYNOPSIS
@@ -12,8 +12,8 @@
 #   in your configure.ac.
 #
 #   This macro checks for Python and tries to get the include path to
-#   'Python.h'. It provides the $(PYTHON_CPPFLAGS) and $(PYTHON_LDFLAGS)
-#   output variables. It also exports $(PYTHON_EXTRA_LIBS) and
+#   'Python.h'. It provides the $(PYTHON_CPPFLAGS) and $(PYTHON_LIBS) output
+#   variables. It also exports $(PYTHON_EXTRA_LIBS) and
 #   $(PYTHON_EXTRA_LDFLAGS) for embedding Python in your code.
 #
 #   You can search for some particular version of Python by passing a
@@ -40,7 +40,6 @@
 #   Copyright (c) 2009 Matteo Settenvini <matteo@member.fsf.org>
 #   Copyright (c) 2009 Horst Knorr <hk_classes@knoda.org>
 #   Copyright (c) 2013 Daniel Mullner <muellner@math.stanford.edu>
-#   Copyright (c) 2015 Michael Petch <mpetch@capp-sysware.com>
 #
 #   This program is free software: you can redistribute it and/or modify it
 #   under the terms of the GNU General Public License as published by the
@@ -53,7 +52,7 @@
 #   Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License along
-#   with this program. If not, see <http://www.gnu.org/licenses/>.
+#   with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 #   As a special exception, the respective Autoconf Macro's copyright owner
 #   gives unlimited permission to copy, distribute and modify the configure
@@ -68,78 +67,69 @@
 #   modified version of the Autoconf Macro, you may extend this special
 #   exception to the GPL to apply to your modified version as well.
 
-#serial 17.1
+#serial 19
 
 AU_ALIAS([AC_PYTHON_DEVEL], [AX_PYTHON_DEVEL])
 AC_DEFUN([AX_PYTHON_DEVEL],[
+	#
+	# Allow the use of a (user set) custom python version
+	#
 	AC_ARG_VAR([PYTHON_VERSION],[The installed Python
 		version to use, for example '2.3'. This string
 		will be appended to the Python interpreter
 		canonical name.])
 
-	if test x"$PYTHON" = x""; then
-		#
-		# Allow the use of a (user set) custom python version
-		#
+	AC_PATH_PROG([PYTHON],[python[$PYTHON_VERSION]])
+	if test -z "$PYTHON"; then
+	   AC_MSG_ERROR([Cannot find python$PYTHON_VERSION in your system path])
+	   PYTHON_VERSION=""
+	fi
 
-		AC_PATH_PROG([PYTHON],[python[$PYTHON_VERSION]])
-		if test -z "$PYTHON"; then
-		   AC_MSG_ERROR([Cannot find python$PYTHON_VERSION in your system path])
-		   PYTHON_VERSION=""
-		fi
-
-		#
-		# Check for a version of Python >= 2.1.0
-		#
-		AC_MSG_CHECKING([for a version of Python >= '2.1.0'])
-		ac_supports_python_ver=`$PYTHON -c "import sys; \
-			ver = sys.version.split ()[[0]]; \
-			print (ver >= '2.1.0')"`
-		if test "$ac_supports_python_ver" != "True"; then
-			if test -z "$PYTHON_NOVERSIONCHECK"; then
-				AC_MSG_RESULT([no])
-				AC_MSG_FAILURE([
+	#
+	# Check for a version of Python >= 2.1.0
+	#
+	AC_MSG_CHECKING([for a version of Python >= '2.1.0'])
+	ac_supports_python_ver=`$PYTHON -c "import sys; \
+		ver = sys.version.split ()[[0]]; \
+		print (ver >= '2.1.0')"`
+	if test "$ac_supports_python_ver" != "True"; then
+		if test -z "$PYTHON_NOVERSIONCHECK"; then
+			AC_MSG_RESULT([no])
+			AC_MSG_FAILURE([
 This version of the AC@&t@_PYTHON_DEVEL macro
 doesn't work properly with versions of Python before
 2.1.0. You may need to re-run configure, setting the
-variables PYTHON_CPPFLAGS, PYTHON_LDFLAGS, PYTHON_SITE_PKG,
+variables PYTHON_CPPFLAGS, PYTHON_LIBS, PYTHON_SITE_PKG,
 PYTHON_EXTRA_LIBS and PYTHON_EXTRA_LDFLAGS by hand.
 Moreover, to disable this check, set PYTHON_NOVERSIONCHECK
 to something else than an empty string.
 ])
-			else
-				AC_MSG_RESULT([skip at user request])
-			fi
 		else
-			AC_MSG_RESULT([yes])
+			AC_MSG_RESULT([skip at user request])
 		fi
+	else
+		AC_MSG_RESULT([yes])
+	fi
 
-		#
-		# if the macro parameter ``version'' is set, honour it
-		#
-		if test -n "$1"; then
-			AC_MSG_CHECKING([for a version of Python $1])
-			ac_supports_python_ver=`$PYTHON -c "import sys; \
-				ver = sys.version.split ()[[0]]; \
-				print (ver $1)"`
-			if test "$ac_supports_python_ver" = "True"; then
-			   AC_MSG_RESULT([yes])
-			else
-				AC_MSG_RESULT([no])
-				AC_MSG_ERROR([this package requires Python $1.
+	#
+	# if the macro parameter ``version'' is set, honour it
+	#
+	if test -n "$1"; then
+		AC_MSG_CHECKING([for a version of Python $1])
+		ac_supports_python_ver=`$PYTHON -c "import sys; \
+			ver = sys.version.split ()[[0]]; \
+			print (ver $1)"`
+		if test "$ac_supports_python_ver" = "True"; then
+		   AC_MSG_RESULT([yes])
+		else
+			AC_MSG_RESULT([no])
+			AC_MSG_ERROR([this package requires Python $1.
 If you have it installed, but it isn't the default Python
 interpreter in your system path, please pass the PYTHON_VERSION
 variable to configure. See ``configure --help'' for reference.
 ])
-				PYTHON_VERSION=""
-			fi
+			PYTHON_VERSION=""
 		fi
-	else
-		AC_PATH_PROG([PYTHON],[$PYTHON])
-		if test -z "$PYTHON"; then
-		   AC_MSG_ERROR([Cannot find $PYTHON in your system path])
-		fi
-		PYTHON_VERSION=""
 	fi
 
 	#
@@ -182,7 +172,7 @@ $ac_distutils_result])
 	# Check for Python library path
 	#
 	AC_MSG_CHECKING([for Python library path])
-	if test -z "$PYTHON_LDFLAGS"; then
+	if test -z "$PYTHON_LIBS"; then
 		# (makes two attempts to ensure we've got a version number
 		# from the interpreter)
 		ac_python_version=`cat<<EOD | $PYTHON -
@@ -237,25 +227,25 @@ EOD`
 		then
 			# use the official shared library
 			ac_python_library=`echo "$ac_python_library" | sed "s/^lib//"`
-			PYTHON_LDFLAGS="-L$ac_python_libdir -l$ac_python_library"
+			PYTHON_LIBS="-L$ac_python_libdir -l$ac_python_library"
 		else
 			# old way: use libpython from python_configdir
 			ac_python_libdir=`$PYTHON -c \
 			  "from distutils.sysconfig import get_python_lib as f; \
 			  import os; \
 			  print (os.path.join(f(plat_specific=1, standard_lib=1), 'config'));"`
-			PYTHON_LDFLAGS="-L$ac_python_libdir -lpython$ac_python_version"
+			PYTHON_LIBS="-L$ac_python_libdir -lpython$ac_python_version"
 		fi
 
-		if test -z "PYTHON_LDFLAGS"; then
+		if test -z "PYTHON_LIBS"; then
 			AC_MSG_ERROR([
   Cannot determine location of your Python DSO. Please check it was installed with
-  dynamic libraries enabled, or try setting PYTHON_LDFLAGS by hand.
+  dynamic libraries enabled, or try setting PYTHON_LIBS by hand.
 			])
 		fi
 	fi
-	AC_MSG_RESULT([$PYTHON_LDFLAGS])
-	AC_SUBST([PYTHON_LDFLAGS])
+	AC_MSG_RESULT([$PYTHON_LIBS])
+	AC_SUBST([PYTHON_LIBS])
 
 	#
 	# Check for site packages
@@ -272,25 +262,25 @@ EOD`
 	# libraries which must be linked in when embedding
 	#
 	AC_MSG_CHECKING(python extra libraries)
-	if test -z "$PYTHON_EXTRA_LIBS"; then
-	   PYTHON_EXTRA_LIBS=`$PYTHON -c "import distutils.sysconfig; \
+	if test -z "$PYTHON_EXTRA_LDFLAGS"; then
+	   PYTHON_EXTRA_LDFLAGS=`$PYTHON -c "import distutils.sysconfig; \
                 conf = distutils.sysconfig.get_config_var; \
                 print (conf('LIBS') + ' ' + conf('SYSLIBS'))"`
 	fi
-	AC_MSG_RESULT([$PYTHON_EXTRA_LIBS])
-	AC_SUBST(PYTHON_EXTRA_LIBS)
+	AC_MSG_RESULT([$PYTHON_EXTRA_LDFLAGS])
+	AC_SUBST(PYTHON_EXTRA_LDFLAGS)
 
 	#
 	# linking flags needed when embedding
 	#
 	AC_MSG_CHECKING(python extra linking flags)
-	if test -z "$PYTHON_EXTRA_LDFLAGS"; then
-		PYTHON_EXTRA_LDFLAGS=`$PYTHON -c "import distutils.sysconfig; \
+	if test -z "$PYTHON_EXTRA_LIBS"; then
+		PYTHON_EXTRA_LIBS=`$PYTHON -c "import distutils.sysconfig; \
 			conf = distutils.sysconfig.get_config_var; \
 			print (conf('LINKFORSHARED'))"`
 	fi
-	AC_MSG_RESULT([$PYTHON_EXTRA_LDFLAGS])
-	AC_SUBST(PYTHON_EXTRA_LDFLAGS)
+	AC_MSG_RESULT([$PYTHON_EXTRA_LIBS])
+	AC_SUBST(PYTHON_EXTRA_LIBS)
 
 	#
 	# final check to see if everything compiles alright
@@ -298,8 +288,10 @@ EOD`
 	AC_MSG_CHECKING([consistency of all components of python development environment])
 	# save current global flags
 	ac_save_LIBS="$LIBS"
+	ac_save_LDFLAGS="$LDFLAGS"
 	ac_save_CPPFLAGS="$CPPFLAGS"
-	LIBS="$ac_save_LIBS $PYTHON_LDFLAGS $PYTHON_EXTRA_LDFLAGS $PYTHON_EXTRA_LIBS"
+	LIBS="$ac_save_LIBS $PYTHON_LIBS $PYTHON_EXTRA_LIBS $PYTHON_EXTRA_LIBS"
+	LDFLAGS="$ac_save_LDFLAGS $PYTHON_EXTRA_LDFLAGS"
 	CPPFLAGS="$ac_save_CPPFLAGS $PYTHON_CPPFLAGS"
 	AC_LANG_PUSH([C])
 	AC_LINK_IFELSE([
@@ -310,6 +302,7 @@ EOD`
 	# turn back to default flags
 	CPPFLAGS="$ac_save_CPPFLAGS"
 	LIBS="$ac_save_LIBS"
+	LDFLAGS="$ac_save_LDFLAGS"
 
 	AC_MSG_RESULT([$pythonexists])
 
@@ -317,8 +310,8 @@ EOD`
 	   AC_MSG_FAILURE([
   Could not link test program to Python. Maybe the main Python library has been
   installed in some non-standard library path. If so, pass it to configure,
-  via the LDFLAGS environment variable.
-  Example: ./configure LDFLAGS="-L/usr/non-standard-path/python/lib"
+  via the LIBS environment variable.
+  Example: ./configure LIBS="-L/usr/non-standard-path/python/lib"
   ============================================================================
    ERROR!
    You probably have to install the development version of the Python package
