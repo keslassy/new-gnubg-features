@@ -646,7 +646,7 @@ RestoreRolloutRolloutContext(rolloutcontext * prc, const char *sz)
     prc->fLateEvals = 0;
     prc->fStopOnSTD = 0;
     prc->nLate = 0;
-    prc->nMinimumGames = 144;
+    prc->nMinimumGames = 324;
     prc->rStdLimit = 0.01f;
 
     if (!pc)
@@ -798,7 +798,7 @@ RestoreExtendedRolloutContext(rolloutcontext * prc, const char *sz)
     prc->fTruncBearoff2 = fTruncBearoff2;
     prc->fTruncBearoffOS = fTruncBearoffOS;
     prc->rngRollout = RNG_MERSENNE;
-    prc->nMinimumGames = 144;
+    prc->nMinimumGames = 324;
     prc->rStdLimit = 0.01f;
 
     for (i = 0; i < 2; ++i) {
