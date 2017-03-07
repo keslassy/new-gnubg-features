@@ -43,6 +43,8 @@
 #include "rollout.h"
 #include "lib/simd.h"
 
+#define LogCubeClamped(n) (n < (1 << STAT_MAXCUBE) ? LogCube(n) : (STAT_MAXCUBE - 1))
+
 #if !defined(LOCKING_VERSION)
 
 f_BasicCubefulRollout BasicCubefulRollout = BasicCubefulRolloutNoLocking;
@@ -478,7 +480,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
 
                         /* update statistics */
                         if (aarsStatistics)
-                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acDoubleTake[LogCube(pci->nCube)]);
+                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acDoubleTake[LogCubeClamped(pci->nCube)]);
 
                         SetCubeInfo(pci, 2 * pci->nCube, !pci->fMove, pci->fMove, pci->nMatchTo,
                                     pci->anScore, pci->fCrawford, pci->fJacoby, pci->fBeavers, pci->bgv);
@@ -516,8 +518,8 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
                         /* update statistics */
 
                         if (aarsStatistics) {
-                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acDoubleDrop[LogCube(pci->nCube)]);
-                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWin[LogCube(pci->nCube)]);
+                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acDoubleDrop[LogCubeClamped(pci->nCube)]);
+                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWin[LogCubeClamped(pci->nCube)]);
                         };
 
                         break;
@@ -757,13 +759,13 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
                     if (aarsStatistics)
                         switch (GameStatus((ConstTanBoard) aanBoard[ici], pci->bgv)) {
                         case 1:
-                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWin[LogCube(pci->nCube)]);
+                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWin[LogCubeClamped(pci->nCube)]);
                             break;
                         case 2:
-                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWinGammon[LogCube(pci->nCube)]);
+                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWinGammon[LogCubeClamped(pci->nCube)]);
                             break;
                         case 3:
-                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWinBackgammon[LogCube(pci->nCube)]);
+                            MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWinBackgammon[LogCubeClamped(pci->nCube)]);
                             break;
                         }
 
