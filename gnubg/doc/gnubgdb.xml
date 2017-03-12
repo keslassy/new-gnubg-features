@@ -699,13 +699,13 @@ To start a new match in the CL version type 'new match' or
       <para>The shortcut buttons are the quickest way to start the game or
         match. If you click on the button with the $ sign, you will start a new
         money game session immediately. If you click on a numbered button, you
-        will start a new match of the specified length.</para>
+        will start a new match of the specified length. If you click on the
+        pencil-and-paper button you will start editing a position.</para>
       <para>The dialog allows a fine tuning of the startup options:</para>
       <orderedlist continuation="restarts" inheritnum="ignore">
         <listitem>
-          <para>Use the radio buttons to choose whether you want to start a
-            match, game or session. If you wish to start a new match, you should
-            select the match length by typing into the Match length field.
+          <para>In none of the above shortcuts is suitable, clicking OK
+	    will start a new match of the length set in the Match length field.
           </para>
         </listitem>
         <listitem>
