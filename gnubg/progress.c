@@ -26,13 +26,13 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <math.h>
+#include <time.h>
 
 #include "eval.h"
 #include "rollout.h"
 #include "progress.h"
 #include "backgammon.h"
 #include "format.h"
-#include "time.h"
 
 #if defined(USE_GTK)
 #include "gtkgame.h"
@@ -239,7 +239,11 @@ GTKStatPageWin(const rolloutstat * prs, const int cGames)
     int cGamesCount = 0;
     char *sz;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
 
     pwLabel = gtk_label_new(_("Win statistics"));
 
@@ -330,7 +334,11 @@ GTKStatPageCube(const rolloutstat * prs, const int cGames)
     int anTotal[4];
     char sz[100];
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
 
     pwLabel = gtk_label_new(_("Cube statistics"));
 
@@ -407,7 +415,11 @@ GTKStatPageBearoff(const rolloutstat * prs, const int UNUSED(cGames))
     GtkTreeModel *model;
     const char *headers[] = { "" };
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
 
     pwLabel = gtk_label_new(_("Bearoff statistics"));
 
@@ -466,7 +478,11 @@ GTKStatPageClosedOut(const rolloutstat * prs, const int UNUSED(cGames))
     GtkTreeModel *model;
     const char *headers[] = { "" };
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
 
     pwLabel = gtk_label_new(_("Closed out statistics"));
 
@@ -532,7 +548,11 @@ GTKStatPageHit(const rolloutstat * prs, const int cGames)
     GtkTreeModel *model;
     const char *headers[] = { "" };
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
 
     pwLabel = gtk_label_new(_("Hit statistics"));
 
@@ -553,8 +573,6 @@ GTKStatPageHit(const rolloutstat * prs, const int cGames)
 static GtkWidget *
 GTKRolloutStatPage(const rolloutstat * prs, const int cGames)
 {
-
-
     /* GTK Widgets */
 
     GtkWidget *pw;
@@ -564,7 +582,11 @@ GTKRolloutStatPage(const rolloutstat * prs, const int cGames)
 
     /* Create notebook pages */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
 
     pwWin = GTKStatPageWin(prs, cGames);
     pwCube = GTKStatPageCube(prs, cGames);
@@ -582,11 +604,13 @@ GTKRolloutStatPage(const rolloutstat * prs, const int cGames)
     gtk_box_pack_start(GTK_BOX(pw), pwClosedOut, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pw), pwHit, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3, 8, 0)
+    gtk_container_add(GTK_CONTAINER(psw), pw);
+#else
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(psw), pw);
-
+#endif
 
     return psw;
-
 }
 
 
@@ -680,7 +704,7 @@ create_rollout_list(int n, char asz[][40], GtkWidget ** View, GtkListStore ** Li
         N_("Std dev"),
         N_("JSDs")
     };
-    char *aszTemp[N_ROLLOUT_COLS];
+    const char *aszTemp[N_ROLLOUT_COLS];
 
     for (i = 0; i < N_ROLLOUT_COLS; i++)
         aszTemp[i] = aszTitle[i] ? gettext(aszTitle[i]) : "";
@@ -776,7 +800,12 @@ GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
 
     g_signal_connect(G_OBJECT(prp->pwRolloutViewStat), "clicked", G_CALLBACK(GTKViewRolloutStatistics), prp);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pwVbox = gtk_vbox_new(FALSE, 4);
+#endif
+
     create_rollout_list(n, asz, &prp->pwRolloutResult, &prp->pwRolloutResultList, prc->fCubeful);
     prp->pwRolloutProgress = gtk_progress_bar_new();
 #if GTK_CHECK_VERSION(3,0,0)
@@ -789,7 +818,11 @@ GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
 
     /* time elapsed and left */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwhbox, FALSE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Time elapsed")), FALSE, FALSE, 4);
