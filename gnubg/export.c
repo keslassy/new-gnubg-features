@@ -29,7 +29,7 @@
 #include <string.h>
 #include "glib-ext.h"
 
-#if HAVE_LIBPNG
+#if defined(HAVE_LIBPNG)
 #include <png.h>
 #endif
 
@@ -43,7 +43,7 @@
 #include "boardpos.h"
 #include "boarddim.h"
 
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
 #include <cairo.h>
 #include <cairo-svg.h>
 #include <cairo-pdf.h>
@@ -88,7 +88,7 @@ filename_from_iGame(const char *szBase, const int iGame)
     }
 }
 
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
 static gchar *
 export_get_filename(char *sz)
 {
@@ -248,7 +248,7 @@ draw_cairo_pages(cairo_t * cairo, listOLD * game_ptr)
 extern void
 CommandExportPositionSVG(char *sz)
 {
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
     gchar *filename;
     int move_nr;
     int game_nr;
@@ -281,7 +281,7 @@ CommandExportPositionSVG(char *sz)
 extern void
 CommandExportPositionPDF(char *sz)
 {
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
     gchar *filename;
     int move_nr;
     int game_nr;
@@ -314,7 +314,7 @@ CommandExportPositionPDF(char *sz)
 extern void
 CommandExportPositionPS(char *sz)
 {
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
     gchar *filename;
     int move_nr;
     int game_nr;
@@ -348,7 +348,7 @@ CommandExportPositionPS(char *sz)
 extern void
 CommandExportGamePDF(char *sz)
 {
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
     gchar *filename;
     cairo_surface_t *surface;
     cairo_t *cairo;
@@ -373,7 +373,7 @@ CommandExportGamePDF(char *sz)
 extern void
 CommandExportGamePS(char *sz)
 {
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
     gchar *filename;
     cairo_surface_t *surface;
     cairo_t *cairo;
@@ -398,7 +398,7 @@ CommandExportGamePS(char *sz)
 extern void
 CommandExportMatchPDF(char *sz)
 {
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
     listOLD *pl;
     int nGames = 0;
     int i;
@@ -428,7 +428,7 @@ CommandExportMatchPDF(char *sz)
 extern void
 CommandExportMatchPS(char *sz)
 {
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
     listOLD *pl;
     int nGames = 0;
     int i;
@@ -455,7 +455,7 @@ CommandExportMatchPS(char *sz)
         outputerrf(_("Failed to create cairo surface for %s"), sz);
 }
 
-#if HAVE_LIBPNG
+#if defined(HAVE_LIBPNG)
 
 /* size of html images in steps of BOARD_WIDTH x BOARD_HEIGHT
  * as defined in boarddim.h */
@@ -659,7 +659,7 @@ CommandExportPositionPNG(char *sz)
 
     /* generate PNG image */
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (GetMainAppearance()->fDisplayType == DT_3D) {
         GenerateImage3d(sz, exsExport.nPNGSize, BOARD_WIDTH, BOARD_HEIGHT);
     } else
@@ -766,11 +766,11 @@ ExportSnowieTxt(char *sz, const matchstate * pms)
 
     /* chequers on the bar for opponent */
 
-    sz += sprintf(sz, "%d;", pms->anBoard[1][24]);
+    sz += sprintf(sz, "%u;", pms->anBoard[1][24]);
 
     /* dice */
 
-    sprintf(sz, "%d;%d;", (pms->anDice[0] > 0) ? pms->anDice[0] : 0, (pms->anDice[1] > 0) ? pms->anDice[1] : 0);
+    sprintf(sz, "%u;%u;", (pms->anDice[0] > 0) ? pms->anDice[0] : 0, (pms->anDice[1] > 0) ? pms->anDice[1] : 0);
 
 }
 
