@@ -3907,8 +3907,9 @@ CommandTake(char *UNUSED(sz))
     }
 
     if (!move_not_last_in_match_ok())
+        return;
 
-        playSound(SOUND_TAKE);
+    playSound(SOUND_TAKE);
 
     pmr = NewMoveRecord();
 
