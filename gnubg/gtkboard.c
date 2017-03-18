@@ -2516,7 +2516,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
             }
         }
 
-        if (bd->diceRoll[0] <= 0) {     /* Dice not on board */
+        if (bd->diceRoll[0] == 0) {     /* Dice not on board */
             bd->x_dice[0] = bd->x_dice[1] = -DIE_WIDTH - 3;
 
             if ((bd->diceRoll[0] == 0 && old_dice[0] > 0) && (bd->diceRoll[1] == 0 && old_dice[1] > 0)) {
