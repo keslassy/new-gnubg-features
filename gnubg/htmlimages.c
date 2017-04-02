@@ -23,7 +23,7 @@
 #include <errno.h>
 
 #include <string.h>
-#if HAVE_UNISTD_H
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
 
@@ -41,7 +41,7 @@
 #include "boardpos.h"
 #include "boarddim.h"
 
-#if HAVE_LIBPNG
+#if defined(HAVE_LIBPNG)
 
 static char *szFile, *pchFile;
 static int imagesWritten;
@@ -64,7 +64,7 @@ static unsigned char *auchBoard, *auchChequer[2], *auchChequerLabels, *auchLo, *
 
 static unsigned short *asRefract[2];
 
-#if USE_GTK
+#if defined(USE_GTK)
 static unsigned char *auchArrow[2];
 #endif
 static unsigned char *auchMidlb;
@@ -105,7 +105,7 @@ DrawArrow(int side, int player)
 
     memcpy(auchMidlb, auchBoard, BOARD_WIDTH * s * BOARD_HEIGHT * s * 3);
 
-#if USE_GTK
+#if defined(USE_GTK)
     {
         int x, y;
         ArrowPosition(side /* rd.fClockwise */ , player, s, &x, &y);
@@ -578,7 +578,7 @@ RenderObjects(void)
 
     rd.fLabels = TRUE;
     rd.nSize = s;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     /* Use 2d colours for dice */
     rd.fDisplayType = DT_2D;
 #endif
@@ -587,7 +587,7 @@ RenderObjects(void)
     RenderChequers(&rd, auchChequer[0], auchChequer[1], asRefract[0], asRefract[1], CHEQUER_WIDTH * s * 4);
     RenderChequerLabels(&rd, auchChequerLabels, CHEQUER_LABEL_WIDTH * s * 3);
 
-#if USE_GTK && HAVE_CAIRO
+#if defined(USE_GTK) && defined(HAVE_CAIRO)
     RenderArrows(&rd, auchArrow[0], auchArrow[1], s * ARROW_WIDTH * 4, rd.fClockwise);
 #endif
 
@@ -643,7 +643,7 @@ AllocObjects(void)
     s = exsExport.nHtmlSize;
 
     auchMidlb = malloc((BOARD_WIDTH * s * 3 * BOARD_HEIGHT * s) * sizeof(unsigned char));
-#if USE_GTK
+#if defined(USE_GTK)
     auchArrow[0] = malloc(s * ARROW_WIDTH * 4 * s * ARROW_HEIGHT);
     auchArrow[1] = malloc(s * ARROW_WIDTH * 4 * s * ARROW_HEIGHT);
 #endif
@@ -681,7 +681,7 @@ TidyObjects(void)
 {
     int i, j, k;
     free(auchMidlb);
-#if USE_GTK
+#if defined(USE_GTK)
     free(auchArrow[0]);
     free(auchArrow[1]);
 #endif
