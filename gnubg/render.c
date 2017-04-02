@@ -25,7 +25,7 @@
 #include <glib.h>
 #include <stdio.h>
 #include <string.h>
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
@@ -41,18 +41,19 @@
 #include "backgammon.h"
 #include "util.h"
 
-#if USE_GTK
+#if defined(USE_GTK)
 #include <gtk/gtk.h>
 #include <cairo.h>
 #endif
-#if USE_BOARD3D
+
+#if defined(USE_BOARD3D)
 #include "fun3d.h"
 #endif
 
 static randctx rc;
 #define RAND irand( &rc )
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
 #define FONT_VERA "fonts/Vera.ttf"
 #define FONT_VERA_SERIF_BOLD "fonts/VeraSeBd.ttf"
 #if 0 /* unused for now */
@@ -126,7 +127,7 @@ int positions[2][30][3] = { {
                                  }
 };
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
 static FT_Library ftl;
 #endif
 
@@ -155,7 +156,7 @@ static renderdata rdDefault = {
     TRUE,                       /* Show game info */
     TRUE,                       /* dynamic labels */
     1                           /* Show move indicator */
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
         , DT_2D,                /* Display type */
     TRUE,                       /* fHinges3d */
     FALSE,                      /* Show shadows */
@@ -1013,7 +1014,7 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
     default:
         g_assert_not_reached();
     }
-#if USE_GTK
+#if defined(USE_GTK)
     if (showingGray)
         GrayScaleColC(auch);
 #endif
@@ -1381,7 +1382,7 @@ RenderBasicNumber(unsigned char *puch, int nStride,
     }
 }
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
 static void
 RenderGlyph(unsigned char *puch, int nStride, FT_Glyph pftg,
             int xOff, int yOff, unsigned char r, unsigned char g, unsigned char b)
@@ -1471,7 +1472,7 @@ RenderBasicLabels(renderdata * prd, unsigned char *puch, int nStride,
 static void
 RenderLabels(renderdata * prd, unsigned char *puch, int nStride, const int iStart, const int iEnd, const int iDelta)
 {
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     FT_Face ftf;
     int i;
     FT_Glyph aftg[10];
@@ -1757,7 +1758,7 @@ RenderChequerLabels(renderdata * prd, unsigned char *puch, int nStride)
 {
     int i;
     unsigned int ip;
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     FT_Face ftf;
     FT_Glyph aftg[10];
     int fFreetype = FALSE;
@@ -1815,7 +1816,7 @@ RenderChequerLabels(renderdata * prd, unsigned char *puch, int nStride)
             puch[ip * nStride + (4 * prd->nSize - 1) * 3 + 2] = 0;
         }
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
         if (fFreetype)
             RenderNumber(puch, nStride, aftg, i + 4, 2 * prd->nSize, 45 * prd->nSize / 16, 0, 0, 0);
         else
@@ -1825,7 +1826,7 @@ RenderChequerLabels(renderdata * prd, unsigned char *puch, int nStride)
         puch += CHEQUER_LABEL_WIDTH * prd->nSize * nStride;
     }
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     if (fFreetype)
         for (i = 0; i < 10; i++)
             FT_Done_Glyph(aftg[i]);
@@ -1926,7 +1927,7 @@ extern void
 RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned char *puchCube, int nStrideCube)
 {
     int i;
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     FT_Face ftf;
     FT_Glyph aftg[10], aftgSmall[10];
     int fFreetype = FALSE;
@@ -1961,7 +1962,7 @@ RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned cha
                        prd->nSize * nStrideCube, nStrideCube,
                        CUBE_LABEL_WIDTH * prd->nSize, CUBE_LABEL_HEIGHT * prd->nSize);
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
         if (fFreetype)
             RenderNumber(puch, nStride, aftg, 2 << i, 2 * prd->nSize, 3 * prd->nSize, 0, 0, 0x80);
         else
@@ -1979,7 +1980,7 @@ RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned cha
                        prd->nSize * nStrideCube, nStrideCube,
                        CUBE_LABEL_WIDTH * prd->nSize, CUBE_LABEL_HEIGHT * prd->nSize);
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
         if (fFreetype)
             RenderNumber(puch, nStride, aftgSmall, 2 << i, 2 * prd->nSize, 3 * prd->nSize, 0, 0, 0x80);
         else
@@ -1989,7 +1990,7 @@ RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned cha
         puch += CUBE_LABEL_WIDTH * prd->nSize * nStride;
     }
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     if (fFreetype)
         for (i = 0; i < 10; i++) {
             FT_Done_Glyph(aftg[i]);
@@ -2004,7 +2005,7 @@ RenderResignFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned c
 {
     int i;
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     FT_Face ftf;
     FT_Glyph aftg[10], aftgSmall[10];
     int fFreetype = FALSE;
@@ -2039,7 +2040,7 @@ RenderResignFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned c
                        prd->nSize * nStrideCube, nStrideCube,
                        RESIGN_LABEL_WIDTH * prd->nSize, RESIGN_LABEL_HEIGHT * prd->nSize);
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
         if (fFreetype)
             RenderNumber(puch, nStride, aftg, i + 1, 2 * prd->nSize, (7 * prd->nSize) / 2, 0, 0, 0x80);
         else
@@ -2049,7 +2050,7 @@ RenderResignFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned c
         puch += RESIGN_LABEL_WIDTH * prd->nSize * nStride;
     }
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     if (fFreetype)
         for (i = 0; i < 10; i++) {
             FT_Done_Glyph(aftg[i]);
@@ -2248,7 +2249,7 @@ Copy_RGB_to_RGBA(unsigned char *puchDest, int nDestStride,
     }
 }
 
-#if USE_GTK && HAVE_CAIRO
+#if defined(USE_GTK) && defined(HAVE_CAIRO)
 static float
 Highlight(float c)
 {
@@ -2543,7 +2544,7 @@ CalculateArea(renderdata * prd, unsigned char *puch, int nStride,
     }
 
     /* draw arrow for direction of play */
-#if USE_GTK
+#if defined(USE_GTK)
     if (prd->showMoveIndicator &&
         intersects(x, y, cx, cy,
                    anArrowPosition[0], anArrowPosition[1], ARROW_WIDTH * prd->nSize, ARROW_HEIGHT * prd->nSize)) {
@@ -2607,7 +2608,7 @@ RenderImages(renderdata * prd, renderimages * pri)
     pri->asRefract[1] = malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * sizeof(unsigned short));
     pri->achResign = malloc(nSize * nSize * RESIGN_WIDTH * RESIGN_HEIGHT * 4);
     pri->achResignFaces = malloc(nSize * nSize * RESIGN_WIDTH * RESIGN_HEIGHT * 3 * 3);
-#if USE_GTK
+#if defined(USE_GTK)
     pri->auchArrow[0] = malloc(prd->nSize * prd->nSize * ARROW_WIDTH * ARROW_HEIGHT * 4);
     pri->auchArrow[1] = malloc(prd->nSize * prd->nSize * ARROW_WIDTH * ARROW_HEIGHT * 4);
 #else
@@ -2628,7 +2629,7 @@ RenderImages(renderdata * prd, renderimages * pri)
     RenderResign(prd, pri->achResign, nSize * RESIGN_WIDTH * 4);
     RenderResignFaces(prd, pri->achResignFaces, nSize * RESIGN_LABEL_WIDTH * 3,
                       pri->achResign, nSize * RESIGN_WIDTH * 4);
-#if USE_GTK && HAVE_CAIRO
+#if defined(USE_GTK) && defined(HAVE_CAIRO)
     if (prd->showMoveIndicator)
         RenderArrows(prd, pri->auchArrow[0], pri->auchArrow[1], nSize * ARROW_WIDTH * 4, prd->fClockwise);
 #endif
@@ -2657,7 +2658,7 @@ FreeImages(renderimages * pri)
     free(pri->asRefract[1]);
     free(pri->achResign);
     free(pri->achResignFaces);
-#if USE_GTK
+#if defined(USE_GTK)
     free(pri->auchArrow[0]);
     free(pri->auchArrow[1]);
 #endif
@@ -2673,7 +2674,7 @@ RenderInitialise(void)
 
     irandinit(&rc, FALSE);
 
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     FT_Init_FreeType(&ftl);
 #endif
 }
@@ -2681,7 +2682,7 @@ RenderInitialise(void)
 extern void
 RenderFinalise(void)
 {
-#if HAVE_FREETYPE
+#if defined(HAVE_FREETYPE)
     FT_Done_FreeType(ftl);
 #endif
 }
@@ -2698,7 +2699,7 @@ ColourCompare(float c1[4], float c2[4])
     return TolComp(c1[0], c2[0]) && TolComp(c1[1], c2[1]) && TolComp(c1[2], c2[2]) && TolComp(c1[3], c2[3]);
 }
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 
 extern int
 MaterialCompare(Material * pMat1, Material * pMat2)
@@ -2731,7 +2732,7 @@ MaterialTextCompare(Material * pMat1, Material * pMat2)
 extern int
 PreferenceCompare(renderdata * prd1, renderdata * prd2)
 {
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     if (display_is_3d(prd1)) {  /* 3d settings */
         return (prd1->pieceType == prd2->pieceType &&
                 prd1->fHinges3d == prd2->fHinges3d &&

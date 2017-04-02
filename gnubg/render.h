@@ -24,7 +24,7 @@
 
 #include "gnubg-types.h"
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 #include "types3d.h"
 struct _Material {
     float ambientColour[4];
@@ -67,7 +67,7 @@ typedef struct _renderdata {
     int fDynamicLabels;         /* TRUE if the point numbers are dynamic, i.e.,
                                  * they adjust depending on the player on roll */
     int showMoveIndicator;
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
     displaytype fDisplayType;   /* 2d or 3d display */
     int fHinges3d;              /* TRUE if hinges should be drawn */
     int showShadows;            /* Show 3d shadows */
