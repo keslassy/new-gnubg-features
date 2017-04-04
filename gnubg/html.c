@@ -1939,7 +1939,7 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
             "<td colspan=\"2\" %s>%s",
             _("Proper cube action:"), GetStyle(CLASS_CUBE_ACTION, hecss), GetCubeRecommendation(cd));
 
-    if ((r = getPercent(cd, arDouble)) >= 0.0)
+    if ((r = getPercent(cd, arDouble)) >= 0.0f)
         fprintf(pf, " (%.1f%%)", 100.0f * r);
 
 
@@ -3000,16 +3000,15 @@ CommandExportMatchHtml(char *sz)
             aszLinks[2] = g_path_get_basename(filenames[2]);
         }
 
-
-
         filenames[3] = filename_from_iGame(sz, nGames - 1);
         aszLinks[3] = g_path_get_basename(filenames[3]);
         if (!i) {
 
             if (!confirmOverwrite(sz, fConfirmSave)) {
-                for (j = 0; j < 4; j++)
+                for (j = 0; j < 4; j++) {
+                    g_free(aszLinks[j]);
                     g_free(filenames[j]);
-
+                }
                 g_free(szCurrent);
                 return;
             }
@@ -3023,9 +3022,10 @@ CommandExportMatchHtml(char *sz)
             pf = stdout;
         else if (!(pf = gnubg_g_fopen(szCurrent, "w"))) {
             outputerr(szCurrent);
-            for (j = 0; j < 4; j++)
+            for (j = 0; j < 4; j++) {
+                g_free(aszLinks[j]);
                 g_free(filenames[j]);
-
+            }
             g_free(szCurrent);
             return;
         }
@@ -3034,9 +3034,10 @@ CommandExportMatchHtml(char *sz)
                        exsExport.szHTMLPictureURL, exsExport.szHTMLExtension,
                        exsExport.het, exsExport.hecss, i, i == nGames - 1, aszLinks);
 
-        for (j = 0; j < 4; j++)
+        for (j = 0; j < 4; j++) {
+            g_free(aszLinks[j]);
             g_free(filenames[j]);
-
+        }
         g_free(szCurrent);
 
         if (pf != stdout)

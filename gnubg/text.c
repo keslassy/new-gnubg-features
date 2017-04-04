@@ -851,7 +851,6 @@ CommandExportMatchText(char *sz)
     }
 
     /* Find number of games in match */
-
     for (pl = lMatch.plNext, nGames = 0; pl != &lMatch; pl = pl->plNext, nGames++);
 
     for (pl = lMatch.plNext, i = 0; pl != &lMatch; pl = pl->plNext, i++) {
@@ -860,8 +859,10 @@ CommandExportMatchText(char *sz)
 
         if (!i) {
 
-            if (!confirmOverwrite(sz, fConfirmSave))
+            if (!confirmOverwrite(sz, fConfirmSave)) {
+                g_free(szCurrent);
                 return;
+            }
 
             setDefaultFileName(sz);
 
@@ -872,6 +873,7 @@ CommandExportMatchText(char *sz)
             pf = stdout;
         else if ((pf = gnubg_g_fopen(szCurrent, "w")) == 0) {
             outputerr(szCurrent);
+            g_free(szCurrent);
             return;
         }
 
@@ -880,6 +882,7 @@ CommandExportMatchText(char *sz)
         if (pf != stdout)
             fclose(pf);
 
+        g_free(szCurrent);
     }
 
 }
