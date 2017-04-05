@@ -1929,7 +1929,7 @@ RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned cha
     int i;
 #if defined(HAVE_FREETYPE)
     FT_Face ftf;
-    FT_Glyph aftg[10], aftgSmall[10];
+    FT_Glyph aftg[10], aftgSmall[10], aftgTiny[10];
     int fFreetype = FALSE;
     char *file;
 
@@ -1947,6 +1947,13 @@ RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned cha
         for (i = 0; i < 10; i++) {
             FT_Load_Char(ftf, '0' + i, FT_LOAD_RENDER);
             FT_Get_Glyph(ftf->glyph, aftgSmall + i);
+        }
+
+        FT_Set_Pixel_Sizes(ftf, 0, (3 * prd->nSize) / 2);
+
+        for (i = 0; i < 10; i++) {
+            FT_Load_Char(ftf, '0' + i, FT_LOAD_RENDER);
+            FT_Get_Glyph(ftf->glyph, aftgTiny + i);
         }
 
         FT_Done_Face(ftf);
@@ -1972,6 +1979,24 @@ RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned cha
         puch += CUBE_LABEL_WIDTH * prd->nSize * nStride;
     }
 
+    for (; i < 9; i++) {
+        /* Clear destination buffer (no blending at present - so all overwriten anyway) */
+        memset(puch, 0, nStride * CUBE_LABEL_HEIGHT * prd->nSize);
+
+        AlphaBlendBase(puch, nStride, puch, nStride, puchCube + prd->nSize * 4 +
+                       prd->nSize * nStrideCube, nStrideCube,
+                       CUBE_LABEL_WIDTH * prd->nSize, CUBE_LABEL_HEIGHT * prd->nSize);
+
+#if defined(HAVE_FREETYPE)
+        if (fFreetype)
+            RenderNumber(puch, nStride, aftgSmall, 2 << i, 2 * prd->nSize, (11 * prd->nSize) / 4, 0, 0, 0x80);
+        else
+#endif
+            RenderBasicNumber(puch, nStride, 3 * prd->nSize, 2 << i, 3 * prd->nSize, 4 * prd->nSize, 0, 0, 0x80);
+
+        puch += CUBE_LABEL_WIDTH * prd->nSize * nStride;
+    }
+
     for (; i < 12; i++) {
         /* Clear destination buffer (no blending at present - so all overwriten anyway) */
         memset(puch, 0, nStride * CUBE_LABEL_HEIGHT * prd->nSize);
@@ -1982,10 +2007,10 @@ RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned cha
 
 #if defined(HAVE_FREETYPE)
         if (fFreetype)
-            RenderNumber(puch, nStride, aftgSmall, 2 << i, 2 * prd->nSize, 3 * prd->nSize, 0, 0, 0x80);
+            RenderNumber(puch, nStride, aftgTiny, 2 << i, 2 * prd->nSize, (5 * prd->nSize) / 2, 0, 0, 0x80);
         else
 #endif
-            RenderBasicNumber(puch, nStride, 3 * prd->nSize, 2 << i, 3 * prd->nSize, 4 * prd->nSize, 0, 0, 0x80);
+            RenderBasicNumber(puch, nStride, 2 * prd->nSize, 2 << i, 3 * prd->nSize, 4 * prd->nSize, 0, 0, 0x80);
 
         puch += CUBE_LABEL_WIDTH * prd->nSize * nStride;
     }
