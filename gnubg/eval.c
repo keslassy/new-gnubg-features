@@ -1988,18 +1988,17 @@ raceBGprob(const TanBoard anBoard, int side, const bgvariation bgv)
     }
 
     {
+        float p = 0.0f;
         const long *bgp = getRaceBGprobs(dummy[1 - side]);
         if (bgp) {
             int k = PositionBearoff(anBoard[side], pbc1->nPoints, pbc1->nChequers);
             unsigned short int aProb[32];
 
-            float p = 0.0;
             unsigned int j;
 
             unsigned long scale = (side == 0) ? 36 : 1;
 
             BearoffDist(pbc1, k, NULL, NULL, NULL, aProb, NULL);
-
 
             for (j = 1 - side; j < RBG_NPROBS; j++) {
                 unsigned long sum = 0;
@@ -2012,19 +2011,19 @@ raceBGprob(const TanBoard anBoard, int side, const bgvariation bgv)
 
             p /= 65535.0f;
 
-            return p;
-
         } else {
-            float p[5];
+            float ap[5];
 
             if (PositionBearoff(dummy[0], 6, 15) > 923 || PositionBearoff(dummy[1], 6, 15) > 923) {
-                EvalBearoff1((ConstTanBoard) dummy, p, bgv, NULL);
+                EvalBearoff1((ConstTanBoard) dummy, ap, bgv, NULL);
             } else {
-                EvalBearoff2((ConstTanBoard) dummy, p, bgv, NULL);
+                EvalBearoff2((ConstTanBoard) dummy, ap, bgv, NULL);
             }
 
-            return side == 1 ? p[0] : 1 - p[0];
+            p = (side == 1 ? ap[0] : 1 - ap[0]);
         }
+
+        return MIN(p, 1.0f);
     }
 }
 
@@ -5714,7 +5713,7 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
     move *pm;
     movefilter *mFilters;
     unsigned int nMaxPly = 0;
-    int cOldMoves;
+    unsigned int cOldMoves;
 
     /* Find all moves -- note that pml contains internal pointers to static
      * data, so we can't call GenerateMoves again (or anything that calls
@@ -5830,7 +5829,7 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
 
                 if (fResort && pec->nPlies) {
                     move m;
-                    int j;
+                    unsigned int j;
 
                     memcpy(&m, pml->amMoves + i, sizeof m);
 
