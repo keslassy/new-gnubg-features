@@ -92,6 +92,7 @@ listOLD lMatch, *plGame, *plLastMove;
 statcontext scMatch;
 static int fComputerDecision = FALSE;
 static int fEndGame = FALSE;
+static int fCrawfordState = -1;
 int automaticTask = FALSE;
 
 typedef enum _annotatetype {
@@ -377,7 +378,6 @@ ApplyMoveRecord(matchstate * pms, const listOLD * plGame, const moverecord * pmr
         pms->fTurn = pms->fMove;
         break;
     }
-
 }
 
 extern void
@@ -780,6 +780,17 @@ NewGame(void)
     pmr = NewMoveRecord();
     pmr->mt = MOVE_GAMEINFO;
     pmr->sz = NULL;
+
+    if (fCrawfordState >= 0) {
+        ms.fCrawford = fCrawfordState & 0x1;
+        ms.fPostCrawford = (fCrawfordState & 0x2) >> 1;
+    } else {
+       if (ms.nMatchTo && fAutoCrawford) {
+            ms.fPostCrawford |= ms.fCrawford && MAX(ms.anScore[0], ms.anScore[1]) < ms.nMatchTo;
+            ms.fCrawford = !ms.fPostCrawford && !ms.fCrawford &&
+                MAX(ms.anScore[0], ms.anScore[1]) == ms.nMatchTo - 1 && MIN(ms.anScore[0], ms.anScore[1]) < ms.nMatchTo - 1;
+        }
+    }
 
     pmr->g.i = ms.cGames;
     pmr->g.nMatch = ms.nMatchTo;
@@ -1738,7 +1749,6 @@ NextTurn(int fPlayNext)
                          "%s wins a %s and %d points.\n",
                          pmgi->nPoints), ap[pmgi->fWinner].szName, gettext(aszGameResult[n - 1]), pmgi->nPoints);
 
-
 #if defined (USE_GTK)
         if (fX) {
             if (fDisplay) {
@@ -1762,6 +1772,9 @@ NextTurn(int fPlayNext)
             ms.fCrawford = !ms.fPostCrawford && !ms.fCrawford &&
                 ms.anScore[pmgi->fWinner] == ms.nMatchTo - 1 && ms.anScore[!pmgi->fWinner] != ms.nMatchTo - 1;
         }
+
+        fCrawfordState = ms.fCrawford | (ms.fPostCrawford << 1);
+
 #if defined (USE_GTK)
         if (!fX || fDisplay)
 #endif
@@ -2754,6 +2767,7 @@ ClearMatch(void)
     ms.fMove = ms.fTurn = -1;
     ms.fCrawford = FALSE;
     ms.fPostCrawford = FALSE;
+    fCrawfordState = -1;
     ms.gs = GAME_NONE;
     ms.fJacoby = fJacoby;
 
@@ -2771,7 +2785,6 @@ ClearMatch(void)
 extern void
 FreeMatch(void)
 {
-
     PopGame(lMatch.plNext->p, TRUE);
     IniStatcontext(&scMatch);
 }
@@ -2779,7 +2792,6 @@ FreeMatch(void)
 extern void
 SetMatchDate(matchinfo * pmi)
 {
-
     time_t t = time(NULL);
     struct tm *ptm = localtime(&t);
 
@@ -3988,6 +4000,8 @@ SetMatchID(const char *szMatchID)
 
     if (nMatchTo == 1)
         fCrawford = 0;
+
+    fCrawfordState = -1;
 
     /* start new match or session */
 
