@@ -56,7 +56,7 @@ static int sgferror( const char *s ) {
 }
 
 static listOLD *NewList( void ) {
-    listOLD *pl = calloc(1,  sizeof( *pl ) );
+    listOLD *pl = malloc( sizeof( *pl ) );
     ListCreate( pl );
     return pl;
 }
