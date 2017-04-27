@@ -568,9 +568,9 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
                 }
 
-
             }
-
+            if (list == NULL)
+                g_free(aasz);
         }
 
         break;
