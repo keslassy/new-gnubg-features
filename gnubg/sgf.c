@@ -84,8 +84,7 @@ FreeList(listOLD * pl, int nLevel)
         ListDelete(pl->plNext);
     }
 
-    if (nLevel != 4)
-        free(pl);
+    free(pl);
 }
 
 static void
