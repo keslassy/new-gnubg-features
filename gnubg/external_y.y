@@ -80,7 +80,7 @@
 #include "external_y.h"
 
 /* Resolve a warning on older GLIBC/GNU systems that have stpcpy */
-#if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
+#if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE && !defined(__USE_XOPEN2K8)
 extern char *stpcpy(char *s1, const char *s2);
 #endif
 
