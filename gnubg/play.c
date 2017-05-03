@@ -4089,6 +4089,14 @@ SetMatchID(const char *szMatchID)
     /* make sure that the hint record has the player on turn */
     get_current_moverecord(NULL);
 
+#if defined(USE_GTK)
+    if (fX) {
+        BoardData *bd = BOARD(pwBoard)->board_data;
+        bd->diceRoll[0] = anDice[0];
+        bd->diceRoll[1] = anDice[1];
+    }
+#endif
+
     ShowBoard();
 }
 
