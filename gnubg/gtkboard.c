@@ -1555,7 +1555,7 @@ ForcedMove(TanBoard anBoard, unsigned int anDice[2])
 }
 
 static int
-GreadyBearoff(TanBoard anBoard, unsigned int anDice[2])
+GreedyBearoff(TanBoard anBoard, unsigned int anDice[2])
 {
 
     movelist ml;
@@ -1829,7 +1829,7 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
         /* Don't let them move chequers unless the dice have been
          * rolled, or they're editing the board. */
         if (bd->diceShown != DICE_ON_BOARD && !editing) {
-            outputl("You must roll the dice before moving pieces");
+            outputl(_("You must roll the dice before you can move."));
             outputx();
             board_beep(bd);
             bd->drag_point = -1;
@@ -1872,13 +1872,13 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
             bd->drag_colour = bd->turn;
             bd->drag_point = -1;
 
-            if (ForcedMove(anBoard, bd->diceRoll) || GreadyBearoff(anBoard, bd->diceRoll)) {
+            if (ForcedMove(anBoard, bd->diceRoll) || GreedyBearoff(anBoard, bd->diceRoll)) {
                 int old_points[28];
                 memcpy(old_points, bd->points, sizeof old_points);
 
                 /* we've found a move: update board  */
                 if (UpdateMove(bd, anBoard)) {
-                    /* should not happen as ForcedMove and GreadyBearoff
+                    /* should not happen as ForcedMove and GreedyBearoff
                      * always return legal moves */
                     g_assert_not_reached();
                 }
