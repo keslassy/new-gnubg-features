@@ -1013,8 +1013,10 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
 
     }
 
-    if (!pchd->pwFrame)
+    if (!pchd->pwFrame) {
+        g_free(pchd);
         return NULL;
+    }
 
     gtk_box_pack_start(GTK_BOX(pw), pchd->pwFrame, FALSE, FALSE, 0);
 
