@@ -38,10 +38,11 @@ typedef struct _rollswidget {
     GtkWidget *ptv;             /* the tree widget */
     GtkWidget *pDialog, *pCancel, *pScale;
 
-    int closing;
     evalcontext *pec;
     matchstate *pms;
     int nDepth;                 /* current depth */
+    int closing;
+
 } rollswidget;
 
 
@@ -340,7 +341,11 @@ GTKShowRolls(const gint nDepth, evalcontext * pec, matchstate * pms)
 
     /* vbox to hold tree widget and buttons */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+#else
     vbox = gtk_vbox_new(FALSE, 8);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(vbox), 8);
     gtk_container_add(GTK_CONTAINER(DialogArea(prw->pDialog, DA_MAIN)), vbox);
 
@@ -356,23 +361,39 @@ GTKShowRolls(const gint nDepth, evalcontext * pec, matchstate * pms)
 
     /* buttons */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(vbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 0);
+#else
     gtk_box_pack_start(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(hbox), gtk_label_new(_("Depth")), FALSE, FALSE, 4);
 
     /* Set page size to 1 */
     padj = GTK_ADJUSTMENT(gtk_adjustment_new(1., 1., 5., 1., 1., 0.));
+#if GTK_CHECK_VERSION(3,0,0)
+    prw->pScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padj);
+#else
     prw->pScale = gtk_hscale_new(padj);
+#endif
     gtk_widget_set_size_request(prw->pScale, 100, -1);
     gtk_box_pack_start(GTK_BOX(hbox), prw->pScale, FALSE, FALSE, 4);
     gtk_scale_set_digits(GTK_SCALE(prw->pScale), 0);
     gtk_scale_set_draw_value(GTK_SCALE(prw->pScale), TRUE);
 
     /* Separate vbox to make button height correct */
+#if GTK_CHECK_VERSION(3,0,0)
+    vb2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vb2 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(hbox), vb2, FALSE, FALSE, 4);
     prw->pCancel = gtk_button_new_with_label(_("Cancel"));
     gtk_widget_set_size_request(prw->pCancel, -1, 27);
