@@ -379,7 +379,11 @@ CubeAnalysis(cubehintdata * pchd)
     pwFrame = gtk_frame_new(_("Cube analysis"));
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
     pwTable = gtk_table_new(8, 4, FALSE);
@@ -818,7 +822,7 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     GtkWidget *pwply;
     GtkWidget *pwEvalSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwRollout = gtk_button_new_with_label(_("Rollout"));
-    GtkWidget *pwRolloutPresets = gtk_hbox_new(FALSE, 0);
+    GtkWidget *pwRolloutPresets;
     GtkWidget *pwRolloutSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwMWC = gtk_toggle_button_new_with_label(_("MWC"));
     GtkWidget *pwCopy = gtk_button_new_with_label(_("Copy"));
@@ -849,7 +853,11 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     gtk_table_attach(GTK_TABLE(pwTools), pwEvalSettings, 1, 2, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_table_attach(GTK_TABLE(pwTools), pw, 2, 3, 0, 1, (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     for (i = 0; i < 5; ++i) {
@@ -870,6 +878,12 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
         g_free(sz);
 
     }
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwRolloutPresets = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwRolloutPresets = gtk_hbox_new(FALSE, 0);
+#endif
 
     gtk_table_attach(GTK_TABLE(pwTools), pwMWC, 3, 4, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
@@ -963,7 +977,13 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
     pchd->did_double = did_double;
     pchd->did_take = did_take;
     pchd->hist = hist;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pchd->pw = pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+#else
     pchd->pw = pw = gtk_hbox_new(FALSE, 2);
+#endif
+
     switch (pmr->mt) {
 
     case MOVE_NORMAL:
@@ -998,11 +1018,19 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
 
     gtk_box_pack_start(GTK_BOX(pw), pchd->pwFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwx = gtk_vbox_new(FALSE, 0);
+#endif
 
     gtk_box_pack_start(GTK_BOX(pwx), pw, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhb = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhb = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwhb), CreateCubeAnalysisTools(pchd), FALSE, FALSE, 8);
 
     gtk_box_pack_start(GTK_BOX(pwx), pwhb, FALSE, FALSE, 0);
