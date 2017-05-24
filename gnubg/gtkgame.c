@@ -21,7 +21,6 @@
 
 #include "config.h"
 #include "gnubgmodule.h"
-#include "gtklocdefs.h"
 #include "gtkuidefs.h"
 
 #include <glib.h>
@@ -3707,7 +3706,12 @@ CreateMainWindow(void)
                                    TRUE);
     gtk_window_add_accel_group(GTK_WINDOW(pwMain), pagMain);
 #endif
-    gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle = gtk_locdef_handle_box_new(), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHandle = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwHandle = gtk_vbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle, FALSE, FALSE, 0);
 #if defined(USE_GTKUIMANAGER)
     pwMenuBar = gtk_ui_manager_get_widget(puim, "/MainMenu");
     gtk_container_add(GTK_CONTAINER(pwHandle), pwMenuBar);
@@ -3716,7 +3720,12 @@ CreateMainWindow(void)
     gtk_container_add(GTK_CONTAINER(pwHandle), pwMenuBar = gtk_item_factory_get_widget(pif, "<main>"));
 #endif
 
-    gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle = gtk_locdef_handle_box_new(), FALSE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHandle = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwHandle = gtk_vbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle, FALSE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(pwHandle), pwToolbar = ToolbarNew());
 
     gtk_box_pack_start(GTK_BOX(pwVbox), pwGameBox = gtk_hbox_new(FALSE, 0), TRUE, TRUE, 0);
