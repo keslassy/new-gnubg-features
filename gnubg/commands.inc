@@ -210,13 +210,13 @@ static command acAnnotateRoll[] = {
       "PS format"), szFILENAME, &cFilename },
     { NULL, NULL, NULL, NULL, NULL }
 }, acExportPosition[] = {
-    { "gammonline", CommandExportPositionGammOnLine,
-      N_("Save the current position in .html format "
-         "(special for GammOnLine)"), 
-      szFILENAME, &cFilename },
-    { "gol2clipboard", CommandExportPositionGOL2Clipboard,
+    { "bgo2clipboard", CommandExportPositionGOL2Clipboard,
       N_("Copy the current position in .html format to clipboard"
-         "(special for GammOnLine)"), 
+         "(special for BGonline)"),
+      szFILENAME, &cFilename },
+    { "bgonline", CommandExportPositionGammOnLine,
+      N_("Save the current position in .html format "
+         "(special for BGonline)"),
       szFILENAME, &cFilename },
 #if defined(HAVE_PANGOCAIRO)
     { "ps", CommandExportPositionPS, N_("Save the current position in "

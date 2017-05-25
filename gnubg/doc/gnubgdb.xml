@@ -1499,8 +1499,8 @@ To roll the dice the CL version type 'roll'.
           <orderedlist continuation="restarts" inheritnum="ignore">
             <listitem>
               <para>the BBS images used by Kit Woolsey's GammOnLine e-magazine,
-                Danish Backgammon Federation's web-based discussion group and
-                others </para>
+              Stick's BGonline or the Danish Backgammon Federation's web-based
+	      discussion groups and others</para>
             </listitem>
             <listitem>
               <para>the fibs2html images used by the Joseph Heled's program
@@ -1526,8 +1526,8 @@ To roll the dice the CL version type 'roll'.
             it's possible to leave out the analysis or parts of the analysis.
             Also, you may enter a specific URL to the pictures used to compose
             the board which is useful for posting positions on web-based
-            discussion groups such as Kit Woolsey's GammOnLine, the Danish
-            Backgammon Federation's Debat Forum.</para>
+            discussion groups such as Stick's BGonline, Kit Woolsey's GammOnLine,
+	    or the Danish Backgammon Federation's Debat Forum.</para>
           <para>If you want to have html images locally on your computer, you
             can have <application>GNU Backgammon</application> generate these.
             The html images will be generated based on the current appearance
@@ -4444,11 +4444,11 @@ Equity
           the style attribute. If you wish to make any modifications to the
           style sheet without modifying the actual source code of
             <application>GNU Backgammon</application> you have to choose one of
-          the first two methods. Note that the special export for Kit Woolsey's
+          the first two methods. Note that the special export for BGonline /
           GammOnLine uses the third method since the XHTML is pasted into a web
           page without the possibility to modify the header section of the page
           where the style sheet is defined. Thus, it's not possible to modify
-          the style of the generated XHTML for GammOnLine without modifications
+          the style of this variant of generated XHTML without modifications
           of the source code or extensive search and replace in the generated
           XHTML.</para>
         <para>Below follows a description of the CSS classes used in the XHTML

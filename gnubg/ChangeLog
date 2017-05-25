@@ -1,3 +1,11 @@
+2017-05-25  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* gtkgame.c, gtkuidefs.h, commands.inc: Use "Copy as BGonline"
+	instead of "Copy as GammOnLine" in the Edit menu.
+	The second name tends to confuses new users who wish to post a
+	position at bgonline but don't know the older, now less popular
+	forum and that both use the same format.
+
 2017-02-19  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* configure.ac, bearoff.c, bearoff.h: Raise minimum version

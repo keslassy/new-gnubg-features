@@ -47,7 +47,7 @@
 	      \
 	      "<menu name='CopyAsMenu' action='CopyAsMenuAction'>" \
 	        "<menuitem name='PosAsAscii' action='CopyPosAsAsciiAction' />" \
-	        "<menuitem name='GammOnLine' action='CopyAsGammOnLineAction' />" \
+	        "<menuitem name='BGonline' action='CopyAsGammOnLineAction' />" \
 	      "</menu>" \
 	      \
 	      "<menuitem name='PasteID' action='PasteIDAction' />" \
