@@ -417,7 +417,7 @@ printImageClass(FILE * pf, const char *szImageDir, const char *szImage,
                 const htmlexportcss hecss, const htmlexporttype het, const stylesheetclass ssc)
 {
 
-    fprintf(pf, "<img src=\"%s%s%s.%s\" %s alt=\"%s\" />",
+    fprintf(pf, "<img src=\"%s%s%s.%s\" %s alt=\"%s\"/>",
             (szImageDir) ? szImageDir : "",
             (!szImageDir || szImageDir[strlen(szImageDir) - 1] == '/') ? "" : "/",
             szImage, szExtension,
@@ -537,7 +537,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
 
     printImageClass(pf, szImageDir, fTurn ? "n_high" : "n_low",
                     szExtension, NULL, hecss, HTML_EXPORT_TYPE_BBS, CLASS_BOARD_IMG_HEADER);
-    fputs("<br />\n", pf);
+    fputs("<br/>\n", pf);
 
     /* chequers off */
 
@@ -567,7 +567,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
     } else
         printImageClass(pf, szImageDir, "c_up_0", szExtension, NULL, hecss, HTML_EXPORT_TYPE_BBS, CLASS_BOARD_IMG);
 
-    fputs("<br />\n", pf);
+    fputs("<br/>\n", pf);
 
     /* end of first row */
 
@@ -596,7 +596,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
     else
         printImageClass(pf, szImageDir, "c_blank", szExtension, NULL, hecss, HTML_EXPORT_TYPE_BBS, CLASS_BOARD_IMG);
 
-    fputs("<br />\n", pf);
+    fputs("<br/>\n", pf);
 
     /* end of center row */
 
@@ -632,7 +632,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
     } else
         printImageClass(pf, szImageDir, "c_dn_0", szExtension, NULL, hecss, HTML_EXPORT_TYPE_BBS, CLASS_BOARD_IMG);
 
-    fputs("<br />\n", pf);
+    fputs("<br/>\n", pf);
 
     /* point numbers */
 
@@ -654,7 +654,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
 
     fprintf(pf, "<span %s>", GetStyle(CLASS_POSITIONID, hecss));
 
-    fprintf(pf, "%s <tt>%s</tt> %s <tt>%s</tt><br /></span></td></tr></table>\n",
+    fprintf(pf, "%s <tt>%s</tt> %s <tt>%s</tt><br/></span></td></tr></table>\n",
             _("Position ID:"), PositionID((ConstTanBoard) pms->anBoard), _("Match ID:"), MatchIDFromMatchState(pms));
 
 }
@@ -741,7 +741,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
     printImage(pf, szImageDir, sz, szExtension,
                fTurn ? "+-13-14-15-16-17-18-+---+-19-20-21-22-23-24-+" :
                "+-12-11-10--9--8--7-+---+--6--5--4--3--2--1-+", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
-    fprintf(pf, "<br />\n");
+    fprintf(pf, "<br/>\n");
 
     /* cube image */
 
@@ -813,7 +813,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
 
     printImage(pf, szImageDir, "b-right", szExtension, "|", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
 
-    fprintf(pf, "<br />\n");
+    fprintf(pf, "<br/>\n");
 
     /* center of board */
 
@@ -843,7 +843,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
         printImage(pf, szImageDir, "b-midr", szExtension, "|", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
 
-        fprintf(pf, "<br />\n");
+        fprintf(pf, "<br/>\n");
 
     } else {
 
@@ -862,7 +862,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
         printImage(pf, szImageDir, "b-midr", szExtension, "|", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
 
-        fprintf(pf, "<br />\n");
+        fprintf(pf, "<br/>\n");
 
     }
 
@@ -933,7 +933,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
     /* right border */
 
     printImage(pf, szImageDir, "b-right", szExtension, "|", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
-    fprintf(pf, "<br />\n");
+    fprintf(pf, "<br/>\n");
 
     /* bottom */
 
@@ -945,21 +945,21 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
                fTurn ?
                "+-12-11-10--9--8--7-+---+--6--5--4--3--2--1-+" :
                "+-13-14-15-16-17-18-+---+-19-20-21-22-23-24-+", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
-    fprintf(pf, "<br />\n");
+    fprintf(pf, "<br/>\n");
 
     /* pip counts */
 
     printImage(pf, szImageDir, "b-indent", szExtension, "", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
 
     PipCount((ConstTanBoard) anBoard, anPips);
-    fprintf(pf, _("Pip counts: %s %u, %s %u<br />\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
+    fprintf(pf, _("Pip counts: %s %u, %s %u<br/>\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
 
     /* position ID */
 
     printImage(pf, szImageDir, "b-indent", szExtension, "", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
     fprintf(pf, "<span %s>", GetStyle(CLASS_POSITIONID, hecss));
 
-    fprintf(pf, _("Position ID: <tt>%s</tt> Match ID: <tt>%s</tt><br />\n"),
+    fprintf(pf, _("Position ID: <tt>%s</tt> Match ID: <tt>%s</tt><br/>\n"),
             PositionID((ConstTanBoard) pms->anBoard), MatchIDFromMatchState(pms));
 
     fprintf(pf, "</span>");
@@ -1374,13 +1374,13 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
     fputs("<p>", pf);
 
     PipCount((ConstTanBoard) anBoard, anPips);
-    fprintf(pf, _("Pip counts: %s %u, %s %u<br />\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
+    fprintf(pf, _("Pip counts: %s %u, %s %u<br/>\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
 
     /* position ID */
 
     fprintf(pf, "<span %s>", GetStyle(CLASS_POSITIONID, hecss));
 
-    fprintf(pf, _("Position ID: <tt>%s</tt> Match ID: <tt>%s</tt><br />\n"),
+    fprintf(pf, _("Position ID: <tt>%s</tt> Match ID: <tt>%s</tt><br/>\n"),
             PositionID((ConstTanBoard) pms->anBoard), MatchIDFromMatchState(pms));
 
     fprintf(pf, "</span>");
@@ -1436,7 +1436,7 @@ HTMLBoardHeader(FILE * pf, const matchstate * pms,
     fputs("\n<!-- Header -->\n\n", pf);
 
     if (fHR)
-        fputs("<hr />\n", pf);
+        fputs("<hr/>\n", pf);
 
     fputs("<p>", pf);
 
@@ -1519,10 +1519,10 @@ HTMLPrologue(FILE * pf, const matchstate * pms,
             "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" "
             "lang=\"en\">\n"
             "<head>\n"
-            "<meta name=\"generator\" content=\"%s\" />\n"
+            "<meta name=\"generator\" content=\"%s\"/>\n"
             "<meta http-equiv=\"Content-Type\" "
-            "content=\"text/html; charset=%s\" />\n"
-            "<meta name=\"keywords\" content=\"%s, %s, %s\" />\n"
+            "content=\"text/html; charset=%s\"/>\n"
+            "<meta name=\"keywords\" content=\"%s, %s, %s\"/>\n"
             "<meta name=\"description\" "
             "content=\"",
             VERSION_STRING,
@@ -1530,12 +1530,12 @@ HTMLPrologue(FILE * pf, const matchstate * pms,
 
     fprintf(pf, _("%s (analysed by %s)"), szTitle, VERSION_STRING);
 
-    fprintf(pf, "\" />\n" "<title>%s</title>\n", szTitle);
+    fprintf(pf, "\"/>\n" "<title>%s</title>\n", szTitle);
 
     if (hecss == HTML_EXPORT_CSS_HEAD)
         WriteStyleSheet(pf, hecss);
     else if (hecss == HTML_EXPORT_CSS_EXTERNAL)
-        fputs("<link title=\"CSS stylesheet\" rel=\"stylesheet\" " "href=\"gnubg.css\" type=\"text/css\" />\n", pf);
+        fputs("<link title=\"CSS stylesheet\" rel=\"stylesheet\" " "href=\"gnubg.css\" type=\"text/css\"/>\n", pf);
 
     fprintf(pf, "</head>\n" "\n" "<body %s>\n" "<h1>", GetStyle(CLASS_FONT_FAMILY, hecss));
 
@@ -1550,7 +1550,7 @@ HTMLPrologue(FILE * pf, const matchstate * pms,
     for (i = 0; i < 4; i++)
         if (aszLinks && aszLinks[i]) {
             if (fFirst) {
-                fprintf(pf, "<hr />\n");
+                fprintf(pf, "<hr/>\n");
                 fputs("<p>\n", pf);
                 fFirst = FALSE;
             }
@@ -1595,7 +1595,7 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
     for (i = 0; i < 4; i++)
         if (aszLinks && aszLinks[i]) {
             if (fFirst) {
-                fprintf(pf, "<hr />\n");
+                fprintf(pf, "<hr/>\n");
                 fputs("<p>\n", pf);
                 fFirst = FALSE;
             }
@@ -1608,7 +1608,7 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
 
     time(&t);
 
-    fputs("<hr />\n" "<address>", pf);
+    fputs("<hr/>\n" "<address>", pf);
 
     fprintf(pf,
             _("Output generated %s by "
@@ -1624,11 +1624,11 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
             "<a href=\"http://validator.w3.org/check?uri=referer\">"
             "<img style=\"border:0;width:88px;height:31px\" "
             "src=\"http://www.w3.org/Icons/valid-xhtml10\" "
-            "alt=\"%s\" /></a>\n"
+            "alt=\"%s\"/></a>\n"
             "<a href=\"http://jigsaw.w3.org/css-validator/check/referer\">"
             "<img style=\"border:0;width=88px;height:31px\" "
             "src=\"http://jigsaw.w3.org/css-validator/images/vcss\" "
-            "alt=\"%s\" />" "</a>\n" "</p>\n" "</body>\n" "</html>\n", _("Valid XHTML 1.0 Strict!"), _("Valid CSS!"));
+            "alt=\"%s\"/>" "</a>\n" "</p>\n" "</body>\n" "</html>\n", _("Valid XHTML 1.0 Strict!"), _("Valid CSS!"));
 
 
 }
@@ -2598,7 +2598,7 @@ HTMLPrintComment(FILE * pf, const moverecord * pmr, const htmlexportcss hecss)
         while (*sz) {
 
             if (*sz == '\n')
-                fputs("<br />\n", pf);
+                fputs("<br/>\n", pf);
             else
                 fputc(*sz, pf);
 
@@ -2633,7 +2633,7 @@ HTMLPrintMI(FILE * pf, const char *szTitle, const char *sz)
     ppch = g_strsplit(sz, "\n", -1);
     for (i = 0; (pchToken = ppch[i]); ++i) {
         if (i)
-            fputs("<br />\n", pf);
+            fputs("<br/>\n", pf);
         fputs(pchToken, pf);
     }
 
@@ -2659,7 +2659,7 @@ HTMLMatchInfo(FILE * pf, const matchinfo * pmi, const htmlexportcss UNUSED(hecss
 
     fputs("\n<!-- Match Information -->\n\n", pf);
 
-    fputs("<hr />", pf);
+    fputs("<hr/>", pf);
 
     fprintf(pf, "<h2>%s</h2>\n", _("Match Information"));
 
@@ -2836,7 +2836,7 @@ ExportGameHTML(FILE * pf, listOLD * plGame, const char *szImageDir,
         /* match statistics */
         header = ms.nMatchTo ? _("Match statistics") : _("Session statistics");
 
-        fprintf(pf, "<hr />\n");
+        fprintf(pf, "<hr/>\n");
         HTMLDumpStatcontext(pf, &scTotal, msOrig.nMatchTo, -1, hecss, header);
         psc_rel = relational_player_stats_get(ap[0].szName, ap[1].szName);
         if (psc_rel) {
