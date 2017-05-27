@@ -377,7 +377,7 @@ GTKShowRolls(const gint nDepth, evalcontext * pec, matchstate * pms)
     gtk_box_pack_start(GTK_BOX(hbox), gtk_label_new(_("Depth")), FALSE, FALSE, 4);
 
     /* Set page size to 1 */
-    padj = GTK_ADJUSTMENT(gtk_adjustment_new(1., 1., 5., 1., 1., 0.));
+    padj = GTK_ADJUSTMENT(gtk_adjustment_new(1., 1., 4., 1., 1., 0.));
 #if GTK_CHECK_VERSION(3,0,0)
     prw->pScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padj);
 #else
