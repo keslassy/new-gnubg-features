@@ -422,19 +422,30 @@ ChequerPrefs3d(BoardData * bd)
 {
     GtkWidget *pw, *pwx, *vbox, *pwhbox, *dtPieceTypeFrame;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 4);
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Chequer 0:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
                        gtk_colour_picker_new3d(&bd->rd->ChequerMat[0], DF_VARIABLE_OPACITY, TT_PIECE), FALSE, FALSE,
                        TT_PIECE);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Chequer 1:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
@@ -446,7 +457,11 @@ ChequerPrefs3d(BoardData * bd)
     gtk_container_set_border_width(GTK_CONTAINER(dtPieceTypeFrame), 4);
     gtk_box_pack_start(GTK_BOX(pw), dtPieceTypeFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(dtPieceTypeFrame), vbox);
 
     pwRoundedPiece = gtk_radio_button_new_with_label(NULL, _("Rounded disc"));
@@ -465,7 +480,11 @@ ChequerPrefs3d(BoardData * bd)
     gtk_container_set_border_width(GTK_CONTAINER(dtTextureTypeFrame), 4);
     gtk_box_pack_start(GTK_BOX(pw), dtTextureTypeFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(dtTextureTypeFrame), vbox);
     gtk_widget_set_sensitive(GTK_WIDGET(dtTextureTypeFrame), (bd->rd->ChequerMat[0].textureInfo != NULL));
 
@@ -489,16 +508,22 @@ DicePrefs3d(BoardData * bd, int f)
     GtkWidget *pw, *pwhbox;
     GtkWidget *pwx;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 4);
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
     apwDieColour[f] = gtk_check_button_new_with_label(_("Die colour same " "as chequer colour"));
     gtk_box_pack_start(GTK_BOX(pw), apwDieColour[f], FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwDieColour[f]), bd->rd->afDieColour3d[f]);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Die colour:")), FALSE, FALSE, 4);
 
     apwDiceColourBox[f] = gtk_colour_picker_new3d(&bd->rd->DiceMat[f], DF_VARIABLE_OPACITY, TT_NONE);
@@ -506,7 +531,12 @@ DicePrefs3d(BoardData * bd, int f)
     gtk_widget_set_sensitive(GTK_WIDGET(apwDiceColourBox[f]), !bd->rd->afDieColour3d[f]);
     gtk_box_pack_start(GTK_BOX(pwhbox), apwDiceColourBox[f], FALSE, FALSE, 4);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Pip colour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_colour_picker_new3d(&bd->rd->DiceDotMat[f], DF_FULL_ALPHA, TT_NONE), FALSE,
@@ -523,18 +553,29 @@ CubePrefs3d(BoardData * bd)
     GtkWidget *pw, *pwhbox;
     GtkWidget *pwx;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 4);
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Cube colour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
                        gtk_colour_picker_new3d(&bd->rd->CubeMat, DF_NO_ALPHA, TT_NONE), FALSE, FALSE, TT_PIECE);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Text colour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
@@ -549,12 +590,18 @@ BoardPage3d(BoardData * bd)
     GtkWidget *pw, *pwhbox;
     GtkWidget *pwx;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 4);
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Background\ncolour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
@@ -566,14 +613,24 @@ BoardPage3d(BoardData * bd)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwBgTrays), bd->rd->bgInTrays);
     g_signal_connect(G_OBJECT(pwBgTrays), "toggled", G_CALLBACK(option_changed), 0);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("First\npoint colour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
                        gtk_colour_picker_new3d(&bd->rd->PointMat[0], DF_FULL_ALPHA, TT_GENERAL), FALSE, FALSE,
                        TT_PIECE);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Second\npoint colour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
@@ -595,12 +652,18 @@ BorderPage3d(BoardData * bd)
     GtkWidget *pw, *pwhbox;
     GtkWidget *pwx;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 4);
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Border colour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
@@ -617,21 +680,36 @@ BorderPage3d(BoardData * bd)
     gtk_box_pack_start(GTK_BOX(pw), pwHinges, FALSE, FALSE, 0);
     g_signal_connect(G_OBJECT(pwHinges), "toggled", G_CALLBACK(HingeChanged), NULL);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Hinge colour:")), FALSE, FALSE, 4);
 
     pmHingeCol = gtk_colour_picker_new3d(&bd->rd->HingeMat, DF_NO_ALPHA, TT_HINGE);
     gtk_widget_set_sensitive(pmHingeCol, bd->rd->fHinges3d);
     gtk_box_pack_start(GTK_BOX(pwhbox), pmHingeCol, FALSE, FALSE, 4);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Point number\ncolour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
                        gtk_colour_picker_new3d(&bd->rd->PointNumberMat, DF_FULL_ALPHA, TT_NONE), FALSE, FALSE,
                        TT_PIECE);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Background\ncolour:")), FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pwhbox),
@@ -679,16 +757,23 @@ ChequerPrefs(BoardData * bd, int f)
 
     GtkWidget *pw, *pwhbox, *pwx, *pwScale, *pwBox;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 0);
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
     apadj[f] = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->arRefraction[f], 1.0, 3.5, 0.1, 1.0, 0.0));
     apadjCoefficient[f] = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->arCoefficient[f], 0.0, 1.0, 0.1, 0.1, 0.0));
     apadjExponent[f] = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->arExponent[f], 1.0, 100.0, 1.0, 10.0, 0.0));
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Colour:")), FALSE, FALSE, 4);
 
     apwColour[f] = gtk_color_button_new();
@@ -698,36 +783,75 @@ ChequerPrefs(BoardData * bd, int f)
 
     gtk_color_button_set_from_array(GTK_COLOR_BUTTON(apwColour[f]), bd->rd->aarColour[f]);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Refractive Index:")), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_end(GTK_BOX(pwhbox), gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, apadj[f]), TRUE, TRUE, 4);
+#else
     gtk_box_pack_end(GTK_BOX(pwhbox), gtk_hscale_new(apadj[f]), TRUE, TRUE, 4);
+#endif
     g_signal_connect(G_OBJECT(apadj[f]), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Dull")), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, apadjCoefficient[f]), TRUE, TRUE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_hscale_new(apadjCoefficient[f]), TRUE, TRUE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Shiny")), FALSE, FALSE, 4);
     g_signal_connect(G_OBJECT(apadjCoefficient[f]), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Diffuse")), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, apadjExponent[f]), TRUE, TRUE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_hscale_new(apadjExponent[f]), TRUE, TRUE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Specular")), FALSE, FALSE, 4);
     g_signal_connect(G_OBJECT(apadjExponent[f]), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 
     if (f == 0) {
         padjRound = GTK_ADJUSTMENT(gtk_adjustment_new(1.0 - bd->rd->rRound, 0, 1, 0.1, 0.1, 0));
         g_signal_connect(G_OBJECT(padjRound), "value-changed", G_CALLBACK(UpdatePreview), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        pwScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjRound);
+#else
         pwScale = gtk_hscale_new(padjRound);
+#endif
         gtk_widget_set_size_request(pwScale, 100, -1);
         gtk_scale_set_draw_value(GTK_SCALE(pwScale), FALSE);
         gtk_scale_set_digits(GTK_SCALE(pwScale), 2);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         pwBox = gtk_hbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Chequer shape:")), FALSE, FALSE, 0);
         gtk_box_pack_start(GTK_BOX(pw), pwBox, FALSE, FALSE, 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         pwBox = gtk_hbox_new(FALSE, 0);
+#endif
 
         gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Flat")), FALSE, FALSE, 4);
         gtk_box_pack_start(GTK_BOX(pwBox), pwScale, FALSE, FALSE, 0);
@@ -748,9 +872,15 @@ DicePrefs(BoardData * bd, int f)
     GtkWidget *pwFrame;
     GtkWidget *pwx;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 4);
+    pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
     /* frame with colour selections for the dice */
@@ -758,37 +888,69 @@ DicePrefs(BoardData * bd, int f)
     pwFrame = gtk_frame_new(_("Die colour"));
     gtk_box_pack_start(GTK_BOX(pw), pwFrame, FALSE, FALSE, 0);
 
-    pwvbox = gtk_vbox_new(FALSE, 0);
     gtk_container_add(GTK_CONTAINER(pwFrame), pwvbox);
 
     apwDieColour[f] = gtk_check_button_new_with_label(_("Die colour same " "as chequer colour"));
     gtk_box_pack_start(GTK_BOX(pwvbox), apwDieColour[f], FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwDieColour[f]), bd->rd->afDieColour[f]);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    apwDiceColourBox[f] = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     apwDiceColourBox[f] = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), apwDiceColourBox[f], FALSE, FALSE, 0);
 
     apadjDiceCoefficient[f] = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->arDiceCoefficient[f], 0.0, 1.0, 0.1, 0.1, 0.0));
     apadjDiceExponent[f] = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->arDiceExponent[f], 1.0, 100.0, 1.0, 10.0, 0.0));
 
-    gtk_box_pack_start(GTK_BOX(apwDiceColourBox[f]), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(apwDiceColourBox[f]), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Die colour:")), FALSE, FALSE, 4);
     apwDiceColour[f] = gtk_color_button_new();
     g_signal_connect(G_OBJECT(apwDiceColour[f]), "color-set", UpdatePreview, NULL);
     gtk_color_button_set_from_array(GTK_COLOR_BUTTON(apwDiceColour[f]), bd->rd->aarDiceColour[f]);
     gtk_box_pack_start(GTK_BOX(pwhbox), apwDiceColour[f], TRUE, TRUE, 4);
 
-    gtk_box_pack_start(GTK_BOX(apwDiceColourBox[f]), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 4);
+    /* Vertical space */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(apwDiceColourBox[f]), pwhbox, FALSE, FALSE, 4);
 
-    gtk_box_pack_start(GTK_BOX(apwDiceColourBox[f]), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(apwDiceColourBox[f]), pwhbox, FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Dull")), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, apadjDiceCoefficient[f]), TRUE, TRUE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_hscale_new(apadjDiceCoefficient[f]), TRUE, TRUE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Shiny")), FALSE, FALSE, 4);
     g_signal_connect(G_OBJECT(apadjDiceCoefficient[f]), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 
-    gtk_box_pack_start(GTK_BOX(apwDiceColourBox[f]), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(apwDiceColourBox[f]), pwhbox, FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Diffuse")), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, apadjDiceExponent[f]), TRUE, TRUE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_hscale_new(apadjDiceExponent[f]), TRUE, TRUE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Specular")), FALSE, FALSE, 4);
     g_signal_connect(G_OBJECT(apadjDiceExponent[f]), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 
@@ -796,7 +958,12 @@ DicePrefs(BoardData * bd, int f)
 
     /* colour of dot on dice */
 
-    gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Pip colour:")), FALSE, FALSE, 4);
 
     apwDiceDotColour[f] = gtk_color_button_new();
@@ -813,13 +980,16 @@ static GtkWidget *
 CubePrefs(BoardData * bd)
 {
 
-
     GtkWidget *pw;
     GtkWidget *pwx;
 
-    pw = gtk_vbox_new(FALSE, 4);
-
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pwx = gtk_hbox_new(FALSE, 4);
+    pw = gtk_vbox_new(FALSE, 4);
+#endif
 
     gtk_box_pack_start(GTK_BOX(pw), pwx, FALSE, FALSE, 0);
 
@@ -851,9 +1021,14 @@ BoardPage(BoardData * bd)
         N_("Second point colour:"),
     };
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 0);
+#endif
+
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
     for (j = 0; j < 4; j++) {
@@ -864,16 +1039,30 @@ BoardPage(BoardData * bd)
         for (i = 0; i < 4; i++)
             ar[i] = bd->rd->aanBoardColour[j][i] / 255.0f;
 
-        gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+        pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+        pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+        gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 0);
         gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(gettext(asz[j])), FALSE, FALSE, 4);
         apwBoard[j] = gtk_color_button_new();
         g_signal_connect(G_OBJECT(apwBoard[j]), "color-set", UpdatePreview, NULL);
         gtk_color_button_set_from_array(GTK_COLOR_BUTTON(apwBoard[j]), ar);
         gtk_box_pack_start(GTK_BOX(pwhbox), apwBoard[j], TRUE, TRUE, 4);
 
-        gtk_box_pack_start(GTK_BOX(pw), pwhbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+        pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+        pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
+        gtk_box_pack_start(GTK_BOX(pw), pwhbox, FALSE, FALSE, 4);
         gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Smooth")), FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_box_pack_start(GTK_BOX(pwhbox), gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, apadjBoard[j]), TRUE, TRUE, 4);
+#else
         gtk_box_pack_start(GTK_BOX(pwhbox), gtk_hscale_new(apadjBoard[j]), TRUE, TRUE, 4);
+#endif
         gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Speckled")), FALSE, FALSE, 4);
         g_signal_connect(G_OBJECT(apadjBoard[j]), "value-changed", G_CALLBACK(UpdatePreview), NULL);
     }
@@ -917,9 +1106,13 @@ BorderPage(BoardData * bd)
     woodtype bw;
     GtkWidget *pwx;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pw, TRUE, TRUE, 0);
 
     gtk_box_pack_start(GTK_BOX(pw), pwWood = gtk_radio_button_new_with_label(NULL, _("Wooden")), FALSE, FALSE, 0);
@@ -1237,13 +1430,21 @@ Add2dLightOptions(GtkWidget * pwx, renderdata * prd)
         rAzimuth = 360 - rAzimuth;
 
     paAzimuth = GTK_ADJUSTMENT(gtk_adjustment_new(rAzimuth, 0.0, 360.0, 1.0, 30.0, 0.0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, paAzimuth);
+#else
     pScale = gtk_hscale_new(paAzimuth);
+#endif
     gtk_widget_set_size_request(pScale, 150, -1);
     gtk_table_attach(GTK_TABLE(pwLightTable), pScale, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 4, 2);
     g_signal_connect(G_OBJECT(paAzimuth), "value-changed", G_CALLBACK(LightChanged2d), NULL);
 
     paElevation = GTK_ADJUSTMENT(gtk_adjustment_new(rElevation, 0.0, 90.0, 1.0, 10.0, 0.0));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_table_attach(GTK_TABLE(pwLightTable), gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, paElevation), 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 4, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwLightTable), gtk_hscale_new(paElevation), 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 4, 2);
+#endif
     g_signal_connect(G_OBJECT(paElevation), "value-changed", G_CALLBACK(LightChanged2d), NULL);
 
     /* FIXME add settings for ambient light */
@@ -1258,20 +1459,33 @@ LightingPage(BoardData * bd)
         *pwLightPosX, *pwLightLevelAmbient, *pwLightLevelDiffuse, *pwLightLevelSpecular,
         *pwLightPosY, *pwLightPosZ, *dtLightSourceFrame;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    dtBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     dtBox = gtk_vbox_new(FALSE, 4);
+#endif
+
     gtk_box_pack_start(GTK_BOX(pwx), dtBox, FALSE, FALSE, 0);
 
     if (display_is_3d(&rdPrefs)) {
+#if GTK_CHECK_VERSION(3,0,0)
+        dtBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         dtBox = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(pwx), dtBox, FALSE, FALSE, 0);
 
         dtLightSourceFrame = gtk_frame_new(_("Light Source Type"));
         gtk_container_set_border_width(GTK_CONTAINER(dtLightSourceFrame), 4);
         gtk_box_pack_start(GTK_BOX(dtBox), dtLightSourceFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         vbox = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_container_add(GTK_CONTAINER(dtLightSourceFrame), vbox);
 
         pwLightSource = gtk_radio_button_new_with_label(NULL, _("Positional"));
@@ -1290,10 +1504,18 @@ LightingPage(BoardData * bd)
         gtk_container_set_border_width(GTK_CONTAINER(dtLightPositionFrame), 4);
         gtk_box_pack_start(GTK_BOX(dtBox), dtLightPositionFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        frameBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         frameBox = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_container_add(GTK_CONTAINER(dtLightPositionFrame), frameBox);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         hBox = gtk_hbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(frameBox), hBox, FALSE, FALSE, 0);
 
         lab = gtk_label_new(_("Left"));
@@ -1301,7 +1523,11 @@ LightingPage(BoardData * bd)
 
         padjLightPosX = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->lightPos[0], -1.5, 4, .1, 1, 0));
         g_signal_connect(G_OBJECT(padjLightPosX), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        pwLightPosX = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjLightPosX);
+#else
         pwLightPosX = gtk_hscale_new(padjLightPosX);
+#endif
         gtk_scale_set_draw_value(GTK_SCALE(pwLightPosX), FALSE);
         gtk_widget_set_size_request(pwLightPosX, 150, -1);
         gtk_box_pack_start(GTK_BOX(hBox), pwLightPosX, TRUE, TRUE, 0);
@@ -1309,10 +1535,18 @@ LightingPage(BoardData * bd)
         lab = gtk_label_new(_("Right"));
         gtk_box_pack_start(GTK_BOX(hBox), lab, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         hBox = gtk_hbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(frameBox), hBox, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         vbox2 = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(hBox), vbox2, FALSE, FALSE, 0);
 
         lab = gtk_label_new(_("Bottom"));
@@ -1320,7 +1554,11 @@ LightingPage(BoardData * bd)
 
         padjLightPosY = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->lightPos[1], -1.5, 4, .1, 1, 0));
         g_signal_connect(G_OBJECT(padjLightPosY), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        pwLightPosY = gtk_scale_new(GTK_ORIENTATION_VERTICAL, padjLightPosY);
+#else
         pwLightPosY = gtk_vscale_new(padjLightPosY);
+#endif
         gtk_scale_set_draw_value(GTK_SCALE(pwLightPosY), FALSE);
 
         gtk_widget_set_size_request(pwLightPosY, -1, 70);
@@ -1329,7 +1567,11 @@ LightingPage(BoardData * bd)
         lab = gtk_label_new(_("Top"));
         gtk_box_pack_start(GTK_BOX(vbox2), lab, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         vbox2 = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(hBox), vbox2, FALSE, FALSE, 0);
 
         lab = gtk_label_new(_("Low"));
@@ -1337,7 +1579,11 @@ LightingPage(BoardData * bd)
 
         padjLightPosZ = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->lightPos[2], .5, 5, .1, 1, 0));
         g_signal_connect(G_OBJECT(padjLightPosZ), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
         pwLightPosZ = gtk_vscale_new(padjLightPosZ);
+#else
+        pwLightPosZ = gtk_vscale_new(padjLightPosZ);
+#endif
         gtk_scale_set_draw_value(GTK_SCALE(pwLightPosZ), FALSE);
 
         gtk_box_pack_start(GTK_BOX(vbox2), pwLightPosZ, TRUE, TRUE, 0);
@@ -1349,10 +1595,18 @@ LightingPage(BoardData * bd)
         gtk_container_set_border_width(GTK_CONTAINER(dtLightLevelsFrame), 4);
         gtk_box_pack_start(GTK_BOX(dtBox), dtLightLevelsFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        frameBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         frameBox = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_container_add(GTK_CONTAINER(dtLightLevelsFrame), frameBox);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         hBox = gtk_hbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(frameBox), hBox, FALSE, FALSE, 0);
 
         lab = gtk_label_new(_("Ambient"));
@@ -1360,11 +1614,19 @@ LightingPage(BoardData * bd)
 
         padjLightLevelAmbient = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->lightLevels[0], 0, 100, 1, 10, 0));
         g_signal_connect(G_OBJECT(padjLightLevelAmbient), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        pwLightLevelAmbient = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjLightLevelAmbient);
+#else
         pwLightLevelAmbient = gtk_hscale_new(padjLightLevelAmbient);
+#endif
         gtk_widget_set_tooltip_text(pwLightLevelAmbient, _("Ambient light specifies the general light level"));
         gtk_box_pack_start(GTK_BOX(hBox), pwLightLevelAmbient, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         hBox = gtk_hbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(frameBox), hBox, FALSE, FALSE, 0);
 
         lab = gtk_label_new(_("Diffuse"));
@@ -1372,11 +1634,19 @@ LightingPage(BoardData * bd)
 
         padjLightLevelDiffuse = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->lightLevels[1], 0, 100, 1, 10, 0));
         g_signal_connect(G_OBJECT(padjLightLevelDiffuse), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        pwLightLevelDiffuse = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjLightLevelDiffuse);
+#else
         pwLightLevelDiffuse = gtk_hscale_new(padjLightLevelDiffuse);
+#endif
         gtk_widget_set_tooltip_text(pwLightLevelDiffuse, _("Diffuse light specifies light from the light source"));
         gtk_box_pack_start(GTK_BOX(hBox), pwLightLevelDiffuse, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         hBox = gtk_hbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(frameBox), hBox, FALSE, FALSE, 0);
 
         lab = gtk_label_new(_("Specular"));
@@ -1384,7 +1654,11 @@ LightingPage(BoardData * bd)
 
         padjLightLevelSpecular = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->lightLevels[2], 0, 100, 1, 10, 0));
         g_signal_connect(G_OBJECT(padjLightLevelSpecular), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        pwLightLevelSpecular = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjLightLevelSpecular);
+#else
         pwLightLevelSpecular = gtk_hscale_new(padjLightLevelSpecular);
+#endif
         gtk_widget_set_tooltip_text(pwLightLevelSpecular, _("Specular light is reflected light off shiny surfaces"));
         gtk_box_pack_start(GTK_BOX(hBox), pwLightLevelSpecular, TRUE, TRUE, 0);
     } else
@@ -1413,9 +1687,13 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     pwQuickDraw = 0;
 #endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwx = gtk_hbox_new(FALSE, 0);
-
     pw = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pw, FALSE, FALSE, 0);
 
 #if defined(USE_BOARD3D)
@@ -1423,7 +1701,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     gtk_container_set_border_width(GTK_CONTAINER(dtFrame), 4);
     gtk_box_pack_start(GTK_BOX(pw), dtFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    dtBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     dtBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(dtFrame), dtBox);
 
     pwBoardType = gtk_radio_button_new_with_label(NULL, _("2d Board"));
@@ -1460,14 +1742,22 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMoveIndicator), bd->rd->showMoveIndicator);
     g_signal_connect(G_OBJECT(pwMoveIndicator), "toggled", G_CALLBACK(MoveIndicatorToggled), 0);
 #if defined(USE_BOARD3D)
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pwvbox, FALSE, FALSE, 0);
 
     frame3dOptions = gtk_frame_new(_("3d Options"));
     gtk_container_set_border_width(GTK_CONTAINER(frame3dOptions), 4);
     gtk_box_pack_start(GTK_BOX(pwvbox), frame3dOptions, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(frame3dOptions), pw);
 
     pwShowShadows = gtk_check_button_new_with_label(_("Show shadows"));
@@ -1476,7 +1766,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwShowShadows), bd->rd->showShadows);
     g_signal_connect(G_OBJECT(pwShowShadows), "toggled", G_CALLBACK(toggle_show_shadows), NULL);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pw), hBox, FALSE, FALSE, 0);
 
     lightLab = gtk_label_new(_("light"));
@@ -1484,7 +1778,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 
     padjDarkness = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->shadowDarkness, 3, 100, 1, 10, 0));
     g_signal_connect(G_OBJECT(padjDarkness), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwDarkness = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjDarkness);
+#else
     pwDarkness = gtk_hscale_new(padjDarkness);
+#endif
     gtk_widget_set_tooltip_text(pwDarkness, _("Vary the darkness of the shadows"));
     gtk_scale_set_draw_value(GTK_SCALE(pwDarkness), FALSE);
     gtk_box_pack_start(GTK_BOX(hBox), pwDarkness, TRUE, TRUE, 0);
@@ -1512,11 +1810,18 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pw), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
-
+#if GTK_CHECK_VERSION(3,0,0)
+    hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pw), hBox, FALSE, FALSE, 0);
 
     anglelab = gtk_label_new(_("Board angle: "));
@@ -1524,13 +1829,21 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 
     padjBoardAngle = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->boardAngle, 0, 60, 1, 10, 0));
     g_signal_connect(G_OBJECT(padjBoardAngle), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwBoardAngle = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjBoardAngle);
+#else
     pwBoardAngle = gtk_hscale_new(padjBoardAngle);
+#endif
     gtk_widget_set_tooltip_text(pwBoardAngle, _("Vary the angle the board is tilted at"));
     gtk_scale_set_digits(GTK_SCALE(pwBoardAngle), 0);
     gtk_widget_set_size_request(pwBoardAngle, 100, -1);
     gtk_box_pack_start(GTK_BOX(hBox), pwBoardAngle, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pw), hBox, FALSE, FALSE, 0);
 
     skewLab = gtk_label_new(_("FOV skew: "));
@@ -1538,7 +1851,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 
     padjSkewFactor = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->skewFactor, 0, 100, 1, 10, 0));
     g_signal_connect(G_OBJECT(padjSkewFactor), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwSkewFactor = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjSkewFactor);
+#else
     pwSkewFactor = gtk_hscale_new(padjSkewFactor);
+#endif
     gtk_widget_set_size_request(pwSkewFactor, 100, -1);
     gtk_widget_set_tooltip_text(pwSkewFactor, _("Vary the field-of-view of the 3d display"));
     gtk_scale_set_digits(GTK_SCALE(pwSkewFactor), 0);
@@ -1554,7 +1871,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     lab = gtk_label_new(_("Curve accuracy"));
     gtk_box_pack_start(GTK_BOX(pw), lab, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pw), hBox, FALSE, FALSE, 0);
 
     lab = gtk_label_new(_("low"));
@@ -1562,7 +1883,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 
     padjAccuracy = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->curveAccuracy, 8, 60, 4, 12, 0));
     g_signal_connect(G_OBJECT(padjAccuracy), "value-changed", G_CALLBACK(option_changed), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwAccuracy = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjAccuracy);
+#else
     pwAccuracy = gtk_hscale_new(padjAccuracy);
+#endif
     gtk_widget_set_tooltip_text(pwAccuracy, _("Change how accurately curves are drawn."
                                               " If performance is slow try lowering this value."
                                               " Increasing this value will only have an effect on large displays"));
@@ -1576,7 +1901,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     lab = gtk_label_new(_("Dice size"));
     gtk_box_pack_start(GTK_BOX(pw), lab, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pw), hBox, FALSE, FALSE, 0);
 
     lab = gtk_label_new(_("small"));
@@ -1584,7 +1913,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 
     padjDiceSize = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->diceSize, 1.5, 4, .1, 1, 0));
     g_signal_connect(G_OBJECT(padjDiceSize), "value-changed", G_CALLBACK(DiceSizeChanged), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwDiceSize = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjDiceSize);
+#else
     pwDiceSize = gtk_hscale_new(padjDiceSize);
+#endif
     gtk_widget_set_tooltip_text(pwDiceSize, _("Vary the size of the dice"));
     gtk_scale_set_draw_value(GTK_SCALE(pwDiceSize), FALSE);
     gtk_box_pack_start(GTK_BOX(hBox), pwDiceSize, TRUE, TRUE, 0);
@@ -1924,12 +2257,20 @@ DesignAddTitle(boarddesign * pbde)
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Add current board design"),
                                DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(DesignAddOK), pbde);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pwvbox = gtk_vbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwvbox);
 
     /* title */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pwhbox, FALSE, FALSE, 4);
 
 
@@ -1943,7 +2284,11 @@ DesignAddTitle(boarddesign * pbde)
 
     /* author */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pwhbox, FALSE, FALSE, 4);
 
 
@@ -2486,7 +2831,11 @@ DesignPage(GList * plBoardDesigns, BoardData * UNUSED(bd))
     GtkWidget *pwPage;
     GtkCellRenderer *renderer;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwPage = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pwPage = gtk_vbox_new(FALSE, 4);
+#endif
 
     /* List with board designs */
 
@@ -2505,13 +2854,20 @@ DesignPage(GList * plBoardDesigns, BoardData * UNUSED(bd))
     g_signal_connect(pwDesignList, "cursor-changed", G_CALLBACK(DesignSelectNew), NULL);
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    g_object_set(G_OBJECT(pwScrolled), "expand", TRUE, NULL);
+#endif
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(pwScrolled), pwDesignList);
     gtk_container_add(GTK_CONTAINER(pwPage), pwScrolled);
 
     /* button: use design */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwPage), pwhbox, FALSE, FALSE, 4);
 
     /* 
@@ -2545,7 +2901,11 @@ DesignPage(GList * plBoardDesigns, BoardData * UNUSED(bd))
 
     /* export design */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwPage), pwhbox, FALSE, FALSE, 4);
 
     pwDesignExport = gtk_button_new_with_label(_("Export design"));
@@ -2706,7 +3066,11 @@ append_preview_page(GtkWidget * pwNotebook, GtkWidget * pwPage, char *szLabel, p
 
     GtkWidget *pw;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pw = gtk_hbox_new(FALSE, 4);
+#endif
 
     gtk_box_pack_start(GTK_BOX(pw), pwPage, TRUE, TRUE, 0);
     gtk_widget_show_all(pw);
@@ -2827,7 +3191,12 @@ BoardPreferences(GtkWidget * pwBoard)
     }
 #endif
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwHbox = gtk_hbox_new(FALSE, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwHbox);
 
     pwNotebook = gtk_notebook_new();
 

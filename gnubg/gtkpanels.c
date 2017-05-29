@@ -617,10 +617,14 @@ CommandFocusIn(GtkWidget * UNUSED(widget), GdkEventFocus * UNUSED(eventDetails),
 static GtkWidget *
 CreateCommandWindow(void)
 {
-    GtkWidget *pwhbox;
-    GtkWidget *pwvbox = gtk_vbox_new(FALSE, 0);
+    GtkWidget *pwhbox, *pwvbox;
     GtkWidget *pwShowHelp;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     CreatePanel(WINDOW_COMMAND, pwvbox, _("GNU Backgammon - Command"), "command");
 
     cedPanel.cmdString = NULL;
@@ -636,7 +640,11 @@ CreateCommandWindow(void)
     g_signal_connect(G_OBJECT(cedPanel.pwEntry), "key-press-event", G_CALLBACK(CommandKeyPress), &cedPanel);
     g_signal_connect(G_OBJECT(cedPanel.pwEntry), "activate", G_CALLBACK(CommandOK), &cedPanel);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pwhbox, FALSE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), cedPanel.cmdEntryCombo, TRUE, TRUE, 10);
@@ -671,11 +679,24 @@ CreateAnalysisWindow(void)
         gtk_window_add_accel_group(GTK_WINDOW(woPanel[WINDOW_ANALYSIS].pwWin), pagMain);
 
         gtk_paned_pack1(GTK_PANED(pwPaned), pwAnalysis = gtk_label_new(NULL), TRUE, FALSE);
-        gtk_paned_pack2(GTK_PANED(pwPaned), pHbox = gtk_hbox_new(FALSE, 0), FALSE, TRUE);
+#if GTK_CHECK_VERSION(3,0,0)
+        pHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+        pHbox = gtk_hbox_new(FALSE, 0);
+#endif
+        gtk_paned_pack2(GTK_PANED(pwPaned), pHbox, FALSE, TRUE);
     } else {
+#if GTK_CHECK_VERSION(3,0,0)
+        pHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         pHbox = gtk_hbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(pHbox), pwAnalysis = gtk_label_new(NULL), TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+        pHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         pHbox = gtk_hbox_new(FALSE, 0);
+#endif
     }
 
     pwCommentary = gtk_text_view_new();
@@ -785,9 +806,17 @@ SelectGame(GtkWidget * pw, void *UNUSED(data))
 static void
 CreateGameWindow(void)
 {
+    GtkWidget *psw = gtk_scrolled_window_new(NULL, NULL);
+    GtkWidget *pvbox, *phbox;
 
-    GtkWidget *psw = gtk_scrolled_window_new(NULL, NULL),
-        *pvbox = gtk_vbox_new(FALSE, 0), *phbox = gtk_hbox_new(FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    g_object_set(G_OBJECT(psw), "expand", TRUE, NULL);
+    pvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    phbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pvbox = gtk_vbox_new(FALSE, 0);
+    phbox = gtk_hbox_new(FALSE, 0);
+#endif
 
     if (!woPanel[WINDOW_GAME].docked) {
         woPanel[WINDOW_GAME].pwWin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -824,9 +853,17 @@ static void
 CreateHeadWindow(gnubgwindow panel, const char *sz, GtkWidget * pwWidge)
 {
     GtkWidget *pwLab = gtk_label_new(sz);
-    GtkWidget *pwVbox = gtk_vbox_new(FALSE, 0);
-    GtkWidget *pwHbox = gtk_hbox_new(FALSE, 0);
+    GtkWidget *pwVbox, *pwHbox;
     GtkWidget *pwX = gtk_button_new();
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwVbox = gtk_vbox_new(FALSE, 0);
+    pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
+
     gtk_button_set_image(GTK_BUTTON(pwX), gtk_image_new_from_stock(GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
     g_signal_connect(G_OBJECT(pwX), "clicked", G_CALLBACK(woPanel[panel].hideFun), NULL);
 
