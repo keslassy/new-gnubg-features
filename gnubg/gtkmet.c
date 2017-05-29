@@ -99,9 +99,15 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
     char sz[16];
     GtkWidget *pwScrolledWindow = gtk_scrolled_window_new(NULL, NULL);
     GtkWidget *pwTable = gtk_table_new(nRows + 1, nCols + 1, TRUE);
-    GtkWidget *pw;
-    GtkWidget *pwBox = gtk_vbox_new(FALSE, 0);
+    GtkWidget *pw, *pwBox;
     mettable *pmt;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    g_object_set(G_OBJECT(pwScrolledWindow), "expand", TRUE, NULL);
+    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwBox = gtk_vbox_new(FALSE, 0);
+#endif
 
     pmt = (mettable *) g_malloc(sizeof(mettable));
     pmt->pwTable = pwTable;
@@ -113,12 +119,16 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
 
     gtk_box_pack_start(GTK_BOX(pwBox), pwScrolledWindow, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3, 8, 0)
+    gtk_container_add(GTK_CONTAINER(pwScrolledWindow), pwTable);
+#else
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(pwScrolledWindow), pwTable);
+#endif
 
     /* header for rows */
 
     for (i = 0; i < nCols; i++) {
-        sprintf(sz, _("%d-away"), i + 1);
+        sprintf(sz, _("%u-away"), i + 1);
         gtk_table_attach_defaults(GTK_TABLE(pwTable), pw = gtk_label_new(sz), i + 1, i + 2, 0, 1);
         if (i == nAway1) {
             gtk_widget_set_name(GTK_WIDGET(pw), "gnubg-met-matching-score");
@@ -128,7 +138,7 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
     /* header for columns */
 
     for (i = 0; i < nRows; i++) {
-        sprintf(sz, _("%d-away"), i + 1);
+        sprintf(sz, _("%u-away"), i + 1);
         gtk_table_attach_defaults(GTK_TABLE(pwTable), pw = gtk_label_new(sz), 0, 1, i + 1, i + 2);
         if (i == nAway0) {
             gtk_widget_set_name(GTK_WIDGET(pw), "gnubg-met-matching-score");
