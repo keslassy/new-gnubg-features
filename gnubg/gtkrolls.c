@@ -355,6 +355,11 @@ GTKShowRolls(const gint nDepth, evalcontext * pec, matchstate * pms)
     /* scrolled window to hold tree widget */
 
     prw->psw = gtk_scrolled_window_new(NULL, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+/* This is apparently needed in 3.18.9 (Ubuntu 16.04)
+   but no longer in 3.22.15 (Fedora 25 / FreeBSD) */
+    g_object_set(G_OBJECT(prw->psw, "expand", TRUE, NULL);
+#endif
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(prw->psw), GTK_SHADOW_ETCHED_IN);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(prw->psw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_box_pack_start(GTK_BOX(vbox), prw->psw, TRUE, TRUE, 0);
