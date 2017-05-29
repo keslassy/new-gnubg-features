@@ -3517,6 +3517,7 @@ ParseBoardDesigns(const char *szFile, const int fDeletable)
 
     context = g_markup_parse_context_new(&markup_parser, (GMarkupParseFlags) 0, parser, NULL);
     if (!context) {
+        g_free(contents);
         g_free(parser->filename);
         g_free(parser);
         return NULL;
@@ -3528,6 +3529,7 @@ ParseBoardDesigns(const char *szFile, const int fDeletable)
         g_error_free(error);
         free_board_designs(parser->designs);
         g_markup_parse_context_free(context);
+        g_free(contents);
         g_free(parser->filename);
         g_free(parser);
         return NULL;
@@ -3536,6 +3538,7 @@ ParseBoardDesigns(const char *szFile, const int fDeletable)
 
     returnlist = parser->designs;
 
+    g_free(contents);
     g_free(parser->filename);
     free_board_design(parser->current_design, NULL);
     g_free(parser);
