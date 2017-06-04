@@ -777,6 +777,7 @@ CommandRelationalSelect(char *sz)
 
     if (rs->rows == 0) {
         outputl(_("No rows found.\n"));
+        FreeRowset(rs);
         return;
     }
 #if USE_GTK

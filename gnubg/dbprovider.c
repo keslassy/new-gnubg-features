@@ -24,12 +24,12 @@
 
 #include "config.h"
 #include "gnubgmodule.h"
-#include "stdlib.h"
-
 #include "backgammon.h"
+#include "dbprovider.h"
+
+#include <stdlib.h>
 #include <glib/gstdio.h>
 #include <string.h>
-#include "dbprovider.h"
 
 DBProviderType dbProviderType = (DBProviderType) 0;
 int storeGameStats = TRUE;
@@ -149,9 +149,7 @@ FreeRowset(RowSet * pRow)
     }
     free(pRow->data);
 
-    pRow->cols = pRow->rows = 0;
-    pRow->data = NULL;
-    pRow->widths = NULL;
+    free(pRow);
 }
 
 int
@@ -163,8 +161,10 @@ RunQueryValue(const DBProvider * pdb, const char *query)
         int id = (int)strtol(rs->data[1][0], NULL, 0);
         FreeRowset(rs);
         return id;
-    } else
+    } else {
+        FreeRowset(rs);
         return -1;
+    }
 }
 
 extern RowSet *

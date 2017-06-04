@@ -129,6 +129,7 @@ create_model(void)
 
     if (rs->rows < 2) {
         GTKMessage(_("No data in database"), DT_INFO);
+        FreeRowset(rs);
         return 0;
     }
 
