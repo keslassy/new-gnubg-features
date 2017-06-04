@@ -149,6 +149,8 @@ Ratio(float a, int b)
 	g_string_append_printf(value, "'%s', ", g_ascii_dtostr(tmpf, G_ASCII_DTOSTR_BUF_SIZE, y));}
 #define APPENDI(x,y) {g_string_append_printf(column, "%s, ", x); \
 	g_string_append_printf(value, "'%i', ", y);}
+#define APPENDU(x,y) {g_string_append_printf(column, "%s, ", x); \
+        g_string_append_printf(value, "'%u', ", y);}
 
 static int
 AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *table, int nMatchTo, statcontext * sc)
@@ -197,7 +199,7 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     APPENDF("chequer_error_total", sc->arErrorCheckerplay[player][1]);
     APPENDF("chequer_error_per_move_normalised", Ratio(sc->arErrorCheckerplay[player][0], unforced));
     APPENDF("chequer_error_per_move", Ratio(sc->arErrorCheckerplay[player][1], unforced));
-    APPENDI("chequer_rating", GetRating(Ratio(scMatch.arErrorCheckerplay[player][0], unforced)));
+    APPENDU("chequer_rating", GetRating(Ratio(scMatch.arErrorCheckerplay[player][0], unforced)));
     APPENDI("very_lucky_rolls", sc->anLuck[player][LUCK_VERYGOOD]);
     APPENDI("lucky_rolls", sc->anLuck[player][LUCK_GOOD]);
     APPENDI("unmarked_rolls", sc->anLuck[player][LUCK_NONE]);
@@ -207,7 +209,7 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     APPENDF("luck_total", sc->arLuck[player][1]);
     APPENDF("luck_per_move_normalised", Ratio(sc->arLuck[player][0], totalmoves));
     APPENDF("luck_per_move", Ratio(sc->arLuck[player][1], totalmoves));
-    APPENDI("luck_rating", getLuckRating(Ratio(sc->arLuck[player][0], totalmoves)));
+    APPENDU("luck_rating", getLuckRating(Ratio(sc->arLuck[player][0], totalmoves)));
     APPENDI("total_cube_decisions", sc->anTotalCube[player]);
     APPENDI("close_cube_decisions", sc->anCloseCube[player]);
     APPENDI("doubles", sc->anDouble[player]);
@@ -235,7 +237,7 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     APPENDF("cube_error_total", errorcost * sc->anCloseCube[player]);
     APPENDF("cube_error_per_move_normalised", errorskill);
     APPENDF("cube_error_per_move", errorcost);
-    APPENDI("cube_rating", GetRating(errorskill));;
+    APPENDU("cube_rating", GetRating(errorskill));;
     APPENDF("overall_error_total_normalised", errorskill * sc->anCloseCube[player] + sc->arErrorCheckerplay[player][0]);
     APPENDF("overall_error_total", errorcost * sc->anCloseCube[player] + sc->arErrorCheckerplay[player][1]);
     APPENDF("overall_error_per_move_normalised",
@@ -244,7 +246,7 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     APPENDF("overall_error_per_move",
             Ratio(errorcost * sc->anCloseCube[player] +
                   sc->arErrorCheckerplay[player][1], sc->anCloseCube[player] + unforced));
-    APPENDI("overall_rating",
+    APPENDU("overall_rating",
             GetRating(Ratio
                       (errorskill * sc->anCloseCube[player] +
                        sc->arErrorCheckerplay[player][0], sc->anCloseCube[player] + unforced)));
@@ -280,9 +282,9 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     if (scMatch.fDice && !nMatchTo && scMatch.nGames > 1) {
 
         APPENDF("actual_advantage", scMatch.arActualResult[player] / scMatch.nGames);
-        APPENDF("actual_advantage_ci", 1.95996f * sqrt(scMatch.arVarianceActual[player] / scMatch.nGames));
+        APPENDF("actual_advantage_ci", 1.95996f * sqrtf(scMatch.arVarianceActual[player] / scMatch.nGames));
         APPENDF("luck_adjusted_advantage", scMatch.arLuckAdj[player] / scMatch.nGames);
-        APPENDF("luck_adjusted_advantage_ci", 1.95996f * sqrt(scMatch.arVarianceLuckAdj[player] / scMatch.nGames));
+        APPENDF("luck_adjusted_advantage_ci", 1.95996f * sqrtf(scMatch.arVarianceLuckAdj[player] / scMatch.nGames));
     }
 
     g_string_truncate(column, column->len - 2);
@@ -465,7 +467,7 @@ CommandRelationalAddMatch(char *sz)
     }
 
     if (mi.nYear)
-        date = g_strdup_printf("%04d-%02d-%02d", mi.nYear, mi.nMonth, mi.nDay);
+        date = g_strdup_printf("%04u-%02u-%02u", mi.nYear, mi.nMonth, mi.nDay);
     else
         date = NULL;
 
