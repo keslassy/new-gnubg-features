@@ -962,7 +962,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         query = gtk_text_buffer_new(NULL);
         pwQueryText = gtk_text_view_new_with_buffer(query);
         gtk_text_buffer_set_text(query,
-                                 "s.session_id, s.length, p1.name, p2.name from player p1, player p2 join session s on s.player_id0 = p1.player_id and s.player_id1 = p2.player_id",
+                                 "s.session_id, s.length, p1.name, p2.name from (player p1, player p2) join session s on s.player_id0 = p1.player_id and s.player_id1 = p2.player_id",
                                  -1);
     } else
         pwQueryText = gtk_text_view_new_with_buffer(query);
