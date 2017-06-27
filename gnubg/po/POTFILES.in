@@ -167,7 +167,6 @@ simpleboard.h
 sound.c
 sound.h
 speed.c
-speed.h
 text.c
 timer.c
 util.c
