@@ -227,7 +227,15 @@ do_list_store(void)
 
     treeview = gtk_tree_view_new_with_model(model);
     g_object_unref(model);
+#if GTK_CHECK_VERSION(3,14,0)
+    /* 
+     * This should not be hard coded but set from the theme.
+     * Explicit deprecation starts at 3.14 but it may
+     * not work in earlier gtk3 as well.
+     */
+#else
     gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(treeview), TRUE);
+#endif
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(treeview), COLUMN_NICK);
 
 
@@ -718,13 +726,22 @@ RelationalOptions(void)
         gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(dbtype), GetProviderName(i));
     g_signal_connect(dbtype, "changed", G_CALLBACK(TypeChanged), dbList);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vb2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    hb2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     vb2 = gtk_vbox_new(FALSE, 0);
     hb2 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(vb2), hb2, FALSE, FALSE, 10);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vb1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     vb1 = gtk_vbox_new(FALSE, 0);
-
     hb1 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(hb1), gtk_label_new(_("DB Type")), FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hb1), dbtype, FALSE, FALSE, 0);
 
@@ -732,6 +749,7 @@ RelationalOptions(void)
 
     table = gtk_table_new(4, 2, FALSE);
     lbl = gtk_label_new(_("Username"));
+
     gtk_misc_set_alignment(GTK_MISC(lbl), 1, .5);
     gtk_table_attach(GTK_TABLE(table), lbl, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
     user = gtk_entry_new();
@@ -786,10 +804,18 @@ RelationalOptions(void)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(pwScrolled), dbList);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vb1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vb1 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(hb2), vb1, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vb1), pwScrolled, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hb1 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(vb1), hb1, FALSE, FALSE, 0);
     adddb = gtk_button_new_with_label("Add database");
     g_signal_connect(adddb, "clicked", G_CALLBACK(AddDBClicked), dbList);
@@ -834,11 +860,19 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     pwPaned = gtk_vpaned_new();
     gtk_paned_set_position(GTK_PANED(pwPaned), (int) (REL_DIALOG_HEIGHT * 0.6));
     gtk_notebook_append_page(GTK_NOTEBOOK(pwn), pwPaned, gtk_label_new(_("Players")));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwVbox), INSIDE_FRAME_GAP);
     gtk_paned_add1(GTK_PANED(pwPaned), pwVbox);
     gtk_box_pack_start(GTK_BOX(pwVbox), GtkRelationalShowStats(), TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHbox2 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox2, FALSE, FALSE, 0);
 
     pwOpen = gtk_button_new_with_label("Open");
@@ -857,11 +891,19 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_container_set_border_width(GTK_CONTAINER(pwPlayerFrame), OUTSIDE_FRAME_GAP);
     gtk_paned_add2(GTK_PANED(pwPaned), pwPlayerFrame);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, NAME_NOTES_VGAP);
+#else
     pwVbox = gtk_vbox_new(FALSE, NAME_NOTES_VGAP);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwVbox), INSIDE_FRAME_GAP);
     gtk_container_add(GTK_CONTAINER(pwPlayerFrame), pwVbox);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHbox2 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox2, FALSE, FALSE, 0);
 
     pwLabel = gtk_label_new("Name");
@@ -869,7 +911,11 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     pwPlayerName = gtk_entry_new();
     gtk_box_pack_start(GTK_BOX(pwHbox2), pwPlayerName, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVbox2 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwVbox2, TRUE, TRUE, 0);
 
     pwLabel = gtk_label_new("Notes");
@@ -884,7 +930,11 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_container_add(GTK_CONTAINER(pwScrolled), pwPlayerNotes);
     gtk_box_pack_start(GTK_BOX(pwVbox2), pwScrolled, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHbox2 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox2, FALSE, FALSE, 0);
 
     pwUpdate = gtk_button_new_with_label("Update Details");
@@ -896,7 +946,11 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 *******************************************************/
 
     /* Query sheet */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_notebook_append_page(GTK_NOTEBOOK(pwn), pwVbox, gtk_label_new(_("Query")));
     gtk_container_set_border_width(GTK_CONTAINER(pwVbox), INSIDE_FRAME_GAP);
 
@@ -922,7 +976,11 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_box_pack_start(GTK_BOX(pwVbox), pwQueryText, FALSE, FALSE, 0);
     gtk_widget_set_size_request(pwQueryText, 250, 80);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox, FALSE, FALSE, 0);
     pwLabel = gtk_label_new("Result");
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
@@ -932,10 +990,18 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     g_signal_connect(G_OBJECT(pwRun), "clicked", G_CALLBACK(RelationalQuery), pwVbox);
     gtk_box_pack_start(GTK_BOX(pwHbox), pwRun, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwQueryBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwQueryBox = gtk_vbox_new(FALSE, 0);
+#endif
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+#if GTK_CHECK_VERSION(3, 8, 0)
+    gtk_container_add(GTK_CONTAINER(pwScrolled), pwQueryBox);
+#else
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(pwScrolled), pwQueryBox);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwScrolled, TRUE, TRUE, 0);
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwn);
