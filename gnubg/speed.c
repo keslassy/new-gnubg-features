@@ -33,8 +33,7 @@
 #include <stdlib.h>
 #endif
 
-#include <isaac.h>
-#include "speed.h"
+#include "lib/isaac.h"
 #include "lib/simd.h"
 
 #define EVALS_PER_ITERATION 1024
@@ -42,7 +41,7 @@
 static randctx rc;
 static double timeTaken;
 
-extern void
+static void
 RunEvals(void *UNUSED(notused))
 {
     int aanBoard[EVALS_PER_ITERATION][2][25];
