@@ -229,7 +229,6 @@ dnl Checks for libraries.
 dnl
 
 AC_CHECK_LIB(m,sqrt)
-AC_CHECK_LIB(gmp, __gmpz_import)
 AC_SEARCH_LIBS(gethostbyname,nsl)
 AC_SEARCH_LIBS(inet_aton,resolv)
 if test "x$win32" = "xyes"; then
@@ -252,6 +251,20 @@ if test "$bcrl" = "y" ; then
     AC_DEFINE([HAVE_LIB_READLINE],1,Define if you have libreadline)
     fi
 AC_SUBST(READLINE_LIBS)
+
+dnl
+dnl Check for gmp
+dnl 
+
+bcgmp=n
+AC_CHECK_LIB(gmp,__gmpz_import,
+             [AC_CHECK_HEADER(gmp.h,
+              GMP_LIB="-lgmp";bcgmp=y)],
+              GMP_LIB="")
+if test "$bcgmp" = "y" ; then
+    AC_DEFINE([HAVE_LIBGMP],1,Define if you have libgmp)
+    fi
+AC_SUBST(GMP_LIB)
 
 dnl
 dnl Checks for header files.
