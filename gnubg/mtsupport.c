@@ -28,12 +28,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#if USE_GTK
-#include <gtk/gtk.h>
+#if defined(USE_GTK)
 #include <gtkgame.h>
 #endif
 
-#include "speed.h"
 #include "rollout.h"
 #include "util.h"
 #include "lib/simd.h"
@@ -491,8 +489,7 @@ multi_debug(const char *str, ...)
 #else
 #include "multithread.h"
 #include <stdlib.h>
-#if USE_GTK
-#include <gtk/gtk.h>
+#if defined(USE_GTK)
 #include <gtkgame.h>
 #endif
 
