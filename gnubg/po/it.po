@@ -941,11 +941,11 @@ msgstr "Decisione di cubo sconosciuta"
 #: eval.c:4077 format.c:1115 gtkgame.c:4957 html.c:298 progress.c:679
 #: show.c:119
 msgid "Cubeful"
-msgstr "Con il cubo in gioco"
+msgstr "Con il cubo"
 
 #: eval.c:4077 gtkmovelistctrl.c:289 html.c:295 progress.c:678 show.c:119
 msgid "Cubeless"
-msgstr "Senza il cubo in gioco"
+msgstr "Senza il cubo"
 
 #: eval.c:4077 format.c:117 format.c:799 format.c:1133
 msgid "ply"
