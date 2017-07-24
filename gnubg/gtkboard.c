@@ -89,8 +89,12 @@ static unsigned char *TTachCube, *TTachCubeFaces;
 static gint board_set(Board * board, gchar * board_text, const gint resigned, const gint cube_use);
 static void InitialPos(BoardData * bd);
 
-
+#if GTK_CHECK_VERSION(3,0,0)
+G_DEFINE_TYPE(Board, board, GTK_TYPE_BOX)
+#else
 G_DEFINE_TYPE(Board, board, GTK_TYPE_VBOX)
+#endif
+
 extern GtkWidget *
 board_new(renderdata * prd)
 {
@@ -777,7 +781,11 @@ update_move(BoardData * bd)
 
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_state_flags(bd->wmove, fIncomplete ? GTK_STATE_FLAG_ACTIVE : GTK_STATE_NORMAL, TRUE);
+#else
     gtk_widget_set_state(bd->wmove, fIncomplete ? GTK_STATE_ACTIVE : GTK_STATE_NORMAL);
+#endif
     gtk_label_set_text(GTK_LABEL(bd->wmove), move);
 
     return (fIllegal && !fGUIIllegal) ? -1 : 0;
@@ -825,7 +833,9 @@ board_start_drag(GtkWidget * UNUSED(widget), BoardData * bd, int
     {
         board_invalidate_point(bd, drag_point);
 
+#if !GTK_CHECK_VERSION(3,22,0)
         gdk_window_process_updates(gtk_widget_get_window(bd->drawing_area), FALSE);
+#endif
 
         bd->x_drag = x;
         bd->y_drag = y;
@@ -989,7 +999,9 @@ board_drag(GtkWidget * UNUSED(widget), BoardData * bd, int x, int y)
     }
 #endif
 
+#if !GTK_CHECK_VERSION(3,22,0)
     gdk_window_process_updates(gtk_widget_get_window(bd->drawing_area), FALSE);
+#endif
 
     if (s == 0)
         return;
@@ -1042,7 +1054,9 @@ board_end_drag(GtkWidget * UNUSED(widget), BoardData * bd)
     unsigned char *puch;
     int s = bd->rd->nSize;
 
+#if !GTK_CHECK_VERSION(3,22,0)
     gdk_window_process_updates(gtk_widget_get_window(bd->drawing_area), FALSE);
+#endif
 
     if (s == 0)
         return;
@@ -2221,8 +2235,10 @@ score_changed(GtkAdjustment * adj, BoardData * bd)
         gtk_adjustment_set_upper(bd->ascore1, upper);
     }
 
+#if !GTK_CHECK_VERSION(3,18,0)
     gtk_adjustment_changed(bd->ascore0);
     gtk_adjustment_changed(bd->ascore1);
+#endif
 
     if (nMatchLen) {
 
@@ -2732,7 +2748,9 @@ board_blink_timeout(gpointer p)
         blink_move += 2;
     }
 
+#if !GTK_CHECK_VERSION(3,22,0)
     gdk_window_process_updates(gtk_widget_get_window(pbd->drawing_area), FALSE);
+#endif
 
     return TRUE;
 }
@@ -2848,7 +2866,9 @@ board_slide_timeout(gpointer p)
             bd->drag_point = -1;
             slide_phase = 0;
             slide_move += 2;
+#if !GTK_CHECK_VERSION(3,22,0)
             gdk_window_process_updates(gtk_widget_get_window(bd->drawing_area), FALSE);
+#endif
             playSound(SOUND_CHEQUER);
 
             return TRUE;
@@ -3677,7 +3697,11 @@ board_init(Board * board)
 
     /* the board */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    bd->table = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     bd->table = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(board), bd->table, FALSE, TRUE, 0);
 
     /* 
@@ -3687,12 +3711,20 @@ board_init(Board * board)
     pwFrame = gtk_frame_new(NULL);
     gtk_box_pack_start(GTK_BOX(bd->table), pwFrame, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwvbox);
 
     /* first row: picture of chequer + name of player */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pw, FALSE, FALSE, 0);
 
     /* picture of chequer */
@@ -3714,7 +3746,11 @@ board_init(Board * board)
 
     /* second row: "Score" + score */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pw, FALSE, FALSE, 0);
 
     /* score label */
@@ -3735,7 +3771,11 @@ board_init(Board * board)
 
     /* third row: pip count and epc */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pw, FALSE, FALSE, 0);
 
     /* pip count label */
@@ -3754,12 +3794,20 @@ board_init(Board * board)
     pwFrame = gtk_frame_new(NULL);
     gtk_box_pack_start(GTK_BOX(bd->table), pwFrame, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwvbox);
 
     /* first row: picture of chequer + name of player */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pw, FALSE, FALSE, 0);
 
     /* picture of chequer */
@@ -3781,7 +3829,11 @@ board_init(Board * board)
 
     /* second row: "Score" + score */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pw, FALSE, FALSE, 0);
 
     /* score label */
@@ -3802,7 +3854,11 @@ board_init(Board * board)
 
     /* third row: pip count and epc */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pw, FALSE, FALSE, 0);
 
     /* pip count label */
@@ -3822,7 +3878,11 @@ board_init(Board * board)
     pwFrame = gtk_frame_new(NULL);
     gtk_box_pack_end(GTK_BOX(bd->table), pwFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwvbox);
 
     /* move string */
@@ -3832,7 +3892,12 @@ board_init(Board * board)
 
     /* match length */
 
-    gtk_box_pack_start(GTK_BOX(pwvbox), pw = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pw = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwvbox), pw, FALSE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(pw), gtk_label_new(_("Match:")), FALSE, FALSE, 4);
 
@@ -3866,8 +3931,9 @@ board_init(Board * board)
 
     g_object_ref(bd->jacoby);
     g_object_ref(bd->crawford);
+#if !GTK_CHECK_VERSION(3,18,0)
     gtk_adjustment_value_changed(GTK_ADJUSTMENT(bd->amatch));
-
+#endif
 
     /* dice drawing area */
 
