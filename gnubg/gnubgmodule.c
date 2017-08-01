@@ -37,6 +37,7 @@
 #include "matchid.h"
 #include "util.h"
 #include "lib/gnubg-types.h"
+#include "lib/simd.h"
 
 #if defined(USE_GTK)
 #include "gtkgame.h"
@@ -3023,7 +3024,8 @@ PythonNavigate(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
 
     if (nextRecord == INT_MIN && nextGame == INT_MIN) {
         /* no args, go to start */
-        ChangeGame(lMatch.plNext->p);
+        if (lMatch.plNext->p)       /* Match not empty */
+            ChangeGame(lMatch.plNext->p);
     } else {
 
         if (nextRecord != INT_MIN && nextRecord < 0) {
