@@ -675,6 +675,7 @@ generate_os(const int nOS, const int fHeader,
         fclose(pfTmp);
 
         g_unlink(tmpfile);
+        g_free(tmpfile);
 
     }
     putc('\n', stderr);
@@ -1254,6 +1255,7 @@ generate_ts(const int nTSP, const int nTSC,
     fclose(pfTmp);
 
     g_unlink(tmpfile);
+    g_free(tmpfile);
 
 }
 

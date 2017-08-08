@@ -100,6 +100,7 @@ main(int argc, /*lint -e{818} */ char *argv[])
             fprintf(stderr, "Failed to save neural net!");
             return EXIT_FAILURE;
         }
+        NeuralNetDestroy(&nn);
     }
 
     fprintf(stderr, _("%d nets converted\n"), c);
