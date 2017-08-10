@@ -1,4 +1,6 @@
-INCLUDES=-I$(srcdir)/../analyze \
+## $Id$
+ 
+AM_CPPFLAGS=-I$(srcdir)/../analyze \
          -I$(srcdir)/../gnubg \
 	 @PYTHON_CSPEC@
 
