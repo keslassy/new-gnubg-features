@@ -36,6 +36,9 @@ AC_FUNC_REALLOC
 AC_FUNC_STRTOD
 AC_CHECK_FUNCS([memmove memset pow sqrt strcasecmp strchr strdup strncasecmp])
 
+AC_SEARCH_LIBS([dlopen], [dl dld], [], [
+  AC_MSG_ERROR([unable to find the dlopen() function])
+])
 
 dnl
 dnl SSE
