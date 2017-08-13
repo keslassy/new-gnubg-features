@@ -373,6 +373,8 @@ SIMD_Supported(void)
 
 #else
 
+#if defined(HAVE_SSE)
+
 #if defined(__APPLE__) || defined(__FreeBSD__)
 #include <sys/sysctl.h>
 #endif
@@ -546,13 +548,19 @@ CheckSSE(void)
     return result;
 }
 
+#endif /* HAVE_SSE */
+
 int
 SIMD_Supported(void)
 {
     static int state = -3;
 
     if (state == -3)
+#if defined(HAVE_SSE)
         state = CheckSSE();
+#else
+        state = -2;
+#endif
 
     return state;
 }
