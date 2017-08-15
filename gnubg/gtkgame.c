@@ -5738,6 +5738,7 @@ GtkShowEngine(GtkWidget * parent)
     szBuffer[1] = NULL;
     EvalStatus(szBuffer[0]);
     ShowList(szBuffer, _("Evaluation Engine"), parent);
+    g_free(szBuffer[0]);
 }
 
 extern void
