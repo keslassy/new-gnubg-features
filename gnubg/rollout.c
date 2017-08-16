@@ -243,7 +243,7 @@ RolloutDice(int iTurn, int iGame,
                 int n;
                 if ((n = RollDice(anDice, rngx, rngctx)) != 0)
                     return n;
-            } while (fInitial && !iTurn && anDice[0] == anDice[1]);
+            } while (anDice[0] == anDice[1]);
 
             return 0;
         }
