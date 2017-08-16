@@ -963,7 +963,7 @@ static command acSetExportHTMLType[] = {
   { NULL, NULL, NULL, NULL, NULL }    
 }, acSetInvert[] = {
   { "matchequitytable", CommandSetInvertMatchEquityTable,
-    N_("invert match equity table"), szONOFF, &cOnOff },
+    N_("Invert match equity table"), szONOFF, &cOnOff },
   { "met", CommandSetInvertMatchEquityTable,
     N_("alias for 'set invert matchequitytable'"), szONOFF, &cOnOff },
   { NULL, NULL, NULL, NULL, NULL }    
@@ -1443,7 +1443,7 @@ command acTop[] = {
 #if defined(HAVE_LIB_READLINE)
     { "history", CommandHistory, N_("Display current history"), NULL, NULL },
 #endif /* HAVE_LIB_READLINE */
-    { "invert", NULL, N_("invert match equity tables, etc."), 
+    { "invert", NULL, N_("Invert match equity table"), 
       NULL, acSetInvert },
     { "import", NULL, 
       N_("Import matches, games or positions from other programs"),
