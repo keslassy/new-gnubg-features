@@ -234,11 +234,10 @@ float arLuckLevel[] = {
     0.3f,                       /* LUCK_GOOD */
     0.6f                        /* LUCK_VERYGOOD */
 }, arSkillLevel[] = {
-
     0.16f,                      /* SKILL_VERYBAD */
-        0.08f,                  /* SKILL_BAD */
-        0.04f,                  /* SKILL_DOUBTFUL */
-        0,                      /* SKILL_NONE */
+    0.08f,                      /* SKILL_BAD */
+    0.04f,                      /* SKILL_DOUBTFUL */
+    0                           /* SKILL_NONE */
 };
 
 #include "movefilters.inc"
@@ -1116,6 +1115,7 @@ PortableSignal(int nSignal, void (*p) (int), psighandler * pOld, int fRestart)
 
     sigvec(nSignal, p ? &sv : NULL, pOld);
 #else
+    (void) fRestart;            /* silence compiler warning */
     if (pOld)
         *pOld = signal(nSignal, p);
     else if (p)
