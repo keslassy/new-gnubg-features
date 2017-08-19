@@ -389,6 +389,8 @@ GTKShowRace(TanBoard anBoard)
 
     g_signal_connect_after(G_OBJECT(pwNotebook), "switch-page", G_CALLBACK(set_current_page), pwNotebook);
 
+    g_object_set_data_full(G_OBJECT(pwDialog), "racewidget", prw, free);
+
     /* show dialog */
 
     /* OSR can take a long time for non-race positions */
