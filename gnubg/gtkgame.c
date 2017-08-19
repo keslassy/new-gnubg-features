@@ -1031,7 +1031,11 @@ SetAnnotation(moverecord * pmr)
             fMoveOld = ms.fMove;
             fTurnOld = ms.fTurn;
 
+#if GTK_CHECK_VERSION(3,0,0)
+            pwAnalysis = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
             pwAnalysis = gtk_vbox_new(FALSE, 0);
+#endif
 
             pwBox = gtk_table_new(2, 3, FALSE);
             gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 4);
@@ -1121,9 +1125,14 @@ SetAnnotation(moverecord * pmr)
 
             dt = DoubleType(ms.fDoubled, ms.fMove, ms.fTurn);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            pwAnalysis = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+            pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
             pwAnalysis = gtk_vbox_new(FALSE, 0);
-
             pwBox = gtk_vbox_new(FALSE, 0);
+#endif
+
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(Q_(aszDoubleTypes[dt])), FALSE, FALSE, 2);
             gtk_box_pack_start(GTK_BOX(pwBox), skill_label(pmr->stCube), FALSE, FALSE, 2);
             gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 0);
@@ -1145,9 +1154,14 @@ SetAnnotation(moverecord * pmr)
 
             tt = (taketype) DoubleType(ms.fDoubled, ms.fMove, ms.fTurn);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            pwAnalysis = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+            pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
             pwAnalysis = gtk_vbox_new(FALSE, 0);
-
             pwBox = gtk_vbox_new(FALSE, 0);
+#endif
+
             gtk_box_pack_start(GTK_BOX(pwBox),
                                gtk_label_new(pmr->mt == MOVE_TAKE ? _("Take") : _("Drop")), FALSE, FALSE, 2);
             gtk_box_pack_start(GTK_BOX(pwBox), skill_label(pmr->stCube), FALSE, FALSE, 2);
@@ -1164,7 +1178,11 @@ SetAnnotation(moverecord * pmr)
             break;
 
         case MOVE_RESIGN:
+#if GTK_CHECK_VERSION(3,0,0)
+            pwAnalysis = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
             pwAnalysis = gtk_vbox_new(FALSE, 0);
+#endif
 
             /* equities for resign */
 
@@ -1173,7 +1191,11 @@ SetAnnotation(moverecord * pmr)
 
             /* skill for resignation */
 
+#if GTK_CHECK_VERSION(3,0,0)
+            pwBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
             pwBox = gtk_hbox_new(FALSE, 0);
+#endif
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Resign")), FALSE, FALSE, 2);
 
             pwAlign = gtk_alignment_new(0.5f, 0.5f, 0.0f, 0.0f);
@@ -1183,7 +1205,11 @@ SetAnnotation(moverecord * pmr)
 
             /* skill for accept */
 
+#if GTK_CHECK_VERSION(3,0,0)
+            pwBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
             pwBox = gtk_hbox_new(FALSE, 0);
+#endif
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Accept")), FALSE, FALSE, 2);
 
             pwAlign = gtk_alignment_new(0.5f, 0.5f, 0.0f, 0.0f);
@@ -2030,7 +2056,11 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     if (pfOK)
         *pfOK = FALSE;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwEval = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwEval = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwEval), 8);
 
     pew = malloc(sizeof *pew);
@@ -2046,7 +2076,11 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     pwFrame = gtk_frame_new(_("Predefined settings"));
     gtk_container_add(GTK_CONTAINER(pwev), pwFrame);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+#else
     pw2 = gtk_vbox_new(FALSE, 8);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pw2);
     gtk_container_set_border_width(GTK_CONTAINER(pw2), 8);
 
@@ -2075,7 +2109,11 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     pwFrame = gtk_frame_new(_("User defined settings"));
     gtk_container_add(GTK_CONTAINER(pwEval), pwFrame);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+#else
     pw2 = gtk_vbox_new(FALSE, 8);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw2), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), pw2);
 
@@ -2094,7 +2132,11 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     pwFrame2 = gtk_frame_new(_("Lookahead"));
     gtk_container_add(GTK_CONTAINER(pwev), pwFrame2);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame2), pw);
 
     pew->padjPlies = GTK_ADJUSTMENT(gtk_adjustment_new(pec->nPlies, 0, 7, 1, 1, 0));
@@ -2159,12 +2201,20 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     pwFrame2 = gtk_frame_new(_("Noise"));
     gtk_container_add(GTK_CONTAINER(pwev), pwFrame2);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw3 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw3 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame2), pw3);
 
 
     pew->padjNoise = GTK_ADJUSTMENT(gtk_adjustment_new(pec->rNoise, 0, 1, 0.001, 0.001, 0.0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pw3), pw);
     gtk_container_add(GTK_CONTAINER(pw), gtk_label_new(_("Noise:")));
     gtk_container_add(GTK_CONTAINER(pw), gtk_spin_button_new(pew->padjNoise, 0.001, 3));
@@ -2336,7 +2386,12 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
                                DT_INFO, button, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON,
                                G_CALLBACK(DetailedAnalysisOK), pDetails);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hbox = gtk_hbox_new(FALSE, 0);
+#endif
+
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), hbox);
 
     pwFrame = gtk_frame_new(_("Chequer play"));
@@ -2351,7 +2406,11 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
     gtk_box_pack_start(GTK_BOX(hbox), pwFrame, TRUE, TRUE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwvbox);
 
     gtk_box_pack_start(GTK_BOX(pwvbox),
@@ -2390,18 +2449,30 @@ AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
     GtkWidget *vbox, *hbox, *pw2, *pwDetails, *vboxSpacer;
     int i;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vboxSpacer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vboxSpacer = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(vboxSpacer), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), vboxSpacer);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(vboxSpacer), vbox);
 
     /*
      * Frame with prefined settings
      */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pw2 = gtk_vbox_new(FALSE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(vbox), pw2, FALSE, FALSE, 0);
 
     /* option menu with selection of predefined settings */
@@ -2416,7 +2487,11 @@ AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
 
     pwDetails = gtk_button_new_with_label(_("Advanced Settings..."));
     g_signal_connect(G_OBJECT(pwDetails), "clicked", G_CALLBACK(ShowDetailedAnalysis), (void *) pAnalDetails);
+#if GTK_CHECK_VERSION(3,0,0)
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(hbox), pwDetails, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 4);
     UpdateSummaryEvalMenuSetting(pAnalDetails);
@@ -2570,22 +2645,42 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Analysis Settings"),
                                DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(AnalysisOK), &aw);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwPage = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+#else
     pwPage = gtk_hbox_new(FALSE, 6);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwPage), 8);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vbox1 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwPage), vbox1, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hboxTop = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hboxTop = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(vbox1), hboxTop, TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    hboxBottom = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hboxBottom = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(vbox1), hboxBottom, TRUE, TRUE, 0);
 
     pwFrame = gtk_frame_new(_("Analysis"));
     gtk_box_pack_start(GTK_BOX(hboxTop), pwFrame, TRUE, TRUE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vbox2 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), vbox2);
 
     aw.pwMoves = gtk_check_button_new_with_label(_("Chequer play"));
@@ -2658,28 +2753,48 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     pwFrame = gtk_frame_new(_("Analysis Level"));
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vbox1 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(hboxTop), vbox1, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), pwFrame, FALSE, FALSE, 0);
 
     pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
                                               &aw.esChequer.ec, (movefilter *) & aw.aamf, &aw.esCube.ec, NULL);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwPage), gtk_separator_new(GTK_ORIENTATION_VERTICAL), TRUE, TRUE, 0);
+#else
     gtk_box_pack_start(GTK_BOX(pwPage), gtk_vseparator_new(), TRUE, TRUE, 0);
+#endif
 
     pwFrame = gtk_frame_new(_("Eval Hint/Tutor Level"));
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vbox2 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(vbox2), pwFrame, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwPage), vbox2, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     vbox1 = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), vbox1);
 
     aw.pwHintSame = gtk_check_button_new_with_label(_("Same as analysis"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(aw.pwHintSame), fEvalSameAsAnalysis);
     g_signal_connect(G_OBJECT(aw.pwHintSame), "toggled", G_CALLBACK(HintSameToggled), &aw);
+#if GTK_CHECK_VERSION(3,0,0)
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(hbox), aw.pwHintSame, FALSE, FALSE, 8);
     gtk_box_pack_start(GTK_BOX(vbox1), hbox, FALSE, FALSE, 0);
 
@@ -2729,10 +2844,18 @@ PlayersPage(playerswidget * ppw, int i, const char *title)
 
     pwFrame = gtk_frame_new(title);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwVBox);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), 4);
     gtk_container_add(GTK_CONTAINER(pwVBox), pw);
     gtk_container_add(GTK_CONTAINER(pw), gtk_label_new(_("Default Name:")));
@@ -2757,7 +2880,11 @@ PlayersPage(playerswidget * ppw, int i, const char *title)
                       ppw->apwRadio[i][2] =
                       gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(ppw->apwRadio[i][0]),
                                                                   _("External")));
+#if GTK_CHECK_VERSION(3,0,0)
+    ppw->apwExternal[i] = pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     ppw->apwExternal[i] = pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), 4);
     gtk_widget_set_sensitive(pw, ap[i].pt == PLAYER_EXTERNAL);
     gtk_container_add(GTK_CONTAINER(pwVBox), pw);
@@ -2814,7 +2941,13 @@ SetPlayers(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         GTKCreateDialog(_("GNU Backgammon - Players"), DT_QUESTION,
                         NULL, DIALOG_FLAG_MODAL, G_CALLBACK(PlayersOK), &plw);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwHBox = gtk_hbox_new(FALSE, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwHBox);
     gtk_box_pack_start(GTK_BOX(pwHBox), PlayersPage(&plw, 0, _("Player 0")), FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwHBox), PlayersPage(&plw, 1, _("Player 1")), FALSE, FALSE, 0);
     PlayerTypeToggled(NULL, &plw);
@@ -2992,7 +3125,11 @@ GetFlagWidget(char *language, char *langCode, const char *flagfilename)
     gtk_widget_modify_bg(eb2, GTK_STATE_INSENSITIVE, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_NORMAL]);
     gtk_container_add(GTK_CONTAINER(frame), eb2);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+#else
     vbox = gtk_vbox_new(FALSE, 5);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(vbox), 5);
     gtk_container_add(GTK_CONTAINER(eb2), vbox);
 
@@ -3063,7 +3200,11 @@ AddLangWidgets(GtkWidget * cont)
 {
     int i, numLangs;
     GtkWidget *pwVbox, *pwHbox, *selLang = NULL;
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(cont), pwVbox);
 
     pwLangRadio1 = gtk_radio_button_new_with_label(NULL, "");
@@ -3089,7 +3230,11 @@ AddLangWidgets(GtkWidget * cont)
         if (!StrCaseCmp(szLang, aaszLang[i + 1][1]))
             selLang = flag;
     }
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwHbox), pwLangTable, FALSE, FALSE, 20);
 
@@ -3656,7 +3801,13 @@ CreateMainWindow(void)
     gtk_drag_dest_set(pwMain, GTK_DEST_DEFAULT_ALL, &fileDrop, 1, GDK_ACTION_DEFAULT);
     g_signal_connect(G_OBJECT(pwMain), "drag_data_received", G_CALLBACK(FileDragDropped), NULL);
 
-    gtk_container_add(GTK_CONTAINER(pwMain), pwVbox = gtk_vbox_new(FALSE, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwVbox = gtk_vbox_new(FALSE, 0);
+#endif
+
+    gtk_container_add(GTK_CONTAINER(pwMain), pwVbox);
 
 #if defined(USE_GTKUIMANAGER)
     GError *error = NULL;
@@ -3728,10 +3879,20 @@ CreateMainWindow(void)
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHandle, FALSE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(pwHandle), pwToolbar = ToolbarNew());
 
-    gtk_box_pack_start(GTK_BOX(pwVbox), pwGameBox = gtk_hbox_new(FALSE, 0), TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGameBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwGameBox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwVbox), pwGameBox, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(pwVbox), hpaned = gtk_hpaned_new(), TRUE, TRUE, 0);
 
-    gtk_paned_add1(GTK_PANED(hpaned), pwPanelGameBox = gtk_hbox_new(FALSE, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwPanelGameBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwPanelGameBox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_paned_add1(GTK_PANED(hpaned), pwPanelGameBox);
     gtk_container_add(GTK_CONTAINER(pwPanelGameBox), pwEventBox = gtk_event_box_new());
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwEventBox), FALSE);
 
@@ -3739,9 +3900,18 @@ CreateMainWindow(void)
     g_signal_connect(G_OBJECT(pwEventBox), "button-press-event", G_CALLBACK(board_button_press),
                      BOARD(pwBoard)->board_data);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwPanelHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwPanelHbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_paned_pack2(GTK_PANED(hpaned), pwPanelHbox, FALSE, FALSE);
-    gtk_box_pack_start(GTK_BOX(pwPanelHbox), pwPanelVbox = gtk_vbox_new(FALSE, 1), TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwPanelVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 1);
+#else
+    pwPanelVbox = gtk_vbox_new(FALSE, 1);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwPanelHbox), pwPanelVbox, TRUE, TRUE, 0);
 
     /* Do this so that the menu is packed now instead of in the idle loop */
 #if defined(USE_GTKUIMANAGER)
@@ -3752,7 +3922,12 @@ CreateMainWindow(void)
 
     /* Status bar */
 
-    gtk_box_pack_end(GTK_BOX(pwVbox), pwHbox = gtk_hbox_new(FALSE, 0), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_end(GTK_BOX(pwVbox), pwHbox, FALSE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(pwHbox), pwStatus = gtk_statusbar_new(), TRUE, TRUE, 0);
 
@@ -3779,7 +3954,11 @@ CreateMainWindow(void)
     pwIDBox = gtk_event_box_new();
     gtk_box_pack_start(GTK_BOX(pwHbox), pwIDBox, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHbox2 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwIDBox), pwHbox2);
 
     gtk_box_pack_start(GTK_BOX(pwHbox2), gtk_label_new("GNUbg ID:"), FALSE, FALSE, 0);
@@ -4399,7 +4578,11 @@ NewWidget(newwidget * pnw)
     GtkWidget *pwVbox, *pwHbox, *pwLabel, *pwToolbar;
     GtkWidget *pwButtons, *pwFrame, *pwVbox2;
     GtkToolItem *pwToolButton;
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVbox = gtk_vbox_new(FALSE, 0);
+#endif
     pwToolbar = gtk_toolbar_new();
 
     toolbar_set_orientation(GTK_TOOLBAR(pwToolbar), GTK_ORIENTATION_HORIZONTAL);
@@ -4448,7 +4631,12 @@ NewWidget(newwidget * pnw)
     }
 
     pwFrame = gtk_frame_new(_("Match settings"));
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
 
     pwLabel = gtk_label_new(_("Length:"));
     gtk_label_set_justify(GTK_LABEL(pwLabel), GTK_JUSTIFY_RIGHT);
@@ -4464,8 +4652,13 @@ NewWidget(newwidget * pnw)
 
     pwFrame = gtk_frame_new(_("Player settings"));
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pwVbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwHbox = gtk_hbox_new(FALSE, 0);
     pwVbox2 = gtk_vbox_new(FALSE, 0);
+#endif
 
     gtk_container_add(GTK_CONTAINER(pwHbox), pwVbox2);
 
@@ -4485,7 +4678,11 @@ NewWidget(newwidget * pnw)
 
     g_signal_connect(G_OBJECT(pwButtons), "clicked", G_CALLBACK(SettingsPressed), NULL);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVbox2 = gtk_vbox_new(FALSE, 0);
+#endif
 
     gtk_container_add(GTK_CONTAINER(pwHbox), pwVbox2);
 
@@ -4827,13 +5024,21 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     GtkWidget *pwHBox;
     GtkWidget *pwTable, *pwFrame;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwPage = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwPage = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwPage), 8);
 
     prpw->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nSeed, 0, INT_MAX, 1, 1, 0));
 
     prpw->padjTrials = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nTrials, 1, 1296 * 1296, 36, 36, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwPage), pw);
 
     gtk_container_add(GTK_CONTAINER(pw), gtk_label_new(_("Seed:")));
@@ -4845,7 +5050,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     pwFrame = gtk_frame_new(_("Truncation"));
     gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+#else
     pw = gtk_hbox_new(FALSE, 8);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
@@ -4854,7 +5063,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwDoTrunc), prw->rcRollout.fDoTruncate);
     g_signal_connect(G_OBJECT(prpw->pwDoTrunc), "toggled", G_CALLBACK(TruncEnableToggled), prw);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    prpw->pwAdjTruncPlies  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     prpw->pwAdjTruncPlies = pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pw), pwHBox);
     gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Truncate at ply:")));
 
@@ -4865,7 +5078,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     pwFrame = gtk_frame_new(_("Evaluation for later plies"));
     gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+#else
     pw = gtk_hbox_new(FALSE, 8);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
@@ -4874,7 +5091,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoLate), prw->rcRollout.fLateEvals);
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwDoLate), "toggled", G_CALLBACK(LateEvalToggled), prw);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    prpw->pwAdjLatePlies  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     prpw->pwAdjLatePlies = pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pw), pwHBox);
     gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Change eval after ply:")));
 
@@ -4885,7 +5106,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
 
     /* an hbox for the pane */
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+#else
     pw = gtk_hbox_new(FALSE, 8);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
@@ -4895,11 +5120,18 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwDoSTDStop), "toggled", G_CALLBACK(STDStopToggled), prw);
 
     /* a vbox for the adjusters */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwv = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pw), pwv);
 
-
+#if GTK_CHECK_VERSION(3,0,0)
+    prpw->pwAdjMinGames  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     prpw->pwAdjMinGames = pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
     gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Minimum Trials:")));
 
@@ -4909,7 +5141,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 
     gtk_container_add(GTK_CONTAINER(pwHBox), prpw->pwMinGames);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    prpw->pwAdjMaxError  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     prpw->pwAdjMaxError = pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
     gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Equity Standard Deviation:")));
 
@@ -4924,12 +5160,20 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
 
     /* an hbox for the frame */
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+#else
     pw = gtk_hbox_new(FALSE, 8);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
     /* a vbox for the check boxes */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwv = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pw), pwv);
 
     prpw->pwJsdDoStop = gtk_check_button_new_with_label(_("Enable Stop on JSD"));
@@ -4938,10 +5182,18 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwJsdDoStop), "toggled", G_CALLBACK(JsdStopToggled), prw);
 
     /* a vbox for the adjusters */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwv = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pw), pwv);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    prpw->pwJsdAdjMinGames  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     prpw->pwJsdAdjMinGames = pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
     gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Minimum Trials:")));
 
@@ -4952,7 +5204,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 
     gtk_container_add(GTK_CONTAINER(pwHBox), prpw->pwJsdMinGames);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    prpw->pwJsdAdjLimit  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     prpw->pwJsdAdjLimit = pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
     gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("JSDs from best choice")));
 
@@ -4964,7 +5220,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 
     pwFrame = gtk_frame_new(_("Bearoff Truncation"));
     gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
+#if GTK_CHECK_VERSION(3,0,0)
+    prpw->pwTruncBearoffOpts = pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+#else
     prpw->pwTruncBearoffOpts = pw = gtk_vbox_new(FALSE, 8);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
@@ -5135,7 +5395,11 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
         gtk_notebook_append_page(GTK_NOTEBOOK(rw.RolloutNotebook),
                                  RolloutPageGeneral(rw.prwGeneral, &rw), gtk_label_new(_("General Settings")));
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_notebook_append_page(GTK_NOTEBOOK(rw.RolloutNotebook), pwVBox, gtk_label_new(_("Play settings")));
 
         pwTable = gtk_table_new(3, 2, FALSE);
@@ -5655,14 +5919,22 @@ GTKShowScoreSheet(void)
         strcat(title, _("Money Session"));
 
     pwDialog = GTKCreateDialog(title, DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwBox);
 
     gtk_container_set_border_width(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     hbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), hbox);
 
     store = gtk_list_store_new(2, G_TYPE_INT, G_TYPE_INT);
@@ -5760,7 +6032,11 @@ GTKShowVersion(void)
     gtk_box_pack_start(GTK_BOX(DialogArea(pwDialog, DA_MAIN)), image, FALSE, FALSE, 0);
 
     /* Buttons on right side */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwButtonBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwButtonBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(DialogArea(pwDialog, DA_MAIN)), pwButtonBox, FALSE, FALSE, 8);
 
     gtk_box_pack_start(GTK_BOX(pwButtonBox), pwButton = gtk_button_new_with_label(_("Credits")), FALSE, FALSE, 8);
@@ -5800,19 +6076,31 @@ GTKShowBuildInfo(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
     const char *pch;
 
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Build Info"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwBox);
 
     gtk_box_pack_start(GTK_BOX(pwBox), SelectableLabel(pwDialog, "Version " VERSION_STRING), FALSE, FALSE, 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwBox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(pwBox), gtk_hseparator_new(), FALSE, FALSE, 4);
+#endif
 
     while ((pch = GetBuildInfoString()))
         gtk_box_pack_start(GTK_BOX(pwBox), pwPrompt = gtk_label_new(gettext(pch)), FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwBox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(pwBox), gtk_hseparator_new(), FALSE, FALSE, 4);
+#endif
 
     gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_(aszCOPYRIGHT)), FALSE, FALSE, 4);
 
@@ -5830,7 +6118,13 @@ static void
 AddTitle(GtkWidget * pwBox, char *Title)
 {
     GtkRcStyle *ps = gtk_rc_style_new();
-    GtkWidget *pwTitle = gtk_label_new(Title), *pwHBox = gtk_hbox_new(TRUE, 0);
+    GtkWidget *pwTitle = gtk_label_new(Title), *pwHBox;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, FALSE, FALSE, 4);
 
     ps->font_desc = pango_font_description_new();
@@ -5889,22 +6183,38 @@ GTKCommandShowCredits(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
 
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwMainHBox = gtk_hbox_new(FALSE, 0);
+#endif
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainHBox);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwMainHBox), pwBox, FALSE, FALSE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
 
     while (credit->Title) {
         /* Two columns, so new hbox every-other one */
         if (i / 2 == (i + 1) / 2) {
-            pwHBox = gtk_hbox_new(TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+            pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+            pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
             gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, TRUE, FALSE, 0);
         }
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_box_pack_start(GTK_BOX(pwHBox), pwVBox, FALSE, FALSE, 0);
 
         AddTitle(pwVBox, _(credit->Title));
@@ -5915,12 +6225,20 @@ GTKCommandShowCredits(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
             ce++;
         }
         if (i == 1)
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_box_pack_start(GTK_BOX(pwBox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 4);
+#else
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_hseparator_new(), FALSE, FALSE, 4);
+#endif
         credit++;
         i++;
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwMainHBox), pwVBox, FALSE, FALSE, 0);
 
     AddTitle(pwVBox, _("Special thanks"));
@@ -5948,9 +6266,12 @@ GTKCommandShowCredits(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
     gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwScrolled, TRUE, TRUE, 0);
     gtk_widget_set_size_request(pwScrolled, 150, -1);
+#if GTK_CHECK_VERSION(3, 8, 0)
+    gtk_container_add(GTK_CONTAINER(pwScrolled), treeview);
+#else
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(pwScrolled), treeview);
+#endif
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-
 
     GTKRunDialog(pwDialog);
 }
@@ -6681,7 +7002,11 @@ AddNavigation(GtkWidget * pvbox)
         sprintf(sz, _("All games: %s %d, %s %d"), ap[0].szName, anFinalScore[0], ap[1].szName, anFinalScore[1]);
     else
         sprintf(sz, _("All games: %s, %s"), ap[0].szName, ap[1].szName);
+#if GTK_CHECK_VERSION(3,0,0)
+    phbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     phbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pvbox), phbox, FALSE, FALSE, 4);
     pw = button_from_image(gtk_image_new_from_stock(GNUBG_STOCK_GO_PREV_GAME, GTK_ICON_SIZE_LARGE_TOOLBAR));
     g_signal_connect(G_OBJECT(pw), "clicked", G_CALLBACK(StatsPreviousGame), box);
@@ -6835,7 +7160,11 @@ GTKDumpStatcontext(int game)
     gtk_notebook_set_scrollable(GTK_NOTEBOOK(pwNotebook), TRUE);
     gtk_notebook_popup_disable(GTK_NOTEBOOK(pwNotebook));
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pvbox), pwNotebook, TRUE, TRUE, 0);
 
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), statViews[FORMATGS_OVERALL] = CreateList(),
@@ -7147,9 +7476,19 @@ GTKShowCalibration(void)
     /* FIXME should be modal but presently causes crash and/or killing of the main window */
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Speed estimate"), DT_QUESTION,
                                NULL, 0, G_CALLBACK(CalibrationOK), pwspin);
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwvbox = gtk_vbox_new(FALSE, 8));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+#else
+    pwvbox = gtk_vbox_new(FALSE, 8);
+#endif
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwvbox);
     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 8);
-    gtk_container_add(GTK_CONTAINER(pwvbox), pwhbox = gtk_hbox_new(FALSE, 8));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 8);
+#endif
+    gtk_container_add(GTK_CONTAINER(pwvbox), pwhbox);
     gtk_container_add(GTK_CONTAINER(pwhbox), pwenable = gtk_check_button_new_with_label(_("Speed recorded:")));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwenable), rEvalsPerSec > 0);
 
@@ -7185,7 +7524,12 @@ GTKCalibrationStart(void)
 
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Calibration"), DT_INFO,
                                NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_NOTIDY, G_CALLBACK(CalibrationCancel), NULL);
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwhbox = gtk_hbox_new(FALSE, 8));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 8);
+#endif
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwhbox);
     gtk_container_set_border_width(GTK_CONTAINER(pwhbox), 8);
     gtk_container_add(GTK_CONTAINER(pwhbox), gtk_label_new(_("Calibrating:")));
     gtk_container_add(GTK_CONTAINER(pwhbox), pwResult = gtk_label_new(_("       (n/a)       ")));
@@ -7263,11 +7607,20 @@ GTKResign(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     }
     pwDialog = GTKCreateDialog(_("Resign"), DT_QUESTION, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_NOOK, NULL, NULL);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+    /* FIXME: how do we set homogenous to TRUE in gtk3 ? */
+#else
     pwVbox = gtk_vbox_new(TRUE, 5);
+#endif
 
     for (i = 0; i < 3; i++) {
         pwButtons = gtk_button_new();
+#if GTK_CHECK_VERSION(3,0,0)
+        pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
         pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
         gtk_container_add(GTK_CONTAINER(pwButtons), pwHbox);
         gtk_box_pack_start(GTK_BOX(pwHbox), gtk_image_new_from_stock(resign_stocks[i], GTK_ICON_SIZE_LARGE_TOOLBAR),
                            FALSE, FALSE, 0);
