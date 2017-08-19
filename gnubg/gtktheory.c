@@ -346,7 +346,7 @@ TheoryUpdated(GtkWidget * UNUSED(pw), theorywidget * ptw)
     /* set max on the gammon spinners */
 
     for (i = 0; i < 2; ++i)
-        gtk_adjustment_set_upper(ptw->aapwRates[i][1], 100.0f - gtk_adjustment_get_value(ptw->aapwRates[i][0]));
+        gtk_adjustment_set_upper(ptw->aapwRates[i][1], 100.0 - gtk_adjustment_get_value(ptw->aapwRates[i][0]));
 
     SetCubeInfo(&ci, ci.nCube, 0, 0, ci.nMatchTo, ci.anScore, ci.fCrawford, ci.fJacoby, ci.fBeavers, ci.bgv);
 
@@ -520,7 +520,7 @@ GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
         gtk_locdef_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr,
                              GTK_STATE_PRELIGHT, GTK_SHADOW_OUT, NULL, pwGraph, "drop", ax[1], 13, ax[2] - ax[1], cy - 2);
 
-    if (ptw->aar[iPlayer][2] < 1.0)
+    if (ptw->aar[iPlayer][2] < 1.0f)
         gtk_locdef_paint_box(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr,
                              GTK_STATE_SELECTED, GTK_SHADOW_OUT, NULL, pwGraph, "too-good", ax[2], 13, x + cx - ax[2], cy - 2);
 
@@ -613,17 +613,29 @@ GTKShowTheory(const int fActivePage)
 
     gtk_window_set_default_size(GTK_WINDOW(pwDialog), 660, 300);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwOuterHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+#else
     pwOuterHBox = gtk_hbox_new(FALSE, 8);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwOuterHBox), 8);
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwOuterHBox);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwOuterHBox), pwVBox, FALSE, FALSE, 0);
 
     /* match/money play */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHBox, FALSE, FALSE, 0);
 
     gtk_container_add(GTK_CONTAINER(pwHBox), ptw->apwRadio[0] = gtk_radio_button_new_with_label(NULL, _("Match play")));
@@ -643,7 +655,11 @@ GTKShowTheory(const int fActivePage)
     ptw->apwFrame[0] = gtk_frame_new(_("Match score"));
     gtk_box_pack_start(GTK_BOX(pwVBox), ptw->apwFrame[0], FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pw = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(ptw->apwFrame[0]), pw);
 
     pwTable = gtk_table_new(2, 3, FALSE);
@@ -673,7 +689,11 @@ GTKShowTheory(const int fActivePage)
 
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pw), pwHBox);
 
     gtk_container_add(GTK_CONTAINER(pwHBox), ptw->pwCrawford = gtk_check_button_new_with_label(_("Crawford game")));
@@ -683,7 +703,11 @@ GTKShowTheory(const int fActivePage)
     ptw->pwCubeFrame = gtk_frame_new(_("Cube"));
     gtk_container_add(GTK_CONTAINER(pw), ptw->pwCubeFrame);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(ptw->pwCubeFrame), pwHBox);
 
     j = 1;
@@ -709,7 +733,11 @@ GTKShowTheory(const int fActivePage)
     pwFrame = gtk_frame_new(_("Match equity table"));
     gtk_container_add(GTK_CONTAINER(pw), pwFrame);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pwx = gtk_vbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwx);
 
     gtk_box_pack_start(GTK_BOX(pwx), pwz = gtk_label_new((char *) miCurrent.szName), FALSE, FALSE, 0);
@@ -725,7 +753,11 @@ GTKShowTheory(const int fActivePage)
     ptw->apwFrame[1] = gtk_frame_new(_("Money play"));
     gtk_box_pack_start(GTK_BOX(pwVBox), ptw->apwFrame[1], FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(ptw->apwFrame[1]), pwHBox);
 
     gtk_container_add(GTK_CONTAINER(pwHBox), ptw->pwJacoby = gtk_check_button_new_with_label(_("Jacoby rule")));
@@ -742,7 +774,11 @@ GTKShowTheory(const int fActivePage)
     pwFrame = gtk_frame_new(_("Gammon and backgammon percentages"));
     gtk_box_pack_start(GTK_BOX(pwVBox), pwFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwx = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwx = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwx);
 
 
@@ -783,7 +819,11 @@ GTKShowTheory(const int fActivePage)
 
     /* radio buttons with plies */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwz = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwz = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwx), pwz, FALSE, FALSE, 4);
 
     for (i = 0; i <= MAXPLY; ++i) {
@@ -815,7 +855,11 @@ GTKShowTheory(const int fActivePage)
 
     /* market window */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
+#else
     pwVBox = gtk_vbox_new(FALSE, 10);
+#endif
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwVBox, gtk_label_new(_("Market window")));
 
     do_mw_views(ptw);
@@ -832,7 +876,11 @@ GTKShowTheory(const int fActivePage)
     }
 
     /* window graph */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwVBox, gtk_label_new(_("Window graph")));
 
     for (i = 0; i < 2; i++) {
@@ -854,7 +902,11 @@ GTKShowTheory(const int fActivePage)
 
     /* gammon prices */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
 
     ptw->pwGammonPrice = gtk_text_view_new();
     gtk_text_view_set_editable(GTK_TEXT_VIEW(ptw->pwGammonPrice), FALSE);
