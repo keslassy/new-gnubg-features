@@ -1440,10 +1440,34 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
             }
             bd->points[26] = bd->nchequers;
             bd->points[27] = -bd->nchequers;
+            /* Reset dice and cube */
+            ms.anDice[0] = ms.anDice[1] = 0;
+            ms.fTurn = ms.fMove = 1;
+            ms.fResigned = ms.fDoubled = 0;
+            bd->diceRoll[0] = bd->diceRoll[1] = 0;
+            bd->diceShown = DICE_BELOW_BOARD;
+            bd->turn = 1;
+            ms.nCube = 0;
+            bd->cube = 0;
+            ms.fCubeOwner = -1;
+            bd->cube_owner = 0;
+            ms.gs = GAME_PLAYING;
         } else {                /* if (n == POINT_UNUSED0 || n == POINT_UNUSED1) */
             /* click on unused bearoff tray in edit mode -- reset to starting position */
             TanBoard anBoard;
             InitBoard(anBoard, ms.bgv);
+            /* Reset dice and cube */
+            ms.anDice[0] = ms.anDice[1] = 0;
+            ms.fTurn = ms.fMove = 1;
+            ms.fResigned = ms.fDoubled = 0;
+            bd->diceRoll[0] = bd->diceRoll[1] = 0;
+            bd->diceShown = DICE_BELOW_BOARD;
+            bd->turn = 1;
+            ms.nCube = 0;
+            bd->cube = 0;
+            ms.fCubeOwner = -1;
+            bd->cube_owner = 0;
+            ms.gs = GAME_PLAYING;
             write_board(bd, anBoard);
         }
 #if defined(USE_BOARD3D)

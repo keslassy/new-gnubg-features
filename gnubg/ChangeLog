@@ -1,3 +1,11 @@
+2017-08-19  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* gtkboard.c: In edit mode, clicking on the bearoff-side tray
+	clears the board and clicking on the midpoint-side one resets it
+	to the initial position.
+	This used to leave the dice and cube unchanged ; now it resets the
+	cube to 1 and centered, and clears the dice.
+
 2017-05-25  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gtkgame.c, gtkuidefs.h, commands.inc: Use "Copy as BGonline"
