@@ -120,13 +120,20 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
 {
 
     GtkWidget *pwTable = gtk_table_new(3, 4, FALSE);
-    GtkWidget *pwvbox = gtk_vbox_new(FALSE, 0);
+
+    GtkWidget *pwvbox;
     GtkWidget *pw;
     GtkWidget *pwFrame;
     gchar *sz;
     unsigned int i;
 
     pwFrame = gtk_frame_new(_("Effective pip count"));
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
 
     gtk_container_add(GTK_CONTAINER(pwFrame), pwvbox);
     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
@@ -253,17 +260,26 @@ static GtkWidget *
 OSRPage(TanBoard UNUSED(anBoard), racewidget * prw)
 {
 
-    GtkWidget *pwvbox = gtk_vbox_new(FALSE, 4);
+    GtkWidget *pwvbox;
     GtkWidget *pw;
     GtkWidget *pwp = gtk_alignment_new(0, 0, 0, 0);
     float ar0[2] = { 0, 0 };
     char *pch;
 
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
+    pwvbox = gtk_vbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
 
     prw->padjTrials = GTK_ADJUSTMENT(gtk_adjustment_new(5760, 1, 1296 * 1296, 36, 36, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pw, FALSE, FALSE, 4);
 
     gtk_box_pack_start(GTK_BOX(pw), gtk_label_new(_("Trials:")), FALSE, FALSE, 4);
@@ -274,7 +290,11 @@ OSRPage(TanBoard UNUSED(anBoard), racewidget * prw)
 
     /* separator */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwvbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(pwvbox), gtk_hseparator_new(), FALSE, FALSE, 4);
+#endif
 
     /* result */
 
@@ -288,7 +308,11 @@ OSRPage(TanBoard UNUSED(anBoard), racewidget * prw)
 
     /* effective pip count */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwvbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(pwvbox), gtk_hseparator_new(), FALSE, FALSE, 4);
+#endif
 
     gtk_box_pack_start(GTK_BOX(pwvbox), EffectivePipCount(ar0, ar0, !prw->fMove, &prw->epcwOSR), FALSE, FALSE, 4);
 
