@@ -4193,6 +4193,7 @@ DestroySetDice(GtkWidget * po, void *data)
     free(sdd->TTachGrayDice);
     free(sdd->TTachGrayPip);
     gtk_widget_destroy(gtk_widget_get_toplevel(po));
+    free(sdd);
 }
 
 #if defined(USE_BOARD3D)
