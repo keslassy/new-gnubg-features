@@ -164,11 +164,11 @@ SaveCommon(guint f, gchar * prompt)
     GtkWidget *hbox;
     guint i, j, type;
     SaveOptions so;
-    static guint last_export_type = 0;
+    static ExportType last_export_type = EXPORT_SGF;
     static guint last_export_mgp = 0;
     static gchar *last_save_folder = NULL;
     static gchar *last_export_folder = NULL;
-    gchar *fn = GetFilename(TRUE, (f == 1) ? 0 : last_export_type);
+    gchar *fn = GetFilename(TRUE, (f == 1) ? EXPORT_SGF : last_export_type);
     gchar *folder = NULL;
     const gchar *mgp_text[3] = { "match", "game", "position" };
 
@@ -199,7 +199,11 @@ SaveCommon(guint f, gchar * prompt)
     so.upext = gtk_check_button_new_with_label(_("Update extension"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(so.upext), TRUE);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+#else
     hbox = gtk_hbox_new(FALSE, 10);
+#endif
     gtk_box_pack_start(GTK_BOX(hbox), so.mgp, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), so.description, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), so.upext, TRUE, TRUE, 0);
@@ -222,7 +226,7 @@ SaveCommon(guint f, gchar * prompt)
                 cmd = g_strdup_printf("save %s \"%s\"", et, fn);
             else
                 cmd = g_strdup_printf("export %s %s \"%s\"", et, export_format[type].clname, fn);
-            last_export_type = type;
+            last_export_type = (ExportType) type;
             last_export_mgp = gtk_combo_box_get_active(GTK_COMBO_BOX(so.mgp));
             g_free(last_export_folder);
             last_export_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(so.fc));
@@ -352,13 +356,22 @@ GTKOpen(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     type_combo = import_types_combo();
     g_signal_connect(type_combo, "changed", G_CALLBACK(OpenTypeChanged), fc);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    box2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     box = gtk_hbox_new(FALSE, 0);
     box2 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(box), box2, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box2), gtk_label_new(_("Open as:")), FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box2), type_combo, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    box2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     box2 = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(box), box2, FALSE, FALSE, 10);
     gtk_box_pack_start(GTK_BOX(box2), gtk_label_new(_("Selected file type: ")), FALSE, FALSE, 0);
     selFileType = gtk_label_new("");
