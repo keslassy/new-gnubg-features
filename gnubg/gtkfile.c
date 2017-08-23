@@ -37,6 +37,7 @@
 
 #include "gtkfile.h"
 #include "gtkgame.h"
+#include "gtktoolbar.h"
 #include "gtkwindows.h"
 #include "file.h"
 #include "util.h"
@@ -334,9 +335,10 @@ do_import_file(gint import_type, gchar * fn)
         cmd = g_strdup_printf("import %s \"%s\"", import_format[import_type].clname, fn);
     }
     if (cmd)
+        if (ToolbarIsEditing(NULL))
+            click_edit();
         UserCommand(cmd);
     g_free(cmd);
-
 }
 
 extern void
