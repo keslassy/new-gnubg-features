@@ -212,9 +212,8 @@ click_edit(void)
 {
     if (!inCallback) {
 #if defined(USE_GTKUIMANAGER)
-        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(puim,
-                                                                                 "/MainMenu/EditMenu/EditPosition")),
-                                     TRUE);
+        GtkAction *editstatus = gtk_ui_manager_get_action(puim, "/MainMenu/EditMenu/EditPosition");
+        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(editstatus), !gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(editstatus)));
 #else
         toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
         gtk_button_clicked(GTK_BUTTON(ptw->pwEdit));
