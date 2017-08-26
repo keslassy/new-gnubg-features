@@ -1136,17 +1136,22 @@ To roll the dice the CL version type 'roll'.
     <sect2 id="gnubg-edit_entering">
       <title>Entering Edit mode</title>
       <para>To set up a position, you have to be in <emphasis>Edit
-        mode</emphasis>. To enter Edit mode you simply click the Edit button in
-        the tool bar. There is currently no keyboard shortcut or menu item for
-        entering edit mode. The Edit button is a toggle button and you will stay
-        in edit mode until you release the button by clicking it again.</para>
-      <para>If your Edit button in the toolbar is disabled it is because there
-        is no game or match in progress. With the current state of
-          <application>GNU Backgammon</application> there must be a game or
-        match in progress to be able to enter edit mode. (This may change in the
-        future.) If there is no game in progress and you want to set up a
-        position, you can simply start a new game or match by clicking New in
-        the toolbar.</para>
+        mode</emphasis>. To enter Edit mode you simply click the Edit
+        button in the tool bar and can start editing the current
+        position. There is currently no keyboard shortcut or menu item
+        for entering edit mode. The Edit button is a toggle button and
+        you will stay in edit mode until you release the button by
+        clicking it again.</para>
+      <para>If your Edit button in the toolbar is disabled it is
+        because there is no game or match in progress hence no current
+        position to edit. In this case you can use
+        the <guibutton>New</guibutton> button in the toolbar and then
+        the pencil-and-paper button to enter Edit mode on the opening
+        position of a unlimited session.</para>
+      <para>If used from a game in progress, this New-then-Edit
+      sequence enters Edit mode on the current position after
+      normalizing it with the player on roll on the bottom side and
+      the match length set to unlimited session.</para>
       <para>When you are in edit mode you will see the the text (Editing) in the
         match information box below the board.</para>
     </sect2>
@@ -1174,9 +1179,10 @@ To roll the dice the CL version type 'roll'.
 	    </textobject>
         </mediaobject>
       </figure>
-      <para>You can also just as easy generate the initial position by clicking
-        the opposite trays when in edit mode. Clicking in one of these trays
-        puts all checkers back to the initial position.</para>
+      <para>You can also just as easy generate the initial position by
+        clicking the opposite trays when in edit mode. Clicking in one
+        of these trays puts all checkers back to the initial
+        position.</para>
       <figure float="0" id="gnubg-fig_initpos">
         <title>Click in the one of the areas marked with a red ellipse to get to
           the initial position.</title>
@@ -1191,6 +1197,8 @@ To roll the dice the CL version type 'roll'.
       </figure>
       <para>Note that the bearoff trays change side when the board is displayed
         with clockwise movement.</para>
+      <para>In addition, both click-on-tray actions above reset the
+        cube to centered with a value of 1 and clear the dice.</para>
     </sect2>
     <sect2 id="gnubg-edit_quick">
       <title>Quick edit</title>
@@ -4755,6 +4763,24 @@ Equity
                 <entry>6 threads</entry>
               </row>
               <row>
+                <entry>647000</entry>
+                <entry>Intel Core i7-6670HQ 2.60 GHz</entry>
+                <entry>Intel NUC 6i7KYK</entry>
+                <entry>16 GB</entry>
+                <entry>Ubuntu 16.04</entry>
+                <entry>1.05.002</entry>
+                <entry>8 threads</entry>
+              </row>
+              <row>
+                <entry>500300</entry>
+                <entry>Intel Core i7-6670HQ 2.60 GHz</entry>
+                <entry>Intel NUC 6i7KYK</entry>
+                <entry>16 GB</entry>
+                <entry>Ubuntu 16.04</entry>
+                <entry>1.05.002</entry>
+                <entry>4 threads</entry>
+              </row>
+              <row>
                 <entry>449500</entry>
                 <entry>Intel Core i5-2400 3.10 GHz</entry>
                 <entry>Dell Optiplex 790</entry>
@@ -4762,6 +4788,33 @@ Equity
                 <entry>CentOS 6</entry>
                 <entry>1.02</entry>
                 <entry>4 threads</entry>
+              </row>
+              <row>
+                <entry>422000</entry>
+                <entry>Intel Core i7-5557U 3.10 GHz</entry>
+                <entry>Intel NUC 5i7RYH</entry>
+                <entry>8 GB</entry>
+                <entry>Ubuntu 16.04</entry>
+                <entry>1.05.002</entry>
+                <entry>4 threads</entry>
+              </row>
+              <row>
+                <entry>310000</entry>
+                <entry>Intel Core i7-5557U 3.10 GHz</entry>
+                <entry>Intel NUC 5i7RYH</entry>
+                <entry>8 GB</entry>
+                <entry>Ubuntu 16.04</entry>
+                <entry>1.05.002</entry>
+                <entry>2 threads</entry>
+              </row>
+              <row>
+                <entry>281000</entry>
+                <entry>Intel Core i7-6670HQ 2.60 GHz</entry>
+                <entry>Intel NUC 6i7KYK</entry>
+                <entry>16 GB</entry>
+                <entry>Ubuntu 16.04</entry>
+                <entry>1.05.002</entry>
+                <entry>2 threads</entry>
               </row>
               <row>
                 <entry>258600</entry>
@@ -4800,11 +4853,29 @@ Equity
                 <entry>1 thread</entry>
               </row>
               <row>
+                <entry>165500</entry>
+                <entry>Intel Core i7-5557U 3.10 GHz</entry>
+                <entry>Intel NUC 5i7RYH</entry>
+                <entry>8 GB</entry>
+                <entry>Ubuntu 16.04</entry>
+                <entry>1.05.002</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
                 <entry>161300</entry>
                 <entry>Intel Xeon E5-2687W 3.00 GHz</entry>
                 <entry>HP Z840</entry>
                 <entry>64 GB</entry>
                 <entry>CentOS 7</entry>
+                <entry>1.05.002</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
+                <entry>149300</entry>
+                <entry>Intel Core i7-6670HQ 2.60 GHz</entry>
+                <entry>Intel NUC 6i7KYK</entry>
+                <entry>16 GB</entry>
+                <entry>Ubuntu 16.04</entry>
                 <entry>1.05.002</entry>
                 <entry>1 thread</entry>
               </row>
