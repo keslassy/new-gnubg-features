@@ -1,3 +1,13 @@
+2017-08-26  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* gtkgame.c: When entering edit mode via New / Edit position
+	instead of the Edit button:
+	- dont clear the dice
+	- set the score and match length to 0-0 in a default match or session
+	- set the player on roll to be the bottom player,
+	  swapping the board if needed
+	creating a reference position from the one at hand.
+
 2017-08-19  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gtkboard.c: In edit mode, clicking on the bearoff-side tray

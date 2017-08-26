@@ -4541,22 +4541,27 @@ ToolButtonPressed(GtkWidget * pw, newwidget * pnw)
 extern int
 edit_new(unsigned int length)
 {
-    matchstate ms;
+    matchstate lms;
 
-    ms.anDice[0] = ms.anDice[1] = 0;
-    ms.fTurn = ms.fMove = 1;
-    ms.fResigned = 0;
-    ms.fDoubled = 0;
-    ms.fCubeOwner = -1;
-    ms.fCrawford = FALSE;
-    ms.fJacoby = fJacoby;
-    ms.anScore[0] = ms.anScore[1] = 0;
-    ms.nCube = 0;
-    ms.gs = GAME_PLAYING;
+    lms.anDice[0] = ms.anDice[0];
+    lms.anDice[1] = ms.anDice[1];
 
-    ms.nMatchTo = length;
+    lms.fTurn = lms.fMove = 1;
+    lms.fResigned = 0;
+    lms.fDoubled = 0;
+    if (ms.fCubeOwner == -1)
+        lms.fCubeOwner = ms.fCubeOwner;
+    else
+        lms.fCubeOwner = (ms.fTurn == 1 ? ms.fCubeOwner : !ms.fCubeOwner);
+    lms.fCrawford = FALSE;
+    lms.fJacoby = fJacoby;
+    lms.anScore[0] = lms.anScore[1] = 0;
+    lms.nCube = ms.nCube;
+    lms.gs = GAME_PLAYING;
 
-    CommandSetMatchID(MatchIDFromMatchState(&ms));
+    lms.nMatchTo = length;
+
+    CommandSetMatchID(MatchIDFromMatchState(&lms));
 
     return 0;
 }
