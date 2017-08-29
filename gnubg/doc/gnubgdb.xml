@@ -4960,15 +4960,6 @@ Equity
                 <entry>1.02</entry>
               </row>
               <row>
-                <entry>32600</entry>
-                <entry>ARM Cortex-A53  1.2 GHz</entry>
-                <entry>Raspberry Pi 3 Model B</entry>
-                <entry>1024 MB</entry>
-                <entry>Raspbian 8.0</entry>
-                <entry>1.04</entry>
-                <entry>4 threads</entry>
-              </row>
-              <row>
                 <entry>23000</entry>
                 <entry>Intel Pentium 4 2.8 GHz</entry>
                 <entry>Asus P4P800D</entry>
@@ -4977,13 +4968,13 @@ Equity
                 <entry>0.14.3-devel</entry>
               </row>
               <row>
-                <entry>10500</entry>
-                <entry>ARM Cortex-A53  1.2 GHz</entry>
+                <entry>13600</entry>
+                <entry>ARM Cortex-A53  600 MHz</entry>
                 <entry>Raspberry Pi 3 Model B</entry>
                 <entry>1024 MB</entry>
                 <entry>Raspbian 8.0</entry>
                 <entry>1.04</entry>
-                <entry>1 thread</entry>
+                <entry>4 threads</entry>
               </row>
               <row>
                 <entry>9170</entry>
@@ -5008,6 +4999,15 @@ Equity
                 <entry>128 MB</entry>
                 <entry>Win XP SP2</entry>
                 <entry>1.02</entry>
+              </row>
+              <row>
+                <entry>5100</entry>
+                <entry>ARM Cortex-A53  600 MHz</entry>
+                <entry>Raspberry Pi 3 Model B</entry>
+                <entry>1024 MB</entry>
+                <entry>Raspbian 8.0</entry>
+                <entry>1.04</entry>
+                <entry>1 thread</entry>
               </row>
             </tbody>
           </tgroup>
