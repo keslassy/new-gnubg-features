@@ -1,7 +1,7 @@
 /*
  * openurl.c
  *
- * by Jørn Thyssen <jthyssen@dk.ibm.com>, 2002.
+ * by Joern Thyssen <jthyssen@dk.ibm.com>, 2002.
  * (after inspiration from osr.cc from fibs2html <fibs2html.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,26 +24,26 @@
 #include <stdlib.h>
 #include "backgammon.h"
 #include "openurl.h"
-#ifdef WIN32
+#if defined(_WIN32)
 #include <windows.h>
 #include <shellapi.h>
 #else
 #include <string.h>
-#endif                          /* WIN32 */
+#endif                          /* _WIN32 */
 static gchar *web_browser = NULL;
 
 extern const gchar *
 get_web_browser(void)
 {
     const gchar *pch;
-#ifdef WIN32
+#if defined(_WIN32)
     if (!web_browser || !*web_browser)
         return ("");
 #endif
     if (web_browser && *web_browser)
         return web_browser;
     if ((pch = g_getenv("BROWSER")) == NULL) {
-#ifdef __APPLE__
+#if defined(__APPLE__)
         pch = "open";
 #else
         pch = OPEN_URL_PROG;
@@ -68,12 +68,12 @@ OpenURL(const char *szURL)
     gchar *commandString;
     GError *error = NULL;
     if (!(browser) || !(*browser)) {
-#ifdef WIN32
-        int win_error;
+#if defined(_WIN32)
+        ptrdiff_t win_error;
         gchar *url = g_filename_to_uri(szURL, NULL, NULL);
-        win_error = (int) ShellExecute(NULL, TEXT("open"), url ? url : szURL, NULL, ".\\", SW_SHOWNORMAL);
+        win_error = (ptrdiff_t) ShellExecute(NULL, TEXT("open"), url ? url : szURL, NULL, ".\\", SW_SHOWNORMAL);
         if (win_error < 33)
-            outputerrf(_("Failed to perform default action on " "%s. Error code was %d"), url, win_error);
+            outputerrf(_("Failed to perform default action on " "%s. Error code was %d"), url, (int)win_error);
         g_free(url);
         return;
 #endif
