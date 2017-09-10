@@ -2355,7 +2355,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         if (show)
             output(FormatMoveHint(szBuf, &ms, &pmr->ml, i, TRUE, TRUE, TRUE));
         else if (procdatarec && procdatarec->pfProcessRecord) {
-            procdatarec->avOutputData[PROCREC_HINT_ARGOUT_INDEX] = (void *) (long) i;
+            procdatarec->avOutputData[PROCREC_HINT_ARGOUT_INDEX] = (void *) (ptrdiff_t) i;
             if (!procdatarec->pfProcessRecord(procdatarec))
                 break;
         }

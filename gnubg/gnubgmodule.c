@@ -787,7 +787,7 @@ PythonHint_Callback (procrecorddata *pr)
     PyObject *list = (PyObject *)pr->pvUserData;
     PyObject *hintdict = NULL, *ctxdict = NULL, *details = NULL;
 
-    int index = (int)(long)pr->avOutputData[PROCREC_HINT_ARGOUT_INDEX];
+    int index = (int)(ptrdiff_t)pr->avOutputData[PROCREC_HINT_ARGOUT_INDEX];
     const matchstate * pms = pr->avOutputData[PROCREC_HINT_ARGOUT_MATCHSTATE];
     const movelist  * pml = pr->avOutputData[PROCREC_HINT_ARGOUT_MOVELIST];
     const evalsetup * pes = &pml->amMoves[index].esMove;
@@ -879,7 +879,7 @@ PythonHint(PyObject * UNUSED(self), PyObject * args)
         prochint.pvUserData = PyList_New(0);
         prochint.pfProcessRecord = PythonHint_Callback;
         prochint.avInputData[PROCREC_HINT_ARGIN_SHOWPROGRESS] = (void *)(long)0;
-        prochint.avInputData[PROCREC_HINT_ARGIN_MAXMOVES] = (void *)(long)nMaxMoves;
+        prochint.avInputData[PROCREC_HINT_ARGIN_MAXMOVES] = (void *)(ptrdiff_t)nMaxMoves;
         hint_move (szNumber, FALSE, (void *)&prochint);
         if (fInterrupt) {
             ResetInterrupt();
