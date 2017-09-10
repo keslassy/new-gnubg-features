@@ -72,7 +72,7 @@ OpenURL(const char *szURL)
         ptrdiff_t win_error;
         gchar *url = g_filename_to_uri(szURL, NULL, NULL);
         win_error = (ptrdiff_t) ShellExecute(NULL, TEXT("open"), url ? url : szURL, NULL, ".\\", SW_SHOWNORMAL);
-        if (win_error < 33)
+        if (win_error >= 0 && win_error < 33)
             outputerrf(_("Failed to perform default action on " "%s. Error code was %d"), url, (int)win_error);
         g_free(url);
         return;
