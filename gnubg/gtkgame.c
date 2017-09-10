@@ -3278,7 +3278,7 @@ SetLanguage(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(w))
 static void
 ReportBug(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
 {
-    OpenURL("http://savannah.gnu.org/bugs/?func=additem&group=gnubg");
+    OpenURL("https://savannah.gnu.org/bugs/?func=additem&group=gnubg");
 }
 
 #if defined(USE_GTKUIMANAGER)
