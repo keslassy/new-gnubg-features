@@ -36,6 +36,13 @@ char *docdir = NULL;
 #include <fcntl.h>
 #include <windows.h>
 
+/* Default build on WIN32, including msys, installs something not
+ * nearly usable as is (it is rather destined to be repackaged in a
+ * standalone installer).
+ * Define this for the binaries to be more similar to a linux build.
+ */
+/* #define USABLE_UNDER_MSYS 1 */
+
 extern void
 PrintSystemError(const char *message)
 {
@@ -63,7 +70,7 @@ extern char *
 getDataDir(void)
 {
     if (!datadir) {
-#ifndef WIN32
+#if !defined(WIN32)
         datadir = g_strdup(AC_DATADIR);
 #else
         char buf[FILENAME_MAX];
@@ -85,7 +92,7 @@ extern char *
 getPkgDataDir(void)
 {
     if (!pkg_datadir)
-#ifndef WIN32
+#if !defined(WIN32) || defined(USABLE_UNDER_MSYS)
         pkg_datadir = g_strdup(AC_PKGDATADIR);
 #else
         pkg_datadir = g_build_filename(getDataDir(), NULL);
@@ -97,7 +104,7 @@ extern char *
 getDocDir(void)
 {
     if (!docdir)
-#ifndef WIN32
+#if !defined(WIN32) || defined(USABLE_UNDER_MSYS)
         docdir = g_strdup(AC_DOCDIR);
 #else
         docdir = g_build_filename(getDataDir(), "doc", NULL);
