@@ -89,7 +89,7 @@ GnuBGFileDialog(const gchar * prompt, const gchar * folder, const gchar * name, 
     if ((pc = strrchr(programdir, G_DIR_SEPARATOR)) != NULL) {
         *pc = '\0';
 
-        tmp = g_build_filename(programdir, "GamesGrid", "SaveGame", NULL);
+        tmp = g_build_filename(programdir, "GridGammon", "SaveGame", NULL);
         gtk_file_chooser_add_shortcut_folder(GTK_FILE_CHOOSER(fc), tmp, NULL);
         g_free(tmp);
 

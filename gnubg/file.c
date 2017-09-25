@@ -75,7 +75,7 @@ ExportFormat export_format[] = {
 ImportFormat import_format[] = {
     {IMPORT_SGF, ".sgf", N_("GNU Backgammon File"), "sgf"}
     ,                           /*must be the first element */
-    {IMPORT_SGG, ".sgg", N_("GamesGrid Save Game"), "sgg"}
+    {IMPORT_SGG, ".sgg", N_("GridGammon Save Game"), "sgg"}
     ,
     {IMPORT_MAT, ".mat", N_("Jellyfish Match"), "mat"}
     ,
