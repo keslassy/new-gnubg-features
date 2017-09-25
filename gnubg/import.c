@@ -1,7 +1,7 @@
 /*
  * import.c
  *
- * by Øystein Johansen, 2000, 2001, 2002
+ * by Oystein Johansen, 2000, 2001, 2002
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
@@ -80,7 +80,7 @@ IsValidMove(const TanBoard anBoard, const int anMove[8])
 static void
 ParseSetDate(char *szFilename)
 {
-    /* Gamesgrid mat files contain date in filename.
+    /* GridGammon mat files contain date in filename.
      * for other files use last file access date
      */
 
@@ -96,7 +96,11 @@ ParseSetDate(char *szFilename)
             /* check if 8 digits before - are valid date */
             if (strptime(pch - 8, "%Y%m%d", &mdate) == pch) {
                 matchdate = &mdate;
-                SetMatchInfo(&mi.pchPlace, "GamesGrid", NULL);
+                /* GamesGrid closed at the end of May 2008, GridGammon opened some time later */
+                if (mdate.tm_year <= 107 || (mdate.tm_year == 108 && mdate.tm_mon <= 5))
+                    SetMatchInfo(&mi.pchPlace, "GamesGrid", NULL);
+                else
+                    SetMatchInfo(&mi.pchPlace, "GridGammon", NULL);
             }
         }
     }
@@ -899,7 +903,7 @@ ImportGame(FILE * fp, int iGame, int nLength, bgvariation bgVariation, int *warn
     for (; pch >= sz0; pch--)
         if (isspace(*pch))
             *pch = ' ';
-        else if (*pch == ',' && strtol(pch + 1, NULL, 10) > 0) {        /* GamesGrid mat files have ratings */
+        else if (*pch == ',' && strtol(pch + 1, NULL, 10) > 0) {        /* GridGammon mat files have ratings */
             *pch = '\0';        /* after player name                */
             SetMatchInfo(&mi.pchRating[0], pch + 1, NULL);
         }
@@ -911,7 +915,7 @@ ImportGame(FILE * fp, int iGame, int nLength, bgvariation bgVariation, int *warn
     for (; pch >= sz1; pch--)
         if (isspace(*pch))
             *pch = ' ';
-        else if (*pch == ',' && strtol(pch + 1, NULL, 10) > 0) {        /* GamesGrid mat files have ratings */
+        else if (*pch == ',' && strtol(pch + 1, NULL, 10) > 0) {        /* GridGammon mat files have ratings */
             *pch = '\0';        /* after player name                */
             SetMatchInfo(&mi.pchRating[1], pch + 1, NULL);
         }
@@ -2191,7 +2195,7 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
     int i;
     static const char *aszOptions[] = {
         "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-        "Saturday", "Sunday",
+        "Saturday", "Sunday", "GamesGrid",
         "ELO:", "Jacoby:", "Automatic Doubles:", "Crawford:", "Beavers:",
         "Raccoons:", "Doubling Cube:", "Rated:", "Match Length:",
         "Variant:", NULL
@@ -2199,7 +2203,6 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
     double arRating[2];
     int anExp[2];
     const char *pc;
-    char *pc2;
 
     for (i = 0, pc = aszOptions[i]; pc; ++i, pc = aszOptions[i])
         if (!strncmp(sz, pc, strlen(pc)))
@@ -2213,11 +2216,20 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
     case 4:
     case 5:
     case 6:
-
         /* date */
         ParseSGGDate(sz, &pmi->nDay, &pmi->nMonth, &pmi->nYear);
         break;
+
     case 7:
+        /* place */
+        /* GamesGrid closed at the end of May 2008, GridGammon opened some time later */
+        if (pmi->nYear <= 2007 || (pmi->nYear == 2008 && pmi->nMonth <= 5))
+            pmi->pchPlace = g_strdup("GamesGrid");
+        else
+            pmi->pchPlace = g_strdup("GridGammon");
+        break;
+
+    case 8:
 
         /* ratings */
         /* Players are swapped later (at the end of ImportSGG()) and ratings
@@ -2234,7 +2246,7 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
         }
         break;
 
-    case 8:
+    case 9:
 
         /* Jacoby rule */
 
@@ -2244,7 +2256,7 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
         *pfJacobyRule = !strcmp(szTemp, "Yes");
         break;
 
-    case 9:
+    case 10:
 
         /* automatic doubles */
 
@@ -2254,9 +2266,9 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
         *pfAutoDoubles = !strcmp(szTemp, "Yes");
         break;
 
-    case 10:
+    case 11:
 
-        /* crawford rule */
+        /* Crawford rule */
 
         if (!GetValue(sz, szTemp))
             break;
@@ -2264,15 +2276,15 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
         *pfCrawfordRule = !strcmp(szTemp, "Yes");
         break;
 
-    case 11:
     case 12:
+    case 13:
 
         /* beavers & raccons */
 
         /* ignored as they are not used internally in gnubg */
         break;
 
-    case 13:
+    case 14:
 
         /* doubling cube */
 
@@ -2282,17 +2294,17 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
         *pfCubeUse = !strcmp(szTemp, "Yes");
         break;
 
-    case 14:
+    case 15:
 
         /* rated */
         break;
 
-    case 15:
+    case 16:
 
         /* match length */
         break;
 
-    case 16:
+    case 17:
 
         /* variant */
 
@@ -2314,14 +2326,8 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
         break;
 
     default:
+        g_assert_not_reached();
 
-        /* most likely "place" */
-        if (pmi->pchPlace)
-            free(pmi->pchPlace);
-
-        if ((pc2 = strpbrk(sz, "\n\r")) != NULL)
-            *pc2 = 0;
-        pmi->pchPlace = g_strdup(sz);
     }
 }
 
