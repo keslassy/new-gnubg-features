@@ -172,8 +172,8 @@ gnubg moves 8/5 6/5.
       <listitem>
         <para>Importing of positions, games, and matches from a number of
           standard file formats, including: native GNU Backgammon file (.sgf),
-          GamesGrid Save Game (.sgg),
-          Jellyfish Match (.mat), FIBS Oldmoves (.fibs), Jellyfish Position
+          Jellyfish Match (.mat), GridGammon Save Game (.sgg),
+          FIBS Oldmoves (.fibs), Jellyfish Position
           (.pos), Snowie Text (.txt), TrueMoneyGames (.tmg), GammonEmpire Game
           (.gam), PartyGammon Game (.gam), and BGRoom Game (.bgf).</para>
       </listitem>
@@ -1375,7 +1375,7 @@ To roll the dice the CL version type 'roll'.
 <entry> <command>import oldmoves &lt;filepath&gt;</command> </entry>
 </row>
               <row>
-                <entry>Gamesgrid Save Game</entry>
+                <entry>GridGammon Save Game</entry>
 <entry> <command>import sgg &lt;filepath&gt;</command> </entry>
 </row>
               <row>
@@ -5236,7 +5236,7 @@ Equity
         <para>Import of matches and positions from a number of file formats is
           possible: (.gam) GammonEmpire Game,
           (.gam) PartyGammon Game, (.mat) Jellyfish Match, (.pos) Jellyfish
-          Position, (.sgf) Gnu Backgammon File, (.sgg) GamesGrid Save Game,
+          Position, (.sgf) Gnu Backgammon File, (.sgg) GridGammon Save Game,
           (.tmg) TrueMoneyGames, (.txt) Snowie Text</para>
       </sect3>
       <sect3 id="gnubg-faq_analysing_sides">

@@ -69,7 +69,7 @@ Backgammon.
 * Import of matches and positions from a number of file formats:
   (.gam) GammonEmpire Game, (.gam) PartyGammon Game, (.mat) Jellyfish
   Match, (.pos) Jellyfish Position, (.sgf) GNU Backgammon File, (.sgg)
-  GamesGrid Save Game, (.tmg) TrueMoneyGames, (.txt) Snowie Text
+  GridGammon Save Game, (.tmg) TrueMoneyGames, (.txt) Snowie Text
 
 * Python Scripting ability.
 
