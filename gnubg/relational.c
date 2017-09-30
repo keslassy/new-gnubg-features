@@ -767,7 +767,7 @@ CommandRelationalSelect(char *sz)
     RowSet *rs;
 
     if (!sz || !*sz) {
-        outputl(_("You must specify a sql query to run."));
+        outputl(_("You must specify a SQL query to run."));
         return;
     }
 
