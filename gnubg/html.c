@@ -337,7 +337,7 @@ printRolloutTable(FILE * pf,
         fputs("<tr>", pf);
 
         if (asz)
-            fprintf(pf, "<td>%s</td>", _("Standard error"));
+            fprintf(pf, "<td>%s</td>", _("Standard deviation"));
 
         fprintf(pf, "<td %s>%s</td>", GetStyle(CLASS_PERCENT, hecss), OutputPercent(aarStdDev[ici][OUTPUT_WIN]));
         fprintf(pf, "<td %s>%s</td>", GetStyle(CLASS_PERCENT, hecss), OutputPercent(aarStdDev[ici][OUTPUT_WINGAMMON]));
