@@ -1081,7 +1081,7 @@ append_dice_options(optionswidget * pow)
                                   "how to double aggressively after a good opening "
                                   "sequence, (b) learn to control your temper "
                                   "while things are going bad, (c) learn to play "
-                                  "very good or very bad rolls, or (d) just have fun. "));
+                                  "very good or very bad rolls, or (d) just have fun."));
 
     pow->pwHigherDieFirst = gtk_check_button_new_with_label(_("Show higher die on left"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwHigherDieFirst), fGUIHighDieFirst);
