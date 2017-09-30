@@ -387,7 +387,7 @@ CreateTheoryWindow(void)
 
     store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING, -1);
     gtk_list_store_append(store, &iter);
-    gtk_list_store_set(store, &iter, 0, _("Pip_Count"), 1, "", -1);
+    gtk_list_store_set(store, &iter, 0, _("Pip count"), 1, "", -1);
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store, &iter, 0, _("EPC"), 1, "", -1);
     gtk_list_store_append(store, &iter);
