@@ -1616,7 +1616,7 @@ CommandSetDefaultNames(char *sz)
     for (i = 0; i < 2; i++) {
         char *pch = names[i];
         if (!pch || !*pch) {
-            outputl(_("You must specify two player names use."));
+            outputl(_("You must specify two player names."));
             return;
         }
 
@@ -3308,6 +3308,7 @@ CommandSetMatchRound(char *sz)
 {
 
     SetMatchInfo(&mi.pchRound, sz, _("Match round"));
+
 }
 
 extern void
