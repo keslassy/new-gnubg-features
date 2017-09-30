@@ -753,7 +753,7 @@ ReadIntoMemory(bearoffcontext * pbc)
     GError *error = NULL;
     pbc->map = g_mapped_file_new(pbc->szFilename, FALSE, &error);
     if (!pbc->map) {
-        g_printerr(_("%s: Failed to map bearoffdatabase %s\n"), pbc->szFilename, error->message);
+        g_printerr(_("%s: Failed to map bearoff database %s\n"), pbc->szFilename, error->message);
         g_error_free(error);
         return NULL;
     }
