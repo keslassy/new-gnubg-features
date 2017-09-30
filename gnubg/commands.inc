@@ -416,13 +416,13 @@ command acSetEvaluation[] = {
     { NULL, NULL, NULL, NULL, NULL }
 }, acSetPlayer[] = {
     { "chequerplay", CommandSetPlayerChequerplay, N_("Control chequerplay "
-      "parameters when gnubg plays"), NULL, acSetEvalParam },
+      "parameters when GNUbg plays"), NULL, acSetEvalParam },
     { "cubedecision", CommandSetPlayerCubedecision, N_("Control cube decision "
-      "parameters when gnubg plays"), NULL, acSetEvalParam },
+      "parameters when GNUbg plays"), NULL, acSetEvalParam },
     { "external", CommandSetPlayerExternal, N_("Have another process make all "
       "moves for a player"), szFILENAME, &cFilename },
     { "gnubg", CommandSetPlayerGNU, 
-      N_("Have gnubg make all moves for a player"),
+      N_("Have GNUbg make all moves for a player"),
       NULL, NULL },
     { "human", CommandSetPlayerHuman, N_("Have a human make all moves for a "
       "player"), NULL, NULL },
@@ -1198,7 +1198,7 @@ static command acSetVariation[] = {
     { "postcrawford", CommandSetPostCrawford, 
       N_("Set whether this is a post-Crawford game"), szONOFF, &cOnOff },
     { "priority", NULL, N_("Set the priority of gnubg"), NULL, acSetPriority },
-    { "prompt", CommandSetPrompt, N_("Customise the prompt gnubg prints when "
+    { "prompt", CommandSetPrompt, N_("Customise the prompt GNUbg prints when "
       "ready for commands"), szPROMPT, NULL },
     { "ratingoffset", CommandSetRatingOffset,
       N_("Set rating offset used for estimating abs. rating"),
@@ -1475,7 +1475,7 @@ command acTop[] = {
       NULL },
     { "roll", CommandRoll, N_("Roll the dice"), NULL, NULL },
     { "rollout", CommandRollout, 
-      N_("Have gnubg perform rollouts of the current position."),
+      N_("Have GNUbg perform rollouts of the current position."),
       szOPTPOSITION, NULL },
     { "save", NULL, N_("Write data to a file"), NULL, acSave },
     { "set", NULL, N_("Modify program parameters"), NULL, acSet },

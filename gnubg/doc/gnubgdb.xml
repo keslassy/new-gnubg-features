@@ -4289,7 +4289,7 @@ Equity
           <para>So, the position ID of the checkers at the start of the game is
             simply:</para>
           <para>4HPwATDgc/ABMA</para>
-          <para>You can set the board in gnubg either by writing the position ID
+          <para>You can set the board in GNUbg either by writing the position ID
             into the position text input field in the GUI or by executing the
             command</para>
           <para>set board 4HPwATDgc/ABMA.</para>
@@ -4314,7 +4314,7 @@ Equity
       <sect2 id="gnubg-tech_matchid">
         <title>A technical description of the Match ID</title>
         <para>This section describes how the match ID is calculated. The match
-          ID can be used for easy exchange of positions for gnubg users in
+          ID can be used for easy exchange of positions for GNUbg users in
           conjunction with the position ID. The match key is a 9 byte
           representation of the match score, match length, value of cube, owner
           of cube, Crawford game flag, player on roll, player to make a
@@ -4438,7 +4438,7 @@ Equity
         <para>Q Y k q A S A A I A A A</para>
         <para>So, the match id is simply:</para>
         <para>QYkqASAAIAAA</para>
-        <para>If someone post a match ID you can set up the position in gnubg by
+        <para>If someone post a match ID you can set up the position in GNUbg by
           writing or pasting it into the Match ID text input field on the main
           window, or by executing the command</para>
         <para>set matchid QYkqASAAIAAA.</para>
@@ -4651,7 +4651,7 @@ Equity
           questions</title>
         <para>Send an email to <ulink url="mailto:bug-gnubg@gnu.org">the GNU
             backgammon mailing list.</ulink> If it is a bug, be sure to include
-          the name of your operating system, the version of gnubg you use, and
+          the name of your operating system, the version of GNUbg you use, and
           any error messages you receive. Try to describe exactly what happens
           before the error occurs.</para>
       </sect3>
@@ -5219,7 +5219,7 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_analysing_edit">
         <title>How do I set up a position manually?</title>
-        <para>Open a new game, match or session. If gnubg already rolls the
+        <para>Open a new game, match or session. If GNUbg already rolls the
           dice, don't bother. Press `edit', and either type the position_id and
           press Enter on your keyboard, or use the mouse to set up the checkers.</para>
         <para>A mouse click at the border of the board empties the point. A left
@@ -5392,7 +5392,7 @@ Equity
         <para>It is further <ulink url="http://www.bkgm.com/gloss/lookup.cgi?effective+pip+count">explained on BackGammon Galore</ulink>, especially in a <ulink url="http://www.bkgm.com/rgb/rgb.cgi?view+1076">post by Douglas
           Zare</ulink>.</para>
         <para>How do one calculate the EPC then, or the expected number of
-          remaining rolls? GnuBG uses the one-sided bearoff database, which
+          remaining rolls? GNUbg uses the one-sided bearoff database, which
           contains the chance of bearing off the final checker in any given
           number of rolls. A player would probably use some quite complicated
           heuristics (please see the aforementioned post by Douglas Zare,
