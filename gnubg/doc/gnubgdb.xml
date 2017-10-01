@@ -134,7 +134,7 @@ gnubg moves 8/5 6/5.
         <application>GNU Backgammon</application>.</para>
     <itemizedlist>
       <listitem>
-        <para>A command line interface (with full command editing features if
+        <para>A command-line interface (with full command editing features if
           GNU readline is available) that lets you play matches and sessions
           against GNU Backgammon with a rough ASCII representation of the board
           on text terminals.</para>
@@ -584,9 +584,9 @@ gnubg moves 8/5 6/5.
       <para>If <application moreinfo="none">GNU Backgammon</application> is
         properly installed on your system, you can start it by simply typing
         gnubg at the command prompt. If you want to start the GNU Backgammon
-        command line interface, you can type gnubg --tty or gnubg -t. With this
+        command-line interface, you can type gnubg --tty or gnubg -t. With this
         option, <application moreinfo="none">GNU Backgammon</application> starts
-        without the graphic user interface. There is also other options which
+        without the graphical user interface. There is also other options which
         can be added at the start-up.</para>
     </sect2>
     <sect2 id="gnubg-starting_ms">
@@ -595,11 +595,10 @@ gnubg moves 8/5 6/5.
         Backgammon</application> which may be downloaded from the <ulink url="http://www.gnubg.org">main <application moreinfo="none">GNU
             Backgammon</application> page</ulink> comes with an installation
         system. The installation system will create a launch menu item in your
-        start menu. Usually the menu item can be found by choosing <menuchoice moreinfo="none"><guimenu moreinfo="none">Start</guimenu><guimenuitem moreinfo="none">Programs</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon for Windows.</guimenuitem></menuchoice>.</para>
+        start menu. Usually the menu item can be found by choosing <menuchoice moreinfo="none"><guimenu moreinfo="none">Start</guimenu><guimenuitem moreinfo="none">Programs</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon</guimenuitem></menuchoice>.</para>
       <para><application moreinfo="none">GNU Backgammon</application> also has a
-        command line interface. This is supplied as a separate executable file
-        on Microsoft Windows. You can start this version of <application moreinfo="none">GNU Backgammon</application> by choosing <menuchoice moreinfo="none"><guimenu moreinfo="none">Start</guimenu><guimenuitem moreinfo="none">Programs</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon Command Line
-          Interface.</guimenuitem></menuchoice>
+        command-line interface. This is supplied as a separate executable file
+        on Microsoft Windows. You can start this version of <application moreinfo="none">GNU Backgammon</application> by choosing <menuchoice moreinfo="none"><guimenu moreinfo="none">Start</guimenu><guimenuitem moreinfo="none">Programs</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon CLI</guimenuitem></menuchoice>.
       </para>
     </sect2>
     <sect2 id="gnubg-starting_mac">
@@ -640,8 +639,8 @@ gnubg moves 8/5 6/5.
       <title>Command line options</title>
       <para> The following options control the startup of <application moreinfo="none">GNU Backgammon</application>. Most options are
         available in all versions of <application moreinfo="none">GNU
-        Backgammon</application>, but notably, the -w and -t options don't work
-        under MS windows where separate command line and GUI applications exist
+        Backgammon</application>, but notably, the -w and -t options do not work
+        under Microsoft Windows where separate command-line and GUI applications exist
         instead.</para>
       <example id="gnubg-options">
         <title>GNU Backgammon startup options</title>
@@ -662,7 +661,7 @@ Application Options:
 -q, --quiet                  Disable sound effects
 -r, --no-rc                  Do not read .gnubgrc and .gnubgautorc commands
 -S, --splash                 Show GTK splash screen
--t, --tty                    Start the command line instead of using the graphical interface
+-t, --tty                    Start the command-line instead of using the graphical interface
 -v, --version                Show version information and exit
 -w, --window-system-only     Ignore tty input when using the graphical interface
 -d, --debug                  Turn on debug
@@ -1360,7 +1359,7 @@ To roll the dice the CL version type 'roll'.
           the tool bar button labeled Open, to open the file dialog box
           directly.</para>
         <para>It is still possible to import an unrecognized file by using the
-          underlying command line interface. Enable the command pane by choosing <menuchoice><guimenu>View</guimenu><guimenuitem>Command</guimenuitem></menuchoice>. In the command pane type in <command>import oldmoves
+          underlying command-line interface. Enable the command pane by choosing <menuchoice><guimenu>View</guimenu><guimenuitem>Command</guimenuitem></menuchoice>. In the command pane type in <command>import oldmoves
             &lt;filepath&gt;</command> to import, e.g., an oldmoves fibs
           formatted file.</para>
         <para>The following table contains the supported formats and the
@@ -1546,7 +1545,7 @@ To roll the dice the CL version type 'roll'.
           <para>To start the generation of the html images, select in the menu <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem><guimenuitem>HTML images...</guimenuitem></menuchoice>. In the file dialog box, you can select a
               <emphasis>directory</emphasis> where the images will be generated.
             The images are stored in PNG format.</para>
-          <para>To generate images for the command line, use the command:</para>
+          <para>To generate images from the command line, use the command:</para>
           <para>export htmlimages directory</para>
           <para>where directory is the directory where you want your images to
             be created.</para>
@@ -4602,15 +4601,16 @@ Equity
           <emphasis>Solaris</emphasis>. The main prerequisite is the
           availability of the GLib library at version 2.8 or later.
 	</para>
-	<para>Installable packages for
-          <emphasis>MS Windows</emphasis> and <emphasis>Mac OS X</emphasis> are
-          available for download at the project official website. Already
-	  built packages are often provided by Linux distributions as well.
+	<para>Installable packages for <emphasis>Microsoft
+	Windows</emphasis> and <emphasis>Mac OS X</emphasis> are
+	available for download at the project official
+	website. Already built packages are often provided by Linux
+	distributions as well.
 	</para>
 	<para>When you successfully port
-          GNU Backgammon to other operating systems, you are welcome to give us
-          a note at <ulink url="mailto:bug-gnubg@gnu.org">the GNU backgammon
-            mailing list.</ulink>
+          <application>GNU Backgammon</application> to other operating systems, you are welcome to give us
+          a note at <ulink url="mailto:bug-gnubg@gnu.org">the GNU Backgammon
+            mailing list</ulink>.
         </para>
       </sect3>
       <sect3 id="gnubg-faq_general_getit">
@@ -4629,7 +4629,7 @@ Equity
             Public License</ulink>. But be aware that <application>GNU
             Backgammon</application> is not <emphasis>public domain
           software</emphasis> or <emphasis>shareware</emphasis> as you perhaps
-          know from <emphasis>MS Windows</emphasis>. <application>GNU
+          know from <emphasis>Microsoft Windows</emphasis>. <application>GNU
           Backgammon</application> is free as in <emphasis>freedom</emphasis>,
           i.e. all the source code is there for you to inspect, change or
           distribute as long as you keep said license.</para>
@@ -4650,7 +4650,7 @@ Equity
         <title>Though I really read all the documentation I still have
           questions</title>
         <para>Send an email to <ulink url="mailto:bug-gnubg@gnu.org">the GNU
-            backgammon mailing list.</ulink> If it is a bug, be sure to include
+            backgammon mailing list</ulink>. If it is a bug, be sure to include
           the name of your operating system, the version of GNUbg you use, and
           any error messages you receive. Try to describe exactly what happens
           before the error occurs.</para>
@@ -4658,7 +4658,7 @@ Equity
       <sect3 id="gnubg-faq_general_ideas">
         <title>I want to make a few proposals, I have new ideas</title>
         <para>You're welcome! Send an email with your suggestions to <ulink url="mailto:bug-gnubg@gnu.org">the GNU backgammon mailing
-          list.</ulink>
+          list</ulink>.
         </para>
       </sect3>
     </sect2>
@@ -4667,7 +4667,7 @@ Equity
       <sect3 id="gnubg-faq_install_other">
         <title>Do I need some other software to run <application>GNU
           Backgammon</application>?</title>
-	<para>On MS Windows everything you need is included in the installer.</para>
+	<para>On Microsoft Windows everything you need is included in the installer.</para>
 	<para>On Mac OS/X you will need the XQuartz Window System.</para>
         <para>On Linux there are prerequisites as well but your package manager (apt, yum, etc...) will take care of them.</para>
       </sect3>
@@ -4693,7 +4693,7 @@ Equity
       </sect3>
 <!-- link is dead!
       <sect3 id="gnubg-faq_install_compilems">
-        <title>What software do I need for compiling under MS Windows?</title>
+        <title>What software do I need for compiling under Microsoft Windows?</title>
         <para>Follow the instructions at <ulink url="http://www.gnubg.org/index.php?itemid=50">http://www.gnubg.org/index.php?itemid=50</ulink>.</para>
       </sect3>A
 -->
@@ -5051,8 +5051,8 @@ Equity
           positions with the one sided bearoff database.</para>
       </sect3>
       <sect3 id="gnubg-faq_start_beginner">
-        <title>Starting from the WinXP menu it plays like a beginner</title>
-        <para>Open the MS Windows menu and go to the entry for gnubg.
+        <title>Starting from the Windows menu it plays like a beginner</title>
+        <para>Open the Windows menu and go to the entry for <application>GNU Backgammon</application>.
           Right-click with the mouse and choose `properties'. Check, if the
           `working path' is the same directory as the `*.exe'-file one line
           above. If not, adjust the working path.</para>
@@ -5064,13 +5064,13 @@ Equity
           have chosen at least a desktop resolution of 65535 (16 bit color
           depth). If your card is a ATI Rage <emphasis>somewhat</emphasis> there
           still might be some problems with the graphical interface (GTK+) and
-          MS Windows.</para>
+          Microsoft Windows.</para>
       </sect3>
       <sect3 id="gnubg-faq_start_gtk">
         <title>I only get a command-line interface</title>
-        <para>Using MS Windows, just click on the correct menu entry
-            (`<application>GNU Backgammon</application> for Windows'). If it
-          still doesn't work, check whether `c:\[path-to-your-gnubg]\gnubg.exe'
+        <para>Using Microsoft Windows, just click on the correct menu entry
+            (`<application>GNU Backgammon</application>'). If it
+          still doesn't work, check whether `C:\[path-to-your-gnubg]\gnubg.exe'
           exists or not.</para>
         <para>GNU/Linux users should check if <ulink url="https://www.gtk.org/">GTK+</ulink> is installed.</para>
       </sect3>
@@ -5078,12 +5078,12 @@ Equity
         <title>I do not need this graphical stuff</title>
         <para>For <emphasis>GNU/Linux</emphasis> users: open a terminal and run
             <command>gnubg -t</command>.</para>
-        <para><productname>MS Windows</productname> users: Look for a file
+        <para><productname>Microsoft Windows</productname> users: Look for a file
           called <command>gnubg-cli.exe</command> in <application>GNU
-          Backgammon</application>'s install directory or open the MS Windows
+          Backgammon</application>'s install directory or open the Microsoft Windows
           menu <menuchoice><guimenu>Start</guimenu><guimenuitem>Run...</guimenuitem></menuchoice> and type
-          <command>c:\[path-to-your-gnubg]\gnubg-cli.exe</command>. There is
-          also a menu entry GNU Backgammon Command Line Interface.</para>
+          <command>C:\[path-to-your-gnubg]\gnubg-cli.exe</command>. There is
+          also a menu entry GNU Backgammon CLI.</para>
       </sect3>
     </sect2>
     <sect2 id="gnubg-faq_play">
@@ -5442,12 +5442,12 @@ Equity
 	  </textobject>
           </mediaobject>
         </figure>
-        <para>The double windows (intervals) are:</para>
-        <para>[DP;CP] = Your double window! This window does not contain any
+        <para>The doubling windows (intervals) are:</para>
+        <para>[DP;CP] = Your doubling window! This window does not contain any
           information about redoubles but only the distance to the point where
           you do not want to play for the double amount of points.</para>
-        <para>[TP;DP] = 100% minus your opponent's double window now.</para>
-        <para>[reTP;reDP] = 100% minus your opponent's double window after he
+        <para>[TP;DP] = 100% minus your opponent's doubling window now.</para>
+        <para>[reTP;reDP] = 100% minus your opponent's doubling window after he
           has taken.</para>
       </sect3>
       <sect3 id="gnubg-faq_abbr_tg">
