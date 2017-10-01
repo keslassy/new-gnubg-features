@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.2"
+#define YYBISON_VERSION "3.0.4"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -83,7 +83,7 @@
 #include "sgf.h"
 
 /* Resolve a warning on older GLIBC/GNU systems that have stpcpy */
-#if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
+#if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE && !defined(__USE_XOPEN2K8)
 extern char *stpcpy(char *s1, const char *s2);
 #endif
 
@@ -106,7 +106,7 @@ static int sgferror( const char *s ) {
 }
 
 static listOLD *NewList( void ) {
-    listOLD *pl = calloc(1,  sizeof( *pl ) );
+    listOLD *pl = malloc( sizeof( *pl ) );
     ListCreate( pl );
     return pl;
 }
@@ -182,7 +182,7 @@ extern int sgfdebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
+
 union YYSTYPE
 {
 #line 98 "sgf_y.y" /* yacc.c:355  */
@@ -194,6 +194,8 @@ union YYSTYPE
 
 #line 196 "sgf_y.c" /* yacc.c:355  */
 };
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -207,7 +209,7 @@ int sgfparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 211 "sgf_y.c" /* yacc.c:358  */
+#line 213 "sgf_y.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1289,55 +1291,55 @@ yyreduce:
         case 2:
 #line 116 "sgf_y.y" /* yacc.c:1646  */
     { (yyval.pl) = plCollection = (yyvsp[0].pl); }
-#line 1293 "sgf_y.c" /* yacc.c:1646  */
+#line 1295 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 120 "sgf_y.y" /* yacc.c:1646  */
     { (yyval.pl) = NewList(); }
-#line 1299 "sgf_y.c" /* yacc.c:1646  */
+#line 1301 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 122 "sgf_y.y" /* yacc.c:1646  */
     { ListInsert( (yyvsp[-1].pl), (yyvsp[0].pl) ); (yyval.pl) = (yyvsp[-1].pl); }
-#line 1305 "sgf_y.c" /* yacc.c:1646  */
+#line 1307 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 127 "sgf_y.y" /* yacc.c:1646  */
     { ListInsert( (yyvsp[-1].pl)->plNext, (yyvsp[-2].pl) ); (yyval.pl) = (yyvsp[-1].pl); }
-#line 1311 "sgf_y.c" /* yacc.c:1646  */
+#line 1313 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 131 "sgf_y.y" /* yacc.c:1646  */
     { (yyval.pl) = NewList(); ListInsert( (yyval.pl), (yyvsp[0].pl) ); }
-#line 1317 "sgf_y.c" /* yacc.c:1646  */
+#line 1319 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 133 "sgf_y.y" /* yacc.c:1646  */
     { ListInsert( (yyvsp[-1].pl), (yyvsp[0].pl) ); (yyval.pl) = (yyvsp[-1].pl); }
-#line 1323 "sgf_y.c" /* yacc.c:1646  */
+#line 1325 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 138 "sgf_y.y" /* yacc.c:1646  */
     { (yyval.pl) = (yyvsp[0].pl); }
-#line 1329 "sgf_y.c" /* yacc.c:1646  */
+#line 1331 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 142 "sgf_y.y" /* yacc.c:1646  */
     { (yyval.pl) = NewList(); }
-#line 1335 "sgf_y.c" /* yacc.c:1646  */
+#line 1337 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 144 "sgf_y.y" /* yacc.c:1646  */
     { ListInsert( (yyvsp[-1].pl), (yyvsp[0].pp) ); (yyval.pl) = (yyvsp[-1].pl); }
-#line 1341 "sgf_y.c" /* yacc.c:1646  */
+#line 1343 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 14:
@@ -1347,41 +1349,41 @@ yyreduce:
 		    (yyval.pp) = malloc( sizeof(property) ); (yyval.pp)->pl = (yyvsp[-1].pl);
 		    (yyval.pp)->ach[ 0 ] = (yyvsp[-2].ach)[ 0 ]; (yyval.pp)->ach[ 1 ] = (yyvsp[-2].ach)[ 1 ];
 		}
-#line 1351 "sgf_y.c" /* yacc.c:1646  */
+#line 1353 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 15:
 #line 159 "sgf_y.y" /* yacc.c:1646  */
     { (yyval.pl) = NewList(); }
-#line 1357 "sgf_y.c" /* yacc.c:1646  */
+#line 1359 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 161 "sgf_y.y" /* yacc.c:1646  */
     { ListInsert( (yyvsp[-1].pl), (yyvsp[0].pch) ); (yyval.pl) = (yyvsp[-1].pl); }
-#line 1363 "sgf_y.c" /* yacc.c:1646  */
+#line 1365 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 165 "sgf_y.y" /* yacc.c:1646  */
     { (yyval.pch) = Concatenate( (yyvsp[-1].pl) ); }
-#line 1369 "sgf_y.c" /* yacc.c:1646  */
+#line 1371 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 169 "sgf_y.y" /* yacc.c:1646  */
     { (yyval.pl) = NewList(); }
-#line 1375 "sgf_y.c" /* yacc.c:1646  */
+#line 1377 "sgf_y.c" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 171 "sgf_y.y" /* yacc.c:1646  */
     { ListInsert( (yyvsp[-1].pl), (yyvsp[0].pch) ); (yyval.pl) = (yyvsp[-1].pl); }
-#line 1381 "sgf_y.c" /* yacc.c:1646  */
+#line 1383 "sgf_y.c" /* yacc.c:1646  */
     break;
 
 
-#line 1385 "sgf_y.c" /* yacc.c:1646  */
+#line 1387 "sgf_y.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

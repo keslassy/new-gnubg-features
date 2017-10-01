@@ -19,7 +19,7 @@
 #include "credits.h"
 
 const char aszCOPYRIGHT[] = N_("Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-                               "Copyright (C) 2016 by Gary Wong and the AUTHORS; for details type `show version'.");
+                               "Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show version'.");
 
 credEntry ceAuthors[] = {
   {"Joseph Heled", 0},
@@ -38,13 +38,14 @@ credEntry ceAuthors[] = {
 credEntry ceContrib[] = {
   {"Olivier Baur", 0},
   {"Holger Bochnig", 0},
+  {"Guido Flohr", 0},
   {"Nis Joergensen", 0},
   {"Petr Kadlec", 0},
   {"Kaoru Takahashi", 0},
   {"Stein Kulseth", 0},
-  {"Rod Roark", 0},
   {"Ingo Macherius", 0},
-  {"Guido Flohr", 0},
+  {"Jeremy Moore", 0},
+  {"Rod Roark", 0},
   {0, 0}
 };
 
@@ -93,17 +94,17 @@ credEntry ceCredits[] = {
   {"Olivier Croisille", 0},
   {"Ned Cross", 0},
   {"Ian Curtis", 0},
-  {"Christopher D. Yep", 0},
   {"Bill Davidson", 0},
   {"Giulio De Marco", 0},
   {"Michael Depreli", 0},
   {"Alberta di Silvio", 0},
   {"Ian Dunstan", 0},
   {"Max Durbano", 0},
+  {"Christopher D. Yep", 0},
   {"Peter Eberhard", 0},
   {"Robert Eberlein", 0},
-  {"James F. Kibler", 0},
   {"Dan Fandrich", 0},
+  {"James F. Kibler", 0},
   {"Kennedy Fraser", 0},
   {"Ric Gerace", 0},
   {"Michel Grimminck", 0},
@@ -178,8 +179,8 @@ credEntry ceCredits[] = {
   {"Sander van Rijnswou", 0},
   {"Robert-Jan Veldhuizen", 0},
   {"Morten Wang", 0},
-  {"JP White", 0},
   {"Jeff White", 0},
+  {"JP White", 0},
   {"Mike Whitton", 0},
   {"Chris Wilson", 0},
   {"Simon Woodhead", 0},
@@ -204,10 +205,10 @@ credits creditList[] =
 const char aszAUTHORS[] =
 "                         GNU Backgammon was written by:\n"
 "\n"
-"    Joseph Heled            Jim Segrave             Michael Petch\n"
-"    Oystein Johansen        Joern Thyssen           Philippe Michel\n"
-"    Jonathan Kinsey         Gary Wong\n"
-"    David Montgomery        Christian Anthon\n"
+"    Joseph Heled            Jim Segrave             Christian Anthon\n"
+"    Oystein Johansen        Joern Thyssen           Michael Petch\n"
+"    Jonathan Kinsey         Gary Wong               Philippe Michel\n"
+"    David Montgomery\n"
 " \n"
 "                                   Support by:\n"
 "\n"
@@ -216,9 +217,10 @@ const char aszAUTHORS[] =
 "\n"
 "                         Contributors of code include:\n"
 "\n"
-"    Olivier Baur            Petr Kadlec             Rod Roark\n"
-"    Holger Bochnig          Kaoru Takahashi         Ingo Macherius\n"
-"    Nis Joergensen          Stein Kulseth           Guido Flohr\n"
+"    Olivier Baur            Petr Kadlec             Ingo Macherius\n"
+"    Holger Bochnig          Kaoru Takahashi         Jeremy Moore\n"
+"    Guido Flohr             Stein Kulseth           Rod Roark\n"
+"    Nis Joergensen\n"
 "\n"
 "                            Translations by:\n"
 "\n"
@@ -236,44 +238,44 @@ const char aszAUTHORS[] =
 "\n"
 "             Contributors (of bug reports and suggestions) include:\n"
 "\n"
-"    Russ Allbery            Neil Kazaross           Jared Riley\n"
-"    Misja Alma              Mathias Kegelmann       Klaus Rindholt\n"
-"    Kazuaki Asai            Matija Kejzar           Oliver Riordan\n"
-"    Eric Augustine          Bert Van Kerckhove      Alex Romosan\n"
-"    Erik Barfoed            James F. Kibler         Hans-Juergen Schaefer\n"
-"    Ron Barry               Johnny Kirk             Steve Schreiber\n"
-"    Steve Baedke            Gerhard Knop            Hugh Sconyers\n"
-"    Stefan van den Berg     Robert Konigsberg       Martin Schrode\n"
-"    Frank Berger            Martin Krainer          Paul Selick\n"
-"    Jim Borror              Elias Kritikos          Sho Sengoku\n"
-"    Chuck Bower             Corrin Lakeland         Ian Shaw\n"
-"    Adrian Bunk             Tim Laursen             Alberta di Silvio\n"
-"    Nick Bratby             Myshkin LeVine          Peter Sochovsky\n"
-"    Craig Campbell          Eli Liang               Mark Spencer\n"
-"    Timothy Chow            Ege Lundgren            Scott Steiner\n"
-"    John Chuang             Kevin Maguire           Maik Stiebler\n"
-"    Tristan Colgate         Massimiliano Maini      W. Stroop (Rob)\n"
-"    Olivier Croisille       Giulio De Marco         Daisuke Takahashi\n"
-"    Ned Cross               John Marttila           Yoshito Takeuchi\n"
-"    Ian Curtis              Alix Martin             Jacques Thiriat\n"
-"    Bill Davidson           Tom Martin              Malene Thyssen\n"
-"    Michael Depreli         William Maslen          Claes Tornberg\n"
-"    Ian Dunstan             Joachim Matussek        Sander van Rijnswou\n"
-"    Max Durbano             Thomas Meyer            Robert-Jan Veldhuizen\n"
-"    Peter Eberhard          Daniel Murphy           Morten Wang\n"
-"    Robert Eberlein         Magnar Naustdalslid     Jeff White\n"
-"    Fotis                   Dave Neary              JP White\n"
-"    Dan Fandrich            Rolf Nielsen            Mike Whitton\n"
-"    Kennedy Fraser          Mirori Orange           Chris Wilson\n"
-"    Ric Gerace              Peter Orum              Simon Woodhead\n"
-"    Michel Grimminck        Roy Passfield           Kit Woolsey\n"
-"    Eric Groleau            Thomas Patrick          Frank Worrell\n"
-"    Jeff Haferman           Billie Patterson        Christopher D. Yep\n"
-"    Morten Juul Henriksen   Zvezdan Petkovic        Anders Zachrison\n"
-"    Alain Henry             Petri Pitkanen          Douglas Zare\n"
-"    Jens Hoefkens           Sam Pottle              Louis Zulli\n"
-"    Casey Hopkins           Henrik Ravn\n"
-"    Martin Janke            James Rech\n"
+"    Russ Allbery            Neil Kazaross           James Rech\n"
+"    Misja Alma              Mathias Kegelmann       Jared Riley\n"
+"    Kazuaki Asai            Matija Kejzar           Klaus Rindholt\n"
+"    Eric Augustine          Bert Van Kerckhove      Oliver Riordan\n"
+"    Erik Barfoed            James F. Kibler         Alex Romosan\n"
+"    Ron Barry               Johnny Kirk             Hans-Juergen Schaefer\n"
+"    Steve Baedke            Gerhard Knop            Steve Schreiber\n"
+"    Stefan van den Berg     Robert Konigsberg       Hugh Sconyers\n"
+"    Frank Berger            Martin Krainer          Martin Schrode\n"
+"    Jim Borror              Elias Kritikos          Paul Selick\n"
+"    Chuck Bower             Corrin Lakeland         Sho Sengoku\n"
+"    Adrian Bunk             Tim Laursen             Ian Shaw\n"
+"    Nick Bratby             Myshkin LeVine          Alberta di Silvio\n"
+"    Craig Campbell          Eli Liang               Peter Sochovsky\n"
+"    Timothy Chow            Ege Lundgren            Mark Spencer\n"
+"    John Chuang             Kevin Maguire           Scott Steiner\n"
+"    Tristan Colgate         Massimiliano Maini      Maik Stiebler\n"
+"    Olivier Croisille       Giulio De Marco         W. Stroop (Rob)\n"
+"    Ned Cross               John Marttila           Daisuke Takahashi\n"
+"    Ian Curtis              Alix Martin             Yoshito Takeuchi\n"
+"    Bill Davidson           Tom Martin              Jacques Thiriat\n"
+"    Michael Depreli         William Maslen          Malene Thyssen\n"
+"    Ian Dunstan             Joachim Matussek        Claes Tornberg\n"
+"    Max Durbano             Thomas Meyer            Sander van Rijnswou\n"
+"    Peter Eberhard          Daniel Murphy           Robert-Jan Veldhuizen\n"
+"    Robert Eberlein         Magnar Naustdalslid     Morten Wang\n"
+"    Fotis                   Dave Neary              Jeff White\n"
+"    Dan Fandrich            Rolf Nielsen            JP White\n"
+"    Kennedy Fraser          Mirori Orange           Mike Whitton\n"
+"    Ric Gerace              Peter Orum              Chris Wilson\n"
+"    Michel Grimminck        Roy Passfield           Simon Woodhead\n"
+"    Eric Groleau            Thomas Patrick          Kit Woolsey\n"
+"    Jeff Haferman           Billie Patterson        Frank Worrell\n"
+"    Morten Juul Henriksen   Zvezdan Petkovic        Christopher D. Yep\n"
+"    Alain Henry             Petri Pitkanen          Anders Zachrison\n"
+"    Jens Hoefkens           Sam Pottle              Douglas Zare\n"
+"    Casey Hopkins           Henrik Ravn             Louis Zulli\n"
+"    Martin Janke\n"
 "\n"
 "\n"
 "  Credit is also due to those who have published information about backgammon\n"
