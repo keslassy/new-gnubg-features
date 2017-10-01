@@ -68,7 +68,7 @@
 terms of the GNU Free Documentation License, Version 1.3 or any later version
 published by the Free Software Foundation; with no Invariant Sections, no
 Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included in
-the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend="legal"/>. </para>
+the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend="fdl"/>. </para>
     <title>Feedback</title>
       <para>To report a bug or make a suggestion regarding the <application moreinfo="none">GNU Backgammon</application> application or this
         manual, send your suggestions to <email>bug-gnubg@gnu.org</email> or
@@ -200,8 +200,8 @@ gnubg moves 8/5 6/5.
       <para><application moreinfo="none">GNU Backgammon</application> is
         developed under the GNU General Public License (GPL) and it is part of
         the GNU project. For more information about the GNU project please visit their website:
-        <ulink url="http://www.gnu.org/">http://www.gnu.org/</ulink> For more information about free software in general please visit The Free
-        Software Foundation at: <ulink url="http://www.fsf.org/">http://www.fsf.org/</ulink>.</para>
+        <ulink url="https://www.gnu.org/">https://www.gnu.org/</ulink> For more information about free software in general please visit The Free
+        Software Foundation at: <ulink url="https://www.fsf.org/">https://www.fsf.org/</ulink>.</para>
     </sect2>
   </sect1>
   <sect1 id="gnubg-rules">
@@ -4275,7 +4275,7 @@ Equity
           </informaltable>
           <para>so the 10 byte key (in hex) is E0 73 F0 01 30 E0 73 F0 01
           30.</para>
-          <para>The ID format is simply the <ulink url="http://www.ietf.org/rfc/rfc2045.txt">Base64</ulink> encoding
+          <para>The ID format is simply the <ulink url="https://www.ietf.org/rfc/rfc2045.txt">Base64</ulink> encoding
             of the key. (Technically, a Base64 encoding of 80 binary bits should
             consist of 14 characters followed by two = padding characters, but
             this padding is omitted in the ID format.)</para>
@@ -4636,7 +4636,7 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_general_gnu">
         <title>This GNU stuff sounds interesting</title>
-        <para>Take a look at the <ulink url="http://www.gnu.org/">GNU home
+        <para>Take a look at the <ulink url="https://www.gnu.org/">GNU home
           page</ulink>. It's also the page for Free Software Foundation.</para>
       </sect3>
       <sect3 id="gnubg-faq_general_backgammon">
@@ -5069,10 +5069,10 @@ Equity
       <sect3 id="gnubg-faq_start_gtk">
         <title>I only get a command-line interface</title>
         <para>Using MS Windows, just click on the correct menu entry
-            (`<application>GNU Backgammon</application> for windows'). If it
+            (`<application>GNU Backgammon</application> for Windows'). If it
           still doesn't work, check whether `c:\[path-to-your-gnubg]\gnubg.exe'
           exists or not.</para>
-        <para>GNU/Linux users should check if <ulink url="http://www.gtk.org/">GTK+</ulink> is installed.</para>
+        <para>GNU/Linux users should check if <ulink url="https://www.gtk.org/">GTK+</ulink> is installed.</para>
       </sect3>
       <sect3 id="gnubg-faq_start_cl">
         <title>I do not need this graphical stuff</title>
@@ -5470,12 +5470,12 @@ Equity
       </sect3>
     </sect2>
   </sect1>
-<appendix id="legal" lang="en">
+<appendix id="fdl">
   <title>GNU Free Documentation License</title>
   <simpara>Version 1.3, 3 November 2008</simpara>
   <simpara>
     Copyright &#169; 2000, 2001, 2002, 2007, 2008
-    <ulink url="http://www.fsf.org/">Free Software Foundation, Inc.</ulink>
+    <ulink url="https://www.fsf.org/">Free Software Foundation, Inc.</ulink>
   </simpara>
   <simpara>
     Everyone is permitted to copy and distribute verbatim copies of this
@@ -5946,7 +5946,7 @@ Equity
     Free Documentation License from time to time. Such new versions will be
     similar in spirit to the present version, but may differ in detail to
     address new problems or concerns. See
-    <ulink url="http://www.gnu.org/copyleft/">Copyleft</ulink>.
+    <ulink url="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</ulink>.
   </simpara>
   <simpara>
     Each version of the License is given a distinguishing version number. If
