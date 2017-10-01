@@ -49,9 +49,9 @@ enum {
 
 static const gchar *titles[] = {
     N_("Nick"),
-    N_("Gnu\nErr"),
-    N_("Gnu\nMove"),
-    N_("Gnu\nCube"),
+    N_("GNU\nErr"),
+    N_("GNU\nMove"),
+    N_("GNU\nCube"),
     N_("Snw\nErr"),
     N_("Snw\nMove"),
     N_("Snw\nCube"),
@@ -109,7 +109,7 @@ create_model(void)
                                      G_TYPE_FLOAT,
                                      G_TYPE_FLOAT, G_TYPE_FLOAT, G_TYPE_FLOAT, G_TYPE_FLOAT, G_TYPE_FLOAT);
 
-    /* prepare the sql query */
+    /* prepare the SQL query */
     rs = RunQuery("name,"
                   "SUM(total_moves),"
                   "SUM(unforced_moves),"
