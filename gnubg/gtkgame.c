@@ -4243,7 +4243,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 
         if (python_script) {
 #ifdef WIN32
-            outputerrf(_("The MS windows GTK interface doesn't support the '-p' option. Use the cl interface instead"));
+            outputerrf(_("The Windows GTK interface does not support the '-p' option. Use the command-line interface instead."));
 #else
 #if defined(USE_PYTHON)
             g_idle_add(python_run_file, g_strdup(python_script));
