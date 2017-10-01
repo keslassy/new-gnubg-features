@@ -549,7 +549,11 @@ static char const *aszBuildInfo[] = {
     N_("SQLite database supported."),
 #endif
 #if defined(USE_GTK)
-    N_("GTK graphical interface supported."),
+#if GTK_CHECK_VERSION(3,0,0)
+    N_("GTK3 graphical interface supported."),
+#else
+    N_("GTK2 graphical interface supported."),
+#endif
 #endif
 #if defined(HAVE_SOCKETS)
     N_("External players supported."),
