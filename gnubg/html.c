@@ -1612,7 +1612,7 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
 
     fprintf(pf,
             _("Output generated %s by "
-              "<a href=\"http://www.gnu.org/software/gnubg/\">%s</a>"), ctime(&t), VERSION_STRING);
+              "<a href=\"https://www.gnu.org/software/gnubg/\">%s</a>"), ctime(&t), VERSION_STRING);
 
     fputs(" ", pf);
 
@@ -1665,13 +1665,13 @@ HTMLEpilogueComment(FILE * pf)
 
     fputs("\n<!-- Epilogue -->\n\n", pf);
 
-    fprintf(pf, _("<!-- Output generated %s by %s " "(http://www.gnu.org/software/gnubg/) "), pc, VERSION_STRING);
+    fprintf(pf, _("<!-- Output generated %s by %s " "(https://www.gnu.org/software/gnubg/) "), pc, VERSION_STRING);
 
     fputs(" ", pf);
 
-    fprintf(pf, _("(HTML Export version %d.%d) -->"), iMajor, iMinor);
+    fprintf(pf, _("(HTML Export version %d.%d)"), iMajor, iMinor);
 
-
+    fputs(" -->", pf);
 }
 
 /*
