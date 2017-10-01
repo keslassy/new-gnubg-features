@@ -54,6 +54,7 @@ bg[PRELIGHT] = { 0.80, 0.82, 0.84 }
 
 fg[NORMAL] = { 0.0, 0.0, 0.0 }
 fg[SELECTED] = { 0.9, 0.9, 0.9 }
+fg[INSENSITIVE] =  { 0.95, 0.95, 0.95 }
 fg[ACTIVE] = { 0.0, 0.0, 0.0 }
 fg[PRELIGHT] = { 0.2, 0.1, 0.0 }
 
