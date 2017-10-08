@@ -543,7 +543,13 @@ const char *szHomeDirectory;
 
 static char const *aszBuildInfo[] = {
 #if defined(USE_PYTHON)
-    N_("Python supported."),
+#if (PY_MAJOR_VERSION == 2)
+    N_("Python 2 supported."),
+#elif (PY_MAJOR_VERSION == 3)
+    N_("Python 3 supported."),
+#else
+    #error "Unsupported python version"
+#endif
 #endif
 #if defined(USE_SQLITE)
     N_("SQLite database supported."),
