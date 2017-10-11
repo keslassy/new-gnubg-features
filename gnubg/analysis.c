@@ -2424,7 +2424,7 @@ check_cube_in_pmr(const moverecord * pmr)
     }
 
     if (pmr->mt != MOVE_NORMAL && pmr->mt != MOVE_DOUBLE && pmr->mt != MOVE_TAKE && pmr->mt != MOVE_DROP) {
-        outputerrf(_("This move doesn't imply a cubeaction. Cannot mark."));
+        outputerrf(_("This move doesn't imply a cube action. Cannot mark."));
         return 0;
     }
     return 1;
