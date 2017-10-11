@@ -2090,7 +2090,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     gtk_widget_set_tooltip_text(pwev,
                                 _("Select a predefined setting, ranging from "
-                                  "beginner's play to the 4ply setting " "that will test your patience"));
+                                  "beginner's play to the 4ply setting."));
 
     pew->pwOptionMenu = gtk_combo_box_text_new();
 
@@ -2156,7 +2156,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                                 _("Instruct GNU Backgammon to use a set of neural networks "
                                   "just to prune away move candidates within a deeper ply search. "
                                   "This increases the speed considerably at a negligible cost in playing strength. "
-                                  "It is recommended to enable this option"));
+                                  "It is recommended to enable this option."));
 
     /* cubeful */
 
@@ -2181,7 +2181,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                                       "cubeful evaluations for cube decisions. "
                                       "Disabling this option will make GNU Backgammon "
                                       "use cubeless evaluations in the interval nodes "
-                                      "of higher ply evaluations. It is recommended " "to enable this option"));
+                                      "of higher ply evaluations. It is recommended " "to enable this option."));
 
     /* noise */
 
@@ -2196,7 +2196,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                                   "(beginner to advanced) use this technique. "
                                   "The introduced noise can be "
                                   "deterministic, i.e., always the same noise for "
-                                  "the same position, or it can be random"));
+                                  "the same position, or it can be random."));
 
     pwFrame2 = gtk_frame_new(_("Noise"));
     gtk_container_add(GTK_CONTAINER(pwev), pwFrame2);
@@ -2248,7 +2248,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                                       "A \"smaller\" filter will be faster, but "
                                       "GNU Backgammon may not find the best move. "
                                       "Power users may set up their own filters "
-                                      "by clicking on the [Modify] button"));
+                                      "by clicking on the [Modify] button."));
 
     } else
         pew->pwMoveFilter = NULL;
@@ -3970,7 +3970,7 @@ CreateMainWindow(void)
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 2);
 
     gtk_widget_set_tooltip_text(pwIDBox, _("This is a unique id for this position."
-                                           " Ctrl+C copies the current ID and Ctrl+V pastes an ID from the clipboard"));
+                                           " Ctrl+C copies the current ID and Ctrl+V pastes an ID from the clipboard."));
     g_signal_connect(G_OBJECT(pwIDBox), "button-press-event", G_CALLBACK(ContextMenu), idMenu);
 
     pwStop = gtk_event_box_new();
@@ -7217,7 +7217,7 @@ GTKDumpStatcontext(int game)
 #endif
 
     pwUsePanels = gtk_check_button_new_with_label(_("Split statistics into panels"));
-    gtk_widget_set_tooltip_text(pwUsePanels, "Show data in a single list or split other several panels");
+    gtk_widget_set_tooltip_text(pwUsePanels, "Show data in a single list or split into several panels");
     gtk_box_pack_start(GTK_BOX(pvbox), pwUsePanels, FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwUsePanels), fGUIUseStatsPanel);
     g_signal_connect(G_OBJECT(pwUsePanels), "toggled", G_CALLBACK(toggle_fGUIUseStatsPanel), NULL);
