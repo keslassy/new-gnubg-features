@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-01 20:55+0200\n"
+"POT-Creation-Date: 2017-10-11 23:56+0200\n"
 "PO-Revision-Date: 2011-02-05 18:26+0200\n"
 "Last-Translator: Mihai <mihaiv@gmail.com>\n"
 "Language-Team:  <>\n"
@@ -171,7 +171,7 @@ msgstr ""
 
 #: analysis.c:2427
 #, c-format
-msgid "This move doesn't imply a cubeaction. Cannot mark."
+msgid "This move doesn't imply a cube action. Cannot mark."
 msgstr ""
 
 #: analysis.c:2439
@@ -693,7 +693,7 @@ msgstr ""
 msgid "Rewinding dice file (%s)"
 msgstr "Revenire la început fişier zaruri (%s)\n"
 
-#: drawboard.c:72 drawboard.c:295 gnubg.c:4965 gtkexport.c:650 gtkgame.c:2870
+#: drawboard.c:72 drawboard.c:295 gnubg.c:4971 gtkexport.c:650 gtkgame.c:2870
 #: gtkgame.c:3799 gtkgame.c:6481
 msgid "GNU Backgammon"
 msgstr "Table GNU"
@@ -1170,7 +1170,7 @@ msgstr " şi până la %d mutări în plus în valoarea %0.3g\n"
 msgid "Play"
 msgstr "Mutare"
 
-#: format.c:302 gnubg.c:1446 gnubg.c:1454 gnubg.c:2737 gnubg.c:2745
+#: format.c:302 gnubg.c:1452 gnubg.c:1460 gnubg.c:2743 gnubg.c:2751
 #: gtkgame.c:3362 gtkgame.c:3376 gtkoptions.c:419 gtkprefs.c:3100
 #: gtkprefs.c:3110 gtktheory.c:704 progress.c:256 progress.c:351
 msgid "Cube"
@@ -1405,7 +1405,7 @@ msgstr "L(bg)"
 msgid "Equity"
 msgstr "Valoare"
 
-#: format.c:1115 gnubg.c:1768 gtkchequer.c:465 gtkcube.c:139 gtkcube.c:151
+#: format.c:1115 gnubg.c:1774 gtkchequer.c:465 gtkcube.c:139 gtkcube.c:151
 #: gtkcube.c:402 gtkcube.c:414 gtkcube.c:827 gtkmovelist.c:214 html.c:2171
 msgid "MWC"
 msgstr "MWC"
@@ -1617,10 +1617,6 @@ msgstr "<comandă>"
 msgid "<comment>"
 msgstr "<comentariu>"
 
-#: gnubg.c:487
-msgid "evaluation|rollout"
-msgstr "simulare|zaruri"
-
 #: gnubg.c:488
 msgid "<filename>"
 msgstr "<nume fişier>"
@@ -1657,18 +1653,9 @@ msgstr ""
 msgid "<name>"
 msgstr "<nume>"
 
-#: gnubg.c:497
-#, fuzzy
-msgid "[quiet]"
-msgstr "Valoare"
-
 #: gnubg.c:498
 msgid "system|<language code>"
 msgstr "sistem|<cod limbaj>"
-
-#: gnubg.c:499
-msgid "on|off"
-msgstr "pornit|oprit"
 
 #: gnubg.c:500
 msgid "[command]"
@@ -1797,127 +1784,133 @@ msgstr "<deviaţii standard legate>"
 msgid "<std dev>"
 msgstr "<dev std>"
 
-#: gnubg.c:546
-msgid "Python supported."
+#: gnubg.c:547
+#, fuzzy
+msgid "Python 2 supported."
 msgstr "Python suportat."
 
 #: gnubg.c:549
+#, fuzzy
+msgid "Python 3 supported."
+msgstr "Python suportat."
+
+#: gnubg.c:555
 msgid "SQLite database supported."
 msgstr "Baza de date SQLite suportată."
 
-#: gnubg.c:553
+#: gnubg.c:559
 msgid "GTK3 graphical interface supported."
 msgstr ""
 
-#: gnubg.c:555
+#: gnubg.c:561
 msgid "GTK2 graphical interface supported."
 msgstr ""
 
-#: gnubg.c:559
+#: gnubg.c:565
 msgid "External players supported."
 msgstr "Playere externe suportate."
 
-#: gnubg.c:562
+#: gnubg.c:568
 msgid "Long RNG seeds supported."
 msgstr "Seminţe lungi RNG suportate."
 
-#: gnubg.c:565
+#: gnubg.c:571
 msgid "3d Boards supported."
 msgstr "Table 3D suportate."
 
-#: gnubg.c:568
+#: gnubg.c:574
 msgid "Windows sound system supported."
 msgstr "Sistemul de sunet Windows suportat."
 
-#: gnubg.c:570
+#: gnubg.c:576
 #, fuzzy
 msgid "Apple CoreAudio sound system supported."
 msgstr "Sistemul de sunet ESD suportat."
 
-#: gnubg.c:572
+#: gnubg.c:578
 #, fuzzy
 msgid "Apple QuickTime sound system supported."
 msgstr "Sistemul de sunet ESD suportat."
 
-#: gnubg.c:574
+#: gnubg.c:580
 #, fuzzy
 msgid "libcanberra sound system supported."
 msgstr "Sistemul de sunet Windows suportat."
 
-#: gnubg.c:577
+#: gnubg.c:583
 msgid "Multiple threads supported."
 msgstr "Mai multe fire de execuţie suportate."
 
-#: gnubg.c:581
+#: gnubg.c:587
 #, fuzzy
 msgid "SSE/SSE2 supported."
 msgstr "Python suportat."
 
-#: gnubg.c:583
+#: gnubg.c:589
 #, fuzzy
 msgid "AVX supported."
 msgstr "Python suportat."
 
-#: gnubg.c:585
+#: gnubg.c:591
 #, fuzzy
 msgid "SSE supported."
 msgstr "Python suportat."
 
-#: gnubg.c:894
+#: gnubg.c:900
 msgid "Current position"
 msgstr "Poziţia curentă."
 
-#: gnubg.c:914
+#: gnubg.c:920
 #, c-format
 msgid "`simple' must be followed by 26 integers; found only %d\n"
 msgstr "'simple' trebuie urmat de 26 de întregi; găsiţi numai %d\n"
 
-#: gnubg.c:954 gnubg.c:965
+#: gnubg.c:960 gnubg.c:971
 msgid "Illegal position."
 msgstr "Poziţie ilegală."
 
-#: gnubg.c:1061
+#: gnubg.c:1067
 #, fuzzy, c-format
 msgid "You must specify whether to set '%s' on or off.\n"
 msgstr ""
 "Trebuie să specifici dacă să setez %s pornit sau oprit (vezi `help set "
 "%s').\n"
 
-#: gnubg.c:1090
+#: gnubg.c:1096
 #, fuzzy, c-format
 msgid "Illegal keyword `%s'.\n"
 msgstr "Cuvânt cheie ilegal `%s' -- încercă `help set %s'.\n"
 
-#: gnubg.c:1149
+#: gnubg.c:1155
 #, fuzzy
 msgid "Interrupted"
 msgstr "(Întrerupt)"
 
-#: gnubg.c:1196
+#: gnubg.c:1202
 msgid ""
 "This installation of GNU Backgammon was compiled without Python support."
 msgstr ""
 "Această instalare de Table GNU a fost compilată fără suport pentru Python."
 
-#: gnubg.c:1206
+#: gnubg.c:1212
 #, fuzzy
 msgid "Incomplete command."
 msgstr "Comandă incompletă -- încearcă 'help'."
 
-#: gnubg.c:1230
+#: gnubg.c:1236
 #, fuzzy, c-format
 msgid "Unknown keyword `%s'.\n"
 msgstr "Cuvânt cheie necunoscut: %s\n"
 
-#: gnubg.c:1324 gnubg.c:1355 gnubg.c:1429 gnubg.c:2720 play.c:2509
+#: gnubg.c:1330 gnubg.c:1361 gnubg.c:1435 gnubg.c:2726 play.c:2509
 msgid "Rolled"
 msgstr "Aruncat"
 
-#: gnubg.c:1386 gnubg.c:5397 gtkgame.c:1465 gtkgame.c:1483 gtkgame.c:1501
+#: gnubg.c:1392 gnubg.c:5403 gtkgame.c:1465 gtkgame.c:1483 gtkgame.c:1501
 msgid "No game in progress."
 msgstr "Nici un joc în curs."
 
-#: gnubg.c:1412 gnubg.c:1414 gnubg.c:2703 gnubg.c:2705 text.c:62 text.c:67
+#: gnubg.c:1418 gnubg.c:1420 gnubg.c:2709 gnubg.c:2711 text.c:62 text.c:67
 #, c-format
 msgid "%d point"
 msgid_plural "%d points"
@@ -1925,162 +1918,162 @@ msgstr[0] "%d punct"
 msgstr[1] "%d puncte"
 msgstr[2] "%d puncte"
 
-#: gnubg.c:1421 gnubg.c:2712 text.c:76
+#: gnubg.c:1427 gnubg.c:2718 text.c:76
 #, c-format
 msgid "Cube offered at %d"
 msgstr "Cubul oferit la %d"
 
-#: gnubg.c:1429
+#: gnubg.c:1435
 #, fuzzy, c-format
 msgid "%s %u%u"
 msgstr "%d%d"
 
-#: gnubg.c:1431 gnubg.c:2722 text.c:86
+#: gnubg.c:1437 gnubg.c:2728 text.c:86
 msgid "On roll"
 msgstr "La aruncare"
 
-#: gnubg.c:1440 gnubg.c:2731 text.c:95
+#: gnubg.c:1446 gnubg.c:2737 text.c:95
 #, fuzzy, c-format
 msgid "1 point match"
 msgstr "partidă de %d puncte"
 
-#: gnubg.c:1442 gnubg.c:2733 text.c:97
+#: gnubg.c:1448 gnubg.c:2739 text.c:97
 #, fuzzy, c-format
 msgid "%d point match (Crawford game)"
 msgstr "partidă de %d puncte (joc %d)"
 
-#: gnubg.c:1444 gnubg.c:2735 text.c:99
+#: gnubg.c:1450 gnubg.c:2741 text.c:99
 #, c-format
 msgid "%d point match (Cube: %d)"
 msgstr "Partidă de %d puncte (Cub: %d)"
 
-#: gnubg.c:1459 gnubg.c:2750 gtkgame.c:5922 text.c:114
+#: gnubg.c:1465 gnubg.c:2756 gtkgame.c:5922 text.c:114
 #, c-format
 msgid "%d point match"
 msgstr "partidă de %d puncte"
 
 #. FIXME it's not necessarily the player on roll who resigned
-#: gnubg.c:1464
+#: gnubg.c:1470
 #, fuzzy
 msgid "resigns"
 msgstr "Modele"
 
-#: gnubg.c:1489
+#: gnubg.c:1495
 #, fuzzy
 msgid "MatchID"
 msgstr "ID partidă:"
 
-#: gnubg.c:1515 gnubg.c:1527
+#: gnubg.c:1521 gnubg.c:1533
 msgid "No game"
 msgstr "Nici un joc"
 
-#: gnubg.c:1537
+#: gnubg.c:1543
 msgid "Game over"
 msgstr "Jocul s-a terminat"
 
-#: gnubg.c:1581 gnubg.c:2572 show.c:450 show.c:480 show.c:805 show.c:1116
+#: gnubg.c:1587 gnubg.c:2578 show.c:450 show.c:480 show.c:805 show.c:1116
 #: show.c:1170 show.c:1217 show.c:1264 show.c:1312 show.c:1428
 msgid "No position specified and no game in progress."
 msgstr "Nici o poziţie specificată şi nici un joc în curs."
 
-#: gnubg.c:1604
+#: gnubg.c:1610
 msgid "Evaluating position..."
 msgstr "Evaluând poziţia..."
 
-#: gnubg.c:1696
+#: gnubg.c:1702
 #, fuzzy, c-format
 msgid "No help available for topic `%s'"
 msgstr ""
 "Nici un ajutor disponibil pentru topica '%s' -- încearcă 'help' pentru o "
 "listă de topici.\n"
 
-#: gnubg.c:1721
+#: gnubg.c:1727
 #, fuzzy
 msgid "Usage"
 msgstr "Utilizator"
 
-#: gnubg.c:1724
+#: gnubg.c:1730
 #, fuzzy
 msgid "subcommand"
 msgstr "<subcomandă>\n"
 
-#: gnubg.c:1730
+#: gnubg.c:1736
 msgid "Available commands:"
 msgstr "Comenzi disponibile:"
 
-#: gnubg.c:1730
+#: gnubg.c:1736
 msgid "Available subcommands:"
 msgstr "Subcomenzi disponibile:"
 
-#: gnubg.c:1768
+#: gnubg.c:1774
 msgid "Eq."
 msgstr "Eq."
 
 #. Opponent has rolled the dice and then resigned. We want to find out if the resignation is OK after
 #. * the roll
-#: gnubg.c:1969 play.c:917 play.c:927
+#: gnubg.c:1975 play.c:917 play.c:927
 msgid "Considering resignation..."
 msgstr "Considerând renunţarea..."
 
-#: gnubg.c:1986 gnubg.c:1995 gtkgame.c:5759
+#: gnubg.c:1992 gnubg.c:2001 gtkgame.c:5759
 msgid "Equity before resignation"
 msgstr "Valoare înainte de renunţare"
 
-#: gnubg.c:1987 gnubg.c:1996 gtkgame.c:5775
+#: gnubg.c:1993 gnubg.c:2002 gtkgame.c:5775
 msgid "Equity after resignation"
 msgstr "Valoare după renunţare"
 
-#: gnubg.c:1988 gnubg.c:1998
+#: gnubg.c:1994 gnubg.c:2004
 #, fuzzy
 msgid "Correct resign decision"
 msgstr ""
 "Decizia curentă de renunţare  : %s\n"
 "\n"
 
-#: gnubg.c:1988 gnubg.c:1998 gtkgame.c:1213
+#: gnubg.c:1994 gnubg.c:2004 gtkgame.c:1213
 msgid "Accept"
 msgstr "Acceptă"
 
-#: gnubg.c:1988 gnubg.c:1998
+#: gnubg.c:1994 gnubg.c:2004
 msgid "Reject"
 msgstr "Refuză"
 
-#: gnubg.c:2011 gtkcube.c:669 play.c:1095 play.c:1294
+#: gnubg.c:2017 gtkcube.c:669 play.c:1095 play.c:1294
 msgid "Considering cube action..."
 msgstr "Considerând acţiunea de cub"
 
-#: gnubg.c:2191 gnubg.c:2237
+#: gnubg.c:2197 gnubg.c:2243
 #, c-format
 msgid "This decision is part of beaver/raccoon sequence and cannot be hinted"
 msgstr ""
 
-#: gnubg.c:2198
+#: gnubg.c:2204
 #, c-format
 msgid "You cannot double."
 msgstr "Nu poţi dubla."
 
-#: gnubg.c:2302 gnubgmodule.c:1198 gnubgmodule.c:1333 play.c:1396
+#: gnubg.c:2308 gnubgmodule.c:1198 gnubgmodule.c:1333 play.c:1396
 msgid "Considering move..."
 msgstr "Considerând mutarea..."
 
-#: gnubg.c:2346
+#: gnubg.c:2352
 msgid "There are no legal moves."
 msgstr "Nu există mutări legale."
 
-#: gnubg.c:2376 gnubgmodule.c:860
+#: gnubg.c:2382 gnubgmodule.c:860
 msgid "You must set up a board first."
 msgstr "Trebuie să setezi o tablă mai întâi."
 
-#: gnubg.c:2546
+#: gnubg.c:2552
 msgid "That command is not yet implemented."
 msgstr "Acea comandă nu este încă implementată."
 
-#: gnubg.c:2568
+#: gnubg.c:2574
 msgid ""
 "The rollout command takes no arguments and only rollouts the current position"
 msgstr ""
 
-#: gnubg.c:2579
+#: gnubg.c:2585
 #, fuzzy, c-format
 msgid "Current Position"
 msgstr "Poziţia curentă."
@@ -2088,30 +2081,30 @@ msgstr "Poziţia curentă."
 #. Python escape.
 #. Ideally we should be able to handle both > print 1+1 sys.exit() and > print 1+1
 #. * currently we only handle the latter...
-#: gnubg.c:2621
+#: gnubg.c:2627
 msgid "Only Python commands supported, not multiline code"
 msgstr ""
 
-#: gnubg.c:2648
+#: gnubg.c:2654
 msgid "This build of GNU Backgammon does not support Python"
 msgstr "Această compilare de Table GNU nu suportă Python"
 
-#: gnubg.c:2651 gnubg.c:2674
+#: gnubg.c:2657 gnubg.c:2680
 #, fuzzy
 msgid "You must specify a file to load from."
 msgstr ""
 "Trebuie să specifici un fişier din care să încarci (vezi `help load game')."
 
-#: gnubg.c:3345
+#: gnubg.c:3351
 #, fuzzy, c-format
 msgid "Settings saved to %s."
 msgstr "Setările salvate la %s.\n"
 
-#: gnubg.c:3345
+#: gnubg.c:3351
 msgid "standard output stream"
 msgstr "flux ieşire standard"
 
-#: gnubg.c:3851 makebearoff.c:1364 makebearoff.c:1365 makebearoff.c:1366
+#: gnubg.c:3857 makebearoff.c:1364 makebearoff.c:1365 makebearoff.c:1366
 #: makebearoff.c:1367 makebearoff.c:1369 makebearoff.c:1423 makebearoff.c:1428
 #: show.c:383 show.c:1848 show.c:1850 show.c:1852 show.c:1855 show.c:1880
 #: show.c:1884 show.c:1888 show.c:1897 show.c:1905 show.c:1909 show.c:1913
@@ -2119,7 +2112,7 @@ msgstr "flux ieşire standard"
 msgid "yes"
 msgstr "da"
 
-#: gnubg.c:3851 makebearoff.c:1364 makebearoff.c:1365 makebearoff.c:1366
+#: gnubg.c:3857 makebearoff.c:1364 makebearoff.c:1365 makebearoff.c:1366
 #: makebearoff.c:1367 makebearoff.c:1369 makebearoff.c:1423 makebearoff.c:1428
 #: show.c:383 show.c:1848 show.c:1850 show.c:1852 show.c:1855 show.c:1880
 #: show.c:1884 show.c:1888 show.c:1897 show.c:1905 show.c:1909 show.c:1913
@@ -2127,204 +2120,204 @@ msgstr "da"
 msgid "no"
 msgstr "nu"
 
-#: gnubg.c:3881 gnubg.c:5023
+#: gnubg.c:3887 gnubg.c:5029
 msgid "Please answer `y' or `n'."
 msgstr "Te rog răspunde 'y' (da) sau 'n' (nu)."
 
-#: gnubg.c:3909
+#: gnubg.c:3915
 #, fuzzy
 msgid "output will be shown"
 msgstr "Numerele pip nu vor fi arătate."
 
-#: gnubg.c:3909
+#: gnubg.c:3915
 #, fuzzy
 msgid "output will not be shown"
 msgstr "Numerele pip nu vor fi arătate."
 
-#: gnubg.c:4371
+#: gnubg.c:4377
 msgid "Enter dice: "
 msgstr "Introduce zaruri:"
 
-#: gnubg.c:4389
+#: gnubg.c:4395
 msgid "You must enter two numbers between 1 and 6."
 msgstr "Trebuie să introduci două numere între 1 şi 6"
 
-#: gnubg.c:4406
+#: gnubg.c:4412
 #, fuzzy
 msgid "Failure setting up RNG"
 msgstr "Eroare la setarea RNG\n"
 
-#: gnubg.c:4410
+#: gnubg.c:4416
 #, fuzzy
 msgid "Failure setting up RNG for rollout."
 msgstr "Eroare la setarea RNG pentru simulare.\n"
 
-#: gnubg.c:4507
+#: gnubg.c:4513
 msgid "Do not use bearoff database"
 msgstr "Nu folosi bază de date de scoatere"
 
-#: gnubg.c:4509
+#: gnubg.c:4515
 msgid "Evaluate commands in FILE and exit"
 msgstr "Evaluează comenzi în FILE şi ieşi"
 
-#: gnubg.c:4511
+#: gnubg.c:4517
 msgid "Set language to LANG"
 msgstr "Setează limba la LANG"
 
-#: gnubg.c:4513
+#: gnubg.c:4519
 msgid "Evaluate Python code in FILE and exit"
 msgstr "Evaluează cod Python în FILE şi ieşi"
 
-#: gnubg.c:4515
+#: gnubg.c:4521
 msgid "Disable sound effects"
 msgstr "Dezactivează efectele de sunet"
 
-#: gnubg.c:4517
+#: gnubg.c:4523
 msgid "Do not read .gnubgrc and .gnubgautorc commands"
 msgstr "Nu citi comenzile .gnubgrc şi .gnubgautorc"
 
-#: gnubg.c:4520
+#: gnubg.c:4526
 #, fuzzy
 msgid "Show gtk splash screen"
 msgstr "Nu arăta imaginea de întâmpinare gtk"
 
-#: gnubg.c:4522
+#: gnubg.c:4528
 #, fuzzy
 msgid "Start the command-line instead of using the graphical interface"
 msgstr "Modifică felul cum arată interfaţa grafică"
 
-#: gnubg.c:4524
+#: gnubg.c:4530
 msgid "Show version information and exit"
 msgstr "Arată informaţii despre versiune şi ieşi"
 
-#: gnubg.c:4526
+#: gnubg.c:4532
 #, fuzzy
 msgid "Ignore tty input when using the graphical interface"
 msgstr "Ignoră intrarea tty la folosirea sistemului de ferestre"
 
-#: gnubg.c:4528
+#: gnubg.c:4534
 msgid "Turn on debug"
 msgstr "Porneşte depanarea"
 
-#: gnubg.c:4530
+#: gnubg.c:4536
 #, fuzzy
 msgid "Specify location of general data"
 msgstr "Specifică un generator extern"
 
-#: gnubg.c:4532
+#: gnubg.c:4538
 msgid "Specify location of program specific data"
 msgstr ""
 
-#: gnubg.c:4534
+#: gnubg.c:4540
 msgid "Specify location of program documentation"
 msgstr ""
 
-#: gnubg.c:4536
+#: gnubg.c:4542
 #, fuzzy
 msgid "Specify location of user's preferences directory"
 msgstr "Specifică un generator extern"
 
-#: gnubg.c:4635 gnubg.c:4638 gnubg.c:4643 gnubg.c:4646 gnubg.c:4651
-#: gnubg.c:4656
+#: gnubg.c:4641 gnubg.c:4644 gnubg.c:4649 gnubg.c:4652 gnubg.c:4657
+#: gnubg.c:4662
 msgid "Initialising"
 msgstr "Iniţializare"
 
-#: gnubg.c:4635 gtkoptions.c:976
+#: gnubg.c:4641 gtkoptions.c:976
 msgid "Random number generator"
 msgstr "Generator de numere aleatoare"
 
-#: gnubg.c:4638
+#: gnubg.c:4644
 msgid "match equity table"
 msgstr "tabela de valori a partidei"
 
-#: gnubg.c:4643
+#: gnubg.c:4649
 msgid "neural nets"
 msgstr "reţele neurale"
 
-#: gnubg.c:4646
+#: gnubg.c:4652
 #, fuzzy
 msgid "initialising thread data"
 msgstr "Eroare la iniţializarea bazei de date de scoatere vechi!\n"
 
-#: gnubg.c:4651
+#: gnubg.c:4657
 msgid "Windows sockets"
 msgstr "Socket-uri Windows"
 
-#: gnubg.c:4664
+#: gnubg.c:4670
 msgid "Loading"
 msgstr "Încărcare"
 
-#: gnubg.c:4664
+#: gnubg.c:4670
 msgid "User Settings"
 msgstr "Setări utilizator"
 
-#: gnubg.c:4713
+#: gnubg.c:4719
 #, fuzzy, c-format
 msgid "GNU Backgammon build without Python."
 msgstr "Table GNU compilat fără Python\n"
 
-#: gnubg.c:4745 gnubg.c:4788
+#: gnubg.c:4751 gnubg.c:4794
 msgid "Command only valid in match play"
 msgstr "Comanda este validă doar în timpul partidei"
 
-#: gnubg.c:4757 gnubg.c:4758 gnubg.c:4760
+#: gnubg.c:4763 gnubg.c:4764 gnubg.c:4766
 #, fuzzy
 msgid "MWC for equity"
 msgstr "MWC înainte de renunţare"
 
-#: gnubg.c:4759 gnubg.c:4804
+#: gnubg.c:4765 gnubg.c:4810
 #, fuzzy
 msgid "By linear interpolation"
 msgstr "După interpolare liniară:\n"
 
-#: gnubg.c:4802 gnubg.c:4803 gnubg.c:4805
+#: gnubg.c:4808 gnubg.c:4809 gnubg.c:4811
 #, fuzzy
 msgid "Equity for MWC"
 msgstr "Valoare partidă ca MWC"
 
-#: gnubg.c:4946
+#: gnubg.c:4952
 #, c-format
 msgid "File \"%s\" exists. Overwrite? "
 msgstr "Fişierul \"%s\" există. Suprascrie? "
 
-#: gnubg.c:5041
+#: gnubg.c:5047
 #, fuzzy
 msgid "You may be about to make a very bad play"
 msgstr "Eşti pe cale să joci foarte slab. Eşti sigur? "
 
-#: gnubg.c:5045
+#: gnubg.c:5051
 #, fuzzy
 msgid "You may be about to make a bad play"
 msgstr "Eşti pe cale să joci slab. Eşti sigur? "
 
-#: gnubg.c:5049
+#: gnubg.c:5055
 #, fuzzy
 msgid "You may be about to make a doubtful play"
 msgstr "Eşti pe cale să joci îndoielnic. Eşti sigur? "
 
-#: gnubg.c:5061
+#: gnubg.c:5067
 msgid "Are you sure?"
 msgstr ""
 
-#: gnubg.c:5123
+#: gnubg.c:5129
 msgid "Analysis used for `hint' has been cleared"
 msgstr "Analiza utilizată pentru 'hint' a fost ştearsă"
 
-#: gnubg.c:5258
+#: gnubg.c:5264
 #, c-format
 msgid ""
 "Locale in your environment not supported by C library. Falling back to C "
 "locale.\n"
 msgstr ""
 
-#: gnubg.c:5460
+#: gnubg.c:5466
 #, fuzzy
 msgid ""
 "Are you sure you want to discard the current match and your existing "
 "autosave? "
 msgstr "Eşti sigur că vrei să ştergi toate partidele din această bază de date?"
 
-#: gnubg.c:5468
+#: gnubg.c:5474
 #, fuzzy
 msgid "Are you sure you want to discard the current match? "
 msgstr "Eşti sigur că vrei să ştergi toate partidele din această bază de date?"
@@ -3324,7 +3317,7 @@ msgstr "Selectează o setare predefinită:"
 #, fuzzy
 msgid ""
 "Select a predefined setting, ranging from beginner's play to the 4ply "
-"setting that will test your patience"
+"setting."
 msgstr ""
 "Selectează o setare predefinită, pornind de la joc de începător până la "
 "setarea mare maestru care îţi va testa răbdarea"
@@ -3375,7 +3368,7 @@ msgid ""
 "Instruct GNU Backgammon to use a set of neural networks just to prune away "
 "move candidates within a deeper ply search. This increases the speed "
 "considerably at a negligible cost in playing strength. It is recommended to "
-"enable this option"
+"enable this option."
 msgstr ""
 "Instruieşte Table GNU să folosească evaluări cu cub, i.e., include valoarea "
 "posesiei cubului în evaluări. Este recomandat să activezi această opţiune."
@@ -3399,11 +3392,12 @@ msgstr ""
 "posesiei cubului în evaluări. Este recomandat să activezi această opţiune."
 
 #: gtkgame.c:2180
+#, fuzzy
 msgid ""
 "GNU Backgammon will always perform cubeful evaluations for cube decisions. "
 "Disabling this option will make GNU Backgammon use cubeless evaluations in "
 "the interval nodes of higher ply evaluations. It is recommended to enable "
-"this option"
+"this option."
 msgstr ""
 "Table GNU va realiza întotdeauna evaluări cu cub pentru deciziile de cub. "
 "Dezactivarea acestei opţiuni va face ca Table GNU să folosească evaluări "
@@ -3417,7 +3411,7 @@ msgid ""
 "This is useful for introducing levels below 0-ply. The weaker levels "
 "(beginner to advanced) use this technique. The introduced noise can be "
 "deterministic, i.e., always the same noise for the same position, or it can "
-"be random"
+"be random."
 msgstr ""
 "Poţi folosi această opţiune pentru a introduce zgomot sau erori în evaluări. "
 "Este util pentru a introduce nivele sub 0-mutări. Boţii mai jos clasificaţi "
@@ -3443,7 +3437,7 @@ msgid ""
 "GNU Backgammon will evaluate all moves at 0-ply. The move filter controls "
 "how many moves will be evaluted at higher plies. A \"smaller\" filter will "
 "be faster, but GNU Backgammon may not find the best move. Power users may "
-"set up their own filters by clicking on the [Modify] button"
+"set up their own filters by clicking on the [Modify] button."
 msgstr ""
 "Table GNU va evalua toate mutările la 0-mutări înainte. Filtrul de mutări "
 "controlează câte mutări să fie evaluate la mutări mai adânci. Un filtru mai "
@@ -4668,7 +4662,7 @@ msgstr "ID poziţie:"
 #: gtkgame.c:3972
 msgid ""
 "This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard"
+"+V pastes an ID from the clipboard."
 msgstr ""
 
 #: gtkgame.c:4132
@@ -13027,6 +13021,16 @@ msgid "You must specify a file to export to (see `help export position text')."
 msgstr ""
 "Trebuie să specifici un fişier în care să exporţi (vezi `help export "
 "position text')."
+
+#~ msgid "evaluation|rollout"
+#~ msgstr "simulare|zaruri"
+
+#, fuzzy
+#~ msgid "[quiet]"
+#~ msgstr "Valoare"
+
+#~ msgid "on|off"
+#~ msgstr "pornit|oprit"
 
 #~ msgid "(HTML Export version %d.%d) -->"
 #~ msgstr "(Export HTML versiunea %d.%d) -->"

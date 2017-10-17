@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon 0.14-devel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-01 20:55+0200\n"
+"POT-Creation-Date: 2017-10-11 23:56+0200\n"
 "PO-Revision-Date: 2008-04-17 20:09-0000\n"
 "Last-Translator: Jon <Jon_Kinsey@hotmail.com>\n"
 "Language-Team: none\n"
@@ -165,7 +165,7 @@ msgstr ""
 
 #: analysis.c:2427
 #, c-format
-msgid "This move doesn't imply a cubeaction. Cannot mark."
+msgid "This move doesn't imply a cube action. Cannot mark."
 msgstr ""
 
 #: analysis.c:2439
@@ -666,7 +666,7 @@ msgstr ""
 msgid "Rewinding dice file (%s)"
 msgstr ""
 
-#: drawboard.c:72 drawboard.c:295 gnubg.c:4965 gtkexport.c:650 gtkgame.c:2870
+#: drawboard.c:72 drawboard.c:295 gnubg.c:4971 gtkexport.c:650 gtkgame.c:2870
 #: gtkgame.c:3799 gtkgame.c:6481
 msgid "GNU Backgammon"
 msgstr "GNU Backgammon"
@@ -1130,7 +1130,7 @@ msgstr ""
 msgid "Play"
 msgstr "Leikmaður"
 
-#: format.c:302 gnubg.c:1446 gnubg.c:1454 gnubg.c:2737 gnubg.c:2745
+#: format.c:302 gnubg.c:1452 gnubg.c:1460 gnubg.c:2743 gnubg.c:2751
 #: gtkgame.c:3362 gtkgame.c:3376 gtkoptions.c:419 gtkprefs.c:3100
 #: gtkprefs.c:3110 gtktheory.c:704 progress.c:256 progress.c:351
 msgid "Cube"
@@ -1348,7 +1348,7 @@ msgstr ""
 msgid "Equity"
 msgstr ""
 
-#: format.c:1115 gnubg.c:1768 gtkchequer.c:465 gtkcube.c:139 gtkcube.c:151
+#: format.c:1115 gnubg.c:1774 gtkchequer.c:465 gtkcube.c:139 gtkcube.c:151
 #: gtkcube.c:402 gtkcube.c:414 gtkcube.c:827 gtkmovelist.c:214 html.c:2171
 msgid "MWC"
 msgstr ""
@@ -1564,10 +1564,6 @@ msgstr ""
 msgid "<comment>"
 msgstr "Athugasemdir:"
 
-#: gnubg.c:487
-msgid "evaluation|rollout"
-msgstr ""
-
 #: gnubg.c:488
 msgid "<filename>"
 msgstr ""
@@ -1602,16 +1598,8 @@ msgstr ""
 msgid "<name>"
 msgstr ""
 
-#: gnubg.c:497
-msgid "[quiet]"
-msgstr ""
-
 #: gnubg.c:498
 msgid "system|<language code>"
-msgstr ""
-
-#: gnubg.c:499
-msgid "on|off"
 msgstr ""
 
 #: gnubg.c:500
@@ -1739,289 +1727,295 @@ msgstr ""
 msgid "<std dev>"
 msgstr ""
 
-#: gnubg.c:546
-msgid "Python supported."
+#: gnubg.c:547
+#, fuzzy
+msgid "Python 2 supported."
 msgstr "Phyton stutt."
 
 #: gnubg.c:549
 #, fuzzy
+msgid "Python 3 supported."
+msgstr "Phyton stutt."
+
+#: gnubg.c:555
+#, fuzzy
 msgid "SQLite database supported."
 msgstr "Guile stutt."
 
-#: gnubg.c:553
+#: gnubg.c:559
 msgid "GTK3 graphical interface supported."
 msgstr ""
 
-#: gnubg.c:555
+#: gnubg.c:561
 msgid "GTK2 graphical interface supported."
 msgstr ""
 
-#: gnubg.c:559
+#: gnubg.c:565
 msgid "External players supported."
 msgstr ""
 
-#: gnubg.c:562
+#: gnubg.c:568
 msgid "Long RNG seeds supported."
 msgstr ""
 
-#: gnubg.c:565
+#: gnubg.c:571
 #, fuzzy
 msgid "3d Boards supported."
 msgstr "Phyton stutt."
 
-#: gnubg.c:568
+#: gnubg.c:574
 #, fuzzy
 msgid "Windows sound system supported."
 msgstr "Gluggakerfi stutt"
 
-#: gnubg.c:570
+#: gnubg.c:576
 #, fuzzy
 msgid "Apple CoreAudio sound system supported."
 msgstr "Studd hljóðkerfi"
 
-#: gnubg.c:572
+#: gnubg.c:578
 #, fuzzy
 msgid "Apple QuickTime sound system supported."
 msgstr "Studd hljóðkerfi"
 
-#: gnubg.c:574
+#: gnubg.c:580
 #, fuzzy
 msgid "libcanberra sound system supported."
 msgstr "Studd hljóðkerfi"
 
-#: gnubg.c:577
+#: gnubg.c:583
 #, fuzzy
 msgid "Multiple threads supported."
 msgstr "Guile stutt."
 
-#: gnubg.c:581
+#: gnubg.c:587
 #, fuzzy
 msgid "SSE/SSE2 supported."
 msgstr "Engin greining tiltæk"
 
-#: gnubg.c:583
+#: gnubg.c:589
 #, fuzzy
 msgid "AVX supported."
 msgstr "Phyton stutt."
 
-#: gnubg.c:585
+#: gnubg.c:591
 #, fuzzy
 msgid "SSE supported."
 msgstr "Phyton stutt."
 
-#: gnubg.c:894
+#: gnubg.c:900
 msgid "Current position"
 msgstr ""
 
-#: gnubg.c:914
+#: gnubg.c:920
 #, c-format
 msgid "`simple' must be followed by 26 integers; found only %d\n"
 msgstr ""
 
-#: gnubg.c:954 gnubg.c:965
+#: gnubg.c:960 gnubg.c:971
 msgid "Illegal position."
 msgstr ""
 
-#: gnubg.c:1061
+#: gnubg.c:1067
 #, fuzzy, c-format
 msgid "You must specify whether to set '%s' on or off.\n"
 msgstr "Þú verður að tilgreina stærð milli 1 og 21."
 
-#: gnubg.c:1090
+#: gnubg.c:1096
 #, c-format
 msgid "Illegal keyword `%s'.\n"
 msgstr ""
 
-#: gnubg.c:1149
+#: gnubg.c:1155
 #, fuzzy
 msgid "Interrupted"
 msgstr "Miðlungsspilari"
 
-#: gnubg.c:1196
+#: gnubg.c:1202
 msgid ""
 "This installation of GNU Backgammon was compiled without Python support."
 msgstr ""
 
-#: gnubg.c:1206
+#: gnubg.c:1212
 #, fuzzy
 msgid "Incomplete command."
 msgstr "Opna skipanir"
 
-#: gnubg.c:1230
+#: gnubg.c:1236
 #, fuzzy, c-format
 msgid "Unknown keyword `%s'.\n"
 msgstr "Óþekkt lykilorð: %s\n"
 
-#: gnubg.c:1324 gnubg.c:1355 gnubg.c:1429 gnubg.c:2720 play.c:2509
+#: gnubg.c:1330 gnubg.c:1361 gnubg.c:1435 gnubg.c:2726 play.c:2509
 msgid "Rolled"
 msgstr "Kastað"
 
-#: gnubg.c:1386 gnubg.c:5397 gtkgame.c:1465 gtkgame.c:1483 gtkgame.c:1501
+#: gnubg.c:1392 gnubg.c:5403 gtkgame.c:1465 gtkgame.c:1483 gtkgame.c:1501
 msgid "No game in progress."
 msgstr "Ekkert spil í gangi"
 
-#: gnubg.c:1412 gnubg.c:1414 gnubg.c:2703 gnubg.c:2705 text.c:62 text.c:67
+#: gnubg.c:1418 gnubg.c:1420 gnubg.c:2709 gnubg.c:2711 text.c:62 text.c:67
 #, fuzzy, c-format
 msgid "%d point"
 msgid_plural "%d points"
 msgstr[0] "%d stig"
 msgstr[1] "%d stig"
 
-#: gnubg.c:1421 gnubg.c:2712 text.c:76
+#: gnubg.c:1427 gnubg.c:2718 text.c:76
 #, c-format
 msgid "Cube offered at %d"
 msgstr ""
 
-#: gnubg.c:1429
+#: gnubg.c:1435
 #, c-format
 msgid "%s %u%u"
 msgstr ""
 
-#: gnubg.c:1431 gnubg.c:2722 text.c:86
+#: gnubg.c:1437 gnubg.c:2728 text.c:86
 msgid "On roll"
 msgstr ""
 
-#: gnubg.c:1440 gnubg.c:2731 text.c:95
+#: gnubg.c:1446 gnubg.c:2737 text.c:95
 #, fuzzy, c-format
 msgid "1 point match"
 msgstr "%d stiga keppni"
 
-#: gnubg.c:1442 gnubg.c:2733 text.c:97
+#: gnubg.c:1448 gnubg.c:2739 text.c:97
 #, fuzzy, c-format
 msgid "%d point match (Crawford game)"
 msgstr "%d stiga keppni"
 
-#: gnubg.c:1444 gnubg.c:2735 text.c:99
+#: gnubg.c:1450 gnubg.c:2741 text.c:99
 #, c-format
 msgid "%d point match (Cube: %d)"
 msgstr ""
 
-#: gnubg.c:1459 gnubg.c:2750 gtkgame.c:5922 text.c:114
+#: gnubg.c:1465 gnubg.c:2756 gtkgame.c:5922 text.c:114
 #, c-format
 msgid "%d point match"
 msgstr "%d stiga keppni"
 
 #. FIXME it's not necessarily the player on roll who resigned
-#: gnubg.c:1464
+#: gnubg.c:1470
 #, fuzzy
 msgid "resigns"
 msgstr " Gefst upp"
 
-#: gnubg.c:1489
+#: gnubg.c:1495
 #, fuzzy
 msgid "MatchID"
 msgstr "Keppni kt:"
 
-#: gnubg.c:1515 gnubg.c:1527
+#: gnubg.c:1521 gnubg.c:1533
 msgid "No game"
 msgstr "Ekkert spil"
 
-#: gnubg.c:1537
+#: gnubg.c:1543
 msgid "Game over"
 msgstr "Spili lokið"
 
-#: gnubg.c:1581 gnubg.c:2572 show.c:450 show.c:480 show.c:805 show.c:1116
+#: gnubg.c:1587 gnubg.c:2578 show.c:450 show.c:480 show.c:805 show.c:1116
 #: show.c:1170 show.c:1217 show.c:1264 show.c:1312 show.c:1428
 msgid "No position specified and no game in progress."
 msgstr "Engin staða tilgreind og ekkert spil í gangi."
 
-#: gnubg.c:1604
+#: gnubg.c:1610
 msgid "Evaluating position..."
 msgstr "Met stöðu..."
 
-#: gnubg.c:1696
+#: gnubg.c:1702
 #, c-format
 msgid "No help available for topic `%s'"
 msgstr ""
 
-#: gnubg.c:1721
+#: gnubg.c:1727
 #, fuzzy
 msgid "Usage"
 msgstr "Notandi"
 
-#: gnubg.c:1724
+#: gnubg.c:1730
 #, fuzzy
 msgid "subcommand"
 msgstr "/_Hjálp/_Skipanir"
 
-#: gnubg.c:1730
+#: gnubg.c:1736
 #, fuzzy
 msgid "Available commands:"
 msgstr "Tiltækar skipanir:\n"
 
-#: gnubg.c:1730
+#: gnubg.c:1736
 #, fuzzy
 msgid "Available subcommands:"
 msgstr "Tiltækar undirskipanir:\n"
 
-#: gnubg.c:1768
+#: gnubg.c:1774
 msgid "Eq."
 msgstr ""
 
 #. Opponent has rolled the dice and then resigned. We want to find out if the resignation is OK after
 #. * the roll
-#: gnubg.c:1969 play.c:917 play.c:927
+#: gnubg.c:1975 play.c:917 play.c:927
 msgid "Considering resignation..."
 msgstr ""
 
-#: gnubg.c:1986 gnubg.c:1995 gtkgame.c:5759
+#: gnubg.c:1992 gnubg.c:2001 gtkgame.c:5759
 msgid "Equity before resignation"
 msgstr ""
 
-#: gnubg.c:1987 gnubg.c:1996 gtkgame.c:5775
+#: gnubg.c:1993 gnubg.c:2002 gtkgame.c:5775
 msgid "Equity after resignation"
 msgstr ""
 
-#: gnubg.c:1988 gnubg.c:1998
+#: gnubg.c:1994 gnubg.c:2004
 msgid "Correct resign decision"
 msgstr ""
 
-#: gnubg.c:1988 gnubg.c:1998 gtkgame.c:1213
+#: gnubg.c:1994 gnubg.c:2004 gtkgame.c:1213
 #, fuzzy
 msgid "Accept"
 msgstr "Þiggja"
 
-#: gnubg.c:1988 gnubg.c:1998
+#: gnubg.c:1994 gnubg.c:2004
 #, fuzzy
 msgid "Reject"
 msgstr "Hafna"
 
-#: gnubg.c:2011 gtkcube.c:669 play.c:1095 play.c:1294
+#: gnubg.c:2017 gtkcube.c:669 play.c:1095 play.c:1294
 msgid "Considering cube action..."
 msgstr ""
 
-#: gnubg.c:2191 gnubg.c:2237
+#: gnubg.c:2197 gnubg.c:2243
 #, c-format
 msgid "This decision is part of beaver/raccoon sequence and cannot be hinted"
 msgstr ""
 
-#: gnubg.c:2198
+#: gnubg.c:2204
 #, c-format
 msgid "You cannot double."
 msgstr ""
 
-#: gnubg.c:2302 gnubgmodule.c:1198 gnubgmodule.c:1333 play.c:1396
+#: gnubg.c:2308 gnubgmodule.c:1198 gnubgmodule.c:1333 play.c:1396
 msgid "Considering move..."
 msgstr "Hugleiði leik..."
 
-#: gnubg.c:2346
+#: gnubg.c:2352
 msgid "There are no legal moves."
 msgstr "Það eru engir löglegir leikir mögulegir."
 
-#: gnubg.c:2376 gnubgmodule.c:860
+#: gnubg.c:2382 gnubgmodule.c:860
 msgid "You must set up a board first."
 msgstr "Þú verður að stilla upp fyrst."
 
-#: gnubg.c:2546
+#: gnubg.c:2552
 msgid "That command is not yet implemented."
 msgstr "Þessi skipun er ekki enn framkvæmanleg"
 
-#: gnubg.c:2568
+#: gnubg.c:2574
 msgid ""
 "The rollout command takes no arguments and only rollouts the current position"
 msgstr ""
 
-#: gnubg.c:2579
+#: gnubg.c:2585
 #, fuzzy, c-format
 msgid "Current Position"
 msgstr "Opna stöðu"
@@ -2029,29 +2023,29 @@ msgstr "Opna stöðu"
 #. Python escape.
 #. Ideally we should be able to handle both > print 1+1 sys.exit() and > print 1+1
 #. * currently we only handle the latter...
-#: gnubg.c:2621
+#: gnubg.c:2627
 msgid "Only Python commands supported, not multiline code"
 msgstr ""
 
-#: gnubg.c:2648
+#: gnubg.c:2654
 msgid "This build of GNU Backgammon does not support Python"
 msgstr ""
 
-#: gnubg.c:2651 gnubg.c:2674
+#: gnubg.c:2657 gnubg.c:2680
 #, fuzzy
 msgid "You must specify a file to load from."
 msgstr "Þú verður að tilgreina stærð milli 1 og 21."
 
-#: gnubg.c:3345
+#: gnubg.c:3351
 #, fuzzy, c-format
 msgid "Settings saved to %s."
 msgstr "Stillingar vistaðar í %s.\n"
 
-#: gnubg.c:3345
+#: gnubg.c:3351
 msgid "standard output stream"
 msgstr ""
 
-#: gnubg.c:3851 makebearoff.c:1364 makebearoff.c:1365 makebearoff.c:1366
+#: gnubg.c:3857 makebearoff.c:1364 makebearoff.c:1365 makebearoff.c:1366
 #: makebearoff.c:1367 makebearoff.c:1369 makebearoff.c:1423 makebearoff.c:1428
 #: show.c:383 show.c:1848 show.c:1850 show.c:1852 show.c:1855 show.c:1880
 #: show.c:1884 show.c:1888 show.c:1897 show.c:1905 show.c:1909 show.c:1913
@@ -2059,7 +2053,7 @@ msgstr ""
 msgid "yes"
 msgstr ""
 
-#: gnubg.c:3851 makebearoff.c:1364 makebearoff.c:1365 makebearoff.c:1366
+#: gnubg.c:3857 makebearoff.c:1364 makebearoff.c:1365 makebearoff.c:1366
 #: makebearoff.c:1367 makebearoff.c:1369 makebearoff.c:1423 makebearoff.c:1428
 #: show.c:383 show.c:1848 show.c:1850 show.c:1852 show.c:1855 show.c:1880
 #: show.c:1884 show.c:1888 show.c:1897 show.c:1905 show.c:1909 show.c:1913
@@ -2067,191 +2061,191 @@ msgstr ""
 msgid "no"
 msgstr ""
 
-#: gnubg.c:3881 gnubg.c:5023
+#: gnubg.c:3887 gnubg.c:5029
 msgid "Please answer `y' or `n'."
 msgstr ""
 
-#: gnubg.c:3909
+#: gnubg.c:3915
 #, fuzzy
 msgid "output will be shown"
 msgstr "Stöðu- og keppni kennitölur munu ekki sjást"
 
-#: gnubg.c:3909
+#: gnubg.c:3915
 #, fuzzy
 msgid "output will not be shown"
 msgstr "Stöðu- og keppni kennitölur munu ekki sjást"
 
-#: gnubg.c:4371
+#: gnubg.c:4377
 msgid "Enter dice: "
 msgstr ""
 
-#: gnubg.c:4389
+#: gnubg.c:4395
 msgid "You must enter two numbers between 1 and 6."
 msgstr "Þú verður að slá inn tvær tölur milli 1 og 6."
 
-#: gnubg.c:4406
+#: gnubg.c:4412
 msgid "Failure setting up RNG"
 msgstr ""
 
-#: gnubg.c:4410
+#: gnubg.c:4416
 msgid "Failure setting up RNG for rollout."
 msgstr ""
 
-#: gnubg.c:4507
+#: gnubg.c:4513
 msgid "Do not use bearoff database"
 msgstr ""
 
-#: gnubg.c:4509
+#: gnubg.c:4515
 msgid "Evaluate commands in FILE and exit"
 msgstr ""
 
-#: gnubg.c:4511
+#: gnubg.c:4517
 msgid "Set language to LANG"
 msgstr ""
 
-#: gnubg.c:4513
+#: gnubg.c:4519
 msgid "Evaluate Python code in FILE and exit"
 msgstr ""
 
-#: gnubg.c:4515
+#: gnubg.c:4521
 #, fuzzy
 msgid "Disable sound effects"
 msgstr "Virkja hljóð"
 
-#: gnubg.c:4517
+#: gnubg.c:4523
 msgid "Do not read .gnubgrc and .gnubgautorc commands"
 msgstr ""
 
-#: gnubg.c:4520
+#: gnubg.c:4526
 #, fuzzy
 msgid "Show gtk splash screen"
 msgstr "Ekki sýna þetta aftur"
 
-#: gnubg.c:4522
+#: gnubg.c:4528
 msgid "Start the command-line instead of using the graphical interface"
 msgstr ""
 
-#: gnubg.c:4524
+#: gnubg.c:4530
 msgid "Show version information and exit"
 msgstr ""
 
-#: gnubg.c:4526
+#: gnubg.c:4532
 msgid "Ignore tty input when using the graphical interface"
 msgstr ""
 
-#: gnubg.c:4528
+#: gnubg.c:4534
 msgid "Turn on debug"
 msgstr ""
 
-#: gnubg.c:4530
+#: gnubg.c:4536
 msgid "Specify location of general data"
 msgstr ""
 
-#: gnubg.c:4532
+#: gnubg.c:4538
 msgid "Specify location of program specific data"
 msgstr ""
 
-#: gnubg.c:4534
+#: gnubg.c:4540
 msgid "Specify location of program documentation"
 msgstr ""
 
-#: gnubg.c:4536
+#: gnubg.c:4542
 msgid "Specify location of user's preferences directory"
 msgstr ""
 
-#: gnubg.c:4635 gnubg.c:4638 gnubg.c:4643 gnubg.c:4646 gnubg.c:4651
-#: gnubg.c:4656
+#: gnubg.c:4641 gnubg.c:4644 gnubg.c:4649 gnubg.c:4652 gnubg.c:4657
+#: gnubg.c:4662
 msgid "Initialising"
 msgstr "Frumstilli"
 
-#: gnubg.c:4635 gtkoptions.c:976
+#: gnubg.c:4641 gtkoptions.c:976
 msgid "Random number generator"
 msgstr ""
 
-#: gnubg.c:4638
+#: gnubg.c:4644
 #, fuzzy
 msgid "match equity table"
 msgstr "match equity töflu"
 
-#: gnubg.c:4643
+#: gnubg.c:4649
 msgid "neural nets"
 msgstr "tauganet"
 
-#: gnubg.c:4646
+#: gnubg.c:4652
 #, fuzzy
 msgid "initialising thread data"
 msgstr "Frumstilli"
 
-#: gnubg.c:4651
+#: gnubg.c:4657
 msgid "Windows sockets"
 msgstr "Windows sökkla"
 
-#: gnubg.c:4664
+#: gnubg.c:4670
 msgid "Loading"
 msgstr "Hleð inn"
 
-#: gnubg.c:4664
+#: gnubg.c:4670
 msgid "User Settings"
 msgstr "Notendastillingar"
 
-#: gnubg.c:4713
+#: gnubg.c:4719
 #, fuzzy, c-format
 msgid "GNU Backgammon build without Python."
 msgstr "GNU Backgammon - Almennar stillingar"
 
-#: gnubg.c:4745 gnubg.c:4788
+#: gnubg.c:4751 gnubg.c:4794
 msgid "Command only valid in match play"
 msgstr ""
 
-#: gnubg.c:4757 gnubg.c:4758 gnubg.c:4760
+#: gnubg.c:4763 gnubg.c:4764 gnubg.c:4766
 msgid "MWC for equity"
 msgstr ""
 
-#: gnubg.c:4759 gnubg.c:4804
+#: gnubg.c:4765 gnubg.c:4810
 #, fuzzy
 msgid "By linear interpolation"
 msgstr "Hreinsa athugasemdir"
 
-#: gnubg.c:4802 gnubg.c:4803 gnubg.c:4805
+#: gnubg.c:4808 gnubg.c:4809 gnubg.c:4811
 msgid "Equity for MWC"
 msgstr ""
 
-#: gnubg.c:4946
+#: gnubg.c:4952
 #, c-format
 msgid "File \"%s\" exists. Overwrite? "
 msgstr "Skráin \"%s\" er til.  Skrifa yfir?"
 
-#: gnubg.c:5041
+#: gnubg.c:5047
 #, fuzzy
 msgid "You may be about to make a very bad play"
 msgstr "Þú ert e.t.v. að fara að leika illa af þér.  Ertu viss?"
 
-#: gnubg.c:5045
+#: gnubg.c:5051
 #, fuzzy
 msgid "You may be about to make a bad play"
 msgstr "Þú ert e.t.v. að fara að leika af þér.  Ertu viss?"
 
-#: gnubg.c:5049
+#: gnubg.c:5055
 #, fuzzy
 msgid "You may be about to make a doubtful play"
 msgstr "Þú ert e.t.v. að fara að leika vafasaman leik.  Ertu viss?"
 
-#: gnubg.c:5061
+#: gnubg.c:5067
 msgid "Are you sure?"
 msgstr ""
 
-#: gnubg.c:5123
+#: gnubg.c:5129
 msgid "Analysis used for `hint' has been cleared"
 msgstr ""
 
-#: gnubg.c:5258
+#: gnubg.c:5264
 #, c-format
 msgid ""
 "Locale in your environment not supported by C library. Falling back to C "
 "locale.\n"
 msgstr ""
 
-#: gnubg.c:5460
+#: gnubg.c:5466
 #, fuzzy
 msgid ""
 "Are you sure you want to discard the current match and your existing "
@@ -2259,7 +2253,7 @@ msgid ""
 msgstr ""
 "Ertu viss um að þú viljir hætta og stöðva leikinn áður en honum er lokið"
 
-#: gnubg.c:5468
+#: gnubg.c:5474
 #, fuzzy
 msgid "Are you sure you want to discard the current match? "
 msgstr ""
@@ -3239,7 +3233,7 @@ msgstr "Veldu gefna stillingu:"
 #, fuzzy
 msgid ""
 "Select a predefined setting, ranging from beginner's play to the 4ply "
-"setting that will test your patience"
+"setting."
 msgstr ""
 "Veldu fyrirframgefna stillingu, allt frá byrjanda að stórmeistarasem mun "
 "virkilega reyna á þig"
@@ -3288,7 +3282,7 @@ msgid ""
 "Instruct GNU Backgammon to use a set of neural networks just to prune away "
 "move candidates within a deeper ply search. This increases the speed "
 "considerably at a negligible cost in playing strength. It is recommended to "
-"enable this option"
+"enable this option."
 msgstr ""
 
 #. cubeful
@@ -3312,7 +3306,7 @@ msgid ""
 "GNU Backgammon will always perform cubeful evaluations for cube decisions. "
 "Disabling this option will make GNU Backgammon use cubeless evaluations in "
 "the interval nodes of higher ply evaluations. It is recommended to enable "
-"this option"
+"this option."
 msgstr ""
 
 #: gtkgame.c:2193
@@ -3321,7 +3315,7 @@ msgid ""
 "This is useful for introducing levels below 0-ply. The weaker levels "
 "(beginner to advanced) use this technique. The introduced noise can be "
 "deterministic, i.e., always the same noise for the same position, or it can "
-"be random"
+"be random."
 msgstr ""
 
 #: gtkgame.c:2201
@@ -3341,7 +3335,7 @@ msgid ""
 "GNU Backgammon will evaluate all moves at 0-ply. The move filter controls "
 "how many moves will be evaluted at higher plies. A \"smaller\" filter will "
 "be faster, but GNU Backgammon may not find the best move. Power users may "
-"set up their own filters by clicking on the [Modify] button"
+"set up their own filters by clicking on the [Modify] button."
 msgstr ""
 
 #: gtkgame.c:2405 gtkgame.c:2689 gtkgame.c:7182
@@ -4596,7 +4590,7 @@ msgstr "Stöðu kt:"
 #: gtkgame.c:3972
 msgid ""
 "This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard"
+"+V pastes an ID from the clipboard."
 msgstr ""
 
 #: gtkgame.c:4132
