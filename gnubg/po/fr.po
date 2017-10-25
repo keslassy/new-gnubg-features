@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-11 23:56+0200\n"
-"PO-Revision-Date: 2017-10-11 23:43+0200\n"
+"PO-Revision-Date: 2017-10-22 23:13+0200\n"
 "Last-Translator: Philippe Michel <philippe.michel7@sfr.fr>\n"
 "Language-Team: <fr@li.org>\n"
 "Language: fr\n"
@@ -18,59 +18,59 @@ msgstr ""
 
 #: analysis.c:45
 msgid "rating|Awful!"
-msgstr "niveau|Horrible!"
+msgstr "Horrible!"
 
 #: analysis.c:46
 msgid "rating|Beginner"
-msgstr "niveau|Débutant"
+msgstr "Débutant"
 
 #: analysis.c:47
 msgid "rating|Casual player"
-msgstr "niveau|Amateur"
+msgstr "Amateur"
 
 #: analysis.c:48
 msgid "rating|Intermediate"
-msgstr "niveau|Intermédiaire"
+msgstr "Intermédiaire"
 
 #: analysis.c:49
 msgid "rating|Advanced"
-msgstr "niveau|Confirmé"
+msgstr "Confirmé"
 
 #: analysis.c:50
 msgid "rating|Expert"
-msgstr "niveau|Expert"
+msgstr "Expert"
 
 #: analysis.c:51
 msgid "rating|World class"
-msgstr "niveau|Champion"
+msgstr "Champion"
 
 #: analysis.c:52
 msgid "rating|Supernatural"
-msgstr "niveau|Surnaturel"
+msgstr "Surnaturel"
 
 #: analysis.c:53
 msgid "rating|N/A"
-msgstr "niveau|N/D"
+msgstr "N/D"
 
 #: analysis.c:57
 msgid "luck|Go to bed"
-msgstr "chance|Allez vous coucher"
+msgstr "Allez vous coucher"
 
 #: analysis.c:58
 msgid "luck|Bad dice, man!"
-msgstr "chance|Mauvais dés, mon ami !"
+msgstr "Mauvais dés, mon ami !"
 
 #: analysis.c:59
 msgid "luck|None"
-msgstr "chance|Aucune"
+msgstr "Aucune"
 
 #: analysis.c:60
 msgid "luck|Good dice, man!"
-msgstr "chance|Bons dés, mon ami !"
+msgstr "Bons dés, mon ami !"
 
 #: analysis.c:61
 msgid "luck|Go to Las Vegas"
-msgstr "chance|Allez tout de suite à Las Vegas"
+msgstr "Allez tout de suite à Las Vegas"
 
 #: analysis.c:1115
 msgid ""
@@ -685,39 +685,39 @@ msgstr "Simulation"
 
 #: eval.c:307
 msgid "setting|beginner"
-msgstr "réglage|débutant"
+msgstr "débutant"
 
 #: eval.c:308
 msgid "setting|casual play"
-msgstr "réglage|amateur"
+msgstr "amateur"
 
 #: eval.c:309
 msgid "setting|intermediate"
-msgstr "réglage|iintermédiaire"
+msgstr "intermédiaire"
 
 #: eval.c:310
 msgid "setting|advanced"
-msgstr "réglage|confirmé"
+msgstr "confirmé"
 
 #: eval.c:311
 msgid "setting|expert"
-msgstr "réglage|expert"
+msgstr "expert"
 
 #: eval.c:312
 msgid "setting|world class"
-msgstr "réglage|champion"
+msgstr "champion"
 
 #: eval.c:313
 msgid "setting|supremo"
-msgstr "réglage|maître"
+msgstr "maître"
 
 #: eval.c:314
 msgid "setting|grandmaster"
-msgstr "réglage|grand maître"
+msgstr "grand maître"
 
 #: eval.c:315
 msgid "setting|4ply"
-msgstr "réglage|4ply"
+msgstr "4ply"
 
 #: eval.c:347
 msgid "Tiny"
@@ -741,15 +741,15 @@ msgstr "Enorme"
 
 #: eval.c:364
 msgid "doubletype|Double"
-msgstr "type de double|Double"
+msgstr "Double"
 
 #: eval.c:365
 msgid "doubletype|Beaver"
-msgstr "type de double|beaver"
+msgstr "beaver"
 
 #: eval.c:366
 msgid "doubletype|Raccoon"
-msgstr "type de double|Raccoon"
+msgstr "Raccoon"
 
 #: eval.c:530 eval.c:565
 #, c-format
@@ -836,6 +836,8 @@ msgid ""
 " * Weights file and databases installed in:\n"
 "   - %s\n"
 msgstr ""
+" * Fichiers de poids neuronaux et bases de données installés dans :\n"
+"   - %s\n"
 
 #: eval.c:3137 format.c:778 gtkcube.c:357 html.c:1702
 msgid "Double, take"
@@ -1498,7 +1500,7 @@ msgid ""
 msgstr ""
 "Ce programme est fourni en l'état, SANS AUCUNE GARANTIE ; pour plus de "
 "détails, tapez `show warranty'.\n"
-"Ce logiciel est gratuit, n'hésitez donc pas à le diffuser autour de vous\n"
+"Ce logiciel est gratuit, n'hésitez donc pas à le diffuser autour de vous "
 "sous certaines conditions ; tapez `show copying' pour plus de détails.\n"
 
 #. Usage strings
@@ -1552,7 +1554,7 @@ msgstr "<nom>"
 
 #: gnubg.c:498
 msgid "system|<language code>"
-msgstr "système|<code langue>"
+msgstr "system|<code langue>"
 
 #: gnubg.c:500
 msgid "[command]"
@@ -6941,7 +6943,7 @@ msgstr "GNU Backgammon - Base de données"
 
 #: gtkrelational.c:954
 msgid "Query"
-msgstr "Demande"
+msgstr "Requête"
 
 #: gtkrelational.c:1017
 msgid "GNU Backgammon - Database Result"
@@ -7408,11 +7410,11 @@ msgstr[0] "Le score (après %d partie(s)) est : %s %d, %s %d"
 msgstr[1] "The score (after %d games) is: %s %d, %s %d"
 
 #: html.c:1510
-#, fuzzy, c-format
+#, c-format
 msgid " (match to %d point%s)"
 msgid_plural " (match to %d points%s)"
-msgstr[0] "(%d points)"
-msgstr[1] "(%d points)"
+msgstr[0] "(match en %d point%s)"
+msgstr[1] "(match en %d points%s)"
 
 #: html.c:1514 html.c:3156 show.c:902 text.c:207
 msgid ", Crawford game"
@@ -7420,7 +7422,7 @@ msgstr ", partie Crawford"
 
 #: html.c:1514 html.c:3156 show.c:902 text.c:209
 msgid ", post-Crawford play"
-msgstr ""
+msgstr ", jeu post-Crawford"
 
 #: html.c:1529
 msgid "match play"
@@ -11302,12 +11304,12 @@ msgstr "Le score (après %d parties) est de : %s %d, %s %d"
 #: show.c:900
 #, c-format
 msgid " (match to %d point%s).\n"
-msgstr ""
+msgstr " (match en %d point%s).\n"
 
 #: show.c:901
 #, c-format
 msgid " (match to %d points%s).\n"
-msgstr ""
+msgstr " (match en %d points%s).\n"
 
 #: show.c:905
 msgid " (money session, with Jacoby rule)."
