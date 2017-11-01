@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 23:56+0200\n"
+"POT-Creation-Date: 2017-11-01 10:08+0100\n"
 "PO-Revision-Date: 2009-02-07 00:16+0100\n"
 "Last-Translator: Renzo Campagna <renzo.camp@tin.it>\n"
 "Language-Team: Italiano <renzo.camp@tin.it>\n"
@@ -22,59 +22,59 @@ msgstr ""
 
 #: analysis.c:45
 msgid "rating|Awful!"
-msgstr "rating|Novizio!"
+msgstr "Novizio!"
 
 #: analysis.c:46
 msgid "rating|Beginner"
-msgstr "rating|Principiante"
+msgstr "Principiante"
 
 #: analysis.c:47
 msgid "rating|Casual player"
-msgstr "rating|Giocatore occasionale"
+msgstr "Giocatore occasionale"
 
 #: analysis.c:48
 msgid "rating|Intermediate"
-msgstr "rating|Intermedio"
+msgstr "Intermedio"
 
 #: analysis.c:49
 msgid "rating|Advanced"
-msgstr "rating|Avanzato"
+msgstr "Avanzato"
 
 #: analysis.c:50
 msgid "rating|Expert"
-msgstr "rating|Esperto"
+msgstr "Esperto"
 
 #: analysis.c:51
 msgid "rating|World class"
-msgstr "rating|Classe Mondiale"
+msgstr "Classe Mondiale"
 
 #: analysis.c:52
 msgid "rating|Supernatural"
-msgstr "rating|Extraterrestre"
+msgstr "Extraterrestre"
 
 #: analysis.c:53
 msgid "rating|N/A"
-msgstr "rating|N/A"
+msgstr "N/A"
 
 #: analysis.c:57
 msgid "luck|Go to bed"
-msgstr "luck|Vai a dormire"
+msgstr "Vai a dormire"
 
 #: analysis.c:58
 msgid "luck|Bad dice, man!"
-msgstr "luck|Dadi orrendi!!"
+msgstr "Dadi orrendi!!"
 
 #: analysis.c:59
 msgid "luck|None"
-msgstr "luck|Nessuna"
+msgstr "Nessuna"
 
 #: analysis.c:60
 msgid "luck|Good dice, man!"
-msgstr "luck|Bei dadi!!"
+msgstr "Bei dadi!!"
 
 #: analysis.c:61
 msgid "luck|Go to Las Vegas"
-msgstr "luck|Vai a Las Vegas immediatamente"
+msgstr "Vai a Las Vegas immediatamente"
 
 #: analysis.c:1115
 msgid ""
@@ -698,40 +698,40 @@ msgstr "Rollout"
 
 #: eval.c:307
 msgid "setting|beginner"
-msgstr "imposta|principiante"
+msgstr "principiante"
 
 #: eval.c:308
 msgid "setting|casual play"
-msgstr "imposta|giocatore occasionale"
+msgstr "giocatore occasionale"
 
 #: eval.c:309
 msgid "setting|intermediate"
-msgstr "imposta|intermedio"
+msgstr "intermedio"
 
 #: eval.c:310
 msgid "setting|advanced"
-msgstr "imposta|avanzato"
+msgstr "avanzato"
 
 #: eval.c:311
 msgid "setting|expert"
-msgstr "imposta|esperto"
+msgstr "esperto"
 
 #: eval.c:312
 msgid "setting|world class"
-msgstr "imposta|classe mondiale"
+msgstr "classe mondiale"
 
 #: eval.c:313
 msgid "setting|supremo"
-msgstr "imposta|classe suprema"
+msgstr "classe suprema"
 
 #: eval.c:314
 msgid "setting|grandmaster"
-msgstr "imposta|gran maestro"
+msgstr "gran maestro"
 
 #: eval.c:315
 #, fuzzy
 msgid "setting|4ply"
-msgstr "imposta|giocatore occasionale"
+msgstr "4ply"
 
 #: eval.c:347
 msgid "Tiny"
@@ -755,15 +755,15 @@ msgstr "Approfondito"
 
 #: eval.c:364
 msgid "doubletype|Double"
-msgstr "tipo di raddoppio|Raddoppio"
+msgstr "Raddoppio"
 
 #: eval.c:365
 msgid "doubletype|Beaver"
-msgstr "tipo di raddoppio|Beaver"
+msgstr "Beaver"
 
 #: eval.c:366
 msgid "doubletype|Raccoon"
-msgstr "tipo di raddoppio|Raccoon"
+msgstr "Raccoon"
 
 #: eval.c:530 eval.c:565
 #, fuzzy, c-format
@@ -1578,7 +1578,7 @@ msgstr "<nome>"
 
 #: gnubg.c:498
 msgid "system|<language code>"
-msgstr "sistema|<codice lingua>"
+msgstr "system|<codice lingua>"
 
 #: gnubg.c:500
 msgid "[command]"
@@ -1602,7 +1602,7 @@ msgstr "[lunghezza]"
 
 #: gnubg.c:505
 msgid "[modulus <modulus>|factors <factor> <factor>] [seed]"
-msgstr "[modulo <modulo>|fattore <fattore> <fattore>] [origine]"
+msgstr "[modulus <modulo>|factors <fattore> <fattore>] [origine]"
 
 #: gnubg.c:507
 msgid "[name]"
@@ -1655,7 +1655,7 @@ msgstr "<misura>"
 
 #: gnubg.c:519
 msgid "[game|roll|rolled|marked] <count>"
-msgstr "[game|lancio|lanciato|marcato] <conteggio>"
+msgstr "[game|roll|rolled|marked] <conteggio>"
 
 #: gnubg.c:520
 msgid "<trials>"
@@ -5649,7 +5649,7 @@ msgstr "Lunghezza del match predefinita"
 
 #: gtkoptions.c:795
 msgid "length|points"
-msgstr "lunghezza|punti"
+msgstr "punti"
 
 #: gtkoptions.c:797
 msgid "Specify the default length to use when starting new matches."

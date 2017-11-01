@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon 1.05\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 23:56+0200\n"
+"POT-Creation-Date: 2017-11-01 10:08+0100\n"
 "PO-Revision-Date: 2016-02-25 19:56+0200\n"
 "Last-Translator: Vangelis Skarmoutsos <skarmoutsosv@gmail.com>\n"
 "Language-Team: Ελληνικά <team@gnome.gr>\n"
@@ -20,59 +20,59 @@ msgstr ""
 
 #: analysis.c:45
 msgid "rating|Awful!"
-msgstr "αξιολόγηση|Απαίσια!"
+msgstr "Απαίσια!"
 
 #: analysis.c:46
 msgid "rating|Beginner"
-msgstr "αξιολόγηση|Αρχάριος"
+msgstr "Αρχάριος"
 
 #: analysis.c:47
 msgid "rating|Casual player"
-msgstr "αξιολόγηση|Συνηθισμένος παίκτης"
+msgstr "Συνηθισμένος παίκτης"
 
 #: analysis.c:48
 msgid "rating|Intermediate"
-msgstr "αξιολόγηση|Ενδιάμεσος"
+msgstr "Ενδιάμεσος"
 
 #: analysis.c:49
 msgid "rating|Advanced"
-msgstr "αξιολόγηση|Προχωρημένος"
+msgstr "Προχωρημένος"
 
 #: analysis.c:50
 msgid "rating|Expert"
-msgstr "αξιολόγηση|Ειδικός"
+msgstr "Ειδικός"
 
 #: analysis.c:51
 msgid "rating|World class"
-msgstr "αξιολόγηση|Παγκόσμιας κλάσης"
+msgstr "Παγκόσμιας κλάσης"
 
 #: analysis.c:52
 msgid "rating|Supernatural"
-msgstr "αξιολόγηση|Υπερφυσικός"
+msgstr "Υπερφυσικός"
 
 #: analysis.c:53
 msgid "rating|N/A"
-msgstr "αξιολόγηση|Δ/Υ"
+msgstr "Δ/Υ"
 
 #: analysis.c:57
 msgid "luck|Go to bed"
-msgstr "τύχη|Πήγαινε για ύπνο"
+msgstr "Πήγαινε για ύπνο"
 
 #: analysis.c:58
 msgid "luck|Bad dice, man!"
-msgstr "τύχη|Κακή ζαριά, φίλε!"
+msgstr "Κακή ζαριά, φίλε!"
 
 #: analysis.c:59
 msgid "luck|None"
-msgstr "τύχη|Καθόλου"
+msgstr "Καθόλου"
 
 #: analysis.c:60
 msgid "luck|Good dice, man!"
-msgstr "τύχη|Καλή ζαριά, φίλε!"
+msgstr "Καλή ζαριά, φίλε!"
 
 #: analysis.c:61
 msgid "luck|Go to Las Vegas"
-msgstr "τύχη|Πήγαινε στο Λας Βέγκας"
+msgstr "Πήγαινε στο Λας Βέγκας"
 
 #: analysis.c:1115
 msgid ""

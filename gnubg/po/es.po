@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 23:56+0200\n"
+"POT-Creation-Date: 2017-11-01 10:08+0100\n"
 "PO-Revision-Date: 2008-12-29 00:40+0100\n"
 "Last-Translator: Fernando García García <fergarciaga@gmail.com>\n"
 "Language-Team: ES-Translation\n"
@@ -22,59 +22,59 @@ msgstr ""
 
 #: analysis.c:45
 msgid "rating|Awful!"
-msgstr "calificación|Horrible"
+msgstr "Horrible"
 
 #: analysis.c:46
 msgid "rating|Beginner"
-msgstr "calificación|Principiante"
+msgstr "Principiante"
 
 #: analysis.c:47
 msgid "rating|Casual player"
-msgstr "calificación|Jugador ocasional"
+msgstr "Jugador ocasional"
 
 #: analysis.c:48
 msgid "rating|Intermediate"
-msgstr "calificación|Intermedio"
+msgstr "Intermedio"
 
 #: analysis.c:49
 msgid "rating|Advanced"
-msgstr "calificación|Avanzado"
+msgstr "Avanzado"
 
 #: analysis.c:50
 msgid "rating|Expert"
-msgstr "calificación|Experto"
+msgstr "Experto"
 
 #: analysis.c:51
 msgid "rating|World class"
-msgstr "calificación|Clase mundial"
+msgstr "Clase mundial"
 
 #: analysis.c:52
 msgid "rating|Supernatural"
-msgstr "calificación|Sobrenatural"
+msgstr "Sobrenatural"
 
 #: analysis.c:53
 msgid "rating|N/A"
-msgstr "calificación|N/D"
+msgstr "N/D"
 
 #: analysis.c:57
 msgid "luck|Go to bed"
-msgstr "azar|¡No es tu día!"
+msgstr "¡No es tu día!"
 
 #: analysis.c:58
 msgid "luck|Bad dice, man!"
-msgstr "azar|Malos dados, amigo"
+msgstr "Malos dados, amigo"
 
 #: analysis.c:59
 msgid "luck|None"
-msgstr "azar|Normal"
+msgstr "Normal"
 
 #: analysis.c:60
 msgid "luck|Good dice, man!"
-msgstr "azar|Buenos dados, amigo"
+msgstr "Buenos dados, amigo"
 
 #: analysis.c:61
 msgid "luck|Go to Las Vegas"
-msgstr "azar|¡Estás de suerte, compra lotería!"
+msgstr "¡Estás de suerte, compra lotería!"
 
 #: analysis.c:1115
 msgid ""
@@ -703,40 +703,40 @@ msgstr "Simulación de lanzamientos («rollout»)"
 
 #: eval.c:307
 msgid "setting|beginner"
-msgstr "configuración|principiante"
+msgstr "principiante"
 
 #: eval.c:308
 msgid "setting|casual play"
-msgstr "configuración|jugador ocasional"
+msgstr "jugador ocasional"
 
 #: eval.c:309
 msgid "setting|intermediate"
-msgstr "configuración|intermedio"
+msgstr "intermedio"
 
 #: eval.c:310
 msgid "setting|advanced"
-msgstr "configuración|avanzado"
+msgstr "avanzado"
 
 #: eval.c:311
 msgid "setting|expert"
-msgstr "configuración|experto"
+msgstr "experto"
 
 #: eval.c:312
 msgid "setting|world class"
-msgstr "configuración|clase mundial"
+msgstr "clase mundial"
 
 #: eval.c:313
 msgid "setting|supremo"
-msgstr "configuración|supremo"
+msgstr "supremo"
 
 #: eval.c:314
 msgid "setting|grandmaster"
-msgstr "configuración|gran maestro"
+msgstr "gran maestro"
 
 #: eval.c:315
 #, fuzzy
 msgid "setting|4ply"
-msgstr "configuración|jugador ocasional"
+msgstr "4ply"
 
 #: eval.c:347
 msgid "Tiny"
@@ -760,15 +760,15 @@ msgstr "Enorme"
 
 #: eval.c:364
 msgid "doubletype|Double"
-msgstr "doblaje|Doblar"
+msgstr "Doblar"
 
 #: eval.c:365
 msgid "doubletype|Beaver"
-msgstr "doblaje|«Beaver» (Redoblar)"
+msgstr "«Beaver» (Redoblar)"
 
 #: eval.c:366
 msgid "doubletype|Raccoon"
-msgstr "doblaje|«Raccoon» (Re-redoblar)"
+msgstr "«Raccoon» (Re-redoblar)"
 
 #: eval.c:530 eval.c:565
 #, fuzzy, c-format
@@ -1582,7 +1582,7 @@ msgstr "<nombre>"
 
 #: gnubg.c:498
 msgid "system|<language code>"
-msgstr "sistema|<código de idioma>"
+msgstr "system|<código de idioma>"
 
 #: gnubg.c:500
 msgid "[command]"
@@ -1606,7 +1606,7 @@ msgstr "[longitud]"
 
 #: gnubg.c:505
 msgid "[modulus <modulus>|factors <factor> <factor>] [seed]"
-msgstr "[módulo <módulo>|factores <factor> <factor>] [semilla]"
+msgstr "[modulus <módulo>|factors <factor> <factor>] [semilla]"
 
 #: gnubg.c:507
 msgid "[name]"
@@ -1659,7 +1659,7 @@ msgstr "<tamaño>"
 
 #: gnubg.c:519
 msgid "[game|roll|rolled|marked] <count>"
-msgstr "[juego|lanzar|lanzado|marcado] <cuenta>"
+msgstr "[game|roll|rolled|marked] <cuenta>"
 
 #: gnubg.c:520
 msgid "<trials>"
@@ -1700,7 +1700,7 @@ msgstr "[<advertencia>]"
 
 #: gnubg.c:528
 msgid "<warning> on|off"
-msgstr "<advertencia> activa|inactiva"
+msgstr "<advertencia> on|off"
 
 #: gnubg.c:530
 msgid "<joint standard deviations>"
@@ -5669,7 +5669,7 @@ msgstr "Longitud de partida por omisión:"
 
 #: gtkoptions.c:795
 msgid "length|points"
-msgstr "longitud|puntos"
+msgstr "puntos"
 
 #: gtkoptions.c:797
 msgid "Specify the default length to use when starting new matches."
