@@ -1578,7 +1578,7 @@ msgstr "[longueur]"
 
 #: gnubg.c:505
 msgid "[modulus <modulus>|factors <factor> <factor>] [seed]"
-msgstr "[modulo <modulo>|facteurs <facteur> <facteur>] [graine]"
+msgstr "[modulo <modulo>|factors <facteur> <facteur>] [graine]"
 
 #: gnubg.c:507
 msgid "[name]"
@@ -1630,7 +1630,7 @@ msgstr "<taille>"
 
 #: gnubg.c:519
 msgid "[game|roll|rolled|marked] <count>"
-msgstr ""
+msgstr "[game|roll|rolled|marked] <nombre>"
 
 #: gnubg.c:520
 msgid "<trials>"
@@ -5395,7 +5395,7 @@ msgstr "Longueur de match par défaut :"
 
 #: gtkoptions.c:795
 msgid "length|points"
-msgstr ""
+msgstr "points"
 
 #: gtkoptions.c:797
 msgid "Specify the default length to use when starting new matches."
