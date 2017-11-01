@@ -792,7 +792,7 @@ append_match_options(optionswidget * pow)
     pow->padjLength = GTK_ADJUSTMENT(gtk_adjustment_new(nDefaultLength, 0, 99, 1, 1, 0));
     pw = gtk_spin_button_new(GTK_ADJUSTMENT(pow->padjLength), 1, 0);
     gtk_box_pack_start(GTK_BOX(pwhbox), pw, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("length|points")), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(Q_("length|points")), FALSE, FALSE, 0);
     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(pw), TRUE);
     gtk_widget_set_tooltip_text(pwev, _("Specify the default length to use when starting " "new matches."));
 
