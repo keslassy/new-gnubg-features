@@ -219,6 +219,10 @@ dnl have_gthread, have_gtk and have_gtk are handled later, not having glib is fa
 
 AX_C___ATTRIBUTE__()
 
+if test "x$ax_cv___attribute__" = "xyes"; then
+AX_GCC_FUNC_ATTRIBUTE(unused)
+fi
+
 dnl
 dnl check for pkg-config controlled libs
 dnl

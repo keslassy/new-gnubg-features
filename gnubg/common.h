@@ -74,7 +74,7 @@ typedef void (*psighandler) (int);
 
 /* Macro to mark parameters that aren't used in the function */
 #ifdef UNUSED
-#elif defined(__GNUC__)
+#elif defined(HAVE_FUNC_ATTRIBUTE_UNUSED)
 #define UNUSED(x) UNUSED_ ## x __attribute__((unused))
 #elif defined(_lint)
 #define UNUSED(x) /*lint -e{715, 818}*/ _unused_##x

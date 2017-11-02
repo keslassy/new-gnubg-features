@@ -1,3 +1,7 @@
+2017-11-02  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* ax_gcc_func_attribute.m4, Makefile.am: New file
+
 2015-08-30  Michael Petch  <mpetch@capp-sysware.com>
 
 	* -az_python.m4, +ax_python_devel.m4: No longer use the macros
