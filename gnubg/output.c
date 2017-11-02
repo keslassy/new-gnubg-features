@@ -39,11 +39,11 @@
 #include <io.h>
 #endif
 
-#if USE_GTK_UNDEF
+#if defined(USE_GTK_UNDEF)
 #undef USE_GTK
 #endif
 
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkgame.h"
 #endif
 
@@ -67,7 +67,7 @@ output(const char *sz)
     if (cOutputDisabled || !foutput_on)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKOutput(sz);
         return;
@@ -88,7 +88,7 @@ outputl(const char *sz)
     if (cOutputDisabled || !foutput_on)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         char *szOut = g_strdup_printf("%s\n", sz);
         GTKOutput(szOut);
@@ -168,7 +168,7 @@ outputerrv(const char *sz, va_list val)
     char *szFormatted;
     szFormatted = g_strdup_vprintf(sz, val);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         GTKOutputErr(szFormatted);
 #endif
@@ -187,7 +187,7 @@ outputx(void)
     if (cOutputDisabled || cOutputPostponed || !foutput_on)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         GTKOutputX();
 #endif
@@ -201,7 +201,7 @@ outputnew(void)
     if (cOutputDisabled || !foutput_on)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         GTKOutputNew();
 #endif
@@ -244,5 +244,3 @@ outputresume(void)
         outputx();
     }
 }
-
-
