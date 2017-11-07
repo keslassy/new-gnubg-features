@@ -2244,7 +2244,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
         gtk_widget_set_tooltip_text(pwev,
                                     _("GNU Backgammon will evaluate all moves at "
                                       "0-ply. The move filter controls how many "
-                                      "moves will be evaluted at higher plies. "
+                                      "moves will be evaluated at higher plies. "
                                       "A \"smaller\" filter will be faster, but "
                                       "GNU Backgammon may not find the best move. "
                                       "Power users may set up their own filters "
