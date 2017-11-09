@@ -472,6 +472,11 @@ GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
     char sz[4];
     PangoLayout *layout;
 
+#if ! GTK_CHECK_VERSION(3,0,0)
+    /* The gtk_locdef_* below don't use cr with GTK2. Avoid compiler warning inthis case. */
+    (void)cr;
+#endif
+
     gtk_widget_get_allocation(pwGraph, &allocation);
     x = 8;
     y = 12;
