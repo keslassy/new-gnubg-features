@@ -190,7 +190,7 @@ UpdateStyle(GtkWidget * pw, const float r)
     double *gbval;
 
     gbval = g_malloc(sizeof(*gbval));
-    *gbval = 1.0 - r;
+    *gbval = 1.0 - (double)r;
     g_object_set_data_full(G_OBJECT(pw), "gbval", gbval, g_free);
 
     ps->bg[GTK_STATE_NORMAL].red = 0xFFFF;
@@ -339,6 +339,7 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
         gtk_render_frame(gtk_widget_get_style_context(pw), cr, 0, 0, width, height);
     }
 #else
+    (void) cr;                  /* silence compiler warning */
     gtk_paint_box(gtk_widget_get_style(pw), gtk_widget_get_window(pw), GTK_STATE_NORMAL,
                   GTK_SHADOW_IN, NULL, NULL, NULL, 0, 0, allocation.width, allocation.height);
 #endif
@@ -654,7 +655,7 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
                     g_object_set_data_full(G_OBJECT(ptm->aapwDA[i][j]), "user_data", pi, g_free);
 #if GTK_CHECK_VERSION(3,0,0)
-                    gtk_style_context_add_class(gtk_widget_get_style_context(ptm->aapwDA[i][j]), " gnubg-temp-map-quadrant");
+                    gtk_style_context_add_class(gtk_widget_get_style_context(ptm->aapwDA[i][j]), "gnubg-temp-map-quadrant");
                     g_signal_connect(G_OBJECT(ptm->aapwDA[i][j]), "draw", G_CALLBACK(DrawQuadrant), ptmw);
 #else
                     g_signal_connect(G_OBJECT(ptm->aapwDA[i][j]), "expose_event", G_CALLBACK(ExposeQuadrant), ptmw);
