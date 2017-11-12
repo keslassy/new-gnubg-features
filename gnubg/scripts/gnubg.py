@@ -104,7 +104,11 @@ def gnubg_InteractivePyShell_tui(argv=[''], banner=None):
             from IPython.frontend.terminal.embed import InteractiveShellEmbed
 
         from IPython import __version__ as ipyversion
-        from traitlets.config.loader import Config
+        if ipy_version_info[0] >= 4:
+            from traitlets.config.loader import Config
+        else:
+            from IPython.config.loader import Config
+
     except:
         # Otherwise use standard interpreter
         if (banner == None):
