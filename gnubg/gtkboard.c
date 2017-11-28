@@ -3356,7 +3356,7 @@ UpdateCrawfordToggle(GtkWidget * UNUSED(pw), BoardData * bd)
                      (((nMatchLen - anScoreNew[0]) == 1) ||
                       ((nMatchLen - anScoreNew[1]) == 1)) && (anScoreNew[0] < nMatchLen && anScoreNew[1] < nMatchLen));
     gtk_widget_set_sensitive(bd->crawford, allowCrawford);
-    if (!allowCrawford)
+    if (!allowCrawford && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(bd->crawford)) == TRUE)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(bd->crawford), FALSE);
 }
 
