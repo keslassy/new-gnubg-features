@@ -782,7 +782,7 @@ update_move(BoardData * bd)
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_set_state_flags(bd->wmove, fIncomplete ? GTK_STATE_FLAG_ACTIVE : GTK_STATE_NORMAL, TRUE);
+    gtk_widget_set_state_flags(bd->wmove, fIncomplete ? GTK_STATE_FLAG_ACTIVE : GTK_STATE_FLAG_NORMAL, TRUE);
 #else
     gtk_widget_set_state(bd->wmove, fIncomplete ? GTK_STATE_ACTIVE : GTK_STATE_NORMAL);
 #endif
