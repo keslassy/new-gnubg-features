@@ -392,22 +392,24 @@ main(int argc, char* argv[])
       }
       case N_EP:
       {
-	evalPlies = atoi(opt.optarg);
+	int i = atoi(opt.optarg);
 
-	if( evalPlies < 0 ) {
+	if( i < 0 ) {
 	  cerr << endl << "negative plies" << endl;
 	  exit(1);
 	}
+	evalPlies = (unsigned int) i;
 	break;
       }
       case N_OG:
       {
-	osrGames = atoi(opt.optarg);
+	int i = atoi(opt.optarg);
 
-	if( osrGames <= 0 ) {
+	if( i <= 0 ) {
 	  cerr << endl << "non positive osrGames" << endl;
 	  exit(1);
 	}
+	osrGames = (unsigned int) i;
 	break;
       }
       case N_OSRO:
