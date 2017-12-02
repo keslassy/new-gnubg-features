@@ -1,3 +1,5 @@
+#!/usr/bin/env pygnubg 
+
 import gnubg
 import random
 
