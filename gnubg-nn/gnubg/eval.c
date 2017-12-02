@@ -1743,7 +1743,7 @@ FindBestMoveInEval(int nDice0, int nDice1, int anBoard[2][25], int direction)
 	  cacheNode ec, *pec;
 #endif
 
-	  long l;
+	  unsigned long l;
 	  cache* c =
 	    useEvalNet ? nets[posClass].pcache : nets[CLASS_CONTACT].ncache;
       
@@ -1979,7 +1979,7 @@ EvaluatePosition(CONST int anBoard[2][25], float arOutput[],
 		 unsigned char* pauch)
 {
   evalcache ec, *pec;
-  long l = -1;
+  unsigned long l = (unsigned long)-1;
 
   {                                       assert( !p || (int)snp <= nPlies ); }
 	
@@ -2022,7 +2022,7 @@ EvaluatePosition(CONST int anBoard[2][25], float arOutput[],
 #if defined( GARY_CODE )
   return CacheAdd(nets[CLASS_CONTACT].ncache, l, &ec, sizeof(ec));
 #else
-  if( l >= 0 ) CacheAdd(nets[CLASS_CONTACT].ncache, &ec, l);
+  if( l != (unsigned long)-1 ) CacheAdd(nets[CLASS_CONTACT].ncache, &ec, l);
   return 0;
 #endif
 }
@@ -2107,7 +2107,7 @@ InvertEvaluation(float ar[NUM_OUTPUTS] )
 extern int
 GameStatus(CONST int anBoard[2][25])
 {
-  float ar[NUM_OUTPUTS];
+  float ar[NUM_OUTPUTS] = {0, 0, 0, 0, 0};
     
   if( ClassifyPosition( anBoard ) != CLASS_OVER )
     return 0;
@@ -2710,7 +2710,7 @@ extern int
 EvaluatePositionToBO(CONST int anBoard[2][25], float arOutput[], int direction)
 {
   evalcache ec, *pec;
-  long l;
+  unsigned long l;
 
   PositionKey((ConstBoard)anBoard, ec.auchKey);
 

@@ -49,7 +49,7 @@ extern int CacheStats( cache *pc, unsigned int *pcLookup, unsigned int *pcHit );
 
 typedef struct _cacheNode {
   unsigned char auchKey[10];
-  int 		nPlies;
+  unsigned int 	nPlies;
   float 	ar[5 /*NUM_OUTPUTS*/];
 } cacheNode;
 
@@ -70,7 +70,7 @@ int
 CacheCreate(cache* pc, unsigned int size);
 
 int
-CacheResize(cache *pc, int cNew);
+CacheResize(cache *pc, unsigned int cNew);
 
 /* l is filled with a value which is passed to CacheAdd */
 cacheNode*

@@ -291,7 +291,7 @@ typedef  unsigned long   ub4;
 }
 
 static unsigned long
-keyToLong(char k[10], int np)
+keyToLong(unsigned char k[10], int np)
 {
   ub4 a = 0x9e3779b9;  /* the golden ratio; an arbitrary value */
   ub4 b = a;
@@ -424,14 +424,14 @@ CacheDestroy(cache* pc)
 void
 CacheFlush(cache* pc)
 {
-  int k;
+  unsigned int k;
   for(k = 0; k < pc->size; ++k) {
     pc->m[k].nPlies = (unsigned int)-1;
   }
 }
 
 int
-CacheResize( cache *pc, int cNew )
+CacheResize( cache *pc, unsigned int cNew )
 {
   if( cNew == pc->size ) {
     return 0;

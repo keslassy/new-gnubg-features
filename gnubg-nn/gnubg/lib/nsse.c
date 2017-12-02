@@ -229,8 +229,8 @@ sigmoid_ps( __m128 xin )
 static void
 EvaluateSSE(const neuralnet *pnn, const float arInput[], float ar[], float arOutput[])
 {
-  const unsigned int cHidden = pnn->cHidden;
-  unsigned int i, j;
+  const int cHidden = pnn->cHidden;
+  int i, j;
   float* prWeight = pnn->arHiddenWeight;
   __m128 vec0, vec1, vec3, sum;
 
@@ -396,7 +396,7 @@ NeuralNetEvaluateSSE(const neuralnet *pnn, float arInput[], float arOutput[])
 
 #else
 
-int NeuralNetEvaluateSSE(const neuralnet *pnn, float arInput[], float arOutput[]) {
+int NeuralNetEvaluateSSE(const neuralnet *pnn __attribute__((unused)), float arInput[] __attribute__((unused)), float arOutput[] __attribute__((unused))) {
   assert(0);
 }
 
