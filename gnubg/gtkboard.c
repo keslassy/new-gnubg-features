@@ -3172,7 +3172,9 @@ board_size_allocate(GtkWidget * board, GtkAllocation * allocation)
     GtkAllocation child_allocation;
     GtkRequisition requisition;
 
+#if GTK_CHECK_VERSION(3,0,0)
     GTK_WIDGET_CLASS(board_parent_class)->size_allocate(board, allocation);
+#endif
     gtk_widget_set_allocation(board, allocation);
 
     /* position ID, match ID: just below toolbar */
