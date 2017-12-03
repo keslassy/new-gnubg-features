@@ -382,7 +382,7 @@ float rContactX = 0.68f;
 static inline int
 msb32(int n)
 {
-    return 31 - __builtin_clz(n);
+    return 31 - __builtin_clz(n);  /* or __builtin_clz() ^ 31 */
 }
 #else
 /* from rosettacode.org */
@@ -3768,7 +3768,7 @@ Cl2CfMatchCentered(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
 
     } else if (arOutput[OUTPUT_WIN] < rTG) {
 
-        /* In double window */
+        /* In doubling window */
 
         rMWCLive = rMWCOppCash + (rMWCCash - rMWCOppCash) * (arOutput[OUTPUT_WIN] - rOppTG) / (rTG - rOppTG);
         return rMWCDead * (1.0f - rCubeX) + rMWCLive * rCubeX;
@@ -5292,9 +5292,17 @@ static int EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard, 
 /* Functions that have both locking and non-locking versions below here */
 
 static int ScoreMoves(movelist * pml, const cubeinfo * pci, const evalcontext * pec, int nPlies);
-static int ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi);
-
-#define PRUNE_MOVES 10
+static int ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi, unsigned int prune_moves);
+/*
+   The pruning nets select the best MIN_PRUNE_MOVES +
+   floor(log2(number of legal moves)) moves instead of 10 as they used
+   to do.  A value of 5 for MIN_PRUNE_MOVES brings a small speed-up
+   and, according to the Depreli benchmark, an insignificant strength
+   improvement.  Using a lower value causes a measurable degradation
+   of play. Using a higher one doesn't significantly improve it.
+*/
+#define MIN_PRUNE_MOVES 5
+#define MAX_PRUNE_MOVES (MIN_PRUNE_MOVES + 11)
 
 static SIMD_AVX_STACKALIGN void
 FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const TanBoard anBoardIn,
@@ -5303,7 +5311,8 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
     unsigned int i;
     movelist ml;
     positionclass evalClass = CLASS_OVER;
-    unsigned int bmovesi[PRUNE_MOVES];
+    unsigned int bmovesi[MAX_PRUNE_MOVES];
+    unsigned int prune_moves;
 
     GenerateMoves(&ml, anBoardIn, nDice0, nDice1, FALSE);
 
@@ -5319,7 +5328,10 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
         return;
     }
 
-    if (ml.cMoves <= PRUNE_MOVES) {
+    /* LogCube() is floor(log2()) */
+    prune_moves = MIN_PRUNE_MOVES + LogCube(ml.cMoves);
+
+    if (ml.cMoves <= prune_moves) {
         ScoreMoves(&ml, pci, pec, 0);
         PositionFromKey(anBoardOut, &ml.amMoves[ml.iMoveBest].key);
         return;
@@ -5374,16 +5386,16 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
             CacheAdd(&cpEval, &ec, l);
         }
         pm->rScore = UtilityME(arOutput, pci);
-        if (i < PRUNE_MOVES) {
+        if (i < prune_moves) {
             bmovesi[i] = i;
             if (pm->rScore > ml.amMoves[bmovesi[0]].rScore) {
                 bmovesi[i] = bmovesi[0];
                 bmovesi[0] = i;
             }
         } else if (pm->rScore < ml.amMoves[bmovesi[0]].rScore) {
-            int m = 0, k;
+            unsigned int m = 0, k;
             bmovesi[0] = i;
-            for (k = 1; k < PRUNE_MOVES; ++k) {
+            for (k = 1; k < prune_moves; ++k) {
                 if (ml.amMoves[bmovesi[k]].rScore > ml.amMoves[bmovesi[m]].rScore) {
                     m = k;
                 }
@@ -5396,7 +5408,7 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
     pci->fMove = !pci->fMove;
 
     if (i == ml.cMoves)
-        ScoreMovesPruned(&ml, pci, pec, bmovesi);
+        ScoreMovesPruned(&ml, pci, pec, bmovesi, prune_moves);
     else
         ScoreMoves(&ml, pci, pec, 0);
 
@@ -5618,7 +5630,7 @@ ScoreMoves(movelist * pml, const cubeinfo * pci, const evalcontext * pec, int nP
 }
 
 static int
-ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi)
+ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi, unsigned int prune_moves)
 {
     unsigned int i, j;
     int r = 0;                  /* return value */
@@ -5629,7 +5641,7 @@ ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, 
     /* start incremental evaluations */
     nnStates[0].state = nnStates[1].state = nnStates[2].state = NNSTATE_INCREMENTAL;
 
-    for (j = 0; j < PRUNE_MOVES; j++) {
+    for (j = 0; j < prune_moves; j++) {
 
         i = bmovesi[j];
 

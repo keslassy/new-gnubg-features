@@ -1,3 +1,10 @@
+2017-12-03  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* eval.c: Tune the number of candidate moves selected by the
+	pruning nets depending on the number of legal moves in the
+	position. This slightly improves evaluations speed without
+	degrading the playing strength.
+
 2017-08-26  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gtkgame.c: When entering edit mode via New / Edit position
