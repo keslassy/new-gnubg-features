@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 23:56+0200\n"
+"POT-Creation-Date: 2017-12-05 07:25-0700\n"
 "PO-Revision-Date: 2006-04-25 16:26+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -304,8 +304,8 @@ msgstr "Wurf"
 
 #: bearoff.c:632 bearoff.c:649 bearoff.c:658 format.c:796 formatgs.c:201
 #: formatgs.c:307 formatgs.c:354 formatgs.c:368 formatgs.c:416 formatgs.c:430
-#: formatgs.c:460 formatgs.c:486 formatgs.c:501 formatgs.c:516 gtkboard.c:638
-#: gtkboard.c:639 html.c:1863 html.c:2673 progress.c:829 progress.c:831
+#: formatgs.c:460 formatgs.c:486 formatgs.c:501 formatgs.c:516 gtkboard.c:637
+#: gtkboard.c:638 html.c:1863 html.c:2673 progress.c:829 progress.c:831
 #: progress.c:839
 #, c-format
 msgid "n/a"
@@ -531,45 +531,45 @@ msgstr "Übersetzung"
 msgid "Support"
 msgstr "Support"
 
-#: dbprovider.c:262
+#: dbprovider.c:273
 msgid "Error importing 'main' module"
 msgstr ""
 
-#: dbprovider.c:350
+#: dbprovider.c:361
 msgid "Error connecting to database"
 msgstr "Fehler beim Verbinden zur Datenbank"
 
-#: dbprovider.c:421
+#: dbprovider.c:432
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr ""
 "Windows Sockets Fehler (%s):\n"
 "%s"
 
-#: dbprovider.c:426 dbprovider.c:435
+#: dbprovider.c:437 dbprovider.c:446
 #, fuzzy, c-format
 msgid "invalid Python return"
 msgstr "Ungültiger Rückgabewert"
 
-#: dbprovider.c:446
+#: dbprovider.c:457
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Fehler im Element Nr.%d\n"
 
-#: dbprovider.c:456
+#: dbprovider.c:467
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Fehler im Unterelement Nr (%d, %d)\n"
 
-#: dbprovider.c:469
+#: dbprovider.c:480
 msgid "none"
 msgstr "nichts"
 
-#: dbprovider.c:471
+#: dbprovider.c:482
 msgid "unknown type"
 msgstr "Unbekannter Typ"
 
-#: dbprovider.c:478
+#: dbprovider.c:489
 #, fuzzy, c-format
 msgid "Item %d is not a list\n"
 msgstr "Element Nr.%d is keine Sequenz\n"
@@ -996,7 +996,7 @@ msgstr "Alle Doppler-Entscheidungen:"
 msgid "Cubeful"
 msgstr "Mit Doppler"
 
-#: eval.c:4121 gtkmovelistctrl.c:303 html.c:295 progress.c:702 show.c:119
+#: eval.c:4121 gtkmovelistctrl.c:305 html.c:295 progress.c:702 show.c:119
 msgid "Cubeless"
 msgstr "Ohne Doppler"
 
@@ -1179,7 +1179,7 @@ msgstr "Ply"
 
 #: format.c:302 gnubg.c:1452 gnubg.c:1460 gnubg.c:2743 gnubg.c:2751
 #: gtkgame.c:3362 gtkgame.c:3376 gtkoptions.c:419 gtkprefs.c:3100
-#: gtkprefs.c:3110 gtktheory.c:704 progress.c:256 progress.c:351
+#: gtkprefs.c:3110 gtktheory.c:709 progress.c:256 progress.c:351
 msgid "Cube"
 msgstr "Doppler"
 
@@ -2603,44 +2603,44 @@ msgstr "Lehne ab"
 msgid "_Resign"
 msgstr "Aufgeben"
 
-#: gtkboard.c:627
+#: gtkboard.c:626
 #, c-format
 msgid "(no hit: %d roll)"
 msgid_plural "(no hit: %d rolls)"
 msgstr[0] "(kein Treffer: %d Würfe)"
 msgstr[1] "(kein Treffer: %d Würfe)"
 
-#: gtkboard.c:640 gtkboard.c:641 gtkboard.c:653 gtkboard.c:654
+#: gtkboard.c:639 gtkboard.c:640 gtkboard.c:652 gtkboard.c:653
 #, fuzzy, c-format
 msgid "Pips: "
 msgstr "Pips:"
 
-#: gtkboard.c:669 gtkboard.c:670 gtkboard.c:689 gtkboard.c:690
+#: gtkboard.c:668 gtkboard.c:669 gtkboard.c:688 gtkboard.c:689
 #, fuzzy, c-format
 msgid "EPC: "
 msgstr "EPC"
 
-#: gtkboard.c:732
+#: gtkboard.c:731
 msgid "Illegal move"
 msgstr "Illegaler Zug"
 
-#: gtkboard.c:745
+#: gtkboard.c:744
 msgid "(Editing)"
 msgstr "(Editieren)"
 
-#: gtkboard.c:772
+#: gtkboard.c:771
 #, c-format
 msgid "Return hits: %s\n"
 msgstr "Treffer (zurück): %s\n"
 
-#: gtkboard.c:1870 play.c:2603
+#: gtkboard.c:1869 play.c:2603
 msgid "You must roll the dice before you can move."
 msgstr "Du musst würfeln, bevor Du einen Zug machen kannst."
 
 #. calling CommandPlay here may lead to crashes if
 #. * the click is in the small time frame between end
 #. * of player turn and next computer turn
-#: gtkboard.c:1882 play.c:1908 play.c:2270 play.c:2326 play.c:2432 play.c:2598
+#: gtkboard.c:1881 play.c:1908 play.c:2270 play.c:2326 play.c:2432 play.c:2598
 #: play.c:3702 play.c:3757 play.c:3824 play.c:3928
 msgid ""
 "It is the computer's turn -- type `play' to force it to move immediately."
@@ -2648,58 +2648,58 @@ msgstr ""
 "Der Computer ist am Zug -- gebe `play' ein, um ihn zum sofortigen Ziehen zu "
 "zwingen."
 
-#: gtkboard.c:2270 gtkboard.c:2276
+#: gtkboard.c:2269 gtkboard.c:2275
 #, c-format
 msgid "%d (won match)"
 msgstr "%d (gewann das Match)"
 
-#: gtkboard.c:2272 gtkboard.c:2278
+#: gtkboard.c:2271 gtkboard.c:2277
 #, c-format
 msgid "%d (%d-away)"
 msgstr "%d -(%d- weg)"
 
-#: gtkboard.c:2508
+#: gtkboard.c:2507
 msgid "unlimited"
 msgstr "unbegrenzt"
 
-#: gtkboard.c:3387
+#: gtkboard.c:3388
 msgid "You can only change whether this is the Crawford game when editing"
 msgstr "Du kannst nur festlegen, ob dies die 'Crawford'-Partie ist"
 
-#: gtkboard.c:3398
+#: gtkboard.c:3399
 msgid "You can only enable Jacoby while editing a position"
 msgstr ""
 
-#: gtkboard.c:3674
+#: gtkboard.c:3675
 #, c-format
 msgid "Set player %d on roll."
 msgstr "Setze Spieler %d am Wurf"
 
 #. score label
-#: gtkboard.c:3782 gtkboard.c:3865
+#: gtkboard.c:3783 gtkboard.c:3866
 msgid "Score:"
 msgstr "Spielstand:"
 
-#: gtkboard.c:3926
+#: gtkboard.c:3927
 msgid "Match:"
 msgstr "Match:"
 
 #. crawford and jacoby flag
-#: gtkboard.c:3941 gtktheory.c:700
+#: gtkboard.c:3942 gtktheory.c:705
 msgid "Crawford game"
 msgstr "Crawford Partie"
 
-#: gtkboard.c:3942
+#: gtkboard.c:3943
 #, fuzzy
 msgid "Jacoby"
 msgstr "Jacoby-Regel"
 
-#: gtkboard.c:4235 gtkboard.c:4250
+#: gtkboard.c:4236 gtkboard.c:4251
 #, fuzzy, c-format
 msgid "%s wins opening roll"
 msgstr "%s ist am Wurf.\n"
 
-#: gtkboard.c:4242 gtkboard.c:4254
+#: gtkboard.c:4243 gtkboard.c:4255
 #, fuzzy, c-format
 msgid "%s to roll"
 msgstr "%s ist am Wurf:"
@@ -3459,7 +3459,7 @@ msgstr "Deterministischer \"Lärm\""
 #, fuzzy
 msgid ""
 "GNU Backgammon will evaluate all moves at 0-ply. The move filter controls "
-"how many moves will be evaluted at higher plies. A \"smaller\" filter will "
+"how many moves will be evaluated at higher plies. A \"smaller\" filter will "
 "be faster, but GNU Backgammon may not find the best move. Power users may "
 "set up their own filters by clicking on the [Modify] button."
 msgstr ""
@@ -5810,7 +5810,7 @@ msgid "Specify the default length to use when starting new matches."
 msgstr "Bestimme die vorgegebene Länge für den Start neuer Matches."
 
 #. match equity table
-#: gtkoptions.c:799 gtktheory.c:734
+#: gtkoptions.c:799 gtktheory.c:739
 msgid "Match equity table"
 msgstr "Matchequity-Tabelle"
 
@@ -6222,7 +6222,7 @@ msgid "Kleinman count"
 msgstr "Kleinman Count"
 
 #. create dialog
-#: gtkpanels.c:406 gtktheory.c:609
+#: gtkpanels.c:406 gtktheory.c:614
 msgid "GNU Backgammon - Theory"
 msgstr "GNU Backgammon - Theorie"
 
@@ -7423,20 +7423,20 @@ msgid "Calculating equities for %s"
 msgstr "Kalkuliere die Gewinnerwartungen für %s"
 
 #. dialog
-#: gtktempmap.c:589
+#: gtktempmap.c:590
 msgid "Sho Sengoku Temperature Map - Distribution of rolls"
 msgstr "Zeige die \"Sho Sengoku Temperature Map\" - Verteilung der Würfe"
 
-#: gtktempmap.c:774 gtktheory.c:832
+#: gtktempmap.c:775 gtktheory.c:837
 #, c-format
 msgid "%d ply"
 msgstr "%d Ply"
 
-#: gtktempmap.c:802
+#: gtktempmap.c:803
 msgid "Show equities"
 msgstr "Zeige Gewinnerwartungen"
 
-#: gtktempmap.c:809
+#: gtktempmap.c:810
 msgid "Show best move"
 msgstr "Zeige den besten Zug"
 
@@ -7517,76 +7517,76 @@ msgstr ""
 msgid "Doubled cube"
 msgstr "Doppler auf einer Seite"
 
-#: gtktheory.c:565
+#: gtktheory.c:570
 msgid "Evaluating gammon percentages"
 msgstr "Beurteile die Anzahl Gammons (in Prozent)"
 
-#: gtktheory.c:642
+#: gtktheory.c:647
 msgid "Match play"
 msgstr "Matches"
 
-#: gtktheory.c:645
+#: gtktheory.c:650
 msgid "Money game"
 msgstr "Moneygame"
 
-#: gtktheory.c:651
+#: gtktheory.c:656
 msgid "Reset"
 msgstr "Zurücksetzen"
 
 #. match score widget
-#: gtktheory.c:656
+#: gtktheory.c:661
 msgid "Match score"
 msgstr "Spielstand im Match"
 
-#: gtktheory.c:685
+#: gtktheory.c:690
 msgid "-away"
 msgstr "- weg"
 
 #. money play widget
-#: gtktheory.c:754
+#: gtktheory.c:759
 msgid "Money play"
 msgstr "Spiel um Geld"
 
-#: gtktheory.c:764 html.c:3160
+#: gtktheory.c:769 html.c:3160
 msgid "Jacoby rule"
 msgstr "Jacoby-Regel"
 
-#: gtktheory.c:769
+#: gtktheory.c:774
 msgid "Beavers allowed"
 msgstr "Beaver sind erlaubt"
 
 #. gammon and backgammon percentages
-#: gtktheory.c:775
+#: gtktheory.c:780
 msgid "Gammon and backgammon percentages"
 msgstr "Prozente Gammons und Backgammons"
 
-#: gtktheory.c:801
+#: gtktheory.c:806
 msgid "bg rate(%)"
 msgstr "bg-Rate(%)"
 
-#: gtktheory.c:802
+#: gtktheory.c:807
 msgid "gammon rate(%)"
 msgstr "Gammon-Rate(%)"
 
-#: gtktheory.c:864
+#: gtktheory.c:869
 msgid "Market window"
 msgstr "Marktfenster"
 
-#: gtktheory.c:870
+#: gtktheory.c:875
 #, c-format
 msgid "Market window for player %s"
 msgstr "Marktfenster für Spieler %s"
 
-#: gtktheory.c:885
+#: gtktheory.c:890
 msgid "Window graph"
 msgstr "Grafische Darstellung"
 
-#: gtktheory.c:888
+#: gtktheory.c:893
 #, c-format
 msgid "Window graph for player %s"
 msgstr "Grafische Darstellung für Spieler %s"
 
-#: gtktheory.c:922
+#: gtktheory.c:927
 msgid "Gammon values"
 msgstr "Gammon-Werte"
 
@@ -8444,112 +8444,112 @@ msgstr ""
 msgid "Size of xhash"
 msgstr "Grösse der PNG-Images:"
 
-#: makehyper.c:186
+#: makehyper.c:187
 #, fuzzy
 msgid "Number of game-over positions"
 msgstr "Anzahl der Partien mit Treffer(n)"
 
-#: makehyper.c:187
+#: makehyper.c:188
 #, fuzzy
 msgid "Number of non-contact positions"
 msgstr "Doppler-Effektivität für Kontakt-Positonen"
 
-#: makehyper.c:188
+#: makehyper.c:189
 #, fuzzy
 msgid "Number of contact positions"
 msgstr "Doppler-Effektivität für Kontakt-Positonen"
 
-#: makehyper.c:189
+#: makehyper.c:190
 #, fuzzy
 msgid "Total number of legal positions"
 msgstr "Gesamtanzahl der \"einseitigen\" Positionen: %d\n"
 
-#: makehyper.c:190
+#: makehyper.c:191
 #, fuzzy
 msgid "Number of illegal positions"
 msgstr "Illegale Position."
 
-#: makehyper.c:191
+#: makehyper.c:192
 #, fuzzy
 msgid "Total number of positions in file"
 msgstr "Gesamtanzahl der \"einseitigen\" Positionen: %d\n"
 
-#: makehyper.c:644
+#: makehyper.c:645
 #, c-format
 msgid "Number of chequers: %d\n"
 msgstr "Anzahl der Chequer: %d\n"
 
-#: makehyper.c:648
+#: makehyper.c:649
 #, fuzzy
 msgid "Total number of one sided positions"
 msgstr "Gesamtanzahl der \"einseitigen\" Positionen: %d\n"
 
-#: makehyper.c:649
+#: makehyper.c:650
 #, fuzzy
 msgid "Total number of two sided positions"
 msgstr "Gesamtanzahl der \"zweiseitigen\" Positionen: %d\n"
 
-#: makehyper.c:650
+#: makehyper.c:651
 #, fuzzy
 msgid "Estimated size of file"
 msgstr "Geschätzte verbleibende Zeit"
 
-#: makehyper.c:650
+#: makehyper.c:651
 #, fuzzy
 msgid "bytes"
 msgstr "ja"
 
-#: makehyper.c:651
+#: makehyper.c:652
 #, fuzzy
 msgid "Output file"
 msgstr "Support"
 
-#: makehyper.c:652
+#: makehyper.c:653
 #, fuzzy
 msgid "Convergence threshold"
 msgstr "Fehlerschwelle %f.\n"
 
-#: makehyper.c:658
+#: makehyper.c:659
 #, c-format
 msgid "*** Obtain start guess ***\n"
 msgstr ""
 
-#: makehyper.c:666
+#: makehyper.c:667
 #, c-format
 msgid "0-vector start guess\n"
 msgstr ""
 
-#: makehyper.c:669
+#: makehyper.c:670
 #, c-format
 msgid "Start from file\n"
 msgstr "Starte mit der Datei\n"
 
-#: makehyper.c:675
+#: makehyper.c:676
 #, c-format
 msgid "Time for start guess: %d seconds\n"
 msgstr ""
 
-#: makehyper.c:683
+#: makehyper.c:684
 #, c-format
 msgid "*** Iteration %03d *** \n"
 msgstr "***Wiederholung %03d*** \n"
 
-#: makehyper.c:689
+#: makehyper.c:690
 #, c-format
 msgid "norm of delta: %f\n"
 msgstr ""
 
-#: makehyper.c:702
+#: makehyper.c:703
 #, c-format
 msgid "Time for iteration %03d: %d seconds\n"
 msgstr ""
 
-#: makehyper.c:714
+#: makehyper.c:715
 #, c-format
 msgid "Time for writing final file: %d seconds\n"
 msgstr "Zeit für das Schreiben der endgültigen Datei: %d Sekunden\n"
 
-#: makehyper.c:721
+#: makehyper.c:722
 #, c-format
 msgid "Total time: %d seconds\n"
 msgstr "Gesamtzeit: %d Sekunden\n"

@@ -1,3 +1,9 @@
+2017-12-05  Michael Petch  <mpetch@gnubg.org>
+
+	* doc/gnubg/*, po/*
+	Update static documentation files and translation files
+	Version 1.06.000 released
+
 2017-12-03  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* eval.c: Tune the number of candidate moves selected by the
