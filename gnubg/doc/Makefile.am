@@ -4,7 +4,7 @@ AM_CPPFLAGS = -DAC_DOCDIR='"$(docdir)"' -DAC_DATADIR='"$(datadir)"' -DAC_PKGDATA
 
 gnubg_helpdir = $(docdir)
 gnubg_imagedir = $(docdir)/images
-gnubg_help_DATA =  gnubg.html allabout.html
+gnubg_help_DATA =  gnubg.html allabout.html gnubg.pdf allabout.pdf
 gnubg_image_DATA = images/1540d81e.png images/16d7944c.png images/1805dc7d.png \
 		   images/20bc52ca.png images/20d56757.png images/234924dc.png images/26e34ea5.png \
 		   images/29c6aa57.png images/2d9edbab.png images/2dd86698.png images/2e6307ae.png \
