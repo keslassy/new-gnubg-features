@@ -714,7 +714,10 @@ extern void *
 InitRNG(unsigned long *pnSeed, int *pfInitFrom, const int fSet, const rng rngx)
 {
     int f = FALSE;
-    rngcontext *rngctx = g_new0(rngcontext, 1);
+    rngcontext *rngctx = g_try_new0(rngcontext, 1);
+
+    if (rngctx == NULL)
+        return NULL;
 
     /* misc. initialisation */
 
@@ -739,7 +742,6 @@ InitRNG(unsigned long *pnSeed, int *pfInitFrom, const int fSet, const rng rngx)
         *pfInitFrom = f;
 
     return rngctx;
-
 }
 
 extern int
