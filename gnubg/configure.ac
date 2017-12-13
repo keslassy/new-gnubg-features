@@ -549,7 +549,7 @@ if test x"$enable_gasserts" != x"yes"; then
 fi
 AS_IF( [test x"$enable_gasserts" != x"yes"], [AC_MSG_RESULT($gasserts)], [AC_MSG_RESULT(yes)] )
 
-dnl Compiling with -O3 makes a useful difference with gcc, clang and Sun's	 AC_SUBST(AM_CFLAGS)
+dnl Compiling with -O3 makes a useful difference with gcc, clang and Sun's
 dnl compiler ; -ffast-math helps as well when available.	 
 dnl For instance, some match analysis on a Core i5 CPU (gcc 4.4.7, -mavx) :	 
 dnl -O2             1:23	 
