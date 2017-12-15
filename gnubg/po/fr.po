@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-05 07:25-0700\n"
+"POT-Creation-Date: 2017-12-15 07:13+0100\n"
 "PO-Revision-Date: 2017-10-22 23:13+0200\n"
 "Last-Translator: Philippe Michel <philippe.michel7@sfr.fr>\n"
 "Language-Team: <fr@li.org>\n"
@@ -626,13 +626,13 @@ msgstr "GNU Backgammon lit les dés dans le fichier : %s"
 msgid "You cannot show the seed with this random number generator."
 msgstr "La graine n'est pas visible avec ce générateur de nombres aléatoires."
 
-#: dice.c:831
+#: dice.c:833
 #, c-format
 msgid "Your dice generator isn't working. Failing back on RNG_MERSENNE"
 msgstr ""
 
 #. end of file
-#: dice.c:861
+#: dice.c:863
 #, c-format
 msgid "Rewinding dice file (%s)"
 msgstr "Retour au début du fichier de dés (%s)"
@@ -2607,7 +2607,7 @@ msgstr "Accepte"
 
 #: gtkcube.c:104 gtkcube.c:305 gtkrelational.c:58
 msgid "Pass"
-msgstr "Passés"
+msgstr "Passe"
 
 #. header
 #: gtkcube.c:121
@@ -3320,7 +3320,7 @@ msgstr ""
 
 #: gtkgame.c:2861
 msgid "Default Name:"
-msgstr ""
+msgstr "Nom :"
 
 #: gtkgame.c:2865
 msgid "Human"
@@ -4548,7 +4548,7 @@ msgstr "Réglages généraux"
 
 #: gtkgame.c:5408
 msgid "Play settings"
-msgstr ""
+msgstr "Réglages du jeu"
 
 #: gtkgame.c:5415
 msgid "First Play (1) "
@@ -6662,7 +6662,7 @@ msgstr "Importe le thème"
 
 #: gtkprefs.c:3084
 msgid "Lighting"
-msgstr ""
+msgstr "Eclairage"
 
 #: gtkprefs.c:3090
 msgid "Designs"
@@ -6694,7 +6694,7 @@ msgstr "Pions (1)"
 
 #: gtkprefs.c:3215
 msgid "General"
-msgstr "Générale"
+msgstr "Général"
 
 #: gtkrace.c:150
 #, c-format
@@ -7373,7 +7373,7 @@ msgstr "Type de board inconnu\n"
 #: html.c:1445
 #, c-format
 msgid "Move number %d:"
-msgstr "Numéro de déplacement %d :"
+msgstr "Coup numéro %d :"
 
 #: html.c:1454 text.c:159
 #, fuzzy, c-format
@@ -7413,8 +7413,8 @@ msgstr[1] "The score (after %d games) is: %s %d, %s %d"
 #, c-format
 msgid " (match to %d point%s)"
 msgid_plural " (match to %d points%s)"
-msgstr[0] "(match en %d point%s)"
-msgstr[1] "(match en %d points%s)"
+msgstr[0] " (match en %d point%s)"
+msgstr[1] " (match en %d points%s)"
 
 #: html.c:1514 html.c:3156 show.c:902 text.c:207
 msgid ", Crawford game"
@@ -11299,7 +11299,7 @@ msgstr ""
 #: show.c:895 text.c:200
 #, c-format
 msgid "The score (after %d games) is: %s %d, %s %d"
-msgstr "Le score (après %d parties) est de : %s %d, %s %d"
+msgstr "Le score (après %d parties) est : %s %d, %s %d"
 
 #: show.c:900
 #, c-format
@@ -12062,15 +12062,15 @@ msgstr "Arrêt de GNU Backgammon"
 
 #: sound.c:347
 msgid "Agree"
-msgstr "D'accord"
+msgstr "Accepte l'abandon"
 
 #: sound.c:348
 msgid "Doubling"
-msgstr ""
+msgstr "Double"
 
 #: sound.c:350
 msgid "Chequer movement"
-msgstr "Déplecement du pion"
+msgstr "Déplacement de pion"
 
 #: sound.c:352
 msgid "Redouble"
