@@ -404,10 +404,9 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
         vec1 = _mm256_hadd_ps(vec0, vec0);
         _mm256_store_ps(r, vec1);
 
-        _mm256_zeroupper();
-
         arOutput[i] = sigmoid(-pnn->rBetaOutput * (r[0] + r[4] + pnn->arOutputThreshold[i]));
 
+        _mm256_zeroupper();
 #else
         vec0 = _mm_shuffle_ps(sum, sum, _MM_SHUFFLE(2, 3, 0, 1));
         vec1 = _mm_add_ps(sum, vec0);
