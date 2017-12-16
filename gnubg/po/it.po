@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-05 07:25-0700\n"
+"POT-Creation-Date: 2017-12-16 11:54-0700\n"
 "PO-Revision-Date: 2009-02-07 00:16+0100\n"
 "Last-Translator: Renzo Campagna <renzo.camp@tin.it>\n"
 "Language-Team: Italiano <renzo.camp@tin.it>\n"
@@ -638,13 +638,13 @@ msgstr "GNU Backgammon legge i dadi dal file: %s"
 msgid "You cannot show the seed with this random number generator."
 msgstr "Non puoi visualizzare il seed con questo generatore casuale di numeri."
 
-#: dice.c:831
+#: dice.c:833
 #, c-format
 msgid "Your dice generator isn't working. Failing back on RNG_MERSENNE"
 msgstr ""
 
 #. end of file
-#: dice.c:861
+#: dice.c:863
 #, c-format
 msgid "Rewinding dice file (%s)"
 msgstr "Rivedo il file dei dadi (%s)"

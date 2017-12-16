@@ -1,3 +1,14 @@
+2017-12-16  Michael Petch  <mpetch@gnubg.org>
+
+	* doc/gnubg/*, po/*
+	Update static documentation files and translation files
+	Version 1.06.001 released
+
+2017-12-15  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* lib/neuralnetsse.c : Work around AVX issue when generating
+    code with GCC 7.x and 8.x
+
 2017-12-05  Michael Petch  <mpetch@gnubg.org>
 
 	* doc/gnubg/*, po/*
