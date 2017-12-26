@@ -1446,7 +1446,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
             bd->diceRoll[0] = bd->diceRoll[1] = 0;
             bd->diceShown = DICE_BELOW_BOARD;
             bd->turn = 1;
-            ms.nCube = 0;
+            ms.nCube = 1;
             bd->cube = 0;
             ms.fCubeOwner = -1;
             bd->cube_owner = 0;
@@ -1462,7 +1462,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
             bd->diceRoll[0] = bd->diceRoll[1] = 0;
             bd->diceShown = DICE_BELOW_BOARD;
             bd->turn = 1;
-            ms.nCube = 0;
+            ms.nCube = 1;
             bd->cube = 0;
             ms.fCubeOwner = -1;
             bd->cube_owner = 0;
