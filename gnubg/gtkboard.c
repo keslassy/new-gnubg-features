@@ -1433,6 +1433,8 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
         n = board_point_with_border(board, bd, x, y);
 
     if (!dragging && (n == POINT_UNUSED0 || n == POINT_UNUSED1 || n == 26 || n == 27)) {
+        board_invalidate_dice(bd);
+        board_invalidate_cube(bd);
         if (n == 26 || n == 27) {       /* click on bearoff tray in edit mode -- bear off all chequers */
             for (i = 0; i < 26; i++) {
                 bd->points[i] = 0;
@@ -1474,8 +1476,11 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
             RestrictiveRedraw();
         else
 #endif
-            for (i = 0; i < 28; i++)
-                board_invalidate_point(bd, i);
+           {
+                board_invalidate_cube(bd);
+                for (i = 0; i < 28; i++)
+                    board_invalidate_point(bd, i);
+           }
 
         updateBoard(board, bd);
     }
