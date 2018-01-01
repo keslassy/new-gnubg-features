@@ -28,9 +28,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#if defined(USE_GTK)
-#include <gtkgame.h>
-#endif
 
 #include "rollout.h"
 #include "util.h"
@@ -489,9 +486,6 @@ multi_debug(const char *str, ...)
 #else
 #include "multithread.h"
 #include <stdlib.h>
-#if defined(USE_GTK)
-#include <gtkgame.h>
-#endif
 
 SSE_ALIGN(ThreadData td);
 
