@@ -34,7 +34,8 @@
 
 #define UI_UPDATETIME 250
 
-/*#define DEBUG_MULTITHREADED 1 */
+/* #define DEBUG_MULTITHREADED 1 */
+
 #if defined (USE_MULTITHREAD) && defined(DEBUG_MULTITHREADED)
 void multi_debug(const char *str, ...);
 #else
@@ -70,6 +71,7 @@ typedef struct _ManualEvent {
 #endif
     int signalled;
 } *ManualEvent;
+
 typedef GPrivate *TLSItem;
 
 #if GLIB_CHECK_VERSION (2,32,0)
@@ -77,7 +79,8 @@ typedef GMutex Mutex;
 #else
 typedef GMutex *Mutex;
 #endif
-#elif defined(WIN32)            /* GLIB_THREAD */
+
+#elif defined(WIN32)
 typedef HANDLE ManualEvent;
 typedef DWORD TLSItem;
 typedef HANDLE Event;
@@ -88,15 +91,13 @@ typedef HANDLE Mutex;
 extern void TLSSetValue(TLSItem pItem, int value);
 
 #if defined (DEBUG_MULTITHREADED)
-extern void Mutex_Lock(Mutex mutex, const char *reason);
+extern void Mutex_Lock(Mutex mutex);
 #else
-#define Mutex_Lock(mutex, reason) WaitForSingleObject(mutex, INFINITE)
+#define Mutex_Lock(mutex) WaitForSingleObject(mutex, INFINITE)
 #define Mutex_Release(mutex) ReleaseMutex(mutex)
 #endif
 
 #endif
-
-#if defined(USE_MULTITHREAD)
 
 typedef struct _ThreadData {
     int doneTasks;
@@ -104,6 +105,7 @@ typedef struct _ThreadData {
     int result;
     ThreadLocalData *tld;
 
+#if defined(USE_MULTITHREAD)
     ManualEvent activity;
     TLSItem tlsItem;
     Mutex queueLock;
@@ -116,15 +118,8 @@ typedef struct _ThreadData {
 
     int closingThreads;
     unsigned int numThreads;
-} ThreadData;
-#else
-typedef struct _ThreadData {
-    int doneTasks;
-    GList *tasks;
-    int result;
-    ThreadLocalData *tld;
-} ThreadData;
 #endif
+} ThreadData;
 
 extern int MT_GetDoneTasks(void);
 extern void MT_AbortTasks(void);
@@ -143,7 +138,7 @@ extern ThreadData td;
 
 #if defined(GLIB_THREADS)
 extern void ResetManualEvent(ManualEvent ME);
-extern void Mutex_Lock(Mutex *mutex, const char *reason);
+extern void Mutex_Lock(Mutex *mutex);
 extern void Mutex_Release(Mutex *mutex);
 extern void WaitForManualEvent(ManualEvent ME);
 extern void SetManualEvent(ManualEvent ME);
@@ -167,7 +162,6 @@ extern void FreeMutex(Mutex * mutex);
 #if !defined(MAX_NUMTHREADS)
 #define MAX_NUMTHREADS 48
 #endif
-
 
 extern void MT_Release(void);
 extern void MT_Exclusive(void);

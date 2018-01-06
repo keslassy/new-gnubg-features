@@ -24,7 +24,7 @@
 
 #include "config.h"
 
-#ifdef WIN32
+#if defined(WIN32)
 #include <process.h>
 #endif
 #include <stdlib.h>
@@ -72,7 +72,9 @@ MT_GetTask(void)
 {
     Task *task = NULL;
 
-    Mutex_Lock(&td.queueLock, "get task");
+    multi_debug("get task asks lock (queueLock)");
+    Mutex_Lock(&td.queueLock);
+    multi_debug("get task gets lock (queueLock)");
 
     if (g_list_length(td.tasks) > 0) {
         task = (Task *) g_list_first(td.tasks)->data;
@@ -82,8 +84,8 @@ MT_GetTask(void)
         }
     }
 
-    multi_debug("get task: release");
     Mutex_Release(&td.queueLock);
+    multi_debug("get task unlocks (queueLock)");
 
     return task;
 }
@@ -99,7 +101,7 @@ MT_AbortTasks(void)
     td.result = -1;
 }
 
-#ifdef GLIB_THREADS
+#if defined(GLIB_THREADS)
 static SIMD_STACKALIGN gpointer
 MT_WorkerThreadFunction(void *tld)
 #else
@@ -138,7 +140,7 @@ MT_WorkerThreadFunction(void *tld)
             }
         } while (!td.closingThreads);
 
-#ifdef GLIB_THREADS
+#if defined(GLIB_THREADS)
 #if 0
 #if __GNUC__ && defined(WIN32)
         /* De-align stack pointer to avoid crash on exit */
@@ -167,7 +169,7 @@ MT_CreateThreads(void)
     for (i = 0; i < td.numThreads; i++) {
         ThreadLocalData *pTLD = MT_CreateThreadLocalData(i);
 
-#ifdef GLIB_THREADS
+#if defined(GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,32,0)
         if (!g_thread_try_new("Worker", MT_WorkerThreadFunction, pTLD, NULL))
 #else
@@ -230,7 +232,7 @@ void
 MT_AddTask(Task * pt, gboolean lock)
 {
     if (lock) {
-        Mutex_Lock(&td.queueLock, "add task");
+        Mutex_Lock(&td.queueLock);
     }
     if (td.addedTasks == 0)
         td.result = 0;          /* Reset result for new tasks */
@@ -250,12 +252,12 @@ mt_add_tasks(unsigned int num_tasks, AsyncFun pFun, void *taskData, gpointer lin
 {
     unsigned int i;
     {
-#ifdef DEBUG_MULTITHREADED
-        char buf[20];
-        sprintf(buf, "add %u tasks", num_tasks);
-        Mutex_Lock(&td.queueLock, buf);
+#if defined(DEBUG_MULTITHREADED)
+        multi_debug("add %u tasks asks lock (queueLock)", num_tasks);
+        Mutex_Lock(&td.queueLock);
+        multi_debug("add tasks gets lock (queueLock)");
 #else
-        Mutex_Lock(&td.queueLock, NULL);
+        Mutex_Lock(&td.queueLock);
 #endif
     }
     for (i = 0; i < num_tasks; i++) {
@@ -265,8 +267,8 @@ mt_add_tasks(unsigned int num_tasks, AsyncFun pFun, void *taskData, gpointer lin
         pt->pLinkedTask = linked;
         MT_AddTask(pt, FALSE);
     }
-    multi_debug("add many release: lock");
     Mutex_Release(&td.queueLock);
+    multi_debug("add tasks unlocks (queueLock)");
 }
 
 static gboolean

@@ -60,13 +60,13 @@ MT_CreateThreadLocalData(int id)
     return tld;
 }
 
-#if USE_MULTITHREAD
+#if defined(USE_MULTITHREAD)
 
 #if defined(DEBUG_MULTITHREADED) && defined(WIN32)
 unsigned int mainThreadID;
 #endif
 
-#ifdef GLIB_THREADS
+#if defined(GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,32,0)
 static GMutex condMutex;        /* Extra mutex needed for waiting */
 #else
@@ -74,7 +74,7 @@ static GMutex *condMutex = NULL;        /* Extra mutex needed for waiting */
 #endif
 #endif
 
-#ifdef GLIB_THREADS
+#if defined(GLIB_THREADS)
 
 #if GLIB_CHECK_VERSION (2,32,0)
 /* Dynamic allocation of GPrivate is deprecated */
@@ -140,13 +140,14 @@ WaitForManualEvent(ManualEvent ME)
 #else
     GTimeVal tv;
 #endif
-    multi_debug("wait for manual event locks");
+    multi_debug("wait for manual event asks lock (condMutex)");
 #if GLIB_CHECK_VERSION (2,32,0)
     g_mutex_lock(&condMutex);
     end_time = g_get_monotonic_time() + 10 * G_TIME_SPAN_SECOND;
 #else
     g_mutex_lock(condMutex);
 #endif
+    multi_debug("wait for manual event gets lock (condMutex)");
     while (!ME->signalled) {
         multi_debug("waiting for manual event");
 #if GLIB_CHECK_VERSION (2,32,0)
@@ -167,41 +168,45 @@ WaitForManualEvent(ManualEvent ME)
 #else
     g_mutex_unlock(condMutex);
 #endif
-    multi_debug("wait for manual event unlocks");
+    multi_debug("wait for manual event unlocks (condMutex)");
 }
 
 extern void
 ResetManualEvent(ManualEvent ME)
 {
-    multi_debug("reset manual event locks");
+    multi_debug("reset manual event asks lock (condMutex)");
 #if GLIB_CHECK_VERSION (2,32,0)
     g_mutex_lock(&condMutex);
+    multi_debug("reset manual event gets lock (condMutex)");
     ME->signalled = FALSE;
     g_mutex_unlock(&condMutex);
 #else
     g_mutex_lock(condMutex);
+    multi_debug("reset manual event gets lock (condMutex)");
     ME->signalled = FALSE;
     g_mutex_unlock(condMutex);
 #endif
-    multi_debug("reset manual event unlocks");
+    multi_debug("reset manual event unlocks (condMutex)");
 }
 
 extern void
 SetManualEvent(ManualEvent ME)
 {
-    multi_debug("reset manual event locks");
+    multi_debug("reset manual event asks lock (condMutex)");
 #if GLIB_CHECK_VERSION (2,32,0)
     g_mutex_lock(&condMutex);
+    multi_debug("reset manual event gets lock (condMutex)");
     ME->signalled = TRUE;
     g_cond_broadcast(&ME->cond);
     g_mutex_unlock(&condMutex);
 #else
     g_mutex_lock(condMutex);
+    multi_debug("reset manual event gets lock (condMutex)");
     ME->signalled = TRUE;
     g_cond_broadcast(ME->cond);
     g_mutex_unlock(condMutex);
 #endif
-    multi_debug("reset manual event unlocks");
+    multi_debug("reset manual event unlocks (condMutex)");
 }
 
 #if GLIB_CHECK_VERSION (2,32,0)
@@ -231,13 +236,8 @@ FreeMutex(Mutex * mutex)
 #endif
 
 extern void
-Mutex_Lock(Mutex * mutex, const char *reason)
+Mutex_Lock(Mutex * mutex)
 {
-#ifdef DEBUG_MULTITHREADED
-    multi_debug(reason);
-#else
-    (void) reason;
-#endif
 #if GLIB_CHECK_VERSION (2,32,0)
     g_mutex_lock(mutex);
 #else
@@ -248,9 +248,6 @@ Mutex_Lock(Mutex * mutex, const char *reason)
 extern void
 Mutex_Release(Mutex * mutex)
 {
-#ifdef DEBUG_MULTITHREADED
-    multi_debug("Releasing lock");
-#endif
 #if GLIB_CHECK_VERSION (2,32,0)
     g_mutex_unlock(mutex);
 #else
@@ -314,23 +311,20 @@ FreeMutex(Mutex * mutex)
     CloseHandle(*mutex);
 }
 
-#ifdef DEBUG_MULTITHREADED
+#if defined(DEBUG_MULTITHREADED)
 void
-Mutex_Lock(Mutex mutex, const char *reason)
+Mutex_Lock(Mutex mutex)
 {
     if (WaitForSingleObject(mutex, 0) == WAIT_OBJECT_0) {       /* Got mutex */
-        multi_debug("%s: lock acquired", reason);
+        ;
     } else {
-        multi_debug("%s: waiting on lock", reason);
         WaitForSingleObject(mutex, INFINITE);
-        multi_debug("lock relinquished");
     }
 }
 
 void
 Mutex_Release(Mutex mutex)
 {
-    multi_debug("Releasing lock");
     ReleaseMutex(mutex);
 }
 
@@ -419,16 +413,19 @@ MT_Close(void)
 extern void
 MT_Exclusive(void)
 {
-    Mutex_Lock(&td.multiLock, "Exclusive lock");
+    multi_debug("exclusive asks lock (multiLock)");
+    Mutex_Lock(&td.multiLock);
+    multi_debug("exclusive gets lock (multiLock)");
 }
 
 extern void
 MT_Release(void)
 {
     Mutex_Release(&td.multiLock);
+    multi_debug("release unlocks (multiLock)");
 }
 
-#ifdef DEBUG_MULTITHREADED
+#if defined(DEBUG_MULTITHREADED)
 extern void
 multi_debug(const char *str, ...)
 {
@@ -438,7 +435,7 @@ multi_debug(const char *str, ...)
     char buf[1024];
 
     /* Sync output so order makes some sense */
-#ifdef WIN32
+#if defined(WIN32)
     WaitForSingleObject(td.multiLock, INFINITE);
 #endif
     /* With glib threads, locking here doesn't seem to work :
@@ -459,7 +456,7 @@ multi_debug(const char *str, ...)
     else
         sprintf(tn, "T%d", id + 1);
 
-#ifdef GLIB_THREADS
+#if defined(GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,28,0)
     printf("%" G_GINT64_FORMAT " %s: %s\n", g_get_monotonic_time(), tn, buf);
 #else
@@ -476,7 +473,7 @@ multi_debug(const char *str, ...)
 
     va_end(vl);
 
-#ifdef WIN32
+#if defined(WIN32)
     ReleaseMutex(td.multiLock);
 #endif
 }
