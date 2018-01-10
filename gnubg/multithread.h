@@ -100,8 +100,8 @@ extern void Mutex_Lock(Mutex mutex);
 #endif
 
 typedef struct _ThreadData {
-    int doneTasks;
     GList *tasks;
+    int doneTasks;
     int result;
     ThreadLocalData *tld;
 
@@ -195,6 +195,9 @@ extern unsigned int MT_GetNumThreads(void);
 #define MT_SafeAdd(x, y) g_atomic_int_add(x, y)
 #define MT_SafeDec(x) g_atomic_int_add(x, -1)
 #define MT_SafeDecCheck(x) g_atomic_int_dec_and_test(x)
+#define MT_SafeGet(x) g_atomic_int_get(x)
+#define MT_SafeSet(x, y) g_atomic_int_set(x, y)
+#define MT_SafeCompare(x, y) g_atomic_int_compare_and_exchange(x, y, y)
 #else
 #define MT_SafeInc(x) (void)InterlockedIncrement((long*)x)
 #define MT_SafeIncValue(x) InterlockedIncrement((long*)x)
@@ -202,6 +205,9 @@ extern unsigned int MT_GetNumThreads(void);
 #define MT_SafeAdd(x, y) InterlockedExchangeAdd((long*)x, y)
 #define MT_SafeDec(x) (void)InterlockedDecrement((long*)x)
 #define MT_SafeDecCheck(x) (InterlockedDecrement((long*)x) == 0)
+#define MT_SafeGet(x) InterlockedExchangeAdd((long*)x, 0)
+#define MT_SafeSet(x, y) (void)InterlockedExchange((long*)x, y)
+#define MT_SafeCompare(x, y) (InterlockedCompareExchange((long*)x, y, y) == y)
 #endif
 
 #else                           /*USE_MULTITHREAD */
