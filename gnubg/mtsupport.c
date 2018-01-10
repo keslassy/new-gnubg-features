@@ -344,7 +344,8 @@ MT_InitThreads(void)
     g_assert(g_thread_supported());
 #endif
     td.tasks = NULL;
-    td.doneTasks = td.addedTasks = 0;
+    MT_SafeSet(&td.doneTasks, 0);
+    td.addedTasks = 0;
     td.totalTasks = -1;
     InitManualEvent(&td.activity);
     TLSCreate(&td.tlsItem);

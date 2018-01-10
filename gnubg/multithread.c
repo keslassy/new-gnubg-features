@@ -275,7 +275,7 @@ static gboolean
 WaitForAllTasks(int time)
 {
     int j = 0;
-    while (td.doneTasks != td.totalTasks) {
+    while (!MT_SafeCompare(&td.doneTasks, td.totalTasks)) {
         if (j == 10)
             return FALSE;       /* Not done yet */
 
@@ -316,7 +316,8 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     }
     multi_debug("Done waiting for all tasks");
 
-    td.doneTasks = td.addedTasks = 0;
+    MT_SafeSet(&td.doneTasks, 0);
+    td.addedTasks = 0;
     td.totalTasks = -1;
 
 #if defined(USE_GTK)
@@ -334,7 +335,7 @@ MT_SetResultFailed(void)
 extern int
 MT_GetDoneTasks(void)
 {
-    return td.doneTasks;
+    return MT_SafeGet(&td.doneTasks);
 }
 
 /* Code below used in calibrate to try and get a resonable figure for multiple threads */
@@ -416,7 +417,7 @@ mt_add_tasks(unsigned int num_tasks, AsyncFun pFun, void *taskData, gpointer lin
 extern int
 MT_GetDoneTasks(void)
 {
-    return td.doneTasks;
+    return MT_SafeGet(&td.doneTasks);
 }
 
 int
@@ -426,7 +427,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     guint as_source, cb_source = 0;
 
     (void) callbackTime;        /* silence compiler warning */
-    td.doneTasks = 0;
+    MT_SafeSet(&td.doneTasks, 0);
 
 #if defined(USE_GTK)
     GTKSuspendInput();
@@ -438,7 +439,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     cb_source = g_timeout_add(1000, pCallback, NULL);
     if (autosave)
         as_source = g_timeout_add(nAutoSaveTime * 60000, save_autosave, NULL);
-    for (member = g_list_first(td.tasks); member; member = member->next, td.doneTasks++) {
+    for (member = g_list_first(td.tasks); member; member = member->next, MT_SafeInc(&td.doneTasks)) {
         Task *task = member->data;
         task->fun(task->data);
         free(task->pLinkedTask);
