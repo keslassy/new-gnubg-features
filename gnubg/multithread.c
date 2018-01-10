@@ -171,7 +171,7 @@ MT_CreateThreads(void)
 
 #if defined(GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,32,0)
-        if (!g_thread_try_new("Worker", MT_WorkerThreadFunction, pTLD, NULL))
+        if (!g_thread_try_new(NULL, MT_WorkerThreadFunction, pTLD, NULL))
 #else
         if (!g_thread_create(MT_WorkerThreadFunction, pTLD, FALSE, NULL))
 #endif
