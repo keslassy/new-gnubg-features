@@ -225,6 +225,9 @@ extern int asyncRet;
 #define MT_SafeAdd(x, y) ((*x) += y)
 #define MT_SafeDec(x) (--(*x))
 #define MT_SafeDecCheck(x) ((--(*x)) == 0)
+#define MT_SafeGet(x) (*x)
+#define MT_SafeSet(x, y) ((*x) = y)
+#define MT_SafeCompare(x, y) ((*x) == y)
 #define MT_GetThreadID() 0
 #define MT_Get_nnState() td.tld->pnnState
 #define MT_Get_aMoves() td.tld->aMoves
