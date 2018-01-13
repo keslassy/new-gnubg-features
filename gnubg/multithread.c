@@ -163,7 +163,11 @@ static void
 MT_CreateThreads(void)
 {
     unsigned int i;
-    multi_debug("CreateThreads()");
+#if defined(DEBUG_MULTITHREADED)
+    gchar *buf = g_strdup_printf("create %u threads", td.numThreads);
+    multi_debug(buf);
+    g_free(buf);
+#endif
     td.result = 0;
     td.closingThreads = FALSE;
     for (i = 0; i < td.numThreads; i++) {
@@ -179,6 +183,8 @@ MT_CreateThreads(void)
         if (_beginthread(MT_WorkerThreadFunction, 0, pTLD) == 0)
 #endif
             printf("Failed to create thread\n");
+        else
+            multi_debug("1 thread created");
     }
     td.addedTasks = td.numThreads;
     /* Wait for all the threads to be created (timeout after 1 second) */
@@ -232,7 +238,9 @@ void
 MT_AddTask(Task * pt, gboolean lock)
 {
     if (lock) {
+        multi_debug("add task asks lock (queueLock)");
         Mutex_Lock(&td.queueLock);
+        multi_debug("add task gets lock (queueLock)");
     }
     if (td.addedTasks == 0)
         td.result = 0;          /* Reset result for new tasks */
@@ -242,8 +250,8 @@ MT_AddTask(Task * pt, gboolean lock)
         SetManualEvent(td.activity);
     }
     if (lock) {
-        multi_debug("add task: release");
         Mutex_Release(&td.queueLock);
+        multi_debug("add task unlocks");
     }
 }
 
