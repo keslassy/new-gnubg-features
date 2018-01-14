@@ -37,6 +37,11 @@ dnl
 dnl host specifics
 dnl
 
+dnl Only relevant for win32 but the macro has to be executed unconditionally
+dnl -Wl since libtool uses gcc as linker
+dnl
+AX_APPEND_LINK_FLAGS([-Wl,--large-address-aware],,,)
+
 win32=no
 
 AC_MSG_CHECKING([for host])
@@ -44,7 +49,7 @@ case "$host" in
   *-*-mingw*)
     win32=yes
     CFLAGS="$CFLAGS -mms-bitfields"
-	LDFLAGS="$LDFLAGS -lws2_32 -lwinmm"
+    LDFLAGS="$LDFLAGS -lws2_32 -lwinmm"
     ;;
   *-*-darwin*)
     darwin=yes

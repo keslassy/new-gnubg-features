@@ -1,3 +1,14 @@
+2018-01-14  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* configure.ac: Build 32-bit Windows binaries as Large Address
+	Aware. This is needed to use the largest bearoff databases.
+
+	On 32-bit versions of the operating system this change by itself
+	is not enough (but is harmless). Windows must be started with a
+	specific option for it to be effective ; see
+	https://msdn.microsoft.com/library/windows/hardware/ff556232(v=vs.85).aspx
+	for details.
+
 2017-12-26  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gtkboard.c: Set the cube value to 1, not 0 when clicking on a
