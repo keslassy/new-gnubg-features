@@ -101,13 +101,8 @@ MT_AbortTasks(void)
     td.result = -1;
 }
 
-#if defined(GLIB_THREADS)
 static SIMD_STACKALIGN gpointer
 MT_WorkerThreadFunction(void *tld)
-#else
-static SIMD_STACKALIGN void
-MT_WorkerThreadFunction(void *tld)
-#endif
 {
 #if 0
     /* why do we need this align ? - because of a gcc bug */
@@ -140,7 +135,6 @@ MT_WorkerThreadFunction(void *tld)
             }
         } while (!td.closingThreads);
 
-#if defined(GLIB_THREADS)
 #if 0
 #if __GNUC__ && defined(WIN32)
         /* De-align stack pointer to avoid crash on exit */
@@ -148,7 +142,6 @@ MT_WorkerThreadFunction(void *tld)
 #endif
 #endif
         return NULL;
-#endif
     }
 }
 
@@ -173,18 +166,15 @@ MT_CreateThreads(void)
     for (i = 0; i < td.numThreads; i++) {
         ThreadLocalData *pTLD = MT_CreateThreadLocalData(i);
 
-#if defined(GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,32,0)
         if (!g_thread_try_new(NULL, MT_WorkerThreadFunction, pTLD, NULL))
 #else
         if (!g_thread_create(MT_WorkerThreadFunction, pTLD, FALSE, NULL))
 #endif
-#else
-        if (_beginthread(MT_WorkerThreadFunction, 0, pTLD) == 0)
-#endif
             printf("Failed to create thread\n");
-        else
+        else {
             multi_debug("1 thread created");
+        }
     }
     td.addedTasks = td.numThreads;
     /* Wait for all the threads to be created (timeout after 1 second) */
@@ -432,7 +422,7 @@ int
 MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
 {
     GList *member;
-    guint as_source, cb_source = 0;
+    guint as_source = 0, cb_source = 0;
 
     (void) callbackTime;        /* silence compiler warning */
     MT_SafeSet(&td.doneTasks, 0);

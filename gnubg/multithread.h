@@ -62,7 +62,6 @@ typedef struct _ThreadLocalData {
     NNState *pnnState;
 } ThreadLocalData;
 
-#if defined(GLIB_THREADS)
 typedef struct _ManualEvent {
 #if GLIB_CHECK_VERSION (2,32,0)
     GCond cond;
@@ -78,25 +77,6 @@ typedef GPrivate *TLSItem;
 typedef GMutex Mutex;
 #else
 typedef GMutex *Mutex;
-#endif
-
-#elif defined(WIN32)
-typedef HANDLE ManualEvent;
-typedef DWORD TLSItem;
-typedef HANDLE Event;
-typedef HANDLE Mutex;
-#define WaitForManualEvent(ME) WaitForSingleObject(ME, INFINITE)
-#define ResetManualEvent(ME) ResetEvent(ME)
-#define SetManualEvent(ME) SetEvent(ME)
-extern void TLSSetValue(TLSItem pItem, int value);
-
-#if defined (DEBUG_MULTITHREADED)
-extern void Mutex_Lock(Mutex mutex);
-#else
-#define Mutex_Lock(mutex) WaitForSingleObject(mutex, INFINITE)
-#define Mutex_Release(mutex) ReleaseMutex(mutex)
-#endif
-
 #endif
 
 typedef struct _ThreadData {
@@ -136,14 +116,12 @@ extern ThreadData td;
 
 #if defined(USE_MULTITHREAD)
 
-#if defined(GLIB_THREADS)
 extern void ResetManualEvent(ManualEvent ME);
 extern void Mutex_Lock(Mutex *mutex);
 extern void Mutex_Release(Mutex *mutex);
 extern void WaitForManualEvent(ManualEvent ME);
 extern void SetManualEvent(ManualEvent ME);
 extern void TLSSetValue(TLSItem pItem, size_t value);
-#endif
 extern void TLSFree(TLSItem pItem);
 extern void InitManualEvent(ManualEvent * pME);
 extern void FreeManualEvent(ManualEvent ME);
@@ -152,12 +130,7 @@ extern void FreeMutex(Mutex * mutex);
 
 #define UI_UPDATETIME 250
 
-#if defined (GLIB_THREADS)
 #define TLSGet(item) *((size_t*)g_private_get(item))
-
-#else                           /* WIN32 */
-#define TLSGet(item) *((int*)TlsGetValue(item))
-#endif                          /* GLIB_THREADS */
 
 #if !defined(MAX_NUMTHREADS)
 #define MAX_NUMTHREADS 48
@@ -179,7 +152,6 @@ extern unsigned int MT_GetNumThreads(void);
 #define MT_Get_nnState() ((ThreadLocalData *)TLSGet(td.tlsItem))->pnnState
 #define MT_Get_aMoves() ((ThreadLocalData *)TLSGet(td.tlsItem))->aMoves
 
-#if defined (GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,30,0)
 #define MT_SafeIncValue(x) (g_atomic_int_add(x, 1) + 1)
 #define MT_SafeIncCheck(x) (g_atomic_int_add(x, 1))
@@ -198,17 +170,6 @@ extern unsigned int MT_GetNumThreads(void);
 #define MT_SafeGet(x) g_atomic_int_get(x)
 #define MT_SafeSet(x, y) g_atomic_int_set(x, y)
 #define MT_SafeCompare(x, y) g_atomic_int_compare_and_exchange(x, y, y)
-#else
-#define MT_SafeInc(x) (void)InterlockedIncrement((long*)x)
-#define MT_SafeIncValue(x) InterlockedIncrement((long*)x)
-#define MT_SafeIncCheck(x) (InterlockedIncrement((long*)x) > 1)
-#define MT_SafeAdd(x, y) InterlockedExchangeAdd((long*)x, y)
-#define MT_SafeDec(x) (void)InterlockedDecrement((long*)x)
-#define MT_SafeDecCheck(x) (InterlockedDecrement((long*)x) == 0)
-#define MT_SafeGet(x) InterlockedExchangeAdd((long*)x, 0)
-#define MT_SafeSet(x, y) (void)InterlockedExchange((long*)x, y)
-#define MT_SafeCompare(x, y) (InterlockedCompareExchange((long*)x, y, y) == y)
-#endif
 
 #else                           /*USE_MULTITHREAD */
 #if !defined(MAX_NUMTHREADS)

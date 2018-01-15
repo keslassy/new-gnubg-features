@@ -66,15 +66,11 @@ MT_CreateThreadLocalData(int id)
 unsigned int mainThreadID;
 #endif
 
-#if defined(GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,32,0)
 static GMutex condMutex;        /* Extra mutex needed for waiting */
 #else
 static GMutex *condMutex = NULL;        /* Extra mutex needed for waiting */
 #endif
-#endif
-
-#if defined(GLIB_THREADS)
 
 #if GLIB_CHECK_VERSION (2,32,0)
 /* Dynamic allocation of GPrivate is deprecated */
@@ -255,86 +251,6 @@ Mutex_Release(Mutex * mutex)
 #endif
 }
 
-#else                           /* win32 */
-
-extern void
-TLSCreate(TLSItem * ppItem)
-{
-    *ppItem = TlsAlloc();
-    if (*ppItem == TLS_OUT_OF_INDEXES)
-        PrintSystemError("calling TlsAlloc");
-}
-
-extern void
-TLSFree(TLSItem pItem)
-{
-    free(TlsGetValue(pItem));
-    TlsFree(pItem);
-}
-
-extern void
-TLSSetValue(TLSItem pItem, int value)
-{
-    int *pNew = (int *) malloc(sizeof(int));
-    *pNew = value;
-    if (TlsSetValue(pItem, pNew) == 0)
-        PrintSystemError("calling TLSSetValue");
-}
-
-#define TLSGet(item) *((int*)TlsGetValue(item))
-
-extern void
-InitManualEvent(ManualEvent * pME)
-{
-    *pME = CreateEvent(NULL, TRUE, FALSE, NULL);
-    if (*pME == NULL)
-        PrintSystemError("creating manual event");
-}
-
-extern void
-FreeManualEvent(ManualEvent ME)
-{
-    CloseHandle(ME);
-}
-
-extern void
-InitMutex(Mutex * pMutex)
-{
-    *pMutex = CreateMutex(NULL, FALSE, NULL);
-    if (*pMutex == NULL)
-        PrintSystemError("creating mutex");
-}
-
-extern void
-FreeMutex(Mutex * mutex)
-{
-    CloseHandle(*mutex);
-}
-
-#if defined(DEBUG_MULTITHREADED)
-void
-Mutex_Lock(Mutex mutex)
-{
-    if (WaitForSingleObject(mutex, 0) == WAIT_OBJECT_0) {       /* Got mutex */
-        ;
-    } else {
-        WaitForSingleObject(mutex, INFINITE);
-    }
-}
-
-void
-Mutex_Release(Mutex mutex)
-{
-    ReleaseMutex(mutex);
-}
-
-#else
-#define Mutex_Lock(mutex, reason) WaitForSingleObject(mutex, INFINITE)
-#define Mutex_Release(mutex) ReleaseMutex(mutex)
-#endif
-
-#endif
-
 extern void
 MT_InitThreads(void)
 {
@@ -358,7 +274,7 @@ MT_InitThreads(void)
     InitMutex(&td.queueLock);
     InitManualEvent(&td.syncStart);
     InitManualEvent(&td.syncEnd);
-#if defined(GLIB_THREADS) && !GLIB_CHECK_VERSION (2,32,0)
+#if !GLIB_CHECK_VERSION (2,32,0)
     if (condMutex == NULL)
         condMutex = g_mutex_new();
 #endif
@@ -457,7 +373,6 @@ multi_debug(const char *str, ...)
     else
         sprintf(tn, "T%d", id + 1);
 
-#if defined(GLIB_THREADS)
 #if GLIB_CHECK_VERSION (2,28,0)
     printf("%" G_GINT64_FORMAT " %s: %s\n", g_get_monotonic_time(), tn, buf);
 #else
@@ -467,9 +382,6 @@ multi_debug(const char *str, ...)
         g_get_current_time(&tv);
         printf("%lu %s: %s\n", 1000000UL * tv.tv_sec + tv.tv_usec, tn, buf);
     }
-#endif
-#else
-    printf("%s: %s\n", tn, buf);
 #endif
 
     va_end(vl);
@@ -481,11 +393,7 @@ multi_debug(const char *str, ...)
 
 #endif
 
-#else
-#include "multithread.h"
-#include <stdlib.h>
-
-SSE_ALIGN(ThreadData td);
+#else	/* !defined(USE_MULTITHREAD) */
 
 extern void
 MT_InitThreads(void)

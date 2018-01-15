@@ -1,3 +1,10 @@
+2018-01-15  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* configure.ac, multithread.h, multithread.c, mtsupport.c: Remove
+	support of win32 native threads, as discussed in bug-gnubg
+	(http://lists.gnu.org/archive/html/bug-gnubg/2015-01/msg00034.html).
+	--enable-threads is now a yes (GLib threads) / no choice only.
+
 2018-01-14  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* configure.ac: Build 32-bit Windows binaries as Large Address
