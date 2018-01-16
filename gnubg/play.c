@@ -109,9 +109,9 @@ NewMoveRecord(void)
     moverecord *pmr = malloc(sizeof *pmr);
 
     if (!pmr) {
-        outputerr("NewMoveRecord");
+        outputerr("Memory allocation failure in NewMoveRecord()");
         g_assert_not_reached();
-        return NULL;
+        exit(EXIT_FAILURE);
     }
 
     memset(pmr, 0, sizeof *pmr);
@@ -4190,10 +4190,8 @@ get_current_moverecord(int *pfHistory)
         pmr_hint_destroy();
 
     if (!pmr_hint) {
-        if ((pmr_hint = NewMoveRecord()))
-            pmr_hint->fPlayer = ms.fTurn;
-        else
-            return NULL;
+        pmr_hint = NewMoveRecord();
+        pmr_hint->fPlayer = ms.fTurn;
     }
 
     if (ms.anDice[0] > 0) {

@@ -226,6 +226,7 @@ AX_C___ATTRIBUTE__()
 
 if test "x$ax_cv___attribute__" = "xyes"; then
 AX_GCC_FUNC_ATTRIBUTE(format)
+AX_GCC_FUNC_ATTRIBUTE(returns_nonnull)
 AX_GCC_FUNC_ATTRIBUTE(unused)
 fi
 
