@@ -26,13 +26,13 @@
 #include <windows.h>
 #endif
 
+#define UI_UPDATETIME 250
+
 #if defined(USE_MULTITHREAD)
 #include <glib.h>
 #endif
 
 #include "backgammon.h"
-
-#define UI_UPDATETIME 250
 
 /* #define DEBUG_MULTITHREADED 1 */
 
@@ -127,8 +127,6 @@ extern void InitManualEvent(ManualEvent * pME);
 extern void FreeManualEvent(ManualEvent ME);
 extern void InitMutex(Mutex * pMutex);
 extern void FreeMutex(Mutex * mutex);
-
-#define UI_UPDATETIME 250
 
 #define TLSGet(item) *((size_t*)g_private_get(item))
 
