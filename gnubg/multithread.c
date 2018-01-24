@@ -41,6 +41,9 @@
 #include "lib/simd.h"
 
 #if defined(USE_MULTITHREAD)
+
+static GThread* thread[MAX_NUMTHREADS];
+
 extern unsigned int
 MT_GetNumThreads(void)
 {
@@ -50,10 +53,14 @@ MT_GetNumThreads(void)
 extern void
 MT_CloseThreads(void)
 {
+    unsigned int i;
+
     td.closingThreads = TRUE;
     mt_add_tasks(td.numThreads, CloseThread, NULL, NULL);
     if (MT_WaitForTasks(NULL, 0, FALSE) != (int) td.numThreads)
         g_print("Error closing threads!\n");
+    for (i = 0; i < td.numThreads; i++)
+        g_thread_join(thread[i]);
 }
 
 static void
@@ -167,9 +174,9 @@ MT_CreateThreads(void)
         ThreadLocalData *pTLD = MT_CreateThreadLocalData(i);
 
 #if GLIB_CHECK_VERSION (2,32,0)
-        if (!g_thread_try_new(NULL, MT_WorkerThreadFunction, pTLD, NULL))
+        if (!(thread[i] = g_thread_try_new(NULL, MT_WorkerThreadFunction, pTLD, NULL)))
 #else
-        if (!g_thread_create(MT_WorkerThreadFunction, pTLD, FALSE, NULL))
+        if (!(thread[i] = g_thread_create(MT_WorkerThreadFunction, pTLD, TRUE, NULL)))
 #endif
             printf("Failed to create thread\n");
         else {
