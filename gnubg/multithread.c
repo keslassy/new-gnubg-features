@@ -55,7 +55,7 @@ MT_CloseThreads(void)
 {
     unsigned int i;
 
-    td.closingThreads = TRUE;
+    MT_SafeSet(&td.closingThreads, TRUE);
     mt_add_tasks(td.numThreads, CloseThread, NULL, NULL);
     if (MT_WaitForTasks(NULL, 0, FALSE) != (int) td.numThreads)
         g_print("Error closing threads!\n");
@@ -140,7 +140,7 @@ MT_WorkerThreadFunction(void *tld)
                 task->fun(task->data);
                 MT_TaskDone(task);
             }
-        } while (!td.closingThreads);
+        } while (MT_SafeCompare(&td.closingThreads, FALSE));
 
 #if 0
 #if __GNUC__ && defined(WIN32)
@@ -169,7 +169,7 @@ MT_CreateThreads(void)
     g_free(buf);
 #endif
     td.result = 0;
-    td.closingThreads = FALSE;
+    MT_SafeSet(&td.closingThreads, FALSE);
     for (i = 0; i < td.numThreads; i++) {
         ThreadLocalData *pTLD = MT_CreateThreadLocalData(i);
 
