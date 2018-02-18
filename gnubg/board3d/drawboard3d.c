@@ -3742,7 +3742,7 @@ getCheqSize(renderdata * prd)
     unsigned int i, accuracy = (prd->curveAccuracy / 4) - 1;
     prd->acrossCheq = prd->downCheq = 1;
     for (i = 1; i < accuracy; i++) {
-        if (((float) prd->acrossCheq) / prd->downCheq > .5)
+        if (2 * prd->acrossCheq > prd->downCheq)
             prd->downCheq++;
         else
             prd->acrossCheq++;
