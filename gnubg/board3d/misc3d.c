@@ -583,7 +583,7 @@ LoadTexture(Texture * texture, const char *filename)
     }
 
     if (pix_error) {
-        g_print("Failed to open texture: %s\n", filename);
+        g_print("Failed to open texture: %s, %s\n", filename, pix_error->message);
         return 0;               /* failed to load file */
     }
 
@@ -618,8 +618,7 @@ LoadTexture(Texture * texture, const char *filename)
     return 1;
 }
 
-static
-    void
+static void
 SetTexture(BoardData3d * bd3d, Material * pMat, const char *filename)
 {
     /* See if already loaded */
