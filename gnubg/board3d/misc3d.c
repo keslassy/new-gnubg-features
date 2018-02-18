@@ -148,10 +148,10 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
     float al[4], dl[4], sl[4];
 
     copyPoint(lp, prd->lightPos);
-    lp[3] = (float) (prd->lightType == LT_POSITIONAL);
+    lp[3] = prd->lightType == LT_POSITIONAL ? 1.0f : 0.0f;
 
     /* If directioinal vector is from origin */
-    if (lp[3] == 0) {
+    if (prd->lightType != LT_POSITIONAL) {
         lp[0] -= getBoardWidth() / 2.0f;
         lp[1] -= getBoardHeight() / 2.0f;
     }
@@ -814,7 +814,7 @@ movePath(Path * p, float d, float *rotate, float v[3])
     float done;
     d -= p->mileStone;
 
-    while (!finishedPath(p) && (done = moveAlong(d, p->pathType[p->state], p->pts[p->state], p->pts[p->state + 1], v, rotate)) != -1) { /* Next path segment */
+    while (!finishedPath(p) && (done = moveAlong(d, p->pathType[p->state], p->pts[p->state], p->pts[p->state + 1], v, rotate)) >= 0.0f) { /* Next path segment */
         d -= done;
         p->mileStone += done;
         p->state++;
@@ -1988,7 +1988,7 @@ idleAnimate(BoardData3d * bd3d)
         float old_pos[3];
         ClipBox temp;
         float *pRotate = 0;
-        if (bd3d->rotateMovingPiece != -1 && bd3d->piecePath.state == 2)
+        if (bd3d->rotateMovingPiece >= 0.0f && bd3d->piecePath.state == 2)
             pRotate = &bd3d->rotateMovingPiece;
 
         copyPoint(old_pos, bd3d->movingPos);
@@ -2305,7 +2305,7 @@ SetupMat(Material * pMat, float r, float g, float b, float dr, float dg, float d
     pMat->specularColour[3] = a;
     pMat->shine = shin;
 
-    pMat->alphaBlend = (a != 1) && (a != 0);
+    pMat->alphaBlend = (a < 1.0f) && (a > 0.0f);
 
     pMat->textureInfo = NULL;
     pMat->pTexture = NULL;
