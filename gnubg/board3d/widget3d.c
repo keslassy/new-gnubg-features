@@ -176,16 +176,17 @@ CreateGLWidget(BoardData * bd)
     /* Drawing area for OpenGL */
     p3dWidget = bd->bd3d->drawing_area3d = gtk_drawing_area_new();
 
+    if (p3dWidget == NULL) {
+        g_print("Can't create opengl drawing widget\n");
+        return FALSE;
+    }
+
     /* Set OpenGL-capability to the widget - no list sharing */
     if (!gtk_widget_set_gl_capability(p3dWidget, getGlConfig(), NULL, TRUE, GDK_GL_RGBA_TYPE)) {
         g_print("Can't create opengl capable widget\n");
         return FALSE;
     }
 
-    if (p3dWidget == NULL) {
-        g_print("Can't create opengl drawing widget\n");
-        return FALSE;
-    }
     /* set up events and signals for OpenGL widget */
     gtk_widget_set_events(p3dWidget, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK |
                           GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK);
