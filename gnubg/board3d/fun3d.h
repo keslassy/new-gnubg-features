@@ -96,7 +96,6 @@ extern void SetupVisual(void);
 extern void SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd);
 extern void DisplayCorrectBoardType(BoardData * bd, BoardData3d * bd3d, renderdata * prd);
 extern int CreateGLWidget(BoardData * bd);
-extern int DoAcceleratedCheck(const BoardData3d * bd3d, GtkWidget * pwParent);
 
 extern void RollDice3d(BoardData * bd, BoardData3d * bd3d, const renderdata * prd);
 extern void AnimateMove3d(BoardData * bd, BoardData3d * bd3d);

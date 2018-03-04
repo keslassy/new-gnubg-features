@@ -1296,7 +1296,6 @@ toggle_display_type(GtkWidget * widget, BoardData * bd)
     rdPrefs.fDisplayType = state ? DT_3D : DT_2D;
 
     if (display_is_3d(&rdPrefs)) {
-        DoAcceleratedCheck(bd->bd3d, widget);
         updateDiceOccPos(bd, bd->bd3d);
     } else {
         board_free_pixmaps(bd);
