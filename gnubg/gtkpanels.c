@@ -567,14 +567,12 @@ Capitalize(char *str)
     int cap = 1;
     while (*str) {
         if (cap) {
-            if (*str >= 'a' && *str <= 'z')
-                *str += 'A' - 'a';
+            *str = g_ascii_toupper(*str);
             cap = 0;
         } else {
             if (*str == ' ')
                 cap = 1;
-            if (*str >= 'A' && *str <= 'Z')
-                *str -= 'A' - 'a';
+            *str = g_ascii_tolower(*str);
         }
         str++;
     }
