@@ -5361,7 +5361,7 @@ RunAsyncProcess(AsyncFun fn, void *data, const char *msg)
     pt->pLinkedTask = NULL;
     pt->fun = fn;
     pt->data = data;
-    MT_AddTask(pt, FALSE);
+    MT_AddTask(pt, TRUE);
 #endif
 
     ProgressStart(msg);
