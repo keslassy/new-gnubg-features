@@ -40,7 +40,7 @@ static inline void
 cache_lock(evalCache * pc, uint32_t k)
 {
     while (__sync_lock_test_and_set(&(pc->entries[k].lock), 1))
-        while (pc->entries[k].lock)
+        while (__sync_fetch_and_add(&pc->entries[k].lock, 0))
             __asm volatile ("pause":::"memory");
 }
 
