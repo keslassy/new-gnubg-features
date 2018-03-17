@@ -113,7 +113,7 @@ InitManualEvent(ManualEvent * pME)
 #else
     pNewME->cond = g_cond_new();
 #endif
-    MT_SafeSet(&pNewME->signalled, FALSE);
+    pNewME->signalled = FALSE;
     *pME = pNewME;
 }
 
@@ -144,7 +144,7 @@ WaitForManualEvent(ManualEvent ME)
     g_mutex_lock(condMutex);
 #endif
     multi_debug("wait for manual event gets lock (condMutex)");
-    while (MT_SafeCompare(&ME->signalled, FALSE)) {
+    while (!ME->signalled) {
         multi_debug("waiting for manual event");
 #if GLIB_CHECK_VERSION (2,32,0)
         if (!g_cond_wait_until(&ME->cond, &condMutex, end_time))
@@ -174,12 +174,12 @@ ResetManualEvent(ManualEvent ME)
 #if GLIB_CHECK_VERSION (2,32,0)
     g_mutex_lock(&condMutex);
     multi_debug("reset manual event gets lock (condMutex)");
-    MT_SafeSet(&ME->signalled, FALSE);
+    ME->signalled = FALSE;
     g_mutex_unlock(&condMutex);
 #else
     g_mutex_lock(condMutex);
     multi_debug("reset manual event gets lock (condMutex)");
-    MT_SafeSet(&ME->signalled, FALSE);
+    ME->signalled = FALSE;
     g_mutex_unlock(condMutex);
 #endif
     multi_debug("reset manual event unlocks (condMutex)");
@@ -192,13 +192,13 @@ SetManualEvent(ManualEvent ME)
 #if GLIB_CHECK_VERSION (2,32,0)
     g_mutex_lock(&condMutex);
     multi_debug("reset manual event gets lock (condMutex)");
-    MT_SafeSet(&ME->signalled, TRUE);
+    ME->signalled = TRUE;
     g_cond_broadcast(&ME->cond);
     g_mutex_unlock(&condMutex);
 #else
     g_mutex_lock(condMutex);
     multi_debug("reset manual event gets lock (condMutex)");
-    MT_SafeSet(&ME->signalled, TRUE);
+    ME->signalled = TRUE;
     g_cond_broadcast(ME->cond);
     g_mutex_unlock(condMutex);
 #endif
