@@ -60,7 +60,7 @@ freeOccluder(Occluder * pOcc)
         g_array_free(pOcc->handle->edges, TRUE);
         g_array_free(pOcc->handle->points, TRUE);
         free(pOcc->handle);
-        pOcc->handle = 0;
+        pOcc->handle = NULL;
         glDeleteLists(pOcc->shadow_list, 1);
     }
 }
@@ -505,7 +505,7 @@ addHalfTube(Occluder * pOcc, float r, float h, unsigned int numSteps)
     g_assert(xPts && yPts);
 
     for (i = 0; i <= numSteps; i++) {
-        float ang = step * i - ((float) G_PI / 2.0f);
+        float ang = step * i - (float) G_PI_2;
         xPts[i] = sinf(ang) * r;
         yPts[i] = cosf(ang) * r;
     }

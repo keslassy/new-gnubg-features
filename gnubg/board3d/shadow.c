@@ -45,7 +45,7 @@ shadowInit(BoardData3d * bd3d, renderdata * prd)
     prd->dimness = ((prd->lightLevels[1] / 100.0f) * (100 - prd->shadowDarkness)) / 100;
 
     for (i = 0; i < NUM_OCC; i++)
-        bd3d->Occluders[i].handle = 0;
+        bd3d->Occluders[i].handle = NULL;
 
     /* Check the stencil buffer is present */
     glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
