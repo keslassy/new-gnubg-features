@@ -462,7 +462,7 @@ TryConnection(DBProvider * pdb, GtkWidget * dbList)
         gtk_widget_set_sensitive(deldb, FALSE);
     } else {                    /* Test ok */
         GList *pl = pdb->GetDatabaseList(pdb->username, pdb->password, pdb->hostname);
-        if (g_list_find_custom(pl, pdb->database, (GCompareFunc) g_ascii_strncasecmp) == NULL) {        /* Somehow selected database not in list, so add it */
+        if (g_list_find_custom(pl, pdb->database, (GCompareFunc) g_ascii_strcasecmp) == NULL) {        /* Somehow selected database not in list, so add it */
             pl = g_list_append(pl, g_strdup(pdb->database));
         }
         while (pl) {
