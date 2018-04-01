@@ -165,7 +165,7 @@ static void
 board_beep(BoardData * UNUSED(bd))
 {
     if (fGUIBeep)
-        gdk_beep();
+        gdk_display_beep(gdk_display_get_default());
 }
 
 extern void
