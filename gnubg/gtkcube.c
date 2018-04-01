@@ -955,9 +955,11 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     gtk_widget_set_tooltip_text(pwMWC, _("Toggle output as MWC or equity"));
 
-    gtk_widget_set_tooltip_text(pwCopy, _("Copy"));
+    gtk_widget_set_tooltip_text(pwCopy, _("Copy cube decision to clipboard"));
 
-    gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position " "after selected move"));
+    gtk_widget_set_tooltip_text(pwCmark, _("Mark cube decision for later rollout"));
+
+    gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position"));
 
     return pwTools;
 

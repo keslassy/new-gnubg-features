@@ -616,21 +616,25 @@ CreateMoveListTools(hintdata * phd)
 
     /* tool tips */
 
-    gtk_widget_set_tooltip_text(pwRollout, _("Rollout chequer play with current settings"));
+    gtk_widget_set_tooltip_text(pwRollout, _("Rollout selected moves with current settings"));
 
-    gtk_widget_set_tooltip_text(pwEval, _("Evaluate chequer play with current settings"));
+    gtk_widget_set_tooltip_text(pwEval, _("Evaluate selected moves with current settings"));
 
     gtk_widget_set_tooltip_text(pwRolloutSettings, _("Modify rollout settings"));
 
     gtk_widget_set_tooltip_text(pwEvalSettings, _("Modify evaluation settings"));
 
+    gtk_widget_set_tooltip_text(pwShow, _("Show position after selected move"));
+
     gtk_widget_set_tooltip_text(pwMWC, _("Toggle output as MWC or equity"));
 
     gtk_widget_set_tooltip_text(pwCopy, _("Copy selected moves to clipboard"));
 
-    gtk_widget_set_tooltip_text(pwMove, _("Move the selected move"));
+    gtk_widget_set_tooltip_text(pwMove, _("Play the selected move"));
 
-    gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position " "after selected move"));
+    gtk_widget_set_tooltip_text(pwCmark, _("Mark selected moves for later rollout"));
+
+    gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position" " after selected move"));
 
 
     return pwTools;
