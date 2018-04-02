@@ -5,15 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-16 11:54-0700\n"
-"PO-Revision-Date: 2017-10-22 23:13+0200\n"
+"POT-Creation-Date: 2018-04-02 21:39+0200\n"
+"PO-Revision-Date: 2018-04-02 18:58+0200\n"
 "Last-Translator: Philippe Michel <philippe.michel7@sfr.fr>\n"
 "Language-Team: <fr@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: analysis.c:45
@@ -72,7 +72,7 @@ msgstr "Bons dés, mon ami !"
 msgid "luck|Go to Las Vegas"
 msgstr "Allez tout de suite à Las Vegas"
 
-#: analysis.c:1115
+#: analysis.c:1117
 msgid ""
 "No analysis selected, you must specify at least one type of analysis to "
 "perform"
@@ -80,53 +80,53 @@ msgstr ""
 "Aucune analyse détectée. Vous devez spécifier au moins un type d'analyse à "
 "effectuer"
 
-#: analysis.c:1152
+#: analysis.c:1154
 msgid "Analysing game; move:"
 msgstr "Analyse de la partie ; coup :"
 
-#: analysis.c:1186
+#: analysis.c:1188
 msgid "Analysing match; move:"
 msgstr "Analyse du match ; coup :"
 
 #. header
-#: analysis.c:1402 bearoff.c:562 bearoff.c:598 bearoff.c:601 bearoff.c:640
+#: analysis.c:1404 bearoff.c:562 bearoff.c:598 bearoff.c:601 bearoff.c:640
 #: bearoff.c:666 bearoff.c:696 format.c:275 html.c:2487 show.c:1363
 msgid "Player"
 msgstr "Joueur"
 
-#: analysis.c:1408
+#: analysis.c:1410
 msgid "Chequerplay statistics"
 msgstr "Statistiques de jeu du pion"
 
-#: analysis.c:1430 html.c:2517
+#: analysis.c:1432 html.c:2517
 msgid "Luck statistics"
 msgstr "Statistiques de chance"
 
-#: analysis.c:1452 html.c:2538 progress.c:343
+#: analysis.c:1454 html.c:2538 progress.c:343
 msgid "Cube statistics"
 msgstr "Statistiques des décisions de videau"
 
-#: analysis.c:1474 html.c:2559
+#: analysis.c:1476 html.c:2559
 msgid "Overall statistics"
 msgstr "Statistiques globales"
 
-#: analysis.c:1559
+#: analysis.c:1561
 msgid "Please use 'analyse move' on the double decision"
 msgstr "Utilisez 'analyse move' pour la decision de doubler"
 
-#: analysis.c:1568
+#: analysis.c:1570
 msgid "Analysing move..."
 msgstr "Analyse du coup..."
 
-#: analysis.c:1575
+#: analysis.c:1577
 msgid "Please use `hint' on unfinished moves"
 msgstr "Utilisez 'hint' pour les coups partiellement joués"
 
-#: analysis.c:1763
+#: analysis.c:1765
 msgid "Cannot clear analysis on this move"
 msgstr "Impossible d'effacer l'analyse de ce coup"
 
-#: analysis.c:2013
+#: analysis.c:2015
 #, c-format
 msgid ""
 "Move %d\n"
@@ -135,52 +135,52 @@ msgstr ""
 "Coup %d\n"
 "Videau marqué\n"
 
-#: analysis.c:2039
+#: analysis.c:2041
 #, c-format
 msgid "Move %d\n"
 msgstr "Coup %d\n"
 
-#: analysis.c:2041
+#: analysis.c:2043
 #, c-format
 msgid "%u (%s) marked\n"
 msgstr "%u (%s) marqué\n"
 
-#: analysis.c:2060
+#: analysis.c:2062
 #, c-format
 msgid "Game %d\n"
 msgstr "Partie %d\n"
 
-#: analysis.c:2422
+#: analysis.c:2424
 #, c-format
 msgid "No moverecord stored for this cube."
 msgstr ""
 
-#: analysis.c:2427
+#: analysis.c:2429
 #, c-format
 msgid "This move doesn't imply a cube action. Cannot mark."
 msgstr ""
 
-#: analysis.c:2439
+#: analysis.c:2441
 #, c-format
 msgid "No moverecord stored for this move."
 msgstr ""
 
-#: analysis.c:2444
+#: analysis.c:2446
 #, c-format
 msgid "This is not a normal chequer move. Cannot mark."
 msgstr ""
 
-#: analysis.c:2449
+#: analysis.c:2451
 #, c-format
 msgid "No moves to analyse"
 msgstr ""
 
-#: analysis.c:2532
+#: analysis.c:2534
 #, c-format
 msgid "`cmark move set none' requires a list of moves to set"
 msgstr ""
 
-#: analysis.c:2546
+#: analysis.c:2548
 #, c-format
 msgid "`cmark move set rollout' requires a list of moves to set"
 msgstr ""
@@ -1087,8 +1087,8 @@ msgid "Play"
 msgstr "Jouer"
 
 #: format.c:302 gnubg.c:1452 gnubg.c:1460 gnubg.c:2743 gnubg.c:2751
-#: gtkgame.c:3362 gtkgame.c:3376 gtkoptions.c:419 gtkprefs.c:3100
-#: gtkprefs.c:3110 gtktheory.c:709 progress.c:256 progress.c:351
+#: gtkgame.c:3362 gtkgame.c:3376 gtkoptions.c:419 gtkprefs.c:3099
+#: gtkprefs.c:3109 gtktheory.c:709 progress.c:256 progress.c:351
 msgid "Cube"
 msgstr "Videau"
 
@@ -1686,7 +1686,7 @@ msgstr "Python 2 pris en charge."
 
 #: gnubg.c:549
 msgid "Python 3 supported."
-msgstr "Python 2 pris en charge."
+msgstr "Python 3 pris en charge."
 
 #: gnubg.c:555
 msgid "SQLite database supported."
@@ -2341,67 +2341,67 @@ msgstr ""
 msgid "invalid position number"
 msgstr ""
 
-#: gnubgstock.c:100 gtkgame.c:3331
+#: gnubgstock.c:105 gtkgame.c:3331
 msgid "_Accept"
 msgstr "_Accepte"
 
-#: gnubgstock.c:101
+#: gnubgstock.c:106
 msgid "Play in Anti-clockwise Direction"
 msgstr ""
 
-#: gnubgstock.c:102
+#: gnubgstock.c:107
 msgid "Play in _Clockwise Direction"
 msgstr ""
 
-#: gnubgstock.c:103 gtkgame.c:3329
+#: gnubgstock.c:108 gtkgame.c:3329
 msgid "_Double"
 msgstr "_Double"
 
-#: gnubgstock.c:104 gtkgame.c:3334
+#: gnubgstock.c:109 gtkgame.c:3334
 msgid "_End Game"
 msgstr ""
 
-#: gnubgstock.c:105
+#: gnubgstock.c:110
 msgid "Next CMarked"
 msgstr ""
 
-#: gnubgstock.c:106
+#: gnubgstock.c:111
 msgid "Next _Game"
 msgstr ""
 
-#: gnubgstock.c:107
+#: gnubgstock.c:112
 msgid "Next _Marked"
 msgstr ""
 
-#: gnubgstock.c:108
+#: gnubgstock.c:113
 msgid "_Next"
 msgstr ""
 
-#: gnubgstock.c:109
+#: gnubgstock.c:114
 msgid "Previous CMarked"
 msgstr ""
 
-#: gnubgstock.c:110
+#: gnubgstock.c:115
 msgid "Previous _Game"
 msgstr ""
 
-#: gnubgstock.c:111
+#: gnubgstock.c:116
 msgid "Previous _Marked"
 msgstr ""
 
-#: gnubgstock.c:112
+#: gnubgstock.c:117
 msgid "_Previous"
 msgstr "_Précédent"
 
-#: gnubgstock.c:113 gtkgame.c:3346
+#: gnubgstock.c:118 gtkgame.c:3346
 msgid "_Hint"
 msgstr ""
 
-#: gnubgstock.c:114
+#: gnubgstock.c:119
 msgid "_Reject"
 msgstr "_Refuse"
 
-#: gnubgstock.c:115
+#: gnubgstock.c:120
 msgid "_Resign"
 msgstr ""
 
@@ -2435,14 +2435,14 @@ msgstr "(Édition)"
 msgid "Return hits: %s\n"
 msgstr ""
 
-#: gtkboard.c:1869 play.c:2603
+#: gtkboard.c:1874 play.c:2603
 msgid "You must roll the dice before you can move."
 msgstr "Vous devez jeter les dés avant de jouer un coup."
 
 #. calling CommandPlay here may lead to crashes if
 #. * the click is in the small time frame between end
 #. * of player turn and next computer turn
-#: gtkboard.c:1881 play.c:1908 play.c:2270 play.c:2326 play.c:2432 play.c:2598
+#: gtkboard.c:1886 play.c:1908 play.c:2270 play.c:2326 play.c:2432 play.c:2598
 #: play.c:3702 play.c:3757 play.c:3824 play.c:3928
 msgid ""
 "It is the computer's turn -- type `play' to force it to move immediately."
@@ -2450,57 +2450,57 @@ msgstr ""
 "C'est le tour de l'ordinateur -- tapez \"play\" pour le forcer à jouer "
 "immédiatement."
 
-#: gtkboard.c:2269 gtkboard.c:2275
+#: gtkboard.c:2274 gtkboard.c:2280
 #, c-format
 msgid "%d (won match)"
 msgstr "%d (gagne le match)"
 
-#: gtkboard.c:2271 gtkboard.c:2277
+#: gtkboard.c:2276 gtkboard.c:2282
 #, c-format
 msgid "%d (%d-away)"
 msgstr "%d (-%d)"
 
-#: gtkboard.c:2507
+#: gtkboard.c:2512
 msgid "unlimited"
 msgstr "illimité"
 
-#: gtkboard.c:3388
+#: gtkboard.c:3393
 msgid "You can only change whether this is the Crawford game when editing"
 msgstr ""
 
-#: gtkboard.c:3399
+#: gtkboard.c:3404
 msgid "You can only enable Jacoby while editing a position"
 msgstr ""
 
-#: gtkboard.c:3675
+#: gtkboard.c:3680
 #, c-format
 msgid "Set player %d on roll."
 msgstr "Donner le trait au joueur %d."
 
 #. score label
-#: gtkboard.c:3783 gtkboard.c:3866
+#: gtkboard.c:3788 gtkboard.c:3871
 msgid "Score:"
 msgstr "Score :"
 
-#: gtkboard.c:3927
+#: gtkboard.c:3932
 msgid "Match:"
 msgstr "Match :"
 
 #. crawford and jacoby flag
-#: gtkboard.c:3942 gtktheory.c:705
+#: gtkboard.c:3947 gtktheory.c:705
 msgid "Crawford game"
 msgstr "Partie de Crawford"
 
-#: gtkboard.c:3943
+#: gtkboard.c:3948
 msgid "Jacoby"
 msgstr "Règle de Jacoby"
 
-#: gtkboard.c:4236 gtkboard.c:4251
+#: gtkboard.c:4241 gtkboard.c:4256
 #, c-format
 msgid "%s wins opening roll"
 msgstr ""
 
-#: gtkboard.c:4243 gtkboard.c:4255
+#: gtkboard.c:4248 gtkboard.c:4260
 #, c-format
 msgid "%s to roll"
 msgstr ""
@@ -2526,16 +2526,15 @@ msgstr "Eval"
 msgid "..."
 msgstr "..."
 
-#: gtkchequer.c:466 gtkgame.c:3354 gtkgame.c:3365 gtkmovelist.c:65
-#: gtkrolls.c:200 html.c:2167 sound.c:351
-msgid "Move"
-msgstr "Coup"
+#: gtkchequer.c:466
+msgid "verb|Move"
+msgstr "Jouer"
 
 #: gtkchequer.c:467 gtkgame.c:3364 gtkgame.c:3367 gtkgame.c:3370 gtkgame.c:3373
 msgid "Show"
 msgstr "Montrer"
 
-#: gtkchequer.c:468 gtkcube.c:828 gtkcube.c:958
+#: gtkchequer.c:468 gtkcube.c:828
 msgid "Copy"
 msgstr "Copier"
 
@@ -2551,46 +2550,54 @@ msgstr ""
 msgid "Details"
 msgstr "Détail"
 
-#: gtkchequer.c:526 gtkcube.c:876
+#: gtkchequer.c:530 gtkcube.c:876
 #, c-format
 msgid "Evaluate play on cubeful %d-ply"
 msgstr "Evaluer le coup avec videau à %d coup(s)"
 
-#: gtkchequer.c:565 gtkcube.c:920
+#: gtkchequer.c:573 gtkcube.c:920
 #, c-format
 msgid "Rollout preset %c"
 msgstr ""
 
 #. tool tips
-#: gtkchequer.c:611
-msgid "Rollout chequer play with current settings"
+#: gtkchequer.c:619
+msgid "Rollout selected moves with current settings"
 msgstr "Simuler le coup de pion avec les réglages actuels"
 
-#: gtkchequer.c:613
-msgid "Evaluate chequer play with current settings"
+#: gtkchequer.c:621
+msgid "Evaluate selected moves with current settings"
 msgstr "Evaluer le coup de pion avec les réglages actuels"
 
-#: gtkchequer.c:615 gtkcube.c:952
+#: gtkchequer.c:623 gtkcube.c:952
 msgid "Modify rollout settings"
 msgstr "Modifier les réglages de simulation"
 
-#: gtkchequer.c:617 gtkcube.c:954
+#: gtkchequer.c:625 gtkcube.c:954
 msgid "Modify evaluation settings"
 msgstr "Modifier les réglages d'évaluation"
 
-#: gtkchequer.c:619 gtkcube.c:956
+#: gtkchequer.c:627
+msgid "Show position after selected move"
+msgstr "Afficher la position après le coup sélectionné"
+
+#: gtkchequer.c:629 gtkcube.c:956
 msgid "Toggle output as MWC or equity"
 msgstr "Basculer entre CGM et équité"
 
-#: gtkchequer.c:621
+#: gtkchequer.c:631
 msgid "Copy selected moves to clipboard"
 msgstr "Copier les coups sélectionnés vers le presse-papiers"
 
-#: gtkchequer.c:623
-msgid "Move the selected move"
+#: gtkchequer.c:633
+msgid "Play the selected move"
 msgstr "Jouer le coup sélectionné"
 
-#: gtkchequer.c:625 gtkcube.c:960
+#: gtkchequer.c:635
+msgid "Mark selected moves for later rollout"
+msgstr "Marquer les coups sélectionné en vue d'une simulation"
+
+#: gtkchequer.c:637
 msgid "Show Sho Sengoku Temperature Map of position after selected move"
 msgstr ""
 "Afficher la Carte de Température de Sho Sengoku de la position après le(s) "
@@ -2601,7 +2608,7 @@ msgid "Lose"
 msgstr "Perd"
 
 #: gtkcube.c:103 gtkcube.c:296 gtkgame.c:1166 gtkrelational.c:59 latex.c:468
-#: play.c:4462 sound.c:355
+#: play.c:4460 sound.c:355
 msgid "Take"
 msgstr "Accepte"
 
@@ -2678,6 +2685,19 @@ msgstr "Simuler la décision de videau avec les réglages actuels"
 #: gtkcube.c:950
 msgid "Evaluate cube decision with current settings"
 msgstr "Evaluer la décision de videau avec les réglages actuels"
+
+#: gtkcube.c:958
+#, fuzzy
+msgid "Copy cube decision to clipboard"
+msgstr "Copier les coups sélectionnés vers le presse-papiers"
+
+#: gtkcube.c:960
+msgid "Mark cube decision for later rollout"
+msgstr ""
+
+#: gtkcube.c:962
+msgid "Show Sho Sengoku Temperature Map of position"
+msgstr "Afficher la Carte de Température de Sho Sengoku pour la position"
 
 #: gtkexport.c:39
 msgid "Annotations"
@@ -2783,8 +2803,8 @@ msgid "Include"
 msgstr "Inclure"
 
 #. show stuff
-#: gtkexport.c:512 gtkexport.c:522 gtkgame.c:4132 gtkprefs.c:3096
-#: gtkprefs.c:3106
+#: gtkexport.c:512 gtkexport.c:522 gtkgame.c:4132 gtkprefs.c:3095
+#: gtkprefs.c:3105
 msgid "Board"
 msgstr "Board"
 
@@ -2792,7 +2812,7 @@ msgstr "Board"
 msgid "move(s) between board shown"
 msgstr "coup(s) entre les boards"
 
-#: gtkexport.c:536 gtkrelational.c:862
+#: gtkexport.c:536 gtkrelational.c:868
 msgid "Players"
 msgstr "Joueurs"
 
@@ -3035,7 +3055,7 @@ msgstr "Différence : "
 msgid "Didn't double"
 msgstr "Pas doublé"
 
-#: gtkgame.c:1063 play.c:4483 text.c:84 text.c:442
+#: gtkgame.c:1063 play.c:4481 text.c:84 text.c:442
 #, c-format
 msgid "Rolled %u%u"
 msgstr "Dés %u%u"
@@ -3057,7 +3077,7 @@ msgstr "Décision de videau"
 msgid "GNU Backgammon cannot analyse neither beavers nor raccoons yet"
 msgstr "GNU Backgammon ne sait pas encore analyser les beavers et les raccons"
 
-#: gtkgame.c:1166 latex.c:481 play.c:4470 sound.c:349
+#: gtkgame.c:1166 latex.c:481 play.c:4468 sound.c:349
 msgid "Drop"
 msgstr "Passe"
 
@@ -3552,6 +3572,11 @@ msgstr "Analyser le match ou la session"
 msgid "Clear analysis"
 msgstr "Effacer l'analyse"
 
+#: gtkgame.c:3354 gtkgame.c:3365 gtkmovelist.c:65 gtkrolls.c:200 html.c:2167
+#: sound.c:351
+msgid "noun|Move"
+msgstr "Coup"
+
 #: gtkgame.c:3358
 msgid "_Match or session"
 msgstr "_Match ou session"
@@ -3745,7 +3770,7 @@ msgid "_Theory"
 msgstr "_Théorie"
 
 #. TOGGLE
-#: gtkgame.c:3448 gtkpanels.c:892
+#: gtkgame.c:3448 gtkpanels.c:890
 msgid "Command"
 msgstr "Commandes"
 
@@ -5822,174 +5847,174 @@ msgstr "<sous-commande>\n"
 msgid "Available subcommands:\n"
 msgstr "Sous-commandes disponibles :\n"
 
-#: gtkpanels.c:628
+#: gtkpanels.c:626
 msgid "GNU Backgammon - Command"
 msgstr "GNU Backgammon - Commandes"
 
-#: gtkpanels.c:652
+#: gtkpanels.c:650
 msgid "Help"
 msgstr "Aide"
 
-#: gtkpanels.c:672
+#: gtkpanels.c:670
 msgid "GNU Backgammon - Annotation"
 msgstr "GNU Backgammon - Annotation"
 
-#: gtkpanels.c:751
+#: gtkpanels.c:749
 #, c-format
 msgid "Game %d: %d, %d Crawford"
 msgstr "Partie %d : %d, %d Crawford"
 
-#: gtkpanels.c:753
+#: gtkpanels.c:751
 #, c-format
 msgid "Game %d: %d, %d"
 msgstr "Partie %d : %d, %d"
 
-#: gtkpanels.c:824
+#: gtkpanels.c:822
 msgid "GNU Backgammon - Game record"
 msgstr "GNU Backgammon - Déroulement de la partie"
 
-#: gtkpanels.c:884
+#: gtkpanels.c:882
 msgid "Commentary"
 msgstr "Commentaires"
 
-#: gtkpanels.c:889
+#: gtkpanels.c:887
 msgid "Messages"
 msgstr "Messages"
 
-#: gtkpanels.c:895
+#: gtkpanels.c:893
 msgid "Theory"
 msgstr "Théorie"
 
-#: gtkpanels.c:1444
+#: gtkpanels.c:1442
 msgid "Move analysis and commentary will be displayed."
 msgstr "L'analyse des coups et les commentaires seront affichés."
 
-#: gtkpanels.c:1445
+#: gtkpanels.c:1443
 msgid "Move analysis and commentary will not be displayed."
 msgstr "L'analyse des coups et les commentaires ne seront pas affichés."
 
-#: gtkpanels.c:1453
+#: gtkpanels.c:1451
 msgid "Show window with messages"
 msgstr "Afficher la fenêtre des messages."
 
-#: gtkpanels.c:1453
+#: gtkpanels.c:1451
 msgid "Do not show window with messages."
 msgstr "Ne pas afficher la fenêtre des messages."
 
-#: gtkpanels.c:1461
+#: gtkpanels.c:1459
 #, fuzzy
 msgid "Show window with theory"
 msgstr "Afficher la fenêtre des messages."
 
-#: gtkpanels.c:1461
+#: gtkpanels.c:1459
 msgid "Do not show window with theory."
 msgstr ""
 
-#: gtkpanels.c:1469
+#: gtkpanels.c:1467
 #, fuzzy
 msgid "Show window to enter commands"
 msgstr "Afficher la fenêtre des messages."
 
-#: gtkpanels.c:1469
+#: gtkpanels.c:1467
 msgid "Do not show window to enter commands."
 msgstr ""
 
-#: gtkpanels.c:1477
+#: gtkpanels.c:1475
 #, fuzzy
 msgid "Show game window with moves"
 msgstr "Afficher la fenêtre des messages."
 
-#: gtkpanels.c:1477
+#: gtkpanels.c:1475
 msgid "Do not show game window with moves."
 msgstr ""
 
-#: gtkpanels.c:1485
+#: gtkpanels.c:1483
 #, fuzzy
 msgid "Show window with analysis"
 msgstr "Afficher la fenêtre des messages."
 
-#: gtkpanels.c:1485
+#: gtkpanels.c:1483
 msgid "Do not show window with analysis."
 msgstr ""
 
-#: gtkpanels.c:1546
+#: gtkpanels.c:1544
 #, c-format
 msgid "Illegal value. See 'help set geometry %s width'.\n"
 msgstr ""
 
-#: gtkpanels.c:1550
+#: gtkpanels.c:1548
 #, c-format
 msgid "Width of %s window set to %d.\n"
 msgstr ""
 
-#: gtkpanels.c:1566
+#: gtkpanels.c:1564
 #, c-format
 msgid "Illegal value. See 'help set geometry %s height'.\n"
 msgstr ""
 
-#: gtkpanels.c:1570
+#: gtkpanels.c:1568
 #, c-format
 msgid "Height of %s window set to %d.\n"
 msgstr ""
 
-#: gtkpanels.c:1585
+#: gtkpanels.c:1583
 #, c-format
 msgid "Illegal value. See 'help set geometry %s xpos'.\n"
 msgstr ""
 
-#: gtkpanels.c:1589
+#: gtkpanels.c:1587
 #, c-format
 msgid "X-position of %s window set to %d.\n"
 msgstr ""
 
-#: gtkpanels.c:1605
+#: gtkpanels.c:1603
 #, c-format
 msgid "Illegal value. See 'help set geometry %s ypos'.\n"
 msgstr ""
 
-#: gtkpanels.c:1609
+#: gtkpanels.c:1607
 #, c-format
 msgid "Y-position of %s window set to %d.\n"
 msgstr ""
 
-#: gtkpanels.c:1622
+#: gtkpanels.c:1620
 #, c-format
 msgid "%s window maximised.\n"
 msgstr "Fenêtre agrandie %s.\n"
 
-#: gtkpanels.c:1622
+#: gtkpanels.c:1620
 #, c-format
 msgid "%s window unmaximised.\n"
 msgstr "Fenêtre réduite %s.\n"
 
-#: gtkpanels.c:1633 gtkpanels.c:1650
+#: gtkpanels.c:1631 gtkpanels.c:1648
 msgid "Game list, Annotation and Message panels/windows will be displayed."
 msgstr ""
 
-#: gtkpanels.c:1634 gtkpanels.c:1652
+#: gtkpanels.c:1632 gtkpanels.c:1650
 msgid "Game list, Annotation and Message panels/windows will not be displayed."
 msgstr ""
 
-#: gtkpanels.c:1659
+#: gtkpanels.c:1657
 msgid "Windows will be docked."
 msgstr ""
 
-#: gtkpanels.c:1659
+#: gtkpanels.c:1657
 msgid "Windows will be detached."
 msgstr ""
 
-#: gtkpanels.c:1667
+#: gtkpanels.c:1665
 msgid "window"
 msgstr "fenêtre"
 
-#: gtkpanels.c:1678
+#: gtkpanels.c:1676
 #, fuzzy
 msgid ""
 "Default geometries:\n"
 "\n"
 msgstr "Images par défaut"
 
-#: gtkprefs.c:255 gtkprefs.c:3184
+#: gtkprefs.c:255 gtkprefs.c:3183
 msgid "GNU Backgammon - Appearance"
 msgstr "GNU Backgammon - Apparence"
 
@@ -6149,11 +6174,11 @@ msgstr "Terne"
 msgid "Shiny"
 msgstr "Brillant"
 
-#: gtkprefs.c:821 gtkprefs.c:948 gtkprefs.c:1632
+#: gtkprefs.c:821 gtkprefs.c:948 gtkprefs.c:1631
 msgid "Diffuse"
 msgstr "Diffus"
 
-#: gtkprefs.c:827 gtkprefs.c:954 gtkprefs.c:1652
+#: gtkprefs.c:827 gtkprefs.c:954 gtkprefs.c:1651
 msgid "Specular"
 msgstr "Spéculaire"
 
@@ -6254,32 +6279,32 @@ msgstr "Boisé"
 msgid "Painted"
 msgstr "Peint"
 
-#: gtkprefs.c:1367
+#: gtkprefs.c:1366
 msgid "Save settings and test 3d performance for 3 seconds?"
 msgstr ""
 "Enregistrer les paramètres et tester les performances 3d pendant 3 secondes ?"
 
-#: gtkprefs.c:1377
+#: gtkprefs.c:1376
 msgid "3d Performance is very fast.\n"
 msgstr "Les performances 3d sont excellentes.\n"
 
-#: gtkprefs.c:1379
+#: gtkprefs.c:1378
 msgid "3d Performance is good.\n"
 msgstr "Les performances 3d sont bonnes.\n"
 
-#: gtkprefs.c:1381
+#: gtkprefs.c:1380
 msgid "3d Performance is ok.\n"
 msgstr "Les performances 3d sont correctes.\n"
 
-#: gtkprefs.c:1383
+#: gtkprefs.c:1382
 msgid "3d Performance is poor.\n"
 msgstr "Les performances 3d sont mauvaises.\n"
 
-#: gtkprefs.c:1385
+#: gtkprefs.c:1384
 msgid "3d Performance is very poor.\n"
 msgstr "Les performances 3d sont très mauvaises.\n"
 
-#: gtkprefs.c:1387
+#: gtkprefs.c:1386
 #, c-format
 msgid ""
 "%s\n"
@@ -6288,348 +6313,348 @@ msgstr ""
 "%s\n"
 "(%.1f trames par seconde)\n"
 
-#: gtkprefs.c:1393
+#: gtkprefs.c:1392
 msgid "Disable shadows to improve performance"
 msgstr "Désactiver les ombres pour améliorer les performances"
 
-#: gtkprefs.c:1395
+#: gtkprefs.c:1394
 msgid "Try the quick draw option to improve performance"
 msgstr "Essayez l'option de tirage rapide pour améliorer les performances."
 
-#: gtkprefs.c:1397
+#: gtkprefs.c:1396
 msgid ""
 "The quick draw option will not change the result of this performance test"
 msgstr ""
 "L'option de tirage rapide ne changera pas le résultat de ce test de "
 "performances."
 
-#: gtkprefs.c:1413
+#: gtkprefs.c:1412
 msgid "Light azimuth"
 msgstr "Azimut de la lumière"
 
-#: gtkprefs.c:1414
+#: gtkprefs.c:1413
 msgid "Light elevation"
 msgstr "Elévation de la lumière"
 
-#: gtkprefs.c:1480
+#: gtkprefs.c:1479
 msgid "Light Source Type"
 msgstr "Type de source lumineuse"
 
-#: gtkprefs.c:1491
+#: gtkprefs.c:1490
 msgid "Positional"
 msgstr ""
 
-#: gtkprefs.c:1492
+#: gtkprefs.c:1491
 msgid "This is a fixed light source, like a lamp"
 msgstr "Source lumineuse fixe, par exemple une lampe"
 
-#: gtkprefs.c:1497
+#: gtkprefs.c:1496
 msgid "Directional"
 msgstr ""
 
-#: gtkprefs.c:1498
+#: gtkprefs.c:1497
 msgid "This is a light direction, like the sun"
 msgstr "Source lumineuse directionnelle, par exemple le soleil"
 
-#: gtkprefs.c:1503
+#: gtkprefs.c:1502
 msgid "Light Position"
 msgstr ""
 
-#: gtkprefs.c:1521
+#: gtkprefs.c:1520
 msgid "Left"
 msgstr "Gauche"
 
-#: gtkprefs.c:1535
+#: gtkprefs.c:1534
 msgid "Right"
 msgstr "Droite"
 
-#: gtkprefs.c:1552
+#: gtkprefs.c:1551
 msgid "Bottom"
 msgstr "Bas"
 
-#: gtkprefs.c:1567
+#: gtkprefs.c:1566
 msgid "Top"
 msgstr "Haut"
 
-#: gtkprefs.c:1577
+#: gtkprefs.c:1576
 msgid "Low"
 msgstr "Faible"
 
-#: gtkprefs.c:1591
+#: gtkprefs.c:1590
 msgid "High"
 msgstr "Forte"
 
-#: gtkprefs.c:1594
+#: gtkprefs.c:1593
 msgid "Light Levels"
 msgstr "Niveaux de luminosité"
 
-#: gtkprefs.c:1612
+#: gtkprefs.c:1611
 #, fuzzy
 msgid "Ambient"
 msgstr "Couleur des dés :"
 
-#: gtkprefs.c:1622
+#: gtkprefs.c:1621
 msgid "Ambient light specifies the general light level"
 msgstr "L'option Lumière d'ambiance utilise le niveau de luminosité général"
 
-#: gtkprefs.c:1642
+#: gtkprefs.c:1641
 msgid "Diffuse light specifies light from the light source"
 msgstr ""
 "L'option Lumière diffuse utilise la lumière en provenance de la source "
 "lumineuse"
 
-#: gtkprefs.c:1662
+#: gtkprefs.c:1661
 msgid "Specular light is reflected light off shiny surfaces"
 msgstr ""
 "L'option Lumière spéculaire utilise la lumière reflétée par des surfaces "
 "brillantes"
 
-#: gtkprefs.c:1700
+#: gtkprefs.c:1699
 msgid "Display Type"
 msgstr "Type d'affichage"
 
-#: gtkprefs.c:1711
+#: gtkprefs.c:1710
 msgid "2d Board"
 msgstr "Board 2d"
 
-#: gtkprefs.c:1715
+#: gtkprefs.c:1714
 msgid "3d Board"
 msgstr "Board 3d"
 
-#: gtkprefs.c:1723
+#: gtkprefs.c:1722
 msgid "Numbered point labels"
 msgstr "Numéroter les cases"
 
-#: gtkprefs.c:1726
+#: gtkprefs.c:1725
 msgid "Show or hide point numbers"
 msgstr ""
 
-#: gtkprefs.c:1728
+#: gtkprefs.c:1727
 msgid "Dynamic labels"
 msgstr "Etiquettes  dynamiques"
 
-#: gtkprefs.c:1736
+#: gtkprefs.c:1735
 msgid "Update the labels so they are correct for the player on roll"
 msgstr ""
 "Mettre à jour les étiquettes afin qu'elles soient correctes pour le joueur "
 "au trait"
 
-#: gtkprefs.c:1738
+#: gtkprefs.c:1737
 msgid "Show move indicator"
 msgstr "Afficher l'indicateur de déplacement"
 
-#: gtkprefs.c:1739
+#: gtkprefs.c:1738
 msgid "Show or hide arrow indicating who is moving"
 msgstr ""
 
-#: gtkprefs.c:1752
+#: gtkprefs.c:1751
 msgid "3d Options"
 msgstr "Options 3d"
 
-#: gtkprefs.c:1763
+#: gtkprefs.c:1762
 msgid "Show shadows"
 msgstr "Montre les ombres"
 
-#: gtkprefs.c:1764
+#: gtkprefs.c:1763
 msgid "Display shadows, this option requires a fast graphics card"
 msgstr "Afficher les ombres, cette option requiert une carte graphique rapide"
 
-#: gtkprefs.c:1776
+#: gtkprefs.c:1775
 msgid "light"
 msgstr ""
 
-#: gtkprefs.c:1786
+#: gtkprefs.c:1785
 msgid "Vary the darkness of the shadows"
 msgstr "Modifier  la profondeur des ombres"
 
-#: gtkprefs.c:1790
+#: gtkprefs.c:1789
 #, fuzzy
 msgid "dark"
 msgstr "Cèdre"
 
-#: gtkprefs.c:1795
+#: gtkprefs.c:1794
 #, fuzzy
 msgid "Animate dice rolls"
 msgstr "Saisissez les dés : "
 
-#: gtkprefs.c:1796
+#: gtkprefs.c:1795
 #, fuzzy
 msgid "Dice rolls will shake across board"
 msgstr "Les jets de dés seront analysés."
 
-#: gtkprefs.c:1800
+#: gtkprefs.c:1799
 #, fuzzy
 msgid "Animate resignation flag"
 msgstr "Équité après abandon :"
 
-#: gtkprefs.c:1801
+#: gtkprefs.c:1800
 msgid "Waves resignation flag"
 msgstr ""
 
-#: gtkprefs.c:1805
+#: gtkprefs.c:1804
 msgid "Close board on exit"
 msgstr "Fermer le board en quittant le programme"
 
-#: gtkprefs.c:1806
+#: gtkprefs.c:1805
 #, fuzzy
 msgid "When you quit GNUbg, the board will close"
 msgstr "Lorque vous quittez gnubg, le board se ferme."
 
-#: gtkprefs.c:1827
+#: gtkprefs.c:1826
 #, fuzzy
 msgid "Board angle: "
 msgstr "Images des boards"
 
-#: gtkprefs.c:1837
+#: gtkprefs.c:1836
 msgid "Vary the angle the board is tilted at"
 msgstr "Modifier l'angle d'inclinaison du board"
 
-#: gtkprefs.c:1849
+#: gtkprefs.c:1848
 msgid "FOV skew: "
 msgstr ""
 
-#: gtkprefs.c:1860
+#: gtkprefs.c:1859
 msgid "Vary the field-of-view of the 3d display"
 msgstr "Modifier l'angle de champ de la vue 3d"
 
-#: gtkprefs.c:1864
+#: gtkprefs.c:1863
 msgid "Plan view"
 msgstr ""
 
-#: gtkprefs.c:1865
+#: gtkprefs.c:1864
 msgid "Display the 3d board with a 2d overhead view"
 msgstr "Afficher le board 3d dans une vue de dessus 2d"
 
-#: gtkprefs.c:1871
+#: gtkprefs.c:1870
 msgid "Curve accuracy"
 msgstr "Précision de la courbe"
 
-#: gtkprefs.c:1881
+#: gtkprefs.c:1880
 #, fuzzy
 msgid "low"
 msgstr "Lente"
 
-#: gtkprefs.c:1891
+#: gtkprefs.c:1890
 msgid ""
 "Change how accurately curves are drawn. If performance is slow try lowering "
 "this value. Increasing this value will only have an effect on large displays"
 msgstr ""
 
-#: gtkprefs.c:1897
+#: gtkprefs.c:1896
 msgid "high"
 msgstr ""
 
-#: gtkprefs.c:1901
+#: gtkprefs.c:1900
 #, fuzzy
 msgid "Dice size"
 msgstr "Taille du cache :"
 
-#: gtkprefs.c:1911
+#: gtkprefs.c:1910
 msgid "small"
 msgstr ""
 
-#: gtkprefs.c:1921
+#: gtkprefs.c:1920
 msgid "Vary the size of the dice"
 msgstr ""
 
-#: gtkprefs.c:1925
+#: gtkprefs.c:1924
 #, fuzzy
 msgid "large"
 msgstr "Grand"
 
-#: gtkprefs.c:1928
+#: gtkprefs.c:1927
 msgid "Quick drawing"
 msgstr ""
 
-#: gtkprefs.c:1929
+#: gtkprefs.c:1928
 msgid "Fast drawing option to improve performance"
 msgstr ""
 
-#: gtkprefs.c:1935
+#: gtkprefs.c:1934
 msgid "Test performance"
 msgstr "Tester les performances"
 
-#: gtkprefs.c:2111
+#: gtkprefs.c:2110
 msgid "unknown title"
 msgstr "nom inconnu"
 
-#: gtkprefs.c:2116
+#: gtkprefs.c:2115
 msgid "unknown author"
 msgstr "auteur inconnu"
 
-#: gtkprefs.c:2257
+#: gtkprefs.c:2256
 msgid "GNU Backgammon - Add current board design"
 msgstr "GNU Backgammon - Ajouter le thème de board actuel"
 
-#: gtkprefs.c:2277
+#: gtkprefs.c:2276
 msgid "Title of new design:"
 msgstr "Nom du nouveau thème :"
 
-#: gtkprefs.c:2295
+#: gtkprefs.c:2294
 msgid "Author of new design:"
 msgstr "Auteur du nouveau thème :"
 
-#: gtkprefs.c:2593
+#: gtkprefs.c:2592
 msgid "Export Design"
 msgstr ""
 
 #. new design, so get settings and copy to other dimension
-#: gtkprefs.c:2614
+#: gtkprefs.c:2613
 #, fuzzy
 msgid "User defined"
 msgstr "personnalisé"
 
-#: gtkprefs.c:2615
+#: gtkprefs.c:2614
 msgid "User"
 msgstr "Utilisateur"
 
-#: gtkprefs.c:2661
+#: gtkprefs.c:2660
 msgid "Import Design"
 msgstr ""
 
 #. no designs found
-#: gtkprefs.c:2669
+#: gtkprefs.c:2668
 msgid "File not found or no designs in file."
 msgstr "Le fichier est introuvable ou ne contient aucun thème."
 
 #. add designs to current list
 #. FIXME: show dialog instead
-#: gtkprefs.c:2680
+#: gtkprefs.c:2679
 msgid "Adding new designs:"
 msgstr ""
 
-#: gtkprefs.c:2688
+#: gtkprefs.c:2687
 #, c-format
 msgid "%d design added.\n"
 msgid_plural "%d designs added.\n"
 msgstr[0] ""
 msgstr[1] ""
 
-#: gtkprefs.c:2703
+#: gtkprefs.c:2702
 #, fuzzy, c-format
 msgid "Permanently remove design %s?"
 msgstr "Effacer le thème"
 
-#: gtkprefs.c:2725
+#: gtkprefs.c:2724
 #, fuzzy, c-format
 msgid "Permanently overwrite 3d settings for design %s?"
 msgstr "Effacer le thème"
 
-#: gtkprefs.c:2727
+#: gtkprefs.c:2726
 #, fuzzy, c-format
 msgid "Permanently overwrite 2d settings for design %s?"
 msgstr "Effacer le thème"
 
-#: gtkprefs.c:2729
+#: gtkprefs.c:2728
 #, fuzzy, c-format
 msgid "Permanently overwrite settings for design %s?"
 msgstr "Effacer le thème"
 
-#: gtkprefs.c:2815
+#: gtkprefs.c:2814
 msgid "Select new design and lose current changes?"
 msgstr "Sélectionner un nouveau thème et annuler les changements en cours ?"
 
-#: gtkprefs.c:2851
+#: gtkprefs.c:2850
 msgid "Design"
 msgstr "Thème"
 
@@ -6637,62 +6662,62 @@ msgstr "Thème"
 #. * buttons
 #.
 #. add current design
-#: gtkprefs.c:2879
+#: gtkprefs.c:2878
 msgid "Add current design"
 msgstr "Ajouter le thème actuel"
 
 #. remove design
-#: gtkprefs.c:2886
+#: gtkprefs.c:2885
 msgid "Remove design"
 msgstr "Effacer le thème"
 
 #. update design
-#: gtkprefs.c:2895
+#: gtkprefs.c:2894
 msgid "Update design"
 msgstr ""
 
-#: gtkprefs.c:2911
+#: gtkprefs.c:2910
 msgid "Export design"
 msgstr "Exporte le thème"
 
 #. import design
-#: gtkprefs.c:2918
+#: gtkprefs.c:2917
 msgid "Import design"
 msgstr "Importe le thème"
 
-#: gtkprefs.c:3084
+#: gtkprefs.c:3083
 msgid "Lighting"
 msgstr "Eclairage"
 
-#: gtkprefs.c:3090
+#: gtkprefs.c:3089
 msgid "Designs"
 msgstr "Thèmes"
 
-#: gtkprefs.c:3095
+#: gtkprefs.c:3094
 msgid "Chequers"
 msgstr "Pions"
 
-#: gtkprefs.c:3097 gtkprefs.c:3107
+#: gtkprefs.c:3096 gtkprefs.c:3106
 msgid "Border"
 msgstr "Cadre"
 
-#: gtkprefs.c:3098 gtkprefs.c:3108
+#: gtkprefs.c:3097 gtkprefs.c:3107
 msgid "Dice (0)"
 msgstr "Dés (0)"
 
-#: gtkprefs.c:3099 gtkprefs.c:3109
+#: gtkprefs.c:3098 gtkprefs.c:3108
 msgid "Dice (1)"
 msgstr "Dés (1)"
 
-#: gtkprefs.c:3104
+#: gtkprefs.c:3103
 msgid "Chequers (0)"
 msgstr "Pions (0)"
 
-#: gtkprefs.c:3105
+#: gtkprefs.c:3104
 msgid "Chequers (1)"
 msgstr "Pions (1)"
 
-#: gtkprefs.c:3215
+#: gtkprefs.c:3214
 msgid "General"
 msgstr "Général"
 
@@ -6941,11 +6966,11 @@ msgstr "Infos"
 msgid "GNU Backgammon - Database"
 msgstr "GNU Backgammon - Base de données"
 
-#: gtkrelational.c:954
+#: gtkrelational.c:955
 msgid "Query"
 msgstr "Requête"
 
-#: gtkrelational.c:1017
+#: gtkrelational.c:1018
 msgid "GNU Backgammon - Database Result"
 msgstr ""
 
@@ -8486,7 +8511,7 @@ msgstr "%s propose d'abandonner un %s.\n"
 msgid "%s offers to resign.\n"
 msgstr "%s propose d'abandonner un %s.\n"
 
-#: play.c:3835 play.c:4661 set.c:2681
+#: play.c:3835 play.c:4659 set.c:2681
 msgid "Please resolve the resignation first."
 msgstr "Veuillez d'abord répondre à la proposition d'abandon."
 
@@ -8572,31 +8597,31 @@ msgstr ""
 msgid "Stepping back to the offering of the cube. "
 msgstr ""
 
-#: play.c:4447
+#: play.c:4445
 #, c-format
 msgid "Double to %d"
 msgstr "Double à %d"
 
-#: play.c:4447
+#: play.c:4445
 #, c-format
 msgid "Redouble to %d"
 msgstr "Redouble à %d"
 
-#: play.c:4451
+#: play.c:4449
 #, c-format
 msgid "Beaver to %d"
 msgstr "Beaver à %d"
 
-#: play.c:4451
+#: play.c:4449
 #, c-format
 msgid "Raccoon to %d"
 msgstr "Raccoon à %d"
 
-#: play.c:4478
+#: play.c:4476
 msgid " Resigns"
 msgstr "Abandonne"
 
-#: play.c:4656 set.c:2675
+#: play.c:4654 set.c:2675
 msgid "There must be a game in progress to set a player on roll."
 msgstr ""
 
