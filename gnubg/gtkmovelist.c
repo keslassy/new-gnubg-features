@@ -62,7 +62,7 @@ MoveListCreate(hintdata * phd)
         N_("L bg"),
         NULL,
         N_("Diff."),
-        N_("Move")
+        N_("noun|Move")
     };
     unsigned int i;
     int showWLTree = showMoveListDetail && !phd->fDetails;

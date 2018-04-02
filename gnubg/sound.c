@@ -348,7 +348,7 @@ const char *sound_description[NUM_SOUNDS] = {
     N_("Doubling"),
     N_("Drop"),
     N_("Chequer movement"),
-    N_("Move"),
+    N_("noun|Move"),
     N_("Redouble"),
     N_("Resign"),
     N_("Roll"),

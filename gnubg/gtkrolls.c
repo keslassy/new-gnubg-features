@@ -197,7 +197,7 @@ RollsTree(const int n, evalcontext * pec, const matchstate * pms)
     GtkCellRenderer *renderer;
     static const char *aszColumn[] = {
         N_("Roll"),
-        N_("Move"),
+        N_("noun|Move"),
         N_("Equity")
     };
 

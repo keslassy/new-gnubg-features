@@ -2164,7 +2164,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
     fprintf(pf, "<th %s colspan=\"2\">%s</th>\n",
             GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVENUMBER, -1), _("#"));
     fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVEPLY, -1), _("Ply"));
-    fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVEMOVE, -1), _("Move"));
+    fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVEMOVE, -1), Q_("noun|Move"));
     fprintf(pf,
             "<th %s>%s</th>\n" "</tr>\n",
             GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVEEQUITY, -1),

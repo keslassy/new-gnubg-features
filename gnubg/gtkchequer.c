@@ -463,7 +463,7 @@ CreateMoveListTools(hintdata * phd)
     GtkWidget *pwRollout = gtk_button_new_with_label(_("Rollout"));
     GtkWidget *pwRolloutSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwMWC = gtk_toggle_button_new_with_label(_("MWC"));
-    GtkWidget *pwMove = gtk_button_new_with_label(_("Move"));
+    GtkWidget *pwMove = gtk_button_new_with_label(Q_("verb|Move"));
     GtkWidget *pwShow = gtk_toggle_button_new_with_label(_("Show"));
     GtkWidget *pwCopy = gtk_button_new_with_label(_("Copy"));
     GtkWidget *pwTempMap = gtk_button_new_with_label(_("TM"));

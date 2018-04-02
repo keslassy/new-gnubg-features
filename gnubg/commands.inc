@@ -1017,7 +1017,7 @@ static command acSetExportHTMLType[] = {
   { "humanwinsmatch", CommandSetSoundSoundHumanWinMatch, 
     N_("Human wins match"), szOPTFILENAME, &cFilename },
   { "move", CommandSetSoundSoundMove, 
-    N_("Move"), szOPTFILENAME, &cFilename },
+    N_("noun|Move"), szOPTFILENAME, &cFilename },
   { "redouble", CommandSetSoundSoundRedouble, 
     N_("Redouble"), szOPTFILENAME, &cFilename },
   { "resign", CommandSetSoundSoundResign, 
