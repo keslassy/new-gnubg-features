@@ -1044,6 +1044,8 @@ AddStatcontext(const statcontext * pscA, statcontext * pscB)
 
     int i, j;
 
+    MT_Exclusive();
+
     pscB->nGames++;
 
     pscB->fMoves |= pscA->fMoves;
@@ -1104,7 +1106,7 @@ AddStatcontext(const statcontext * pscA, statcontext * pscB)
         }
 
     }
-
+    MT_Release();
 }
 
 static int
