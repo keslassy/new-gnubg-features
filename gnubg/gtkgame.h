@@ -72,7 +72,9 @@ extern int ArePanelsDocked(void);
 extern int ArePanelsShowing(void);
 extern int DockedPanelsShowing(void);
 extern int edit_new(unsigned int length);
+#if ! GTK_CHECK_VERSION(3,0,0)
 extern int GetPanelWidth(gnubgwindow panel);
+#endif
 extern int GTKGetManualDice(unsigned int an[2]);
 extern int GTKGetMove(int anMove[8]);
 extern int GtkTutor(char *sz);

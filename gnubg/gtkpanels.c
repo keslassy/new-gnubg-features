@@ -365,7 +365,7 @@ UpdateTheoryData(BoardData * bd, int UpdateType, const TanBoard points)
             PipCount(points, anPip);
 
             fKC = KleinmanCount(anPip[1], anPip[0]);
-            if (fKC != -1) {
+            if (fKC >= 0) {
                 pc = g_strdup_printf("%.4f", fKC);
                 gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(store), &iter, NULL, 3);
                 gtk_list_store_set(store, &iter, 1, pc, -1);
@@ -1705,11 +1705,13 @@ IsPanelDocked(gnubgwindow window)
     return woPanel[window].docked;
 }
 
+#if ! GTK_CHECK_VERSION(3,0,0)
 int
 GetPanelWidth(gnubgwindow panel)
 {
     return woPanel[panel].wg.nWidth;
 }
+#endif
 
 int
 IsPanelShowVar(gnubgwindow panel, void *p)
