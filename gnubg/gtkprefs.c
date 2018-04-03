@@ -3240,10 +3240,8 @@ SetBoardPreferences(GtkWidget * pwBoard, char *sz)
     if (fX) {
         BoardData *bd = BOARD(pwBoard)->board_data;
 
-        if (gtk_widget_get_realized(pwBoard))
-            board_free_pixmaps(bd);
-
         if (gtk_widget_get_realized(pwBoard)) {
+            board_free_pixmaps(bd);
             board_create_pixmaps(pwBoard, bd);
 #if defined(USE_BOARD3D)
             DisplayCorrectBoardType(bd, bd->bd3d, bd->rd);
