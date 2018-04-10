@@ -118,7 +118,7 @@ MoveListCreate(hintdata * phd)
         gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_DIFF], renderer,
                                                     "text", ML_COL_DIFF + offset, "foreground", ML_COL_FGCOL + offset,
                                                     NULL);
-        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_MOVE], renderer,
+        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, Q_(aszTitleDetails[ML_COL_MOVE]), renderer,
                                                     "text", ML_COL_MOVE + offset, "foreground", ML_COL_FGCOL + offset,
                                                     NULL);
     }

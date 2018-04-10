@@ -551,9 +551,9 @@ SetSoundFile(const gnubgsound sound, const char *file)
     g_free(old_file);
 
     if (!*new_file) {
-        outputf(_("No sound played for: %s\n"), gettext(sound_description[sound]));
+        outputf(_("No sound played for: %s\n"), Q_(sound_description[sound]));
     } else {
-        outputf(_("Sound for: %s: %s\n"), gettext(sound_description[sound]), new_file);
+        outputf(_("Sound for: %s: %s\n"), Q_(sound_description[sound]), new_file);
     }
     g_free(sound_file[sound]);
     sound_file[sound] = g_strdup(new_file);

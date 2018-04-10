@@ -216,7 +216,7 @@ RollsTree(const int n, evalcontext * pec, const matchstate * pms)
         g_object_set(G_OBJECT(renderer), "xalign", 0.0, NULL);
 
         gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(ptv),
-                                                    -1, gettext(aszColumn[i]), renderer, "text", i, NULL);
+                                                    -1, Q_(aszColumn[i]), renderer, "text", i, NULL);
     }
 
     if (fInterrupt) {

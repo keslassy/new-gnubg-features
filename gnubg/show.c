@@ -2006,9 +2006,9 @@ CommandShowSound(char *UNUSED(sz))
     for (i = (gnubgsound) 0; i < NUM_SOUNDS; ++i) {
         char *sound = GetSoundFile(i);
         if (!*sound)
-            outputf(_("   %-30.30s : no sound\n"), gettext(sound_description[i]));
+            outputf(_("   %-30.30s : no sound\n"), Q_(sound_description[i]));
         else
-            outputf("   %-30.30s : \"%s\"\n", gettext(sound_description[i]), sound);
+            outputf("   %-30.30s : \"%s\"\n", Q_(sound_description[i]), sound);
         g_free(sound);
     }
 }

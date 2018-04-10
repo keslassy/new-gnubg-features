@@ -264,7 +264,7 @@ SoundSelected(GtkTreeView * treeview, gpointer UNUSED(userdata))
     gtk_tree_view_get_cursor(GTK_TREE_VIEW(treeview), &path, NULL);
     selSound = (gnubgsound) gtk_tree_path_get_indices(path)[0];
 
-    gtk_frame_set_label(GTK_FRAME(soundFrame), sound_description[selSound]);
+    gtk_frame_set_label(GTK_FRAME(soundFrame), Q_(sound_description[selSound]));
     SoundSkipUpdate = TRUE;
     gtk_entry_set_text(GTK_ENTRY(soundPath), soundDetails[selSound].Path);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(soundEnabled), (*soundDetails[selSound].Path) ? TRUE : FALSE);
@@ -872,7 +872,7 @@ append_sound_options(optionswidget * pow)
         soundDetails[i].Path = GetSoundFile(i);
 
         gtk_list_store_append(store, &iter);
-        gtk_list_store_set(store, &iter, SOUND_COL, gettext(sound_description[i]), -1);
+        gtk_list_store_set(store, &iter, SOUND_COL, Q_(sound_description[i]), -1);
     }
 
     soundList = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
