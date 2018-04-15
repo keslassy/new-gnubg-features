@@ -1493,6 +1493,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         else
 #endif
         if (gtk_widget_get_realized(pwBoard)) {
+            board_free_pixmaps(bd);
             board_create_pixmaps(pwBoard, bd);
             gtk_widget_queue_draw(bd->drawing_area);
         }
