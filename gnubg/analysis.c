@@ -105,8 +105,10 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, co
 
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
-                                   pci, pec, defaultFilters) < 0)
+                                   pci, pec, defaultFilters) < 0) {
+                free(ml.amMoves);
                 return ERR_VAL;
+            }
 
             if (!ml.cMoves) {
 
@@ -141,8 +143,10 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, co
 
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
-                                   &ciOpp, pec, defaultFilters) < 0)
+                                   &ciOpp, pec, defaultFilters) < 0) {
+                free(ml.amMoves);
                 return ERR_VAL;
+            }
 
             if (!ml.cMoves) {
 
@@ -194,8 +198,10 @@ LuckNormal(const TanBoard anBoard, const int n0, const int n1, const cubeinfo * 
 
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
-                                   pci, pec, defaultFilters) < 0)
+                                   pci, pec, defaultFilters) < 0) {
+                free(ml.amMoves);
                 return ERR_VAL;
+            }
 
             if (!ml.cMoves) {
 
@@ -683,8 +689,10 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     if (FindnSaveBestMoves(&ml, pmr->anDice[0],
                                            pmr->anDice[1],
                                            (ConstTanBoard) pms->anBoard, &key,
-                                           arSkillLevel[SKILL_DOUBTFUL], &ci, &pesChequer->ec, aamf) < 0)
+                                           arSkillLevel[SKILL_DOUBTFUL], &ci, &pesChequer->ec, aamf) < 0) {
+                        free(ml.amMoves);
                         return -1;
+                    }
                     MT_Exclusive();
                     CopyMoveList(&pmr->ml, &ml);
                     if (ml.cMoves)
@@ -716,7 +724,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
 
         dt = DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
 
-        if (dt != DT_NORMAL)
+        if (dt > DT_NORMAL)	/* TODO: analyse beavers */
             break;
 
         /* cube action */
@@ -767,7 +775,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             break;
 
         tt = (taketype) DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
-        if (tt > TT_NORMAL)
+        if (tt > TT_NORMAL)	/* TODO: analyse beavers */
             break;
 
         if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != ERR_VAL)) {
@@ -787,7 +795,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             break;
 
         tt = (taketype) DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
-        if (tt > TT_NORMAL)
+        if (tt > TT_NORMAL)	/* TODO: analyse beavers */
             break;
 
         if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != ERR_VAL)) {
