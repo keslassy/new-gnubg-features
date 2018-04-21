@@ -1,7 +1,7 @@
 /*
  * boardpos.h
  *
- * by Jørn Thyssen <jth@gnubg.org>, 2003
+ * by Joern Thyssen <jth@gnubg.org>, 2003
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
