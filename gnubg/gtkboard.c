@@ -2129,7 +2129,8 @@ board_button_release(GtkWidget * board, GdkEventButton * event, BoardData * bd)
     if (place_chequer_or_revert(bd, legal_point))
         playSound(SOUND_CHEQUER);
     else {
-        board_invalidate_point(bd, release_point);
+        if (release_point >= 0)
+            board_invalidate_point(bd, release_point);
         board_beep(bd);
 #if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd) && bd->rd->quickDraw)
