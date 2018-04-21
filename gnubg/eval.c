@@ -5683,8 +5683,10 @@ FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
         for (i = 0; i < 8; ++i)
             anMove[i] = -1;
 
-    if (FindnSaveBestMoves(&ml, nDice0, nDice1, (ConstTanBoard) anBoard, NULL, 0.0f, pci, &ec, aamf) < 0)
+    if (FindnSaveBestMoves(&ml, nDice0, nDice1, (ConstTanBoard) anBoard, NULL, 0.0f, pci, &ec, aamf) < 0) {
+        free(ml.amMoves);
         return -1;
+    }
 
     if (anMove) {
         for (i = 0; i < ml.cMaxMoves * 2; i++)
@@ -5694,8 +5696,7 @@ FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
     if (ml.cMoves)
         PositionFromKey(anBoard, &ml.amMoves[ml.iMoveBest].key);
 
-    if (ml.amMoves)
-        free(ml.amMoves);
+    free(ml.amMoves);
 
     return ml.cMaxMoves * 2;
 }
@@ -5759,6 +5760,9 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
         }
 
         if (ScoreMoves(pml, pci, pec, iPly) < 0) {
+            free(pm);
+            pml->cMoves = 0;
+            pml->amMoves = NULL;
             return -1;
         }
 
