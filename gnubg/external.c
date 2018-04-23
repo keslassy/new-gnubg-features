@@ -554,7 +554,8 @@ extern void
 CommandExternal(char *sz)
 {
 
-#if !HAVE_SOCKETS
+#if !defined(HAVE_SOCKETS)
+    (void) sz;		/* silence compiler warning */
     outputl(_("This installation of GNU Backgammon was compiled without\n"
               "socket support, and does not implement external controllers."));
 #else
@@ -567,7 +568,7 @@ CommandExternal(char *sz)
     scancontext scanctx;
     int fExit;
     int fRestart = TRUE;
-    int retval;
+    int retval = 0;
 
     sz = NextToken(&sz);
 
