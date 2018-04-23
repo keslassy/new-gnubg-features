@@ -1,7 +1,7 @@
 /*
  * export.h
  *
- * by Jørn Thyssen  <jthyssen@dk.ibm.com>, 2002.
+ * by Joern Thyssen  <jthyssen@dk.ibm.com>, 2002.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
@@ -96,7 +96,7 @@ extern char *filename_from_iGame(const char *szBase, const int iGame);
 extern int WritePNG(const char *sz, unsigned char *puch,
                     unsigned int nStride, unsigned int nSizeX, unsigned int nSizeY);
 
-#if USE_BOARD3D
+#if defined(USE_BOARD3D)
 void GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, unsigned int nSizeY);
 #endif
 
