@@ -19,7 +19,7 @@
  */
 
 #include "config.h"
-#if HAVE_PANGOCAIRO
+#if defined(HAVE_PANGOCAIRO)
 #include <cairo.h>
 #include <pango/pangocairo.h>
 #include <glib.h>
@@ -236,7 +236,7 @@ draw_cube(SimpleBoard * board)
     fill_and_stroke(cr, color);
     text = g_strdup_printf("%d", cube);
     cairo_move_to(cr, x, y);
-    draw_centered_text(cr, color.text, 10.0f - 2 * floorf(log10f(cube)), text);
+    draw_centered_text(cr, color.text, (gfloat) (12 - 2 * strlen(text)), text);
     g_free(text);
 }
 
