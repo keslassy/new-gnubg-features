@@ -86,7 +86,7 @@ static DBProvider providers[NUM_PROVIDERS] = {
 #if !defined(WIN32)
     {PyPostgreConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, PyPostgreGetDatabaseList,
      PyPostgreDeleteDatabase,
-     "Postgres (Python)", "PythonPostgre", "PostgreSQL connection via PyGreSQL Python module", TRUE, TRUE, "gnubg", "",
+     "PostgreSQL (Python)", "PythonPostgre", "PostgreSQL connection via PyGreSQL Python module", TRUE, TRUE, "gnubg", "",
      "", "localhost:5432"},
 #endif
 #endif
