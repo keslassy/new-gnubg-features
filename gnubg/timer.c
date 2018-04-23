@@ -65,7 +65,7 @@ extern double
 get_time(void)
 {                               /* Return elapsed time in milliseconds */
     struct timeval tv;
-    gettimeofday(&tv, 0);
+    gettimeofday(&tv, NULL);
 
     return 1000.0 * tv.tv_sec + 0.001 * tv.tv_usec;
 }
