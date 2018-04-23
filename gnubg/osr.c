@@ -4,7 +4,7 @@
  *
  * one-sided race rollouts
  *
- * by Jørn Thyssen <jthyssen@dk.ibm.com>, 2002.
+ * by Joern Thyssen <jthyssen@dk.ibm.com>, 2002.
  * (after inspiration from osr.cc from fibs2html <fibs2html.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -707,7 +707,7 @@ osp(const unsigned int anBoard[25], const unsigned int nGames,
         /* chequers outside home: do one sided rollout */
         rollOSR(nGames, an, nOut, arProbs, MAX_PROBS, arGammonProbs, MAX_GAMMON_PROBS);
     else {
-        /* chequers inde home: use BEAROFF2 */
+        /* chequers inside home: use BEAROFF2 */
 
         /* no gammon possible */
         for (i = 0; i < MAX_GAMMON_PROBS; ++i)

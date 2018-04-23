@@ -1,7 +1,7 @@
 /*
  * openurl.h
  *
- * by Jørn Thyssen <jth@gnubg.org>, 2002
+ * by Joern Thyssen <jth@gnubg.org>, 2002
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
