@@ -1372,13 +1372,13 @@ DoTestPerformance(GtkWidget * pw, GtkWidget * board)
 
     fps = TestPerformance3d(bd);
 
-    if (fps >= 30)
-        msg = _("3d Performance is very fast.\n");
-    else if (fps >= 15)
+    if (fps >= 120)
+        msg = _("3d Performance is very good.\n");
+    else if (fps >= 60)
         msg = _("3d Performance is good.\n");
-    else if (fps >= 10)
+    else if (fps >= 30)
         msg = _("3d Performance is ok.\n");
-    else if (fps >= 5)
+    else if (fps >= 15)
         msg = _("3d Performance is poor.\n");
     else
         msg = _("3d Performance is very poor.\n");
