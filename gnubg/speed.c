@@ -84,7 +84,7 @@ RunEvals(void *UNUSED(notused))
     }
 
 #if defined(USE_MULTITHREAD)
-    if ((t = MT_SyncEnd()) != 0)
+    if ((t = MT_SyncEnd()) > 0)
         timeTaken += t;
 #else
     timeTaken += (get_time() - t);
