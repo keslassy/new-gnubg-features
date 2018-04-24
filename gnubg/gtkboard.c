@@ -306,9 +306,10 @@ board_draw_area(cairo_t * cr, gint x, gint y, gint cx, gint cy, BoardData * bd)
 {
     unsigned char *puch;
 
-    puch = g_alloca(cx * cy * 3);
+    puch = malloc(cx * cy * 3);
     RenderArea(bd, puch, x, y, cx, cy);
     draw_rgb_image(cr, puch, x, y, cx, cy);
+    free(puch);
 }
 
 #if GTK_CHECK_VERSION(3,0,0)
