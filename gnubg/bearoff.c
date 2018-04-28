@@ -769,10 +769,10 @@ ReadIntoMemory(bearoffcontext * pbc)
  *
  */
 
-static unsigned int
+static inline unsigned int
 MakeInt(unsigned char a, unsigned char b, unsigned char c, unsigned char d)
 {
-    return (a | (unsigned char) b << 8 | (unsigned char) c << 16 | (unsigned char) d << 24);
+    return (a | b << 8 | c << 16 | d << 24);
 }
 
 static void
@@ -799,14 +799,14 @@ InvalidDb(bearoffcontext * pbc)
  *
  */
 extern bearoffcontext *
-BearoffInit(const char *szFilename, const int bo, void (*p) (unsigned int))
+BearoffInit(const char *szFilename, const unsigned int bo, void (*p) (unsigned int))
 {
     bearoffcontext *pbc;
     char sz[41];
 
     pbc = g_new0(bearoffcontext, 1);
 
-    if (bo & (int) BO_HEURISTIC) {
+    if (bo & BO_HEURISTIC) {
         pbc->bt = BEAROFF_ONESIDED;
         pbc->nPoints = HEURISTIC_P;
         pbc->nChequers = HEURISTIC_C;
@@ -872,6 +872,13 @@ BearoffInit(const char *szFilename, const int bo, void (*p) (unsigned int))
         return NULL;
     }
 
+    if (((bo & BO_MUST_BE_ONE_SIDED) && (pbc->bt != BEAROFF_ONESIDED))
+        || ((bo & BO_MUST_BE_TWO_SIDED) && (pbc->bt != BEAROFF_TWOSIDED))) {
+        	g_printerr("%s: %s\n (%s: '%2s')\n", szFilename, _("incorrect bearoff database"), _("wrong bearoff type"), sz + 6);
+        InvalidDb(pbc);
+        return NULL;
+    }
+
     if (pbc->bt == BEAROFF_TWOSIDED || pbc->bt == BEAROFF_ONESIDED) {
 
         /* normal onesided or twosided bearoff database */
@@ -925,7 +932,7 @@ BearoffInit(const char *szFilename, const int bo, void (*p) (unsigned int))
      * read database into memory if requested 
      */
 
-    if (bo & (int) BO_IN_MEMORY) {
+    if (bo & BO_IN_MEMORY) {
         fclose(pbc->pf);
         pbc->pf = NULL;
         if ((ReadIntoMemory(pbc) == NULL))

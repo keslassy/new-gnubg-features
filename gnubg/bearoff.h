@@ -58,7 +58,7 @@ enum _bearoffoptions {
     BO_HEURISTIC = 8
 };
 
-extern bearoffcontext *BearoffInit(const char *szFilename, const int bo, void (*p) (unsigned int));
+extern bearoffcontext *BearoffInit(const char *szFilename, const unsigned int bo, void (*p) (unsigned int));
 
 extern int
  BearoffEval(const bearoffcontext * pbc, const TanBoard anBoard, float arOutput[]);
@@ -79,7 +79,7 @@ BearoffDist(const bearoffcontext * pbc, const unsigned int nPosID,
 extern int
  BearoffCubeful(const bearoffcontext * pbc, const unsigned int iPos, float ar[4], unsigned short int aus[4]);
 
-extern void BearoffClose(bearoffcontext * ppbc);
+extern void BearoffClose(bearoffcontext * pbc);
 
 extern int
  isBearoff(const bearoffcontext * pbc, const TanBoard anBoard);
