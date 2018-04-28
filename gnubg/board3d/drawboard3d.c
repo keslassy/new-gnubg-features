@@ -40,8 +40,8 @@ typedef struct _viewArea {
 static int
 LogCube(int n)
 {
-    int i = 0;
-    while (n > (1 << i))
+    unsigned int i = 0;
+    while (n > (1u << i))
         i++;
 
     return i < 6 ? i : 0;
@@ -1106,7 +1106,7 @@ drawPieces(const BoardData * bd, const BoardData3d * bd3d, const renderdata * pr
 }
 
 static void
-DrawNumbers(const BoardData * bd, int sides)
+DrawNumbers(const BoardData * bd, unsigned int sides)
 {
     int i;
     char num[3];
@@ -1599,9 +1599,9 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) + BOARD_FILLET - curveTextOff - (h)) * tuv);\
 	glVertex3f((x) + (w), y, z);\
 	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) + BOARD_FILLET - curveTextOff) * tuv);\
-	glVertex3f((x) + (w), y, z + (h));\
+	glVertex3f((x) + (w), y, (z) + (h));\
 	if (tuv != 0.0f) glTexCoord2f((x) * tuv, ((y) + BOARD_FILLET - curveTextOff) * tuv);\
-	glVertex3f(x, y, z + (h));\
+	glVertex3f(x, y, (z) + (h));\
 	glEnd();
 
 #define DrawTop(x, y, z, w, h)\
@@ -1610,9 +1610,9 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 	if (tuv != 0.0f) glTexCoord2f((x) * tuv, ((y) - (BOARD_FILLET - curveTextOff) + (h)) * tuv);\
 	glVertex3f(x, y, z);\
 	if (tuv != 0.0f) glTexCoord2f((x) * tuv, ((y) - (BOARD_FILLET - curveTextOff)) * tuv);\
-	glVertex3f(x, y, z + (h));\
+	glVertex3f(x, y, (z) + (h));\
 	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) - (BOARD_FILLET - curveTextOff)) * tuv);\
-	glVertex3f((x) + (w), y, z + (h));\
+	glVertex3f((x) + (w), y, (z) + (h));\
 	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) - (BOARD_FILLET - curveTextOff) + (h)) * tuv);\
 	glVertex3f((x) + (w), y, z);\
 	glEnd();
@@ -1638,9 +1638,9 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 	if (tuv != 0.0f) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff) + (h)) * tuv, ((y) + (w)) * tuv);\
 	glVertex3f(x, (y) + (w), z);\
 	if (tuv != 0.0f) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff)) * tuv, ((y) + (w)) * tuv);\
-	glVertex3f(x, (y) + (w), z + (h));\
+	glVertex3f(x, (y) + (w), (z) + (h));\
 	if (tuv != 0.0f) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff)) * tuv, (y) * tuv);\
-	glVertex3f(x, y, z + (h));\
+	glVertex3f(x, y, (z) + (h));\
 	glEnd();
 
 #define TextureOffset(s, t) if (tuv != 0.0f)\

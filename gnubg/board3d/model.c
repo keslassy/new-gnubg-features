@@ -24,7 +24,7 @@
 #include "config.h"
 #include "inc3d.h"
 
-#define TOP_EDGE -2
+#define TOP_EDGE (-2)
 
 typedef struct _position {
     float x, y, z;
