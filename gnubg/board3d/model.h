@@ -34,8 +34,8 @@ typedef struct Occluder_T {
 
 extern void GenerateShadowVolume(const Occluder * pOcc, const float olight[4]);
 
-extern void initOccluder(Occluder * Occ);
-extern void freeOccluder(Occluder * Occ);
+extern void initOccluder(Occluder * pOcc);
+extern void freeOccluder(Occluder * pOcc);
 extern void copyOccluder(const Occluder * fromOcc, Occluder * toOcc);
 extern void moveToOcc(const Occluder * pOcc);
 
@@ -44,8 +44,8 @@ extern void addSquare(Occluder * pOcc, float x, float y, float z, float w, float
 extern void addSquareCentered(Occluder * pOcc, float x, float y, float z, float w, float h, float d);
 extern void addCube(Occluder * pOcc, float x, float y, float z, float w, float h, float d);
 extern void addWonkyCube(Occluder * pOcc, float x, float y, float z, float w, float h, float d, float s, int full);
-extern void addCylinder(Occluder * pOcc, float x, float y, float z, float r, float d, unsigned int a);
-extern void addHalfTube(Occluder * pOcc, float r, float h, unsigned int a);
+extern void addCylinder(Occluder * pOcc, float x, float y, float z, float r, float d, unsigned int numSteps);
+extern void addHalfTube(Occluder * pOcc, float r, float h, unsigned int numSteps);
 extern void addDice(Occluder * pOcc, float size);
 
 extern void draw_shadow_volume_extruded_edges(Occluder * pOcc, const float light_position[4], unsigned int prim);

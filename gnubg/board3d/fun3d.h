@@ -85,7 +85,7 @@ extern void FindNamedTexture(TextureInfo ** textureInfo, char *name);
 float Dist2d(float a, float b);
 float ***Alloc3d(unsigned int x, unsigned int y, unsigned int z);
 void Free3d(float ***array, unsigned int x, unsigned int y);
-int LoadTexture(Texture * texture, const char *Filename);
+int LoadTexture(Texture *texture, const char *filename);
 void CheckOpenglError(void);
 
 /* Functions for 3d board */
