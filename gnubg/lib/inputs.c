@@ -113,14 +113,14 @@ baseInputs(const TanBoard anBoard, float arInput[])
 
     const unsigned int *pB = &anBoard[0][0];
     float *pInput = &arInput[0];
-    register __m128 vec0;
-    register __m128 vec1;
-    register __m128 vec2;
-    register __m128 vec3;
-    register __m128 vec4;
-    register __m128 vec5;
-    register __m128 vec6;
-    register __m128 vec7;
+    __m128 vec0;
+    __m128 vec1;
+    __m128 vec2;
+    __m128 vec3;
+    __m128 vec4;
+    __m128 vec5;
+    __m128 vec6;
+    __m128 vec7;
 
     while (i--) {
         vec0 = _mm_load_ps(inpvec[*pB++]);
@@ -171,10 +171,6 @@ baseInputs(const TanBoard anBoard, float arInput[])
     /* bar */
     vec0 = _mm_load_ps(inpvecb[*pB]);
     _mm_store_ps(pInput, vec0);
-
-#if defined(USE_AVX)
-    _mm256_zeroupper();
-#endif
 
     return;
 }
