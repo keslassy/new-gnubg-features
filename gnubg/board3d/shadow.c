@@ -53,7 +53,7 @@ shadowInit(BoardData3d * bd3d, renderdata * prd)
         g_print("No stencil buffer - no shadows\n");
         return;
     }
-    midStencilVal = 1 << (stencilBits - 1);
+    midStencilVal = 1u << (stencilBits - 1);
     glClearStencil(midStencilVal);
 
     bd3d->shadowsInitialised = TRUE;
@@ -122,7 +122,7 @@ draw_shadow_volume_to_stencil(const BoardData3d * bd3d)
     glDepthMask(GL_FALSE);
 
     /* Z-pass approach */
-    glStencilFunc(GL_ALWAYS, midStencilVal, (GLuint) ~ 0);
+    glStencilFunc(GL_ALWAYS, midStencilVal, (GLuint) ~ 0u);
 
     glCullFace(GL_FRONT);
     glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
