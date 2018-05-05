@@ -3511,12 +3511,11 @@ board_edit(BoardData * bd)
         if (nMatchToNew != ms.nMatchTo || changed) {
             /* new match length; issue "set matchid ..." command */
             gchar *sz;
-            int i;
 
             if (nMatchToNew)
-                for (i = 0; i < 2; ++i)
-                    if (anScoreNew[i] >= nMatchToNew)
-                        anScoreNew[i] = 0;
+                if ((anScoreNew[0] >= nMatchToNew) || (anScoreNew[1] >= nMatchToNew))
+                    anScoreNew[0] = anScoreNew[1] = 0;
+
             if ((bd->diceRoll[0] > 6) || (bd->diceRoll[1] > 6)) {
                 bd->diceRoll[0] = bd->diceRoll[1] = 0;
             }
