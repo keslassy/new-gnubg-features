@@ -38,7 +38,7 @@ typedef struct _viewArea {
 
 /* My logcube - more than 32 then return 0 (show 64) */
 static int
-LogCube(int n)
+LogCube(unsigned int n)
 {
     unsigned int i = 0;
     while (n > (1u << i))
@@ -170,11 +170,8 @@ static void
 preDrawPiece0(const renderdata * prd, int display)
 {
     unsigned int i, j;
-    float angle, angle2, step;
+    float angle2, step;
 
-    float latitude;
-
-    float new_radius;
     float radius = PIECE_HOLE / 2.0f;
     float discradius = radius * 0.8f;
     float lip = radius - discradius;
@@ -207,10 +204,10 @@ preDrawPiece0(const renderdata * prd, int display)
 
     angle2 = 0;
     for (j = 0; j <= prd->curveAccuracy / 4; j++) {
-        latitude = sinf(angle2) * lip;
-        new_radius = Dist2d(lip, latitude);
+        float latitude = sinf(angle2) * lip;
+        float new_radius = Dist2d(lip, latitude);
+        float angle = 0;
 
-        angle = 0;
         for (i = 0; i < prd->curveAccuracy; i++) {
             n[i][j][0] = sinf(angle) * new_radius;
             p[i][j][0] = sinf(angle) * (discradius + new_radius);
@@ -381,7 +378,7 @@ renderDice(const renderdata * prd)
     float lat_angle;
     float lat_step;
     float radius;
-    float angle, step = 0;
+    float step = 0;
     float size = getDiceSize(prd);
 
     unsigned int corner_steps = (prd->curveAccuracy / 4) + 1;
@@ -408,10 +405,11 @@ renderDice(const renderdata * prd)
 
     /* Calculate corner points */
     for (i = 0; i < lns + 1; i++) {
+        float angle = 0.0f;
+
         ns = (prd->curveAccuracy / 4) - i;
         if (ns > 0)
             step = ((float) G_PI / 2 - lat_angle) / (ns);
-        angle = 0;
 
         for (j = 0; j <= ns; j++) {
             corner_points[i][j][0] = cosf(lat_angle) * radius;
@@ -601,7 +599,7 @@ moveToDoubleCubePos(const BoardData * bd)
 NTH_STATIC void
 drawDCNumbers(const BoardData * bd, const diceTest * dt)
 {
-    int c, nice;
+    int c;
     float radius = DOUBLECUBE_SIZE / 7.0f;
     float ds = (DOUBLECUBE_SIZE * 5.0f / 7.0f);
     float hds = (ds / 2);
@@ -613,6 +611,8 @@ drawDCNumbers(const BoardData * bd, const diceTest * dt)
     glLineWidth(.5f);
     glPushMatrix();
     for (c = 0; c < 6; c++) {
+        int nice;
+
         if (c < 3)
             side = c;
         else
@@ -699,7 +699,7 @@ static void
 drawDots(const BoardData3d * bd3d, float diceSize, float dotOffset, const diceTest * dt, int showFront)
 {
     int dot;
-    int c, nd;
+    int c;
     int *dp;
     float radius;
     float ds = (diceSize * 5.0f / 7.0f);
@@ -714,6 +714,8 @@ drawDots(const BoardData3d * bd3d, float diceSize, float dotOffset, const diceTe
 
     glPushMatrix();
     for (c = 0; c < 6; c++) {
+        int nd;
+
         if (c < 3)
             dot = c;
         else
@@ -1717,7 +1719,7 @@ TextureReset}
 NTH_STATIC void
 drawTable(const BoardData3d * bd3d, const renderdata * prd)
 {
-    float st, ct, dInc, curveTextOff = 0;
+    float curveTextOff = 0;
     tuv = 0;
 
     if (bd3d->State != BOARD_OPEN)
@@ -1745,6 +1747,8 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
 
     if (prd->roundedEdges) {
         if (prd->BoxMat.pTexture) {
+            float st, ct, dInc;
+
             tuv = (TEXTURE_SCALE) / prd->BoxMat.pTexture->width;
             st = sinf((2 * (float) G_PI) / prd->curveAccuracy) * BOARD_FILLET;
             ct = (cosf((2 * (float) G_PI) / prd->curveAccuracy) - 1) * BOARD_FILLET;
@@ -2516,9 +2520,11 @@ NearestHit(int hits, const GLuint * ptr)
     } else {                    /* Find the highest/closest object */
         int i, sel = -1;
         GLuint names;
-        float minDepth = FLT_MAX, depth;
+        float minDepth = FLT_MAX;
 
         for (i = 0; i < hits; i++) {    /* for each hit */
+            float depth;
+
             names = *ptr++;
             depth = (float) *ptr++ / 0x7fffffff;
             ptr++;              /* Skip max depth value */
@@ -2646,12 +2652,12 @@ NTH_STATIC void
 drawPointPick(const BoardData * UNUSED(bd), void *data)
 {                               /* Draw sub parts of point to work out which part of point clicked */
     unsigned int point = GPOINTER_TO_UINT(data);
-    unsigned int i;
-    float pos[3];
 
     if (point <= 25) {          /* Split first point into 2 parts for zero and one selection */
 #define SPLIT_PERCENT .40f
 #define SPLIT_HEIGHT (PIECE_HOLE * SPLIT_PERCENT)
+        unsigned int i;
+        float pos[3];
 
         getPiecePos(point, 1, pos);
 

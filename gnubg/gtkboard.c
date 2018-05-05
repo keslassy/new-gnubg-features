@@ -1937,7 +1937,7 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
 
         /* Click on an empty point or opponent blot; try to make the point. */
         if (!editing && bd->drag_point <= 24 && (numOnPoint == 0 || numOnPoint == -bd->turn)) {
-            int n[2], bar, i;
+            int n[2], bar;
             int old_points[28];
             TanBoard points;
             positionkey key;
@@ -1951,6 +1951,7 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
                 /* Rolled a double; find the two closest chequers to make
                  * the point. */
                 int c = 0;
+                int i;
 
                 n[0] = n[1] = -1;
 
@@ -2301,7 +2302,7 @@ score_changed(GtkAdjustment * adj, BoardData * bd)
 extern void
 RollDice2d(BoardData * bd)
 {
-    int iAttempt = 0, iPoint, x, y, cx, cy;
+    int x, y, cx, cy;
 
     bd->x_dice[0] = RAND % (3 * DIE_WIDTH) + BEAROFF_WIDTH + 1;
     bd->x_dice[1] = RAND % (6 * CHEQUER_WIDTH - 2 - bd->x_dice[0]) + bd->x_dice[0] + DIE_WIDTH + 1;
@@ -2321,6 +2322,8 @@ RollDice2d(BoardData * bd)
 #endif
 
     if (bd->rd->nSize > 0) {
+        int iAttempt = 0, iPoint;
+
         for (iPoint = 1; iPoint <= 24; iPoint++) {
             if (abs(bd->points[iPoint]) >= 5) {
                 point_area(bd, iPoint, &x, &y, &cx, &cy);
@@ -2382,7 +2385,8 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
     gchar *dest, buf[32];
     gint i, *pn, **ppn;
     gint old_board[28];
-    int old_cube, old_doubled, old_crawford, old_xCube, old_yCube, editing;
+    unsigned int old_cube;
+    int old_doubled, old_crawford, old_xCube, old_yCube, editing;
     int old_resigned;
     int old_xResign, old_yResign;
     int old_turn;
@@ -3066,14 +3070,15 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
 
     unsigned char aanBoardTemp[4][4];
 #if defined(USE_BOARD3D)
-    int j;
     double aarColourTemp[2][4];
     unsigned char aanBoardColourTemp[4];
     double arCubeColourTemp[4];
     double aarDiceColourTemp[2][4];
     double aarDiceDotColourTemp[2][4];
 
-    if (display_is_3d(bd->rd)) {        /* As settings currently separate, copy 3d colours so 2d dialog colours (small chequers, dice etc.) are correct */
+    if (display_is_3d(bd->rd)) {
+        int j;
+        /* As settings currently separate, copy 3d colours so 2d dialog colours (small chequers, dice etc.) are correct */
         memcpy(aarColourTemp, bd->rd->aarColour, sizeof(bd->rd->aarColour));
         memcpy(aanBoardColourTemp, bd->rd->aanBoardColour[0], sizeof(bd->rd->aanBoardColour[0]));
         memcpy(arCubeColourTemp, bd->rd->arCubeColour, sizeof(bd->rd->arCubeColour));
