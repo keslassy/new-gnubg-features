@@ -346,7 +346,7 @@ fi
 AC_CHECK_HEADERS(GL/glx.h)
 
 if test  "$with_board3d" != "no" && test "$with_gtk" != "no" && test "x$have_gtk" = "xyes" && test "x$have_gtkglext" = "xyes" -a "x$have_glu" = "xyes"; then
-	AC_DEFINE(USE_BOARD3D,1, [Define if you want to use the 3d boards])
+	AC_DEFINE(USE_BOARD3D,1, [Define if you want to use the 3D boards])
 	no_board3d="no"
 fi
 

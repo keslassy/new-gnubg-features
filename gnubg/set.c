@@ -690,7 +690,7 @@ CommandSetVsync3d(char *sz)
     fSync = (fSync != 0) ? 1 : 0;       /* Set to 1 or 0, (-1 == not set) */
 #else
     (void) sz;                  /* suppress unused parameter compiler warning */
-    outputl(_("This function is for the MS Windows 3d board only"));
+    outputl(_("This function is for MS Windows 3D boards only"));
 #endif
 }
 

@@ -568,7 +568,7 @@ static char const *aszBuildInfo[] = {
     N_("Long RNG seeds supported."),
 #endif
 #if defined(USE_BOARD3D)
-    N_("3d Boards supported."),
+    N_("3D boards supported."),
 #endif
 #if defined(WIN32)
     N_("Windows sound system supported."),

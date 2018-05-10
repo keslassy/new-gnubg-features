@@ -391,7 +391,7 @@ option_changed(GtkWidget * UNUSED(widget), GtkWidget * UNUSED(pw))
 
 static void
 redraw_changed(GtkWidget * UNUSED(widget), GtkWidget ** UNUSED(ppw))
-{                               /* Update 3d colour previews */
+{                               /* Update 3D colour previews */
     if (!fUpdate)
         return;
 
@@ -1287,7 +1287,7 @@ toggle_display_type(GtkWidget * widget, BoardData * bd)
     int i;
     int state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
     int numPages = g_list_length(gtk_container_get_children(GTK_CONTAINER(GTK_NOTEBOOK(pwNotebook))));
-    /* Show pages with correct 2d/3d settings */
+    /* Show pages with correct 2D/3D settings */
     for (i = numPages - 1; i >= NUM_NONPREVIEW_PAGES; i--)
         gtk_notebook_remove_page(GTK_NOTEBOOK(pwNotebook), i);
 
@@ -1363,7 +1363,7 @@ DoTestPerformance(GtkWidget * pw, GtkWidget * board)
     float fps;
 
     GTKSetCurrentParent(pw);
-    if (!GetInputYN(_("Save settings and test 3d performance for 3 seconds?")))
+    if (!GetInputYN(_("Save settings and test 3D performance for 3 seconds?")))
         return;
 
     BoardPrefsOK(pw, board);
@@ -1373,15 +1373,15 @@ DoTestPerformance(GtkWidget * pw, GtkWidget * board)
     fps = TestPerformance3d(bd);
 
     if (fps >= 120)
-        msg = _("3d Performance is very good.\n");
+        msg = _("3D performance is very good.\n");
     else if (fps >= 60)
-        msg = _("3d Performance is good.\n");
+        msg = _("3D performance is good.\n");
     else if (fps >= 30)
-        msg = _("3d Performance is ok.\n");
+        msg = _("3D performance is ok.\n");
     else if (fps >= 15)
-        msg = _("3d Performance is poor.\n");
+        msg = _("3D performance is poor.\n");
     else
-        msg = _("3d Performance is very poor.\n");
+        msg = _("3D performance is very poor.\n");
 
     sprintf(str, _("%s\n(%.1f frames per second)\n"), msg, fps);
 
@@ -1707,11 +1707,11 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 #endif
     gtk_container_add(GTK_CONTAINER(dtFrame), dtBox);
 
-    pwBoardType = gtk_radio_button_new_with_label(NULL, _("2d Board"));
+    pwBoardType = gtk_radio_button_new_with_label(NULL, _("2D board"));
     gtk_box_pack_start(GTK_BOX(dtBox), pwBoardType, FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwBoardType), (display_is_2d(bd->rd)));
 
-    button = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwBoardType), _("3d Board"));
+    button = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwBoardType), _("3D board"));
     if (!gtk_gl_init_success)
         gtk_widget_set_sensitive(button, FALSE);
     gtk_box_pack_start(GTK_BOX(dtBox), button, FALSE, FALSE, 0);
@@ -1748,7 +1748,7 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 #endif
     gtk_box_pack_start(GTK_BOX(pwx), pwvbox, FALSE, FALSE, 0);
 
-    frame3dOptions = gtk_frame_new(_("3d Options"));
+    frame3dOptions = gtk_frame_new(_("3D options"));
     gtk_container_set_border_width(GTK_CONTAINER(frame3dOptions), 4);
     gtk_box_pack_start(GTK_BOX(pwvbox), frame3dOptions, FALSE, FALSE, 0);
 
@@ -1856,12 +1856,12 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     pwSkewFactor = gtk_hscale_new(padjSkewFactor);
 #endif
     gtk_widget_set_size_request(pwSkewFactor, 100, -1);
-    gtk_widget_set_tooltip_text(pwSkewFactor, _("Vary the field-of-view of the 3d display"));
+    gtk_widget_set_tooltip_text(pwSkewFactor, _("Vary the field-of-view of the 3D display"));
     gtk_scale_set_digits(GTK_SCALE(pwSkewFactor), 0);
     gtk_box_pack_start(GTK_BOX(hBox), pwSkewFactor, FALSE, FALSE, 0);
 
     pwPlanView = gtk_check_button_new_with_label(_("Plan view"));
-    gtk_widget_set_tooltip_text(pwPlanView, _("Display the 3d board with a 2d overhead view"));
+    gtk_widget_set_tooltip_text(pwPlanView, _("Display the 3D board with a 2D overhead view"));
     gtk_box_pack_start(GTK_BOX(pw), pwPlanView, FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwPlanView), bd->rd->planView);
     g_signal_connect(G_OBJECT(pwPlanView), "toggled", G_CALLBACK(toggle_planview), NULL);
@@ -2500,7 +2500,7 @@ Set3dColourChar(Material * pMat, unsigned char col[4])
 static void
 CopyNewSettingsToOtherDimension(renderdata * prd)
 {
-    if (display_is_3d(prd)) {   /* Create rough 2d settings based on new 3d settings */
+    if (display_is_3d(prd)) {   /* Create rough 2D settings based on new 3D settings */
         prd->wt = WOOD_PAINT;
         Set2dColour(prd->aarColour[0], &prd->ChequerMat[0]);
         Set2dColour(prd->aarColour[1], &prd->ChequerMat[1]);
@@ -2516,7 +2516,7 @@ CopyNewSettingsToOtherDimension(renderdata * prd)
         Set2dColourChar(prd->aanBoardColour[1], &prd->BoxMat);
         Set2dColourChar(prd->aanBoardColour[2], &prd->PointMat[0]);
         Set2dColourChar(prd->aanBoardColour[3], &prd->PointMat[1]);
-    } else {                    /* Create rough 3d settings based on new 2d settings */
+    } else {                    /* Create rough 3D settings based on new 2D settings */
         Set3dColour(&prd->ChequerMat[0], prd->aarColour[0]);
         Set3dColour(&prd->ChequerMat[1], prd->aarColour[1]);
         Set3dColour(&prd->DiceMat[0], prd->aarDiceColour[0]);
@@ -2721,9 +2721,9 @@ UpdateDesign(GtkWidget * pw, gpointer data)
     char prompt[200];
 #if defined(USE_BOARD3D)
     if (display_is_3d(&rdPrefs))
-        sprintf(prompt, _("Permanently overwrite 3d settings for design %s?"), pbdeModified->szTitle);
+        sprintf(prompt, _("Permanently overwrite 3D settings for design %s?"), pbdeModified->szTitle);
     else
-        sprintf(prompt, _("Permanently overwrite 2d settings for design %s?"), pbdeModified->szTitle);
+        sprintf(prompt, _("Permanently overwrite 2D settings for design %s?"), pbdeModified->szTitle);
 #else
     sprintf(prompt, _("Permanently overwrite settings for design %s?"), pbdeModified->szTitle);
 #endif
@@ -2737,7 +2737,7 @@ UpdateDesign(GtkWidget * pw, gpointer data)
         /* Get current (2d) settings for design */
         ParsePreferences(pbdeModified, &newPrefs);
 
-        /* Overwrite 3d settings with current values */
+        /* Overwrite 3D settings with current values */
         Set3dSettings(&newPrefs, &rdPrefs);
     } else
 #endif
@@ -2753,7 +2753,7 @@ UpdateDesign(GtkWidget * pw, gpointer data)
         newPrefs = rdPrefs;
 
 #if defined(USE_BOARD3D)
-        /* Overwrite 3d design settings */
+        /* Overwrite 3D design settings */
         Set3dSettings(&newPrefs, &designPrefs);
 #endif
     }
@@ -3281,7 +3281,7 @@ IsBlackColour3d(Material * pMat)
 
 extern void
 Default3dSettings(BoardData * bd)
-{                               /* If no 3d settings loaded, set 3d appearance to first design */
+{                               /* If no 3D settings loaded, set 3D appearance to first design */
     /* Check if colours are set to default values */
     if (IsWhiteColour3d(&bd->rd->ChequerMat[0]) && IsBlackColour3d(&bd->rd->ChequerMat[1]) &&
         IsWhiteColour3d(&bd->rd->DiceMat[0]) && IsBlackColour3d(&bd->rd->DiceMat[1]) &&
@@ -3308,7 +3308,7 @@ Default3dSettings(BoardData * bd)
 
                 g_free(pch);
 
-                /* Copy 3d settings from rdNew to main appearance settings */
+                /* Copy 3D settings from rdNew to main appearance settings */
                 bd->rd->pieceType = rdNew.pieceType;
                 bd->rd->pieceTextureType = rdNew.pieceTextureType;
                 bd->rd->fHinges3d = rdNew.fHinges3d;
