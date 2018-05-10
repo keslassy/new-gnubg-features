@@ -2,7 +2,7 @@
  * gtkcolour3d.c
  * by Jon Kinsey, 2003
  *
- * 3d colour selection dialog and preview area
+ * 3D colour selection dialog and preview area
  *
  *
  * This program is free software; you can redistribute it and/or modify
@@ -396,7 +396,7 @@ UpdateColour3d(GtkButton * UNUSED(button), UpdateDetails * pDetails)
     col3d = pDetails->mat;
 
     if (pwColourDialog3d == NULL) {
-        pwColourDialog3d = GTKCreateDialog(_("3d Colour selection"), DT_QUESTION,
+        pwColourDialog3d = GTKCreateDialog(_("3D colour selection"), DT_QUESTION,
                                            pDetails->preview, DIALOG_FLAG_MODAL | DIALOG_FLAG_NORESPONSE, NULL, NULL);
         AddWidgets(DialogArea(pwColourDialog3d, DA_MAIN));
         g_signal_connect(pwColourDialog3d, "response", G_CALLBACK(DialogClose), NULL);
@@ -492,7 +492,7 @@ gtk_colour_picker_new3d(Material * pMat, int opacity, TextureType textureType)
     GtkWidget *previewWidget, *button = gtk_button_new();
 
     if (curDetail == MAX_DETAILS) {
-        outputerrf("Error: Too many 3d colour previews\n");
+        outputerrf("Error: Too many 3D colour previews\n");
         return 0;
     }
     details[curDetail].mat = *pMat;
