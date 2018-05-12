@@ -18,12 +18,12 @@
 #ifndef SIMD_H
 #define SIMD_H
 
-#if USE_SIMD_INSTRUCTIONS
+#if defined(USE_SIMD_INSTRUCTIONS)
 
 #include <stdlib.h>
 #include "common.h"
 
-#ifdef USE_AVX
+#if defined(USE_AVX)
 #define ALIGN_SIZE 32
 #define VEC_SIZE 8
 #define LOG2VEC_SIZE 3
@@ -33,17 +33,24 @@
 #define ALIGN_SIZE 16
 #define VEC_SIZE 4
 #define LOG2VEC_SIZE 2
+#if defined(HAVE_SSE)
 #define float_vector __m128
 #define int_vector __m128i
+#elif defined(HAVE_NEON)
+#define float_vector float32x4_t
+#define int_vector int32x4_t
+#else
+#error "Inconsistent SIMD defines"
+#endif
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 #define SSE_ALIGN(D) __declspec(align(ALIGN_SIZE)) D
 #else
 #define SSE_ALIGN(D) D __attribute__ ((aligned(ALIGN_SIZE)))
 #endif
 
-#if __GNUC__ && defined(WIN32)
+#if defined(__GNUC__) && defined(WIN32)
 /* Align stack pointer on 16 byte boundary so SSE variables work correctly */
 #define SIMD_STACKALIGN __attribute__((force_align_arg_pointer))
 #if defined(USE_AVX)
@@ -60,6 +67,10 @@
 
 extern float *sse_malloc(size_t size);
 extern void sse_free(float *ptr);
+
+#if defined(HAVE_NEON)
+extern int CheckNEON(void);
+#endif
 
 #else /* USE_SIMD_INSTRUCTIONS */
 

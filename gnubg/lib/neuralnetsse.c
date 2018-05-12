@@ -2,7 +2,7 @@
  * neuralnetsse.c
  * by Jon Kinsey, 2006
  *
- * SIMD (Intel) specific code
+ * SIMD specific code
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 3 or later of the GNU General Public License as
@@ -31,7 +31,9 @@
 #include "neuralnet.h"
 #include <string.h>
 
-#if defined(USE_AVX)
+#if defined(USE_NEON)
+#include <arm_neon.h>
+#elif defined(USE_AVX)
 #include <immintrin.h>
 #elif defined(USE_SSE2)
 #include <emmintrin.h>
@@ -42,19 +44,71 @@
 #include <glib.h>
 #include "sigmoid.h"
 
+#if defined(HAVE_NEON)
+#include <signal.h>
+#include <setjmp.h>
+#endif
+
 float *
 sse_malloc(size_t size)
 {
+#if defined(HAVE_SSE)
     return (float *) _mm_malloc(size, ALIGN_SIZE);
+#elif defined(HAVE_NEON)
+    void *ptr = NULL;
+    
+    posix_memalign(&ptr, ALIGN_SIZE, size);
+    return (float *)ptr;
+#else
+    #error "Inconsistent SIMD defines"
+#endif
 }
 
 void
 sse_free(float *ptr)
 {
+#if defined(HAVE_SSE)
     _mm_free(ptr);
+#else
+    free(ptr);
+#endif
 }
 
-#if defined(USE_AVX) || defined(USE_SSE2)
+#if defined(HAVE_NEON)
+static jmp_buf env;
+
+static void
+my_handler(int status)
+{
+    longjmp(env, status);
+}
+
+int
+CheckNEON(void)
+{
+   void (*oldsig)(int);
+
+   oldsig = signal(SIGILL, my_handler);
+   if (setjmp(env)) {
+       signal(SIGILL, oldsig);
+       return 0;
+   } else {
+#if defined(__ARM_FEATURE_SIMD32)
+       /* v7 */
+       asm volatile ("vmin.f32 q0, q0, q0");
+#elif defined(__ARM_NEON)
+       /* aarch64 */
+       asm volatile ("fmin v0.4s, v0.4s, v0.4s");
+#else
+       #error "Unexpected ARM architecture"
+#endif
+       signal(SIGILL, oldsig);
+       return 1;
+   }
+}
+#endif
+
+#if defined(USE_AVX) || defined(USE_SSE2) || defined(USE_NEON)
 #include <stdint.h>
 
 static const union {
@@ -101,16 +155,22 @@ sigmoid_positive_ps(float_vector xin)
     float *ex_elem = (float *) &ex;
 #if defined(USE_AVX)
     float_vector x1 = _mm256_min_ps(xin, tens.ps);
-#else
+#elif defined(HAVE_SSE)
     float_vector x1 = _mm_min_ps(xin, tens.ps);
+#else
+    float_vector x1 = vminq_f32(xin, tens.ps);
+    float_vector rec;
 #endif
 
 #if defined(USE_AVX)
     x1 = _mm256_mul_ps(x1, tens.ps);
     i.i = _mm256_cvttps_epi32(x1);
-#else
+#elif defined(HAVE_SSE)
     x1 = _mm_mul_ps(x1, tens.ps);
     i.i = _mm_cvttps_epi32(x1);
+#else
+    x1 = vmulq_f32(x1, tens.ps);
+    i.i = vcvtq_s32_f32(x1);
 #endif
     ex_elem[0] = e[i.i32[0]];
     ex_elem[1] = e[i.i32[1]];
@@ -137,7 +197,7 @@ sigmoid_positive_ps(float_vector xin)
 #else
     return _mm256_div_ps(ones.ps, x1);
 #endif
-#else
+#elif defined(HAVE_SSE)
     x1 = _mm_sub_ps(x1, _mm_cvtepi32_ps(i.i));
     x1 = _mm_add_ps(x1, tens.ps);
     x1 = _mm_mul_ps(x1, ex);
@@ -146,6 +206,21 @@ sigmoid_positive_ps(float_vector xin)
     return _mm_rcp_ps(x1);
 #else
     return _mm_div_ps(ones.ps, x1);
+#endif
+#else
+    x1 = vsubq_f32(x1, vcvtq_f32_s32(i.i));
+    x1 = vaddq_f32(x1, tens.ps);
+    x1 = vmulq_f32(x1, ex);
+    x1 = vaddq_f32(x1, ones.ps);
+
+    /* TODO: Check how many Newton-Raphson iterations are needed to match x86 rcp and div accuracy */
+#ifdef __FAST_MATH__
+    rec = vrecpeq_f32(x1);
+    return vmulq_f32(vrecpsq_f32(x1, rec), rec);
+#else
+    rec = vrecpeq_f32(x1);
+    rec = vmulq_f32(vrecpsq_f32(x1, rec), rec);
+    return vmulq_f32(vrecpsq_f32(x1, rec), rec);
 #endif
 #endif
 }
@@ -159,12 +234,18 @@ sigmoid_ps(float_vector xin)
     xin = _mm256_and_ps(xin, abs_mask.ps);      /* Abs. value by clearing signbit */
     c = sigmoid_positive_ps(xin);
     return _mm256_or_ps(_mm256_and_ps(mask, c), _mm256_andnot_ps(mask, _mm256_sub_ps(ones.ps, c)));
-#else
+#elif defined(HAVE_SSE)
     float_vector mask = _mm_cmplt_ps(xin, _mm_setzero_ps());
     float_vector c;
     xin = _mm_and_ps(xin, abs_mask.ps); /* Abs. value by clearing signbit */
     c = sigmoid_positive_ps(xin);
     return _mm_or_ps(_mm_and_ps(mask, c), _mm_andnot_ps(mask, _mm_sub_ps(ones.ps, c)));
+#else
+    int_vector mask = (int_vector)vcltq_f32(xin, vdupq_n_f32(0.0f));
+    float_vector c;
+    xin = (float_vector)vandq_s32((int_vector)xin, (int_vector)abs_mask.ps); /* Abs. value by clearing signbit */
+    c = sigmoid_positive_ps(xin);
+    return (float_vector)vorrq_s32(vandq_s32(mask, (int_vector)c), vbicq_s32((int_vector)vsubq_f32(ones.ps, c),mask));
 #endif
 }
 
@@ -214,15 +295,31 @@ for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE
 }
 #endif
 #endif
+#if defined(USE_NEON)
+#define INPUT_ADD() \
+for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) { \
+    vec0 = vld1q_f32(pr); \
+    vec1 = vld1q_f32(prWeight); \
+    sum = vaddq_f32(vec0, vec1); \
+    vst1q_f32(pr, sum); \
+}
+#define INPUT_MULTADD() \
+for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE) { \
+    vec0 = vld1q_f32(pr); \
+    vec1 = vld1q_f32(prWeight); \
+    vec3 = vmulq_f32(vec1, scalevec); \
+    sum = vaddq_f32(vec0, vec3); \
+    vst1q_f32(pr, sum); \
+}
+#endif
 
 static void
-EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOutput[])
+EvaluateSSE(const neuralnet * restrict pnn, const float arInput[], float ar[], float arOutput[])
 {
-
     const unsigned int cHidden = pnn->cHidden;
     unsigned int i, j;
     float *prWeight;
-#if defined(USE_SSE2) || defined(USE_AVX)
+#if defined(USE_SSE2) || defined(USE_AVX) || defined(USE_NEON)
     float *par;
 #if defined(USE_FMA3)
     float_vector vec0, vec1, scalevec, sum;
@@ -281,13 +378,16 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 #if defined(USE_FMA3)
                 scalevec = _mm256_set1_ps(ari);
                 INPUT_MULTADD();
+#elif defined(USE_NEON)
+                scalevec = vdupq_n_f32(ari);
+                INPUT_MULTADD();
 #else
                 if (unlikely(ari == 1.0f)) {
                     INPUT_ADD();
                 } else {
 #if defined(USE_AVX)
                     scalevec = _mm256_set1_ps(ari);
-#else
+#elif defined(HAVE_SSE)
                     scalevec = _mm_set1_ps(ari);
 #endif
                     INPUT_MULTADD();
@@ -307,8 +407,10 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
 #if defined(USE_AVX)
                     scalevec = _mm256_set1_ps(ari);
-#else
+#elif defined(HAVE_SSE)
                     scalevec = _mm_set1_ps(ari);
+#else
+                    scalevec = vdupq_n_f32(ari);
 #endif
                     INPUT_MULTADD();
                 }
@@ -326,13 +428,16 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 #if defined(USE_FMA3)
                 scalevec = _mm256_set1_ps(ari);
                 INPUT_MULTADD();
+#elif defined(USE_NEON)
+                scalevec = vdupq_n_f32(ari);
+                INPUT_MULTADD();
 #else
                 if (likely(ari == 1.0f)) {
                     INPUT_ADD();
                 } else {
 #if defined(USE_AVX)
                     scalevec = _mm256_set1_ps(ari);
-#else
+#elif defined(HAVE_SSE)
                     scalevec = _mm_set1_ps(ari);
 #endif
                     INPUT_MULTADD();
@@ -341,23 +446,31 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
             }
         }
 
-#if defined(USE_SSE2) || defined(USE_AVX)
+#if defined(USE_SSE2) || defined(USE_AVX) || defined(USE_NEON)
 #if defined(USE_AVX)
     scalevec = _mm256_set1_ps(pnn->rBetaHidden);
-#else
+#elif defined(HAVE_SSE)
     scalevec = _mm_set1_ps(pnn->rBetaHidden);
+#else
+    scalevec = vdupq_n_f32(pnn->rBetaHidden);
 #endif
+
     for (par = ar, i = (cHidden >> LOG2VEC_SIZE); i; i--, par += VEC_SIZE) {
 #if defined(USE_AVX)
         float_vector vec = _mm256_load_ps(par);
         vec = _mm256_mul_ps(vec, scalevec);
         vec = sigmoid_ps(vec);
         _mm256_store_ps(par, vec);
-#else
+#elif defined(HAVE_SSE)
         float_vector vec = _mm_load_ps(par);
         vec = _mm_mul_ps(vec, scalevec);
         vec = sigmoid_ps(vec);
         _mm_store_ps(par, vec);
+#else
+        float_vector vec = vld1q_f32(par);
+        vec = vmulq_f32(vec, scalevec);
+        vec = sigmoid_ps(vec);
+        vst1q_f32(par, vec);
 #endif
     }
 #else
@@ -378,8 +491,10 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
         float *pr = ar;
 #if defined(USE_AVX)
         sum = _mm256_setzero_ps();
-#else
+#elif defined(HAVE_SSE)
         sum = _mm_setzero_ps();
+#else
+        sum = vdupq_n_f32(0.0f);
 #endif
         for (j = (cHidden >> LOG2VEC_SIZE); j; j--, prWeight += VEC_SIZE, pr += VEC_SIZE) {
 #if defined(USE_AVX)
@@ -391,11 +506,16 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
             vec3 = _mm256_mul_ps(vec0, vec1);   /* Multiply */
             sum = _mm256_add_ps(sum, vec3);     /* Add */
 #endif
-#else
+#elif defined(HAVE_SSE)
             vec0 = _mm_load_ps(pr);     /* Four floats into vec0 */
             vec1 = _mm_load_ps(prWeight);       /* Four weights into vec1 */
             vec3 = _mm_mul_ps(vec0, vec1);      /* Multiply */
             sum = _mm_add_ps(sum, vec3);        /* Add */
+#else
+            vec0 = vld1q_f32(pr);     /* Four floats into vec0 */
+            vec1 = vld1q_f32(prWeight);       /* Four weights into vec1 */
+            vec3 = vmulq_f32(vec0, vec1);      /* Multiply */
+            sum = vaddq_f32(sum, vec3);        /* Add */
 #endif
         }
 
@@ -405,7 +525,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
         _mm256_store_ps(r, vec1);
 
         arOutput[i] = sigmoid(-pnn->rBetaOutput * (r[0] + r[4] + pnn->arOutputThreshold[i]));
-#else
+#elif defined(HAVE_SSE)
         vec0 = _mm_shuffle_ps(sum, sum, _MM_SHUFFLE(2, 3, 0, 1));
         vec1 = _mm_add_ps(sum, vec0);
         vec0 = _mm_shuffle_ps(vec1, vec1, _MM_SHUFFLE(1, 1, 3, 3));
@@ -413,6 +533,19 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
         _mm_store_ss(&r, sum);
 
         arOutput[i] = sigmoid(-pnn->rBetaOutput * (r + pnn->arOutputThreshold[i]));
+
+#else
+       {
+       float32x2_t vec0_h, vec0_l, vec1;
+
+       vec0_h = vget_high_f32(sum);
+       vec0_l = vget_low_f32(sum);
+       vec1 = vpadd_f32(vec0_h, vec0_l);
+       vec1 = vpadd_f32(vec1, vec1);
+       vst1_lane_f32(&r, vec1, 0);
+
+       arOutput[i] = sigmoid(-pnn->rBetaOutput * (r + pnn->arOutputThreshold[i]));
+       }
 #endif
     }
 #if defined(USE_AVX)
@@ -422,7 +555,7 @@ EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOu
 
 
 extern int
-NeuralNetEvaluateSSE(const neuralnet * pnn, /*lint -e{818} */ float arInput[],
+NeuralNetEvaluateSSE(const neuralnet * restrict pnn, /*lint -e{818} */ float arInput[],
                      float arOutput[], NNState * UNUSED(pnState))
 {
     SSE_ALIGN(float ar[pnn->cHidden]);

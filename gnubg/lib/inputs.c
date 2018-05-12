@@ -24,7 +24,9 @@
 #include "eval.h"
 
 #if defined(USE_SIMD_INSTRUCTIONS)
-#if defined(USE_AVX)
+#if defined(USE_NEON)
+#include <arm_neon.h>
+#elif defined(USE_AVX)
 #include <immintrin.h>
 #elif defined(USE_SSE2)
 #include <emmintrin.h>
@@ -113,6 +115,8 @@ baseInputs(const TanBoard anBoard, float arInput[])
 
     const unsigned int *pB = &anBoard[0][0];
     float *pInput = &arInput[0];
+
+#if defined(HAVE_SSE)
     __m128 vec0;
     __m128 vec1;
     __m128 vec2;
@@ -121,8 +125,19 @@ baseInputs(const TanBoard anBoard, float arInput[])
     __m128 vec5;
     __m128 vec6;
     __m128 vec7;
+#elif defined(HAVE_NEON)
+    float32x4_t vec0;
+    float32x4_t vec1;
+    float32x4_t vec2;
+    float32x4_t vec3;
+    float32x4_t vec4;
+    float32x4_t vec5;
+    float32x4_t vec6;
+    float32x4_t vec7;
+#endif
 
     while (i--) {
+#if defined(HAVE_SSE)
         vec0 = _mm_load_ps(inpvec[*pB++]);
         _mm_store_ps(pInput, vec0);
         vec1 = _mm_load_ps(inpvec[*pB++]);
@@ -139,16 +154,40 @@ baseInputs(const TanBoard anBoard, float arInput[])
         _mm_store_ps(pInput += 4, vec6);
         vec7 = _mm_load_ps(inpvec[*pB++]);
         _mm_store_ps(pInput += 4, vec7);
+#else
+        vec0 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput, vec0);
+        vec1 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec1);
+        vec2 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec2);
+        vec3 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec3);
+        vec4 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec4);
+        vec5 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec5);
+        vec6 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec6);
+        vec7 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec7);
+#endif
         pInput += 4;
     }
 
     /* bar */
+#if defined(HAVE_SSE)
     vec0 = _mm_load_ps(inpvecb[*pB++]);
     _mm_store_ps(pInput, vec0);
+#else
+    vec0 = vld1q_f32(inpvecb[*pB++]);
+    vst1q_f32(pInput, vec0);
+#endif
     pInput += 4;
 
     i = 3;
     while (i--) {
+#if defined(HAVE_SSE)
         vec0 = _mm_load_ps(inpvec[*pB++]);
         _mm_store_ps(pInput, vec0);
         vec1 = _mm_load_ps(inpvec[*pB++]);
@@ -165,12 +204,35 @@ baseInputs(const TanBoard anBoard, float arInput[])
         _mm_store_ps(pInput += 4, vec6);
         vec7 = _mm_load_ps(inpvec[*pB++]);
         _mm_store_ps(pInput += 4, vec7);
+#else
+        vec0 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput, vec0);
+        vec1 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec1);
+        vec2 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec2);
+        vec3 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec3);
+        vec4 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec4);
+        vec5 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec5);
+        vec6 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec6);
+        vec7 = vld1q_f32(inpvec[*pB++]);
+        vst1q_f32(pInput += 4, vec7);
+#endif
         pInput += 4;
     }
 
     /* bar */
+#if defined(HAVE_SSE)
     vec0 = _mm_load_ps(inpvecb[*pB]);
     _mm_store_ps(pInput, vec0);
+#else
+    vec0 = vld1q_f32(inpvecb[*pB++]);
+    vst1q_f32(pInput, vec0);
+#endif
 
     return;
 }

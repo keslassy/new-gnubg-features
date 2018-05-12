@@ -235,7 +235,6 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
         }
     case NNEVAL_FROMBASE:
         {
-            unsigned int i;
             if (pnState->cSavedIBase != pnn->cInput) {
                 Evaluate(pnn, arInput, ar, arOutput, 0);
                 break;
@@ -245,6 +244,7 @@ NeuralNetEvaluate(const neuralnet * pnn, float arInput[], float arOutput[], NNSt
             {
                 float *r = arInput;
                 float *s = pnState->savedIBase;
+                unsigned int i;
 
                 for (i = 0; i < pnn->cInput; ++i, ++r, ++s) {
                     if (*r != *s /*lint --e(777) */ ) {
@@ -500,7 +500,7 @@ CheckSSE(void)
 #if defined(__FreeBSD__)
     int error = sysctlbyname("hw.instruction_sse", &result, &length, NULL, 0);
 #endif
-    if (0 != error)
+    if (error != 0)
         result = 0;
 
 #else
@@ -555,12 +555,15 @@ SIMD_Supported(void)
 {
     static int state = -3;
 
-    if (state == -3)
-#if defined(HAVE_SSE)
+    if (state == -3) {
+#if defined(HAVE_NEON)
+        state = CheckNEON();
+#elif defined(HAVE_SSE)
         state = CheckSSE();
 #else
         state = -2;
 #endif
+    }
 
     return state;
 }

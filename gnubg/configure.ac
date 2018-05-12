@@ -83,6 +83,27 @@ if test "${CFLAGS+set}" = set; then
 fi
 AC_PROG_CC
 AM_PROG_CC_C_O
+AC_PROG_CC_STDC
+# Additional test below is mostly borrowed from varnish.
+# Check $build_vendor since this fails with the Sun compiler on OpenIndiana
+if test "x$build_vendor" = "xredhat"; then
+if test "x$ac_cv_prog_cc_stdc" = "xno" -o "x$ac_cv_prog_cc_stdc" = "x"; then
+# We might be on RHEL5 with its broken autoconf.
+# Check if CC is gcc and if it bails when given -std=gnu99.
+# If not, use that.  Yuck.
+  if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
+     CC="$CC -std=gnu99"
+     AC_RUN_IFELSE(
+	[AC_LANG_PROGRAM([],[[
+return 0;
+    ]])],
+    [],
+    [AC_MSG_ERROR([Could not find a C99 compatible compiler])])
+  else
+    AC_MSG_ERROR([Could not find a C99 compatible compiler])
+  fi
+fi
+fi
 
 # the following needs to come after the expansion of AC_PROG_CC
 if $cflags_were_set; then :; else
@@ -225,9 +246,11 @@ dnl have_gthread, have_gtk and have_gtk are handled later, not having glib is fa
 AX_C___ATTRIBUTE__()
 
 if test "x$ax_cv___attribute__" = "xyes"; then
+AX_GCC_FUNC_ATTRIBUTE(const)
 AX_GCC_FUNC_ATTRIBUTE(format)
 AX_GCC_FUNC_ATTRIBUTE(returns_nonnull)
 AX_GCC_FUNC_ATTRIBUTE(unused)
+AX_GCC_FUNC_ATTRIBUTE(fallthrough)
 fi
 
 dnl
@@ -416,6 +439,10 @@ if test "x$simdcpu" = "xundef" || test "x$simdcpu" = "xyes"; then
         simdcpu="sse2"
     elif test "x$ax_cv_have_sse_ext" = "xyes"; then 
         simdcpu="sse"
+    elif test "x$ax_cv_have_neon_ext" = "xyes"; then
+        simdcpu="neon"
+    elif test "x$ax_cv_have_vfpv4_ext" = "xyes"; then
+	simdcpu="neon-vfpv4"
     else
         simdcpu="no"
     fi
@@ -433,6 +460,13 @@ if test "x$simdcpu" != "xno"; then
 	if test "x$simdcpu" = "xsse2"; then
 		AC_DEFINE(USE_SSE2, 1, Define if you want to compile with SSE2 support)
 	fi
+	if test "x$simdcpu" = "neon-vfpv4"; then
+		AC_DEFINE(USE_VFPv4, 1, Define if you want to compile with NEON-VFPv4 support)
+		AC_DEFINE(USE_NEON, 1, Define if you want to compile with NEON support)
+	fi
+	if test "x$simdcpu" = "xneon"; then
+		AC_DEFINE(USE_NEON, 1, Define if you want to compile with NEON support)
+	fi
 	if test x"$GCC" = "xyes"; then
 		if test "x$SIMD_CFLAGS" = x; then
 			if test "x$simdcpu" = "xfma"; then
@@ -441,6 +475,10 @@ if test "x$simdcpu" != "xno"; then
 				SIMD_CFLAGS="-mavx"
 			elif test "x$simdcpu" = "xsse2"; then 
 				SIMD_CFLAGS="-msse -msse2"
+			elif test "x$simdcpu" = "xneon-vfpv4"; then
+				SIMD_CFLAGS="-mfpu=neon-vfpv4 -ffast-math"
+			elif test "x$simdcpu" = "xneon"; then
+				SIMD_CFLAGS="-mfpu=neon -ffast-math"
 			else
 				SIMD_CFLAGS="-msse"
 			fi
