@@ -1,3 +1,8 @@
+2018-05-12  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* simd.h, neuralnetsse.c, neuralnet.c, inputs.c: Add ARM NEON
+	instructions support.
+
 2016-01-03  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* neuralnetsse.c: Use FMA3 instructions in a few places if

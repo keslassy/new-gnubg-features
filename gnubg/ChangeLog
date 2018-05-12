@@ -1,3 +1,11 @@
+2018-05-12  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* configure.ac, gnubg.c, m4/ax_ext.m4, lib/simd.h,
+	lib/neuralnet.c, lib/neuralnetsse.c, lib/inputs.c:
+	Add ARM NEON instructions support.
+	It should be explicitly enabled at configuration with
+	--enable-simd=neon
+
 2018-01-15  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* configure.ac, multithread.h, multithread.c, mtsupport.c: Remove
