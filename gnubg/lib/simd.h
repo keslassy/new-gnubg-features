@@ -39,6 +39,11 @@
 #elif defined(HAVE_NEON)
 #define float_vector float32x4_t
 #define int_vector int32x4_t
+/*
+ * Workaround for clang on raspbian 9
+ * It defines __ARM_FEATURE_SIMD32 but its arm_neon.h needs __ARM_NEON
+ */
+#define __ARM_NEON 1
 #else
 #error "Inconsistent SIMD defines"
 #endif

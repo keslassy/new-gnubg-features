@@ -314,7 +314,7 @@ for (j = (cHidden >> LOG2VEC_SIZE); j; j--, pr += VEC_SIZE, prWeight += VEC_SIZE
 #endif
 
 static void
-EvaluateSSE(const neuralnet * restrict pnn, const float arInput[], float ar[], float arOutput[])
+EvaluateSSE(const neuralnet * pnn, const float arInput[], float ar[], float arOutput[])
 {
     const unsigned int cHidden = pnn->cHidden;
     unsigned int i, j;
@@ -555,7 +555,7 @@ EvaluateSSE(const neuralnet * restrict pnn, const float arInput[], float ar[], f
 
 
 extern int
-NeuralNetEvaluateSSE(const neuralnet * restrict pnn, /*lint -e{818} */ float arInput[],
+NeuralNetEvaluateSSE(const neuralnet * pnn, /*lint -e{818} */ float arInput[],
                      float arOutput[], NNState * UNUSED(pnState))
 {
     SSE_ALIGN(float ar[pnn->cHidden]);
