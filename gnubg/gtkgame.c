@@ -1992,7 +1992,7 @@ static void
 EvalNoiseValueChanged(GtkAdjustment * padj, evalwidget * pew)
 {
 
-    gtk_widget_set_sensitive(pew->pwDeterministic, gtk_adjustment_get_value(padj) != 0.0f);
+    gtk_widget_set_sensitive(pew->pwDeterministic, gtk_adjustment_get_value(padj) != 0.0);
 
     EvalChanged(NULL, pew);
 
@@ -2506,7 +2506,7 @@ AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
    }
 
 #define ADJUSTSKILLUPDATE(button,flag,string) \
-  if( gtk_adjustment_get_value ( paw->apadjSkill[(button)] ) != arSkillLevel[(flag)] ) \
+  if( gtk_adjustment_get_value ( paw->apadjSkill[(button)] ) != (gdouble)arSkillLevel[(flag)] ) \
   { \
      gchar buf[G_ASCII_DTOSTR_BUF_SIZE]; \
      sprintf(sz,  (string), g_ascii_formatd( buf, G_ASCII_DTOSTR_BUF_SIZE, \
@@ -2515,7 +2515,7 @@ AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
   }
 
 #define ADJUSTLUCKUPDATE(button,flag,string) \
-  if( gtk_adjustment_get_value( paw->apadjLuck[(button)] ) != arLuckLevel[(flag)] ) \
+  if( gtk_adjustment_get_value( paw->apadjLuck[(button)] ) != (gdouble)arLuckLevel[(flag)] ) \
   { \
      gchar buf[G_ASCII_DTOSTR_BUF_SIZE]; \
      sprintf(sz,  (string), g_ascii_formatd( buf, G_ASCII_DTOSTR_BUF_SIZE, \
@@ -4003,12 +4003,19 @@ CreateMainWindow(void)
     g_signal_connect(G_OBJECT(pwMain), "destroy", G_CALLBACK(gtk_main_quit), NULL);
 }
 
+#if !defined(WIN32)
+static inline void my_g_object_unref(gpointer data, gpointer UNUSED(user_data))
+{
+    g_object_unref(data);
+}
+#endif
+
 static void
 gnubg_set_default_icon(void)
 {
     /* win32 uses the ico file for this */
     /* adapted from pidgin */
-#ifndef WIN32
+#if !defined(WIN32)
     GList *icons = NULL;
     GdkPixbuf *icon = NULL;
     char *ip;
@@ -4035,7 +4042,7 @@ gnubg_set_default_icon(void)
     }
     gtk_window_set_default_icon_list(icons);
 
-    g_list_foreach(icons, (GFunc) g_object_unref, NULL);
+    g_list_foreach(icons, my_g_object_unref, NULL);
     g_list_free(icons);
 #endif
 }
@@ -4324,7 +4331,6 @@ TutorHint(GtkWidget * pw, void *UNUSED(unused))
 
     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
     UserCommand("hint");
-
 }
 
 static void
@@ -5036,7 +5042,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 #endif
     gtk_container_set_border_width(GTK_CONTAINER(pwPage), 8);
 
-    prpw->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nSeed, 0, INT_MAX, 1, 1, 0));
+    prpw->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble)prw->rcRollout.nSeed, 0, INT_MAX, 1, 1, 0));
 
     prpw->padjTrials = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nTrials, 1, 1296 * 1296, 36, 36, 0));
 #if GTK_CHECK_VERSION(3,0,0)
@@ -6380,7 +6386,13 @@ GTKHelp(char *sz)
 
     g_signal_connect_swapped(pw, "response", G_CALLBACK(gtk_widget_destroy), pw);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pw, DA_MAIN)), pwPaned = gtk_vpaned_new());
+#if GTK_CHECK_VERSION(3,0,0)
+    pwPaned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+#else
+    pwPaned = gtk_vpaned_new();
+#endif
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pw, DA_MAIN)), pwPaned);
 
     gtk_paned_pack1(GTK_PANED(pwPaned), pwScrolled = gtk_scrolled_window_new(NULL, NULL), TRUE, FALSE);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pwScrolled), GTK_SHADOW_IN);
@@ -6518,12 +6530,17 @@ enable_menu(GtkWidget * pw, int f)
         gtk_widget_set_sensitive(pw, f);
 }
 
+static inline void my_enable_menu(gpointer data, gpointer user_data)
+{
+     enable_menu((GtkWidget *)data, GPOINTER_TO_INT(user_data));
+}
+
 static void
 enable_sub_menu(GtkWidget * pw, int f)
 {
 
     GtkMenuShell *pms = GTK_MENU_SHELL(pw);
-    g_list_foreach(gtk_container_get_children(GTK_CONTAINER(pms)), (GFunc) enable_menu, GINT_TO_POINTER(f));
+    g_list_foreach(gtk_container_get_children(GTK_CONTAINER(pms)), my_enable_menu, GINT_TO_POINTER(f));
 }
 
 /* A global setting has changed; update entry in Settings menu if necessary. */
@@ -7438,7 +7455,7 @@ CalibrationOK(GtkWidget * pw, GtkWidget * ppw)
     GtkAdjustment *padj = gtk_spin_button_get_adjustment(GTK_SPIN_BUTTON(ppw));
 
     if (gtk_widget_is_sensitive(ppw)) {
-        if (gtk_adjustment_get_value(padj) != rEvalsPerSec) {
+        if (gtk_adjustment_get_value(padj) != (gdouble)rEvalsPerSec) {
             sprintf(sz, "set calibration %.0f", gtk_adjustment_get_value(padj));
             UserCommand(sz);
         }
