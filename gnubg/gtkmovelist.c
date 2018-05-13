@@ -303,10 +303,19 @@ MoveListGetSelectionList(const hintdata * phd)
     return gtk_tree_selection_get_selected_rows(sel, &model);
 }
 
+/* gtk_tree_path_free() is not the right function type
+   to be called directly from g_list_foreach() below
+*/
+static inline void
+my_gtk_tree_path_free(gpointer data, gpointer UNUSED(user_data))
+{
+    gtk_tree_path_free((GtkTreePath *) data);
+}
+
 extern void
 MoveListFreeSelectionList(GList * pl)
 {
-    g_list_foreach(pl, (GFunc) gtk_tree_path_free, NULL);
+    g_list_foreach(pl, my_gtk_tree_path_free, NULL);
     g_list_free(pl);
 }
 
