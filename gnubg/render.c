@@ -1390,7 +1390,11 @@ RenderGlyph(unsigned char *puch, int nStride, FT_Glyph pftg,
 
     FT_BitmapGlyph pftbg;
     FT_Bitmap *pb;
+#if (FREETYPE_MAJOR * 10000 + FREETYPE_MINOR * 100 + FREETYPE_PATCH >= 20504)
     unsigned int x, y, x0 = 0, y0 = 0;
+#else
+    int x, y, x0 = 0, y0 = 0;
+#endif
 
     g_assert(pftg->format == FT_GLYPH_FORMAT_BITMAP);
 
