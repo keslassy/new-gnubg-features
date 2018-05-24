@@ -4952,6 +4952,15 @@ Equity
                 <entry>1 thread</entry>
               </row>
               <row>
+                <entry>43700</entry>
+                <entry>ARM Cortex-A53  600 MHz</entry>
+                <entry>Raspberry Pi 3 Model B</entry>
+                <entry>1024 MB</entry>
+                <entry>Raspbian 9.4</entry>
+                <entry>1.06.002, --with-simd=neon</entry>
+                <entry>2 threads</entry>
+              </row>
+              <row>
                 <entry>37600</entry>
                 <entry>Intel Pentium 4 2.8 GHz</entry>
                 <entry>Dell Optiplex GX270</entry>
@@ -4968,13 +4977,31 @@ Equity
                 <entry>0.14.3-devel</entry>
               </row>
               <row>
-                <entry>13600</entry>
+                <entry>21800</entry>
                 <entry>ARM Cortex-A53  600 MHz</entry>
                 <entry>Raspberry Pi 3 Model B</entry>
                 <entry>1024 MB</entry>
-                <entry>Raspbian 8.0</entry>
-                <entry>1.04</entry>
-                <entry>4 threads</entry>
+                <entry>Raspbian 9.4</entry>
+                <entry>1.06.002, --with-simd=neon</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
+                <entry>10900</entry>
+                <entry>ARM Cortex-A53  600 MHz</entry>
+                <entry>Raspberry Pi 3 Model B</entry>
+                <entry>1024 MB</entry>
+                <entry>Raspbian 9.4</entry>
+                <entry>1.06.002</entry>
+                <entry>1 thread</entry>
+              </row>
+              <row>
+                <entry>10400</entry>
+                <entry>ARM Cortex-A53  600 MHz</entry>
+                <entry>Raspberry Pi 3 Model B</entry>
+                <entry>1024 MB</entry>
+                <entry>Raspbian 9.4</entry>
+                <entry>1.05.002</entry>
+                <entry>1 thread</entry>
               </row>
               <row>
                 <entry>9170</entry>
@@ -4999,15 +5026,6 @@ Equity
                 <entry>128 MB</entry>
                 <entry>Win XP SP2</entry>
                 <entry>1.02</entry>
-              </row>
-              <row>
-                <entry>5100</entry>
-                <entry>ARM Cortex-A53  600 MHz</entry>
-                <entry>Raspberry Pi 3 Model B</entry>
-                <entry>1024 MB</entry>
-                <entry>Raspbian 8.0</entry>
-                <entry>1.04</entry>
-                <entry>1 thread</entry>
               </row>
             </tbody>
           </tgroup>
