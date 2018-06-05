@@ -498,7 +498,11 @@ GTKShowExport(exportsetup * pexs)
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 8, 0);
 
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwVBox);
 
     for (i = 0; i < NUM_INCLUDE; i++) {
@@ -522,7 +526,11 @@ GTKShowExport(exportsetup * pexs)
     gtk_table_attach(GTK_TABLE(pwTableX), pw = gtk_label_new(_("Board")), 0, 1, 0, 1, GTK_FILL, GTK_FILL, 4, 0);
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
 
     pew->padjDisplayBoard = GTK_ADJUSTMENT(gtk_adjustment_new(0, 0, 1000, 1, 1, 0));
 
@@ -551,11 +559,18 @@ GTKShowExport(exportsetup * pexs)
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwVBox);
 
-
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVBox), pw, TRUE, TRUE, 0);
 
     gtk_box_pack_start(GTK_BOX(pw), gtk_label_new(_("Show at most")), TRUE, TRUE, 4);
@@ -593,7 +608,11 @@ GTKShowExport(exportsetup * pexs)
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwVBox);
 
 
@@ -632,7 +651,11 @@ GTKShowExport(exportsetup * pexs)
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwVBox);
     gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 4);
 
@@ -642,7 +665,11 @@ GTKShowExport(exportsetup * pexs)
 
     gtk_box_pack_start(GTK_BOX(pwVBox), pew->pwHTMLPictureURL = gtk_entry_new(), TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwHBox), gtk_label_new(_("HTML board type:")), TRUE, TRUE, 0);
 
     pew->pwHTMLType = gtk_combo_box_text_new();
@@ -657,7 +684,11 @@ GTKShowExport(exportsetup * pexs)
 
     /* HTML CSS */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwHBox), gtk_label_new(_("CSS Style sheet:")), TRUE, TRUE, 0);
 
     pew->pwHTMLCSS = gtk_combo_box_text_new();
@@ -677,12 +708,20 @@ GTKShowExport(exportsetup * pexs)
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwVBox);
     gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 4);
 
     /* Png size */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwHBox), 4);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHBox, FALSE, FALSE, 0);
 
@@ -691,7 +730,11 @@ GTKShowExport(exportsetup * pexs)
     gtk_box_pack_start(GTK_BOX(pwHBox), pew->pwPNGSize = gtk_label_new(""), TRUE, TRUE, 0);
 
     pew->adjPNGSize = GTK_ADJUSTMENT(gtk_adjustment_new(1, 1, 20, 1, 5, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, pew->adjPNGSize);
+#else
     pwHScale = gtk_hscale_new(pew->adjPNGSize);
+#endif
     gtk_scale_set_digits(GTK_SCALE(pwHScale), 0);
 
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHScale, FALSE, FALSE, 0);
@@ -699,7 +742,11 @@ GTKShowExport(exportsetup * pexs)
     g_signal_connect(G_OBJECT(pew->adjPNGSize), "value-changed", G_CALLBACK(SizeChanged), pew->pwPNGSize);
 
     /* HTML size */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwHBox), 4);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHBox, FALSE, FALSE, 0);
 
@@ -708,12 +755,20 @@ GTKShowExport(exportsetup * pexs)
     gtk_box_pack_start(GTK_BOX(pwHBox), pew->pwHtmlSize = gtk_label_new(""), TRUE, TRUE, 0);
 
     pew->adjHtmlSize = GTK_ADJUSTMENT(gtk_adjustment_new(1, 1, 20, 1, 5, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, pew->adjHtmlSize);
+#else
     pwHScale = gtk_hscale_new(pew->adjHtmlSize);
+#endif
     gtk_scale_set_digits(GTK_SCALE(pwHScale), 0);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHScale, FALSE, FALSE, 0);
 
     genHtml = gtk_button_new_with_label(_("Generate HTML images..."));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwHBox), genHtml, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwHBox, FALSE, FALSE, 0);
 
