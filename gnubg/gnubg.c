@@ -450,23 +450,23 @@ exportsetup exsExport = {
     {FALSE, TRUE}
     ,
     /* display all moves */
-    {TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE}
+    {TRUE, TRUE, TRUE, TRUE}
     ,
 
     TRUE,                       /* show detailed prob. for cube decisions */
     {FALSE, TRUE}
     ,                           /* do not show move parameters */
     /* display all cube decisions */
-    {TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE}
+    {TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE}
     ,
 
-    NULL,                       /* HTML url to pictures */
+    NULL,                       /* HTML URL to pictures */
     HTML_EXPORT_TYPE_GNU,
     NULL,                       /* HTML extension */
     HTML_EXPORT_CSS_HEAD,       /* write CSS stylesheet in <head> */
 
     4,                          /* PNG size */
-    4                           /* Html size */
+    4                           /* HTML size */
 };
 
 

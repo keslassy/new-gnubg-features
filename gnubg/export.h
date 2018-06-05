@@ -26,9 +26,9 @@
 #ifndef EXPORT_H
 #define EXPORT_H
 
-#define EXPORT_CUBE_ACTUAL   7
-#define EXPORT_CUBE_MISSED   8
-#define EXPORT_CUBE_CLOSE    9
+#define EXPORT_CUBE_ACTUAL   4
+#define EXPORT_CUBE_MISSED   5
+#define EXPORT_CUBE_CLOSE    6
 
 
 typedef enum _htmlexporttype {
@@ -67,13 +67,13 @@ typedef struct _exportsetup {
     unsigned int nMoves;        /* show at most nMoves */
     int fMovesDetailProb;       /* show detailed probabilities */
     int afMovesParameters[2];   /* detailed parameters */
-    int afMovesDisplay[7];      /* display moves */
+    int afMovesDisplay[4];      /* display moves */
 
     /* cube */
 
     int fCubeDetailProb;        /* show detailed probabilities */
     int afCubeParameters[2];    /* detailed parameters */
-    int afCubeDisplay[10];      /* display moves */
+    int afCubeDisplay[7];       /* display cube actions */
 
     /* FIXME: add format specific options */
 
