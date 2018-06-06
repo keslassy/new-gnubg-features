@@ -31,8 +31,8 @@
 
 GdkColor wlCol;
 
-static void custom_cell_renderer_movelist_init(CustomCellRendererMovelist * cellprogress);
-static void custom_cell_renderer_movelist_class_init(CustomCellRendererMovelistClass * klass);
+static void custom_cell_renderer_movelist_init(CustomCellRendererMovelist * cellprogress, gpointer g_class);
+static void custom_cell_renderer_movelist_class_init(CustomCellRendererMovelistClass * klass, gpointer class_data);
 static void custom_cell_renderer_movelist_set_property(GObject * object,
                                                        guint param_id, const GValue * value, GParamSpec * pspec);
 static void custom_cell_renderer_movelist_finalize(GObject * gobject);
@@ -109,7 +109,7 @@ custom_cell_renderer_movelist_get_type(void)
  ***************************************************************************/
 
 static void
-custom_cell_renderer_movelist_init(CustomCellRendererMovelist * cellrendererprogress)
+custom_cell_renderer_movelist_init(CustomCellRendererMovelist * cellrendererprogress, gpointer UNUSED(g_class))
 {
     gtk_cell_renderer_set_padding(GTK_CELL_RENDERER(cellrendererprogress), 2, 2);
     g_object_set(GTK_CELL_RENDERER(cellrendererprogress), "mode", (int) GTK_CELL_RENDERER_MODE_INERT, NULL);
@@ -130,7 +130,7 @@ custom_cell_renderer_movelist_init(CustomCellRendererMovelist * cellrendererprog
  ***************************************************************************/
 
 static void
-custom_cell_renderer_movelist_class_init(CustomCellRendererMovelistClass * klass)
+custom_cell_renderer_movelist_class_init(CustomCellRendererMovelistClass * klass, gpointer UNUSED(class_data))
 {
     GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS(klass);
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
