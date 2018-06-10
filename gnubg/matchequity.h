@@ -119,7 +119,7 @@ extern void
 
 
 getMEMultiple(const int nScore0, const int nScore1, const int nMatchTo,
-              const int nPoints,
+              const int nCube,
               const int nCubePrime0, const int nCubePrime1,
               const int fCrawford,
               float aafMET[MAXSCORE][MAXSCORE], float aafMETPostCrawford[2][MAXSCORE], float *player0, float *player1);
