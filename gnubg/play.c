@@ -609,9 +609,9 @@ add_moverecord_sanity_check(moverecord * pmr)
 }
 
 extern void
-AddMoveRecord(void *pv)
+AddMoveRecord(moverecord *pmr)
 {
-    moverecord *pmr = pv, *pmrOld;
+    moverecord *pmrOld;
 
     add_moverecord_get_cur(pmr);
 
@@ -669,14 +669,14 @@ move_not_last_in_match_ok(void)
 }
 
 extern void
-SetMoveRecord(void *pv)
+SetMoveRecord(moverecord *pmr)
 {
 
 #if defined (USE_GTK)
     if (fX)
-        GTKSetMoveRecord(pv);
+        GTKSetMoveRecord(pmr);
 #else
-    (void) pv;                  /* suppress unused parameter compiler warning */
+    (void) pmr;                 /* suppress unused parameter compiler warning */
 #endif
 }
 

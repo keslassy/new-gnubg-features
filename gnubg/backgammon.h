@@ -262,12 +262,12 @@ void asyncDumpDecision(decisionData * pdd);
 void asyncFindBestMoves(findData * pfd);
 void asyncFindMove(findData * pfd);
 void asyncScoreMove(scoreData * psd);
-void asyncEvalRoll(decisionData * pcdd);
+void asyncEvalRoll(decisionData * pdd);
 void asyncAnalyzeMove(moveData * pmd);
-void asyncGammonRates(decisionData * pcdd);
-void asyncMoveDecisionE(decisionData * pcdd);
-void asyncCubeDecisionE(decisionData * pcdd);
-void asyncCubeDecision(decisionData * pcdd);
+void asyncGammonRates(decisionData * pdd);
+void asyncMoveDecisionE(decisionData * pdd);
+void asyncCubeDecisionE(decisionData * pdd);
+void asyncCubeDecision(decisionData * pdd);
 int RunAsyncProcess(AsyncFun fun, void *data, const char *msg);
 
 /* There is a global storedmoves struct to maintain the list of moves
@@ -473,7 +473,7 @@ extern moverecord *NewMoveRecord(void);
 #endif
 extern void HandleInterrupt(int idSignal);
 extern void AddGame(moverecord * pmr);
-extern void AddMoveRecord(void *pmr);
+extern void AddMoveRecord(moverecord * pmr);
 extern void ApplyMoveRecord(matchstate * pms, const listOLD * plGame, const moverecord * pmr);
 extern void CalculateBoard(void);
 extern void CancelCubeAction(void);
@@ -499,11 +499,11 @@ extern void PromptForExit(void);
 extern void Prompt(void);
 extern void ResetInterrupt(void);
 extern void SaveRolloutSettings(FILE * pf, const char *sz, rolloutcontext * prc);
-extern void setDefaultFileName(char *sz);
+extern void setDefaultFileName(char *path);
 extern void SetMatchDate(matchinfo * pmi);
 extern void SetMatchID(const char *szMatchID);
 extern void SetMatchInfo(char **ppch, const char *sz, char *szMessage);
-extern void SetMoveRecord(void *pmr);
+extern void SetMoveRecord(moverecord *pmr);
 extern void SetTurn(int i);
 extern void show_8912(TanBoard anBoard, char *sz);
 extern void show_bearoff(TanBoard an, char *sz);
@@ -1001,7 +1001,7 @@ extern void find_skills(moverecord * pmr, const matchstate * pms, int did_double
 extern int getGameNumber(const listOLD * plGame);
 extern int getMoveNumber(const listOLD * plGame, const void *p);
 extern int CheckGameExists(void);
-extern void pmr_cubedata_set(moverecord * pmr, evalsetup * es, float output[2][NUM_ROLLOUT_OUTPUTS],
+extern void pmr_cubedata_set(moverecord * pmr, evalsetup * pes, float output[2][NUM_ROLLOUT_OUTPUTS],
                              float stddev[2][NUM_ROLLOUT_OUTPUTS]);
 extern void pmr_movelist_set(moverecord * pmr, evalsetup * pes, movelist * pml);
 extern listOLD *game_add_pmr_hint(listOLD * plGame);
