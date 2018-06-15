@@ -3987,6 +3987,8 @@ SetMatchID(const char *szMatchID)
     if (MatchFromID(anDice, &fTurn, &fResigned, &fDoubled, &fMove, &fCubeOwner, &fCrawford,
                     &nMatchTo, anScore, &nCube, &lfJacoby, &gs, szMatchID) < 0) {
         outputf(_("Illegal match ID '%s'\n"), szMatchID);
+#if 0
+        /* debugging details */
         outputf(_("Dice %u %u, "), anDice[0], anDice[1]);
         outputf(_("player on roll %d (turn %d), "), fMove, fTurn);
         outputf(_("resigned %d,\n"), fResigned);
@@ -3998,6 +4000,7 @@ SetMatchID(const char *szMatchID)
         outputf(_("score %d-%d, "), anScore[0], anScore[1]);
         outputf(_("cube %d, "), nCube);
         outputf(_("game state %d\n"), (int) gs);
+#endif
         outputx();
         return;
     }
