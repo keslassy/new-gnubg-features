@@ -603,16 +603,18 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
         int dice2 = sz[1] - '0';
 
         if (fBeaver) {
-            /* look likes the previous beaver was taken */
+            /* looks like the previous beaver was taken */
+            moverecord *prev;
+
             pmr = NewMoveRecord();
 
             pmr->mt = MOVE_TAKE;
-            pmr->fPlayer = iPlayer;
-            if (!LinkToDouble(pmr)) {
+            if (!(prev = LinkToDouble(pmr))) {
                 outputl(_("Take record found but doesn't follow a double"));
                 free(pmr);
                 return;
             }
+            pmr->fPlayer = !prev->fPlayer;
             AddMoveRecord(pmr);
         }
         fBeaver = FALSE;
@@ -770,13 +772,13 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
 
     }
 
-    if (!StrNCaseCmp(sz, "double", 6) || !StrNCaseCmp(sz, "beavers", 7) || !StrNCaseCmp(sz, "raccoons", 7)) {
+    if (!StrNCaseCmp(sz, "double", 6) || !StrNCaseCmp(sz, "beaver", 6) || !StrNCaseCmp(sz, "raccoon", 7)) {
         pmr = NewMoveRecord();
         pmr->mt = MOVE_DOUBLE;
         pmr->fPlayer = iPlayer;
         LinkToDouble(pmr);
         AddMoveRecord(pmr);
-        fBeaver = !StrNCaseCmp(sz, "beavers", 6);
+        fBeaver = !StrNCaseCmp(sz, "beaver", 6);
 
     } else if (!StrNCaseCmp(sz, "take", 4)) {
         pmr = NewMoveRecord();
@@ -788,6 +790,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
             return;
         }
         AddMoveRecord(pmr);
+        fBeaver = FALSE;
     } else if (!StrNCaseCmp(sz, "drop", 4)) {
 
         pmr = NewMoveRecord();
