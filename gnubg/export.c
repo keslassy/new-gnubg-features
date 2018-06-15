@@ -1143,7 +1143,7 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
 
                 /* I don't understand why we need to swap this field! */
                 ct = strstr(buffer, ";");
-                ct[7] = '0' + ('1' - ct[7]);
+                ct[7] = (ct[7] == '0') ? '1' : '0';
             }
             if (!(i & 1))
                 if (fSst)
