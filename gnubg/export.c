@@ -1027,6 +1027,7 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
     matchstate msExport;
     char sz[128], buffer[256];
     int i = 0, n, nFileCube = 1, fWarned = FALSE, diceRolled = 0;
+    int nDoubles = 0;
     TanBoard anBoard;
 
     /* FIXME It would be nice if this function was updated to use the
@@ -1081,13 +1082,35 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
             SwapSides(anBoard);
             /*   if (( sz[ strlen(sz)-1 ] == ' ') && (strlen(sz) > 5 ))
              * sz[ strlen(sz) - 1 ] = 0;  Don't need this..  */
+            nDoubles = 0;
             break;
         case MOVE_DOUBLE:
-            sprintf(sz, " Doubles => %d", nFileCube <<= 1);
-            msExport.fCubeOwner = !(i & 1);
+            if (nDoubles == 0) {
+                sprintf(sz, " Doubles => %d", nFileCube <<= 1);
+                msExport.fCubeOwner = !(i & 1);
+            } else {
+                /* Jellyfish uses this, not "Doubles" */
+                sprintf(sz, " Beavers => %d", nFileCube <<= 1);
+            }
+            nDoubles++;
             break;
         case MOVE_TAKE:
-            strcpy(sz, " Takes");       /* FIXME beavers? */
+            /* Don't print "Takes" after a beaver or the following moves
+             * will be swapped between players. This is Jellyfish's behaviour.
+             * It supported only one beaver. We print either filler spaces
+             * or nothing depending on the number of redoubles to get the
+             * following moves in the right column.
+             */
+            if (nDoubles % 2)
+                if (nDoubles == 1)
+                    strcpy(sz, " Takes");
+                else
+                    strcpy(sz, "  ");
+            else {
+                nDoubles = 0;
+                continue;
+            }
+            nDoubles = 0;
             break;
         case MOVE_DROP:
             sprintf(sz, " Drops%sWins %d point%s",
