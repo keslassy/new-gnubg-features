@@ -114,9 +114,9 @@ getDocDir(void)
 
 
 void
-PrintError(const char *str)
+PrintError(const char *message)
 {
-    g_printerr("%s: %s", str, strerror(errno));
+    g_printerr("%s: %s", message, strerror(errno));
 }
 
 /* Non-Ansi compliant function */

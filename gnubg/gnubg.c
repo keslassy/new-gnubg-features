@@ -5355,13 +5355,13 @@ asyncCubeDecision(decisionData * pdd)
 }
 
 extern int
-RunAsyncProcess(AsyncFun fn, void *data, const char *msg)
+RunAsyncProcess(AsyncFun fun, void *data, const char *msg)
 {
     int ret;
 #if defined(USE_MULTITHREAD)
     Task *pt = (Task *) malloc(sizeof(Task));
     pt->pLinkedTask = NULL;
-    pt->fun = fn;
+    pt->fun = fun;
     pt->data = data;
     MT_AddTask(pt, TRUE);
 #endif
@@ -5372,7 +5372,7 @@ RunAsyncProcess(AsyncFun fn, void *data, const char *msg)
     ret = MT_WaitForTasks(Progress, 100, FALSE);
 #else
     asyncRet = 0;
-    fn(data);                   /* Just call function in single threaded build */
+    fun(data);                  /* Just call function in single threaded build */
     ret = asyncRet;
 #endif
 

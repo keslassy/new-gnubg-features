@@ -106,7 +106,7 @@ extern ratingtype GetRating(const float rError);
 extern void IniStatcontext(statcontext * psc);
 extern void AddStatcontext(const statcontext * pscA, statcontext * pscB);
 
-extern void DumpStatcontext(char *szOutput, const statcontext * psc, const char *pl, const char *op, int nMatchTo);
+extern void DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, const char *op, int nMatchTo);
 
 extern void
  updateStatisticsGame(const listOLD * plGame);

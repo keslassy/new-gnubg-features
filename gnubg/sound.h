@@ -61,7 +61,7 @@ extern void SoundWait(void);
 
 extern char *GetDefaultSoundFile(gnubgsound sound);
 extern void playSoundFile(char *file, gboolean sync);
-extern void SetSoundFile(const gnubgsound gs, const char *szFilename);
+extern void SetSoundFile(const gnubgsound sound, const char *file);
 extern char *GetSoundFile(gnubgsound sound);
 extern const char *sound_get_command(void);
 extern char *sound_set_command(const char *sz);
