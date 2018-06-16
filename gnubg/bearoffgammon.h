@@ -32,7 +32,7 @@ struct GammonProbs {
     unsigned int p0:8;          /*  0 - 36 */
 };
 
-extern struct GammonProbs *getBearoffGammonProbs(const unsigned int b[6]);
+extern struct GammonProbs *getBearoffGammonProbs(const unsigned int board[6]);
 
 extern long *getRaceBGprobs(const unsigned int board[6]);
 

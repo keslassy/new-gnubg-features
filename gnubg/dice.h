@@ -49,7 +49,7 @@ extern void PrintRNGCounter(const rng rngx, rngcontext * rngctx);
 extern void InitRNGSeed(unsigned int n, const rng rngx, rngcontext * rngctx);
 extern int RNGSystemSeed(const rng rngx, void *p, unsigned long *pnSeed);
 
-extern int RollDice(unsigned int anDice[2], rng * prngx, rngcontext * rngctx);
+extern int RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx);
 
 #if defined(HAVE_LIBGMP)
 extern int InitRNGSeedLong(char *sz, rng rng, rngcontext * rngctx);
