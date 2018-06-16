@@ -22,10 +22,10 @@
 #ifndef RELATIONAL_H
 #define RELATIONAL_H
 
-#include <dbprovider.h>
 #include <stddef.h>
 #include <sys/types.h>
 #include "analysis.h"
+#include "dbprovider.h"
 
 #define DB_VERSION 1
 
