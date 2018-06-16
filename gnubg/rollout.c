@@ -1813,7 +1813,7 @@ getResignEquities(float arResign[NUM_ROLLOUT_OUTPUTS], cubeinfo * pci, int nResi
 
 
 extern int
-ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc * pf, void *p)
+ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc * pfRolloutProgress, void * pUserData)
 {
 
     const cubeinfo *pci;
@@ -1850,7 +1850,7 @@ ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc 
     }
 
     nGamesDone = RolloutGeneral(apBoard,
-                                apOutput, apStdDev, NULL, apes, apci, apCubeDecTop, cMoves, TRUE, FALSE, pf, p);
+                                apOutput, apStdDev, NULL, apes, apci, apCubeDecTop, cMoves, TRUE, FALSE, pfRolloutProgress, pUserData);
     /* put fMove back again */
     for (i = 0; i < cMoves; ++i) {
         aci[i].fMove = !aci[i].fMove;

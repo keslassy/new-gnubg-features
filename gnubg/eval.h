@@ -453,16 +453,16 @@ extern int
  GetDPEq(int *pfCube, float *prDPEq, const cubeinfo * pci);
 
 extern float
- mwc2eq(const float rMwc, const cubeinfo * ci);
+ mwc2eq(const float rMwc, const cubeinfo * pci);
 
 extern float
- eq2mwc(const float rEq, const cubeinfo * ci);
+ eq2mwc(const float rEq, const cubeinfo * pci);
 
 extern float
- se_mwc2eq(const float rMwc, const cubeinfo * ci);
+ se_mwc2eq(const float rMwc, const cubeinfo * pci);
 
 extern float
- se_eq2mwc(const float rEq, const cubeinfo * ci);
+ se_eq2mwc(const float rEq, const cubeinfo * pci);
 
 extern char
 *FormatEval(char *sz, evalsetup * pes);
