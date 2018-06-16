@@ -22,11 +22,13 @@
  */
 
 #include "config.h"
+
 #include <time.h>
-#include <backgammon.h>
 #if HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
+
+#include "backgammon.h"
 
 #ifdef WIN32
 #include <windows.h>
