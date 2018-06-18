@@ -4944,7 +4944,6 @@ LateEvalToggled(GtkWidget * UNUSED(pw), rolloutwidget * prw)
 static void
 STDStopToggled(GtkWidget * UNUSED(pw), rolloutwidget * prw)
 {
-
     int do_std_stop = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoSTDStop));
 
     gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwAdjMinGames), do_std_stop);
@@ -4954,13 +4953,10 @@ STDStopToggled(GtkWidget * UNUSED(pw), rolloutwidget * prw)
 static void
 JsdStopToggled(GtkWidget * UNUSED(pw), rolloutwidget * prw)
 {
-
-    int do_jsd_stop = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop));
-
-    gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwJsdAdjLimit), do_jsd_stop);
+   int do_jsd_stop = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop));
 
     gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwJsdAdjMinGames), do_jsd_stop);
-
+    gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwJsdAdjLimit), do_jsd_stop);
 }
 
 static void
@@ -5031,8 +5027,8 @@ PlayersSameToggled(GtkWidget * UNUSED(pw), rolloutwidget * prw)
 static GtkWidget *
 RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 {
-    GtkWidget *pwPage, *pw, *pwv;
-    GtkWidget *pwHBox;
+    GtkWidget *pwPage;
+    GtkWidget *pwh, *pwv, *pwHBox;
     GtkWidget *pwTable, *pwFrame;
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -5043,90 +5039,91 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_container_set_border_width(GTK_CONTAINER(pwPage), 8);
 
     prpw->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble)prw->rcRollout.nSeed, 0, INT_MAX, 1, 1, 0));
-
     prpw->padjTrials = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nTrials, 1, 1296 * 1296, 36, 36, 0));
+
 #if GTK_CHECK_VERSION(3,0,0)
-    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 #else
-    pw = gtk_hbox_new(FALSE, 0);
+    pwh = gtk_hbox_new(FALSE, 8);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwPage), pw);
+    gtk_box_pack_start(GTK_BOX(pwPage), pwh, FALSE, FALSE, 0);
 
-    gtk_container_add(GTK_CONTAINER(pw), gtk_label_new(_("Seed:")));
-    gtk_container_add(GTK_CONTAINER(pw), gtk_spin_button_new(prpw->padjSeed, 1, 0));
+    gtk_box_pack_start(GTK_BOX(pwh), gtk_label_new(_("Seed:")), FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(pwh), gtk_spin_button_new(prpw->padjSeed, 1, 0), FALSE, FALSE, 4);
 
-    gtk_container_add(GTK_CONTAINER(pw), gtk_label_new(_("Trials:")));
-    gtk_container_add(GTK_CONTAINER(pw), gtk_spin_button_new(prpw->padjTrials, 36, 0));
+    gtk_box_pack_end(GTK_BOX(pwh), gtk_spin_button_new(prpw->padjTrials, 36, 0), FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(pwh), gtk_label_new(_("Trials:")), FALSE, FALSE, 4);
 
     pwFrame = gtk_frame_new(_("Truncation"));
-    gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
+    gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+    pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 #else
-    pw = gtk_hbox_new(FALSE, 8);
+    pwh = gtk_hbox_new(FALSE, 8);
 #endif
-    gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
-    gtk_container_add(GTK_CONTAINER(pwFrame), pw);
+    gtk_container_set_border_width(GTK_CONTAINER(pwh), 8);
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwh);
 
     prpw->pwDoTrunc = gtk_check_button_new_with_label(_("Truncate Rollouts"));
-    gtk_container_add(GTK_CONTAINER(pw), prpw->pwDoTrunc);
+    gtk_box_pack_start(GTK_BOX(pwh), prpw->pwDoTrunc, FALSE, FALSE, 4);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwDoTrunc), prw->rcRollout.fDoTruncate);
     g_signal_connect(G_OBJECT(prpw->pwDoTrunc), "toggled", G_CALLBACK(TruncEnableToggled), prw);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    prpw->pwAdjTruncPlies  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    prpw->pwAdjTruncPlies = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     prpw->pwAdjTruncPlies = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pw), pwHBox);
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Truncate at ply:")));
+    gtk_box_pack_end(GTK_BOX(pwh), pwHBox, FALSE, FALSE, 4);
 
     prpw->padjTruncPlies = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nTruncate, 0, 1000, 1, 1, 0));
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_spin_button_new(prpw->padjTruncPlies, 1, 0));
+    gtk_box_pack_end(GTK_BOX(pwHBox), gtk_spin_button_new(prpw->padjTruncPlies, 1, 0), FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Truncate at ply:")), FALSE, FALSE, 4);
 
 
     pwFrame = gtk_frame_new(_("Evaluation for later plies"));
-    gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
+    gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+    pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 #else
-    pw = gtk_hbox_new(FALSE, 8);
+    pwh = gtk_hbox_new(FALSE, 8);
 #endif
-    gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
-    gtk_container_add(GTK_CONTAINER(pwFrame), pw);
+    gtk_container_set_border_width(GTK_CONTAINER(pwh), 8);
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwh);
 
     prpw->pwDoLate = gtk_check_button_new_with_label(_("Enable separate evaluations "));
-    gtk_container_add(GTK_CONTAINER(pw), prpw->pwDoLate);
+    gtk_box_pack_start(GTK_BOX(pwh), prpw->pwDoLate, FALSE, FALSE, 4);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoLate), prw->rcRollout.fLateEvals);
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwDoLate), "toggled", G_CALLBACK(LateEvalToggled), prw);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    prpw->pwAdjLatePlies  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    prpw->pwAdjLatePlies = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     prpw->pwAdjLatePlies = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pw), pwHBox);
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Change eval after ply:")));
+    gtk_box_pack_end(GTK_BOX(pwh), pwHBox, FALSE, FALSE, 4);
 
     prpw->padjLatePlies = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nLate, 0, 1000, 1, 1, 0));
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_spin_button_new(prpw->padjLatePlies, 1, 0));
+    gtk_box_pack_end(GTK_BOX(pwHBox), gtk_spin_button_new(prpw->padjLatePlies, 1, 0), FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Change eval after ply:")), FALSE, FALSE, 4);
 
+    
     pwFrame = gtk_frame_new(_("Stop when result is accurate"));
-    gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
+    gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
 
-    /* an hbox for the pane */
+    /* an hbox for the frame */
 #if GTK_CHECK_VERSION(3,0,0)
-    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+    pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 #else
-    pw = gtk_hbox_new(FALSE, 8);
+    pwh = gtk_hbox_new(FALSE, 8);
 #endif
-    gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
-    gtk_container_add(GTK_CONTAINER(pwFrame), pw);
+    gtk_container_set_border_width(GTK_CONTAINER(pwh), 8);
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwh);
 
     prpw->pwDoSTDStop = gtk_check_button_new_with_label(_("Stop when SE is small enough "));
-    gtk_container_add(GTK_CONTAINER(pw), prpw->pwDoSTDStop);
+    gtk_box_pack_start(GTK_BOX(pwh), prpw->pwDoSTDStop, FALSE, FALSE, 4);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoSTDStop), prw->rcRollout.fStopOnSTD);
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwDoSTDStop), "toggled", G_CALLBACK(STDStopToggled), prw);
     gtk_widget_set_tooltip_text(prpw->pwDoSTDStop,
@@ -5142,51 +5139,47 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 #else
     pwv = gtk_vbox_new(FALSE, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pw), pwv);
+    gtk_box_pack_end(GTK_BOX(pwh), pwv, FALSE, FALSE, 4);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    prpw->pwAdjMinGames  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    prpw->pwAdjMinGames = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     prpw->pwAdjMinGames = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Minimum Trials:")));
+    gtk_box_pack_start(GTK_BOX(pwv), pwHBox, TRUE, TRUE, 0);
 
     prpw->padjMinGames = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nMinimumGames, 1, 1296 * 1296, 36, 36, 0));
-
     prpw->pwMinGames = gtk_spin_button_new(prpw->padjMinGames, 1, 0);
-
-    gtk_container_add(GTK_CONTAINER(pwHBox), prpw->pwMinGames);
+    gtk_box_pack_end(GTK_BOX(pwHBox), prpw->pwMinGames, FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Minimum Trials:")), FALSE, FALSE, 4);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    prpw->pwAdjMaxError  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    prpw->pwAdjMaxError = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     prpw->pwAdjMaxError = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Equity SE threshold:")));
+    gtk_box_pack_end(GTK_BOX(pwv), pwHBox, TRUE, TRUE, 0);
 
     prpw->padjMaxError = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.rStdLimit, 0, 1, .0001, .0001, 0));
-
     prpw->pwMaxError = gtk_spin_button_new(prpw->padjMaxError, .0001, 4);
-
-    gtk_container_add(GTK_CONTAINER(pwHBox), prpw->pwMaxError);
+    gtk_box_pack_end(GTK_BOX(pwHBox), prpw->pwMaxError, FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Equity SE threshold:")), FALSE, FALSE, 4);
 
 
     pwFrame = gtk_frame_new(_("Stop when result is clear"));
-    gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
+    gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
 
     /* an hbox for the frame */
 #if GTK_CHECK_VERSION(3,0,0)
-    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+    pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 #else
-    pw = gtk_hbox_new(FALSE, 8);
+    pwh = gtk_hbox_new(FALSE, 8);
 #endif
-    gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
-    gtk_container_add(GTK_CONTAINER(pwFrame), pw);
+    gtk_container_set_border_width(GTK_CONTAINER(pwh), 8);
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwh);
 
     prpw->pwJsdDoStop = gtk_check_button_new_with_label(_("Stop when JSD margin is high enough"));
-    gtk_container_add(GTK_CONTAINER(pw), prpw->pwJsdDoStop);
+    gtk_box_pack_start(GTK_BOX(pwh), prpw->pwJsdDoStop, FALSE, FALSE, 4);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop), prw->rcRollout.fStopOnJsd);
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwJsdDoStop), "toggled", G_CALLBACK(JsdStopToggled), prw);
     gtk_widget_set_tooltip_text(prpw->pwJsdDoStop,
@@ -5203,56 +5196,54 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 #else
     pwv = gtk_vbox_new(FALSE, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pw), pwv);
+    gtk_box_pack_end(GTK_BOX(pwh), pwv, FALSE, FALSE, 4);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    prpw->pwJsdAdjMinGames  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    prpw->pwJsdAdjMinGames = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     prpw->pwJsdAdjMinGames = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Minimum Trials:")));
+    gtk_box_pack_start(GTK_BOX(pwv), pwHBox, TRUE, TRUE, 0);
 
     prpw->padjJsdMinGames =
         GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nMinimumJsdGames, 1, 1296 * 1296, 36, 36, 0));
-
     prpw->pwJsdMinGames = gtk_spin_button_new(prpw->padjJsdMinGames, 1, 0);
-
-    gtk_container_add(GTK_CONTAINER(pwHBox), prpw->pwJsdMinGames);
+    gtk_box_pack_end(GTK_BOX(pwHBox), prpw->pwJsdMinGames, FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Minimum Trials:")), FALSE, FALSE, 4);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    prpw->pwJsdAdjLimit  = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    prpw->pwJsdAdjLimit = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     prpw->pwJsdAdjLimit = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("JSD threshold:")));
-
+    gtk_box_pack_end(GTK_BOX(pwv), pwHBox, TRUE, TRUE, 0);
+    
     prpw->padjJsdLimit = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.rJsdLimit, 0, 8, .0001, .0001, 0));
-
     prpw->pwJsdAdjLimit = gtk_spin_button_new(prpw->padjJsdLimit, .0001, 4);
+    gtk_box_pack_end(GTK_BOX(pwHBox), prpw->pwJsdAdjLimit, FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("JSD threshold:")), FALSE, FALSE, 4);
 
-    gtk_container_add(GTK_CONTAINER(pwHBox), prpw->pwJsdAdjLimit);
 
     pwFrame = gtk_frame_new(_("Bearoff Truncation"));
-    gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
+    gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
+    
 #if GTK_CHECK_VERSION(3,0,0)
-    prpw->pwTruncBearoffOpts = pw = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
+    prpw->pwTruncBearoffOpts = pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 #else
-    prpw->pwTruncBearoffOpts = pw = gtk_vbox_new(FALSE, 8);
+    prpw->pwTruncBearoffOpts = pwv = gtk_vbox_new(FALSE, 8);
 #endif
-    gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
-    gtk_container_add(GTK_CONTAINER(pwFrame), pw);
+    gtk_container_set_border_width(GTK_CONTAINER(pwv), 8);
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwv);
 
     prpw->pwTruncBearoff2 =
         gtk_check_button_new_with_label(_("Truncate cubeless and cubeful money at exact bearoff database"));
 
-    gtk_container_add(GTK_CONTAINER(pw), prpw->pwTruncBearoff2);
+    gtk_box_pack_start(GTK_BOX(pwv), prpw->pwTruncBearoff2, FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwTruncBearoff2), prw->rcRollout.fTruncBearoff2);
 
     prpw->pwTruncBearoffOS = gtk_check_button_new_with_label(_("Truncate cubeless at one-sided bearoff database"));
 
-    gtk_container_add(GTK_CONTAINER(pw), prpw->pwTruncBearoffOS);
+    gtk_box_pack_start(GTK_BOX(pwv), prpw->pwTruncBearoffOS, FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwTruncBearoffOS), prw->rcRollout.fTruncBearoffOS);
 
 
