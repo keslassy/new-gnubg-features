@@ -5125,10 +5125,16 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
-    prpw->pwDoSTDStop = gtk_check_button_new_with_label(_("Stop when STD is small enough "));
+    prpw->pwDoSTDStop = gtk_check_button_new_with_label(_("Stop when SE is small enough "));
     gtk_container_add(GTK_CONTAINER(pw), prpw->pwDoSTDStop);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoSTDStop), prw->rcRollout.fStopOnSTD);
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwDoSTDStop), "toggled", G_CALLBACK(STDStopToggled), prw);
+    gtk_widget_set_tooltip_text(prpw->pwDoSTDStop,
+        _("Standard Error (SE) of the candidate play equity is a measure of "
+           "the accuracy of the current rollout result. "
+          "If the rollout were to be continued indefinitely, its result would "
+          "have about 95% chances to be in an interval of +/-2 SE around the "
+          "current result."));
 
     /* a vbox for the adjusters */
 #if GTK_CHECK_VERSION(3,0,0)
@@ -5158,7 +5164,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     prpw->pwAdjMaxError = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
     gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Equity Standard Deviation:")));
+    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("Equity SE threshold:")));
 
     prpw->padjMaxError = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.rStdLimit, 0, 1, .0001, .0001, 0));
 
@@ -5167,7 +5173,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_container_add(GTK_CONTAINER(pwHBox), prpw->pwMaxError);
 
 
-    pwFrame = gtk_frame_new(_("Stop Rollouts of multiple moves based on JSD"));
+    pwFrame = gtk_frame_new(_("Stop when result is clear"));
     gtk_container_add(GTK_CONTAINER(pwPage), pwFrame);
 
     /* an hbox for the frame */
@@ -5179,10 +5185,17 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_container_set_border_width(GTK_CONTAINER(pw), 8);
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
-    prpw->pwJsdDoStop = gtk_check_button_new_with_label(_("Enable Stop on JSD"));
+    prpw->pwJsdDoStop = gtk_check_button_new_with_label(_("Stop when JSD margin is high enough"));
     gtk_container_add(GTK_CONTAINER(pw), prpw->pwJsdDoStop);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop), prw->rcRollout.fStopOnJsd);
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwJsdDoStop), "toggled", G_CALLBACK(JsdStopToggled), prw);
+    gtk_widget_set_tooltip_text(prpw->pwJsdDoStop,
+        _("The number of Joint Standard Deviations (JSD) between "
+          "the current favourite and another candidate decision is a "
+          "measure of how unlikely continuing the rollout is to "
+          "change the current result. "
+          "A candidate trailing by 2.33 JSD has about 1% chance to "
+          "end as winner if the rollout were to be continued indefinitely."));
 
     /* a vbox for the adjusters */
 #if GTK_CHECK_VERSION(3,0,0)
@@ -5213,7 +5226,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     prpw->pwJsdAdjLimit = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
     gtk_container_add(GTK_CONTAINER(pwv), pwHBox);
-    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("JSDs from best choice")));
+    gtk_container_add(GTK_CONTAINER(pwHBox), gtk_label_new(_("JSD threshold:")));
 
     prpw->padjJsdLimit = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.rJsdLimit, 0, 8, .0001, .0001, 0));
 
@@ -5232,7 +5245,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
     prpw->pwTruncBearoff2 =
-        gtk_check_button_new_with_label(_("Truncate cubeless (and cubeful money) at exact bearoff database"));
+        gtk_check_button_new_with_label(_("Truncate cubeless and cubeful money at exact bearoff database"));
 
     gtk_container_add(GTK_CONTAINER(pw), prpw->pwTruncBearoff2);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwTruncBearoff2), prw->rcRollout.fTruncBearoff2);
@@ -5254,9 +5267,16 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     g_signal_connect(G_OBJECT(prpw->pwCubeful), "toggled", G_CALLBACK(CubefulToggled), prw);
 
 
-    prpw->pwVarRedn = gtk_check_button_new_with_label(_("Variance reduction"));
+    prpw->pwVarRedn = gtk_check_button_new_with_label(_("Use variance reduction"));
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwVarRedn, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwVarRedn), prw->rcRollout.fVarRedn);
+    gtk_widget_set_tooltip_text(prpw->pwVarRedn,
+        _("Variance Reduction is a procedure used to considerably increase "
+          "the accuracy of rollout results. "
+          "It has a significant cost for 0-ply rollouts "
+          "(but is still valuable on an accuracy per elapsed-time basis) "
+          "and is almost free for higher plies. "
+          "It is recommended to enable this option."));
 
     prpw->pwRotate = gtk_check_button_new_with_label(_("Use quasi-random dice"));
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwRotate, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
@@ -5403,7 +5423,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
 #else
         pwVBox = gtk_vbox_new(FALSE, 0);
 #endif
-        gtk_notebook_append_page(GTK_NOTEBOOK(rw.RolloutNotebook), pwVBox, gtk_label_new(_("Play settings")));
+        gtk_notebook_append_page(GTK_NOTEBOOK(rw.RolloutNotebook), pwVBox, gtk_label_new(_("Play Settings")));
 
         pwTable = gtk_table_new(3, 2, FALSE);
         gtk_box_pack_start(GTK_BOX(pwVBox), pwTable, FALSE, FALSE, 0);
@@ -5420,7 +5440,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[3]->pwSettingWidgets), 1, 2, 1, 2,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
         rw.prpwTrunc->pmf = NULL;
-        rw.analysisDetails[4] = RolloutPage(rw.prpwTrunc, _("Truncation Pt."), FALSE, NULL);
+        rw.analysisDetails[4] = RolloutPage(rw.prpwTrunc, _("Truncation Point"), FALSE, NULL);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[4]->pwSettingWidgets), 0, 1, 2, 3,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
 
@@ -5430,12 +5450,12 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
         g_signal_connect(G_OBJECT(RPGeneral.pwPlayersAreSame), "toggled", G_CALLBACK(PlayersSameToggled), &rw);
 
         RPGeneral.pwCubeEqualChequer =
-            gtk_check_button_new_with_label(_("Cube decisions use same settings as Chequer play"));
+            gtk_check_button_new_with_label(_("Cube decisions use same settings as chequer play"));
         gtk_box_pack_start(GTK_BOX(pwVBox), RPGeneral.pwCubeEqualChequer, FALSE, FALSE, 0);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(RPGeneral.pwCubeEqualChequer), rw.fCubeEqualChequer);
         g_signal_connect(G_OBJECT(RPGeneral.pwCubeEqualChequer), "toggled", G_CALLBACK(CubeEqCheqToggled), &rw);
 
-        RPGeneral.pwTruncEqualPlayer0 = gtk_check_button_new_with_label(_("Use player0 setting for truncation point"));
+        RPGeneral.pwTruncEqualPlayer0 = gtk_check_button_new_with_label(_("Use player 0 setting for truncation point"));
         gtk_box_pack_start(GTK_BOX(pwVBox), RPGeneral.pwTruncEqualPlayer0, FALSE, FALSE, 0);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(RPGeneral.pwTruncEqualPlayer0), rw.fTruncEqualPlayer0);
         g_signal_connect(G_OBJECT(RPGeneral.pwTruncEqualPlayer0), "toggled", G_CALLBACK(TruncEqualPlayer0Toggled), &rw);
