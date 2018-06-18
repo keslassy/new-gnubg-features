@@ -701,7 +701,7 @@ create_rollout_list(int n, char asz[][40], GtkWidget ** View, GtkListStore ** Li
         N_("Lose (bg)"),
         N_("Cubeless"),
         N_("Cubeful"),
-        N_("Std dev"),
+        N_("Std Err"),
         N_("JSDs")
     };
     const char *aszTemp[N_ROLLOUT_COLS];
@@ -863,8 +863,6 @@ GTKRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
     static int min_games_done = 0;
     char sz[32];
     int i;
-    gchar *gsz;
-    float frac;
     GtkTreeIter iter;
 
     if (!prp || !prp->pwRolloutResult)
@@ -913,8 +911,9 @@ GTKRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
             min_games_done = iGame + 1;
     }
     if (iAlternative == (prp->n - 1)) {
-        frac = ((float) min_games_done) / prc->nTrials;
-        gsz = g_strdup_printf("%d/%u (%d%%)", min_games_done, prc->nTrials, (int) (100.0f * frac));
+        float frac = ((float) min_games_done) / prc->nTrials;
+        gchar *gsz = g_strdup_printf("%d/%u (%d%%)", min_games_done, prc->nTrials, (int) (100.0f * frac));
+
         gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(prp->pwRolloutProgress), frac);
         gtk_progress_bar_set_text(GTK_PROGRESS_BAR(prp->pwRolloutProgress), gsz);
         g_free(gsz);
