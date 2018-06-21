@@ -90,6 +90,7 @@ static gint board_set(Board * board, gchar * board_text, const gint resigned, co
 static void InitialPos(BoardData * bd);
 
 #if GTK_CHECK_VERSION(3,0,0)
+/* default orientation is horizontal, set to vertical in board_init() */
 G_DEFINE_TYPE(Board, board, GTK_TYPE_BOX)
 #else
 G_DEFINE_TYPE(Board, board, GTK_TYPE_VBOX)
@@ -3697,6 +3698,10 @@ board_init(Board * board)
     GtkWidget *pw;
     GtkWidget *pwFrame;
     GtkWidget *pwvbox;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_orientable_set_orientation(GTK_ORIENTABLE (board), GTK_ORIENTATION_VERTICAL);
+#endif
 
     board->board_data = bd;
     bd->widget = GTK_WIDGET(board);
