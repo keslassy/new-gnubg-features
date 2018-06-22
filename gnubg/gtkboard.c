@@ -3725,6 +3725,10 @@ board_init(Board * board)
     gtk_widget_add_events(GTK_WIDGET(bd->drawing_area), GDK_EXPOSURE_MASK |
                           GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK |
                           GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_hexpand(bd->drawing_area, TRUE);
+    gtk_widget_set_vexpand(bd->drawing_area, TRUE);
+#endif
     gtk_container_add(GTK_CONTAINER(board), bd->drawing_area);
 
 #if defined(USE_BOARD3D)
