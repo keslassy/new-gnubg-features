@@ -335,6 +335,7 @@ GL_Create(void)
         gtk_tree_view_column_pack_start(column, renderer, FALSE);
         gtk_tree_view_column_set_cell_data_func(column, renderer, RenderMoveString, NULL, NULL);
         gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
+        gtk_tree_view_column_set_expand(column, TRUE);
         gtk_tree_view_append_column(GTK_TREE_VIEW(pwGameList), column);
     }
 
