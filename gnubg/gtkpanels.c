@@ -834,7 +834,7 @@ CreateGameWindow(void)
     g_signal_connect(G_OBJECT(game_select_combo), "changed", G_CALLBACK(SelectGame), NULL);
     gtk_box_pack_start(GTK_BOX(phbox), game_select_combo, TRUE, TRUE, 4);
 
-    gtk_container_add(GTK_CONTAINER(pvbox), psw);
+    gtk_box_pack_end(GTK_BOX(pvbox), psw, TRUE, TRUE, 0);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
     gtk_widget_set_size_request(psw, -1, 150);
