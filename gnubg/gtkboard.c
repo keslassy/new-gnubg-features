@@ -3069,19 +3069,18 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
     unsigned short asRefract[2][CHEQUER_WIDTH * 3 * CHEQUER_HEIGHT * 3];
     int i, nSizeReal;
 
-    unsigned char aanBoardTemp[4][4];
+    unsigned char aanBoardColourTemp[4][4];
 #if defined(USE_BOARD3D)
-    double aarColourTemp[2][4];
-    unsigned char aanBoardColourTemp[4];
-    double arCubeColourTemp[4];
-    double aarDiceColourTemp[2][4];
-    double aarDiceDotColourTemp[2][4];
+    float aarColourTemp[2][4];
+    float arCubeColourTemp[4];
+    float aarDiceColourTemp[2][4];
+    float aarDiceDotColourTemp[2][4];
 
     if (display_is_3d(bd->rd)) {
         int j;
         /* As settings currently separate, copy 3d colours so 2d dialog colours (small chequers, dice etc.) are correct */
         memcpy(aarColourTemp, bd->rd->aarColour, sizeof(bd->rd->aarColour));
-        memcpy(aanBoardColourTemp, bd->rd->aanBoardColour[0], sizeof(bd->rd->aanBoardColour[0]));
+        memcpy(aanBoardColourTemp[0], bd->rd->aanBoardColour[0], sizeof(bd->rd->aanBoardColour[0]));
         memcpy(arCubeColourTemp, bd->rd->arCubeColour, sizeof(bd->rd->arCubeColour));
         memcpy(aarDiceColourTemp, bd->rd->aarDiceColour, sizeof(bd->rd->aarDiceColour));
         memcpy(aarDiceDotColourTemp, bd->rd->aarDiceDotColour, sizeof(bd->rd->aarDiceDotColour));
@@ -3101,7 +3100,7 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
     {
         if (bd->grayBoard) {
             showingGray = bd->grayBoard;
-            memcpy(aanBoardTemp, bd->rd->aanBoardColour, sizeof(aanBoardTemp));
+            memcpy(aanBoardColourTemp, bd->rd->aanBoardColour, sizeof(bd->rd->aanBoardColour));
             for (i = 0; i < 4; i++)
                 GrayScaleColC(bd->rd->aanBoardColour[i]);
         }
@@ -3136,7 +3135,7 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
 #if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {        /* Restore 2d colours */
         memcpy(bd->rd->aarColour, aarColourTemp, sizeof(bd->rd->aarColour));
-        memcpy(bd->rd->aanBoardColour[0], aanBoardColourTemp, sizeof(aanBoardColourTemp));
+        memcpy(bd->rd->aanBoardColour[0], aanBoardColourTemp[0], sizeof(bd->rd->aanBoardColour[0]));
         memcpy(bd->rd->arCubeColour, arCubeColourTemp, sizeof(bd->rd->arCubeColour));
         memcpy(bd->rd->aarDiceColour, aarDiceColourTemp, sizeof(bd->rd->aarDiceColour));
         memcpy(bd->rd->aarDiceDotColour, aarDiceDotColourTemp, sizeof(bd->rd->aarDiceDotColour));
@@ -3145,7 +3144,7 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
     {
         if (bd->grayBoard) {
             showingGray = FALSE;
-            memcpy(bd->rd->aanBoardColour, aanBoardTemp, sizeof(aanBoardTemp));
+            memcpy(bd->rd->aanBoardColour, aanBoardColourTemp, sizeof(bd->rd->aanBoardColour));
         }
     }
 }
