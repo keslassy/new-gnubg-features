@@ -64,7 +64,6 @@ typedef struct _toolbarwidget {
     GtkWidget *pwNextMarked;    /* button for "Next CMarked" */
     GtkWidget *pwReset;         /* button for "Reset" */
     GtkWidget *pwEdit;          /* button for "Edit" */
-    GtkWidget *pwHideShowPanel; /* button hide/show panel */
     GtkWidget *pwButtonClockwise;       /* button for clockwise */
 
 } toolbarwidget;
