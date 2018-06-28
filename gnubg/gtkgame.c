@@ -4794,7 +4794,7 @@ typedef struct _rolloutpagegeneral {
     GtkAdjustment *padjSeed, *padjMinGames, *padjMaxError;
     GtkAdjustment *padjJsdMinGames, *padjJsdLimit;
     GtkWidget *arpwGeneral;
-    GtkWidget *pwMinGames, *pwMaxError;
+    GtkWidget *pwMinGames, *pwMaxError, *pwJsdLimit;
 } rolloutpagegeneral;
 
 typedef struct _rolloutwidget {
@@ -5219,8 +5219,8 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_box_pack_end(GTK_BOX(pwv), pwHBox, TRUE, TRUE, 0);
     
     prpw->padjJsdLimit = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.rJsdLimit, 0, 8, .0001, .0001, 0));
-    prpw->pwJsdAdjLimit = gtk_spin_button_new(prpw->padjJsdLimit, .0001, 4);
-    gtk_box_pack_end(GTK_BOX(pwHBox), prpw->pwJsdAdjLimit, FALSE, FALSE, 4);
+    prpw->pwJsdLimit = gtk_spin_button_new(prpw->padjJsdLimit, .0001, 4);
+    gtk_box_pack_end(GTK_BOX(pwHBox), prpw->pwJsdLimit, FALSE, FALSE, 4);
     gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("JSD threshold:")), FALSE, FALSE, 4);
 
 
