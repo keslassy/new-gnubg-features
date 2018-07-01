@@ -152,7 +152,9 @@ StartGuessHyper(hyperequity ahe[], const int nC, bearoffcontext * UNUSED(pbc))
             case HYPER_CONTACT:
                 ++ai[1];
                 --ai[2];
-                /* FALLTHRU */
+#if defined(HAVE_FUNC_ATTRIBUTE_FALLTHROUGH)
+                __attribute__((fallthrough));
+#endif
             case HYPER_BEAROFF:
 
                 memset(&ahe[i * nPos + j], 0, sizeof(hyperequity));
