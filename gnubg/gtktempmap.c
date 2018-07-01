@@ -607,7 +607,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
     /* vbox to hold tree widget and buttons */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+#else
     pwv = gtk_vbox_new(FALSE, 6);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwv), 6);
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwv);
 
@@ -727,7 +731,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
     /* separator */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwv), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 0);
+#else
     gtk_box_pack_start(GTK_BOX(pwv), gtk_hseparator_new(), FALSE, FALSE, 0);
+#endif
 
     /* gauge */
 
@@ -762,18 +770,25 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
     /* separator */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwv), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 0);
+#else
     gtk_box_pack_start(GTK_BOX(pwv), gtk_hseparator_new(), FALSE, FALSE, 0);
-
+#endif
 
     /* buttons */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwh = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwv), pwh, FALSE, FALSE, 0);
 
     for (i = 0; i < 4; ++i) {
 
         gchar *sz = g_strdup_printf(_("%d ply"), i);
-        if (!i)
+        if (i == 0)
             pw = pwx = gtk_radio_button_new_with_label(NULL, sz);
         else
             pw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx), sz);
@@ -796,7 +811,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
     /* show-buttons */
 
     if (n < 2) {
+#if GTK_CHECK_VERSION(3,0,0)
+        pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
         pwh = gtk_hbox_new(FALSE, 4);
+#endif
         gtk_box_pack_start(GTK_BOX(pwv), pwh, FALSE, FALSE, 0);
     }
 
