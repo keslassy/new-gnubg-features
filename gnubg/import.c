@@ -3798,16 +3798,24 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
                     side = !side;
                     OutputMove(matFP, side, " Drops");
                 }
-                fprintf(matFP, "      Wins %d points\n", stake);
+                if (side)
+                    fprintf(matFP, "%36s", "");
+                fprintf(matFP, " Wins %d points\n", stake);
                 break;          /* end of game */
             }
 
             moveCount++;
-            if (doubled) {      /* Taken */
-                stake *= 2;
+            if (doubled) {      /* Taken, peek ahead to see if it is a beaver */
+                if (strcmp(value, "Beaver")) {
+                     stake *= 2;
+                     OutputMove(matFP, !side, " Takes");
+                } else {
+                     stake *= 4;
+                     sprintf(outBuf, " Beavers => %d", stake);
+                     OutputMove(matFP, !side, outBuf);
+                }
                 side = !side;
                 doubled = FALSE;
-                OutputMove(matFP, side, " Takes");
             }
 
             value = buffer;
@@ -3816,7 +3824,6 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
                 outputerrf("Error parsing file. Wrong move count: expected %d, got %s", moveCount, ptr);
                 g_assert_not_reached();
             }
-
             ptr = NextTokenGeneral(&value, ":");
             if (!strcmp(ptr, "X"))
                 side = 0;
@@ -3830,6 +3837,9 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
             if (!strcmp(value, "Double")) {
                 doubled = TRUE;
                 sprintf(outBuf, " Doubles => %d", stake * 2);
+            } else if (!strcmp(value, "Beaver")) {
+                /* already handled above */
+                continue;
             } else {
                 g_assert(*value == '(');
                 value++;
