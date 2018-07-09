@@ -3728,25 +3728,25 @@ board_init(Board * board)
     gtk_widget_set_hexpand(bd->drawing_area, TRUE);
     gtk_widget_set_vexpand(bd->drawing_area, TRUE);
 #endif
-    gtk_container_add(GTK_CONTAINER(board), bd->drawing_area);
+    gtk_box_pack_start(GTK_BOX(board), bd->drawing_area, TRUE, TRUE, 0);
 
 #if defined(USE_BOARD3D)
     /* 3d board drawing area */
     gtk_gl_init_success = gtk_gl_init_success ? CreateGLWidget(bd) : FALSE;
     if (gtk_gl_init_success) {
-        gtk_container_add(GTK_CONTAINER(board), GetDrawingArea3d(bd->bd3d));
+        gtk_box_pack_start(GTK_BOX(board), GetDrawingArea3d(bd->bd3d), TRUE, TRUE, 0);
     } else
         bd->bd3d = NULL;
 #endif
 
-    /* the board */
+    /* various stuff below the board */
 
 #if GTK_CHECK_VERSION(3,0,0)
     bd->table = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     bd->table = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_box_pack_start(GTK_BOX(board), bd->table, FALSE, TRUE, 0);
+    gtk_box_pack_end(GTK_BOX(board), bd->table, FALSE, TRUE, 0);
 
     /* 
      * player 0 
