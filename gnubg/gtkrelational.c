@@ -750,7 +750,12 @@ RelationalOptions(void)
     table = gtk_table_new(4, 2, FALSE);
     lbl = gtk_label_new(_("Username"));
 
-    gtk_misc_set_alignment(GTK_MISC(lbl), 1, .5);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(lbl, GTK_ALIGN_END);
+    gtk_widget_set_valign(lbl, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(lbl), 1, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(table), lbl, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
     user = gtk_entry_new();
     gtk_entry_set_width_chars(GTK_ENTRY(user), 20);
@@ -758,7 +763,13 @@ RelationalOptions(void)
     gtk_table_attach(GTK_TABLE(table), user, 1, 2, 0, 1, 0, 0, 0, 0);
 
     lbl = gtk_label_new(_("Password"));
-    gtk_misc_set_alignment(GTK_MISC(lbl), 1, .5);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(lbl, GTK_ALIGN_END);
+    gtk_widget_set_valign(lbl, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(lbl), 1, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(table), lbl, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
     password = gtk_entry_new();
     gtk_entry_set_width_chars(GTK_ENTRY(password), 20);
@@ -767,7 +778,13 @@ RelationalOptions(void)
     gtk_table_attach(GTK_TABLE(table), password, 1, 2, 1, 2, 0, 0, 0, 0);
 
     lbl = gtk_label_new(_("Hostname"));
-    gtk_misc_set_alignment(GTK_MISC(lbl), 1, .5);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(lbl, GTK_ALIGN_END);
+    gtk_widget_set_valign(lbl, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(lbl), 1, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(table), lbl, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
     hostname = gtk_entry_new();
     gtk_entry_set_max_length(GTK_ENTRY(hostname), 64);
@@ -793,8 +810,14 @@ RelationalOptions(void)
 
     help = gtk_frame_new(_("Info"));
     helptext = gtk_label_new(NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(helptext, GTK_ALIGN_START);
+    gtk_widget_set_valign(helptext, GTK_ALIGN_START);
+    g_object_set(helptext, "margin", 4, NULL);
+#else
     gtk_misc_set_alignment(GTK_MISC(helptext), 0, 0);
     gtk_misc_set_padding(GTK_MISC(helptext), 4, 4);
+#endif
     gtk_widget_set_size_request(helptext, 400, 70);
     gtk_container_add(GTK_CONTAINER(help), helptext);
     gtk_box_pack_start(GTK_BOX(vb2), help, FALSE, FALSE, 4);
@@ -920,7 +943,12 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_box_pack_start(GTK_BOX(pwVbox), pwVbox2, TRUE, TRUE, 0);
 
     pwLabel = gtk_label_new("Notes");
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox2), pwLabel, FALSE, FALSE, 0);
 
     pwPlayerNotes = gtk_text_view_new();
@@ -956,7 +984,12 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_container_set_border_width(GTK_CONTAINER(pwVbox), INSIDE_FRAME_GAP);
 
     pwLabel = gtk_label_new("Query text");
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+#endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwLabel, FALSE, FALSE, 0);
 
     if (!query) {
@@ -984,7 +1017,12 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox, FALSE, FALSE, 0);
     pwLabel = gtk_label_new("Result");
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+#endif
     gtk_box_pack_start(GTK_BOX(pwHbox), pwLabel, TRUE, TRUE, 0);
 
     pwRun = gtk_button_new_with_label("Run Query");
