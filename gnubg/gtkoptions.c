@@ -335,7 +335,11 @@ append_game_options(optionswidget * pow)
     pwp = gtk_alignment_new(0, 0, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Game")));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
 
     pow->pwAutoGame = gtk_check_button_new_with_label(_("Start new games immediately"));
@@ -379,7 +383,11 @@ append_game_options(optionswidget * pow)
     pwf = gtk_frame_new(_("Variations"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pwf, FALSE, FALSE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwf), 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwb = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwb = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwf), pwb);
 
     for (i = 0; i < NUM_VARIATIONS; ++i) {
@@ -417,7 +425,11 @@ append_cube_options(optionswidget * pow)
     pwp = gtk_alignment_new(0, 0, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Cube")));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
 
     pow->pwCubeUsecube = gtk_check_button_new_with_label(_("Use doubling cube"));
@@ -447,7 +459,11 @@ append_cube_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
     pow->pwBeaversLabel = gtk_label_new(_("Maximum number of beavers:"));
@@ -466,7 +482,11 @@ append_cube_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
     pow->pwAutomaticLabel = gtk_label_new(_("Maximum automatic doubles:"));
@@ -502,7 +522,11 @@ append_tutor_options(optionswidget * pow)
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Tutor")));
     pwf = gtk_frame_new(NULL);
     gtk_container_add(GTK_CONTAINER(pwp), pwf);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
     gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
 
@@ -526,7 +550,11 @@ append_tutor_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Warning level:")), FALSE, FALSE, 0);
@@ -566,7 +594,11 @@ append_display_options(optionswidget * pow)
     pwp = gtk_alignment_new(0, 0, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Display")));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
 
     pow->pwGameClockwise = gtk_check_button_new_with_label(_("Clockwise movement"));
@@ -580,7 +612,11 @@ append_display_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Move delay:")), FALSE, FALSE, 0);
@@ -611,7 +647,11 @@ append_display_options(optionswidget * pow)
                                   "which can be useful for recording, entering and "
                                   "exchanging board positions and match situations."));
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+#else
     pwhbox = gtk_hbox_new(FALSE, 2);
+#endif
     pow->pwShowPips = gtk_combo_box_text_new();
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pow->pwShowPips), _("None"));
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pow->pwShowPips), _("Pips"));
@@ -622,13 +662,21 @@ append_display_options(optionswidget * pow)
     gtk_box_pack_start(GTK_BOX(pwhbox), pow->pwShowPips, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwhbox, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwAnimBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwAnimBox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pwAnimBox, FALSE, FALSE, 0);
 
     pwFrame = gtk_frame_new(_("Animation"));
     gtk_box_pack_start(GTK_BOX(pwAnimBox), pwFrame, FALSE, FALSE, 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwBox);
 
     pow->pwAnimateNone = gtk_radio_button_new_with_label(NULL, _("None"));
@@ -655,11 +703,19 @@ append_display_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwAnimBox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwSpeed = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwSpeed = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwSpeed);
 
     pow->padjSpeed = GTK_ADJUSTMENT(gtk_adjustment_new(nGUIAnimSpeed, 0, 7, 1, 1, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, pow->padjSpeed);
+#else
     pwScale = gtk_hscale_new(pow->padjSpeed);
+#endif
     gtk_widget_set_size_request(pwScale, 100, -1);
     gtk_scale_set_draw_value(GTK_SCALE(pwScale), FALSE);
     gtk_scale_set_digits(GTK_SCALE(pwScale), 0);
@@ -731,7 +787,11 @@ append_display_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
     pw = gtk_label_new(_("Number of digits in output:"));
@@ -778,13 +838,22 @@ append_match_options(optionswidget * pow)
     pwp = gtk_alignment_new(0, 0, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Match")));
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
 
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Default match length:")), FALSE, FALSE, 0);
@@ -799,10 +868,18 @@ append_match_options(optionswidget * pow)
     pwf = gtk_frame_new(_("Match equity table"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pwf, TRUE, TRUE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwf), 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwb = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwb = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwf), pwb);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhoriz = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhoriz = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwb), pwhoriz);
     gtk_box_pack_start(GTK_BOX(pwhoriz), gtk_label_new(_("Current:")), FALSE, FALSE, 2);
     pwLabelFile = gtk_label_new((char *) miCurrent.szFileName);
@@ -840,14 +917,30 @@ append_sound_options(optionswidget * pow)
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvboxMain = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvboxMain = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvboxMain, gtk_label_new(_("Sound")));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhboxTop = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhboxTop = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvboxMain), pwhboxTop, TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvboxTop = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvboxTop = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwhboxTop), pwvboxTop, TRUE, TRUE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     pwLabel = gtk_label_new(_("Sound command:"));
     gtk_box_pack_start(GTK_BOX(pwhbox), pwLabel, FALSE, FALSE, 0);
     pwSoundCommand = gtk_entry_new();
@@ -895,13 +988,21 @@ append_sound_options(optionswidget * pow)
     soundFrame = gtk_frame_new(NULL);
     gtk_box_pack_start(GTK_BOX(pwvboxMain), soundFrame, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvboxDetails = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pwvboxDetails = gtk_vbox_new(FALSE, 4);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwvboxDetails), 4);
     soundEnabled = gtk_check_button_new_with_label("Enabled");
     g_signal_connect(soundEnabled, "clicked", G_CALLBACK(SoundEnabledClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwvboxDetails), soundEnabled, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Path:")), FALSE, FALSE, 0);
     soundPath = gtk_entry_new();
     g_signal_connect(soundPath, "changed", G_CALLBACK(PathChanged), NULL);
@@ -911,7 +1012,11 @@ append_sound_options(optionswidget * pow)
     gtk_box_pack_start(GTK_BOX(pwhbox), soundPathButton, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwvboxDetails), pwhbox, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     soundPlayButton = gtk_button_new_with_label("Play Sound");
     g_signal_connect(soundPlayButton, "clicked", G_CALLBACK(SoundPlayClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwhbox), soundPlayButton, FALSE, FALSE, 0);
@@ -952,12 +1057,20 @@ append_dice_options(optionswidget * pow)
     pwp = gtk_alignment_new(0, 0, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Dice")));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
 
     frame = gtk_frame_new(_("Dice generation"));
     gtk_box_pack_start(GTK_BOX(pwvbox), frame, TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 1);
+#else
     pwvbox2 = gtk_vbox_new(FALSE, 1);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 4);
     gtk_container_add(GTK_CONTAINER(frame), pwvbox2);
 
@@ -977,9 +1090,17 @@ append_dice_options(optionswidget * pow)
                 gtk_box_pack_start(GTK_BOX(pwvbox2), pow->apwDice[0], FALSE, FALSE, 0);
                 g_signal_connect(G_OBJECT(pow->apwDice[0]), "toggled", G_CALLBACK(DiceToggled), pow);
 
+#if GTK_CHECK_VERSION(3,0,0)
+                pwvbox3 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
                 pwvbox3 = gtk_vbox_new(FALSE, 0);
+#endif
                 gtk_box_pack_start(GTK_BOX(pwvbox2), pwvbox3, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+                pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
                 pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
                 gtk_box_pack_start(GTK_BOX(pwvbox3), pwhbox, FALSE, FALSE, 0);
 
                 /* Rng types */
@@ -989,13 +1110,21 @@ append_dice_options(optionswidget * pow)
                 gtk_widget_set_tooltip_text(pow->pwRngComboBox, _("Select a random number generator to use"));
 
                 /* Seed */
+#if GTK_CHECK_VERSION(3,0,0)
+                pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
                 pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
                 gtk_box_pack_start(GTK_BOX(pwvbox3), pwhbox, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+                pow->pwSeed = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
                 pow->pwSeed = gtk_hbox_new(FALSE, 0);
+#endif
                 gtk_box_pack_start(GTK_BOX(pwhbox), pow->pwSeed, TRUE, TRUE, 26);
                 gtk_box_pack_start(GTK_BOX(pow->pwSeed), gtk_label_new(_("Seed: ")), FALSE, FALSE, 0);
 
-                pow->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new(nRandom, 0, UINT_MAX, 1, 1, 0));
+                pow->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble)0, 0, UINT_MAX, 1, 1, 0));
 
                 pw = gtk_spin_button_new(GTK_ADJUSTMENT(pow->padjSeed), 1, 0);
                 gtk_box_pack_start(GTK_BOX(pow->pwSeed), pw, FALSE, FALSE, 0);
@@ -1036,7 +1165,11 @@ append_dice_options(optionswidget * pow)
 
     /* select rolls for player */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pow->pwCheatRollBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pow->pwCheatRollBox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox2), pow->pwCheatRollBox, FALSE, FALSE, 0);
 
     for (i = 0; i < 2; ++i) {
@@ -1055,7 +1188,11 @@ append_dice_options(optionswidget * pow)
         char *sz;
         const char **ppch;
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
         pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
         gtk_box_pack_start(GTK_BOX(pow->pwCheatRollBox), pwhbox, TRUE, TRUE, 0);
 
         gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Always roll the ")), FALSE, FALSE, 0);
@@ -1109,7 +1246,11 @@ append_other_options(optionswidget * pow)
     pwp = gtk_alignment_new(0, 0, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Other")));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwvbox = gtk_vbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
 
     pow->pwConfStart = gtk_check_button_new_with_label(_("Confirm when aborting game"));
@@ -1134,7 +1275,11 @@ append_other_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
     /* goto first game upon loading option */
@@ -1158,7 +1303,12 @@ append_other_options(optionswidget * pow)
     table = gtk_table_new(2, 3, FALSE);
 
     label = gtk_label_new(_("Default SGF folder:"));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(label, GTK_ALIGN_START);
+    gtk_widget_set_valign(label, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+#endif
     gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 0, 1);
     pow->pwDefaultSGFFolder = gtk_file_chooser_button_new(NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
     if (default_sgf_folder)
@@ -1166,7 +1316,12 @@ append_other_options(optionswidget * pow)
     gtk_table_attach_defaults(GTK_TABLE(table), pow->pwDefaultSGFFolder, 1, 2, 0, 1);
 
     label = gtk_label_new(_("Default Import folder:"));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(label, GTK_ALIGN_START);
+    gtk_widget_set_valign(label, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+#endif
     gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 1, 2);
     pow->pwDefaultImportFolder = gtk_file_chooser_button_new(NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
     if (default_import_folder)
@@ -1174,7 +1329,12 @@ append_other_options(optionswidget * pow)
     gtk_table_attach_defaults(GTK_TABLE(table), pow->pwDefaultImportFolder, 1, 2, 1, 2);
 
     label = gtk_label_new(_("Default Export folder:"));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(label, GTK_ALIGN_START);
+    gtk_widget_set_valign(label, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+#endif
     gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 2, 3);
     pow->pwDefaultExportFolder = gtk_file_chooser_button_new(NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
     if (default_export_folder)
@@ -1183,7 +1343,11 @@ append_other_options(optionswidget * pow)
 
     gtk_box_pack_start(GTK_BOX(pwvbox), table, FALSE, FALSE, 3);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     label = gtk_label_new(_("Web browser:"));
     gtk_box_pack_start(GTK_BOX(pwhbox), label, FALSE, FALSE, 0);
 
@@ -1196,11 +1360,19 @@ append_other_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pw = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pw);
 
     pow->padjCache = GTK_ADJUSTMENT(gtk_adjustment_new(GetEvalCacheSize(), 0, CACHE_SIZE_GUIMAX - 16, 1, 1, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, pow->padjCache);
+#else
     pwScale = gtk_hscale_new(pow->padjCache);
+#endif
     gtk_widget_set_size_request(pwScale, 100, -1);
     gtk_scale_set_draw_value(GTK_SCALE(pwScale), TRUE);
     g_signal_connect(G_OBJECT(pwScale), "format-value", G_CALLBACK(CacheSizeString), NULL);
@@ -1220,7 +1392,11 @@ append_other_options(optionswidget * pow)
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
     gtk_box_pack_start(GTK_BOX(pwvbox), pwev, FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Eval Threads:")), FALSE, FALSE, 0);
@@ -1234,7 +1410,11 @@ append_other_options(optionswidget * pow)
                                 _("The number of threads to use in multi-threaded operations,"
                                   " this should be set to the number of logical processing units available"));
 #endif
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_box_pack_start(GTK_BOX(pwvbox), pwhbox, FALSE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Auto save frequency")), FALSE, FALSE, 0);
