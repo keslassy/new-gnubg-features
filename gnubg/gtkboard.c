@@ -3784,7 +3784,12 @@ board_init(Board * board)
     bd->name0 = gtk_entry_new();
     gtk_entry_set_max_length(GTK_ENTRY(bd->name0), MAX_NAME_LEN);
     bd->lname0 = gtk_label_new(NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(bd->lname0, GTK_ALIGN_START);
+    gtk_widget_set_valign(bd->lname0, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(bd->lname0), 0, 0.5);
+#endif
     gtk_container_add(GTK_CONTAINER(bd->mname0), bd->lname0);
     gtk_container_add(GTK_CONTAINER(bd->mname0), bd->name0);
 
@@ -3867,7 +3872,12 @@ board_init(Board * board)
     bd->name1 = gtk_entry_new();
     gtk_entry_set_max_length(GTK_ENTRY(bd->name1), MAX_NAME_LEN);
     bd->lname1 = gtk_label_new(NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(bd->lname1, GTK_ALIGN_START);
+    gtk_widget_set_valign(bd->lname1, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(bd->lname1), 0, 0.5);
+#endif
     gtk_container_add(GTK_CONTAINER(bd->mname1), bd->lname1);
     gtk_container_add(GTK_CONTAINER(bd->mname1), bd->name1);
 
