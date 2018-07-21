@@ -663,7 +663,13 @@ CreateAnalysisWindow(void)
     GtkWidget *pHbox, *sw;
     GtkTextBuffer *buffer;
     if (!woPanel[WINDOW_ANALYSIS].docked) {
-        GtkWidget *pwPaned = gtk_vpaned_new();
+        GtkWidget *pwPaned;
+
+#if GTK_CHECK_VERSION(3,0,0)
+        pwPaned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+#else
+        pwPaned = gtk_vpaned_new();
+#endif
 
         woPanel[WINDOW_ANALYSIS].pwWin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
@@ -768,8 +774,8 @@ GTKRegenerateGames(void)
     GL_SetNames();
     GTKPopGame(0);
     for (pl = lMatch.plNext; pl->p; pl = pl->plNext) {
-        listOLD *plGame = pl->p;
-        GTKAddGame(plGame->plNext->p);
+        listOLD *plg = pl->p;
+        GTKAddGame(plg->plNext->p);
     }
 
     GTKSetGame(i);
