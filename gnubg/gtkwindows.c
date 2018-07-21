@@ -173,12 +173,20 @@ GTKCreateDialog(const char *szTitle, const dialogtype dt,
     pag = gtk_accel_group_new();
     gtk_window_add_accel_group(GTK_WINDOW(pwDialog), pag);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(pwDialog))), pwHbox, TRUE, TRUE, 0);
 
     if (dt != DT_CUSTOM) {
         pwPixmap = gtk_image_new_from_stock(aszStockItem[dt], GTK_ICON_SIZE_DIALOG);
+#if GTK_CHECK_VERSION(3,0,0)
+        g_object_set(pwPixmap, "margin", 8, NULL);
+#else
         gtk_misc_set_padding(GTK_MISC(pwPixmap), 8, 8);
+#endif
         gtk_box_pack_start(GTK_BOX(pwHbox), pwPixmap, FALSE, FALSE, 0);
     }
 
@@ -346,7 +354,12 @@ GTKGetInput(char *title, char *prompt, GtkWidget * parent)
     inputString = NULL;
     pwDialog = GTKCreateDialog(title, DT_QUESTION, parent, DIALOG_FLAG_MODAL, G_CALLBACK(GetInputOk), pwEntry);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwHbox = gtk_hbox_new(FALSE, 0));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwHbox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwHbox);
 
     gtk_box_pack_start(GTK_BOX(pwHbox), gtk_label_new(prompt), FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwHbox), pwEntry, FALSE, FALSE, 0);
@@ -387,11 +400,19 @@ GTKShowWarning(warningType warning, GtkWidget * pwParent)
                             warnings[warning].isWarningQuestion ? DT_AREYOUSURE : DT_WARNING, pwParent,
                             DIALOG_FLAG_MODAL, G_CALLBACK(WarningOK), (void *) warning);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
         pwv = gtk_vbox_new(FALSE, 0);
+#endif
         gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwv);
 
         pwMsg = gtk_label_new(gettext(warnings[warning].warningString));
+#if GTK_CHECK_VERSION(3,0,0)
+        g_object_set(pwMsg, "margin", 8, NULL);
+#else
         gtk_misc_set_padding(GTK_MISC(pwMsg), 8, 8);
+#endif
         gtk_box_pack_start(GTK_BOX(pwv), pwMsg, TRUE, TRUE, 0);
 
         buf = g_strdup_printf("<small>%s</small>", _("Don't show this again"));
