@@ -193,7 +193,11 @@ MoveFilterPage(const int i, const int j,
     GtkWidget *pwhbox;
     GtkWidget *pw;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwPage = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
     pwPage = gtk_vbox_new(FALSE, 0);
+#endif
 
     /* enable */
 
@@ -204,7 +208,11 @@ MoveFilterPage(const int i, const int j,
 
     /* accept */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     pmfsw->aapwA[i][j] = pwhbox;
     gtk_box_pack_start(GTK_BOX(pwPage), pwhbox, FALSE, FALSE, 0);
 
@@ -223,7 +231,11 @@ MoveFilterPage(const int i, const int j,
 
     /* extra */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
     pwhbox = gtk_hbox_new(FALSE, 0);
+#endif
     pmfsw->aapwET[i][j] = pwhbox;
     gtk_box_pack_start(GTK_BOX(pwPage), pwhbox, FALSE, FALSE, 0);
 
@@ -274,7 +286,11 @@ MoveFilterSetup(movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES], int *pfOK)
     GtkWidget *pwNotebook;
     GtkWidget *pwvbox;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwSetup = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
     pwSetup = gtk_vbox_new(FALSE, 4);
+#endif
 
     pmfsw = (movefiltersetupwidget *) g_malloc(sizeof(movefiltersetupwidget));
 
@@ -306,7 +322,11 @@ MoveFilterSetup(movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES], int *pfOK)
 
         char *sz = g_strdup_printf(_("%d-ply"), i + 1);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+#else
         pwvbox = gtk_vbox_new(FALSE, 4);
+#endif
         gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwvbox, gtk_label_new(sz));
         g_free(sz);
 
@@ -445,7 +465,11 @@ MoveFilterWidget(movefilter * pmf, int *UNUSED(pfOK), GCallback pfChanged, gpoin
 
     /* output widget (with "User defined", or "Large" etc */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
     pw = gtk_hbox_new(FALSE, 4);
+#endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
     pmfw->pwOptionMenu = gtk_combo_box_text_new();
     for (i = 0; i <= NUM_MOVEFILTER_SETTINGS; i++) {
