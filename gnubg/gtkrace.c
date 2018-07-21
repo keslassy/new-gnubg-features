@@ -149,7 +149,12 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
 
         sz = g_strdup_printf(_("Player %s"), ap[i].szName);
         gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz), 0, 1, i + 1, i + 2, 0, 0, 4, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pw, GTK_ALIGN_START);
+        gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
         g_free(sz);
 
         sz = g_strdup_printf("%7.3f", arPips[fInvert ? !i : i]);
@@ -168,10 +173,20 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
 
     gtk_box_pack_start(GTK_BOX(pwvbox),
                        pw = gtk_label_new(_("EPC = Effective pip count = " "Avg. rolls * 8.167")), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
 
     gtk_box_pack_start(GTK_BOX(pwvbox), pw = gtk_label_new(_("Wastage = EPC - Pips")), FALSE, FALSE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
 
     return pwFrame;
 
@@ -300,7 +315,12 @@ OSRPage(TanBoard UNUSED(anBoard), racewidget * prw)
 
     pch = g_strdup_printf(_("%s on roll:"), ap[prw->fMove].szName);
     gtk_box_pack_start(GTK_BOX(pwvbox), pw = gtk_label_new(pch), FALSE, FALSE, 4);
-    gtk_misc_set_alignment(GTK_MISC(pw), 0.0f, 0.5f);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
     g_free(pch);
 
     prw->pwOutput = do_rollout_view();

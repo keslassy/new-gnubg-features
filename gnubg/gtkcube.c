@@ -163,7 +163,12 @@ TakeAnalysis(cubehintdata * pchd)
     }
 
     pw = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
     g_free(sz);
 
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
@@ -204,7 +209,12 @@ TakeAnalysis(cubehintdata * pchd)
 
     pw = gtk_label_new(_("Cubeful equities:"));
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
-    gtk_misc_set_alignment(GTK_MISC(pw), 0.0, 0.5);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
     iRow++;
 
     /* ordered take actions with equities */
@@ -223,7 +233,12 @@ TakeAnalysis(cubehintdata * pchd)
 
         sz = g_strdup_printf("%d.", i + 1);
         pw = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pw, GTK_ALIGN_START);
+        gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
         g_free(sz);
 
         gtk_table_attach(GTK_TABLE(pwTable), pw,
@@ -232,7 +247,12 @@ TakeAnalysis(cubehintdata * pchd)
         /* label */
 
         pw = gtk_label_new(gettext(aszCube[ai[i]]));
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pw, GTK_ALIGN_START);
+        gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
 
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          1, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
@@ -245,7 +265,12 @@ TakeAnalysis(cubehintdata * pchd)
             sz = g_strdup_printf("%7.3f%%", 100.0f * (1.0f - eq2mwc(arDouble[ai[i]], &ci)));
 
         pw = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pw, GTK_ALIGN_END);
+        gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
+#endif
         g_free(sz);
 
         gtk_table_attach(GTK_TABLE(pwTable), pw,
@@ -262,7 +287,12 @@ TakeAnalysis(cubehintdata * pchd)
                                      100.0f * eq2mwc(arDouble[ai[0]], &ci) - 100.0f * eq2mwc(arDouble[ai[i]], &ci));
 
             pw = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_widget_set_halign(pw, GTK_ALIGN_END);
+            gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
             gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
+#endif
             g_free(sz);
 
             gtk_table_attach(GTK_TABLE(pwTable), pw,
@@ -277,7 +307,12 @@ TakeAnalysis(cubehintdata * pchd)
     /* proper cube action */
 
     pw = gtk_label_new(_("Correct response: "));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
 
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
 
@@ -318,7 +353,12 @@ TakeAnalysis(cubehintdata * pchd)
 
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
 
     gtk_table_attach(GTK_TABLE(pwTable), pw, 2, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
 
@@ -426,7 +466,12 @@ CubeAnalysis(cubehintdata * pchd)
     }
 
     pw = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
     g_free(sz);
 
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
@@ -449,7 +494,12 @@ CubeAnalysis(cubehintdata * pchd)
 
     pw = gtk_label_new(_("Cubeful equities:"));
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
-    gtk_misc_set_alignment(GTK_MISC(pw), 0.0, 0.5);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
     iRow++;
 
 
@@ -461,7 +511,12 @@ CubeAnalysis(cubehintdata * pchd)
 
         sz = g_strdup_printf("%d.", i + 1);
         pw = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pw, GTK_ALIGN_START);
+        gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
         g_free(sz);
 
         gtk_table_attach(GTK_TABLE(pwTable), pw,
@@ -470,7 +525,12 @@ CubeAnalysis(cubehintdata * pchd)
         /* label */
 
         pw = gtk_label_new(gettext(aszCube[ai[i]]));
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pw, GTK_ALIGN_START);
+        gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
 
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          1, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
@@ -480,7 +540,12 @@ CubeAnalysis(cubehintdata * pchd)
         sz = OutputEquity(arDouble[ai[i]], &ci, TRUE);
 
         pw = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pw, GTK_ALIGN_END);
+        gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
+#endif
 
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          2, 3, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
@@ -490,7 +555,12 @@ CubeAnalysis(cubehintdata * pchd)
         if (i) {
 
             pw = gtk_label_new(OutputEquityDiff(arDouble[ai[i]], arDouble[OUTPUT_OPTIMAL], &ci));
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_widget_set_halign(pw, GTK_ALIGN_END);
+            gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
             gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
+#endif
 
             gtk_table_attach(GTK_TABLE(pwTable), pw,
                              3, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
@@ -507,7 +577,12 @@ CubeAnalysis(cubehintdata * pchd)
             /*        probably along with rollout details */
 
             pw = gtk_label_new(OutputPercents(cdec->aarOutput[ai[i] - 1], TRUE));
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_widget_set_halign(pw, GTK_ALIGN_CENTER);
+            gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
             gtk_misc_set_alignment(GTK_MISC(pw), 0.5, 0.5);
+#endif
 
             gtk_table_attach(GTK_TABLE(pwTable), pw,
                              0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
@@ -521,12 +596,22 @@ CubeAnalysis(cubehintdata * pchd)
     /* proper cube action */
 
     pw = gtk_label_new(_("Proper cube action: "));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
 
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
 
     pw = gtk_label_new(GetCubeRecommendation(cd));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#endif
 
     gtk_table_attach(GTK_TABLE(pwTable), pw, 2, 3, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
 
@@ -537,7 +622,12 @@ CubeAnalysis(cubehintdata * pchd)
         sz = g_strdup_printf("(%.1f%%)", 100.0f * r);
         pw = gtk_label_new(sz);
         g_free(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pw, GTK_ALIGN_END);
+        gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
+#endif
 
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          3, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
