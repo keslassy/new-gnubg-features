@@ -890,15 +890,30 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
     /* First column with text */
 
     pwLabel = gtk_label_new(_("Equity before resignation: "));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, 0, 1, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
 
     pwLabel = gtk_label_new(_("Equity after resignation: "));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, 1, 2, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
 
     pwLabel = gtk_label_new(_("Difference: "));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, 2, 3, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
 
     /* Second column: equities/mwc */
@@ -911,7 +926,12 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
         sprintf(sz, "%+6.3f", rBefore);
 
     pwLabel = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_END);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 1, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 1, 2, 0, 1, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
 
 
@@ -921,7 +941,12 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
         sprintf(sz, "%+6.3f", rAfter);
 
     pwLabel = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_END);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 1, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 1, 2, 1, 2, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
 
 
@@ -931,9 +956,13 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
         sprintf(sz, "%+6.3f", rAfter - rBefore);
 
     pwLabel = gtk_label_new(sz);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwLabel, GTK_ALIGN_END);
+    gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 1, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 1, 2, 2, 3, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
-
 
     return pwTable;
 
@@ -2713,7 +2742,12 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i + 1,
                          (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
         gtk_label_set_justify(GTK_LABEL(pwLabel), GTK_JUSTIFY_RIGHT);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+        gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+#endif
     }
 
     for (i = 0; i < 3; i++) {
@@ -2737,7 +2771,12 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i + 1,
                          (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
         gtk_label_set_justify(GTK_LABEL(pwLabel), GTK_JUSTIFY_RIGHT);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+        gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+#else
         gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+#endif
     }
 
     for (i = 0; i < 4; i++) {
@@ -3885,7 +3924,12 @@ CreateMainWindow(void)
     pwGameBox = gtk_hbox_new(FALSE, 0);
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwGameBox, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(pwVbox), hpaned = gtk_hpaned_new(), TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    hpaned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
+#else
+    hpaned = gtk_hpaned_new();
+#endif
+    gtk_box_pack_start(GTK_BOX(pwVbox), hpaned, TRUE, TRUE, 0);
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwPanelGameBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -3934,7 +3978,13 @@ CreateMainWindow(void)
     gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(pwStatus), FALSE);
     /* It's a bit naughty to access pwStatus->label, but its default alignment
      * is ugly, and GTK gives us no other way to change it. */
-    gtk_misc_set_alignment(GTK_MISC(get_statusbar_label(GTK_STATUSBAR(pwStatus))), 0.0f, 0.5f);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(get_statusbar_label(GTK_STATUSBAR(pwStatus)), GTK_ALIGN_START);
+    gtk_widget_set_valign(get_statusbar_label(GTK_STATUSBAR(pwStatus)), GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(get_statusbar_label(GTK_STATUSBAR(pwStatus))), 0, 0.5);
+#endif
+
     idOutput = gtk_statusbar_get_context_id(GTK_STATUSBAR(pwStatus), "gnubg output");
     idProgress = gtk_statusbar_get_context_id(GTK_STATUSBAR(pwStatus), "progress");
     g_signal_connect(G_OBJECT(pwStatus), "text-popped", G_CALLBACK(TextPopped), NULL);
@@ -4373,7 +4423,11 @@ GtkTutor(char *sz)
 
     pwPrompt = gtk_label_new(sz);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    g_object_set(pwPrompt, "margin", 8, NULL);
+#else
     gtk_misc_set_padding(GTK_MISC(pwPrompt), 8, 8);
+#endif
     gtk_label_set_justify(GTK_LABEL(pwPrompt), GTK_JUSTIFY_LEFT);
     gtk_label_set_line_wrap(GTK_LABEL(pwPrompt), TRUE);
     gtk_container_add(GTK_CONTAINER(DialogArea(pwTutorDialog, DA_MAIN)), pwPrompt);
@@ -5767,7 +5821,12 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     gtk_table_attach(GTK_TABLE(pwTable), pw =
                      gtk_label_new(fMWC ? _("MWC before resignation") : _("Equity before resignation")), 0, 1, 0, 1,
                      GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
-    gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(pw), 0.0, 0.5);
+#endif
 
     if (fMWC)
         sprintf(sz, "%6.2f%%", 100.0 * (eq2mwc(-rEqBefore, pci)));
@@ -5776,14 +5835,24 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
 
     gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz),
                      1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
-    gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_END);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(pw), 1.0, 0.5);
+#endif
 
     /* equity after resignation */
 
     gtk_table_attach(GTK_TABLE(pwTable), pw =
                      gtk_label_new(fMWC ? _("MWC after resignation") : _("Equity after resignation")), 0, 1, 1, 2,
                      GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
-    gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(pw), 0.0, 0.5);
+#endif
 
     if (fMWC)
         sprintf(sz, "%6.2f%%", 100.0 * eq2mwc(-rEqAfter, pci));
@@ -5792,7 +5861,12 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
 
     gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz),
                      1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
-    gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_END);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(pw), 1.0, 0.5);
+#endif
 
     if (-rEqAfter >= -rEqBefore)
         pch = _("You should accept the resignation!");
@@ -6042,7 +6116,11 @@ GTKShowVersion(void)
     fn = g_build_filename(getPkgDataDir(), "pixmaps", "gnubg-big.png", NULL);
     image = gtk_image_new_from_file(fn);
     g_free(fn);
+#if GTK_CHECK_VERSION(3,0,0)
+    g_object_set(image, "margin", 8, NULL);
+#else
     gtk_misc_set_padding(GTK_MISC(image), 8, 8);
+#endif
     gtk_box_pack_start(GTK_BOX(DialogArea(pwDialog, DA_MAIN)), image, FALSE, FALSE, 0);
 
     /* Buttons on right side */
@@ -7369,7 +7447,12 @@ AddToTable(GtkWidget * pwTable, char *str, int x, int y)
 {
     GtkWidget *pw = gtk_label_new(str);
     /* Right align */
-    gtk_misc_set_alignment(GTK_MISC(pw), 1, .5);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pw, GTK_ALIGN_END);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
+    gtk_misc_set_alignment(GTK_MISC(pw), 1.0, 0.5);
+#endif
     gtk_table_attach(GTK_TABLE(pwTable), pw, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 }
 
