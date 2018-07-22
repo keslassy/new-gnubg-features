@@ -473,7 +473,7 @@ GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
     PangoLayout *layout;
 
 #if ! GTK_CHECK_VERSION(3,0,0)
-    /* The gtk_locdef_* below don't use cr with GTK2. Avoid compiler warning inthis case. */
+    /* The gtk_locdef_* below don't use cr with GTK2. Avoid compiler warning in this case. */
     (void)cr;
 #endif
 
@@ -951,7 +951,12 @@ GTKShowTheory(const int fActivePage)
     gtk_text_view_set_editable(GTK_TEXT_VIEW(ptw->pwGammonPrice), FALSE);
 
     font_desc = pango_font_description_from_string("Monospace");
+#if GTK_CHECK_VERSION(3,0,0)
+    /* FIXME: this is deprecated since version 3.16, use the CSS instead */
+    gtk_widget_override_font(ptw->pwGammonPrice, font_desc);
+#else
     gtk_widget_modify_font(ptw->pwGammonPrice, font_desc);
+#endif
     pango_font_description_free(font_desc);
     gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(ptw->pwGammonPrice), GTK_WRAP_NONE);
 
