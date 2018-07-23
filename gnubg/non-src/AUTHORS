@@ -1,9 +1,9 @@
                          GNU Backgammon was written by:
 
-    Joseph Heled            Jim Segrave             Christian Anthon
-    Oystein Johansen        Joern Thyssen           Michael Petch
-    Jonathan Kinsey         Gary Wong               Philippe Michel
-    David Montgomery
+    Joseph Heled            Jim Segrave             Michael Petch
+    Oystein Johansen        Joern Thyssen           Philippe Michel
+    Jonathan Kinsey         Gary Wong
+    David Montgomery        Christian Anthon
  
                                    Support by:
 
@@ -12,10 +12,10 @@
 
                          Contributors of code include:
 
-    Olivier Baur            Petr Kadlec             Ingo Macherius
-    Holger Bochnig          Kaoru Takahashi         Jeremy Moore
-    Guido Flohr             Stein Kulseth           Rod Roark
-    Nis Joergensen
+    Olivier Baur            Petr Kadlec             Jeremy Moore
+    Holger Bochnig          Kaoru Takahashi         Rod Roark
+    Guido Flohr             Stein Kulseth
+    Nis Joergensen          Ingo Macherius
 
                             Translations by:
 
@@ -33,44 +33,44 @@
 
              Contributors (of bug reports and suggestions) include:
 
-    Russ Allbery            Neil Kazaross           James Rech
-    Misja Alma              Mathias Kegelmann       Jared Riley
-    Kazuaki Asai            Matija Kejzar           Klaus Rindholt
-    Eric Augustine          Bert Van Kerckhove      Oliver Riordan
-    Erik Barfoed            James F. Kibler         Alex Romosan
-    Ron Barry               Johnny Kirk             Hans-Juergen Schaefer
-    Steve Baedke            Gerhard Knop            Steve Schreiber
-    Stefan van den Berg     Robert Konigsberg       Hugh Sconyers
-    Frank Berger            Martin Krainer          Martin Schrode
-    Jim Borror              Elias Kritikos          Paul Selick
-    Chuck Bower             Corrin Lakeland         Sho Sengoku
-    Adrian Bunk             Tim Laursen             Ian Shaw
-    Nick Bratby             Myshkin LeVine          Alberta di Silvio
-    Craig Campbell          Eli Liang               Peter Sochovsky
-    Timothy Chow            Ege Lundgren            Mark Spencer
-    John Chuang             Kevin Maguire           Scott Steiner
-    Tristan Colgate         Massimiliano Maini      Maik Stiebler
-    Olivier Croisille       Giulio De Marco         W. Stroop (Rob)
-    Ned Cross               John Marttila           Daisuke Takahashi
-    Ian Curtis              Alix Martin             Yoshito Takeuchi
-    Bill Davidson           Tom Martin              Jacques Thiriat
-    Michael Depreli         William Maslen          Malene Thyssen
-    Ian Dunstan             Joachim Matussek        Claes Tornberg
-    Max Durbano             Thomas Meyer            Sander van Rijnswou
-    Peter Eberhard          Daniel Murphy           Robert-Jan Veldhuizen
-    Robert Eberlein         Magnar Naustdalslid     Morten Wang
-    Fotis                   Dave Neary              Jeff White
-    Dan Fandrich            Rolf Nielsen            JP White
-    Kennedy Fraser          Mirori Orange           Mike Whitton
-    Ric Gerace              Peter Orum              Chris Wilson
-    Michel Grimminck        Roy Passfield           Simon Woodhead
-    Eric Groleau            Thomas Patrick          Kit Woolsey
-    Jeff Haferman           Billie Patterson        Frank Worrell
-    Morten Juul Henriksen   Zvezdan Petkovic        Christopher D. Yep
-    Alain Henry             Petri Pitkanen          Anders Zachrison
-    Jens Hoefkens           Sam Pottle              Douglas Zare
-    Casey Hopkins           Henrik Ravn             Louis Zulli
-    Martin Janke
+    Russ Allbery            Neil Kazaross           Jared Riley
+    Misja Alma              Mathias Kegelmann       Klaus Rindholt
+    Kazuaki Asai            Matija Kejzar           Oliver Riordan
+    Eric Augustine          Bert Van Kerckhove      Alex Romosan
+    Erik Barfoed            James F. Kibler         Hans-Juergen Schaefer
+    Ron Barry               Johnny Kirk             Steve Schreiber
+    Steve Baedke            Gerhard Knop            Hugh Sconyers
+    Stefan van den Berg     Robert Konigsberg       Martin Schrode
+    Frank Berger            Martin Krainer          Paul Selick
+    Jim Borror              Elias Kritikos          Sho Sengoku
+    Chuck Bower             Corrin Lakeland         Ian Shaw
+    Adrian Bunk             Tim Laursen             Alberta di Silvio
+    Nick Bratby             Myshkin LeVine          Peter Sochovsky
+    Craig Campbell          Eli Liang               Mark Spencer
+    Timothy Chow            Ege Lundgren            Scott Steiner
+    John Chuang             Kevin Maguire           Maik Stiebler
+    Tristan Colgate         Massimiliano Maini      W. Stroop (Rob)
+    Olivier Croisille       Giulio De Marco         Daisuke Takahashi
+    Ned Cross               John Marttila           Yoshito Takeuchi
+    Ian Curtis              Alix Martin             Jacques Thiriat
+    Bill Davidson           Tom Martin              Malene Thyssen
+    Michael Depreli         William Maslen          Claes Tornberg
+    Ian Dunstan             Joachim Matussek        Sander van Rijnswou
+    Max Durbano             Thomas Meyer            Robert-Jan Veldhuizen
+    Peter Eberhard          Daniel Murphy           Morten Wang
+    Robert Eberlein         Magnar Naustdalslid     Jeff White
+    Fotis                   Dave Neary              JP White
+    Dan Fandrich            Rolf Nielsen            Mike Whitton
+    Kennedy Fraser          Mirori Orange           Chris Wilson
+    Ric Gerace              Peter Orum              Simon Woodhead
+    Michel Grimminck        Roy Passfield           Kit Woolsey
+    Eric Groleau            Thomas Patrick          Frank Worrell
+    Jeff Haferman           Billie Patterson        Christopher D. Yep
+    Morten Juul Henriksen   Zvezdan Petkovic        Anders Zachrison
+    Alain Henry             Petri Pitkanen          Douglas Zare
+    Jens Hoefkens           Sam Pottle              Louis Zulli
+    Casey Hopkins           Henrik Ravn
+    Martin Janke            James Rech
 
 
   Credit is also due to those who have published information about backgammon
