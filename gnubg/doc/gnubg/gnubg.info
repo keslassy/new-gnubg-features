@@ -1,4 +1,4 @@
-This is gnubg.info, produced by makeinfo version 6.1 from gnubg.texi.
+This is gnubg.info, produced by makeinfo version 6.5 from gnubg.texi.
 
 INFO-DIR-SECTION Games
 START-INFO-DIR-ENTRY
@@ -4554,6 +4554,9 @@ Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
            Duo        E6400
            P8400
            2.26 GHz
+43700      ARM        Raspberry  1024 MB    Raspbian   1.06.002,  2
+           Cortex-A53 Pi 3                  9.4        -with-simd=neonthreads
+           600 MHz    Model B
 37600      Intel      Dell       1 GB       CentOS 5   1.02
            Pentium    Optiplex
            4 2.8      GX270
@@ -4562,8 +4565,14 @@ Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
            Pentium    P4P800D               SP2
            4 2.8
            GHz
-13600      ARM        Raspberry  1024 MB    Raspbian   1.04       4
-           Cortex-A53 Pi 3                  8.0                   threads
+21800      ARM        Raspberry  1024 MB    Raspbian   1.06.002,  1 thread
+           Cortex-A53 Pi 3                  9.4        -with-simd=neon
+           600 MHz    Model B
+10900      ARM        Raspberry  1024 MB    Raspbian   1.06.002   1 thread
+           Cortex-A53 Pi 3                  9.4
+           600 MHz    Model B
+10400      ARM        Raspberry  1024 MB    Raspbian   1.05.002   1 thread
+           Cortex-A53 Pi 3                  9.4
            600 MHz    Model B
 9170       Intel      Toshiba    256 MB     Win XP     1.04
            Celeron    Satellite             SP1
@@ -4574,9 +4583,6 @@ Evals/sec  CPU        System/MainRAM        OS         GNUBG-Version
 6990       Intel      Toshiba    128 MB     Win XP     1.02
            Celeron    Satellite             SP2
            600 MHz    4310
-5100       ARM        Raspberry  1024 MB    Raspbian   1.04       1 thread
-           Cortex-A53 Pi 3                  8.0
-           600 MHz    Model B
 
 
 File: gnubg.info,  Node: Running GNU Backgammon,  Next: Playing backgammon,  Prev: How to install,  Up: Frequently Asked Questions
@@ -5796,45 +5802,45 @@ Node: I would like to compile it from the source code181979
 Node: What software do I need for compiling under GNU/Linux?182395
 Node: It does not compile183118
 Node: On what CPU will GNU Backgammon run fastest?183547
-Node: Running GNU Backgammon189837
-Node: I get an error message when starting190320
-Node: GNU Backgammon complains about missing files190720
-Node: Starting from the Windows menu it plays like a beginner192409
-Node: My screen mixes up while starting GNU Backgammon192995
-Node: I only get a command-line interface193596
-Node: I do not need this graphical stuff194129
-Node: Playing backgammon194664
-Node: What is the difference of a new game or match or session?195148
-Node: What is a beaver in Backgammon?195784
-Node: How do I move the checkers?196302
-Node: Why am I allowed to place more than 5 checkers on a point?197079
-Node: GNU Backgammon plays poorly197604
-Node: GNU Backgammon is too strong for me198185
-Node: I think the bot is cheating198567
-Node: Settings199024
-Node: Where can I change the name of the human player?199340
-Node: How do I change the colors?199708
-Node: How do I stop the annoying beeps?200066
-Node: What are Plies?200413
-Node: What is noise?202317
-Node: Analysing202571
-Node: What are these funny letters at the right bottom?203031
-Node: How do I set up a position manually?203882
-Node: Which formats can I use to import matches and positions?204792
-Node: How can I switch the players sides?205388
-Node: What do ! and ? mean?205702
-Node: How is the error rate determined?206506
-Node: What does Pips mean?207365
-Node: What does EPC mean?208176
-Node: Abbreviations210328
-Node: GWC?210521
-Node: MWC?210664
-Node: DP?210820
-Node: CP?211224
-Ref: The double line211859
-Node: TG?212286
-Node: EPC?212625
-Node: GNU Free Documentation License212881
+Node: Running GNU Backgammon190170
+Node: I get an error message when starting190653
+Node: GNU Backgammon complains about missing files191053
+Node: Starting from the Windows menu it plays like a beginner192742
+Node: My screen mixes up while starting GNU Backgammon193328
+Node: I only get a command-line interface193929
+Node: I do not need this graphical stuff194462
+Node: Playing backgammon194997
+Node: What is the difference of a new game or match or session?195481
+Node: What is a beaver in Backgammon?196117
+Node: How do I move the checkers?196635
+Node: Why am I allowed to place more than 5 checkers on a point?197412
+Node: GNU Backgammon plays poorly197937
+Node: GNU Backgammon is too strong for me198518
+Node: I think the bot is cheating198900
+Node: Settings199357
+Node: Where can I change the name of the human player?199673
+Node: How do I change the colors?200041
+Node: How do I stop the annoying beeps?200399
+Node: What are Plies?200746
+Node: What is noise?202650
+Node: Analysing202904
+Node: What are these funny letters at the right bottom?203364
+Node: How do I set up a position manually?204215
+Node: Which formats can I use to import matches and positions?205125
+Node: How can I switch the players sides?205721
+Node: What do ! and ? mean?206035
+Node: How is the error rate determined?206839
+Node: What does Pips mean?207698
+Node: What does EPC mean?208509
+Node: Abbreviations210661
+Node: GWC?210854
+Node: MWC?210997
+Node: DP?211153
+Node: CP?211557
+Ref: The double line212192
+Node: TG?212619
+Node: EPC?212958
+Node: GNU Free Documentation License213214
 
 End Tag Table
 

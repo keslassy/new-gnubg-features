@@ -4679,19 +4679,23 @@ Evals/sec@tab CPU@tab System/Main board@tab RAM@tab OS @tab GNUBG-Version@tab
 @item
 63500@tab Intel Core 2 Duo P8400 2.26 GHz@tab Dell Latitude E6400@tab 2 GB@tab Win XP SP3@tab 1.02@tab 1 thread
 @item
+43700@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 9.4@tab 1.06.002, --with-simd=neon@tab 2 threads
+@item
 37600@tab Intel Pentium 4 2.8 GHz@tab Dell Optiplex GX270@tab 1 GB@tab CentOS 5@tab 1.02@tab 
 @item
 23000@tab Intel Pentium 4 2.8 GHz@tab Asus P4P800D@tab 1024 MB@tab Win XP SP2@tab 0.14.3-devel@tab 
 @item
-13600@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 8.0@tab 1.04@tab 4 threads
+21800@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 9.4@tab 1.06.002, --with-simd=neon@tab 1 thread
+@item
+10900@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 9.4@tab 1.06.002@tab 1 thread
+@item
+10400@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 9.4@tab 1.05.002@tab 1 thread
 @item
 9170@tab Intel Celeron 750 MHz@tab Toshiba Satellite 4600@tab 256 MB@tab Win XP SP1@tab 1.04@tab 
 @item
 8520@tab Intel Celeron 750 MHz@tab Toshiba Satellite 4600@tab 256 MB@tab Win XP SP1@tab 1.02@tab 
 @item
 6990@tab Intel Celeron 600 MHz@tab Toshiba Satellite 4310@tab 128 MB@tab Win XP SP2@tab 1.02@tab 
-@item
-5100@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 8.0@tab 1.04@tab 1 thread
 @end multitable
 
 @node Running GNU Backgammon, Playing backgammon, How to install, Frequently Asked Questions
