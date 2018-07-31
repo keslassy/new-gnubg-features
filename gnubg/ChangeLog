@@ -1,3 +1,8 @@
+2018-07-31  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* dbprovider.h, dbprovider.c Add PostgreSQL support on Win32
+	platforms using Python and PyGreSQL.
+
 2018-05-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* configure.ac, gnubg.c, m4/ax_ext.m4, lib/simd.h,

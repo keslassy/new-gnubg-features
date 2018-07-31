@@ -48,12 +48,10 @@ static void PyDisconnect(void);
 static RowSet *PySelect(const char *str);
 static int PyUpdateCommand(const char *str);
 static void PyCommit(void);
-#if !defined(WIN32)
 static int PyPostgreConnect(const char *dbfilename, const char *user, const char *password, const char *hostname);
 static GList *PyPostgreGetDatabaseList(const char *user, const char *password, const char *hostname);
 static int PyPostgreDeleteDatabase(const char *dbfilename, const char *user, const char *password,
                                    const char *hostname);
-#endif
 static GList *PyMySQLGetDatabaseList(const char *user, const char *password, const char *hostname);
 static int PyMySQLDeleteDatabase(const char *dbfilename, const char *user, const char *password, const char *hostname);
 #endif
@@ -83,12 +81,10 @@ static DBProvider providers[NUM_PROVIDERS] = {
     {PyMySQLConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, PyMySQLGetDatabaseList, PyMySQLDeleteDatabase,
      "MySQL (Python)", "PythonMySQL", "MySQL connection via MySQLdb Python module", TRUE, TRUE, "gnubg", "", "",
      "localhost:3306"},
-#if !defined(WIN32)
     {PyPostgreConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, PyPostgreGetDatabaseList,
      PyPostgreDeleteDatabase,
      "PostgreSQL (Python)", "PythonPostgre", "PostgreSQL connection via PyGreSQL Python module", TRUE, TRUE, "gnubg", "",
      "", "localhost:5432"},
-#endif
 #endif
 };
 
@@ -313,7 +309,6 @@ PyMySQLConnect(const char *dbfilename, const char *user, const char *password, c
     return 1;
 }
 
-#if !defined(WIN32)
 int
 PyPostgreConnect(const char *dbfilename, const char *user, const char *password, const char *hostname)
 {
@@ -333,7 +328,6 @@ PyPostgreConnect(const char *dbfilename, const char *user, const char *password,
     }
     return 1;
 }
-#endif
 
 #if !defined(USE_SQLITE)
 static int
@@ -519,7 +513,6 @@ PyMySQLGetDatabaseList(const char *user, const char *password, const char *hostn
     }
 }
 
-#if !defined(WIN32)
 GList *
 PyPostgreGetDatabaseList(const char *user, const char *password, const char *hostname)
 {
@@ -541,7 +534,6 @@ PyPostgreGetDatabaseList(const char *user, const char *password, const char *hos
         return NULL;
     }
 }
-#endif
 
 int
 PyMySQLDeleteDatabase(const char *dbfilename, const char *user, const char *password, const char *hostname)
@@ -557,7 +549,6 @@ PyMySQLDeleteDatabase(const char *dbfilename, const char *user, const char *pass
     return ret;
 }
 
-#if !defined(WIN32)
 int
 PyPostgreDeleteDatabase(const char *dbfilename, const char *user, const char *password, const char *hostname)
 {
@@ -572,7 +563,6 @@ PyPostgreDeleteDatabase(const char *dbfilename, const char *user, const char *pa
     g_free(buf);
     return ret;
 }
-#endif
 
 #endif
 
@@ -614,7 +604,6 @@ SQLiteDisconnect(void)
 RowSet *
 SQLiteSelect(const char *str)
 {
-    size_t i, row;
     int ret;
     char *buf = g_strdup_printf("Select %s;", str);
     RowSet *rs = NULL;
@@ -623,8 +612,10 @@ SQLiteSelect(const char *str)
     ret = sqlite3_prepare(connection, buf, -1, &pStmt, NULL);
     g_free(buf);
     if (ret == SQLITE_OK) {
+        size_t i, row;
         size_t numCols = (size_t) sqlite3_column_count(pStmt);
         size_t numRows = 0;
+
         while ((ret = sqlite3_step(pStmt)) == SQLITE_ROW)
             numRows++;
         if (sqlite3_reset(pStmt) != SQLITE_OK)
