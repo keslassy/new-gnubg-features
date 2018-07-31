@@ -43,6 +43,9 @@ curl (Internet random numbers generator)
 Python does not have to be from the base system. Another version or a 3rd party
 package like Anaconda would be suitable.
 
+To access a MySQL/MariaDB or PostgreSQL database, gnubg needs to be built
+with Python support and the PyMySQL or PyGreSQL module must be installed
+on the target host. These modules may themselves have prerequisites.
 
 Gnubg documentation is provided in various viewable formats. Rebuilding it
 from sources needs
