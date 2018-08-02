@@ -44,3 +44,4 @@ doxygen
 compile
 *.lo
 *.la
+.dirstamp
