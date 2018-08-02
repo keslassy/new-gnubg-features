@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon 0.14-devel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 21:56+0200\n"
+"POT-Creation-Date: 2018-07-31 22:19+0200\n"
 "PO-Revision-Date: 2008-04-17 20:09-0000\n"
 "Last-Translator: Jon <Jon_Kinsey@hotmail.com>\n"
 "Language-Team: none\n"
@@ -441,7 +441,7 @@ msgstr "Engin áferð"
 #: non-src/credits.c:21
 msgid ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-"Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show "
+"Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show "
 "version'."
 msgstr ""
 
@@ -523,46 +523,46 @@ msgstr "Afbrigði"
 msgid "Support"
 msgstr "Flytja inn"
 
-#: dbprovider.c:273
+#: dbprovider.c:269
 msgid "Error importing 'main' module"
 msgstr ""
 
-#: dbprovider.c:361
+#: dbprovider.c:355
 #, fuzzy
 msgid "Error connecting to database"
 msgstr "Flytja út gagnagrunn"
 
-#: dbprovider.c:432
+#: dbprovider.c:426
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr "Windows sökkla"
 
-#: dbprovider.c:437 dbprovider.c:446
+#: dbprovider.c:431 dbprovider.c:440
 #, c-format
 msgid "invalid Python return"
 msgstr ""
 
-#: dbprovider.c:457
+#: dbprovider.c:451
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Flytja út gagnagrunn"
 
-#: dbprovider.c:467
+#: dbprovider.c:461
 #, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr ""
 
-#: dbprovider.c:480
+#: dbprovider.c:474
 #, fuzzy
 msgid "none"
 msgstr "Geri"
 
-#: dbprovider.c:482
+#: dbprovider.c:476
 #, fuzzy
 msgid "unknown type"
 msgstr "Óþekkt stilling `%s'.\n"
 
-#: dbprovider.c:489
+#: dbprovider.c:483
 #, c-format
 msgid "Item %d is not a list\n"
 msgstr ""

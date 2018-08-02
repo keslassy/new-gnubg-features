@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon 0.13-devel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 21:56+0200\n"
+"POT-Creation-Date: 2018-07-31 22:19+0200\n"
 "PO-Revision-Date: 2003-01-24 14:19-0500\n"
 "Last-Translator: Gary Wong <gtw@gnu.org>\n"
 "Language-Team: none\n"
@@ -457,7 +457,7 @@ msgstr ""
 #: non-src/credits.c:21
 msgid ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-"Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show "
+"Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show "
 "version'."
 msgstr ""
 
@@ -534,46 +534,46 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: dbprovider.c:273
+#: dbprovider.c:269
 msgid "Error importing 'main' module"
 msgstr ""
 
-#: dbprovider.c:361
+#: dbprovider.c:355
 #, fuzzy
 msgid "Error connecting to database"
 msgstr "Error initialising old bearoff database!\n"
 
-#: dbprovider.c:432
+#: dbprovider.c:426
 #, c-format
 msgid "unexpected rowset error"
 msgstr ""
 
-#: dbprovider.c:437 dbprovider.c:446
+#: dbprovider.c:431 dbprovider.c:440
 #, c-format
 msgid "invalid Python return"
 msgstr ""
 
-#: dbprovider.c:457
+#: dbprovider.c:451
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Error reading MET\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:461
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Error creating xhash with %d elements\n"
 
-#: dbprovider.c:480
+#: dbprovider.c:474
 #, fuzzy
 msgid "none"
 msgstr "None"
 
-#: dbprovider.c:482
+#: dbprovider.c:476
 #, fuzzy
 msgid "unknown type"
 msgstr "unknown title"
 
-#: dbprovider.c:489
+#: dbprovider.c:483
 #, c-format
 msgid "Item %d is not a list\n"
 msgstr ""

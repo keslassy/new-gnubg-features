@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 21:56+0200\n"
+"POT-Creation-Date: 2018-07-31 22:19+0200\n"
 "PO-Revision-Date: 2006-04-25 16:26+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -465,7 +465,7 @@ msgstr "Keine Oberfläche"
 #: non-src/credits.c:21
 msgid ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-"Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show "
+"Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show "
 "version'."
 msgstr ""
 
@@ -542,45 +542,45 @@ msgstr "Übersetzung"
 msgid "Support"
 msgstr "Support"
 
-#: dbprovider.c:273
+#: dbprovider.c:269
 msgid "Error importing 'main' module"
 msgstr ""
 
-#: dbprovider.c:361
+#: dbprovider.c:355
 msgid "Error connecting to database"
 msgstr "Fehler beim Verbinden zur Datenbank"
 
-#: dbprovider.c:432
+#: dbprovider.c:426
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr ""
 "Windows Sockets Fehler (%s):\n"
 "%s"
 
-#: dbprovider.c:437 dbprovider.c:446
+#: dbprovider.c:431 dbprovider.c:440
 #, fuzzy, c-format
 msgid "invalid Python return"
 msgstr "Ungültiger Rückgabewert"
 
-#: dbprovider.c:457
+#: dbprovider.c:451
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Fehler im Element Nr.%d\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:461
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Fehler im Unterelement Nr (%d, %d)\n"
 
-#: dbprovider.c:480
+#: dbprovider.c:474
 msgid "none"
 msgstr "nichts"
 
-#: dbprovider.c:482
+#: dbprovider.c:476
 msgid "unknown type"
 msgstr "Unbekannter Typ"
 
-#: dbprovider.c:489
+#: dbprovider.c:483
 #, fuzzy, c-format
 msgid "Item %d is not a list\n"
 msgstr "Element Nr.%d is keine Sequenz\n"

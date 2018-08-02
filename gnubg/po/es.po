@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 21:56+0200\n"
+"POT-Creation-Date: 2018-07-31 22:19+0200\n"
 "PO-Revision-Date: 2008-12-29 00:40+0100\n"
 "Last-Translator: Fernando García García <fergarciaga@gmail.com>\n"
 "Language-Team: ES-Translation\n"
@@ -434,7 +434,7 @@ msgstr "Sin textura"
 #: non-src/credits.c:21
 msgid ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-"Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show "
+"Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show "
 "version'."
 msgstr ""
 
@@ -511,43 +511,43 @@ msgstr "Traducciones"
 msgid "Support"
 msgstr "Soporte"
 
-#: dbprovider.c:273
+#: dbprovider.c:269
 msgid "Error importing 'main' module"
 msgstr "Error al importar el módulo 'principal' ('main')"
 
-#: dbprovider.c:361
+#: dbprovider.c:355
 msgid "Error connecting to database"
 msgstr "Error al conectar con la base de datos"
 
-#: dbprovider.c:432
+#: dbprovider.c:426
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr "Error en el socket de Windows"
 
-#: dbprovider.c:437 dbprovider.c:446
+#: dbprovider.c:431 dbprovider.c:440
 #, c-format
 msgid "invalid Python return"
 msgstr "retorno de Python inválido"
 
-#: dbprovider.c:457
+#: dbprovider.c:451
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Error al obtener el elemento %zu\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:461
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Error al obtener el subelemento (%zu, %zu)\n"
 
-#: dbprovider.c:480
+#: dbprovider.c:474
 msgid "none"
 msgstr "ninguno"
 
-#: dbprovider.c:482
+#: dbprovider.c:476
 msgid "unknown type"
 msgstr "tipo desconocido"
 
-#: dbprovider.c:489
+#: dbprovider.c:483
 #, fuzzy, c-format
 msgid "Item %d is not a list\n"
 msgstr "El elemento %zu no es una lista\n"

@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 21:56+0200\n"
+"POT-Creation-Date: 2018-07-31 22:19+0200\n"
 "PO-Revision-Date: 2010-01-02 16:50+0100\n"
 "Last-Translator: Christian Anthon <christian.anthon@gmail.com>\n"
 "Language-Team: American English <kde-i18n-doc@lists.kde.org>\n"
@@ -442,7 +442,7 @@ msgstr "Ingen overflade"
 #, fuzzy
 msgid ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-"Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show "
+"Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show "
 "version'."
 msgstr ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
@@ -522,43 +522,43 @@ msgstr "Oversættelser"
 msgid "Support"
 msgstr "Support"
 
-#: dbprovider.c:273
+#: dbprovider.c:269
 msgid "Error importing 'main' module"
 msgstr "Fejl under indhendtning af \"main\" modulet"
 
-#: dbprovider.c:361
+#: dbprovider.c:355
 msgid "Error connecting to database"
 msgstr "Fejl under tilslutning til databasen"
 
-#: dbprovider.c:432
+#: dbprovider.c:426
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr "Windows socket fejl"
 
-#: dbprovider.c:437 dbprovider.c:446
+#: dbprovider.c:431 dbprovider.c:440
 #, c-format
 msgid "invalid Python return"
 msgstr "ulovlig Python tilbagemelding"
 
-#: dbprovider.c:457
+#: dbprovider.c:451
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Fejl under hentning af %zu\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:461
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Fejl under hentning af (%zu, %zu)\n"
 
-#: dbprovider.c:480
+#: dbprovider.c:474
 msgid "none"
 msgstr "Ingen"
 
-#: dbprovider.c:482
+#: dbprovider.c:476
 msgid "unknown type"
 msgstr "ukendt type"
 
-#: dbprovider.c:489
+#: dbprovider.c:483
 #, fuzzy, c-format
 msgid "Item %d is not a list\n"
 msgstr "%zu er ikke en liste\n"

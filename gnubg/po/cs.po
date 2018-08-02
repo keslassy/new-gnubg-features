@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg-0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 21:56+0200\n"
+"POT-Creation-Date: 2018-07-31 22:19+0200\n"
 "PO-Revision-Date: 2013-01-13 22:20+0100\n"
 "Last-Translator: Petr Kadlec <mormegil@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -430,7 +430,7 @@ msgstr "Bez textury"
 #, fuzzy
 msgid ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-"Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show "
+"Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show "
 "version'."
 msgstr ""
 "Copyright © 1999, 2000, 2001, 2002, 2003, 2004 Gary Wong.\n"
@@ -509,43 +509,43 @@ msgstr "Překlady"
 msgid "Support"
 msgstr "Podpora"
 
-#: dbprovider.c:273
+#: dbprovider.c:269
 msgid "Error importing 'main' module"
 msgstr "Chyba při importu modulu „main“"
 
-#: dbprovider.c:361
+#: dbprovider.c:355
 msgid "Error connecting to database"
 msgstr "Chyba při připojování k databázi"
 
-#: dbprovider.c:432
+#: dbprovider.c:426
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr "Chyba Windows socketu"
 
-#: dbprovider.c:437 dbprovider.c:446
+#: dbprovider.c:431 dbprovider.c:440
 #, c-format
 msgid "invalid Python return"
 msgstr "neznámý návratový typ z Pythonu"
 
-#: dbprovider.c:457
+#: dbprovider.c:451
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Chyba při získávání položky %d\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:461
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Chyba při získávání podpoložky (%d, %d)\n"
 
-#: dbprovider.c:480
+#: dbprovider.c:474
 msgid "none"
 msgstr "nic"
 
-#: dbprovider.c:482
+#: dbprovider.c:476
 msgid "unknown type"
 msgstr "neznámý typ"
 
-#: dbprovider.c:489
+#: dbprovider.c:483
 #, fuzzy, c-format
 msgid "Item %d is not a list\n"
 msgstr "Položka %d není seznam\n"

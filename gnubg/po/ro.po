@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 21:56+0200\n"
+"POT-Creation-Date: 2018-07-31 22:19+0200\n"
 "PO-Revision-Date: 2011-02-05 18:26+0200\n"
 "Last-Translator: Mihai <mihaiv@gmail.com>\n"
 "Language-Team:  <>\n"
@@ -463,7 +463,7 @@ msgstr "Nici o textură"
 #: non-src/credits.c:21
 msgid ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-"Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show "
+"Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show "
 "version'."
 msgstr ""
 
@@ -540,49 +540,49 @@ msgstr "Traduceri"
 msgid "Support"
 msgstr "Suport"
 
-#: dbprovider.c:273
+#: dbprovider.c:269
 #, fuzzy
 msgid "Error importing 'main' module"
 msgstr "Eroare la importarea __main__"
 
-#: dbprovider.c:361
+#: dbprovider.c:355
 #, fuzzy
 msgid "Error connecting to database"
 msgstr "Eroare la rularea comenzii bază de date"
 
-#: dbprovider.c:432
+#: dbprovider.c:426
 #, fuzzy, c-format
 msgid "unexpected rowset error"
 msgstr ""
 "Eroare socket windows (%s):\n"
 "%s"
 
-#: dbprovider.c:437 dbprovider.c:446
+#: dbprovider.c:431 dbprovider.c:440
 #, fuzzy, c-format
 msgid "invalid Python return"
 msgstr "număr poziţie invalid"
 
-#: dbprovider.c:457
+#: dbprovider.c:451
 #, fuzzy, c-format
 msgid "Error getting item %d\n"
 msgstr "Eroare la obţinerea elementului nr. %d\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:461
 #, fuzzy, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Eroare la obţinerea sub-elementului nr (%d, %d)\n"
 
-#: dbprovider.c:480
+#: dbprovider.c:474
 #, fuzzy
 msgid "none"
 msgstr "Nimic"
 
-#: dbprovider.c:482
+#: dbprovider.c:476
 #, fuzzy
 msgid "unknown type"
 msgstr "[tip necunoscut]"
 
-#: dbprovider.c:489
+#: dbprovider.c:483
 #, fuzzy, c-format
 msgid "Item %d is not a list\n"
 msgstr "Elementul nr. %d nu este o secvenţă\n"

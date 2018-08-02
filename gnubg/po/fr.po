@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-22 21:56+0200\n"
+"POT-Creation-Date: 2018-07-31 22:19+0200\n"
 "PO-Revision-Date: 2018-07-22 22:14+0200\n"
 "Last-Translator: Philippe Michel <philippe.michel7@sfr.fr>\n"
 "Language-Team: <fr@li.org>\n"
@@ -419,7 +419,7 @@ msgstr "Aucune texture"
 #: non-src/credits.c:21
 msgid ""
 "Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-"Copyright (C) 2017 by Gary Wong and the AUTHORS; for details type `show "
+"Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show "
 "version'."
 msgstr ""
 
@@ -495,43 +495,43 @@ msgstr "Traductions"
 msgid "Support"
 msgstr "Support"
 
-#: dbprovider.c:273
+#: dbprovider.c:269
 msgid "Error importing 'main' module"
 msgstr "Erreur lors de l'importation du module 'main'"
 
-#: dbprovider.c:361
+#: dbprovider.c:355
 msgid "Error connecting to database"
 msgstr "Erreur lors de la connexion à la base de données"
 
-#: dbprovider.c:432
+#: dbprovider.c:426
 #, c-format
 msgid "unexpected rowset error"
 msgstr ""
 
-#: dbprovider.c:437 dbprovider.c:446
+#: dbprovider.c:431 dbprovider.c:440
 #, c-format
 msgid "invalid Python return"
 msgstr ""
 
-#: dbprovider.c:457
+#: dbprovider.c:451
 #, c-format
 msgid "Error getting item %d\n"
 msgstr "Erreur lors de la récupération de l'élément %d\n"
 
-#: dbprovider.c:467
+#: dbprovider.c:461
 #, c-format
 msgid "Error getting sub item (%d, %d)\n"
 msgstr "Erreur lors de la récupération du sous-élément (%d, %d)\n"
 
-#: dbprovider.c:480
+#: dbprovider.c:474
 msgid "none"
 msgstr "aucun(e)"
 
-#: dbprovider.c:482
+#: dbprovider.c:476
 msgid "unknown type"
 msgstr "type inconnu"
 
-#: dbprovider.c:489
+#: dbprovider.c:483
 #, c-format
 msgid "Item %d is not a list\n"
 msgstr "L'élément %d n'est pas une liste\n"
