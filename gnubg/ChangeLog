@@ -1,3 +1,7 @@
+2018-08-02  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	Version 1.06.002 released.
+
 2018-07-31  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* dbprovider.h, dbprovider.c Add PostgreSQL support on Win32
