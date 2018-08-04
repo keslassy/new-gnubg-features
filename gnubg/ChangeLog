@@ -28,10 +28,9 @@
 	Aware. This is needed to use the largest bearoff databases.
 
 	On 32-bit versions of the operating system this change by itself
-	is not enough (but is harmless). Windows must be started with a
-	specific option for it to be effective ; see
-	https://msdn.microsoft.com/library/windows/hardware/ff556232(v=vs.85).aspx
-	for details.
+	is not enough (but is harmless). See
+	https://docs.microsoft.com/en-us/windows/desktop/Memory/4-gigabyte-tuning
+	on how to enable it.
 
 2017-12-26  Philippe Michel  <philippe.michel7@sfr.fr>
 
