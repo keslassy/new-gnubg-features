@@ -129,6 +129,7 @@ CloseFileHelper( /*lint -e{818} */ FileHelper * fh)
 {
     fclose(fh->fp);
     free(fh->data);
+    g_free(fh);
 }
 
 static void
