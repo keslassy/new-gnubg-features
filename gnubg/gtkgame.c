@@ -6851,8 +6851,7 @@ GTKSet(void *p)
     } else if (p == &ms.nCube) {
         ShowBoard();            /* this is overkill, but it works */
     } else if (IsPanelShowVar(WINDOW_ANNOTATION, p)) {
-        if (PanelShowing(WINDOW_ANNOTATION))
-            ShowHidePanel(WINDOW_ANNOTATION);
+        ShowHidePanel(WINDOW_ANNOTATION);
     } else if (IsPanelShowVar(WINDOW_GAME, p)) {
         ShowHidePanel(WINDOW_GAME);
     } else if (IsPanelShowVar(WINDOW_ANALYSIS, p)) {
