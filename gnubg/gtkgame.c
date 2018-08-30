@@ -4843,7 +4843,7 @@ typedef struct _rolloutpagegeneral {
     GtkWidget *pwAdjLatePlies, *pwAdjTruncPlies, *pwAdjMinGames;
     GtkWidget *pwDoSTDStop, *pwAdjMaxError;
     GtkWidget *pwJsdDoStop;
-    GtkWidget *pwJsdMinGames, *pwJsdAdjMinGames, *pwJsdAdjLimit;
+    GtkWidget *pwJsdMinGames, *pwJsdAdjMinGames, *pwAdjJsdLimit;
     GtkAdjustment *padjTrials, *padjTruncPlies, *padjLatePlies;
     GtkAdjustment *padjSeed, *padjMinGames, *padjMaxError;
     GtkAdjustment *padjJsdMinGames, *padjJsdLimit;
@@ -4913,7 +4913,7 @@ GetRolloutSettings(GtkWidget * pw, rolloutwidget * prw)
     prw->rcRollout.fStopOnJsd = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop));
     prw->rcRollout.nMinimumJsdGames =
         (unsigned int) gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdMinGames));
-    prw->rcRollout.rJsdLimit = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdAdjLimit));
+    prw->rcRollout.rJsdLimit = (float) gtk_spin_button_get_value(GTK_SPIN_BUTTON(prw->prwGeneral->pwJsdLimit));
 
     /* if the players are the same, copy player 0 settings to player 1 */
     if (fPlayersAreSame) {
@@ -5010,7 +5010,7 @@ JsdStopToggled(GtkWidget * UNUSED(pw), rolloutwidget * prw)
    int do_jsd_stop = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop));
 
     gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwJsdAdjMinGames), do_jsd_stop);
-    gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwJsdAdjLimit), do_jsd_stop);
+    gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwAdjJsdLimit), do_jsd_stop);
 }
 
 static void
@@ -5266,9 +5266,9 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Minimum Trials:")), FALSE, FALSE, 4);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    prpw->pwJsdAdjLimit = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    prpw->pwAdjJsdLimit = pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
-    prpw->pwJsdAdjLimit = pwHBox = gtk_hbox_new(FALSE, 0);
+    prpw->pwAdjJsdLimit = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
     gtk_box_pack_end(GTK_BOX(pwv), pwHBox, TRUE, TRUE, 0);
     
