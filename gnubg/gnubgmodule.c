@@ -3279,7 +3279,7 @@ static PyMethodDef gnubgMethods[] = {
      "    arguments: [ list of 10 ints] \n"
      "    returns: board ( see 'cfevaluate' )"}
     ,
-    {"match", (PyCFunction) PythonMatch, METH_VARARGS | METH_KEYWORDS,
+    {"match", (PyCFunction)(void (*) (void))(PyCFunctionWithKeywords) PythonMatch, METH_VARARGS | METH_KEYWORDS,
      "Get the current match\n"
      "    arguments: [ include-analysis = 0/1, include-boards = 0/1,\n"
      "       include-statistics = 0/1, verbose = 0/1 ]\n"
@@ -3350,7 +3350,7 @@ static PyMethodDef gnubgMethods[] = {
      "          'rules' = 'Crawford'/whatever\n"
      "          'variation' => 'Standard' or whatever\n"}
     ,
-    {"navigate", (PyCFunction) PythonNavigate, METH_VARARGS | METH_KEYWORDS,
+    {"navigate", (PyCFunction)(void (*) (void))(PyCFunctionWithKeywords) PythonNavigate, METH_VARARGS | METH_KEYWORDS,
      "go to a position in a match or session'n"
      "    arguments: no args = go to start of match/session\n"
      "         [ game=offset] go forward/backward n games\n"
