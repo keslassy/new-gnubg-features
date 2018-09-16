@@ -56,8 +56,8 @@ static int curDetail;
 #define PREVIEW_HEIGHT 40
 
 /* World sizes */
-#define STRIP_WIDTH 100
-#define STRIP_HEIGHT 10.f
+#define STRIP_WIDTH 100.0
+#define STRIP_HEIGHT 10.0
 
 static int previewLightLevels[3];
 
@@ -104,7 +104,7 @@ Draw(Material * pMat)
 {
     Texture texture;
     int tempShin = pMat->shine;
-    float edge = (1 / (float) PREVIEW_HEIGHT) * STRIP_HEIGHT;
+    const double edge = STRIP_HEIGHT / PREVIEW_HEIGHT;
     /* Accentuate shiness - so visible in preview */
     pMat->shine = tempShin / 3;
 
@@ -144,8 +144,7 @@ Draw(Material * pMat)
     glTranslatef(edge * 2, STRIP_HEIGHT / 2, 0.f);
     glRotatef(90.f, 0.f, 1.f, 0.f);
     /* -edge to give a black outline */
-    gluCylinder(qobj, (double) STRIP_HEIGHT / 2 - edge, (double) STRIP_HEIGHT / 2 - edge,
-                (double) STRIP_WIDTH - edge * 3, 36, 36);
+    gluCylinder(qobj, STRIP_HEIGHT / 2 - edge, STRIP_HEIGHT / 2 - edge, STRIP_WIDTH - edge * 3, 36, 36);
     glPopMatrix();
 
     if (pMat->textureInfo) {
@@ -197,7 +196,7 @@ SetupColourPreview(void)
     glViewport(0, 0, PREVIEW_WIDTH, PREVIEW_HEIGHT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0, (double) STRIP_WIDTH, 0.0, (double) STRIP_HEIGHT, (double) -STRIP_HEIGHT, 0.0);
+    glOrtho(0.0, STRIP_WIDTH, 0.0, STRIP_HEIGHT, -STRIP_HEIGHT, 0.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -414,7 +413,8 @@ UpdateColour3d(GtkButton * UNUSED(button), UpdateDetails * pDetails)
     gtk_adjustment_set_value(padjShine, (double) col3d.shine);
     if (IsFlagSet(pDetails->opacity, DF_VARIABLE_OPACITY)) {
         useOpacity = 1;
-        gtk_adjustment_set_value(padjOpacity, col3d.alphaBlend ? (col3d.ambientColour[3] + .001) * 100 : 100.0);
+        gtk_adjustment_set_value(padjOpacity,
+                                 col3d.alphaBlend ? ((double) col3d.ambientColour[3] + .001) * 100 : 100.0);
     } else {
         useOpacity = 0;
         if (IsFlagSet(pDetails->opacity, DF_FULL_ALPHA))
