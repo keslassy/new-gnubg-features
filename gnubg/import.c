@@ -854,6 +854,8 @@ ImportGame(FILE * fp, int iGame, int nLength, bgvariation bgVariation, int *warn
 
     /* Process player score line, avoid fscanf(%nn) as buffer may overrun */
     szLine = GetMatLine(fp);
+    if (!szLine)
+        return 1;
     psz = szLine;
     while (isspace(*psz))
         psz++;
