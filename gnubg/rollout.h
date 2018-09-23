@@ -75,9 +75,9 @@ RolloutGeneral(ConstTanBoard * apBoard,
                float (*apOutput[])[NUM_ROLLOUT_OUTPUTS],
                float (*apStdDev[])[NUM_ROLLOUT_OUTPUTS],
                rolloutstat apStatistics[][2],
-               evalsetup(*apes[]),
-               const cubeinfo(*apci[]),
-               int (*apCubeDecTop[]), int alternatives,
+               evalsetup *apes[],
+               const cubeinfo *apci[],
+               int *apCubeDecTop[], int alternatives,
                int fInvert, int fCubeRollout, rolloutprogressfunc * pfRolloutProgress, void *pUserData);
 
 extern int
