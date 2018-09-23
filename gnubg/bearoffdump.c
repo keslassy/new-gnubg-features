@@ -125,9 +125,9 @@ main(int argc, char **argv)
 
     {
         char szOut[2048];
-        char *ap[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+        char *apc[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
-        puts(DrawBoard(szOut, (ConstTanBoard) anBoard, TRUE, ap, NULL, 15));
+        puts(DrawBoard(szOut, (ConstTanBoard) anBoard, TRUE, apc, NULL, 15));
     }
 
     /* dump req. position */
