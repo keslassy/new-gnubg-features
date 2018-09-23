@@ -34,11 +34,9 @@ typedef enum _bearofftype {
 } bearofftype;
 
 typedef struct _bearoffcontext {
-    FILE *pf;                   /* file pointer */
     bearofftype bt;             /* type of bearoff database */
     unsigned int nPoints;       /* number of points covered by database */
     unsigned int nChequers;     /* number of chequers for one-sided database */
-    char *szFilename;           /* filename */
     /* one sided dbs */
     int fCompressed;            /* is database compressed? */
     int fGammon;                /* gammon probs included */
@@ -46,6 +44,8 @@ typedef struct _bearoffcontext {
     int fHeuristic;             /* heuristic database? */
     /* two sided dbs */
     int fCubeful;               /* cubeful equities included */
+    FILE *pf;                   /* file pointer */
+    char *szFilename;           /* filename */
     GMappedFile *map;
     unsigned char *p;           /* pointer to data in memory */
 } bearoffcontext;
