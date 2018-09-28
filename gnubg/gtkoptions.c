@@ -53,6 +53,7 @@ typedef struct _optionswidget {
     GtkWidget *pwNoteBook;
     GtkWidget *pwAutoBearoff;
     GtkWidget *pwAutoCrawford;
+    GtkWidget *pwAutoEndGame;
     GtkWidget *pwAutoGame;
     GtkWidget *pwAutoMove;
     GtkWidget *pwAutoRoll;
@@ -367,6 +368,11 @@ append_game_options(optionswidget * pow)
                                   "non-contact bearoff, if there is an "
                                   "unambiguous move which bears off as "
                                   "many chequers as possible, then " "choose that move automatically."));
+
+    pow->pwAutoEndGame = gtk_check_button_new_with_label(_("End Game asks confirmation"));
+    gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwAutoEndGame, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(pow->pwAutoEndGame,
+                                _("Ask confirmation when the End Game button from the toolbar is used."));
 
     pow->pwIllegal = gtk_check_button_new_with_label(_("Allow dragging to illegal points"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwIllegal), fGUIIllegal);
@@ -1505,7 +1511,7 @@ static void
 OptionsOK(GtkWidget * pw, optionswidget * pow)
 {
     char sz[128];
-    int n;
+    int n, f;
     unsigned int u, i;
     gchar *filename, *command, *tmp, *newfolder;
     const gchar *new_browser;
@@ -1522,14 +1528,17 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
 
     gtk_widget_hide(gtk_widget_get_toplevel(pw));
 
-    CHECKUPDATE(pow->pwAutoBearoff, fAutoBearoff, "set automatic bearoff %s")
-        CHECKUPDATE(pow->pwAutoCrawford, fAutoCrawford, "set automatic crawford %s")
-        CHECKUPDATE(pow->pwAutoGame, fAutoGame, "set automatic game %s")
-        CHECKUPDATE(pow->pwAutoRoll, fAutoRoll, "set automatic roll %s")
-        CHECKUPDATE(pow->pwAutoMove, fAutoMove, "set automatic move %s")
-        CHECKUPDATE(pow->pwTutor, fTutor, "set tutor mode %s")
-        CHECKUPDATE(pow->pwTutorCube, fTutorCube, "set tutor cube %s")
-        CHECKUPDATE(pow->pwTutorChequer, fTutorChequer, "set tutor chequer %s") {
+    CHECKUPDATE(pow->pwAutoBearoff, fAutoBearoff, "set automatic bearoff %s");
+    CHECKUPDATE(pow->pwAutoCrawford, fAutoCrawford, "set automatic crawford %s");
+    f = GetWarningEnabled(WARN_ENDGAME);
+    CHECKUPDATE(pow->pwAutoEndGame, f, "set warning endgame %s");
+    CHECKUPDATE(pow->pwAutoGame, fAutoGame, "set automatic game %s");
+    CHECKUPDATE(pow->pwAutoRoll, fAutoRoll, "set automatic roll %s");
+    CHECKUPDATE(pow->pwAutoMove, fAutoMove, "set automatic move %s");
+    CHECKUPDATE(pow->pwTutor, fTutor, "set tutor mode %s");
+    CHECKUPDATE(pow->pwTutorCube, fTutorCube, "set tutor cube %s");
+    CHECKUPDATE(pow->pwTutorChequer, fTutorChequer, "set tutor chequer %s");
+    {
         GtkTreeModel *model;
         GtkTreeIter iter;
 
@@ -1779,9 +1788,12 @@ OptionsSet(optionswidget * pow)
 {
 
     unsigned int i;
+    int f;
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoBearoff), fAutoBearoff);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoCrawford), fAutoCrawford);
+    f = GetWarningEnabled(WARN_ENDGAME);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoEndGame), f);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoGame), fAutoGame);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoMove), fAutoMove);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoRoll), fAutoRoll);

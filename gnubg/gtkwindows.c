@@ -332,9 +332,9 @@ GTKMessage(const char *sz, dialogtype dt)
 }
 
 extern int
-GTKGetInputYN(char *szPrompt)
+GTKGetInputYN(char *sz)
 {
-    return GTKMessage(szPrompt, DT_AREYOUSURE);
+    return GTKMessage(sz, DT_AREYOUSURE);
 }
 
 static char *inputString;
@@ -452,6 +452,12 @@ extern void
 SetWarningEnabled(warningType warning, int value)
 {
     warnings[warning].warningEnabled = value;
+}
+
+extern int
+GetWarningEnabled(warningType warning)
+{
+    return warnings[warning].warningEnabled;
 }
 
 extern void

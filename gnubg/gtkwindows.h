@@ -75,6 +75,7 @@ typedef enum _warningType {
 extern int GTKShowWarning(warningType warning, GtkWidget * pwParent);
 extern warningType ParseWarning(char *str);
 extern void SetWarningEnabled(warningType warning, int value);
+extern int GetWarningEnabled(warningType warning);
 extern void PrintWarning(warningType warning);
 extern void WriteWarnings(FILE * pf);
 
