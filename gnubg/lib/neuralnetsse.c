@@ -95,10 +95,10 @@ CheckNEON(void)
    } else {
 #if defined(__ARM_FEATURE_SIMD32)
        /* v7 */
-       asm volatile ("vmin.f32 q0, q0, q0");
+       __asm__ __volatile__ ("vmin.f32 q0, q0, q0");
 #elif defined(__ARM_NEON)
        /* aarch64 */
-       asm volatile ("fmin v0.4s, v0.4s, v0.4s");
+       __asm__ __volatile__ ("fmin v0.4s, v0.4s, v0.4s");
 #else
        #error "Unexpected ARM architecture"
 #endif

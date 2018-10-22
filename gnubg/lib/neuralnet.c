@@ -384,7 +384,7 @@ check_for_cpuid(void)
 {
     int result;
 
-    asm volatile(
+    __asm__ __volatile__ (
 #if defined(ENVIRONMENT32) && defined(__PIC__)
         /* We have to be careful to not destroy ebx if using PIC on 32bit builds */
         "pushl %%ebx\n\t"
@@ -458,7 +458,7 @@ CheckSSE(void)
 
 #if defined(USE_AVX)
 
-    asm volatile(
+    __asm__ __volatile__ (
 #if defined(ENVIRONMENT32) && defined(__PIC__)
         /* We have to be careful to not destroy ebx if using PIC on 32bit builds */
         "pushl %%ebx\n\t"
@@ -505,7 +505,7 @@ CheckSSE(void)
 
 #else
 
-    asm volatile (
+    __asm__ __volatile__ (
 #if defined(ENVIRONMENT32) && defined(__PIC__)
         /* We have to be careful to not destroy ebx if using PIC on I386 */
         "pushl %%ebx\n\t"
