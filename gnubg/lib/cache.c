@@ -113,7 +113,7 @@ CacheCreate(evalCache * pc, unsigned int s)
 /* MurmurHash3  https://code.google.com/p/smhasher/wiki/MurmurHash */
 
 extern uint32_t
-GetHashKey(uint32_t hashMask, const cacheNodeDetail * e)
+GetHashKey(uint32_t hashMask, const cacheNodeDetail * restrict e)
 {
     uint32_t hash = (uint32_t) e->nEvalContext;
     int i;
@@ -151,7 +151,7 @@ GetHashKey(uint32_t hashMask, const cacheNodeDetail * e)
 
 
 uint32_t
-CacheLookupWithLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, float *arCubeful)
+CacheLookupWithLocking(evalCache * restrict pc, const cacheNodeDetail * restrict e, float * restrict arOut, float * restrict arCubeful)
 {
     uint32_t const l = GetHashKey(pc->hashMask, e);
 
@@ -191,7 +191,7 @@ CacheLookupWithLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, 
 }
 
 uint32_t
-CacheLookupNoLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, float *arCubeful)
+CacheLookupNoLocking(evalCache * restrict pc, const cacheNodeDetail * restrict e, float *restrict arOut, float * restrict arCubeful)
 {
     uint32_t const l = GetHashKey(pc->hashMask, e);
 
@@ -222,7 +222,7 @@ CacheLookupNoLocking(evalCache * pc, const cacheNodeDetail * e, float *arOut, fl
 }
 
 void
-CacheAddWithLocking(evalCache * pc, const cacheNodeDetail * e, uint32_t l)
+CacheAddWithLocking(evalCache * restrict pc, const cacheNodeDetail * restrict e, uint32_t l)
 {
 #if defined(USE_MULTITHREAD)
     cache_lock(pc, l);
