@@ -1,3 +1,7 @@
+2018-10-26  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* configure.ac: Build requires a C99- or gnu99-compatible compiler.
+
 2018-08-02  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	Version 1.06.002 released.
