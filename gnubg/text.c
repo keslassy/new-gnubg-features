@@ -209,7 +209,7 @@ TextPrologue(GString * gsz, const matchstate * pms, const int UNUSED(iGame))
             g_string_append(gsz, _(", post-Crawford play"));
     }
 
-    g_string_append(gsz, "\n");
+    g_string_append(gsz, "\n\n");
 
 }
 
@@ -585,7 +585,7 @@ TextMatchInfo(FILE * pf, const matchinfo * pmi)
 
     int i;
 
-    fputs(_("Match Information:\n\n"), pf);
+    fputs(_("Match Information:\n"), pf);
 
     /* ratings */
 
@@ -683,8 +683,10 @@ ExportGameText(FILE * pf, listOLD * plGame, const int iGame, const int fLastGame
             fputs(gsz->str, pf);
             g_string_free(gsz, TRUE);
 
-            if (exsExport.fIncludeMatchInfo)
+            if (exsExport.fIncludeMatchInfo) {
                 TextMatchInfo(pf, &mi);
+                fputs("\n", pf);
+            }
 
             msOrig = msExport;
             pmgi = &pmr->g;
