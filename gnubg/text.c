@@ -392,9 +392,7 @@ static void
 TextPrintMoveAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 {
 
-    char szBuf[1024];
     char sz[64];
-    unsigned int i;
 
     cubeinfo ci;
 
@@ -447,8 +445,11 @@ TextPrintMoveAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
         g_string_append_printf(gsz, ":\n");
 
     if (pmr->ml.cMoves) {
+        unsigned int i;
 
         for (i = 0; i < pmr->ml.cMoves; i++) {
+            char szBuf[1024];
+
             if (i >= exsExport.nMoves && i != pmr->n.iMove)
                 continue;
 
@@ -500,18 +501,17 @@ extern void
 TextAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 {
 
-
-    char sz[1024];
-
     switch (pmr->mt) {
 
     case MOVE_NORMAL:
 
-        if (pmr->n.anMove[0] >= 0)
+        if (pmr->n.anMove[0] >= 0) {
+            char sz[1024];
+
             g_string_append_printf(gsz,
                                    _("* %s moves %s"),
                                    ap[pmr->fPlayer].szName, FormatMove(sz, pms->anBoard, pmr->n.anMove));
-        else if (!pmr->ml.cMoves)
+        } else if (!pmr->ml.cMoves)
             g_string_append_printf(gsz, _("* %s cannot move"), ap[pmr->fPlayer].szName);
 
         g_string_append(gsz, "\n");
@@ -584,8 +584,6 @@ TextMatchInfo(FILE * pf, const matchinfo * pmi)
 {
 
     int i;
-    char sz[80];
-    struct tm tmx;
 
     fputs(_("Match Information:\n\n"), pf);
 
@@ -600,6 +598,8 @@ TextMatchInfo(FILE * pf, const matchinfo * pmi)
     /* date */
 
     if (pmi->nYear) {
+        struct tm tmx;
+        char sz[80];
 
         tmx.tm_year = pmi->nYear - 1900;
         tmx.tm_mon = pmi->nMonth - 1;
@@ -655,7 +655,6 @@ ExportGameText(FILE * pf, listOLD * plGame, const int iGame, const int fLastGame
     xmovegameinfo *pmgi = NULL;
     GString *gsz;
     listOLD *pl_hint = NULL;
-    statcontext *psc_rel;
 
     msOrig.nMatchTo = 0;
 
@@ -777,6 +776,8 @@ ExportGameText(FILE * pf, listOLD * plGame, const int iGame, const int fLastGame
     }
 
     if (fLastGame) {
+        statcontext *psc_rel = relational_player_stats_get(ap[0].szName, ap[1].szName);
+
         gsz = g_string_new(NULL);
         if (msOrig.nMatchTo)
             g_string_append_printf(gsz, _("Match statistics\n\n"));
@@ -784,7 +785,6 @@ ExportGameText(FILE * pf, listOLD * plGame, const int iGame, const int fLastGame
             g_string_append_printf(gsz, _("Session statistics\n\n"));
         TextDumpStatcontext(gsz, &scTotal, msOrig.nMatchTo);
 
-        psc_rel = relational_player_stats_get(ap[0].szName, ap[1].szName);
         if (psc_rel) {
             g_string_append_printf(gsz, _("\nStatistics from database\n\n"));
             TextDumpStatcontext(gsz, psc_rel, 0);
@@ -840,7 +840,6 @@ CommandExportMatchText(char *sz)
     FILE *pf;
     listOLD *pl;
     int nGames;
-    char *szCurrent;
     int i;
 
     sz = NextToken(&sz);
@@ -855,7 +854,7 @@ CommandExportMatchText(char *sz)
 
     for (pl = lMatch.plNext, i = 0; pl != &lMatch; pl = pl->plNext, i++) {
 
-        szCurrent = filename_from_iGame(sz, i);
+        char *szCurrent = filename_from_iGame(sz, i);
 
         if (!i) {
 
