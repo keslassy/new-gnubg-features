@@ -43,7 +43,7 @@
 #include <readline/readline.h>
 #endif
 
-#ifdef WIN32
+#if defined(WIN32)
 #include <io.h>
 #endif
 
@@ -814,7 +814,10 @@ GTKSetCube(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     if (an[1] != ms.fCubeOwner) {
         if (an[1] >= 0) {
-            sprintf(sz, "set cube owner %d", an[1]);
+            /* gcc 8+ issues a warning if we print an[1] since the buffer
+             * is too small for large integers. With !! it knows that the
+             * number is only one char long and small enough to fit in. */
+            sprintf(sz, "set cube owner %d", !!an[1]);
             UserCommand(sz);
         } else
             UserCommand("set cube centre");
@@ -1079,7 +1082,9 @@ SetAnnotation(moverecord * pmr)
 
             GetMatchStateCubeInfo(&ci, &ms);
             if (GetDPEq(NULL, NULL, &ci)) {
-                gtk_table_attach_defaults(GTK_TABLE(pwBox), gtk_label_new(pmr->stCube == SKILL_NONE ? "" : _("Didn't double")), 0, 1, 0, 1);
+                gtk_table_attach_defaults(GTK_TABLE(pwBox),
+                                          gtk_label_new(pmr->stCube == SKILL_NONE ? "" : _("Didn't double")), 0, 1, 0,
+                                          1);
                 gtk_table_attach_defaults(GTK_TABLE(pwBox), skill_label(pmr->stCube), 0, 1, 1, 2);
             }
 
@@ -1387,7 +1392,6 @@ MainSize(GtkWidget * pw, GtkRequisition * preq, gpointer p)
     else if (!SetMainWindowSize())
         gtk_window_set_default_size(GTK_WINDOW(pw),
                                     MAX(480, preq->width), MIN(preq->height + 79 * 3, gdk_screen_height() - 20));
-
     width = GetPanelWidth(WINDOW_MAIN);
     if (width)
         gtk_paned_set_position(GTK_PANED(hpaned), width - panelSize);
@@ -2118,8 +2122,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     gtk_container_add(GTK_CONTAINER(pw2), gtk_label_new(_("Select a predefined setting:")));
 
     gtk_widget_set_tooltip_text(pwev,
-                                _("Select a predefined setting, ranging from "
-                                  "beginner's play to the 4ply setting."));
+                                _("Select a predefined setting, ranging from " "beginner's play to the 4ply setting."));
 
     pew->pwOptionMenu = gtk_combo_box_text_new();
 
@@ -3265,7 +3268,8 @@ AddLangWidgets(GtkWidget * cont)
         GtkWidget *flag = GetFlagWidget(aaszLang[i + 1][0], aaszLang[i + 1][1], aaszLang[i + 1][2]);
         int row = i / NUM_COLS;
         int col = i - row * NUM_COLS;
-        gtk_table_attach(GTK_TABLE(pwLangTable), flag, col, col + 1, row, row + 1, (GtkAttachOptions) 0, (GtkAttachOptions) 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(pwLangTable), flag, col, col + 1, row, row + 1, (GtkAttachOptions) 0,
+                         (GtkAttachOptions) 0, 0, 0);
         if (!StrCaseCmp(szLang, aaszLang[i + 1][1]))
             selLang = flag;
     }
@@ -3329,7 +3333,7 @@ static GtkActionEntry actionEntries[] = {
     {"FileSaveAction", GTK_STOCK_SAVE, N_("_Save"), "<control>S", NULL, G_CALLBACK(GTKSave)},
     {"FileCommandsOpenAction", NULL, N_("Open _Commands..."), NULL, NULL, G_CALLBACK(GTKCommandsOpen)},
     {"FileMatchInfoAction", NULL, N_("Match information..."), NULL, NULL, G_CALLBACK(GTKMatchInfo)},
-#ifdef WIN32
+#if defined(WIN32)
     {"FileExitAction", NULL, N_("E_xit"), "<control>Q", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIT)},
 #else
     {"FileExitAction", NULL, N_("_Quit"), "<control>Q", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIT)},
@@ -3520,7 +3524,7 @@ static GtkItemFactoryEntry aife[] = {
      NULL},
     {N_("/_File/-"), NULL, NULL, 0, "<Separator>", NULL},
     {
-#ifdef WIN32
+#if defined(WIN32)
      N_("/_File/E_xit"),
 #else
      N_("/_File/_Quit"),
@@ -3824,7 +3828,7 @@ static void
 CreateMainWindow(void)
 {
     GtkWidget *pwVbox, *pwHbox, *pwHbox2, *pwHandle, *pwPanelHbox, *pwStopButton, *idMenu, *menu_item, *pwFrame;
-#ifdef GTK_TARGET_OTHER_APP     /* gtk 2.12+ */
+#if defined(GTK_TARGET_OTHER_APP)       /* gtk 2.12+ */
     GtkTargetEntry fileDrop = { "text/uri-list", GTK_TARGET_OTHER_APP, 1 };
 #else
     GtkTargetEntry fileDrop = { "text/uri-list", 0, 1 };
@@ -3936,7 +3940,7 @@ CreateMainWindow(void)
 #else
     pwPanelGameBox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_paned_add1(GTK_PANED(hpaned), pwPanelGameBox);
+    gtk_paned_pack1(GTK_PANED(hpaned), pwPanelGameBox, TRUE, TRUE);
     gtk_container_add(GTK_CONTAINER(pwPanelGameBox), pwEventBox = gtk_event_box_new());
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwEventBox), FALSE);
 
@@ -4054,7 +4058,8 @@ CreateMainWindow(void)
 }
 
 #if !defined(WIN32)
-static inline void my_g_object_unref(gpointer data, gpointer UNUSED(user_data))
+static inline void
+my_g_object_unref(gpointer data, gpointer UNUSED(user_data))
 {
     g_object_unref(data);
 }
@@ -4107,8 +4112,7 @@ ApplyDefaultCss(void)
     cssPath = BuildFilename("gnubg.css");
     gtk_css_provider_load_from_path(cssProvider, cssPath, NULL);
     gtk_style_context_add_provider_for_screen(gtk_window_get_screen(GTK_WINDOW(pwMain)),
-                                              GTK_STYLE_PROVIDER(cssProvider),
-                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+                                              GTK_STYLE_PROVIDER(cssProvider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     g_free(cssPath);
     if (cssProvider)
@@ -4299,8 +4303,9 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
         }
 
         if (python_script) {
-#ifdef WIN32
-            outputerrf(_("The Windows GTK interface does not support the '-p' option. Use the command-line interface instead."));
+#if defined(WIN32)
+            outputerrf(_
+                       ("The Windows GTK interface does not support the '-p' option. Use the command-line interface instead."));
 #else
 #if defined(USE_PYTHON)
             g_idle_add(python_run_file, g_strdup(python_script));
@@ -5007,7 +5012,7 @@ STDStopToggled(GtkWidget * UNUSED(pw), rolloutwidget * prw)
 static void
 JsdStopToggled(GtkWidget * UNUSED(pw), rolloutwidget * prw)
 {
-   int do_jsd_stop = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop));
+    int do_jsd_stop = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop));
 
     gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwJsdAdjMinGames), do_jsd_stop);
     gtk_widget_set_sensitive(GTK_WIDGET(prw->prwGeneral->pwAdjJsdLimit), do_jsd_stop);
@@ -5092,7 +5097,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 #endif
     gtk_container_set_border_width(GTK_CONTAINER(pwPage), 8);
 
-    prpw->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble)prw->rcRollout.nSeed, 0, INT_MAX, 1, 1, 0));
+    prpw->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble) prw->rcRollout.nSeed, 0, INT_MAX, 1, 1, 0));
     prpw->padjTrials = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nTrials, 1, 1296 * 1296, 36, 36, 0));
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -5163,7 +5168,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_box_pack_end(GTK_BOX(pwHBox), gtk_spin_button_new(prpw->padjLatePlies, 1, 0), FALSE, FALSE, 4);
     gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Change eval after ply:")), FALSE, FALSE, 4);
 
-    
+
     pwFrame = gtk_frame_new(_("Stop when result is accurate"));
     gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
 
@@ -5181,11 +5186,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoSTDStop), prw->rcRollout.fStopOnSTD);
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwDoSTDStop), "toggled", G_CALLBACK(STDStopToggled), prw);
     gtk_widget_set_tooltip_text(prpw->pwDoSTDStop,
-        _("Standard Error (SE) of the candidate play equity is a measure of "
-           "the accuracy of the current rollout result. "
-          "If the rollout were to be continued indefinitely, its result would "
-          "have about 95% chances to be in an interval of +/-2 SE around the "
-          "current result."));
+                                _("Standard Error (SE) of the candidate play equity is a measure of "
+                                  "the accuracy of the current rollout result. "
+                                  "If the rollout were to be continued indefinitely, its result would "
+                                  "have about 95% chances to be in an interval of +/-2 SE around the "
+                                  "current result."));
 
     /* a vbox for the adjusters */
 #if GTK_CHECK_VERSION(3,0,0)
@@ -5237,12 +5242,12 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwJsdDoStop), prw->rcRollout.fStopOnJsd);
     g_signal_connect(G_OBJECT(prw->prwGeneral->pwJsdDoStop), "toggled", G_CALLBACK(JsdStopToggled), prw);
     gtk_widget_set_tooltip_text(prpw->pwJsdDoStop,
-        _("The number of Joint Standard Deviations (JSD) between "
-          "the current favourite and another candidate decision is a "
-          "measure of how unlikely continuing the rollout is to "
-          "change the current result. "
-          "A candidate trailing by 2.33 JSD has about 1% chance to "
-          "end as winner if the rollout were to be continued indefinitely."));
+                                _("The number of Joint Standard Deviations (JSD) between "
+                                  "the current favourite and another candidate decision is a "
+                                  "measure of how unlikely continuing the rollout is to "
+                                  "change the current result. "
+                                  "A candidate trailing by 2.33 JSD has about 1% chance to "
+                                  "end as winner if the rollout were to be continued indefinitely."));
 
     /* a vbox for the adjusters */
 #if GTK_CHECK_VERSION(3,0,0)
@@ -5271,7 +5276,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     prpw->pwAdjJsdLimit = pwHBox = gtk_hbox_new(FALSE, 0);
 #endif
     gtk_box_pack_end(GTK_BOX(pwv), pwHBox, TRUE, TRUE, 0);
-    
+
     prpw->padjJsdLimit = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.rJsdLimit, 0, 8, .0001, .0001, 0));
     prpw->pwJsdLimit = gtk_spin_button_new(prpw->padjJsdLimit, .0001, 4);
     gtk_box_pack_end(GTK_BOX(pwHBox), prpw->pwJsdLimit, FALSE, FALSE, 4);
@@ -5280,7 +5285,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 
     pwFrame = gtk_frame_new(_("Bearoff Truncation"));
     gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
-    
+
 #if GTK_CHECK_VERSION(3,0,0)
     prpw->pwTruncBearoffOpts = pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 #else
@@ -5316,12 +5321,11 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwVarRedn, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwVarRedn), prw->rcRollout.fVarRedn);
     gtk_widget_set_tooltip_text(prpw->pwVarRedn,
-        _("Variance Reduction is a procedure used to considerably increase "
-          "the accuracy of rollout results. "
-          "It has a significant cost for 0-ply rollouts "
-          "(but is still valuable on an accuracy per elapsed-time basis) "
-          "and is almost free for higher plies. "
-          "It is recommended to enable this option."));
+                                _("Variance Reduction is a procedure used to considerably increase "
+                                  "the accuracy of rollout results. "
+                                  "It has a significant cost for 0-ply rollouts "
+                                  "(but is still valuable on an accuracy per elapsed-time basis) "
+                                  "and is almost free for higher plies. " "It is recommended to enable this option."));
 
     prpw->pwRotate = gtk_check_button_new_with_label(_("Use quasi-random dice"));
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwRotate, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
@@ -6301,7 +6305,6 @@ GTKCommandShowCredits(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
 #endif
             gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, TRUE, FALSE, 0);
         }
-
 #if GTK_CHECK_VERSION(3,0,0)
         pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
@@ -6553,7 +6556,7 @@ static void
 GTKBearoffProgressCancel(void)
 {
 
-#ifdef SIGINT
+#if defined(SIGINT)
     raise(SIGINT);
 #endif
     exit(EXIT_FAILURE);
@@ -6611,9 +6614,10 @@ enable_menu(GtkWidget * pw, int f)
         gtk_widget_set_sensitive(pw, f);
 }
 
-static inline void my_enable_menu(gpointer data, gpointer user_data)
+static inline void
+my_enable_menu(gpointer data, gpointer user_data)
 {
-     enable_menu((GtkWidget *)data, GPOINTER_TO_INT(user_data));
+    enable_menu((GtkWidget *) data, GPOINTER_TO_INT(user_data));
 }
 
 static void
@@ -7479,7 +7483,8 @@ GTKMatchInfo(void)
     AddToTable(pwTable, _("Place:"), 0, 5);
     AddToTable(pwTable, _("Annotator:"), 0, 6);
 
-    gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("Comments:")), 2, 3, 0, 1, (GtkAttachOptions)0, (GtkAttachOptions)0, 0, 0);
+    gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("Comments:")), 2, 3, 0, 1, (GtkAttachOptions) 0,
+                     (GtkAttachOptions) 0, 0, 0);
 
     apwRating[0] = gtk_entry_new();
     if (mi.pchRating[0])
@@ -7540,7 +7545,7 @@ CalibrationOK(GtkWidget * pw, GtkWidget * ppw)
     GtkAdjustment *padj = gtk_spin_button_get_adjustment(GTK_SPIN_BUTTON(ppw));
 
     if (gtk_widget_is_sensitive(ppw)) {
-        if (gtk_adjustment_get_value(padj) != (gdouble)rEvalsPerSec) {
+        if (gtk_adjustment_get_value(padj) != (gdouble) rEvalsPerSec) {
             sprintf(sz, "set calibration %.0f", gtk_adjustment_get_value(padj));
             UserCommand(sz);
         }
