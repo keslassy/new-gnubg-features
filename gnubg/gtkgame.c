@@ -6310,7 +6310,7 @@ GTKCommandShowCredits(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
 #else
         pwVBox = gtk_vbox_new(FALSE, 0);
 #endif
-        gtk_box_pack_start(GTK_BOX(pwHBox), pwVBox, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(pwHBox), pwVBox, TRUE, FALSE, 0);
 
         AddTitle(pwVBox, _(credit->Title));
 
