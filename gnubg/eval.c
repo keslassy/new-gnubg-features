@@ -2637,7 +2637,7 @@ ApplySubMove(TanBoard anBoard, const int iSrc, const int nRoll, const int fCheck
         return -1;
     }
 
-    if (iSrc < 0 || iSrc > 24 || iDest > 24 || anBoard[1][iSrc] < 1) {
+    if (iSrc < 0 || iSrc > 24 || iDest >= iSrc || anBoard[1][iSrc] < 1) {
         /* Invalid point number, or source point is empty */
         errno = EINVAL;
         return -1;
