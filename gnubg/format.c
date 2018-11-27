@@ -588,7 +588,7 @@ OutputPercent(const float r)
     static char sz[OUTPUT_SZ_LENGTH];
 
     if (fOutputWinPC) {
-        sprintf(sz, "%*.*f", fOutputDigits + 2, fOutputDigits > 2 ? fOutputDigits - 2 : 0, 100.0 * r);
+        sprintf(sz, "%*.*f", fOutputDigits + 2, fOutputDigits > 2 ? fOutputDigits - 2 : 0, 100.0f * r);
     } else {
         sprintf(sz, "%*.*f", fOutputDigits + 2, fOutputDigits, r);
     }
@@ -856,7 +856,7 @@ OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
     sprintf(strchr(sz, 0), "%s: %s", _("Proper cube action"), GetCubeRecommendation(cd));
 
-    if ((r = getPercent(cd, arDouble)) >= 0.0)
+    if ((r = getPercent(cd, arDouble)) >= 0.0f)
         sprintf(strchr(sz, 0), " (%.1f%%)", 100.0f * r);
 
     strcat(sz, "\n");
@@ -935,15 +935,15 @@ DumpOver(const TanBoard anBoard, char *pchOutput, const bgvariation bgv)
     if (EvalOver(anBoard, ar, bgv, NULL))
         return -1;
 
-    if (ar[OUTPUT_WIN] > 0.0)
+    if (ar[OUTPUT_WIN] > 0.0f)
         strcpy(pchOutput, _("Win"));
     else
         strcpy(pchOutput, _("Loss"));
     strcat(pchOutput, " ");
 
-    if (ar[OUTPUT_WINBACKGAMMON] > 0.0 || ar[OUTPUT_LOSEBACKGAMMON] > 0.0)
+    if (ar[OUTPUT_WINBACKGAMMON] > 0.0f || ar[OUTPUT_LOSEBACKGAMMON] > 0.0f)
         sprintf(pchOutput, "(%s)\n", _("backgammon"));
-    else if (ar[OUTPUT_WINGAMMON] > 0.0 || ar[OUTPUT_LOSEGAMMON] > 0.0)
+    else if (ar[OUTPUT_WINGAMMON] > 0.0f || ar[OUTPUT_LOSEGAMMON] > 0.0f)
         sprintf(pchOutput, "(%s)\n", _("gammon"));
     else
         sprintf(pchOutput, "(%s)\n", _("single"));
