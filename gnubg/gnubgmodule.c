@@ -2459,10 +2459,10 @@ PyGameStats(const statcontext * sc, const int fIsMatch, const int nMatchTo)
         for (side = 0; side < 2; ++side) {
             PyObject *d = Py_BuildValue("{s:f,s:f,s:f,s:f}",
                                         "actual", sc->arActualResult[side] / sc->nGames,
-                                        "actual-ci", 1.95996f * sqrt(sc->arVarianceActual[side] / sc->nGames),
+                                        "actual-ci", 1.95996f * sqrtf(sc->arVarianceActual[side] / sc->nGames),
                                         "luck-adjusted",
                                         sc->arLuckAdj[side] / sc->nGames,
-                                        "luck-adjusted-ci", 1.95996f * sqrt(sc->arVarianceLuckAdj[side] / sc->nGames));
+                                        "luck-adjusted-ci", 1.95996f * sqrtf(sc->arVarianceLuckAdj[side] / sc->nGames));
 
             DictSetItemSteal(p[side], "ppg-advantage", d);
         }
