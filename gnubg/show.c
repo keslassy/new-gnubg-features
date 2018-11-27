@@ -1386,7 +1386,7 @@ writeMET(float aafMET[][MAXSCORE], const int nRows, const int nCols, const int f
         outputf(_(" %3i-away "), i + 1);
 
         for (j = 0; j < nCols; j++)
-            outputf(" %8.4f ", fInvert ? 100.0f * (1.0 - GET_MET(i, j, aafMET)) : GET_MET(i, j, aafMET) * 100.0);
+            outputf(" %8.4f ", fInvert ? 100.0f * (1.0f - GET_MET(i, j, aafMET)) : GET_MET(i, j, aafMET) * 100.0f);
         output("\n");
     }
     output("\n");
@@ -1631,7 +1631,7 @@ CommandShowMarketWindow(char *sz)
 
     for (i = 0; i < 2; i++)
         outputf(_("Player %-25s: gammon rate %6.2f%%, bg rate %6.2f%%\n"),
-                ap[i].szName, aarRates[i][0] * 100.0, aarRates[i][1] * 100.0);
+                ap[i].szName, aarRates[i][0] * 100.0f, aarRates[i][1] * 100.0f);
 
 
     if (ms.nMatchTo) {
@@ -1774,12 +1774,12 @@ CommandShowMarketWindow(char *sz)
             else
                 output(_("Dead cube: "));
 
-            outputf("%6.2f%% - %6.2f%%\n", 100. * arDP1[i], 100. * arCP1[i]);
+            outputf("%6.2f%% - %6.2f%%\n", 100.0f * arDP1[i], 100.0f * arCP1[i]);
 
             if (fAutoRedouble[i])
-                outputf(_("Dead cube (opponent redoubles):" "%6.2f%% - %6.2f%%\n\n"), 100. * arDP2[i], 100. * arCP2[i]);
+                outputf(_("Dead cube (opponent redoubles):" "%6.2f%% - %6.2f%%\n\n"), 100.0f * arDP2[i], 100.0f * arCP2[i]);
             else if (!afDead[i])
-                outputf(_("Live cube:" "%6.2f%% - %6.2f%%\n\n"), 100. * arDP2[i], 100. * arCP2[i]);
+                outputf(_("Live cube:" "%6.2f%% - %6.2f%%\n\n"), 100.0f * arDP2[i], 100.0f * arCP2[i]);
 
         }
 
@@ -2233,8 +2233,8 @@ CommandShowMatchResult(char *UNUSED(sz))
             if (ms.nMatchTo)
                 outputf("%10d %9.2f%% %9.2f%%\n",
                         n,
-                        100.0 * (0.5f + psc->arActualResult[0]),
-                        100.0 * (0.5f + psc->arActualResult[0] - psc->arLuck[0][1] + psc->arLuck[1][1]));
+                        100.0f * (0.5f + psc->arActualResult[0]),
+                        100.0f * (0.5f + psc->arActualResult[0] - psc->arLuck[0][1] + psc->arLuck[1][1]));
             else
                 outputf("%10d %9.3f%% %9.3f%%\n",
                         n, psc->arActualResult[0], psc->arActualResult[0] - psc->arLuck[0][1] + psc->arLuck[1][1]);
@@ -2253,7 +2253,7 @@ CommandShowMatchResult(char *UNUSED(sz))
     }
 
     if (ms.nMatchTo)
-        outputf("%10s %9.2f%% %9.2f%%\n", _("Final"), 100.0 * (0.5f + arSum[0]), 100.0 * (0.5f + arSum[1]));
+        outputf("%10s %9.2f%% %9.2f%%\n", _("Final"), 100.0f * (0.5f + arSum[0]), 100.0f * (0.5f + arSum[1]));
     else
         outputf("%10s %+9.3f %+9.3f\n", _("Sum"), arSum[0], arSum[1]);
 
@@ -2261,9 +2261,9 @@ CommandShowMatchResult(char *UNUSED(sz))
         outputf("%10s %+9.3f %+9.3f\n", _("Average"), arSum[0] / n, arSum[1] / n);
         outputf("%10s %9.3f %9.3f\n", "95%CI",
                 1.95996f *
-                sqrt(arSumSquared[0] / n -
-                     arSum[0] * arSum[0] / (n * n)) / sqrt(n),
-                1.95996f * sqrt(arSumSquared[1] / n - arSum[1] * arSum[1] / (n * n)) / sqrt(n));
+                sqrtf(arSumSquared[0] / n -
+                     arSum[0] * arSum[0] / (n * n)) / sqrtf(n),
+                1.95996f * sqrtf(arSumSquared[1] / n - arSum[1] * arSum[1] / (n * n)) / sqrtf(n));
     }
 
 }
