@@ -4762,10 +4762,10 @@ CommandEq2MWC(char *sz)
 
     GetMatchStateCubeInfo(&ci, &ms);
 
-    outputf("%s = %+6.3f: %6.2f%%\n", _("MWC for equity"), -1.0, 100.0 * eq2mwc(-1.0, &ci));
-    outputf("%s = %+6.3f: %6.2f%%\n", _("MWC for equity"), +1.0, 100.0 * eq2mwc(+1.0, &ci));
+    outputf("%s = %+6.3f: %6.2f%%\n", _("MWC for equity"), -1.0, 100.0f * eq2mwc(-1.0, &ci));
+    outputf("%s = %+6.3f: %6.2f%%\n", _("MWC for equity"), +1.0, 100.0f * eq2mwc(+1.0, &ci));
     outputf("%s:\n", _("By linear interpolation"));
-    outputf("%s = %+6.3f: %6.2f%%\n", _("MWC for equity"), rEq, 100.0 * eq2mwc(rEq, &ci));
+    outputf("%s = %+6.3f: %6.2f%%\n", _("MWC for equity"), rEq, 100.0f * eq2mwc(rEq, &ci));
 
 }
 
@@ -4807,10 +4807,10 @@ CommandMWC2Eq(char *sz)
     if (rMwc > 1.0f)
         rMwc /= 100.0f;
 
-    outputf("%s = %6.2f%%: %+6.3f\n", _("Equity for MWC"), 100.0 * eq2mwc(-1.0, &ci), -1.0);
-    outputf("%s = %6.2f%%: %+6.3f\n", _("Equity for MWC"), 100.0 * eq2mwc(+1.0, &ci), +1.0);
+    outputf("%s = %6.2f%%: %+6.3f\n", _("Equity for MWC"), 100.0f * eq2mwc(-1.0, &ci), -1.0);
+    outputf("%s = %6.2f%%: %+6.3f\n", _("Equity for MWC"), 100.0f * eq2mwc(+1.0, &ci), +1.0);
     outputf("%s:\n", _("By linear interpolation"));
-    outputf("%s = %6.2f%%: %+6.3f\n", _("Equity for MWC"), 100.0 * rMwc, mwc2eq(rMwc, &ci));
+    outputf("%s = %6.2f%%: %+6.3f\n", _("Equity for MWC"), 100.0f * rMwc, mwc2eq(rMwc, &ci));
 
 
 }
