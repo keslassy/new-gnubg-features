@@ -1296,9 +1296,9 @@ IniStatcontext(statcontext * psc)
 extern float
 relativeFibsRating(float r, int n)
 {
-    float const x = -2000.0f / (float) sqrt(1.0 * n) * (float) log10(1.0 / r - 1.0);
+    float const x = -2000.0f / sqrtf(n) * log10f(1.0f / r - 1.0f);
 
-    return (x < -2100) ? -2100 : x;
+    return (x < -2100.0f) ? -2100.0f : x;
 }
 
 /*
