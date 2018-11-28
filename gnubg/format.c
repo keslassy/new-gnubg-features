@@ -417,15 +417,15 @@ OutputEquity(const float r, const cubeinfo * pci, const int f)
 
     if (!pci->nMatchTo || !fOutputMWC) {
         if (f)
-            sprintf(sz, "%+*.*f", fOutputDigits + 3, fOutputDigits, r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, r);
         else
-            sprintf(sz, "% *.*f", fOutputDigits + 2, fOutputDigits, r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits, r);
     } else {
         if (fOutputMatchPC) {
-            sprintf(sz, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
                     100.0f * (f ? eq2mwc(r, pci) : se_eq2mwc(r, pci)));
         } else {
-            sprintf(sz, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, f ? eq2mwc(r, pci) : se_eq2mwc(r, pci));
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, f ? eq2mwc(r, pci) : se_eq2mwc(r, pci));
         }
     }
 
@@ -443,9 +443,9 @@ OutputMoneyEquity(const float ar[], const int f)
         ar[OUTPUT_LOSEGAMMON] - ar[OUTPUT_LOSEBACKGAMMON];
 
     if (f)
-        sprintf(sz, "%+*.*f", fOutputDigits + 3, fOutputDigits, eq);
+        snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, eq);
     else
-        sprintf(sz, "% *.*f", fOutputDigits + 2, fOutputDigits, eq);
+        snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits, eq);
 
 
     return sz;
@@ -475,25 +475,25 @@ OutputEquityScale(const float r, const cubeinfo * pci, const cubeinfo * pciBase,
 
     if (!pci->nMatchTo) {
         if (f)
-            sprintf(sz, "%+*.*f", fOutputDigits + 3, fOutputDigits, pci->nCube / pciBase->nCube * r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, pci->nCube / pciBase->nCube * r);
         else
-            sprintf(sz, "% *.*f", fOutputDigits + 2, fOutputDigits, pci->nCube / pciBase->nCube * r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits, pci->nCube / pciBase->nCube * r);
     } else {
 
         if (fOutputMWC) {
 
             if (fOutputMatchPC) {
-                sprintf(sz, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
                         100.0f * (f ? eq2mwc(r, pci) : se_eq2mwc(r, pci)));
             } else {
-                sprintf(sz, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, f ? eq2mwc(r, pci) : se_eq2mwc(r, pci));
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, f ? eq2mwc(r, pci) : se_eq2mwc(r, pci));
             }
 
         } else {
             if (f)
-                sprintf(sz, "%+*.*f", fOutputDigits + 3, fOutputDigits, mwc2eq(eq2mwc(r, pci), pciBase));
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, mwc2eq(eq2mwc(r, pci), pciBase));
             else
-                sprintf(sz, "% *.*f", fOutputDigits + 2, fOutputDigits, se_mwc2eq(se_eq2mwc(r, pci), pciBase));
+                snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits, se_mwc2eq(se_eq2mwc(r, pci), pciBase));
         }
 
 
@@ -524,13 +524,13 @@ OutputEquityDiff(const float r1, const float r2, const cubeinfo * pci)
     static char sz[OUTPUT_SZ_LENGTH];
 
     if (!pci->nMatchTo || !fOutputMWC) {
-        sprintf(sz, "%+*.*f", fOutputDigits + 3, fOutputDigits, r1 - r2);
+        snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, r1 - r2);
     } else {
         if (fOutputMatchPC) {
-            sprintf(sz, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
                     100.0f * eq2mwc(r1, pci) - 100.0f * eq2mwc(r2, pci));
         } else {
-            sprintf(sz, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, eq2mwc(r1, pci) - eq2mwc(r2, pci));
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, eq2mwc(r1, pci) - eq2mwc(r2, pci));
         }
     }
 
@@ -556,23 +556,23 @@ OutputMWC(const float r, const cubeinfo * pci, const int f)
 
     if (!pci->nMatchTo) {
         if (f)
-            sprintf(sz, "%+*.*f", fOutputDigits + 3, fOutputDigits, r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, r);
         else
-            sprintf(sz, "% *.*f", fOutputDigits + 2, fOutputDigits, r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits, r);
     } else {
 
         if (!fOutputMWC) {
             if (f)
-                sprintf(sz, "%+*.*f", fOutputDigits + 3, fOutputDigits, mwc2eq(r, pci));
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, mwc2eq(r, pci));
             else
-                sprintf(sz, "% *.*f", fOutputDigits + 3, fOutputDigits, se_mwc2eq(r, pci));
+                snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 3, fOutputDigits, se_mwc2eq(r, pci));
         } else if (fOutputMatchPC) {
-            sprintf(sz, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0, 100.0f * r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0, 100.0f * r);
         } else {
             if (f)
-                sprintf(sz, "%+*.*f", fOutputDigits + 3, fOutputDigits + 1, r);
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits + 1, r);
             else
-                sprintf(sz, "% *.*f", fOutputDigits + 3, fOutputDigits + 1, r);
+                snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 3, fOutputDigits + 1, r);
         }
     }
 
@@ -588,9 +588,9 @@ OutputPercent(const float r)
     static char sz[OUTPUT_SZ_LENGTH];
 
     if (fOutputWinPC) {
-        sprintf(sz, "%*.*f", fOutputDigits + 2, fOutputDigits > 2 ? fOutputDigits - 2 : 0, 100.0f * r);
+        snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 2, fOutputDigits > 2 ? fOutputDigits - 2 : 0, 100.0f * r);
     } else {
-        sprintf(sz, "%*.*f", fOutputDigits + 2, fOutputDigits, r);
+        snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 2, fOutputDigits, r);
     }
 
     return sz;
