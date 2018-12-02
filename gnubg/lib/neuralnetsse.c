@@ -233,19 +233,20 @@ sigmoid_ps(float_vector xin)
     float_vector c;
     xin = _mm256_and_ps(xin, abs_mask.ps);      /* Abs. value by clearing signbit */
     c = sigmoid_positive_ps(xin);
-    return _mm256_or_ps(_mm256_and_ps(mask, c), _mm256_andnot_ps(mask, _mm256_sub_ps(ones.ps, c)));
+    return _mm256_blendv_ps(_mm256_sub_ps(ones.ps, c), c, mask);
 #elif defined(HAVE_SSE)
     float_vector mask = _mm_cmplt_ps(xin, _mm_setzero_ps());
     float_vector c;
     xin = _mm_and_ps(xin, abs_mask.ps); /* Abs. value by clearing signbit */
     c = sigmoid_positive_ps(xin);
+    /* _mm_blendv_ps() is only available with SSE4.1 or later */
     return _mm_or_ps(_mm_and_ps(mask, c), _mm_andnot_ps(mask, _mm_sub_ps(ones.ps, c)));
 #else
     int_vector mask = (int_vector)vcltq_f32(xin, vdupq_n_f32(0.0f));
     float_vector c;
     xin = (float_vector)vandq_s32((int_vector)xin, (int_vector)abs_mask.ps); /* Abs. value by clearing signbit */
     c = sigmoid_positive_ps(xin);
-    return (float_vector)vorrq_s32(vandq_s32(mask, (int_vector)c), vbicq_s32((int_vector)vsubq_f32(ones.ps, c),mask));
+    return vbslq_f32((uint32x4_t)mask, c, vsubq_f32(ones.ps, c));
 #endif
 }
 
