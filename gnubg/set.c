@@ -2543,18 +2543,10 @@ CommandSetScore(char *sz)
         return;
     }
 
-    if (ms.nMatchTo && n0 >= ms.nMatchTo && n1 >= ms.nMatchTo) {
-        outputl(_("Only one player may win the match."));
+    if (ms.nMatchTo && (n0 >= ms.nMatchTo || n1 >= ms.nMatchTo)) {
+        outputl(_("You cannot set a score where the match is " "already over."));
         return;
     }
-
-    if ((fCrawford0 || fCrawford1) && (n0 >= ms.nMatchTo || n1 >= ms.nMatchTo)) {
-        outputl(_("You cannot play the Crawford game once the match is " "already over."));
-        return;
-    }
-
-    /* allow scores above the match length, since that doesn't really
-     * hurt anything */
 
     CancelCubeAction();
 
