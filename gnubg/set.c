@@ -202,7 +202,7 @@ SetRNG(rng * prng, rngcontext * rngctx, rng rngNew, char *szSeed)
                     }
                     fInit = TRUE;
                 } else if (!StrNCaseCmp(szSeed, "factors", strcspn(szSeed, " \t\n\r\v\f"))) {
-                    NextToken(&szSeed); /* skip "modulus" keyword */
+                    NextToken(&szSeed); /* skip "factors" keyword */
                     sz = NextToken(&szSeed);
                     sz1 = NextToken(&szSeed);
                     if (InitRNGBBSFactors(sz, sz1, rngctx)) {
@@ -4460,7 +4460,7 @@ SetXGID(char *sz)
     } else
         g_free(s);
 
-    /* atoi(v[0]) is a maximum (money) cube value, unused in gnubg.
+    /* atoi(v[0]) is a maximum (money) cube value, unused in GNUbg.
      * Special case : if it is set to 0, the position is cubeless
      * with gammons and backgammons counting. See msxg initialization below.
      * It may not be that useful though, since setting a position is typically
@@ -4468,6 +4468,9 @@ SetXGID(char *sz)
      * will override that. */
 
     nMatchTo = atoi(v[1]);
+
+    if (nMatchTo > MAXSCORE)
+        return 1;
 
     nRules = atoi(v[2]);
 
@@ -4480,7 +4483,7 @@ SetXGID(char *sz)
             fCrawford = 1;
             break;
         default:
-            return (1);
+            return 1;
         }
     } else {
         switch (nRules) {
@@ -4507,6 +4510,9 @@ SetXGID(char *sz)
 
     anScore[0] = atoi(v[3]);
     anScore[1] = atoi(v[4]);
+
+    if (nMatchTo > 0 && (anScore[0] >= nMatchTo || anScore[1] >= nMatchTo))
+        return 1;
 
     fMove = atoi(v[6]) == 1 ? 1 : 0;
 
@@ -4536,6 +4542,9 @@ SetXGID(char *sz)
     }
 
     nCube = 1 << atoi(v[8]);
+
+    if (nCube > MAX_CUBE)
+        return 1;
 
     switch (atoi(v[7])) {
     case 1:
