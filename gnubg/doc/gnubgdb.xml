@@ -997,14 +997,15 @@ To roll the dice the CL version type 'roll'.
         option will be listed in order with the best option highest. The number
         right to the listed equities is the differences from the cube decision
         considered best.</para>
-      <para>The last line states the best considered cube action. In the figure
-        above, <application>GNU Backgammon</application> considers the best cube
-        action to be No double, take. When percentage number right to the proper
-        cube action, is a number which indicates the <emphasis>bluff</emphasis>
-        potential. It is the necessary percentage chance you think you can bluff
-        your opponent into passing the cube to make the double theoretically
-        correct. This number is only available when the position is considered
-        No double, take or Too good to double, pass.</para>
+      <para>The last line states the best considered cube action. In
+      the figure above, <application>GNU Backgammon</application>
+      considers the best cube action to be No double, take. The number
+      right to the proper cube action is the percentage of bad
+      decisions by the taker that is needed to make a bad doubling
+      decision against <application>GNU Backgammon</application>
+      profitable against such an opponent. This number is only
+      available when the position is considered No double, take or Too
+      good to double, pass.</para>
 </sect3>
     <sect3 id="gnubg-hint_button">
       <title>The hint tool buttons</title>
