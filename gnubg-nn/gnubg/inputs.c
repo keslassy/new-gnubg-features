@@ -16,6 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * $Id$
  */
 
 #if HAVE_CONFIG_H
@@ -1778,7 +1779,6 @@ iMobility(CONST int* anBoard, CONST int* anBoardOpp, float* inp, int scale)
 
 
   switch( scale ) {
-    case 0: *inp = n;
     case 1: *inp = n / 3600.0; break;
     case 2: *inp = n / 8280.0; break;
   }
@@ -1798,7 +1798,6 @@ iRMobility(CONST int* anBoard, CONST int* anBoardOpp, float* inp, int scale)
 
 
   switch( scale ) {
-    case 0: *inp = n;
     case 1: *inp = n / 3600.0; break;
     case 2: *inp = n / 8280.0; break;
   }
