@@ -120,19 +120,19 @@ PrintError(const char *message)
 }
 
 /* Non-Ansi compliant function */
-#ifdef __STRICT_ANSI__
+#if defined(__STRICT_ANSI__)
 FILE *fdopen(int, const char *);
 #endif
 
-/* Temporary version of g_file_open_tmp() as glib version doesn't work
- * although this code is copied from glib... */
-#ifndef WIN32
+/* Temporary version of g_file_open_tmp() as older win32 version doesn't work */
+
+#if !defined(WIN32) || GLIB_CHECK_VERSION (2,18,4)
 #define TEMP_g_file_open_tmp g_file_open_tmp
 #else
-int
+static int
 TEMP_g_mkstemp(char *tmpl)
 {
-    int count, fd;
+    int count;
     static const char letters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     static const int NLETTERS = sizeof(letters) - 1;
     glong value;
@@ -147,6 +147,7 @@ TEMP_g_mkstemp(char *tmpl)
 
     for (count = 0; count < 100; value += 7777, ++count) {
         glong v = value;
+        int fd;
 
         /* Fill in the random bits.  */
         XXXXXX[0] = letters[v % NLETTERS];
@@ -176,7 +177,7 @@ TEMP_g_mkstemp(char *tmpl)
     return -1;
 }
 
-int
+static int
 TEMP_g_file_open_tmp(const char *tmpl, char **name_used, GError ** UNUSED(pError))
 {
     const char *sep = "";
