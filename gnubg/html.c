@@ -2681,7 +2681,7 @@ HTMLMatchInfo(FILE * pf, const matchinfo * pmi, const htmlexportcss UNUSED(hecss
         tmx.tm_year = pmi->nYear - 1900;
         tmx.tm_mon = pmi->nMonth - 1;
         tmx.tm_mday = pmi->nDay;
-        strftime(sz, sizeof(sz), "%B %d, %Y", &tmx);
+        strftime(sz, sizeof(sz), "%x", &tmx);
         HTMLPrintMI(pf, _("Date"), sz);
     }
 
