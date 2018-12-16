@@ -4950,8 +4950,10 @@ confirmOverwrite(const char *sz, const int f)
 
     if (f && !access(sz, F_OK)) {
 
-        szPrompt = (char *) malloc(50 + strlen(sz));
-        sprintf(szPrompt, _("File \"%s\" exists. Overwrite? "), sz);
+        size_t buflen = 64 + strlen(sz);
+
+        szPrompt = (char *) malloc(buflen);
+        snprintf(szPrompt, buflen, _("File \"%s\" exists. Overwrite? "), sz);
         i = GetInputYN(szPrompt);
         free(szPrompt);
         return i;
