@@ -31,9 +31,6 @@
 #include <time.h>
 #include "glib-ext.h"
 
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
 #include "backgammon.h"
 #include "drawboard.h"
 #if USE_GTK
@@ -499,7 +496,7 @@ static int
 ExpandMatMove(const TanBoard anBoard, int anMove[8], int *pc, const unsigned int anDice[2])
 {
 
-    int i, j, k;
+    int i;
     int c = *pc;
 
     if (anDice[0] != anDice[1]) {
@@ -542,6 +539,8 @@ ExpandMatMove(const TanBoard anBoard, int anMove[8], int *pc, const unsigned int
         for (i = 0; i < c; ++i) {
 
             /* if this is a consolidated move then "expand" it */
+
+            int j, k;
 
             j = (anDice[0] - 1 + anMove[2 * i] - anMove[2 * i + 1]) / anDice[0];
 
@@ -587,7 +586,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
 
     char *pch;
     moverecord *pmr;
-    int i, c;
+    int c;
     static int fBeaver = FALSE;
 
     sz += strspn(sz, " \t");
@@ -698,6 +697,8 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
         if (c > 0) {
 
             /* moves found */
+
+            int i;
 
             for (i = 0; i < (c << 1); i++)
                 pmr->n.anMove[i]--;
@@ -946,7 +947,6 @@ ImportGame(FILE * fp, int iGame, int nLength, bgvariation bgVariation, int *warn
     AddMoveRecord(pmr);
 
     while ((szLine = GetMatLine(fp)) && !g_strrstr(szLine, START_STRING)) {
-        pchRight = pchLeft = NULL;
 
         if ((pch = strpbrk(szLine, "\n\r")) != 0)
             *pch = 0;
@@ -1596,9 +1596,9 @@ static char *
 FindScoreIs(FILE * pf, char *buffer)
 {
 
-    char *p;
-
     while (fgets(buffer, MAXLINE, pf)) {
+        char *p;
+
         if ((p = strstr(buffer, "Score is ")) != 0)
             return p;
     }
@@ -3154,7 +3154,7 @@ ImportSnowieTxt(FILE * pf)
 static int
 ImportGAM(FILE * fp, char *UNUSED(szFilename))
 {
-    char *pch, *pchLeft, *pchRight, *szLine;
+    char *pchLeft, *pchRight, *szLine;
     moverecord *pmgi;
     int warned = -1;
 
@@ -3219,6 +3219,8 @@ ImportGAM(FILE * fp, char *UNUSED(szFilename))
 
         /* Read game */
         while ((szLine = GetMatLine(fp)) != 0) {
+            char *pch;
+
             pchRight = pchLeft = NULL;
 
             if ((pch = strpbrk(szLine, "\n\r")) != 0)
@@ -3266,7 +3268,7 @@ WritePartyGame(FILE * fp, char *gameStr, int ns)
     int moveNum = 1;
     int side = -1;
     while ((move = NextTokenGeneral(&data, "#")) != NULL) {
-        char *roll, buf[100];
+        char buf[100];
         char *moveStr = NULL;
         side = (move[0] == '2');
         if ((side == 0) || (moveNum == 1 && side == 1)) {
@@ -3278,6 +3280,8 @@ WritePartyGame(FILE * fp, char *gameStr, int ns)
 
         move = strchr(move, ' ') + 1;
         if (isdigit(*move)) {
+            char *roll;
+
             move = strchr(move, ' ') + 1;
             move = strchr(move, ' ') + 1;
             roll = move;
@@ -3405,7 +3409,6 @@ extern void
 CommandImportJF(char *sz)
 {
     FILE *pf;
-    int rc;
 
     sz = NextToken(&sz);
 
@@ -3415,7 +3418,7 @@ CommandImportJF(char *sz)
     }
 
     if ((pf = gnubg_g_fopen(sz, "rb"))) {
-        rc = ImportJF(pf, sz);
+        int rc = ImportJF(pf, sz);
         if (rc)
             /* no file imported */
             return;
@@ -3431,7 +3434,6 @@ extern void
 CommandImportMat(char *sz)
 {
     FILE *pf;
-    int rc;
 
     sz = NextToken(&sz);
 
@@ -3441,7 +3443,7 @@ CommandImportMat(char *sz)
     }
 
     if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
-        rc = ImportMat(pf, sz);
+        int rc = ImportMat(pf, sz);
         fclose(pf);
         if (rc)
             /* no file imported */
@@ -3457,7 +3459,6 @@ extern void
 CommandImportOldmoves(char *sz)
 {
     FILE *pf;
-    int rc;
 
     sz = NextToken(&sz);
 
@@ -3467,7 +3468,7 @@ CommandImportOldmoves(char *sz)
     }
 
     if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
-        rc = ImportOldmoves(pf, sz);
+        int rc = ImportOldmoves(pf, sz);
         fclose(pf);
         if (rc)
             /* no file imported */
@@ -3484,7 +3485,6 @@ extern void
 CommandImportSGG(char *sz)
 {
     FILE *pf;
-    int rc;
 
     sz = NextToken(&sz);
 
@@ -3494,7 +3494,7 @@ CommandImportSGG(char *sz)
     }
 
     if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
-        rc = ImportSGG(pf, sz);
+        int rc = ImportSGG(pf, sz);
         fclose(pf);
         if (rc)
             /* no file imported */
@@ -3510,7 +3510,6 @@ extern void
 CommandImportTMG(char *sz)
 {
     FILE *pf;
-    int rc;
 
     sz = NextToken(&sz);
 
@@ -3520,7 +3519,7 @@ CommandImportTMG(char *sz)
     }
 
     if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
-        rc = ImportTMG(pf, sz);
+        int rc = ImportTMG(pf, sz);
         fclose(pf);
         if (rc)
             /* no file imported */
@@ -3537,7 +3536,6 @@ CommandImportSnowieTxt(char *sz)
 {
 
     FILE *pf;
-    int rc;
 
     sz = NextToken(&sz);
 
@@ -3547,7 +3545,7 @@ CommandImportSnowieTxt(char *sz)
     }
 
     if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
-        rc = ImportSnowieTxt(pf);
+        int rc = ImportSnowieTxt(pf);
         fclose(pf);
         if (rc)
             /* no file imported */
@@ -3583,9 +3581,8 @@ CommandImportEmpire(char *sz)
 extern void
 CommandImportParty(char *sz)
 {
-    FILE *gamf, *matf, *pf;
+    FILE *gamf, *matf;
     char *tmpfile;
-    int rc;
 
     sz = NextToken(&sz);
 
@@ -3615,8 +3612,9 @@ CommandImportParty(char *sz)
     }
 
     if (ConvertPartyGammonFileToMat(gamf, matf)) {
+        FILE *pf;
         if ((pf = gnubg_g_fopen(tmpfile, "r")) != 0) {
-            rc = ImportMat(pf, tmpfile);
+            int rc = ImportMat(pf, tmpfile);
             fclose(pf);
             if (!rc) {
                 setDefaultFileName(tmpfile);
@@ -3667,16 +3665,16 @@ CommandImportAuto(char *sz)
 }
 
 #define BGR_STRING "BGF version"
-static int moveNum;
+static int moveNumBGR;
 
 static void
 OutputMove(FILE * fpOut, int side, const char *outBuf)
 {
-    if ((side == 0) || (moveNum == 1)) {
-        fprintf(fpOut, "%3d) ", moveNum);
+    if ((side == 0) || (moveNumBGR == 1)) {
+        fprintf(fpOut, "%3d) ", moveNumBGR);
         if (side == 1)
             fprintf(fpOut, "%28s", " ");
-        moveNum++;
+        moveNumBGR++;
     }
     if (side == 0)
         fprintf(fpOut, "%-27s ", outBuf);
@@ -3781,7 +3779,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
 
         /* Game Moves */
         moveCount = 0;
-        moveNum = 1;
+        moveNumBGR = 1;
         doubled = FALSE;
         stake = 1;
         while (!feof(bgrFP)) {
@@ -3809,12 +3807,12 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
             moveCount++;
             if (doubled) {      /* Taken, peek ahead to see if it is a beaver */
                 if (strcmp(value, "Beaver")) {
-                     stake *= 2;
-                     OutputMove(matFP, !side, " Takes");
+                    stake *= 2;
+                    OutputMove(matFP, !side, " Takes");
                 } else {
-                     stake *= 4;
-                     sprintf(outBuf, " Beavers => %d", stake);
-                     OutputMove(matFP, !side, outBuf);
+                    stake *= 4;
+                    sprintf(outBuf, " Beavers => %d", stake);
+                    OutputMove(matFP, !side, outBuf);
                 }
                 side = !side;
                 doubled = FALSE;
@@ -3870,9 +3868,8 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
 extern void
 CommandImportBGRoom(char *sz)
 {
-    FILE *gamf, *matf, *pf;
+    FILE *gamf, *matf;
     char *matfile;
-    int rc;
 
     sz = NextToken(&sz);
 
@@ -3895,8 +3892,9 @@ CommandImportBGRoom(char *sz)
     }
 
     if (ConvertBGRoomFileToMat(gamf, matf)) {
+        FILE *pf;
         if ((pf = gnubg_g_fopen(matfile, "r")) != 0) {
-            rc = ImportMat(pf, matfile);
+            int rc = ImportMat(pf, matfile);
             fclose(pf);
             if (!rc) {
                 setDefaultFileName(matfile);
