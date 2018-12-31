@@ -3356,7 +3356,7 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
                 else if (!StrCaseCmp(key, "PLAYER_2"))
                     strcpy(p2, value);
                 else if (!StrCaseCmp(key, "GAMEPLAY")) {
-                    pg.gameStr = (char *) malloc(strlen(value) + 1);
+                    pg.gameStr = (char *) realloc(pg.gameStr, strlen(value) + 1);
                     strcpy(pg.gameStr, value);
                 } else if (!StrCaseCmp(key, "SCORE1"))
                     pg.s1 = atoi(value);
