@@ -747,8 +747,6 @@ Analyze::analyze(R1&               r,
       // for first rolloutCubefull
       diceGen.startRetrive();
     } else {
-      assert( ! arStdDev );
-      
       EvaluatePosition(b, arOutput, r.nPlies, 0, xOnPlay, 0,0,0);
 
       // for first rolloutCubefull
