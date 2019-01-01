@@ -1,1 +1,1 @@
-EXTRA_DIST=az_python.m4
+EXTRA_DIST=ax_python_embed.m4
