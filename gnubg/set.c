@@ -20,7 +20,6 @@
  */
 
 #include "config.h"
-#include "gtklocdefs.h"
 
 #ifdef WIN32
 /* Needed for thread priority defines */
@@ -64,6 +63,7 @@
 #include "export.h"
 
 #if defined(USE_GTK)
+#include "gtklocdefs.h"
 #include "gtkgame.h"
 #include "gtkprefs.h"
 #include "gtkchequer.h"
