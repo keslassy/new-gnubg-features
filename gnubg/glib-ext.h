@@ -26,7 +26,6 @@
 #include <stdio.h>
 #include <glib.h>
 #include <glib-object.h>
-#include "gtklocdefs.h"
 
 #if ! GLIB_CHECK_VERSION(2,14,0)
 
