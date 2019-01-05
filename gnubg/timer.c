@@ -24,8 +24,11 @@
 #include "config.h"
 
 #include <time.h>
+
+#if !HAVE_CLOCK_GETTIME
 #if HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
 #endif
 
 #include "backgammon.h"
@@ -59,6 +62,17 @@ get_time()
 
     QueryPerformanceCounter(&timer);
     return timer.QuadPart / perFreq;
+}
+
+#elif HAVE_CLOCK_GETTIME
+
+extern double
+get_time(void)
+{                               /* Return elapsed time in milliseconds */
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+
+    return 1000.0 * ts.tv_sec + 0.000001 * ts.tv_nsec;
 }
 
 #else

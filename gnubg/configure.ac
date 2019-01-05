@@ -321,6 +321,7 @@ dnl
 AC_CHECK_FUNCS(sigaction sigvec,break)
 AC_CHECK_FUNCS(strptime setpriority)
 AC_CHECK_FUNCS(mtrace)
+AC_CHECK_FUNCS(clock_gettime)
 
 dnl
 dnl Checks for compiler builtins
