@@ -2365,6 +2365,7 @@ typedef struct _AnalysisDetails {
     movefilter *mfCube;
     GtkWidget *pwCube, *pwChequer, *pwOptionMenu, *pwSettingWidgets;
     int cubeDisabled;
+    int fWeakLevels;
 } AnalysisDetails;
 
 static void
@@ -2402,10 +2403,17 @@ UpdateSummaryEvalMenuSetting(AnalysisDetails * pAnalDetails)
     int chequerDefault = EvalDefaultSetting(pAnalDetails->esChequer, pAnalDetails->mfChequer);
     int cubeDefault = EvalDefaultSetting(pAnalDetails->esCube, pAnalDetails->mfCube);
     int setting = NUM_SETTINGS;
+    
     if (chequerDefault == cubeDefault
         /* Special case as cube_supremo==cube_worldclass */
         || (chequerDefault == SETTINGS_SUPREMO && cubeDefault == SETTINGS_WORLDCLASS))
         setting = chequerDefault;
+
+    setting -= (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
+    if (setting < 0)
+        /* This combo box doesn't accept weak levels
+           but one of them was selected through user defined */
+        setting = NUM_SETTINGS - (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(pAnalDetails->pwOptionMenu), setting);
 }
@@ -2459,7 +2467,8 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
 static void
 SummaryMenuActivate(GtkComboBox * box, AnalysisDetails * pAnalDetails)
 {
-    int selected = gtk_combo_box_get_active(box);
+    int selected = gtk_combo_box_get_active(box) + (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
+
     if (selected == NUM_SETTINGS)
         return;                 /* user defined */
 
@@ -2511,7 +2520,7 @@ AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
 
     pAnalDetails->pwOptionMenu = gtk_combo_box_text_new();
 
-    for (i = 0; i < NUM_SETTINGS; i++)
+    for (i = (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT); i < NUM_SETTINGS; i++)
         gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pAnalDetails->pwOptionMenu), Q_(aszSettings[i]));
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pAnalDetails->pwOptionMenu), _("user defined"));
     g_signal_connect(G_OBJECT(pAnalDetails->pwOptionMenu), "changed", G_CALLBACK(SummaryMenuActivate), pAnalDetails);
@@ -2639,7 +2648,7 @@ HintSameToggled(GtkWidget * UNUSED(notused), analysiswidget * paw)
 
 static AnalysisDetails *
 CreateEvalSettings(GtkWidget * pwParent, const char *title, evalcontext * pechequer, movefilter * pmfchequer,
-                   evalcontext * pecube, movefilter * pmfcube)
+                   evalcontext * pecube, movefilter * pmfcube, int fWeakLevels)
 {
     AnalysisDetails *pAnalDetail = malloc(sizeof(AnalysisDetails));
     pAnalDetail->title = title;
@@ -2648,6 +2657,7 @@ CreateEvalSettings(GtkWidget * pwParent, const char *title, evalcontext * pecheq
     pAnalDetail->esCube = pecube;
     pAnalDetail->mfCube = pmfcube;
     pAnalDetail->cubeDisabled = FALSE;
+    pAnalDetail->fWeakLevels = fWeakLevels;
 
     pAnalDetail->pwSettingWidgets = AddLevelSettings(pwParent, pAnalDetail);
     return pAnalDetail;
@@ -2804,7 +2814,7 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_box_pack_start(GTK_BOX(vbox1), pwFrame, FALSE, FALSE, 0);
 
     pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
-                                              &aw.esChequer.ec, (movefilter *) & aw.aamf, &aw.esCube.ec, NULL);
+                                              &aw.esChequer.ec, (movefilter *) & aw.aamf, &aw.esCube.ec, NULL, FALSE);
 
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_box_pack_start(GTK_BOX(pwPage), gtk_separator_new(GTK_ORIENTATION_VERTICAL), TRUE, TRUE, 0);
@@ -2842,7 +2852,7 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     pAnalDetailSettings2 = CreateEvalSettings(vbox1, _("Hint/Tutor settings"),
                                               &aw.esEvalChequer.ec, (movefilter *) & aw.aaEvalmf, &aw.esEvalCube.ec,
-                                              NULL);
+                                              NULL, FALSE);
     aw.pwCubeSummary = pAnalDetailSettings2->pwSettingWidgets;
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwPage);
@@ -2916,7 +2926,7 @@ PlayersPage(playerswidget * ppw, int i, const char *title)
 
     ppw->pLevelSettings[i] = CreateEvalSettings(pwVBox, _("GNU Backgammon settings"),
                                                 &ppw->ap[i].esChequer.ec, (movefilter *) ppw->ap[i].aamf,
-                                                &ppw->ap[i].esCube.ec, NULL);
+                                                &ppw->ap[i].esCube.ec, NULL, TRUE);
 
     gtk_container_add(GTK_CONTAINER(pwVBox),
                       ppw->apwRadio[i][2] =
@@ -4982,7 +4992,7 @@ RolloutPage(rolloutpagewidget * prpw, const char *title, const int UNUSED(fMoveF
     if (frameRet)
         *frameRet = pwFrame;
 
-    return CreateEvalSettings(pwFrame, title, prpw->precCheq, prpw->pmf, prpw->precCube, NULL);
+    return CreateEvalSettings(pwFrame, title, prpw->precCheq, prpw->pmf, prpw->precCube, NULL, FALSE);
 }
 
 static void
