@@ -65,10 +65,10 @@ fill_and_stroke(cairo_t * cr, SimpleBoardColor c)
 
 /*! \brief calculates the point position and direction up or down
  * 
- * points are numbered 0 to 23 counter clockwize for the top player
+ * points are numbered 0 to 23 counter clockwise for the top player
  */
 static void
-get_point_base(gint i, gint * x, gint * y, gint * direction)
+get_point_base(gint i, gint * restrict x, gint * restrict y, gint * restrict direction)
 {
     g_assert(i >= 0 && i < 24);
 
@@ -84,7 +84,7 @@ get_point_base(gint i, gint * x, gint * y, gint * direction)
         *x = 30 + (11 - i) * 20;
         *y = 30;
         *direction = 1;
-    } else if (i > -1) {
+    } else {
         *x = 170 + (5 - i) * 20;
         *y = 30;
         *direction = 1;
@@ -174,9 +174,9 @@ static void
 draw_points(SimpleBoard * board)
 {
     gint x, y, direction, i;
-    gchar *number;
     cairo_t *cr = board->cr;
     for (i = 0; i < 24; i++) {
+        gchar *number;
         SimpleBoardColor color = board->color_point[i % 2];
         gint point_nr;
 
@@ -363,7 +363,6 @@ static void
 draw_checkers_on_xy(cairo_t * cr, gint x, gint y, gint direction, gint max, gint number, SimpleBoardColor color)
 {
     gint p;
-    gchar *checker_text;
     for (p = 0; number > 0 && p < max; number--, p++) {
         y += 20 * direction;
         cairo_move_to(cr, x + 9, y);
@@ -372,7 +371,7 @@ draw_checkers_on_xy(cairo_t * cr, gint x, gint y, gint direction, gint max, gint
         fill_and_stroke(cr, color);
     }
     if (number) {
-        checker_text = g_strdup_printf("%d", number + max);
+        gchar *checker_text = g_strdup_printf("%d", number + max);
         cairo_move_to(cr, x, y);
         draw_centered_text(cr, color.text, 7.0, checker_text);
         g_free(checker_text);
