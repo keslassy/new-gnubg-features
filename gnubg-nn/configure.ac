@@ -97,7 +97,7 @@ AX_PYTHON_VERSION_ENSURE([2.2])
 AX_PYTHON_CSPEC
 AX_PYTHON_LSPEC
 if test "x$ax_python_cspec" == "x"; then
-	AC_MSG_ERROR("Needs python devel");
+	AC_MSG_ERROR("Needs python devel. Did you use either --with-python or --with-python=python2 ?");
 fi
 
 AC_DEFINE(OS_BEAROFF_DB, 1, [osbdb])
