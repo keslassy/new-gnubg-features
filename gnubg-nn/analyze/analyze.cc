@@ -226,7 +226,11 @@ Analyze::init(const char* netFile, bool const shortCuts)
     );
 
   if( ! version ) {
-    cerr << "Failed to initialise net:" << initalNetName.c_str() << endl;
+    cerr << "Failed to initialise net:" << initalNetName.c_str()
+#if defined( LOADED_BO ) || defined( OS_BEAROFF_DB )
+    << " or bearoff databases:" << string(envHome) << "/gnubg_*.db"
+#endif
+    << endl;
     return 0;
   }
 
