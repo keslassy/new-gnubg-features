@@ -83,20 +83,21 @@ allows a script to generate it on the fly if needed!
 @node Compilation
 @chapter Compilation
 
-gnubg-nn is not set to use GNU automake. Also, it is likely to compile
-only under Linux using gmake (GNU make).
+gnubg-nn is configured with GNU autotools.
 
-To compile, change to the @var{py} directory and do @samp{gmake safe}.
+To build it, in the base directory, run @samp{./configure --with-python} or
+@samp{./configure --with-python=python2} if the latter is not the default
+version on your system, then @samp{make}.
 
 @node Run Time Data files
 @chapter Run Time Data files
 
-To run, @gnubg{} need to read in the NN's from an external file.
+To run, @gnubg{} needs to read in the NN's from an external file.
 
-Please not that gnubg-nn NN file is different than @gnubg{}. Grab the latest
-net from
-@uref{ftp://ftp.demon.nl/pub/games/gnubg/nn-training/nets/nngnubg.weights.bz2,here}.
-After unzipping, you night want to rename it gnubg.weights.
+Please note that gnubg-nn NN file format is different than @gnubg{}.
+Grab the latest net from
+@uref{http://files.gnubg.org/media/nn-training/current/nets/nngnubg.weights.bz2}.
+After unzipping, you might want to rename it gnubg.weights.
 
 @section How to specify which net to use in run time
 
