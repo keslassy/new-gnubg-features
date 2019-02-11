@@ -308,8 +308,6 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
             list = g_list_append(list, aasz);
 
-
-
         }
         break;
 
@@ -375,17 +373,15 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
     case FORMATGS_OVERALL:
 
         {
-            int i, n;
-
             /* total error rate */
-
-            aasz = g_malloc(3 * sizeof(*aasz));
 
             if (psc->fCube || psc->fMoves) {
 
+                aasz = g_malloc(3 * sizeof(*aasz));
+
                 aasz[0] = g_strdup_printf(_("Error total %s"), total_text(nMatchTo));
 
-                for (i = 0; i < 2; ++i)
+                for (int i = 0; i < 2; ++i)
                     aasz[i + 1] = errorRate(-aaaar[COMBINED][TOTAL][i][NORMALISED],
                                             -aaaar[COMBINED][TOTAL][i][UNNORMALISED], nMatchTo);
 
@@ -397,7 +393,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
                 aasz[0] = g_strdup_printf(_("Error rate %s"), rate_text(nMatchTo));
 
-                for (i = 0; i < 2; ++i)
+                for (int i = 0; i < 2; ++i)
                     aasz[i + 1] = errorRateMP(-aaaar[COMBINED][PERMOVE][i][NORMALISED],
                                               -aaaar[COMBINED][PERMOVE][i][UNNORMALISED], nMatchTo);
 
@@ -409,11 +405,14 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
                 aasz[0] = g_strdup(_("Snowie error rate"));
 
-                for (i = 0; i < 2; ++i)
-                    if ((n = psc->anTotalMoves[0] + psc->anTotalMoves[1]) > 0)
+                for (int i = 0; i < 2; ++i) {
+                    int n = psc->anTotalMoves[0] + psc->anTotalMoves[1];
+
+                    if (n > 0)
                         aasz[i + 1] = errorRateMP(-aaaar[COMBINED][TOTAL][i][NORMALISED] / n, 0.0f, nMatchTo);
                     else
                         aasz[i + 1] = g_strdup(_("n/a"));
+                }
 
                 list = g_list_append(list, aasz);
 
@@ -423,7 +422,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
                 aasz[0] = g_strdup(_("Overall rating"));
 
-                for (i = 0; i < 2; ++i)
+                for (int i = 0; i < 2; ++i)
                     if (psc->anCloseCube[i] + psc->anUnforcedMoves[i])
                         aasz[i + 1] = g_strdup(Q_(aszRating[GetRating(aaaar[COMBINED][PERMOVE][i][NORMALISED])]));
                     else
@@ -476,7 +475,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
                     aasz = g_malloc(3 * sizeof(*aasz));
                     aasz[0] = g_strdup(_("Error based abs. FIBS rating"));
 
-                    for (i = 0; i < 2; ++i)
+                    for (int i = 0; i < 2; ++i)
                         if (psc->anCloseCube[i] + psc->anUnforcedMoves[i])
                             aasz[i + 1] = g_strdup_printf("%6.1f",
                                                           absoluteFibsRating(aaaar[CHEQUERPLAY][PERMOVE][i][NORMALISED],
@@ -492,7 +491,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
                     aasz = g_malloc(3 * sizeof(*aasz));
                     aasz[0] = g_strdup(_("Chequerplay errors rating loss"));
 
-                    for (i = 0; i < 2; ++i)
+                    for (int i = 0; i < 2; ++i)
                         if (psc->anUnforcedMoves[i])
                             aasz[i + 1] = g_strdup_printf("%6.1f",
                                                           absoluteFibsRatingChequer(aaaar[CHEQUERPLAY][PERMOVE][i]
@@ -507,7 +506,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
                     aasz = g_malloc(3 * sizeof(*aasz));
                     aasz[0] = g_strdup(_("Cube errors rating loss"));
 
-                    for (i = 0; i < 2; ++i)
+                    for (int i = 0; i < 2; ++i)
                         if (psc->anCloseCube[i])
                             aasz[i + 1] = g_strdup_printf("%6.1f",
                                                           absoluteFibsRatingCube(aaaar[CUBEDECISION][PERMOVE][i]
@@ -531,21 +530,20 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
                      /* xgettext: no-c-format */
                      N_("95% confidence interval (ppg)")}
                 };
-                int i, j;
                 const float *af[2][2];
                 af[0][0] = psc->arActualResult;
                 af[0][1] = psc->arVarianceActual;
                 af[1][0] = psc->arLuckAdj;
                 af[1][1] = psc->arVarianceLuckAdj;
 
-                for (i = 0; i < 2; ++i) {
+                for (int i = 0; i < 2; ++i) {
 
                     /* ppg */
 
                     aasz = g_malloc(3 * sizeof(*aasz));
                     aasz[0] = g_strdup(gettext(asz[i][0]));
 
-                    for (j = 0; j < 2; ++j)
+                    for (int j = 0; j < 2; ++j)
                         aasz[j + 1] =
                             g_strdup_printf("%+*.*f", fOutputDigits + 3, fOutputDigits, af[i][0][j] / psc->nGames);
 
@@ -556,7 +554,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
                     aasz = g_malloc(3 * sizeof(*aasz));
                     aasz[0] = g_strdup(gettext(asz[i][1]));
 
-                    for (j = 0; j < 2; ++j) {
+                    for (int j = 0; j < 2; ++j) {
                         float ci = 1.95996f * sqrtf(af[i][1][j] / psc->nGames);
                         float max = af[i][0][j] + ci;
                         float min = af[i][0][j] - ci;
@@ -569,8 +567,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
                 }
 
             }
-            if (list == NULL)
-                g_free(aasz);
+
         }
 
         break;
@@ -583,7 +580,6 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
     }
 
     return list;
-
 
 }
 
