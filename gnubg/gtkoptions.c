@@ -1130,7 +1130,14 @@ append_dice_options(optionswidget * pow)
                 gtk_box_pack_start(GTK_BOX(pwhbox), pow->pwSeed, TRUE, TRUE, 26);
                 gtk_box_pack_start(GTK_BOX(pow->pwSeed), gtk_label_new(_("Seed: ")), FALSE, FALSE, 0);
 
+#if defined(HAVE_LIBGMP)
+                /* 9007199254740992 is 2^53, the largest integer
+                   that can be represented exactly in a gdouble */
+                pow->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble)0, 0,
+ 9007199254740992, 1, 1, 0));
+#else
                 pow->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble)0, 0, UINT_MAX, 1, 1, 0));
+#endif
 
                 pw = gtk_spin_button_new(GTK_ADJUSTMENT(pow->padjSeed), 1, 0);
                 gtk_box_pack_start(GTK_BOX(pow->pwSeed), pw, FALSE, FALSE, 0);
@@ -1662,8 +1669,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     }
 
     if (pow->fChanged == 1) {
-        u = (unsigned int) gtk_adjustment_get_value(pow->padjSeed);
-        sprintf(sz, "set seed %u", u);
+        sprintf(sz, "set seed %-20.0f", gtk_adjustment_get_value(pow->padjSeed));
         UserCommand(sz);
     }
 
