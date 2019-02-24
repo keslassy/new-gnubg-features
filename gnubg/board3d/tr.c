@@ -359,10 +359,10 @@ trBeginTile(TRcontext * tr)
 
     /* compute projection parameters */
     left = tr->Left + (tr->Right - tr->Left)
-        * (int) (tr->CurrentColumn * tr->TileWidthNB - border) / tr->ImageWidth;
+        * (tr->CurrentColumn * tr->TileWidthNB - border) / tr->ImageWidth;
     right = left + (tr->Right - tr->Left) * tileWidth / tr->ImageWidth;
     bottom = tr->Bottom + (tr->Top - tr->Bottom)
-        * (int) (tr->CurrentRow * tr->TileHeightNB - border) / tr->ImageHeight;
+        * (tr->CurrentRow * tr->TileHeightNB - border) / tr->ImageHeight;
     top = bottom + (tr->Top - tr->Bottom) * tileHeight / tr->ImageHeight;
 
     if (tr->Perspective)
