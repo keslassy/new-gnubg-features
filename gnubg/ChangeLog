@@ -1,8 +1,13 @@
+2019-02-24  Philippe Michel  <philippe.michel7@sfr.fr>
+
+	* gnubg.c: Decrease doubtful/bad/very bad thresholds in analysis
+	results from 0.04/0.08/0.16 to 0.03/0.06/0.12 point.
+
 2019-01-10  Philippe Michel  <philippe.michel7@sfr.fr>
 
-	* gtkgame.c: Do not offer levels weaker than expert in the
-	analysis, tutor and rollout settings first panel of the GUI (they
-	are still accessible through the Advanced Settings subpanel).
+	* gtkgame.c: Do not offer levels weaker than expert in the main
+	analysis, tutor and rollout settings panel of the GUI (they are
+	still accessible through the advanced settings subpanel).
 
 2018-10-26  Philippe Michel  <philippe.michel7@sfr.fr>
 
@@ -14,7 +19,7 @@
 
 2018-07-31  Philippe Michel  <philippe.michel7@sfr.fr>
 
-	* dbprovider.h, dbprovider.c Add PostgreSQL support on Win32
+	* dbprovider.h, dbprovider.c: Add PostgreSQL support on Win32
 	platforms using Python and PyGreSQL.
 
 2018-05-12  Philippe Michel  <philippe.michel7@sfr.fr>

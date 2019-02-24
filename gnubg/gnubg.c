@@ -234,9 +234,9 @@ float arLuckLevel[] = {
     0.3f,                       /* LUCK_GOOD */
     0.6f                        /* LUCK_VERYGOOD */
 }, arSkillLevel[] = {
-    0.16f,                      /* SKILL_VERYBAD */
-    0.08f,                      /* SKILL_BAD */
-    0.04f,                      /* SKILL_DOUBTFUL */
+    0.12f,                      /* SKILL_VERYBAD */
+    0.06f,                      /* SKILL_BAD */
+    0.03f,                      /* SKILL_DOUBTFUL */
     0                           /* SKILL_NONE */
 };
 
