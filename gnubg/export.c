@@ -348,7 +348,7 @@ CommandExportPositionPS(char *sz)
     g_free(filename);
 
     if (surface) {
-        cairo_t * cairo = cairo_create(surface);
+        cairo_t *cairo = cairo_create(surface);
 
         draw_simple_board_on_cairo(&ms, pmr, move_nr, game_nr, cairo, SIZE_1PERPAGE);
         cairo_surface_destroy(surface);
@@ -463,7 +463,7 @@ CommandExportMatchPS(char *sz)
     if (surface) {
         cairo_t *cairo;
         int nGames = 0;
-	int i;
+        int i;
 
         for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext, nGames++);
 
@@ -1055,7 +1055,15 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
     InitBoard(anBoard, ms.bgv);
 
     for (pl = plGame->plNext; pl != plGame; pl = pl->plNext) {
+        if (pl == NULL) {
+            g_assert_not_reached();
+            break;
+        }
         pmr = pl->p;
+        if (pmr == NULL) {
+            g_assert_not_reached();
+            break;
+        }
         switch (pmr->mt) {
         case MOVE_GAMEINFO:
             if (withScore) {
@@ -1072,7 +1080,7 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
                 fprintf(pf, " %-31s%s\n", ap[0].szName, ap[1].szName);
             msExport.fCubeOwner = -1;
             /* FIXME what about automatic doubles? */
-            continue;	/* branch out of the switch and continue for (pl ...) */
+            continue;           /* branch out of the switch and continue for (pl ...) */
         case MOVE_NORMAL:
             diceRolled = 0;
             sprintf(sz, "%u%u: ", pmr->anDice[0], pmr->anDice[1]);
@@ -1161,23 +1169,32 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
                 SwapSides(anBoard);
 
             if (fSst) {         /* Snowie standard text */
-                moverecord *pnextmr = pl->plNext->p;
+                moverecord *pnextmr;
                 char *ct;
 
-                msExport.nMatchTo = ms.nMatchTo;
-                msExport.nCube = nFileCube;
-                msExport.fMove = (i & 1);
-                msExport.fTurn = (i & 1);
-                PositionFromKey(msExport.anBoard, &pmr->sb.key);
-                msExport.anDice[0] = pnextmr->anDice[0];
-                msExport.anDice[1] = pnextmr->anDice[1];
-                if (i & 1)
-                    SwapSides(msExport.anBoard);
-                ExportSnowieTxt(buffer, &msExport);
+                if (pl->plNext == NULL) {
+                    fprintf(pf, "Unexportable play (%s)\n", buffer);
+                    g_assert_not_reached();
+                } else if (pl->plNext->p == NULL) {
+                    fprintf(pf, "Unexportable play (%s)\n", buffer);
+                    g_assert_not_reached();
+                } else {
+                    pnextmr = pl->plNext->p;
+                    msExport.nMatchTo = ms.nMatchTo;
+                    msExport.nCube = nFileCube;
+                    msExport.fMove = (i & 1);
+                    msExport.fTurn = (i & 1);
+                    PositionFromKey(msExport.anBoard, &pmr->sb.key);
+                    msExport.anDice[0] = pnextmr->anDice[0];
+                    msExport.anDice[1] = pnextmr->anDice[1];
+                    if (i & 1)
+                        SwapSides(msExport.anBoard);
+                    ExportSnowieTxt(buffer, &msExport);
 
-                /* I don't understand why we need to swap this field! */
-                ct = strstr(buffer, ";");
-                ct[7] = (ct[7] == '0') ? '1' : '0';
+                    /* I don't understand why we need to swap this field! */
+                    ct = strstr(buffer, ";");
+                    ct[7] = (ct[7] == '0') ? '1' : '0';
+                }
             }
             if (!(i & 1))
                 if (fSst)
