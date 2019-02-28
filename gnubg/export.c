@@ -75,11 +75,11 @@ filename_from_iGame(const char *szBase, const int iGame)
     else {
         char *sz = g_malloc(strlen(szBase) + 5);
         char *szExtension = strrchr(szBase, '.');
-        char *pc;
         if (!szExtension) {
             sprintf(sz, "%s_%03d", szBase, iGame + 1);
             return sz;
         } else {
+            char *pc;
             strcpy(sz, szBase);
             pc = strrchr(sz, '.');
             sprintf(pc, "_%03d%s", iGame + 1, szExtension);
@@ -178,10 +178,8 @@ export_boards(moverecord * pmr, matchstate * msExport, int *iMove, int iGame, ca
     FixMatchState(msExport, pmr);
     switch (pmr->mt) {
     case MOVE_NORMAL:
-        if (pmr->fPlayer != msExport->fMove) {
+        if (pmr->fPlayer != msExport->fMove)
             SwapSides(msExport->anBoard);
-            msExport->fMove = pmr->fPlayer;
-        }
         msExport->fTurn = msExport->fMove = pmr->fPlayer;
         msExport->anDice[0] = pmr->anDice[0];
         msExport->anDice[1] = pmr->anDice[1];
@@ -256,7 +254,6 @@ CommandExportPositionSVG(char *sz)
     int game_nr;
     moverecord *pmr;
     cairo_surface_t *surface;
-    cairo_t *cairo;
 
     if (!CheckGameExists())
         return;
@@ -264,16 +261,19 @@ CommandExportPositionSVG(char *sz)
     filename = export_get_filename(sz);
     if (!filename)
         return;
+
     pmr = export_get_moverecord(&game_nr, &move_nr);
     if (!pmr) {
         g_free(filename);
         outputerrf(_("Cannot create export for this move"));
         return;
     }
+
     surface = cairo_svg_surface_create(filename, SIMPLE_BOARD_WIDTH, SIMPLE_BOARD_HEIGHT / 2.0);
     g_free(filename);
+
     if (surface) {
-        cairo = cairo_create(surface);
+        cairo_t *cairo = cairo_create(surface);
         draw_simple_board_on_cairo(&ms, pmr, move_nr, game_nr, cairo, SIZE_1PERPAGE);
         cairo_surface_destroy(surface);
         cairo_destroy(cairo);
@@ -291,7 +291,6 @@ CommandExportPositionPDF(char *sz)
     int game_nr;
     moverecord *pmr;
     cairo_surface_t *surface;
-    cairo_t *cairo;
 
     if (!CheckGameExists())
         return;
@@ -299,16 +298,20 @@ CommandExportPositionPDF(char *sz)
     filename = export_get_filename(sz);
     if (!filename)
         return;
+
     pmr = export_get_moverecord(&game_nr, &move_nr);
     if (!pmr) {
         g_free(filename);
         outputerrf(_("Cannot create export for this move"));
         return;
     }
+
     surface = cairo_pdf_surface_create(filename, SIMPLE_BOARD_WIDTH, SIMPLE_BOARD_HEIGHT);
     g_free(filename);
+
     if (surface) {
-        cairo = cairo_create(surface);
+        cairo_t *cairo = cairo_create(surface);
+
         draw_simple_board_on_cairo(&ms, pmr, move_nr, game_nr, cairo, SIZE_1PERPAGE);
         cairo_surface_destroy(surface);
         cairo_destroy(cairo);
@@ -326,7 +329,6 @@ CommandExportPositionPS(char *sz)
     int game_nr;
     moverecord *pmr;
     cairo_surface_t *surface;
-    cairo_t *cairo;
 
     if (!CheckGameExists())
         return;
@@ -334,6 +336,7 @@ CommandExportPositionPS(char *sz)
     filename = export_get_filename(sz);
     if (!filename)
         return;
+
     pmr = export_get_moverecord(&game_nr, &move_nr);
     if (!pmr) {
         g_free(filename);
@@ -343,8 +346,10 @@ CommandExportPositionPS(char *sz)
 
     surface = cairo_ps_surface_create(filename, SIMPLE_BOARD_WIDTH, SIMPLE_BOARD_HEIGHT);
     g_free(filename);
+
     if (surface) {
-        cairo = cairo_create(surface);
+        cairo_t * cairo = cairo_create(surface);
+
         draw_simple_board_on_cairo(&ms, pmr, move_nr, game_nr, cairo, SIZE_1PERPAGE);
         cairo_surface_destroy(surface);
         cairo_destroy(cairo);
@@ -359,7 +364,6 @@ CommandExportGamePDF(char *sz)
 #if defined(HAVE_PANGOCAIRO)
     gchar *filename;
     cairo_surface_t *surface;
-    cairo_t *cairo;
 
     if (!CheckGameExists())
         return;
@@ -369,8 +373,10 @@ CommandExportGamePDF(char *sz)
         return;
     surface = cairo_pdf_surface_create(filename, SIMPLE_BOARD_WIDTH, SIMPLE_BOARD_HEIGHT);
     g_free(filename);
+
     if (surface) {
-        cairo = cairo_create(surface);
+        cairo_t *cairo = cairo_create(surface);
+
         draw_cairo_pages(cairo, plGame);
         cairo_surface_destroy(surface);
         cairo_destroy(cairo);
@@ -385,7 +391,6 @@ CommandExportGamePS(char *sz)
 #if defined(HAVE_PANGOCAIRO)
     gchar *filename;
     cairo_surface_t *surface;
-    cairo_t *cairo;
 
     if (!CheckGameExists())
         return;
@@ -395,8 +400,10 @@ CommandExportGamePS(char *sz)
         return;
     surface = cairo_ps_surface_create(filename, SIMPLE_BOARD_WIDTH, SIMPLE_BOARD_HEIGHT);
     g_free(filename);
+
     if (surface) {
-        cairo = cairo_create(surface);
+        cairo_t *cairo = cairo_create(surface);
+
         draw_cairo_pages(cairo, plGame);
         cairo_surface_destroy(surface);
         cairo_destroy(cairo);
@@ -410,11 +417,8 @@ CommandExportMatchPDF(char *sz)
 {
 #if defined(HAVE_PANGOCAIRO)
     listOLD *pl;
-    int nGames = 0;
-    int i;
     char *filename;
     cairo_surface_t *surface;
-    cairo_t *cairo;
 
     filename = export_get_filename(sz);
 
@@ -422,7 +426,12 @@ CommandExportMatchPDF(char *sz)
         return;
     surface = cairo_pdf_surface_create(filename, SIMPLE_BOARD_WIDTH, SIMPLE_BOARD_HEIGHT);
     g_free(filename);
+
     if (surface) {
+        cairo_t *cairo;
+        int nGames = 0;
+        int i;
+
         for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext, nGames++);
 
         cairo = cairo_create(surface);
@@ -441,11 +450,8 @@ CommandExportMatchPS(char *sz)
 {
 #if defined(HAVE_PANGOCAIRO)
     listOLD *pl;
-    int nGames = 0;
-    int i;
     char *filename;
     cairo_surface_t *surface;
-    cairo_t *cairo;
 
     filename = export_get_filename(sz);
 
@@ -453,7 +459,12 @@ CommandExportMatchPS(char *sz)
         return;
     surface = cairo_ps_surface_create(filename, SIMPLE_BOARD_WIDTH, SIMPLE_BOARD_HEIGHT);
     g_free(filename);
+
     if (surface) {
+        cairo_t *cairo;
+        int nGames = 0;
+	int i;
+
         for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext, nGames++);
 
         cairo = cairo_create(surface);
@@ -480,7 +491,6 @@ WritePNG(const char *sz, unsigned char *puch, unsigned int nStride, unsigned int
     png_structp ppng;
     png_infop pinfo;
     png_text atext[3];
-    unsigned int i;
 
     if (!(pf = gnubg_g_fopen(sz, "wb")))
         return -1;
@@ -529,6 +539,8 @@ WritePNG(const char *sz, unsigned char *puch, unsigned int nStride, unsigned int
 
     {
         png_bytep *aprow = (png_bytep *) g_alloca(nSizeY * sizeof(png_bytep));;
+        unsigned int i;
+
         for (i = 0; i < nSizeY; ++i)
             aprow[i] = puch + nStride * i;
 
@@ -1065,9 +1077,8 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
             diceRolled = 0;
             sprintf(sz, "%u%u: ", pmr->anDice[0], pmr->anDice[1]);
             if (fSst) {         /* Snowie standard text */
-                moverecord *pnextmr;
                 if (pl->plNext && pl->plNext->p) {
-                    pnextmr = pl->plNext->p;
+                    moverecord *pnextmr = pl->plNext->p;
                     if (pnextmr->mt == MOVE_SETBOARD)
                         /* Illegal move entered in gnubg as bogus move followed by
                          * editing position : don't export the move, only the dice */
