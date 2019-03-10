@@ -1655,7 +1655,7 @@ CommandSetAliases(char *sz)
         outputf("%s %lu %s.\n", _("Aliases list limited to"), (long unsigned int) (sizeof(player1aliases) - 1),
                 _("characters, truncating"));
 
-    strncpy(player1aliases, sz, sizeof(player1aliases) - 1);
+    g_strlcpy(player1aliases, sz, sizeof(player1aliases));
 
     outputf(_("Aliases for player 1 when importing MAT files set to \"%s\".\n "), player1aliases);
 }
@@ -4433,8 +4433,7 @@ SetXGID(char *sz)
     int fSidesSwapped = FALSE;
 
     for (i = 0; i < 9 && (c = strrchr(s, ':')); i++) {
-        strncpy(v[i], c + 1, 4);
-        v[i][4] = '\0';
+        g_strlcpy(v[i], c + 1, 5);
         *c = '\0';
     }
 

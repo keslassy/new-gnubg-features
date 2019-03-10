@@ -2924,7 +2924,7 @@ ParseSnowieTxt(char *sz,
 
             memset(aszPlayer[j], 0, MAX_NAME_LEN);
             if (*pc)
-                strncpy(aszPlayer[j], pc, MAX_NAME_LEN - 1);
+                g_strlcpy(aszPlayer[j], pc, MAX_NAME_LEN);
             else
                 sprintf(aszPlayer[j], "Player %d", j);
             break;
