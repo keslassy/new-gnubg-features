@@ -3891,26 +3891,6 @@ GetInputYN(char *szPrompt)
     return FALSE;
 }
 
-/* Like strncpy, except it does the right thing */
-extern char *
-strcpyn(char *szDest, const char *szSrc, int cch)
-{
-
-    char *pchDest = szDest;
-    const char *pchSrc = szSrc;
-
-    if (cch-- < 1)
-        return szDest;
-
-    while (cch--)
-        if (!(*pchDest++ = *pchSrc++))
-            return szDest;
-
-    *pchDest = 0;
-
-    return szDest;
-}
-
 extern void
 CommandSetOutputOutput(char *sz)
 {

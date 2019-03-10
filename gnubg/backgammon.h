@@ -424,8 +424,6 @@ extern int fInteractive;
 
 /* now we can include libintl.h */
 #include <glib/gi18n.h>
-/* Like strncpy, except it does the right thing */
-extern char *strcpyn(char *szDest, const char *szSrc, int cch);
 
 extern char *GetMatchCheckSum(void);
 extern char *CheckCommand(char *sz, command * ac);

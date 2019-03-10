@@ -2962,7 +2962,7 @@ PlayersOK(GtkWidget * pw, playerswidget * pplw)
     *pplw->pfOK = TRUE;
 
     for (i = 0; i < 2; i++) {
-        strcpyn(pplw->ap[i].szName, gtk_entry_get_text(GTK_ENTRY(pplw->apwName[i])), MAX_NAME_LEN);
+        g_strlcpy(pplw->ap[i].szName, gtk_entry_get_text(GTK_ENTRY(pplw->apwName[i])), MAX_NAME_LEN);
 
         for (j = (playertype) 0; j < (playertype) 3; j++)
             if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pplw->apwRadio[i][j]))) {
@@ -2970,7 +2970,7 @@ PlayersOK(GtkWidget * pw, playerswidget * pplw)
                 break;
             }
 
-        strcpyn(pplw->aszSocket[i], gtk_entry_get_text(GTK_ENTRY(pplw->apwSocket[i])), 128);
+        g_strlcpy(pplw->aszSocket[i], gtk_entry_get_text(GTK_ENTRY(pplw->apwSocket[i])), 128);
     }
 
     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
