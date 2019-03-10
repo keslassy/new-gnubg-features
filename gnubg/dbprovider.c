@@ -122,8 +122,7 @@ SetRowsetData( /*lint -e{818} */ RowSet * rs, size_t row, size_t col, const char
     if (!data)
         data = "";
 
-    rs->data[row][col] = malloc(strlen(data) + 1);
-    strcpy(rs->data[row][col], data);
+    rs->data[row][col] = g_strdup(data);
 
     size = strlen(data);
     if (row == 0 || size > rs->widths[col])
@@ -142,7 +141,7 @@ FreeRowset(RowSet * pRow)
 
             for (i = 0; i < pRow->rows; i++) {
                 for (j = 0; j < pRow->cols; j++) {
-                    free(pRow->data[i][j]);
+                    g_free(pRow->data[i][j]);
                 }
             free(pRow->data[i]);
             }
@@ -462,9 +461,9 @@ ConvertPythonToRowset(PyObject * v)
                     continue;
                 }
                 if (PyUnicode_Check(e2))
-                    strcpy(buf, PyBytes_AsString(PyUnicode_AsUTF8String(e2)));
+                    g_strlcpy(buf, PyBytes_AsString(PyUnicode_AsUTF8String(e2)), sizeof(buf));
                 else if (PyBytes_Check(e2))
-                    strcpy(buf, PyBytes_AsString(e2));
+                    g_strlcpy(buf, PyBytes_AsString(e2), sizeof(buf));
                 else if (PyInt_Check(e2) || PyLong_Check(e2)
                          || !StrCaseCmp(e2->ob_type->tp_name, "Decimal"))       /* Not sure how to check for decimal type directly */
                     sprintf(buf, "%ld", PyInt_AsLong(e2));
