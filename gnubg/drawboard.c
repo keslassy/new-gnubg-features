@@ -61,7 +61,6 @@ DrawBoardStd(char *sz, const TanBoard anBoard, int fRoll, char *asz[], char *szM
     char *pch = sz, *pchIn;
     unsigned int x, y;
     unsigned int cOffO = nChequers, cOffX = nChequers;
-    TanBoard an;
     static char achX[17] = "     X6789ABCDEF", achO[17] = "     O6789ABCDEF";
 
     for (x = 0; x < 25; x++) {
@@ -74,6 +73,8 @@ DrawBoardStd(char *sz, const TanBoard anBoard, int fRoll, char *asz[], char *szM
     if (fRoll)
         strcpy(pch, PositionID((ConstTanBoard) anBoard));
     else {
+        TanBoard an;
+
         for (x = 0; x < 25; x++) {
             an[0][x] = anBoard[1][x];
             an[1][x] = anBoard[0][x];
@@ -284,7 +285,6 @@ DrawBoardCls(char *sz, const TanBoard anBoard, int fRoll, char *asz[], char *szM
 
     char *pch = sz, *pchIn;
     unsigned int x, y, cOffO = nChequers, cOffX = nChequers;
-    TanBoard an;
     static char achX[17] = "     X6789ABCDEF", achO[17] = "     O6789ABCDEF";
 
     for (x = 0; x < 25; x++) {
@@ -297,6 +297,8 @@ DrawBoardCls(char *sz, const TanBoard anBoard, int fRoll, char *asz[], char *szM
     if (fRoll)
         strcpy(pch, PositionID((ConstTanBoard) anBoard));
     else {
+        TanBoard an;
+
         for (x = 0; x < 25; x++) {
             an[0][x] = anBoard[1][x];
             an[1][x] = anBoard[0][x];
@@ -981,7 +983,7 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
 {
 
     int i, n, fCanDouble, fOppCanDouble, anOppDice[2];
-    int nTmp, fNonCrawford, fPostCrawford;
+    int fNonCrawford, fPostCrawford;
     int nTurn, nColor, nDirection;
     int anFIBSBoard[26];
     int fMustSwap = 0;
@@ -1058,7 +1060,9 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
 
     /* Opponent's turn? */
     if (fMustSwap) {
-        nTmp = procBrd->nScore;
+        int nTmp;
+
+        nTmp  = procBrd->nScore;
         procBrd->nScore = procBrd->nScoreOpp;
         procBrd->nScoreOpp = nTmp;
         nTmp = fCanDouble;
