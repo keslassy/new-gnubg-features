@@ -52,15 +52,18 @@ RelationalMatchExists(DBProvider * pdb)
 static int
 GameOver(void)
 {
-    int anFinalScore[2];
-    int nMatch;
     const listOLD *firstGame = lMatch.plNext->p;
+
     if (firstGame) {
         const moverecord *pmr = firstGame->plNext->p;
         if (pmr) {
+            int nMatch;
+
             g_assert(pmr->mt == MOVE_GAMEINFO);
             nMatch = pmr->g.nMatch;
             if (ms.nMatchTo) {  /* Match - check someone has won */
+                int anFinalScore[2];
+
                 return (getFinalScore(anFinalScore) && ((anFinalScore[0] >= nMatch)
                                                         || (anFinalScore[1] >= nMatch)));
             } else {            /* Session - check game over */
@@ -378,10 +381,10 @@ static void
 AddGames(DBProvider * pdb, int session_id, int player_id0, int player_id1)
 {
     int gamenum = 0;
-    listOLD *plGame, *pl = lMatch.plNext;
-    while ((plGame = pl->p) != NULL) {
+    listOLD *plg, *pl = lMatch.plNext;
+    while ((plg = pl->p) != NULL) {
         int game_id = GetNextId(pdb, "game");
-        moverecord *pmr = plGame->plNext->p;
+        moverecord *pmr = plg->plNext->p;
         xmovegameinfo *pmgi = &pmr->g;
 
         char *buf = g_strdup_printf("INSERT INTO game(game_id, session_id, player_id0, player_id1, "
@@ -403,7 +406,7 @@ extern void
 CommandRelationalAddMatch(char *sz)
 {
     DBProvider *pdb;
-    char *buf, *buf2, *date;
+    char *buf, *date;
     char warnings[1024] = "";
     int session_id, existing_id, player_id0, player_id1;
     char *arg = NULL;
@@ -436,6 +439,8 @@ CommandRelationalAddMatch(char *sz)
     }
     existing_id = RelationalMatchExists(pdb);
     if (existing_id != -1) {
+        char *buf2;
+
         if (!quiet && !GetInputYN(_("Match exists, overwrite?")))
             return;
 
@@ -533,8 +538,6 @@ relational_player_stats_get(const char *player0, const char *player1)
     DBProvider *pdb = NULL;
     char *query[2];
     int i;
-    char *buf;
-    RowSet *rs;
     statcontext *psc;
 
     g_return_val_if_fail(player0, NULL);
@@ -572,7 +575,7 @@ relational_player_stats_get(const char *player0, const char *player1)
 
     IniStatcontext(psc);
     for (i = 0; i < 2; ++i) {
-        buf = g_strdup_printf("SUM(total_moves),"
+        char *buf = g_strdup_printf("SUM(total_moves),"
                               "SUM(unforced_moves),"
                               "SUM(total_cube_decisions),"
                               "SUM(close_cube_decisions),"
@@ -602,8 +605,9 @@ relational_player_stats_get(const char *player0, const char *player1)
                               "SUM(error_wrong_takes_normalised),"
                               "SUM(error_wrong_passes_normalised),"
                               "SUM(luck_total_normalised)" "from matchstat " "%s", query[i]);
-        rs = pdb->Select(buf);
+        RowSet *rs = pdb->Select(buf);
         g_free(buf);
+
         if ((!rs) || !strtol(rs->data[1][0], NULL, 0))
             return NULL;
         psc->anTotalMoves[i] = (int) strtol(rs->data[1][0], NULL, 0);
@@ -649,7 +653,7 @@ relational_player_stats_get(const char *player0, const char *player1)
 extern void
 CommandRelationalShowDetails(char *sz)
 {
-    gchar output[STATCONTEXT_MAXSIZE];
+    gchar buffer[STATCONTEXT_MAXSIZE];
     statcontext *psc;
 
     gchar *player0 = NextToken(&sz);
@@ -668,16 +672,16 @@ CommandRelationalShowDetails(char *sz)
         return;
     }
 
-    DumpStatcontext(output, psc, player0, player1 ? player1 : _("Opponents"), 0);
+    DumpStatcontext(buffer, psc, player0, player1 ? player1 : _("Opponents"), 0);
     g_free(psc);
 #if USE_GTK
     if (fX) {
-        GTKTextWindow(output, _("Player statistics"), DT_INFO, NULL);
+        GTKTextWindow(buffer, _("Player statistics"), DT_INFO, NULL);
     } else
 #endif
     {
         outputl(_("Player statistics\n\n"));
-        outputl(output);
+        outputl(buffer);
     }
 }
 
@@ -763,7 +767,6 @@ CommandRelationalEraseAll(char *UNUSED(sz))
 extern void
 CommandRelationalSelect(char *sz)
 {
-    unsigned int i, j;
     RowSet *rs;
 
     if (!sz || !*sz) {
@@ -785,7 +788,7 @@ CommandRelationalSelect(char *sz)
         GtkShowQuery(rs);
     else
 #endif
-        for (i = 0; i < rs->rows; i++) {
+        for (unsigned int i = 0; i < rs->rows; i++) {
             if (i == 1) {       /* Underline headings */
                 char *line, *p;
                 unsigned int k;
@@ -808,7 +811,7 @@ CommandRelationalSelect(char *sz)
                 free(line);
             }
 
-            for (j = 0; j < rs->cols; j++) {
+            for (unsigned int j = 0; j < rs->cols; j++) {
                 if (j > 0)
                     output(" | ");
 
