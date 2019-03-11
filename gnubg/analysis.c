@@ -298,7 +298,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
 {
     cubeinfo ci;
     static positionkey key;
-    float rSkill, rChequerSkill, rCost;
+    float rSkill, rCost;
     unsigned int i;
     float arDouble[4];
     const xmovegameinfo *pmgi = &((moverecord *) plGame->plNext->p)->g;
@@ -416,10 +416,12 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
         if (fAnalyseMove && (pmr->esChequer.et != EVAL_NONE || pmr->n.anMove[0] < 0)) {
             /* find skill */
             TanBoard anBoardMove;
+            float rChequerSkill = 0.0f;
+
             memcpy(anBoardMove, pms->anBoard, sizeof(anBoardMove));
             ApplyMove(anBoardMove, pmr->n.anMove, FALSE);
             PositionKey((ConstTanBoard) anBoardMove, &key);
-            rChequerSkill = 0.0f;
+
             if (pmr->ml.amMoves) {
                 for (i = 0; i < pmr->ml.cMoves; i++)
 
@@ -939,7 +941,6 @@ AnalyseMoveMT(Task * task)
 static int
 AnalyzeGame(listOLD * plGame, int wait)
 {
-    int result;
     unsigned int i;
     listOLD *pl = plGame->plNext;
     moverecord *pmr = pl->p;
@@ -1007,7 +1008,7 @@ AnalyzeGame(listOLD * plGame, int wait)
 
     if (wait) {
         multi_debug("wait for all task: analysis");
-        result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+        int result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
 
         if (result == -1)
             IniStatcontext(psc);
@@ -1641,7 +1642,6 @@ updateStatisticsGame(const listOLD * plGame)
 {
 
     listOLD *pl;
-    moverecord *pmr;
     moverecord *pmrx = plGame->plNext->p;
     matchstate msAnalyse;
 
@@ -1649,7 +1649,7 @@ updateStatisticsGame(const listOLD * plGame)
 
     for (pl = plGame->plNext; pl != plGame; pl = pl->plNext) {
 
-        pmr = pl->p;
+        moverecord *pmr = pl->p;
 
         updateStatisticsMove(pmr, &msAnalyse, plGame, &pmrx->g.sc);
 
@@ -2076,10 +2076,8 @@ cmark_game_show(GString * gsz, listOLD * game, int game_number)
             ApplyMoveRecord(&ms_local, game, pmr);
             break;
         case MOVE_NORMAL:
-            if (pmr->fPlayer != ms_local.fMove) {
+            if (pmr->fPlayer != ms_local.fMove)
                 SwapSides(ms_local.anBoard);
-                ms_local.fMove = pmr->fPlayer;
-            }
             ms_local.fTurn = ms_local.fMove = pmr->fPlayer;
             cmark_cube_show(gsz, &ms_local, pmr, movenr);
             ms_local.anDice[0] = pmr->anDice[0];
@@ -2222,7 +2220,6 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
     gint c;
     guint j;
     gint res;
-    move *m;
     move **ppm;
     void *p;
     GSList *list = NULL;
@@ -2248,7 +2245,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
 
     for (pl = list, j = 0; pl; pl = g_slist_next(pl), j++) {
         gint i = GPOINTER_TO_INT(pl->data);
-        m = ppm[j] = &pmr->ml.amMoves[i];
+        move *m = ppm[j] = &pmr->ml.amMoves[i];
         ppci[j] = &ci;
         FormatMove(asz[j], msBoard(), m->anMove);
     }

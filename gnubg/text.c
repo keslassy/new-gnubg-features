@@ -267,7 +267,7 @@ TextPrintCubeAnalysisTable(GString * gsz,
 {
 
     int fActual, fClose, fMissed;
-    int fDisplay;
+    int fDisplayIt;
     float arDouble[4];
 
     /* check if cube analysis should be printed */
@@ -281,13 +281,13 @@ TextPrintCubeAnalysisTable(GString * gsz,
     fClose = isCloseCubedecision(arDouble);
     fMissed = isMissedDouble(arDouble, aarOutput, fDouble, pci);
 
-    fDisplay =
+    fDisplayIt =
         (fActual && exsExport.afCubeDisplay[EXPORT_CUBE_ACTUAL]) ||
         (fClose && exsExport.afCubeDisplay[EXPORT_CUBE_CLOSE]) ||
         (fMissed && exsExport.afCubeDisplay[EXPORT_CUBE_MISSED]) ||
         (exsExport.afCubeDisplay[stDouble]) || (exsExport.afCubeDisplay[stTake]);
 
-    if (!fDisplay)
+    if (!fDisplayIt)
         return;
 
     g_string_append(gsz, OutputCubeAnalysisFull(aarOutput, aarStdDev, pes, pci, fDouble, fTake, stDouble, stTake));
@@ -700,10 +700,8 @@ ExportGameText(FILE * pf, listOLD * plGame, const int iGame, const int fLastGame
 
         case MOVE_NORMAL:
 
-            if (pmr->fPlayer != msExport.fMove) {
+            if (pmr->fPlayer != msExport.fMove)
                 SwapSides(msExport.anBoard);
-                msExport.fMove = pmr->fPlayer;
-            }
 
             msExport.fTurn = msExport.fMove = pmr->fPlayer;
             msExport.anDice[0] = pmr->anDice[0];
