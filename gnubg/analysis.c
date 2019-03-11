@@ -1007,8 +1007,10 @@ AnalyzeGame(listOLD * plGame, int wait)
     g_assert(pl->plNext == plGame);
 
     if (wait) {
+        int result;
+
         multi_debug("wait for all task: analysis");
-        int result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+        result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
 
         if (result == -1)
             IniStatcontext(psc);
