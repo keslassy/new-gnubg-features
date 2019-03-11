@@ -551,7 +551,7 @@ TextAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 static void
 TextDumpStatcontext(GString * gsz, const statcontext * psc, int nMatchTo)
 {
-    char sz[4096];
+    char sz[STATCONTEXT_MAXSIZE];
 
     DumpStatcontext(sz, psc, ap[0].szName, ap[1].szName, nMatchTo);
     g_string_append(gsz, sz);

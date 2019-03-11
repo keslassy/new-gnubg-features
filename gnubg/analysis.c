@@ -1500,7 +1500,7 @@ DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, con
 extern void
 CommandShowStatisticsMatch(char *UNUSED(sz))
 {
-    char szOutput[4096];
+    char szOutput[STATCONTEXT_MAXSIZE];
 
     updateStatisticsMatch(&lMatch);
 
@@ -1530,7 +1530,7 @@ CommandShowStatisticsGame(char *UNUSED(sz))
 {
 
     moverecord *pmr;
-    char szOutput[4096];
+    char szOutput[STATCONTEXT_MAXSIZE];
 
     if (!CheckGameExists())
         return;

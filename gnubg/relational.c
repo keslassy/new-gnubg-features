@@ -649,7 +649,7 @@ relational_player_stats_get(const char *player0, const char *player1)
 extern void
 CommandRelationalShowDetails(char *sz)
 {
-    gchar output[4096];
+    gchar output[STATCONTEXT_MAXSIZE];
     statcontext *psc;
 
     gchar *player0 = NextToken(&sz);
