@@ -26,7 +26,6 @@
 #include <glib.h>
 #include <ctype.h>
 #include <glib/gstdio.h>
-#include <fcntl.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -768,11 +767,11 @@ GTKGetManualDice(unsigned int an[2])
 extern void
 GTKSetDice(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
-
     unsigned int an[2];
-    char sz[13];                /* "set dice x y" */
 
     if (!GTKGetManualDice(an)) {
+        char sz[13];            /* "set dice x y" */
+
         sprintf(sz, "set dice %u %u", an[0], an[1]);
         UserCommand(sz);
     }
@@ -781,7 +780,6 @@ GTKSetDice(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 extern void
 GTKSetCube(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
-
     int valChanged;
     int an[2];
     char sz[20];                /* "set cube value 4096" */
@@ -1012,11 +1010,8 @@ skill_label(skilltype st)
 extern void
 SetAnnotation(moverecord * pmr)
 {
-
-    GtkWidget *pwParent = gtk_widget_get_parent(pwAnalysis), *pw = NULL, *pwBox, *pwAlign;
-    int fMoveOld, fTurnOld;
+    GtkWidget *pwParent = gtk_widget_get_parent(pwAnalysis), *pw = NULL;
     listOLD *pl;
-    char sz[64];
     GtkWidget *pwCubeAnalysis = NULL;
     doubletype dt;
     taketype tt;
@@ -1052,6 +1047,10 @@ SetAnnotation(moverecord * pmr)
     fAutoCommentaryChange = FALSE;
 
     if (pmr) {
+        GtkWidget *pwBox, *pwAlign;
+        char sz[64], *pch;
+        int fMoveOld, fTurnOld;
+
         if (pmr->sz) {
             fAutoCommentaryChange = TRUE;
             gtk_text_buffer_set_text(buffer, pmr->sz, -1);
@@ -1090,25 +1089,22 @@ SetAnnotation(moverecord * pmr)
 
             /* luck */
 
-            {
-                char sz[64], *pch;
-                cubeinfo ci;
+            pch = sz + sprintf(sz, _("Rolled %u%u"), pmr->anDice[0], pmr->anDice[1]);
 
-                pch = sz + sprintf(sz, _("Rolled %u%u"), pmr->anDice[0], pmr->anDice[1]);
+            if (pmr->rLuck != ERR_VAL) {
+                if (fOutputMWC && ms.nMatchTo) {
+                    cubeinfo ci;
 
-                if (pmr->rLuck != ERR_VAL) {
-                    if (fOutputMWC && ms.nMatchTo) {
-                        GetMatchStateCubeInfo(&ci, &ms);
-                        sprintf(pch, " (%+0.3f%%)", 100.0f * (eq2mwc(pmr->rLuck, &ci) - eq2mwc(0.0f, &ci)));
-                    } else
-                        sprintf(pch, " (%+0.3f)", pmr->rLuck);
-                }
-                gtk_table_attach_defaults(GTK_TABLE(pwBox), gtk_label_new(sz), 1, 2, 0, 1);
-                gtk_table_attach_defaults(GTK_TABLE(pwBox), luck_label(pmr->lt), 1, 2, 1, 2);
-
+                    GetMatchStateCubeInfo(&ci, &ms);
+                    sprintf(pch, " (%+0.3f%%)", 100.0f * (eq2mwc(pmr->rLuck, &ci) - eq2mwc(0.0f, &ci)));
+                } else
+                    sprintf(pch, " (%+0.3f)", pmr->rLuck);
             }
+            gtk_table_attach_defaults(GTK_TABLE(pwBox), gtk_label_new(sz), 1, 2, 0, 1);
+            gtk_table_attach_defaults(GTK_TABLE(pwBox), luck_label(pmr->lt), 1, 2, 1, 2);
 
             /* chequer play skill */
+
             strcpy(sz, _("Moved "));
             FormatMove(sz + strlen(_("Moved ")), msBoard(), pmr->n.anMove);
 
@@ -1180,7 +1176,6 @@ SetAnnotation(moverecord * pmr)
                 gtk_box_pack_start(GTK_BOX(pwAnalysis),
                                    gtk_label_new(_("GNU Backgammon cannot "
                                                    "analyse neither beavers " "nor raccoons yet")), FALSE, FALSE, 0);
-
             break;
 
         case MOVE_TAKE:
@@ -1273,7 +1268,6 @@ SetAnnotation(moverecord * pmr)
 
         if (badSkill(pmr->stCube))
             gtk_notebook_set_current_page(GTK_NOTEBOOK(pw), 1);
-
 
     }
 }
@@ -1978,23 +1972,19 @@ EvalGetValues(evalcontext * pec, evalwidget * pew)
 static void
 EvalChanged(GtkWidget * UNUSED(pw), evalwidget * pew)
 {
-
-    int i;
     evalcontext ecCurrent;
     int fFound = FALSE;
-    int fEval, fMoveFilter;
 
     EvalGetValues(&ecCurrent, pew);
 
     /* update predefined settings menu */
 
-    for (i = 0; i < NUM_SETTINGS; i++) {
+    for (int i = 0; i < NUM_SETTINGS; i++) {
 
-        fEval = !cmp_evalcontext(&aecSettings[i], &ecCurrent);
-        fMoveFilter = !aecSettings[i].nPlies ||
-            (!pew->fMoveFilter ||
-             equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pew->pmf,
-                               aaamfMoveFilterSettings[aiSettingsMoveFilter[i]]));
+        int fEval = !cmp_evalcontext(&aecSettings[i], &ecCurrent);
+        int fMoveFilter = !aecSettings[i].nPlies ||
+            (!pew->fMoveFilter || equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pew->pmf,
+                                                    aaamfMoveFilterSettings[aiSettingsMoveFilter[i]]));
 
         if (fEval && fMoveFilter) {
 
@@ -2379,16 +2369,12 @@ DetailedAnalysisOK(GtkWidget * pw, AnalysisDetails * pDetails)
 static int
 EvalDefaultSetting(evalcontext * pec, movefilter * pmf)
 {
-    int i;
-    int fEval, fMoveFilter;
-
     /* Look for predefined settings */
-    for (i = 0; i < NUM_SETTINGS; i++) {
-        fEval = !cmp_evalcontext(&aecSettings[i], pec);
-        fMoveFilter = !aecSettings[i].nPlies ||
-            (!pmf ||
-             equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pmf,
-                               aaamfMoveFilterSettings[aiSettingsMoveFilter[i]]));
+    for (int i = 0; i < NUM_SETTINGS; i++) {
+        int fEval = !cmp_evalcontext(&aecSettings[i], pec);
+        int fMoveFilter = !aecSettings[i].nPlies || (!pmf || equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pmf,
+                                                                               aaamfMoveFilterSettings
+                                                                               [aiSettingsMoveFilter[i]]));
 
         if (fEval && fMoveFilter)
             return i;
@@ -2403,7 +2389,7 @@ UpdateSummaryEvalMenuSetting(AnalysisDetails * pAnalDetails)
     int chequerDefault = EvalDefaultSetting(pAnalDetails->esChequer, pAnalDetails->mfChequer);
     int cubeDefault = EvalDefaultSetting(pAnalDetails->esCube, pAnalDetails->mfCube);
     int setting = NUM_SETTINGS;
-    
+
     if (chequerDefault == cubeDefault
         /* Special case as cube_supremo==cube_worldclass */
         || (chequerDefault == SETTINGS_SUPREMO && cubeDefault == SETTINGS_WORLDCLASS))
@@ -2412,7 +2398,7 @@ UpdateSummaryEvalMenuSetting(AnalysisDetails * pAnalDetails)
     setting -= (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
     if (setting < 0)
         /* This combo box doesn't accept weak levels
-           but one of them was selected through user defined */
+         * but one of them was selected through user defined */
         setting = NUM_SETTINGS - (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(pAnalDetails->pwOptionMenu), setting);
@@ -2980,10 +2966,9 @@ static void
 SetPlayers(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
     GtkWidget *pwDialog, *pwHBox;
-    int i, fOK = FALSE;
+    int fOK = FALSE;
     player apTemp[2];
     playerswidget plw;
-    char sz[256];
 
     memcpy(apTemp, ap, sizeof ap);
     plw.ap = apTemp;
@@ -3010,12 +2995,14 @@ SetPlayers(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     free(plw.pLevelSettings[1]);
 
     if (fOK) {
+        char sz[256];
+
         outputpostpone();
 
         sprintf(sz, "set defaultnames \"%s\" \"%s\"", apTemp[0].szName, apTemp[1].szName);
         UserCommand(sz);
 
-        for (i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             /* NB: this comparison is case-sensitive, and does not use
              * CompareNames(), so that the user can modify the case of
              * names. */
@@ -3162,9 +3149,6 @@ GetFlagWidget(char *language, char *langCode, const char *flagfilename)
 {                               /* Create a flag */
     GtkWidget *eb, *eb2, *vbox, *lab1;
     GtkWidget *frame;
-    char *file;
-    GdkPixbuf *pixbuf;
-    GtkWidget *image;
     GError *pix_error = NULL;
 
     eb = gtk_event_box_new();
@@ -3186,13 +3170,13 @@ GetFlagWidget(char *language, char *langCode, const char *flagfilename)
     gtk_container_add(GTK_CONTAINER(eb2), vbox);
 
     if (flagfilename) {
-        file = BuildFilename(flagfilename);
-        pixbuf = gdk_pixbuf_new_from_file(file, &pix_error);
+        char *file = BuildFilename(flagfilename);
+        GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(file, &pix_error);
 
         if (pix_error)
             outputerrf("Failed to open flag: %s\n", file);
         else {
-            image = gtk_image_new_from_pixbuf(pixbuf);
+            GtkWidget *image = gtk_image_new_from_pixbuf(pixbuf);
             gtk_box_pack_start(GTK_BOX(vbox), image, FALSE, FALSE, 0);
         }
         g_free(file);
@@ -4083,8 +4067,6 @@ gnubg_set_default_icon(void)
 #if !defined(WIN32)
     GList *icons = NULL;
     GdkPixbuf *icon = NULL;
-    char *ip;
-    guint i;
     struct {
         const char *dir;
         const char *fn;
@@ -4096,8 +4078,8 @@ gnubg_set_default_icon(void)
         "48x48", "gnubg.png"}
     };
 
-    for (i = 0; i < G_N_ELEMENTS(is); i++) {
-        ip = g_build_filename(getDataDir(), "icons", "hicolor", is[i].dir, "apps", is[i].fn, NULL);
+    for (guint i = 0; i < G_N_ELEMENTS(is); i++) {
+        char *ip = g_build_filename(getDataDir(), "icons", "hicolor", is[i].dir, "apps", is[i].fn, NULL);
         icon = gdk_pixbuf_new_from_file(ip, NULL);
         g_free(ip);
         if (icon)
@@ -4502,13 +4484,11 @@ GTKOutputX(void)
 extern void
 GTKOutputErr(const char *sz)
 {
-
-    GtkTextBuffer *buffer;
     GtkTextIter iter;
     GTKMessage(sz, DT_ERROR);
 
     if (PanelShowing(WINDOW_MESSAGE)) {
-        buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(pwMessageText));
+        GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(pwMessageText));
         gtk_text_buffer_get_end_iter(buffer, &iter);
         gtk_text_buffer_insert(buffer, &iter, sz, -1);
         gtk_text_buffer_insert(buffer, &iter, "\n", -1);
@@ -4519,7 +4499,6 @@ GTKOutputErr(const char *sz)
 extern void
 GTKOutputNew(void)
 {
-
     /* This is horribly ugly, but fFinishedPopping will never be set if
      * the progress bar leaves a message in the status stack.  There should
      * be at most one message, so we get rid of it here. */
@@ -4825,14 +4804,12 @@ GTKNew(void)
 extern void
 SetMET(GtkWidget * UNUSED(pw), gpointer p)
 {
-    gchar *filename, *command;
-
     gchar *met_dir = BuildFilename("met");
-    filename = GTKFileSelect(_("Set match equity table"), "*.xml", met_dir, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
+    gchar *filename = GTKFileSelect(_("Set match equity table"), "*.xml", met_dir, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
     g_free(met_dir);
 
     if (filename) {
-        command = g_strconcat("set matchequitytable \"", filename, "\"", NULL);
+        gchar *command = g_strconcat("set matchequitytable \"", filename, "\"", NULL);
         UserCommand(command);
         g_free(command);
         g_free(filename);
@@ -4887,7 +4864,6 @@ typedef struct _rolloutwidget {
 static void
 GetRolloutSettings(GtkWidget * pw, rolloutwidget * prw)
 {
-    int p0, p1, i;
     int fCubeEqChequer, fPlayersAreSame;
 
     prw->rcRollout.nTrials = (int) gtk_adjustment_get_value(prw->prwGeneral->padjTrials);
@@ -4932,6 +4908,8 @@ GetRolloutSettings(GtkWidget * pw, rolloutwidget * prw)
 
     /* if the players are the same, copy player 0 settings to player 1 */
     if (fPlayersAreSame) {
+        int p0, p1;
+
         for (p0 = 0, p1 = 1; p0 < 4; p0 += 2, p1 += 2) {
             memcpy(prw->prpwPages[p1]->precCheq, prw->prpwPages[p0]->precCheq, sizeof(evalcontext));
             memcpy(prw->prpwPages[p1]->precCube, prw->prpwPages[p0]->precCube, sizeof(evalcontext));
@@ -4945,7 +4923,7 @@ GetRolloutSettings(GtkWidget * pw, rolloutwidget * prw)
      * cube settings */
 
     if (fCubeEqChequer) {
-        for (i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             memcpy(prw->prpwPages[i]->precCube, prw->prpwPages[i]->precCheq, sizeof(evalcontext));
         }
 
@@ -4982,7 +4960,7 @@ load_rs_clicked(GtkWidget * pw, rolloutwidget * prw)
     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
 }
 
-/* create one page for rollout settings  for playes & truncation */
+/* create one page for rollout settings for play & truncation */
 
 static AnalysisDetails *
 RolloutPage(rolloutpagewidget * prpw, const char *title, const int UNUSED(fMoveFilter), GtkWidget ** frameRet)
@@ -5392,12 +5370,12 @@ gtk_save_rollout_settings(void)
 static void
 gtk_load_rollout_settings(void)
 {
+    gchar *folder = g_build_filename(szHomeDirectory, "rol", NULL);
+    gchar *filename =
+        GTKFileSelect(_("Open rollout settings (*.rol)"), "*.rol", folder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
 
-    gchar *filename, *command, *folder;
-    folder = g_build_filename(szHomeDirectory, "rol", NULL);
-    filename = GTKFileSelect(_("Open rollout settings (*.rol)"), "*.rol", folder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
     if (filename) {
-        command = g_strconcat("load commands \"", filename, "\"", NULL);
+        gchar *command = g_strconcat("load commands \"", filename, "\"", NULL);
         outputoff();
         UserCommand(command);
         outputon();
@@ -5410,9 +5388,6 @@ gtk_load_rollout_settings(void)
 extern void
 SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
 {
-    GtkWidget *pwDialog, *pwTable, *pwVBox;
-    GtkWidget *saveAsButton;
-    GtkWidget *loadRSButton;
     int fOK = FALSE;
     int saveAs = TRUE;
     int loadRS = TRUE;
@@ -5424,6 +5399,9 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
     const float epsilon = 1.0e-6f;
 
     while (saveAs || loadRS) {
+        GtkWidget *pwDialog, *pwTable, *pwVBox;
+        GtkWidget *saveAsButton, *loadRSButton;
+
         memcpy(&rw.rcRollout, &rcRollout, sizeof(rcRollout));
         rw.prwGeneral = &RPGeneral;
         rw.prpwPages[0] = &RPPlayer0;
@@ -5641,7 +5619,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
                 UserCommand(sz);
             }
 
-            if (fabs(rw.rcRollout.rStdLimit - rcRollout.rStdLimit) > epsilon) {
+            if (fabsf(rw.rcRollout.rStdLimit - rcRollout.rStdLimit) > epsilon) {
                 gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
                 sprintf(sz, "set rollout limit maxerr %s",
                         g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%5.4f", rw.rcRollout.rStdLimit));
@@ -5660,7 +5638,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
                 UserCommand(sz);
             }
 
-            if (fabs(rw.rcRollout.rJsdLimit - rcRollout.rJsdLimit) > epsilon) {
+            if (fabsf(rw.rcRollout.rJsdLimit - rcRollout.rJsdLimit) > epsilon) {
                 gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
                 sprintf(sz, "set rollout jsd limit %s",
                         g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%5.4f", rw.rcRollout.rJsdLimit));
@@ -5843,7 +5821,7 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
 #endif
 
     if (fMWC)
-        sprintf(sz, "%6.2f%%", 100.0 * (eq2mwc(-rEqBefore, pci)));
+        sprintf(sz, "%6.2f%%", 100.0f * (eq2mwc(-rEqBefore, pci)));
     else
         sprintf(sz, "%+6.3f", -rEqBefore);
 
@@ -5869,7 +5847,7 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
 #endif
 
     if (fMWC)
-        sprintf(sz, "%6.2f%%", 100.0 * eq2mwc(-rEqAfter, pci));
+        sprintf(sz, "%6.2f%%", 100.0f * eq2mwc(-rEqAfter, pci));
     else
         sprintf(sz, "%+6.3f", -rEqAfter);
 
@@ -6282,7 +6260,6 @@ GTKCommandShowCredits(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
     GtkTreeIter iter;
     int i = 0;
     credits *credit = &creditList[0];
-    credEntry *ce;
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
     ListCreate(&names);
@@ -6306,8 +6283,10 @@ GTKCommandShowCredits(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
     gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
 
     while (credit->Title) {
+        credEntry *ce;
+
         /* Two columns, so new hbox every-other one */
-        if (i / 2 == (i + 1) / 2) {
+        if (i % 2 == 1) {
 #if GTK_CHECK_VERSION(3,0,0)
             pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
@@ -6401,17 +6380,17 @@ GTKHelpSelect(GtkTreeSelection * pts, gpointer UNUSED(p))
 
     GtkTreeModel *ptm;
     GtkTreeIter ti;
-    GtkTreePath *ptp;
     command **apc;
-    int i, c;
-    char szCommand[128], *pchCommand = szCommand, szUsage[128], *pchUsage = szUsage, *pLabel;
-    const char *pch;
+    char szCommand[128], *pchCommand = szCommand, szUsage[128], *pchUsage = szUsage;
 
     if (gtk_tree_selection_get_selected(pts, &ptm, &ti)) {
-        ptp = gtk_tree_model_get_path(ptm, &ti);
-        c = gtk_tree_path_get_depth(ptp);
+        char *pLabel;
+
+        GtkTreePath *ptp = gtk_tree_model_get_path(ptm, &ti);
+        int c = gtk_tree_path_get_depth(ptp);
+
         apc = malloc(c * sizeof(command *));
-        for (i = c - 1;; i--) {
+        for (int i = c - 1;; i--) {
             gtk_tree_model_get(ptm, &ti, 2, apc + i, -1);
             if (!i)
                 break;
@@ -6419,10 +6398,10 @@ GTKHelpSelect(GtkTreeSelection * pts, gpointer UNUSED(p))
             gtk_tree_model_get_iter(ptm, &ti, ptp);
         }
 
-        for (i = 0; i < c; i++) {
+        for (int i = 0; i < c; i++) {
             /* accumulate command and usage strings from path */
             /* FIXME use markup a la gtk_label_set_markup for this */
-            pch = apc[i]->sz;
+            const char *pch = apc[i]->sz;
             while (*pch)
                 *pchCommand++ = *pchUsage++ = *pch++;
             *pchCommand++ = ' ';
@@ -7058,13 +7037,12 @@ static const statcontext *
 GetStatContext(int game)
 {
     xmovegameinfo *pmgi;
-    int i;
 
     if (!game)
         return &scMatch;
     else {
         listOLD *plGame, *pl = lMatch.plNext;
-        for (i = 1; i < game; i++)
+        for (int i = 1; i < game; i++)
             pl = pl->plNext;
 
         plGame = pl->p;
@@ -7550,12 +7528,12 @@ GTKMatchInfo(void)
 static void
 CalibrationOK(GtkWidget * pw, GtkWidget * ppw)
 {
-
-    char sz[128];
     GtkAdjustment *padj = gtk_spin_button_get_adjustment(GTK_SPIN_BUTTON(ppw));
 
     if (gtk_widget_is_sensitive(ppw)) {
         if (gtk_adjustment_get_value(padj) != (gdouble) rEvalsPerSec) {
+            char sz[128];
+
             sprintf(sz, "set calibration %.0f", gtk_adjustment_get_value(padj));
             UserCommand(sz);
         }
@@ -7569,7 +7547,6 @@ CalibrationOK(GtkWidget * pw, GtkWidget * ppw)
 static void
 CalibrationEnable(GtkWidget * pw, GtkWidget * pwspin)
 {
-
     gtk_widget_set_sensitive(pwspin, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw)));
 }
 
@@ -7712,7 +7689,7 @@ CallbackResign(GtkWidget * pw, gpointer data)
 extern void
 GTKResign(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
-    GtkWidget *pwDialog, *pwVbox, *pwHbox, *pwButtons;
+    GtkWidget *pwDialog, *pwVbox;
     int i;
     const char *asz[3] = { N_("Resign normal"),
         N_("Resign gammon"),
@@ -7737,6 +7714,8 @@ GTKResign(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
 
     for (i = 0; i < 3; i++) {
+        GtkWidget *pwButtons, *pwHbox;
+
         pwButtons = gtk_button_new();
 #if GTK_CHECK_VERSION(3,0,0)
         pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
