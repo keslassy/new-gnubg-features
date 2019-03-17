@@ -6286,7 +6286,7 @@ GTKCommandShowCredits(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
         credEntry *ce;
 
         /* Two columns, so new hbox every-other one */
-        if (i % 2 == 1) {
+        if (i % 2 == 0) {
 #if GTK_CHECK_VERSION(3,0,0)
             pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
