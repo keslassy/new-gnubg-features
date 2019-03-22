@@ -3269,7 +3269,11 @@ AddChild(GtkWidget * pw, GtkRequisition * pr)
 
     GtkRequisition r;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_get_preferred_size(pw, NULL, &r);
+#else
     gtk_widget_size_request(pw, &r);
+#endif
 
     if (r.width > pr->width)
         pr->width = r.width;
@@ -3571,7 +3575,7 @@ DrawAlphaImage(cairo_t * cr, int x, int y, unsigned char *puchSrc, int nStride, 
             puchDest[0] = (unsigned char) (puch[0] * 0x100 / (0x100 - puch[3]));
             puchDest[1] = (unsigned char) (puch[1] * 0x100 / (0x100 - puch[3]));
             puchDest[2] = (unsigned char) (puch[2] * 0x100 / (0x100 - puch[3]));
-            puchDest[3] = 0xFF - puch[3];
+            puchDest[3] = (unsigned char) (0xFF - puch[3]);
 
             puch += 4;
             puchDest += 4;
