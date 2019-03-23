@@ -760,7 +760,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
 
         /* display arrow */
 
-        if (pms->fCubeOwner == -1 || pms->fCubeOwner)
+        if (pms->fCubeOwner)
             printImage(pf, szImageDir, fTurn ? "b-topdn" : "b-topup",
                        szExtension, "", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
         else {
@@ -1709,7 +1709,7 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
     float r;
 
     int fActual, fClose, fMissed;
-    int fDisplay;
+    int fDisplayIt;
     int fAnno = FALSE;
 
     cubedecision cd;
@@ -1725,13 +1725,13 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
     fClose = isCloseCubedecision(arDouble);
     fMissed = fDouble > -1 && isMissedDouble(arDouble, aarOutput, fDouble, pci);
 
-    fDisplay =
+    fDisplayIt =
         (fActual && exsExport.afCubeDisplay[EXPORT_CUBE_ACTUAL]) ||
         (fClose && exsExport.afCubeDisplay[EXPORT_CUBE_CLOSE]) ||
         (fMissed && exsExport.afCubeDisplay[EXPORT_CUBE_MISSED]) ||
         (exsExport.afCubeDisplay[stDouble]) || (exsExport.afCubeDisplay[stTake]);
 
-    if (!fDisplay)
+    if (!fDisplayIt)
         return;
 
     fputs("\n<!-- Cube Analysis -->\n\n", pf);
@@ -2107,10 +2107,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
                       const char *UNUSED(szImageDir), const char *UNUSED(szExtension),
                       const htmlexporttype UNUSED(het), const htmlexportcss hecss)
 {
-
     char sz[64];
-    unsigned int i;
-    float rEq, rEqTop;
 
     cubeinfo ci;
 
@@ -2173,7 +2170,9 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
 
     if (pmr->ml.cMoves) {
 
-        for (i = 0; i < pmr->ml.cMoves; i++) {
+        for (unsigned int i = 0; i < pmr->ml.cMoves; i++) {
+
+            float rEq, rEqTop;
 
             if (i >= exsExport.nMoves && i != pmr->n.iMove)
                 continue;
@@ -2310,8 +2309,8 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
 
                 case EVAL_ROLLOUT:
                     {
-                        char *sz = g_strdup(OutputRolloutContext(NULL, &pes->rc));
-                        char *pcS = sz, *pcE;
+                        char *szrc = g_strdup(OutputRolloutContext(NULL, &pes->rc));
+                        char *pcS = szrc, *pcE;
 
                         while ((pcE = strstr(pcS, "\n"))) {
 
@@ -2338,7 +2337,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
 
                         }
 
-                        g_free(sz);
+                        g_free(szrc);
 
                         break;
 
@@ -2401,9 +2400,6 @@ static void
 HTMLAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
              const char *szImageDir, const char *szExtension, const htmlexporttype het, const htmlexportcss hecss)
 {
-
-    char sz[1024];
-
     switch (pmr->mt) {
 
     case MOVE_NORMAL:
@@ -2413,11 +2409,13 @@ HTMLAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
         if (het == HTML_EXPORT_TYPE_FIBS2HTML)
             printImage(pf, szImageDir, "b-indent", szExtension, "", hecss, het);
 
-        if (pmr->n.anMove[0] >= 0)
+        if (pmr->n.anMove[0] >= 0) {
+            char sz[1024];
+
             fprintf(pf,
                     _("%s%s moves %s"), bullet,
                     ap[pmr->fPlayer].szName, FormatMove(sz, (ConstTanBoard) pms->anBoard, pmr->n.anMove));
-        else if (!pmr->ml.cMoves)
+        } else if (!pmr->ml.cMoves)
             fprintf(pf, _("%s%s cannot move"), bullet, ap[pmr->fPlayer].szName);
 
         fputs("</p>\n", pf);
@@ -2648,7 +2646,6 @@ HTMLMatchInfo(FILE * pf, const matchinfo * pmi, const htmlexportcss UNUSED(hecss
 {
 
     int i;
-    char sz[80];
     struct tm tmx;
 
     if (!pmi->nYear &&
@@ -2677,6 +2674,7 @@ HTMLMatchInfo(FILE * pf, const matchinfo * pmi, const htmlexportcss UNUSED(hecss
     /* date */
 
     if (pmi->nYear) {
+        char sz[80];
 
         tmx.tm_year = pmi->nYear - 1900;
         tmx.tm_mon = pmi->nMonth - 1;
@@ -2764,10 +2762,8 @@ ExportGameHTML(FILE * pf, listOLD * plGame, const char *szImageDir,
 
         case MOVE_NORMAL:
 
-            if (pmr->fPlayer != msExport.fMove) {
+            if (pmr->fPlayer != msExport.fMove)
                 SwapSides(msExport.anBoard);
-                msExport.fMove = pmr->fPlayer;
-            }
 
             msExport.fTurn = msExport.fMove = pmr->fPlayer;
             msExport.anDice[0] = pmr->anDice[0];
@@ -2889,16 +2885,15 @@ OpenCSS(const char *sz)
 static void
 check_for_html_images(gchar * path)
 {
-    gchar *folder;
-    gchar *img;
     char *url = exsExport.szHTMLPictureURL;
 
     if (url && g_path_is_absolute(url)) {
         if (!g_file_test(url, G_FILE_TEST_EXISTS))
             CommandExportHTMLImages(url);
     } else {
-        folder = g_path_get_dirname(path);
-        img = g_build_filename(folder, url, NULL);
+        gchar *folder = g_path_get_dirname(path);
+        gchar *img = g_build_filename(folder, url, NULL);
+
         if (!g_file_test(img, G_FILE_TEST_EXISTS))
             CommandExportHTMLImages(img);
         g_free(img);
@@ -2966,7 +2961,6 @@ CommandExportMatchHtml(char *sz)
     listOLD *pl;
     int nGames;
     char *aszLinks[4], *filenames[4];
-    char *szCurrent;
     int i, j;
 
     sz = NextToken(&sz);
@@ -2984,8 +2978,8 @@ CommandExportMatchHtml(char *sz)
     for (pl = lMatch.plNext, nGames = 0; pl != &lMatch; pl = pl->plNext, nGames++);
 
     for (pl = lMatch.plNext, i = 0; pl != &lMatch; pl = pl->plNext, i++) {
+        char *szCurrent = filename_from_iGame(sz, i);
 
-        szCurrent = filename_from_iGame(sz, i);
         filenames[0] = filename_from_iGame(sz, 0);
         aszLinks[0] = g_path_get_basename(filenames[0]);
         filenames[1] = aszLinks[1] = NULL;
