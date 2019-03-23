@@ -160,7 +160,7 @@ RenderText(const char *text, FT_Library ftLib, OGLFont * pFont, const char *pPat
         if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_NO_HINTING))
             return 0;
         g_assert(face->glyph->format == ft_glyph_format_outline);
-        if (pFont->height == 0)
+        if (pFont->height <= 0)
             pFont->height = (float) face->glyph->metrics.height * scale * heightRatio / 64;
 
 
@@ -179,13 +179,13 @@ RenderText(const char *text, FT_Library ftLib, OGLFont * pFont, const char *pPat
             if (nextGlyphIndex && !FT_Get_Kerning(face, glyphIndex, nextGlyphIndex, ft_kerning_unfitted, &kernAdvance))
                 kern = kernAdvance.x;
 
-            glTranslatef((face->glyph->advance.x + kern) / 64.0f, 0.f, 0.f);
+            glTranslatef((float) (face->glyph->advance.x + kern) / 64.0f, 0.f, 0.f);
             len += kern;
         }
     }
     glEndList();
 
-    pFont->length = (len / 64.0f) * pFont->scale;
+    pFont->length = ((float) len / 64.0f) * pFont->scale;
 
     return !FT_Done_Face(face);
 }
@@ -309,12 +309,12 @@ GetKern(const OGLFont * pFont, char cur, char next)
 static float
 getTextLen3d(const OGLFont * pFont, const char *str)
 {
-    int len = 0;
+    long int len = 0;
     while (*str) {
         len += pFont->advance + GetKern(pFont, str[0], str[1]);
         str++;
     }
-    return (len / 64.0f) * pFont->scale;
+    return ((float) len / 64.0f) * pFont->scale;
 }
 
 static void
@@ -328,7 +328,7 @@ RenderString3d(const OGLFont * pFont, const char *str)
         glCallList(pFont->glyphs + (unsigned int) offset);
 
         /* Move on to next place */
-        glTranslatef((pFont->advance + GetKern(pFont, str[0], str[1])) / 64.0f, 0.f, 0.f);
+        glTranslatef((float) (pFont->advance + GetKern(pFont, str[0], str[1])) / 64.0f, 0.f, 0.f);
 
         str++;
     }
@@ -340,8 +340,6 @@ static void
 PopulateVectoriser(Vectoriser * pVect, const FT_Outline * pOutline)
 {
     int startIndex = 0;
-    int endIndex;
-    int contourLength;
     int contourIndex;
 
     pVect->contours = g_array_new(FALSE, FALSE, sizeof(Contour));
@@ -352,8 +350,8 @@ PopulateVectoriser(Vectoriser * pVect, const FT_Outline * pOutline)
         FT_Vector *pointList = &pOutline->points[startIndex];
         char *tagList = &pOutline->tags[startIndex];
 
-        endIndex = pOutline->contours[contourIndex];
-        contourLength = (endIndex - startIndex) + 1;
+        int endIndex = pOutline->contours[contourIndex];
+        int contourLength = (endIndex - startIndex) + 1;
 
         newContour.conPoints = g_array_new(FALSE, FALSE, sizeof(Point));
         PopulateContour(newContour.conPoints, pointList, tagList, contourLength);
@@ -425,12 +423,12 @@ PopulateContour(GArray * contour, const FT_Vector * points, const char *pointTag
             int previousPointIndex = (pointIndex == 0) ? numberOfPoints - 1 : pointIndex - 1;
             int nextPointIndex = (pointIndex == numberOfPoints - 1) ? 0 : pointIndex + 1;
             Point controlPoint, previousPoint, nextPoint;
-            controlPoint.data[0] = points[pointIndex].x;
-            controlPoint.data[1] = points[pointIndex].y;
-            previousPoint.data[0] = points[previousPointIndex].x;
-            previousPoint.data[1] = points[previousPointIndex].y;
-            nextPoint.data[0] = points[nextPointIndex].x;
-            nextPoint.data[1] = points[nextPointIndex].y;
+            controlPoint.data[0] = (GLdouble) points[pointIndex].x;
+            controlPoint.data[1] = (GLdouble) points[pointIndex].y;
+            previousPoint.data[0] = (GLdouble) points[previousPointIndex].x;
+            previousPoint.data[1] = (GLdouble) points[previousPointIndex].y;
+            nextPoint.data[0] = (GLdouble) points[nextPointIndex].x;
+            nextPoint.data[1] = (GLdouble) points[nextPointIndex].y;
 
             g_assert(pointTag == FT_Curve_Tag_Conic);   /* Only this main type supported */
 
@@ -449,11 +447,11 @@ PopulateContour(GArray * contour, const FT_Vector * points, const char *pointTag
 
                 pointIndex++;
                 previousPoint = nextPoint;
-                controlPoint.data[0] = points[pointIndex].x;
-                controlPoint.data[1] = points[pointIndex].y;
+                controlPoint.data[0] = (GLdouble) points[pointIndex].x;
+                controlPoint.data[1] = (GLdouble) points[pointIndex].y;
                 nextPointIndex = (pointIndex == numberOfPoints - 1) ? 0 : pointIndex + 1;
-                nextPoint.data[0] = points[nextPointIndex].x;
-                nextPoint.data[1] = points[nextPointIndex].y;
+                nextPoint.data[0] = (GLdouble) points[nextPointIndex].x;
+                nextPoint.data[1] = (GLdouble) points[nextPointIndex].y;
             }
 
             controlPoints[0][0] = previousPoint.data[0];
@@ -481,7 +479,7 @@ PopulateContour(GArray * contour, const FT_Vector * points, const char *pointTag
 #define GLUFUN(X) X
 #elif defined(__GNUC__)
 #if defined(WIN32)
-typedef APIENTRY GLvoid (*_GLUfuncptr)();
+typedef APIENTRY GLvoid(*_GLUfuncptr) ();
 #endif
 #define GLUFUN(X) (_GLUfuncptr)X
 #else
