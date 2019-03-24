@@ -83,7 +83,7 @@ DrawBoardStd(char *sz, const TanBoard anBoard, int fRoll, char *asz[], char *szM
         strcpy(pch, PositionID((ConstTanBoard) an));
     }
 
-    pch += 14;
+    pch += L_POSITIONID;
     *pch++ = '\n';
 
     /* match id */
@@ -307,7 +307,7 @@ DrawBoardCls(char *sz, const TanBoard anBoard, int fRoll, char *asz[], char *szM
         strcpy(pch, PositionID((ConstTanBoard) an));
     }
 
-    pch += 14;
+    pch += L_POSITIONID;
     *pch++ = '\n';
 
     /* match id */
@@ -509,9 +509,9 @@ FormatPoint(char *pch, int n)
         strcpy(pch, ("bar"));
         return pch + strlen(("bar"));
     } else if (n > 9)
-        *pch++ = (char) (n / 10) + '0';
+        *pch++ = (char) ((n / 10) + '0');
 
-    *pch++ = (n % 10) + '0';
+    *pch++ = (char) ((n % 10) + '0');
 
     return pch;
 }
@@ -523,9 +523,9 @@ FormatPointPlain(char *pch, int n)
     g_assert(n >= 0);
 
     if (n > 9)
-        *pch++ = (char) (n / 10) + '0';
+        *pch++ = (char) ((n / 10) + '0');
 
-    *pch++ = (n % 10) + '0';
+    *pch++ = (char) ((n % 10) + '0');
 
     return pch;
 }
@@ -704,7 +704,7 @@ FormatMove(char *sz, const TanBoard anBoard, int anMove[8])
 
         if (anCount[i] > 1) {
             *pch++ = '(';
-            *pch++ = '0' + (char) anCount[i];
+            *pch++ = (char) ('0' + anCount[i]);
             *pch++ = ')';
         }
     }
