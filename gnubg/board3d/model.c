@@ -125,7 +125,7 @@ CreatePlane(plane * p, const position * p1, const position * p2, const position 
     cr[2] = v0[0] * v1[1] - v0[1] * v1[0];
 
     l = sqrtf(cr[0] * cr[0] + cr[1] * cr[1] + cr[2] * cr[2]);
-    if (l == 0) {               /* degenerate triangle */
+    if (l <= 0) {               /* degenerate triangle */
         p->a = p->b = p->c = p->d = 0;
         return;
     }
@@ -194,7 +194,7 @@ GenerateShadowEdges(const Occluder * pOcc)
 #endif
 
 static float
-sqdDist(const GArray * planes, int pIndex, const float point[4])
+sqdDist(const GArray * planes, const int pIndex, const float point[4])
 {
     plane *p = &g_array_index(planes, plane, pIndex);
     return (p->a * point[0] + p->b * point[1] + p->c * point[2] + p->d * point[3]);
@@ -456,14 +456,14 @@ addCubeCentered(Occluder * pOcc, float x, float y, float z, float w, float h, fl
 void
 addCylinder(Occluder * pOcc, float x, float y, float z, float r, float d, unsigned int numSteps)
 {
-    float step = (2 * (float) G_PI) / numSteps;
+    float step = (2 * (float) G_PI) / (float) numSteps;
     float *xPts = (float *) malloc(sizeof(float) * numSteps);
     float *yPts = (float *) malloc(sizeof(float) * numSteps);
     unsigned int i;
     g_assert(xPts && yPts);
 
     for (i = 0; i < numSteps; i++) {
-        float ang = step * i + (step / 2.0f);
+        float ang = step * ((float) i + 0.5f);
         xPts[i] = sinf(ang) * r;
         yPts[i] = cosf(ang) * r;
     }
@@ -498,14 +498,14 @@ addHalfTube(Occluder * pOcc, float r, float h, unsigned int numSteps)
         return;
     }
 
-    step = ((2 * (float) G_PI) / numSteps) / 2.0f;
+    step = (float) G_PI / (float) numSteps;
 
     xPts = (float *) malloc(sizeof(float) * (numSteps + 1));
     yPts = (float *) malloc(sizeof(float) * (numSteps + 1));
     g_assert(xPts && yPts);
 
     for (i = 0; i <= numSteps; i++) {
-        float ang = step * i - (float) G_PI_2;
+        float ang = step * (float) i - (float) G_PI_2;
         xPts[i] = sinf(ang) * r;
         yPts[i] = cosf(ang) * r;
     }
@@ -566,14 +566,14 @@ void
 addDice(Occluder * pOcc, float size)
 {                               /* Hard-coded numSteps to keep model simple + doesn't work correctly when > 8... */
     unsigned int numSteps = 8;
-    float step = (2 * (float) G_PI) / numSteps;
+    float step = (2.0f * (float) G_PI) / (float) numSteps;
     float *xPts = (float *) malloc(sizeof(float) * numSteps);
     float *yPts = (float *) malloc(sizeof(float) * numSteps);
     unsigned int i, c, f;
     g_assert(xPts && yPts);
 
     for (i = 0; i < numSteps; i++) {
-        float ang = step * i;
+        float ang = step * (float) i;
         xPts[i] = sinf(ang) * size;
         yPts[i] = cosf(ang) * size;
     }
