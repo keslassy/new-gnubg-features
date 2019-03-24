@@ -223,7 +223,7 @@ draw_cairo_pages(cairo_t * cairo, listOLD * game_ptr)
     psc = &pmr->g.sc;
     AddStatcontext(psc, &scTotal);
     iGame = getGameNumber(game_ptr);
-    if (game_is_last(plGame))
+    if (game_is_last(game_ptr))
         pl_hint = game_add_pmr_hint(game_ptr);
     for (pl = pl->plNext, page = 1; pl != game_ptr; pl = pl->plNext, page++) {
         export_boards(pl->p, &msExport, &iMove, iGame, cairo, SIZE_2PERPAGE);
