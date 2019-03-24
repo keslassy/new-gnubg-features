@@ -686,7 +686,7 @@ RolloutStopAll(GObject * UNUSED(po), rolloutprogress * prp)
 }
 
 static void
-create_rollout_list(int n, char asz[][40], GtkWidget ** View, GtkListStore ** List, gboolean cubeful)
+create_rollout_list(int n, char asz[][FORMATEDMOVESIZE], GtkWidget ** View, GtkListStore ** List, gboolean cubeful)
 {
     int i;
     GtkTreeModel *sort_model;
@@ -743,7 +743,7 @@ create_rollout_list(int n, char asz[][40], GtkWidget ** View, GtkListStore ** Li
 
 static void
 GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
-                        rolloutstat aars[][2], rolloutcontext * prc, char asz[][40], gboolean multiple, void **pp)
+                        rolloutstat aars[][2], rolloutcontext * prc, char asz[][FORMATEDMOVESIZE], gboolean multiple, void **pp)
 {
 
     gchar *sz;
@@ -995,7 +995,7 @@ GTKRolloutProgressEnd(void **pp, gboolean destroy)
 static void
 TextRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
                          rolloutstat UNUSED(aars[2][2]),
-                         rolloutcontext * prc, char asz[][40], gboolean UNUSED(multiple), void **pp)
+                         rolloutcontext * prc, char asz[][FORMATEDMOVESIZE], gboolean UNUSED(multiple), void **pp)
 {
 
     int i;
@@ -1125,7 +1125,7 @@ TextRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
 
 extern void
 RolloutProgressStart(const cubeinfo * pci, const int n,
-                     rolloutstat aars[2][2], rolloutcontext * prc, char asz[][40], gboolean multiple, void **pp)
+                     rolloutstat aars[2][2], rolloutcontext * prc, char asz[][FORMATEDMOVESIZE], gboolean multiple, void **pp)
 {
 
     if (!fShowProgress)

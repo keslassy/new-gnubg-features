@@ -22,6 +22,8 @@
 #ifndef FORMAT_H
 #define FORMAT_H
 
+#include "drawboard.h"
+
 #define MAX_OUTPUT_DIGITS 6
 
 extern int fOutputMWC, fOutputWinPC, fOutputMatchPC;
@@ -64,6 +66,6 @@ extern char *OutputMoneyEquity(const float ar[], const int f);
 
 extern char *FormatCubePosition(char *sz, cubeinfo * pci);
 extern void
- FormatCubePositions(const cubeinfo * pci, char asz[2][40]);
+ FormatCubePositions(const cubeinfo * pci, char asz[2][FORMATEDMOVESIZE]);
 
 #endif                          /* FORMAT_H */

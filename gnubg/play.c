@@ -889,8 +889,7 @@ NewGame(void)
 static void
 ShowAutoMove(const TanBoard anBoard, int anMove[8])
 {
-
-    char sz[40];
+    char sz[FORMATEDMOVESIZE];
 
     if (!fDisplay)
         return;
@@ -2470,7 +2469,7 @@ DumpGameList(GString * gsz, listOLD * plGame)
     moverecord *pmr;
     int nFileCube = 1;
     TanBoard anBoard;
-    char tmp[100];
+    char tmp[FORMATEDMOVESIZE];
     int column = 0;
     InitBoard(anBoard, ms.bgv);
     for (pl = plGame->plNext; pl != plGame; pl = pl->plNext) {

@@ -2039,7 +2039,7 @@ static void
 cmark_move_show(GString * gsz, const matchstate * UNUSED(pms), const moverecord * pmr, int movenr)
 {
     guint i;
-    gchar sz[40];
+    gchar sz[FORMATEDMOVESIZE];
     int found = 0;
 
     g_return_if_fail(pmr);
@@ -2215,7 +2215,7 @@ cmark_match_clear(listOLD * match)
 static int
 cmark_move_rollout(moverecord * pmr, gboolean destroy)
 {
-    gchar(*asz)[40];
+    gchar(*asz)[FORMATEDMOVESIZE];
     cubeinfo ci;
     cubeinfo **ppci;
     GSList *pl = NULL;
@@ -2240,7 +2240,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
 
     ppm = g_new(move *, c);
     ppci = g_new(cubeinfo *, c);
-    asz = (char (*)[40]) g_malloc(40 * c);
+    asz = (char (*)[FORMATEDMOVESIZE]) g_malloc(FORMATEDMOVESIZE * c);
     if (pmr->n.iMove != UINT_MAX)
         CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, key);
     GetMatchStateCubeInfo(&ci, &ms);
@@ -2304,7 +2304,7 @@ cmark_cube_rollout(moverecord * pmr, gboolean destroy)
     float aarOutput[2][NUM_ROLLOUT_OUTPUTS];
     float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
     rolloutstat aarsStatistics[2][2];
-    gchar asz[2][40];
+    gchar asz[2][FORMATEDMOVESIZE];
     void *p;
     int res;
 

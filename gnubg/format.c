@@ -896,7 +896,7 @@ OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
 
 extern void
-FormatCubePositions(const cubeinfo * pci, char asz[2][40])
+FormatCubePositions(const cubeinfo * pci, char asz[2][FORMATEDMOVESIZE])
 {
 
     cubeinfo aci[2];

@@ -515,7 +515,7 @@ ExtFIBSBoard(scancontext * pec)
 
         } else if (processedBoard.anDice[0]) {
             /* move */
-            char szMove[64];
+            char szMove[FORMATEDMOVESIZE];
             if (FindBestMove(anMove, processedBoard.anDice[0], processedBoard.anDice[1],
                              processedBoard.anBoard, &ci, &GetEvalChequer()->ec, *GetEvalMoveFilter()) < 0)
                 return NULL;

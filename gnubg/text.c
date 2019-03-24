@@ -391,8 +391,7 @@ TextPrintCubeAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 static void
 TextPrintMoveAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 {
-
-    char sz[64];
+    char sz[FORMATEDMOVESIZE];
 
     cubeinfo ci;
 
@@ -506,7 +505,7 @@ TextAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
     case MOVE_NORMAL:
 
         if (pmr->n.anMove[0] >= 0) {
-            char sz[1024];
+            char sz[FORMATEDMOVESIZE];
 
             g_string_append_printf(gsz,
                                    _("* %s moves %s"),

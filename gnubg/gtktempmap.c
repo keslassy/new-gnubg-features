@@ -246,7 +246,7 @@ UpdateTempMapEquities(tempmapwidget * ptmw)
     float rMax, rMin, r;
     cubeinfo ci;
     int m;
-    char szMove[100];
+    char szMove[FORMATEDMOVESIZE];
 
     /* calc. min, max and average */
 
@@ -373,7 +373,8 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
     /* move */
 
     if (j >= 0 && ptmw->fShowBestMove) {
-        char szMove[100];
+        char szMove[FORMATEDMOVESIZE];
+
         FormatMovePlain(szMove, ptmw->atm[m].pms->anBoard, ptmw->atm[m].aaanMove[i][j]);
         if (ptmw->fShowEquity)
             g_string_append_printf(str, " %s", szMove);

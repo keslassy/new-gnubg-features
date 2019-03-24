@@ -2107,7 +2107,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
                       const char *UNUSED(szImageDir), const char *UNUSED(szExtension),
                       const htmlexporttype UNUSED(het), const htmlexportcss hecss)
 {
-    char sz[64];
+    char sz[FORMATEDMOVESIZE];
 
     cubeinfo ci;
 
@@ -2410,7 +2410,7 @@ HTMLAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
             printImage(pf, szImageDir, "b-indent", szExtension, "", hecss, het);
 
         if (pmr->n.anMove[0] >= 0) {
-            char sz[1024];
+            char sz[FORMATEDMOVESIZE];
 
             fprintf(pf,
                     _("%s%s moves %s"), bullet,

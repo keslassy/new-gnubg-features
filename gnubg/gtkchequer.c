@@ -67,7 +67,7 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
     {
         move **ppm = (move **) malloc(c * sizeof(move *));
         cubeinfo **ppci = (cubeinfo **) malloc(c * sizeof(cubeinfo *));
-        char (*asz)[40] = (char (*)[40]) malloc(40 * c);
+        char (*asz)[FORMATEDMOVESIZE] = (char (*)[FORMATEDMOVESIZE]) malloc(FORMATEDMOVESIZE * c);
 
         for (i = 0, pl = plSelList; i < c; pl = pl->next, i++) {
             m = ppm[i] = MoveListGetMove(phd, pl);
@@ -154,7 +154,7 @@ static void
 MoveListTempMapClicked(GtkWidget * pw, hintdata * phd)
 {
     GList *pl;
-    char szMove[100];
+    char szMove[FORMATEDMOVESIZE];
     matchstate *ams;
     int i, c;
     gchar **asz;

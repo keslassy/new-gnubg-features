@@ -1933,7 +1933,7 @@ FinishMove(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
 
     int anMove[8];
-    char sz[65];
+    char sz[FORMATEDMOVESIZE];
 
     if (!GTKGetMove(anMove))
         /* no valid move */

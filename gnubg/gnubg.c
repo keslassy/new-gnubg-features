@@ -1752,7 +1752,7 @@ FormatMoveHint(char *sz, const matchstate * pms, movelist * pml,
 {
 
     cubeinfo ci;
-    char szTemp[2048], szMove[32];
+    char szTemp[2048], szMove[FORMATEDMOVESIZE];
     float *ar, *arStdDev;
     float rEq, rEqTop;
 
@@ -2569,7 +2569,7 @@ CommandRollout(char *sz)
     rolloutstat arsStatistics[2];
     TanBoard anBoard;
     cubeinfo ci;
-    char asz[1][40];
+    char asz[1][FORMATEDMOVESIZE];
     void *p;
 
     if (CountTokens(sz) > 0) {

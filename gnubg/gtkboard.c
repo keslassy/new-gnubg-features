@@ -730,7 +730,7 @@ update_pipcount(BoardData * bd, const TanBoard points)
 static int
 update_move(BoardData * bd)
 {
-    char *move = _("Illegal move"), move_buf[40];
+    char *move = _("Illegal move"), move_buf[FORMATEDMOVESIZE];
     unsigned int i;
     TanBoard points;
     positionkey key;
@@ -796,7 +796,7 @@ static void
 Confirm(BoardData * bd)
 {
 
-    char move[40];
+    char move[FORMATEDMOVESIZE];
     TanBoard points;
 
     read_board(bd, points);

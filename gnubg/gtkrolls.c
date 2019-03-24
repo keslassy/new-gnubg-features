@@ -60,7 +60,7 @@ add_level(GtkTreeStore * model, GtkTreeIter * iter,
     int anMove[8];
     int i;
 
-    char szRoll[3], szMove[100], *szEquity;
+    char szRoll[3], szMove[FORMATEDMOVESIZE], *szEquity;
 
     /* cubeinfo for opponent on roll */
 

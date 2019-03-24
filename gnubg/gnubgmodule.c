@@ -783,7 +783,7 @@ PythonNextTurn(PyObject * UNUSED(self), PyObject * UNUSED(args))
 static int
 PythonHint_Callback (procrecorddata *pr)
 {
-    char szMove[25];
+    char szMove[FORMATEDMOVESIZE];
     PyObject *list = (PyObject *)pr->pvUserData;
     PyObject *hintdict = NULL, *ctxdict = NULL, *details = NULL;
 
@@ -1103,7 +1103,7 @@ PythonMoveTuple2String(PyObject * UNUSED(self), PyObject * args)
     PyObject *pyBoard = NULL;
     PyObject *pyMove = NULL;
 
-    char szMove[32];
+    char szMove[FORMATEDMOVESIZE];
     signed int anMove[8];
     TanBoard anBoard;
 

@@ -695,7 +695,7 @@ CubeAnalysisRollout(GtkWidget * pw, cubehintdata * pchd)
     cubedecisiondata *cdec = pchd->pmr->CubeDecPtr;
     rolloutstat aarsStatistics[2][2];
     evalsetup *pes = &cdec->esDouble;
-    char asz[2][40];
+    char asz[2][FORMATEDMOVESIZE];
     void *p;
 
     if (pes->et != EVAL_ROLLOUT) {

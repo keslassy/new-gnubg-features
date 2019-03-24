@@ -31,6 +31,7 @@ extern char *DrawBoard(char *pch, const TanBoard anBoard, int fRoll, char *asz[]
 /* Fill the buffer pch with a representation of the move anMove, assuming
  * the board looks like anBoard.  pch must have room for 28 characters plus
  * a trailing 0 (consider the move `bar/24* 23/22* 21/20* 19/18*'). */
+#define FORMATEDMOVESIZE 29
 extern char *FormatMove(char *pch, const TanBoard anBoard, int anMove[8]);
 extern char *FormatMovePlain(char *pch, TanBoard anBoard, int anMove[8]);
 extern int ParseMove(char *pch, int an[8]);
