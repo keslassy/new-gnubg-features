@@ -172,6 +172,11 @@ show_evals(const char *text,
     if (!fLateEvals)
         return;
 
+    if (late == NULL) {
+        g_assert_not_reached();
+        return;
+    }
+
     outputf(_("%s after %d plies:\n"), text, nLate);
     if (fPlayersAreSame)
         ShowEvaluation(late);
@@ -281,8 +286,8 @@ ShowRollout(rolloutcontext * prc)
     }
 
     if (fDoTruncate) {
-        show_evals(_("Truncation point Chequer play evaluation:"), &prc->aecChequerTrunc, 0, 1, 0, 0);
-        show_evals(_("Truncation point Cube evaluation:"), &prc->aecCubeTrunc, 0, 1, 0, 0);
+        show_evals(_("Truncation point Chequer play evaluation:"), &prc->aecChequerTrunc, NULL, TRUE, FALSE, 0);
+        show_evals(_("Truncation point Cube evaluation:"), &prc->aecCubeTrunc, NULL, TRUE, FALSE, 0);
     }
 
     if (prc->fStopOnSTD) {
