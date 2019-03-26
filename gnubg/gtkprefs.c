@@ -828,7 +828,7 @@ ChequerPrefs(BoardData * bd, int f)
     g_signal_connect(G_OBJECT(apadjExponent[f]), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 
     if (f == 0) {
-        padjRound = GTK_ADJUSTMENT(gtk_adjustment_new(1.0 - bd->rd->rRound, 0, 1, 0.1, 0.1, 0));
+        padjRound = GTK_ADJUSTMENT(gtk_adjustment_new(1.0f - bd->rd->rRound, 0, 1, 0.1, 0.1, 0));
         g_signal_connect(G_OBJECT(padjRound), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 #if GTK_CHECK_VERSION(3,0,0)
         pwScale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjRound);
@@ -2080,7 +2080,7 @@ UseDesign(void)
         if (fabs(newPrefs.arLight[2] - 1.0f) < 1e-5)
             rAzimuth = 0.0;
         else
-            rAzimuth = (float) (acos(newPrefs.arLight[0] / sqrt(1.0 - newPrefs.arLight[2] *
+            rAzimuth = (float) (acos(newPrefs.arLight[0] / sqrt(1.0f - newPrefs.arLight[2] *
                                                                 newPrefs.arLight[2])) * 180 / G_PI);
         if (newPrefs.arLight[1] < 0)
             rAzimuth = 360 - rAzimuth;
@@ -2337,7 +2337,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
                      prd->fHinges ? 'y' : 'n',
                      g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%0.0f", rAzimuth),
                      g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%0.0f", rElevation),
-                     g_ascii_formatd(buf3, G_ASCII_DTOSTR_BUF_SIZE, "%0.1f", 1.0 - prd->rRound));
+                     g_ascii_formatd(buf3, G_ASCII_DTOSTR_BUF_SIZE, "%0.1f", 1.0f - prd->rRound));
 
     pTemp += sprintf(pTemp, "         chequers0=#%02X%02X%02X;%s;%s;%s;%s\n",
                      /* chequers0 */
@@ -2436,9 +2436,9 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
             prd->bgInTrays ? 'y' : 'n',
             prd->roundedPoints ? 'y' : 'n',
             prd->lightType == LT_POSITIONAL ? 'p' : 'd',
-            g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[0]),
-            g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[1]),
-            g_ascii_formatd(buf3, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[2]),
+            g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->lightPos[0]),
+            g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->lightPos[1]),
+            g_ascii_formatd(buf3, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->lightPos[2]),
             prd->lightLevels[0], prd->lightLevels[1], prd->lightLevels[2],
             WriteMaterial(&prd->ChequerMat[0]),
             WriteMaterial(&prd->ChequerMat[1]),
