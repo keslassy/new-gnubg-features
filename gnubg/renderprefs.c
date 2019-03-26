@@ -668,12 +668,11 @@ SaveRenderingSettings(FILE * pf)
     fprintf(pf, "curveaccuracy=%u ", prd->curveAccuracy);
     fprintf(pf, "lighttype=%c ", prd->lightType == LT_POSITIONAL ? 'p' : 'd');
 
-    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[0]);
+    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->lightPos[0]);
     fprintf(pf, "lightposx=%s ", buf);
-
-    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[1]);
+    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->lightPos[1]);
     fprintf(pf, "lightposy=%s ", buf);
-    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->lightPos[2]);
+    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->lightPos[2]);
     fprintf(pf, "lightposz=%s ", buf);
     fprintf(pf, "lightambient=%d ", prd->lightLevels[0]);
     fprintf(pf, "lightdiffuse=%d ", prd->lightLevels[1]);
@@ -682,7 +681,7 @@ SaveRenderingSettings(FILE * pf)
     fprintf(pf, "skewfactor=%d ", prd->skewFactor);
     fprintf(pf, "planview=%c ", prd->planView ? 'y' : 'n');
 
-    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", prd->diceSize);
+    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->diceSize);
     fprintf(pf, "dicesize=%s ", buf);
 
     fprintf(pf, "roundededges=%c ", prd->roundedEdges ? 'y' : 'n');
@@ -711,12 +710,12 @@ SaveRenderingSettings(FILE * pf)
     fprintf(pf, "wood=%s ", aszWoodName[prd->wt]);
     fprintf(pf, "hinges=%c ", prd->fHinges ? 'y' : 'n');
 
-    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rAzimuth);
-    g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%f", rElevation);
+    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.1f", rAzimuth);
+    g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%.1f", rElevation);
     fprintf(pf, "light=%s;%s ", buf, buf1);
 
-    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%0.1f", (1.0 - prd->rRound));
-    fprintf(pf, "shape=%s  ", buf);
+    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%0.1f", (1.0f - prd->rRound));
+    fprintf(pf, "shape=%s ", buf);
 
     g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->aarColour[0][3]);
     g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->arRefraction[0]);
