@@ -990,10 +990,6 @@ CommandShowScoreSheet(char *UNUSED(sz))
     char *data[2];
     listOLD *pl;
 
-    if (ms.gs == GAME_NONE) {
-        outputl(_("No game in progress (type `new game' to start one)."));
-        return;
-    }
 #if USE_GTK
     if (fX) {
         GTKShowScoreSheet();
