@@ -60,15 +60,14 @@ CopyAppearance(renderdata * prd)
 static char
 HexDigit(char ch)
 {
+    int n = toupper(ch);
 
-    ch = (char) toupper(ch);
-
-    if (ch >= '0' && ch <= '9')
-        return ch - '0';
-    else if (ch >= 'A' && ch <= 'F')
-        return ch - 'A' + 0xA;
+    if (n >= '0' && n <= '9')
+        return (char) (n - '0');
+    else if (n >= 'A' && n <= 'F')
+        return (char) (ch - 'A' + 0xA);
     else
-        return 0;
+        return (char) 0;
 }
 
 static int
@@ -196,7 +195,7 @@ SetMaterialCommon(Material * pMat, const char *sz, const char **arg)
         opac = 1;
 
     pMat->ambientColour[3] = pMat->diffuseColour[3] = pMat->specularColour[3] = opac;
-    pMat->alphaBlend = (opac != 1) && (opac != 0);
+    pMat->alphaBlend = (opac < 1.0f) && (opac > 0.0f);
 
     if (pch && sz) {
         sz += strlen(sz) + 1;
@@ -298,8 +297,7 @@ SetColourARSS(float aarColour[2][4],
 
 /* Set colour, shine, specular, flag. */
 static int
-SetColourSSF(float aarColour[2][4],
-             gfloat arCoefficient[2], gfloat arExponent[2], int afDieColour[2], char *sz, int i)
+SetColourSSF(float aarColour[2][4], gfloat arCoefficient[2], gfloat arExponent[2], int afDieColour[2], char *sz, int i)
 {
 
     char *pch;
@@ -641,14 +639,14 @@ SaveRenderingSettings(FILE * pf)
     gchar buf2[G_ASCII_DTOSTR_BUF_SIZE];
     gchar buf3[G_ASCII_DTOSTR_BUF_SIZE];
     renderdata *prd = GetMainAppearance();
-    float rElevation = (float) (asinf(prd->arLight[2]) * 180 / G_PI);
+    float rElevation = asinf(prd->arLight[2]) * 180.0f / (float) G_PI;
     float rAzimuth = (fabsf(prd->arLight[2] - 1.0f) < 1e-5f) ? 0.0f :
-        (float) (acosf(prd->arLight[0] / sqrtf(1.0f - prd->arLight[2] * prd->arLight[2])) * 180 / G_PI);
+        acosf(prd->arLight[0] / sqrtf(1.0f - prd->arLight[2] * prd->arLight[2])) * 180.0f / (float) G_PI;
 
     if (prd->arLight[1] < 0)
         rAzimuth = 360 - rAzimuth;
 
-    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->aSpeckle[0] / 128.0f);
+    g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", (float) prd->aSpeckle[0] / 128.0f);
     fprintf(pf, "set appearance board=#%02X%02X%02X;%s ",
             prd->aanBoardColour[0][0], prd->aanBoardColour[0][1], prd->aanBoardColour[0][2], buf);
 
