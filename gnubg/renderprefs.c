@@ -169,37 +169,32 @@ SetMaterialCommon(Material * pMat, const char *sz, const char **arg)
 
     if (SetColourF(pMat->specularColour, sz) != 0)
         return -1;
+    sz += strlen(sz) + 1;
 
-    if (sz) {
-        sz += strlen(sz) + 1;
-        if ((pch = strchr(sz, ';')))
-            *pch = 0;
-    }
-    if (sz)
+    if ((pch = strchr(sz, ';')))
+        *pch = 0;
+
+    if (*sz)
         pMat->shine = atoi(sz);
     else
         pMat->shine = 128;
 
-    if (sz) {
-        sz += strlen(sz) + 1;
-        if ((pch = strchr(sz, ';')))
-            *pch = 0;
-    }
-    if (sz) {
-        int o = atoi(sz);
-        if (o == 100)
-            opac = 1;
-        else
-            opac = o / 100.0f;
-    } else
-        opac = 1;
+    sz += strlen(sz) + 1;
+
+    if ((pch = strchr(sz, ';')))
+        *pch = 0;
+
+    if (*sz)
+        opac = (float) atoi(sz) / 100.0f;
+    else
+        opac = 1.0f;
 
     pMat->ambientColour[3] = pMat->diffuseColour[3] = pMat->specularColour[3] = opac;
     pMat->alphaBlend = (opac < 1.0f) && (opac > 0.0f);
 
-    if (pch && sz) {
+    if (pch) {
         sz += strlen(sz) + 1;
-        if (sz && *sz) {
+        if (*sz) {
             *arg = sz;
             return 1;
         }
