@@ -100,8 +100,6 @@ LoadCollection(char *sz)
 
     listOLD *plCollection, *pl, *plRoot, *plProp;
     FILE *pf;
-    int fBackgammon;
-    property *pp;
 
     fError = FALSE;
     SGFErrorHandler = ErrorHandler;
@@ -127,10 +125,12 @@ LoadCollection(char *sz)
     if (plCollection) {
         pl = plCollection->plNext;
         while (pl != plCollection) {
+            int fBackgammon = FALSE;
+
             plRoot = ((listOLD *) ((listOLD *) pl->p)->plNext->p)->plNext->p;
-            fBackgammon = FALSE;
+
             for (plProp = plRoot->plNext; plProp != plRoot; plProp = plProp->plNext) {
-                pp = plProp->p;
+                property *pp = plProp->p;
 
                 if (pp->ach[0] == 'G' && pp->ach[1] == 'M' && pp->pl->plNext->p && atoi((char *)
                                                                                         pp->pl->plNext->p) == 6) {
@@ -516,17 +516,18 @@ Point(char ch, int f)
 static void
 RestoreRolloutScore(move * pm, const char *sz)
 {
-
     char *pc = strstr(sz, "Score");
 
-    pm->rScore = -99999;
-    pm->rScore2 = -99999;
+    if (pc) {
+        pc += 6;
+        pm->rScore = (float) g_ascii_strtod(pc, &pc);
+        pm->rScore2 = (float) g_ascii_strtod(pc, &pc);
+    } else {
+        pm->rScore = -99999;
+        pm->rScore2 = -99999;
+    }
 
-    if (!pc)
-        return;
-    pc += 6;
-    pm->rScore = (float) g_ascii_strtod(pc, &pc);
-    pm->rScore2 = (float) g_ascii_strtod(pc, &pc);
+    return;
 }
 
 static void
@@ -580,8 +581,6 @@ InitEvalContext(evalcontext * pec)
 static void
 RestoreEvalContext(evalcontext * pec, char *pc)
 {
-
-    int fUsePrune = 0;
     int ver = CheckSGFVersion(&pc);
 
     InitEvalContext(pec);
@@ -597,8 +596,7 @@ RestoreEvalContext(evalcontext * pec, char *pc)
     } else {
         pec->fDeterministic = (unsigned int) strtol(pc, &pc, 10);
         pec->rNoise = (float) g_ascii_strtod(pc, &pc);
-        fUsePrune = (unsigned int) strtol(pc, &pc, 10);
-        pec->fUsePrune = fUsePrune;
+        pec->fUsePrune = (unsigned int) strtol(pc, &pc, 10);
     }
 }
 
@@ -874,11 +872,10 @@ RestoreDoubleAnalysis(property * pp,
         ++pch;
         pes->et = EVAL_EVAL;
         ver = CheckSGFVersion(&pch);
-        pes->ec.rNoise = 0.0f;
         memset(aarOutput[0], 0, NUM_ROLLOUT_OUTPUTS * sizeof(float));
         memset(aarOutput[1], 0, NUM_ROLLOUT_OUTPUTS * sizeof(float));
-        aarOutput[0][OUTPUT_CUBEFUL_EQUITY] = -20000.0;
-        aarOutput[1][OUTPUT_CUBEFUL_EQUITY] = -20000.0;
+        aarOutput[0][OUTPUT_CUBEFUL_EQUITY] = -20000.0f;
+        aarOutput[1][OUTPUT_CUBEFUL_EQUITY] = -20000.0f;
 
         if (ver < 2) {
             /* skip 4 fields left over from earlier formats */
@@ -1074,13 +1071,13 @@ PointList(listOLD * pl, int an[])
 {
 
     int i;
-    char *pch, ch0, ch1;
+    char ch0, ch1;
 
     for (i = 0; i < 25; i++)
         an[i] = 0;
 
     for (; pl->p; pl = pl->plNext) {
-        pch = pl->p;
+        char *pch = pl->p;
 
         if (strchr(pch, ':')) {
             ch0 = ch1 = 0;
@@ -1364,7 +1361,7 @@ static void
 RestoreGame(listOLD * pl)
 {
 
-    moverecord *pmr, *pmrResign;
+    moverecord *pmr;
 
     InitBoard(ms.anBoard, ms.bgv);
 
@@ -1392,7 +1389,7 @@ RestoreGame(listOLD * pl)
          * inverted when shown. /jth 2003-10-12 
          * ms.fTurn = ms.fMove = -1; */
 
-        pmrResign = NewMoveRecord();
+        moverecord *pmrResign = NewMoveRecord();
 
         pmrResign->mt = MOVE_RESIGN;
 
@@ -2080,11 +2077,11 @@ SaveGame(FILE * pf, listOLD * plGame)
     putc(']', pf);
 
     if (!pmr->g.i) {
-        char szDate[32];
-
         WriteProperty(pf, "WR", mi.pchRating[0]);
         WriteProperty(pf, "BR", mi.pchRating[1]);
         if (mi.nYear) {
+            char szDate[11];
+
             sprintf(szDate, "%04u-%02u-%02u", mi.nYear, mi.nMonth, mi.nDay);
             WriteProperty(pf, "DT", szDate);
         }
