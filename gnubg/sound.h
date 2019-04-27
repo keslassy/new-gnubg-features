@@ -56,7 +56,6 @@ extern int fSound;
 extern int fQuiet;
 
 extern void playSound(const gnubgsound gs);
-extern void SoundFlushCache(const gnubgsound gs);
 extern void SoundWait(void);
 
 extern char *GetDefaultSoundFile(gnubgsound sound);
