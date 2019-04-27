@@ -2486,8 +2486,8 @@ DumpGameList(GString * gsz, listOLD * plGame)
         case MOVE_NORMAL:
             g_string_append_printf(gsz, "%u%u%-5s: ", pmr->anDice[0], pmr->anDice[1], aszLuckTypeAbbr[pmr->lt]);
             FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove);
-            g_string_append_printf(gsz, "%-15s", tmp);
-            g_string_append_printf(gsz, "%-10s%-10s", aszSkillTypeAbbr[pmr->n.stMove], aszSkillTypeAbbr[pmr->stCube]);
+            g_string_append_printf(gsz, "%-19s", tmp);
+            g_string_append_printf(gsz, "%-8s%-8s", aszSkillTypeAbbr[pmr->n.stMove], aszSkillTypeAbbr[pmr->stCube]);
             ApplyMove(anBoard, pmr->n.anMove, FALSE);
             SwapSides(anBoard);
             break;
@@ -2518,14 +2518,15 @@ DumpGameList(GString * gsz, listOLD * plGame)
 extern void
 CommandListGame(char *UNUSED(sz))
 {
-    GString *gsz = g_string_new(NULL);
+    GString *gsz;
 
-    if (ms.gs != GAME_PLAYING) {
-        outputl(_("No game in progress (type `new game' to start one)."));
-
+    if (plGame == NULL)
         return;
-    }
+
+    gsz = g_string_new(NULL);
+
     DumpGameList(gsz, plGame);
+
 #if defined (USE_GTK)
     if (fX)
         GTKTextWindow(gsz->str, _("Game dump"), DT_INFO, NULL);
@@ -2535,6 +2536,7 @@ CommandListGame(char *UNUSED(sz))
         outputl(gsz->str);
         outputx();
     }
+
     g_string_free(gsz, TRUE);
 }
 
