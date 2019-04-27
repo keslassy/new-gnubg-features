@@ -73,8 +73,6 @@ unsigned int nGUIAnimSpeed = 4;
 int animate_player, *animate_move_list, animation_finished = TRUE;
 
 static GtkVBoxClass *parent_class = NULL;
-static randctx rc;
-
 
 typedef struct _SetDiceData {
     unsigned char *TTachDice[2], *TTachPip[2], *TTachGrayDice, *TTachGrayPip;
@@ -84,7 +82,8 @@ typedef struct _SetDiceData {
 /*todo - tidy set cube like above */
 static unsigned char *TTachCube, *TTachCubeFaces;
 
-#define RAND irand( &rc )
+static randctx rctx;
+#define RAND irand( &rctx )
 
 static gint board_set(Board * board, gchar * board_text, const gint resigned, const gint cube_use);
 static void InitialPos(BoardData * bd);
@@ -758,7 +757,8 @@ update_move(BoardData * bd)
                 fIncomplete = bd->valid_move->cMoves < bd->move_list.cMaxMoves
                     || bd->valid_move->cPips < bd->move_list.cMaxPips;
                 fIllegal = FALSE;
-                FormatMove(move = move_buf, (ConstTanBoard) bd->old_board, bd->valid_move->anMove);
+                FormatMove(move_buf, (ConstTanBoard) bd->old_board, bd->valid_move->anMove);
+                move = move_buf;
                 break;
             }
 
@@ -2155,7 +2155,6 @@ board_button_release(GtkWidget * board, GdkEventButton * event, BoardData * bd)
     {
         /* undo drag target help */
         if (fGUIDragTargetHelp && bd->DragTargetHelp) {
-            int i;
             for (i = 0; i <= 3; ++i) {
                 if (bd->iTargetHelpPoints[i] != -1)
                     board_invalidate_point(bd, bd->iTargetHelpPoints[i]);
@@ -2938,7 +2937,6 @@ board_animate(Board * board, int move[8], int player)
     {
         BoardData *bd = board->board_data;
         if (display_is_3d(bd->rd)) {
-            BoardData *bd = board->board_data;
             AnimateMove3d(bd, bd->bd3d);
             return;
         }
@@ -3514,8 +3512,6 @@ board_edit(BoardData * bd)
 
         if (nMatchToNew != ms.nMatchTo || changed) {
             /* new match length; issue "set matchid ..." command */
-            gchar *sz;
-
             if (nMatchToNew)
                 if ((anScoreNew[0] >= nMatchToNew) || (anScoreNew[1] >= nMatchToNew))
                     anScoreNew[0] = anScoreNew[1] = 0;
@@ -3523,7 +3519,7 @@ board_edit(BoardData * bd)
             if ((bd->diceRoll[0] > 6) || (bd->diceRoll[1] > 6)) {
                 bd->diceRoll[0] = bd->diceRoll[1] = 0;
             }
-            sz = g_strdup_printf("set matchid %s",
+            sprintf(sz, "set matchid %s",
                                  MatchID(bd->diceRoll,
                                          ms.fTurn,
                                          ms.fResigned,
@@ -3531,7 +3527,6 @@ board_edit(BoardData * bd)
                                          ms.fMove, ms.fCubeOwner, crawford, nMatchToNew, anScoreNew, bd->cube,
                                          jacoby, ms.gs));
             UserCommand(sz);
-            g_free(sz);
         }
 
         /* Update if crawford was changed. */
