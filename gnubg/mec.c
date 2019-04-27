@@ -89,7 +89,7 @@ main(int argc, char **argv)
     /* Equity chart, E[p][o] = equity for p when p is p away, and o is o away.
      * If there is a game favorite, i.e. wpf > 0.5, p above is considered
      * to be the favorite in each game.  For now we also assume no free drop
-     * vigourish.  This will only affect the computation of post crawford
+     * vigourish.  This will only affect the computation of post-Crawford
      * equities, and is quite easy to correct.  */
 
     double **E = (double **) malloc((ml + 1) * sizeof(double *));
@@ -113,14 +113,14 @@ main(int argc, char **argv)
         }
     }
 
-    /* Compute post crawford equities, given gammon rate, winning percentage
+    /* Compute post-Crawford equities, given gammon rate, winning percentage
      * for favorite (game), match length.  Fill in the equity table. */
 
     post_crawford(gr, wpf, ml, E, 0.0, 0.0);
 
     {
         int i;
-        printf("Post-crawford:\n");
+        printf("Post-Crawford:\n");
         for (i = 1; i < ml; ++i)
             printf("%6.3f", E[i][1]);
         printf("\n");
@@ -130,14 +130,14 @@ main(int argc, char **argv)
     }
 
 
-    /* Compute crawford equities, given gammon rate, winning percentage
-     * for favorite (game), match length, and post crawford equities.
+    /* Compute Crawford equities, given gammon rate, winning percentage
+     * for favorite (game), match length, and post-Crawford equities.
      * Fill in the table. */
 
     crawford(gr, wpf, ml, E);
 
-    /* Compute pre-crawford equities,  given gammon rate, winning percentage
-     * for favorite (game), match length, and crawford equities.
+    /* Compute pre-Crawford equities,  given gammon rate, winning percentage
+     * for favorite (game), match length, and Crawford equities.
      * Fill in the table. */
 
     pre_crawford(gr, wpf, ml, E);
@@ -202,7 +202,7 @@ mec_pc(const float rGammonRate,
     /* Equity chart, E[p][o] = equity for p when p is p away, and o is o away.
      * If there is a game favorite, i.e. wpf > 0.5, p above is considered
      * to be the favorite in each game.  For now we also assume no free drop
-     * vigourish.  This will only affect the computation of post crawford
+     * vigourish.  This will only affect the computation of post-Crawford
      * equities, and is quite easy to correct.  */
 
     double **E = (double **) malloc((ml + 1) * sizeof(double *));
@@ -228,7 +228,7 @@ mec_pc(const float rGammonRate,
         }
     }
 
-    /* Compute post crawford equities, given gammon rate, winning percentage
+    /* Compute post-Crawford equities, given gammon rate, winning percentage
      * for favorite (game), match length.  Fill in the equity table. */
 
     post_crawford(gr, wpf, ml, E, (double) rFreeDrop2Away, (double) rFreeDrop4Away);
@@ -276,7 +276,7 @@ mec(const float rGammonRate, const float rWinRate,
     /* Equity chart, E[p][o] = equity for p when p is p away, and o is o away.
      * If there is a game favorite, i.e. wpf > 0.5, p above is considered
      * to be the favorite in each game.  For now we also assume no free drop
-     * vigourish.  This will only affect the computation of post crawford
+     * vigourish.  This will only affect the computation of post-Crawford
      * equities, and is quite easy to correct.  */
 
     double **E = (double **) malloc((ml + 1) * sizeof(double *));
@@ -302,23 +302,23 @@ mec(const float rGammonRate, const float rWinRate,
         }
     }
 
-    /* Compute post crawford equities, given gammon rate, winning percentage
+    /* Compute post-Crawford equities, given gammon rate, winning percentage
      * for favorite (game), match length.  Fill in the equity table. */
 
     for (i = 0; i < ml; ++i)
         E[i + 1][1] = aarMetPC[0][i];
 
     for (i = 0; i < ml; ++i)
-        E[1][i + 1] = 1.0 - aarMetPC[1][i];
+        E[1][i + 1] = 1.0 - (double)aarMetPC[1][i];
 
-    /* Compute crawford equities, given gammon rate, winning percentage
-     * for favorite (game), match length, and post crawford equities.
+    /* Compute Crawford equities, given gammon rate, winning percentage
+     * for favorite (game), match length, and post-Crawford equities.
      * Fill in the table. */
 
     crawford(gr, wpf, ml, E);
 
-    /* Compute pre-crawford equities,  given gammon rate, winning percentage
-     * for favorite (game), match length, and crawford equities.
+    /* Compute pre-Crawford equities,  given gammon rate, winning percentage
+     * for favorite (game), match length, and Crawford equities.
      * Fill in the table. */
 
     pre_crawford(gr, wpf, ml, E);
@@ -385,8 +385,8 @@ crawford(double gr, double wpf, int ml, /*lint -e{818} */ double **E)
 {
     int i;
 
-    /* Compute crawford equities.  Do this backwards, since
-     * we overwrite post crawford equities with crawford equities.
+    /* Compute Crawford equities.  Do this backwards, since
+     * we overwrite post-Crawford equities with Crawford equities.
      * In this way we only overwrite equities no longer needed. */
 
     for (i = ml; i >= 2; i--) {
