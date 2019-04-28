@@ -16,3 +16,5 @@ bin_PROGRAMS = pygnubg
 #SYSLIBS= -ldl -lpthread -lutil
 AM_CFLAGS = $(SSE_CFLAGS)
 AM_CXXFLAGS = $(SSE_CFLAGS)
+
+EXTRA_DIST = bgutil.py bgutil1.py
