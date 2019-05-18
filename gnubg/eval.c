@@ -26,7 +26,6 @@
 #include <locale.h>
 #include <string.h>
 #include <errno.h>
-#include <fcntl.h>
 #include "isaac.h"
 #include <md5.h>
 #include "bearoffgammon.h"
@@ -378,16 +377,14 @@ float rCrashedX = 0.68f;
 float rContactX = 0.68f;
 
 
-#ifdef HAVE___BUILTIN_CLZ
 static inline int
 msb32(int n)
+#ifdef HAVE___BUILTIN_CLZ
 {
-    return 31 - __builtin_clz(n);  /* or __builtin_clz() ^ 31 */
+    return 31 - __builtin_clz(n);       /* or __builtin_clz() ^ 31 */
 }
 #else
 /* from rosettacode.org */
-static inline int
-msb32(int n)
 {
     int b = 0;
 #define step(x) if (n >= 1 << x) b += x, n >>= x
@@ -649,7 +646,7 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
     if (!fNoBearoff) {
         gnubg_bearoff_os = BuildFilename("gnubg_os0.bd");
         if (!pbc1)
-            pbc1 = BearoffInit(gnubg_bearoff_os, BO_IN_MEMORY|BO_MUST_BE_ONE_SIDED, NULL);
+            pbc1 = BearoffInit(gnubg_bearoff_os, BO_IN_MEMORY | BO_MUST_BE_ONE_SIDED, NULL);
         g_free(gnubg_bearoff_os);
 
         if (!pbc1)
@@ -671,12 +668,12 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
 
         gnubg_bearoff_os = BuildFilename("gnubg_os.bd");
         /* init one-sided db */
-        pbcOS = BearoffInit(gnubg_bearoff_os, BO_IN_MEMORY|BO_MUST_BE_ONE_SIDED, NULL);
+        pbcOS = BearoffInit(gnubg_bearoff_os, BO_IN_MEMORY | BO_MUST_BE_ONE_SIDED, NULL);
         g_free(gnubg_bearoff_os);
 
         gnubg_bearoff = BuildFilename("gnubg_ts.bd");
         /* init two-sided db */
-        pbcTS = BearoffInit(gnubg_bearoff, BO_IN_MEMORY|BO_MUST_BE_TWO_SIDED, NULL);
+        pbcTS = BearoffInit(gnubg_bearoff, BO_IN_MEMORY | BO_MUST_BE_TWO_SIDED, NULL);
         g_free(gnubg_bearoff);
 
         /* hyper-gammon databases */
@@ -719,8 +716,7 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
                   !NeuralNetLoad(&nnRace, pfWeights) &&
                   !NeuralNetLoad(&nnCrashed, pfWeights) &&
                   !NeuralNetLoad(&nnpContact, pfWeights) &&
-                  !NeuralNetLoad(&nnpCrashed, pfWeights) &&
-                  !NeuralNetLoad(&nnpRace, pfWeights)
+                  !NeuralNetLoad(&nnpCrashed, pfWeights) && !NeuralNetLoad(&nnpRace, pfWeights)
                 ))
                 perror(szWeights);
             setlocale(LC_ALL, "");
@@ -903,7 +899,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
         g_assert(n);
 
-        afInput[I_BREAK_CONTACT] = n / (15 + 152.0f);
+        afInput[I_BREAK_CONTACT] = (float) n / (15 + 152.0f);
     }
     {
         unsigned int p = 0;
@@ -913,7 +909,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
                 p += (i + 1) * anBoard[i];
         }
 
-        afInput[I_FREEPIP] = p / 100.0f;
+        afInput[I_FREEPIP] = (float) p / 100.0f;
     }
 
     {
@@ -955,7 +951,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             }
         }
 
-        afInput[I_TIMING] = t / 100.0f;
+        afInput[I_TIMING] = (float) t / 100.0f;
     }
 
     /* Back chequer */
@@ -969,7 +965,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             }
         }
 
-        afInput[I_BACK_CHEQUER] = nBack / 24.0f;
+        afInput[I_BACK_CHEQUER] = (float) nBack / 24.0f;
 
         /* Back anchor */
 
@@ -979,7 +975,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             }
         }
 
-        afInput[I_BACK_ANCHOR] = i / 24.0f;
+        afInput[I_BACK_ANCHOR] = (float) i / 24.0f;
 
         /* Forward anchor */
 
@@ -1000,7 +996,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             }
         }
 
-        afInput[I_FORWARD_ANCHOR] = n == 0 ? 2.0f : n / 6.0f;
+        afInput[I_FORWARD_ANCHOR] = n == 0 ? 2.0f : (float) n / 6.0f;
     }
 
 
@@ -1259,21 +1255,21 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             }
         }
 
-        afInput[I_PIPLOSS] = np / (12.0f * 36.0f);
+        afInput[I_PIPLOSS] = (float) np / (12.0f * 36.0f);
 
-        afInput[I_P1] = n1 / 36.0f;
-        afInput[I_P2] = n2 / 36.0f;
+        afInput[I_P1] = (float) n1 / 36.0f;
+        afInput[I_P2] = (float) n2 / 36.0f;
     }
 
-    afInput[I_BACKESCAPES] = Escapes(anBoard, 23 - nOppBack) / 36.0f;
+    afInput[I_BACKESCAPES] = (float) Escapes(anBoard, 23 - nOppBack) / 36.0f;
 
-    afInput[I_BACKRESCAPES] = Escapes1(anBoard, 23 - nOppBack) / 36.0f;
+    afInput[I_BACKRESCAPES] = (float) Escapes1(anBoard, 23 - nOppBack) / 36.0f;
 
     for (n = 36, i = 15; i < 24 - nOppBack; i++)
         if ((j = Escapes(anBoard, i)) < n)
             n = j;
 
-    afInput[I_ACONTAIN] = (36 - n) / 36.0f;
+    afInput[I_ACONTAIN] = (float) (36 - n) / 36.0f;
     afInput[I_ACONTAIN2] = afInput[I_ACONTAIN] * afInput[I_ACONTAIN];
 
     if (nOppBack < 0) {
@@ -1287,14 +1283,14 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             n = j;
 
 
-    afInput[I_CONTAIN] = (36 - n) / 36.0f;
+    afInput[I_CONTAIN] = (float) (36 - n) / 36.0f;
     afInput[I_CONTAIN2] = afInput[I_CONTAIN] * afInput[I_CONTAIN];
 
     for (n = 0, i = 6; i < 25; i++)
         if (anBoard[i])
             n += (i - 5) * anBoard[i] * Escapes(anBoardOpp, i);
 
-    afInput[I_MOBILITY] = n / 3600.0f;
+    afInput[I_MOBILITY] = (float) n / 3600.0f;
 
     j = 0;
     n = 0;
@@ -1325,7 +1321,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
         k = (k + j - 1) / j;
     }
 
-    afInput[I_MOMENT2] = k / 400.0f;
+    afInput[I_MOMENT2] = (float) k / 400.0f;
 
     if (anBoard[24] > 0) {
         int loss = 0;
@@ -1357,7 +1353,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             }
         }
 
-        afInput[I_ENTER] = loss / (36.0f * (49.0f / 6.0f));
+        afInput[I_ENTER] = (float) loss / (36.0f * (49.0f / 6.0f));
     } else {
         afInput[I_ENTER] = 0.0f;
     }
@@ -1367,7 +1363,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
         n += anBoardOpp[i] > 1;
     }
 
-    afInput[I_ENTER2] = (36 - (n - 6) * (n - 6)) / 36.0f;
+    afInput[I_ENTER2] = (float) (36 - (n - 6) * (n - 6)) / 36.0f;
 
     {
         int pa = -1;
@@ -1397,9 +1393,9 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
         }
 
         if (tot) {
-            afInput[I_BACKBONE] = 1 - (w / (tot * 11.0f));
+            afInput[I_BACKBONE] = 1.0f - ((float) w / ((float) tot * 11.0f));
         } else {
-            afInput[I_BACKBONE] = 0;
+            afInput[I_BACKBONE] = 0.0f;
         }
     }
 
@@ -1424,9 +1420,9 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             if (nAc > 1) {
                 /* g_assert( tot >= 4 ); */
 
-                afInput[I_BACKG] = (tot - 3) / 4.0f;
+                afInput[I_BACKG] = (float) (tot - 3) / 4.0f;
             } else if (nAc == 1) {
-                afInput[I_BACKG1] = tot / 8.0f;
+                afInput[I_BACKG1] = (float) tot / 8.0f;
             }
         }
     }
@@ -1461,7 +1457,7 @@ CalculateRaceInputs(const TanBoard anBoard, float inputs[])
             afInput[k++] = (nc == 1) ? 1.0f : 0.0f;
             afInput[k++] = (nc == 2) ? 1.0f : 0.0f;
             afInput[k++] = (nc >= 3) ? 1.0f : 0.0f;
-            afInput[k] = nc > 3 ? (nc - 3) / 2.0f : 0.0f;
+            afInput[k] = nc > 3 ? (float) (nc - 3) / 2.0f : 0.0f;
         }
 
         /* Men off */
@@ -1482,7 +1478,7 @@ CalculateRaceInputs(const TanBoard anBoard, float inputs[])
                 }
             }
 
-            afInput[RI_NCROSS] = nCross / 10.0f;
+            afInput[RI_NCROSS] = (float) nCross / 10.0f;
         }
     }
 }
@@ -1501,17 +1497,17 @@ menOffAll(const unsigned int *anBoard, float *afInput)
     }
 
     if (menOff <= 5) {
-        afInput[0] = menOff ? menOff / 5.0f : 0.0f;
+        afInput[0] = menOff ? (float) menOff / 5.0f : 0.0f;
         afInput[1] = 0.0f;
         afInput[2] = 0.0f;
     } else if (menOff <= 10) {
         afInput[0] = 1.0f;
-        afInput[1] = (menOff - 5) / 5.0f;
+        afInput[1] = (float) (menOff - 5) / 5.0f;
         afInput[2] = 0.0f;
     } else {
         afInput[0] = 1.0;
         afInput[1] = 1.0;
-        afInput[2] = (menOff - 10) / 5.0f;
+        afInput[2] = ((float) menOff - 10) / 5.0f;
     }
 }
 
@@ -1529,17 +1525,17 @@ menOffNonCrashed(const unsigned int *anBoard, float *afInput)
     }
 
     if (menOff <= 2) {
-        afInput[0] = menOff ? menOff / 3.0f : 0.0f;
+        afInput[0] = menOff ? (float) menOff / 3.0f : 0.0f;
         afInput[1] = 0.0f;
         afInput[2] = 0.0f;
     } else if (menOff <= 5) {
         afInput[0] = 1.0f;
-        afInput[1] = (menOff - 3) / 3.0f;
+        afInput[1] = (float) (menOff - 3) / 3.0f;
         afInput[2] = 0.0f;
     } else {
         afInput[0] = 1.0f;
         afInput[1] = 1.0f;
-        afInput[2] = (menOff - 6) / 3.0f;
+        afInput[2] = (float) (menOff - 6) / 3.0f;
     }
 
 }
@@ -2006,7 +2002,7 @@ raceBGprob(const TanBoard anBoard, int side, const bgvariation bgv)
                 for (i = 1; i <= j + side; ++i) {
                     sum += aProb[i];
                 }
-                p += ((float) bgp[j]) / scale * sum;
+                p += (float) bgp[j] / (float) scale *(float) sum;
             }
 
             p /= 65535.0f;
@@ -2286,8 +2282,8 @@ Noise(const evalcontext * pec, const TanBoard anBoard, int iOutput)
         float x, y;
 
         do {
-            x = (float) irand(&rc) * 2.0f / UB4MAXVAL - 1.0f;
-            y = (float) irand(&rc) * 2.0f / UB4MAXVAL - 1.0f;
+            x = (float) irand(&rc) * 2.0f / (float) UB4MAXVAL - 1.0f;
+            y = (float) irand(&rc) * 2.0f / (float) UB4MAXVAL - 1.0f;
             r = x * x + y * y;
         } while (r > 1.0f || r == 0.0f);
 
@@ -2462,7 +2458,6 @@ Utility(float ar[NUM_OUTPUTS], const cubeinfo * pci)
 
         /* For money game the gammon price is the same for both
          * players, so there is no need to use pci->fMove. */
-
         return
             ar[OUTPUT_WIN] * 2.0f - 1.0f +
             (ar[OUTPUT_WINGAMMON] - ar[OUTPUT_LOSEGAMMON]) *
@@ -2903,7 +2898,7 @@ KleinmanCount(int nPipOnRoll, int nPipNotOnRoll)
     nSum = nPipNotOnRoll + nPipOnRoll;
 
     if (nSum > 4) {
-        rK = (nDiff + 4) / (2 * sqrtf(nSum - 4));
+        rK = (float) (nDiff + 4) / (2.0f * sqrtf((float) (nSum - 4)));
         return 0.5f * (1.0f + erff(rK));
     } else
         return 0.f;
@@ -2931,7 +2926,8 @@ extern int
 IsightCount(const TanBoard anBoard, int pn[2])
 {
     unsigned int anPips[2];
-    int anMenLeft[2] = { 0, 0 }, anCrossOver[2] = { 0, 0 };
+    int anMenLeft[2] = { 0, 0 }, anCrossOver[2] = {
+    0, 0};
     int i, x;
 
     PipCount(anBoard, anPips);
@@ -2990,7 +2986,7 @@ ThorpCount(const TanBoard anBoard, int *pnLeader, float *adjusted, int *pnTraile
     *pnLeader += anBoard[1][0];
     *pnLeader -= anCovered[1];
     if (*pnLeader > 30)
-        *adjusted = (float) (*pnLeader * 1.1f);
+        *adjusted = (float) *pnLeader * 1.1f;
     else
         *adjusted = (float) *pnLeader;
 
@@ -3227,7 +3223,7 @@ GetCacheMB(int size)
     if (size <= 0)
         return 0;
     else
-        return (1 << (size + 15)) * sizeof(cacheNode) / (1024 * 1024);
+        return (1 << (size + 15)) * (int) sizeof(cacheNode) / (1024 * 1024);
 }
 
 extern int
@@ -4069,7 +4065,7 @@ EvalEfficiency(const TanBoard anBoard, positionclass pc)
 
             PipCount(anBoard, anPips);
 
-            rEff = anPips[1] * rRaceFactorX + rRaceCoefficientX;
+            rEff = (float) anPips[1] * rRaceFactorX + rRaceCoefficientX;
             if (rEff > rRaceMax)
                 return rRaceMax;
             else {
@@ -5164,7 +5160,6 @@ locateMove(const TanBoard anBoard, const int anMove[8], const movelist * pml)
         if (EqualKeys(key2, key1))
             return i;
 
-
     }
 
     return 0;
@@ -5292,15 +5287,16 @@ static int EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard, 
 /* Functions that have both locking and non-locking versions below here */
 
 static int ScoreMoves(movelist * pml, const cubeinfo * pci, const evalcontext * pec, int nPlies);
-static int ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi, unsigned int prune_moves);
+static int ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi,
+                            unsigned int prune_moves);
 /*
-   The pruning nets select the best MIN_PRUNE_MOVES +
-   floor(log2(number of legal moves)) moves instead of 10 as they used
-   to do.  A value of 5 for MIN_PRUNE_MOVES brings a small speed-up
-   and, according to the Depreli benchmark, an insignificant strength
-   improvement.  Using a lower value causes a measurable degradation
-   of play. Using a higher one doesn't significantly improve it.
-*/
+ * The pruning nets select the best MIN_PRUNE_MOVES +
+ * floor(log2(number of legal moves)) moves instead of 10 as they used
+ * to do.  A value of 5 for MIN_PRUNE_MOVES brings a small speed-up
+ * and, according to the Depreli benchmark, an insignificant strength
+ * improvement.  Using a lower value causes a measurable degradation
+ * of play. Using a higher one doesn't significantly improve it.
+ */
 #define MIN_PRUNE_MOVES 5
 #define MAX_PRUNE_MOVES (MIN_PRUNE_MOVES + 11)
 
@@ -5470,7 +5466,7 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
                     return -1;
 
                 for (i = 0; i < NUM_OUTPUTS; i++)
-                    arOutput[i] += w * arVariationOutput[i];
+                    arOutput[i] += (float) w *arVariationOutput[i];
             }
 
         }
@@ -5630,7 +5626,8 @@ ScoreMoves(movelist * pml, const cubeinfo * pci, const evalcontext * pec, int nP
 }
 
 static int
-ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi, unsigned int prune_moves)
+ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi,
+                 unsigned int prune_moves)
 {
     unsigned int i, j;
     int r = 0;                  /* return value */
@@ -5955,7 +5952,6 @@ GeneralEvaluationEPlied(NNState * nnStates, float arOutput[NUM_ROLLOUT_OUTPUTS],
 
         arOutput[OUTPUT_EQUITY] = UtilityME(arOutput, pci);
         arOutput[OUTPUT_CUBEFUL_EQUITY] = 0.0f;
-
     }
 
     return 0;
@@ -6046,9 +6042,9 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                 /* Sum up cubeless winning chances and cubeful equities */
 
                 for (i = 0; i < NUM_OUTPUTS; i++)
-                    arOutput[i] += w * ar[i];
+                    arOutput[i] += (float) w *ar[i];
                 for (i = 0; i < 2 * cci; i++)
-                    arCf[i] += w * arCfTemp[i];
+                    arCf[i] += (float) w *arCfTemp[i];
 
             }
 
