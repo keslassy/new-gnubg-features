@@ -1220,11 +1220,11 @@ BoardPrefsOK(GtkWidget * pw, GtkWidget * mainBoard)
 static void
 WorkOut2dLight(renderdata * prd)
 {
-    prd->arLight[2] = (float) sin(gtk_adjustment_get_value(paElevation) / 180 * G_PI);
-    prd->arLight[0] = (float) (cos(gtk_adjustment_get_value(paAzimuth) / 180 * G_PI) *
-                               sqrt(1.0 - prd->arLight[2] * prd->arLight[2]));
-    prd->arLight[1] = (float) (sin(gtk_adjustment_get_value(paAzimuth) / 180 * G_PI) *
-                               sqrt(1.0 - prd->arLight[2] * prd->arLight[2]));
+    prd->arLight[2] = sinf((float)gtk_adjustment_get_value(paElevation) / 180.f * (float)G_PI);
+    prd->arLight[0] = cosf((float)gtk_adjustment_get_value(paAzimuth) / 180.f * (float)G_PI) *
+                               sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
+    prd->arLight[1] = sinf((float)gtk_adjustment_get_value(paAzimuth) / 180.f * (float)G_PI) *
+                               sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
 }
 
 static void
@@ -1412,17 +1412,17 @@ Add2dLightOptions(GtkWidget * pwx, renderdata * prd)
     gtk_table_attach(GTK_TABLE(pwLightTable), gtk_label_new(_("Light azimuth")), 0, 1, 0, 1, 0, 0, 4, 2);
     gtk_table_attach(GTK_TABLE(pwLightTable), gtk_label_new(_("Light elevation")), 0, 1, 1, 2, 0, 0, 4, 2);
 
-    rElevation = (float) (asinf(prd->arLight[2]) * 180 / G_PI);
+    rElevation = asinf(prd->arLight[2]) * (float)(180 / G_PI);
     {
-        float s = (float) sqrt(1.0 - prd->arLight[2] * prd->arLight[2]);
+        float s = sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
         if (s == 0)
             rAzimuth = 0;
         else {
-            float ac = (float) acosf(prd->arLight[0] / s);
+            float ac = acosf(prd->arLight[0] / s);
             if (ac == 0)
                 rAzimuth = 0;
             else
-                rAzimuth = (float) (ac * 180 / G_PI);
+                rAzimuth = ac * (float)(180 / G_PI);
         }
     }
     if (prd->arLight[1] < 0)
@@ -2080,8 +2080,7 @@ UseDesign(void)
         if (fabs(newPrefs.arLight[2] - 1.0f) < 1e-5)
             rAzimuth = 0.0;
         else
-            rAzimuth = (float) (acos(newPrefs.arLight[0] / sqrt(1.0f - newPrefs.arLight[2] *
-                                                                newPrefs.arLight[2])) * 180 / G_PI);
+            rAzimuth = acosf(newPrefs.arLight[0] / sqrtf(1.0f - newPrefs.arLight[2] * newPrefs.arLight[2])) * (float)(180 / G_PI);
         if (newPrefs.arLight[1] < 0)
             rAzimuth = 360 - rAzimuth;
 
@@ -2317,7 +2316,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
 
     float rElevation = (float) (asin(prd->arLight[2]) * 180 / G_PI);
     float rAzimuth = (fabs(prd->arLight[2] - 1.0f) < 1e-5) ? 0.0f :
-        (float) (acos(prd->arLight[0] / sqrt(1.0 - prd->arLight[2] * prd->arLight[2])) * 180 / G_PI);
+        acosf(prd->arLight[0] / sqrtf(1.0f - prd->arLight[2] * prd->arLight[2])) * (float)(180 / G_PI);
 
     if (prd->arLight[1] < 0)
         rAzimuth = 360 - rAzimuth;
@@ -2327,7 +2326,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
                      /* board */
                      prd->aanBoardColour[0][0], prd->aanBoardColour[0][1],
                      prd->aanBoardColour[0][2],
-                     g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", prd->aSpeckle[0] / 128.0f),
+                     g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", (float) prd->aSpeckle[0] / 128.0f),
                      /* border */
                      prd->aanBoardColour[1][0], prd->aanBoardColour[1][1], prd->aanBoardColour[1][2]);
 
@@ -2397,11 +2396,11 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
                 /* points0 */
                 prd->aanBoardColour[2][0], prd->aanBoardColour[2][1],
                 prd->aanBoardColour[2][2],
-                g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", prd->aSpeckle[2] / 128.0f),
+                g_ascii_formatd(buf1, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", (float) prd->aSpeckle[2] / 128.0f),
                 /* points1 */
                 prd->aanBoardColour[3][0], prd->aanBoardColour[3][1],
                 prd->aanBoardColour[3][2],
-                g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", prd->aSpeckle[3] / 128.0f));
+                g_ascii_formatd(buf2, G_ASCII_DTOSTR_BUF_SIZE, "%0.2f", (float) prd->aSpeckle[3] / 128.0f));
 
 #if defined(USE_BOARD3D)
     sprintf(pTemp,
@@ -2951,7 +2950,7 @@ GetPrefs(renderdata * prd)
         prd->showShadows = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwShowShadows));
         prd->shadowDarkness = (int) gtk_adjustment_get_value(padjDarkness);
         /* Darkness as percentage of ambient light */
-        prd->dimness = ((prd->lightLevels[1] / 100.0f) * (100 - prd->shadowDarkness)) / 100;
+        prd->dimness = (((float) prd->lightLevels[1] / 100.0f) * (float) (100 - prd->shadowDarkness)) / 100.0f;
 
         prd->animateRoll = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwAnimateRoll));
         prd->animateFlag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwAnimateFlag));
