@@ -1303,9 +1303,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
         }
     }
 
-    if (j) {
-        n = (n + j - 1) / j;
-    }
+    n = (n + j - 1) / j;
 
     j = 0;
     for (k = 0, i = n + 1; i < 25; i++) {
