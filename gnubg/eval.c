@@ -922,7 +922,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
         no += anBoard[24];
 
         for (i = 23; i > m; --i) {
-            if (anBoard[i] && anBoard[i] != 2) {
+            if (unlikely(anBoard[i] && anBoard[i] != 2)) {
                 int n = ((anBoard[i] > 2) ? (anBoard[i] - 2) : 1);
                 no += n;
                 t += i * n;
@@ -1014,7 +1014,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
     for (i = (nBoard > 2) ? 23 : 21; i >= 0; i--)
         /* if there's a blot there, then */
 
-        if (anBoardOpp[i] == 1)
+        if (unlikely(anBoardOpp[i] == 1))
             /* for every point beyond */
 
             for (j = 24 - i; j < 25; j++)
@@ -1069,10 +1069,10 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
             for (j = 0; j < 4; j++) {
                 int r = aaRoll[i][j];
 
-                if (r < 0)
+                if (unlikely(r < 0))
                     break;
 
-                if (!aHit[r])
+                if (likely(!aHit[r]))
                     continue;
 
                 pi = aIntermediate + r;
@@ -1370,7 +1370,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
         int np;
 
         for (np = 23; np > 0; --np) {
-            if (anBoard[np] >= 2) {
+            if (unlikely(anBoard[np] >= 2)) {
                 if (pa == -1) {
                     pa = np;
                     continue;
