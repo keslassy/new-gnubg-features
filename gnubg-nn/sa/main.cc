@@ -733,6 +733,8 @@ main(int argc, char* argv[])
 	    setShortCuts(shortCuts);
 	  } else if( option == "osrGames" ) {
 	    osrGames = atoi(value.c_str());
+          } else if( option == "osrInRoll" ) {
+            osrInRoll = atoi(value.c_str());
 	  } else {
 	    cerr << "Unknown option " << option << endl;
 	    exit(1);
