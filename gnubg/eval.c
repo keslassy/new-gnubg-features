@@ -2823,6 +2823,7 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
 {
     TanBoard board[2];
     int back[2] = { -1, -1 };
+    int menleft[2] = { 0, 0 };
     int a, b;
 
     int i = cmp_evalsetup(&pm0->esMove, &pm1->esMove);
@@ -2839,6 +2840,8 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
                 back[a] = b;
                 break;
             }
+        for ( ; b > -1; b--)
+            menleft[a] += board[a][1][b];
         }
     }
 
@@ -2857,6 +2860,12 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
 
     if (pm0->rScore != pm1->rScore || pm0->rScore2 != pm1->rScore2)
         return CompareMoves(pm0, pm1);
+
+    /* If everything else is equal bear as many men off as possible */
+    if (menleft[0] > menleft[1])
+        return 1;
+    if (menleft[0] < menleft[1])
+        return -1;
 
     /* If everything else is equal "back" chequer at high point bad */
     return (back[0] > back[1] ? 1 : -1);
@@ -5980,7 +5989,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
     float *arCfTemp = (float *) g_alloca(2 * cci * sizeof(float));
     cubeinfo *aci = (cubeinfo *) g_alloca(2 * cci * sizeof(cubeinfo));
 
-    int w;
+    float w;
     int n0, n1;
 
     pc = ClassifyPosition(anBoard, pciMove->bgv);
@@ -6006,7 +6015,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
 
         for (n0 = 1; n0 <= 6; n0++) {
             for (n1 = 1; n1 <= n0; n1++) {
-                w = (n0 == n1) ? 1 : 2;
+                w = (n0 == n1) ? 1.0f : 2.0f;
 
                 for (i = 0; i < 25; i++) {
                     anBoardNew[0][i] = anBoard[0][i];
@@ -6040,9 +6049,9 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                 /* Sum up cubeless winning chances and cubeful equities */
 
                 for (i = 0; i < NUM_OUTPUTS; i++)
-                    arOutput[i] += (float) w *ar[i];
+                    arOutput[i] += w *ar[i];
                 for (i = 0; i < 2 * cci; i++)
-                    arCf[i] += (float) w *arCfTemp[i];
+                    arCf[i] += w *arCfTemp[i];
 
             }
 
