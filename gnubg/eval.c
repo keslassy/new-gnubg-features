@@ -2823,7 +2823,7 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
 {
     TanBoard board[2];
     int back[2] = { -1, -1 };
-    int menleft[2] = { 0, 0 };
+    int cleft[2] = { 0, 0 };
     int a, b;
 
     int i = cmp_evalsetup(&pm0->esMove, &pm1->esMove);
@@ -2831,17 +2831,15 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
     if (i)
         return -i;              /* sort descending */
 
-    /* find the "back" chequer */
+    /* find the "back" chequer and the number of chequers left */
     PositionFromKey(board[0], &pm0->key);
     PositionFromKey(board[1], &pm1->key);
     for (a = 0; a < 2; a++) {
-        for (b = 24; b > -1; b--) {
+        for (b = 0; b <= 24 ; b++) {
             if (board[a][1][b] > 0) {
                 back[a] = b;
-                break;
+                cleft[a] += board[a][1][b];
             }
-        for ( ; b > -1; b--)
-            menleft[a] += board[a][1][b];
         }
     }
 
@@ -2862,9 +2860,9 @@ CompareMovesGeneral(const move * pm0, const move * pm1)
         return CompareMoves(pm0, pm1);
 
     /* If everything else is equal bear as many men off as possible */
-    if (menleft[0] > menleft[1])
+    if (cleft[0] > cleft[1])
         return 1;
-    if (menleft[0] < menleft[1])
+    if (cleft[0] < cleft[1])
         return -1;
 
     /* If everything else is equal "back" chequer at high point bad */

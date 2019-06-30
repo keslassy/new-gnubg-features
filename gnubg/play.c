@@ -1400,12 +1400,12 @@ ComputerTurn(void)
                 free(pmr);
                 return -1;
             }
-            /* resorts the moves according to cubeful (if applicable),
-             * cubeless and chequer on highest point to avoid some silly
-             * looking moves */
+
+            /* resort the moves according to cubeful (if applicable),
+             * cubeless equities and tie-breaking heuristics to avoid
+             * some silly looking moves */
 
             RefreshMoveList(&pmr->ml, NULL);
-
 
             /* make the move found above */
             if (pmr->ml.cMoves) {

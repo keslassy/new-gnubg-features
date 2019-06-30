@@ -2338,6 +2338,17 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         pmr_movelist_set(pmr, GetEvalChequer(), &ml);
         find_skills(pmr, &ms, FALSE, -1);
     }
+
+    /* resort the moves according to cubeful (if applicable),
+     * cubeless equities and tie-breaking heuristics to avoid
+     * suggesting some silly looking moves */
+
+    if (pmr->ml.cMoves > 0) {
+        int *ai = (int *) malloc(pmr->ml.cMoves * sizeof(int));
+        RefreshMoveList(&pmr->ml, ai);
+        free(ai);
+    }
+
 #if defined(USE_GTK)
     if (!procdatarec && fX) {
         if (hist && show)
