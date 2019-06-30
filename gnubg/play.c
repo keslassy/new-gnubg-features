@@ -157,7 +157,7 @@ static int anLastMove[8], fLastMove, fLastPlayer;
 static void
 PlayMove(matchstate * pms, int const anMove[8], int const fPlayer)
 {
-    int i, nSrc, nDest;
+    int i;
 
 #if defined (USE_GTK)
     if (pms == &ms) {
@@ -172,6 +172,8 @@ PlayMove(matchstate * pms, int const anMove[8], int const fPlayer)
         SwapSides(pms->anBoard);
 
     for (i = 0; i < 8; i += 2) {
+        int  nSrc, nDest;
+
         nSrc = anMove[i];
         nDest = anMove[i | 1];
 
@@ -889,15 +891,16 @@ NewGame(void)
 static void
 ShowAutoMove(const TanBoard anBoard, int anMove[8])
 {
-    char sz[FORMATEDMOVESIZE];
-
     if (!fDisplay)
         return;
 
     if (anMove[0] == -1)
         outputf(_("%s cannot move.\n"), ap[ms.fTurn].szName);
-    else
+    else {
+        char sz[FORMATEDMOVESIZE];
+
         outputf(_("%s moves %s.\n"), ap[ms.fTurn].szName, FormatMove(sz, anBoard, anMove));
+    }
 }
 
 static void
@@ -1011,7 +1014,6 @@ ComputerTurn(void)
 
     moverecord *pmr;
     cubeinfo ci;
-    float arDouble[4], rDoublePoint;
 #if defined(HAVE_SOCKETS)
     char szBoard[256], szResponse[256];
     int fTurnOrig;
@@ -1052,6 +1054,7 @@ ComputerTurn(void)
             fComputerDecision = FALSE;
             return 0;
         } else if (ms.fDoubled) {
+            float arDouble[4];
             decisionData dd;
             cubedecision cd;
 
@@ -1226,9 +1229,6 @@ ComputerTurn(void)
         } else {
             findData fd;
             TanBoard anBoardMove;
-            float arResign[NUM_ROLLOUT_OUTPUTS];
-            static char achResign[3] = { 'n', 'g', 'b' };
-            char ach[2];
 
             /* Don't use the global board for this call, to avoid
              * race conditions with updating the board and aborting the
@@ -1239,6 +1239,7 @@ ComputerTurn(void)
              * so only evaluate at 0 plies. */
 
             if (ClassifyPosition(msBoard(), ms.bgv) <= CLASS_RACE) {
+                float arResign[NUM_ROLLOUT_OUTPUTS];
                 int nResign;
 
                 evalcontext ecResign = { FALSE, 0, FALSE, TRUE, 0.0 };
@@ -1250,9 +1251,10 @@ ComputerTurn(void)
                 nResign = getResignation(arResign, anBoardMove, &ci, &esResign);
 
                 if (nResign > 0 && nResign > ms.fResignationDeclined) {
+                    char ach[2];
 
                     fComputerDecision = TRUE;
-                    ach[0] = achResign[nResign - 1];
+                    ach[0] = "ngb"[nResign - 1];
                     ach[1] = 0;
                     CommandResign(ach);
                     fComputerDecision = FALSE;
@@ -1266,6 +1268,8 @@ ComputerTurn(void)
             if (ms.fCubeUse && !ms.anDice[0] && ms.nCube < MAX_CUBE && GetDPEq(NULL, NULL, &ci)) {
                 evalcontext ecDH;
                 SSE_ALIGN(float arOutput[NUM_ROLLOUT_OUTPUTS]);
+                float rDoublePoint;
+
                 memcpy(&ecDH, &ap[ms.fTurn].esCube.ec, sizeof ecDH);
                 ecDH.fCubeful = FALSE;
                 if (ecDH.nPlies)
@@ -1281,7 +1285,7 @@ ComputerTurn(void)
                 rDoublePoint = GetDoublePointDeadCube(arOutput, &ci);
 
                 if (arOutput[0] >= rDoublePoint) {
-
+                    float arDouble[4];
                     /* We're in market window */
                     decisionData dd;
                     cubedecision cd;
@@ -1426,7 +1430,6 @@ ComputerTurn(void)
 #if defined(HAVE_SOCKETS)
         fTurnOrig = ms.fTurn;
 
-#if 1
         /* FIXME handle resignations -- there must be some way of indicating
          * that a resignation has been offered to the external player. */
         if (ms.fResigned == 3) {
@@ -1440,7 +1443,6 @@ ComputerTurn(void)
             fComputerDecision = FALSE;
             return 0;
         }
-#endif
 
         if (!ms.anDice[0] && !ms.fDoubled && !ms.fResigned &&
             (!ms.fCubeUse || ms.nCube >= MAX_CUBE || !GetDPEq(NULL, NULL, &ci))) {
@@ -4396,19 +4398,19 @@ LinkToDouble(moverecord * pmr)
 extern int
 getFinalScore(int *anScore)
 {
-    listOLD *plGame;
+    listOLD *plg;
 
     /* find last game */
-    for (plGame = lMatch.plNext; plGame->plNext->p; plGame = plGame->plNext);
+    for (plg = lMatch.plNext; plg->plNext->p; plg = plg->plNext);
 
-    if (plGame->p && ((listOLD *) plGame->p)->plNext &&
-        ((listOLD *) plGame->p)->plNext->p &&
-        ((moverecord *) ((listOLD *) plGame->p)->plNext->p)->mt == MOVE_GAMEINFO) {
-        anScore[0] = ((moverecord *) ((listOLD *) plGame->p)->plNext->p)->g.anScore[0];
-        anScore[1] = ((moverecord *) ((listOLD *) plGame->p)->plNext->p)->g.anScore[1];
-        if (((moverecord *) ((listOLD *) plGame->p)->plNext->p)->g.fWinner != -1)
-            anScore[((moverecord *) ((listOLD *) plGame->p)->plNext->p)->g.fWinner] +=
-                ((moverecord *) ((listOLD *) plGame->p)->plNext->p)->g.nPoints;
+    if (plg->p && ((listOLD *) plg->p)->plNext &&
+        ((listOLD *) plg->p)->plNext->p &&
+        ((moverecord *) ((listOLD *) plg->p)->plNext->p)->mt == MOVE_GAMEINFO) {
+        anScore[0] = ((moverecord *) ((listOLD *) plg->p)->plNext->p)->g.anScore[0];
+        anScore[1] = ((moverecord *) ((listOLD *) plg->p)->plNext->p)->g.anScore[1];
+        if (((moverecord *) ((listOLD *) plg->p)->plNext->p)->g.fWinner != -1)
+            anScore[((moverecord *) ((listOLD *) plg->p)->plNext->p)->g.fWinner] +=
+                ((moverecord *) ((listOLD *) plg->p)->plNext->p)->g.nPoints;
         return TRUE;
     }
 
@@ -4550,23 +4552,22 @@ GetMatchCheckSum(void)
     char *gameStr;
     size_t size;
     char buf[1024];
-    listOLD *pList, *plGame, *plMove;
+    listOLD *pList, *plg, *plm;
     listOLD buffers;
     ListCreate(&buffers);
 
     sprintf(buf, "%s vs %s (%d)", ap[0].szName, ap[1].szName, ms.nMatchTo);
     AddString(&buffers, buf);
 
-    for (plGame = lMatch.plNext; plGame->p; plGame = plGame->plNext) {
-        listOLD *plStart = plGame->p;
+    for (plg = lMatch.plNext; plg->p; plg = plg->plNext) {
+        listOLD *plStart = plg->p;
         int move = 1;
-        for (plMove = plStart->plNext; plMove->p; plMove = plMove->plNext) {
-            char playerStr[4] = ".AB";
+        for (plm = plStart->plNext; plm->p; plm = plm->plNext) {
             int player;
-            moverecord *pmr = plMove->p;
+            moverecord *pmr = plm->p;
             const char *moveString = GetMoveString(pmr, &player, FALSE);
             if (moveString) {
-                sprintf(buf, " %d%c %s", move, playerStr[player + 1], moveString);
+                sprintf(buf, " %d%c %s", move, ".AB"[player + 1], moveString);
                 AddString(&buffers, buf);
                 if (player == 1)
                     move++;
