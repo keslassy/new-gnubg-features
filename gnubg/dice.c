@@ -513,12 +513,11 @@ InitRNGSeedMP(mpz_t n, rng rng, rngcontext * rngctx)
     switch (rng) {
 
     case RNG_MERSENNE:{
-            gint32 *achState;
-            unsigned long tempmtkey[MT_ARRAY_N];
-            size_t cb;
-            unsigned int i;
-
             if (mpz_cmp_ui(n, UINT_MAX) > 0) {
+                gint32 *achState;
+                unsigned long tempmtkey[MT_ARRAY_N];
+                size_t cb;
+                unsigned int i;
 
                 achState = mpz_export(NULL, &cb, -1, sizeof(gint32), 0, 0, n);
                 for (i = 0; i < MT_ARRAY_N && i < cb; i++) {
@@ -630,40 +629,40 @@ RNGSystemSeed(const rng rngx, void *p, unsigned long *pnSeed)
     unsigned int n = 0;
 
 #if defined(HAVE_LIBGMP)
-#if !defined(WIN32)
-    int h;
-#endif
     if (!pnSeed) {
 #if defined(WIN32)
         /* Can be amended to support seeds > 32 bit */
         guint32 achState;
-        mpz_t n;
+        mpz_t mpzn;
 
         GTimeVal tv;
         g_get_current_time(&tv);
         achState = (unsigned int) tv.tv_sec ^ (unsigned int) tv.tv_usec;
 
-        mpz_init(n);
-        mpz_import(n, 1, -1, sizeof(guint32), 0, 0, &achState);
-        InitRNGSeedMP(n, rngx, rngctx);
-        mpz_clear(n);
+        mpz_init(mpzn);
+        mpz_import(mpzn, 1, -1, sizeof(guint32), 0, 0, &achState);
+        InitRNGSeedMP(mpzn, rngx, rngctx);
+        mpz_clear(mpzn);
 
         return TRUE;
 #else
         /* We can use long seeds and don't have to save the seed anywhere,
          * so try 512 bits of state instead of 32. */
+
+        int h;
+
         if ((h = open("/dev/urandom", O_RDONLY)) >= 0) {
             char achState[64];
 
             if (read(h, achState, 64) == 64) {
-                mpz_t n;
+                mpz_t mpzn;
 
                 close(h);
 
-                mpz_init(n);
-                mpz_import(n, 16, -1, 4, 0, 0, achState);
-                InitRNGSeedMP(n, rngx, rngctx);
-                mpz_clear(n);
+                mpz_init(mpzn);
+                mpz_import(mpzn, 16, -1, 4, 0, 0, achState);
+                InitRNGSeedMP(mpzn, rngx, rngctx);
+                mpz_clear(mpzn);
 
                 return TRUE;
             } else
@@ -792,8 +791,8 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
                 rngctx->nMD5++; /* useful ? indispensable ? */
             }
 
-            anDice[0] = h.an[0] / exp232_q + 1;
-            anDice[1] = h.an[1] / exp232_q + 1;
+            anDice[0] = (unsigned int) (h.an[0] / exp232_q + 1);
+            anDice[1] = (unsigned int) (h.an[1] / exp232_q + 1);
 
             rngctx->nMD5++;
             rngctx->c += 2;
