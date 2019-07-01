@@ -423,9 +423,10 @@ OutputEquity(const float r, const cubeinfo * pci, const int f)
     } else {
         if (fOutputMatchPC) {
             snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
-                    100.0f * (f ? eq2mwc(r, pci) : se_eq2mwc(r, pci)));
+                     100.0f * (f ? eq2mwc(r, pci) : se_eq2mwc(r, pci)));
         } else {
-            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, f ? eq2mwc(r, pci) : se_eq2mwc(r, pci));
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1,
+                     f ? eq2mwc(r, pci) : se_eq2mwc(r, pci));
         }
     }
 
@@ -484,16 +485,19 @@ OutputEquityScale(const float r, const cubeinfo * pci, const cubeinfo * pciBase,
 
             if (fOutputMatchPC) {
                 snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
-                        100.0f * (f ? eq2mwc(r, pci) : se_eq2mwc(r, pci)));
+                         100.0f * (f ? eq2mwc(r, pci) : se_eq2mwc(r, pci)));
             } else {
-                snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, f ? eq2mwc(r, pci) : se_eq2mwc(r, pci));
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1,
+                         f ? eq2mwc(r, pci) : se_eq2mwc(r, pci));
             }
 
         } else {
             if (f)
-                snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, mwc2eq(eq2mwc(r, pci), pciBase));
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits,
+                         mwc2eq(eq2mwc(r, pci), pciBase));
             else
-                snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits, se_mwc2eq(se_eq2mwc(r, pci), pciBase));
+                snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits,
+                         se_mwc2eq(se_eq2mwc(r, pci), pciBase));
         }
 
 
@@ -508,10 +512,8 @@ OutputEquityScale(const float r, const cubeinfo * pci, const cubeinfo * pciBase,
  * Return formatted string with equity or MWC for an equity difference.
  *
  * Input:
- *    r: equity (either money equity for normalised money eq. for match play
+ *    r1, r2: equities (either money equity for normalised money eq. for match play
  *    pci: cubeinfo
- *    f: indicates equity (TRUE) or std. error (FALSE)
- *    
  *
  * Important: function is not re-entrant. Caller must save output
  * if needed.
@@ -523,14 +525,36 @@ OutputEquityDiff(const float r1, const float r2, const cubeinfo * pci)
 
     static char sz[OUTPUT_SZ_LENGTH];
 
+    if (fOutputDigits > MAX_OUTPUT_DIGITS) {
+        g_assert_not_reached();
+        return NULL;
+    }
+
+    /* If the difference is 0, print it as -0 in the right format.
+     * Using IEEE754 negative zero is tricky and would not work
+     * if compiled with -ffast-math (which we tend to do for performance
+     * reasons). Make a special case and print the minus sign explicitely.
+     */
+
     if (!pci->nMatchTo || !fOutputMWC) {
-        snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, r1 - r2);
+        if (r1 == r2)
+            snprintf(sz, OUTPUT_SZ_LENGTH, "-%*.*f", fOutputDigits + 2, fOutputDigits, 0.0);
+        else
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, r1 - r2);
     } else {
         if (fOutputMatchPC) {
-            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
-                    100.0f * eq2mwc(r1, pci) - 100.0f * eq2mwc(r2, pci));
+            if (r1 == r2)
+                snprintf(sz, OUTPUT_SZ_LENGTH, " -%*.*f%%", fOutputDigits + 1,
+                         fOutputDigits > 1 ? fOutputDigits - 1 : 0, 0.0);
+            else
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
+                         100.0f * eq2mwc(r1, pci) - 100.0f * eq2mwc(r2, pci));
         } else {
-            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1, eq2mwc(r1, pci) - eq2mwc(r2, pci));
+            if (r1 == r2)
+                snprintf(sz, OUTPUT_SZ_LENGTH, "-%*.*f", fOutputDigits + 2, fOutputDigits + 1, 0.0);
+            else
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1,
+                         eq2mwc(r1, pci) - eq2mwc(r2, pci));
         }
     }
 
@@ -567,7 +591,8 @@ OutputMWC(const float r, const cubeinfo * pci, const int f)
             else
                 snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 3, fOutputDigits, se_mwc2eq(r, pci));
         } else if (fOutputMatchPC) {
-            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0, 100.0f * r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
+                     100.0f * r);
         } else {
             if (f)
                 snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits + 1, r);
@@ -588,7 +613,8 @@ OutputPercent(const float r)
     static char sz[OUTPUT_SZ_LENGTH];
 
     if (fOutputWinPC) {
-        snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 2, fOutputDigits > 2 ? fOutputDigits - 2 : 0, 100.0f * r);
+        snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 2, fOutputDigits > 2 ? fOutputDigits - 2 : 0,
+                 100.0f * r);
     } else {
         snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 2, fOutputDigits, r);
     }
