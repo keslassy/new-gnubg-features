@@ -284,7 +284,6 @@ MoveFilterSetup(movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES], int *pfOK)
     int i, j;
     movefiltersetupwidget *pmfsw;
     GtkWidget *pwNotebook;
-    GtkWidget *pwvbox;
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwSetup = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
@@ -320,6 +319,7 @@ MoveFilterSetup(movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES], int *pfOK)
 
     for (i = 0; i < MAX_FILTER_PLIES; ++i) {
 
+        GtkWidget *pwvbox;
         char *sz = g_strdup_printf(_("%d-ply"), i + 1);
 
 #if GTK_CHECK_VERSION(3,0,0)

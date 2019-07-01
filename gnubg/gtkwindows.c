@@ -146,7 +146,7 @@ GTKCreateDialog(const char *szTitle, const dialogtype dt,
                 GtkWidget * parent, int flags, GCallback okFun, void *okFunData)
 {
     CallbackStruct *cbData;
-    GtkWidget *pwDialog, *pwHbox, *pwPixmap;
+    GtkWidget *pwDialog, *pwHbox;
     GtkAccelGroup *pag;
     int fQuestion = (dt == DT_QUESTION || dt == DT_AREYOUSURE);
 
@@ -181,7 +181,7 @@ GTKCreateDialog(const char *szTitle, const dialogtype dt,
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(pwDialog))), pwHbox, TRUE, TRUE, 0);
 
     if (dt != DT_CUSTOM) {
-        pwPixmap = gtk_image_new_from_stock(aszStockItem[dt], GTK_ICON_SIZE_DIALOG);
+        GtkWidget *pwPixmap = gtk_image_new_from_stock(aszStockItem[dt], GTK_ICON_SIZE_DIALOG);
 #if GTK_CHECK_VERSION(3,0,0)
         g_object_set(pwPixmap, "margin", 8, NULL);
 #else
