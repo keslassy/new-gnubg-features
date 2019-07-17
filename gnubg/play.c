@@ -2682,7 +2682,12 @@ CommandMove(char *sz)
 
     if (fTutor && fTutorChequer) {
         moverecord *pmr_cur = get_current_moverecord(NULL);
-        g_assert(pmr_cur);
+
+        if (!pmr_cur) {
+            g_assert_not_reached();
+            free(pmr);
+            return;
+        }
         /* update or set the move */
         memcpy(pmr_cur->n.anMove, an, sizeof an);
         hint_move("", FALSE, NULL);
@@ -3095,7 +3100,7 @@ CommandNextRoll(char *UNUSED(sz))
 
 #if defined (USE_GTK)
     /* Make sure dice are shown */
-    if (fX) {
+    if (fX && bd) {
         bd->diceRoll[0] = !ms.anDice[0];
     }
 #endif
