@@ -102,6 +102,31 @@ typedef enum _annotatetype {
 
 static annotatetype at;
 
+static positionkey currentkey;
+
+static int GetDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx, TanBoard anBoard) 
+{
+   static int dice0, dice1;
+   positionkey key;
+
+   PositionKey(anBoard, &key);
+
+   if (EqualKeys(key, currentkey)) {
+       anDice[0] = dice0;
+       anDice[1] = dice1;
+
+       return 0;
+   } else {
+       int rc = RollDice(anDice, prng, rngctx);
+
+       dice0 = anDice[0];
+       dice1 = anDice[1];
+       CopyKey(key, currentkey);
+
+       return rc;
+   }
+}
+
 extern moverecord *
 NewMoveRecord(void)
 {
@@ -666,6 +691,8 @@ move_not_last_in_match_ok(void)
     if (move_is_last_in_match())
         return TRUE;
 
+    memset(&currentkey, 0, sizeof(positionkey));
+
     return GetInputYN(_("The current move is not the last in the match.\n"
                         "Continuing will destroy the remainder of the match. Continue?"));
 }
@@ -825,7 +852,7 @@ NewGame(void)
     AddGame(pmr);
 
   reroll:
-    fError = RollDice(ms.anDice, &rngCurrent, rngctxCurrent);
+    fError = GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard);
 
     if (fInterrupt || fError) {
         PopGame(plGame, TRUE);
@@ -854,7 +881,7 @@ NewGame(void)
                 outputf(_("The cube is now at %d.\n"), ms.nCube <<= 1);
             UpdateSetting(&ms.nCube);
         }
-
+        memset(&currentkey, 0, sizeof(positionkey));
         goto reroll;
     }
 
@@ -1361,7 +1388,7 @@ ComputerTurn(void)
             /* Roll dice and move */
             if (!ms.anDice[0]) {
                 if (!fCheat || CheatDice(ms.anDice, &ms, afCheatRoll[ms.fMove]))
-                    if (RollDice(ms.anDice, &rngCurrent, rngctxCurrent) < 0)
+                    if (GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
                         return -1;
 
                 DiceRolled();
@@ -1446,7 +1473,7 @@ ComputerTurn(void)
 
         if (!ms.anDice[0] && !ms.fDoubled && !ms.fResigned &&
             (!ms.fCubeUse || ms.nCube >= MAX_CUBE || !GetDPEq(NULL, NULL, &ci))) {
-            if (RollDice(ms.anDice, &rngCurrent, rngctxCurrent) < 0)
+            if (GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
                 return -1;
 
             DiceRolled();
@@ -1530,7 +1557,7 @@ ComputerTurn(void)
             return ms.fTurn == fTurnOrig ? -1 : 0;
         } else if (!ms.anDice[0]) {
             if (tolower(*szResponse) == 'r') {  /* roll */
-                if (RollDice(ms.anDice, &rngCurrent, rngctxCurrent) < 0)
+                if (GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
                     return -1;
 
                 DiceRolled();
@@ -3858,7 +3885,7 @@ CommandRoll(char *UNUSED(sz))
         return;
 
     if (!fCheat || CheatDice(ms.anDice, &ms, afCheatRoll[ms.fMove]))
-        if (RollDice(ms.anDice, &rngCurrent, rngctxCurrent) < 0)
+        if (GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
             return;
 
     pmr = NewMoveRecord();
