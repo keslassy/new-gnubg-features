@@ -4933,25 +4933,21 @@ CommandSwapPlayers(char *UNUSED(sz))
 extern int
 confirmOverwrite(const char *sz, const int f)
 {
-
-    char *szPrompt;
-    int i;
-
     /* check for existing file */
 
     if (f && !access(sz, F_OK)) {
+        gchar *szPrompt;
+        int i;
 
-        size_t buflen = 64 + strlen(sz);
-
-        szPrompt = (char *) malloc(buflen);
-        snprintf(szPrompt, buflen, _("File \"%s\" exists. Overwrite? "), sz);
+        szPrompt = g_strdup_printf(_("File \"%s\" exists. Overwrite? "), sz);
         i = GetInputYN(szPrompt);
-        free(szPrompt);
+
+        g_free(szPrompt);
+
         return i;
 
     } else
         return TRUE;
-
 
 }
 
