@@ -188,7 +188,6 @@ SetRNG(rng * prng, rngcontext * rngctx, rng rngNew, char *szSeed)
     case RNG_BBS:
 #if defined(HAVE_LIBGMP)
         {
-            char *sz, *sz1;
             int fInit;
 
             fInit = FALSE;
@@ -202,6 +201,8 @@ SetRNG(rng * prng, rngcontext * rngctx, rng rngNew, char *szSeed)
                     }
                     fInit = TRUE;
                 } else if (!StrNCaseCmp(szSeed, "factors", strcspn(szSeed, " \t\n\r\v\f"))) {
+                    char *sz, *sz1;
+
                     NextToken(&szSeed); /* skip "factors" keyword */
                     sz = NextToken(&szSeed);
                     sz1 = NextToken(&szSeed);
@@ -2446,7 +2447,7 @@ CommandSetScore(char *sz)
     xmovegameinfo *pmgi;
     const char *pch0, *pch1, *pch2;
     char *pchEnd0, *pchEnd1, *pchEnd2;
-    int n0, n1, n, fCrawford0, fCrawford1, fPostCrawford0, fPostCrawford1;
+    int n0, n1, fCrawford0, fCrawford1, fPostCrawford0, fPostCrawford1;
 
     if ((pch0 = NextToken(&sz)) == 0)
         pch0 = "";
@@ -2455,7 +2456,8 @@ CommandSetScore(char *sz)
         pch1 = "";
 
     if ((pch2 = NextToken(&sz)) != 0) {
-        n = (int) strtol(pch2, &pchEnd2, 10);
+        int n = (int) strtol(pch2, &pchEnd2, 10);
+
         if (pch2 == pchEnd2 || n < 0 || n > MAXSCORE) {
             outputf(_("Match length must be between 0 (unlimited session) and %d\n"), MAXSCORE);
             return;
@@ -2705,12 +2707,10 @@ CommandSetJacoby(char *sz)
 extern void
 CommandSetCrawford(char *sz)
 {
-
-    moverecord *pmr;
-    xmovegameinfo *pmgi;
-
     if (ms.nMatchTo > 0) {
         if ((ms.nMatchTo - ms.anScore[0] == 1) || (ms.nMatchTo - ms.anScore[1] == 1)) {
+            moverecord *pmr;
+            xmovegameinfo *pmgi;
 
             if (SetToggle("crawford", &ms.fCrawford, sz,
                           _("This game is the Crawford game (no doubling allowed)."),
@@ -2748,12 +2748,10 @@ CommandSetCrawford(char *sz)
 extern void
 CommandSetPostCrawford(char *sz)
 {
-
-    moverecord *pmr;
-    xmovegameinfo *pmgi;
-
     if (ms.nMatchTo > 0) {
         if ((ms.nMatchTo - ms.anScore[0] == 1) || (ms.nMatchTo - ms.anScore[1] == 1)) {
+            moverecord *pmr;
+            xmovegameinfo *pmgi;
 
             SetToggle("postcrawford", &ms.fPostCrawford, sz,
                       _("This is post-Crawford play (doubling allowed)."), _("This is not post-Crawford play."));
@@ -4385,7 +4383,7 @@ SetXGID(char *sz)
     int fCubeOwner = -1;
     int nCube = -1;
     int fDoubled = 0;
-    int fJacoby = 0;
+    int fJacobyRule = 0;
     matchstate msxg;
     TanBoard anBoard;
     char *posid, *matchid;
@@ -4445,19 +4443,19 @@ SetXGID(char *sz)
     } else {
         switch (nRules) {
         case 0:
-            fJacoby = 0;
+            fJacobyRule = 0;
             nBeavers = 0;
             break;
         case 1:
-            fJacoby = 1;
+            fJacobyRule = 1;
             nBeavers = 0;
             break;
         case 2:
-            fJacoby = 0;
+            fJacobyRule = 0;
             nBeavers = 3;
             break;
         case 3:
-            fJacoby = 1;
+            fJacobyRule = 1;
             nBeavers = 3;
             break;
         default:
@@ -4533,7 +4531,7 @@ SetXGID(char *sz)
     msxg.fCubeUse = fCubeUse;
     if (atoi(v[0]) == 0)
         msxg.fCubeUse = FALSE;
-    msxg.fJacoby = fJacoby;
+    msxg.fJacoby = fJacobyRule;
     msxg.gs = GAME_PLAYING;
 
     matchid = g_strdup(MatchIDFromMatchState(&msxg));
@@ -4596,7 +4594,6 @@ CommandSetXGID(char *sz)
 extern void
 CommandSetGNUBgID(char *sz)
 {
-    char *out;
     char *posid = NULL;
     char *matchid = NULL;
 
@@ -4604,7 +4601,7 @@ CommandSetGNUBgID(char *sz)
         return;
 
     while (sz && *sz) {
-        out = get_base64(sz, &sz);
+        char *out = get_base64(sz, &sz);
         if (out) {
             if (strlen(out) == L_MATCHID) {
                 if (matchid)
