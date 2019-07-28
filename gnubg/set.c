@@ -1023,43 +1023,52 @@ CommandSetDisplay(char *sz)
 extern void
 CommandSetEvalCubeful(char *sz)
 {
-
-    char asz[2][128], szCommand[64];
+    gchar *asz0, *asz1, *szCommand;
     int f = pecSet->fCubeful;
 
-    sprintf(asz[0], _("%s will use cubeful evaluation.\n"), szSet);
-    sprintf(asz[1], _("%s will use cubeless evaluation.\n"), szSet);
-    sprintf(szCommand, "%s cubeful", szSetCommand);
-    SetToggle(szCommand, &f, sz, asz[0], asz[1]);
+    asz0 = g_strdup_printf(_("%s will use cubeful evaluation.\n"), szSet);
+    asz1 = g_strdup_printf(_("%s will use cubeless evaluation.\n"), szSet);
+    szCommand = g_strdup_printf("%s cubeful", szSetCommand);
+    SetToggle(szCommand, &f, sz, asz0, asz1);
     pecSet->fCubeful = f;
+
+    g_free(szCommand);
+    g_free(asz1);
+    g_free(asz0);
 }
 
 extern void
 CommandSetEvalPrune(char *sz)
 {
-
-    char asz[2][128], szCommand[64];
+    gchar *asz0, *asz1, *szCommand;
     int f = pecSet->fUsePrune;
 
-    sprintf(asz[0], _("%s will use pruning.\n"), szSet);
-    sprintf(asz[1], _("%s will not use pruning.\n"), szSet);
-    sprintf(szCommand, "%s prune", szSetCommand);
-    SetToggle(szCommand, &f, sz, asz[0], asz[1]);
+    asz0 = g_strdup_printf(_("%s will use pruning.\n"), szSet);
+    asz1 = g_strdup_printf(_("%s will not use pruning.\n"), szSet);
+    szCommand = g_strdup_printf("%s prune", szSetCommand);
+    SetToggle(szCommand, &f, sz, asz0, asz1);
     pecSet->fUsePrune = f;
+
+    g_free(szCommand);
+    g_free(asz1);
+    g_free(asz0);
 }
 
 extern void
 CommandSetEvalDeterministic(char *sz)
 {
-
-    char asz[2][128], szCommand[64];
+    gchar *asz0, *asz1, *szCommand;
     int f = pecSet->fDeterministic;
 
-    sprintf(asz[0], _("%s will use deterministic noise.\n"), szSet);
-    sprintf(asz[1], _("%s will use pseudo-random noise.\n"), szSet);
-    sprintf(szCommand, "%s deterministic", szSetCommand);
-    SetToggle(szCommand, &f, sz, asz[0], asz[1]);
+    asz0 = g_strdup_printf(_("%s will use deterministic noise.\n"), szSet);
+    asz1 = g_strdup_printf(_("%s will use pseudo-random noise.\n"), szSet);
+    szCommand = g_strdup_printf("%s deterministic", szSetCommand);
+    SetToggle(szCommand, &f, sz, asz0, asz1);
     pecSet->fDeterministic = f;
+
+    g_free(szCommand);
+    g_free(asz1);
+    g_free(asz0);
 
     if (pecSet->rNoise == 0.0f)
         outputl(_("(Note that this setting will have no effect unless you " "set noise to some non-zero value.)"));
@@ -1546,10 +1555,8 @@ CommandSetPlayerName(char *sz)
 extern void
 CommandSetPlayer(char *sz)
 {
-
-    char *pch = NextToken(&sz), *pchCopy;
+    char *pch = NextToken(&sz);
     int i;
-    char szTemp[32];
 
     if (!pch) {
         outputl(_("You must specify a player (see `help set player')."));
@@ -1557,28 +1564,23 @@ CommandSetPlayer(char *sz)
         return;
     }
 
-    szSetCommand = szTemp;
-
     if ((i = ParsePlayer(pch)) == 0 || i == 1) {
+        gchar *szTemp;
+
         iPlayerSet = i;
-        sprintf(szTemp, "player %d", i);
+        szTemp = g_strdup_printf("player %d", i);
+        szSetCommand = szTemp;
 
         HandleCommand(sz, acSetPlayer);
         UpdateSetting(ap);
 
         szSetCommand = NULL;
+        g_free(szTemp);
         return;
     }
 
     if (i == 2) {
-        if ((pchCopy = malloc(strlen(sz) + 1)) == 0) {
-            outputl(_("Insufficient memory."));
-
-            szSetCommand = NULL;
-            return;
-        }
-
-        strcpy(pchCopy, sz);
+        gchar *pchCopy = g_strdup(sz);
 
         outputpostpone();
 
@@ -1594,7 +1596,7 @@ CommandSetPlayer(char *sz)
 
         UpdateSetting(ap);
 
-        free(pchCopy);
+        g_free(pchCopy);
 
         szSetCommand = NULL;
         return;
@@ -2345,7 +2347,6 @@ CommandSetRolloutRotate(char *sz)
 extern void
 CommandSetRolloutCubeful(char *sz)
 {
-
     int f = prcSet->fCubeful;
 
     SetToggle("rollout cubeful", &f, sz,
@@ -2358,8 +2359,7 @@ CommandSetRolloutCubeful(char *sz)
 extern void
 CommandSetRolloutPlayer(char *sz)
 {
-
-    char *pch = NextToken(&sz), *pchCopy;
+    char *pch = NextToken(&sz);
     int i;
 
     if (!pch) {
@@ -2377,13 +2377,7 @@ CommandSetRolloutPlayer(char *sz)
     }
 
     if (i == 2) {
-        if ((pchCopy = malloc(strlen(sz) + 1)) == 0) {
-            outputl(_("Insufficient memory."));
-
-            return;
-        }
-
-        strcpy(pchCopy, sz);
+        gchar *pchCopy = g_strdup(sz);
 
         outputpostpone();
 
@@ -2395,7 +2389,7 @@ CommandSetRolloutPlayer(char *sz)
 
         outputresume();
 
-        free(pchCopy);
+        g_free(pchCopy);
 
         return;
     }
@@ -2406,8 +2400,7 @@ CommandSetRolloutPlayer(char *sz)
 extern void
 CommandSetRolloutLatePlayer(char *sz)
 {
-
-    char *pch = NextToken(&sz), *pchCopy;
+    char *pch = NextToken(&sz);
     int i;
 
     if (!pch) {
@@ -2425,13 +2418,7 @@ CommandSetRolloutLatePlayer(char *sz)
     }
 
     if (i == 2) {
-        if ((pchCopy = malloc(strlen(sz) + 1)) == 0) {
-            outputl(_("Insufficient memory."));
-
-            return;
-        }
-
-        strcpy(pchCopy, sz);
+        gchar *pchCopy = g_strdup(sz);
 
         outputpostpone();
 
@@ -2443,7 +2430,7 @@ CommandSetRolloutLatePlayer(char *sz)
 
         outputresume();
 
-        free(pchCopy);
+        g_free(pchCopy);
 
         return;
     }
@@ -2789,14 +2776,13 @@ CommandSetPostCrawford(char *sz)
         outputl(_("Cannot set post-Crawford play for money sessions."));
     else
         outputl(_("No match in progress (type `new match n' to start one)."));
-
 }
 
 #if defined(USE_GTK)
 extern void
 CommandSetWarning(char *sz)
 {
-    char buf[100];
+    gchar *buf;
     warningType warning;
     char *pValue = strchr(sz, ' ');
 
@@ -2808,8 +2794,9 @@ CommandSetWarning(char *sz)
 
     warning = ParseWarning(sz);
     if ((int) warning < 0) {
-        sprintf(buf, _("Unknown warning %s."), sz);
+        buf = g_strdup_printf(_("Unknown warning %s."), sz);
         outputl(buf);
+        g_free(buf);
         return;
     }
 
@@ -2821,12 +2808,14 @@ CommandSetWarning(char *sz)
     } else if (!StrCaseCmp(pValue, "off")) {
         SetWarningEnabled(warning, FALSE);
     } else {
-        sprintf(buf, _("Unknown value %s."), pValue);
+        buf = g_strdup_printf(_("Unknown value %s."), pValue);
         outputl(buf);
+        g_free(buf);
         return;
     }
-    sprintf(buf, _("Warning %s set to %s."), sz, pValue);
+    buf =g_strdup_printf( _("Warning %s set to %s."), sz, pValue);
     outputl(buf);
+    g_free(buf);
 }
 
 extern void
@@ -2843,9 +2832,10 @@ CommandShowWarning(char *sz)
     } else {                    /* Show specific warning */
         warning = ParseWarning(sz);
         if ((int) warning < 0) {
-            char buf[100];
-            sprintf(buf, _("Unknown warning %s."), sz);
+            gchar *buf;
+            buf = g_strdup_printf(_("Unknown warning %s."), sz);
             outputl(buf);
+            g_free(buf);
             return;
         }
         PrintWarning(warning);
@@ -3036,7 +3026,7 @@ extern void
 CommandSetAnalysisPlayer(char *sz)
 {
 
-    char *pch = NextToken(&sz), *pchCopy;
+    char *pch = NextToken(&sz);
     int i;
 
     if (!pch) {
@@ -3053,13 +3043,7 @@ CommandSetAnalysisPlayer(char *sz)
     }
 
     if (i == 2) {
-        if ((pchCopy = malloc(strlen(sz) + 1)) == 0) {
-            outputl(_("Insufficient memory."));
-
-            return;
-        }
-
-        strcpy(pchCopy, sz);
+        gchar *pchCopy = g_strdup(sz);
 
         outputpostpone();
 
@@ -3071,7 +3055,7 @@ CommandSetAnalysisPlayer(char *sz)
 
         outputresume();
 
-        free(pchCopy);
+        g_free(pchCopy);
 
         return;
     }
@@ -3084,16 +3068,16 @@ CommandSetAnalysisPlayer(char *sz)
 extern void
 CommandSetAnalysisPlayerAnalyse(char *sz)
 {
+    gchar *sz1, *sz2;
 
-    char sz1[100];
-    char sz2[100];
+    sz1 = g_strdup_printf(_("Analyse %s's chequerplay and cube decisions."), ap[iPlayerSet].szName);
 
-    sprintf(sz1, _("Analyse %s's chequerplay and cube decisions."), ap[iPlayerSet].szName);
-
-    sprintf(sz2, _("Do not analyse %s's chequerplay and cube decisions."), ap[iPlayerSet].szName);
+    sz2 = g_strdup_printf(_("Do not analyse %s's chequerplay and cube decisions."), ap[iPlayerSet].szName);
 
     SetToggle("analysis player", &afAnalysePlayers[iPlayerSet], sz, sz1, sz2);
 
+    g_free(sz2);
+    g_free(sz1);
 }
 
 
@@ -3274,77 +3258,65 @@ CommandSetMatchLength(char *sz)
 extern void
 CommandSetMatchPlace(char *sz)
 {
-
     SetMatchInfo(&mi.pchPlace, sz, _("Match place"));
 }
 
 extern void
 CommandSetMatchRating(char *sz)
 {
-
+    gchar *szMessage;
     int n;
-    char szMessage[64];
 
     if ((n = ParsePlayer(NextToken(&sz))) < 0) {
         outputl(_("You must specify which player's rating to set (see `help " "set matchinfo rating')."));
         return;
     }
 
-    sprintf(szMessage, _("Rating for %s"), ap[n].szName);
+    szMessage = g_strdup_printf(_("Rating for %s"), ap[n].szName);
 
     SetMatchInfo(&mi.pchRating[n], sz, szMessage);
+
+    g_free(szMessage);
 }
 
 extern void
 CommandSetMatchRound(char *sz)
 {
-
     SetMatchInfo(&mi.pchRound, sz, _("Match round"));
-
 }
 
 extern void
 CommandSetMatchID(char *sz)
 {
-
     SetMatchID(sz);
-
 }
 
 extern void
 CommandSetExportIncludeAnnotations(char *sz)
 {
-
     SetToggle("annotations", &exsExport.fIncludeAnnotation, sz,
               _("Include annotations in exports"), _("Do not include annotations in exports"));
-
 }
 
 extern void
 CommandSetExportIncludeAnalysis(char *sz)
 {
-
     SetToggle("analysis", &exsExport.fIncludeAnalysis, sz,
               _("Include analysis in exports"), _("Do not include analysis in exports"));
-
 }
 
 extern void
 CommandSetExportIncludeStatistics(char *sz)
 {
-
     SetToggle("statistics", &exsExport.fIncludeStatistics, sz,
               _("Include statistics in exports"), _("Do not include statistics in exports"));
-
 }
 
 extern void
 CommandSetExportIncludeMatchInfo(char *sz)
 {
-
     SetToggle("matchinfo", &exsExport.fIncludeMatchInfo, sz,
               _("Include match information in exports"), _("Do not include match information in exports"));
-
 }
 
 extern void
@@ -4038,7 +4010,7 @@ extern void
 CommandSetCheatPlayer(char *sz)
 {
 
-    char *pch = NextToken(&sz), *pchCopy;
+    char *pch = NextToken(&sz);
     int i;
 
     if (!pch) {
@@ -4055,13 +4027,7 @@ CommandSetCheatPlayer(char *sz)
     }
 
     if (i == 2) {
-        if ((pchCopy = malloc(strlen(sz) + 1)) == 0) {
-            outputl(_("Insufficient memory."));
-
-            return;
-        }
-
-        strcpy(pchCopy, sz);
+        gchar *pchCopy = g_strdup(sz);
 
         outputpostpone();
 
@@ -4073,7 +4039,7 @@ CommandSetCheatPlayer(char *sz)
 
         outputresume();
 
-        free(pchCopy);
+        g_free(pchCopy);
 
         return;
     }
