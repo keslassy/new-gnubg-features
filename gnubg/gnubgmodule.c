@@ -231,28 +231,28 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
 
     PyObject *pyKey, *pyValue;
     Py_ssize_t iPos = 0;
-    char *pchKey;
     static const char *aszKeys[] = {
         "jacoby", "crawford", "move", "beavers", "cube", "matchto",
         "bgv", "cubeowner", "score", "gammonprice", NULL
     };
-    int iKey;
-    void *ap[10];
+    void *apv[10];
     int *pi;
     float *pf;
     int i = 0;
-    ap[i++] = &pci->fJacoby;
-    ap[i++] = &pci->fCrawford;
-    ap[i++] = &pci->fMove;
-    ap[i++] = &pci->fBeavers;
-    ap[i++] = &pci->nCube;
-    ap[i++] = &pci->nMatchTo;
-    ap[i++] = &pci->bgv;
-    ap[i++] = &pci->fCubeOwner;
-    ap[i++] = pci->anScore;
-    ap[i++] = pci->arGammonPrice;
+    apv[i++] = &pci->fJacoby;
+    apv[i++] = &pci->fCrawford;
+    apv[i++] = &pci->fMove;
+    apv[i++] = &pci->fBeavers;
+    apv[i++] = &pci->nCube;
+    apv[i++] = &pci->nMatchTo;
+    apv[i++] = &pci->bgv;
+    apv[i++] = &pci->fCubeOwner;
+    apv[i++] = pci->anScore;
+    apv[i++] = pci->arGammonPrice;
 
     while (PyDict_Next(p, &iPos, &pyKey, &pyValue)) {
+        char *pchKey;
+        int iKey;
 
         if (!(pchKey = PyBytes_AsString(pyKey)))
             return -1;
@@ -289,20 +289,20 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
                 return -1;
             }
 
-            *((int *) ap[iKey]) = (int) PyInt_AsLong(pyValue);
+            *((int *) apv[iKey]) = (int) PyInt_AsLong(pyValue);
 
             break;
 
         case 8:
             /* score */
-            pi = (int *) ap[iKey];
+            pi = (int *) apv[iKey];
             if (!PyArg_ParseTuple(pyValue, "ii", pi, pi + 1))
                 return -1;
             break;
 
         case 9:
             /* gammon price */
-            pf = (float *) ap[iKey];
+            pf = (float *) apv[iKey];
             if (!PyArg_ParseTuple(pyValue, "(ff)(ff)", pf, pf + 2, pf + 1, pf + 3))
                 return -1;
             break;
@@ -324,24 +324,24 @@ PyToMoveFilter(PyObject * p, movefilter * pmf, int * ply, int * level)
 
     PyObject *pyKey, *pyValue;
     Py_ssize_t iPos = 0;
-    char *pchKey;
     static const char *aszKeys[] = {
         "ply", "level", "acceptmoves", "extramoves", "threshold", NULL
     };
 
-    int iKey;
-    void *ap[5];
+    void *apv[5];
     int i = 0;
-    ap[i++] = ply;
-    ap[i++] = level;
-    ap[i++] = &pmf->Accept;
-    ap[i++] = &pmf->Extra;
-    ap[i++] = &pmf->Threshold;
+    apv[i++] = ply;
+    apv[i++] = level;
+    apv[i++] = &pmf->Accept;
+    apv[i++] = &pmf->Extra;
+    apv[i++] = &pmf->Threshold;
 
     if (!PyDict_Check(p))
         return -1;
 
     while (PyDict_Next(p, &iPos, &pyKey, &pyValue)) {
+        char *pchKey;
+        int iKey;
 
         if (!(pchKey = PyBytes_AsString(pyKey)))
             return -1;
@@ -372,7 +372,7 @@ PyToMoveFilter(PyObject * p, movefilter * pmf, int * ply, int * level)
                                                     "(see gnubg.getevalhintfilter() for an example)"));
                 return -1;
             }
-            *((int *) ap[iKey]) = (int) PyInt_AsLong(pyValue);
+            *((int *) apv[iKey]) = (int) PyInt_AsLong(pyValue);
             break;
 
         case 4:
@@ -383,7 +383,7 @@ PyToMoveFilter(PyObject * p, movefilter * pmf, int * ply, int * level)
                                                     "(see gnubg.getevalhintfilter() for an example)"));
                 return -1;
             }
-            *((float *) ap[iKey]) = (float) PyFloat_AsDouble(pyValue);
+            *((float *) apv[iKey]) = (float) PyFloat_AsDouble(pyValue);
             break;
 
         default:
@@ -401,7 +401,6 @@ static int
 PyToMoveFilters(PyObject * p, TmoveFilter aamf)
 {
     Py_ssize_t iSeqLen;
-    PyObject *pObj;
     movefilter  newFilter;
     TmoveFilter aamftmp;
     movefilter  defaultFilter = { -1, 0, 0.0 };
@@ -422,7 +421,7 @@ PyToMoveFilters(PyObject * p, TmoveFilter aamf)
 
     iSeqLen = PySequence_Size(p);
     for (entry = 0; entry < iSeqLen; ++entry) {
-        pObj = PySequence_Fast_GET_ITEM(p, entry);
+        PyObject *pObj = PySequence_Fast_GET_ITEM(p, entry);
         iPly = iLevel = 0;
         if (PyToMoveFilter(pObj, &newFilter, &iPly, &iLevel) < 0) {
             PyErr_SetString(PyExc_ValueError, _("invalid movefilter in list"
@@ -540,21 +539,21 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
 
     PyObject *pyKey, *pyValue;
     Py_ssize_t iPos = 0;
-    char *pchKey;
     static const char *aszKeys[] = {
         "turn", "resigned", "doubled", "gamestate", "dice", NULL
     };
-    int iKey;
-    void *ap[5];
+    void *apv[5];
     int *pi;
     int i = 0;
-    ap[i++] = &ppi->fTurn;
-    ap[i++] = &ppi->fResigned;
-    ap[i++] = &ppi->fDoubled;
-    ap[i++] = &ppi->gs;
-    ap[i++] = &ppi->anDice;
+    apv[i++] = &ppi->fTurn;
+    apv[i++] = &ppi->fResigned;
+    apv[i++] = &ppi->fDoubled;
+    apv[i++] = &ppi->gs;
+    apv[i++] = &ppi->anDice;
 
     while (PyDict_Next(p, &iPos, &pyKey, &pyValue)) {
+        char *pchKey;
+        int iKey;
 
         if (!(pchKey = PyBytes_AsString(pyKey)))
             return -1;
@@ -583,7 +582,7 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
                                                     "(see gnubg.posinfo() for an example)"));
                 return -1;
             }
-            *((int *) ap[iKey]) = (int) PyInt_AsLong(pyValue);
+            *((int *) apv[iKey]) = (int) PyInt_AsLong(pyValue);
             break;
 
         case 3:
@@ -594,12 +593,12 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
                                                     "(see gnubg.posinfo() for an example)"));
                 return -1;
             }
-            *((gamestate *) ap[iKey]) = (gamestate) PyInt_AsLong(pyValue);
+            *((gamestate *) apv[iKey]) = (gamestate) PyInt_AsLong(pyValue);
             break;
 
         case 4:
             /* Dice */
-            pi = (int *) ap[iKey];
+            pi = (int *) apv[iKey];
             if (!PyArg_ParseTuple(pyValue, "ii", pi, pi + 1))
                 return -1;
             break;
@@ -631,14 +630,14 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
 
     PyObject *pyKey, *pyValue;
     Py_ssize_t iPos = 0;
-    char *pchKey;
     static const char *aszKeys[] = {
         "cubeful", "plies", "deterministic", "prune", "noise", NULL
     };
-    int iKey;
     int i;
 
     while (PyDict_Next(p, &iPos, &pyKey, &pyValue)) {
+        char *pchKey;
+        int iKey;
 
         if (!(pchKey = PyBytes_AsString(pyKey)))
             return -1;
@@ -720,7 +719,7 @@ PythonCubeInfo(PyObject * UNUSED(self), PyObject * args)
     int nMatchTo = ms.nMatchTo;
     int anScore[2];
     int fCrawford = ms.fCrawford;
-    int fJacoby = ms.fJacoby;
+    int fJacobyRule = ms.fJacoby;
     int fBeavers = ms.cBeavers;
     bgvariation bgv = ms.bgv;
     anScore[0] = ms.anScore[0];
@@ -731,7 +730,7 @@ PythonCubeInfo(PyObject * UNUSED(self), PyObject * args)
                           &nCube, &fCubeOwner, &fMove, &nMatchTo, &anScore[0], &anScore[1], &fCrawford, &bgv))
         return NULL;
 
-    if (SetCubeInfo(&ci, nCube, fCubeOwner, fMove, nMatchTo, anScore, fCrawford, fJacoby, fBeavers, bgv)) {
+    if (SetCubeInfo(&ci, nCube, fCubeOwner, fMove, nMatchTo, anScore, fCrawford, fJacobyRule, fBeavers, bgv)) {
         PyErr_SetString(PyExc_StandardError, _("error in SetCubeInfo\n"));
         return NULL;
     }
@@ -802,9 +801,9 @@ PythonHint_Callback (procrecorddata *pr)
         hintdict = Py_BuildValue("{s:i,s:s,s:f,s:f}", "movenum", index + 1, "type", "none", "equity", rEq, "eqdiff", rEqDiff);
         break;
     case EVAL_EVAL:{
-        const move *mi = &pml->amMoves[index];
-        details = Py_BuildValue("{s:(fffff),s:f}", "probs", mi->arEvalMove[0], mi->arEvalMove[1],
-                                mi->arEvalMove[2], mi->arEvalMove[3], mi->arEvalMove[4], "score", mi->rScore);
+        const move *pmi = &pml->amMoves[index];
+        details = Py_BuildValue("{s:(fffff),s:f}", "probs", pmi->arEvalMove[0], pmi->arEvalMove[1],
+                                pmi->arEvalMove[2], pmi->arEvalMove[3], pmi->arEvalMove[4], "score", pmi->rScore);
 
         ctxdict = EvalContextToPy(&pes->ec);
         hintdict = Py_BuildValue("{s:i,s:s,s:s,s:f,s:f,s:N,s:N}", "movenum", index + 1, "type", "eval", "move", szMove,
@@ -812,16 +811,16 @@ PythonHint_Callback (procrecorddata *pr)
         break;
         }
     case EVAL_ROLLOUT: {
-        const move *mi = &pml->amMoves[index];
-        const float *p = mi->arEvalMove;
-        const float *s = mi->arEvalStdDev;
+        const move *pmi = &pml->amMoves[index];
+        const float *p = pmi->arEvalMove;
+        const float *s = pmi->arEvalStdDev;
 
         details = Py_BuildValue("{s:(fffff),s:(fffff),s:f,s:f,s:f,s:f,s:i,s:f}",
                                         "probs", p[0], p[1], p[2], p[3], p[4],
                                         "probs-std", s[0], s[1], s[2], s[3], s[4],
                                         "match-eq", p[OUTPUT_EQUITY],
                                         "cubeful-eq", p[OUTPUT_CUBEFUL_EQUITY],
-                                        "score", mi->rScore, "score2", mi->rScore2, "trials", pes->rc.nGamesDone,
+                                        "score", pmi->rScore, "score2", pmi->rScore2, "trials", pes->rc.nGamesDone,
                                         "stopped-on-jsd", pes->rc.rStoppedOnJSD);
 
         ctxdict = RolloutContextToPy(&pes->rc);
@@ -977,14 +976,11 @@ static PyObject *
 PythonParseMove(PyObject * UNUSED(self), PyObject * args)
 {
     PyObject *pyMoves;
-    PyObject *pyMove;
-    PyObject *pyMoveL;
-    PyObject *pyMoveR;
     char *pch;
     char *sz;
     int an[8];
     int nummoves;
-    int movesidx, moveidx;
+    int movesidx;
 
     if (!PyArg_ParseTuple(args, "s:moves", &pch))
         return NULL;
@@ -1004,6 +1000,11 @@ PythonParseMove(PyObject * UNUSED(self), PyObject * args)
         return NULL;
 
     for (movesidx = 0; movesidx < nummoves; movesidx++) {
+        PyObject *pyMove;
+        PyObject *pyMoveL;
+        PyObject *pyMoveR;
+        int moveidx;
+
         pyMoveL = PyInt_FromLong(an[movesidx * 2]);
         pyMoveR = PyInt_FromLong(an[movesidx * 2 + 1]);
 
@@ -1340,15 +1341,15 @@ PythonFindBestMove(PyObject * UNUSED(self), PyObject * args)
 
     {
         PyObject *p;
-        Py_ssize_t k;
-        int nMove;
 
-        if (fd.pml->cMoves <= 0)
+        if (fd.pml->cMoves == 0)
             p = PyTuple_New(0);
         else {
+            Py_ssize_t k;
+
             p = PyTuple_New(8);
             for (k = 0; k < 8; ++k) {
-                nMove = ml.amMoves[0].anMove[k];
+                int nMove = ml.amMoves[0].anMove[k];
                 if ((nMove == -1) && ((k % 2) == 0))
                     break;
 
@@ -1368,12 +1369,12 @@ METRow(float ar[MAXSCORE], const int n)
 
     int i;
     PyObject *pyList;
-    PyObject *pyf;
 
     if (!(pyList = PyList_New(n)))
         return NULL;
 
     for (i = 0; i < n; ++i) {
+        PyObject *pyf;
 
         if (!(pyf = PyFloat_FromDouble(ar[i])))
             return NULL;
@@ -1390,15 +1391,15 @@ METRow(float ar[MAXSCORE], const int n)
 static PyObject *
 METPre(float aar[MAXSCORE][MAXSCORE], const int n)
 {
-
     int i;
     PyObject *pyList;
-    PyObject *pyRow;
 
     if (!(pyList = PyList_New(n)))
         return NULL;
 
     for (i = 0; i < n; ++i) {
+        PyObject *pyRow;
+
         if (!(pyRow = METRow(aar[i], n)))
             return NULL;
 
@@ -1415,12 +1416,9 @@ static PyObject *
 PythonDiceRolls(PyObject * UNUSED(self), PyObject * args)
 {
     PyObject *pyDiceRolls;
-    PyObject *pyDiceRoll;
-    PyObject *pyDie1;
-    PyObject *pyDie2;
     long n;
     unsigned int anDice[2];
-    int dieidx, rollsidx;
+    int rollsidx;
 
     if (!PyArg_ParseTuple(args, "l:dicerolls", &n))
         return NULL;
@@ -1435,6 +1433,11 @@ PythonDiceRolls(PyObject * UNUSED(self), PyObject * args)
 
     rollsidx = 0;
     while (n-- > 0) {
+        PyObject *pyDiceRoll;
+        PyObject *pyDie1;
+        PyObject *pyDie2;
+        int dieidx;
+
         RollDice(anDice, &rngCurrent, rngctxCurrent);
 
         pyDie1 = PyInt_FromLong(anDice[0]);
@@ -1767,7 +1770,6 @@ PythonPositionFromKey(PyObject * UNUSED(self), PyObject * args)
     TanBoard anBoard;
     int i;
     PyObject *pyKey = NULL;
-    PyObject *py;
     oldpositionkey key;
 
     if (!PyArg_ParseTuple(args, "|O!:positionfromkey", &PyList_Type, &pyKey))
@@ -1776,6 +1778,8 @@ PythonPositionFromKey(PyObject * UNUSED(self), PyObject * args)
     if (pyKey) {
 
         for (i = 0; i < 10; ++i) {
+            PyObject *py;
+
             if (!(py = PyList_GetItem(pyKey, i)))
                 return NULL;
 
@@ -1857,11 +1861,11 @@ diffContext(const evalcontext * c, PyMatchState * ms)
 
     if (!s) {
         ms->ec = c;
-        return 0;
+        return NULL;
     }
 
     if (cmp_evalcontext(s, c) == 0) {
-        return 0;
+        return NULL;
     }
 
     {
@@ -1898,7 +1902,7 @@ diffRolloutContext(const rolloutcontext * c, PyMatchState * ms)
 
     if (!s) {
         ms->rc = c;
-        return 0;
+        return NULL;
     }
 
     {
@@ -2096,7 +2100,7 @@ luckString(lucktype const lt, int const ignoreNone)
         return "verygood";
     }
     g_assert_not_reached();
-    return 0;
+    return NULL;
 }
 
 static const char *
@@ -2113,7 +2117,7 @@ skillString(skilltype const st, int const ignoreNone)
         return ignoreNone ? 0 : "unmarked";
     }
     g_assert_not_reached();
-    return 0;
+    return NULL;
 }
 
 static void
@@ -2153,9 +2157,9 @@ PyMoveAnalysis(const movelist * pml, PyMatchState * ms)
     unsigned int n = 0;
 
     for (i = 0; i < pml->cMoves; i++) {
-        const move *mi = &pml->amMoves[i];
+        const move *pmi = &pml->amMoves[i];
 
-        switch (mi->esMove.et) {
+        switch (pmi->esMove.et) {
         case EVAL_EVAL:
         case EVAL_ROLLOUT:
             {
@@ -2169,7 +2173,7 @@ PyMoveAnalysis(const movelist * pml, PyMatchState * ms)
     }
 
     if (!n) {
-        return 0;
+        return NULL;
     }
 
     {
@@ -2177,22 +2181,22 @@ PyMoveAnalysis(const movelist * pml, PyMatchState * ms)
         n = 0;
 
         for (i = 0; i < pml->cMoves; i++) {
-            const move *mi = &pml->amMoves[i];
+            const move *pmi = &pml->amMoves[i];
             PyObject *v = 0;;
 
-            switch (mi->esMove.et) {
+            switch (pmi->esMove.et) {
             case EVAL_EVAL:
                 {
-                    PyObject *m = PyMove(mi->anMove);
+                    PyObject *m = PyMove(pmi->anMove);
                     v = Py_BuildValue("{s:s,s:O,s:(fffff),s:f}",
                                       "type", "eval",
                                       "move", m,
-                                      "probs", mi->arEvalMove[0], mi->arEvalMove[1],
-                                      mi->arEvalMove[2], mi->arEvalMove[3], mi->arEvalMove[4], "score", mi->rScore);
+                                      "probs", pmi->arEvalMove[0], pmi->arEvalMove[1],
+                                      pmi->arEvalMove[2], pmi->arEvalMove[3], pmi->arEvalMove[4], "score", pmi->rScore);
                     Py_DECREF(m);
 
                     {
-                        PyObject *c = diffContext(&mi->esMove.ec, ms);
+                        PyObject *c = diffContext(&pmi->esMove.ec, ms);
                         if (c) {
                             DictSetItemSteal(v, "evalcontext", c);
                         }
@@ -2202,10 +2206,10 @@ PyMoveAnalysis(const movelist * pml, PyMatchState * ms)
                 }
             case EVAL_ROLLOUT:
                 {
-                    PyObject *m = PyMove(mi->anMove);
-                    const evalsetup *pes = &mi->esMove;
-                    const float *p = mi->arEvalMove;
-                    const float *s = mi->arEvalStdDev;
+                    PyObject *m = PyMove(pmi->anMove);
+                    const evalsetup *pes = &pmi->esMove;
+                    const float *p = pmi->arEvalMove;
+                    const float *s = pmi->arEvalStdDev;
 
                     v = Py_BuildValue("{s:s,s:O,s:i,s:(fffff),s:f,s:f"
                                       ",s:(fffff),s:f,s:f}",
@@ -2326,7 +2330,7 @@ PyGameStats(const statcontext * sc, const int fIsMatch, const int nMatchTo)
     float aaaar[3][2][2][2];
 
     if (!(sc->fMoves || sc->fCube || sc->fDice)) {
-        return 0;
+        return NULL;
     }
 
     getMWCFromError(sc, aaaar);
@@ -2536,7 +2540,7 @@ PythonGame(const listOLD * plGame,
 
     if (!(gameDict && gameInfoDict)) {
         PyErr_SetString(PyExc_MemoryError, "");
-        return 0;
+        return NULL;
     }
 
     DictSetItemSteal(gameInfoDict, "score-X", PyInt_FromLong(g->anScore[0]));
@@ -2852,7 +2856,7 @@ PythonMatch(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
 
     if (!PyArg_ParseTupleAndKeywords(args, keywds, "|iiii", kwlist,
                                      &includeAnalysis, &boards, &statistics, &verboseAnalysis))
-        return 0;
+        return NULL;
 
 
     matchDict = PyDict_New();
@@ -2860,12 +2864,12 @@ PythonMatch(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
 
     if (!matchDict && !matchInfoDict) {
         PyErr_SetString(PyExc_MemoryError, "");
-        return 0;
+        return NULL;
     }
 
     if (g->i != 0) {
         PyErr_SetString(PyExc_StandardError, "First game missing from match");
-        return 0;
+        return NULL;
     }
     g_assert(g->i == 0);
 
@@ -2945,39 +2949,39 @@ PythonMatch(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
         int nGames = 0;
         const listOLD *pl;
         PyObject *matchTuple;
-        statcontext scMatch;
+        statcontext scm;
 
         for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
             ++nGames;
         }
 
         if (statistics) {
-            IniStatcontext(&scMatch);
+            IniStatcontext(&scm);
         }
 
         matchTuple = PyTuple_New(nGames);
 
         nGames = 0;
         for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
-            PyObject *g = PythonGame(pl->p, includeAnalysis, verboseAnalysis,
-                                     statistics ? &scMatch : 0, boards, &s);
+            PyObject *pg = PythonGame(pl->p, includeAnalysis, verboseAnalysis,
+                                     statistics ? &scm : 0, boards, &s);
 
-            if (!g) {
+            if (!pg) {
                 /* Memory leaked. out of memory anyway */
-                return 0;
+                return NULL;
             }
 
-            PyTuple_SET_ITEM(matchTuple, nGames, g);
+            PyTuple_SET_ITEM(matchTuple, nGames, pg);
             ++nGames;
         }
 
         DictSetItemSteal(matchDict, "games", matchTuple);
 
         if (statistics) {
-            PyObject *s = PyGameStats(&scMatch, TRUE, g->nMatch);
+            PyObject *pgs = PyGameStats(&scm, TRUE, g->nMatch);
 
-            if (s) {
-                DictSetItemSteal(matchDict, "stats", s);
+            if (pgs) {
+                DictSetItemSteal(matchDict, "stats", pgs);
             }
         }
     }
@@ -3005,32 +3009,32 @@ PythonNavigate(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
 {
     int nextRecord = INT_MIN;
     int nextGame = INT_MIN;
-    int gamesDif = 0;
-    int recordsDiff = 0;
-    PyObject *r, *tmpobj;
+    PyObject *r;
 
     static char *kwlist[] = { "next", "game", 0 };
 
     if (!lMatch.plNext) {
         PyErr_SetString(PyExc_RuntimeError, "no active match");
-        return 0;
+        return NULL;
     }
 
     if (!PyArg_ParseTupleAndKeywords(args, keywds, "|ii", kwlist, &nextRecord, &nextGame))
-        return 0;
+        return NULL;
 
 
-    r = 0;
+    r = NULL;
 
     if (nextRecord == INT_MIN && nextGame == INT_MIN) {
         /* no args, go to start */
         if (lMatch.plNext->p)       /* Match not empty */
             ChangeGame(lMatch.plNext->p);
     } else {
+        int gamesDif = 0;
+        int recordsDiff = 0;
 
         if (nextRecord != INT_MIN && nextRecord < 0) {
             PyErr_SetString(PyExc_ValueError, "negative next record");
-            return 0;
+            return NULL;
         }
 
         if (nextGame != INT_MIN && nextGame != 0) {
@@ -3067,10 +3071,10 @@ PythonNavigate(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
          * If normal move, set global dice for export and such.
          */
         if (plLastMove->plNext && plLastMove->plNext->p) {
-            const moverecord *r = (const moverecord *) (plLastMove->plNext->p);
+            const moverecord *pmr = (const moverecord *) (plLastMove->plNext->p);
 
-            if (r->mt == MOVE_NORMAL) {
-                memcpy(ms.anDice, r->anDice, sizeof(ms.anDice));
+            if (pmr->mt == MOVE_NORMAL) {
+                memcpy(ms.anDice, pmr->anDice, sizeof(ms.anDice));
             }
         }
 
@@ -3088,6 +3092,8 @@ PythonNavigate(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
         Py_INCREF(Py_None);
         r = Py_None;
     } else {
+        PyObject *tmpobj;
+
         Py_INCREF(Py_None);
         tmpobj = PythonUpdateUI(NULL, Py_None);
         Py_DECREF(tmpobj);
@@ -3393,7 +3399,7 @@ extern gint
 python_run_file(gpointer file)
 {
     char *pch;
-    PyObject *py_dict = NULL, *py_ret = NULL;
+    PyObject *py_dict, *py_ret;
 
     g_assert(file);
 
