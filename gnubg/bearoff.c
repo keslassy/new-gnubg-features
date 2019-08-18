@@ -34,7 +34,6 @@
 #include <glib/gstdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
 #include <errno.h>
 #include "glib-ext.h"
 
@@ -208,7 +207,6 @@ GenerateBearoff(unsigned char *p, unsigned int nId)
 {
     unsigned int anRoll[2], anBoard[6], aProb[32];
     unsigned int i, iBest;
-    unsigned short us;
 
     for (i = 0; i < 32; i++)
         aProb[i] = 0;
@@ -230,7 +228,8 @@ GenerateBearoff(unsigned char *p, unsigned int nId)
         }
 
     for (i = 0; i < 32; i++) {
-        us = (unsigned short) ((aProb[i] + 18) / 36);
+        unsigned short us = (unsigned short) ((aProb[i] + 18) / 36);
+
         p[(nId << 6) | (i << 1)] = us & 0xFF;
         p[(nId << 6) | (i << 1) | 1] = us >> 8;
     }
@@ -286,7 +285,6 @@ ReadTwoSidedBearoff(const bearoffcontext * pbc, const unsigned int iPos, float a
     unsigned int i, k = (pbc->fCubeful) ? 4 : 1;
     unsigned char ac[8];
     unsigned char *pc = NULL;
-    unsigned short int us;
 
     if (pbc->p)
         pc = pbc->p + 40 + 2 * iPos * k;
@@ -297,7 +295,8 @@ ReadTwoSidedBearoff(const bearoffcontext * pbc, const unsigned int iPos, float a
     /* add to cache */
 
     for (i = 0; i < k; ++i) {
-        us = pc[2 * i] | (unsigned short) (pc[2 * i + 1] << 8);
+        unsigned short int  us = pc[2 * i] | (unsigned short) (pc[2 * i + 1] << 8);
+
         if (aus)
             aus[i] = us;
         if (ar)
@@ -551,7 +550,6 @@ BearoffDumpTwoSided(const bearoffcontext * pbc, const TanBoard anBoard, char *sz
     unsigned int n = Combination(pbc->nPoints + pbc->nChequers, pbc->nPoints);
     unsigned int iPos = nUs * n + nThem;
     float ar[4];
-    unsigned int i;
     const char *aszEquity[] = {
         N_("Cubeless equity"),
         N_("Owned cube"),
@@ -564,7 +562,7 @@ BearoffDumpTwoSided(const bearoffcontext * pbc, const TanBoard anBoard, char *sz
     ReadTwoSidedBearoff(pbc, iPos, ar, NULL);
 
     if (pbc->fCubeful)
-        for (i = 0; i < 4; ++i)
+        for (int i = 0; i < 4; ++i)
             sprintf(sz + strlen(sz), "%-30.30s: %+7.4f\n", gettext(aszEquity[i]), ar[i]);
     else
         sprintf(sz + strlen(sz), "%-30.30s: %+7.4f\n", gettext(aszEquity[0]), 2.0f * ar[0] - 1.0f);
@@ -1018,10 +1016,6 @@ AssignOneSided(float arProb[32], float arGammonProb[32],
                unsigned short int ausGammonProb[32],
                const unsigned short int ausProbx[32], const unsigned short int ausGammonProbx[32])
 {
-
-    int i;
-    float arx[64];
-
     if (ausProb)
         memcpy(ausProb, ausProbx, 32 * sizeof(ausProb[0]));
 
@@ -1029,6 +1023,9 @@ AssignOneSided(float arProb[32], float arGammonProb[32],
         memcpy(ausGammonProb, ausGammonProbx, 32 * sizeof(ausGammonProbx[0]));
 
     if (ar || arProb || arGammonProb) {
+        float arx[64];
+        int i;
+
         for (i = 0; i < 32; ++i)
             arx[i] = ausProbx[i] / 65535.0f;
 
