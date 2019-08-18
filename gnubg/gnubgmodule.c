@@ -3455,7 +3455,11 @@ PythonInitialise(char *argv0)
     python_dir = g_build_filename(working_dir, "PythonLib", NULL);
     if (access(python_dir, F_OK) == 0) {
         /* Set Python to use this directory */
+#if PY_MAJOR_VERSION >= 3
+        Py_SetPythonHome(Py_DecodeLocale(python_dir, NULL));
+#else
         Py_SetPythonHome(python_dir);
+#endif
     }
     g_free(working_dir);
 #endif
