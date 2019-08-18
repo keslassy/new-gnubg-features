@@ -222,13 +222,12 @@ RolloutDice(int iTurn, int iGame,
     if (fInitial && !iTurn) {
         /* rollout of initial position: no doubles allowed */
         if (fRotate) {
-            unsigned int j;
 
             if (!iGame)
                 nSkip = 0;
 
             for (;; nSkip++) {
-                j = dicePerms->aaanPermutation[0][0][(iGame + nSkip) % 36];
+                unsigned int j = dicePerms->aaanPermutation[0][0][(iGame + nSkip) % 36];
 
                 anDice[0] = j / 6 + 1;
                 anDice[1] = j % 6 + 1;
@@ -267,11 +266,11 @@ extern void
 ClosedBoard(int afClosedBoard[2], const TanBoard anBoard)
 {
 
-    int i, j, n;
+    int i, j;
 
     for (i = 0; i < 2; i++) {
+        int n = 0;
 
-        n = 0;
         for (j = 0; j < 6; j++) {
             if (anBoard[i][j] > 1)
                 n++;
@@ -941,13 +940,13 @@ check_jsds(int *active)
 {
     int alt;
     float v, s, denominator;
-    rolloutcontext *prc;
 
     for (alt = 0; alt < ro_alternatives; ++alt) {
 
         /* 1) For each move, calculate the cubeful (or cubeless if that's what we're doing)
          * equity */
-        prc = &ro_apes[alt]->rc;
+        rolloutcontext *prc = &ro_apes[alt]->rc;
+
         if (prc->fCubeful) {
             v = aarMu[alt][OUTPUT_CUBEFUL_EQUITY];
             s = aarSigma[alt][OUTPUT_CUBEFUL_EQUITY];
@@ -1187,14 +1186,13 @@ RolloutLoopMT(void *UNUSED(unused))
 
             /* apply the results */
             for (j = 0; j < NUM_ROLLOUT_OUTPUTS; j++) {
-                float rMuNew, rDelta;
+                float rMuNew;
 
                 aarResult[alt][j] += aar[j];
                 rMuNew = aarResult[alt][j] / (altGameCount[alt]);
 
                 if (altGameCount[alt] > 1) {    /* for i == 0 aarVariance is not defined */
-
-                    rDelta = rMuNew - aarMu[alt][j];
+                    float rDelta = rMuNew - aarMu[alt][j];
 
                     aarVariance[alt][j] =
                         aarVariance[alt][j] * (1.0f - 1.0f / (altGameCount[alt] - 1)) +
@@ -1262,13 +1260,13 @@ UpdateProgress(gpointer UNUSED(unused))
 {
     if (fShowProgress && ro_alternatives > 0) {
         int alt;
-        rolloutcontext *prc;
 
         multi_debug("exclusive lock: update progress");
         MT_Exclusive();
 
         for (alt = 0; alt < ro_alternatives; ++alt) {
-            prc = &ro_apes[alt]->rc;
+            rolloutcontext *prc = &ro_apes[alt]->rc;
+
             (*ro_pfProgress) (aarMu, aarSigma, prc, aciLocal, initial_game_count, altGameCount[alt] - 1, alt,
                               ajiJSD[alt].nRank + 1, ajiJSD[alt].rJSD, fNoMore[alt], show_jsds, ro_fCubeRollout,
                               ro_pUserData);
@@ -1390,7 +1388,6 @@ RolloutGeneral(ConstTanBoard * apBoard,
             }
         } else {
             int nGames = prc->nGamesDone;
-            float r;
 
             previous_rollouts++;
 
@@ -1407,6 +1404,8 @@ RolloutGeneral(ConstTanBoard * apBoard,
                 nFirstTrial = nGames;
             /* restore internal variables from input values */
             for (j = 0; j < NUM_ROLLOUT_OUTPUTS; ++j) {
+                float r;
+
                 r = aarMu[alt][j] = (*apOutput[alt])[j];
                 aarResult[alt][j] = r * nGames;
                 r = aarSigma[alt][j] = (*apStdDev[alt])[j];
@@ -1642,8 +1641,6 @@ GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
                      const TanBoard anBoard,
                      cubeinfo * pci, rolloutcontext * prc, evalsetup * pes, rolloutprogressfunc * pf, void *p)
 {
-
-
     evalsetup esLocal;
     evalsetup(*apes[2]);
     cubeinfo aci[2];
@@ -1691,7 +1688,6 @@ GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
         prc->fCubeful = TRUE;
     }
 
-
     if ((cGames = RolloutGeneral(apBoard, apOutput, apStdDev,
                                  aarsStatistics, apes, apci, apCubeDecTop, 2, FALSE, TRUE, pf, p)) <= 0)
         return -1;
@@ -1700,7 +1696,6 @@ GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
     pes->rc.nSkip = nSkip;
 
     return 0;
-
 }
 
 
@@ -1815,12 +1810,9 @@ getResignEquities(float arResign[NUM_ROLLOUT_OUTPUTS], cubeinfo * pci, int nResi
 extern int
 ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc * pfRolloutProgress, void * pUserData)
 {
-
-    const cubeinfo *pci;
     int fCubeDecTop = TRUE;
     int i;
     int nGamesDone;
-    rolloutcontext *prc;
 
     TanBoard *anBoard = g_alloca(cMoves * 2 * 25 * sizeof(int));
     ConstTanBoard *apBoard = g_alloca(cMoves * sizeof(int *));
@@ -1860,6 +1852,8 @@ ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc 
         return -1;
 
     for (i = 0; i < cMoves; ++i) {
+        const cubeinfo *pci;
+        rolloutcontext *prc;
 
         /* Score for move:
          * rScore is the primary score (cubeful/cubeless)
