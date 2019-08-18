@@ -27,11 +27,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if HAVE_UNISTD_H
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
-
-#include <gtk/gtk.h>
 
 #if defined(WIN32)
 /* MS gl.h needs windows.h to be included first */
