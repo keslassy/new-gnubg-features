@@ -217,7 +217,10 @@ SetRNG(rng * prng, rngcontext * rngctx, rng rngNew, char *szSeed)
             if (!fInit)
                 /* use default modulus, with factors
                  * 148028650191182616877187862194899201391 and
-                 * 315270837425234199477225845240496832591. */
+                 * 315270837425234199477225845240496832591.
+                 * (this is copied from old libgmp code,
+                 * the numbers must be primes, congruent to 3 mod 4)
+                 */
                 InitRNGBBSModulus("46669116508701198206463178178218347698370"
                                   "262771368237383789001446050921334081", rngctx);
             break;
@@ -2811,7 +2814,7 @@ CommandSetWarning(char *sz)
         g_free(buf);
         return;
     }
-    buf =g_strdup_printf( _("Warning %s set to %s."), sz, pValue);
+    buf = g_strdup_printf(_("Warning %s set to %s."), sz, pValue);
     outputl(buf);
     g_free(buf);
 }
