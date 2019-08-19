@@ -4687,7 +4687,7 @@ Equity
           follow the instructions at <ulink url="http://www.gnubg.org/index.php?itemid=100">this page</ulink>.</para>
         <para>Details like the exact names of the prerequisite packages will vary
           from a distribution to another but the general process will remain
-          identical. If you are remotely familiar with open source software
+          identical. If you are remotely familiar with software
           set up with <application>autoconf</application>, you will see that
 	  <application>GNU Backgammon</application> is straightforward to build.
 	</para>
