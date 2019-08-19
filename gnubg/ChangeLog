@@ -518,8 +518,8 @@
 
 	* +doc/bearoffdump.6, +doc/makebearoff.6, +doc/makehyper.6,
 	  +doc/makeweights.6, doc/Makefile.am, Makefile.am:
-	Add man pages for the GNUBG utilities, based upon the man pages
-	created by Russ Allbery for Debian/GNU Linux. Fix docdir usage,
+	Add man pages for the GNUbg utilities, based upon the man pages
+	created by Russ Allbery for Debian GNU/Linux. Fix docdir usage,
 	and compress the man pages.
 
 2013-08-20  Michael Petch  <mpetch@gnubg.org>
@@ -789,7 +789,7 @@
 	* gnubgmodule.c, gtkgame.c, play.c: Modify the interactive Python 
 	interpreter to support tab completion and command history. Begin
 	reintroducing Python IDLE, since it functions on MS Windows and
-	various linux distros. Ubuntu/Debian installation of IDLE can be 
+	various GNU/Linux distros. Ubuntu/Debian installation of IDLE can be 
 	done via: apt-get install idle . If IDLE is not present it will
 	drop back to the old method. CLI builds don't use IDLE at present.
 	IDLE is not on the GUI menu but can be activated by turning on the

@@ -39,7 +39,7 @@ char *docdir = NULL;
 /* Default build on WIN32, including msys, installs something not
  * nearly usable as is (it is rather destined to be repackaged in a
  * standalone installer).
- * Define this for the binaries to be more similar to a linux build.
+ * Define this for the binaries to be more similar to a GNU/Linux build.
  */
 /* #define USABLE_UNDER_MSYS 1 */
 

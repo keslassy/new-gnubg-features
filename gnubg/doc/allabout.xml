@@ -100,7 +100,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
     </sect2>
     <sect2 id="Brief_feature_list" xreflabel="Brief feature list">
       <title>Brief feature list</title>
-      <para>Aside from offering an analytical engine of the highest order, the program's interface provides a very impressive number of features for users, many of which are not available in commercial programs. It's worth mentioning that GNU Backgammon is also available for MacOS, Solaris, Linux, and other operating systems. There are also programs using the GNU engine running on <ulink url="http://bglightce.homelinux.net/">Pocket PC PDAs</ulink>, and the <ulink url="http://www.nongnu.org/bglight/">source</ulink> is available to be ported to PDAs. </para>
+      <para>Aside from offering an analytical engine of the highest order, the program's interface provides a very impressive number of features for users, many of which are not available in commercial programs. It's worth mentioning that GNU Backgammon is also available for MacOS, Solaris, GNU/Linux, and other operating systems. There are also programs using the GNU engine running on <ulink url="http://bglightce.homelinux.net/">Pocket PC PDAs</ulink>, and the <ulink url="http://www.nongnu.org/bglight/">source</ulink> is available to be ported to PDAs. </para>
       <orderedlist>
         <listitem>
           <para>Import and export one's games and matches from other sources such as FIBS, Gamesgrid (it imports comments as well), and TrueMoneyGames.</para>
@@ -162,7 +162,7 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
         <imagedata align="center" fileref="images/md9b1995.png"/>
       </imageobject>
     </mediaobject>
-    <para>And then the version (Windows, Mac OS X, Linux, etc.) you want. </para>
+    <para>And then the version (Windows, Mac OS X, GNU/Linux, etc.) you want. </para>
   </sect1>
   <sect1 id="Playing_a_game" xreflabel="Playing a game">
     <title>Playing a game</title>

@@ -580,7 +580,7 @@ gnubg moves 8/5 6/5.
     </sect1info>
     <title>Starting GNU Backgammon</title>
     <sect2 id="gnubg-starting_unix">
-      <title>Linux and Unix</title>
+      <title>GNU/Linux and Unix</title>
       <para>If <application moreinfo="none">GNU Backgammon</application> is
         properly installed on your system, you can start it by simply typing
         gnubg at the command prompt. If you want to start the GNU Backgammon
@@ -4605,7 +4605,7 @@ Equity
 	<para>Installable packages for <emphasis>Microsoft
 	Windows</emphasis> and <emphasis>Mac OS X</emphasis> are
 	available for download at the project official
-	website. Already built packages are often provided by Linux
+	website. Already built packages are often provided by GNU/Linux
 	distributions as well.
 	</para>
 	<para>When you successfully port
@@ -4670,7 +4670,7 @@ Equity
           Backgammon</application>?</title>
 	<para>On Microsoft Windows everything you need is included in the installer.</para>
 	<para>On Mac OS/X you will need the XQuartz Window System.</para>
-        <para>On Linux there are prerequisites as well but your package manager (apt, yum, etc...) will take care of them.</para>
+        <para>On GNU/Linux there are prerequisites as well but your package manager (apt, yum, etc...) will take care of them.</para>
       </sect3>
       <sect3 id="gnubg-faq_install_new">
         <title>I want to install a newer version</title>
