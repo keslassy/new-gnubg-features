@@ -5816,7 +5816,7 @@ msgid ""
 "the best it can."
 msgstr ""
 "Stelle die vorherige Größe und Position eines Fensters wieder her. Dies ist "
-"eigentlich Aufgabe eines \"Session-\" oder \"Window\"-Managers (Unix/Linux). "
+"eigentlich Aufgabe eines \"Session-\" oder \"Window\"-Managers. "
 "Da GNU Backgammon jedoch auch auf Plattformen portiert wird, bei denen es "
 "diese Manager nicht gibt, versuchen wir hier unser Bestes."
 
