@@ -1,10 +1,9 @@
-The files in this directory will be generated automatically on linux
-and other system supporting the autobuild process. You should
-therefore not edit any of these files. If you need to alter any code
-in any of these files you should rather edit the corresponding file
-that generates it.
+The files in this directory will be generated automatically on systems
+supporting the autobuild process. You should therefore not edit any of
+them. If you need to alter code in any of these files you should
+instead edit the corresponding file that generates it.
 
-If you have troubles building any of these files you may copy the file
+If you have trouble building any of these files you may copy the file
 causing problems from this directory to its intended location.
 
 TARGET                              SOURCE
