@@ -914,9 +914,8 @@ ParsePosition(TanBoard an, char **ppch, char *pchDesc)
          * integer 26  : # of opp chequers on the bar
          */
 
-        int n;
-
         for (i = 0; i < 26; i++) {
+            int n;
 
             if ((n = ParseNumber(ppch)) == INT_MIN) {
                 outputf(_("`simple' must be followed by 26 integers; " "found only %d\n"), i);
@@ -2608,12 +2607,13 @@ CommandRollout(char *sz)
 static void
 LoadCommands(FILE * pf, char *szFile)
 {
-    char sz[2048], *pch;
+    char sz[2048];
 
     outputpostpone();
 
     /* FIXME shouldn't restart sys calls on signals during this fgets */
     while (fgets(sz, sizeof(sz), pf) != NULL) {
+        char *pch;
 
         if ((pch = strchr(sz, '\n')))
             *pch = 0;
@@ -3417,7 +3417,6 @@ ERCompletion(const char *sz, int nState)
 {
     static int i;
     static size_t cch;
-    const char *pch;
     char *szDup;
 
     if (!nState) {
@@ -3426,7 +3425,7 @@ ERCompletion(const char *sz, int nState)
     }
 
     while (i < 2) {
-        pch = i++ ? "rollout" : "evaluation";
+        const char *pch = i++ ? "rollout" : "evaluation";
 
         if (!StrNCaseCmp(sz, pch, cch)) {
             if (!(szDup = malloc(strlen(pch) + 1)))
@@ -3446,7 +3445,6 @@ OnOffCompletion(const char *sz, int nState)
     static unsigned int i;
     static size_t cch;
     static const char *asz[] = { "false", "no", "off", "on", "true", "yes" };
-    const char *pch;
     char *szDup;
 
     if (!nState) {
@@ -3455,7 +3453,7 @@ OnOffCompletion(const char *sz, int nState)
     }
 
     while (i < sizeof(asz) / sizeof(asz[0])) {
-        pch = asz[i++];
+        const char *pch = asz[i++];
 
         if (!StrNCaseCmp(sz, pch, cch)) {
             if (!(szDup = malloc(strlen(pch) + 1)))
@@ -3532,13 +3530,15 @@ static command *
 FindContext(command * pc, char *szOrig, int ich)
 {
     char *sz = (char *) g_alloca(strlen(szOrig) * sizeof(char) + 1);
-    char *pch, *pchCurrent;
+    char *pch;
     command *pcResume = NULL;
 
     pch = strcpy(sz, szOrig);
     pch[ich] = 0;
 
     do {
+        char *pchCurrent;
+
         if (!(pchCurrent = NextToken(&pch)))
             /* no command */
             return pc;
@@ -4273,16 +4273,18 @@ run_cl(void)
 static void
 init_language(char **lang)
 {
-    char *szFile, szTemp[4096];
-    char *pch;
+    char *szFile;
     FILE *pf;
 
     outputoff();
     szFile = g_build_filename(szHomeDirectory, "gnubgautorc", NULL);
 
     if (!*lang && (pf = gnubg_g_fopen(szFile, "r"))) {
+        char szTemp[4096];
 
         while (fgets(szTemp, sizeof(szTemp), pf) != NULL) {
+            char *pch;
+
             if ((pch = strchr(szTemp, '\n')))
                 *pch = 0;
             if ((pch = strchr(szTemp, '\r')))
@@ -4936,13 +4938,13 @@ confirmOverwrite(const char *sz, const int f)
     /* check for existing file */
 
     if (f && !access(sz, F_OK)) {
-        gchar *szPrompt;
+        gchar *szp;
         int i;
 
-        szPrompt = g_strdup_printf(_("File \"%s\" exists. Overwrite? "), sz);
-        i = GetInputYN(szPrompt);
+        szp = g_strdup_printf(_("File \"%s\" exists. Overwrite? "), sz);
+        i = GetInputYN(szp);
 
-        g_free(szPrompt);
+        g_free(szp);
 
         return i;
 
@@ -5077,20 +5079,18 @@ TextToClipboard(const char *sz)
 void
 CommandDiceRolls(char *sz)
 {
-    int n;
     char *pch;
-    unsigned int anDice[2];
 
     if ((pch = NextToken(&sz))) {
-        n = ParseNumber(&pch);
+        int n = ParseNumber(&pch);
 
         while (n-- > 0) {
+            unsigned int anDice[2];
+
             RollDice(anDice, &rngCurrent, rngctxCurrent);
 
             printf("%u %u\n", anDice[0], anDice[1]);
-
         }
-
     }
 }
 
@@ -5099,16 +5099,12 @@ CommandDiceRolls(char *sz)
 extern void
 CommandHistory(char *UNUSED(sz))
 {
-
     int i;
-    HIST_ENTRY *phe;
 
     for (i = 0; i < history_length; ++i) {
-        phe = history_get(i + history_base);
+        HIST_ENTRY *phe = history_get(i + history_base);
         outputf("%6d %s\n", i + history_base, phe->line);
     }
-
-
 }
 
 #endif                          /* HAVE_LIB_READLINE */
@@ -5145,11 +5141,10 @@ EPC(const TanBoard anBoard, float *arEPC, float *arMu, float *arSigma, int *pfSo
     if (isBearoff(pbc1, anBoard)) {
         /* one sided in-memory database */
         float ar[4];
-        unsigned int n;
         int i;
 
         for (i = 0; i < 2; ++i) {
-            n = PositionBearoff(anBoard[i], pbc1->nPoints, pbc1->nChequers);
+            unsigned int n = PositionBearoff(anBoard[i], pbc1->nPoints, pbc1->nChequers);
 
             if (BearoffDist(pbc1, n, NULL, NULL, ar, NULL, NULL))
                 return -1;
@@ -5171,11 +5166,10 @@ EPC(const TanBoard anBoard, float *arEPC, float *arMu, float *arSigma, int *pfSo
     } else if (isBearoff(pbcOS, anBoard)) {
         /* one sided in-memory database */
         float ar[4];
-        unsigned int n;
         int i;
 
         for (i = 0; i < 2; ++i) {
-            n = PositionBearoff(anBoard[i], pbcOS->nPoints, pbcOS->nChequers);
+            unsigned int n = PositionBearoff(anBoard[i], pbcOS->nPoints, pbcOS->nChequers);
 
             if (BearoffDist(pbcOS, n, NULL, NULL, ar, NULL, NULL))
                 return -1;

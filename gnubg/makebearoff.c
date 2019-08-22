@@ -696,7 +696,7 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
     int d0, d1;
     movelist ml;
     TanBoard anBoard, anBoardTemp;
-    int ii, j, k;
+    int j, k;
     unsigned int i;
 #if !defined(G_DISABLE_ASSERT)
     int iBest;
@@ -727,6 +727,8 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
      */
 
     if (pbc) {
+        int ii;
+
         for (ii = 24; ii >= 0 && !anBoard[1][ii]; --ii);
 
         if (ii < (int) pbc->nPoints) {
@@ -828,13 +830,12 @@ NDBearoff(const int iPos, const unsigned int nPoints, float ar[4], xhash * ph, b
 
 
 static void
-generate_nd(const int nPoints, const int nHashSize, const int fHeader, bearoffcontext * pbc, FILE * output)
+generate_nd(const int nPoints, const int nHashSize, const int fHeader, bearoffcontext * pbc, FILE * outfile)
 {
 
     int n = Combination(nPoints + 15, nPoints);
 
     int i, j;
-    char sz[41];
     float ar[4];
     int fTTY = isatty(STDERR_FILENO);
 
@@ -851,8 +852,10 @@ generate_nd(const int nPoints, const int nHashSize, const int fHeader, bearoffco
     XhashStatus(&h);
 
     if (fHeader) {
+        char sz[41];
+
         sprintf(sz, "gnubg-OS-%02d-15-1-0-1xxxxxxxxxxxxxxxxxxx\n", nPoints);
-        fputs(sz, output);
+        fputs(sz, outfile);
     }
 
 
@@ -864,7 +867,7 @@ generate_nd(const int nPoints, const int nHashSize, const int fHeader, bearoffco
             ar[0] = ar[1] = ar[2] = ar[3] = 0.0f;
 
         for (j = 0; j < 4; ++j)
-            WriteFloat(ar[j], output);
+            WriteFloat(ar[j], outfile);
 
         XhashAdd(&h, i, ar, 16);
         if (!(i % 100) && fTTY)
@@ -934,7 +937,6 @@ TSLookup(const int nUs, const int nThem,
     int iPos = CalcPosition(nUs, nThem, n);
     unsigned char ac[8];
     int i;
-    unsigned short int us;
 
     /* seek to position */
 
@@ -958,10 +960,8 @@ TSLookup(const int nUs, const int nThem,
         exit(-1);
     }
 
-    for (i = 0; i < (fCubeful ? 4 : 1); ++i) {
-        us = (unsigned short) (ac[2 * i] | ac[2 * i + 1] << 8);
-        arEquity[i] = us - 0x8000;
-    }
+    for (i = 0; i < (fCubeful ? 4 : 1); ++i)
+        arEquity[i] = (unsigned short) (ac[2 * i] | ac[2 * i + 1] << 8) - 0x8000;
 
     ++cLookup;
 
@@ -1288,7 +1288,7 @@ main(int argc, char **argv)
     glib_ext_init();
     MT_InitThreads();
     bearoffcontext *pbc = NULL;
-    FILE *output;
+    FILE *outfile;
     double r;
     int nTSP = 0, nTSC = 0;
 
@@ -1344,7 +1344,7 @@ main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    if (!(output = gnubg_g_fopen(szOutput, "w+b"))) {
+    if (!(outfile = gnubg_g_fopen(szOutput, "w+b"))) {
         perror(szOutput);
         return EXIT_FAILURE;
     }
@@ -1395,9 +1395,9 @@ main(int argc, char **argv)
         }
 
         if (fND) {
-            generate_nd(nOS, nHashSize, fHeader, pbc, output);
+            generate_nd(nOS, nHashSize, fHeader, pbc, outfile);
         } else {
-            generate_os(nOS, fHeader, fCompress, fGammon, nHashSize, pbc, output);
+            generate_os(nOS, fHeader, fCompress, fGammon, nHashSize, pbc, outfile);
         }
 
         BearoffClose(pbc);
@@ -1441,7 +1441,7 @@ main(int argc, char **argv)
             exit(2);
         }
 
-        generate_ts(nTSP, nTSC, fHeader, fCubeful, nHashSize, pbc, output);
+        generate_ts(nTSP, nTSC, fHeader, fCubeful, nHashSize, pbc, outfile);
 
         /* close old bearoff database */
 
@@ -1451,7 +1451,7 @@ main(int argc, char **argv)
 
     }
 
-    fclose(output);
+    fclose(outfile);
     return 0;
 
 }

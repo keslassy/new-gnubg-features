@@ -57,7 +57,7 @@ static GtkWidget *
 GnuBGFileDialog(const gchar * prompt, const gchar * folder, const gchar * name, GtkFileChooserAction action)
 {
 #ifdef WIN32
-    char *programdir, *pc, *tmp;
+    char *programdir, *pc;
 #endif
     GtkWidget *fc;
     switch (action) {
@@ -87,6 +87,8 @@ GnuBGFileDialog(const gchar * prompt, const gchar * folder, const gchar * name, 
 #ifdef WIN32
     programdir = g_strdup(getDataDir());
     if ((pc = strrchr(programdir, G_DIR_SEPARATOR)) != NULL) {
+        char *tmp;
+
         *pc = '\0';
 
         tmp = g_build_filename(programdir, "GridGammon", "SaveGame", NULL);
@@ -118,10 +120,12 @@ extern char *
 GTKFileSelect(const gchar * prompt, const gchar * extension, const gchar * folder,
               const gchar * name, GtkFileChooserAction action)
 {
-    gchar *sz, *filename = NULL;
+    gchar *filename = NULL;
     GtkWidget *fc = GnuBGFileDialog(prompt, folder, name, action);
+
     if (extension && *extension) {
-        sz = g_strdup_printf(_("Supported files (%s)"), extension);
+        gchar *sz = g_strdup_printf(_("Supported files (%s)"), extension);
+
         FilterAdd(sz, extension, GTK_FILE_CHOOSER(fc));
         FilterAdd(_("All Files"), "*", GTK_FILE_CHOOSER(fc));
         g_free(sz);
@@ -129,7 +133,9 @@ GTKFileSelect(const gchar * prompt, const gchar * extension, const gchar * folde
 
     if (gtk_dialog_run(GTK_DIALOG(fc)) == GTK_RESPONSE_ACCEPT)
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc));
+
     gtk_widget_destroy(fc);
+
     return filename;
 }
 
@@ -140,20 +146,27 @@ typedef struct _SaveOptions {
 static void
 SaveOptionsCallBack(GtkWidget * UNUSED(pw), SaveOptions * pso)
 {
-    gchar *fn, *fnn, *fnd;
     gint type, mgp;
 
     type = gtk_combo_box_get_active(GTK_COMBO_BOX(pso->description));
     mgp = gtk_combo_box_get_active(GTK_COMBO_BOX(pso->mgp));
+
     gtk_dialog_set_response_sensitive(GTK_DIALOG(pso->fc), GTK_RESPONSE_ACCEPT, export_format[type].exports[mgp]);
+
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pso->upext))) {
+        gchar *fn;
+
         if ((fn = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(pso->fc))) != NULL) {
-            DisectPath(fn, export_format[type].extension, &fnn, &fnd);
-            gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(pso->fc), fnd);
-            gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(pso->fc), fnn);
+            gchar *fnname, *fndir;
+
+            DisectPath(fn, export_format[type].extension, &fnname, &fndir);
+            gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(pso->fc), fndir);
+            gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(pso->fc), fnname);
+
+            g_free(fnname);
+            g_free(fndir);
+
             g_free(fn);
-            g_free(fnn);
-            g_free(fnd);
         }
     }
 }
@@ -347,7 +360,6 @@ GTKOpen(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
     GtkWidget *fc;
     GtkWidget *type_combo, *box, *box2;
-    gchar *fn;
     gchar *folder = NULL;
     gint import_type;
     static gchar *last_import_folder = NULL;
@@ -390,7 +402,7 @@ GTKOpen(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     autoOpen = TRUE;
 
     if (gtk_dialog_run(GTK_DIALOG(fc)) == GTK_RESPONSE_ACCEPT) {
-        fn = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc));
+        gchar *fn = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc));
         import_type = gtk_combo_box_get_active(GTK_COMBO_BOX(type_combo));
         if (import_type == 0) { /* Type automatically based on file */
             do_import_file(lastOpenType, fn);
@@ -590,7 +602,6 @@ batch_create_model(GSList * filenames)
     GtkListStore *store;
     GtkTreeIter tree_iter;
     GSList *iter;
-    FilePreviewData *fpd;
 
     store = gtk_list_store_new(NUM_COLS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
@@ -599,6 +610,7 @@ batch_create_model(GSList * filenames)
         char *folder;
         char *file;
         char *filename = (char *) iter->data;
+        FilePreviewData *fpd;
 
         gtk_list_store_append(store, &tree_iter);
 

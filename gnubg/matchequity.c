@@ -691,12 +691,11 @@ ExtendMET(float aarMET[MAXSCORE][MAXSCORE], const int nMaxScore)
 
     float rStddev0, rStddev1, rGames, rSigma;
     int i, j;
-    int nScore0, nScore1;
 
     /* Extend match equity table */
     for (i = nMaxScore; i < MAXSCORE; i++) {
 
-        nScore0 = i + 1;
+        int nScore0 = i + 1;
 
         if (nScore0 > 10)
             rStddev0 = 1.77f;
@@ -705,9 +704,9 @@ ExtendMET(float aarMET[MAXSCORE][MAXSCORE], const int nMaxScore)
 
         for (j = 0; j <= i; j++) {
 
-            nScore1 = j + 1;
+            int nScore1 = j + 1;
 
-            rGames = (nScore0 + nScore1) / 2.0f;
+            rGames = (float)(nScore0 + nScore1) / 2.0f;
 
             if (nScore1 > 10)
                 rStddev1 = 1.77f;
@@ -1696,19 +1695,18 @@ invertMET(void)
 {
 
     int i, j;
-    float r;
 
     for (i = 0; i < MAXSCORE; i++) {
+
+        /* post crawford entries */
+
+        float r = aafMETPostCrawford[0][i];
+        aafMETPostCrawford[0][i] = aafMETPostCrawford[1][i];
+        aafMETPostCrawford[1][i] = r;
 
         /* diagonal */
 
         aafMET[i][i] = 1.0f - aafMET[i][i];
-
-        /* post crawford entries */
-
-        r = aafMETPostCrawford[0][i];
-        aafMETPostCrawford[0][i] = aafMETPostCrawford[1][i];
-        aafMETPostCrawford[1][i] = r;
 
         /* off diagonal entries */
 
@@ -1750,7 +1748,7 @@ getMEMultiple(const int nScore0, const int nScore1, const int nMatchTo,
 {
 
     int scores[2][DTLBP1 + 1];  /* the resulting match scores */
-    int i, max_res, s0, s1;
+    int i, max_res;
     int *score0, *score1;
     int mult[] = { 1, 2, 3, 4, 6 };
     float *p0, *p1, f;
@@ -1808,8 +1806,8 @@ getMEMultiple(const int nScore0, const int nScore1, const int nMatchTo,
 
     /* now go through the resulting scores, looking up the equities */
     for (i = 0; i < max_res; ++i) {
-        s0 = *score0++;
-        s1 = *score1++;
+        int s0 = *score0++;
+        int s1 = *score1++;
 
         if (unlikely(s0 < 0)) {
             /* player 0 wins */
