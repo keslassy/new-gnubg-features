@@ -7459,12 +7459,12 @@ extern void
 GTKMatchInfo(void)
 {
     int fOK = FALSE;
-    GtkWidget *pwDialog, *pwTable, *pwComment;
+    GtkWidget *pwDialog, *pwTable, *pwScrolled, *pwComment;
     char sz[128];
 
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Match information"),
                                DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(MatchInfoOK), &fOK);
-    pwTable = gtk_table_new(5, 7, FALSE);
+    pwTable = gtk_table_new(3, 7, FALSE);
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwTable);
 
     sprintf(sz, _("%s's rating:"), ap[0].szName);
@@ -7479,8 +7479,8 @@ GTKMatchInfo(void)
     AddToTable(pwTable, _("Place:"), 0, 5);
     AddToTable(pwTable, _("Annotator:"), 0, 6);
 
-    gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("Comments:")), 2, 3, 0, 1, (GtkAttachOptions) 0,
-                     (GtkAttachOptions) 0, 0, 0);
+    sprintf(sz, "%-78s", _("Comments:"));
+    gtk_table_attach_defaults(GTK_TABLE(pwTable), gtk_label_new(sz), 2, 3, 0, 1);
 
     apwRating[0] = gtk_entry_new();
     if (mi.pchRating[0])
@@ -7526,9 +7526,12 @@ GTKMatchInfo(void)
         gtk_text_buffer_set_text(buffer, mi.pchComment, -1);
     }
     gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(pwComment), GTK_WRAP_WORD);
-    gtk_table_attach_defaults(GTK_TABLE(pwTable), pwComment, 2, 5, 1, 7);
 
-    gtk_window_set_default_size(GTK_WINDOW(pwDialog), 500, 0);
+    pwScrolled = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_container_add(GTK_CONTAINER(pwScrolled), pwComment);
+
+    gtk_table_attach_defaults(GTK_TABLE(pwTable), pwScrolled, 2, 3, 1, 7);
 
     GTKRunDialog(pwDialog);
 }
