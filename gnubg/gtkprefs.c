@@ -755,7 +755,7 @@ static GtkWidget *
 ChequerPrefs(BoardData * bd, int f)
 {
 
-    GtkWidget *pw, *pwhbox, *pwx, *pwScale, *pwBox;
+    GtkWidget *pw, *pwhbox, *pwx;
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -828,6 +828,8 @@ ChequerPrefs(BoardData * bd, int f)
     g_signal_connect(G_OBJECT(apadjExponent[f]), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 
     if (f == 0) {
+        GtkWidget *pwScale, *pwBox;
+        
         padjRound = GTK_ADJUSTMENT(gtk_adjustment_new(1.0f - bd->rd->rRound, 0, 1, 0.1, 0.1, 0));
         g_signal_connect(G_OBJECT(padjRound), "value-changed", G_CALLBACK(UpdatePreview), NULL);
 #if GTK_CHECK_VERSION(3,0,0)
@@ -1454,9 +1456,6 @@ static GtkWidget *
 LightingPage(BoardData * bd)
 {
     GtkWidget *dtBox, *pwx;
-    GtkWidget *vbox, *vbox2, *frameBox, *hBox, *lab,
-        *pwLightPosX, *pwLightLevelAmbient, *pwLightLevelDiffuse, *pwLightLevelSpecular,
-        *pwLightPosY, *pwLightPosZ, *dtLightSourceFrame;
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwx = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -1469,6 +1468,10 @@ LightingPage(BoardData * bd)
     gtk_box_pack_start(GTK_BOX(pwx), dtBox, FALSE, FALSE, 0);
 
     if (display_is_3d(&rdPrefs)) {
+        GtkWidget *vbox, *vbox2, *frameBox, *hBox, *lab;
+        GtkWidget *pwLightPosX, *pwLightLevelAmbient, *pwLightLevelDiffuse, *pwLightLevelSpecular;
+        GtkWidget *pwLightPosY, *pwLightPosZ, *dtLightSourceFrame;
+
 #if GTK_CHECK_VERSION(3,0,0)
         dtBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
@@ -1948,8 +1951,6 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 static void
 UseDesign(void)
 {
-    int i, j;
-    float ar[4];
     gfloat rAzimuth, rElevation;
     renderdata newPrefs;
 #if defined(USE_BOARD3D)
@@ -1998,7 +1999,7 @@ UseDesign(void)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwBgTrays), newPrefs.bgInTrays);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwRoundPoints), newPrefs.roundedPoints);
 
-        for (i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwDieColour[i]), newPrefs.afDieColour3d[i]);
 
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwHinges), newPrefs.fHinges3d);
@@ -2011,7 +2012,7 @@ UseDesign(void)
 
         /* chequers */
 
-        for (i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i) {
             gtk_color_button_set_from_array(GTK_COLOR_BUTTON(apwColour[i]), newPrefs.aarColour[i]);
 
             gtk_adjustment_set_value(GTK_ADJUSTMENT(apadj[i]), newPrefs.arRefraction[i]);
@@ -2023,7 +2024,7 @@ UseDesign(void)
 
         /* dice + dice dot */
 
-        for (i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i) {
 
             gtk_widget_set_sensitive(GTK_WIDGET(apwDiceColourBox[i]), !newPrefs.afDieColour[i]);
 
@@ -2051,12 +2052,13 @@ UseDesign(void)
 
         /* board + points */
 
-        for (i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
+            float ar[4];
 
             if (i != 1)
                 gtk_adjustment_set_value(GTK_ADJUSTMENT(apadjBoard[i]), newPrefs.aSpeckle[i] / 128.0);
 
-            for (j = 0; j < 4; j++)
+            for (int j = 0; j < 4; j++)
                 ar[j] = newPrefs.aanBoardColour[i][j] / 255.0f;
 
             gtk_color_button_set_from_array(GTK_COLOR_BUTTON(apwBoard[i]), ar);
@@ -2087,7 +2089,7 @@ UseDesign(void)
         gtk_adjustment_set_value(GTK_ADJUSTMENT(paAzimuth), rAzimuth);
         gtk_adjustment_set_value(GTK_ADJUSTMENT(paElevation), rElevation);
 
-        for (i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwDieColour[i]), newPrefs.afDieColour[i]);
 
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwHinges), newPrefs.fHinges);
@@ -2935,7 +2937,6 @@ static void
 GetPrefs(renderdata * prd)
 {
 
-    int i, j;
     float ar[4];
 
 #if defined(USE_BOARD3D)
@@ -2943,7 +2944,7 @@ GetPrefs(renderdata * prd)
     if (display_is_3d(&rdPrefs)) {
         int newCurveAccuracy;
         /* dice colour same as chequer colour */
-        for (i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i) {
             prd->afDieColour3d[i] = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(apwDieColour[i]));
         }
 
@@ -2984,11 +2985,11 @@ GetPrefs(renderdata * prd)
 #endif
     {
         /* dice colour same as chequer colour */
-        for (i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i) {
             prd->afDieColour[i] = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(apwDieColour[i]));
         }
 
-        for (i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             prd->arRefraction[i] = (float) gtk_adjustment_get_value(apadj[i]);
             prd->arCoefficient[i] = (float) gtk_adjustment_get_value(apadjCoefficient[i]);
             prd->arExponent[i] = (float) gtk_adjustment_get_value(apadjExponent[i]);
@@ -2998,39 +2999,39 @@ GetPrefs(renderdata * prd)
         }
 
         gtk_color_button_get_array(GTK_COLOR_BUTTON(apwColour[0]), ar);
-        for (i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
             prd->aarColour[0][i] = ar[i];
 
         gtk_color_button_get_array(GTK_COLOR_BUTTON(apwColour[1]), ar);
-        for (i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
             prd->aarColour[1][i] = ar[i];
 
         gtk_color_button_get_array(GTK_COLOR_BUTTON(apwDiceColour[0]), ar);
-        for (i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
             prd->aarDiceColour[0][i] = ar[i];
 
         gtk_color_button_get_array(GTK_COLOR_BUTTON(apwDiceColour[1]), ar);
-        for (i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
             prd->aarDiceColour[1][i] = ar[i];
 
-        for (j = 0; j < 2; ++j) {
+        for (int j = 0; j < 2; ++j) {
 
             gtk_color_button_get_array(GTK_COLOR_BUTTON(apwDiceDotColour[j]), ar);
-            for (i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
                 prd->aarDiceDotColour[j][i] = ar[i];
         }
 
         /* cube colour */
         gtk_color_button_get_array(GTK_COLOR_BUTTON(pwCubeColour), ar);
 
-        for (i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
             prd->arCubeColour[i] = ar[i];
 
         /* board colour */
-        for (j = 0; j < 4; j++) {
+        for (int j = 0; j < 4; j++) {
             gtk_color_button_get_array(GTK_COLOR_BUTTON(apwBoard[j]), ar);
 
-            for (i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
                 prd->aanBoardColour[j][i] = (ar[i] == 1) ? 0xff : (unsigned char) (ar[i] * 0x100);
         }
 
