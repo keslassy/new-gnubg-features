@@ -254,7 +254,7 @@ static void
 CreateDotTexture(unsigned int *pDotTexture)
 {
     unsigned int i, j;
-    unsigned char *data = (unsigned char *) malloc(sizeof(*data) * DOT_SIZE * DOT_SIZE * 3);
+    unsigned char *data = malloc(sizeof(*data) * DOT_SIZE * DOT_SIZE * 3);
     unsigned char *pData = data;
     g_assert(pData);
 
@@ -770,13 +770,16 @@ moveAlong(float d, PathType type, const float start[3], const float end[3], floa
             return -1;
         }
     } else {
-        float xCent, zCent, xRad, zRad;
-        float yOff, yDiff = end[1] - start[1];
+        float yDiff = end[1] - start[1];
 
-        xRad = end[0] - start[0];
-        zRad = end[2] - start[2];
+        float xRad = end[0] - start[0];
+        float zRad = end[2] - start[2];
+
         lineLen = (float) G_PI *((fabsf(xRad) + fabsf(zRad)) / 2.0f) / 2.0f;
         if (d <= lineLen) {
+            float xCent, zCent;
+            float yOff;
+
             per = d / lineLen;
             if (rotate)
                 *rotate = per;
@@ -1085,7 +1088,6 @@ circleRevTex(float radius, float height, unsigned int accuracy, const Texture * 
 void
 drawBox(int type, float x, float y, float z, float w, float h, float d, const Texture * texture)
 {                               /* Draw a box with normals and optional textures */
-    float repX, repY;
     float normX, normY, normZ;
     float w2 = w / 2.0f, h2 = h / 2.0f, d2 = d / 2.0f;
 
@@ -1101,8 +1103,8 @@ drawBox(int type, float x, float y, float z, float w, float h, float d, const Te
     glBegin(GL_QUADS);
 
     if (texture) {
-        repX = (w * TEXTURE_SCALE) / texture->width;
-        repY = (h * TEXTURE_SCALE) / texture->height;
+        float repX = (w * TEXTURE_SCALE) / texture->width;
+        float repY = (h * TEXTURE_SCALE) / texture->height;
 
         /* Front Face */
         glNormal3f(0.f, 0.f, normZ);
@@ -1299,17 +1301,16 @@ drawCube(float size)
 void
 drawRect(float x, float y, float z, float w, float h, const Texture * texture)
 {                               /* Draw a rectangle */
-    float repX, repY, tuv;
-
     glPushMatrix();
+
     glTranslatef(x + w / 2, y + h / 2, z);
     glScalef(w / 2.0f, h / 2.0f, 1.f);
     glNormal3f(0.f, 0.f, 1.f);
 
     if (texture) {
-        tuv = TEXTURE_SCALE / texture->width;
-        repX = w * tuv;
-        repY = h * tuv;
+        float tuv = TEXTURE_SCALE / texture->width;
+        float repX = w * tuv;
+        float repY = h * tuv;
 
         glBegin(GL_QUADS);
         glTexCoord2f(0.f, 0.f);
@@ -1336,17 +1337,16 @@ drawRect(float x, float y, float z, float w, float h, const Texture * texture)
 void
 drawSplitRect(float x, float y, float z, float w, float h, const Texture * texture)
 {                               /* Draw a rectangle in 2 bits */
-    float repX, repY, tuv;
-
     glPushMatrix();
+
     glTranslatef(x + w / 2, y + h / 2, z);
     glScalef(w / 2.0f, h / 2.0f, 1.f);
     glNormal3f(0.f, 0.f, 1.f);
 
     if (texture) {
-        tuv = TEXTURE_SCALE / texture->width;
-        repX = w * tuv;
-        repY = h * tuv;
+        float tuv = TEXTURE_SCALE / texture->width;
+        float repX = w * tuv;
+        float repY = h * tuv;
 
         glBegin(GL_QUADS);
         glTexCoord2f(0.f, 0.f);
@@ -1440,9 +1440,7 @@ void
 QuarterCylinder(float radius, float len, unsigned int accuracy, const Texture * texture)
 {
     unsigned int i;
-    float angle;
     float d;
-    float sar, car;
     float dInc = 0;
 
     /* texture unit value */
@@ -1458,7 +1456,9 @@ QuarterCylinder(float radius, float len, unsigned int accuracy, const Texture * 
     d = 0;
     glBegin(GL_QUAD_STRIP);
     for (i = 0; i < accuracy / 4 + 1; i++) {
-        angle = ((float) i * 2.f * (float) G_PI) / accuracy;
+        float sar, car;
+        float angle = ((float) i * 2.f * (float) G_PI) / accuracy;
+
         glNormal3f(sinf(angle), 0.f, cosf(angle));
 
         sar = sinf(angle) * radius;
@@ -1481,9 +1481,7 @@ void
 QuarterCylinderSplayedRev(float radius, float len, unsigned int accuracy, const Texture * texture)
 {
     unsigned int i;
-    float angle;
     float d;
-    float sar, car;
     float dInc = 0;
 
     /* texture unit value */
@@ -1499,7 +1497,9 @@ QuarterCylinderSplayedRev(float radius, float len, unsigned int accuracy, const 
     d = 0;
     glBegin(GL_QUAD_STRIP);
     for (i = 0; i < accuracy / 4 + 1; i++) {
-        angle = ((float) i * 2.f * (float) G_PI) / accuracy;
+        float sar, car;
+        float angle = ((float) i * 2.f * (float) G_PI) / accuracy;
+
         glNormal3f(sinf(angle), 0.f, cosf(angle));
 
         sar = sinf(angle) * radius;
@@ -1522,9 +1522,7 @@ void
 QuarterCylinderSplayed(float radius, float len, unsigned int accuracy, const Texture * texture)
 {
     unsigned int i;
-    float angle;
     float d;
-    float sar, car;
     float dInc = 0;
 
     /* texture unit value */
@@ -1540,7 +1538,9 @@ QuarterCylinderSplayed(float radius, float len, unsigned int accuracy, const Tex
     d = 0;
     glBegin(GL_QUAD_STRIP);
     for (i = 0; i < accuracy / 4 + 1; i++) {
-        angle = ((float) i * 2.f * (float) G_PI) / accuracy;
+        float sar, car;
+        float angle = ((float) i * 2.f * (float) G_PI) / accuracy;
+
         glNormal3f(sinf(angle), 0.f, cosf(angle));
 
         sar = sinf(angle) * radius;
@@ -1562,11 +1562,12 @@ QuarterCylinderSplayed(float radius, float len, unsigned int accuracy, const Tex
 void
 drawCornerEigth(float **const *boardPoints, float radius, unsigned int accuracy)
 {
-    unsigned int i, ns;
+    unsigned int i;
     int j;
 
     for (i = 0; i < accuracy / 4; i++) {
-        ns = (accuracy / 4) - (i + 1);
+        unsigned int ns = (accuracy / 4) - (i + 1);
+
         glBegin(GL_TRIANGLE_STRIP);
         glNormal3f(boardPoints[i][ns + 1][0] / radius, boardPoints[i][ns + 1][1] / radius,
                    boardPoints[i][ns + 1][2] / radius);
@@ -1585,13 +1586,10 @@ drawCornerEigth(float **const *boardPoints, float radius, unsigned int accuracy)
 void
 calculateEigthPoints(float ****boardPoints, float radius, unsigned int accuracy)
 {
-    unsigned int i, j, ns;
+    unsigned int i, j;
 
     float lat_angle;
     float lat_step;
-    float latitude;
-    float new_radius;
-    float angle;
     float step = 0;
     unsigned int corner_steps = (accuracy / 4) + 1;
     *boardPoints = Alloc3d(corner_steps, corner_steps, 3);
@@ -1601,11 +1599,11 @@ calculateEigthPoints(float ****boardPoints, float radius, unsigned int accuracy)
 
     /* Calculate corner 1/8th sphere points */
     for (i = 0; i < (accuracy / 4) + 1; i++) {
-        latitude = sinf(lat_angle) * radius;
-        new_radius = Dist2d(radius, latitude);
+        float latitude = sinf(lat_angle) * radius;
+        float new_radius = Dist2d(radius, latitude);
+        float angle = 0.0f ;
+        unsigned int ns = (accuracy / 4) - i;
 
-        angle = 0;
-        ns = (accuracy / 4) - i;
         if (ns > 0)
             step = (2.f * (float) G_PI) / (ns * 4.f);
 
@@ -1899,8 +1897,9 @@ MouseMove3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd, in
 void
 RestrictiveStartMouseMove(unsigned int pos, unsigned int depth)
 {
-    float erasePos[3];
     if (numRestrictFrames != -1) {
+        float erasePos[3];
+
         getPiecePos(pos, depth, erasePos);
         RestrictiveDrawFrame(erasePos, PIECE_HOLE, PIECE_HOLE, PIECE_DEPTH);
         CopyBox(&eraseCb, &cb[numRestrictFrames]);
@@ -1973,7 +1972,7 @@ static int
 idleAnimate(BoardData3d * bd3d)
 {
     BoardData *bd = pIdleBD;
-    float elapsedTime = (float) ((get_time() - animStartTime) / 1000.0f);
+    float elapsedTime = (float) (get_time() - animStartTime) / 1000.0f;
     float vel = .2f + nGUIAnimSpeed * .3f;
     float animateDistance = elapsedTime * vel;
     renderdata *prd = bd->rd;
