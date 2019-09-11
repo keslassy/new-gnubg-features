@@ -228,24 +228,6 @@ create_str2gvalue_tuple(char *str, GValue * gv)
     return g_list_prepend(g_list_prepend(NULL, gv), gvstr);
 }
 
-GList *
-create_str2double_tuple(char *str, double value)
-{
-    GString *tmpstr = g_string_new(str);
-    GVALUE_CREATE(G_TYPE_DOUBLE, double, value, gvdouble);
-    GVALUE_CREATE(G_TYPE_GSTRING, boxed, tmpstr, gvstr);
-    g_string_free(tmpstr, TRUE);
-    return g_list_prepend(g_list_prepend(NULL, gvdouble), gvstr);
-}
-
-void
-free_strmap_tuple(GList * tuple)
-{
-    g_string_free(g_list_nth_data(tuple, 0), TRUE);
-    g_free(g_list_nth_data(tuple, 1));
-    g_list_free(tuple);
-}
-
 void
 g_value_list_tostring(GString * str, GList * list, int depth)
 {

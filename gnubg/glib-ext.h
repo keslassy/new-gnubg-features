@@ -68,8 +68,6 @@ extern void g_list_gv_boxed_free(GList * list);
 extern void g_list_gv_free_full(gpointer data);
 extern GList *create_str2int_tuple(char *str, int value);
 extern GList *create_str2gvalue_tuple(char *str, GValue * gv);
-extern GList *create_str2double_tuple(char *str, double value);
-extern void free_strmap_tuple(GList * tuple);
 extern void g_value_list_tostring(GString * str, GList * list, int depth);
 extern void g_value_tostring(GString * str, GValue * gv, int depth);
 
