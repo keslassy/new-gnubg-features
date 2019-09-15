@@ -159,7 +159,14 @@ dnl
 dnl check for compiler support
 dnl
 
-PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.8.0], have_glib="yes", AC_MSG_ERROR([You need to have glib2 to compile GNU backgammon]))
+if test "x$win32" = "xyes"; then
+glib2minrev=13
+else
+glib2minrev=8
+fi
+
+PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.$glib2minrev.0], have_glib="yes", AC_MSG_ERROR([You need to have glib2 version 2.$glib2minrev or higher to compile GNU Backgammon]))
+
 PKG_CHECK_MODULES(GOBJECT, [gobject-2.0], have_gobject="yes", AC_MSG_WARN([no gobject support in glib]))
 PKG_CHECK_MODULES(GTHREAD, [gthread-2.0], have_gthread="yes", AC_MSG_WARN([no thread support in glib]))
 PKG_CHECK_MODULES(FREETYPE2, [freetype2], have_freetype="yes", AC_MSG_WARN([no freetype support]))
@@ -435,7 +442,7 @@ dnl
 
 AX_EXT()
 AC_MSG_CHECKING([for SIMD CPU instructions])
-AC_ARG_ENABLE( simd, [  --enable-simd=TYPE      enable SIMD usage for newer cpus(TYPE=yes,fma,avx,sse2,neon,no)], simdcpu=$enableval, simdcpu="undef")
+AC_ARG_ENABLE( simd, [  --enable-simd=TYPE      enable SIMD usage for newer cpus (TYPE=yes,fma,avx,sse2,neon,no)], simdcpu=$enableval, simdcpu="undef")
 if test "x$simdcpu" = "xundef" || test "x$simdcpu" = "xyes"; then
     if test "x$ax_cv_have_fma_ext" = "xyes"; then
         simdcpu="fma"
