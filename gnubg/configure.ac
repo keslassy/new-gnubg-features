@@ -1,12 +1,14 @@
 dnl To rebuild the `configure' script from this, execute the command
 dnl     autoconf
 dnl in the directory containing this script.
-dnl
-dnl by Gary Wong <gtw@gnu.org>, 1999, 2000, 2001.
-dnl
-dnl This program is free software; you can redistribute it and/or modify
+
+dnl Copyright (C) 1999-2002 Gary Wong <gtw@gnu.org>
+dnl Copyright (C) 2002-2019 the AUTHORS
+
+dnl This program is free software: you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
-dnl the Free Software Foundation, version 3 or later.
+dnl the Free Software Foundation, either version 3 of the License, or
+dnl (at your option) any later version.
 dnl
 dnl This program is distributed in the hope that it will be useful,
 dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,8 +16,11 @@ dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl GNU General Public License for more details.
 dnl
 dnl You should have received a copy of the GNU General Public License
-dnl along with this program; if not, write to the Free Software
-dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+dnl along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+dnl
+dnl $Id$
+dnl
 
 AC_REVISION($Revision$)
 AC_INIT([GNU Backgammon],m4_esyscmd(echo 1.06.002$VERSION_EXT | tr -d '\n'),[bug-gnubg@gnu.org],[gnubg])
