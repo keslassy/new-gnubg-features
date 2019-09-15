@@ -29,7 +29,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "glib-ext.h"
 
 #include "backgammon.h"
 #include "dice.h"
@@ -105,7 +104,7 @@ LoadCollection(char *sz)
     SGFErrorHandler = ErrorHandler;
 
     if (strcmp(sz, "-")) {
-        if (!(pf = gnubg_g_fopen(sz, "r"))) {
+        if (!(pf = g_fopen(sz, "r"))) {
             outputerr(sz);
             return NULL;
         }
@@ -2303,7 +2302,7 @@ CommandSaveGame(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
+    else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -2343,7 +2342,7 @@ CommandSaveMatch(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
+    else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -2389,7 +2388,7 @@ CommandSavePosition(char *sz)
 
     if (!strcmp(sz, "-"))
         pf = stdout;
-    else if (!(pf = gnubg_g_fopen(sz, "w"))) {
+    else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }

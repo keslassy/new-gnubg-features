@@ -842,7 +842,7 @@ OpenDiceFile(rngcontext * rngctx, const char *sz)
     g_free(rngctx->szDiceFilename);     /* initialized to NULL */
     rngctx->szDiceFilename = g_strdup(sz);
 
-    return (rngctx->fDice = gnubg_g_fopen(sz, "r"));
+    return (rngctx->fDice = g_fopen(sz, "r"));
 }
 
 static unsigned int

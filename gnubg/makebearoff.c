@@ -1344,7 +1344,7 @@ main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    if (!(outfile = gnubg_g_fopen(szOutput, "w+b"))) {
+    if (!(outfile = g_fopen(szOutput, "w+b"))) {
         perror(szOutput);
         return EXIT_FAILURE;
     }

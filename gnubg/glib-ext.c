@@ -26,44 +26,6 @@
 #include <string.h>
 #include "glib-ext.h"
 
-/*  Based on glib's g_fopen to work around issues with WIN32 
- *  versions of g_fopen 
- */
-
-FILE *
-gnubg_g_fopen(const gchar * filename, const gchar * mode)
-{
-#if defined(WIN32)
-    wchar_t *wfilename = g_utf8_to_utf16(filename, -1, NULL, NULL, NULL);
-    wchar_t *wmode;
-    FILE *retval;
-    int save_errno;
-
-    if (wfilename == NULL) {
-        errno = EINVAL;
-        return NULL;
-    }
-
-    wmode = g_utf8_to_utf16(mode, -1, NULL, NULL, NULL);
-
-    if (wmode == NULL) {
-        g_free(wfilename);
-        errno = EINVAL;
-        return NULL;
-    }
-
-    retval = _wfopen(wfilename, wmode);
-    save_errno = errno;
-
-    g_free(wfilename);
-    g_free(wmode);
-
-    errno = save_errno;
-    return retval;
-#else
-    return fopen(filename, mode);
-#endif
-}
 
 #if ! GLIB_CHECK_VERSION(2,14,0)
 

@@ -51,8 +51,6 @@ void g_once_init_leave(volatile gsize * value_location, gsize initialization_val
 extern void g_list_free_full(GList * list, GDestroyNotify free_func);
 #endif
 
-extern FILE *gnubg_g_fopen(const gchar * filename, const gchar * mode);
-
 typedef GList GMap;
 typedef GList GMapEntry;
 

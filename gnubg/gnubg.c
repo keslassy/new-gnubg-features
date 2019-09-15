@@ -2694,7 +2694,7 @@ CommandLoadCommands(char *sz)
         return;
     }
 
-    if ((pf = gnubg_g_fopen(sz, "r"))) {
+    if ((pf = g_fopen(sz, "r"))) {
         LoadCommands(pf, sz);
         fclose(pf);
     } else
@@ -3307,7 +3307,7 @@ CommandSaveSettings(char *szParam)
     if (!strcmp(szFile, "-"))
         pf = stdout;
     else
-        pf = gnubg_g_fopen(szFile, "w");
+        pf = g_fopen(szFile, "w");
 
     if (!pf) {
         outputerr(szFile);
@@ -4279,7 +4279,7 @@ init_language(char **lang)
     outputoff();
     szFile = g_build_filename(szHomeDirectory, "gnubgautorc", NULL);
 
-    if (!*lang && (pf = gnubg_g_fopen(szFile, "r"))) {
+    if (!*lang && (pf = g_fopen(szFile, "r"))) {
         char szTemp[4096];
 
         while (fgets(szTemp, sizeof(szTemp), pf) != NULL) {
@@ -5416,7 +5416,7 @@ save_autosave(gpointer UNUSED(unused))
     close(fd);
     g_unlink(autosave);
 
-    pf = gnubg_g_fopen(autosave, "w");
+    pf = g_fopen(autosave, "w");
     if (!pf) {
         autosave = NULL;
         MT_Release();

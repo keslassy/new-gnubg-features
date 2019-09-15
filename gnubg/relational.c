@@ -38,7 +38,6 @@
 #include "util.h"
 #include <glib/gstdio.h>
 #include <glib.h>
-#include "glib-ext.h"
 
 static int
 RelationalMatchExists(DBProvider * pdb)
@@ -308,7 +307,7 @@ CreateDatabase(DBProvider * pdb)
     char line[1024];
 
     gchar *szFile = BuildFilename("gnubg.sql");
-    FILE *fp = gnubg_g_fopen(szFile, "r");
+    FILE *fp = g_fopen(szFile, "r");
 
     if (!fp) {
         g_free(szFile);

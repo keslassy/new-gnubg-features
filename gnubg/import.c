@@ -29,7 +29,6 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <time.h>
-#include "glib-ext.h"
 
 #include "backgammon.h"
 #include "drawboard.h"
@@ -3417,7 +3416,7 @@ CommandImportJF(char *sz)
         return;
     }
 
-    if ((pf = gnubg_g_fopen(sz, "rb"))) {
+    if ((pf = g_fopen(sz, "rb"))) {
         int rc = ImportJF(pf, sz);
         if (rc)
             /* no file imported */
@@ -3442,7 +3441,7 @@ CommandImportMat(char *sz)
         return;
     }
 
-    if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
+    if ((pf = g_fopen(sz, "r")) != 0) {
         int rc = ImportMat(pf, sz);
         fclose(pf);
         if (rc)
@@ -3467,7 +3466,7 @@ CommandImportOldmoves(char *sz)
         return;
     }
 
-    if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
+    if ((pf = g_fopen(sz, "r")) != 0) {
         int rc = ImportOldmoves(pf, sz);
         fclose(pf);
         if (rc)
@@ -3493,7 +3492,7 @@ CommandImportSGG(char *sz)
         return;
     }
 
-    if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
+    if ((pf = g_fopen(sz, "r")) != 0) {
         int rc = ImportSGG(pf, sz);
         fclose(pf);
         if (rc)
@@ -3518,7 +3517,7 @@ CommandImportTMG(char *sz)
         return;
     }
 
-    if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
+    if ((pf = g_fopen(sz, "r")) != 0) {
         int rc = ImportTMG(pf, sz);
         fclose(pf);
         if (rc)
@@ -3544,7 +3543,7 @@ CommandImportSnowieTxt(char *sz)
         return;
     }
 
-    if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
+    if ((pf = g_fopen(sz, "r")) != 0) {
         int rc = ImportSnowieTxt(pf);
         fclose(pf);
         if (rc)
@@ -3567,7 +3566,7 @@ CommandImportEmpire(char *sz)
         return;
     }
 
-    if ((pf = gnubg_g_fopen(sz, "r")) != 0) {
+    if ((pf = g_fopen(sz, "r")) != 0) {
         int res = ImportGAM(pf, sz);
         fclose(pf);
         if (!res)
@@ -3591,7 +3590,7 @@ CommandImportParty(char *sz)
         return;
     }
 
-    if ((gamf = gnubg_g_fopen(sz, "r")) == 0) {
+    if ((gamf = g_fopen(sz, "r")) == 0) {
         outputerr(sz);
         return;
     }
@@ -3604,7 +3603,7 @@ CommandImportParty(char *sz)
         return;
     }
 
-    if ((matf = gnubg_g_fopen(tmpfile, "w")) == 0) {
+    if ((matf = g_fopen(tmpfile, "w")) == 0) {
         outputerr(tmpfile);
         g_free(tmpfile);
         fclose(gamf);
@@ -3613,7 +3612,7 @@ CommandImportParty(char *sz)
 
     if (ConvertPartyGammonFileToMat(gamf, matf)) {
         FILE *pf;
-        if ((pf = gnubg_g_fopen(tmpfile, "r")) != 0) {
+        if ((pf = g_fopen(tmpfile, "r")) != 0) {
             int rc = ImportMat(pf, tmpfile);
             fclose(pf);
             if (!rc) {
@@ -3878,13 +3877,13 @@ CommandImportBGRoom(char *sz)
         return;
     }
 
-    if ((gamf = gnubg_g_fopen(sz, "r")) == 0) {
+    if ((gamf = g_fopen(sz, "r")) == 0) {
         outputerr(sz);
         return;
     }
 
     matfile = g_strdup_printf("%s.mat", sz);
-    if ((matf = gnubg_g_fopen(matfile, "w")) == 0) {
+    if ((matf = g_fopen(matfile, "w")) == 0) {
         outputerr(matfile);
         g_free(matfile);
         fclose(gamf);
@@ -3893,7 +3892,7 @@ CommandImportBGRoom(char *sz)
 
     if (ConvertBGRoomFileToMat(gamf, matf)) {
         FILE *pf;
-        if ((pf = gnubg_g_fopen(matfile, "r")) != 0) {
+        if ((pf = g_fopen(matfile, "r")) != 0) {
             int rc = ImportMat(pf, matfile);
             fclose(pf);
             if (!rc) {

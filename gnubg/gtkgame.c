@@ -32,7 +32,6 @@
 #include <string.h>
 #include <errno.h>
 #include <locale.h>
-#include "glib-ext.h"
 
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
@@ -5352,7 +5351,7 @@ gtk_save_rollout_settings(void)
     }
 
     errno = 0;
-    pf = gnubg_g_fopen(filename, "w");
+    pf = g_fopen(filename, "w");
     if (!pf) {
         outputerr(filename);
         g_free(filename);

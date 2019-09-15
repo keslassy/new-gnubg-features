@@ -35,7 +35,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "glib-ext.h"
 
 #define HEURISTIC_C 15
 #define HEURISTIC_P 6
@@ -830,7 +829,7 @@ BearoffInit(const char *szFilename, const unsigned int bo, void (*p) (unsigned i
     }
 
 
-    if ((pbc->pf = gnubg_g_fopen(szFilename, "rb")) == 0) {
+    if ((pbc->pf = g_fopen(szFilename, "rb")) == 0) {
         g_printerr("%s\n", _("Invalid or nonexistent database"));
         InvalidDb(pbc);
         return NULL;
@@ -934,7 +933,7 @@ BearoffInit(const char *szFilename, const unsigned int bo, void (*p) (unsigned i
         fclose(pbc->pf);
         pbc->pf = NULL;
         if ((ReadIntoMemory(pbc) == NULL))
-            if ((pbc->pf = gnubg_g_fopen(szFilename, "rb")) == 0) {
+            if ((pbc->pf = g_fopen(szFilename, "rb")) == 0) {
                 g_printerr("%s\n", _("Invalid or nonexistent database"));
                 InvalidDb(pbc);
                 return NULL;
