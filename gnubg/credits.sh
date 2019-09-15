@@ -1,12 +1,12 @@
 #!/bin/sh
-#
-# credits.sh
-#
-# by Gary Wong <gtw@gnu.org>, 1998, 1999, 2000, 2001, 2002, 2003, 2004
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of version 3 or later of the GNU General Public License as
-# published by the Free Software Foundation.
+
+# Copyright (C) 1998-2004 Gary Wong <gtw@gnu.org>
+# Copyright (C) 2004-2014 the AUTHORS
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,8 +14,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #
 # $Id$
 # 
@@ -203,11 +203,13 @@ EOF
 # generate credits.c
 
 cat > credits.h <<EOF
-/* Do not modify this file!  It is created automatically by credits.sh.
-   Modify credits.sh instead. 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+/* Do not modify this file!  It is created automatically by credits.sh. */
+
+/*             
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -215,9 +217,8 @@ cat > credits.h <<EOF
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include <glib/gi18n.h>
 
@@ -245,11 +246,13 @@ extern const char aszCOPYRIGHT[];
 
 EOF
 cat > credits.c <<EOF
-/* Do not modify this file!  It is created automatically by credits.sh.
-   Modify credits.sh instead. 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+/* Do not modify this file!  It is created automatically by credits.sh. */
+
+/*             
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -257,16 +260,15 @@ cat > credits.c <<EOF
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "common.h"
 #include <glib/gi18n.h>
 #include "credits.h"
 
-const char aszCOPYRIGHT[] = N_("Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-                               "Copyright (C) 2019 by Gary Wong and the AUTHORS; for details type \`show version'.");
+const char aszCOPYRIGHT[] = N_("Copyright (C) 1999-2004 Gary Wong.\n"
+                               "Copyright (C) 2004-2019 the AUTHORS; for details type \`show version'.");
 
 credEntry ceAuthors[] = {
 EOF
@@ -410,7 +412,7 @@ cat >> AUTHORS <<'EOF'
        
     The manual for GNU Backgammon includes a chapter describing the rules of
       backgammon, written by Tom Keith for his Backgammon Galore web site
-                             <http://www.bkgm.com/>.
+                             <https://www.bkgm.com/>.
 
 
   Library code from the following authors has been included in GNU Backgammon:

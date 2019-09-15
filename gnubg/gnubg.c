@@ -4174,8 +4174,8 @@ BearoffProgress(unsigned int i)
 static void
 VersionMessage(void)
 {
-    g_print("%s\n%s\n", _(VERSION_STRING), _(aszCOPYRIGHT));
-    g_print("%s", _(intro_string));
+    g_print("%s\n\n%s\n\n", _(VERSION_STRING), _(aszCOPYRIGHT));
+    g_print("%s\n", _(intro_string));
 }
 
 #if defined(HAVE_LIB_READLINE)
