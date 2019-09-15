@@ -209,7 +209,7 @@ gnubg moves 8/5 6/5.
     <para>This section describes how to play a game, a match, or a session of
       money games against <application moreinfo="none">GNU
       Backgammon</application> or a human opponent. It is taken directly from
-      the rules section of <ulink url="http://www.bkgm.com/">Backgammon Galore
+      the rules section of <ulink url="https://www.bkgm.com/">Backgammon Galore
       </ulink>, courtesy of Tom Keith.</para>
     <sect2 id="gnubg-rules_setup">
       <title>Setup</title>
@@ -1331,7 +1331,7 @@ To roll the dice the CL version type 'roll'.
         button, red checkers. (assuming you didn't change the colors). You will
         get used to this editing. and it makes it much faster to set up a
         position.</para>
-      <para>See also <ulink url="http://www.bkgm.com/rgb/rgb.cgi?view+1098">Albert Silver's post on GammOnLine</ulink>
+      <para>See also <ulink url="https://www.bkgm.com/rgb/rgb.cgi?view+1098">Albert Silver's post on GammOnLine</ulink>
       </para>
     </sect2>
   </sect1>
@@ -2197,7 +2197,7 @@ To roll the dice the CL version type 'roll'.
                 as the <emphasis>actual result</emphasis> plus the total
                 unnormalized luck rate. This is also called <emphasis>variance
                 reduction of skill</emphasis> as described in Douglas Zare's
-                excellent article <ulink url="http://www.bkgm.com/articles/Zare/HedgingTowardSkill.html">
+                excellent article <ulink url="https://www.bkgm.com/articles/Zare/HedgingTowardSkill.html">
                 Hedging Toward Skill</ulink>. This should give an unbiased
                 measure of the strengths of the players. </para>
             </listitem>
