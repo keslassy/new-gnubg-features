@@ -219,7 +219,8 @@ DrawLeftAxis(const GraphData * pgd)
 
     for (i = 1; i <= numPoints; i++) {
         float y = NUM_HEIGHT;
-        y += (float) i *pointInc;
+
+        y += (float) (i * pointInc);
         glColor3f(1.f, 1.f, 1.f);
         PrintSideNumber(i * pointInc, NUM_WIDTH * 10, NUM_HEIGHT * 10, NUM_WIDTH - 1, y);
 
