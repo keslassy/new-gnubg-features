@@ -314,7 +314,6 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
     int i = 0;
     int j = 0;
     int m = 0;
-    float r = 0.0f;
     cubeinfo ci;
     PangoLayout *layout;
     PangoFontDescription *description;
@@ -325,19 +324,17 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
     gtk_widget_get_allocation(pw, &allocation);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    {
-        double *gbval = g_object_get_data(G_OBJECT(pw), "gbval");
-        guint width, height;
+    double *gbval = g_object_get_data(G_OBJECT(pw), "gbval");
+    guint width, height;
 
-        width = gtk_widget_get_allocated_width(pw);
-        height = gtk_widget_get_allocated_height(pw);
+    width = gtk_widget_get_allocated_width(pw);
+    height = gtk_widget_get_allocated_height(pw);
 
-        cairo_rectangle(cr, 0, 0, width, height);
-        cairo_set_source_rgb(cr, 1.0, *gbval, *gbval);
-        cairo_fill(cr);
+    cairo_rectangle(cr, 0, 0, width, height);
+    cairo_set_source_rgb(cr, 1.0, *gbval, *gbval);
+    cairo_fill(cr);
 
-        gtk_render_frame(gtk_widget_get_style_context(pw), cr, 0, 0, width, height);
-    }
+    gtk_render_frame(gtk_widget_get_style_context(pw), cr, 0, 0, width, height);
 #else
     (void) cr;                  /* silence compiler warning */
     gtk_paint_box(gtk_widget_get_style(pw), gtk_widget_get_window(pw), GTK_STATE_NORMAL,
@@ -358,6 +355,8 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
     str = g_string_new("");
 
     if (ptmw->fShowEquity) {
+        float r = 0.0f;
+
         if (j >= 0)
             r = ptmw->atm[m].aarEquity[i][j];
         else if (j == -1)
@@ -391,9 +390,9 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
     if (ptmw->fShowEquity && j >= 0 && ptmw->fShowBestMove)
         y = 2;
     else if (ptmw->fShowEquity)
-        y = (allocation.height - 4) / 2.0f;
+        y = (float)(allocation.height - 4) / 2.0f;
     else
-        y = 2 + (allocation.height - 4) / 10.0f;
+        y = 2 + (float)(allocation.height - 4) / 10.0f;
 
     description = pango_font_description_from_string("sans");
     pango_font_description_set_size(description, allocation.height * PANGO_SCALE / 8);
@@ -408,7 +407,7 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
                                 GTK_STATE_NORMAL, TRUE, NULL, pw, NULL, 2, (int) y, layout);
         if (tmp) {
             pch = tmp + 1;
-            y += (allocation.height - 4) / 5.0f;
+            y += (float)(allocation.height - 4) / 5.0f;
         }
     } while (tmp);
 
@@ -759,7 +758,7 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
         g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(ExposeQuadrant), NULL);
 #endif
 
-        UpdateStyle(pw, 1.0f * i / 15.0f);
+        UpdateStyle(pw, (float)i / 15.0f);
 
 
     }
