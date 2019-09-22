@@ -396,7 +396,7 @@ static void
 ExportHTMLImages(void)
 {
     GtkWidget *fc;
-    gchar *message, *expfolder, *folder, *command;
+    gchar *message, *expfolder, *command;
     gint ok = FALSE;
     fc = gtk_file_chooser_dialog_new(_
                                      ("Select top folder for HTML export"),
@@ -407,6 +407,8 @@ ExportHTMLImages(void)
     gtk_window_set_transient_for(GTK_WINDOW(fc), GTK_WINDOW(pwMain));
 
     while (!ok) {
+        gchar *folder;
+
         if (gtk_dialog_run(GTK_DIALOG(fc)) == GTK_RESPONSE_CANCEL) {
             gtk_widget_destroy(fc);
             return;
