@@ -217,14 +217,14 @@ static void
 do_mw_views(theorywidget * ptw)
 {
     int i;
-    GtkListStore *store;
-    GtkCellRenderer *renderer;
 
     for (i = 0; i < 2; i++) {
-        store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+        GtkListStore *store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+        GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
         ptw->apwMW[i] = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
         g_object_unref(store);
-        renderer = gtk_cell_renderer_text_new();
+
         gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(ptw->apwMW[i]), -1, "", renderer, "text", 0, NULL);
         gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(ptw->apwMW[i]), -1, _("Dead cube"), renderer,
                                                     "text", 1, NULL);
@@ -237,10 +237,11 @@ static void
 remove_mw_rows(theorywidget * ptw)
 {
     int i;
-    GtkTreeModel *model;
-    GtkTreeIter iter;
+
     for (i = 0; i < 2; ++i) {
-        model = gtk_tree_view_get_model(GTK_TREE_VIEW(ptw->apwMW[i]));
+        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(ptw->apwMW[i]));
+        GtkTreeIter iter;
+
         if (gtk_tree_model_iter_nth_child(model, &iter, NULL, 0))
             while (gtk_list_store_remove(GTK_LIST_STORE(model), &iter)) {
             };
@@ -253,8 +254,6 @@ add_mw_money_rows(theorywidget * ptw, const cubeinfo * pci, float aarRates[2][2]
     int i, j, k;
     gchar *asz[3];
     float aaarPoints[2][7][2];
-    GtkListStore *store;
-    GtkTreeIter iter;
     const char *aszMoneyPointLabel[] = {
         N_("Take Point (TP)"),
         N_("Beaver Point (BP)"),
@@ -268,7 +267,9 @@ add_mw_money_rows(theorywidget * ptw, const cubeinfo * pci, float aarRates[2][2]
     /* money play */
     getMoneyPoints(aaarPoints, pci->fJacoby, pci->fBeavers, aarRates);
     for (i = 0; i < 2; ++i) {
-        store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(ptw->apwMW[i])));
+        GtkListStore * store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(ptw->apwMW[i])));
+        GtkTreeIter iter;
+
         for (j = 0; j < 7; j++) {
             asz[0] = g_strdup(gettext(aszMoneyPointLabel[j]));
             for (k = 0; k < 2; k++)
@@ -292,8 +293,6 @@ add_mw_match_rows(theorywidget * ptw, const cubeinfo * pci, float aarRates[2][2]
     float aaarPointsMatch[2][4][2];
     int afAutoRedouble[2];
     int afDead[2];
-    GtkListStore *store;
-    GtkTreeIter iter;
     const char *aszMatchPlayLabel[] = {
         N_("Take Point (TP)"),
         N_("Double point (DP)"),
@@ -303,7 +302,9 @@ add_mw_match_rows(theorywidget * ptw, const cubeinfo * pci, float aarRates[2][2]
 
 
     for (i = 0; i < 2; i++) {
-        store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(ptw->apwMW[i])));
+        GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(ptw->apwMW[i])));
+        GtkTreeIter iter;
+
         getMatchPoints(aaarPointsMatch, afAutoRedouble, afDead, pci, aarRates);
         for (j = 0; j < 4; j++) {
             asz[0] = g_strdup(gettext(aszMatchPlayLabel[j]));
@@ -598,16 +599,15 @@ GTKShowTheory(const int fActivePage)
     GtkWidget *pwDialog, *pwNotebook;
 
     GtkWidget *pwOuterHBox, *pwVBox, *pwHBox;
-    GtkWidget *pwFrame, *pwTable, *pwAlign;
+    GtkWidget *pwFrame, *pwTable;
 
     GtkWidget *pw, *pwx, *pwz;
 
-    int i, j;
-    char sz[256];
-    int *pi;
     PangoFontDescription *font_desc;
 
     theorywidget *ptw;
+
+    int i, j;
 
     /* create dialog */
 
@@ -727,6 +727,8 @@ GTKShowTheory(const int fActivePage)
 
     j = 1;
     for (i = 0; i < 7; i++) {
+
+        char sz[4];
 
         sprintf(sz, "%d", j);
 
@@ -867,6 +869,8 @@ GTKShowTheory(const int fActivePage)
 
     for (i = 0; i <= MAXPLY; ++i) {
 
+        int *pi;
+
         gchar *sz = g_strdup_printf(_("%d ply"), i);
         if (!i)
             ptw->apwPly[i] = gtk_radio_button_new_with_label(NULL, sz);
@@ -874,7 +878,7 @@ GTKShowTheory(const int fActivePage)
             ptw->apwPly[i] = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(ptw->apwPly[0]), sz);
         g_free(sz);
 
-        pi = (int *) g_malloc(sizeof(int));
+        pi = g_malloc(sizeof(int));
         *pi = i;
 
         g_object_set_data_full(G_OBJECT(ptw->apwPly[i]), "ply", pi, g_free);
@@ -905,12 +909,14 @@ GTKShowTheory(const int fActivePage)
 
     for (i = 0; i < 2; ++i) {
 
-        sprintf(sz, _("Market window for player %s"), ap[i].szName);
+        gchar *sz = g_strdup_printf( _("Market window for player %s"), ap[i].szName);
+
         pwFrame = gtk_frame_new(sz);
         gtk_box_pack_start(GTK_BOX(pwVBox), pwFrame, FALSE, FALSE, 0);
 
-
         gtk_container_add(GTK_CONTAINER(pwFrame), ptw->apwMW[i]);
+
+        g_free(sz);
 
     }
 
@@ -923,9 +929,13 @@ GTKShowTheory(const int fActivePage)
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwVBox, gtk_label_new(_("Window graph")));
 
     for (i = 0; i < 2; i++) {
-        sprintf(sz, _("Window graph for player %s"), ap[i].szName);
+        GtkWidget *pwAlign;
+        gchar *sz = g_strdup_printf( _("Window graph for player %s"), ap[i].szName);
+
         pwFrame = gtk_frame_new(sz);
         gtk_box_pack_start(GTK_BOX(pwVBox), pwFrame, FALSE, FALSE, 4);
+
+        g_free(sz);
 
         gtk_container_add(GTK_CONTAINER(pwFrame), pwAlign = gtk_alignment_new(0.5, 0.5, 1, 0));
         gtk_container_add(GTK_CONTAINER(pwAlign), ptw->apwGraph[i] = gtk_drawing_area_new());
