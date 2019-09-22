@@ -1,10 +1,10 @@
 Installation
 ============
 
-Installing gnubg is rather painless through the use of the GNU autoconf
-package.  Simply untar the gnubg distribution, and run the ``configure''
-script. Then ``make´´ and then as root ``make install´´.  If you have obtained
-the distribution from the CVS repository, run ``./autogen.sh'' first.
+Installing GNUbg is rather painless through the use of the GNU autoconf
+package.  Simply untar the GNUbg distribution, and run the ``configure''
+script. Then ``make´´ and then, as root, ``make install´´.  If you have
+obtained the distribution from the CVS repository, run ``./autogen.sh'' first.
 
 You are likely to want or need the following tools
 
@@ -20,11 +20,11 @@ If bison or flex are missing or too old, the files they create can be copied
 from non-src (these are non-src/*_*) to the base directory.
 
 Gcc or clang are the preferred compilers. Those from Intel or Sun/Oracle can
-build gnubg but not necessarily with the SIMD extensions.
+build GNUbg but not necessarily with the SIMD extensions.
 
-The only needed development library is
+The only mandatory development library is
 
-GLib			version >= 2.8
+GLib			version >= 2.8 (>= 2.13 on Windows)
 
 but you probably want to make use of most of the following ones as well
 
@@ -43,11 +43,11 @@ curl (Internet random numbers generator)
 Python does not have to be from the base system. Another version or a 3rd party
 package like Anaconda would be suitable.
 
-To access a MySQL/MariaDB or PostgreSQL database, gnubg needs to be built
+To access a MySQL/MariaDB or PostgreSQL database, GNUbg needs to be built
 with Python support and the PyMySQL or PyGreSQL module must be installed
 on the target host. These modules may themselves have prerequisites.
 
-Gnubg documentation is provided in various viewable formats. Rebuilding it
+GNUbg documentation is provided in various viewable formats. Rebuilding it
 from sources needs
 
 texinfo
@@ -59,8 +59,8 @@ know in order to compile.  However, there are a few options to ``configure'' to
 help it out, or to disable a certain feature. See ``configure --help´´ for more
 info.
 
-  --enable-simd=TYPE      enable SIMD for newer cpus (TYPE=yes,no,sse,sse2,avx 
-                          default=yes)
+  --enable-simd=TYPE      enable SIMD for newer cpus (TYPE=yes,fma,avx,sse2,
+                          neon,no) default=yes)
   --enable-gasserts       enable g_assert debugging macros (Default disabled)
   --disable-cputest       disable runtime SIMD CPU test (Default no)
   --enable-threads        enable multithread support (Default enabled)

@@ -1,26 +1,27 @@
-GNU Backgammon version 1.00.0
+GNU Backgammon version 1.*
+
 
 GNU Backgammon is developed under the GNU General Public License (GPL)
-and it's part of the GNU project. If you want to know more about GPL
+and is part of the GNU project. If you want to know more about GPL
 and the Free Software Foundation you can visit the FSF website. The
 conditions for copying may be found in the FILE `COPYING`
 
 Look for news and releases of GNU Backgammon at
-http://www.gnubg.org. Here you will also find ways to report bugs and
-give suggestions.
+https://www.gnu.org/software/gnubg/.
+There you will also find ways to report bugs and give suggestions.
 
 For instructions on how to build gnubg, please read the file `INSTALL'
 and the other sections in this file; for other information, please see
 the GNU Backgammon manual in the `doc' directory.
 
-Introduction =========== GNU Backgammon (gnubg) plays and analyzes
-backgammon games and matches. It is able to play and analyze both
-money games and tournament matches, evaluate and roll out positions,
-and more. Driven by a command-line interface, it displays an ASCII
-rendering of a board on text-only terminals, but also allows the user
-to play games and manipulate positions with a graphical GTK+
-interface. GNU Backgammon is extensible on platforms which support
-Python.
+
+GNU Backgammon (gnubg) plays and analyzes backgammon games and matches.
+It is able to play and analyze both money games and tournament matches,
+evaluate and roll out positions, and more.
+Driven by a command-line interface, it displays an ASCII rendering of
+a board on text-only terminals, but also allows the user to play games
+and manipulate positions with a graphical GTK+ interface.
+GNU Backgammon is extensible on platforms which support Python.
 
 GNU Backgammon is a world class opponent and rates at around 2200 on
 FIBS, the First Internet Backgammon Server - at its best, it is in the
