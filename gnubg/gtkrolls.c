@@ -194,7 +194,6 @@ RollsTree(const int n, evalcontext * pec, const matchstate * pms)
     GtkTreeModel *pm;
     GtkWidget *ptv;
     int i;
-    GtkCellRenderer *renderer;
     static const char *aszColumn[] = {
         N_("Roll"),
         N_("noun|Move"),
@@ -212,7 +211,8 @@ RollsTree(const int n, evalcontext * pec, const matchstate * pms)
 
     for (i = 0; i < 3; ++i) {
 
-        renderer = gtk_cell_renderer_text_new();
+        GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
         g_object_set(G_OBJECT(renderer), "xalign", 0.0, NULL);
 
         gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(ptv),
