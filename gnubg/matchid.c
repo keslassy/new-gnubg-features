@@ -88,11 +88,7 @@ SetBits(unsigned char *pc, unsigned int bitPos, unsigned int nBits, int iContent
 static void
 GetBits(const unsigned char *pc, const unsigned int bitPos, const unsigned int nBits, int *piContent)
 {
-
-
     unsigned int i, j;
-    unsigned int k, r;
-
     unsigned char c[2];
 
     /* FIXME: rewrite GetBits to be faster */
@@ -101,6 +97,8 @@ GetBits(const unsigned char *pc, const unsigned int bitPos, const unsigned int n
     c[1] = 0;
 
     for (i = 0, j = bitPos; i < nBits; i++, j++) {
+
+        unsigned int k, r;
 
         k = j / 8;
         r = j % 8;
