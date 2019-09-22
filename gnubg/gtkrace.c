@@ -124,7 +124,6 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
     GtkWidget *pwvbox;
     GtkWidget *pw;
     GtkWidget *pwFrame;
-    gchar *sz;
     unsigned int i;
 
     pwFrame = gtk_frame_new(_("Effective pip count"));
@@ -147,7 +146,7 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
 
     for (i = 0; i < 2; ++i) {
 
-        sz = g_strdup_printf(_("Player %s"), ap[i].szName);
+        gchar *sz = g_strdup_printf(_("Player %s"), ap[i].szName);
         gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz), 0, 1, i + 1, i + 2, 0, 0, 4, 4);
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pw, GTK_ALIGN_START);
@@ -198,13 +197,12 @@ PerformOSR(GtkWidget * UNUSED(pw), racewidget * prw)
 
     unsigned int nTrials = (unsigned int) gtk_adjustment_get_value(prw->padjTrials);
     float ar[5];
-    int i, j;
+    int i;
     char sz[16];
     unsigned int anPips[2];
     const float x = (2 * 3 + 3 * 4 + 4 * 5 + 4 * 6 + 6 * 7 +
                      5 * 8 + 4 * 9 + 2 * 10 + 2 * 11 + 1 * 12 + 1 * 16 + 1 * 20 + 1 * 24) / 36.0f;
     float arMu[2];
-    gchar *pch;
     GtkTreeIter iter;
     GtkTreeModel *store;
 
@@ -225,14 +223,14 @@ PerformOSR(GtkWidget * UNUSED(pw), racewidget * prw)
     /* effective pip count */
 
     for (i = 0; i < 2; ++i) {
-
-        j = prw->fMove ? i : !i;
+        gchar *pch;
+        int j = prw->fMove ? i : !i;
 
         pch = g_strdup_printf("%7.3f", arMu[j] * x);
         gtk_label_set_text(GTK_LABEL(prw->epcwOSR.apwEPC[i]), pch);
         g_free(pch);
 
-        pch = g_strdup_printf("%7.3f", arMu[j] * x - anPips[j]);
+        pch = g_strdup_printf("%7.3f", arMu[j] * x - (float)anPips[j]);
         gtk_label_set_text(GTK_LABEL(prw->epcwOSR.apwWastage[i]), pch);
         g_free(pch);
 
