@@ -1022,11 +1022,13 @@ CommandShowScoreSheet(char *UNUSED(sz))
 
         if (plGame) {
             moverecord *pmr = plGame->plNext->p;
+
             score[0] = pmr->g.anScore[0];
             score[1] = pmr->g.anScore[1];
         } else {
             moverecord *pmr;
-            listOLD *plGame = pl->p;
+
+            plGame = pl->p;
             if (!plGame) {
                 continue;
             } else {
@@ -1555,7 +1557,7 @@ CommandShowMarketWindow(char *sz)
 
     float aarRates[2][2];
 
-    int i, fAutoRedouble[2], afDead[2], anNormScore[2];
+    int fAutoRedouble[2], afDead[2], anNormScore[2];
 
     if (ms.gs != GAME_PLAYING) {
         outputl(_("No game in progress (type `new game' to start one)."));
@@ -1599,7 +1601,7 @@ CommandShowMarketWindow(char *sz)
 
         /* Check that ratios are 0 <= ratio <= 1 */
 
-        for (i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             if (aarRates[i][0] > 1.0f) {
                 outputf(_("illegal gammon ratio for player %i: %f\n"), i, aarRates[i][0]);
                 return;
@@ -1630,19 +1632,19 @@ CommandShowMarketWindow(char *sz)
 
 
 
-    for (i = 0; i < 2; i++)
+    for (int i = 0; i < 2; i++)
         outputf(_("Player %-25s: gammon rate %6.2f%%, bg rate %6.2f%%\n"),
                 ap[i].szName, aarRates[i][0] * 100.0f, aarRates[i][1] * 100.0f);
 
 
     if (ms.nMatchTo) {
 
-        for (i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
             anNormScore[i] = ms.nMatchTo - ms.anScore[i];
 
         GetPoints(arOutput, &ci, arCP2);
 
-        for (i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
 
             fAutoRedouble[i] = (anNormScore[i] - 2 * ms.nCube <= 0) && (anNormScore[!i] - 2 * ms.nCube > 0);
 
@@ -1766,7 +1768,7 @@ CommandShowMarketWindow(char *sz)
 
         output("\n\n");
 
-        for (i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
 
             outputf(_("Player %s market window:\n\n"), ap[i].szName);
 
@@ -1807,16 +1809,14 @@ CommandShowMarketWindow(char *sz)
 
         float aaarPoints[2][7][2];
 
-        int i, j;
-
         getMoneyPoints(aaarPoints, ci.fJacoby, ci.fBeavers, aarRates);
 
-        for (i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
 
             outputf(_("\nPlayer %s cube parameters:\n\n"), ap[i].szName);
             outputf("%-27s  %7s      %s\n", _("Cube parameter"), _("Dead Cube"), _("Live Cube"));
 
-            for (j = 0; j < 7; j++)
+            for (int j = 0; j < 7; j++)
                 outputf("%-27s  %7.3f%%     %7.3f%%\n",
                         gettext(aszMoneyPointLabel[j]), aaarPoints[i][j][0] * 100.0f, aaarPoints[i][j][1] * 100.0f);
 
@@ -2215,7 +2215,6 @@ CommandShowMatchResult(char *UNUSED(sz))
     xmovegameinfo *pmgi;
     statcontext *psc;
     listOLD *pl;
-    float r;
 
     updateStatisticsMatch(&lMatch);
 
@@ -2223,6 +2222,8 @@ CommandShowMatchResult(char *UNUSED(sz))
     outputf("%-10s %-10s %-10s\n\n", _("Game"), _("Actual"), _("Luck adj."));
 
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext, ++n) {
+
+        float r;
 
         pmr = (moverecord *) ((listOLD *) pl->p)->plNext->p;
         pmgi = &pmr->g;
