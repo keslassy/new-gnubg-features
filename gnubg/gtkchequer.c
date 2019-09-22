@@ -51,11 +51,11 @@ static void
 MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
 {
     cubeinfo ci;
-    int i, c, res;
-    move *m;
     int *ai;
     void *p;
     GList *pl, *plSelList = MoveListGetSelectionList(phd);
+    int c;
+
     if (!plSelList)
         return;
 
@@ -68,9 +68,11 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
         move **ppm = (move **) malloc(c * sizeof(move *));
         cubeinfo **ppci = (cubeinfo **) malloc(c * sizeof(cubeinfo *));
         char (*asz)[FORMATEDMOVESIZE] = (char (*)[FORMATEDMOVESIZE]) malloc(FORMATEDMOVESIZE * c);
+        int i, res;
 
         for (i = 0, pl = plSelList; i < c; pl = pl->next, i++) {
-            m = ppm[i] = MoveListGetMove(phd, pl);
+            move *m = ppm[i] = MoveListGetMove(phd, pl);
+
             ppci[i] = &ci;
             FormatMove(asz[i], msBoard(), m->anMove);
         }
@@ -121,11 +123,11 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
 extern void
 ShowMove(hintdata * phd, const int f)
 {
-    char *sz;
-    TanBoard anBoard;
     if (f) {
         move *pm;
         GList *plSelList = MoveListGetSelectionList(phd);
+        TanBoard anBoard;
+
         if (!plSelList)
             return;
 
@@ -140,7 +142,7 @@ ShowMove(hintdata * phd, const int f)
         UpdateMove((BOARD(pwBoard))->board_data, anBoard);
     } else {
 
-        sz = g_strdup("show board");
+        gchar *sz = g_strdup("show board");
         UserCommand(sz);
         g_free(sz);
 
@@ -229,14 +231,15 @@ MoveListCmarkClicked(GtkWidget * UNUSED(pw), hintdata * phd)
 static void
 MoveListMWC(GtkWidget * pw, hintdata * phd)
 {
-    char sz[80];
     int f = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
 
     if (f != fOutputMWC) {
-        sprintf(sz, "set output mwc %s", fOutputMWC ? "off" : "on");
+        gchar *sz = g_strdup_printf("set output mwc %s", fOutputMWC ? "off" : "on");
 
         UserCommand(sz);
         UserCommand("save settings");
+
+        g_free(sz);
     }
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), fOutputMWC);
@@ -468,9 +471,7 @@ CreateMoveListTools(hintdata * phd)
     GtkWidget *pwCopy = gtk_button_new_with_label(_("Copy"));
     GtkWidget *pwTempMap = gtk_button_new_with_label(_("TM"));
     GtkWidget *pwCmark = gtk_button_new_with_label(_("Cmark"));
-    GtkWidget *pwply;
     int i;
-    char *sz;
 
     pwDetails = phd->fDetails ? NULL : gtk_toggle_button_new_with_label(_("Details"));
     phd->pwRollout = pwRollout;
@@ -516,8 +517,9 @@ CreateMoveListTools(hintdata * phd)
 
     for (i = 0; i < 5; ++i) {
 
-        sz = g_strdup_printf("%d", i);  /* string is freed by set_data_full */
-        pwply = gtk_button_new_with_label(sz);
+        gchar *sz = g_strdup_printf("%d", i);  /* string is freed by set_data_full */
+        GtkWidget *pwply = gtk_button_new_with_label(sz);
+
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_style_context_add_class(gtk_widget_get_style_context(pwply), "gnubg-analysis-button");
 #endif
@@ -558,9 +560,9 @@ CreateMoveListTools(hintdata * phd)
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     for (i = 0; i < 5; ++i) {
-        GtkWidget *ro_preset;
-        sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
-        ro_preset = gtk_button_new_with_label(sz);
+        gchar *sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
+        GtkWidget *ro_preset = gtk_button_new_with_label(sz);
+
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_style_context_add_class(gtk_widget_get_style_context(ro_preset), "gnubg-analysis-button");
 #endif

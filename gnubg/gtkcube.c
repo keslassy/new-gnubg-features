@@ -848,14 +848,15 @@ static void
 CubeAnalysisMWC(GtkWidget * pw, cubehintdata * pchd)
 {
 
-    char sz[80];
     int f = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
 
     if (f != fOutputMWC) {
-        sprintf(sz, "set output mwc %s", fOutputMWC ? "off" : "on");
+        gchar *sz = g_strdup_printf("set output mwc %s", fOutputMWC ? "off" : "on");
 
         UserCommand(sz);
         UserCommand("save settings");
+
+        g_free(sz);
     }
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), fOutputMWC);
@@ -892,7 +893,7 @@ static void
 CubeAnalysisTempMap(GtkWidget * UNUSED(pw), cubehintdata * UNUSED(pchd))
 {
 
-    char *sz = g_strdup("show temperaturemap =cube");
+    gchar *sz = g_strdup("show temperaturemap =cube");
     UserCommand(sz);
     g_free(sz);
 
@@ -909,7 +910,6 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 {
     GtkWidget *pwTools;
     GtkWidget *pwEval = gtk_button_new_with_label(_("Eval"));
-    GtkWidget *pwply;
     GtkWidget *pwEvalSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwRollout = gtk_button_new_with_label(_("Rollout"));
     GtkWidget *pwRolloutPresets;
@@ -920,7 +920,6 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     GtkWidget *pwCmark = gtk_toggle_button_new_with_label(_("Cmark"));
     GtkWidget *pw;
     int i;
-    char *sz;
 
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_style_context_add_class(gtk_widget_get_style_context(pwEval), "gnubg-analysis-button");
@@ -952,8 +951,9 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     for (i = 0; i < 5; ++i) {
 
-        sz = g_strdup_printf("%d", i);  /* string is freed by set_data_full */
-        pwply = gtk_button_new_with_label(sz);
+        gchar *sz = g_strdup_printf("%d", i);  /* string is freed by set_data_full */
+        GtkWidget *pwply = gtk_button_new_with_label(sz);
+
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_style_context_add_class(gtk_widget_get_style_context(pwply), "gnubg-analysis-button");
 #endif
@@ -996,7 +996,8 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     for (i = 0; i < 5; ++i) {
         GtkWidget *ro_preset;
-        sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
+        gchar *sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
+
         ro_preset = gtk_button_new_with_label(sz);
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_style_context_add_class(gtk_widget_get_style_context(ro_preset), "gnubg-analysis-button");
