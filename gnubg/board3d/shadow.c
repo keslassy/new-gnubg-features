@@ -42,7 +42,7 @@ shadowInit(BoardData3d * bd3d, renderdata * prd)
         return;
 
     /* Darkness as percentage of ambient light */
-    prd->dimness = ((prd->lightLevels[1] / 100.0f) * (100 - prd->shadowDarkness)) / 100;
+    prd->dimness = (float)(prd->lightLevels[1] * (100 - prd->shadowDarkness)) / (100.0f * 100.0f);
 
     for (i = 0; i < NUM_OCC; i++)
         bd3d->Occluders[i].handle = NULL;
@@ -95,7 +95,6 @@ int renderingBase = FALSE;
 static void
 DrawShadows(const BoardData3d * bd3d)
 {
-    int i;
     if (renderingBase) {
         glCallList(bd3d->Occluders[OCC_BOARD].shadow_list);
         if (bd3d->Occluders[OCC_HINGE1].show) {
@@ -103,7 +102,7 @@ DrawShadows(const BoardData3d * bd3d)
             glCallList(bd3d->Occluders[OCC_HINGE2].shadow_list);
         }
     } else {
-        for (i = 0; i < NUM_OCC; i++) {
+        for (int i = 0; i < NUM_OCC; i++) {
             if (bd3d->Occluders[i].show)
                 glCallList(bd3d->Occluders[i].shadow_list);
         }
