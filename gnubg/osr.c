@@ -338,9 +338,7 @@ static void
 FindBestMoveOSR4(unsigned int anBoard[25], const unsigned int nDice, unsigned int *pnOut)
 {
     unsigned int nd = 4;
-    unsigned int i, j, n = 0;
-    unsigned int first, any;
-    unsigned int lc;
+    unsigned int i, n = 0;
 
     /* check for exact bear-ins */
 
@@ -384,6 +382,9 @@ FindBestMoveOSR4(unsigned int anBoard[25], const unsigned int nDice, unsigned in
 #endif
 
     if (*pnOut > 0 && nd > 0) {
+        unsigned int first;
+        unsigned int lc;
+
         first = TRUE;
 
         /* find rearest chequer */
@@ -457,6 +458,8 @@ FindBestMoveOSR4(unsigned int anBoard[25], const unsigned int nDice, unsigned in
 
     if (!*pnOut) {              /* all chequers inside home quadrant */
         while (nd) {
+            unsigned int any;
+
             if (anBoard[nDice - 1]) {
                 /* perfect bear-off */
                 --anBoard[nDice - 1];
@@ -497,7 +500,7 @@ FindBestMoveOSR4(unsigned int anBoard[25], const unsigned int nDice, unsigned in
             /* FIXME: fill gaps? */
 
             for (i = 0; nd && i < 6; i++) {
-                j = 5 - i;
+                unsigned int j = 5 - i;
 
                 while (anBoard[j] && nd) {
 
@@ -606,7 +609,6 @@ rollOSR(const unsigned int nGames, const unsigned int anBoard[25], const unsigne
     unsigned int an[25];
     unsigned short int anProb[32];
     unsigned int i;
-    unsigned int n, m;
     unsigned int iGame;
 
     int *anCounts = (int *) g_alloca(nMaxGammonProbs * sizeof(int));
@@ -619,6 +621,7 @@ rollOSR(const unsigned int nGames, const unsigned int anBoard[25], const unsigne
     /* perform rollouts */
 
     for (iGame = 0; iGame < nGames; ++iGame) {
+        unsigned int n, m;
 
         memcpy(an, anBoard, sizeof(an));
 
@@ -648,7 +651,7 @@ rollOSR(const unsigned int nGames, const unsigned int anBoard[25], const unsigne
     /* scale resulting probabilities */
 
     for (i = 0; i < (unsigned int) nMaxProbs; ++i) {
-        arProbs[i] /= nGames;
+        arProbs[i] /= (float)nGames;
         /* printf ( "arProbs[%d]=%f\n", i, arProbs[ i ] ); */
     }
 
@@ -656,7 +659,7 @@ rollOSR(const unsigned int nGames, const unsigned int anBoard[25], const unsigne
      * (prob. of getting inside home quadrant in i rolls */
 
     for (i = 0; i < nMaxGammonProbs; ++i) {
-        arGammonProbs[i] = 1.0f * anCounts[i] / nGames;
+        arGammonProbs[i] = (float)anCounts[i] / (float)nGames;
         /* printf ( "arGammonProbs[%d]=%f\n", i, arGammonProbs[ i ] ); */
     }
 
@@ -684,9 +687,8 @@ osp(const unsigned int anBoard[25], const unsigned int nGames,
     unsigned int an[25], float arProbs[MAX_PROBS], float arGammonProbs[MAX_GAMMON_PROBS])
 {
 
-    int i, n;
+    int i;
     unsigned int nTotal, nOut;
-    unsigned short int anProb[32];
 
     /* copy board into an, and find total number of chequers left,
      * and number of chequers outside home */
@@ -709,6 +711,8 @@ osp(const unsigned int anBoard[25], const unsigned int nGames,
     else {
         /* chequers inside home: use BEAROFF2 */
 
+        unsigned short int anProb[32];
+
         /* no gammon possible */
         for (i = 0; i < MAX_GAMMON_PROBS; ++i)
             arGammonProbs[i] = 0.0f;
@@ -726,7 +730,7 @@ osp(const unsigned int anBoard[25], const unsigned int nGames,
         getBearoffProbs(PositionBearoff(anBoard, pbc1->nPoints, pbc1->nChequers), anProb);
 
         for (i = 0; i < 32; ++i) {
-            n = MIN(i, MAX_PROBS - 1);
+            int n = MIN(i, MAX_PROBS - 1);
             arProbs[n] += anProb[i] / 65535.0f;
             /* printf ( "arProbs[%d]=%f\n", n, arProbs[n] ); */
         }
@@ -744,9 +748,8 @@ bgProb(const unsigned int anBoard[25],
 {
 
     unsigned int nTotPipsHome = 0;
-    unsigned int i, j;
-    float r, s;
-    unsigned short int anProb[32];
+    unsigned int i;
+    float r;
 
     /* total pips before out of opponent's home quadrant */
 
@@ -759,10 +762,12 @@ bgProb(const unsigned int anBoard[25],
 
         /* ( nTotal + 3 ) / 4 - 1: number of rolls before opponent is off. */
         /* (nTotPipsHome + 2) / 3: numbers of rolls before I'm out of
-         * opponent's home quadrant (with consequtive 2-1's) */
+         * opponent's home quadrant (with consecutive 2-1's) */
 
         if ((nTotal + 3) / 4 - 1 <= (nTotPipsHome + 2) / 3) {
             /* backgammon is possible */
+
+            unsigned short int anProb[32];
 
             /* get "bear-off" prob (for getting out of opp.'s home quadr.) */
 
@@ -774,7 +779,8 @@ bgProb(const unsigned int anBoard[25],
 
                 if (arProbs[i] > 0.0f) {
 
-                    s = 0.0f;
+                    float s = 0.0f;
+                    unsigned int j;
 
                     for (j = i + !fOnRoll; j < 32; ++j)
                         s += anProb[j] / 65535.0f;
@@ -901,7 +907,7 @@ raceProbs(const TanBoard anBoard, const unsigned int nGames, float arOutput[NUM_
         for (i = 0; i < 2; ++i) {
             arMu[i] = 0.0f;
             for (j = 0; j < MAX_PROBS; ++j)
-                arMu[i] += 1.0f * j * aarProbs[i][j];
+                arMu[i] +=  (float)j * aarProbs[i][j];
 
         }
 
