@@ -470,7 +470,6 @@ GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
 
     GtkAllocation allocation;
     int i, x, y, cx, cy, iPlayer, ax[3];
-    char sz[4];
     PangoLayout *layout;
 
 #if ! GTK_CHECK_VERSION(3,0,0)
@@ -501,8 +500,12 @@ GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
         if (!(i & 3)) {
             int width;
             int height;
-            sprintf(sz, "%d", i * 5);
+            gchar *sz = g_strdup_printf("%d", i * 5);
+
             pango_layout_set_text(layout, sz, -1);
+
+            g_free(sz);
+
             pango_layout_get_pixel_size(layout, &width, &height);
             gtk_locdef_paint_layout(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr,
                                     GTK_STATE_NORMAL, TRUE, NULL, pwGraph, "label",
@@ -728,9 +731,7 @@ GTKShowTheory(const int fActivePage)
     j = 1;
     for (i = 0; i < 7; i++) {
 
-        char sz[4];
-
-        sprintf(sz, "%d", j);
+        gchar *sz = g_strdup_printf("%d", j);
 
         if (!i)
             gtk_container_add(GTK_CONTAINER(pwHBox), ptw->apwCube[i] = gtk_radio_button_new_with_label(NULL, sz));
@@ -738,6 +739,8 @@ GTKShowTheory(const int fActivePage)
             gtk_container_add(GTK_CONTAINER(pwHBox),
                               ptw->apwCube[i] =
                               gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(ptw->apwCube[0]), sz));
+
+        g_free(sz);
 
         g_signal_connect(G_OBJECT(ptw->apwCube[i]), "toggled", G_CALLBACK(TheoryUpdated), ptw);
 
