@@ -743,7 +743,7 @@ static PyObject *
 PythonPosInfo(PyObject * UNUSED(self), PyObject * args)
 {
 
-    posinfo pi;
+    static posinfo pi;
     int fTurn = ms.fTurn;
     int fResigned = ms.fResigned;
     int fDoubled = ms.fDoubled;
