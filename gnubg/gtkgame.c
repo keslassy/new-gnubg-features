@@ -1484,7 +1484,7 @@ CopyAsGOL(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 static void
 CopyIDs(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {                               /* Copy the position and match ids to the clipboard */
-    char buffer[1024];
+    char buffer[L_MATCHID + 1 + L_POSITIONID + 1];
 
     if (ms.gs == GAME_NONE) {
         output(_("No game in progress."));
@@ -1492,7 +1492,7 @@ CopyIDs(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         return;
     }
 
-    sprintf(buffer, "%s:%s\n", PositionID(msBoard()), MatchIDFromMatchState(&ms));
+    sprintf(buffer, "%s:%s", PositionID(msBoard()), MatchIDFromMatchState(&ms));
 
     GTKTextToClipboard(buffer);
 
@@ -1502,7 +1502,7 @@ CopyIDs(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 static void
 CopyMatchID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {                               /* Copy the position and match ids to the clipboard */
-    char buffer[1024];
+    gchar *buffer;
 
     if (ms.gs == GAME_NONE) {
         output(_("No game in progress."));
@@ -1510,9 +1510,11 @@ CopyMatchID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         return;
     }
 
-    sprintf(buffer, "%s %s\n", _("Match ID:"), MatchIDFromMatchState(&ms));
+    buffer = g_strdup_printf("%s %s", _("Match ID:"), MatchIDFromMatchState(&ms));
 
     GTKTextToClipboard(buffer);
+
+    g_free(buffer);
 
     gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Match ID copied to the clipboard"));
 }
@@ -1520,7 +1522,7 @@ CopyMatchID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 static void
 CopyPositionID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {                               /* Copy the position and match ids to the clipboard */
-    char buffer[1024];
+    gchar *buffer;
 
     if (ms.gs == GAME_NONE) {
         output(_("No game in progress."));
@@ -1528,9 +1530,11 @@ CopyPositionID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         return;
     }
 
-    sprintf(buffer, "%s %s\n", _("Position ID:"), PositionID(msBoard()));
+    buffer = g_strdup_printf("%s %s", _("Position ID:"), PositionID(msBoard()));
 
     GTKTextToClipboard(buffer);
+
+    g_free(buffer);
 
     gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Position ID copied to the clipboard"));
 }
