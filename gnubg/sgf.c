@@ -648,7 +648,7 @@ RestoreRolloutRolloutContext(rolloutcontext * prc, const char *sz)
     if (!pc)
         return;
 
-    sscanf(pc, "RC %d %d %d %hu %u \"%[^\"]\" %lu %d %d %d",
+    sscanf(pc, "RC %d %d %d %hu %u \"%1023[^\"]\" %lu %d %d %d",
            &fCubeful,
            &fVarRedn,
            &fInitial, &prc->nTruncate, &prc->nTrials, szTemp, &prc->nSeed, &fRotate, &fTruncBearoff2, &fTruncBearoffOS);
@@ -775,7 +775,7 @@ RestoreExtendedRolloutContext(rolloutcontext * prc, const char *sz)
     if (!pc)
         return;
 
-    if (sscanf(pc, "RC %d %d %d %d %d %d %hu %d %d %hu \"%[^\"]\" %lu",
+    if (sscanf(pc, "RC %d %d %d %d %d %d %hu %d %d %hu \"%1023[^\"]\" %lu",
                &fCubeful,
                &fVarRedn,
                &fInitial,
@@ -952,7 +952,6 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
                     movelist * pml, unsigned int *piMove, evalsetup * pesChequer, const matchstate * pms)
 {
     listOLD *pl = pp->pl->plNext;
-    char *pc, *pch, ch;
     move *pm;
     int i;
     int fUsePrune = 0;
@@ -977,6 +976,8 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
     pesChequer->et = EVAL_NONE;
 
     for (pl = pp->pl->plNext->plNext; pl->p; pl = pl->plNext, pm++) {
+        char *pc, *pch, ch;
+
         pc = pl->p;
 
         /* FIXME we could work these out, but it hardly seems worth it */
@@ -1060,7 +1061,6 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
 
         if (cmp_evalsetup(pesChequer, &pm->esMove) < 0)
             memcpy(pesChequer, &pm->esMove, sizeof(evalsetup));
-
 
     }
 }
@@ -2093,9 +2093,6 @@ SaveGame(FILE * pf, listOLD * plGame)
 
     if (pmr->g.fCrawford || pmr->g.fJacoby || pmr->g.bgv != VARIATION_STANDARD || !pmr->g.fCubeUse) {
 
-        static const char *aszSGFVariation[NUM_VARIATIONS] = { NULL, "Nackgammon", "Hypergammon1", "Hypergammon2",
-            "Hypergammon3"
-        };
         int fFirst = TRUE;
 
         fputs("RU[", pf);
@@ -2108,9 +2105,11 @@ SaveGame(FILE * pf, listOLD * plGame)
             AddRule(pf, "CrawfordGame", &fFirst);
         if (pmr->g.fJacoby)
             AddRule(pf, "Jacoby", &fFirst);
-        if (pmr->g.bgv != VARIATION_STANDARD)
-            AddRule(pf, aszSGFVariation[pmr->g.bgv], &fFirst);
+        if (pmr->g.bgv != VARIATION_STANDARD) {
+            static const char *aszSGFVariation[NUM_VARIATIONS] = { NULL, "Nackgammon", "Hypergammon1", "Hypergammon2", "Hypergammon3" };
 
+            AddRule(pf, aszSGFVariation[pmr->g.bgv], &fFirst);
+        }
         fputs("]", pf);
     }
 
