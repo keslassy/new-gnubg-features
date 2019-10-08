@@ -342,9 +342,10 @@ UpdateTheoryData(BoardData * bd, int UpdateType, const TanBoard points)
     }
 
     if (UpdateType & TT_RETURNHITS) {
-        TanBoard anBoard;
         pc = NULL;
         if (bd->valid_move) {
+            TanBoard anBoard;
+
             PositionFromKey(anBoard, &bd->valid_move->key);
             pc = ReturnHits(anBoard);
         }

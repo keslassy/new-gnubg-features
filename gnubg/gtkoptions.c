@@ -1522,15 +1522,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     unsigned int u, i;
     gchar *filename, *command, *tmp, *newfolder;
     const gchar *new_browser;
-    static const char *set_rng_cmds[NUM_RNGS] = {
-        "set rng bbs",
-        "set rng isaac",
-        "set rng md5",
-        "set rng mersenne",
-        "set rng manual",
-        "set rng random.org",
-        NULL,
-    };
+
     BoardData *bd = BOARD(pwBoard)->board_data;
 
     gtk_widget_hide(gtk_widget_get_toplevel(pw));
@@ -1630,7 +1622,19 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         }
     }
     if (i < RNG_FILE && i != (unsigned int) rngCurrent) {
+
+        static const char *set_rng_cmds[NUM_RNGS] = {
+            "set rng bbs",
+            "set rng isaac",
+            "set rng md5",
+            "set rng mersenne",
+            "set rng manual",
+            "set rng random.org",
+            NULL,
+        };
+
         UserCommand(set_rng_cmds[i]);
+
     } else if (i == RNG_FILE && i != (unsigned int) rngCurrent) {
         filename = GTKFileSelect(_("Select file with dice"), NULL, NULL, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
         if (filename) {
