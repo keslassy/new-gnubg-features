@@ -270,7 +270,7 @@ NeuralNetLoad(neuralnet * pnn, FILE * pf)
     float *pr;
     char dummy[16];
 
-    if (fscanf(pf, "%u %u %u %s %f %f\n", &pnn->cInput, &pnn->cHidden,
+    if (fscanf(pf, "%u %u %u %15s %f %f\n", &pnn->cInput, &pnn->cHidden,
                &pnn->cOutput, dummy, &pnn->rBetaHidden,
                &pnn->rBetaOutput) < 5 || pnn->cInput < 1 ||
         pnn->cHidden < 1 || pnn->cOutput < 1 || pnn->rBetaHidden <= 0.0f || pnn->rBetaOutput <= 0.0f) {
