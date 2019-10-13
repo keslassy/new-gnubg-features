@@ -1,11 +1,11 @@
 /*
- * util.c
+ * Copyright (C) 2007-2009 Christian Anthon <anthon@kiku.dk>
+ * Copyright (C) 2007-2019 the AUTHORS
  *
- * by Christian Anthon 2007
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -31,7 +30,7 @@ char *datadir = NULL;
 char *pkg_datadir = NULL;
 char *docdir = NULL;
 
-#ifdef WIN32
+#if defined(WIN32)
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
@@ -124,85 +123,11 @@ PrintError(const char *message)
 FILE *fdopen(int, const char *);
 #endif
 
-/* Temporary version of g_file_open_tmp() as older win32 version doesn't work */
-
-#if !defined(WIN32) || GLIB_CHECK_VERSION (2,18,4)
-#define TEMP_g_file_open_tmp g_file_open_tmp
-#else
-static int
-TEMP_g_mkstemp(char *tmpl)
-{
-    int count;
-    static const char letters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    static const int NLETTERS = sizeof(letters) - 1;
-    glong value;
-    GTimeVal tv;
-    static int counter = 0;
-    /* This is where the Xs start.  */
-    char *XXXXXX = &tmpl[strlen(tmpl) - 6];
-
-    /* Get some more or less random data.  */
-    g_get_current_time(&tv);
-    value = (tv.tv_usec ^ tv.tv_sec) + counter++;
-
-    for (count = 0; count < 100; value += 7777, ++count) {
-        glong v = value;
-        int fd;
-
-        /* Fill in the random bits.  */
-        XXXXXX[0] = letters[v % NLETTERS];
-        v /= NLETTERS;
-        XXXXXX[1] = letters[v % NLETTERS];
-        v /= NLETTERS;
-        XXXXXX[2] = letters[v % NLETTERS];
-        v /= NLETTERS;
-        XXXXXX[3] = letters[v % NLETTERS];
-        v /= NLETTERS;
-        XXXXXX[4] = letters[v % NLETTERS];
-        v /= NLETTERS;
-        XXXXXX[5] = letters[v % NLETTERS];
-
-        fd = open(tmpl, O_RDWR | O_CREAT | O_EXCL | O_BINARY, 0600);
-
-        if (fd >= 0)
-            return fd;
-        else if (errno != EEXIST)
-            /* Any other error will apply also to other names we might
-             *  try, and there are 2^32 or so of them, so give up now.
-             */
-            return -1;
-    }
-
-    /* We got out of the loop because we ran out of combinations to try.  */
-    return -1;
-}
-
-static int
-TEMP_g_file_open_tmp(const char *tmpl, char **name_used, GError ** UNUSED(pError))
-{
-    const char *sep = "";
-    char test;
-    const char *tmpdir = g_get_tmp_dir();
-
-    if (tmpl == NULL)
-        tmpl = ".XXXXXX";
-
-    test = tmpdir[strlen(tmpdir) - 1];
-    if (!G_IS_DIR_SEPARATOR(test))
-        sep = G_DIR_SEPARATOR_S;
-
-    *name_used = g_strconcat(tmpdir, sep, tmpl, NULL);
-    return TEMP_g_mkstemp(*name_used);
-}
-
-/* End of temporary copy of glib code, remove when glib version works on windows... */
-#endif
-
 extern FILE *
 GetTemporaryFile(const char *nameTemplate, char **retName)
 {
     FILE *pf;
-    int tmpd = TEMP_g_file_open_tmp(nameTemplate, retName, NULL);
+    int tmpd = g_file_open_tmp(nameTemplate, retName, NULL);
 
     if (tmpd < 0) {
         PrintError("creating temporary file");
