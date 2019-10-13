@@ -205,7 +205,7 @@ EOF
 cat > credits.h <<EOF
 /* Do not modify this file!  It is created automatically by credits.sh. */
 
-/*             
+/*
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -248,7 +248,7 @@ EOF
 cat > credits.c <<EOF
 /* Do not modify this file!  It is created automatically by credits.sh. */
 
-/*             
+/*
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -409,7 +409,7 @@ pr -4 -t < $extra | expand | sed 's/^/    /' >> AUTHORS
 
 cat >> AUTHORS <<'EOF'                            
 
-       
+ 
     The manual for GNU Backgammon includes a chapter describing the rules of
       backgammon, written by Tom Keith for his Backgammon Galore web site
                              <https://www.bkgm.com/>.
