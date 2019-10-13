@@ -4107,25 +4107,25 @@ Equity
             way to build up a sequence that corresponds to a given position is:</para>
           <orderedlist continuation="restarts" inheritnum="ignore">
             <listitem>
-              <para>For every point around the board (starting at the ace point
-                of the player on roll, continuing around to the 24 point and
-                ending at the bar): </para>
+              <para>For every point around the board (starting at the
+              ace point of the player not on roll, continuing around
+              to the 24 point and ending at the bar): </para>
             </listitem>
             <listitem>
-              <para>append as many 1s as the player not on roll
-                (the opponent) has on that point (if any). </para>
+              <para>append as many 1s as the player not on roll has
+              checkers on that point (if any). </para>
             </listitem>
             <listitem>
               <para>append a 0. </para>
             </listitem>
             <listitem>
-              <para>For every point around the board (starting at the ace point
-                of the opponent, continuing around to the opponent's 24 point
-                and ending at the bar): </para>
+              <para>For every point around the board (starting at the
+              ace point of the player on roll, continuing around to
+              the 24 point and ending at the bar): </para>
             </listitem>
             <listitem>
               <para>append as many 1s as the the player on roll has
-                on that point (if any). </para>
+                checkers on that point (if any). </para>
             </listitem>
             <listitem>
               <para>append a 0. </para>
@@ -4234,7 +4234,7 @@ Equity
               </tbody>
             </tgroup>
           </informaltable>
-          <para>so altogether it's:</para>
+          <para>so altogether it is:</para>
           <para>00000111110011100000111110000000000011000000011111001110000011111000000000001100</para>
           <para>In little endian bytes it looks like:</para>
           <informaltable frame="all">
