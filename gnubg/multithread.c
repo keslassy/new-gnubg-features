@@ -32,7 +32,7 @@
 #include <string.h>
 #include <glib.h>
 #if defined(USE_GTK)
-#include <gtkgame.h>
+#include "gtkgame.h"
 #endif
 
 #include "multithread.h"

@@ -55,6 +55,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#ifndef _MSC_VER
 #define EWOULDBLOCK             WSAEWOULDBLOCK
 #define EINPROGRESS             WSAEINPROGRESS
 #define EALREADY                WSAEALREADY
@@ -94,6 +95,7 @@
 #define EREMOTE                 WSAEREMOTE
 #define EINVAL                  WSAEINVAL
 #define EINTR                   WSAEINTR
+#endif
 
 #define inet_aton(ip,addr)  (addr)->s_addr = inet_addr(ip), 1
 #define inet_pton(fam,ip,addr) (addr)->s_addr = inet_addr(ip), 1

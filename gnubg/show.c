@@ -2260,12 +2260,13 @@ CommandShowMatchResult(char *UNUSED(sz))
         outputf("%10s %+9.3f %+9.3f\n", _("Sum"), arSum[0], arSum[1]);
 
     if (n && !ms.nMatchTo) {
-        outputf("%10s %+9.3f %+9.3f\n", _("Average"), arSum[0] / n, arSum[1] / n);
+		float fn = (float)n;
+        outputf("%10s %+9.3f %+9.3f\n", _("Average"), arSum[0] / fn, arSum[1] / fn);
         outputf("%10s %9.3f %9.3f\n", "95%CI",
                 1.95996f *
-                sqrtf(arSumSquared[0] / n -
-                     arSum[0] * arSum[0] / (n * n)) / sqrtf(n),
-                1.95996f * sqrtf(arSumSquared[1] / n - arSum[1] * arSum[1] / (n * n)) / sqrtf(n));
+                sqrtf(arSumSquared[0] / fn -
+                     arSum[0] * arSum[0] / (fn * fn)) / sqrtf(fn),
+                1.95996f * sqrtf(arSumSquared[1] / fn - arSum[1] * arSum[1] / (fn * fn)) / sqrtf(fn));
     }
 
 }
