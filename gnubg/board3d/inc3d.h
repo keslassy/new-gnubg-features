@@ -49,7 +49,6 @@
 #include <GL/glx.h>             /* x-windows file */
 #endif
 
-#include <gtk/gtkgl.h>
 #include "fun3d.h"
 #include "matrix.h"
 #include "gtkwindows.h"
@@ -236,7 +235,6 @@ extern void SetupFlag(void);
 extern void setupDicePaths(const BoardData * bd, Path dicePaths[2], float diceMovingPos[2][3],
                            DiceRotation diceRotation[2]);
 extern void waveFlag(float wag);
-extern GdkGLConfig *getGlConfig(void);
 
 /* Helper functions in misc3d */
 void cylinder(float radius, float height, unsigned int accuracy, const Texture * texture);
@@ -266,5 +264,14 @@ void drawBasePreRender(const BoardData * bd, const BoardData3d * bd3d, const ren
 void initPath(Path * p, const float start[3]);
 void addPathSegment(Path * p, PathType type, const float point[3]);
 void initDT(diceTest * dt, int x, int y, int z);
+
+typedef void (*RealizeCB)(void*);
+typedef void (*ConfigureCB)(GtkWidget*, void*);
+typedef gboolean (*ExposeCB)(GtkWidget*, GdkEventExpose*, void*);
+GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, void* data);
+void GLWidgetMakeCurrent(GtkWidget* widget);
+gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* eventDetails, void* data);
+gboolean GLInit(int* argc, char*** argv);
+
 
 #endif

@@ -218,55 +218,25 @@ TextureChange(GtkComboBoxText * combo, gpointer UNUSED(data))
 }
 
 static gboolean
-expose_event_preview3d(GtkWidget * widget, GdkEventExpose * UNUSED(eventDetails), Material * pMat)
+exposePreviewCB(GtkWidget* widget, GdkEventExpose* eventData, Material * pMat)
 {
-    GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(widget);
-
-    if (!gdk_gl_drawable_gl_begin(gldrawable, gtk_widget_get_gl_context(widget)))
-        return TRUE;
-
-    CheckOpenglError();
-
     SetupLight();
     Draw(pMat);
-
-    gdk_gl_drawable_swap_buffers(gldrawable);
-
-    gdk_gl_drawable_gl_end(gldrawable);
-
-    return TRUE;
+	return TRUE;
 }
 
 static void
-realize_preview3d(GtkWidget * widget, void *UNUSED(data))
+realizePreviewCB(void *UNUSED(data))
 {
-    GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(widget);
-    if (!gdk_gl_drawable_gl_begin(gldrawable, gtk_widget_get_gl_context(widget)))
-        return;
-
     SetupColourPreview();
-
-    gdk_gl_drawable_gl_end(gldrawable);
 }
 
 static GtkWidget *
 CreateGLPreviewWidget(Material * pMat)
-{                               /* Rename this (and the one above to CreateGLBoardWidget) */
-    GtkWidget *p3dWidget = gtk_drawing_area_new();
-
-    /* Set OpenGL-capability to the widget - no list sharing */
-    if (!gtk_widget_set_gl_capability(p3dWidget, getGlConfig(), NULL, TRUE, GDK_GL_RGBA_TYPE)) {
-        outputerrf("Can't create opengl capable widget\n");
+{
+	GtkWidget* p3dWidget = GLWidgetCreate(realizePreviewCB, NULL, exposePreviewCB, pMat);
+	if (p3dWidget == NULL)
         return NULL;
-    }
-
-    if (p3dWidget == NULL) {
-        outputerrf("Can't create opengl drawing widget\n");
-        return NULL;
-    }
-
-    g_signal_connect(G_OBJECT(p3dWidget), "realize", G_CALLBACK(realize_preview3d), NULL);
-    g_signal_connect(G_OBJECT(p3dWidget), "expose_event", G_CALLBACK(expose_event_preview3d), pMat);
 
     return p3dWidget;
 }

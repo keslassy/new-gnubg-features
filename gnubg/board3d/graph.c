@@ -53,16 +53,12 @@ graph_button_press_event(void)
     return FALSE;
 }
 
-static gboolean
-configure_event(GtkWidget * widget, GdkEventConfigure * UNUSED(eventDetails), const GraphData * gd)
+static void
+configureCB(GtkWidget *widget, const GraphData * gd)
 {
-    int width, height;
+	int width, height;
     float maxY, maxX;
     GtkAllocation allocation;
-    GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(widget);
-
-    if (!gdk_gl_drawable_gl_begin(gldrawable, gtk_widget_get_gl_context(widget)))
-        return FALSE;
 
     gtk_widget_get_allocation(widget, &allocation);
     width = allocation.width;
@@ -79,19 +75,11 @@ configure_event(GtkWidget * widget, GdkEventConfigure * UNUSED(eventDetails), co
     glOrtho(0.0, (double) modelWidth, 0.0, (double) modelHeight, -1.0, 0.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-    gdk_gl_drawable_gl_end(gldrawable);
-
-    return TRUE;
 }
 
 static void
-realize(GtkWidget * widget, const GraphData * UNUSED(gd))
+realizeCB(void* data)
 {
-    GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(widget);
-
-    if (!gdk_gl_drawable_gl_begin(gldrawable, gtk_widget_get_gl_context(widget)))
-        return;
     /* Deep blue background colour */
     glClearColor(.2f, .2f, .4f, 1.f);
 
@@ -102,9 +90,6 @@ realize(GtkWidget * widget, const GraphData * UNUSED(gd))
         g_print("Error creating font\n");
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    gdk_gl_drawable_gl_end(gldrawable);
-        /*** OpenGL END ***/
 }
 
 static void
@@ -282,23 +267,11 @@ DrawGraph(const GraphData * gd)
 }
 
 static gboolean
-expose_event(GtkWidget * widget, GdkEventExpose * UNUSED(eventDetails), const GraphData * gd)
+exposeCB(GtkWidget* widget, GdkEventExpose* eventData, const GraphData * gd)
 {
-    GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(widget);
-
-    if (!gdk_gl_drawable_gl_begin(gldrawable, gtk_widget_get_gl_context(widget)))
-        return TRUE;
-    CheckOpenglError();
-
     glClear(GL_COLOR_BUFFER_BIT);
-
     DrawGraph(gd);
-
-    gdk_gl_drawable_swap_buffers(gldrawable);
-
-    gdk_gl_drawable_gl_end(gldrawable);
-
-    return TRUE;
+	return TRUE;
 }
 
 static void
@@ -320,13 +293,10 @@ StatGraph(GraphData * pgd)
     float f1, f2;
     GtkWidget *pw;
 
-    /* Drawing area for OpenGL */
-    pw = gtk_drawing_area_new();
-    /* Set OpenGL-capability to the widget - no list sharing */
-    if ((pw == NULL) || !gtk_widget_set_gl_capability(pw, getGlConfig(), NULL, TRUE, GDK_GL_RGBA_TYPE)) {
-        g_print("Can't create opengl capable widget\n");
+    /* Drawing widget for OpenGL */
+	pw = GLWidgetCreate(realizeCB, configureCB, exposeCB, pgd);
+    if (pw == NULL)
         return NULL;
-    }
 
     f1 = pgd->data[pgd->numGames][0][0] + pgd->data[pgd->numGames][0][1];
     f2 = pgd->data[pgd->numGames][1][0] + pgd->data[pgd->numGames][1][1];
@@ -336,9 +306,6 @@ StatGraph(GraphData * pgd)
 
     gtk_widget_set_events(pw, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK);
     g_signal_connect(G_OBJECT(pw), "button_press_event", G_CALLBACK(graph_button_press_event), pgd);
-    g_signal_connect(G_OBJECT(pw), "realize", G_CALLBACK(realize), pgd);
-    g_signal_connect(G_OBJECT(pw), "configure_event", G_CALLBACK(configure_event), pgd);
-    g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(expose_event), pgd);
     g_signal_connect(G_OBJECT(pw), "destroy", G_CALLBACK(destroy_event), NULL);
 
     return pw;

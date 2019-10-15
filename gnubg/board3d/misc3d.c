@@ -2414,33 +2414,34 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
 void
 GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, unsigned int nSizeY)
 {
-    unsigned char *puch;
-    BoardData *bd = BOARD(pwBoard)->board_data;
-    GdkPixbuf *pixbuf;
-    GError *error = NULL;
-    unsigned int line;
-    unsigned int width = nSize * nSizeX;
-    unsigned int height = nSize * nSizeY;
+	RenderToBufferData renderToBufferData;
+	renderToBufferData.bd = BOARD(pwBoard)->board_data;
+	renderToBufferData.width = nSize * nSizeX;
+	renderToBufferData.height = nSize * nSizeY;
 
     /* Allocate buffer for image, height + 1 as extra line needed to invert image (opengl renders 'upside down') */
-    if ((puch = (unsigned char *) malloc(width * (height + 1) * 3)) == NULL) {
+    if ((renderToBufferData.puch = (unsigned char *) malloc(renderToBufferData.width * (renderToBufferData.height + 1) * 3)) == NULL) {
         outputerr("malloc");
         return;
     }
 
-    RenderToBuffer3d(bd, bd->bd3d, width, height, puch);
+	GLWidgetRender(renderToBufferData.bd->bd3d->drawing_area3d, RenderToBuffer3d, NULL, &renderToBufferData);
+
+	GdkPixbuf* pixbuf;
+	GError* error = NULL;
+	unsigned int line;
 
     /* invert image (y axis) */
-    for (line = 0; line < height / 2; line++) {
-        unsigned int lineSize = width * 3;
+    for (line = 0; line < renderToBufferData.height / 2; line++) {
+        unsigned int lineSize = renderToBufferData.width * 3;
         /* Swap two lines at a time */
-        memcpy(puch + height * lineSize, puch + line * lineSize, lineSize);
-        memcpy(puch + line * lineSize, puch + ((height - line) - 1) * lineSize, lineSize);
-        memcpy(puch + ((height - line) - 1) * lineSize, puch + height * lineSize, lineSize);
+        memcpy(renderToBufferData.puch + renderToBufferData.height * lineSize, renderToBufferData.puch + line * lineSize, lineSize);
+        memcpy(renderToBufferData.puch + line * lineSize, renderToBufferData.puch + ((renderToBufferData.height - line) - 1) * lineSize, lineSize);
+        memcpy(renderToBufferData.puch + ((renderToBufferData.height - line) - 1) * lineSize, renderToBufferData.puch + renderToBufferData.height * lineSize, lineSize);
     }
 
-    pixbuf = gdk_pixbuf_new_from_data(puch, GDK_COLORSPACE_RGB, FALSE, 8,
-                                      (int) width, (int) height, (int) width * 3, NULL, NULL);
+    pixbuf = gdk_pixbuf_new_from_data(renderToBufferData.puch, GDK_COLORSPACE_RGB, FALSE, 8,
+                                      (int)renderToBufferData.width, (int)renderToBufferData.height, (int)renderToBufferData.width * 3, NULL, NULL);
 
     gdk_pixbuf_save(pixbuf, szName, "png", &error, NULL);
     if (error) {
@@ -2448,7 +2449,7 @@ GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, uns
         g_error_free(error);
     }
     g_object_unref(pixbuf);
-    free(puch);
+    free(renderToBufferData.puch);
 }
 
 #endif
