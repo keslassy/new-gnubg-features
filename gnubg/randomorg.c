@@ -1,11 +1,10 @@
 /*
- * randomorg.c
+ * Copyright (C) 2015 Michael Petch <mpetch@capp-sysware.com>
  *
- * by Michael Petch <mpetch@capp-sysware.com>, 2015.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -38,9 +36,9 @@ static size_t
 RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserData)
 {
     size_t nNewDataLen = nSize * nNumMemb;
-    RandomData *randomData = (RandomData *) pvUserData;
+    RandomData *pvRandomData = (RandomData *) pvUserData;
     unsigned int i;
-    int iNumRead = 0;
+    unsigned int iNumRead = 0;
     char *szRawData = (char *) pvRawData;
 
 #if defined(RANDOMORG_DEBUG)
@@ -49,9 +47,9 @@ RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserDa
     for (i = 0; i < nNewDataLen; i++) {
         if ((szRawData[i] >= '0') && (szRawData[i] <= '5')) {
             /* Get a number */
-            randomData->anBuf[iNumRead] = 1 + (unsigned int) (szRawData[i] - '0');
+            pvRandomData->anBuf[iNumRead] = 1 + (unsigned int) (szRawData[i] - '0');
 #if defined(RANDOMORG_DEBUG)
-            outputf("%d", randomData->anBuf[iNumRead]);
+            outputf("%d", pvRandomData->anBuf[iNumRead]);
 #endif
             iNumRead++;
         } else if (isspace(szRawData[i])) {
@@ -64,7 +62,7 @@ RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserDa
         }
     }
 
-    randomData->nNumRolls += iNumRead;
+    pvRandomData->nNumRolls += iNumRead;
     return nNewDataLen;
 }
 
@@ -75,7 +73,7 @@ getDiceRandomDotOrg(void)
 {
     CURL *curl_handle;
     CURLcode nRetVal;
-#ifdef WIN32
+#if defined(WIN32)
     gchar *szWIN32_cert_path = NULL;
 #endif
     if ((randomData.nCurrent >= 0) && ((unsigned int) randomData.nCurrent < randomData.nNumRolls)) {
@@ -89,7 +87,7 @@ getDiceRandomDotOrg(void)
     /* Initialize the curl session */
     curl_handle = curl_easy_init();
 
-#ifdef WIN32
+#if defined(WIN32)
     /* Set location of certificate bundle */
     szWIN32_cert_path = g_build_filename(RANDOMORG_CERTPATH, RANDOMORG_CABUNDLE, NULL);
     curl_easy_setopt(curl_handle, CURLOPT_CAINFO, szWIN32_cert_path);
@@ -109,7 +107,7 @@ getDiceRandomDotOrg(void)
     outputf("\n\n");
 #endif
 
-#ifdef WIN32
+#if defined(WIN32)
     g_free(szWIN32_cert_path);
 #endif
 
