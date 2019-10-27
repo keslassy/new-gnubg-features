@@ -1,14 +1,11 @@
 /*
- * gtkfile.c
+ * Copyright (C) 2005 Ingo Macherius
+ * Copyright (C) 2005-2019 the AUTHORS
  *
- * by Ingo Macherius 2005
- *
- * File dialogs
- *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -56,7 +52,7 @@ FilterAdd(const char *fn, const char *pt, GtkFileChooser * fc)
 static GtkWidget *
 GnuBGFileDialog(const gchar * prompt, const gchar * folder, const gchar * name, GtkFileChooserAction action)
 {
-#ifdef WIN32
+#if defined( WIN32)
     char *programdir, *pc;
 #endif
     GtkWidget *fc;
@@ -81,10 +77,14 @@ GnuBGFileDialog(const gchar * prompt, const gchar * folder, const gchar * name, 
 
     if (folder && *folder && g_file_test(folder, G_FILE_TEST_IS_DIR))
         gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(fc), folder);
-    if (name && *name)
-        gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(fc), name);
+    if (name && *name) {
+        if (action == GTK_FILE_CHOOSER_ACTION_OPEN)
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fc), name);
+        else
+            gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(fc), name);
+    }
 
-#ifdef WIN32
+#if defined(WIN32)
     programdir = g_strdup(getDataDir());
     if ((pc = strrchr(programdir, G_DIR_SEPARATOR)) != NULL) {
         char *tmp;
@@ -174,12 +174,12 @@ SaveOptionsCallBack(GtkWidget * UNUSED(pw), SaveOptions * pso)
 static void
 SaveCommon(guint f, gchar * prompt)
 {
-
     GtkWidget *hbox;
-    guint i, j, type;
+    guint i;
+    gint j, type;
     SaveOptions so;
     static ExportType last_export_type = EXPORT_SGF;
-    static guint last_export_mgp = 0;
+    static gint last_export_mgp = 0;
     static gchar *last_save_folder = NULL;
     static gchar *last_export_folder = NULL;
     gchar *fn = GetFilename(TRUE, (f == 1) ? EXPORT_SGF : last_export_type);
@@ -363,10 +363,11 @@ GTKOpen(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gchar *folder = NULL;
     gint import_type;
     static gchar *last_import_folder = NULL;
+    static gchar *last_import_file = NULL;
 
     folder = last_import_folder ? last_import_folder : default_import_folder;
 
-    fc = GnuBGFileDialog(_("Open backgammon file"), folder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
+    fc = GnuBGFileDialog(_("Open backgammon file"), folder, last_import_file, GTK_FILE_CHOOSER_ACTION_OPEN);
 
     type_combo = import_types_combo();
     g_signal_connect(type_combo, "changed", G_CALLBACK(OpenTypeChanged), fc);
@@ -403,9 +404,12 @@ GTKOpen(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     if (gtk_dialog_run(GTK_DIALOG(fc)) == GTK_RESPONSE_ACCEPT) {
         gchar *fn = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc));
+	
         import_type = gtk_combo_box_get_active(GTK_COMBO_BOX(type_combo));
         if (import_type == 0) { /* Type automatically based on file */
-            do_import_file(lastOpenType, fn);
+            do_import_file((gint)lastOpenType, fn);
+	    g_free(last_import_file);
+	    last_import_file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc));
         } else {
             import_type--;      /* Ignore auto option */
             if (import_type == N_IMPORT_TYPES) {        /* Load command file */
@@ -419,6 +423,8 @@ GTKOpen(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
                 g_free(cmd);
             } else {            /* Import as specific type */
                 do_import_file(import_type, fn);
+		g_free(last_import_file);
+		last_import_file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc));
             }
         }
 
