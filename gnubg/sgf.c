@@ -1,11 +1,11 @@
 /*
- * sgf.c
+ * Copyright (C) 2000-2002 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2001-2019 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 2000, 2001.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -1508,7 +1507,6 @@ CommandLoadPosition(char *sz)
 extern void
 CommandLoadMatch(char *sz)
 {
-
     listOLD *pl;
 
     sz = NextToken(&sz);
@@ -1519,6 +1517,8 @@ CommandLoadMatch(char *sz)
     }
 
     if ((pl = LoadCollection(sz))) {
+        int nGames = 0, nMoves = 0;
+
         /* FIXME make sure the root nodes have MI properties; if not,
          * we're loading a session. */
         if (!get_input_discard())
@@ -1535,6 +1535,7 @@ CommandLoadMatch(char *sz)
 
         for (pl = pl->plNext; pl->p; pl = pl->plNext) {
             RestoreGame(pl->p);
+            nGames++;
         }
 
         FreeGameTreeSeq(pl);
@@ -1550,8 +1551,35 @@ CommandLoadMatch(char *sz)
 
         setDefaultFileName(sz);
 
-        /* FIXME : don't do this if we just loaded a single position */
-        if (fGotoFirstGame)
+        for (pl = plGame->plNext; pl != plGame; pl = pl->plNext) {
+            moverecord *pmr = pl->p;
+
+            switch (pmr->mt) {
+            case MOVE_NORMAL:
+            case MOVE_DOUBLE:
+            case MOVE_TAKE:
+            case MOVE_DROP:
+                nMoves++;
+                break;
+            default:
+                /* do not count the other pseudo-moves */
+                break;
+            }
+        }
+
+        if (nGames == 1 && nMoves == 1) {
+            moverecord *pmr;
+
+            CommandFirstMove(NULL);
+            pl = plGame->plNext;
+            pmr = pl->p;
+            while (pmr->mt != MOVE_NORMAL && pmr->mt != MOVE_DOUBLE) {
+                CommandNext(NULL);
+                pl = pl->plNext;
+                pmr = pl->p;
+            }
+            CommandPrevious(NULL);
+        } else if (fGotoFirstGame)
             CommandFirstGame(NULL);
 
     }
@@ -2106,7 +2134,8 @@ SaveGame(FILE * pf, listOLD * plGame)
         if (pmr->g.fJacoby)
             AddRule(pf, "Jacoby", &fFirst);
         if (pmr->g.bgv != VARIATION_STANDARD) {
-            static const char *aszSGFVariation[NUM_VARIATIONS] = { NULL, "Nackgammon", "Hypergammon1", "Hypergammon2", "Hypergammon3" };
+            static const char *aszSGFVariation[NUM_VARIATIONS] =
+                { NULL, "Nackgammon", "Hypergammon1", "Hypergammon2", "Hypergammon3" };
 
             AddRule(pf, aszSGFVariation[pmr->g.bgv], &fFirst);
         }
