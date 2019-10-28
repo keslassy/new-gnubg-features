@@ -1,8 +1,5 @@
-#
-# batch_win.py -- batch import and analysis of multiple files using gnubg
-#
-# by Oystein Johansen <oystein@gnubg.org>, 2004
-#
+# Copyright (C) 2004 Oystein Johansen <oystein@gnubg.org>
+
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -14,9 +11,11 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #
 # $Id$
+#
 
 # This file is inspired of the batch.py file of Jon Kinsey. The code
 # contains MS-Windows specific code and will therefore only work on MS-Windows

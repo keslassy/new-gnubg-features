@@ -1,8 +1,6 @@
-#
-# batch.py -- batch import and analysis of multiple files using gnubg
-#
-# by Jon Kinsey <Jon_Kinsey@hotmail.com>, 2004
-#
+# Copyright (C) 2004 Jon Kinsey <Jon_Kinsey@hotmail.com>
+# Copyright (C) 2006-2014 the AUTHORS
+
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -14,12 +12,14 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #
 # $Id$
+#
 
 """
- batch.py -- batch import and analysis of multiple files using gnubg
+ batch.py -- batch import and analysis of multiple files using GNUbg
 
  by Jon Kinsey <Jon_Kinsey@hotmail.com>, 2004
 \n"""

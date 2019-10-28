@@ -1,11 +1,8 @@
-#
-# matchseries.py
-#
-# Martin Janke <lists@janke.net>, 2004
-# Achim Mueller <ace@gnubg.org>, 2004
-# Joern Thyssen <jth@gnubg.org>, 2004
-#
-#
+# Copyright (C) 2004 Martin Janke <lists@janke.net>,
+#                    Achim Mueller <ace@gnubg.org>,
+#                    Joern Thyssen <jth@gnubg.org>
+# Copyright (C) 2014 Michael Petch <mpetch@gnubg.org>
+
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -17,9 +14,13 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #
+# $Id$
 #
+
+
 # Play an arbitray number of matches.
 #
 # For example, the script could be used to play gnubg 0-ply using
@@ -45,12 +46,8 @@
 #                  statsFile = "statistics.txt", sgfBasePath = None,
 #                  matBasePath = None)
 # EOF
-#
-# $Id$
-#
 
 import gnubg
-
 
 def playMatchSeries(statsFile=None,  # log file
                     matchLength=7,
