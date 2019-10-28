@@ -1,14 +1,6 @@
-#
-# gnubg.py
-#
-# This file is read by GNU Backgammon during startup.
-# You can add your own user specified functions, if you wish.
-# Below are a few examples for inspiration.
-#
-# Exercise: write a shorter function for calculating pip count!
-#
-# by Joern Thyssen <jth@gnubg.org>, 2003
-#
+# Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
+# Copyright (C) 2006-2019 the AUTHORS
+
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -20,10 +12,16 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #
 # $Id$
 #
+
+# This file is read by GNU Backgammon during startup.
+# You can add your own user specified functions.
+# At the end are a few examples for inspiration.
+
 
 # Add the scripts directory to the module path to allow
 # for modules from this directory to be imported
@@ -211,9 +209,13 @@ def gnubg_InteractivePyShell_gui(argv=['', '-n']):
     sys.argv = argv
 
     try:
-        import idlelib.PyShell
+        if sys.version_info >= (3, 6):
+            import idlelib.pyshell as pyshell
+        else:
+            import idlelib.PyShell as pyshell
+
         try:
-            idlelib.PyShell.main()
+            pyshell.main()
             return True
         except SystemExit:
             # Ignore calls to exit() and quit()
@@ -226,12 +228,16 @@ def gnubg_InteractivePyShell_gui(argv=['', '-n']):
 
     return False
 
+#
+# Examples of python usage start here
+#
+
+# Simple functions using the board object
 
 def swapboard(board):
     """Swap the board"""
 
     return [board[1], board[0]]
-
 
 def pipcount(board):
     """Calculate pip count"""
