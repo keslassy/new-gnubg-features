@@ -1,11 +1,11 @@
 /*
- * gtkoptions.c
+ * Copyright (C) 2003-2004 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2003-2019 the AUTHORS
  *
- * by Joern Thyssen <jth@gnubg.org>, 2003
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -145,14 +144,12 @@ static int relPage, relPageActivated;
 static void
 SeedChanged(GtkWidget * UNUSED(pw), int *pf)
 {
-
     *pf = 1;
 }
 
 static void
 UseCubeToggled(GtkWidget * UNUSED(pw), optionswidget * pow)
 {
-
     gint n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->pwCubeUsecube));
 
     gtk_widget_set_sensitive(pow->pwCubeJacoby, n);
@@ -176,19 +173,16 @@ DiceToggled(GtkWidget * UNUSED(pw), optionswidget * pow)
 static void
 TutorToggled(GtkWidget * UNUSED(pw), optionswidget * pow)
 {
-
     gint n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->pwTutor));
 
     gtk_widget_set_sensitive(pow->pwTutorCube, n);
     gtk_widget_set_sensitive(pow->pwTutorChequer, n);
     gtk_widget_set_sensitive(pow->pwTutorSkill, n);
-
 }
 
 static void
 ToggleAnimation(GtkWidget * pw, GtkWidget * pwSpeed)
 {
-
     gtk_widget_set_sensitive(pwSpeed, !gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw)));
 }
 
@@ -210,10 +204,12 @@ static void
 SoundAllDefaultClicked(GtkWidget * UNUSED(widget), gpointer UNUSED(userdata))
 {
     gnubgsound i;
-    for (i = (gnubgsound)0; i < NUM_SOUNDS; i++) {
+
+    for (i = (gnubgsound) 0; i < NUM_SOUNDS; i++) {
         g_free(soundDetails[i].Path);
         soundDetails[i].Path = GetDefaultSoundFile(i);
     }
+
     SoundDefaultClicked(NULL, NULL);
 }
 
@@ -275,6 +271,7 @@ static void
 SoundTidy(GtkWidget * UNUSED(pw), void *UNUSED(dummy))
 {
     unsigned int i;
+
     for (i = 0; i < NUM_SOUNDS; i++) {  /* Tidy allocated memory */
         g_free(soundDetails[i].Path);
     }
@@ -295,6 +292,7 @@ SoundChangePathClicked(GtkWidget * UNUSED(widget), gpointer UNUSED(userdata))
 {
     static char *lastSoundFolder = NULL;
     char *filename = GTKFileSelect(_("Select soundfile"), "*.wav", lastSoundFolder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
+
     if (filename) {
         lastSoundFolder = g_path_get_dirname(filename);
         SoundSkipUpdate = TRUE;
@@ -313,7 +311,7 @@ SoundPlayClicked(GtkWidget * UNUSED(widget), gpointer UNUSED(userdata))
 static gchar *
 CacheSizeString(GtkScale * UNUSED(scale), gdouble value)
 {
-    return g_strdup_printf("%iMB", GetCacheMB((int)value));
+    return g_strdup_printf("%iMB", GetCacheMB((int) value));
 }
 
 static void
@@ -417,7 +415,6 @@ append_game_options(optionswidget * pow)
 
     for (i = 0; i < 3; ++i)
         gtk_widget_set_sensitive(GTK_WIDGET(pow->apwVariations[i + VARIATION_HYPERGAMMON_1]), apbcHyper[i] != NULL);
-
 }
 
 static void
@@ -427,6 +424,7 @@ append_cube_options(optionswidget * pow)
     GtkWidget *pwvbox;
     GtkWidget *pwev;
     GtkWidget *pwhbox;
+
     /* Cube options */
     pwp = gtk_alignment_new(0, 0, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
@@ -509,7 +507,6 @@ append_cube_options(optionswidget * pow)
                                   "may be applied.  Automatic doubles are only "
                                   "ever used in money games, not matches."));
     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(pow->pwAutomatic), TRUE);
-
 }
 
 static void
@@ -577,7 +574,6 @@ append_tutor_options(optionswidget * pow)
     gtk_widget_set_sensitive(pow->pwTutorSkill, fTutor);
     gtk_widget_set_sensitive(pow->pwTutorCube, fTutor);
     gtk_widget_set_sensitive(pow->pwTutorChequer, fTutor);
-
 }
 
 static void
@@ -824,7 +820,6 @@ append_display_options(optionswidget * pow)
                                   "to produce numbers with approximately the same "
                                   "number of digits. The default value of 3 results "
                                   "in MWCs being output as 50.33%."));
-
 }
 
 static void
@@ -1132,11 +1127,10 @@ append_dice_options(optionswidget * pow)
 
 #if defined(HAVE_LIBGMP)
                 /* 9007199254740992 is 2^53, the largest integer
-                   that can be represented exactly in a gdouble */
-                pow->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble)0, 0,
- 9007199254740992, 1, 1, 0));
+                 * that can be represented exactly in a gdouble */
+                pow->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble) 0, 0, 9007199254740992, 1, 1, 0));
 #else
-                pow->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble)0, 0, UINT_MAX, 1, 1, 0));
+                pow->padjSeed = GTK_ADJUSTMENT(gtk_adjustment_new((gdouble) 0, 0, UINT_MAX, 1, 1, 0));
 #endif
 
                 pw = gtk_spin_button_new(GTK_ADJUSTMENT(pow->padjSeed), 1, 0);
@@ -1455,7 +1449,6 @@ append_other_options(optionswidget * pow)
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwAutoSaveConfirmDelete, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(pow->pwAutoSaveConfirmDelete, _("Ask before auto saves are deleted"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoSaveConfirmDelete), fAutoSaveConfirmDelete);
-
 }
 
 static GtkWidget *
@@ -1504,7 +1497,7 @@ SetSoundSettings(void)
     fGUIBeep = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(soundBeepIllegal));
     CHECKUPDATE(soundBeepIllegal, fGUIBeep, "set gui beep %s");
     CHECKUPDATE(soundsEnabled, fSound, "set sound enable %s");
-    for (i = (gnubgsound)0; i < NUM_SOUNDS; i++) {
+    for (i = (gnubgsound) 0; i < NUM_SOUNDS; i++) {
         if (*soundDetails[i].Path)
             SetSoundFile(i, soundDetails[i].Path);
         else
@@ -1565,35 +1558,34 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         }
     }
 
-    CHECKUPDATE(pow->pwCubeUsecube, fCubeUse, "set cube use %s")
-        CHECKUPDATE(pow->pwCubeJacoby, fJacoby, "set jacoby %s")
-        CHECKUPDATE(pow->pwCubeInvert, fInvertMET, "set invert met %s")
+    CHECKUPDATE(pow->pwCubeUsecube, fCubeUse, "set cube use %s");
+    CHECKUPDATE(pow->pwCubeJacoby, fJacoby, "set jacoby %s");
+    CHECKUPDATE(pow->pwCubeInvert, fInvertMET, "set invert met %s");
 
-        CHECKUPDATE(pow->pwGameClockwise, fClockwise, "set clockwise %s")
+    CHECKUPDATE(pow->pwGameClockwise, fClockwise, "set clockwise %s");
 
-        for (i = 0; i < NUM_VARIATIONS; ++i)
+    for (i = 0; i < NUM_VARIATIONS; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i])) && bgvDefault != (bgvariation) i) {
             sprintf(sz, "set variation %s", aszVariationCommands[i]);
             UserCommand(sz);
             break;
         }
 
-    CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s")
-        CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s")
-        CHECKUPDATE(pow->pwOutputMWCpst, fOutputMatchPC, "set output matchpc %s")
+    CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s");
+    CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s");
+    CHECKUPDATE(pow->pwOutputMWCpst, fOutputMatchPC, "set output matchpc %s");
 
-        if ((n = (int) gtk_adjustment_get_value(pow->padjDigits)) != fOutputDigits) {
+    if ((n = (int) gtk_adjustment_get_value(pow->padjDigits)) != fOutputDigits) {
         sprintf(sz, "set output digits %d", n);
         UserCommand(sz);
     }
 
-
     /* ... */
 
-    CHECKUPDATE(pow->pwConfStart, fConfirmNew, "set confirm new %s")
-        CHECKUPDATE(pow->pwConfOverwrite, fConfirmSave, "set confirm save %s")
+    CHECKUPDATE(pow->pwConfStart, fConfirmNew, "set confirm new %s");
+    CHECKUPDATE(pow->pwConfOverwrite, fConfirmSave, "set confirm save %s");
 
-        if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjCubeAutomatic)) != cAutoDoubles) {
+    if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjCubeAutomatic)) != cAutoDoubles) {
         sprintf(sz, "set automatic doubles %u", u);
         UserCommand(sz);
     }
@@ -1645,10 +1637,10 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         }
     }
 
-    CHECKUPDATE(pow->pwRecordGames, fRecord, "set record %s")
-        CHECKUPDATE(pow->pwDisplay, fDisplay, "set display %s")
+    CHECKUPDATE(pow->pwRecordGames, fRecord, "set record %s");
+    CHECKUPDATE(pow->pwDisplay, fDisplay, "set display %s");
 
-        if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjCache)) != GetEvalCacheSize()) {
+    if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjCache)) != GetEvalCacheSize()) {
         SetEvalCacheSize(u);
     }
 #if defined(USE_MULTITHREAD)
@@ -1679,13 +1671,14 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
 
     SetSoundSettings();
 
-    CHECKUPDATE(pow->pwIllegal, fGUIIllegal, "set gui illegal %s")
-        CHECKUPDATE(pow->pwUseDiceIcon, bd->rd->fDiceArea, "set gui dicearea %s")
-        CHECKUPDATE(pow->pwShowIDs, fShowIDs, "set gui showids %s")
-        CHECKUPDATE(pow->pwHigherDieFirst, fGUIHighDieFirst, "set gui highdiefirst %s")
-        CHECKUPDATE(pow->pwSetWindowPos, fGUISetWindowPos, "set gui windowpositions %s")
-        CHECKUPDATE(pow->pwGrayEdit, fGUIGrayEdit, "set gui grayedit %s")
-        CHECKUPDATE(pow->pwDragTargetHelp, fGUIDragTargetHelp, "set gui dragtargethelp %s") {
+    CHECKUPDATE(pow->pwIllegal, fGUIIllegal, "set gui illegal %s");
+    CHECKUPDATE(pow->pwUseDiceIcon, bd->rd->fDiceArea, "set gui dicearea %s");
+    CHECKUPDATE(pow->pwShowIDs, fShowIDs, "set gui showids %s");
+    CHECKUPDATE(pow->pwHigherDieFirst, fGUIHighDieFirst, "set gui highdiefirst %s");
+    CHECKUPDATE(pow->pwSetWindowPos, fGUISetWindowPos, "set gui windowpositions %s");
+    CHECKUPDATE(pow->pwGrayEdit, fGUIGrayEdit, "set gui grayedit %s");
+    CHECKUPDATE(pow->pwDragTargetHelp, fGUIDragTargetHelp, "set gui dragtargethelp %s");
+    {
 #if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd))
             updateDiceOccPos(bd, bd->bd3d);
@@ -1751,10 +1744,10 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         }
     }
 
-    CHECKUPDATE(pow->pwGotoFirstGame, fGotoFirstGame, "set gotofirstgame %s")
-        CHECKUPDATE(pow->pwGameListStyles, fStyledGamelist, "set styledgamelist %s")
+    CHECKUPDATE(pow->pwGotoFirstGame, fGotoFirstGame, "set gotofirstgame %s");
+    CHECKUPDATE(pow->pwGameListStyles, fStyledGamelist, "set styledgamelist %s");
 
-        newfolder = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(pow->pwDefaultSGFFolder));
+    newfolder = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(pow->pwDefaultSGFFolder));
     if (newfolder && (!default_sgf_folder || strcmp(newfolder, default_sgf_folder))) {
         tmp = g_strdup_printf("set sgf folder \"%s\"", newfolder);
         UserCommand(tmp);
@@ -1796,7 +1789,6 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
 static void
 OptionsSet(optionswidget * pow)
 {
-
     unsigned int i;
     int f;
 
