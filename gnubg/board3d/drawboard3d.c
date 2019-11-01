@@ -1,13 +1,11 @@
 /*
- * drawboard3d.c
- * by Jon Kinsey, 2003
+ * Copyright (C) 2003-2012 Jon Kinsey <jon_kinsey@hotmail.com>
+ * Copyright (C) 2004-2018 the AUTHORS
  *
- * 3d board drawing code
- *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -1590,8 +1587,8 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 }
 
 /* Macros to make texture specification easier */
-#define M_X(x, y, z) if (tuv != 0.0f) glTexCoord2f((z) * tuv, (y) * tuv); glVertex3f(x, y, z);
-#define M_Z(x, y, z) if (tuv != 0.0f) glTexCoord2f((x) * tuv, (y) * tuv); glVertex3f(x, y, z);
+#define M_X(x, y, z) if (tuv != 0.0f) glTexCoord2f((z) * tuv, (y) * tuv); glVertex3f(x, y, z)
+#define M_Z(x, y, z) if (tuv != 0.0f) glTexCoord2f((x) * tuv, (y) * tuv); glVertex3f(x, y, z)
 
 #define DrawBottom(x, y, z, w, h)\
 	glNormal3f(0.f, -1.f, 0.f);\
@@ -1604,7 +1601,7 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 	glVertex3f((x) + (w), y, (z) + (h));\
 	if (tuv != 0.0f) glTexCoord2f((x) * tuv, ((y) + BOARD_FILLET - curveTextOff) * tuv);\
 	glVertex3f(x, y, (z) + (h));\
-	glEnd();
+	glEnd()
 
 #define DrawTop(x, y, z, w, h)\
 	glNormal3f(0.f, 1.f, 0.f);\
@@ -1617,7 +1614,7 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 	glVertex3f((x) + (w), y, (z) + (h));\
 	if (tuv != 0.0f) glTexCoord2f(((x) + (w)) * tuv, ((y) - (BOARD_FILLET - curveTextOff) + (h)) * tuv);\
 	glVertex3f((x) + (w), y, z);\
-	glEnd();
+	glEnd()
 
 #define DrawLeft(x, y, z, w, h)\
 	glNormal3f(-1.f, 0.f, 0.f);\
@@ -1630,7 +1627,7 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 	glVertex3f(x, (y) + (w), (z) + (h));\
 	if (tuv != 0.0f) glTexCoord2f(((x) + BOARD_FILLET - curveTextOff - (h)) * tuv, ((y) + (w)) * tuv);\
 	glVertex3f(x, (y) + (w), z);\
-	glEnd();
+	glEnd()
 
 #define DrawRight(x, y, z, w, h)\
 	glNormal3f(1.f, 0.f, 0.f);\
@@ -1643,7 +1640,7 @@ RotateClosingBoard(const BoardData3d * bd3d, const renderdata * prd)
 	glVertex3f(x, (y) + (w), (z) + (h));\
 	if (tuv != 0.0f) glTexCoord2f(((x) - (BOARD_FILLET - curveTextOff)) * tuv, (y) * tuv);\
 	glVertex3f(x, y, (z) + (h));\
-	glEnd();
+	glEnd()
 
 #define TextureOffset(s, t) if (tuv != 0.0f)\
 {\
@@ -1672,9 +1669,9 @@ InsideFillet(float x, float y, float z, float w, float h, float radius, unsigned
     /* Top */
     DrawBottom(x + BOARD_FILLET, y + h + BOARD_FILLET, BASE_DEPTH, w, EDGE_DEPTH - BOARD_FILLET + LIFT_OFF);
     /* Bottom */
-    DrawTop(x + BOARD_FILLET, y + BOARD_FILLET, BASE_DEPTH, w, EDGE_DEPTH - BOARD_FILLET)
-        /* Right */
-        DrawLeft(x + w + BOARD_FILLET, y + BOARD_FILLET, BASE_DEPTH + LIFT_OFF, h, EDGE_DEPTH - BOARD_FILLET);
+    DrawTop(x + BOARD_FILLET, y + BOARD_FILLET, BASE_DEPTH, w, EDGE_DEPTH - BOARD_FILLET);
+    /* Right */
+    DrawLeft(x + w + BOARD_FILLET, y + BOARD_FILLET, BASE_DEPTH + LIFT_OFF, h, EDGE_DEPTH - BOARD_FILLET);
 
     if (tuv != 0.0f) {
         glMatrixMode(GL_TEXTURE);
@@ -1898,9 +1895,9 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
             glEnd();
             /* Top Face */
             DrawTop((TOTAL_WIDTH + HINGE_GAP) / 2.0f, TOTAL_HEIGHT, 0.f,
-                    (TOTAL_WIDTH - HINGE_GAP) / 2.0f - BOARD_FILLET, BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET)
+                    (TOTAL_WIDTH - HINGE_GAP) / 2.0f - BOARD_FILLET, BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET);
 
-                glBegin(GL_QUADS);
+            glBegin(GL_QUADS);
 
             if (bd3d->State != BOARD_OPEN) {
                 /* Cover up back when closing */
@@ -2191,9 +2188,9 @@ drawTable(const BoardData3d * bd3d, const renderdata * prd)
             glEnd();
 
             DrawTop(BOARD_FILLET, TOTAL_HEIGHT, 0.f, (TOTAL_WIDTH - HINGE_GAP) / 2.0f - BOARD_FILLET,
-                    BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET)
+                    BASE_DEPTH + EDGE_DEPTH - BOARD_FILLET);
 
-                glBegin(GL_QUADS);
+            glBegin(GL_QUADS);
             if (bd3d->State != BOARD_OPEN) {
                 /* Cover up back when closing */
                 glNormal3f(1.f, 0.f, 0.f);
