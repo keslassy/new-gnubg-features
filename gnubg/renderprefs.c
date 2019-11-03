@@ -1,11 +1,11 @@
 /*
- * renderprefs.c
+ * Copyright (C) 2000-2003 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2003-2019 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 2000, 2001, 2002, 2003.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -514,9 +513,9 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
     else if (!StrNCaseCmp(szParam, "lightspecular", c))
         prd->lightLevels[2] = atoi(szValue);
     else if (!StrNCaseCmp(szParam, "boardangle", c))
-        prd->boardAngle = atoi(szValue);
+        prd->boardAngle = (float) g_ascii_strtod(szValue, &szValue);
     else if (!StrNCaseCmp(szParam, "skewfactor", c))
-        prd->skewFactor = atoi(szValue);
+        prd->skewFactor = (float) g_ascii_strtod(szValue, &szValue);
     else if (!StrNCaseCmp(szParam, "planview", c))
         prd->planView = toupper(*szValue) == 'Y';
     else if (!StrNCaseCmp(szParam, "dicesize", c))
@@ -670,8 +669,8 @@ SaveRenderingSettings(FILE * pf)
     fprintf(pf, "lightambient=%d ", prd->lightLevels[0]);
     fprintf(pf, "lightdiffuse=%d ", prd->lightLevels[1]);
     fprintf(pf, "lightspecular=%d ", prd->lightLevels[2]);
-    fprintf(pf, "boardangle=%d ", prd->boardAngle);
-    fprintf(pf, "skewfactor=%d ", prd->skewFactor);
+    fprintf(pf, "boardangle=%.0f ", prd->boardAngle);
+    fprintf(pf, "skewfactor=%.0f ", prd->skewFactor);
     fprintf(pf, "planview=%c ", prd->planView ? 'y' : 'n');
 
     g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%.2f", prd->diceSize);
