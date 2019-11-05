@@ -1,11 +1,11 @@
 /*
- * gtkgame.c
+ * Copyright (C) 2000-2003 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2001-2019 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 2000, 2001, 2002.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -1794,8 +1793,6 @@ DoFullScreenMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     BoardData *bd = BOARD(pwBoard)->board_data;
     GtkWindow *ptl = GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(bd->table)));
     GtkWidget *pwHandle = gtk_widget_get_parent(pwToolbar);
-    int showingPanels;
-    int maximised;
     static gulong id;
     static int changedRP, changedDP;
 
@@ -1837,8 +1834,8 @@ DoFullScreenMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         /* Check if window is maximized */
         {
             GdkWindowState state = gdk_window_get_state(gtk_widget_get_window(GTK_WIDGET(ptl)));
-            maximised = ((state & GDK_WINDOW_STATE_MAXIMIZED) == GDK_WINDOW_STATE_MAXIMIZED);
-            SetFullscreenWindowSettings(ArePanelsShowing(), fShowIDs, maximised);
+            int maxed = ((state & GDK_WINDOW_STATE_MAXIMIZED) == GDK_WINDOW_STATE_MAXIMIZED);
+            SetFullscreenWindowSettings(ArePanelsShowing(), fShowIDs, maxed);
         }
 
         id = g_signal_connect(G_OBJECT(ptl), "key-press-event", G_CALLBACK(EndFullScreen), 0);
@@ -2475,7 +2472,7 @@ SummaryMenuActivate(GtkComboBox * box, AnalysisDetails * pAnalDetails)
 static GtkWidget *
 AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
 {
-    GtkWidget *vbox, *hbox, *pw2, *pwDetails, *vboxSpacer;
+    GtkWidget *vbox, *hbox, *pw2, *pwAdvanced, *vboxSpacer;
     int i;
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2514,14 +2511,14 @@ AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
     g_signal_connect(G_OBJECT(pAnalDetails->pwOptionMenu), "changed", G_CALLBACK(SummaryMenuActivate), pAnalDetails);
     gtk_container_add(GTK_CONTAINER(pw2), pAnalDetails->pwOptionMenu);
 
-    pwDetails = gtk_button_new_with_label(_("Advanced Settings..."));
-    g_signal_connect(G_OBJECT(pwDetails), "clicked", G_CALLBACK(ShowDetailedAnalysis), (void *) pAnalDetails);
+    pwAdvanced = gtk_button_new_with_label(_("Advanced Settings..."));
+    g_signal_connect(G_OBJECT(pwAdvanced), "clicked", G_CALLBACK(ShowDetailedAnalysis), (void *) pAnalDetails);
 #if GTK_CHECK_VERSION(3,0,0)
     hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     hbox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_box_pack_start(GTK_BOX(hbox), pwDetails, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox), pwAdvanced, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 4);
     UpdateSummaryEvalMenuSetting(pAnalDetails);
     return vboxSpacer;          /* Container */
@@ -3261,13 +3258,13 @@ AddLangWidgets(GtkWidget * cont)
     pwLangTable = gtk_table_new(numLangs / NUM_COLS + 1, NUM_COLS, TRUE);
 
     for (i = 0; i < numLangs; i++) {
-        GtkWidget *flag = GetFlagWidget(aaszLang[i + 1][0], aaszLang[i + 1][1], aaszLang[i + 1][2]);
+        GtkWidget *pwFlag = GetFlagWidget(aaszLang[i + 1][0], aaszLang[i + 1][1], aaszLang[i + 1][2]);
         int row = i / NUM_COLS;
         int col = i - row * NUM_COLS;
-        gtk_table_attach(GTK_TABLE(pwLangTable), flag, col, col + 1, row, row + 1, (GtkAttachOptions) 0,
+        gtk_table_attach(GTK_TABLE(pwLangTable), pwFlag, col, col + 1, row, row + 1, (GtkAttachOptions) 0,
                          (GtkAttachOptions) 0, 0, 0);
         if (!StrCaseCmp(szLang, aaszLang[i + 1][1]))
-            selLang = flag;
+            selLang = pwFlag;
     }
 #if GTK_CHECK_VERSION(3,0,0)
     pwHbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -4117,7 +4114,7 @@ extern void
 InitGTK(int *argc, char ***argv)
 {
     char *sz;
-    GtkIconFactory *pif;
+    GtkIconFactory *picf;
     GdkAtom cb;
 
     sz = BuildFilename("gnubg.gtkrc");
@@ -4143,8 +4140,8 @@ InitGTK(int *argc, char ***argv)
 #endif
 
     /*add two xpm based icons */
-    pif = gtk_icon_factory_new();
-    gtk_icon_factory_add_default(pif);
+    picf = gtk_icon_factory_new();
+    gtk_icon_factory_add_default(picf);
 
 #if ! GTK_CHECK_VERSION(2,12,0)
     ptt = gtk_tooltips_new();
@@ -4636,7 +4633,7 @@ static GtkWidget *
 NewWidget(newwidget * pnw)
 {
     int i, j = 1;
-    GtkWidget *pwVbox, *pwHbox, *pwLabel, *pwToolbar;
+    GtkWidget *pwVbox, *pwHbox, *pwLabel, *pwToolbar2;
     GtkWidget *pwButtons, *pwFrame, *pwVbox2;
     GtkToolItem *pwToolButton;
 #if GTK_CHECK_VERSION(3,0,0)
@@ -4644,31 +4641,31 @@ NewWidget(newwidget * pnw)
 #else
     pwVbox = gtk_vbox_new(FALSE, 0);
 #endif
-    pwToolbar = gtk_toolbar_new();
+    pwToolbar2 = gtk_toolbar_new();
 
-    toolbar_set_orientation(GTK_TOOLBAR(pwToolbar), GTK_ORIENTATION_HORIZONTAL);
-    gtk_toolbar_set_style(GTK_TOOLBAR(pwToolbar), GTK_TOOLBAR_ICONS);
-    gtk_toolbar_set_show_arrow(GTK_TOOLBAR(pwToolbar), FALSE);
+    toolbar_set_orientation(GTK_TOOLBAR(pwToolbar2), GTK_ORIENTATION_HORIZONTAL);
+    gtk_toolbar_set_style(GTK_TOOLBAR(pwToolbar2), GTK_TOOLBAR_ICONS);
+    gtk_toolbar_set_show_arrow(GTK_TOOLBAR(pwToolbar2), FALSE);
     pwFrame = gtk_frame_new(_("Shortcut buttons"));
     gtk_box_pack_start(GTK_BOX(pwVbox), pwFrame, TRUE, TRUE, 0);
-    gtk_container_add(GTK_CONTAINER(pwFrame), pwToolbar);
-    gtk_container_set_border_width(GTK_CONTAINER(pwToolbar), 4);
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwToolbar2);
+    gtk_container_set_border_width(GTK_CONTAINER(pwToolbar2), 4);
 
     /* Edit button */
 
     pwToolButton = gtk_tool_button_new_from_stock(GTK_STOCK_EDIT);
     gtk_widget_set_tooltip_text(GTK_WIDGET(pwToolButton), _("Edit position"));
-    gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar), pwToolButton, -1);
+    gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar2), pwToolButton, -1);
     g_signal_connect(pwToolButton, "clicked", G_CALLBACK(edit_new_clicked), pnw);
 
-    gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar), gtk_separator_tool_item_new(), -1);
+    gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar2), gtk_separator_tool_item_new(), -1);
 
     pwToolButton = gtk_tool_button_new_from_stock(GNUBG_STOCK_NEW0);
     gtk_widget_set_tooltip_text(GTK_WIDGET(pwToolButton), _("Start a new money game session"));
-    gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar), pwToolButton, -1);
+    gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar2), pwToolButton, -1);
     g_signal_connect(G_OBJECT(pwToolButton), "clicked", G_CALLBACK(ToolButtonPressedMS), pnw);
 
-    gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar), gtk_separator_tool_item_new(), -1);
+    gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar2), gtk_separator_tool_item_new(), -1);
 
     for (i = 1; i < 19; i = i + 2, j++) {
         gchar *sz;
@@ -4679,7 +4676,7 @@ NewWidget(newwidget * pnw)
         sprintf(stock, "gnubg-stock-new%d", i);
         pwToolButton = gtk_tool_button_new_from_stock(stock);
         gtk_widget_set_tooltip_text(GTK_WIDGET(pwToolButton), sz);
-        gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar), pwToolButton, -1);
+        gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar2), pwToolButton, -1);
         gtk_tool_item_set_homogeneous(pwToolButton, FALSE);
 
         g_free(sz);
@@ -6028,18 +6025,19 @@ GTKShowScoreSheet(void)
     for (pl = lMatch.plNext; pl->p; pl = pl->plNext) {
         int score[2];
         GtkTreeIter iter;
-        listOLD *plGame = pl->plNext->p;
+        listOLD *plg = pl->plNext->p;
 
-        if (plGame) {
-            moverecord *pmr = plGame->plNext->p;
+        if (plg) {
+            moverecord *pmr = plg->plNext->p;
             score[0] = pmr->g.anScore[0];
             score[1] = pmr->g.anScore[1];
         } else {
             moverecord *pmr;
-            listOLD *plGame = pl->p;
-            if (!plGame)
+
+            plg = pl->p;
+            if (!plg)
                 continue;
-            pmr = plGame->plNext->p;
+            pmr = plg->plNext->p;
             score[0] = pmr->g.anScore[0];
             score[1] = pmr->g.anScore[1];
             if (pmr->g.fWinner == -1) {
@@ -6558,16 +6556,18 @@ GTKBearoffProgressCancel(void)
 }
 
 /* Show a dialog box with a progress bar to be used during initialisation
- * if a heuristic bearoff database must be created.  Most of gnubg hasn't
+ * if a heuristic bearoff database must be created.  Most of GNUbg hasn't
  * been initialised yet, so this function is restricted in many ways. */
 extern void
 GTKBearoffProgress(int i)
 {
 
-    static GtkWidget *pwDialog, *pw, *pwAlign;
+    static GtkWidget *pwDialog, *pw;
     gchar *gsz;
 
     if (!pwDialog) {
+        static GtkWidget *pwAlign;
+
         pwDialog =
             GTKCreateDialog(_("GNU Backgammon"), DT_INFO, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_NOTIDY, NULL, NULL);
         gtk_window_set_role(GTK_WINDOW(pwDialog), "progress");
@@ -7047,12 +7047,12 @@ GetStatContext(int game)
     if (!game)
         return &scMatch;
     else {
-        listOLD *plGame, *pl = lMatch.plNext;
+        listOLD *plg, *pl = lMatch.plNext;
         for (int i = 1; i < game; i++)
             pl = pl->plNext;
 
-        plGame = pl->p;
-        pmgi = &((moverecord *) plGame->plNext->p)->g;
+        plg = pl->p;
+        pmgi = &((moverecord *) plg->plNext->p)->g;
         return &pmgi->sc;
     }
 }
@@ -7121,8 +7121,8 @@ AddNavigation(GtkWidget * pvbox)
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(box), sz);
     numStatGames = 0;
     for (pl = lMatch.plNext; pl->p; pl = pl->plNext) {
-        listOLD *plGame = pl->p;
-        moverecord *pmr = plGame->plNext->p;
+        listOLD *plg = pl->p;
+        moverecord *pmr = plg->plNext->p;
         numStatGames++;
 
         sprintf(sz, _("Game %d: %s %d, %s %d"), pmr->g.i + 1, ap[0].szName,
@@ -7295,8 +7295,8 @@ GTKDumpStatcontext(int game)
 
     pl = lMatch.plNext;
     for (i = 0; i < numStatGames; i++) {
-        listOLD *plGame = pl->p;
-        moverecord *mr = plGame->plNext->p;
+        listOLD *plg = pl->p;
+        moverecord *mr = plg->plNext->p;
         xmovegameinfo *pmgi = &mr->g;
         AddGameData(gd, i, &pmgi->sc);
         pl = pl->plNext;
@@ -7404,7 +7404,7 @@ UpdateMatchinfo(const char *pch, const char *szParam, char **ppch)
 
 /* Variables for match info dialog */
 static GtkWidget *apwRating[2], *pwDate, *pwEvent, *pwRound, *pwPlace, *pwAnnotator;
-static GtkTextBuffer *buffer;
+static GtkTextBuffer *txtComment;
 
 static void
 MatchInfoOK(GtkWidget * pw, int *UNUSED(pf))
@@ -7433,8 +7433,8 @@ MatchInfoOK(GtkWidget * pw, int *UNUSED(pf))
     UpdateMatchinfo(gtk_entry_get_text(GTK_ENTRY(pwPlace)), "place", &mi.pchPlace);
     UpdateMatchinfo(gtk_entry_get_text(GTK_ENTRY(pwAnnotator)), "annotator", &mi.pchAnnotator);
 
-    gtk_text_buffer_get_bounds(buffer, &begin, &end);
-    pch = gtk_text_buffer_get_text(buffer, &begin, &end, FALSE);
+    gtk_text_buffer_get_bounds(txtComment, &begin, &end);
+    pch = gtk_text_buffer_get_text(txtComment, &begin, &end, FALSE);
     UpdateMatchinfo(pch, "comment", &mi.pchComment);
     g_free(pch);
 
@@ -7523,9 +7523,9 @@ GTKMatchInfo(void)
     gtk_table_attach_defaults(GTK_TABLE(pwTable), pwAnnotator, 1, 2, 6, 7);
 
     pwComment = gtk_text_view_new();
-    buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(pwComment));
+    txtComment = gtk_text_view_get_buffer(GTK_TEXT_VIEW(pwComment));
     if (mi.pchComment) {
-        gtk_text_buffer_set_text(buffer, mi.pchComment, -1);
+        gtk_text_buffer_set_text(txtComment, mi.pchComment, -1);
     }
     gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(pwComment), GTK_WRAP_WORD);
 
