@@ -1,11 +1,11 @@
 /*
- * analysis.c
+ * Copyright (C) 2000-2004 Joern Thyssen <joern@thyssen.nu>
+ * Copyright (C) 2000-2019 the AUTHORS
  *
- * by Joern Thyssen <joern@thyssen.nu>, 2000
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -726,7 +725,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
 
         dt = DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
 
-        if (dt > DT_NORMAL)	/* TODO: analyse beavers */
+        if (dt > DT_NORMAL)     /* TODO: analyse beavers */
             break;
 
         /* cube action */
@@ -777,7 +776,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             break;
 
         tt = (taketype) DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
-        if (tt > TT_NORMAL)	/* TODO: analyse beavers */
+        if (tt > TT_NORMAL)     /* TODO: analyse beavers */
             break;
 
         if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != ERR_VAL)) {
@@ -797,7 +796,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             break;
 
         tt = (taketype) DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
-        if (tt > TT_NORMAL)	/* TODO: analyse beavers */
+        if (tt > TT_NORMAL)     /* TODO: analyse beavers */
             break;
 
         if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != ERR_VAL)) {
@@ -1299,7 +1298,7 @@ IniStatcontext(statcontext * psc)
 extern float
 relativeFibsRating(float r, int n)
 {
-    float const x = -2000.0f / sqrtf((float)n) * log10f(1.0f / r - 1.0f);
+    float const x = -2000.0f / sqrtf((float) n) * log10f(1.0f / r - 1.0f);
 
     return (x < -2100.0f) ? -2100.0f : x;
 }
