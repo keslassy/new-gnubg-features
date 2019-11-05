@@ -31,10 +31,10 @@ else
 localeloc=-DLOCALEDIR=\"$(localedir)\"
 endif 
 
-AM_CPPFLAGS = -I$(srcdir)/lib -I$(srcdir)/board3d -I$(builddir)/pixmaps -I$(srcdir)/pixmaps \
+AM_CPPFLAGS = -I$(srcdir)/lib -I$(builddir)/pixmaps -I$(srcdir)/pixmaps \
 	   $(localeloc) @FREETYPE2_CFLAGS@ @GLIB_CFLAGS@ \
 	   @LIBPNG_CFLAGS@ @GTK_CFLAGS@ @CAIRO_CFLAGS@ @PANGOCAIRO_CFLAGS@ \
-	   @GTHREAD_CFLAGS@ @GTKGLEXT_CFLAGS@ @CANBERRA_CFLAGS@ @GOBJECT_CFLAGS@ \
+	   @GTHREAD_CFLAGS@ @CANBERRA_CFLAGS@ @GOBJECT_CFLAGS@ \
 	   @LIBCURL_CPPFLAGS@
 
 if USE_SQLITE
@@ -43,6 +43,10 @@ endif
 if USE_PYTHON
 AM_CPPFLAGS += @PYTHON_CPPFLAGS@ 
 endif
+if USE_BOARD3D
+AM_CPPFLAGS += -I$(srcdir)/board3d @GTKGLEXT_CFLAGS@ 
+endif
+
 
 AM_CPPFLAGS += -DAC_DOCDIR='"$(docdir)"' -DAC_DATADIR='"$(datadir)"' -DAC_PKGDATADIR='"$(datadir)/gnubg"'
 
@@ -78,8 +82,8 @@ gnubg_SOURCES = \
 		dice.h \
 		drawboard.c \
 		drawboard.h \
-        eval.c \
-        evallock.c \
+	        eval.c \
+	        evallock.c \
 		eval.h \
 		export.c \
 		export.h \
@@ -109,7 +113,7 @@ gnubg_SOURCES = \
 		matchid.h \
 		mec.c \
 		mec.h \
-        mtsupport.c \
+		mtsupport.c \
 		multithread.c \
 		multithread.h \
 		openurl.c \
@@ -124,8 +128,8 @@ gnubg_SOURCES = \
 		progress.c \
 		progress.h \
 		pylocdefs.h \
-	    randomorg.h \
-	    randomorg.c \
+		randomorg.h \
+		randomorg.c \
 		relational.c \
 		relational.h \
 		render.c \
@@ -195,7 +199,6 @@ if USE_GTK
 gnubg_LDFLAGS = -mwindows
 endif
 endif
-
 
 
 #
