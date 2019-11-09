@@ -492,10 +492,6 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         prd->animateRoll = toupper(*szValue) == 'Y';
     else if (!StrNCaseCmp(szParam, "animateflag", c))
         prd->animateFlag = toupper(*szValue) == 'Y';
-    else if (!StrNCaseCmp(szParam, "closeboard", c))
-        prd->closeBoardOnExit = toupper(*szValue) == 'Y';
-    else if (!StrNCaseCmp(szParam, "quickdraw", c))
-        prd->quickDraw = toupper(*szValue) == 'Y';
     else if (!StrNCaseCmp(szParam, "curveaccuracy", c))
         prd->curveAccuracy = atoi(szValue);
     else if (!StrNCaseCmp(szParam, "lighttype", c))
@@ -655,8 +651,6 @@ SaveRenderingSettings(FILE * pf)
     fprintf(pf, "shadowdarkness=%d ", prd->shadowDarkness);
     fprintf(pf, "animateroll=%c ", prd->animateRoll ? 'y' : 'n');
     fprintf(pf, "animateflag=%c ", prd->animateFlag ? 'y' : 'n');
-    fprintf(pf, "closeboard=%c ", prd->closeBoardOnExit ? 'y' : 'n');
-    fprintf(pf, "quickdraw=%c ", prd->quickDraw ? 'y' : 'n');
     fprintf(pf, "curveaccuracy=%u ", prd->curveAccuracy);
     fprintf(pf, "lighttype=%c ", prd->lightType == LT_POSITIONAL ? 'p' : 'd');
 

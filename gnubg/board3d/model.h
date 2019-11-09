@@ -27,7 +27,7 @@ typedef struct Occluder_T {
     float rot[3];
     int rotator;
 
-    GLuint shadow_list;
+    unsigned int shadow_list;
     OccModel *handle;
     int show;
 } Occluder;

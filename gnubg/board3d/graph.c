@@ -23,6 +23,11 @@
 
 
 #include "config.h"
+
+#include <windows.h>
+#include <gl/gl.h>
+#include <GL/glu.h>
+
 #include "inc3d.h"
 
 #include "renderprefs.h"
@@ -45,7 +50,7 @@ struct _GraphData {
 #define NUM_HEIGHT_PER .15f
 
 static float modelWidth, modelHeight;
-static OGLFont *numberFont = NULL, *totalText = NULL;
+static OGLFont numberFont, totalText;
 
 static gboolean
 graph_button_press_event(void)
@@ -167,7 +172,7 @@ PrintBottomNumber(unsigned int num, float width, float height, float x, float y)
     glColor3f(1.f, 1.f, 1.f);
     glScalef(width, height, 1.f);
     glLineWidth(.5f);
-    glPrintCube(numberFont, numStr);
+    glPrintCube(&numberFont, numStr, 0);	//TODO No AA at the moment
     glPopMatrix();
 }
 
@@ -182,7 +187,7 @@ PrintSideNumber(int num, float width, float height, float x, float y)
 
     glScalef(width, height, 1.f);
     glLineWidth(.5f);
-    glPrintNumbersRA(numberFont, numStr);
+    glPrintNumbersRA(&numberFont, numStr);
 
     glPopMatrix();
 }
@@ -233,7 +238,7 @@ DrawGraph(const GraphData * gd)
     glColor3f(1.f, 1.f, 1.f);
     glLineWidth(.5f);
     glScalef(NUM_WIDTH * 10, NUM_HEIGHT * 10, 1.f);
-    glDrawText(totalText);
+    glDrawText(&totalText);
 
     glPopMatrix();
 
@@ -277,14 +282,8 @@ exposeCB(GtkWidget* widget, GdkEventExpose* eventData, const GraphData * gd)
 static void
 destroy_event(GtkWidget * UNUSED(widget), void *UNUSED(data))
 {
-    if (numberFont != NULL) {
-        FreeNumberFont(numberFont);
-        numberFont = NULL;
-    }
-    if (totalText != NULL) {
-        FreeFontText(totalText);
-        totalText = NULL;
-    }
+	FreeNumberFont(&numberFont);
+	FreeTextFont(&totalText);
 }
 
 GtkWidget *

@@ -427,10 +427,6 @@ CalculateBoard(void)
 
 
     } while (pl != plLastMove);
-
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
 }
 
 static void
@@ -898,10 +894,6 @@ NewGame(void)
 
 
     AddMoveRecord(pmr);
-
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
 
     UpdateSetting(&ms.fTurn);
     UpdateSetting(&ms.gs);
@@ -3316,10 +3308,8 @@ CommandNext(char *sz)
         outputl(_("No game in progress (type `new game' to start one)."));
         return;
     }
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
-    n = 1;
+
+	n = 1;
 
     if ((pch = NextToken(&sz))) {
         if (!StrCaseCmp(pch, "game")) {
@@ -3607,9 +3597,6 @@ CommandPrevious(char *sz)
         outputl(_("No game in progress (type `new game' to start one)."));
         return;
     }
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
 
     n = 1;
 

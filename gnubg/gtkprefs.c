@@ -62,8 +62,8 @@ static GtkWidget *apwColour[2], *apwBoard[4],
     *pwWoodF, *pwNotebook, *pwLabels, *pwDynamicLabels;
 static GList *plBoardDesigns = NULL;
 #if defined(USE_BOARD3D)
-static GtkWidget *pwBoardType, *pwShowShadows, *pwAnimateRoll, *pwAnimateFlag, *pwCloseBoard,
-    *pwDarkness, *lightLab, *darkLab, *pwLightSource, *pwDirectionalSource, *pwQuickDraw,
+static GtkWidget *pwBoardType, *pwShowShadows, *pwAnimateRoll, *pwAnimateFlag,
+    *pwDarkness, *lightLab, *darkLab, *pwLightSource, *pwDirectionalSource,
     *pwTestPerformance, *pmHingeCol, *frame3dOptions, *dtTextureTypeFrame,
     *pwPlanView, *pwBoardAngle, *pwSkewFactor, *skewLab, *anglelab, *pwBgTrays, *pwRoundPoints,
     *dtLightPositionFrame, *dtLightLevelsFrame, *pwRoundedEdges, *pwRoundedPiece, *pwFlatPiece,
@@ -294,7 +294,6 @@ UpdatePreview(void)
         renderdata *prd = bd->rd;
 
         if (display_is_3d(prd)) {       /* Sort out chequer and dice special settings */
-            RerenderBase(bd3d);
             if (prd->ChequerMat[0].textureInfo != prd->ChequerMat[1].textureInfo) {     /* Make both chequers have the same texture */
                 prd->ChequerMat[1].textureInfo = prd->ChequerMat[0].textureInfo;
                 prd->ChequerMat[1].pTexture = prd->ChequerMat[0].pTexture;
@@ -368,7 +367,6 @@ option_changed(GtkWidget * UNUSED(widget), GtkWidget * UNUSED(pw))
 
         if (display_is_3d(prd)) {
             ClearTextures(bd3d);
-            TidyCurveAccuracy3d(bd->bd3d, rdPrefs.curveAccuracy);
 
             GetPrefs(&rdPrefs);
             GetTextures(bd3d, prd);
@@ -1167,9 +1165,6 @@ BoardPrefsOK(GtkWidget * pw, GtkWidget * mainBoard)
 #if defined(USE_BOARD3D)
     if (gtk_gl_init_success) {
         redrawChange = FALSE;
-        rdPrefs.quickDraw = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwQuickDraw));
-
-        TidyCurveAccuracy3d(bd->bd3d, bd->rd->curveAccuracy);
     }
     if (display_is_3d(&rdPrefs)) {
         /* Delete old objects */
@@ -1206,7 +1201,6 @@ BoardPrefsOK(GtkWidget * pw, GtkWidget * mainBoard)
             ShowFlag3d(bd, bd3d, prd);
             if (bd->diceShown == DICE_ON_BOARD)
                 setDicePos(bd, bd3d);   /* Make sure dice appear ok */
-            RestrictiveRedraw();
         }
     }
 #endif
@@ -1315,21 +1309,6 @@ toggle_display_type(GtkWidget * widget, BoardData * bd)
 }
 
 static void
-toggle_quick_draw(GtkWidget * widget, int init)
-{
-    int set = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
-    gtk_widget_set_sensitive(pwShowShadows, !set);
-    gtk_widget_set_sensitive(pwCloseBoard, !set);
-
-    if (set) {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwShowShadows), 0);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwCloseBoard), 0);
-        if (init != -1)
-            GTKShowWarning(WARN_QUICKDRAW_MODE, widget);
-    }
-}
-
-static void
 toggle_show_shadows(GtkWidget * widget, int init)
 {
     int set = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
@@ -1387,13 +1366,9 @@ DoTestPerformance(GtkWidget * pw, GtkWidget * board)
 
     outputl(str);
 
-    if (fps <= 5) {             /* Give some advice, hopefully to speed things up */
+    if (fps <= 20) {             /* Give some advice, hopefully to speed things up */
         if (bd->rd->showShadows)
             outputl(_("Disable shadows to improve performance"));
-        else if (!bd->rd->quickDraw)
-            outputl(_("Try the quick draw option to improve performance"));
-        else
-            outputl(_("The quick draw option will not change the result of this performance test"));
     }
     outputx();
 }
@@ -1684,7 +1659,6 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     GtkWidget *pw, *pwx;
 #if defined(USE_BOARD3D)
     GtkWidget *dtBox, *button, *dtFrame, *hBox, *lab, *pwev, *pwhbox, *pwvbox, *pwAccuracy, *pwDiceSize;
-    pwQuickDraw = 0;
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -1801,11 +1775,6 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
     gtk_widget_set_tooltip_text(pwAnimateFlag, _("Waves resignation flag"));
     gtk_box_pack_start(GTK_BOX(pw), pwAnimateFlag, FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwAnimateFlag), bd->rd->animateFlag);
-
-    pwCloseBoard = gtk_check_button_new_with_label(_("Close board on exit"));
-    gtk_widget_set_tooltip_text(pwCloseBoard, _("When you quit GNUbg, the board will close"));
-    gtk_box_pack_start(GTK_BOX(pw), pwCloseBoard, FALSE, FALSE, 0);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwCloseBoard), bd->rd->closeBoardOnExit);
 
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
@@ -1924,13 +1893,6 @@ GeneralPage(BoardData * bd, GtkWidget * UNUSED(bdMain))
 
     lab = gtk_label_new(_("large"));
     gtk_box_pack_start(GTK_BOX(hBox), lab, FALSE, FALSE, 0);
-
-    pwQuickDraw = gtk_check_button_new_with_label(_("Quick drawing"));
-    gtk_widget_set_tooltip_text(pwQuickDraw, _("Fast drawing option to improve performance"));
-    gtk_box_pack_start(GTK_BOX(pw), pwQuickDraw, FALSE, FALSE, 0);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwQuickDraw), bd->rd->quickDraw);
-    g_signal_connect(G_OBJECT(pwQuickDraw), "toggled", G_CALLBACK(toggle_quick_draw), NULL);
-    toggle_quick_draw(pwQuickDraw, -1);
 
     pwTestPerformance = gtk_button_new_with_label(_("Test performance"));
     gtk_widget_set_sensitive(pwTestPerformance, (display_is_3d(bd->rd)));
@@ -2953,7 +2915,6 @@ GetPrefs(renderdata * prd)
 
         prd->animateRoll = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwAnimateRoll));
         prd->animateFlag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwAnimateFlag));
-        prd->closeBoardOnExit = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwCloseBoard));
 
         newCurveAccuracy = (int) gtk_adjustment_get_value(padjAccuracy);
         newCurveAccuracy -= (newCurveAccuracy % 4);
@@ -3148,7 +3109,6 @@ pref_dialog_map(GtkWidget * UNUSED(window), BoardData * bd)
 #if defined(USE_BOARD3D)
     DisplayCorrectBoardType(bd, bd->bd3d, bd->rd);
     redrawChange = FALSE;
-    bd->rd->quickDraw = FALSE;
 #else
     (void) bd;                  /* suppress unused parameter compiler warning */
 #endif
@@ -3321,7 +3281,6 @@ Default3dSettings(BoardData * bd)
                 bd->rd->boardAngle = rdNew.boardAngle;
                 bd->rd->diceSize = rdNew.diceSize;
                 bd->rd->planView = rdNew.planView;
-                bd->rd->quickDraw = rdNew.quickDraw;
 
                 memcpy(bd->rd->ChequerMat, rdNew.ChequerMat, sizeof(Material[2]));
                 memcpy(bd->rd->DiceMat, rdNew.DiceMat, sizeof(Material[2]));

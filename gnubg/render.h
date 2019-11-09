@@ -75,8 +75,6 @@ typedef struct _renderdata {
 
     int animateRoll;            /* Animate dice rolls */
     int animateFlag;            /* Animate resignation flag */
-    int closeBoardOnExit;       /* Animate board close on quit */
-    int quickDraw;              /* Cut down 3d drawing to improve performance */
     unsigned int curveAccuracy; /* Round curve approximation accuracy */
     lighttype lightType;        /* Positional/Directional light source */
     float lightPos[3];          /* x,y,z pos of light source */

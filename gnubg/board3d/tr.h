@@ -123,13 +123,13 @@ extern "C" {
     extern void trDelete(TRcontext * tr);
 
 
-    extern void trTileSize(TRcontext * tr, GLint width, GLint height, GLint border);
+    extern void trTileSize(TRcontext * tr, int width, int height, int border);
 
 #if 0
     extern void trTileBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image);
 #endif
 
-    extern void trImageSize(TRcontext * tr, GLuint width, GLuint height);
+    extern void trImageSize(TRcontext * tr, unsigned int width, unsigned int height);
 
     extern void trImageBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image);
 
@@ -137,7 +137,7 @@ extern "C" {
     extern void trRowOrder(TRcontext * tr, TRenum order);
 
 
-    extern GLint trGet(const TRcontext * tr, TRenum param);
+    extern int trGet(const TRcontext * tr, TRenum param);
 #endif
 
     extern void trOrtho(TRcontext * tr,

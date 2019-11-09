@@ -22,17 +22,12 @@
  */
 
 #include "config.h"
+#include "legacyGLinc.h"
 #include "inc3d.h"
-#ifdef WIN32
-#include <io.h>
-#endif
 #include "renderprefs.h"
 #include "sound.h"
 #include "export.h"
 #include "gtkgame.h"
-#ifdef WIN32
-#include "wglbuffer.h"
-#endif
 #include "util.h"
 #include <glib/gstdio.h>
 #include "gtklocdefs.h"
@@ -57,9 +52,8 @@ NTH_STATIC double animStartTime = 0;
 static guint idleId = 0;
 static idleFunc *pIdleFun;
 static BoardData *pIdleBD;
-Flag3d flag;                    /* Only one flag */
 
-static void SetupSimpleMatAlpha(Material * pMat, float r, float g, float b, float a);
+Flag3d flag;                    /* Only one flag */
 
 static gboolean
 idle(BoardData3d * bd3d)
@@ -168,13 +162,7 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
     sl[3] = 1;
     glLightfv(GL_LIGHT0, GL_SPECULAR, sl);
 
-    /* Shadow light position */
-    memcpy(bd3d->shadow_light_position, lp, sizeof(float[4]));
-    if (ShadowsInitilised(bd3d)) {
-        int i;
-        for (i = 0; i < NUM_OCC; i++)
-            draw_shadow_volume_extruded_edges(&bd3d->Occluders[i], bd3d->shadow_light_position, GL_QUADS);
-    }
+	UpdateShadowLightPosition(bd3d, lp);
 }
 
 #ifdef WIN32
@@ -241,7 +229,7 @@ static void
 CreateTexture(unsigned int *pID, int width, int height, const unsigned char *bits)
 {
     /* Create texture */
-    glGenTextures(1, (GLuint *) pID);
+    glGenTextures(1, (unsigned int *) pID);
     glBindTexture(GL_TEXTURE_2D, *pID);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -284,8 +272,7 @@ CreateFonts(BoardData3d * bd3d)
     if (!CreateNumberFont(&bd3d->numberFont, FONT_VERA, FONT_PITCH, FONT_SIZE, FONT_HEIGHT_RATIO))
         return FALSE;
 
-    if (!CreateNumberFont
-        (&bd3d->cubeFont, FONT_VERA_SERIF_BOLD, CUBE_FONT_PITCH, CUBE_FONT_SIZE, CUBE_FONT_HEIGHT_RATIO))
+    if (!CreateNumberFont(&bd3d->cubeFont, FONT_VERA_SERIF_BOLD, CUBE_FONT_PITCH, CUBE_FONT_SIZE, CUBE_FONT_HEIGHT_RATIO))
         return FALSE;
 
     return TRUE;
@@ -338,19 +325,6 @@ InitGL(const BoardData * bd)
             glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL_EXT, GL_SEPARATE_SPECULAR_COLOR_EXT);
 #endif
         CreateDotTexture(&bd3d->dotTexture);
-#ifdef WIN32
-        {
-            static int UseBufferRegions = -1;
-            if (UseBufferRegions == -1)
-                UseBufferRegions = wglBufferInitialize();
-#if 0                           /* Remove this until option added to control this */
-            if (UseBufferRegions == 1) {
-                bd3d->wglBuffer = CreateBufferRegion(WGL_BACK_COLOR_BUFFER_BIT_ARB | WGL_DEPTH_BUFFER_BIT_ARB);
-                bd3d->fBuffers = (bd->bd3d->wglBuffer != NULL);
-            }
-#endif
-        }
-#endif
     }
 }
 
@@ -558,7 +532,7 @@ static void
 DeleteTexture(Texture * texture)
 {
     if (texture->texID)
-        glDeleteTextures(1, (GLuint *) & texture->texID);
+        glDeleteTextures(1, (unsigned int *) & texture->texID);
 
     texture->texID = 0;
 }
@@ -692,7 +666,6 @@ Set3dSettings(renderdata * prdnew, const renderdata * prd)
     prdnew->fHinges3d = prd->fHinges3d;
     prdnew->showMoveIndicator = prd->showMoveIndicator;
     prdnew->showShadows = prd->showShadows;
-    prdnew->quickDraw = prd->quickDraw;
     prdnew->roundedEdges = prd->roundedEdges;
     prdnew->bgInTrays = prd->bgInTrays;
     prdnew->roundedPoints = prd->roundedPoints;
@@ -774,7 +747,7 @@ moveAlong(float d, PathType type, const float start[3], const float end[3], floa
         float xRad = end[0] - start[0];
         float zRad = end[2] - start[2];
 
-        lineLen = (float) G_PI *((fabsf(xRad) + fabsf(zRad)) / 2.0f) / 2.0f;
+        lineLen = (float) F_PI *((fabsf(xRad) + fabsf(zRad)) / 2.0f) / 2.0f;
         if (d <= lineLen) {
             float xCent, zCent;
             float yOff;
@@ -786,21 +759,21 @@ moveAlong(float d, PathType type, const float start[3], const float end[3], floa
             if (type == PATH_CURVE_9TO12) {
                 xCent = end[0];
                 zCent = start[2];
-                yOff = yDiff * cosf((float)G_PI_2 * per);
+                yOff = yDiff * cosf((float)F_PI_2 * per);
             } else {
                 xCent = start[0];
                 zCent = end[2];
-                yOff = yDiff * sinf((float)G_PI_2 * per);
+                yOff = yDiff * sinf((float)F_PI_2 * per);
             }
 
             if (type == PATH_CURVE_9TO12) {
-                v[0] = xCent - xRad * cosf((float)G_PI_2 * per);
+                v[0] = xCent - xRad * cosf((float)F_PI_2 * per);
                 v[1] = end[1] - yOff;
-                v[2] = zCent + zRad * sinf((float)G_PI_2 * per);
+                v[2] = zCent + zRad * sinf((float)F_PI_2 * per);
             } else {
-                v[0] = xCent + xRad * sinf((float)G_PI_2 * per);
+                v[0] = xCent + xRad * sinf((float)F_PI_2 * per);
                 v[1] = start[1] + yOff;
-                v[2] = zCent - zRad * cosf((float)G_PI_2 * per);
+                v[2] = zCent - zRad * cosf((float)F_PI_2 * per);
             }
             return -1;
         }
@@ -810,7 +783,7 @@ moveAlong(float d, PathType type, const float start[3], const float end[3], floa
 }
 
 /* Return v position, d distance along path p */
-static int
+int
 movePath(Path * p, float d, float *rotate, float v[3])
 {
     float done;
@@ -921,669 +894,10 @@ Free3d(float ***array, unsigned int x, unsigned int y)
     free(array);
 }
 
-void
-cylinder(float radius, float height, unsigned int accuracy, const Texture * texture)
-{
-    unsigned int i;
-    float angle = 0;
-    float circum = (float) G_PI * radius * 2 / (accuracy + 1);
-    float step = (2 * (float) G_PI) / accuracy;
-    glBegin(GL_QUAD_STRIP);
-    for (i = 0; i < accuracy + 1; i++) {
-        glNormal3f(sinf(angle), cosf(angle), 0.f);
-        if (texture)
-            glTexCoord2f(circum * i / (radius * 2), 0.f);
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, 0.f);
-
-        if (texture)
-            glTexCoord2f(circum * i / (radius * 2), height / (radius * 2));
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
-
-        angle += step;
-    }
-    glEnd();
-}
+#include "Shapes.inc"
 
 void
-circleOutlineOutward(float radius, float height, unsigned int accuracy)
-{                               /* Draw an ouline of a disc in current z plane with outfacing normals */
-    unsigned int i;
-    float angle, step;
-
-    step = (2 * (float) G_PI) / accuracy;
-    angle = 0;
-    glNormal3f(0.f, 0.f, 1.f);
-    glBegin(GL_LINE_STRIP);
-    for (i = 0; i <= accuracy; i++) {
-        glNormal3f(sinf(angle), cosf(angle), 0.f);
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
-        angle -= step;
-    }
-    glEnd();
-}
-
-void
-circleOutline(float radius, float height, unsigned int accuracy)
-{                               /* Draw an ouline of a disc in current z plane */
-    unsigned int i;
-    float angle, step;
-
-    step = (2 * (float) G_PI) / accuracy;
-    angle = 0;
-    glNormal3f(0.f, 0.f, 1.f);
-    glBegin(GL_LINE_STRIP);
-    for (i = 0; i <= accuracy; i++) {
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
-        angle -= step;
-    }
-    glEnd();
-}
-
-void
-circle(float radius, float height, unsigned int accuracy)
-{                               /* Draw a disc in current z plane */
-    unsigned int i;
-    float angle, step;
-
-    step = (2 * (float) G_PI) / accuracy;
-    angle = 0;
-    glNormal3f(0.f, 0.f, 1.f);
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex3f(0.f, 0.f, height);
-    for (i = 0; i <= accuracy; i++) {
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
-        angle -= step;
-    }
-    glEnd();
-}
-
-void
-circleSloped(float radius, float startHeight, float endHeight, unsigned int accuracy)
-{                               /* Draw a disc in sloping z plane */
-    unsigned int i;
-    float angle, step;
-
-    step = (2 * (float) G_PI) / accuracy;
-    angle = 0;
-    glNormal3f(0.f, 0.f, 1.f);
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex3f(0.f, 0.f, startHeight);
-    for (i = 0; i <= accuracy; i++) {
-        float height = ((cosf(angle) + 1) / 2) * (endHeight - startHeight);
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, startHeight + height);
-        angle -= step;
-    }
-    glEnd();
-}
-
-void
-circleRev(float radius, float height, unsigned int accuracy)
-{                               /* Draw a disc with reverse winding in current z plane */
-    unsigned int i;
-    float angle, step;
-
-    step = (2 * (float) G_PI) / accuracy;
-    angle = 0;
-    glNormal3f(0.f, 0.f, 1.f);
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex3f(0.f, 0.f, height);
-    for (i = 0; i <= accuracy; i++) {
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
-        angle += step;
-    }
-    glEnd();
-}
-
-void
-circleTex(float radius, float height, unsigned int accuracy, const Texture * texture)
-{                               /* Draw a disc in current z plane with a texture */
-    unsigned int i;
-    float angle, step;
-
-    if (!texture) {
-        circle(radius, height, accuracy);
-        return;
-    }
-
-    step = (2 * (float) G_PI) / accuracy;
-    angle = 0;
-    glNormal3f(0.f, 0.f, 1.f);
-    glBegin(GL_TRIANGLE_FAN);
-    glTexCoord2f(.5f, .5f);
-    glVertex3f(0.f, 0.f, height);
-    for (i = 0; i <= accuracy; i++) {
-        glTexCoord2f((sinf(angle) * radius + radius) / (radius * 2), (cosf(angle) * radius + radius) / (radius * 2));
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
-        angle -= step;
-    }
-    glEnd();
-}
-
-void
-circleRevTex(float radius, float height, unsigned int accuracy, const Texture * texture)
-{                               /* Draw a disc with reverse winding in current z plane with a texture */
-    unsigned int i;
-    float angle, step;
-
-    if (!texture) {
-        circleRev(radius, height, accuracy);
-        return;
-    }
-
-    step = (2 * (float) G_PI) / accuracy;
-    angle = 0;
-    glNormal3f(0.f, 0.f, 1.f);
-    glBegin(GL_TRIANGLE_FAN);
-    glTexCoord2f(.5f, .5f);
-    glVertex3f(0.f, 0.f, height);
-    for (i = 0; i <= accuracy; i++) {
-        glTexCoord2f((sinf(angle) * radius + radius) / (radius * 2), (cosf(angle) * radius + radius) / (radius * 2));
-        glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
-        angle += step;
-    }
-    glEnd();
-}
-
-void
-drawBox(int type, float x, float y, float z, float w, float h, float d, const Texture * texture)
-{                               /* Draw a box with normals and optional textures */
-    float normX, normY, normZ;
-    float w2 = w / 2.0f, h2 = h / 2.0f, d2 = d / 2.0f;
-
-    glPushMatrix();
-    glTranslatef(x + w2, y + h2, z + d2);
-    glScalef(w2, h2, d2);
-
-    /* Scale normals */
-    normX = w2;
-    normY = h2;
-    normZ = d2;
-
-    glBegin(GL_QUADS);
-
-    if (texture) {
-        float repX = (w * TEXTURE_SCALE) / texture->width;
-        float repY = (h * TEXTURE_SCALE) / texture->height;
-
-        /* Front Face */
-        glNormal3f(0.f, 0.f, normZ);
-        if (type & BOX_SPLITTOP) {
-            glTexCoord2f(0.f, 0.f);
-            glVertex3f(-1.f, -1.f, 1.f);
-            glTexCoord2f(repX, 0.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            glTexCoord2f(repX, repY / 2.0f);
-            glVertex3f(1.f, 0.f, 1.f);
-            glTexCoord2f(0.f, repY / 2.0f);
-            glVertex3f(-1.f, 0.f, 1.f);
-
-            glTexCoord2f(0.f, repY / 2.0f);
-            glVertex3f(-1.f, 0.f, 1.f);
-            glTexCoord2f(repX, repY / 2.0f);
-            glVertex3f(1.f, 0.f, 1.f);
-            glTexCoord2f(repX, repY);
-            glVertex3f(1.f, 1.f, 1.f);
-            glTexCoord2f(0.f, repY);
-            glVertex3f(-1.f, 1.f, 1.f);
-        } else if (type & BOX_SPLITWIDTH) {
-            glTexCoord2f(0.f, 0.f);
-            glVertex3f(-1.f, -1.f, 1.f);
-            glTexCoord2f(repX / 2.0f, 0.f);
-            glVertex3f(0.f, -1.f, 1.f);
-            glTexCoord2f(repX / 2.0f, repY);
-            glVertex3f(0.f, 1.f, 1.f);
-            glTexCoord2f(0.f, repY);
-            glVertex3f(-1.f, 1.f, 1.f);
-
-            glTexCoord2f(repX / 2.0f, 0.f);
-            glVertex3f(0.f, -1.f, 1.f);
-            glTexCoord2f(repX, 0.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            glTexCoord2f(repX, repY);
-            glVertex3f(1.f, 1.f, 1.f);
-            glTexCoord2f(repX / 2.0f, repY);
-            glVertex3f(0.f, 1.f, 1.f);
-        } else {
-            glTexCoord2f(0.f, 0.f);
-            glVertex3f(-1.f, -1.f, 1.f);
-            glTexCoord2f(repX, 0.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            glTexCoord2f(repX, repY);
-            glVertex3f(1.f, 1.f, 1.f);
-            glTexCoord2f(0.f, repY);
-            glVertex3f(-1.f, 1.f, 1.f);
-        }
-        if (!(type & BOX_NOENDS)) {
-            /* Top Face */
-            glNormal3f(0.f, normY, 0.f);
-            glTexCoord2f(0.f, repY);
-            glVertex3f(-1.f, 1.f, -1.f);
-            glTexCoord2f(0.f, 0.f);
-            glVertex3f(-1.f, 1.f, 1.f);
-            glTexCoord2f(repX, 0.f);
-            glVertex3f(1.f, 1.f, 1.f);
-            glTexCoord2f(repX, repY);
-            glVertex3f(1.f, 1.f, -1.f);
-            /* Bottom Face */
-            glNormal3f(0.f, -normY, 0.f);
-            glTexCoord2f(repX, repY);
-            glVertex3f(-1.f, -1.f, -1.f);
-            glTexCoord2f(0.f, repY);
-            glVertex3f(1.f, -1.f, -1.f);
-            glTexCoord2f(0.f, 0.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            glTexCoord2f(repX, 0.f);
-            glVertex3f(-1.f, -1.f, 1.f);
-        }
-        if (!(type & BOX_NOSIDES)) {
-            /* Right face */
-            glNormal3f(normX, 0.f, 0.f);
-            glTexCoord2f(repX, 0.f);
-            glVertex3f(1.f, -1.f, -1.f);
-            glTexCoord2f(repX, repY);
-            glVertex3f(1.f, 1.f, -1.f);
-            glTexCoord2f(0.f, repY);
-            glVertex3f(1.f, 1.f, 1.f);
-            glTexCoord2f(0.f, 0.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            /* Left Face */
-            glNormal3f(-normX, 0.f, 0.f);
-            glTexCoord2f(0.f, 0.f);
-            glVertex3f(-1.f, -1.f, -1.f);
-            glTexCoord2f(repX, 0.f);
-            glVertex3f(-1.f, -1.f, 1.f);
-            glTexCoord2f(repX, repY);
-            glVertex3f(-1.f, 1.f, 1.f);
-            glTexCoord2f(0.f, repY);
-            glVertex3f(-1.f, 1.f, -1.f);
-        }
-    } else {                    /* no texture co-ords */
-        /* Front Face */
-        glNormal3f(0.f, 0.f, normZ);
-        if (type & BOX_SPLITTOP) {
-            glVertex3f(-1.f, -1.f, 1.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            glVertex3f(1.f, 0.f, 1.f);
-            glVertex3f(-1.f, 0.f, 1.f);
-
-            glVertex3f(-1.f, 0.f, 1.f);
-            glVertex3f(1.f, 0.f, 1.f);
-            glVertex3f(1.f, 1.f, 1.f);
-            glVertex3f(-1.f, 1.f, 1.f);
-        } else if (type & BOX_SPLITWIDTH) {
-            glVertex3f(-1.f, -1.f, 1.f);
-            glVertex3f(0.f, -1.f, 1.f);
-            glVertex3f(0.f, 1.f, 1.f);
-            glVertex3f(-1.f, 1.f, 1.f);
-
-            glVertex3f(0.f, -1.f, 1.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            glVertex3f(1.f, 1.f, 1.f);
-            glVertex3f(0.f, 1.f, 1.f);
-        } else {
-            glVertex3f(-1.f, -1.f, 1.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            glVertex3f(1.f, 1.f, 1.f);
-            glVertex3f(-1.f, 1.f, 1.f);
-        }
-
-        if (!(type & BOX_NOENDS)) {
-            /* Top Face */
-            glNormal3f(0.f, normY, 0.f);
-            glVertex3f(-1.f, 1.f, -1.f);
-            glVertex3f(-1.f, 1.f, 1.f);
-            glVertex3f(1.f, 1.f, 1.f);
-            glVertex3f(1.f, 1.f, -1.f);
-            /* Bottom Face */
-            glNormal3f(0.f, -normY, 0.f);
-            glVertex3f(-1.f, -1.f, -1.f);
-            glVertex3f(1.f, -1.f, -1.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            glVertex3f(-1.f, -1.f, 1.f);
-        }
-        if (!(type & BOX_NOSIDES)) {
-            /* Right face */
-            glNormal3f(normX, 0.f, 0.f);
-            glVertex3f(1.f, -1.f, -1.f);
-            glVertex3f(1.f, 1.f, -1.f);
-            glVertex3f(1.f, 1.f, 1.f);
-            glVertex3f(1.f, -1.f, 1.f);
-            /* Left Face */
-            glNormal3f(-normX, 0.f, 0.f);
-            glVertex3f(-1.f, -1.f, -1.f);
-            glVertex3f(-1.f, -1.f, 1.f);
-            glVertex3f(-1.f, 1.f, 1.f);
-            glVertex3f(-1.f, 1.f, -1.f);
-        }
-    }
-    glEnd();
-    glPopMatrix();
-}
-
-void
-drawCube(float size)
-{                               /* Draw a simple cube */
-    glPushMatrix();
-    glScalef(size / 2.0f, size / 2.0f, size / 2.0f);
-
-    glBegin(GL_QUADS);
-    /* Front Face */
-    glVertex3f(-1.f, -1.f, 1.f);
-    glVertex3f(1.f, -1.f, 1.f);
-    glVertex3f(1.f, 1.f, 1.f);
-    glVertex3f(-1.f, 1.f, 1.f);
-    /* Top Face */
-    glVertex3f(-1.f, 1.f, -1.f);
-    glVertex3f(-1.f, 1.f, 1.f);
-    glVertex3f(1.f, 1.f, 1.f);
-    glVertex3f(1.f, 1.f, -1.f);
-    /* Bottom Face */
-    glVertex3f(-1.f, -1.f, -1.f);
-    glVertex3f(1.f, -1.f, -1.f);
-    glVertex3f(1.f, -1.f, 1.f);
-    glVertex3f(-1.f, -1.f, 1.f);
-    /* Right face */
-    glVertex3f(1.f, -1.f, -1.f);
-    glVertex3f(1.f, 1.f, -1.f);
-    glVertex3f(1.f, 1.f, 1.f);
-    glVertex3f(1.f, -1.f, 1.f);
-    /* Left Face */
-    glVertex3f(-1.f, -1.f, -1.f);
-    glVertex3f(-1.f, -1.f, 1.f);
-    glVertex3f(-1.f, 1.f, 1.f);
-    glVertex3f(-1.f, 1.f, -1.f);
-    glEnd();
-
-    glPopMatrix();
-}
-
-void
-drawRect(float x, float y, float z, float w, float h, const Texture * texture)
-{                               /* Draw a rectangle */
-    glPushMatrix();
-
-    glTranslatef(x + w / 2, y + h / 2, z);
-    glScalef(w / 2.0f, h / 2.0f, 1.f);
-    glNormal3f(0.f, 0.f, 1.f);
-
-    if (texture) {
-        float tuv = TEXTURE_SCALE / texture->width;
-        float repX = w * tuv;
-        float repY = h * tuv;
-
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.f, 0.f);
-        glVertex3f(-1.f, -1.f, 0.f);
-        glTexCoord2f(repX, 0.f);
-        glVertex3f(1.f, -1.f, 0.f);
-        glTexCoord2f(repX, repY);
-        glVertex3f(1.f, 1.f, 0.f);
-        glTexCoord2f(0.f, repY);
-        glVertex3f(-1.f, 1.f, 0.f);
-        glEnd();
-    } else {
-        glBegin(GL_QUADS);
-        glVertex3f(-1.f, -1.f, 0.f);
-        glVertex3f(1.f, -1.f, 0.f);
-        glVertex3f(1.f, 1.f, 0.f);
-        glVertex3f(-1.f, 1.f, 0.f);
-        glEnd();
-    }
-
-    glPopMatrix();
-}
-
-void
-drawSplitRect(float x, float y, float z, float w, float h, const Texture * texture)
-{                               /* Draw a rectangle in 2 bits */
-    glPushMatrix();
-
-    glTranslatef(x + w / 2, y + h / 2, z);
-    glScalef(w / 2.0f, h / 2.0f, 1.f);
-    glNormal3f(0.f, 0.f, 1.f);
-
-    if (texture) {
-        float tuv = TEXTURE_SCALE / texture->width;
-        float repX = w * tuv;
-        float repY = h * tuv;
-
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.f, 0.f);
-        glVertex3f(-1.f, -1.f, 0.f);
-        glTexCoord2f(repX, 0.f);
-        glVertex3f(1.f, -1.f, 0.f);
-        glTexCoord2f(repX, repY / 2.0f);
-        glVertex3f(1.f, 0.f, 0.f);
-        glTexCoord2f(0.f, repY / 2.0f);
-        glVertex3f(-1.f, 0.f, 0.f);
-
-        glTexCoord2f(0.f, repY / 2.0f);
-        glVertex3f(-1.f, 0.f, 0.f);
-        glTexCoord2f(repX, repY / 2.0f);
-        glVertex3f(1.f, 0.f, 0.f);
-        glTexCoord2f(repX, repY);
-        glVertex3f(1.f, 1.f, 0.f);
-        glTexCoord2f(0.f, repY);
-        glVertex3f(-1.f, 1.f, 0.f);
-        glEnd();
-    } else {
-        glBegin(GL_QUADS);
-        glVertex3f(-1.f, -1.f, 0.f);
-        glVertex3f(1.f, -1.f, 0.f);
-        glVertex3f(1.f, 0.f, 0.f);
-        glVertex3f(-1.f, 0.f, 0.f);
-
-        glVertex3f(-1.f, 0.f, 0.f);
-        glVertex3f(1.f, 0.f, 0.f);
-        glVertex3f(1.f, 1.f, 0.f);
-        glVertex3f(-1.f, 1.f, 0.f);
-        glEnd();
-    }
-
-    glPopMatrix();
-}
-
-void
-drawChequeredRect(float x, float y, float z, float w, float h, int across, int down, const Texture * texture)
-{                               /* Draw a rectangle split into (across x down) chequers */
-    int i, j;
-    float hh = h / down;
-    float ww = w / across;
-
-    glPushMatrix();
-    glTranslatef(x, y, z);
-    glNormal3f(0.f, 0.f, 1.f);
-
-    if (texture) {
-        float tuv = TEXTURE_SCALE / texture->width;
-        float tw = ww * tuv;
-        float th = hh * tuv;
-        float ty = 0.f;
-
-        for (i = 0; i < down; i++) {
-            float xx = 0, tx = 0;
-            glPushMatrix();
-            glTranslatef(0.f, hh * i, 0.f);
-            glBegin(GL_QUAD_STRIP);
-            for (j = 0; j <= across; j++) {
-                glTexCoord2f(tx, ty + th);
-                glVertex2f(xx, hh);
-                glTexCoord2f(tx, ty);
-                glVertex2f(xx, 0.f);
-                xx += ww;
-                tx += tw;
-            }
-            ty += th;
-            glEnd();
-            glPopMatrix();
-        }
-    } else {
-        for (i = 0; i < down; i++) {
-            float xx = 0;
-            glPushMatrix();
-            glTranslatef(0.f, hh * i, 0.f);
-            glBegin(GL_QUAD_STRIP);
-            for (j = 0; j <= across; j++) {
-                glVertex2f(xx, hh);
-                glVertex2f(xx, 0.f);
-                xx += ww;
-            }
-            glEnd();
-            glPopMatrix();
-        }
-    }
-    glPopMatrix();
-}
-
-void
-QuarterCylinder(float radius, float len, unsigned int accuracy, const Texture * texture)
-{
-    unsigned int i;
-    float d;
-    float dInc = 0;
-
-    /* texture unit value */
-    float tuv;
-    if (texture) {
-        float st = sinf((2 * (float)G_PI) / accuracy) * radius;
-        float ct = (cosf((2 * (float)G_PI) / accuracy) - 1) * radius;
-        dInc = sqrtf(st * st + ct * ct);
-        tuv = (TEXTURE_SCALE) / texture->width;
-    } else
-        tuv = 0.0f;
-
-    d = 0;
-    glBegin(GL_QUAD_STRIP);
-    for (i = 0; i < accuracy / 4 + 1; i++) {
-        float sar, car;
-        float angle = ((float) i * 2.f * (float) G_PI) / accuracy;
-
-        glNormal3f(sinf(angle), 0.f, cosf(angle));
-
-        sar = sinf(angle) * radius;
-        car = cosf(angle) * radius;
-
-        if (tuv != 0.0f)
-            glTexCoord2f(len * tuv, d * tuv);
-        glVertex3f(sar, len, car);
-
-        if (tuv != 0.0f) {
-            glTexCoord2f(0.f, d * tuv);
-            d -= dInc;
-        }
-        glVertex3f(sar, 0.f, car);
-    }
-    glEnd();
-}
-
-void
-QuarterCylinderSplayedRev(float radius, float len, unsigned int accuracy, const Texture * texture)
-{
-    unsigned int i;
-    float d;
-    float dInc = 0;
-
-    /* texture unit value */
-    float tuv;
-    if (texture) {
-        float st = sinf((2 * (float)G_PI) / accuracy) * radius;
-        float ct = (cosf((2 * (float)G_PI) / accuracy) - 1) * radius;
-        dInc = sqrtf(st * st + ct * ct);
-        tuv = (TEXTURE_SCALE) / texture->width;
-    } else
-        tuv = 0;
-
-    d = 0;
-    glBegin(GL_QUAD_STRIP);
-    for (i = 0; i < accuracy / 4 + 1; i++) {
-        float sar, car;
-        float angle = ((float) i * 2.f * (float) G_PI) / accuracy;
-
-        glNormal3f(sinf(angle), 0.f, cosf(angle));
-
-        sar = sinf(angle) * radius;
-        car = cosf(angle) * radius;
-
-        if (tuv != 0.0f)
-            glTexCoord2f((len + car) * tuv, d * tuv);
-        glVertex3f(sar, len + car, car);
-
-        if (tuv != 0.0f) {
-            glTexCoord2f(-car * tuv, d * tuv);
-            d -= dInc;
-        }
-        glVertex3f(sar, -car, car);
-    }
-    glEnd();
-}
-
-void
-QuarterCylinderSplayed(float radius, float len, unsigned int accuracy, const Texture * texture)
-{
-    unsigned int i;
-    float d;
-    float dInc = 0;
-
-    /* texture unit value */
-    float tuv;
-    if (texture) {
-        float st = sinf((2 * (float)G_PI) / accuracy) * radius;
-        float ct = (cosf((2 * (float)G_PI) / accuracy) - 1) * radius;
-        dInc = sqrtf(st * st + ct * ct);
-        tuv = (TEXTURE_SCALE) / texture->width;
-    } else
-        tuv = 0;
-
-    d = 0;
-    glBegin(GL_QUAD_STRIP);
-    for (i = 0; i < accuracy / 4 + 1; i++) {
-        float sar, car;
-        float angle = ((float) i * 2.f * (float) G_PI) / accuracy;
-
-        glNormal3f(sinf(angle), 0.f, cosf(angle));
-
-        sar = sinf(angle) * radius;
-        car = cosf(angle) * radius;
-
-        if (tuv != 0.0f)
-            glTexCoord2f((len - car) * tuv, d * tuv);
-        glVertex3f(sar, len - car, car);
-
-        if (tuv != 0.0f) {
-            glTexCoord2f(car * tuv, d * tuv);
-            d -= dInc;
-        }
-        glVertex3f(sar, car, car);
-    }
-    glEnd();
-}
-
-void
-drawCornerEigth(float **const *boardPoints, float radius, unsigned int accuracy)
-{
-    unsigned int i;
-    int j;
-
-    for (i = 0; i < accuracy / 4; i++) {
-        unsigned int ns = (accuracy / 4) - (i + 1);
-
-        glBegin(GL_TRIANGLE_STRIP);
-        glNormal3f(boardPoints[i][ns + 1][0] / radius, boardPoints[i][ns + 1][1] / radius,
-                   boardPoints[i][ns + 1][2] / radius);
-        glVertex3f(boardPoints[i][ns + 1][0], boardPoints[i][ns + 1][1], boardPoints[i][ns + 1][2]);
-        for (j = (int) ns; j >= 0; j--) {
-            glNormal3f(boardPoints[i + 1][j][0] / radius, boardPoints[i + 1][j][1] / radius,
-                       boardPoints[i + 1][j][2] / radius);
-            glVertex3f(boardPoints[i + 1][j][0], boardPoints[i + 1][j][1], boardPoints[i + 1][j][2]);
-            glNormal3f(boardPoints[i][j][0] / radius, boardPoints[i][j][1] / radius, boardPoints[i][j][2] / radius);
-            glVertex3f(boardPoints[i][j][0], boardPoints[i][j][1], boardPoints[i][j][2]);
-        }
-        glEnd();
-    }
-}
-
-void
-calculateEigthPoints(float ****boardPoints, float radius, unsigned int accuracy)
+calculateEigthPoints(EigthPoints* eigthPoints, float radius, unsigned int accuracy)
 {
     unsigned int i, j;
 
@@ -1591,10 +905,12 @@ calculateEigthPoints(float ****boardPoints, float radius, unsigned int accuracy)
     float lat_step;
     float step = 0;
     unsigned int corner_steps = (accuracy / 4) + 1;
-    *boardPoints = Alloc3d(corner_steps, corner_steps, 3);
+
+	eigthPoints->points = Alloc3d(corner_steps, corner_steps, 3);
+	eigthPoints->accuracy = accuracy;
 
     lat_angle = 0;
-    lat_step = (2 * (float) G_PI) / accuracy;
+    lat_step = (2 * (float) F_PI) / accuracy;
 
     /* Calculate corner 1/8th sphere points */
     for (i = 0; i < (accuracy / 4) + 1; i++) {
@@ -1604,12 +920,12 @@ calculateEigthPoints(float ****boardPoints, float radius, unsigned int accuracy)
         unsigned int ns = (accuracy / 4) - i;
 
         if (ns > 0)
-            step = (2.f * (float) G_PI) / (ns * 4.f);
+            step = (2.f * (float) F_PI) / (ns * 4.f);
 
         for (j = 0; j <= ns; j++) {
-            (*boardPoints)[i][j][0] = sinf(angle) * new_radius;
-            (*boardPoints)[i][j][1] = latitude;
-            (*boardPoints)[i][j][2] = cosf(angle) * new_radius;
+            eigthPoints->points[i][j][0] = sinf(angle) * new_radius;
+            eigthPoints->points[i][j][1] = latitude;
+            eigthPoints->points[i][j][2] = cosf(angle) * new_radius;
 
             angle += step;
         }
@@ -1618,12 +934,15 @@ calculateEigthPoints(float ****boardPoints, float radius, unsigned int accuracy)
 }
 
 void
-freeEigthPoints(float ****boardPoints, unsigned int accuracy)
+freeEigthPoints(EigthPoints* eigthPoints)
 {
-    unsigned int corner_steps = (accuracy / 4) + 1;
-    if (*boardPoints)
-        Free3d(*boardPoints, corner_steps, corner_steps);
-    *boardPoints = 0;
+	if (eigthPoints->points != NULL)
+	{
+		unsigned int corner_steps = (eigthPoints->accuracy / 4) + 1;
+		if (eigthPoints->points)
+			Free3d(eigthPoints->points, corner_steps, corner_steps);
+		eigthPoints->points = 0;
+	}
 }
 
 void
@@ -1650,7 +969,7 @@ PlaceMovingPieceRotation(const BoardData * bd, BoardData3d * bd3d, unsigned int 
 static void
 getProjectedCoord(const float pos[3], float *x, float *y)
 {                               /* Work out where point (x, y, z) is on the screen */
-    GLint viewport[4];
+    int viewport[4];
     GLdouble mvmatrix[16], projmatrix[16], xd, yd, zd;
 
     glGetIntegerv(GL_VIEWPORT, viewport);
@@ -1666,267 +985,15 @@ getProjectedCoord(const float pos[3], float *x, float *y)
     *y = (float) yd;
 }
 
-static int freezeRestrict = 0;
-static ClipBox cb[MAX_FRAMES], eraseCb, lastCb;
-int numRestrictFrames = 0;
-
-static float
-BoxWidth(const ClipBox * pCb)
-{
-    return pCb->xx - pCb->x;
-}
-
-static float
-BoxHeight(const ClipBox * pCb)
-{
-    return pCb->yy - pCb->y;
-}
-
-static float
-BoxMidWidth(const ClipBox * pCb)
-{
-    return pCb->x + BoxWidth(pCb) / 2;
-}
-
-static float
-BoxMidHeight(const ClipBox * pCb)
-{
-    return pCb->y + BoxHeight(pCb) / 2;
-}
-
-static void
-CopyBox(ClipBox * pTo, const ClipBox * pFrom)
-{
-    *pTo = *pFrom;
-}
-
-static void
-EnlargeTo(ClipBox * pCb, float x, float y)
-{
-    if (x < pCb->x)
-        pCb->x = x;
-    if (y < pCb->y)
-        pCb->y = y;
-    if (x > pCb->xx)
-        pCb->xx = x;
-    if (y > pCb->yy)
-        pCb->yy = y;
-}
-
-void
-EnlargeCurrentToBox(const ClipBox * pOtherCb)
-{
-    EnlargeTo(&cb[numRestrictFrames], pOtherCb->x, pOtherCb->y);
-    EnlargeTo(&cb[numRestrictFrames], pOtherCb->xx, pOtherCb->yy);
-}
-
-static void
-InitBox(ClipBox * pCb, float x, float y)
-{
-    pCb->x = pCb->xx = x;
-    pCb->y = pCb->yy = y;
-}
-
-static void
-RationalizeBox(ClipBox * pCb)
-{
-    int midX, midY, maxXoff, maxYoff;
-    /* Make things a bit bigger to avoid slight drawing errors */
-    pCb->x -= .5f;
-    pCb->xx += .5f;
-    pCb->y -= .5f;
-    pCb->yy += .5f;
-    midX = (int) BoxMidWidth(pCb);
-    midY = (int) BoxMidHeight(pCb);
-    maxXoff = MAX(midX - (int) pCb->x, (int) pCb->xx - midX) + 1;
-    maxYoff = MAX(midY - (int) pCb->y, (int) pCb->yy - midY) + 1;
-    pCb->x = (float) (midX - maxXoff);
-    pCb->xx = (float) (midX + maxXoff);
-    pCb->y = (float) (midY - maxYoff);
-    pCb->yy = (float) (midY + maxYoff);
-}
-
-void
-RestrictiveRedraw(void)
-{
-    numRestrictFrames = -1;
-}
-
-void
-RestrictiveDraw(ClipBox * pCb, const float pos[3], float width, float height, float depth)
-{
-    float tpos[3];
-    float x, y;
-
-    copyPoint(tpos, pos);
-    tpos[0] -= width / 2.0f;
-    tpos[1] -= height / 2.0f;
-
-    getProjectedCoord(tpos, &x, &y);
-    InitBox(pCb, x, y);
-
-    tpos[0] += width;
-    getProjectedCoord(tpos, &x, &y);
-    EnlargeTo(pCb, x, y);
-
-    tpos[1] += height;
-    getProjectedCoord(tpos, &x, &y);
-    EnlargeTo(pCb, x, y);
-
-    tpos[0] -= width;
-    getProjectedCoord(tpos, &x, &y);
-    EnlargeTo(pCb, x, y);
-
-    tpos[1] -= height;
-    tpos[2] += depth;
-    getProjectedCoord(tpos, &x, &y);
-    EnlargeTo(pCb, x, y);
-
-    tpos[0] += width;
-    getProjectedCoord(tpos, &x, &y);
-    EnlargeTo(pCb, x, y);
-
-    tpos[1] += height;
-    getProjectedCoord(tpos, &x, &y);
-    EnlargeTo(pCb, x, y);
-
-    tpos[0] -= width;
-    getProjectedCoord(tpos, &x, &y);
-    EnlargeTo(pCb, x, y);
-}
-
-void
-RestrictiveDrawFrame(const float pos[3], float width, float height, float depth)
-{
-    if (numRestrictFrames != -1) {
-        numRestrictFrames++;
-        if (numRestrictFrames == MAX_FRAMES) {  /* Too many drawing requests - just redraw whole screen */
-            RestrictiveRedraw();
-            return;
-        }
-        RestrictiveDraw(&cb[numRestrictFrames], pos, width, height, depth);
-    }
-}
-
-void
-RestrictiveDrawFrameWindow(int x, int y, int width, int height)
-{
-    if (numRestrictFrames != -1) {
-        numRestrictFrames++;
-        if (numRestrictFrames == MAX_FRAMES) {  /* Too many drawing requests - just redraw whole screen */
-            RestrictiveRedraw();
-            return;
-        }
-        cb[numRestrictFrames].x = (float) x;
-        cb[numRestrictFrames].y = (float) y;
-        cb[numRestrictFrames].xx = (float) x + width;
-        cb[numRestrictFrames].yy = (float) y + height;
-    }
-}
-
-void
-RestrictiveRender(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd)
-{
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-
-    while (numRestrictFrames > 0) {
-        RationalizeBox(&cb[numRestrictFrames]);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluPickMatrix((double) BoxMidWidth(&cb[numRestrictFrames]), (double) BoxMidHeight(&cb[numRestrictFrames]),
-                      (double) BoxWidth(&cb[numRestrictFrames]), (double) BoxHeight(&cb[numRestrictFrames]), viewport);
-
-        /* Setup projection matrix - using saved values */
-        if (prd->planView)
-            glOrtho(-bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, 0.0, 5.0);
-        else
-            glFrustum(-bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, zNear, zFar);
-
-        glMatrixMode(GL_MODELVIEW);
-        glViewport((int) (cb[numRestrictFrames].x), (int) (cb[numRestrictFrames].y),
-                   (int) BoxWidth(&cb[numRestrictFrames]), (int) BoxHeight(&cb[numRestrictFrames]));
-
-        drawBoard(bd, bd3d, prd);
-
-        if (!freezeRestrict)
-            numRestrictFrames--;
-        else {
-            if (numRestrictFrames > 1)
-                numRestrictFrames--;
-            else {
-                freezeRestrict = 0;
-                break;
-            }
-        }
-    }
-    /* Restore matrixes */
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
-}
-
 int
 MouseMove3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd, int x, int y)
 {
     if (bd->drag_point >= 0) {
         getProjectedPieceDragPos(x, y, bd3d->dragPos);
         updateMovingPieceOccPos(bd, bd3d);
-
-        if (prd->quickDraw && numRestrictFrames != -1) {
-            if (!freezeRestrict)
-                CopyBox(&eraseCb, &lastCb);
-
-            RestrictiveDraw(&cb[numRestrictFrames], bd3d->dragPos, PIECE_HOLE, PIECE_HOLE, PIECE_DEPTH);
-            freezeRestrict++;
-
-            CopyBox(&lastCb, &cb[numRestrictFrames]);
-            EnlargeCurrentToBox(&eraseCb);
-        }
         return 1;
     } else
         return 0;
-}
-
-void
-RestrictiveStartMouseMove(unsigned int pos, unsigned int depth)
-{
-    if (numRestrictFrames != -1) {
-        float erasePos[3];
-
-        getPiecePos(pos, depth, erasePos);
-        RestrictiveDrawFrame(erasePos, PIECE_HOLE, PIECE_HOLE, PIECE_DEPTH);
-        CopyBox(&eraseCb, &cb[numRestrictFrames]);
-    }
-    freezeRestrict = 1;
-}
-
-void
-RestrictiveEndMouseMove(unsigned int pos, unsigned int depth)
-{
-    float newPos[3];
-    getPiecePos(pos, depth, newPos);
-
-    if (numRestrictFrames == -1)
-        return;
-
-    if (pos == 26 || pos == 27) {
-        newPos[2] -= PIECE_HOLE / 2.0f;
-        RestrictiveDraw(&cb[numRestrictFrames], newPos, PIECE_HOLE, PIECE_HOLE, PIECE_HOLE);
-    } else
-        RestrictiveDraw(&cb[numRestrictFrames], newPos, PIECE_HOLE, PIECE_HOLE, PIECE_DEPTH);
-
-    if (freezeRestrict)
-        EnlargeCurrentToBox(&eraseCb);
-    else
-        EnlargeCurrentToBox(&lastCb);
-
-    freezeRestrict = 0;
 }
 
 static void
@@ -1965,8 +1032,6 @@ SetupMove(BoardData * bd, BoardData3d * bd3d)
     updatePieceOccPos(bd, bd3d);
 }
 
-static int firstFrame;
-
 static int
 idleAnimate(BoardData3d * bd3d)
 {
@@ -1984,7 +1049,6 @@ idleAnimate(BoardData3d * bd3d)
 
     if (bd3d->moving) {
         float old_pos[3];
-        ClipBox temp;
         float *pRotate = 0;
         if (bd3d->rotateMovingPiece >= 0.0f && bd3d->piecePath.state == 2)
             pRotate = &bd3d->rotateMovingPiece;
@@ -2004,9 +1068,6 @@ idleAnimate(BoardData3d * bd3d)
                     bar = 25;
                 bd->points[bar] -= bd->turn;
                 bd->points[moveDest] = 0;
-
-                if (prd->quickDraw)
-                    RestrictiveDrawPiece(bar, Abs(bd->points[bar]));
             }
 
             bd->points[moveDest] += bd->turn;
@@ -2016,16 +1077,6 @@ idleAnimate(BoardData3d * bd3d)
             update_pipcount(bd, (ConstTanBoard) points);
 
             PlaceMovingPieceRotation(bd, bd3d, moveDest, moveStart);
-
-            if (prd->quickDraw && numRestrictFrames != -1) {
-                float new_pos[3];
-                getPiecePos(moveDest, Abs(bd->points[moveDest]), new_pos);
-                if (moveDest == 26 || moveDest == 27) {
-                    new_pos[2] -= PIECE_HOLE / 2.0f;
-                    RestrictiveDraw(&temp, new_pos, PIECE_HOLE, PIECE_HOLE, PIECE_HOLE);
-                } else
-                    RestrictiveDraw(&temp, new_pos, PIECE_HOLE, PIECE_HOLE, PIECE_DEPTH);
-            }
 
             /* Next piece */
             slide_move += 2;
@@ -2041,12 +1092,6 @@ idleAnimate(BoardData3d * bd3d)
             playSound(SOUND_CHEQUER);
         } else {
             updateMovingPieceOccPos(bd, bd3d);
-            if (prd->quickDraw && numRestrictFrames != -1)
-                RestrictiveDraw(&temp, bd3d->movingPos, PIECE_HOLE, PIECE_HOLE, PIECE_DEPTH);
-        }
-        if (prd->quickDraw && numRestrictFrames != -1) {
-            RestrictiveDrawFrame(old_pos, PIECE_HOLE, PIECE_HOLE, PIECE_DEPTH);
-            EnlargeCurrentToBox( /*lint -e(645) */ &temp);      /* temp is initilized above (lint error 645) */
         }
     }
 
@@ -2061,32 +1106,6 @@ idleAnimate(BoardData3d * bd3d)
             stopNextTime = 1;
         }
         updateDiceOccPos(bd, bd3d);
-
-        if (bd->rd->quickDraw && numRestrictFrames != -1) {
-            float pos[3];
-            float overSize;
-            ClipBox temp;
-
-            overSize = getDiceSize(bd->rd) * 1.5f;
-            copyPoint(pos, bd3d->diceMovingPos[0]);
-            pos[2] -= getDiceSize(bd->rd) / 2.0f;
-            RestrictiveDrawFrame(pos, overSize, overSize, overSize);
-
-            copyPoint(pos, bd3d->diceMovingPos[1]);
-            pos[2] -= getDiceSize(bd->rd) / 2.0f;
-            RestrictiveDraw(&temp, pos, overSize, overSize, overSize);
-            EnlargeCurrentToBox(&temp);
-
-            CopyBox(&temp, &cb[numRestrictFrames]);
-            if (!firstFrame)
-                EnlargeCurrentToBox(&eraseCb);
-            else if (firstFrame == -1)
-                RestrictiveRedraw();
-            else
-                firstFrame = 0;
-
-            CopyBox(&eraseCb, &temp);
-        }
     }
 
     return 1;
@@ -2108,13 +1127,7 @@ RollDice3d(BoardData * bd, BoardData3d * bd3d, const renderdata * prd)
         setupDicePaths(bd, bd3d->dicePaths, bd3d->diceMovingPos, bd3d->diceRotation);
         /* Make sure shadows are in correct place */
         UpdateShadows(bd->bd3d);
-        if (prd->quickDraw) {   /* Mark this as the first frame (or -1 to indicate full draw in progress) */
-            if (numRestrictFrames == -1)
-                firstFrame = -1;
-            else
-                firstFrame = 1;
-        }
-        gtk_main();
+		gtk_main();
     } else {
         /* Show dice on board */
         gtk_widget_queue_draw(bd3d->drawing_area3d);
@@ -2146,7 +1159,6 @@ idleWaveFlag(BoardData3d * bd3d)
     float elapsedTime = (float) (get_time() - animStartTime);
     bd3d->flagWaved = elapsedTime / 200;
     updateFlagOccPos(bd, bd3d);
-    RestrictiveDrawFlag(bd);
     return 1;
 }
 
@@ -2163,34 +1175,6 @@ ShowFlag3d(BoardData * bd, BoardData3d * bd3d, const renderdata * prd)
 
     waveFlag(bd3d->flagWaved);
     updateFlagOccPos(bd, bd3d);
-
-    RestrictiveDrawFlag(bd);
-}
-
-static int
-idleCloseBoard(BoardData3d * bd3d)
-{
-    BoardData *bd = pIdleBD;
-    float elapsedTime = (float) (get_time() - animStartTime);
-    if (bd3d->State == BOARD_CLOSED) {  /* finished */
-        StopIdle3d(bd, bd->bd3d);
-#ifdef WIN32
-        Sleep(1000);
-#else
-        sleep(1);
-#endif
-        gtk_main_quit();
-
-        return 1;
-    }
-
-    bd3d->perOpen = (elapsedTime / 3000);
-    if (bd3d->perOpen >= 1) {
-        bd3d->perOpen = 1;
-        bd3d->State = BOARD_CLOSED;
-    }
-
-    return 1;
 }
 
 static int
@@ -2230,42 +1214,9 @@ EmptyPos(BoardData * bd)
 }
 
 void
-CloseBoard3d(BoardData * bd, BoardData3d * bd3d, renderdata * prd)
-{
-    bd3d->fBuffers = FALSE;
-    EmptyPos(bd);
-    bd3d->State = BOARD_CLOSED;
-    /* Turn off most things so they don't interfere when board closed/opening */
-    bd->cube_use = 0;
-    bd->colour = 0;
-    bd->direction = 1;
-    bd->resigned = 0;
-    fClockwise = 0;
-    GTKSuspendInput();
-
-    prd->showShadows = 0;
-    prd->showMoveIndicator = 0;
-    prd->fLabels = 0;
-    bd->diceShown = DICE_NOT_SHOWN;
-    bd3d->State = BOARD_CLOSING;
-
-    /* Random logo */
-    SetupSimpleMat(&bd3d->logoMat, 1.f, 1.f, 1.f);
-    SetTexture(bd3d, &bd3d->logoMat, TEXTURE_PATH "logo.png");
-
-    animStartTime = get_time();
-    bd3d->perOpen = 0;
-    setIdleFunc(bd, idleCloseBoard);
-    /* Push matrix as idleCloseBoard assumes last matrix is on stack */
-    glPushMatrix();
-
-    gtk_main();
-}
-
-void
 SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd)
 {
-    GLint viewport[4];
+    int viewport[4];
     float tempMatrix[16];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
@@ -2276,11 +1227,9 @@ SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata 
     SetupPerspVolume(bd, bd3d, prd, viewport);
 
     SetupLight3d(bd3d, prd);
-    calculateBackgroundSize(bd3d, viewport);
-    if (memcmp(tempMatrix, bd3d->modelMatrix, sizeof(float[16])))
-        RestrictiveRedraw();
 
-    RerenderBase(bd3d);
+	calculateBackgroundSize(bd3d, viewport);
+	CALL_OGL(bd3d->modelHolder.background, drawBackground, prd, bd3d->backGroundPos, bd3d->backGroundSize);	/* Update background to new size */
 }
 
 void
@@ -2309,7 +1258,7 @@ SetupMat(Material * pMat, float r, float g, float b, float dr, float dg, float d
     pMat->pTexture = NULL;
 }
 
-static void
+void
 SetupSimpleMatAlpha(Material * pMat, float r, float g, float b, float a)
 {
     SetupMat(pMat, r, g, b, r, g, b, 0.f, 0.f, 0.f, 0, a);
@@ -2385,24 +1334,18 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
 
     bd3d->shadowsInitialised = FALSE;
     bd3d->shadowsOutofDate = TRUE;
-    bd3d->State = BOARD_OPEN;
     bd3d->moving = 0;
     bd3d->shakingDice = 0;
     bd->drag_point = -1;
     bd->DragTargetHelp = 0;
-    bd3d->fBasePreRendered = FALSE;
 
     SetupSimpleMat(&bd3d->gapColour, 0.f, 0.f, 0.f);
     SetupMat(&bd3d->flagMat, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 50, 0.f);
     SetupMat(&bd3d->flagNumberMat, 0.f, 0.f, .4f, 0.f, 0.f, .4f, 1.f, 1.f, 1.f, 100, 1.f);
 
-    bd3d->diceList = bd3d->DCList = bd3d->pieceList = 0;
-    bd3d->qobjTex = bd3d->qobj = 0;
-
     bd3d->numTextures = 0;
 
-    bd3d->boardPoints = NULL;
-    bd3d->numberFont = bd3d->cubeFont = NULL;
+    bd3d->boardPoints.points = NULL;
 
     memset(bd3d->modelMatrix, 0, sizeof(float[16]));
 
@@ -2467,12 +1410,6 @@ MaterialGetTextureFilename(const Material * pMat)
 }
 
 extern void
-TidyCurveAccuracy3d(BoardData3d * bd3d, unsigned int accuracy)
-{
-    freeEigthPoints(&bd3d->boardPoints, accuracy);
-}
-
-extern void
 DrawScene3d(const BoardData3d * bd3d)
 {
     gtk_widget_queue_draw(bd3d->drawing_area3d);
@@ -2482,12 +1419,6 @@ extern int
 Animating3d(const BoardData3d * bd3d)
 {
     return (bd3d->shakingDice || bd3d->moving);
-}
-
-extern void
-RerenderBase(BoardData3d * bd3d)
-{
-    bd3d->fBasePreRendered = FALSE;
 }
 
 extern gboolean
@@ -2507,31 +1438,10 @@ display_is_2d(const renderdata * prd)
 
 extern void
 Draw3d(const BoardData * bd)
-{                               /* Render board: quick drawing, standard or 2 passes for shadows */
-#ifdef WIN32
-    GtkAllocation allocation;
-    gtk_widget_get_allocation(bd->bd3d->drawing_area3d, &allocation);
-
-    if (bd->bd3d->fBuffers) {
-        if (bd->bd3d->fBasePreRendered)
-            RestoreBufferRegion(bd->bd3d->wglBuffer, 0, 0, allocation.width, allocation.height);
-        else {
-            drawBasePreRender(bd, bd->bd3d, bd->rd);
-            bd->bd3d->fBasePreRendered = TRUE;
-        }
-
-        if (bd->rd->showShadows)
-            shadowDisplay(drawBoardTop, bd, bd->bd3d, bd->rd);
-        else
-            drawBoardTop(bd, bd->bd3d, bd->rd);
-    } else
-#endif
-    {
-        if (bd->rd->showShadows)
-            shadowDisplay(drawBoard, bd, bd->bd3d, bd->rd);
-        else
-            drawBoard(bd, bd->bd3d, bd->rd);
-    }
+{                               /* Render board: standard or 2 passes for shadows */
+	drawBoard(bd, bd->bd3d, bd->rd);
+	if (bd->rd->showShadows)
+		shadowDisplay(bd, bd->bd3d, bd->rd);
 }
 
 static int diceRollingSave;

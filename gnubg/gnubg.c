@@ -1037,10 +1037,6 @@ UpdateSettings(void)
     UpdateSetting(&ms.gs);
 
     ShowBoard();
-
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
 }
 
 /* handle turning a setting on / off
@@ -2520,10 +2516,6 @@ PromptForExit(void)
 
     playSound(SOUND_EXIT);
 
-#if defined(USE_BOARD3D)
-    if (fX && bd && display_is_3d(bd->rd) && bd->rd->closeBoardOnExit && bd->rd->fHinges3d)
-        CloseBoard3d(bd, bd->bd3d, bd->rd);
-#endif
     ProcessEvents();
 
     SoundWait();                /* Wait for sound to finish before final close */

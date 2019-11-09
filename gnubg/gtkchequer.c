@@ -147,9 +147,6 @@ ShowMove(hintdata * phd, const int f)
         g_free(sz);
 
     }
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
 }
 
 static void
@@ -431,10 +428,6 @@ MoveListMove(GtkWidget * pw, hintdata * phd)
 
     FormatMove(szMove, msBoard(), m.anMove);
     UserCommand(szMove);
-
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
 }
 
 static void

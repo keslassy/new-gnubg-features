@@ -1625,10 +1625,6 @@ GTKUndo(void)
 {
     BoardData *bd = BOARD(pwBoard)->board_data;
 
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
-
     if (bd->drag_point >= 0) {  /* Drop piece */
         GdkEventButton dummyEvent;
         dummyEvent.x = dummyEvent.y = 0;
@@ -1675,7 +1671,6 @@ SwitchDisplayMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         UpdateShadows(bd->bd3d);
         if (bd->diceShown == DICE_ON_BOARD)
             setDicePos(bd, bd3d);       /* Make sure dice appear ok */
-        RestrictiveRedraw();
 
         /* Needed for 2d dice+chequer widgets */
         board_free_pixmaps(bd);
@@ -3732,7 +3727,6 @@ Stop(GtkWidget * pw, gpointer UNUSED(unused))
         BoardData *bd = BOARD(pwBoard)->board_data;
         if (display_is_3d(bd->rd)) {
             StopIdle3d(bd, bd->bd3d);
-            RestrictiveRedraw();
         }
     }
 #endif
@@ -3748,7 +3742,6 @@ StopAnyAnimations(void)
     if (display_is_3d(bd->rd)) {
         if (Animating3d(bd->bd3d)) {
             StopIdle3d(bd, bd->bd3d);
-            RestrictiveRedraw();
             return TRUE;
         }
     } else
@@ -4374,7 +4367,6 @@ TutorEnd(GtkWidget * pw, int *pf)
 static void
 TutorHint(GtkWidget * pw, void *UNUSED(unused))
 {
-
     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
     UserCommand("hint");
 }
@@ -4382,13 +4374,8 @@ TutorHint(GtkWidget * pw, void *UNUSED(unused))
 static void
 TutorRethink(GtkWidget * pw, void *UNUSED(unused))
 {
-
-#if defined(USE_BOARD3D)
-    RestrictiveRedraw();
-#endif
     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
     ShowBoard();
-
 }
 
 extern int

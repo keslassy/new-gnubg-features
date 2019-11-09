@@ -2,16 +2,16 @@
 #include "config.h"
 #include "inc3d.h"
 
-#ifdef _MSC_VER
+#if _MSC_VER && !TEST_HARNESS
 // Not yet working...
 GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, void* data)
 { return NULL; }
 void GLWidgetMakeCurrent(GtkWidget* widget)
 {}
 gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* eventDetails, void* data)
-{ return GL_FALSE; }
+{ return 0; }
 gboolean GLInit(int* argc, char*** argv)
-{ return GL_FALSE; }
+{ return 0; }
 
 #else
 

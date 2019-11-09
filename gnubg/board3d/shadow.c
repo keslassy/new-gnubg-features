@@ -22,7 +22,11 @@
  */
 
 #include "config.h"
+#include "legacyGLinc.h"
 #include "inc3d.h"
+
+extern void
+DrawShadows(const BoardData3d* bd3d);
 
 static int midStencilVal;
 
@@ -35,8 +39,7 @@ ShadowsInitilised(const BoardData3d * bd3d)
 void
 shadowInit(BoardData3d * bd3d, renderdata * prd)
 {
-    int i;
-    GLint stencilBits;
+    int stencilBits;
 
     if (bd3d->shadowsInitialised)
         return;
@@ -44,8 +47,7 @@ shadowInit(BoardData3d * bd3d, renderdata * prd)
     /* Darkness as percentage of ambient light */
     prd->dimness = (float)(prd->lightLevels[1] * (100 - prd->shadowDarkness)) / (100.0f * 100.0f);
 
-    for (i = 0; i < NUM_OCC; i++)
-        bd3d->Occluders[i].handle = NULL;
+	initOccluders(bd3d);
 
     /* Check the stencil buffer is present */
     glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
@@ -90,25 +92,6 @@ draw_shadow_volume_extruded_edges( /*lint -e{818} */ Occluder * pOcc, const floa
     }
 }
 
-int renderingBase = FALSE;
-
-static void
-DrawShadows(const BoardData3d * bd3d)
-{
-    if (renderingBase) {
-        glCallList(bd3d->Occluders[OCC_BOARD].shadow_list);
-        if (bd3d->Occluders[OCC_HINGE1].show) {
-            glCallList(bd3d->Occluders[OCC_HINGE1].shadow_list);
-            glCallList(bd3d->Occluders[OCC_HINGE2].shadow_list);
-        }
-    } else {
-        for (int i = 0; i < NUM_OCC; i++) {
-            if (bd3d->Occluders[i].show)
-                glCallList(bd3d->Occluders[i].shadow_list);
-        }
-    }
-}
-
 static void
 draw_shadow_volume_to_stencil(const BoardData3d * bd3d)
 {
@@ -121,7 +104,7 @@ draw_shadow_volume_to_stencil(const BoardData3d * bd3d)
     glDepthMask(GL_FALSE);
 
     /* Z-pass approach */
-    glStencilFunc(GL_ALWAYS, midStencilVal, (GLuint) ~ 0u);
+    glStencilFunc(GL_ALWAYS, midStencilVal, (unsigned int) ~ 0u);
 
     glCullFace(GL_FRONT);
     glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
@@ -140,23 +123,19 @@ draw_shadow_volume_to_stencil(const BoardData3d * bd3d)
 }
 
 void
-shadowDisplay(void (*drawScene) (const BoardData *, const BoardData3d *, const renderdata *), const BoardData * bd,
-              const BoardData3d * bd3d, const renderdata * prd)
+shadowDisplay(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd)
 {
-    /* Pass 1: Draw model, ambient light only (some diffuse to vary shadow darkness) */
     float zero[4] = { 0, 0, 0, 0 };
     float d1[4];
     float specular[4];
     float diffuse[4];
 
-    drawScene(bd, bd3d, prd);
-
-    /* Create shadow volume in stencil buffer */
+	/* Create shadow volume in stencil buffer */
     glEnable(GL_STENCIL_TEST);
     draw_shadow_volume_to_stencil(bd3d);
 
-    /* Pass 2: Redraw model, full light in non-shadowed areas */
-    glStencilFunc(GL_NOTEQUAL, midStencilVal, (GLuint) ~ 0);
+    /* Pass 2: Redraw model, dim light in shadowed areas */
+    glStencilFunc(GL_NOTEQUAL, midStencilVal, (unsigned int) ~ 0);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
     glGetLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
@@ -166,10 +145,7 @@ shadowDisplay(void (*drawScene) (const BoardData *, const BoardData3d *, const r
     glGetLightfv(GL_LIGHT0, GL_SPECULAR, specular);
     glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 
-    if (renderingBase)
-        drawScene(bd, bd3d, prd);
-    else
-        drawBoard(bd, bd3d, prd);
+	drawBoard(bd, bd3d, prd);
 
     glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);

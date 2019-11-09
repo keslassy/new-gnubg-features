@@ -1,3 +1,7 @@
+Sat Nov 09 22:03:45 2019 Jon Kinsey <JonKinsey@gmail.com>
+	* Refactor 3d code, change drawboard3d to use a model rather than immediate mode OpenGL calls
+	* Code split into several new files, also removed quickdraw and closing board animations
+
 Thu Oct 31 19:03:45 2019 Jon Kinsey <JonKinsey@gmail.com>
 	* Add GLWidget.c : Put gtkglext specific code in GLwidget.c
 

@@ -827,8 +827,6 @@ board_start_drag(GtkWidget * UNUSED(widget), BoardData * bd, int
     if (display_is_3d(bd->rd)) {
         SetMovingPieceRotation(bd, bd->bd3d, bd->drag_point);
         updatePieceOccPos(bd, bd->bd3d);
-        if (bd->rd->quickDraw)
-            RestrictiveStartMouseMove(drag_point, abs(bd->points[drag_point] + bd->drag_colour));
     } else
 #endif
     {
@@ -1267,12 +1265,6 @@ place_chequer_or_revert(BoardData * bd, int dest)
     board_invalidate_point(bd, placed ? dest : source);
 
 #if defined(USE_BOARD3D)
-    if (display_is_3d(bd->rd) && bd->rd->quickDraw) {
-        if (placed)
-            RestrictiveEndMouseMove(dest, abs(bd->points[dest]));
-        if (placed && hit)
-            RestrictiveDrawPiece(bar, abs(bd->points[bar]));
-    }
     if (placed && display_is_3d(bd->rd))
         PlaceMovingPieceRotation(bd, bd->bd3d, dest, source);
 #endif
@@ -1474,9 +1466,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
             write_board(bd, anBoard);
         }
 #if defined(USE_BOARD3D)
-        if (display_is_3d(bd->rd))
-            RestrictiveRedraw();
-        else
+        if (!display_is_3d(bd->rd))
 #endif
            {
                 board_invalidate_cube(bd);
@@ -1568,9 +1558,7 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
     }
 
 #if defined(USE_BOARD3D)
-    if (display_is_3d(bd->rd))
-        RestrictiveRedraw();
-    else
+    if (!display_is_3d(bd->rd))
 #endif
     {
         board_invalidate_point(bd, n);
@@ -1630,18 +1618,6 @@ GreedyBearoff(TanBoard anBoard, unsigned int anDice[2])
 
 }
 
-#if defined(USE_BOARD3D)
-static void
-RestrictiveDrawTargetHelp(BoardData * bd)
-{
-    int i;
-    for (i = 0; i < 4; i++) {
-        if (bd->iTargetHelpPoints[i] != -1)
-            RestrictiveDrawPiece(bd->iTargetHelpPoints[i], abs(bd->points[bd->iTargetHelpPoints[i]]) + 1);
-    }
-}
-#endif
-
 extern int
 UpdateMove(BoardData * bd, TanBoard anBoard)
 {
@@ -1666,16 +1642,6 @@ UpdateMove(BoardData * bd, TanBoard anBoard)
     /* Show move */
 #if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
-        if (bd->rd->quickDraw) {
-            int k;
-            for (i = 0; i < j; ++i) {
-                int min = MIN(abs(old_points[an[i]]), abs(bd->points[an[i]]));
-                int max = MAX(abs(old_points[an[i]]), abs(bd->points[an[i]]));
-                min = MIN(min, max - 1);        /* huffed - no change in number of chequers */
-                for (k = min + 1; k <= max; k++)
-                    RestrictiveDrawPiece(an[i], k);
-            }
-        }
         updatePieceOccPos(bd, bd->bd3d);
         DrawScene3d(bd->bd3d);
     } else
@@ -1996,19 +1962,6 @@ board_button_press(GtkWidget * board, GdkEventButton * event, BoardData * bd)
                 if (!update_move(bd)) { /* Show Move */
 #if defined(USE_BOARD3D)
                     if (display_is_3d(bd->rd)) {
-                        if (bd->rd->quickDraw) {        /* Redraw 2 start positions, end position and perhaps bar */
-                            RestrictiveDrawPiece(n[0], abs(bd->points[n[0]]) + 1);
-                            if (n[0] == n[1])
-                                RestrictiveDrawPiece(n[0], abs(bd->points[n[0]]) + 2);
-                            else
-                                RestrictiveDrawPiece(n[1], abs(bd->points[n[1]]) + 1);
-
-                            RestrictiveDrawPiece(bd->drag_point, abs(bd->points[bd->drag_point]));
-                            RestrictiveDrawPiece(bd->drag_point, abs(bd->points[bd->drag_point]) - 1);
-
-                            if (old_points[bd->drag_point])
-                                RestrictiveDrawPiece(bar, abs(bd->points[bar]));
-                        }
                         updatePieceOccPos(bd, bd->bd3d);
                         gtk_widget_queue_draw(board);
                     } else
@@ -2135,10 +2088,6 @@ board_button_release(GtkWidget * board, GdkEventButton * event, BoardData * bd)
         if (release_point >= 0)
             board_invalidate_point(bd, release_point);
         board_beep(bd);
-#if defined(USE_BOARD3D)
-        if (display_is_3d(bd->rd) && bd->rd->quickDraw)
-            RestrictiveEndMouseMove(bd->drag_point, abs(bd->points[bd->drag_point]));
-#endif
     }
 
 #if defined(USE_BOARD3D)
@@ -2146,10 +2095,6 @@ board_button_release(GtkWidget * board, GdkEventButton * event, BoardData * bd)
         /* Update 3d Display */
         updatePieceOccPos(bd, bd->bd3d);
         gtk_widget_queue_draw(board);
-
-        /* undo drag target help if quick drawing */
-        if (bd->rd->quickDraw && fGUIDragTargetHelp && bd->DragTargetHelp)
-            RestrictiveDrawTargetHelp(bd);
     } else
 #endif
     {
@@ -2198,11 +2143,6 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
         if ((ap[bd->drag_colour == -1 ? 0 : 1].pt == PLAYER_HUMAN)      /* not for computer turn */
             &&gdk_event_get_time((GdkEvent *) event) - bd->click_time > HINT_TIME) {
             bd->DragTargetHelp = legal_dest_points(bd, bd->iTargetHelpPoints);
-
-#if defined(USE_BOARD3D)
-            if (bd->rd->quickDraw && fGUIDragTargetHelp && bd->DragTargetHelp)
-                RestrictiveDrawTargetHelp(bd);
-#endif
         }
     }
 #if defined(USE_BOARD3D)
@@ -2594,10 +2534,6 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
             }
             bd->diceShown = DICE_ON_BOARD;
         }
-#if defined(USE_BOARD3D)
-        if (display_is_3d(bd->rd) && bd->rd->quickDraw)
-            RestrictiveDrawDice(bd);
-#endif
     }
 
     if (bd->diceShown == DICE_ON_BOARD) {
@@ -2621,13 +2557,6 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
             /* Make sure flag shadow is correct if players are swapped when resigned */
             if (bd->resigned)
                 updateFlagOccPos(bd, bd->bd3d);
-
-            if (bd->rd->quickDraw) {
-                if (bd->rd->fDynamicLabels)
-                    RestrictiveDrawBoardNumbers(bd->bd3d);
-                if (bd->rd->showMoveIndicator)
-                    RestrictiveDrawMoveIndicator(bd);
-            }
         }
 #endif
         redrawNeeded = 1;
@@ -2649,8 +2578,6 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
 #if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd)) {
             SetupViewingVolume3d(bd, bd->bd3d, bd->rd); /* Cube may be out of top of screen */
-            if (bd->rd->quickDraw)
-                RestrictiveDrawCube(bd, old_doubled, old_cube_owner);
         } else
 #endif
         {
@@ -2922,9 +2849,6 @@ extern void
 board_animate(Board * board, int move[8], int player)
 {
     if (animGUI == ANIMATE_NONE || ms.fResigned) {
-#if defined(USE_BOARD3D)
-        RestrictiveRedraw();
-#endif
         return;
     }
 
@@ -3437,7 +3361,6 @@ board_edit(BoardData * bd)
 
 #if defined(USE_BOARD3D)
     if (display_is_3d(bd->rd)) {
-        RerenderBase(bd->bd3d);
         DrawScene3d(bd->bd3d);
     } else
 #endif

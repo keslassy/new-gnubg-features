@@ -45,9 +45,6 @@ static Warning warnings[WARN_NUM_WARNINGS] = {
      N_("Press escape to exit full screen mode"),
      "fullscreenexit", TRUE, FALSE},
     {
-     N_("This option will speed up the 3D drawing, but may not work correctly on all machines"),
-     "quickdraw", TRUE, FALSE},
-    {
      N_("Drawing shadows is only supported on the latest graphics cards\n"
         "Disable this option if performance is poor"),
      "shadows", TRUE, FALSE},

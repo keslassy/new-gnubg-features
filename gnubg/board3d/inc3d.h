@@ -31,24 +31,6 @@
 #include <unistd.h>
 #endif
 
-#if defined(WIN32)
-/* MS gl.h needs windows.h to be included first */
-#include <winsock2.h>
-#include <windows.h>
-#endif
-
-#if defined(USE_APPLE_OPENGL)
-#include <gl.h>
-#include <glu.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-
-#if defined(HAVE_GL_GLX_H)
-#include <GL/glx.h>             /* x-windows file */
-#endif
-
 #include "fun3d.h"
 #include "matrix.h"
 #include "gtkwindows.h"
@@ -60,27 +42,7 @@
 #define zNear .1
 #define zFar 70.0
 
-extern int numRestrictFrames;
-extern int renderingBase;
-
 extern gboolean gtk_gl_init_success;
-
-typedef enum _BoardState {
-    BOARD_CLOSED, BOARD_CLOSING, BOARD_OPENING, BOARD_OPEN
-} BoardState;
-
-/* Font info */
-
-#define FONT_PITCH 24
-#define FONT_SIZE (base_unit / 20.0f)
-#define FONT_HEIGHT_RATIO 1.f
-
-#define CUBE_FONT_PITCH 34
-#define CUBE_FONT_SIZE (base_unit / 24.0f)
-#define CUBE_FONT_HEIGHT_RATIO 1.25f
-
-#define FONT_VERA "fonts/Vera.ttf"
-#define FONT_VERA_SERIF_BOLD "fonts/VeraSeBd.ttf"
 
 /* Animation paths */
 #define MAX_PATHS 3
@@ -96,17 +58,6 @@ struct _Path {
     int numSegments;
 };
 
-enum OcculderType { OCC_BOARD, OCC_CUBE, OCC_DICE1, OCC_DICE2, OCC_FLAG, OCC_HINGE1, OCC_HINGE2, OCC_PIECE };
-#define FIRST_PIECE (int)OCC_PIECE
-#define LAST_PIECE ((int)OCC_PIECE + 29)
-#define NUM_OCC (LAST_PIECE + 1)
-
-struct _Texture {
-    unsigned int texID;
-    int width;
-    int height;
-};
-
 #define FILENAME_SIZE 15
 #define NAME_SIZE 20
 
@@ -118,6 +69,9 @@ struct _TextureInfo {
 
 struct _BoardData3d {
     GtkWidget *drawing_area3d;  /* main 3d widget */
+
+	/* Store models for each board part */
+	OglModelHolder modelHolder;
 
     /* Bit of a hack - assign each possible position a set rotation */
     int pieceRotation[28][15];
@@ -131,7 +85,6 @@ struct _BoardData3d {
     /* Store how "big" the screen maps to in 3d */
     float backGroundPos[2], backGroundSize[2];
 
-    BoardState State;           /* Open/closed board */
     float perOpen;              /* Percentage open when opening/closing board */
 
     int moving;                 /* Is a piece moving (animating) */
@@ -149,28 +102,20 @@ struct _BoardData3d {
 
     float flagWaved;            /* How much has flag waved */
 
-    OGLFont *numberFont, *cubeFont;     /* OpenGL fonts */
+	OGLFont numberFont, cubeFont;     /* OpenGL fonts */
 
     /* Saved viewing values (used for picking) */
     double vertFrustrum, horFrustrum;
     float modelMatrix[16];
 
-    /* Display list ids and quadratics */
-    GLuint diceList, DCList, pieceList, piecePickList;
-    GLUquadricObj *qobjTex, *qobj;
-
     /* Shadow casters */
-    Occluder Occluders[NUM_OCC];
+    Occluder Occluders[/*NUM_OCC*/37];
     float shadow_light_position[4];
     int shadowsInitialised;
-    int fBasePreRendered;
     int fBuffers;
     int shadowsOutofDate;
 
-    float ***boardPoints;       /* Used for rounded corners */
-#ifdef WIN32
-    HANDLE wglBuffer;
-#endif
+	EigthPoints boardPoints;       /* Used for rounded corners */
 
     /* Textures */
 #define MAX_TEXTURES 10
@@ -178,17 +123,6 @@ struct _BoardData3d {
     char *textureName[MAX_TEXTURES];
     int numTextures;
     unsigned int dotTexture;    /* Holds texture used to draw dots on dice */
-};
-
-struct _Flag3d {
-    /* Define nurbs surface - for flag */
-    GLUnurbsObj *flagNurb;
-#define S_NUMPOINTS 4
-#define S_NUMKNOTS (S_NUMPOINTS * 2)
-#define T_NUMPOINTS 2
-#define T_NUMKNOTS (T_NUMPOINTS * 2)
-    /* Control points for the flag. The Z values are modified to make it wave */
-    float ctlpoints[S_NUMPOINTS][T_NUMPOINTS][3];
 };
 
 extern struct _Flag3d flag;
@@ -215,12 +149,6 @@ extern struct _Flag3d flag;
 /* Draw board parts (boxes) specially */
 enum { /*boxType */ BOX_ALL = 0, BOX_NOSIDES = 1, BOX_NOENDS = 2, BOX_SPLITTOP = 4, BOX_SPLITWIDTH = 8 };
 
-struct _ClipBox {
-    float x;
-    float y;
-    float xx;
-    float yy;
-};
 /* functions used in test harness (static in gnubg) */
 #ifndef TEST_HARNESS
 #define NTH_STATIC static
@@ -236,30 +164,6 @@ extern void setupDicePaths(const BoardData * bd, Path dicePaths[2], float diceMo
                            DiceRotation diceRotation[2]);
 extern void waveFlag(float wag);
 
-/* Helper functions in misc3d */
-void cylinder(float radius, float height, unsigned int accuracy, const Texture * texture);
-void circle(float radius, float height, unsigned int accuracy);
-void circleRev(float radius, float height, unsigned int accuracy);
-void circleTex(float radius, float height, unsigned int accuracy, const Texture * texture);
-void circleRevTex(float radius, float height, unsigned int accuracy, const Texture * texture);
-void circleOutlineOutward(float radius, float height, unsigned int accuracy);
-void circleOutline(float radius, float height, unsigned int accuracy);
-void circleSloped(float radius, float startHeight, float endHeight, unsigned int accuracy);
-void drawBox(int type, float x, float y, float z, float w, float h, float d, const Texture * texture);
-void drawCube(float size);
-void drawRect(float x, float y, float z, float w, float h, const Texture * texture);
-void drawSplitRect(float x, float y, float z, float w, float h, const Texture * texture);
-void drawChequeredRect(float x, float y, float z, float w, float h, int across, int down, const Texture * texture);
-void QuarterCylinder(float radius, float len, unsigned int accuracy, const Texture * texture);
-void QuarterCylinderSplayed(float radius, float len, unsigned int accuracy, const Texture * texture);
-void QuarterCylinderSplayedRev(float radius, float len, unsigned int accuracy, const Texture * texture);
-void drawCornerEigth(float **const *boardPoints, float radius, unsigned int accuracy);
-void calculateEigthPoints(float ****boardPoints, float radius, unsigned int accuracy);
-void drawBoardTop(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd);
-#ifdef WIN32
-void drawBasePreRender(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd);
-#endif
-
 /* Other functions */
 void initPath(Path * p, const float start[3]);
 void addPathSegment(Path * p, PathType type, const float point[3]);
@@ -273,5 +177,17 @@ void GLWidgetMakeCurrent(GtkWidget* widget);
 gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* eventDetails, void* data);
 gboolean GLInit(int* argc, char*** argv);
 
+// Functions required for 3d test harness
+void SetupSimpleMatAlpha(Material* pMat, float r, float g, float b, float a);
+int movePath(Path* p, float d, float* rotate, float v[3]);
+
+extern int DiceShowing(const BoardData* bd);
+extern void getFlagPos(const BoardData* bd, float v[3]);
+extern void getDicePos(const BoardData* bd, int num, float v[3]);
+extern void getDoubleCubePos(const BoardData* bd, float v[3]);
+extern void TidyShadows(BoardData3d* bd3d);
+extern void MakeShadowModel(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd);
+extern void initOccluders(BoardData3d* bd3d);
+extern void UpdateShadowLightPosition(BoardData3d* bd3d, float lp[4]);
 
 #endif

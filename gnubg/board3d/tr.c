@@ -55,6 +55,7 @@
  */
 
 #include "config.h"
+#include "legacyGLinc.h"
 #include "inc3d.h"
 #include "tr.h"
 
@@ -65,14 +66,14 @@
 
 struct _TRctx {
     /* Final image parameters */
-    GLint ImageWidth, ImageHeight;
+    int ImageWidth, ImageHeight;
     GLenum ImageFormat, ImageType;
     GLvoid *ImageBuffer;
 
     /* Tile parameters */
-    GLint TileWidth, TileHeight;
-    GLint TileWidthNB, TileHeightNB;
-    GLint TileBorder;
+    int TileWidth, TileHeight;
+    int TileWidthNB, TileHeightNB;
+    int TileBorder;
     GLenum TileFormat, TileType;
     GLvoid *TileBuffer;
 
@@ -87,12 +88,12 @@ struct _TRctx {
 
     /* Misc */
     TRenum RowOrder;
-    GLint Rows, Columns;
-    GLint CurrentTile;
-    GLint CurrentTileWidth, CurrentTileHeight;
-    GLint CurrentRow, CurrentColumn;
+    int Rows, Columns;
+    int CurrentTile;
+    int CurrentTileWidth, CurrentTileHeight;
+    int CurrentRow, CurrentColumn;
 
-    GLint ViewportSave[4];
+    int ViewportSave[4];
 };
 
 
@@ -145,7 +146,7 @@ trDelete(TRcontext * tr)
 
 
 void
-trTileSize(TRcontext * tr, GLint width, GLint height, GLint border)
+trTileSize(TRcontext * tr, int width, int height, int border)
 {
     if (!tr)
         return;
@@ -180,7 +181,7 @@ trTileBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image)
 
 
 void
-trImageSize(TRcontext * tr, GLuint width, GLuint height)
+trImageSize(TRcontext * tr, unsigned int width, unsigned int height)
 {
     if (!tr)
         return;
@@ -203,7 +204,7 @@ trImageBuffer(TRcontext * tr, GLenum format, GLenum type, GLvoid * image)
 }
 
 #if 0
-GLint
+int
 trGet(const TRcontext * tr, TRenum param)
 {
     if (!tr)
@@ -239,7 +240,7 @@ trGet(const TRcontext * tr, TRenum param)
     case TR_CURRENT_TILE_HEIGHT:
         return tr->CurrentTileHeight;
     case TR_ROW_ORDER:
-        return (GLint) tr->RowOrder;
+        return (int) tr->RowOrder;
     case TR_TOP_TO_BOTTOM:
         return tr->RowOrder == TR_TOP_TO_BOTTOM;
     case TR_BOTTOM_TO_TOP:
@@ -308,8 +309,8 @@ trPerspective(TRcontext * tr, GLdouble fovy, GLdouble aspect, GLdouble znear, GL
 void
 trBeginTile(TRcontext * tr)
 {
-    GLint matrixMode;
-    GLint tileWidth, tileHeight, border;
+    int matrixMode;
+    int tileWidth, tileHeight, border;
     GLdouble left, right, bottom, top;
 
     if (!tr)
@@ -379,7 +380,7 @@ trBeginTile(TRcontext * tr)
 int
 trEndTile(TRcontext * tr)
 {
-    GLint prevRowLength, prevSkipRows, prevSkipPixels;  /*, prevAlignment; */
+    int prevRowLength, prevSkipRows, prevSkipPixels;  /*, prevAlignment; */
 
     if (!tr)
         return 0;
@@ -396,20 +397,20 @@ trEndTile(TRcontext * tr)
     /*glGetIntegerv(GL_PACK_ALIGNMENT, &prevAlignment); */
 
     if (tr->TileBuffer) {
-        GLint srcX = tr->TileBorder;
-        GLint srcY = tr->TileBorder;
-        GLint srcWidth = tr->TileWidthNB;
-        GLint srcHeight = tr->TileHeightNB;
+        int srcX = tr->TileBorder;
+        int srcY = tr->TileBorder;
+        int srcWidth = tr->TileWidthNB;
+        int srcHeight = tr->TileHeightNB;
         glReadPixels(srcX, srcY, srcWidth, srcHeight, tr->TileFormat, tr->TileType, tr->TileBuffer);
     }
 
     if (tr->ImageBuffer) {
-        GLint srcX = tr->TileBorder;
-        GLint srcY = tr->TileBorder;
-        GLint srcWidth = tr->CurrentTileWidth - 2 * tr->TileBorder;
-        GLint srcHeight = tr->CurrentTileHeight - 2 * tr->TileBorder;
-        GLint destX = tr->TileWidthNB * tr->CurrentColumn;
-        GLint destY = tr->TileHeightNB * tr->CurrentRow;
+        int srcX = tr->TileBorder;
+        int srcY = tr->TileBorder;
+        int srcWidth = tr->CurrentTileWidth - 2 * tr->TileBorder;
+        int srcHeight = tr->CurrentTileHeight - 2 * tr->TileBorder;
+        int destX = tr->TileWidthNB * tr->CurrentColumn;
+        int destY = tr->TileHeightNB * tr->CurrentRow;
 
         /* setup pixel store for glReadPixels */
         glPixelStorei(GL_PACK_ROW_LENGTH, tr->ImageWidth);
@@ -451,7 +452,7 @@ trRasterPos3d(const TRcontext * tr, GLdouble x, GLdouble y, GLdouble z)
         glRasterPos3d(x, y, z);
     } else {
         GLdouble modelview[16], proj[16];
-        GLint viewport[4];
+        int viewport[4];
         GLdouble winX, winY, winZ;
 
         /* Get modelview, projection and viewport */

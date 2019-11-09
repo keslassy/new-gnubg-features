@@ -22,6 +22,11 @@
  */
 
 #include "config.h"
+
+#include <windows.h>
+#include <gl/gl.h>
+#include <GL/glu.h>
+
 #include "inc3d.h"
 #include "gtklocdefs.h"
 
