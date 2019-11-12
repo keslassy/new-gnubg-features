@@ -35,7 +35,10 @@ endif
 
 EXTRA_DIST = wglBuffer.c wglBuffer.h
 
-libboard3d_la_SOURCES = DrawOGL.c font3dOGL.c ModelOGL.c Occluders.c PickOGL.c ShimOGL.c GLwidget.c drawboard3d.c font3d.c fun3d.h graph.c gtkcolour3d.c \
+libboard3d_la_SOURCES = DrawOGL.c font3dOGL.c ModelOGL.c Occluders.c PickOGL.c \
+			ShimOGL.c ShimOGL.h legacyGLinc.h BoardDimensions.h \
+			Shapes.inc GLwidget.c \
+			drawboard3d.c font3d.c fun3d.h graph.c gtkcolour3d.c \
 			inc3d.h matrix.c matrix.h misc3d.c model.c model.h \
 			shadow.c types3d.h widget3d.c tr.c tr.h
 			
