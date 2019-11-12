@@ -1,13 +1,11 @@
 /*
- * gtkcolour3d.c
- * by Jon Kinsey, 2003
+ * Copyright (C) 2003-2019 Jon Kinsey <jonkinsey@gmail.com
+ * Copyright (C) 2006-2011 the AUTHORS
  *
- * 3D colour selection dialog and preview area
- *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,16 +13,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
 
 #include "config.h"
 
+#if defined(WIN32)
 #include <windows.h>
 #include <gl/gl.h>
+#endif
 #include <GL/glu.h>
 
 #include "inc3d.h"
