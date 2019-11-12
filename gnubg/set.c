@@ -1,11 +1,11 @@
 /*
- * set.c
+ * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 1999-2019 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 1999, 2000, 2001, 2002.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,15 +13,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
 
 #include "config.h"
 
-#ifdef WIN32
+#if defined(WIN32)
 /* Needed for thread priority defines */
 #include <winsock2.h>
 #include <windows.h>
@@ -37,7 +36,7 @@
 #endif                          /* HAVE_SYS_RESOURCE_H */
 
 #if defined(HAVE_SOCKETS)
-#ifndef WIN32
+#if !defined(WIN32)
 
 #if defined(HAVE_SYS_SOCKET_H)
 #include <sys/types.h>
@@ -47,10 +46,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#else                           /* #ifndef WIN32 */
+#else                           /* WIN32 */
 #include <winsock2.h>
-#endif                          /* #ifndef WIN32 */
-#endif                          /* #if HAVE_SOCKETS */
+#endif                          /* WIN32 */
+#endif                          /* HAVE_SOCKETS */
 
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
@@ -740,14 +739,8 @@ CommandSetClockwise(char *sz)
               _("Player 1 moves anticlockwise (and " "player 0 moves clockwise)."));
 
 #if defined(USE_GTK)
-    if (fX) {
-#if defined(USE_BOARD3D)
-        BoardData *bd = BOARD(pwBoard)->board_data;
+    if (fX)
         ShowBoard();
-#else
-        ShowBoard();
-#endif
-    }
 #endif                          /* USE_GTK */
 }
 
