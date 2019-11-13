@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Jon Kinsey <jonkinsey@gmail.com
+ * Copyright (C) 2019 Jon Kinsey <jonkinsey@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,17 @@
  *
  * $Id$
  */
+
+/*
+ * Shapes.inc is included by multiple .c files, but not every function
+ * defined here is used in each of them. Silence numerous warnings raised
+ * by the common -Wall -Wextra flags
+ */
+
+#if defined(__clang__) || defined(__GNUC__) && ( __GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL >= 40604 )
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 
 static void
 drawRect(float x, float y, float z, float w, float h, const Texture* texture)
@@ -883,3 +894,7 @@ drawCube(float size)
 
     glPopMatrix();
 }
+
+#if defined(__clang__) || defined(__GNUC__) && ( __GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL >= 40604 )
+#pragma GCC diagnostic pop
+#endif
