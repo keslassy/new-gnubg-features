@@ -2,7 +2,7 @@
 #include "config.h"
 #include "legacyGLinc.h"
 #include <stdlib.h>
-#include "types3d.h"
+#include "fun3d.h"
 
 extern void InitMatStacks();
 

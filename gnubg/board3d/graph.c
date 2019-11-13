@@ -20,15 +20,8 @@
 
 
 #include "config.h"
-
-#if defined(WIN32)
-#include <windows.h>
-#include <gl/gl.h>
-#endif
-#include <GL/glu.h>
-
-#include "inc3d.h"
-
+#include "legacyGLinc.h"
+#include "fun3d.h"
 #include "renderprefs.h"
 #include "gtklocdefs.h"
 

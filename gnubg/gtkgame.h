@@ -184,7 +184,6 @@ extern void ProcessInput(char *sz);
 
 #if defined(USE_BOARD3D)
 extern void SetSwitchModeMenuText(void);
-#include "inc3d.h"
 #endif
 
 #endif

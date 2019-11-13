@@ -29,10 +29,6 @@
 #include "render.h"
 #include "gtklocdefs.h"
 
-#if defined(USE_BOARD3D)
-#include "types3d.h"
-#endif
-
 #define TYPE_BOARD			(board_get_type ())
 #define BOARD(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_BOARD, Board))
 #define BOARD_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_BOARD, BoardClass))

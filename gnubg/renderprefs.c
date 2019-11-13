@@ -33,7 +33,7 @@
 #include "gtkgame.h"
 #endif
 #if defined(USE_BOARD3D)
-#include "fun3d.h"
+#include "inc3d.h"
 #endif
 
 const char *aszWoodName[] = {
@@ -356,7 +356,7 @@ check_for_board3d(char *szValue)
 {
     if (*szValue == '2')
         return DT_2D;
-    else if (!fX || gtk_gl_init_success)
+    else if (!fX || widget3dValid)
         return DT_3D;
     return DT_2D;
 }

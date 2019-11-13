@@ -76,15 +76,19 @@
 #include "rollout.h"
 #include "util.h"
 #if defined(USE_BOARD3D)
-#include "fun3d.h"
+#include "inc3d.h"
 #endif
 #include "gnubgstock.h"
 
 #define KEY_ESCAPE -229
 
-#if defined(USE_BOARD3D) && !defined(USE_GTKUIMANAGER)
-/* Offset action to avoid predefined values */
-#define MENU_OFFSET 50
+#if defined(USE_BOARD3D)
+	gboolean widget3dValid;
+
+	#if !defined(USE_GTKUIMANAGER)
+		/* Offset action to avoid predefined values */
+		#define MENU_OFFSET 50
+	#endif
 #endif
 
 #if defined(USE_GTKUIMANAGER)
@@ -1653,7 +1657,7 @@ SetSwitchModeMenuText(void)
     else
         text = _("Switch to 2D view");
     gtk_label_set_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(pMenuItem))), text);
-    gtk_widget_set_sensitive(pMenuItem, gtk_gl_init_success);
+    gtk_widget_set_sensitive(pMenuItem, widget3dValid);
 }
 
 static void
@@ -4129,7 +4133,7 @@ InitGTK(int *argc, char ***argv)
     gnubg_stock_init();
 
 #if defined(USE_BOARD3D)
-    InitGTK3d(argc, argv);
+	widget3dValid = InitGTK3d(argc, argv);
 #endif
 
     /*add two xpm based icons */
@@ -7742,4 +7746,19 @@ MoveListDestroy(void)
         gtk_widget_destroy(pwMoveAnalysis);
         pwMoveAnalysis = NULL;
     }
+}
+
+extern gboolean
+display_is_3d(const renderdata* prd)
+{
+	g_assert(prd->fDisplayType == DT_2D || (prd->fDisplayType == DT_3D && widget3dValid));
+	return (prd->fDisplayType == DT_3D);
+}
+
+extern gboolean
+display_is_2d(const renderdata* prd)
+{
+	displaytype fdt = prd->fDisplayType;
+	g_assert(fdt == DT_2D || fdt == DT_3D);
+	return (fdt == DT_2D ? TRUE : FALSE);
 }

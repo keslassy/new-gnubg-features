@@ -34,6 +34,7 @@ char *docdir = NULL;
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
+#include <direct.h>
 
 /* Default build on WIN32, including msys, installs something not
  * nearly usable as is (it is rather destined to be repackaged in a
@@ -80,7 +81,19 @@ getDataDir(void)
             int pos = MAX(pos1, pos2);
             if (pos > 0)
                 buf[pos] = '\0';
+
             datadir = g_strdup(buf);
+
+			char* testFile = BuildFilename("gnubg.weights");
+			if (access(testFile, F_OK) != 0) {
+				if (_getcwd(buf, FILENAME_MAX) != 0) {	// Try the current working directory instead
+					g_free(pkg_datadir);
+					pkg_datadir = NULL;	// Reset this (set in BuildFilename)
+					g_free(datadir);
+					datadir = g_strdup(buf);
+				}
+			}
+			g_free(testFile);
         }
 #endif
     }

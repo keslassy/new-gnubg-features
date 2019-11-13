@@ -23,7 +23,7 @@
 
 #include "config.h"
 
-#include "inc3d.h"
+#include "fun3d.h"
 #include "util.h"
 
 #include <ft2build.h>

@@ -80,7 +80,7 @@
 #include "openurl.h"
 
 #if defined(USE_BOARD3D)
-#include "fun3d.h"
+#include "inc3d.h"
 #endif
 #include "multithread.h"
 

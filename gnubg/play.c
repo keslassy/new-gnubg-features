@@ -44,7 +44,7 @@
 #include "gtkwindows.h"
 #endif
 #if defined(USE_BOARD3D)
-#include "fun3d.h"
+#include "inc3d.h"
 #endif
 
 static moverecord *pmr_hint = NULL;

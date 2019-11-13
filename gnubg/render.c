@@ -47,7 +47,7 @@
 #endif
 
 #if defined(USE_BOARD3D)
-#include "fun3d.h"
+#include "inc3d.h"
 #endif
 
 static randctx rc;
@@ -202,13 +202,18 @@ static renderdata rdDefault = {
 static inline unsigned char
 clamp(float f)
 {
-
     if (f < 0.0f)
         return 0;
     else if (f > 255.0f)
         return 0xFF;
     else
         return (unsigned char) f;
+}
+
+static inline unsigned char
+iclamp(unsigned int f)
+{
+	return clamp((float)f);
 }
 
 static int
@@ -393,9 +398,9 @@ AlphaBlendBase(unsigned char *puchDest, int nDestStride,
         for (x = cx; x; x--) {
             unsigned int a = puchFore[3];
 
-            *puchDest++ = clamp((*puchBack++ * a) / 0xFF + *puchFore++);
-            *puchDest++ = clamp((*puchBack++ * a) / 0xFF + *puchFore++);
-            *puchDest++ = clamp((*puchBack++ * a) / 0xFF + *puchFore++);
+			*puchDest++ = iclamp((*puchBack++ * a) / 0xFF + *puchFore++);
+            *puchDest++ = iclamp((*puchBack++ * a) / 0xFF + *puchFore++);
+            *puchDest++ = iclamp((*puchBack++ * a) / 0xFF + *puchFore++);
             puchFore++;         /* skip the alpha channel */
         }
         puchDest += nDestStride;
@@ -469,9 +474,9 @@ AlphaBlend2(unsigned char *puchDest, int nDestStride,
         for (x = cx; x; x--) {
             unsigned int a = puchFore[3];
 
-            *puchDest++ = clamp((*puchBack++ * (0xFF - a)) / 0xFF + (*puchFore++ * a) / 0xFF);
-            *puchDest++ = clamp((*puchBack++ * (0xFF - a)) / 0xFF + (*puchFore++ * a) / 0xFF);
-            *puchDest++ = clamp((*puchBack++ * (0xFF - a)) / 0xFF + (*puchFore++ * a) / 0xFF);
+            *puchDest++ = iclamp((*puchBack++ * (0xFF - a)) / 0xFF + (*puchFore++ * a) / 0xFF);
+            *puchDest++ = iclamp((*puchBack++ * (0xFF - a)) / 0xFF + (*puchFore++ * a) / 0xFF);
+            *puchDest++ = iclamp((*puchBack++ * (0xFF - a)) / 0xFF + (*puchFore++ * a) / 0xFF);
             puchFore++;         /* skip the alpha channel */
         }
         puchDest += nDestStride;
@@ -546,9 +551,9 @@ RefractBlend(unsigned char *puchDest, int nDestStride,
             unsigned int a = puchFore[3];
             unsigned char *puch = puchBack + (*psRefract >> 8) * nBackStride + (*psRefract & 0xFF) * 3;
 
-            *puchDest++ = clamp((puch[0] * a) / 0xFF + *puchFore++);
-            *puchDest++ = clamp((puch[1] * a) / 0xFF + *puchFore++);
-            *puchDest++ = clamp((puch[2] * a) / 0xFF + *puchFore++);
+            *puchDest++ = iclamp((puch[0] * a) / 0xFF + *puchFore++);
+            *puchDest++ = iclamp((puch[1] * a) / 0xFF + *puchFore++);
+            *puchDest++ = iclamp((puch[2] * a) / 0xFF + *puchFore++);
             puchFore++;         /* skip the alpha channel */
             psRefract++;
         }
@@ -711,7 +716,7 @@ RenderFramePainted(renderdata * prd, unsigned char *puch, int nStride)
 }
 
 static float
-WoodHash(float r)
+WoodHash(int i)
 {
     /* A quick and dirty hash function for floating point numbers; returns
      * a value in the range [0,1). */
@@ -719,10 +724,10 @@ WoodHash(float r)
     int n;
     float x;
 
-    if (r == 0.0f)
+    if (i == 0)
         return 0;
 
-    x = frexpf(r, &n);
+    x = frexpf((float)i, &n);
 
     return fabsf(frexpf(x * 131073.1294427f + n, &n)) * 2 - 1;
 }
@@ -758,9 +763,9 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         figure = (int) (r / 29 + x / 15 + y / 17 + z / 29);
 
         if (figure % 3 == (grain / 3) % 3) {
-            auch[0] -= WoodHash(figure + grain) * 8;
-            auch[1] -= WoodHash(figure + grain) * 4;
-            auch[2] -= WoodHash(figure + grain) * 2;
+            auch[0] -= (unsigned char)(WoodHash(figure + grain) * 8);
+            auch[1] -= (unsigned char)(WoodHash(figure + grain) * 4);
+            auch[2] -= (unsigned char)(WoodHash(figure + grain) * 2);
         }
 
         break;
@@ -772,7 +777,7 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         if (grain > 40)
             grain = 120 - 2 * grain;
 
-        grain *= WoodHash((int) r / 60) * 0.7f + 0.3f;
+        grain *= (unsigned char)(WoodHash((int) r / 60) * 0.7f + 0.3f);
 
         auch[0] = (unsigned char) (230 - grain);
         auch[1] = (unsigned char) (125 - grain / 2);
@@ -781,9 +786,9 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         figure = (int) (r / 53 + x / 5 + y / 7 + z / 50);
 
         if (figure % 3 == (grain / 3) % 3) {
-            auch[0] -= WoodHash(figure + grain) * 16;
-            auch[1] -= WoodHash(figure + grain) * 8;
-            auch[2] -= WoodHash(figure + grain) * 4;
+            auch[0] -= (unsigned char)(WoodHash(figure + grain) * 16);
+            auch[1] -= (unsigned char)(WoodHash(figure + grain) * 8);
+            auch[2] -= (unsigned char)(WoodHash(figure + grain) * 4);
         }
 
         break;
@@ -821,9 +826,9 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         figure = (int) (r / 29 + x / 15 + y / 17 + z / 29);
 
         if (figure % 3 == (grain / 3) % 3) {
-            auch[0] -= WoodHash(figure + grain) * 16;
-            auch[1] -= WoodHash(figure + grain) * 8;
-            auch[2] -= WoodHash(figure + grain) * 4;
+            auch[0] -= (unsigned char)(WoodHash(figure + grain) * 16);
+            auch[1] -= (unsigned char)(WoodHash(figure + grain) * 8);
+            auch[2] -= (unsigned char)(WoodHash(figure + grain) * 4);
         }
 
         break;
@@ -920,7 +925,7 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         if (grain > 40)
             grain = 120 - 2 * grain;
 
-        grain *= WoodHash((int) r / 60) * 0.7f + 0.3f;
+        grain *= (int)(WoodHash((int) r / 60) * 0.7f + 0.3f);
 
         auch[0] = (unsigned char) (230 + grain / 2);
         auch[1] = (unsigned char) (125 + grain / 3);
@@ -929,9 +934,9 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         figure = (int) (r / 53 + x / 5 + y / 7 + z / 30);
 
         if (figure % 3 == (grain / 3) % 3) {
-            auch[0] -= WoodHash(figure + grain) * 32;
-            auch[1] -= WoodHash(figure + grain) * 16;
-            auch[2] -= WoodHash(figure + grain) * 8;
+            auch[0] -= (unsigned char)(WoodHash(figure + grain) * 32);
+            auch[1] -= (unsigned char)(WoodHash(figure + grain) * 16);
+            auch[2] -= (unsigned char)(WoodHash(figure + grain) * 8);
         }
 
         break;
@@ -980,7 +985,7 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         if (grain > 40)
             grain = 120 - 2 * grain;
 
-        grain *= WoodHash((int) r / 60) * 0.7f + 0.3f;
+        grain *= (int)(WoodHash((int) r / 60) * 0.7f + 0.3f);
 
         auch[0] = (unsigned char) (80 + (grain * 3 / 2));
         auch[1] = (unsigned char) (40 + grain);
@@ -1002,9 +1007,9 @@ WoodPixel(float x, float y, float z, unsigned char auch[3], woodtype wt)
         figure = (int) (r / 60 + z / 30);
 
         if (figure % 3 == (grain / 3) % 3) {
-            auch[0] -= WoodHash(figure + grain) * 16;
-            auch[1] -= WoodHash(figure + grain) * 8;
-            auch[2] -= WoodHash(figure + grain) * 4;
+            auch[0] -= (unsigned char)(WoodHash(figure + grain) * 16);
+            auch[1] -= (unsigned char)(WoodHash(figure + grain) * 8);
+            auch[2] -= (unsigned char)(WoodHash(figure + grain) * 4);
         }
 
         break;
@@ -1071,7 +1076,7 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
             } else if (y < 2 * s) {
                 rDiffuse = rDiffuseTop;
                 nSpecular = nSpecularTop;
-                rHeight = s;
+                rHeight = (float)s;
             } else {
                 rDiffuse = arDiffuse[1][3 * s - y - 1];
                 nSpecular = anSpecular[1][3 * s - y - 1];
@@ -1099,7 +1104,7 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
             } else if (x < 2 * s) {
                 rDiffuse = rDiffuseTop;
                 nSpecular = nSpecularTop;
-                rHeight = s;
+                rHeight = (float)s;
             } else {
                 rDiffuse = arDiffuse[0][3 * s - x - 1];
                 nSpecular = anSpecular[0][3 * s - x - 1];
@@ -1138,7 +1143,7 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
             } else if (x < 5 * s) {
                 rDiffuse = rDiffuseTop;
                 nSpecular = nSpecularTop;
-                rHeight = s;
+                rHeight = (float)s;
             } else {
                 rDiffuse = arDiffuse[0][6 * s - x - 1];
                 nSpecular = anSpecular[0][6 * s - x - 1];
@@ -1172,7 +1177,7 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
                 } else if (x < 2 * s) {
                     rDiffuse = rDiffuseTop;
                     nSpecular = nSpecularTop;
-                    rHeight = s;
+                    rHeight = (float)s;
                 } else {
                     rDiffuse = arDiffuse[0][3 * s - x - 1];
                     nSpecular = anSpecular[0][3 * s - x - 1];
@@ -1202,7 +1207,7 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
                 } else if (y < 5 * s) {
                     rDiffuse = rDiffuseTop;
                     nSpecular = nSpecularTop;
-                    rHeight = s;
+                    rHeight = (float)s;
                 } else {
                     rDiffuse = arDiffuse[1][6 * s - y - 1];
                     nSpecular = anSpecular[1][6 * s - y - 1];
@@ -1297,11 +1302,11 @@ RenderHinges(renderdata * prd, unsigned char *puch, int nStride)
             xNorm = (x - s) / (float) s *(1.0f - yNorm * yNorm);
 
             HingePixel(prd, xNorm, yNorm,
-                       (s - x) / (40 * s), (y - 20 * s) / (40 * s),
+				(float)((s - x) / (40 * s)), (float)((y - 20 * s) / (40 * s)),
                        puch + (y + HINGE_BOT_Y * s) * nStride + (x + (BOARD_WIDTH / 2 - 1) * s) * 3);
 
             HingePixel(prd, xNorm, yNorm,
-                       (s - x) / (40 * s), (y + 20 * s) / (40 * s),
+				(float)((s - x) / (40 * s)), (float)((y + 20 * s) / (40 * s)),
                        puch + (y + HINGE_TOP_Y * s) * nStride + (x + (BOARD_WIDTH / 2 - 1) * s) * 3);
         }
 }
@@ -2460,7 +2465,7 @@ CalculateArea(renderdata * prd, unsigned char *puch, int nStride,
             switch (i) {
             case 0:
                 /* top player on bar */
-                n = -anBoard[0][24];
+                n = -(int)anBoard[0][24];
                 break;
             case 25:
                 /* bottom player on bar */
@@ -2829,3 +2834,19 @@ PreferenceCompare(renderdata * prd1, renderdata * prd2)
             );
     }
 }
+
+#if defined(USE_BOARD3D)
+static int diceRollingSave;
+void
+SuspendDiceRolling(renderdata* prd)
+{
+	diceRollingSave = prd->animateRoll;
+	prd->animateRoll = FALSE;
+}
+
+void
+ResumeDiceRolling(renderdata* prd)
+{
+	prd->animateRoll = diceRollingSave;
+}
+#endif

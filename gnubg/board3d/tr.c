@@ -56,7 +56,7 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
-#include "inc3d.h"
+#include "fun3d.h"
 #include "tr.h"
 
 #define DEFAULT_TILE_WIDTH  256

@@ -1,8 +1,9 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
-#include "inc3d.h"
+#include "fun3d.h"
 #include "BoardDimensions.h"
+#include "gtkboard.h"
 
 extern void drawTableGrayed(const OglModelHolder* modelHolder, const BoardData3d* bd3d, renderdata tmp);
 extern int LogCube(unsigned int n);

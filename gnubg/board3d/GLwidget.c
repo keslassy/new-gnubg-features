@@ -1,6 +1,6 @@
 
 #include "config.h"
-#include "inc3d.h"
+#include "fun3d.h"
 
 #if _MSC_VER && !TEST_HARNESS
 // Not yet working...
@@ -120,11 +120,11 @@ GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, 
 	glwData->configureCB = configureCB;
 	glwData->exposeCB = exposeCB;
 
-	if (realize_event != NULL)
+	if (realizeCB != NULL)
 		g_signal_connect(G_OBJECT(pw), "realize", G_CALLBACK(realize_event), glwData);
-	if (configure_event != NULL)
+	if (configureCB != NULL)
 		g_signal_connect(G_OBJECT(pw), "configure_event", G_CALLBACK(configure_event), glwData);
-	if (expose_event != NULL)
+	if (exposeCB != NULL)
 		g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(expose_event), glwData);
 
 	return pw;

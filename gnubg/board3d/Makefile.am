@@ -33,8 +33,6 @@ noinst_LTLIBRARIES = libboard3d.la
 libboard3d_la_LIBADD = @FREETYPE2_LIBS@ 
 endif
 
-EXTRA_DIST = wglBuffer.c wglBuffer.h
-
 libboard3d_la_SOURCES = DrawOGL.c font3dOGL.c ModelOGL.c Occluders.c PickOGL.c \
 			ShimOGL.c ShimOGL.h legacyGLinc.h BoardDimensions.h \
 			Shapes.inc GLwidget.c \
@@ -43,9 +41,5 @@ libboard3d_la_SOURCES = DrawOGL.c font3dOGL.c ModelOGL.c Occluders.c PickOGL.c \
 			shadow.c types3d.h widget3d.c tr.c tr.h
 			
 libboard3d_la_CFLAGS = $(AM_CFLAGS)
-
-if WIN32
-libboard3d_la_SOURCES += $(EXTRA_DIST)
-endif
 
 noinst_HEADERS = fun3d.h inc3d.h matrix.h model.h types3d.h 

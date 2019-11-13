@@ -39,9 +39,6 @@
 #include "drawboard.h"
 #include "renderprefs.h"
 #include "gnubgstock.h"
-#if defined(USE_BOARD3D)
-#include "fun3d.h"
-#endif
 
 typedef struct _toolbarwidget {
 

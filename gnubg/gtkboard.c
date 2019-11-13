@@ -49,7 +49,7 @@
 #include "gtktoolbar.h"
 #include "boarddim.h"
 #if defined(USE_BOARD3D)
-#include "fun3d.h"
+#include "inc3d.h"
 #endif
 
 /* minimum time in milliseconds before a drag to the
@@ -131,7 +131,7 @@ InitialPos(BoardData * bd)
     int ip[] = { 0, -2, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, -5, 5, 0, 0, 0, -3, 0, -5, 0, 0, 0, 0, 2, 0, 0, 0 };
     memcpy(bd->points, ip, sizeof(bd->points));
 #if defined(USE_BOARD3D)
-    if (gtk_gl_init_success && ShadowsInitilised(bd->bd3d))
+    if (widget3dValid)
         updatePieceOccPos(bd, bd->bd3d);
 #endif
 }
@@ -3085,7 +3085,7 @@ DisplayCorrectBoardType(BoardData * bd, BoardData3d * UNUSED(bd3d), renderdata *
         DrawScene3d(bd->bd3d);
         updateHingeOccPos(bd->bd3d, bd->rd->fHinges3d);
     } else {
-        if (gtk_gl_init_success)
+        if (widget3dValid)
             gtk_widget_hide(GetDrawingArea3d(bd->bd3d));
         gtk_widget_show(bd->drawing_area);
         gtk_widget_queue_draw(bd->drawing_area);
@@ -3147,7 +3147,7 @@ board_size_allocate(GtkWidget * board, GtkAllocation * allocation)
     child_allocation.height = allocation->height;
     child_allocation.x = allocation->x;
     child_allocation.y = allocation->y;
-    if (gtk_gl_init_success)
+    if (widget3dValid)
         gtk_widget_size_allocate(GetDrawingArea3d(bd->bd3d), &child_allocation);
 #endif
 
@@ -3650,8 +3650,8 @@ board_init(Board * board)
 
 #if defined(USE_BOARD3D)
     /* 3d board drawing area */
-    gtk_gl_init_success = gtk_gl_init_success ? CreateGLWidget(bd) : FALSE;
-    if (gtk_gl_init_success) {
+    widget3dValid = widget3dValid ? CreateGLWidget(bd) : FALSE;
+    if (widget3dValid) {
         gtk_box_pack_start(GTK_BOX(board), GetDrawingArea3d(bd->bd3d), TRUE, TRUE, 0);
     } else
         bd->bd3d = NULL;

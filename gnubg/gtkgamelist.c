@@ -35,9 +35,6 @@
 #include "positionid.h"
 #include "gtkgame.h"
 #include "util.h"
-#if defined(USE_BOARD3D)
-#include "fun3d.h"
-#endif
 
 static GtkListStore *plsGameList;
 static GtkWidget *pwGameList;

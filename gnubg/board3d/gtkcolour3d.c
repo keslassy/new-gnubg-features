@@ -19,14 +19,8 @@
  */
 
 #include "config.h"
-
-#if defined(WIN32)
-#include <windows.h>
-#include <gl/gl.h>
-#endif
-#include <GL/glu.h>
-
-#include "inc3d.h"
+#include "legacyGLinc.h"
+#include "fun3d.h"
 #include "gtklocdefs.h"
 
 #include "gtkprefs.h"
@@ -60,8 +54,8 @@ static int curDetail;
 #define PREVIEW_HEIGHT 40
 
 /* World sizes */
-#define STRIP_WIDTH 100.0
-#define STRIP_HEIGHT 10.0
+#define STRIP_WIDTH 100.0f
+#define STRIP_HEIGHT 10.0f
 
 static int previewLightLevels[3];
 
@@ -108,7 +102,7 @@ Draw(Material * pMat)
 {
     static Texture texture;
     int tempShin = pMat->shine;
-    const double edge = STRIP_HEIGHT / PREVIEW_HEIGHT;
+    const float edge = STRIP_HEIGHT / PREVIEW_HEIGHT;
     /* Accentuate shiness - so visible in preview */
     pMat->shine = tempShin / 3;
 

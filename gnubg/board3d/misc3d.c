@@ -23,7 +23,7 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
-#include "inc3d.h"
+#include "fun3d.h"
 #include "renderprefs.h"
 #include "sound.h"
 #include "export.h"
@@ -31,6 +31,7 @@
 #include "util.h"
 #include <glib/gstdio.h>
 #include "gtklocdefs.h"
+#include "gtkboard.h"
 
 #define MAX_FRAMES 10
 #define DOT_SIZE 32
@@ -1421,39 +1422,10 @@ Animating3d(const BoardData3d * bd3d)
     return (bd3d->shakingDice || bd3d->moving);
 }
 
-extern gboolean
-display_is_3d(const renderdata * prd)
-{
-    g_assert(prd->fDisplayType == DT_2D || (prd->fDisplayType == DT_3D && gtk_gl_init_success));
-    return (prd->fDisplayType == DT_3D);
-}
-
-extern gboolean
-display_is_2d(const renderdata * prd)
-{
-    displaytype fdt = prd->fDisplayType;
-    g_assert(fdt == DT_2D || fdt == DT_3D);
-    return (fdt == DT_2D ? TRUE : FALSE);
-}
-
 extern void
 Draw3d(const BoardData * bd)
 {                               /* Render board: standard or 2 passes for shadows */
 	drawBoard(bd, bd->bd3d, bd->rd);
 	if (bd->rd->showShadows)
 		shadowDisplay(bd, bd->bd3d, bd->rd);
-}
-
-static int diceRollingSave;
-void
-SuspendDiceRolling(renderdata * prd)
-{
-    diceRollingSave = prd->animateRoll;
-    prd->animateRoll = FALSE;
-}
-
-void
-ResumeDiceRolling(renderdata * prd)
-{
-    prd->animateRoll = diceRollingSave;
 }

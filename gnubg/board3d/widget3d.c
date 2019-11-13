@@ -23,11 +23,10 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
-#include "inc3d.h"
+#include "fun3d.h"
 #include "tr.h"
 #include "gtklocdefs.h"
-
-gboolean gtk_gl_init_success = FALSE;
+#include "gtkboard.h"
 
 static void
 configure_3dCB(GtkWidget * widget, BoardData *bd)
@@ -116,13 +115,18 @@ CreateGLWidget(BoardData * bd)
     return TRUE;
 }
 
-void
+gboolean
 InitGTK3d(int *argc, char ***argv)
 {
-	gtk_gl_init_success = GLInit(argc, argv);
-    /* Call LoadTextureInfo to get texture details from textures.txt */
-    LoadTextureInfo();
-    SetupFlag();
+	gboolean initOkay = GLInit(argc, argv);
+	if (initOkay)
+	{
+		/* Call LoadTextureInfo to get texture details from textures.txt */
+		LoadTextureInfo();
+		SetupFlag();
+	}
+
+	return initOkay;
 }
 
 gboolean

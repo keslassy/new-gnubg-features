@@ -1,9 +1,10 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
-#include "inc3d.h"
+#include "fun3d.h"
 #include "BoardDimensions.h"
 #include "boardpos.h"
+#include "gtkboard.h"
 
 extern Flag3d flag;
 extern void getFlagPos(const BoardData* bd, float v[3]);

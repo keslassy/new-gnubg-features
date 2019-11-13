@@ -23,7 +23,7 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
-#include "inc3d.h"
+#include "fun3d.h"
 
 #define TOP_EDGE (-2)
 

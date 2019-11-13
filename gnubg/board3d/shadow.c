@@ -23,7 +23,8 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
-#include "inc3d.h"
+#include "fun3d.h"
+#include "render.h"
 
 extern void
 DrawShadows(const BoardData3d* bd3d);

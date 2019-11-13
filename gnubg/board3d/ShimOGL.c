@@ -22,8 +22,7 @@
 #include "render.h"
 #include <cglm/affine.h>
 #include "ShimOGL.h"
-
-#include "stdlib.h"	//TODO: Remove exit() test calls and this include...
+#include "fun3d.h"
 
 typedef struct _MatStack
 {

@@ -22,7 +22,7 @@
  */
 
 #include "config.h"
-#include "inc3d.h"
+#include "fun3d.h"
 #include <glib/gstdio.h>
 
 void

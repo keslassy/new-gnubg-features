@@ -33,7 +33,7 @@
 #include "gtktoolbar.h"
 #include "positionid.h"
 #if defined(USE_BOARD3D)
-#include "fun3d.h"
+#include "inc3d.h"
 #endif
 
 static int fDisplayPanels = TRUE;

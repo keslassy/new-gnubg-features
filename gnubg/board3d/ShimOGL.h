@@ -1,4 +1,5 @@
 
+typedef unsigned int GLenum;
 typedef float GLfloat;
 
 #define GL_MODELVIEW                      0x1700
