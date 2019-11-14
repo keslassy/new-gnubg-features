@@ -8,10 +8,10 @@ bearoffgammon.h
 bearoff.h
 board3d/drawboard3d.c
 board3d/font3d.c
+board3d/font3dOGL.c
 board3d/fun3d.h
 board3d/graph.c
 board3d/gtkcolour3d.c
-board3d/inc3d.h
 board3d/matrix.c
 board3d/matrix.h
 board3d/misc3d.c
@@ -20,9 +20,6 @@ board3d/model.h
 board3d/shadow.c
 board3d/tr.c
 board3d/tr.h
-board3d/types3d.h
-board3d/wglBuffer.c
-board3d/wglBuffer.h
 board3d/widget3d.c
 boarddim.h
 boardpos.c
