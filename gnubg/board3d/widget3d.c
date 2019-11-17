@@ -1,13 +1,11 @@
 /*
- * widget3d.c
- * by Jon Kinsey, 2003
+ * Copyright (C) 2003-2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2003-2018 the AUTHORS
  *
- * GtkGLExt widget for 3d drawing
- *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -78,7 +75,7 @@ UpdateShadows(BoardData3d * bd3d)
 }
 
 static gboolean
-expose_3dCB(GtkWidget* widget, GdkEventExpose* exposeEvent, const BoardData * bd)
+expose_3dCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(exposeEvent), const BoardData * bd)
 {
     if (bd->bd3d->shadowsOutofDate) {   /* Update shadow positions */
         bd->bd3d->shadowsOutofDate = FALSE;
@@ -130,7 +127,7 @@ InitGTK3d(int *argc, char ***argv)
 }
 
 gboolean
-RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* eventData, const RenderToBufferData* renderToBufferData)
+RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* UNUSED(eventData), const RenderToBufferData* renderToBufferData)
 {
     TRcontext *tr;
     GtkAllocation allocation;

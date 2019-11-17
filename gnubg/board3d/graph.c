@@ -18,7 +18,6 @@
  * $Id$
  */
 
-
 #include "config.h"
 #include "legacyGLinc.h"
 #include "fun3d.h"
@@ -75,7 +74,7 @@ configureCB(GtkWidget *widget, const GraphData * gd)
 }
 
 static void
-realizeCB(void* data)
+realizeCB(void* UNUSED(data))
 {
     /* Deep blue background colour */
     glClearColor(.2f, .2f, .4f, 1.f);
@@ -264,11 +263,11 @@ DrawGraph(const GraphData * gd)
 }
 
 static gboolean
-exposeCB(GtkWidget* widget, GdkEventExpose* eventData, const GraphData * gd)
+exposeCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(eventData), const GraphData * gd)
 {
     glClear(GL_COLOR_BUFFER_BIT);
     DrawGraph(gd);
-	return TRUE;
+    return TRUE;
 }
 
 static void

@@ -947,7 +947,7 @@ void MAApoints(const renderdata* prd)
 }
 
 extern void
-drawDC(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
+drawDC(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* UNUSED(bd3d), const renderdata* prd)
 {
 	glPushMatrix();
 	moveToDoubleCubePos(bd);
