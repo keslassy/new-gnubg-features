@@ -51,7 +51,7 @@ static void MatStackPop(MatStack* matStack)
 MatStack mvMatStack, txMatStack, pjMatStack;
 GLenum curMatStack;
 
-void InitMatStacks()
+void InitMatStacks(void)
 {
 	MatStackInit(&mvMatStack);
 	MatStackInit(&txMatStack);
@@ -59,7 +59,7 @@ void InitMatStacks()
 	curMatStack = GL_MODELVIEW;
 }
 
-static MatStack* GetCurMatStack()
+static MatStack* GetCurMatStack(void)
 {
 	switch (curMatStack)
 	{
@@ -73,7 +73,7 @@ static MatStack* GetCurMatStack()
 	return NULL;
 }
 
-static mat4* GetCurMatStackMat()
+static mat4* GetCurMatStackMat(void)
 {
 	return &GetCurMatStack()->stack[GetCurMatStack()->level];
 }
@@ -95,7 +95,7 @@ void SHIMglBegin(GLenum mode)
 	curMode = mode;
 }
 
-void SHIMglEnd()
+void SHIMglEnd(void)
 {
 }
 
@@ -104,12 +104,12 @@ void SHIMglMatrixMode(GLenum mode)
 	curMatStack = mode;
 }
 
-void SHIMglPushMatrix()
+void SHIMglPushMatrix(void)
 {
 	MatStackPush(GetCurMatStack());
 }
 
-void SHIMglPopMatrix()
+void SHIMglPopMatrix(void)
 {
 	MatStackPop(GetCurMatStack());
 }

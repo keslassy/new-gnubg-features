@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2019 Jon Kinsey <jonkinsey@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * $Id$
+ */
 
 #include "config.h"
 #include "legacyGLinc.h"
@@ -13,7 +31,7 @@ extern float getViewAreaHeight(const viewArea* pva);
 static void drawNumbers(const BoardData* bd, int MAA);
 static void MAAtidyEdges(const renderdata* prd);
 extern void drawDC(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-static void MAAmoveIndicator();
+static void MAAmoveIndicator(void);
 extern void drawPieces(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 extern void drawDie(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, int num);
 static void drawSpecialPieces(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
@@ -484,7 +502,7 @@ MAAtidyEdges(const renderdata* prd)
 }
 
 static void
-MAAmoveIndicator()
+MAAmoveIndicator(void)
 {
 	/* Outline arrow */
 	SetColour3d(0.f, 0.f, 0.f, 1.f);    /* Black outline */

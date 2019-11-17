@@ -1,13 +1,11 @@
 /*
- * fun3d.h
- * by Jon Kinsey, 2003
+ * Copyright (C) 2006-2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2007-2016 the AUTHORS
  *
- * General definitions for 3d board
- *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,11 +13,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
+
 #ifndef FUN3D_H
 #define FUN3D_H
 
@@ -269,7 +267,7 @@ extern int extensionSupported(const char* extension);
 void RenderString3d(const OGLFont* pFont, const char* str, float scale, int MAA);
 extern void drawTable(const OglModelHolder* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
 extern void getMoveIndicatorPos(int turn, float pos[3]);
-extern void drawMoveIndicator();
+extern void drawMoveIndicator(void);
 extern void drawFlagPole(unsigned int curveAccuracy);
 extern void drawPoint(const renderdata* prd, float tuv, unsigned int i, int p, int outline);
 extern void drawBackground(const renderdata* prd, const float* bd3dbackGroundPos, const float* bd3dbackGroundSize);
