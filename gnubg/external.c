@@ -1,11 +1,11 @@
 /*
- * external.c
+ * Copyright (C) 2001-2002 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2001-2019 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 2001, 2002.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -183,7 +182,7 @@ ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz)
                 free(psin);
                 return -1;
             }
-			memcpy(&(psin->sin_addr), phe->h_addr, phe->h_length); 
+            memcpy(&(psin->sin_addr), phe->h_addr, phe->h_length);
         }
 
         *pch++ = ':';
@@ -300,7 +299,7 @@ ExternalWrite(int h, char *pch, size_t cch)
 #else
     int n;
 #endif
-	/* outputf("%s", pch); */
+    /* outputf("%s", pch); */
 
     while (cch) {
         ProcessEvents();
@@ -472,8 +471,14 @@ ExtFIBSBoard(scancontext * pec)
         memcpy(anBoardOrig, processedBoard.anBoard, sizeof(processedBoard.anBoard));
 
         if (processedBoard.fDoubled) {
-
             /* take decision */
+
+            SwapSides(processedBoard.anBoard);
+            processedBoard.fCubeOwner = (processedBoard.fCubeOwner == -1 ? -1 : !processedBoard.fCubeOwner);
+
+            SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo, anScore,
+                        processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
+
             if (GeneralCubeDecision(aarOutput, aarStdDev,
                                     aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(), NULL,
                                     NULL) < 0)
@@ -557,7 +562,7 @@ CommandExternal(char *sz)
 {
 
 #if !defined(HAVE_SOCKETS)
-    (void) sz;		/* silence compiler warning */
+    (void) sz;                  /* silence compiler warning */
     outputl(_("This installation of GNU Backgammon was compiled without\n"
               "socket support, and does not implement external controllers."));
 #else
@@ -649,7 +654,7 @@ CommandExternal(char *sz)
 
         while (!fExit && !(retval = ExternalRead(hPeer, szCommand, sizeof(szCommand)))) {
             /* To keep lexer happy terminate each line with \n */
-            if (szCommand[strlen(szCommand)-1] != '\n')
+            if (szCommand[strlen(szCommand) - 1] != '\n')
                 strcat(szCommand, "\n");
 
             if ((ExtParse(&scanctx, szCommand)) == 0) {
@@ -786,7 +791,7 @@ CommandExternal(char *sz)
             }
 
             if (szResponse) {
-                /* outputf("%s", szResponse);*/
+                /* outputf("%s", szResponse); */
                 if (ExternalWrite(hPeer, szResponse, strlen(szResponse)))
                     break;
 
