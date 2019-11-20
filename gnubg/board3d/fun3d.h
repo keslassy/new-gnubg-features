@@ -29,6 +29,7 @@
 #include <unistd.h>
 #endif
 
+#include "common.h"
 #include "inc3d.h"
 #include "matrix.h"
 #include "gtkwindows.h"
