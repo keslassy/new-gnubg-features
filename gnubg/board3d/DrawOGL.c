@@ -525,14 +525,6 @@ MAAmoveIndicator(void)
 	glDisable(GL_LINE_SMOOTH);
 }
 
-static void
-ClearScreen(const renderdata* prd)
-{
-	glClearColor(prd->BackGroundMat.ambientColour[0], prd->BackGroundMat.ambientColour[1],
-		prd->BackGroundMat.ambientColour[2], 0.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
 extern void
 drawDie(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, int num)
 {
@@ -1062,84 +1054,6 @@ calculateBackgroundSize(BoardData3d* bd3d, const int viewport[4])
 	bd3d->backGroundPos[1] = pos3[1];
 	bd3d->backGroundSize[0] = pos2[0] - pos1[0];
 	bd3d->backGroundSize[1] = pos1[1] - pos3[1];
-}
-
-void
-SetupPerspVolume(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, int viewport[4])
-{
-	float aspectRatio = (float)viewport[2] / (float)(viewport[3]);
-	if (!prd->planView) {
-		viewArea va;
-		float halfRadianFOV;
-		double fovScale;
-		float zoom;
-
-		if (aspectRatio < .5f) {        /* Viewing area to high - cut down so board rendered correctly */
-			int newHeight = viewport[2] * 2;
-			viewport[1] = (viewport[3] - newHeight) / 2;
-			viewport[3] = newHeight;
-			glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
-			aspectRatio = .5f;
-			/* Clear screen so top + bottom outside board shown ok */
-			ClearScreen(prd);
-		}
-
-		/* Workout how big the board is (in 3d space) */
-		WorkOutViewArea(bd, &va, &halfRadianFOV, aspectRatio);
-
-		fovScale = zNear * tanf(halfRadianFOV);
-
-		if (aspectRatio > getAreaRatio(&va)) {
-			bd3d->vertFrustrum = fovScale;
-			bd3d->horFrustrum = bd3d->vertFrustrum * aspectRatio;
-		}
-		else {
-			bd3d->horFrustrum = fovScale * getAreaRatio(&va);
-			bd3d->vertFrustrum = bd3d->horFrustrum / aspectRatio;
-		}
-		/* Setup projection matrix */
-		glFrustum(-bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, zNear, zFar);
-
-		/* Setup modelview matrix */
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		/* Zoom back so image fills window */
-		zoom = (getViewAreaHeight(&va) / 2) / tanf(halfRadianFOV);
-		glTranslatef(0.f, 0.f, -zoom);
-
-		/* Offset from centre because of perspective */
-		glTranslatef(0.f, getViewAreaHeight(&va) / 2 + va.bottom, 0.f);
-
-		/* Rotate board */
-		glRotatef((float)prd->boardAngle, -1.f, 0.f, 0.f);
-
-		/* Origin is bottom left, so move from centre */
-		glTranslatef(-(getBoardWidth() / 2.0f), -((getBoardHeight()) / 2.0f), 0.f);
-	}
-	else {
-		float size;
-
-		if (aspectRatio > getBoardWidth() / getBoardHeight()) {
-			size = (getBoardHeight() / 2);
-			bd3d->horFrustrum = size * aspectRatio;
-			bd3d->vertFrustrum = size;
-		}
-		else {
-			size = (getBoardWidth() / 2);
-			bd3d->horFrustrum = size;
-			bd3d->vertFrustrum = size / aspectRatio;
-		}
-		glOrtho(-bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, 0.0, 5.0);
-
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		glTranslatef(-(getBoardWidth() / 2.0f), -(getBoardHeight() / 2.0f), -3.f);
-	}
-
-	/* Save matrix for later */
-	glGetFloatv(GL_MODELVIEW_MATRIX, bd3d->modelMatrix);
 }
 
 extern void

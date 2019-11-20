@@ -241,6 +241,7 @@ PickDraw(int x, int y, PickDrawFun drawFun, const BoardData* bd, void* data)
 	BoardData3d* bd3d = bd->bd3d;
 	int hits;
 	int viewport[4];
+	float *projMat, *modelMat;
 
 	glSelectBuffer(BUFSIZE, selectBuf);
 	glRenderMode(GL_SELECT);
@@ -249,20 +250,14 @@ PickDraw(int x, int y, PickDrawFun drawFun, const BoardData* bd, void* data)
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 
+	getPickMatrices((float)x, (float)y, bd, viewport, &projMat, &modelMat);
+
+	/* Setup openGL legacy matrices */
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-
-	glLoadIdentity();
-	gluPickMatrix((double)x, (double)y, 1.0, 1.0, viewport);
-
-	/* Setup projection matrix - using saved values */
-	if (bd->rd->planView)
-		glOrtho(-bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, 0.0, 5.0);
-	else
-		glFrustum(-bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, zNear, zFar);
-
+	glLoadMatrixf(projMat);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(bd3d->modelMatrix);
+	glLoadMatrixf(modelMat);
 
 	drawFun(bd, data);
 
@@ -359,7 +354,7 @@ NearestHit(int hits, const unsigned int* ptr)
 }
 
 int
-BoardSubPoint3d(const BoardData* bd, int x, int y, guint point)
+BoardSubPoint3d(const BoardData* bd, int x, int y, unsigned int point)
 {
 	int hits = PickDraw(x, y, drawPointPick, bd, GUINT_TO_POINTER(point));
 	return NearestHit(hits, (unsigned int*)selectBuf);

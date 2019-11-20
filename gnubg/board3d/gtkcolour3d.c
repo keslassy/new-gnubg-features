@@ -216,8 +216,9 @@ TextureChange(GtkComboBoxText * combo, gpointer UNUSED(data))
 }
 
 static gboolean
-exposePreviewCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(eventData), Material * pMat)
+exposePreviewCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(eventData), void* data)
 {
+	Material* pMat = (Material*)data;
     SetupLight();
     Draw(pMat);
     return TRUE;

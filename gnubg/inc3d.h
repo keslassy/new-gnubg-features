@@ -20,7 +20,7 @@
 #ifndef INC3D3D_H
 #define INC3D3D_H
 
-#include <gtk/gtk.h>
+#include <glib.h>
 
 typedef struct _BoardData BoardData;
 typedef struct _BoardData3d BoardData3d;
@@ -30,6 +30,7 @@ typedef struct _renderdata renderdata;
 typedef struct _Texture Texture;
 typedef struct _GraphData GraphData;
 typedef struct _statcontext statcontext;
+typedef struct _GtkWidget GtkWidget;
 
 #define DF_VARIABLE_OPACITY 1
 #define DF_NO_ALPHA 2
@@ -83,8 +84,8 @@ extern int Animating3d(const BoardData3d* bd3d);
 extern void RollDice3d(BoardData* bd, BoardData3d* bd3d, const renderdata* prd);
 extern void setDicePos(BoardData* bd, BoardData3d* bd3d);
 extern int BoardPoint3d(const BoardData* bd, int x, int y);
-extern int BoardSubPoint3d(const BoardData* bd, int x, int y, guint point);
-extern void SetupViewingVolume3d(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd);
+extern int BoardSubPoint3d(const BoardData* bd, int x, int y, unsigned int point);
+extern void RecalcViewingVolume(const BoardData* bd);
 extern void ShowFlag3d(BoardData* bd, BoardData3d* bd3d, const renderdata* prd);
 extern void AnimateMove3d(BoardData* bd, BoardData3d* bd3d);
 extern void UpdateShadows(BoardData3d* bd3d);

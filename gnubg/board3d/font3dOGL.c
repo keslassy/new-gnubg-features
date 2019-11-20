@@ -3,6 +3,8 @@
 #include "legacyGLinc.h"
 #include "fun3d.h"
 #include "util.h"
+#include "output.h"
+#include <glib/gi18n.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

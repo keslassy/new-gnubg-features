@@ -1212,17 +1212,16 @@ EmptyPos(BoardData * bd)
 }
 
 void
-SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd)
+SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd, int viewport[4])
 {
-    int viewport[4];
-    float tempMatrix[16];
-    glGetIntegerv(GL_VIEWPORT, viewport);
+   	float *projMat, *modelMat;
+	SetupViewingVolume3dNew(bd, bd3d, prd, &projMat, &modelMat, viewport);
 
-    memcpy(tempMatrix, bd3d->modelMatrix, sizeof(float[16]));
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    SetupPerspVolume(bd, bd3d, prd, viewport);
+	/* Setup openGL legacy matrices */
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(projMat);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(modelMat);
 
     SetupLight3d(bd3d, prd);
 
@@ -1345,8 +1344,6 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
 
     bd3d->boardPoints.points = NULL;
 
-    memset(bd3d->modelMatrix, 0, sizeof(float[16]));
-
     bd->bd3d->fBuffers = FALSE;
 }
 
@@ -1425,4 +1422,25 @@ Draw3d(const BoardData * bd)
 	drawBoard(bd, bd->bd3d, bd->rd);
 	if (bd->rd->showShadows)
 		shadowDisplay(bd, bd->bd3d, bd->rd);
+}
+
+void
+ClearScreen(const renderdata* prd)
+{
+	glClearColor(prd->BackGroundMat.ambientColour[0], prd->BackGroundMat.ambientColour[1],
+		prd->BackGroundMat.ambientColour[2], 0.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void
+glSetViewport(int viewport[4])
+{
+	glViewport(viewport[0], viewport[1], viewport[2] - viewport[0], viewport[3] - viewport[1]);
+}
+
+void RecalcViewingVolume(const BoardData* bd)
+{
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	SetupViewingVolume3d(bd, bd->bd3d, bd->rd, viewport);
 }

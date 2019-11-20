@@ -34,7 +34,8 @@
 #include "gtkwindows.h"
 
 #include "model.h"
-#include "drawboard.h"          /* for fClockwise decl */
+
+extern int fClockwise;          /* Player 1 moves clockwise */
 
 #ifndef TYPES3D_H
 #define TYPES3D_H
@@ -201,7 +202,6 @@ void InitGL(const BoardData* bd);
 /* Drawing functions */
 void drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 extern void Draw3d(const BoardData* bd);
-void SetupPerspVolume(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, int viewport[4]);
 float getBoardWidth(void);
 float getBoardHeight(void);
 void calculateBackgroundSize(BoardData3d* bd3d, const int viewport[4]);
@@ -240,7 +240,7 @@ typedef struct _RenderToBufferData
 	BoardData* bd;
 	unsigned char* puch;
 } RenderToBufferData;
-extern gboolean RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* eventData, const RenderToBufferData* renderToBufferData);
+extern gboolean RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* eventData, void* data);
 extern void DeleteTextureList(void);
 
 extern void updateOccPos(const BoardData* bd);
@@ -274,8 +274,8 @@ extern void drawBackground(const renderdata* prd, const float* bd3dbackGroundPos
 extern int CreateNumberFont(OGLFont* ppFont, const char* fontFile, int pitch, float size, float heightRatio);
 
 /* Clipping planes */
-#define zNear .1
-#define zFar 70.0
+#define zNearVAL .1f
+#define zFarVAL 70.0f
 
 /* Animation paths */
 #define MAX_PATHS 3
@@ -337,9 +337,8 @@ struct _BoardData3d {
 
 	OGLFont numberFont, cubeFont;     /* OpenGL fonts */
 
-    /* Saved viewing values (used for picking) */
-    double vertFrustrum, horFrustrum;
-    float modelMatrix[16];
+    /* Saved viewing values - for offscreen render */
+    float vertFrustrum, horFrustrum;
 
     /* Shadow casters */
     Occluder Occluders[/*NUM_OCC*/37];
@@ -422,5 +421,10 @@ extern void TidyShadows(BoardData3d* bd3d);
 extern void MakeShadowModel(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd);
 extern void initOccluders(BoardData3d* bd3d);
 extern void UpdateShadowLightPosition(BoardData3d* bd3d, float lp[4]);
+extern void getPickMatrices(float x, float y, const BoardData* bd, int* viewport, float** projMat, float** modelMat);
+extern void glSetViewport(int viewport[4]);
+extern void SetupViewingVolume3d(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, int viewport[4]);
+extern void SetupViewingVolume3dNew(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, float** projMat, float** modelMat, int viewport[4]);
+extern void ClearScreen(const renderdata* prd);
 
 #endif

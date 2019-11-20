@@ -26,8 +26,9 @@
 #include "gtkboard.h"
 
 static void
-configure_3dCB(GtkWidget * widget, BoardData *bd)
+configure_3dCB(GtkWidget * widget, void* data)
 {
+	BoardData* bd = (BoardData*)data;
     if (display_is_3d(bd->rd)) {
         static int curHeight = -1, curWidth = -1;
         GtkAllocation allocation;
@@ -37,8 +38,9 @@ configure_3dCB(GtkWidget * widget, BoardData *bd)
         height = allocation.height;
         if (width != curWidth || height != curHeight)
 		{
-            glViewport(0, 0, width, height);
-            SetupViewingVolume3d(bd, bd->bd3d, bd->rd);
+			int viewport[4] = { 0, 0, width, height };
+			glSetViewport(viewport);
+            SetupViewingVolume3d(bd, bd->bd3d, bd->rd, viewport);
 
             curWidth = width;
             curHeight = height;
@@ -47,13 +49,16 @@ configure_3dCB(GtkWidget * widget, BoardData *bd)
 }
 
 static void
-realize_3dCB(BoardData* bd)
+realize_3dCB(void* data)
 {
+	BoardData* bd = (BoardData*)data;
     InitGL(bd);
     GetTextures(bd->bd3d, bd->rd);
     preDraw3d(bd, bd->bd3d, bd->rd);
-    /* Make sure viewing area is correct (in preview) */
-    SetupViewingVolume3d(bd, bd->bd3d, bd->rd);
+
+	/* Make sure viewing area is correct (in preview) */	//TODO: Still needed?
+	RecalcViewingVolume(bd);
+
 #ifdef WIN32
     if (fResetSync) {
         fResetSync = FALSE;
@@ -75,8 +80,9 @@ UpdateShadows(BoardData3d * bd3d)
 }
 
 static gboolean
-expose_3dCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(exposeEvent), const BoardData * bd)
+expose_3dCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(exposeEvent), void* data)
 {
+	const BoardData* bd = (const BoardData*)data;
     if (bd->bd3d->shadowsOutofDate) {   /* Update shadow positions */
         bd->bd3d->shadowsOutofDate = FALSE;
         updateOccPos(bd);
@@ -127,12 +133,14 @@ InitGTK3d(int *argc, char ***argv)
 }
 
 gboolean
-RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* UNUSED(eventData), const RenderToBufferData* renderToBufferData)
+RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* UNUSED(eventData), void* data)
 {
+	const RenderToBufferData* renderToBufferData = (const RenderToBufferData*)data;
     TRcontext *tr;
     GtkAllocation allocation;
 	BoardData3d *bd3d = renderToBufferData->bd->bd3d;
 	int fSaveBufs = bd3d->fBuffers;
+	int viewport[4] = { 0, 0, renderToBufferData->width, renderToBufferData->height };
 
     /* Sort out tile rendering stuff */
     tr = trNew();
@@ -143,13 +151,13 @@ RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* UNUSED(eventData), const Ren
     trImageBuffer(tr, GL_RGB, GL_UNSIGNED_BYTE, renderToBufferData->puch);
 
     /* Sort out viewing perspective */
-    glViewport(0, 0, (int)renderToBufferData->width, (int)renderToBufferData->height);
-    SetupViewingVolume3d(renderToBufferData->bd, bd3d, renderToBufferData->bd->rd);
+	glSetViewport(viewport);
+	SetupViewingVolume3d(renderToBufferData->bd, bd3d, renderToBufferData->bd->rd, viewport);
 
     if (renderToBufferData->bd->rd->planView)
         trOrtho(tr, -bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, 0.0, 5.0);
     else
-        trFrustum(tr, -bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, zNear, zFar);
+        trFrustum(tr, -bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, zNearVAL, zFarVAL);
 
     bd3d->fBuffers = FALSE;     /* Turn this off whilst drawing */
 
@@ -164,7 +172,8 @@ RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* UNUSED(eventData), const Ren
     trDelete(tr);
 
     /* Reset viewing volume for main screen */
-    SetupViewingVolume3d(renderToBufferData->bd, bd3d, renderToBufferData->bd->rd);
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	SetupViewingVolume3d(renderToBufferData->bd, bd3d, renderToBufferData->bd->rd, viewport);
 
 	return FALSE;	// Don't swap buffers
 }

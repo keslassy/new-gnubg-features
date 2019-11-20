@@ -2078,3 +2078,116 @@ int RenderGlyphX(const FT_Outline* pOutline)
 
 	return 1;
 }
+
+void
+SetupPerspVolume(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, float** projMat, float** modelMat, float aspectRatio)
+{
+	if (!prd->planView) {
+		viewArea va;
+		float halfRadianFOV;
+		float fovScale;
+		float zoom;
+
+		/* Workout how big the board is (in 3d space) */
+		WorkOutViewArea(bd, &va, &halfRadianFOV, aspectRatio);
+
+		fovScale = zNearVAL * tanf(halfRadianFOV);
+
+		if (aspectRatio > getAreaRatio(&va)) {
+			bd3d->vertFrustrum = fovScale;
+			bd3d->horFrustrum = bd3d->vertFrustrum * aspectRatio;
+		}
+		else {
+			bd3d->horFrustrum = fovScale * getAreaRatio(&va);
+			bd3d->vertFrustrum = bd3d->horFrustrum / aspectRatio;
+		}
+
+		/* Setup projection matrix */
+		glFrustum(-bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, zNearVAL, zFarVAL);
+
+		/* Setup modelview matrix */
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		/* Zoom back so image fills window */
+		zoom = (getViewAreaHeight(&va) / 2) / tanf(halfRadianFOV);
+		glTranslatef(0.f, 0.f, -zoom);
+
+		/* Offset from centre because of perspective */
+		glTranslatef(0.f, getViewAreaHeight(&va) / 2 + va.bottom, 0.f);
+
+		/* Rotate board */
+		glRotatef((float)prd->boardAngle, -1.f, 0.f, 0.f);
+
+		/* Origin is bottom left, so move from centre */
+		glTranslatef(-(getBoardWidth() / 2.0f), -((getBoardHeight()) / 2.0f), 0.f);
+	}
+	else {
+		float size;
+
+		if (aspectRatio > getBoardWidth() / getBoardHeight()) {
+			size = (getBoardHeight() / 2);
+			bd3d->horFrustrum = size * aspectRatio;
+			bd3d->vertFrustrum = size;
+		}
+		else {
+			size = (getBoardWidth() / 2);
+			bd3d->horFrustrum = size;
+			bd3d->vertFrustrum = size / aspectRatio;
+		}
+		glOrtho(-bd3d->horFrustrum, bd3d->horFrustrum, -bd3d->vertFrustrum, bd3d->vertFrustrum, 0.0, 5.0);
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		glTranslatef(-(getBoardWidth() / 2.0f), -(getBoardHeight() / 2.0f), -3.f);
+	}
+
+	*projMat = SHIMGetProjectionMatrix();
+	*modelMat = SHIMGetModelViewMatrix();
+}
+
+void
+SetupViewingVolume3dNew(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, float** projMat, float** modelMat, int viewport[4])
+{
+	float aspectRatio = (float)viewport[2] / (float)viewport[3];
+	if (!prd->planView) {
+		if (aspectRatio < .5f) {        /* Viewing area to high - cut down so board rendered correctly */
+			int newHeight = viewport[2] * 2;
+			viewport[1] = (viewport[3] - newHeight) / 2;
+			viewport[3] = newHeight;
+			glSetViewport(viewport);
+			aspectRatio = .5f;
+			/* Clear screen so top + bottom outside board shown ok */
+			ClearScreen(prd);
+		}
+	}
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	SetupPerspVolume(bd, bd3d, prd, projMat, modelMat, aspectRatio);
+}
+
+static void gluPickMatrix(GLfloat x, GLfloat y, GLfloat deltax, GLfloat deltay, int* viewport)
+{
+	if (deltax <= 0 || deltay <= 0) {
+		return;
+	}
+
+	/* Translate and scale the picked region to the entire window */
+	glTranslatef((viewport[2] - 2 * (x - viewport[0])) / deltax, (viewport[3] - 2 * (y - viewport[1])) / deltay, 0);
+	glScalef(viewport[2] / deltax, viewport[3] / deltay, 1.0);
+}
+
+void getPickMatrices(float x, float y, const BoardData* bd, int* viewport, float** projMat, float** modelMat)
+{
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluPickMatrix(x, y, 1.0f, 1.0f, viewport);
+
+	SetupPerspVolume(bd, bd->bd3d, bd->rd, projMat, modelMat, (float)viewport[2] / (float)viewport[3]);
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+}

@@ -6856,8 +6856,8 @@ GTKSet(void *p)
         if (gtk_widget_get_realized(pwBoard)) {
 #if defined(USE_BOARD3D)
             /* If in 3d mode may need to update sizes */
-            if (display_is_3d(bd->rd))
-                SetupViewingVolume3d(bd, bd->bd3d, bd->rd);
+			if (display_is_3d(bd->rd))
+				RecalcViewingVolume(bd);
             else
 #endif
             {

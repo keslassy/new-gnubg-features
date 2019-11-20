@@ -21,6 +21,7 @@
 #include <memory.h>
 #include "render.h"
 #include <cglm/affine.h>
+#include <cglm/cam.h>
 #include "ShimOGL.h"
 #include "fun3d.h"
 
@@ -55,7 +56,6 @@ void InitMatStacks(void)
 {
 	MatStackInit(&mvMatStack);
 	MatStackInit(&txMatStack);
-	MatStackInit(&pjMatStack);
 	curMatStack = GL_MODELVIEW;
 }
 
@@ -264,4 +264,33 @@ void SHIMglVertex3f(GLfloat x, GLfloat y, GLfloat z)
 void SHIMglVertex2f(GLfloat x, GLfloat y)
 {
 	SHIMglVertex3f(x, y, 0);
+}
+
+void SHIMglFrustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
+{
+	mat4 frustrum;
+	glm_frustum(left, right, bottom, top, zNear, zFar, frustrum);
+	glm_mat4_mul(*GetCurMatStackMat(), frustrum, *GetCurMatStackMat());
+}
+
+void SHIMglOrtho(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
+{
+	mat4 frustrum;
+	glm_ortho(left, right, bottom, top, zNear, zFar, frustrum);
+	glm_mat4_mul(*GetCurMatStackMat(), frustrum, *GetCurMatStackMat());
+}
+
+void SHIMglLoadIdentity()
+{
+	glm_mat4_identity(*GetCurMatStackMat());
+}
+
+float* SHIMGetModelViewMatrix()
+{
+	return (float*)mvMatStack.stack[mvMatStack.level];
+}
+
+float* SHIMGetProjectionMatrix()
+{
+	return (float*)pjMatStack.stack[pjMatStack.level];
 }

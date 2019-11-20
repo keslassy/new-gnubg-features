@@ -30,6 +30,7 @@
 #define EXPORT_CUBE_MISSED   5
 #define EXPORT_CUBE_CLOSE    6
 
+typedef struct _moverecord moverecord;
 
 typedef enum _htmlexporttype {
     HTML_EXPORT_TYPE_GNU,
