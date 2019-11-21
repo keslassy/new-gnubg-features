@@ -1,11 +1,11 @@
 /*
- * output.c
+ * Copyright (C) 1998-2003 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2013-2014 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 1998, 1999, 2000, 2001, 2002, 2003.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -35,7 +34,8 @@
 #include <string.h>
 #include <signal.h>
 #include <ctype.h>
-#ifdef WIN32
+
+#if defined(WIN32)
 #include <io.h>
 #endif
 
@@ -63,7 +63,6 @@ output_initialize(void)
 extern void
 output(const char *sz)
 {
-
     if (cOutputDisabled || !foutput_on)
         return;
 
@@ -76,15 +75,12 @@ output(const char *sz)
     fprintf(stdout, "%s", sz);
     if (!isatty(STDOUT_FILENO))
         fflush(stdout);
-
 }
 
 /* Write a string to stdout/status bar/popup window, and append \n */
 extern void
 outputl(const char *sz)
 {
-
-
     if (cOutputDisabled || !foutput_on)
         return;
 
@@ -105,7 +101,6 @@ outputl(const char *sz)
 extern void
 outputc(const char ch)
 {
-
     char sz[2];
     sz[0] = ch;
     sz[1] = '\0';
@@ -117,7 +112,6 @@ outputc(const char ch)
 extern void
 outputf(const char *sz, ...)
 {
-
     va_list val;
 
     va_start(val, sz);
@@ -129,7 +123,6 @@ outputf(const char *sz, ...)
 extern void
 outputv(const char *sz, va_list val)
 {
-
     char *szFormatted;
     if (cOutputDisabled || !foutput_on)
         return;
@@ -142,7 +135,6 @@ outputv(const char *sz, va_list val)
 extern void
 outputerr(const char *sz)
 {
-
     /* FIXME we probably shouldn't convert the charset of strerror() - yuck! */
 
     outputerrf("%s: %s", sz, strerror(errno));
@@ -152,7 +144,6 @@ outputerr(const char *sz)
 extern void
 outputerrf(const char *sz, ...)
 {
-
     va_list val;
 
     va_start(val, sz);
@@ -164,7 +155,6 @@ outputerrf(const char *sz, ...)
 extern void
 outputerrv(const char *sz, va_list val)
 {
-
     char *szFormatted;
     szFormatted = g_strdup_vprintf(sz, val);
 
@@ -183,7 +173,6 @@ outputerrv(const char *sz, va_list val)
 extern void
 outputx(void)
 {
-
     if (cOutputDisabled || cOutputPostponed || !foutput_on)
         return;
 
@@ -197,7 +186,6 @@ outputx(void)
 extern void
 outputnew(void)
 {
-
     if (cOutputDisabled || !foutput_on)
         return;
 
@@ -211,7 +199,6 @@ outputnew(void)
 extern void
 outputoff(void)
 {
-
     cOutputDisabled++;
 }
 
@@ -219,7 +206,6 @@ outputoff(void)
 extern void
 outputon(void)
 {
-
     g_assert(cOutputDisabled);
 
     cOutputDisabled--;
@@ -229,7 +215,6 @@ outputon(void)
 extern void
 outputpostpone(void)
 {
-
     cOutputPostponed++;
 }
 
@@ -237,7 +222,6 @@ outputpostpone(void)
 extern void
 outputresume(void)
 {
-
     g_assert(cOutputPostponed);
 
     if (!--cOutputPostponed) {
