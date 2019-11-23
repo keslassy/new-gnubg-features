@@ -10,7 +10,7 @@ extern Flag3d flag;
 extern void getFlagPos(const BoardData* bd, float v[3]);
 extern void moveToDicePos(const BoardData* bd, int num);
 extern void moveToDoubleCubePos(const BoardData* bd);
-extern void drawPiece(const OglModelHolder* modelHolder, const BoardData3d* bd3d, unsigned int point, unsigned int pos, int rotate, int roundPiece, int curveAccuracy, int separateTop);
+extern void drawPiece(const ModelManager* modelHolder, const BoardData3d* bd3d, unsigned int point, unsigned int pos, int rotate, int roundPiece, int curveAccuracy, int separateTop);
 
 #include "Shapes.inc"
 

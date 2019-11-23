@@ -24,33 +24,38 @@
 
 extern void InitMatStacks(void);
 
-void OglModelInit(OglModel* oglModel)
+void OglModelInit(ModelManager* modelHolder, int modelNumber)
 {
-	oglModel->data = NULL;
-	oglModel->dataLength = 0;
-	oglModel->modelUsesTexture = 0;
+	modelHolder->models[modelNumber].data = NULL;
+	modelHolder->models[modelNumber].dataLength = 0;
+	modelHolder->models[modelNumber].modelUsesTexture = 0;
 
 	InitMatStacks();
+
+	modelHolder->numModels++;
 }
 
-void OglModelAlloc(OglModel* oglModel)
+void OglModelAlloc(ModelManager* modelHolder, int modelNumber)
 {
-	oglModel->data = malloc(sizeof(float) * oglModel->dataLength);
-	oglModel->dataLength = 0;
+	modelHolder->totalNumVertices += modelHolder->models[modelNumber].dataLength;
+
+	modelHolder->models[modelNumber].data = malloc(sizeof(float) * modelHolder->models[modelNumber].dataLength);
+	modelHolder->models[modelNumber].dataLength = 0;
 }
 
-void OglModelDraw(const OglModel* oglModel)
+void OglModelDraw(const ModelManager* modelManager, int modelNumber)
 {
-	float* data = oglModel->data;
+	float* data = &modelManager->vertexData[modelManager->models[modelNumber].dataStart];
+	int dataLength = modelManager->models[modelNumber].dataLength;
 
 	int vertexSize = 6;
-	if (oglModel->modelUsesTexture)
+	if (modelManager->models[modelNumber].modelUsesTexture)
 		vertexSize += 2;
 
 	glBegin(GL_TRIANGLES);
-	for (int vertex = 0; vertex < oglModel->dataLength / vertexSize; vertex++)
+	for (int vertex = 0; vertex < dataLength / vertexSize; vertex++)
 	{
-		if (oglModel->modelUsesTexture)
+		if (modelManager->models[modelNumber].modelUsesTexture)
 		{
 			glTexCoord2f(data[0], data[1]);
 			data += 2;
@@ -60,4 +65,44 @@ void OglModelDraw(const OglModel* oglModel)
 		data += 6;
 	}
 	glEnd();
+}
+
+void ModelManagerInit(ModelManager* modelHolder)
+{
+	modelHolder->allocNumVertices = 0;
+	modelHolder->vertexData = NULL;
+}
+
+void ModelManagerStart(ModelManager* modelHolder)
+{
+	modelHolder->totalNumVertices = 0;
+	modelHolder->numModels = 0;
+}
+
+void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber)
+{
+	memcpy(&modelHolder->vertexData[modelHolder->models[modelNumber].dataStart], modelHolder->models[modelNumber].data, modelHolder->models[modelNumber].dataLength * sizeof(float));
+	free(modelHolder->models[modelNumber].data);
+	modelHolder->models[modelNumber].data = NULL;
+}
+
+void ModelManagerCreate(ModelManager* modelHolder)
+{
+	int model;
+	if (modelHolder->totalNumVertices > modelHolder->allocNumVertices)
+	{
+		modelHolder->allocNumVertices = modelHolder->totalNumVertices;
+		free(modelHolder->vertexData);
+		modelHolder->vertexData = malloc(sizeof(float) * modelHolder->allocNumVertices);
+		g_assert(modelHolder->vertexData != NULL);
+	}
+	/* Copy data into one big buffer */
+	int vertexPos = 0;
+	for (model = 0; model < modelHolder->numModels; model++)
+	{
+		modelHolder->models[model].dataStart = vertexPos;
+		ModelManagerCopyModelToBuffer(modelHolder, model);
+		vertexPos += modelHolder->models[model].dataLength;
+	}
+	g_assert(vertexPos == modelHolder->totalNumVertices);
 }

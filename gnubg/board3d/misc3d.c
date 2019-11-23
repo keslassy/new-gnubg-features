@@ -1226,7 +1226,12 @@ SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata 
     SetupLight3d(bd3d, prd);
 
 	calculateBackgroundSize(bd3d, viewport);
-	CALL_OGL(bd3d->modelHolder.background, drawBackground, prd, bd3d->backGroundPos, bd3d->backGroundSize);	/* Update background to new size */
+	if (bd3d->modelHolder.vertexData != NULL)
+	{	/* Update background to new size */
+		CALL_OGL(&bd3d->modelHolder, MT_BACKGROUND, drawBackground, prd, bd3d->backGroundPos, bd3d->backGroundSize);
+		bd3d->modelHolder.numModels--;	// Not a new model
+		ModelManagerCopyModelToBuffer(&bd3d->modelHolder, MT_BACKGROUND);
+	}
 }
 
 void
@@ -1344,7 +1349,9 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
 
     bd3d->boardPoints.points = NULL;
 
-    bd->bd3d->fBuffers = FALSE;
+    bd3d->fBuffers = FALSE;
+
+	ModelManagerInit(&bd3d->modelHolder);
 }
 
 #if defined(HAVE_LIBPNG)

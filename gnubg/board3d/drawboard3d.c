@@ -1479,7 +1479,7 @@ GrayScale3D(Material * pMat)
 }
 
 extern void
-drawTableGrayed(const OglModelHolder* modelHolder, const BoardData3d * bd3d, renderdata tmp)
+drawTableGrayed(const ModelManager* modelHolder, const BoardData3d * bd3d, renderdata tmp)
 {
     GrayScale3D(&tmp.BaseMat);
     GrayScale3D(&tmp.PointMat[0]);
@@ -1998,32 +1998,42 @@ getCheqSize(renderdata * prd)
     }
 }
 
-void Create3dModels(const BoardData* UNUSED(bd), BoardData3d* bd3d, renderdata* prd)
+void Create3dModels(BoardData3d* bd3d, renderdata* prd)
 {
-	CALL_OGL(bd3d->modelHolder.boardBase, drawBoardBase, prd);
-	CALL_OGL(bd3d->modelHolder.oddPoints, drawPoints, prd, 0);
-	CALL_OGL(bd3d->modelHolder.evenPoints, drawPoints, prd, 1);
-	CALL_OGL(bd3d->modelHolder.table, drawTableModel, prd, &bd3d->boardPoints);
+	ModelManagerStart(&bd3d->modelHolder);
+
+	CALL_OGL(&bd3d->modelHolder, MT_BACKGROUND, drawBackground, prd, bd3d->backGroundPos, bd3d->backGroundSize);
+	CALL_OGL(&bd3d->modelHolder, MT_BASE, drawBoardBase, prd);
+	CALL_OGL(&bd3d->modelHolder, MT_ODDPOINTS, drawPoints, prd, 0);
+	CALL_OGL(&bd3d->modelHolder, MT_EVENPOINTS, drawPoints, prd, 1);
+	CALL_OGL(&bd3d->modelHolder, MT_TABLE, drawTableModel, prd, &bd3d->boardPoints);
 	if (prd->fHinges3d)
 	{
-		CALL_OGL(bd3d->modelHolder.hinge, drawHinge, prd);
-	}
-
-	CALL_OGL(bd3d->modelHolder.DC, renderCube, prd, DOUBLECUBE_SIZE);
-	CALL_OGL(bd3d->modelHolder.moveIndicator, drawMoveIndicator);
-
-	if (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP)
-	{
-		CALL_OGL(bd3d->modelHolder.pieceTop, preDrawPiece, bd3d, prd, PTT_TOP);
-		CALL_OGL(bd3d->modelHolder.piece, preDrawPiece, bd3d, prd, PTT_BOTTOM);
+		CALL_OGL(&bd3d->modelHolder, MT_HINGE, drawHinge, prd);
 	}
 	else
 	{
-		CALL_OGL(bd3d->modelHolder.piece, preDrawPiece, bd3d, prd, PTT_ALL);
+		OglModelInit(&bd3d->modelHolder, MT_HINGE);
 	}
 
-	CALL_OGL(bd3d->modelHolder.dice, renderDice, prd);
-	CALL_OGL(bd3d->modelHolder.flagPole, drawFlagPole, prd->curveAccuracy);
+	CALL_OGL(&bd3d->modelHolder, MT_CUBE, renderCube, prd, DOUBLECUBE_SIZE);
+	CALL_OGL(&bd3d->modelHolder, MT_MOVEINDICATOR, drawMoveIndicator);
+
+	if (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP)
+	{
+		CALL_OGL(&bd3d->modelHolder, MT_PIECETOP, preDrawPiece, bd3d, prd, PTT_TOP);
+		CALL_OGL(&bd3d->modelHolder, MT_PIECE, preDrawPiece, bd3d, prd, PTT_BOTTOM);
+	}
+	else
+	{
+		OglModelInit(&bd3d->modelHolder, MT_PIECETOP);
+		CALL_OGL(&bd3d->modelHolder, MT_PIECE, preDrawPiece, bd3d, prd, PTT_ALL);
+	}
+
+	CALL_OGL(&bd3d->modelHolder, MT_DICE, renderDice, prd);
+	CALL_OGL(&bd3d->modelHolder, MT_FLAG, drawFlagPole, prd->curveAccuracy);
+
+	ModelManagerCreate(&bd3d->modelHolder);
 }
 
 void
@@ -2033,7 +2043,7 @@ preDraw3d(const BoardData * bd, BoardData3d * bd3d, renderdata * prd)
 	calculateEigthPoints(&bd3d->boardPoints, BOARD_FILLET, prd->curveAccuracy);
 
 	getCheqSize(prd);
-	Create3dModels(bd, bd3d, prd);
+	Create3dModels(bd3d, prd);
 
     MakeShadowModel(bd, bd3d, prd);
 }

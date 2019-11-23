@@ -32,7 +32,7 @@ RenderString3d(const OGLFont* pFont, const char* str, float scale, int MAA)
 		if (!MAA)
 		{
 			/* Draw character */
-			OglModelDraw(&pFont->models[offset]);
+			OglModelDraw(&pFont->modelManager, offset);
 		}
 		else
 		{
@@ -131,6 +131,9 @@ CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize
 	unsigned int i, j;
 	FT_Face face;
 
+	ModelManagerInit(&pFont->modelManager);
+	ModelManagerStart(&pFont->modelManager);
+
 	memset(pFont, 0, sizeof(OGLFont));
 	pFont->scale = scale;
 	pFont->heightRatio = heightRatio;
@@ -165,7 +168,7 @@ CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize
 			return 0;
 		g_assert(face->glyph->format == ft_glyph_format_outline);
 
-		CALL_OGL(pFont->models[i], RenderGlyphX, &face->glyph->outline);
+		CALL_OGL(&pFont->modelManager, i, RenderGlyphX, &face->glyph->outline);
 
 		glNewList(pFont->AAglyphs + i, GL_COMPILE);
 		if (!RenderGlyph(&face->glyph->outline, 1))
@@ -181,6 +184,8 @@ CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize
 			pFont->kern[i][j] = kernAdvance.x;
 		}
 	}
+
+	ModelManagerCreate(&pFont->modelManager);
 
 	return !FT_Done_Face(face);
 }

@@ -23,20 +23,20 @@
 #include "BoardDimensions.h"
 #include "gtkboard.h"
 
-extern void drawTableGrayed(const OglModelHolder* modelHolder, const BoardData3d* bd3d, renderdata tmp);
+extern void drawTableGrayed(const ModelManager* modelHolder, const BoardData3d* bd3d, renderdata tmp);
 extern int LogCube(unsigned int n);
 extern void WorkOutViewArea(const BoardData* bd, viewArea* pva, float* pHalfRadianFOV, float aspectRatio);
 extern float getAreaRatio(const viewArea* pva);
 extern float getViewAreaHeight(const viewArea* pva);
 static void drawNumbers(const BoardData* bd, int MAA);
 static void MAAtidyEdges(const renderdata* prd);
-extern void drawDC(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 static void MAAmoveIndicator(void);
-extern void drawPieces(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-extern void drawDie(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, int num);
-static void drawSpecialPieces(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-static void drawFlag(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-extern void drawDice(const OglModelHolder* modelHolder, const BoardData* bd, int num, renderdata* prd);
+extern void drawDC(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
+extern void drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
+extern void drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, int num);
+static void drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
+static void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
+extern void drawDice(const ModelManager* modelHolder, const BoardData* bd, int num, renderdata* prd);
 
 ///////////////////////////////////////
 // Legacy Opengl board rendering code
@@ -46,7 +46,7 @@ extern void drawDice(const OglModelHolder* modelHolder, const BoardData* bd, int
 void
 drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {
-	const OglModelHolder* modelHolder = &bd3d->modelHolder;
+	const ModelManager* modelHolder = &bd3d->modelHolder;
 
 	if (!bd->grayBoard)
 		drawTable(modelHolder, bd3d, prd);
@@ -84,7 +84,7 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 		if (fClockwise)
 			glRotatef(180.f, 0.f, 0.f, 1.f);
 
-		OglModelDraw(&modelHolder->moveIndicator);
+		OglModelDraw(modelHolder, MT_MOVEINDICATOR);
 
 		//TODO: Enlarge and draw black outline before overlaying arrow in modern OGL...
 		MAAmoveIndicator();
@@ -526,7 +526,7 @@ MAAmoveIndicator(void)
 }
 
 extern void
-drawDie(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, int num)
+drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, int num)
 {
 	glPushMatrix();
 	/* Move to correct position for die */
@@ -545,7 +545,7 @@ drawDie(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3
 }
 
 extern void
-drawDice(const OglModelHolder* modelHolder, const BoardData* bd, int num, renderdata* prd)
+drawDice(const ModelManager* modelHolder, const BoardData* bd, int num, renderdata* prd)
 {
 	unsigned int value;
 	int rotDice[6][2] = { {0, 0}, {0, 1}, {3, 0}, {1, 0}, {0, 3}, {2, 0} };
@@ -583,7 +583,7 @@ drawDice(const OglModelHolder* modelHolder, const BoardData* bd, int num, render
 
 		/* Draw dice */
 		setMaterial(pDiceMat);
-		OglModelDraw(&modelHolder->dice);
+		OglModelDraw(modelHolder, MT_DICE);
 
 		/* Place back dots inside dice */
 		setMaterial(&bd->rd->DiceDotMat[diceCol]);
@@ -596,7 +596,7 @@ drawDice(const OglModelHolder* modelHolder, const BoardData* bd, int num, render
 	}
 	/* Draw dice */
 	setMaterial(pDiceMat);
-	OglModelDraw(&modelHolder->dice);
+	OglModelDraw(modelHolder, MT_DICE);
 
 	/* Anti-alias dice edges */
 	glLineWidth(1.f);
@@ -637,20 +637,20 @@ drawDice(const OglModelHolder* modelHolder, const BoardData* bd, int num, render
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-static void renderPiece(const OglModelHolder* modelHolder, int separateTop)
+static void renderPiece(const ModelManager* modelHolder, int separateTop)
 {
 	if (separateTop)
 	{
 		glEnable(GL_TEXTURE_2D);
-		OglModelDraw(&modelHolder->pieceTop);
+		OglModelDraw(modelHolder, MT_PIECETOP);
 		glDisable(GL_TEXTURE_2D);
 	}
 
-	OglModelDraw(&modelHolder->piece);
+	OglModelDraw(modelHolder, MT_PIECE);
 }
 
 static void
-renderSpecialPieces(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
+renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {
 	int separateTop = (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP);
 
@@ -676,7 +676,7 @@ renderSpecialPieces(const OglModelHolder* modelHolder, const BoardData* bd, cons
 }
 
 static void
-drawSpecialPieces(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
+drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {                               /* Draw animated or dragged pieces */
 	int blend = (prd->ChequerMat[0].alphaBlend) || (prd->ChequerMat[1].alphaBlend);
 
@@ -694,7 +694,7 @@ drawSpecialPieces(const OglModelHolder* modelHolder, const BoardData* bd, const 
 }
 
 extern void
-drawPiece(const OglModelHolder* modelHolder, const BoardData3d* bd3d, unsigned int point, unsigned int pos, int rotate, int roundPiece, int curveAccuracy, int separateTop)
+drawPiece(const ModelManager* modelHolder, const BoardData3d* bd3d, unsigned int point, unsigned int pos, int rotate, int roundPiece, int curveAccuracy, int separateTop)
 {
 	float v[3];
 	glPushMatrix();
@@ -746,7 +746,7 @@ drawPiece(const OglModelHolder* modelHolder, const BoardData3d* bd3d, unsigned i
 }
 
 extern void
-drawPieces(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
+drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {
 	unsigned int i;
 	unsigned int j;
@@ -939,34 +939,34 @@ void MAApoints(const renderdata* prd)
 }
 
 extern void
-drawDC(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* UNUSED(bd3d), const renderdata* prd)
+drawDC(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* UNUSED(bd3d), const renderdata* prd)
 {
 	glPushMatrix();
 	moveToDoubleCubePos(bd);
 
 	setMaterial(&prd->CubeMat);
-	OglModelDraw(&modelHolder->DC);
+	OglModelDraw(modelHolder, MT_CUBE);
 
 	DrawDCNumbers(bd);
 
 	glPopMatrix();
 }
 
-void drawTable(const OglModelHolder* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
+void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
 {
 	glClear(GL_DEPTH_BUFFER_BIT);	// Could just overwrite values with the board instead
 	glDepthFunc(GL_ALWAYS);
 
 	setMaterial(&prd->BackGroundMat);
-	OglModelDraw(&modelHolder->background);
+	OglModelDraw(modelHolder, MT_BACKGROUND);
 
 	/* Left hand side points */
 	setMaterial(&prd->BaseMat);
-	OglModelDraw(&modelHolder->boardBase);
+	OglModelDraw(modelHolder, MT_BASE);
 	setMaterial(&prd->PointMat[0]);
-	OglModelDraw(&modelHolder->oddPoints);
+	OglModelDraw(modelHolder, MT_ODDPOINTS);
 	setMaterial(&prd->PointMat[1]);
-	OglModelDraw(&modelHolder->evenPoints);
+	OglModelDraw(modelHolder, MT_EVENPOINTS);
 
 	MAApoints(prd);
 
@@ -975,11 +975,11 @@ void drawTable(const OglModelHolder* modelHolder, const BoardData3d* bd3d, const
 	glTranslatef(TOTAL_WIDTH, TOTAL_HEIGHT, 0.f);
 	glRotatef(180.f, 0.f, 0.f, 1.f);
 	setMaterial(&prd->BaseMat);
-	OglModelDraw(&modelHolder->boardBase);
+	OglModelDraw(modelHolder, MT_BASE);
 	setMaterial(&prd->PointMat[0]);
-	OglModelDraw(&modelHolder->oddPoints);
+	OglModelDraw(modelHolder, MT_ODDPOINTS);
 	setMaterial(&prd->PointMat[1]);
-	OglModelDraw(&modelHolder->evenPoints);
+	OglModelDraw(modelHolder, MT_EVENPOINTS);
 
 	MAApoints(prd);
 	glPopMatrix();
@@ -987,18 +987,18 @@ void drawTable(const OglModelHolder* modelHolder, const BoardData3d* bd3d, const
 	glDepthFunc(GL_LEQUAL);
 
 	setMaterial(&prd->BoxMat);
-	OglModelDraw(&modelHolder->table);
+	OglModelDraw(modelHolder, MT_TABLE);
 
 	if (prd->fHinges3d)
 	{
 		setMaterial(&prd->HingeMat);
 		glPushMatrix();
 		glTranslatef((TOTAL_WIDTH) / 2.0f, ((TOTAL_HEIGHT / 2.0f) - HINGE_HEIGHT) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
-		OglModelDraw(&modelHolder->hinge);
+		OglModelDraw(modelHolder, MT_HINGE);
 		glPopMatrix();
 		glPushMatrix();
 		glTranslatef((TOTAL_WIDTH) / 2.0f, ((TOTAL_HEIGHT / 2.0f) - HINGE_HEIGHT + TOTAL_HEIGHT) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
-		OglModelDraw(&modelHolder->hinge);
+		OglModelDraw(modelHolder, MT_HINGE);
 		glPopMatrix();
 
 		/* Shadow in gap between boards */
@@ -1057,7 +1057,7 @@ calculateBackgroundSize(BoardData3d* bd3d, const int viewport[4])
 }
 
 extern void
-renderFlag(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, unsigned int curveAccuracy)
+renderFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, unsigned int curveAccuracy)
 {
 	/* Simple knots i.e. no weighting */
 	float s_knots[S_NUMKNOTS] = { 0, 0, 0, 0, 1, 1, 1, 1 };
@@ -1079,7 +1079,7 @@ renderFlag(const OglModelHolder* modelHolder, const BoardData* bd, const BoardDa
 
 	/* Draw flag pole */
 	SetColour3d(.2f, .2f, .4f, 0.f);    /* Blue pole */
-	OglModelDraw(&modelHolder->flagPole);
+	OglModelDraw(modelHolder, MT_FLAG);
 
 	/* Draw number on flag */
 	glDisable(GL_DEPTH_TEST);
@@ -1128,7 +1128,7 @@ renderFlag(const OglModelHolder* modelHolder, const BoardData* bd, const BoardDa
 }
 
 static void
-drawFlag(const OglModelHolder* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
+drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {
 	float v[4];
 	int isStencil = glIsEnabled(GL_STENCIL_TEST);

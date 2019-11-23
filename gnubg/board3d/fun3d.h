@@ -57,34 +57,38 @@ typedef struct _OglModel
 	float* data;
 	int dataLength;
 	int modelUsesTexture;
+	int dataStart;
 } OglModel;
 
-typedef struct _OglModelHolder
+enum ModelType { MT_BACKGROUND, MT_BASE, MT_ODDPOINTS, MT_EVENPOINTS, MT_TABLE, MT_HINGE, MT_CUBE, MT_MOVEINDICATOR, MT_PIECE, MT_PIECETOP, MT_DICE, MT_FLAG };
+
+#define MAX_MODELS 12
+typedef struct _ModelManager
 {
-	OglModel background;
-	OglModel boardBase;
-	OglModel oddPoints, evenPoints;
-	OglModel table;
-	OglModel hinge;
-	OglModel DC;
-	OglModel moveIndicator;
-	OglModel piece, pieceTop;
-	OglModel dice;
-	OglModel flagPole;
-} OglModelHolder;
+	int totalNumVertices;
+	int allocNumVertices;
+	float* vertexData;
+	int numModels;
+	OglModel models[MAX_MODELS];
+} ModelManager;
 
-/* TODO: Tidy this up... */
-void OglModelInit(OglModel* oglModel);
-void OglModelAlloc(OglModel* oglModel);
-void OglModelDraw(const OglModel* oglModel);
+void OglModelInit(ModelManager* modelHolder, int modelNumber);
+void OglModelAlloc(ModelManager* modelHolder, int modelNumber);
+void OglModelDraw(const ModelManager* modelManager, int modelNumber);
 
+void ModelManagerInit(ModelManager* modelHolder);
+void ModelManagerStart(ModelManager* modelHolder);
+void ModelManagerCreate(ModelManager* modelHolder);
+void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber);
+
+/* TODO: Tidy this up... (i.e. remove tricky macro) */
 extern OglModel* curModel;
-#define CALL_OGL(model, fun, ...) \
+#define CALL_OGL(modelManager, modelNumber, fun, ...) \
 { \
-	curModel = &model;\
-	OglModelInit(curModel);\
+	curModel = modelManager.models[modelNumber];\
+	OglModelInit(modelManager, modelNumber);\
 	fun(__VA_ARGS__);\
-	OglModelAlloc(curModel);\
+	OglModelAlloc(modelManager, modelNumber);\
 	fun(__VA_ARGS__); \
 }
 
@@ -102,7 +106,7 @@ struct _OGLFont {
 	float heightRatio;
 	float height;
 	float length;
-	OglModel models[10];
+	ModelManager modelManager;
 };
 
 typedef struct _Point3d {
@@ -266,7 +270,7 @@ extern void FreeTextFont(OGLFont* ppFont);
 extern int extensionSupported(const char* extension);
 
 void RenderString3d(const OGLFont* pFont, const char* str, float scale, int MAA);
-extern void drawTable(const OglModelHolder* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
+extern void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
 extern void getMoveIndicatorPos(int turn, float pos[3]);
 extern void drawMoveIndicator(void);
 extern void drawFlagPole(unsigned int curveAccuracy);
@@ -305,7 +309,7 @@ struct _BoardData3d {
     GtkWidget *drawing_area3d;  /* main 3d widget */
 
 	/* Store models for each board part */
-	OglModelHolder modelHolder;
+	ModelManager modelHolder;
 
     /* Bit of a hack - assign each possible position a set rotation */
     int pieceRotation[28][15];
