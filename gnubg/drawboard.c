@@ -1,11 +1,11 @@
 /*
- * drawboard.c
+ * Copyright (C) 1999-2002 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2000-2015 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 1999, 2000, 2001, 2002
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -722,7 +721,7 @@ ParseMove(char *pch, int an[8])
      * when instrumented by clang's address sanitizer. Gcc 5 complains
      * ("array subscript is above array bounds") until it is raised to 12
      * then gcc 6 does the same until the size is 17.
-     */ 
+     */
     int i, j, iBegin, iEnd, n, c = 0, anUser[17];
     unsigned fl = 0;
 
@@ -910,10 +909,9 @@ ParseMove(char *pch, int an[8])
  *
  * (see <URL:http://www.fibs.com/fibs_interface.html#board_state>)
  *
- * gnubg extends the meaning of the "doubled" field, so the sign of
+ * GNUbg extends the meaning of the "doubled" field, so the sign of
  * the field indicates who doubled. This is necessary to correctly
  * detects beavers and raccoons.
- *
  */
 
 extern char *
@@ -964,15 +962,14 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
             fDoubled ? (fTurn ? -1 : 1) : 0, anOff[1], anOff[0], fCrawford);
 
 #if 0
-/*  Temporarily remove this code as it breaks the GUI by preventing a player
-    from hitting an opponents blot. It appears to the user as an illegal play
-    Reported by Wolfgang Nelles */
+    /*  Temporarily remove this code as it breaks the GUI by preventing a player
+     * from hitting an opponents blot. It appears to the user as an illegal play
+     * Reported by Wolfgang Nelles */
 
     sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:%d:%d:%d:%d:0:0:0:"
             "0:%d:0", nDice0, nDice1, nDice0, nDice1, fTurn < 0 ? 1 : nCube,
             fTurn < 0 || fCubeOwner != 0, fTurn < 0 || fCubeOwner != 1,
-            fDoubled ? (fTurn ? -1 : 1) : 0, fNonCrawford, fPostCrawford,
-            anOff[1], anOff[0], fCrawford);
+            fDoubled ? (fTurn ? -1 : 1) : 0, fNonCrawford, fPostCrawford, anOff[1], anOff[0], fCrawford);
 #endif
 
     return pch;
@@ -1062,7 +1059,7 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
     if (fMustSwap) {
         int nTmp;
 
-        nTmp  = procBrd->nScore;
+        nTmp = procBrd->nScore;
         procBrd->nScore = procBrd->nScoreOpp;
         procBrd->nScoreOpp = nTmp;
         nTmp = fCanDouble;
