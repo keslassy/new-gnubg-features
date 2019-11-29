@@ -51,7 +51,7 @@ void SHIMglVertex2f(GLfloat x, GLfloat y);
 void SHIMglVertex3f(GLfloat x, GLfloat y, GLfloat z);
 void SHIMglFrustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
 void SHIMglOrtho(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
-void SHIMglLoadIdentity();
+void SHIMglLoadIdentity(void);
 
 #define setMaterial SHIMsetMaterial
 #define glPushMatrix SHIMglPushMatrix
@@ -70,5 +70,5 @@ void SHIMglLoadIdentity();
 #define glOrtho SHIMglOrtho
 #define glLoadIdentity SHIMglLoadIdentity
 
-float* SHIMGetModelViewMatrix();
-float* SHIMGetProjectionMatrix();
+float* SHIMGetModelViewMatrix(void);
+float* SHIMGetProjectionMatrix(void);
