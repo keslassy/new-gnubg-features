@@ -1475,8 +1475,8 @@ ComputerTurn(void)
             SwapSides(anBoardTemp);
 
         FIBSBoard(szBoard, anBoardTemp, ms.fMove,
-                  ap[ms.fMove].szName, ap[!ms.fMove].szName,
-                  ms.nMatchTo, ms.anScore[ms.fMove], ms.anScore[!ms.fMove],
+                  ap[ms.fTurn^ms.fMove].szName, ap[ms.fTurn^!ms.fMove].szName,
+                  ms.nMatchTo, ms.anScore[ms.fTurn^ms.fMove], ms.anScore[ms.fTurn^!ms.fMove],
                   ms.anDice[0], ms.anDice[1], ms.nCube, ms.fCubeOwner, ms.fDoubled, 0 /* turn */ , ms.fCrawford,
                   anChequers[ms.bgv], ms.fPostCrawford);
         strcat(szBoard, "\n");
