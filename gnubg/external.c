@@ -485,20 +485,38 @@ ExtFIBSBoard(scancontext * pec)
                 return NULL;
 
             switch (FindCubeDecision(arDouble, aarOutput, &ci)) {
+
+            case DOUBLE_TAKE:
+            case NODOUBLE_TAKE:
+            case TOOGOOD_TAKE:
+            case REDOUBLE_TAKE:
+            case NO_REDOUBLE_TAKE:
+            case TOOGOODRE_TAKE:
+            case NODOUBLE_DEADCUBE:
+            case NO_REDOUBLE_DEADCUBE:
+            case OPTIONAL_DOUBLE_TAKE:
+            case OPTIONAL_REDOUBLE_TAKE:
+                szResponse = g_strdup("take\n");
+                break;
+
             case DOUBLE_PASS:
             case TOOGOOD_PASS:
             case REDOUBLE_PASS:
             case TOOGOODRE_PASS:
+            case OPTIONAL_DOUBLE_PASS:
+            case OPTIONAL_REDOUBLE_PASS:
                 szResponse = g_strdup("drop\n");
                 break;
 
             case NODOUBLE_BEAVER:
             case DOUBLE_BEAVER:
             case NO_REDOUBLE_BEAVER:
+            case OPTIONAL_DOUBLE_BEAVER:
                 szResponse = g_strdup("beaver\n");
                 break;
 
             default:
+                g_assert_not_reached();
                 szResponse = g_strdup("take\n");
             }
 
@@ -545,7 +563,31 @@ ExtFIBSBoard(scancontext * pec)
                 szResponse = g_strdup("double\n");
                 break;
 
+            case NODOUBLE_TAKE:
+            case TOOGOOD_TAKE:
+            case NO_REDOUBLE_TAKE:
+            case TOOGOODRE_TAKE:
+            case TOOGOOD_PASS:
+            case TOOGOODRE_PASS:
+            case NODOUBLE_BEAVER:
+            case NO_REDOUBLE_BEAVER:
+                szResponse = g_strdup("roll\n");
+                break;
+
+            case OPTIONAL_DOUBLE_BEAVER:
+            case OPTIONAL_DOUBLE_TAKE:
+            case OPTIONAL_REDOUBLE_TAKE:
+            case OPTIONAL_DOUBLE_PASS:
+            case OPTIONAL_REDOUBLE_PASS:
+                if (pec->nPlies == 0 && aarOutput[fTurn][0] > 0.001f)
+                    /* double if 0-ply except when about to lose game */
+                    szResponse = g_strdup("double\n");
+                else
+                    szResponse = g_strdup("roll\n");
+                break;
+
             default:
+                g_assert_not_reached();
                 szResponse = g_strdup("roll\n");
             }
         }
