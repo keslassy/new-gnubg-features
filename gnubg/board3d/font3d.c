@@ -279,8 +279,7 @@ tcbEnd( /*lint -e{818} */ Mesh* pMesh)
 }
 
 #include "ShimOGL.h"
-
-void RenderCharAA(unsigned int glyph);
+#include "BoardDimensions.h"
 
 extern void
 RenderString3d(const OGLFont* pFont, const char* str, float scale, int MAA)
@@ -329,8 +328,6 @@ glPrintPointNumbers(const OGLFont* numberFont, const char* text, int MAA)
 	RenderString3d(numberFont, text, numberFont->scale, MAA);
 	glPopMatrix();
 }
-
-#include "BoardDimensions.h"
 
 void
 DrawNumbers(const OGLFont* numberFont, unsigned int sides, int swapNumbers, int MAA)

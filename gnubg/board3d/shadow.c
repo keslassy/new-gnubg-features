@@ -40,13 +40,13 @@ ShadowsInitilised(const BoardData3d * bd3d)
 void
 shadowInit(BoardData3d * bd3d, renderdata * prd)
 {
-    int stencilBits;
-
     if (bd3d->shadowsInitialised)
         return;
 
 #ifndef USE_GTK3
-    /* Darkness as percentage of ambient light */
+	int stencilBits;
+	
+	/* Darkness as percentage of ambient light */
     prd->dimness = (float)(prd->lightLevels[1] * (100 - prd->shadowDarkness)) / (100.0f * 100.0f);
 
 	initOccluders(bd3d);

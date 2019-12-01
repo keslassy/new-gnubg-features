@@ -438,7 +438,6 @@ extern void glSetViewport(int viewport[4]);
 extern void SetupViewingVolume3d(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, int viewport[4]);
 extern void SetupViewingVolume3dNew(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, float** projMat, float** modelMat, int viewport[4]);
 extern void ClearScreen(const renderdata* prd);
-extern void moveToDoubleCubePos(const BoardData* bd);
 extern float* GetModelViewMatrix(void);
 extern float* GetProjectionMatrix(void);
 extern void LegacyStartAA(float width);
@@ -456,5 +455,6 @@ extern void renderPiece(const ModelManager* modelHolder, int separateTop);
 extern void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol);
 extern void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol);
 extern void gluNurbFlagRender(int curveAccuracy);
+extern void RenderCharAA(unsigned int glyph);
 
 #endif
