@@ -1,17 +1,316 @@
-
+﻿
 #include "config.h"
+#ifdef USE_GTK3
+#include <epoxy/gl.h>
+#endif
 #include "fun3d.h"
+#include "util.h"
+#include "common.h"
 
-#if _MSC_VER && !TEST_HARNESS
-// Not yet working...
-GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, void* data)
-{ return NULL; }
+#include <cglm/affine.h>
+
+typedef struct _GLWidgetData
+{
+	RealizeCB realizeCB;
+	ConfigureCB configureCB;
+	ExposeCB exposeCB;
+	void* cbData;
+} GLWidgetData;
+
+#ifdef USE_GTK3
+
+guint basicShader;
+guint projection_location;
+guint modelView_location;
+guint colour_location;
+
+void
+setMaterial(const Material* pMat)
+{
+	if (pMat != NULL && pMat != currentMat)
+	{
+		currentMat = pMat;
+		glUniform3fv(colour_location, 1, pMat->diffuseColour);
+	}
+}
+
+void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber)
+{
+	glBufferSubData(GL_ARRAY_BUFFER, modelHolder->models[modelNumber].dataStart * sizeof(float), modelHolder->models[modelNumber].dataLength * sizeof(float), modelHolder->models[modelNumber].data);
+	free(modelHolder->models[modelNumber].data);
+	modelHolder->models[modelNumber].data = NULL;
+}
+
+void ModelManagerCreate(ModelManager* modelHolder)
+{
+	int model;
+	if (modelHolder->vao == GL_INVALID_VALUE)
+	{
+		/* we need to create a VAO to store the other buffers */
+		glGenVertexArrays(1, &modelHolder->vao);
+		glBindVertexArray(modelHolder->vao);
+
+		/* this is the VBO that holds the vertex data */
+		glGenBuffers(1, &modelHolder->buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, modelHolder->buffer);
+
+		/* get the location of the "position" and "color" attributes */
+		guint texCoord_index = glGetAttribLocation(basicShader, "texCoordAttrib");
+		guint normal_index = glGetAttribLocation(basicShader, "normalAttrib");
+		guint position_index = glGetAttribLocation(basicShader, "positionAttrib");
+
+		int stride = VERTEX_STRIDE * sizeof(float);
+		/* enable and set the attributes */
+		glEnableVertexAttribArray(texCoord_index);
+		glVertexAttribPointer(texCoord_index, 2, GL_FLOAT, GL_FALSE, stride, 0);
+		glEnableVertexAttribArray(normal_index);
+		glVertexAttribPointer(normal_index, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(float)));
+		glEnableVertexAttribArray(position_index);
+		glVertexAttribPointer(position_index, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(float)));
+	}
+	if (modelHolder->totalNumVertices > modelHolder->allocNumVertices)
+	{
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * modelHolder->totalNumVertices, NULL, GL_STATIC_DRAW);
+		modelHolder->allocNumVertices = modelHolder->totalNumVertices;
+	}
+
+	/* Copy data into gpu buffer */
+	int vertexPos = 0;
+	for (model = 0; model < modelHolder->numModels; model++)
+	{
+		modelHolder->models[model].dataStart = vertexPos;
+		ModelManagerCopyModelToBuffer(modelHolder, model);
+		vertexPos += modelHolder->models[model].dataLength;
+	}
+	g_assert(vertexPos == modelHolder->totalNumVertices);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
 void GLWidgetMakeCurrent(GtkWidget* widget)
-{}
+{
+	//TODO: gtk_gl_area_make_current "not usually needed to be called"?
+	gtk_gl_area_make_current(GTK_GL_AREA(widget));
+}
+
+static guint
+create_shader(int          shader_type,
+	const char* source,
+	GError** error,
+	guint* shader_out)
+{
+	guint shader = glCreateShader(shader_type);
+	glShaderSource(shader, 1, &source, NULL);
+	glCompileShader(shader);
+
+	int status;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		int log_len;
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_len);
+
+		char* buffer = g_malloc(log_len + 1);
+		glGetShaderInfoLog(shader, log_len, NULL, buffer);
+		printf( "Compilation failure in %s shader: %s", shader_type == GL_VERTEX_SHADER ? "vertex" : "fragment", buffer);
+		g_free(buffer);
+
+		glDeleteShader(shader);
+		shader = 0;
+	}
+
+	if (shader_out != NULL)
+		*shader_out = shader;
+
+	return shader != 0;
+}
+
+char* LoadFile(const char* filename)
+{
+	long lSize;
+	char* buffer;
+
+	FILE* fp = fopen(filename, "rb");
+	if (!fp)
+	{
+		printf("Failed to open %s!\n", filename);
+		return NULL;
+	}
+
+	fseek(fp, 0L, SEEK_END);
+	lSize = ftell(fp);
+	if (lSize == -1)
+		return NULL;
+	rewind(fp);
+
+	/* allocate memory for entire content */
+	buffer = calloc(1, lSize + 1);
+	if (!buffer) return NULL;
+
+	fread(buffer, lSize, 1, fp);
+
+	fclose(fp);
+	return buffer;
+}
+
+guint CreateShader(int shader_type, const char* shader_name)
+{
+	int status;
+	char* source;
+	char* pathname = BuildFilename(shader_name);
+	char filename[_MAX_PATH];
+	strcpy(filename, pathname);
+	if (shader_type == GL_VERTEX_SHADER)
+		strcat(filename, "-vertex.glsl");
+	else
+		strcat(filename, "-fragment.glsl");
+	g_free(pathname);
+
+	source = LoadFile(filename);
+
+	guint shader = glCreateShader(shader_type);
+	glShaderSource(shader, 1, &source, NULL);
+	glCompileShader(shader);
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		int log_len;
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_len);
+
+		char* buffer = g_malloc(log_len + 1);
+		glGetShaderInfoLog(shader, log_len, NULL, buffer);
+		printf("Compilation failure in %s shader: %s", shader_type == GL_VERTEX_SHADER ? "vertex" : "fragment", buffer);
+		g_free(buffer);
+		return 0;
+	}
+
+	free(source);
+	return shader;
+}
+
+guint
+init_shaders(const char* shader_name)
+{
+	guint vertex = CreateShader(GL_VERTEX_SHADER, shader_name);
+	guint fragment = CreateShader(GL_FRAGMENT_SHADER, shader_name);
+
+	/* link the vertex and fragment shaders together */
+	guint program = glCreateProgram();
+	glAttachShader(program, vertex);
+	glAttachShader(program, fragment);
+	glLinkProgram(program);
+
+	int status = 0;
+	glGetProgramiv(program, GL_LINK_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		int log_len = 0;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_len);
+
+		char* buffer = g_malloc(log_len + 1);
+		glGetProgramInfoLog(program, log_len, NULL, buffer);
+
+		printf("Linking failure in program: %s", buffer);
+
+		g_free(buffer);
+		return FALSE;
+	}
+
+	return program;
+}
+
+static void
+realize_event(GtkWidget* widget, const GLWidgetData* glwData)
+{
+	GLWidgetMakeCurrent(widget);
+	if (gtk_gl_area_get_error(GTK_GL_AREA(widget)) != NULL)
+		return;
+	gtk_gl_area_set_has_depth_buffer(GTK_GL_AREA(widget), TRUE);
+
+	/* initialize the shaders and retrieve the program data */
+	basicShader = init_shaders("/Shaders/basic");
+	/* get the location of the matrices uniforms */
+	projection_location = glGetUniformLocation(basicShader, "projection");
+	modelView_location = glGetUniformLocation(basicShader, "modelView");
+	colour_location = glGetUniformLocation(basicShader, "colour");
+	glwData->realizeCB(glwData->cbData);
+
+	gtk_widget_queue_draw(widget);
+}
+
+void
+resize_event(GtkGLArea* widget, gint width, gint height, const GLWidgetData* glwData)
+{
+	glwData->configureCB(GTK_WIDGET(widget), glwData->cbData);
+}
+
+void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Material* pMat)
+{
+	setMaterial(pMat);
+
+	/* update the projection matrices we use in the shader */
+	glUniformMatrix4fv(projection_location, 1, GL_FALSE, GetProjectionMatrix());
+	glUniformMatrix4fv(modelView_location, 1, GL_FALSE, GetModelViewMatrix());
+
+	/* use the buffers in the VAO */
+	glBindVertexArray(modelManager->vao);
+
+	/* draw the three vertices as a triangle */
+	glDrawArrays(GL_TRIANGLES, modelManager->models[modelNumber].dataStart / VERTEX_STRIDE, modelManager->models[modelNumber].dataLength / VERTEX_STRIDE);
+}
+
 gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* eventDetails, void* data)
-{ return 0; }
+{
+	CheckOpenglError();
+
+	glClearColor(0.5, 0.5, 0.5, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glUseProgram(basicShader);
+
+	exposeCB(widget, eventDetails, data);
+
+	return TRUE;
+}
+
+static gboolean
+expose_event(GtkWidget* widget, GdkEventExpose* eventDetails, const GLWidgetData* glwData)
+{
+	return GLWidgetRender(widget, glwData->exposeCB, eventDetails, glwData->cbData);
+}
+
+GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, void* data)
+{
+	GtkWidget* pw = gtk_gl_area_new();
+
+	if (pw == NULL) {
+		g_print("Can't create opengl drawing widget\n");
+		return NULL;
+	}
+
+	GLWidgetData* glwData = malloc(sizeof(GLWidgetData));
+	if (!glwData) return NULL;
+
+	glwData->cbData = data;
+	glwData->realizeCB = realizeCB;
+	glwData->configureCB = configureCB;
+	glwData->exposeCB = exposeCB;
+
+	if (realizeCB != NULL)
+		g_signal_connect(G_OBJECT(pw), "realize", G_CALLBACK(realize_event), glwData);
+	if (configureCB != NULL)
+		g_signal_connect(G_OBJECT(pw), "resize", G_CALLBACK(resize_event), glwData);
+	if (exposeCB != NULL)
+		g_signal_connect(G_OBJECT(pw), "render", G_CALLBACK(expose_event), glwData);
+
+	return pw;
+}
+
 gboolean GLInit(int* argc, char*** argv)
-{ return 0; }
+{
+	return GL_TRUE;	// TODO: Anything to check here?
+}
 
 #else
 
@@ -39,14 +338,6 @@ getGlConfig(void)
 	return glconfig;
 }
 
-typedef struct _GLWidgetData
-{
-	RealizeCB realizeCB;
-	ConfigureCB configureCB;
-	ExposeCB exposeCB;
-	void* cbData;
-} GLWidgetData;
-
 static void
 realize_event(GtkWidget* widget, const GLWidgetData* glwData)
 {
@@ -61,8 +352,9 @@ realize_event(GtkWidget* widget, const GLWidgetData* glwData)
 }
 
 static gboolean
-configure_event(GtkWidget* widget, GdkEventConfigure* UNUSED(eventDetails), const GLWidgetData* glwData)
+configure_event(GtkWidget* widget, GdkEventConfigure* UNUSED(eventDetails), void* data)
 {
+	const GLWidgetData* glwData = (const GLWidgetData*)data;
 	GdkGLDrawable* gldrawable = gtk_widget_get_gl_drawable(widget);
 
 	if (!gdk_gl_drawable_gl_begin(gldrawable, gtk_widget_get_gl_context(widget)))

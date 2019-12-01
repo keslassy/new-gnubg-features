@@ -28,9 +28,6 @@ void OglModelInit(ModelManager* modelHolder, int modelNumber)
 {
 	modelHolder->models[modelNumber].data = NULL;
 	modelHolder->models[modelNumber].dataLength = 0;
-	modelHolder->models[modelNumber].modelUsesTexture = 0;
-
-	InitMatStacks();
 
 	modelHolder->numModels++;
 }
@@ -43,40 +40,52 @@ void OglModelAlloc(ModelManager* modelHolder, int modelNumber)
 	modelHolder->models[modelNumber].dataLength = 0;
 }
 
-void OglModelDraw(const ModelManager* modelManager, int modelNumber)
-{
-	float* data = &modelManager->vertexData[modelManager->models[modelNumber].dataStart];
-	int dataLength = modelManager->models[modelNumber].dataLength;
-
-	int vertexSize = 6;
-	if (modelManager->models[modelNumber].modelUsesTexture)
-		vertexSize += 2;
-
-	glBegin(GL_TRIANGLES);
-	for (int vertex = 0; vertex < dataLength / vertexSize; vertex++)
-	{
-		if (modelManager->models[modelNumber].modelUsesTexture)
-		{
-			glTexCoord2f(data[0], data[1]);
-			data += 2;
-		}
-		glNormal3f(data[0], data[1], data[2]);
-		glVertex3f(data[3], data[4], data[5]);
-		data += 6;
-	}
-	glEnd();
-}
-
 void ModelManagerInit(ModelManager* modelHolder)
 {
 	modelHolder->allocNumVertices = 0;
 	modelHolder->vertexData = NULL;
+
+#ifdef USE_GTK3
+	modelHolder->vao = GL_INVALID_VALUE;
+#endif
 }
 
 void ModelManagerStart(ModelManager* modelHolder)
 {
+	InitMatStacks();
+
 	modelHolder->totalNumVertices = 0;
 	modelHolder->numModels = 0;
+}
+
+float* GetModelViewMatrix();
+
+#ifndef USE_GTK3
+void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Material* pMat)
+{
+	float* data = &modelManager->vertexData[modelManager->models[modelNumber].dataStart];
+	int dataLength = modelManager->models[modelNumber].dataLength;
+
+	int usesTexture = (pMat && pMat->pTexture);
+	setMaterial(pMat);
+
+	glPushMatrix();
+	glLoadMatrixf(GetModelViewMatrix());
+
+	glBegin(GL_TRIANGLES);
+	for (int vertex = 0; vertex < dataLength / VERTEX_STRIDE; vertex++)
+	{
+		if (usesTexture)
+		{
+			glTexCoord2f(data[0], data[1]);
+		}
+		glNormal3f(data[2], data[3], data[4]);
+		glVertex3f(data[5], data[6], data[7]);
+		data += VERTEX_STRIDE;
+	}
+	glEnd();
+
+	glPopMatrix();
 }
 
 void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber)
@@ -106,3 +115,4 @@ void ModelManagerCreate(ModelManager* modelHolder)
 	}
 	g_assert(vertexPos == modelHolder->totalNumVertices);
 }
+#endif

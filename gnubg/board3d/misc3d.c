@@ -279,6 +279,7 @@ CreateFonts(BoardData3d * bd3d)
 void
 InitGL(const BoardData * bd)
 {
+#ifndef USE_GTK3
     float gal[4];
     /* Turn on light 0 */
     glEnable(GL_LIGHT0);
@@ -308,7 +309,7 @@ InitGL(const BoardData * bd)
 
     /* Generate normal co-ords for nurbs */
     glEnable(GL_AUTO_NORMAL);
-
+#endif
     if (bd) {
         BoardData3d *bd3d = bd->bd3d;
         /* Setup some 3d things */
@@ -326,21 +327,30 @@ InitGL(const BoardData * bd)
     }
 }
 
+const Material* currentMat = NULL;
+#ifndef USE_GTK3
 void
 setMaterial(const Material * pMat)
 {
-    glMaterialfv(GL_FRONT, GL_AMBIENT, pMat->ambientColour);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, pMat->diffuseColour);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, pMat->specularColour);
-    glMateriali(GL_FRONT, GL_SHININESS, pMat->shine);
+	if (pMat != NULL && pMat != currentMat)
+	{
+		currentMat = pMat;
 
-    if (pMat->pTexture) {
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, pMat->pTexture->texID);
-    } else {
-        glDisable(GL_TEXTURE_2D);
-    }
+		glMaterialfv(GL_FRONT, GL_AMBIENT, pMat->ambientColour);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, pMat->diffuseColour);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, pMat->specularColour);
+		glMateriali(GL_FRONT, GL_SHININESS, pMat->shine);
+
+		if (pMat->pTexture) {
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, pMat->pTexture->texID);
+		}
+		else {
+			glDisable(GL_TEXTURE_2D);
+		}
+	}
 }
+#endif
 
 float
 Dist2d(float a, float b)
@@ -1217,13 +1227,15 @@ SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata 
    	float *projMat, *modelMat;
 	SetupViewingVolume3dNew(bd, bd3d, prd, &projMat, &modelMat, viewport);
 
+#ifndef USE_GTK3
 	/* Setup openGL legacy matrices */
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(projMat);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(modelMat);
 
-    SetupLight3d(bd3d, prd);
+	SetupLight3d(bd3d, prd);
+#endif
 
 	calculateBackgroundSize(bd3d, viewport);
 	if (bd3d->modelHolder.vertexData != NULL)
@@ -1335,14 +1347,14 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
             bd3d->pieceRotation[i][j] = rand() % 360;
 
     bd3d->shadowsInitialised = FALSE;
-    bd3d->shadowsOutofDate = TRUE;
+    bd3d->shadowsOutofDate = FALSE;
     bd3d->moving = 0;
     bd3d->shakingDice = 0;
     bd->drag_point = -1;
     bd->DragTargetHelp = 0;
 
     SetupSimpleMat(&bd3d->gapColour, 0.f, 0.f, 0.f);
-    SetupMat(&bd3d->flagMat, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 50, 0.f);
+	SetupSimpleMat(&bd3d->flagMat, .2f, .2f, .4f);	/* Blue pole */
     SetupMat(&bd3d->flagNumberMat, 0.f, 0.f, .4f, 0.f, 0.f, .4f, 1.f, 1.f, 1.f, 100, 1.f);
 
     bd3d->numTextures = 0;

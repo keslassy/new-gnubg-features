@@ -1,3 +1,6 @@
+Sun Dec 01 20:03:45 2019 Jon Kinsey <JonKinsey@gmail.com>
+	* Add initial support for gtk3's GtkGLArea (not yet working) with very basic shader
+	
 Sat Nov 09 22:03:45 2019 Jon Kinsey <JonKinsey@gmail.com>
 	* Refactor 3d code, change drawboard3d to use a model rather than immediate mode OpenGL calls
 	* Code split into several new files, also removed quickdraw and closing board animations

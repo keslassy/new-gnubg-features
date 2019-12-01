@@ -887,6 +887,14 @@ drawCube(float size)
     glPopMatrix();
 }
 
+static void
+moveToDoubleCubePos(const BoardData* bd)
+{
+	float v[3];
+	getDoubleCubePos(bd, v);
+	glTranslatef(v[0], v[1], v[2]);
+}
+
 #if defined(__clang__) || defined(__GNUC__) && ( __GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL >= 40604 )
 #pragma GCC diagnostic pop
 #endif

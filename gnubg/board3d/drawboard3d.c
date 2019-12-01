@@ -28,6 +28,8 @@
 #include "Shapes.inc"
 #include "gtkboard.h"
 
+extern int LogCube(unsigned int n);
+
 float
 getBoardWidth(void)
 {
@@ -70,8 +72,6 @@ drawPoints(const renderdata* prd, int side)
 	/* texture unit value */
 	float tuv;
 
-	setMaterial(&prd->PointMat[side]);
-
 	if (prd->PointMat[side].pTexture)
 		tuv = (TEXTURE_SCALE) / prd->PointMat[side].pTexture->width;
 	else
@@ -84,7 +84,6 @@ drawPoints(const renderdata* prd, int side)
 void
 drawBoardBase(const renderdata* prd)
 {
-	setMaterial(&prd->BaseMat);
 	if (prd->bgInTrays)
 		drawChequeredRect(EDGE_WIDTH, EDGE_HEIGHT, BASE_DEPTH, BOARD_WIDTH + TRAY_WIDTH - EDGE_WIDTH,
 			TOTAL_HEIGHT - EDGE_HEIGHT * 2, prd->acrossCheq, prd->downCheq, prd->BaseMat.pTexture);
@@ -116,9 +115,6 @@ void drawRectTextureMatched(float x, float y, float z, float w, float h, const T
 void
 drawBackground(const renderdata* prd, const float* bd3dbackGroundPos, const float* bd3dbackGroundSize)
 {
-	/* Draw background */
-	setMaterial(&prd->BackGroundMat);
-
 	//Bottom
 	drawRectTextureMatched(bd3dbackGroundPos[0], bd3dbackGroundPos[1], 0.f, bd3dbackGroundSize[0], -bd3dbackGroundPos[1], prd->BackGroundMat.pTexture);
 	//Left
@@ -272,11 +268,6 @@ preRenderPiece(const renderdata* prd, int display, PieceTextureType ptt)
 void
 preDrawPiece(const BoardData3d* UNUSED(bd3d), const renderdata* prd, PieceTextureType ptt)
 {
-	setMaterial(&prd->ChequerMat[0]);
-
-	if (ptt == PTT_BOTTOM)
-		curModel->modelUsesTexture = FALSE;
-
 	preRenderPiece(prd, TRUE, ptt);
 }
 
@@ -304,8 +295,6 @@ renderDice(const renderdata* prd)
 
 	unsigned int corner_steps = (prd->curveAccuracy / 4) + 1;
 	float*** corner_points = Alloc3d(corner_steps, corner_steps, 3);
-
-	setMaterial(&prd->DiceMat[0]);	// Only picking up if there's a texture (currently always false)
 
 	radius = size / 2.0f;
 	step = (2 * (float)F_PI) / prd->curveAccuracy;
@@ -383,8 +372,6 @@ renderCube(const renderdata* prd, float size)
 	float radius = size / 7.0f;
 	float ds = (size * 5.0f / 7.0f);
 	float hds = (ds / 2);
-
-	setMaterial(&prd->CubeMat);
 
 	glPushMatrix();
 
@@ -708,8 +695,6 @@ drawMoveIndicator()
 void
 drawHinge(const renderdata* prd)
 {
-	setMaterial(&prd->HingeMat);
-
 	glMatrixMode(GL_TEXTURE);
 	glPushMatrix();
 	glScalef(1.f, HINGE_SEGMENTS, 1.f);
@@ -862,8 +847,6 @@ drawTableModel(const renderdata* prd, const EigthPoints* bd3dboardPoints)
 {
 	float curveTextOff = 0;
 	float tuv = 0;
-
-	setMaterial(&prd->BoxMat);
 
 	if (!prd->bgInTrays)
 		drawSplitRect(TOTAL_WIDTH - TRAY_WIDTH + EDGE_WIDTH, EDGE_HEIGHT, BASE_DEPTH, PIECE_HOLE + LIFT_OFF,
@@ -2045,7 +2028,9 @@ preDraw3d(const BoardData * bd, BoardData3d * bd3d, renderdata * prd)
 	getCheqSize(prd);
 	Create3dModels(bd3d, prd);
 
-    MakeShadowModel(bd, bd3d, prd);
+#ifndef USE_GTK3
+	MakeShadowModel(bd, bd3d, prd);
+#endif
 }
 
 #include <ft2build.h>
@@ -2056,7 +2041,7 @@ extern void PopulateVectoriser(Vectoriser* pVect, const FT_Outline* pOutline);
 extern void PopulateMesh(const Vectoriser* pVect, Mesh* pMesh);
 extern void TidyMemory(const Vectoriser* pVect, const Mesh* pMesh);
 
-int RenderGlyphX(const FT_Outline* pOutline)
+int RenderGlyph(const FT_Outline* pOutline)
 {
 	Mesh mesh;
 	unsigned int index, point;
@@ -2153,8 +2138,8 @@ SetupPerspVolume(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, 
 		glTranslatef(-(getBoardWidth() / 2.0f), -(getBoardHeight() / 2.0f), -3.f);
 	}
 
-	*projMat = SHIMGetProjectionMatrix();
-	*modelMat = SHIMGetModelViewMatrix();
+	*projMat = GetProjectionMatrix();
+	*modelMat = GetModelViewMatrix();
 }
 
 void
@@ -2200,4 +2185,309 @@ void getPickMatrices(float x, float y, const BoardData* bd, int* viewport, float
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+}
+
+void drawTableBase(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
+{
+	OglModelDraw(modelHolder, MT_BACKGROUND, &prd->BackGroundMat);
+
+	/* Left hand side points */
+	OglModelDraw(modelHolder, MT_BASE, &prd->BaseMat);
+	OglModelDraw(modelHolder, MT_ODDPOINTS, &prd->PointMat[0]);
+	OglModelDraw(modelHolder, MT_EVENPOINTS, &prd->PointMat[1]);
+
+	/* Rotate around for right board */
+	glPushMatrix();
+	glTranslatef(TOTAL_WIDTH, TOTAL_HEIGHT, 0.f);
+	glRotatef(180.f, 0.f, 0.f, 1.f);
+	OglModelDraw(modelHolder, MT_BASE, &prd->BaseMat);
+	OglModelDraw(modelHolder, MT_ODDPOINTS, &prd->PointMat[0]);
+	OglModelDraw(modelHolder, MT_EVENPOINTS, &prd->PointMat[1]);
+	glPopMatrix();
+}
+
+extern void drawTableBox(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
+{
+	OglModelDraw(modelHolder, MT_TABLE, &prd->BoxMat);
+
+	if (prd->fHinges3d)
+	{
+		glPushMatrix();
+			glTranslatef((TOTAL_WIDTH) / 2.0f, ((TOTAL_HEIGHT / 2.0f) - HINGE_HEIGHT) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
+			OglModelDraw(modelHolder, MT_HINGE, &prd->HingeMat);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef((TOTAL_WIDTH) / 2.0f, ((TOTAL_HEIGHT / 2.0f) - HINGE_HEIGHT + TOTAL_HEIGHT) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
+			OglModelDraw(modelHolder, MT_HINGE, &prd->HingeMat);
+		glPopMatrix();
+	}
+}
+
+extern void
+drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA)
+{
+	int c;
+	float radius = DOUBLECUBE_SIZE / 7.0f;
+	float ds = (DOUBLECUBE_SIZE * 5.0f / 7.0f);
+	float hds = (ds / 2);
+	float depth = hds + radius;
+
+	const char* sides[] = { "4", "16", "32", "64", "8", "2" };
+	int side;
+
+	glPushMatrix();
+	for (c = 0; c < 6; c++) {
+		if (c < 3)
+			side = c;
+		else
+			side = 8 - c;
+
+		/* Don't draw bottom number or back number (unless cube at bottom) */
+		if (side != dt->bottom && !(side == dt->side[0] && bd->cube_owner != -1)) {
+			glPushMatrix();
+			glTranslatef(0.f, 0.f, depth + LIFT_OFF);
+
+			glPrintCube(&bd->bd3d->cubeFont, sides[side], MAA);
+
+			glPopMatrix();
+		}
+		if (c % 2 == 0)
+			glRotatef(-90.f, 0.f, 1.f, 0.f);
+		else
+			glRotatef(90.f, 1.f, 0.f, 0.f);
+	}
+	glPopMatrix();
+}
+
+static void
+DrawDCNumbers(const BoardData* bd)
+{
+	diceTest dt;
+	int extraRot = 0;
+	int rotDC[6][3] = { {1, 0, 0}, {2, 0, 3}, {0, 0, 0}, {0, 3, 1}, {0, 1, 0}, {3, 0, 3} };
+
+	int cubeIndex;
+	/* Rotate to correct number + rotation */
+	if (!bd->doubled) {
+		cubeIndex = LogCube(bd->cube);
+		extraRot = bd->cube_owner + 1;
+	}
+	else {
+		cubeIndex = LogCube(bd->cube * 2);      /* Show offered cube value */
+		extraRot = bd->turn + 1;
+	}
+	if (cubeIndex == 6)
+		cubeIndex = 0;	// 0 == show 64
+
+	glRotatef((rotDC[cubeIndex][2] + extraRot) * 90.0f, 0.f, 0.f, 1.f);
+	glRotatef(rotDC[cubeIndex][0] * 90.0f, 1.f, 0.f, 0.f);
+	glRotatef(rotDC[cubeIndex][1] * 90.0f, 0.f, 1.f, 0.f);
+
+	initDT(&dt, rotDC[cubeIndex][0], rotDC[cubeIndex][1], rotDC[cubeIndex][2] + extraRot);
+
+	setMaterial(&bd->rd->CubeNumberMat);
+	drawDCNumbers(bd, &dt, 0);
+
+#ifndef USE_GTK3
+	LegacyStartAA(0.5f);
+	drawDCNumbers(bd, &dt, 1);
+	LegacyEndAA();
+#endif
+}
+
+extern void
+drawDC(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* UNUSED(bd3d), const renderdata* prd)
+{
+	glPushMatrix();
+	moveToDoubleCubePos(bd);
+
+	OglModelDraw(modelHolder, MT_CUBE, &prd->CubeMat);
+
+	DrawDCNumbers(bd);
+
+	glPopMatrix();
+}
+
+void ShowMoveIndicator(const ModelManager* modelHolder, const BoardData* bd)
+{
+	float pos[3];
+
+	glPushMatrix();
+	getMoveIndicatorPos(bd->turn, pos);
+	glTranslatef(pos[0], pos[1], pos[2]);
+	if (fClockwise)
+		glRotatef(180.f, 0.f, 0.f, 1.f);
+
+	OglModelDraw(modelHolder, MT_MOVEINDICATOR, &bd->rd->ChequerMat[(bd->turn == 1) ? 1 : 0]);
+
+ #ifndef USE_GTK3
+	//TODO: Enlarge and draw black outline before overlaying arrow in modern OGL...
+	MAAmoveIndicator();
+#endif
+
+	glPopMatrix();
+}
+
+extern void
+drawPiece(const ModelManager* modelHolder, const BoardData3d* bd3d, unsigned int point, unsigned int pos, int rotate, int roundPiece, int curveAccuracy, int separateTop)
+{
+	float v[3];
+	glPushMatrix();
+
+	getPiecePos(point, pos, v);
+	glTranslatef(v[0], v[1], v[2]);
+
+	/* Home pieces are sideways */
+	if (point == 26)
+		glRotatef(-90.f, 1.f, 0.f, 0.f);
+	if (point == 27)
+		glRotatef(90.f, 1.f, 0.f, 0.f);
+
+	if (rotate)
+		glRotatef((float)bd3d->pieceRotation[point][pos - 1], 0.f, 0.f, 1.f);
+
+	renderPiece(modelHolder, separateTop);
+
+#ifndef USE_GTK3
+	MAApiece(roundPiece, curveAccuracy);
+#endif
+
+	glPopMatrix();
+}
+
+extern void
+renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
+{
+	int separateTop = (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP);
+
+	if (bd->drag_point >= 0) {
+		glPushMatrix();
+		glTranslatef(bd3d->dragPos[0], bd3d->dragPos[1], bd3d->dragPos[2]);
+		glRotatef((float)bd3d->movingPieceRotation, 0.f, 0.f, 1.f);
+		setMaterial(&prd->ChequerMat[(bd->drag_colour == 1) ? 1 : 0]);
+		renderPiece(modelHolder, separateTop);
+		glPopMatrix();
+	}
+
+	if (bd3d->moving) {
+		glPushMatrix();
+		glTranslatef(bd3d->movingPos[0], bd3d->movingPos[1], bd3d->movingPos[2]);
+		if (bd3d->rotateMovingPiece > 0)
+			glRotatef(-90 * bd3d->rotateMovingPiece * bd->turn, 1.f, 0.f, 0.f);
+		glRotatef((float)bd3d->movingPieceRotation, 0.f, 0.f, 1.f);
+		setMaterial(&prd->ChequerMat[(bd->turn == 1) ? 1 : 0]);
+		renderPiece(modelHolder, separateTop);
+		glPopMatrix();
+	}
+}
+
+extern void
+moveToDicePos(const BoardData* bd, int num)
+{
+	float v[3];
+	getDicePos(bd, num, v);
+	glTranslatef(v[0], v[1], v[2]);
+
+	if (bd->diceShown == DICE_ON_BOARD) {       /* Spin dice to required rotation if on board */
+		glRotatef(bd->bd3d->dicePos[num][2], 0.f, 0.f, 1.f);
+	}
+}
+
+extern void
+drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd, int num)
+{
+	diceTest dt;
+	int z;
+	int rotDice[6][2] = { {0, 0}, {0, 1}, {3, 0}, {1, 0}, {0, 3}, {2, 0} };
+	unsigned int value = bd->diceRoll[num];
+	int diceCol = (bd->turn == 1);
+	/* During program startup value may be zero, if so don't draw */
+	if (!value)
+		return;
+	value--;	/* Zero based for array access */
+
+	/* Get dice rotation */
+	if (bd->diceShown == DICE_BELOW_BOARD)
+		z = 0;
+	else
+		z = ((int)bd3d->dicePos[num][2] + 45) / 90;
+	/* DT = dice test, use to work out which way up the dice is */
+	initDT(&dt, rotDice[value][0], rotDice[value][1], z);
+
+	glPushMatrix();
+	/* Move to correct position for die */
+	if (bd3d->shakingDice) {
+		glTranslatef(bd3d->diceMovingPos[num][0], bd3d->diceMovingPos[num][1], bd3d->diceMovingPos[num][2]);
+		glRotatef(bd3d->diceRotation[num].xRot, 0.f, 1.f, 0.f);
+		glRotatef(bd3d->diceRotation[num].yRot, 1.f, 0.f, 0.f);
+		glRotatef(bd3d->dicePos[num][2], 0.f, 0.f, 1.f);
+	}
+	else
+		moveToDicePos(bd, num);
+
+	/* Orientate dice correctly */
+	glRotatef(90.0f * rotDice[value][0], 1.f, 0.f, 0.f);
+	glRotatef(90.0f * rotDice[value][1], 0.f, 1.f, 0.f);
+
+	if (prd->DiceMat[diceCol].alphaBlend) { /* Draw back of dice separately */
+		DrawBackDice(modelHolder, bd3d, prd, &dt, diceCol);
+	}
+	/* Draw dice */
+	OglModelDraw(modelHolder, MT_DICE, &prd->DiceMat[diceCol]);
+
+#ifndef USE_GTK3
+	MAAdie(prd);
+#endif
+
+#ifndef USE_GTK3
+	DrawDots(modelHolder, bd3d, prd, &dt, diceCol);
+#endif
+
+	glPopMatrix();
+}
+
+extern void MoveToFlagPos(const BoardData* bd)
+{
+	float v[3];
+	glPushMatrix();
+
+	getFlagPos(bd, v);
+	glTranslatef(v[0], v[1], v[2]);
+}
+
+extern void MoveToFlagMiddle()
+{
+	float v[3];
+	/* Move to middle of flag */
+	v[0] = (flag.ctlpoints[1][0][0] + flag.ctlpoints[2][0][0]) / 2.0f;
+	v[1] = (flag.ctlpoints[1][0][0] + flag.ctlpoints[1][1][0]) / 2.0f;
+	v[2] = (flag.ctlpoints[1][0][2] + flag.ctlpoints[2][0][2]) / 2.0f;
+	glTranslatef(v[0], v[1], v[2]);
+
+	/* Work out approx angle of number based on control points */
+	float ang =
+		atanf(-(flag.ctlpoints[2][0][2] - flag.ctlpoints[1][0][2]) /
+		(flag.ctlpoints[2][0][0] - flag.ctlpoints[1][0][0]));
+	float degAng = (ang) * 180 / F_PI;
+
+	glRotatef(degAng, 0.f, 1.f, 0.f);
+}
+
+extern void PopMatrix()
+{
+	glPopMatrix();
+}
+
+extern void
+renderFlag(const ModelManager* modelHolder, const BoardData3d* bd3d, int curveAccuracy)
+{
+	/* Draw flag surface */
+	SetColour3d(1.f, 1.f, 1.f, 0.f);    /* White flag */
+	gluNurbFlagRender(curveAccuracy);
+
+	/* Draw flag pole */
+	OglModelDraw(modelHolder, MT_FLAG, &bd3d->flagMat);
 }

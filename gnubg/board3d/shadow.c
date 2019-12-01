@@ -45,6 +45,7 @@ shadowInit(BoardData3d * bd3d, renderdata * prd)
     if (bd3d->shadowsInitialised)
         return;
 
+#ifndef USE_GTK3
     /* Darkness as percentage of ambient light */
     prd->dimness = (float)(prd->lightLevels[1] * (100 - prd->shadowDarkness)) / (100.0f * 100.0f);
 
@@ -60,6 +61,7 @@ shadowInit(BoardData3d * bd3d, renderdata * prd)
     glClearStencil(midStencilVal);
 
     bd3d->shadowsInitialised = TRUE;
+#endif
 }
 
 #ifdef TEST_HARNESS

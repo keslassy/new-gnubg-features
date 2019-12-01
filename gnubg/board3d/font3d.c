@@ -277,3 +277,122 @@ tcbEnd( /*lint -e{818} */ Mesh* pMesh)
 {                               /* Declaring pMesh as constant isn't useful as pointer member is modified (error 818) */
 	g_array_append_val(pMesh->tesselations, curTess);
 }
+
+#include "ShimOGL.h"
+
+void RenderCharAA(unsigned int glyph);
+
+extern void
+RenderString3d(const OGLFont* pFont, const char* str, float scale, int MAA)
+{
+	glScalef(scale, scale * pFont->heightRatio, 1.f);
+
+	while (*str) {
+		int offset = *str - '0';
+		if (!MAA)
+		{
+			/* Draw character */
+			OglModelDraw(&pFont->modelManager, offset, NULL);
+		}
+		else
+		{
+			/* AA outline of character */
+			RenderCharAA(pFont->AAglyphs + (unsigned int)offset);
+		}
+		/* Move on to next place */
+		glTranslatef((float)(pFont->advance + GetKern(pFont, str[0], str[1])) / 64.0f, 0.f, 0.f);
+
+		str++;
+	}
+}
+
+extern void
+glPrintCube(const OGLFont* cubeFont, const char* text, int MAA)
+{
+	/* Align horizontally and vertically */
+	float scale = cubeFont->scale;
+	float heightOffset = cubeFont->height;
+	if (strlen(text) > 1) {     /* Make font smaller for 2 digit cube numbers */
+		scale *= CUBE_TWODIGIT_FACTOR;
+		heightOffset *= CUBE_TWODIGIT_FACTOR;
+	}
+	glTranslatef(-getTextLen3d(cubeFont, text) / 2.0f, -heightOffset / 2.0f, 0.f);
+	RenderString3d(cubeFont, text, scale, MAA);
+}
+
+extern void
+glPrintPointNumbers(const OGLFont* numberFont, const char* text, int MAA)
+{
+	/* Align horizontally */
+	glPushMatrix();
+	glTranslatef(-getTextLen3d(numberFont, text) / 2.0f, 0.f, 0.f);
+	RenderString3d(numberFont, text, numberFont->scale, MAA);
+	glPopMatrix();
+}
+
+#include "BoardDimensions.h"
+
+void
+DrawNumbers(const OGLFont* numberFont, unsigned int sides, int swapNumbers, int MAA)
+{
+	int i;
+	char num[3];
+	float x;
+	float textHeight = GetFontHeight3d(numberFont);
+	int n;
+
+	glPushMatrix();
+	glTranslatef(0.f, (EDGE_HEIGHT - textHeight) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
+	x = TRAY_WIDTH - PIECE_HOLE / 2.0f;
+
+	for (i = 0; i < 12; i++) {
+		x += PIECE_HOLE;
+		if (i == 6)
+			x += BAR_WIDTH;
+
+		if ((i < 6 && (sides & 1)) || (i >= 6 && (sides & 2))) {
+			glPushMatrix();
+			glTranslatef(x, 0.f, 0.f);
+			if (!fClockwise)
+				n = 12 - i;
+			else
+				n = i + 1;
+
+			if (swapNumbers)
+				n = 25 - n;
+
+			sprintf(num, "%d", n);
+			glPrintPointNumbers(numberFont, num, MAA);
+
+			glPopMatrix();
+		}
+	}
+
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(0.f, TOTAL_HEIGHT - textHeight - (EDGE_HEIGHT - textHeight) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
+	x = TRAY_WIDTH - PIECE_HOLE / 2.0f;
+
+	for (i = 0; i < 12; i++) {
+		x += PIECE_HOLE;
+		if (i == 6)
+			x += BAR_WIDTH;
+		if ((i < 6 && (sides & 1)) || (i >= 6 && (sides & 2))) {
+			glPushMatrix();
+			glTranslatef(x, 0.f, 0.f);
+			if (!fClockwise)
+				n = 13 + i;
+			else
+				n = 24 - i;
+
+			if (swapNumbers)
+				n = 25 - n;
+
+			sprintf(num, "%d", n);
+			glPrintPointNumbers(numberFont, num, MAA);
+
+			glPopMatrix();
+		}
+	}
+	glPopMatrix();
+}

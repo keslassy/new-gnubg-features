@@ -38,6 +38,8 @@
 
 extern int fClockwise;          /* Player 1 moves clockwise */
 
+extern const Material* currentMat;
+
 #ifndef TYPES3D_H
 #define TYPES3D_H
 
@@ -56,7 +58,6 @@ typedef struct _OglModel
 {
 	float* data;
 	int dataLength;
-	int modelUsesTexture;
 	int dataStart;
 } OglModel;
 
@@ -70,16 +71,23 @@ typedef struct _ModelManager
 	float* vertexData;
 	int numModels;
 	OglModel models[MAX_MODELS];
+
+#ifdef USE_GTK3
+	guint vao;
+	guint buffer;
+#endif
 } ModelManager;
 
 void OglModelInit(ModelManager* modelHolder, int modelNumber);
 void OglModelAlloc(ModelManager* modelHolder, int modelNumber);
-void OglModelDraw(const ModelManager* modelManager, int modelNumber);
+void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Material* pMat);
 
 void ModelManagerInit(ModelManager* modelHolder);
 void ModelManagerStart(ModelManager* modelHolder);
 void ModelManagerCreate(ModelManager* modelHolder);
 void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber);
+
+#define VERTEX_STRIDE 8
 
 /* TODO: Tidy this up... (i.e. remove tricky macro) */
 extern OglModel* curModel;
@@ -164,7 +172,6 @@ typedef struct _EigthPoints
 
 extern void freeEigthPoints(EigthPoints* eigthPoints);
 void calculateEigthPoints(EigthPoints* eigthPoints, float radius, unsigned int accuracy);
-//void drawCornerEigth(const EigthPoints* eigthPoints, float radius, const Texture* texture);
 
 /* Used to calculate correct viewarea for board/fov angles */
 typedef struct _viewArea {
@@ -431,5 +438,23 @@ extern void glSetViewport(int viewport[4]);
 extern void SetupViewingVolume3d(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, int viewport[4]);
 extern void SetupViewingVolume3dNew(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, float** projMat, float** modelMat, int viewport[4]);
 extern void ClearScreen(const renderdata* prd);
+extern void moveToDoubleCubePos(const BoardData* bd);
+extern float* GetModelViewMatrix(void);
+extern float* GetProjectionMatrix(void);
+extern void LegacyStartAA(float width);
+extern void LegacyEndAA(void);
+extern void ShowMoveIndicator(const ModelManager* modelHolder, const BoardData* bd);
+extern void MAAmoveIndicator(void);
+extern void drawPiece(const ModelManager* modelHolder, const BoardData3d* bd3d, unsigned int point, unsigned int pos, int rotate, int roundPiece, int curveAccuracy, int separateTop);
+extern void MAAdie(const renderdata* prd);
+extern void renderFlag(const ModelManager* modelHolder, const BoardData3d* bd3d, int curveAccuracy);
+extern void MoveToFlagPos(const BoardData* bd);
+extern void MoveToFlagMiddle(void);
+extern void PopMatrix(void);
+extern void MAApiece(int roundPiece, int curveAccuracy);
+extern void renderPiece(const ModelManager* modelHolder, int separateTop);
+extern void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol);
+extern void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol);
+extern void gluNurbFlagRender(int curveAccuracy);
 
 #endif

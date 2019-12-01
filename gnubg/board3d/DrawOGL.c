@@ -24,24 +24,42 @@
 #include "gtkboard.h"
 
 extern void drawTableGrayed(const ModelManager* modelHolder, const BoardData3d* bd3d, renderdata tmp);
-extern int LogCube(unsigned int n);
 extern void WorkOutViewArea(const BoardData* bd, viewArea* pva, float* pHalfRadianFOV, float aspectRatio);
 extern float getAreaRatio(const viewArea* pva);
 extern float getViewAreaHeight(const viewArea* pva);
 static void drawNumbers(const BoardData* bd, int MAA);
 static void MAAtidyEdges(const renderdata* prd);
-static void MAAmoveIndicator(void);
 extern void drawDC(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 extern void drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-extern void drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, int num);
+extern void drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd, int num);
 static void drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 static void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-extern void drawDice(const ModelManager* modelHolder, const BoardData* bd, int num, renderdata* prd);
 
 ///////////////////////////////////////
 // Legacy Opengl board rendering code
 
 #include "Shapes.inc"
+
+void LegacyStartAA(float width)
+{
+	glLineWidth(.5f);
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_BLEND);
+}
+
+void LegacyEndAA()
+{
+	glDisable(GL_LINE_SMOOTH);
+	glDisable(GL_BLEND);
+}
+
+void RenderCharAA(unsigned int glyph)
+{
+	glPushMatrix();
+		glLoadMatrixf(GetModelViewMatrix());
+		glCallList(glyph);
+	glPopMatrix();
+}
 
 void
 drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
@@ -57,51 +75,62 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 	{
 		drawNumbers(bd, 0);
 
-		glEnable(GL_LINE_SMOOTH);
-		glEnable(GL_BLEND);
+#ifndef USE_GTK3
+		LegacyStartAA(0.5f);
 		drawNumbers(bd, 1);
-		glDisable(GL_LINE_SMOOTH);
-		glDisable(GL_BLEND);
+		LegacyEndAA();
+#endif
 	}
 
-	//    if (bd3d->State == BOARD_OPEN)
+#ifndef USE_GTK3
 	MAAtidyEdges(prd);
+#endif
 
 	if (bd->cube_use && !bd->crawford_game)
 		drawDC(modelHolder, bd, bd3d, prd);
 
 	if (prd->showMoveIndicator)
 	{
-		float pos[3];
-
-		setMaterial(&bd->rd->ChequerMat[(bd->turn == 1) ? 1 : 0]);
-
 		glDisable(GL_DEPTH_TEST);
-
-		glPushMatrix();
-		getMoveIndicatorPos(bd->turn, pos);
-		glTranslatef(pos[0], pos[1], pos[2]);
-		if (fClockwise)
-			glRotatef(180.f, 0.f, 0.f, 1.f);
-
-		OglModelDraw(modelHolder, MT_MOVEINDICATOR);
-
-		//TODO: Enlarge and draw black outline before overlaying arrow in modern OGL...
-		MAAmoveIndicator();
-
-		glPopMatrix();
-
+		ShowMoveIndicator(modelHolder, bd);
 		glEnable(GL_DEPTH_TEST);
 	}
 
 	/* Draw things in correct order so transparency works correctly */
 	/* First pieces, then dice, then moving pieces */
 
+	int transparentPieces = (prd->ChequerMat[0].alphaBlend) || (prd->ChequerMat[1].alphaBlend);
+	if (transparentPieces) {	/* Draw back of piece separately */
+		glCullFace(GL_FRONT);
+		glEnable(GL_BLEND);
+		drawPieces(modelHolder, bd, bd3d, prd);
+		glCullFace(GL_BACK);
+	}
 	drawPieces(modelHolder, bd, bd3d, prd);
+	if (transparentPieces)
+		glDisable(GL_BLEND);
+
+	if (bd->DragTargetHelp) {   /* highlight target points */
+		glPolygonMode(GL_FRONT, GL_LINE);
+		SetColour3d(0.f, 1.f, 0.f, 0.f);        /* Nice bright green... */
+
+		for (int i = 0; i <= 3; i++) {
+			int target = bd->iTargetHelpPoints[i];
+			if (target != -1) { /* Make sure texturing is disabled */
+				int separateTop = (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP);
+#ifndef USE_GTK3
+				if (prd->ChequerMat[0].pTexture)
+					glDisable(GL_TEXTURE_2D);
+#endif
+				drawPiece(modelHolder, bd3d, (unsigned int)target, Abs(bd->points[target]) + 1, TRUE, (prd->pieceType == PT_ROUNDED), prd->curveAccuracy, separateTop);
+			}
+		}
+		glPolygonMode(GL_FRONT, GL_FILL);
+	}
 
 	if (DiceShowing(bd)) {
-		drawDie(modelHolder, bd, bd3d, 0);
-		drawDie(modelHolder, bd, bd3d, 1);
+		drawDie(modelHolder, bd, bd3d, prd, 0);
+		drawDie(modelHolder, bd, bd3d, prd, 1);
 	}
 
 	if (bd3d->moving || bd->drag_point >= 0)
@@ -109,109 +138,6 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 
 	if (bd->resigned)
 		drawFlag(modelHolder, bd, bd3d, prd);
-}
-
-extern void
-drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA)
-{
-	int c;
-	float radius = DOUBLECUBE_SIZE / 7.0f;
-	float ds = (DOUBLECUBE_SIZE * 5.0f / 7.0f);
-	float hds = (ds / 2);
-	float depth = hds + radius;
-
-	const char* sides[] = { "4", "16", "32", "64", "8", "2" };
-	int side;
-
-	glLineWidth(.5f);
-	glPushMatrix();
-	for (c = 0; c < 6; c++) {
-		int nice;
-
-		if (c < 3)
-			side = c;
-		else
-			side = 8 - c;
-		/* Nicer top numbers */
-		nice = (side == dt->top);
-
-		/* Don't draw bottom number or back number (unless cube at bottom) */
-		if (side != dt->bottom && !(side == dt->side[0] && bd->cube_owner != -1)) {
-			if (nice)
-				glDisable(GL_DEPTH_TEST);
-
-			glPushMatrix();
-			glTranslatef(0.f, 0.f, depth + (nice ? 0 : LIFT_OFF));
-
-			glPrintCube(&bd->bd3d->cubeFont, sides[side], MAA);
-
-			glPopMatrix();
-			if (nice)
-				glEnable(GL_DEPTH_TEST);
-		}
-		if (c % 2 == 0)
-			glRotatef(-90.f, 0.f, 1.f, 0.f);
-		else
-			glRotatef(90.f, 1.f, 0.f, 0.f);
-	}
-	glPopMatrix();
-}
-
-static void
-DrawDCNumbers(const BoardData* bd)
-{
-	diceTest dt;
-	int extraRot = 0;
-	int rotDC[6][3] = { {1, 0, 0}, {2, 0, 3}, {0, 0, 0}, {0, 3, 1}, {0, 1, 0}, {3, 0, 3} };
-
-	int cubeIndex;
-	/* Rotate to correct number + rotation */
-	if (!bd->doubled) {
-		cubeIndex = LogCube(bd->cube);
-		extraRot = bd->cube_owner + 1;
-	}
-	else {
-		cubeIndex = LogCube(bd->cube * 2);      /* Show offered cube value */
-		extraRot = bd->turn + 1;
-	}
-	if (cubeIndex == 6)
-		cubeIndex = 0;	// 0 == show 64
-
-	glRotatef((rotDC[cubeIndex][2] + extraRot) * 90.0f, 0.f, 0.f, 1.f);
-	glRotatef(rotDC[cubeIndex][0] * 90.0f, 1.f, 0.f, 0.f);
-	glRotatef(rotDC[cubeIndex][1] * 90.0f, 0.f, 1.f, 0.f);
-
-	initDT(&dt, rotDC[cubeIndex][0], rotDC[cubeIndex][1], rotDC[cubeIndex][2] + extraRot);
-
-	setMaterial(&bd->rd->CubeNumberMat);
-	glNormal3f(0.f, 0.f, 1.f);
-
-	drawDCNumbers(bd, &dt, 0);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_BLEND);
-	drawDCNumbers(bd, &dt, 1);
-	glDisable(GL_LINE_SMOOTH);
-	glDisable(GL_BLEND);
-}
-
-extern void
-moveToDoubleCubePos(const BoardData* bd)
-{
-	float v[3];
-	getDoubleCubePos(bd, v);
-	glTranslatef(v[0], v[1], v[2]);
-}
-
-extern void
-moveToDicePos(const BoardData* bd, int num)
-{
-	float v[3];
-	getDicePos(bd, num, v);
-	glTranslatef(v[0], v[1], v[2]);
-
-	if (bd->diceShown == DICE_ON_BOARD) {       /* Spin dice to required rotation if on board */
-		glRotatef(bd->bd3d->dicePos[num][2], 0.f, 0.f, 1.f);
-	}
 }
 
 /* Define position of dots on dice */
@@ -303,93 +229,21 @@ drawDots(const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTes
 	glPopMatrix();
 }
 
-extern void
-glPrintPointNumbers(const OGLFont* numberFont, const char* text, int MAA)
-{
-	/* Align horizontally */
-	glPushMatrix();
-	glTranslatef(-getTextLen3d(numberFont, text) / 2.0f, 0.f, 0.f);
-	RenderString3d(numberFont, text, numberFont->scale, MAA);
-	glPopMatrix();
-}
-
-static void
-DrawNumbers(const BoardData* bd, unsigned int sides, int MAA)
-{
-	int i;
-	char num[3];
-	float x;
-	float textHeight = GetFontHeight3d(&bd->bd3d->numberFont);
-	int n;
-
-	glPushMatrix();
-	glTranslatef(0.f, (EDGE_HEIGHT - textHeight) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
-	x = TRAY_WIDTH - PIECE_HOLE / 2.0f;
-
-	for (i = 0; i < 12; i++) {
-		x += PIECE_HOLE;
-		if (i == 6)
-			x += BAR_WIDTH;
-
-		if ((i < 6 && (sides & 1)) || (i >= 6 && (sides & 2))) {
-			glPushMatrix();
-			glTranslatef(x, 0.f, 0.f);
-			if (!fClockwise)
-				n = 12 - i;
-			else
-				n = i + 1;
-
-			if (bd->turn == -1 && bd->rd->fDynamicLabels)
-				n = 25 - n;
-
-			sprintf(num, "%d", n);
-			glPrintPointNumbers(&bd->bd3d->numberFont, num, MAA);
-
-			glPopMatrix();
-		}
-	}
-
-	glPopMatrix();
-	glPushMatrix();
-	glTranslatef(0.f, TOTAL_HEIGHT - textHeight - (EDGE_HEIGHT - textHeight) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
-	x = TRAY_WIDTH - PIECE_HOLE / 2.0f;
-
-	for (i = 0; i < 12; i++) {
-		x += PIECE_HOLE;
-		if (i == 6)
-			x += BAR_WIDTH;
-		if ((i < 6 && (sides & 1)) || (i >= 6 && (sides & 2))) {
-			glPushMatrix();
-			glTranslatef(x, 0.f, 0.f);
-			if (!fClockwise)
-				n = 13 + i;
-			else
-				n = 24 - i;
-
-			if (bd->turn == -1 && bd->rd->fDynamicLabels)
-				n = 25 - n;
-
-			sprintf(num, "%d", n);
-			glPrintPointNumbers(&bd->bd3d->numberFont, num, MAA);
-
-			glPopMatrix();
-		}
-	}
-	glPopMatrix();
-}
+extern void DrawNumbers(const OGLFont* numberFont, unsigned int sides, int swapNumbers, int MAA);
 
 static void
 drawNumbers(const BoardData* bd, int MAA)
 {
+	int swapNumbers = (bd->turn == -1 && bd->rd->fDynamicLabels);
+
 	/* No need to depth test as on top of board (depth test could cause alias problems too) */
 	glDisable(GL_DEPTH_TEST);
 	/* Draw inside then anti-aliased outline of numbers */
 	setMaterial(&bd->rd->PointNumberMat);
-	glNormal3f(0.f, 0.f, 1.f);
 
-	glLineWidth(1.f);
-	DrawNumbers(bd, 1, MAA);
-	DrawNumbers(bd, 2, MAA);
+	DrawNumbers(&bd->bd3d->numberFont, 1, swapNumbers, MAA);
+	DrawNumbers(&bd->bd3d->numberFont, 2, swapNumbers, MAA);
+
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -398,9 +252,7 @@ MAAtidyEdges(const renderdata* prd)
 {                               /* Anti-alias board edges */
 	setMaterial(&prd->BoxMat);
 
-	glLineWidth(1.f);
-	glEnable(GL_BLEND);
-	glEnable(GL_LINE_SMOOTH);
+	LegacyStartAA(1.0f);
 	glDepthMask(GL_FALSE);
 
 	glNormal3f(0.f, 0.f, 1.f);
@@ -497,19 +349,18 @@ MAAtidyEdges(const renderdata* prd)
 	glVertex3f(TOTAL_WIDTH - TRAY_WIDTH + LIFT_OFF, TOTAL_HEIGHT - EDGE_HEIGHT, BASE_DEPTH + LIFT_OFF);
 	glEnd();
 	glDepthMask(GL_TRUE);
-	glDisable(GL_BLEND);
-	glDisable(GL_LINE_SMOOTH);
+	LegacyEndAA();
 }
 
-static void
+extern void
 MAAmoveIndicator(void)
 {
+	glPushMatrix();
+	glLoadMatrixf(GetModelViewMatrix());
 	/* Outline arrow */
 	SetColour3d(0.f, 0.f, 0.f, 1.f);    /* Black outline */
 
-	glLineWidth(.5f);
-	glEnable(GL_BLEND);
-	glEnable(GL_LINE_SMOOTH);
+	LegacyStartAA(0.5f);
 
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(-ARROW_UNIT * 2, -ARROW_UNIT);
@@ -521,92 +372,22 @@ MAAmoveIndicator(void)
 	glVertex2f(0.f, -ARROW_UNIT);
 	glEnd();
 
-	glDisable(GL_BLEND);
-	glDisable(GL_LINE_SMOOTH);
-}
-
-extern void
-drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, int num)
-{
-	glPushMatrix();
-	/* Move to correct position for die */
-	if (bd3d->shakingDice) {
-		glTranslatef(bd3d->diceMovingPos[num][0], bd3d->diceMovingPos[num][1], bd3d->diceMovingPos[num][2]);
-		glRotatef(bd3d->diceRotation[num].xRot, 0.f, 1.f, 0.f);
-		glRotatef(bd3d->diceRotation[num].yRot, 1.f, 0.f, 0.f);
-		glRotatef(bd3d->dicePos[num][2], 0.f, 0.f, 1.f);
-	}
-	else
-		moveToDicePos(bd, num);
-	/* Now draw dice */
-	drawDice(modelHolder, bd, num, bd->rd);
-
+	LegacyEndAA();
 	glPopMatrix();
 }
 
-extern void
-drawDice(const ModelManager* modelHolder, const BoardData* bd, int num, renderdata* prd)
+extern void MAAdie(const renderdata* prd)
 {
-	unsigned int value;
-	int rotDice[6][2] = { {0, 0}, {0, 1}, {3, 0}, {1, 0}, {0, 3}, {2, 0} };
-	int diceCol = (bd->turn == 1);
-	int z;
-	float diceSize = getDiceSize(bd->rd);
-	diceTest dt;
-	Material* pDiceMat = &bd->rd->DiceMat[diceCol];
-	Material whiteMat;
-	SetupSimpleMat(&whiteMat, 1.f, 1.f, 1.f);
-
-	value = bd->diceRoll[num];
-
-	/* During program startup value may be zero, if so don't draw */
-	if (!value)
-		return;
-	value--;                    /* Zero based for array access */
-
-	/* Get dice rotation */
-	if (bd->diceShown == DICE_BELOW_BOARD)
-		z = 0;
-	else
-		z = ((int)bd->bd3d->dicePos[num][2] + 45) / 90;
-
-	/* Orientate dice correctly */
-	glRotatef(90.0f * rotDice[value][0], 1.f, 0.f, 0.f);
-	glRotatef(90.0f * rotDice[value][1], 0.f, 1.f, 0.f);
-
-	/* DT = dice test, use to work out which way up the dice is */
-	initDT(&dt, rotDice[value][0], rotDice[value][1], z);
-
-	if (pDiceMat->alphaBlend) { /* Draw back of dice separately */
-		glCullFace(GL_FRONT);
-		glEnable(GL_BLEND);
-
-		/* Draw dice */
-		setMaterial(pDiceMat);
-		OglModelDraw(modelHolder, MT_DICE);
-
-		/* Place back dots inside dice */
-		setMaterial(&bd->rd->DiceDotMat[diceCol]);
-		glEnable(GL_BLEND);     /* NB. Disabled in diceList */
-		glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-		drawDots(bd->bd3d, diceSize, -LIFT_OFF, &dt, 0);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glCullFace(GL_BACK);
-		// NB. GL_BLEND still enabled here (so front blends with back)
-	}
-	/* Draw dice */
-	setMaterial(pDiceMat);
-	OglModelDraw(modelHolder, MT_DICE);
-
 	/* Anti-alias dice edges */
-	glLineWidth(1.f);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_BLEND);
+	LegacyStartAA(1.0f);
 	glDepthMask(GL_FALSE);
 
 	float size = getDiceSize(prd);
 	float radius = size / 2.0f;
 	int c;
+
+	glPushMatrix();
+	glLoadMatrixf(GetModelViewMatrix());
 
 	for (c = 0; c < 6; c++) {
 		circleOutline(radius, radius + LIFT_OFF, prd->curveAccuracy);
@@ -616,71 +397,84 @@ drawDice(const ModelManager* modelHolder, const BoardData* bd, int num, renderda
 		else
 			glRotatef(90.f, 1.f, 0.f, 0.f);
 	}
-	glDisable(GL_BLEND);
-	glDisable(GL_LINE_SMOOTH);
+	glPopMatrix();
+
 	glDepthMask(GL_TRUE);
+	LegacyEndAA();
+}
+
+void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
+{
+	glCullFace(GL_FRONT);
+	glEnable(GL_BLEND);
+
+	/* Draw dice */
+	OglModelDraw(modelHolder, MT_DICE, &prd->DiceMat[diceCol]);
+
+	/* Place back dots inside dice */
+	setMaterial(&prd->DiceDotMat[diceCol]);
+	glEnable(GL_BLEND);     /* NB. Disabled in diceList */
+	glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+	drawDots(bd3d, getDiceSize(prd), -LIFT_OFF, dt, 0);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glCullFace(GL_BACK);
+	// NB. GL_BLEND still enabled here (so front blends with back)
+}
+
+void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
+{
+	Material whiteMat;
+	SetupSimpleMat(&whiteMat, 1.f, 1.f, 1.f);
+
+	glPushMatrix();
+	glLoadMatrixf(GetModelViewMatrix());
 
 	/* Draw (front) dots */
 	glEnable(GL_BLEND);
 	/* First blank out space for dots */
 	setMaterial(&whiteMat);
 	glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
-	drawDots(bd->bd3d, diceSize, LIFT_OFF, &dt, 1);
+	drawDots(bd3d, getDiceSize(prd), LIFT_OFF, dt, 1);
 
 	/* Now fill space with coloured dots */
-	setMaterial(&bd->rd->DiceDotMat[diceCol]);
+	setMaterial(&prd->DiceDotMat[diceCol]);
 	glBlendFunc(GL_ONE, GL_ONE);
-	drawDots(bd->bd3d, diceSize, LIFT_OFF, &dt, 1);
+	drawDots(bd3d, getDiceSize(prd), LIFT_OFF, dt, 1);
 
 	/* Restore blending defaults */
 	glDisable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glPopMatrix();
 }
 
-static void renderPiece(const ModelManager* modelHolder, int separateTop)
+void renderPiece(const ModelManager* modelHolder, int separateTop)
 {
+	const Material* mat = currentMat;
 	if (separateTop)
 	{
+#ifndef USE_GTK3
 		glEnable(GL_TEXTURE_2D);
-		OglModelDraw(modelHolder, MT_PIECETOP);
+#endif
+		OglModelDraw(modelHolder, MT_PIECETOP, mat);
+#ifndef USE_GTK3
 		glDisable(GL_TEXTURE_2D);
+#endif
+		mat = NULL;
 	}
 
-	OglModelDraw(modelHolder, MT_PIECE);
+	OglModelDraw(modelHolder, MT_PIECE, mat);
 }
 
-static void
-renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
-{
-	int separateTop = (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP);
-
-	if (bd->drag_point >= 0) {
-		glPushMatrix();
-		glTranslatef(bd3d->dragPos[0], bd3d->dragPos[1], bd3d->dragPos[2]);
-		glRotatef((float)bd3d->movingPieceRotation, 0.f, 0.f, 1.f);
-		setMaterial(&prd->ChequerMat[(bd->drag_colour == 1) ? 1 : 0]);
-		renderPiece(modelHolder, separateTop);
-		glPopMatrix();
-	}
-
-	if (bd3d->moving) {
-		glPushMatrix();
-		glTranslatef(bd3d->movingPos[0], bd3d->movingPos[1], bd3d->movingPos[2]);
-		if (bd3d->rotateMovingPiece > 0)
-			glRotatef(-90 * bd3d->rotateMovingPiece * bd->turn, 1.f, 0.f, 0.f);
-		glRotatef((float)bd3d->movingPieceRotation, 0.f, 0.f, 1.f);
-		setMaterial(&prd->ChequerMat[(bd->turn == 1) ? 1 : 0]);
-		renderPiece(modelHolder, separateTop);
-		glPopMatrix();
-	}
-}
+extern void
+renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 
 static void
 drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {                               /* Draw animated or dragged pieces */
-	int blend = (prd->ChequerMat[0].alphaBlend) || (prd->ChequerMat[1].alphaBlend);
+	int transparentPieces = (prd->ChequerMat[0].alphaBlend) || (prd->ChequerMat[1].alphaBlend);
 
-	if (blend) {                /* Draw back of piece separately */
+	if (transparentPieces) {                /* Draw back of piece separately */
 		glCullFace(GL_FRONT);
 		glEnable(GL_BLEND);
 		renderSpecialPieces(modelHolder, bd, bd3d, prd);
@@ -689,30 +483,12 @@ drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const Bo
 	}
 	renderSpecialPieces(modelHolder, bd, bd3d, prd);
 
-	if (blend)
+	if (transparentPieces)
 		glDisable(GL_BLEND);
 }
 
-extern void
-drawPiece(const ModelManager* modelHolder, const BoardData3d* bd3d, unsigned int point, unsigned int pos, int rotate, int roundPiece, int curveAccuracy, int separateTop)
+void MAApiece(int roundPiece, int curveAccuracy)
 {
-	float v[3];
-	glPushMatrix();
-
-	getPiecePos(point, pos, v);
-	glTranslatef(v[0], v[1], v[2]);
-
-	/* Home pieces are sideways */
-	if (point == 26)
-		glRotatef(-90.f, 1.f, 0.f, 0.f);
-	if (point == 27)
-		glRotatef(90.f, 1.f, 0.f, 0.f);
-
-	if (rotate)
-		glRotatef((float)bd3d->pieceRotation[point][pos - 1], 0.f, 0.f, 1.f);
-
-	renderPiece(modelHolder, separateTop);
-
 	/* Anti-alias piece edges */
 	float lip = 0;
 	float radius = PIECE_HOLE / 2.0f;
@@ -727,22 +503,17 @@ drawPiece(const ModelManager* modelHolder, const BoardData3d* bd3d, unsigned int
 	if (textureEnabled)
 		glDisable(GL_TEXTURE_2D);
 
-	glLineWidth(1.f);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_BLEND);
+	LegacyStartAA(1.0f);
 	glDepthMask(GL_FALSE);
 
 	circleOutlineOutward(radius, PIECE_DEPTH - lip, curveAccuracy);
 	circleOutlineOutward(radius, lip, curveAccuracy);
 
-	glDisable(GL_BLEND);
-	glDisable(GL_LINE_SMOOTH);
 	glDepthMask(GL_TRUE);
+	LegacyEndAA();
 
 	if (textureEnabled)
 		glEnable(GL_TEXTURE_2D);
-
-	glPopMatrix();
 }
 
 extern void
@@ -750,42 +521,13 @@ drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData
 {
 	unsigned int i;
 	unsigned int j;
-	int blend = (prd->ChequerMat[0].alphaBlend) || (prd->ChequerMat[1].alphaBlend);
 	int separateTop = (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP);
-
-	if (blend) {                /* Draw back of piece separately */
-		glCullFace(GL_FRONT);
-
-		setMaterial(&prd->ChequerMat[0]);
-		for (i = 0; i < 28; i++) {
-			if (bd->points[i] < 0) {
-				unsigned int numPieces = (unsigned int)(-bd->points[i]);
-				for (j = 1; j <= numPieces; j++) {
-					glEnable(GL_BLEND);
-					drawPiece(modelHolder, bd3d, i, j, TRUE, (prd->pieceType == PT_ROUNDED), prd->curveAccuracy, separateTop);
-				}
-			}
-		}
-		setMaterial(&prd->ChequerMat[1]);
-		for (i = 0; i < 28; i++) {
-			if (bd->points[i] > 0) {
-				unsigned int numPieces = (unsigned int)bd->points[i];
-				for (j = 1; j <= numPieces; j++) {
-					glEnable(GL_BLEND);
-					drawPiece(modelHolder, bd3d, i, j, TRUE, (prd->pieceType == PT_ROUNDED), prd->curveAccuracy, separateTop);
-				}
-			}
-		}
-		glCullFace(GL_BACK);
-	}
 
 	setMaterial(&prd->ChequerMat[0]);
 	for (i = 0; i < 28; i++) {
 		if (bd->points[i] < 0) {
 			unsigned int numPieces = (unsigned int)(-bd->points[i]);
 			for (j = 1; j <= numPieces; j++) {
-				if (blend)
-					glEnable(GL_BLEND);
 				drawPiece(modelHolder, bd3d, i, j, TRUE, (prd->pieceType == PT_ROUNDED), prd->curveAccuracy, separateTop);
 			}
 		}
@@ -795,28 +537,9 @@ drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData
 		if (bd->points[i] > 0) {
 			unsigned int numPieces = (unsigned int)bd->points[i];
 			for (j = 1; j <= numPieces; j++) {
-				if (blend)
-					glEnable(GL_BLEND);
 				drawPiece(modelHolder, bd3d, i, j, TRUE, (prd->pieceType == PT_ROUNDED), prd->curveAccuracy, separateTop);
 			}
 		}
-	}
-	if (blend)
-		glDisable(GL_BLEND);
-
-	if (bd->DragTargetHelp) {   /* highlight target points */
-		glPolygonMode(GL_FRONT, GL_LINE);
-		SetColour3d(0.f, 1.f, 0.f, 0.f);        /* Nice bright green... */
-
-		for (i = 0; i <= 3; i++) {
-			int target = bd->iTargetHelpPoints[i];
-			if (target != -1) { /* Make sure texturing is disabled */
-				if (prd->ChequerMat[0].pTexture)
-					glDisable(GL_TEXTURE_2D);
-				drawPiece(modelHolder, bd3d, (unsigned int)target, Abs(bd->points[target]) + 1, TRUE, (prd->pieceType == PT_ROUNDED), prd->curveAccuracy, separateTop);
-			}
-		}
-		glPolygonMode(GL_FRONT, GL_FILL);
 	}
 }
 
@@ -909,9 +632,8 @@ void MAApoints(const renderdata* prd)
 	else
 		tuv = 0;
 
-	glLineWidth(1.f);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_BLEND);
+	LegacyStartAA(1.0f);
+	LegacyEndAA();
 
 	drawPointLegacy(prd, tuv, 0, 0, 1);
 	drawPointLegacy(prd, tuv, 0, 1, 1);
@@ -934,74 +656,34 @@ void MAApoints(const renderdata* prd)
 	drawPointLegacy(prd, tuv, 5, 0, 1);
 	drawPointLegacy(prd, tuv, 5, 1, 1);
 
-	glDisable(GL_BLEND);
-	glDisable(GL_LINE_SMOOTH);
+	LegacyEndAA();
 }
 
-extern void
-drawDC(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* UNUSED(bd3d), const renderdata* prd)
-{
-	glPushMatrix();
-	moveToDoubleCubePos(bd);
-
-	setMaterial(&prd->CubeMat);
-	OglModelDraw(modelHolder, MT_CUBE);
-
-	DrawDCNumbers(bd);
-
-	glPopMatrix();
-}
+extern void drawTableBase(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
+extern void drawTableBox(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
 
 void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
 {
-	glClear(GL_DEPTH_BUFFER_BIT);	// Could just overwrite values with the board instead
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glDepthFunc(GL_ALWAYS);
 
-	setMaterial(&prd->BackGroundMat);
-	OglModelDraw(modelHolder, MT_BACKGROUND);
+	drawTableBase(modelHolder, bd3d, prd);
 
-	/* Left hand side points */
-	setMaterial(&prd->BaseMat);
-	OglModelDraw(modelHolder, MT_BASE);
-	setMaterial(&prd->PointMat[0]);
-	OglModelDraw(modelHolder, MT_ODDPOINTS);
-	setMaterial(&prd->PointMat[1]);
-	OglModelDraw(modelHolder, MT_EVENPOINTS);
-
+#ifndef USE_GTK3
 	MAApoints(prd);
-
-	/* Rotate around for right board */
 	glPushMatrix();
 	glTranslatef(TOTAL_WIDTH, TOTAL_HEIGHT, 0.f);
 	glRotatef(180.f, 0.f, 0.f, 1.f);
-	setMaterial(&prd->BaseMat);
-	OglModelDraw(modelHolder, MT_BASE);
-	setMaterial(&prd->PointMat[0]);
-	OglModelDraw(modelHolder, MT_ODDPOINTS);
-	setMaterial(&prd->PointMat[1]);
-	OglModelDraw(modelHolder, MT_EVENPOINTS);
-
 	MAApoints(prd);
 	glPopMatrix();
+#endif
 
 	glDepthFunc(GL_LEQUAL);
 
-	setMaterial(&prd->BoxMat);
-	OglModelDraw(modelHolder, MT_TABLE);
+	drawTableBox(modelHolder, bd3d, prd);
 
 	if (prd->fHinges3d)
-	{
-		setMaterial(&prd->HingeMat);
-		glPushMatrix();
-		glTranslatef((TOTAL_WIDTH) / 2.0f, ((TOTAL_HEIGHT / 2.0f) - HINGE_HEIGHT) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
-		OglModelDraw(modelHolder, MT_HINGE);
-		glPopMatrix();
-		glPushMatrix();
-		glTranslatef((TOTAL_WIDTH) / 2.0f, ((TOTAL_HEIGHT / 2.0f) - HINGE_HEIGHT + TOTAL_HEIGHT) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
-		OglModelDraw(modelHolder, MT_HINGE);
-		glPopMatrix();
-
-		/* Shadow in gap between boards */
+	{	/* Shade in gap between boards */	//TODO: Add as separate model...
 		setMaterial(&bd3d->gapColour);
 		drawRect((TOTAL_WIDTH - HINGE_GAP * 1.5f) / 2.0f, 0.f, LIFT_OFF, HINGE_GAP * 2, TOTAL_HEIGHT + LIFT_OFF, 0);
 	}
@@ -1056,18 +738,17 @@ calculateBackgroundSize(BoardData3d* bd3d, const int viewport[4])
 	bd3d->backGroundSize[1] = pos1[1] - pos3[1];
 }
 
-extern void
-renderFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, unsigned int curveAccuracy)
+void gluNurbFlagRender(int curveAccuracy)
 {
 	/* Simple knots i.e. no weighting */
 	float s_knots[S_NUMKNOTS] = { 0, 0, 0, 0, 1, 1, 1, 1 };
 	float t_knots[T_NUMKNOTS] = { 0, 0, 1, 1 };
 
-	/* Draw flag surface */
-	setMaterial(&bd3d->flagMat);
-
 	if (flag.flagNurb == NULL)
 		flag.flagNurb = gluNewNurbsRenderer();
+
+	glPushMatrix();
+	glLoadMatrixf(GetModelViewMatrix());
 
 	/* Set size of polygons */
 	gluNurbsProperty(flag.flagNurb, GLU_SAMPLING_TOLERANCE, 500.0f / curveAccuracy);
@@ -1077,60 +758,42 @@ renderFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData
 		&flag.ctlpoints[0][0][0], S_NUMPOINTS, T_NUMPOINTS, GL_MAP2_VERTEX_3);
 	gluEndSurface(flag.flagNurb);
 
-	/* Draw flag pole */
-	SetColour3d(.2f, .2f, .4f, 0.f);    /* Blue pole */
-	OglModelDraw(modelHolder, MT_FLAG);
+	glPopMatrix();
+}
 
+void renderFlagNumbers(const BoardData3d* bd3d, int resignedValue)
+{
 	/* Draw number on flag */
-	glDisable(GL_DEPTH_TEST);
-
 	setMaterial(&bd3d->flagNumberMat);
 
-	glPushMatrix();
-	{
-		/* Move to middle of flag */
-		float v[3];
-		v[0] = (flag.ctlpoints[1][0][0] + flag.ctlpoints[2][0][0]) / 2.0f;
-		v[1] = (flag.ctlpoints[1][0][0] + flag.ctlpoints[1][1][0]) / 2.0f;
-		v[2] = (flag.ctlpoints[1][0][2] + flag.ctlpoints[2][0][2]) / 2.0f;
-		glTranslatef(v[0], v[1], v[2]);
-	}
-	{
-		/* Work out approx angle of number based on control points */
-		float ang =
-			atanf(-(flag.ctlpoints[2][0][2] - flag.ctlpoints[1][0][2]) /
-			(flag.ctlpoints[2][0][0] - flag.ctlpoints[1][0][0]));
-		float degAng = (ang) * 180 / F_PI;
+	MoveToFlagMiddle();
 
-		glRotatef(degAng, 0.f, 1.f, 0.f);
-	}
+	glDisable(GL_DEPTH_TEST);
+	/* No specular light */
+	float specular[4];
+	float zero[4] = { 0, 0, 0, 0 };
+	glGetLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 
-	{
-		/* Draw number */
-		char flagValue[2] = "x";
-		/* No specular light */
-		float specular[4];
-		float zero[4] = { 0, 0, 0, 0 };
-		glGetLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
+	/* Draw number */
+	char flagValue[2] = " ";
 
-		flagValue[0] = '0' + (char)abs(bd->resigned);
-		glScalef(1.3f, 1.3f, 1.f);
+	flagValue[0] = '0' + (char)abs(resignedValue);
 
-		glLineWidth(.5f);
-		glPrintCube(&bd3d->cubeFont, flagValue, /*MAA*/0);
+	float oldScale = bd3d->cubeFont.scale;
+	((BoardData3d*)bd3d)->cubeFont.scale *= 1.3f;
 
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	}
-	glPopMatrix();
+	glLineWidth(.5f);
+	glPrintCube(&bd3d->cubeFont, flagValue, /*MAA*/0);
+	((BoardData3d*)bd3d)->cubeFont.scale = oldScale;
 
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
 	glEnable(GL_DEPTH_TEST);
 }
 
 static void
 drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {
-	float v[4];
 	int isStencil = glIsEnabled(GL_STENCIL_TEST);
 
 	if (isStencil)
@@ -1138,14 +801,11 @@ drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d
 
 	waveFlag(bd3d->flagWaved);
 
-	glPushMatrix();
+	MoveToFlagPos(bd);
+	renderFlag(modelHolder, bd3d, bd->rd->curveAccuracy);
+	renderFlagNumbers(bd3d, bd->resigned);
+	PopMatrix();	/* Move back to origin */
 
-	getFlagPos(bd, v);
-	glTranslatef(v[0], v[1], v[2]);
-
-	renderFlag(modelHolder, bd, bd3d, prd->curveAccuracy);
-
-	glPopMatrix();
 	if (isStencil)
 		glEnable(GL_STENCIL_TEST);
 }
