@@ -1,11 +1,11 @@
 /*
- * render.c
+ * Copyright (C) 1997-2002 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2003-2019 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 1997-2002.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -670,7 +669,7 @@ RenderFramePainted(renderdata * prd, unsigned char *puch, int nStride)
                    diffuse * prd->aanBoardColour[1][1]), clamp(specular * 0x100 + diffuse * prd->aanBoardColour[1][2]));
 
     for (ix = 0; ix < prd->nSize; ix++) {
-        float x = 1.0f - ((float) ix / prd->nSize);
+        float x = 1.0f - ((float) ix / (float) prd->nSize);
         float z = ssqrt(1.0f - x * x);
 
         for (i = 0; i < 4; i++) {
@@ -727,9 +726,9 @@ WoodHash(int i)
     if (i == 0)
         return 0;
 
-    x = frexpf((float)i, &n);
+    x = frexpf((float) i, &n);
 
-    return fabsf(frexpf(x * 131073.1294427f + n, &n)) * 2 - 1;
+    return fabsf(frexpf(x * 131073.1294427f + (float) n, &n)) * 2 - 1;
 }
 
 static void
@@ -1049,9 +1048,9 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
     rDiffuseTop = 0.8f * prd->arLight[2] + 0.2f;
 
     for (x = 0; x < s; x++) {
-        float rx = 1.0f - ((float) x / s);
+        float rx = 1.0f - ((float) x / (float) s);
         float rz = ssqrt(1.0f - rx * rx);
-        arHeight[x] = rz * s;
+        arHeight[x] = rz * (float) s;
 
         for (i = 0; i < 4; i++) {
             cos_theta = prd->arLight[2] * rz + prd->arLight[i & 1] * rx;
@@ -1083,15 +1082,15 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
                 rHeight = arHeight[3 * s - y - 1];
             }
 
-            WoodPixel(100 - y * 0.85f + x * 0.1f, rHeight - x * 0.11f, 200 + x * 0.93f + y * 0.16f, a, prd->wt);
+            WoodPixel(100 - (float) y * 0.85f + (float) x * 0.1f, rHeight - (float) x * 0.11f, 200 + (float) x * 0.93f + (float) y * 0.16f, a, prd->wt);
 
             for (i = 0; i < 3; i++)
-                BUF(y, x, i) = clamp(a[i] * rDiffuse + nSpecular);
+                BUF(y, x, i) = clamp(a[i] * rDiffuse + (float) nSpecular);
 
-            WoodPixel(123 + y * 0.87f - x * 0.08f, rHeight + x * 0.06f, -100 - x * 0.94f - y * 0.11f, a, prd->wt);
+            WoodPixel(123 + (float) y * 0.87f - (float) x * 0.08f, rHeight + (float) x * 0.06f, -100 - (float) x * 0.94f - (float) y * 0.11f, a, prd->wt);
 
             for (i = 0; i < 3; i++)
-                BUF(y + (BOARD_HEIGHT - BORDER_HEIGHT) * s, x, i) = clamp(a[i] * rDiffuse + nSpecular);
+                BUF(y + (BOARD_HEIGHT - BORDER_HEIGHT) * s, x, i) = clamp(a[i] * rDiffuse + (float) nSpecular);
         }
 
     /* Left and right edges */
@@ -1111,17 +1110,17 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
                 rHeight = arHeight[3 * s - x - 1];
             }
 
-            WoodPixel(300 + x * 0.9f + y * 0.1f, rHeight + y * 0.06f, 200 - y * 0.9f + x * 0.1f, a, prd->wt);
+            WoodPixel(300 + (float) x * 0.9f + (float) y * 0.1f, rHeight + (float) y * 0.06f, 200 - (float) y * 0.9f + (float) x * 0.1f, a, prd->wt);
 
             if (x < y && x + y < s * BOARD_HEIGHT)
                 for (i = 0; i < 3; i++)
-                    BUF(y, x, i) = clamp(a[i] * rDiffuse + nSpecular);
+                    BUF(y, x, i) = clamp(a[i] * rDiffuse + (float) nSpecular);
 
-            WoodPixel(-100 - x * 0.86f + y * 0.13f, rHeight - y * 0.07f, 300 + y * 0.92f + x * 0.08f, a, prd->wt);
+            WoodPixel(-100 - (float) x * 0.86f + (float) y * 0.13f, rHeight - (float) y * 0.07f, 300 + (float) y * 0.92f + (float) x * 0.08f, a, prd->wt);
 
             if (s * 3 - x <= y && s * 3 - x + y < s * BOARD_HEIGHT)
                 for (i = 0; i < 3; i++)
-                    BUF(y, x + (BOARD_WIDTH - BORDER_WIDTH) * s, i) = clamp(a[i] * rDiffuse + nSpecular);
+                    BUF(y, x + (BOARD_WIDTH - BORDER_WIDTH) * s, i) = clamp(a[i] * rDiffuse + (float) nSpecular);
         }
 
     /* Bar */
@@ -1150,19 +1149,19 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
                 rHeight = arHeight[6 * s - x - 1];
             }
 
-            WoodPixel(100 - x * 0.88f + y * 0.08f, 50 + rHeight - y * 0.10f, -200 + y * 0.99f - x * 0.12f, a, prd->wt);
+            WoodPixel(100 - (float) x * 0.88f + (float) y * 0.08f, 50 + rHeight - (float) y * 0.10f, -200 + (float) y * 0.99f - (float) x * 0.12f, a, prd->wt);
 
             if (y + x >= s * BORDER_HEIGHT && y - x <= s * (BOARD_HEIGHT - BORDER_HEIGHT))
                 for (i = 0; i < 3; i++)
                     BUF(y, x + (BOARD_WIDTH - BAR_WIDTH) / 2 * s, i)
-                        = clamp(a[i] * rDiffuse + nSpecular);
+                        = clamp(a[i] * rDiffuse + (float) nSpecular);
 
-            WoodPixel(100 - x * 0.86f + y * 0.02f, 50 + rHeight - y * 0.07f, 200 - y * 0.92f + x * 0.03f, a, prd->wt);
+            WoodPixel(100 - (float) x * 0.86f + (float) y * 0.02f, 50 + rHeight - (float) y * 0.07f, 200 - (float) y * 0.92f + (float) x * 0.03f, a, prd->wt);
 
             if (y + s * BAR_WIDTH / 2 - x >= s * BORDER_WIDTH &&
                 y - s * BAR_WIDTH / 2 + x <= s * (BOARD_HEIGHT - BORDER_HEIGHT))
                 for (i = 0; i < 3; i++)
-                    BUF(y, x + BOARD_WIDTH / 2 * s, i) = clamp(a[i] * rDiffuse + nSpecular);
+                    BUF(y, x + BOARD_WIDTH / 2 * s, i) = clamp(a[i] * rDiffuse + (float) nSpecular);
         }
 
     /* Left and right separators (between board and bearoff tray) */
@@ -1184,15 +1183,15 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
                     rHeight = arHeight[3 * s - x - 1];
                 }
 
-                WoodPixel(-300 - x * 0.91f + y * 0.10f, rHeight + y * 0.02f, -200 + y * 0.94f - x * 0.06f, a, prd->wt);
+                WoodPixel(-300 - (float) x * 0.91f + (float) y * 0.10f, rHeight + (float) y * 0.02f, -200 + (float) y * 0.94f - (float) x * 0.06f, a, prd->wt);
 
                 for (i = 0; i < 3; i++)
-                    BUF(y + 2 * s, x + (BEAROFF_WIDTH - BORDER_WIDTH) * s, i) = clamp(a[i] * rDiffuse + nSpecular);
+                    BUF(y + 2 * s, x + (BEAROFF_WIDTH - BORDER_WIDTH) * s, i) = clamp(a[i] * rDiffuse + (float) nSpecular);
 
-                WoodPixel(100 - x * 0.89f - y * 0.07f, rHeight + y * 0.05f, 300 - y * 0.94f + x * 0.11f, a, prd->wt);
+                WoodPixel(100 - (float) x * 0.89f - (float) y * 0.07f, rHeight + (float) y * 0.05f, 300 - (float) y * 0.94f + (float) x * 0.11f, a, prd->wt);
 
                 for (i = 0; i < 3; i++)
-                    BUF(y + 2 * s, x + (BOARD_WIDTH - BEAROFF_WIDTH) * s, i) = clamp(a[i] * rDiffuse + nSpecular);
+                    BUF(y + 2 * s, x + (BOARD_WIDTH - BEAROFF_WIDTH) * s, i) = clamp(a[i] * rDiffuse + (float) nSpecular);
             }
 
     /* Left and right dividers (between the bearoff trays) */
@@ -1214,18 +1213,18 @@ RenderFrameWood(renderdata * prd, unsigned char *puch, int nStride)
                     rHeight = arHeight[6 * s - y - 1];
                 }
 
-                WoodPixel(-100 - y * 0.85f + x * 0.11f, rHeight - x * 0.04f, -100 - x * 0.93f + y * 0.08f, a, prd->wt);
+                WoodPixel(-100 - (float) y * 0.85f + (float) x * 0.11f, rHeight - (float) x * 0.04f, -100 - (float) x * 0.93f + (float) y * 0.08f, a, prd->wt);
 
                 for (i = 0; i < 3; i++)
                     BUF(y + (BOARD_HEIGHT - BEAROFF_DIVIDER_HEIGHT) / 2 * s,
-                        x + (BORDER_WIDTH - 1) * s, i) = clamp(a[i] * rDiffuse + nSpecular);
+                        x + (BORDER_WIDTH - 1) * s, i) = clamp(a[i] * rDiffuse + (float) nSpecular);
 
-                WoodPixel(-123 - y * 0.93f - x * 0.12f, rHeight + x * 0.11f, -150 + x * 0.88f - y * 0.07f, a, prd->wt);
+                WoodPixel(-123 - (float) y * 0.93f - (float) x * 0.12f, rHeight + (float) x * 0.11f, -150 + (float) x * 0.88f - (float) y * 0.07f, a, prd->wt);
 
                 for (i = 0; i < 3; i++)
                     BUF(y + (BOARD_HEIGHT - BEAROFF_DIVIDER_HEIGHT) / 2 * s,
                         x + (BOARD_WIDTH - BEAROFF_WIDTH + BORDER_WIDTH - 1) * s, i) =
-                        clamp(a[i] * rDiffuse + nSpecular);
+                        clamp(a[i] * rDiffuse + (float) nSpecular);
             }
 #undef BUF
 }
@@ -1238,10 +1237,8 @@ HingePixel(renderdata * prd, float xNorm, float yNorm, float xEye, float yEye, u
         {0.6f, 0.7f, 0.5f},
         {0.5f, -0.6f, 0.7f}
     };
-    float zNorm, zEye;
+    float zNorm;
     float diffuse, specular = 0, cos_theta;
-    float l;
-    int i;
     float *arLight[3];
     arLight[0] = prd->arLight;
     arLight[1] = arAuxLight[0];
@@ -1254,7 +1251,9 @@ HingePixel(renderdata * prd, float xNorm, float yNorm, float xEye, float yEye, u
     else {
         diffuse = cos_theta * 0.8f + 0.2f;
 
-        for (i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
+            float zEye, l;
+
             if ((cos_theta = xNorm * arLight[i][0] + yNorm * arLight[i][1] + zNorm * arLight[i][2]) < 0)
                 cos_theta = 0;
 
@@ -1293,13 +1292,13 @@ RenderHinges(renderdata * prd, unsigned char *puch, int nStride)
             if (s < 5 && y && !(y % (2 * s)))
                 yNorm = 0.5;
             else if (y % (2 * s) < s / 5)
-                yNorm = (s / 5 - y % (2 * s)) * (2.5f / s);
+                yNorm = (float) (s / 5 - y % (2 * s)) * (2.5f / (float) s);
             else if (y % (2 * s) >= (2 * s - s / 5))
-                yNorm = (y % (2 * s) - (2 * s - s / 5 - 1)) * (-2.5f / s);
+                yNorm = (float) (y % (2 * s) - (2 * s - s / 5 - 1)) * (-2.5f / (float) s);
             else
                 yNorm = 0;
 
-            xNorm = (x - s) / (float) s *(1.0f - yNorm * yNorm);
+            xNorm = (float) (x - s) / (float) s * (1.0f - yNorm * yNorm);
 
             HingePixel(prd, xNorm, yNorm,
 				(float)((s - x) / (40 * s)), (float)((y - 20 * s) / (40 * s)),
@@ -1481,7 +1480,6 @@ RenderLabels(renderdata * prd, unsigned char *puch, int nStride, const int iStar
 {
 #if defined(HAVE_FREETYPE)
     FT_Face ftf;
-    int i;
     FT_Glyph aftg[10];
     char *file;
 
@@ -1499,18 +1497,18 @@ RenderLabels(renderdata * prd, unsigned char *puch, int nStride, const int iStar
     }
 
     if (prd->fLabels) {
-        for (i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             FT_Load_Char(ftf, '0' + i, FT_LOAD_RENDER);
             FT_Get_Glyph(ftf->glyph, aftg + i);
         }
 
         FT_Done_Face(ftf);
 
-        for (i = 0; i < (1 + abs(iStart - iEnd)); ++i)
+        for (int i = 0; i < (1 + abs(iStart - iEnd)); ++i)
             RenderNumber(puch, nStride, aftg, iStart + i * iDelta,
                          (positions[prd->fClockwise][i + 1][0] + 3) * prd->nSize, 7 * prd->nSize / 3, 0xFF, 0xFF, 0xFF);
 
-        for (i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             FT_Done_Glyph(aftg[i]);
     }
 #else
@@ -1653,7 +1651,7 @@ RenderChequers(renderdata * prd, unsigned char *puch0,
 
     int size = CHEQUER_WIDTH * prd->nSize;
     int ix, iy, in, fx, fy, i;
-    float x, y, z, x_loop, y_loop, diffuse, specular_x, specular_o, cos_theta, r, x1, y1, len;
+    float x, y, z, x_loop, y_loop, diffuse, specular_x, specular_o, cos_theta, x1, y1, len;
 
 #define BUFX( y, x, i ) puch0[ ( (y) * size + (x) ) * 4 + (i) ]
 #define BUFO( y, x, i ) puch1[ ( (y) * size + (x) ) * 4 + (i) ]
@@ -1668,7 +1666,7 @@ RenderChequers(renderdata * prd, unsigned char *puch0,
                 fx = 0;
                 x = x_loop;
                 do {
-                    r = sqrtf(x * x + y * y);
+                    float r = sqrtf(x * x + y * y);
                     if (r < prd->rRound)
                         x1 = y1 = 0.0;
                     else {
@@ -1689,9 +1687,9 @@ RenderChequers(renderdata * prd, unsigned char *puch0,
                             }
                         }
                     }
-                    x += 1.0f / (size);
+                    x += 1.0f / (float) size;
                 } while (!fx++);
-                y += 1.0f / (size);
+                y += 1.0f / (float) size;
             } while (!fy++);
 
             if (!in) {
@@ -1704,10 +1702,10 @@ RenderChequers(renderdata * prd, unsigned char *puch0,
                 BUFX(iy, ix, 3) = BUFO(iy, ix, 3) = 0xFF;
             } else {
                 /* pixel is inside chequer */
-                float r, s, r1, s1, theta;
+                float s, r1, s1, theta;
                 int f;
 
-                r = sqrtf(x_loop * x_loop + y_loop * y_loop);
+                float r = sqrtf(x_loop * x_loop + y_loop * y_loop);
                 if (r < prd->rRound)
                     r1 = 0.0;
                 else
@@ -1731,8 +1729,8 @@ RenderChequers(renderdata * prd, unsigned char *puch0,
                         q = 1.0f;
 
                     *(f ? psRefract1++ : psRefract0++) =
-                        (unsigned short) ((lrintf(iy * q + size / 2 * (1.0f - q)) << 8) |
-                                          lrintf(ix * q + size / 2 * (1.0f - q)));
+                        (unsigned short) ((lrintf((float) iy * q + (float) (size / 2) * (1.0f - q)) << 8) |
+                                          lrintf((float) ix * q + (float) (size / 2) * (1.0f - q)));
                 }
 
                 BUFX(iy, ix, 0) =
@@ -1749,12 +1747,12 @@ RenderChequers(renderdata * prd, unsigned char *puch0,
                 BUFO(iy, ix, 2) =
                     clamp((diffuse * (float) prd->aarColour[1][2] * (float) prd->aarColour[1][3] + specular_o) * 64.0f);
 
-                BUFX(iy, ix, 3) = clamp(0xFF * 0.25f * ((4 - in) + ((1.0f - (float) prd->aarColour[0][3]) * diffuse)));
-                BUFO(iy, ix, 3) = clamp(0xFF * 0.25f * ((4 - in) + ((1.0f - (float) prd->aarColour[1][3]) * diffuse)));
+                BUFX(iy, ix, 3) = clamp(0xFF * 0.25f * ((float) (4 - in) + ((1.0f - (float) prd->aarColour[0][3]) * diffuse)));
+                BUFO(iy, ix, 3) = clamp(0xFF * 0.25f * ((float) (4 - in) + ((1.0f - (float) prd->aarColour[1][3]) * diffuse)));
             }
-            x_loop += 2.0f / (size);
+            x_loop += 2.0f / (float) size;
         }
-        y_loop += 2.0f / (size);
+        y_loop += 2.0f / (float) size;
     }
 #undef BUFX
 #undef BUFO
@@ -1893,9 +1891,9 @@ RenderBasicCube(const float arLight[3], const int nSize, const float arColour[4]
                         }
                     }
                   missed:
-                    x += 1.0f / (CUBE_WIDTH * nSize);
+                    x += 1.0f / (float) (CUBE_WIDTH * nSize);
                 } while (!fx++);
-                y += 1.0f / (CUBE_HEIGHT * nSize);
+                y += 1.0f / (float) (CUBE_HEIGHT * nSize);
             } while (!fy++);
 
             for (i = 0; i < 3; i++)
@@ -1903,9 +1901,9 @@ RenderBasicCube(const float arLight[3], const int nSize, const float arColour[4]
 
             *puch++ = (unsigned char) (255 * (4 - in) / 4);     /* alpha channel */
 
-            x_loop += 2.0f / (CUBE_WIDTH * nSize);
+            x_loop += 2.0f / (float) (CUBE_WIDTH * nSize);
         }
-        y_loop += 2.0f / (CUBE_HEIGHT * nSize);
+        y_loop += 2.0f / (float) (CUBE_HEIGHT * nSize);
         puch += nStride;
     }
 }
@@ -2152,9 +2150,9 @@ RenderDice(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
                             }
                         }
                     }
-                    x += 1.0f / (DIE_WIDTH * prd->nSize);
+                    x += 1.0f / (float) (DIE_WIDTH * prd->nSize);
                 } while (!fx++);
-                y += 1.0f / (DIE_HEIGHT * prd->nSize);
+                y += 1.0f / (float) (DIE_HEIGHT * prd->nSize);
             } while (!fy++);
 
             for (i = 0; i < 3; i++)
@@ -2167,9 +2165,9 @@ RenderDice(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
             if (alpha)
                 *puch1++ = (unsigned char) (255 * (4 - in) / 4);        /* alpha channel */
 
-            x_loop += 2.0f / (DIE_WIDTH * prd->nSize);
+            x_loop += 2.0f / (float) (DIE_WIDTH * prd->nSize);
         }
-        y_loop += 2.0f / (DIE_HEIGHT * prd->nSize);
+        y_loop += 2.0f / (float) (DIE_HEIGHT * prd->nSize);
         puch0 += nStride;
         puch1 += nStride;
     }
@@ -2234,24 +2232,24 @@ RenderPips(renderdata * prd, unsigned char *puch0, unsigned char *puch1, int nSt
                             }
                         }
                     }
-                    x += 1.0f / (prd->nSize);
+                    x += 1.0f / (float) prd->nSize;
                 } while (!fx++);
-                y += 1.0f / (prd->nSize);
+                y += 1.0f / (float) prd->nSize;
             } while (!fy++);
 
             for (i = 0; i < 3; i++)
                 *puch0++ =
                     clamp((diffuse * (float) prd->aarDiceDotColour[0][i] + specular_x) * 64.0f +
-                          (4 - in) * dice_top[0][i]);
+                          (float) (4 - in) * dice_top[0][i]);
 
             for (i = 0; i < 3; i++)
                 *puch1++ =
                     clamp((diffuse * (float) prd->aarDiceDotColour[1][i] + specular_o) * 64.0f +
-                          (4 - in) * dice_top[1][i]);
+                          (float) (4 - in) * dice_top[1][i]);
 
-            x_loop += 2.0f / (prd->nSize);
+            x_loop += 2.0f / (float) prd->nSize;
         }
-        y_loop += 2.0f / (prd->nSize);
+        y_loop += 2.0f / (float) prd->nSize;
         puch0 += nStride;
         puch1 += nStride;
     }
@@ -2309,9 +2307,9 @@ RenderArrow(unsigned char *puch, float arColour[4], int nSize, int left)
     /* Point arrows correct way */
     cairo_translate(cr, .5, .5);
     if (left)
-        cairo_rotate(cr, -G_PI / 2);
+        cairo_rotate(cr, -G_PI_2);
     else
-        cairo_rotate(cr, G_PI / 2);
+        cairo_rotate(cr, G_PI_2);
     cairo_translate(cr, -.5, -.5);
 
     cairo_set_line_width(cr, AR_LINE_WIDTH);
@@ -2394,7 +2392,7 @@ CalculateArea(renderdata * prd, unsigned char *puch, int nStride,
               int anArrowPosition[2], int UNUSED(fPlaying), int nPlayer, int x, int y, int cx, int cy)
 {
 
-    int i, xPoint, yPoint, cxPoint, cyPoint, n;
+    int i, xPoint, yPoint, cxPoint, cyPoint, nc;
     int anOffCalc[2];
 
     if (x < 0) {
@@ -2465,27 +2463,27 @@ CalculateArea(renderdata * prd, unsigned char *puch, int nStride,
             switch (i) {
             case 0:
                 /* top player on bar */
-                n = -(int)anBoard[0][24];
+                nc = -(int)anBoard[0][24];
                 break;
             case 25:
                 /* bottom player on bar */
-                n = anBoard[1][24];
+                nc = anBoard[1][24];
                 break;
             case 26:
                 /* bottom player borne off */
-                n = anOff[1];
+                nc = anOff[1];
                 break;
             case 27:
                 /* top player borne off */
-                n = -anOff[0];
+                nc = -anOff[0];
                 break;
             default:
                 /* ordinary point */
-                n = anBoard[1][i - 1] - anBoard[0][24 - i];
+                nc = anBoard[1][i - 1] - anBoard[0][24 - i];
                 break;
             }
-            if (n)
-                DrawChequers(prd, puch, nStride, pri, i, abs(n), n > 0, x, y, cx, cy);
+            if (nc)
+                DrawChequers(prd, puch, nStride, pri, i, abs(nc), nc > 0, x, y, cx, cy);
         }
     }
 
