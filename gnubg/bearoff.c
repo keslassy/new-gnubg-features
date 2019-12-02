@@ -1,11 +1,11 @@
 /*
- * bearoff.c
+ * Copyright (C) 2002-2004 Joern Thyssen <jthyssen@dk.ibm.com>
+ * Copyright (C) 2003-2019 the AUTHORS
  *
- * by Joern Thyssen <jthyssen@dk.ibm.com>, 2002
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,11 +13,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
+
 #include "config.h"
 /*must be first here because of strange warning from mingw */
 #include "multithread.h"
@@ -104,9 +104,9 @@ AverageRolls(const float arProb[32], float *ar)
     sx = sx2 = 0.0f;
 
     for (i = 1; i < 32; i++) {
-        float p = i * arProb[i];
+        float p = (float) i * arProb[i];
         sx += p;
-        sx2 += i * p;
+        sx2 += (float) i *p;
     }
 
     ar[0] = sx;
@@ -294,7 +294,7 @@ ReadTwoSidedBearoff(const bearoffcontext * pbc, const unsigned int iPos, float a
     /* add to cache */
 
     for (i = 0; i < k; ++i) {
-        unsigned short int  us = pc[2 * i] | (unsigned short) (pc[2 * i + 1] << 8);
+        unsigned short int us = pc[2 * i] | (unsigned short) (pc[2 * i + 1] << 8);
 
         if (aus)
             aus[i] = us;
@@ -354,13 +354,13 @@ ReadHypergammon(const bearoffcontext * pbc, const unsigned int iPos, float arOut
     if (arOutput)
         for (i = 0; i < NUM_OUTPUTS; ++i) {
             us = pc[3 * i] | (pc[3 * i + 1]) << 8 | (pc[3 * i + 2]) << 16;
-            arOutput[i] = us / 16777215.0f;
+            arOutput[i] = (float) us / 16777215.0f;
         }
 
     if (arEquity)
         for (i = 0; i < 4; ++i) {
             us = pc[15 + 3 * i] | (pc[15 + 3 * i + 1]) << 8 | (pc[15 + 3 * i + 2]) << 16;
-            arEquity[i] = (us / 16777215.0f - 0.5f) * 6.0f;
+            arEquity[i] = ((float) us / 16777215.0f - 0.5f) * 6.0f;
         }
 
     return 0;
@@ -662,7 +662,8 @@ BearoffDumpOneSided(const bearoffcontext * pbc, const TanBoard anBoard, char *sz
     sz += sprintf(sz, "\n%s:\n", _("Effective pip count"));
     sz += sprintf(sz, "\t%s\t%s\n", _("Player"), _("Opponent"));
     sz += sprintf(sz, "%s\t%7.3f\t%7.3f\n%s\t%7.3f\t%7.3f\n\n", _("EPC"),
-                  ar[0][0] * x, ar[1][0] * x, _("Wastage"), ar[0][0] * x - anPips[1], ar[1][0] * x - anPips[0]);
+                  ar[0][0] * x, ar[1][0] * x, _("Wastage"), ar[0][0] * x - (float) anPips[1],
+                  ar[1][0] * x - (float) anPips[0]);
 
     sprintf(sz, "%s = %5.3f * %s\n%s = %s - %s\n\n",
             _("EPC"), x, _("Average rolls"), _("Wastage"), _("EPC"), _("pips"));
@@ -871,7 +872,8 @@ BearoffInit(const char *szFilename, const unsigned int bo, void (*p) (unsigned i
 
     if (((bo & BO_MUST_BE_ONE_SIDED) && (pbc->bt != BEAROFF_ONESIDED))
         || ((bo & BO_MUST_BE_TWO_SIDED) && (pbc->bt != BEAROFF_TWOSIDED))) {
-        	g_printerr("%s: %s\n (%s: '%2s')\n", szFilename, _("incorrect bearoff database"), _("wrong bearoff type"), sz + 6);
+        g_printerr("%s: %s\n (%s: '%2s')\n", szFilename, _("incorrect bearoff database"), _("wrong bearoff type"),
+                   sz + 6);
         InvalidDb(pbc);
         return NULL;
     }
@@ -956,7 +958,7 @@ fnd(const float x, const float mu, const float sigma)
 
         float xm = (x - mu) / sigma;
 
-        return 1.0f / (sigma * sqrtf(2.0f * (float) G_PI)) * expf(-xm * xm / 2.0f);
+        return 1.0f / (sigma * sqrtf(2.0f * F_PI)) * expf(-xm * xm / 2.0f);
 
     }
 
@@ -982,7 +984,7 @@ ReadBearoffOneSidedND(const bearoffcontext * pbc,
 
     if (arProb || ausProb)
         for (i = 0; i < 32; ++i) {
-            r = fnd(1.0f * i, arx[0], arx[1]);
+            r = fnd((float) i, arx[0], arx[1]);
             if (arProb)
                 arProb[i] = r;
             if (ausProb)
@@ -993,7 +995,7 @@ ReadBearoffOneSidedND(const bearoffcontext * pbc,
 
     if (arGammonProb || ausGammonProb)
         for (i = 0; i < 32; ++i) {
-            r = fnd(1.0f * i, arx[2], arx[3]);
+            r = fnd((float) i, arx[2], arx[3]);
             if (arGammonProb)
                 arGammonProb[i] = r;
             if (ausGammonProb)
