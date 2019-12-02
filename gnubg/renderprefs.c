@@ -460,15 +460,15 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         float rAzimuth, rElevation;
         gchar **split = g_strsplit(szValue, ";", 0);
 
-        rAzimuth = (float) (g_ascii_strtod(split[0], NULL) * G_PI / 180.0);
-        rElevation = (float) (g_ascii_strtod(split[1], NULL) * G_PI / 180.0);
+        rAzimuth = (float) g_ascii_strtod(split[0], NULL) * F_PI / 180.0f;
+        rElevation = (float) g_ascii_strtod(split[1], NULL) * F_PI / 180.0f;
 
         g_strfreev(split);
 
         if (rElevation < 0.0f)
             rElevation = 0.0f;
-        else if (rElevation > (float) G_PI_2)
-            rElevation = (float) G_PI_2;
+        else if (rElevation > F_PI_2)
+            rElevation = F_PI_2;
 
         prd->arLight[2] = sinf(rElevation);
         prd->arLight[0] = cosf(rAzimuth) * sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
@@ -629,9 +629,9 @@ SaveRenderingSettings(FILE * pf)
     gchar buf2[G_ASCII_DTOSTR_BUF_SIZE];
     gchar buf3[G_ASCII_DTOSTR_BUF_SIZE];
     renderdata *prd = GetMainAppearance();
-    float rElevation = asinf(prd->arLight[2]) * 180.0f / (float) G_PI;
+    float rElevation = asinf(prd->arLight[2]) * 180.0f / F_PI;
     float rAzimuth = (fabsf(prd->arLight[2] - 1.0f) < 1e-5f) ? 0.0f :
-        acosf(prd->arLight[0] / sqrtf(1.0f - prd->arLight[2] * prd->arLight[2])) * 180.0f / (float) G_PI;
+        acosf(prd->arLight[0] / sqrtf(1.0f - prd->arLight[2] * prd->arLight[2])) * 180.0f / F_PI;
 
     if (prd->arLight[1] < 0)
         rAzimuth = 360 - rAzimuth;

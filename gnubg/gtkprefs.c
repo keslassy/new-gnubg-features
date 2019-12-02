@@ -1214,10 +1214,10 @@ BoardPrefsOK(GtkWidget * pw, GtkWidget * mainBoard)
 static void
 WorkOut2dLight(renderdata * prd)
 {
-    prd->arLight[2] = sinf((float)gtk_adjustment_get_value(paElevation) / 180.f * (float)G_PI);
-    prd->arLight[0] = cosf((float)gtk_adjustment_get_value(paAzimuth) / 180.f * (float)G_PI) *
+    prd->arLight[2] = sinf((float)gtk_adjustment_get_value(paElevation) / 180.f * F_PI);
+    prd->arLight[0] = cosf((float)gtk_adjustment_get_value(paAzimuth) / 180.f * F_PI) *
                                sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
-    prd->arLight[1] = sinf((float)gtk_adjustment_get_value(paAzimuth) / 180.f * (float)G_PI) *
+    prd->arLight[1] = sinf((float)gtk_adjustment_get_value(paAzimuth) / 180.f * F_PI) *
                                sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
 }
 
@@ -1387,7 +1387,7 @@ Add2dLightOptions(GtkWidget * pwx, renderdata * prd)
     gtk_table_attach(GTK_TABLE(pwLightTable), gtk_label_new(_("Light azimuth")), 0, 1, 0, 1, 0, 0, 4, 2);
     gtk_table_attach(GTK_TABLE(pwLightTable), gtk_label_new(_("Light elevation")), 0, 1, 1, 2, 0, 0, 4, 2);
 
-    rElevation = asinf(prd->arLight[2]) * (float)(180 / G_PI);
+    rElevation = asinf(prd->arLight[2]) * 180.0f / F_PI;
     {
         float s = sqrtf(1.0f - prd->arLight[2] * prd->arLight[2]);
         if (s == 0)
@@ -1397,7 +1397,7 @@ Add2dLightOptions(GtkWidget * pwx, renderdata * prd)
             if (ac == 0)
                 rAzimuth = 0;
             else
-                rAzimuth = ac * (float)(180 / G_PI);
+                rAzimuth = ac * 180.0f / F_PI;
         }
     }
     if (prd->arLight[1] < 0)
@@ -2038,11 +2038,11 @@ UseDesign(void)
 
         /* light */
 
-        rElevation = (float) (asin(newPrefs.arLight[2]) * 180 / G_PI);
+        rElevation = asinf(newPrefs.arLight[2]) * 180.0f / F_PI;
         if (fabs(newPrefs.arLight[2] - 1.0f) < 1e-5)
             rAzimuth = 0.0;
         else
-            rAzimuth = acosf(newPrefs.arLight[0] / sqrtf(1.0f - newPrefs.arLight[2] * newPrefs.arLight[2])) * (float)(180 / G_PI);
+            rAzimuth = acosf(newPrefs.arLight[0] / sqrtf(1.0f - newPrefs.arLight[2] * newPrefs.arLight[2])) * 180.0f / F_PI;
         if (newPrefs.arLight[1] < 0)
             rAzimuth = 360 - rAzimuth;
 
@@ -2276,9 +2276,9 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
     gchar buf1[G_ASCII_DTOSTR_BUF_SIZE], buf2[G_ASCII_DTOSTR_BUF_SIZE],
         buf3[G_ASCII_DTOSTR_BUF_SIZE], buf4[G_ASCII_DTOSTR_BUF_SIZE];
 
-    float rElevation = (float) (asin(prd->arLight[2]) * 180 / G_PI);
+    float rElevation = asinf(prd->arLight[2]) * 180.0f / F_PI;
     float rAzimuth = (fabs(prd->arLight[2] - 1.0f) < 1e-5) ? 0.0f :
-        acosf(prd->arLight[0] / sqrtf(1.0f - prd->arLight[2] * prd->arLight[2])) * (float)(180 / G_PI);
+        acosf(prd->arLight[0] / sqrtf(1.0f - prd->arLight[2] * prd->arLight[2])) * 180.0f / F_PI;
 
     if (prd->arLight[1] < 0)
         rAzimuth = 360 - rAzimuth;
