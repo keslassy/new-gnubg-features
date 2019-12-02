@@ -100,9 +100,6 @@ extern OglModel* curModel;
 	fun(__VA_ARGS__); \
 }
 
-#define F_PI (float)G_PI
-#define F_PI_2 (float)G_PI_2
-
 typedef signed long  FT_Pos;
 
 struct _OGLFont {
