@@ -1,11 +1,11 @@
 /*
- * export.h
+ * Copyright (C) 2002 Joern Thyssen <jthyssen@dk.ibm.com>
+ * Copyright (C) 2002-2019 the AUTHORS
  *
- * by Joern Thyssen  <jthyssen@dk.ibm.com>, 2002.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,15 +13,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
 
+#include <glib.h>
+
+#include "backgammon.h"
 #include "render.h"
 #include "list.h"
-#include <glib.h>
 
 #ifndef EXPORT_H
 #define EXPORT_H
@@ -29,8 +30,6 @@
 #define EXPORT_CUBE_ACTUAL   4
 #define EXPORT_CUBE_MISSED   5
 #define EXPORT_CUBE_CLOSE    6
-
-typedef struct _moverecord moverecord;
 
 typedef enum _htmlexporttype {
     HTML_EXPORT_TYPE_GNU,
