@@ -55,7 +55,6 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #include "eval.h"
 #include "sgf.h"
 #include "export.h"
-#include "import.h"
 #include "matchequity.h"
 #include "matchid.h"
 #include "positionid.h"

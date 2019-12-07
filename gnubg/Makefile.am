@@ -105,7 +105,6 @@ gnubg_SOURCES = \
 		html.c \
 		htmlimages.c \
 		import.c \
-		import.h \
 		inc3d.h \
 		latex.c \
 		matchequity.c \

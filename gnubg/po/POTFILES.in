@@ -103,7 +103,6 @@ gtkwindows.h
 html.c
 htmlimages.c
 import.c
-import.h
 latex.c
 lib/cache.c
 lib/cache.h
