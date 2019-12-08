@@ -1,7 +1,8 @@
-The files in this directory will be generated automatically on systems
-supporting the autobuild process. You should therefore not edit any of
-them. If you need to alter code in any of these files you should
-instead edit the corresponding file that generates it.
+The files in this directory, with the exception of cglm.shar, will
+be generated automatically on systems supporting the autobuild
+process. You should therefore not edit any of them. If you need to
+alter code in any of these files you should instead edit the
+corresponding file that generates it.
 
 If you have trouble building any of these files you may copy the file
 causing problems from this directory to its intended location.
@@ -23,3 +24,8 @@ TARGET                              SOURCE
 ../sgf_y.h                          ../sgf_y.y
 
 ../pixmaps/gnubg-stock-pixbufs.h    ../pixmaps/stock-icons.list
+
+cglm.shar is an archive of the header files installed by cglm, a
+graphics math library for use with OpenGL, available from
+https://github.com/recp/cglm but provided by few if any GNU/Linux
+distributions.  It is needed to build GNUbg with the 3D board display.
