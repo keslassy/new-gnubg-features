@@ -1,11 +1,11 @@
 /*
- * makebearoff.c
+ * Copyright (C) 1997-2003 Gary Wong <gary@cs.arizona.edu>
+ * Copyright (C) 2002-2019 the AUTHORS
  *
- * by Gary Wong <gary@cs.arizona.edu>, 1997-1999.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -1140,7 +1139,7 @@ static void
 WriteEquity(FILE * pf, const short int si)
 {
 
-    unsigned short int us = si + 0x8000;
+    unsigned short int us = si + (unsigned short int) 0x8000;
 
     putc(us & 0xFF, pf);
     putc((us >> 8) & 0xFF, pf);
@@ -1373,10 +1372,10 @@ main(int argc, char **argv)
             r = Combination(nOS + 15, nOS) * 16.0;
             fprintf(stderr, "%-37s: %.0f (%.1f MB)\n", _("Size of database"), r, r / 1048576.0);
         } else {
-            r = Combination(nOS + 15, nOS) * (fGammon ? 128.0f : 64.0f);
+            r = (float) Combination(nOS + 15, nOS) * (fGammon ? 128.0f : 64.0f);
             fprintf(stderr, "%-37s: %.0f (%.1f MB)\n", _("Size of database (uncompressed)"), r, r / 1048576.0);
             if (fCompress) {
-                r = Combination(nOS + 15, nOS) * (fGammon ? 32.0f : 16.0f);
+                r = (float) Combination(nOS + 15, nOS) * (fGammon ? 32.0f : 16.0f);
                 fprintf(stderr, "%-37s: %.0f (%.1f MB)\n", _("Estimated size of compressed db"), r, r / 1048576.0);
             }
         }

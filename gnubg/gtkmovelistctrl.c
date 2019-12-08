@@ -1,13 +1,12 @@
 /*lint -e818 */
 /*
- * gtkmovelistctrl.c
- * by Jon Kinsey, 2005
+ * Copyright (C) 2005-2009 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2009-2018 the AUTHORS
  *
- * Analysis move list control
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -47,8 +45,7 @@ static void custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
                                                  cairo_t * cr,
                                                  GtkWidget * widget,
                                                  const GdkRectangle * background_area,
-                                                 const GdkRectangle * cell_area,
-                                                 GtkCellRendererState flags);
+                                                 const GdkRectangle * cell_area, GtkCellRendererState flags);
 
 #if ! GTK_CHECK_VERSION(3,0,0)
 static void custom_cell_renderer_movelist_render_window(GtkCellRenderer * cell,
@@ -340,12 +337,12 @@ custom_cell_renderer_movelist_get_size(GtkCellRenderer * cell,
 
     if (cell_area) {
         if (x_offset) {
-            *x_offset = (int) (xalign * (cell_area->width - calc_width));
+            *x_offset = (int) (xalign * (gfloat) (cell_area->width - calc_width));
             *x_offset = MAX(*x_offset, 0);
         }
 
         if (y_offset) {
-            *y_offset = (int) (yalign * (cell_area->height - calc_height));
+            *y_offset = (int) (yalign * (gfloat) (cell_area->height - calc_height));
             *y_offset = MAX(*y_offset, 0);
         }
     }
@@ -363,8 +360,7 @@ custom_cell_renderer_movelist_render(GtkCellRenderer * cell,
                                      cairo_t * cr,
                                      GtkWidget * widget,
                                      const GdkRectangle * background_area,
-                                     const GdkRectangle * cell_area,
-                                     GtkCellRendererState flags)
+                                     const GdkRectangle * cell_area, GtkCellRendererState flags)
 {
     CustomCellRendererMovelist *cellprogress = CUSTOM_CELL_RENDERER_MOVELIST(cell);
     PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);

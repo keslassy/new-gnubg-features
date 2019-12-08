@@ -1,11 +1,11 @@
 /*
- * makehyper.c
+ * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2007-2019 the AUTHORS
  *
- * by Joern Thyssen <jth@gnubg.org>, 2003
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -153,7 +152,7 @@ StartGuessHyper(hyperequity ahe[], const int nC, bearoffcontext * UNUSED(pbc))
                 ++ai[1];
                 --ai[2];
 #if defined(HAVE_FUNC_ATTRIBUTE_FALLTHROUGH)
-                __attribute__((fallthrough));
+                __attribute__ ((fallthrough));
 #endif
             case HYPER_BEAROFF:
 
@@ -226,14 +225,14 @@ StartFromDatabase(hyperequity ahe[], const int nC, const char *szFilename)
 
             for (k = 0; k < NUM_OUTPUTS; ++k) {
                 us = ac[3 * k] | (ac[3 * k + 1]) << 8 | (ac[3 * k + 2]) << 16;
-                r = us / 16777215.0f;
+                r = (float) us / 16777215.0f;
                 g_assert(r >= 0 && r <= 1);
                 ahe[i * nPos + j].arOutput[k] = r;
             }
 
             for (k = 0; k < 4; ++k) {
                 us = ac[15 + 3 * k] | (ac[15 + 3 * k + 1]) << 8 | (ac[15 + 3 * k + 2]) << 16;
-                r = (us / 16777215.0f - 0.5f) * 6.0f;
+                r = ((float) us / 16777215.0f - 0.5f) * 6.0f;
                 g_assert(r >= -3 && r <= 3);
                 ahe[i * nPos + j].arEquity[k + 1] = r;
             }
