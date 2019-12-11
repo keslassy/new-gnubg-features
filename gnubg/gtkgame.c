@@ -26,6 +26,7 @@
 #include <ctype.h>
 #include <glib/gstdio.h>
 #include <math.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1957,7 +1958,7 @@ static void
 EvalGetValues(evalcontext * pec, evalwidget * pew)
 {
 
-    pec->nPlies = (int) gtk_adjustment_get_value(pew->padjPlies);
+    pec->nPlies = (unsigned int) gtk_adjustment_get_value(pew->padjPlies);
     pec->fCubeful = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwCubeful));
 
     pec->fUsePrune = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwUsePrune));
@@ -5859,7 +5860,7 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     else
         pch = _("You should reject the resignation!");
 
-    gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(pch),
+    gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(pch),
                      0, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 8);
 
     gtk_container_set_border_width(GTK_CONTAINER(pwTable), 8);
@@ -6028,6 +6029,7 @@ GTKShowScoreSheet(void)
             plg = pl->p;
             if (!plg)
                 continue;
+
             pmr = plg->plNext->p;
             score[0] = pmr->g.anScore[0];
             score[1] = pmr->g.anScore[1];
@@ -6173,7 +6175,7 @@ GTKShowBuildInfo(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
 #endif
 
     while ((pch = GetBuildInfoString()))
-        gtk_box_pack_start(GTK_BOX(pwBox), pwPrompt = gtk_label_new(gettext(pch)), FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(gettext(pch)), FALSE, FALSE, 0);
 
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_box_pack_start(GTK_BOX(pwBox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 4);
@@ -6539,10 +6541,7 @@ GTKHelp(char *sz)
 static void
 GTKBearoffProgressCancel(void)
 {
-
-#if defined(SIGINT)
     raise(SIGINT);
-#endif
     exit(EXIT_FAILURE);
 }
 
