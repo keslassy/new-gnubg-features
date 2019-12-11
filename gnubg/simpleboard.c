@@ -1,6 +1,11 @@
-/* This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+/*
+ * Copyright (C) 2007-2009 Christian Anthon <anthon@kiku.dk>
+ * Copyright (C) 2007-2019 the AUTHORS
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -8,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -122,7 +126,7 @@ draw_header_text(SimpleBoard * board)
         return;
     cairo_move_to(board->cr, board->text_size * 3, board->text_size * 3);
     draw_fixed_text(board->cr, board->header, board->text_size);
-    cairo_translate(board->cr, 0.0, board->text_size * 6);
+    cairo_translate(board->cr, 0.0, board->text_size * 7.5);
 }
 
 /*! \brief draws the annotation text
@@ -478,7 +482,7 @@ simple_board_draw(SimpleBoard * board)
     draw_turn(board);
     cairo_restore(cr);
     cairo_save(cr);
-    cairo_translate(cr, board->text_size * 3, board->text_size * 6 + board->size);
+    cairo_translate(cr, board->text_size * 3, board->text_size * 7.5 + board->size);
     draw_annotation_text(board);
     cairo_restore(cr);
 
