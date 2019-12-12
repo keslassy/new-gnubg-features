@@ -103,14 +103,14 @@ static annotatetype at;
 
 static positionkey currentkey;
 
-static int GetDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx, TanBoard anBoard) 
+static int GetDice(unsigned int anDice[2], int fTurn, rng * prng, rngcontext * rngctx, TanBoard anBoard) 
 {
-   static int dice0, dice1;
+   static int dice0, dice1, turn;
    positionkey key;
 
    PositionKey(anBoard, &key);
 
-   if (EqualKeys(key, currentkey)) {
+   if (fTurn == turn && EqualKeys(key, currentkey)) {
        anDice[0] = dice0;
        anDice[1] = dice1;
 
@@ -120,6 +120,7 @@ static int GetDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx, TanB
 
        dice0 = anDice[0];
        dice1 = anDice[1];
+       turn = fTurn;
        CopyKey(key, currentkey);
 
        return rc;
@@ -847,7 +848,7 @@ NewGame(void)
     AddGame(pmr);
 
   reroll:
-    fError = GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard);
+    fError = GetDice(ms.anDice, ms.fTurn, &rngCurrent, rngctxCurrent, ms.anBoard);
 
     if (fInterrupt || fError) {
         PopGame(plGame, TRUE);
@@ -1379,7 +1380,7 @@ ComputerTurn(void)
             /* Roll dice and move */
             if (!ms.anDice[0]) {
                 if (!fCheat || CheatDice(ms.anDice, &ms, afCheatRoll[ms.fMove]))
-                    if (GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
+                    if (GetDice(ms.anDice, ms.fTurn, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
                         return -1;
 
                 DiceRolled();
@@ -1464,7 +1465,7 @@ ComputerTurn(void)
 
         if (!ms.anDice[0] && !ms.fDoubled && !ms.fResigned &&
             (!ms.fCubeUse || ms.nCube >= MAX_CUBE || !GetDPEq(NULL, NULL, &ci))) {
-            if (GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
+            if (GetDice(ms.anDice, ms.fTurn, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
                 return -1;
 
             DiceRolled();
@@ -1475,8 +1476,8 @@ ComputerTurn(void)
             SwapSides(anBoardTemp);
 
         FIBSBoard(szBoard, anBoardTemp, ms.fMove,
-                  ap[ms.fTurn^ms.fMove].szName, ap[ms.fTurn^!ms.fMove].szName,
-                  ms.nMatchTo, ms.anScore[ms.fTurn^ms.fMove], ms.anScore[ms.fTurn^!ms.fMove],
+                  ap[ms.fTurn^ms.fMove].szName, ap[ms.fTurn^(!ms.fMove)].szName,
+                  ms.nMatchTo, ms.anScore[ms.fTurn^ms.fMove], ms.anScore[ms.fTurn^(!ms.fMove)],
                   ms.anDice[0], ms.anDice[1], ms.nCube, ms.fCubeOwner, ms.fDoubled, 0 /* turn */ , ms.fCrawford,
                   anChequers[ms.bgv], ms.fPostCrawford);
         strcat(szBoard, "\n");
@@ -1548,7 +1549,7 @@ ComputerTurn(void)
             return ms.fTurn == fTurnOrig ? -1 : 0;
         } else if (!ms.anDice[0]) {
             if (tolower(*szResponse) == 'r') {  /* roll */
-                if (GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
+                if (GetDice(ms.anDice, ms.fTurn, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
                     return -1;
 
                 DiceRolled();
@@ -3874,7 +3875,7 @@ CommandRoll(char *UNUSED(sz))
         return;
 
     if (!fCheat || CheatDice(ms.anDice, &ms, afCheatRoll[ms.fMove]))
-        if (GetDice(ms.anDice, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
+        if (GetDice(ms.anDice, ms.fTurn, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
             return;
 
     pmr = NewMoveRecord();
