@@ -1,11 +1,11 @@
 /*
- * progress.h
+ * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2003-2009 the AUTHORS
  *
- * by Joern Thyssen <jth@gnubg.org>, 2003
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -27,14 +26,11 @@
 #include "drawboard.h"
 
 extern void
-
-
 RolloutProgressStart(const cubeinfo * pci, const int n,
-                     rolloutstat aars[][2], rolloutcontext * pes, char asz[][FORMATEDMOVESIZE], gboolean multiple, void **pp);
+                     rolloutstat aars[][2], rolloutcontext * pes, char asz[][FORMATEDMOVESIZE], gboolean multiple,
+                     void **pp);
 
 extern void
-
-
 RolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
                 float aarStdDev[][NUM_ROLLOUT_OUTPUTS],
                 const rolloutcontext * prc,
@@ -46,6 +42,6 @@ RolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
                 const float rJsd, const int fStopped, const int fShowRanks, int fCubeRollout, void *pUserData);
 
 extern int
- RolloutProgressEnd(void **pp, gboolean destroy);
+RolloutProgressEnd(void **pp, gboolean destroy);
 
 #endif                          /* PROGRESS_H */
