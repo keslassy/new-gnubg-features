@@ -1,11 +1,11 @@
 /*
- * progress.c
+ * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2003-2018 the AUTHORS
  *
- * by Joern Thyssen <jth@gnubg.org>, 2003
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -107,8 +106,8 @@ time_left(unsigned int n_games_todo, unsigned int n_games_done, unsigned int ini
     float pt;
     time_t t_now;
     time(&t_now);
-    pt = ((float) n_games_todo) / (n_games_done - initial_game_count);
-    return (time_t) (pt * (t_now - t_start));
+    pt = (float) n_games_todo / (float) (n_games_done - initial_game_count);
+    return (time_t) (pt * (float) (t_now - t_start));
 }
 
 static char *
@@ -136,7 +135,7 @@ static float
 estimatedSE(const float rSE, const int iGame, const int nTrials)
 {
 
-    return rSE * sqrtf((float) iGame / (nTrials - 1));
+    return rSE * sqrtf((float) iGame / (float) (nTrials - 1));
 
 }
 
@@ -353,13 +352,15 @@ GTKStatPageCube(const rolloutstat * prs, const int cGames)
     gtk_box_pack_start(GTK_BOX(pw), treeview, TRUE, TRUE, 0);
 
     if (anTotal[1] + anTotal[0]) {
-        sprintf(sz, _("Cube efficiency for %s: %7.4f"), ap[0].szName, (float) anTotal[0] / (anTotal[1] + anTotal[0]));
+        sprintf(sz, _("Cube efficiency for %s: %7.4f"), ap[0].szName,
+                (float) anTotal[0] / (float) (anTotal[1] + anTotal[0]));
         pwLabel = gtk_label_new(sz);
         gtk_box_pack_start(GTK_BOX(pw), pwLabel, FALSE, FALSE, 4);
     }
 
     if (anTotal[2] + anTotal[3]) {
-        sprintf(sz, _("Cube efficiency for %s: %7.4f"), ap[1].szName, (float) anTotal[2] / (anTotal[3] + anTotal[2]));
+        sprintf(sz, _("Cube efficiency for %s: %7.4f"), ap[1].szName,
+                (float) anTotal[2] / (float) (anTotal[3] + anTotal[2]));
         pwLabel = gtk_label_new(sz);
         gtk_box_pack_start(GTK_BOX(pw), pwLabel, FALSE, FALSE, 4);
     }
@@ -390,12 +391,12 @@ create_bearoff_model(const rolloutstat * prs)
     g_free(s2);
 
     if (prs->nBearoffMoves)
-        s1 = g_strdup_printf("%7.2f", (float) prs->nBearoffPipsLost / prs->nBearoffMoves);
+        s1 = g_strdup_printf("%7.2f", (float) prs->nBearoffPipsLost / (float) prs->nBearoffMoves);
     else
         s1 = g_strdup_printf("n/a");
 
     if ((prs + 1)->nBearoffMoves)
-        s2 = g_strdup_printf("%7.2f", (float) (prs + 1)->nBearoffPipsLost / (prs + 1)->nBearoffMoves);
+        s2 = g_strdup_printf("%7.2f", (float) (prs + 1)->nBearoffPipsLost / (float) (prs + 1)->nBearoffMoves);
     else
         s2 = g_strdup_printf("n/a");
     gtk_list_store_append(store, &iter);
@@ -454,11 +455,12 @@ create_closed_out_model(const rolloutstat * prs)
     g_free(s2);
 
     if (prs->nOpponentClosedOut)
-        s1 = g_strdup_printf("%7.2f", 1.0f + prs->rOpponentClosedOutMove / prs->nOpponentClosedOut);
+        s1 = g_strdup_printf("%7.2f", 1.0f + (float) prs->rOpponentClosedOutMove / (float) prs->nOpponentClosedOut);
     else
         s1 = g_strdup("n/a");
     if ((prs + 1)->nOpponentClosedOut)
-        s2 = g_strdup_printf("%7.2f", 1.0f + (prs + 1)->rOpponentClosedOutMove / (prs + 1)->nOpponentClosedOut);
+        s2 = g_strdup_printf("%7.2f",
+                             1.0f + (float) (prs + 1)->rOpponentClosedOutMove / (float) (prs + 1)->nOpponentClosedOut);
     else
         s2 = g_strdup("n/a");
     gtk_list_store_append(store, &iter);
@@ -523,12 +525,12 @@ create_hit_model(const rolloutstat * prs, int cGames)
     g_free(s2);
 
     if (prs->nOpponentHit)
-        s1 = g_strdup_printf("%7.2f", 1.0f + prs->rOpponentHitMove / (1.0f * prs->nOpponentHit));
+        s1 = g_strdup_printf("%7.2f", 1.0f + (float) prs->rOpponentHitMove / (float) prs->nOpponentHit);
     else
         s1 = g_strdup_printf("n/a");
 
     if ((prs + 1)->nOpponentHit)
-        s2 = g_strdup_printf("%7.2f", 1.0f + (prs + 1)->rOpponentHitMove / (1.0f * (prs + 1)->nOpponentHit));
+        s2 = g_strdup_printf("%7.2f", 1.0f + (float) (prs + 1)->rOpponentHitMove / (float) (prs + 1)->nOpponentHit);
     else
         s2 = g_strdup_printf("n/a");
     gtk_list_store_append(store, &iter);
@@ -743,7 +745,8 @@ create_rollout_list(int n, char asz[][FORMATEDMOVESIZE], GtkWidget ** View, GtkL
 
 static void
 GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
-                        rolloutstat aars[][2], rolloutcontext * prc, char asz[][FORMATEDMOVESIZE], gboolean multiple, void **pp)
+                        rolloutstat aars[][2], rolloutcontext * prc, char asz[][FORMATEDMOVESIZE], gboolean multiple,
+                        void **pp)
 {
 
     gchar *sz;
@@ -911,7 +914,7 @@ GTKRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
             min_games_done = iGame + 1;
     }
     if (iAlternative == (prp->n - 1)) {
-        float frac = ((float) min_games_done) / prc->nTrials;
+        float frac = (float) min_games_done / (float) prc->nTrials;
         gchar *gsz = g_strdup_printf("%d/%u (%d%%)", min_games_done, prc->nTrials, (int) (100.0f * frac));
 
         gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(prp->pwRolloutProgress), frac);
@@ -1125,7 +1128,8 @@ TextRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
 
 extern void
 RolloutProgressStart(const cubeinfo * pci, const int n,
-                     rolloutstat aars[2][2], rolloutcontext * prc, char asz[][FORMATEDMOVESIZE], gboolean multiple, void **pp)
+                     rolloutstat aars[2][2], rolloutcontext * prc, char asz[][FORMATEDMOVESIZE], gboolean multiple,
+                     void **pp)
 {
 
     if (!fShowProgress)
