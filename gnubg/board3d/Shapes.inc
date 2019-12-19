@@ -895,6 +895,24 @@ moveToDoubleCubePos(const BoardData* bd)
 	glTranslatef(v[0], v[1], v[2]);
 }
 
+static void
+moveToDicePos(const BoardData* bd, int num, float diceRotation)
+{
+	float v[3];
+	getDicePos(bd, num, v);
+	glTranslatef(v[0], v[1], v[2]);
+
+	if (diceRotation != 0)
+		glRotatef(diceRotation, 0.f, 0.f, 1.f);	/* Spin dice to required rotation if on board */
+}
+
+static void MoveToFlagPos(const BoardData* bd)
+{
+	float v[3];
+	getFlagPos(bd, v);
+	glTranslatef(v[0], v[1], v[2]);
+}
+
 #if defined(__clang__) || defined(__GNUC__) && ( __GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL >= 40604 )
 #pragma GCC diagnostic pop
 #endif

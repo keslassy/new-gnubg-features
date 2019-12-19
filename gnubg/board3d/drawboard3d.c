@@ -2390,18 +2390,6 @@ renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const 
 }
 
 extern void
-moveToDicePos(const BoardData* bd, int num)
-{
-	float v[3];
-	getDicePos(bd, num, v);
-	glTranslatef(v[0], v[1], v[2]);
-
-	if (bd->diceShown == DICE_ON_BOARD) {       /* Spin dice to required rotation if on board */
-		glRotatef(bd->bd3d->dicePos[num][2], 0.f, 0.f, 1.f);
-	}
-}
-
-extern void
 drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd, int num)
 {
 	diceTest dt;
@@ -2431,7 +2419,7 @@ drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d*
 		glRotatef(bd3d->dicePos[num][2], 0.f, 0.f, 1.f);
 	}
 	else
-		moveToDicePos(bd, num);
+		moveToDicePos(bd, num, (bd->diceShown == DICE_ON_BOARD) ? bd->bd3d->dicePos[num][2] : 0);
 
 	/* Orientate dice correctly */
 	glRotatef(90.0f * rotDice[value][0], 1.f, 0.f, 0.f);
@@ -2452,15 +2440,6 @@ drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d*
 #endif
 
 	glPopMatrix();
-}
-
-extern void MoveToFlagPos(const BoardData* bd)
-{
-	float v[3];
-	glPushMatrix();
-
-	getFlagPos(bd, v);
-	glTranslatef(v[0], v[1], v[2]);
 }
 
 extern void MoveToFlagMiddle()

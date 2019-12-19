@@ -453,5 +453,6 @@ extern void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3
 extern void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol);
 extern void gluNurbFlagRender(int curveAccuracy);
 extern void RenderCharAA(unsigned int glyph);
+extern void moveToDicePos(const BoardData* bd, int num, float diceRotation);
 
 #endif

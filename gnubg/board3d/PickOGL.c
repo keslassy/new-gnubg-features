@@ -8,7 +8,6 @@
 
 extern Flag3d flag;
 extern void getFlagPos(const BoardData* bd, float v[3]);
-extern void moveToDicePos(const BoardData* bd, int num);
 
 #include "Shapes.inc"
 
@@ -18,7 +17,6 @@ drawFlagPick(const BoardData* bd, void* UNUSED(data))
 	BoardData3d* bd3d = bd->bd3d;
 	renderdata* prd = bd->rd;
 	int s;
-	float v[3];
 
 	waveFlag(bd3d->flagWaved);
 
@@ -26,8 +24,7 @@ drawFlagPick(const BoardData* bd, void* UNUSED(data))
 
 	glPushMatrix();
 
-	getFlagPos(bd, v);
-	glTranslatef(v[0], v[1], v[2]);
+	MoveToFlagPos(bd);
 
 	/* Draw flag surface (approximation) */
 	glBegin(GL_QUAD_STRIP);
@@ -104,11 +101,11 @@ drawPickAreas(const BoardData* bd, void* UNUSED(data))
 	if (DiceShowing(bd)) {
 		glLoadName(POINT_DICE);
 		glPushMatrix();
-		moveToDicePos(bd, 0);
+		moveToDicePos(bd, 0, (bd->diceShown == DICE_ON_BOARD) ? bd->bd3d->dicePos[0][2] : 0);
 		drawCube(getDiceSize(prd) * .95f);
 		glPopMatrix();
 		glPushMatrix();
-		moveToDicePos(bd, 1);
+		moveToDicePos(bd, 1, (bd->diceShown == DICE_ON_BOARD) ? bd->bd3d->dicePos[1][2] : 0);
 		drawCube(getDiceSize(prd) * .95f);
 		glPopMatrix();
 	}
