@@ -1,10 +1,11 @@
 /*
- * file.c
+ * Copyright (C) 2007-2008 Christian Anthon <anthon@kiku.dk>
+ * Copyright (C) 2007-2019 the AUTHORS
  *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -469,21 +469,22 @@ extern char *
 GetFilename(int CheckForCurrent, ExportType type)
 {
     char *sz;
-    time_t t;
 
     if (CheckForCurrent && szCurrentFileName && *szCurrentFileName)
         sz = g_strdup_printf("%s%s", szCurrentFileName, export_format[type].extension);
     else {
-        char tstr[15];
-
         if (mi.nYear)
-            sprintf(tstr, "%04u-%02u-%02u", mi.nYear, mi.nMonth, mi.nDay);
+            sz = g_strdup_printf("%s-%s_%dp_%04u-%02u-%02u.sgf", ap[0].szName, ap[1].szName, ms. nMatchTo, mi.nYear, mi.nMonth, mi.nDay);
         else {
-            t = time(NULL);
+            time_t t = time(NULL);
+            char tstr[15];
+
             if (strftime(tstr, 14, "%Y-%m-%d-%H%M", localtime(&t)) == 0)
                 *tstr = '\0';
+
+            sz = g_strdup_printf("%s-%s_%dp_%s.sgf", ap[0].szName, ap[1].szName, ms.nMatchTo, tstr);
         }
-        sz = g_strdup_printf("%s-%s_%dp_%s.sgf", ap[0].szName, ap[1].szName, ms.nMatchTo, tstr);
     }
+
     return sz;
 }

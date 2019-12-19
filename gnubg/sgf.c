@@ -999,7 +999,7 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
 
         pch = pc;
         while (isspace(ch = *pch++)) {
-        };
+        }
         pch++;
 
         switch (ch) {
@@ -2107,10 +2107,9 @@ SaveGame(FILE * pf, listOLD * plGame)
         WriteProperty(pf, "WR", mi.pchRating[0]);
         WriteProperty(pf, "BR", mi.pchRating[1]);
         if (mi.nYear) {
-            char szDate[11];
-
-            sprintf(szDate, "%04u-%02u-%02u", mi.nYear, mi.nMonth, mi.nDay);
+            char *szDate = g_strdup_printf("%04u-%02u-%02u", mi.nYear, mi.nMonth, mi.nDay);
             WriteProperty(pf, "DT", szDate);
+            g_free(szDate);
         }
         WriteProperty(pf, "EV", mi.pchEvent);
         WriteProperty(pf, "RO", mi.pchRound);
