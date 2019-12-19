@@ -1047,7 +1047,6 @@ idleAnimate(BoardData3d * bd3d)
     float elapsedTime = (float) (get_time() - animStartTime) / 1000.0f;
     float vel = .2f + nGUIAnimSpeed * .3f;
     float animateDistance = elapsedTime * vel;
-    renderdata *prd = bd->rd;
 
     if (stopNextTime) {         /* Stop now - last animation frame has been drawn */
         StopIdle3d(bd, bd->bd3d);

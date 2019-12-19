@@ -37,10 +37,10 @@
 /* Be conservative and always perform explicit byte-ordering.  This is
  * redundant on little-endian architectures, but is portable. */
 #define WRITE( p, n ) \
-    ( ( (unsigned char *) (p) )[ 0 ] = ( (n) & 0xFF ), \
-      ( (unsigned char *) (p) )[ 1 ] = ( (n) & 0xFF00 ) >> 8, \
-      ( (unsigned char *) (p) )[ 2 ] = ( (n) & 0xFF0000 ) >> 16, \
-      ( (unsigned char *) (p) )[ 3 ] = ( (n) & 0xFF000000 ) >> 24 )
+    ( ( (unsigned char *) (p) )[ 0 ] = (unsigned char)( (n) & 0xFF ), \
+      ( (unsigned char *) (p) )[ 1 ] = (unsigned char)(( (n) & 0xFF00 ) >> 8), \
+      ( (unsigned char *) (p) )[ 2 ] = (unsigned char)(( (n) & 0xFF0000 ) >> 16), \
+      ( (unsigned char *) (p) )[ 3 ] = (unsigned char)(( (n) & 0xFF000000 ) >> 24) )
 
 #define READ( p ) \
     ( ( (const unsigned char *) (p) )[ 0 ] | \

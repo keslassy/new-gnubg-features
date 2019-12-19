@@ -236,7 +236,6 @@ typedef void (*PickDrawFun) (const BoardData* bd, void* data);
 static int
 PickDraw(int x, int y, PickDrawFun drawFun, const BoardData* bd, void* data)
 {                               /* Identify if anything is below point (x,y) */
-	BoardData3d* bd3d = bd->bd3d;
 	int hits;
 	int viewport[4];
 	float *projMat, *modelMat;

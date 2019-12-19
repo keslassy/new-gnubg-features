@@ -112,38 +112,6 @@ void GLWidgetMakeCurrent(GtkWidget* widget)
 	gtk_gl_area_make_current(GTK_GL_AREA(widget));
 }
 
-static guint
-create_shader(int          shader_type,
-	const char* source,
-	GError** error,
-	guint* shader_out)
-{
-	guint shader = glCreateShader(shader_type);
-	glShaderSource(shader, 1, &source, NULL);
-	glCompileShader(shader);
-
-	int status;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE)
-	{
-		int log_len;
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_len);
-
-		char* buffer = g_malloc(log_len + 1);
-		glGetShaderInfoLog(shader, log_len, NULL, buffer);
-		printf( "Compilation failure in %s shader: %s", shader_type == GL_VERTEX_SHADER ? "vertex" : "fragment", buffer);
-		g_free(buffer);
-
-		glDeleteShader(shader);
-		shader = 0;
-	}
-
-	if (shader_out != NULL)
-		*shader_out = shader;
-
-	return shader != 0;
-}
-
 char* LoadFile(const char* filename)
 {
 	long lSize;
