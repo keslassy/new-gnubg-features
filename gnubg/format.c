@@ -1,11 +1,11 @@
 /*
- * format.c
+ * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2003-2019 the AUTHORS
  *
- * by Joern Thyssen  <jth@gnubg.org>, 2003
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -476,9 +475,11 @@ OutputEquityScale(const float r, const cubeinfo * pci, const cubeinfo * pciBase,
 
     if (!pci->nMatchTo) {
         if (f)
-            snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits, pci->nCube / pciBase->nCube * r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f", fOutputDigits + 3, fOutputDigits,
+                     (float) (pci->nCube / pciBase->nCube) * r);
         else
-            snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits, pci->nCube / pciBase->nCube * r);
+            snprintf(sz, OUTPUT_SZ_LENGTH, "% *.*f", fOutputDigits + 2, fOutputDigits,
+                     (float) (pci->nCube / pciBase->nCube) * r);
     } else {
 
         if (fOutputMWC) {

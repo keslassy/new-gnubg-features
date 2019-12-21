@@ -1,11 +1,11 @@
 /*
- * formatgs.c
+ * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2003-2019 the AUTHORS
  *
- * by Joern Thyssen  <jth@gnubg.org>, 2003
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -347,7 +346,8 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
             for (i = 0; i < 2; ++i)
                 if (psc->anTotalMoves[i])
                     aasz[i + 1] = errorRateMP(psc->arLuck[i][0] /
-                                              psc->anTotalMoves[i], psc->arLuck[i][1] / psc->anTotalMoves[i], nMatchTo);
+                                              (float) psc->anTotalMoves[i],
+                                              psc->arLuck[i][1] / (float) psc->anTotalMoves[i], nMatchTo);
                 else
                     aasz[i + 1] = g_strdup(_("n/a"));
 
@@ -361,7 +361,8 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
             for (i = 0; i < 2; ++i)
                 if (psc->anTotalMoves[i])
-                    aasz[i + 1] = g_strdup(Q_(aszLuckRating[getLuckRating(psc->arLuck[i][0] / psc->anTotalMoves[i])]));
+                    aasz[i + 1] =
+                        g_strdup(Q_(aszLuckRating[getLuckRating(psc->arLuck[i][0] / (float) psc->anTotalMoves[i])]));
                 else
                     aasz[i + 1] = g_strdup(_("n/a"));
 
@@ -409,7 +410,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
                     int n = psc->anTotalMoves[0] + psc->anTotalMoves[1];
 
                     if (n > 0)
-                        aasz[i + 1] = errorRateMP(-aaaar[COMBINED][TOTAL][i][NORMALISED] / n, 0.0f, nMatchTo);
+                        aasz[i + 1] = errorRateMP(-aaaar[COMBINED][TOTAL][i][NORMALISED] / (float) n, 0.0f, nMatchTo);
                     else
                         aasz[i + 1] = g_strdup(_("n/a"));
                 }
@@ -545,7 +546,8 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
                     for (int j = 0; j < 2; ++j)
                         aasz[j + 1] =
-                            g_strdup_printf("%+*.*f", fOutputDigits + 3, fOutputDigits, af[i][0][j] / psc->nGames);
+                            g_strdup_printf("%+*.*f", fOutputDigits + 3, fOutputDigits,
+                                            af[i][0][j] / (float) psc->nGames);
 
                     list = g_list_append(list, aasz);
 
@@ -555,7 +557,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
                     aasz[0] = g_strdup(gettext(asz[i][1]));
 
                     for (int j = 0; j < 2; ++j) {
-                        float ci = 1.95996f * sqrtf(af[i][1][j] / psc->nGames);
+                        float ci = 1.95996f * sqrtf(af[i][1][j] / (float) psc->nGames);
                         float max = af[i][0][j] + ci;
                         float min = af[i][0][j] - ci;
                         aasz[j + 1] = g_strdup_printf("[%*.*f,%*.*f]",
