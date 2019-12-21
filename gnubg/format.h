@@ -1,11 +1,11 @@
 /*
- * format.h
+ * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2003-2015 the AUTHORS
  *
- * by Joern Thyssen <jth@gnubg.org>, 2003
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -65,7 +64,6 @@ extern char *OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 extern char *OutputMoneyEquity(const float ar[], const int f);
 
 extern char *FormatCubePosition(char *sz, cubeinfo * pci);
-extern void
- FormatCubePositions(const cubeinfo * pci, char asz[2][FORMATEDMOVESIZE]);
+extern void FormatCubePositions(const cubeinfo * pci, char asz[2][FORMATEDMOVESIZE]);
 
 #endif                          /* FORMAT_H */
