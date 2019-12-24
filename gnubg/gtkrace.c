@@ -1,11 +1,11 @@
 /*
- * gtkrace.c
+ * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
+ * Copyright (C) 2003-2017 the AUTHORS
  *
- * by Joern Thyssen <jthyssen@dk.ibm.com>, 2002
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -141,8 +140,8 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
 
     gtk_box_pack_start(GTK_BOX(pwvbox), pwTable, FALSE, FALSE, 4);
 
-    gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(_("EPC")), 1, 2, 0, 1, 0, 0, 4, 4);
-    gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(_("Wastage")), 2, 3, 0, 1, 0, 0, 4, 4);
+    gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("EPC")), 1, 2, 0, 1, 0, 0, 4, 4);
+    gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("Wastage")), 2, 3, 0, 1, 0, 0, 4, 4);
 
     for (i = 0; i < 2; ++i) {
 
@@ -360,7 +359,10 @@ GTKShowRace(TanBoard anBoard)
     racewidget *prw;
 
     prw = malloc(sizeof(racewidget));
-    g_assert(prw != NULL);
+    if (prw == NULL) {
+        outputerr("Memory allocation failure in GTKShowRace()");
+        return;
+    }
     memcpy(prw->anBoard, anBoard, 2 * 25 * sizeof(int));
     prw->fMove = ms.fMove;
 
