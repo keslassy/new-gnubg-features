@@ -1,11 +1,11 @@
 /*
- * relational.c
+ * Copyright (C) 2004 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2004-2019 the AUTHORS
  *
- * by Joern Thyssen <jth@gnubg.org>, 2004.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -235,28 +234,28 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     APPENDF("error_wrong_doubles_above_tg", sc->arErrorWrongDoubleTG[player][1]);
     APPENDF("error_wrong_takes", sc->arErrorWrongTake[player][1]);
     APPENDF("error_wrong_passes", sc->arErrorWrongPass[player][1]);
-    APPENDF("cube_error_total_normalised", errorskill * sc->anCloseCube[player]);
-    APPENDF("cube_error_total", errorcost * sc->anCloseCube[player]);
+    APPENDF("cube_error_total_normalised", errorskill * (float) sc->anCloseCube[player]);
+    APPENDF("cube_error_total", errorcost * (float) sc->anCloseCube[player]);
     APPENDF("cube_error_per_move_normalised", errorskill);
     APPENDF("cube_error_per_move", errorcost);
-    APPENDU("cube_rating", GetRating(errorskill));;
-    APPENDF("overall_error_total_normalised", errorskill * sc->anCloseCube[player] + sc->arErrorCheckerplay[player][0]);
-    APPENDF("overall_error_total", errorcost * sc->anCloseCube[player] + sc->arErrorCheckerplay[player][1]);
+    APPENDU("cube_rating", GetRating(errorskill));
+    APPENDF("overall_error_total_normalised", errorskill * (float) sc->anCloseCube[player] + sc->arErrorCheckerplay[player][0]);
+    APPENDF("overall_error_total", errorcost * (float) sc->anCloseCube[player] + sc->arErrorCheckerplay[player][1]);
     APPENDF("overall_error_per_move_normalised",
-            Ratio(errorskill * sc->anCloseCube[player] +
+            Ratio(errorskill * (float) sc->anCloseCube[player] +
                   sc->arErrorCheckerplay[player][0], sc->anCloseCube[player] + unforced));
     APPENDF("overall_error_per_move",
-            Ratio(errorcost * sc->anCloseCube[player] +
+            Ratio(errorcost * (float) sc->anCloseCube[player] +
                   sc->arErrorCheckerplay[player][1], sc->anCloseCube[player] + unforced));
     APPENDU("overall_rating",
             GetRating(Ratio
-                      (errorskill * sc->anCloseCube[player] +
+                      (errorskill * (float) sc->anCloseCube[player] +
                        sc->arErrorCheckerplay[player][0], sc->anCloseCube[player] + unforced)));
     APPENDF("actual_result", sc->arActualResult[player]);
     APPENDF("luck_adjusted_result", sc->arLuckAdj[player]);
     APPENDI("snowie_moves", totalmoves + scMatch.anTotalMoves[!player]);
     APPENDF("snowie_error_rate_per_move",
-            Ratio(errorskill * scMatch.anCloseCube[player] +
+            Ratio(errorskill * (float) scMatch.anCloseCube[player] +
                   scMatch.arErrorCheckerplay[player][0], totalmoves + scMatch.anTotalMoves[!player]));
     /*time */
     APPENDI("time_penalties", 0);
@@ -283,10 +282,10 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     /* for money sessions only */
     if (scMatch.fDice && !nMatchTo && scMatch.nGames > 1) {
 
-        APPENDF("actual_advantage", scMatch.arActualResult[player] / scMatch.nGames);
-        APPENDF("actual_advantage_ci", 1.95996f * sqrtf(scMatch.arVarianceActual[player] / scMatch.nGames));
-        APPENDF("luck_adjusted_advantage", scMatch.arLuckAdj[player] / scMatch.nGames);
-        APPENDF("luck_adjusted_advantage_ci", 1.95996f * sqrtf(scMatch.arVarianceLuckAdj[player] / scMatch.nGames));
+        APPENDF("actual_advantage", scMatch.arActualResult[player] / (float) scMatch.nGames);
+        APPENDF("actual_advantage_ci", 1.95996f * sqrtf(scMatch.arVarianceActual[player] / (float) scMatch.nGames));
+        APPENDF("luck_adjusted_advantage", scMatch.arLuckAdj[player] / (float) scMatch.nGames);
+        APPENDF("luck_adjusted_advantage_ci", 1.95996f * sqrtf(scMatch.arVarianceLuckAdj[player] / (float) scMatch.nGames));
     }
 
     g_string_truncate(column, column->len - 2);
