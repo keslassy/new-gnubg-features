@@ -53,10 +53,10 @@ graph_button_press_event(void)
 }
 
 static void
-configureCB(GtkWidget *widget, void* data)
+configureCB(GtkWidget * widget, void *data)
 {
-	const GraphData* gd = (const GraphData*)data;
-	int width, height;
+    const GraphData *gd = (const GraphData *) data;
+    int width, height;
     float maxY, maxX;
     GtkAllocation allocation;
 
@@ -78,7 +78,7 @@ configureCB(GtkWidget *widget, void* data)
 }
 
 static void
-realizeCB(void* UNUSED(data))
+realizeCB(void *UNUSED(data))
 {
     /* Deep blue background colour */
     glClearColor(.2f, .2f, .4f, 1.f);
@@ -167,7 +167,7 @@ PrintBottomNumber(unsigned int num, float width, float height, float x, float y)
     glColor3f(1.f, 1.f, 1.f);
     glScalef(width, height, 1.f);
     glLineWidth(.5f);
-    glPrintCube(&numberFont, numStr, 0);	//TODO No AA at the moment
+    glPrintCube(&numberFont, numStr, 0);        //TODO No AA at the moment
     glPopMatrix();
 }
 
@@ -194,11 +194,11 @@ DrawLeftAxis(const GraphData * pgd)
     int *pScale = scale;
     int i, numPoints, pointInc;
 
-    while (pScale[1] && pgd->maxY > *pScale * 5.f)
+    while (pScale[1] && pgd->maxY > (float) *pScale * 5.f)
         pScale++;
 
     pointInc = *pScale;
-    numPoints = (int) (pgd->maxY / pointInc);
+    numPoints = (int) (pgd->maxY / (float) pointInc);
     if (numPoints == 0)
         numPoints = 1;
 
@@ -267,9 +267,9 @@ DrawGraph(const GraphData * gd)
 }
 
 static gboolean
-exposeCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(eventData), void* data)
+exposeCB(GtkWidget * UNUSED(widget), GdkEventExpose * UNUSED(eventData), void *data)
 {
-	const GraphData* gd = (const GraphData*)data;
+    const GraphData *gd = (const GraphData *) data;
     glClear(GL_COLOR_BUFFER_BIT);
     DrawGraph(gd);
     return TRUE;
@@ -278,8 +278,8 @@ exposeCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(eventData), void* dat
 static void
 destroy_event(GtkWidget * UNUSED(widget), void *UNUSED(data))
 {
-	FreeNumberFont(&numberFont);
-	FreeTextFont(&totalText);
+    FreeNumberFont(&numberFont);
+    FreeTextFont(&totalText);
 }
 
 GtkWidget *
@@ -289,7 +289,7 @@ StatGraph(GraphData * pgd)
     GtkWidget *pw;
 
     /* Drawing widget for OpenGL */
-	pw = GLWidgetCreate(realizeCB, configureCB, exposeCB, pgd);
+    pw = GLWidgetCreate(realizeCB, configureCB, exposeCB, pgd);
     if (pw == NULL)
         return NULL;
 
