@@ -1,10 +1,11 @@
 /*
- * matchequity.h
- * by Joern Thyssen, 1999-2002
+ * Copyright (C) 1999-2003 Joern Thyssen <jth@gnubg.org>
+ * Copyright (C) 2000-2013 the AUTHORS
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,12 +13,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
-
 
 #ifndef MATCHEQUITY_H
 #define MATCHEQUITY_H
@@ -30,7 +29,6 @@
 /* Structure for information about match equity table */
 
 typedef struct _metinfo {
-
     gchar *szName;              /* Name of match equity table */
     gchar *szFileName;          /* File name of met */
     gchar *szDescription;       /* Description of met */
@@ -56,26 +54,18 @@ extern float aaaafGammonPrices[MAXCUBELEVEL]
 extern float aaaafGammonPricesPostCrawford[MAXCUBELEVEL]
     [MAXSCORE][2][4];
 
-
-
 extern metinfo miCurrent;
 
-
 extern float
-
-
 getME(const int nScore0, const int nScore1, const int nMatchTo,
       const int fPlayer,
       const int nPoints, const int fWhoWins,
       const int fCrawford, float aafMET[MAXSCORE][MAXSCORE], float aafMETPostCrawford[2][MAXSCORE]);
 
 extern float
-
-
 getMEAtScore(const int nScore0, const int nScore1, const int nMatchTo,
              const int fPlayer, const int fCrawford,
              float aafMET[MAXSCORE][MAXSCORE], float aafMETPostCrawford[2][MAXSCORE]);
-
 
 /* Initialise match equity table */
 
@@ -99,6 +89,7 @@ extern void
  * DP = Double/Pass, DTWG = double/take/wing gammon, etc
  * DPP = double/Pass with CubePrime values, etc.
  */
+
 typedef enum met_indices {
     /* player 0 wins, first cube value */
     DP = 0, NDW = 0, DTW = 1, NDWG = 1, NDWB, DTWG, DTWB,
@@ -114,15 +105,11 @@ typedef enum met_indices {
     NDLP1, DTLP1, NDLBP1, DTLGP1, DTLBP1
 } e_met_indices;
 
-
 extern void
-
-
 getMEMultiple(const int nScore0, const int nScore1, const int nMatchTo,
               const int nCube,
               const int nCubePrime0, const int nCubePrime1,
               const int fCrawford,
               float aafMET[MAXSCORE][MAXSCORE], float aafMETPostCrawford[2][MAXSCORE], float *player0, float *player1);
-
 
 #endif
