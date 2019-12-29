@@ -1,11 +1,11 @@
 /*
- * show.c
+ * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 1999-2019 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 1999, 2000, 2001, 2002.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -60,7 +59,7 @@
 #include "gtkoptions.h"
 #endif
 
-#ifdef WIN32
+#if defined(WIN32)
 #include <io.h>
 #endif
 
@@ -207,19 +206,18 @@ show_movefilters(movefilter aaamf[2][MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 static void
 ShowRollout(rolloutcontext * prc)
 {
-
-    int fDoTruncate = 0;
-    int fLateEvals = 0;
+    int fDoTruncate = FALSE;
+    int fLateEvals = FALSE;
     int nTruncate = prc->nTruncate;
     int nLate = prc->nLate;
-    int fPlayersAreSame = 1;
-    int fCubeEqualChequer = 1;
+    int fPlayersSameSettings = TRUE;
+    int fCubeChequerSameSettings = TRUE;
 
     if (prc->fDoTruncate && (nTruncate > 0))
-        fDoTruncate = 1;
+        fDoTruncate = TRUE;
 
     if (prc->fLateEvals && (!fDoTruncate || ((nTruncate > nLate) && (nLate > 2))))
-        fLateEvals = 1;
+        fLateEvals = TRUE;
 
     outputf(ngettext("%u game will be played per rollout.\n",
                      "%u games will be played per rollout.\n", prc->nTrials), prc->nTrials);
@@ -257,22 +255,22 @@ ShowRollout(rolloutcontext * prc)
         (fLateEvals &&
          (EvalCmp(prc->aecChequerLate, prc->aecChequerLate + 1, 1) ||
           EvalCmp(prc->aecCubeLate, prc->aecCubeLate + 1, 1))))
-        fPlayersAreSame = 0;
+        fPlayersSameSettings = FALSE;
 
     /* see if the cube and chequer evals are the same */
     if (EvalCmp(prc->aecChequer, prc->aecCube, 2) ||
         (fLateEvals && (EvalCmp(prc->aecChequerLate, prc->aecCubeLate, 2))))
-        fCubeEqualChequer = 0;
+        fCubeChequerSameSettings = FALSE;
 
-    if (fCubeEqualChequer) {
+    if (fCubeChequerSameSettings) {
         /* simple summary - show_evals will deal with player differences */
         show_evals(_("Evaluation parameters:"), prc->aecChequer,
-                   prc->aecChequerLate, fPlayersAreSame, fLateEvals, nLate);
+                   prc->aecChequerLate, fPlayersSameSettings, fLateEvals, nLate);
     } else {
         /* Cube different from Chequer */
         show_evals(_("Chequer play parameters:"), prc->aecChequer,
-                   prc->aecChequerLate, fPlayersAreSame, fLateEvals, nLate);
-        show_evals(_("Cube decision parameters:"), prc->aecCube, prc->aecCubeLate, fPlayersAreSame, fLateEvals, nLate);
+                   prc->aecChequerLate, fPlayersSameSettings, fLateEvals, nLate);
+        show_evals(_("Cube decision parameters:"), prc->aecCube, prc->aecCubeLate, fPlayersSameSettings, fLateEvals, nLate);
     }
 
     if (fLateEvals) {
@@ -328,15 +326,13 @@ ShowEvalSetup(evalsetup * pes)
 static void
 ShowPaged(char **ppch)
 {
-
-    int i, nRows = 0;
-    char *pchLines;
-#ifdef TIOCGWINSZ
-    struct winsize ws;
-#endif
-
     if (isatty(STDIN_FILENO)) {
-#ifdef TIOCGWINSZ
+        int i, nRows = 0;
+        char *pchLines;
+
+#if defined(TIOCGWINSZ)
+        struct winsize ws;
+
         if (!(ioctl(STDIN_FILENO, TIOCGWINSZ, &ws)))
             nRows = ws.ws_row;
 #endif
@@ -447,8 +443,6 @@ CommandShowBoard(char *sz)
 {
 
     TanBoard an;
-    char szOut[2048];
-    char *ap[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
     if (!*sz) {
         if (ms.gs == GAME_NONE)
@@ -468,17 +462,19 @@ CommandShowBoard(char *sz)
         game_set(BOARD(pwBoard), an, TRUE, "", "", 0, 0, 0, 0, 0, FALSE, anChequers[ms.bgv]);
     else
 #endif
-        outputl(DrawBoard(szOut, (ConstTanBoard) an, TRUE, ap, MatchIDFromMatchState(&ms), anChequers[ms.bgv]));
+    {
+        char szOut[2048];
+        char *asz[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+
+        outputl(DrawBoard(szOut, (ConstTanBoard) an, TRUE, asz, MatchIDFromMatchState(&ms), anChequers[ms.bgv]));
+    }
 }
 
-extern
-    void
+extern void
 CommandShowFullBoard(char *sz)
 {
 
     TanBoard an;
-    char szOut[2048];
-    char *apch[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 
     if (!*sz) {
         if (ms.gs == GAME_NONE)
@@ -500,7 +496,12 @@ CommandShowFullBoard(char *sz)
                  ms.anScore[1], ms.anScore[0], ms.anDice[0], ms.anDice[1], FALSE, anChequers[ms.bgv]);
     else
 #endif
+    {
+        char szOut[2048];
+        char *apch[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+       
         outputl(DrawBoard(szOut, (ConstTanBoard) an, TRUE, apch, MatchIDFromMatchState(&ms), anChequers[ms.bgv]));
+    }
 }
 
 
@@ -1018,21 +1019,21 @@ CommandShowScoreSheet(char *UNUSED(sz))
 
     for (pl = lMatch.plNext; pl->p; pl = pl->plNext) {
         int score[2];
-        listOLD *plGame = pl->plNext->p;
+        listOLD *plg = pl->plNext->p;
 
-        if (plGame) {
-            moverecord *pmr = plGame->plNext->p;
+        if (plg) {
+            moverecord *pmr = plg->plNext->p;
 
             score[0] = pmr->g.anScore[0];
             score[1] = pmr->g.anScore[1];
         } else {
             moverecord *pmr;
 
-            plGame = pl->p;
-            if (!plGame) {
+            plg = pl->p;
+            if (!plg) {
                 continue;
             } else {
-                pmr = plGame->plNext->p;
+                pmr = plg->plNext->p;
                 score[0] = pmr->g.anScore[0];
                 score[1] = pmr->g.anScore[1];
                 if (pmr->g.fWinner == -1) {
@@ -1153,11 +1154,11 @@ show_thorp(TanBoard an, char *sz)
     sprintf(strchr(sz, 0), _("Thorp Count Leader(+1/10)    L: %.1f\n"), adjusted);
     sprintf(strchr(sz, 0), _("Thorp Count Trailer          T: %d\n\n"), nTrailer);
 
-    if (nTrailer >= (adjusted + 2))
+    if ((float) nTrailer >= (adjusted + 2))
         sprintf(strchr(sz, 0), _("Double, Drop (since L <= T - 2)\n"));
-    else if (nTrailer >= (adjusted - 1))
+    else if ((float) nTrailer >= (adjusted - 1))
         sprintf(strchr(sz, 0), _("Redouble, Take (since L <= T + 1 )\n"));
-    else if (nTrailer >= (adjusted - 2))
+    else if ((float) nTrailer >= (adjusted - 2))
         sprintf(strchr(sz, 0), _("Double, Take (since L <= T + 2)\n"));
     else
         sprintf(strchr(sz, 0), _("No Double, Take (since L > T + 2)\n"));
@@ -1291,7 +1292,7 @@ show_isight(TanBoard an, char *sz)
     sprintf(sz, _("Isight Count Leader          L: %d\n"), pn[1]);
     sprintf(strchr(sz, 0), _("Isight Count Trailer         T: %d\n\n"), pn[0]);
 
-    gwc = 80.0f - pn[1] / 3.0f + 2.0f * (pn[0] - pn[1]);
+    gwc = 80.0f - (float) pn[1] / 3.0f + 2.0f * (float) (pn[0] - pn[1]);
 
     sprintf(strchr(sz, 0), _("Estimated GWC: %4.1f%% (80 - L/3 + 2*(L-T))\n\n"), gwc);
 
@@ -1411,7 +1412,7 @@ EffectivePipCount(const float arMu[2], const unsigned int anPips[2])
     outputf("%-20.20s   %7s  %7s\n", "", _("EPC"), _("Wastage"));
     for (i = 0; i < 2; ++i)
         outputf("%-20.20s   %7.3f  %7.3f\n",
-                ap[i].szName, arMu[ms.fMove ? i : !i] * x, arMu[ms.fMove ? i : !i] * x - anPips[ms.fMove ? i : !i]);
+                ap[i].szName, arMu[ms.fMove ? i : !i] * x, arMu[ms.fMove ? i : !i] * x - (float) anPips[ms.fMove ? i : !i]);
 
     outputf(_("\n" "EPC = Avg. rolls * %5.3f\n" "Wastage = EPC - Pips\n\n"), x);
 
@@ -1553,11 +1554,10 @@ CommandShowMarketWindow(char *sz)
 
     float arOutput[NUM_OUTPUTS];
     float arDP1[2], arDP2[2], arCP1[2], arCP2[2];
-    float rDTW, rDTL, rNDW, rNDL, rDP, rRisk, rGain, r;
 
     float aarRates[2][2];
 
-    int fAutoRedouble[2], afDead[2], anNormScore[2];
+    int anNormScore[2];
 
     if (ms.gs != GAME_PLAYING) {
         outputl(_("No game in progress (type `new game' to start one)."));
@@ -1584,6 +1584,8 @@ CommandShowMarketWindow(char *sz)
     if (aarRates[0][0] >= 0) {
 
         /* read the others */
+
+        float r;
 
         aarRates[1][0] = ((r = ParseReal(&sz)) > 0.0f) ? r : 0.0f;
         aarRates[0][1] = ((r = ParseReal(&sz)) > 0.0f) ? r : 0.0f;
@@ -1639,12 +1641,16 @@ CommandShowMarketWindow(char *sz)
 
     if (ms.nMatchTo) {
 
+        int fAutoRedouble[2], afDead[2];
+
         for (int i = 0; i < 2; i++)
             anNormScore[i] = ms.nMatchTo - ms.anScore[i];
 
         GetPoints(arOutput, &ci, arCP2);
 
         for (int i = 0; i < 2; i++) {
+
+            float rDTW, rDTL, rNDW, rNDL, rDP, rRisk, rGain;
 
             fAutoRedouble[i] = (anNormScore[i] - 2 * ms.nCube <= 0) && (anNormScore[!i] - 2 * ms.nCube > 0);
 
