@@ -1,11 +1,11 @@
 /*
- * rollout.c
+ * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2000-2019 the AUTHORS
  *
- * by Gary Wong <gary@cs.arizona.edu>, 1999, 2000, 2001.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -518,7 +517,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
                         if (aarsStatistics) {
                             MT_SafeInc(&aarsStatistics[ici][pci->fMove].acDoubleDrop[LogCubeClamped(pci->nCube)]);
                             MT_SafeInc(&aarsStatistics[ici][pci->fMove].acWin[LogCubeClamped(pci->nCube)]);
-                        };
+                        }
 
                         break;
 
@@ -665,7 +664,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
 
                         r = arMean[OUTPUT_CUBEFUL_EQUITY] - aaar[anDice[0] - 1][anDice[1] - 1]
                             [OUTPUT_CUBEFUL_EQUITY];
-                        aarVarRedn[ici][OUTPUT_CUBEFUL_EQUITY] += r * pci->nCube / aci[ici].nCube;
+                        aarVarRedn[ici][OUTPUT_CUBEFUL_EQUITY] += r * (float) (pci->nCube / aci[ici].nCube);
                     }
 
                 } else {
@@ -809,7 +808,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
          * all variance reduction terms */
 
         if (!pci->nMatchTo)
-            aarOutput[ici][OUTPUT_CUBEFUL_EQUITY] *= pci->nCube / aci[ici].nCube;
+            aarOutput[ici][OUTPUT_CUBEFUL_EQUITY] *= (float) (pci->nCube / aci[ici].nCube);
 
         if (prc->fVarRedn)
             for (i = 0; i < NUM_ROLLOUT_OUTPUTS; i++)
@@ -818,7 +817,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
         /* multiply money equities */
 
         if (!pci->nMatchTo)
-            aarOutput[ici][OUTPUT_CUBEFUL_EQUITY] *= aci[ici].nCube / nBasisCube;
+            aarOutput[ici][OUTPUT_CUBEFUL_EQUITY] *= (float) (aci[ici].nCube / nBasisCube);
 
 
 
@@ -1066,21 +1065,21 @@ check_sds(int *active)
     int alt;
     for (alt = 0; alt < ro_alternatives; ++alt) {
         float s;
-        int output;
+        int ioutput;
         int err_too_big = 0;
         rolloutcontext *prc;
         if (fNoMore[alt] || altGameCount[alt] < (rcRollout.nMinimumGames))
             continue;
         prc = &ro_apes[alt]->rc;
-        for (output = OUTPUT_EQUITY; output < NUM_ROLLOUT_OUTPUTS; output++) {
-            if (output == OUTPUT_EQUITY) {      /* cubeless */
+        for (ioutput = OUTPUT_EQUITY; ioutput < NUM_ROLLOUT_OUTPUTS; ioutput++) {
+            if (ioutput == OUTPUT_EQUITY) {      /* cubeless */
                 if (!ms.nMatchTo) {     /* money game */
-                    s = fabsf(aarSigma[alt][output]);
+                    s = fabsf(aarSigma[alt][ioutput]);
                     if (ro_fCubeRollout) {
-                        s *= aciLocal[alt].nCube / aciLocal[0].nCube;
+                        s *= (float) (aciLocal[alt].nCube / aciLocal[0].nCube);
                     }
                 } else {        /* match play */
-                    s = fabsf(se_mwc2eq(se_eq2mwc(aarSigma[alt][output],
+                    s = fabsf(se_mwc2eq(se_eq2mwc(aarSigma[alt][ioutput],
                                                   &aciLocal[alt]), &aciLocal[(ro_fCubeRollout ? 0 : alt)]));
                 }
             } else {
@@ -1088,9 +1087,9 @@ check_sds(int *active)
                     continue;
                 /* cubeful */
                 if (!ms.nMatchTo) {     /* money game */
-                    s = fabsf(aarSigma[alt][output]);
+                    s = fabsf(aarSigma[alt][ioutput]);
                 } else {
-                    s = fabsf(se_mwc2eq(aarSigma[alt][output], &aciLocal[(ro_fCubeRollout ? 0 : alt)]));
+                    s = fabsf(se_mwc2eq(aarSigma[alt][ioutput], &aciLocal[(ro_fCubeRollout ? 0 : alt)]));
                 }
             }
 
@@ -1098,7 +1097,7 @@ check_sds(int *active)
                 err_too_big = 1;
                 break;
             }
-        }                       /* for (output = OUTPUT_EQUITY; output < NUM_ROLLOUT_OUTPUTS; output++) */
+        }                       /* for (ioutput = OUTPUT_EQUITY; ioutput < NUM_ROLLOUT_OUTPUTS; ioutput++) */
 
         if (!err_too_big) {
             fNoMore[alt] = 1;
@@ -1188,14 +1187,14 @@ RolloutLoopMT(void *UNUSED(unused))
                 float rMuNew;
 
                 aarResult[alt][j] += aar[j];
-                rMuNew = aarResult[alt][j] / (altGameCount[alt]);
+                rMuNew = aarResult[alt][j] / (float) altGameCount[alt];
 
                 if (altGameCount[alt] > 1) {    /* for i == 0 aarVariance is not defined */
                     float rDelta = rMuNew - aarMu[alt][j];
 
                     aarVariance[alt][j] =
-                        aarVariance[alt][j] * (1.0f - 1.0f / (altGameCount[alt] - 1)) +
-                        (altGameCount[alt]) * rDelta * rDelta;
+                        aarVariance[alt][j] * (1.0f - 1.0f / (float) (altGameCount[alt] - 1)) +
+                        (float) (altGameCount[alt]) * rDelta * rDelta;
                 }
 
                 aarMu[alt][j] = rMuNew;
@@ -1207,7 +1206,7 @@ RolloutLoopMT(void *UNUSED(unused))
                         aarMu[alt][j] = 1.0f;
                 }
 
-                aarSigma[alt][j] = sqrtf(aarVariance[alt][j] / (altGameCount[alt]));
+                aarSigma[alt][j] = sqrtf(aarVariance[alt][j] / (float) altGameCount[alt]);
             }                   /* for (j = 0; j < NUM_ROLLOUT_OUTPUTS; j++ ) */
 
             /* For normal alternatives nGamesDone and altGameCount will be equal. For cube decisions,
@@ -1406,9 +1405,9 @@ RolloutGeneral(ConstTanBoard * apBoard,
                 float r;
 
                 r = aarMu[alt][j] = (*apOutput[alt])[j];
-                aarResult[alt][j] = r * nGames;
+                aarResult[alt][j] = r * (float) nGames;
                 r = aarSigma[alt][j] = (*apStdDev[alt])[j];
-                aarVariance[alt][j] = r * r * nGames;
+                aarVariance[alt][j] = r * r * (float) nGames;
             }
         }
 
@@ -1644,7 +1643,7 @@ GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
     evalsetup(*apes[2]);
     cubeinfo aci[2];
     const cubeinfo(*apci[2]);
-    int cGames;
+    int nTrials;
     int afCubeDecTop[] = { FALSE, FALSE };      /* no cube decision in 
                                                  * iTurn = 0 */
     ConstTanBoard apBoard[2];
@@ -1687,11 +1686,11 @@ GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
         prc->fCubeful = TRUE;
     }
 
-    if ((cGames = RolloutGeneral(apBoard, apOutput, apStdDev,
+    if ((nTrials = RolloutGeneral(apBoard, apOutput, apStdDev,
                                  aarsStatistics, apes, apci, apCubeDecTop, 2, FALSE, TRUE, pf, p)) <= 0)
         return -1;
 
-    pes->rc.nGamesDone = cGames;
+    pes->rc.nGamesDone = nTrials;
     pes->rc.nSkip = nSkip;
 
     return 0;
