@@ -360,7 +360,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
 
                 rSkill = arDouble[OUTPUT_NODOUBLE] - arDouble[OUTPUT_OPTIMAL];
 
-                rCost = pms->nMatchTo ? eq2mwc(rSkill, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * rSkill;
+                rCost = pms->nMatchTo ? eq2mwc(rSkill, &ci) - eq2mwc(0.0f, &ci) : (float) pms->nCube * rSkill;
 
                 if (arDouble[OUTPUT_TAKE] > 1.0f) {
                     /* missed double above cash point */
@@ -386,7 +386,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
          */
         if (fAnalyseDice && pmr->rLuck != ERR_VAL) {
 
-            float r = pms->nMatchTo ? eq2mwc(pmr->rLuck, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * pmr->rLuck;
+            float r = pms->nMatchTo ? eq2mwc(pmr->rLuck, &ci) - eq2mwc(0.0f, &ci) : (float) pms->nCube * pmr->rLuck;
 
             psc->arLuck[pmr->fPlayer][0] += pmr->rLuck;
             psc->arLuck[pmr->fPlayer][1] += r;
@@ -433,7 +433,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
             }
             /* update statistics */
 
-            rCost = pms->nMatchTo ? eq2mwc(rChequerSkill, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * rChequerSkill;
+            rCost = pms->nMatchTo ? eq2mwc(rChequerSkill, &ci) - eq2mwc(0.0f, &ci) : (float) pms->nCube * rChequerSkill;
 
             psc->anMoves[pmr->fPlayer][Skill(rChequerSkill)]++;
 
@@ -472,7 +472,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
             if (rSkill < 0.0f) {
                 /* it was not a double */
 
-                rCost = pms->nMatchTo ? eq2mwc(rSkill, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * rSkill;
+                rCost = pms->nMatchTo ? eq2mwc(rSkill, &ci) - eq2mwc(0.0f, &ci) : (float) pms->nCube * rSkill;
 
                 if (arDouble[OUTPUT_NODOUBLE] > 1.0f) {
                     /* wrong double above too good point */
@@ -512,7 +512,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
 
                 rSkill = -arDouble[OUTPUT_TAKE] - -arDouble[OUTPUT_DROP];
 
-                rCost = pms->nMatchTo ? eq2mwc(rSkill, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * rSkill;
+                rCost = pms->nMatchTo ? eq2mwc(rSkill, &ci) - eq2mwc(0.0f, &ci) : (float) pms->nCube * rSkill;
 
                 psc->anCubeWrongTake[pmr->fPlayer]++;
                 psc->arErrorWrongTake[pmr->fPlayer][0] -= rSkill;
@@ -539,7 +539,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
 
                 rSkill = -arDouble[OUTPUT_DROP] - -arDouble[OUTPUT_TAKE];
 
-                rCost = pms->nMatchTo ? eq2mwc(rSkill, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * rSkill;
+                rCost = pms->nMatchTo ? eq2mwc(rSkill, &ci) - eq2mwc(0.0f, &ci) : (float) pms->nCube * rSkill;
 
                 psc->anCubeWrongPass[pmr->fPlayer]++;
                 psc->arErrorWrongPass[pmr->fPlayer][0] -= rSkill;
@@ -559,7 +559,7 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
         GetMatchStateCubeInfo(&ci, pms);
         if (fAnalyseDice && pmr->rLuck != ERR_VAL) {
 
-            float r = pms->nMatchTo ? eq2mwc(pmr->rLuck, &ci) - eq2mwc(0.0f, &ci) : pms->nCube * pmr->rLuck;
+            float r = pms->nMatchTo ? eq2mwc(pmr->rLuck, &ci) - eq2mwc(0.0f, &ci) : (float) pms->nCube * pmr->rLuck;
 
             psc->arLuck[pmr->fPlayer][0] += pmr->rLuck;
             psc->arLuck[pmr->fPlayer][1] += r;
@@ -1034,11 +1034,11 @@ UpdateVariance(float *prVariance, const float rSum, const float rSumAdd, const i
          * for formula */
 
         float rDelta = rSumAdd;
-        float rMuNew = rSum / nGames;
-        float rMuOld = (rSum - rDelta) / (nGames - 1);
+        float rMuNew = rSum / (float) nGames;
+        float rMuOld = (rSum - rDelta) / (float) (nGames - 1);
         float rDeltaMu = rMuNew - rMuOld;
 
-        *prVariance = *prVariance * (1.0f - 1.0f / (nGames - 1.0f)) + nGames * rDeltaMu * rDeltaMu;
+        *prVariance = *prVariance * (1.0f - 1.0f / ((float) (nGames - 1))) + (float) nGames * rDeltaMu * rDeltaMu;
 
         return;
 
@@ -1316,7 +1316,7 @@ extern float
 absoluteFibsRatingChequer(const float rChequer, const int n)
 {
 
-    return rChequer * (8798.0f + 25526.0f / (n));
+    return rChequer * (8798.0f + 25526.0f / (float) n);
 
 }
 
@@ -1334,7 +1334,7 @@ extern float
 absoluteFibsRatingCube(const float rCube, const int n)
 {
 
-    return rCube * (863.0f - 519.0f / n);
+    return rCube * (863.0f - 519.0f / (float) n);
 
 }
 
@@ -1372,7 +1372,7 @@ getMWCFromError(const statcontext * psc, float aaaar[3][2][2][2])
             aaaar[CHEQUERPLAY][TOTAL][i][j] = psc->arErrorCheckerplay[i][j];
 
             if (psc->anUnforcedMoves[i])
-                aaaar[CHEQUERPLAY][PERMOVE][i][j] = aaaar[0][0][i][j] / psc->anUnforcedMoves[i];
+                aaaar[CHEQUERPLAY][PERMOVE][i][j] = aaaar[0][0][i][j] / (float) psc->anUnforcedMoves[i];
             else
                 aaaar[CHEQUERPLAY][PERMOVE][i][j] = 0.0f;
 
@@ -1386,7 +1386,7 @@ getMWCFromError(const statcontext * psc, float aaaar[3][2][2][2])
                 + psc->arErrorWrongPass[i][j];
 
             if (psc->anCloseCube[i])
-                aaaar[CUBEDECISION][PERMOVE][i][j] = aaaar[CUBEDECISION][TOTAL][i][j] / psc->anCloseCube[i];
+                aaaar[CUBEDECISION][PERMOVE][i][j] = aaaar[CUBEDECISION][TOTAL][i][j] / (float) psc->anCloseCube[i];
             else
                 aaaar[CUBEDECISION][PERMOVE][i][j] = 0.0f;
 
@@ -1398,7 +1398,7 @@ getMWCFromError(const statcontext * psc, float aaaar[3][2][2][2])
 
             if (psc->anUnforcedMoves[i] + psc->anCloseCube[i])
                 aaaar[COMBINED][PERMOVE][i][j] =
-                    aaaar[COMBINED][TOTAL][i][j] / (psc->anUnforcedMoves[i] + psc->anCloseCube[i]);
+                    aaaar[COMBINED][TOTAL][i][j] / (float) (psc->anUnforcedMoves[i] + psc->anCloseCube[i]);
             else
                 aaaar[COMBINED][PERMOVE][i][j] = 0.0f;
 
