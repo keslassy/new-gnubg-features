@@ -1,11 +1,11 @@
 /*
- * eval.c
+ * Copyright (C) 1998-2003 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2000-2019 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 1998, 1999, 2000, 2001, 2002.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -400,10 +399,10 @@ msb32(int n)
 static void
 ComputeTable0(void)
 {
-    int i, c, n0, n1;
+    int i, n0, n1;
 
     for (i = 0; i < 0x1000; i++) {
-        c = 0;
+        int c = 0;
 
         for (n0 = 0; n0 <= 5; n0++)
             for (n1 = 0; n1 <= n0; n1++)
@@ -431,14 +430,14 @@ Escapes(const unsigned int anBoard[25], int n)
 static void
 ComputeTable1(void)
 {
-    int i, c, n0, n1, low;
+    int i, n0, n1;
 
     anEscapes1[0] = 0;
 
     for (i = 1; i < 0x1000; i++) {
-        c = 0;
+        int c = 0;
+        int low = 0;
 
-        low = 0;
         while (!(i & (1 << low))) {
             ++low;
         }
@@ -583,15 +582,13 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
     FILE *pfWeights = NULL;
     int i, fReadWeights = FALSE;
     static int fInitialised = FALSE;
-    char *gnubg_bearoff;
-    char *gnubg_bearoff_os;
 #if defined(USE_SIMD_INSTRUCTIONS)
-    int result, simderror = TRUE;
+    int simderror = TRUE;
 #endif
 
     if (!fInitialised) {
 #if defined(USE_SIMD_INSTRUCTIONS)
-        result = SIMD_Supported();
+        int result = SIMD_Supported();
         switch (result) {
         case -1:
             outputerrf(_("Can't check for SIMD support\n"));
@@ -643,6 +640,9 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
     }
 
     if (!fNoBearoff) {
+        char *gnubg_bearoff;
+        char *gnubg_bearoff_os;
+
         gnubg_bearoff_os = BuildFilename("gnubg_os0.bd");
         if (!pbc1)
             pbc1 = BearoffInit(gnubg_bearoff_os, BO_IN_MEMORY | BO_MUST_BE_ONE_SIDED, NULL);
@@ -882,7 +882,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
     } aRoll[21];
 
     {
-        int n = 0;
+        int np = 0;
 
         for (nOppBack = 24; nOppBack >= 0; --nOppBack) {
             if (anBoardOpp[nOppBack]) {
@@ -894,11 +894,9 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
         for (i = nOppBack + 1; i < 25; i++)
             if (anBoard[i])
-                n += (i + 1 - nOppBack) * anBoard[i];
+                np += (i + 1 - nOppBack) * anBoard[i];
 
-        g_assert(n);
-
-        afInput[I_BREAK_CONTACT] = (float) n / (15 + 152.0f);
+        afInput[I_BREAK_CONTACT] = (float) np / (15 + 152.0f);
     }
     {
         unsigned int p = 0;
@@ -922,17 +920,17 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
         for (i = 23; i > m; --i) {
             if (unlikely(anBoard[i] && anBoard[i] != 2)) {
-                int n = ((anBoard[i] > 2) ? (anBoard[i] - 2) : 1);
-                no += n;
-                t += i * n;
+                int ns = ((anBoard[i] > 2) ? (anBoard[i] - 2) : 1);
+                no += ns;
+                t += i * ns;
             }
         }
 
         for (; i >= 6; --i) {
             if (anBoard[i]) {
-                int n = anBoard[i];
-                no += n;
-                t += i * n;
+                int nc = anBoard[i];
+                no += nc;
+                t += i * nc;
             }
         }
 
@@ -941,11 +939,11 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
                 t += i * (anBoard[i] - 2);
                 no += (anBoard[i] - 2);
             } else if (anBoard[i] < 2) {
-                int n = (2 - anBoard[i]);
+                int nm = (2 - anBoard[i]);
 
-                if (no >= n) {
-                    t -= i * n;
-                    no -= n;
+                if (no >= nm) {
+                    t -= i * nm;
+                    no -= nm;
                 }
             }
         }
@@ -1607,11 +1605,8 @@ swap(int *p0, int *p1)
 extern void
 SwapSides(TanBoard anBoard)
 {
-
-    int i, n;
-
-    for (i = 0; i < 25; i++) {
-        n = anBoard[0][i];
+    for (int i = 0; i < 25; i++) {
+        int n = anBoard[0][i];
         anBoard[0][i] = anBoard[1][i];
         anBoard[1][i] = n;
     }
@@ -2005,15 +2000,15 @@ raceBGprob(const TanBoard anBoard, int side, const bgvariation bgv)
             p /= 65535.0f;
 
         } else {
-            float ap[5];
+            float ar[5];
 
             if (PositionBearoff(dummy[0], 6, 15) > 923 || PositionBearoff(dummy[1], 6, 15) > 923) {
-                EvalBearoff1((ConstTanBoard) dummy, ap, bgv, NULL);
+                EvalBearoff1((ConstTanBoard) dummy, ar, bgv, NULL);
             } else {
-                EvalBearoff2((ConstTanBoard) dummy, ap, bgv, NULL);
+                EvalBearoff2((ConstTanBoard) dummy, ar, bgv, NULL);
             }
 
-            p = (side == 1 ? ap[0] : 1 - ap[0]);
+            p = (side == 1 ? ar[0] : 1.0f - ar[0]);
         }
 
         return MIN(p, 1.0f);
@@ -2285,6 +2280,7 @@ Noise(const evalcontext * pec, const TanBoard anBoard, int iOutput)
         } while (r > 1.0f || r == 0.0f);
 
         r = y * sqrtf(-2.0f * logf(r) / r);
+        (void) x;
     }
 
     r *= pec->rNoise;
@@ -2695,12 +2691,11 @@ SaveMoves(movelist * pml, unsigned int cMoves, unsigned int cPip, int anMoves[],
         pml->cMaxPips = cPip;
     }
 
-    pm = pml->amMoves + pml->cMoves;
-
     PositionKey(anBoard, &key);
 
     for (i = 0; i < pml->cMoves; i++) {
-        move *pm = &(pml->amMoves[i]);
+
+        pm = &(pml->amMoves[i]);
 
         if (EqualKeys(key, pm->key)) {
             if (cMoves > pm->cMoves || cPip > pm->cPips) {
@@ -2717,6 +2712,8 @@ SaveMoves(movelist * pml, unsigned int cMoves, unsigned int cPip, int anMoves[],
             return;
         }
     }
+
+    pm = pml->amMoves + pml->cMoves;
 
     for (i = 0; i < cMoves * 2; i++)
         pm->anMove[i] = anMoves[i] > -1 ? anMoves[i] : -1;
@@ -2896,13 +2893,12 @@ extern float
 KleinmanCount(int nPipOnRoll, int nPipNotOnRoll)
 {
     int nDiff, nSum;
-    float rK;
 
     nDiff = nPipNotOnRoll - nPipOnRoll;
     nSum = nPipNotOnRoll + nPipOnRoll;
 
     if (nSum > 4) {
-        rK = (float) (nDiff + 4) / (2.0f * sqrtf((float) (nSum - 4)));
+        float rK = (float) (nDiff + 4) / (2.0f * sqrtf((float) (nSum - 4)));
         return 0.5f * (1.0f + erff(rK));
     } else
         return 0.f;
@@ -3370,8 +3366,6 @@ FindBestCubeDecision(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], 
      *
      */
 
-    int f;
-
     /* Check if cube is available */
 
     if (!GetDPEq(NULL, NULL, pci)) {
@@ -3400,7 +3394,7 @@ FindBestCubeDecision(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], 
 
             /* 6. DP > DT >= ND: Double, take */
 
-            f = isOptional(arDouble[OUTPUT_TAKE], arDouble[OUTPUT_NODOUBLE]);
+            int f = isOptional(arDouble[OUTPUT_TAKE], arDouble[OUTPUT_NODOUBLE]);
 
             arDouble[OUTPUT_OPTIMAL] = arDouble[OUTPUT_TAKE];
 
@@ -3547,7 +3541,7 @@ extern int
 GetDPEq(int *pfCube, float *prDPEq, const cubeinfo * pci)
 {
 
-    int fCube, fPostCrawford;
+    int fCube;
 
     if (!pci->nMatchTo) {
 
@@ -3576,7 +3570,7 @@ GetDPEq(int *pfCube, float *prDPEq, const cubeinfo * pci)
          */
 
         /* FIXME: equity for double, pass */
-        fPostCrawford = !pci->fCrawford &&
+        int fPostCrawford = !pci->fCrawford &&
             (pci->anScore[0] == pci->nMatchTo - 1 || pci->anScore[1] == pci->nMatchTo - 1);
 
         fCube = (!pci->fCrawford) &&
@@ -3706,7 +3700,7 @@ Cl2CfMatchCentered(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
     float rG0, rBG0, rG1, rBG1;
     float arCP[2];
 
-    float rMWCDead, rMWCLive, rMWCWin, rMWCLose;
+    float rMWCDead, rMWCLive;
     float rMWCOppCash, rMWCCash, rOppTG, rTG;
     float aarMETResult[2][DTLBP1 + 1];
 
@@ -3752,7 +3746,7 @@ Cl2CfMatchCentered(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
 
         /* Opp too good to double */
 
-        rMWCLose = (1.0f - rG1 - rBG1) * aarMETResult[pci->fMove][NDL]
+        float rMWCLose = (1.0f - rG1 - rBG1) * aarMETResult[pci->fMove][NDL]
             + rG1 * aarMETResult[pci->fMove][NDLG]
             + rBG1 * aarMETResult[pci->fMove][NDLB];
 
@@ -3785,7 +3779,7 @@ Cl2CfMatchCentered(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
          * 
          */
 
-        rMWCWin = (1.0f - rG0 - rBG0) * aarMETResult[pci->fMove][NDW]
+        float rMWCWin = (1.0f - rG0 - rBG0) * aarMETResult[pci->fMove][NDW]
             + rG0 * aarMETResult[pci->fMove][NDWG]
             + rBG0 * aarMETResult[pci->fMove][NDWB];
 
@@ -3811,7 +3805,7 @@ Cl2CfMatchOwned(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
     float rG0, rBG0, rG1, rBG1;
     float arCP[2];
 
-    float rMWCDead, rMWCLive, rMWCWin, rMWCLose;
+    float rMWCDead, rMWCLive;
     float rMWCCash, rTG;
     float aarMETResult[2][DTLBP1 + 1];
 
@@ -3860,7 +3854,7 @@ Cl2CfMatchOwned(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
          * 
          */
 
-        rMWCLose = (1.0f - rG1 - rBG1) * aarMETResult[pci->fMove][NDL]
+        float rMWCLose = (1.0f - rG1 - rBG1) * aarMETResult[pci->fMove][NDL]
             + rG1 * aarMETResult[pci->fMove][NDLG]
             + rBG1 * aarMETResult[pci->fMove][NDLB];
 
@@ -3885,7 +3879,7 @@ Cl2CfMatchOwned(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
          * 
          */
 
-        rMWCWin = (1.0f - rG0 - rBG0) * aarMETResult[pci->fMove][NDW]
+        float rMWCWin = (1.0f - rG0 - rBG0) * aarMETResult[pci->fMove][NDW]
             + rG0 * aarMETResult[pci->fMove][NDWG]
             + rBG0 * aarMETResult[pci->fMove][NDWB];
 
@@ -3912,7 +3906,7 @@ Cl2CfMatchUnavailable(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
     float rG0, rBG0, rG1, rBG1;
     float arCP[2];
 
-    float rMWCDead, rMWCLive, rMWCWin, rMWCLose;
+    float rMWCDead, rMWCLive;
     float rMWCOppCash, rOppTG;
     float aarMETResult[2][DTLBP1 + 1];
 
@@ -3963,7 +3957,7 @@ Cl2CfMatchUnavailable(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
          * 
          */
 
-        rMWCLose = (1.0f - rG1 - rBG1) * aarMETResult[pci->fMove][NDL]
+        float rMWCLose = (1.0f - rG1 - rBG1) * aarMETResult[pci->fMove][NDL]
             + rG1 * aarMETResult[pci->fMove][NDLG]
             + rBG1 * aarMETResult[pci->fMove][NDLB];
 
@@ -3987,7 +3981,7 @@ Cl2CfMatchUnavailable(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
          * 
          */
 
-        rMWCWin = (1.0f - rG0 - rBG0) * aarMETResult[pci->fMove][NDW]
+        float rMWCWin = (1.0f - rG0 - rBG0) * aarMETResult[pci->fMove][NDW]
             + rG0 * aarMETResult[pci->fMove][NDWG]
             + rBG0 * aarMETResult[pci->fMove][NDWB];
 
@@ -4478,7 +4472,6 @@ getMoneyPoints(float aaarPoints[2][7][2], const int fJacoby, const int fBeavers,
 {
 
     float arCLV[2];             /* average cubeless value of games won */
-    float rW, rL;
     int i;
 
     /* calculate average cubeless value of games won */
@@ -4492,8 +4485,8 @@ getMoneyPoints(float aaarPoints[2][7][2], const int fJacoby, const int fBeavers,
 
         /* Determine rW and rL from Rick's formulae */
 
-        rW = arCLV[i];
-        rL = arCLV[!i];
+        const float rW = arCLV[i];
+        const float rL = arCLV[!i];
 
         /* Determine points */
 
@@ -4674,7 +4667,6 @@ getMatchPoints(float aaarPoints[2][4][2],
 
     SSE_ALIGN(float arOutput[NUM_OUTPUTS]);
     float arDP1[2], arDP2[2], arCP1[2], arCP2[2], arTG[2];
-    float rDTW, rDTL, rNDW, rNDL, rDP, rRisk, rGain;
 
     int i, anNormScore[2];
 
@@ -4692,6 +4684,8 @@ getMatchPoints(float aaarPoints[2][4][2],
     GetPoints(arOutput, pci, arCP2);
 
     for (i = 0; i < 2; i++) {
+
+        float rDTW, rDTL, rNDW, rNDL, rDP, rRisk, rGain;
 
         afAutoRedouble[i] = (anNormScore[i] - 2 * pci->nCube <= 0) && (anNormScore[!i] - 2 * pci->nCube > 0);
 
@@ -5020,8 +5014,6 @@ getPercent(const cubedecision cd, const float arDouble[])
 extern void
 RefreshMoveList(movelist * pml, int *ai)
 {
-
-    unsigned int i, j;
     movelist ml;
 
     if (!pml->cMoves)
@@ -5035,9 +5027,9 @@ RefreshMoveList(movelist * pml, int *ai)
     pml->rBestScore = pml->amMoves[0].rScore;
 
     if (ai) {
-        for (i = 0; i < pml->cMoves; i++) {
+        for (unsigned int i = 0; i < pml->cMoves; i++) {
 
-            for (j = 0; j < pml->cMoves; j++) {
+            for (unsigned int j = 0; j < pml->cMoves; j++) {
 
                 if (!memcmp(ml.amMoves[j].anMove, pml->amMoves[i].anMove, 8 * sizeof(int)))
                     ai[j] = i;
@@ -5046,10 +5038,7 @@ RefreshMoveList(movelist * pml, int *ai)
         }
 
         free(ml.amMoves);
-
     }
-
-
 }
 
 
@@ -5341,7 +5330,6 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
 
     for (i = 0; i < ml.cMoves; i++) {
         positionclass pc;
-        SSE_ALIGN(float arInput[NUM_PRUNING_INPUTS]);
         SSE_ALIGN(float arOutput[NUM_OUTPUTS]);
         evalcache ec;
         uint32_t l;
@@ -5362,6 +5350,8 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
         CopyKey(pm->key, ec.key);
         ec.nEvalContext = 0;
         if ((l = CacheLookup(&cpEval, &ec, arOutput, NULL)) != CACHEHIT) {
+            SSE_ALIGN(float arInput[NUM_PRUNING_INPUTS]);
+
             baseInputs((ConstTanBoard) anBoardOut, arInput);
             {
                 neuralnet *nets[] = { &nnpRace, &nnpCrashed, &nnpContact };
@@ -5419,10 +5409,8 @@ static int
 EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[],
                      cubeinfo * const pci, const evalcontext * pec, unsigned int nPlies, positionclass pc)
 {
-    int i, n0, n1;
     SSE_ALIGN(float arVariationOutput[NUM_OUTPUTS]);
-    float rTemp;
-    int w;
+    int i;
 
     if (pc > CLASS_PERFECT && nPlies > 0) {
         /* internal node; recurse */
@@ -5430,6 +5418,9 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
         TanBoard anBoardNew;
         /* int anMove[ 8 ]; */
         cubeinfo ciOpp;
+        float rTemp;
+        int n0, n1;
+
         int const usePrune = pec->fUsePrune && pec->rNoise == 0.0f && pci->bgv == VARIATION_STANDARD;
 
         for (i = 0; i < NUM_OUTPUTS; i++)
@@ -5439,7 +5430,7 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
 
         for (n0 = 1; n0 <= 6; n0++) {
             for (n1 = 1; n1 <= n0; n1++) {
-                w = (n0 == n1) ? 1 : 2;
+                float w = (n0 == n1) ? 1.0f : 2.0f;
 
                 for (i = 0; i < 25; i++) {
                     anBoardNew[0][i] = anBoard[0][i];
@@ -5470,7 +5461,7 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
                     return -1;
 
                 for (i = 0; i < NUM_OUTPUTS; i++)
-                    arOutput[i] += (float) w *arVariationOutput[i];
+                    arOutput[i] += w *arVariationOutput[i];
             }
 
         }
@@ -5633,7 +5624,7 @@ static int
 ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, unsigned int *bmovesi,
                  unsigned int prune_moves)
 {
-    unsigned int i, j;
+    unsigned int j;
     int r = 0;                  /* return value */
     NNState *nnStates = MT_Get_nnState();
 
@@ -5644,7 +5635,7 @@ ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, 
 
     for (j = 0; j < prune_moves; j++) {
 
-        i = bmovesi[j];
+        unsigned int i = bmovesi[j];
 
         if (ScoreMove(nnStates, pml->amMoves + i, pci, pec, 0) < 0) {
             r = -1;
@@ -5973,12 +5964,10 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
 
     /* calculate cubeful equity */
 
-    int i, ici;
+    int i;
     positionclass pc;
-    float r;
     SSE_ALIGN(float ar[NUM_OUTPUTS]);
     float arEquity[4];
-    float rCubeX;
 
     cubeinfo ciMoveOpp;
 
@@ -5986,15 +5975,14 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
     float *arCfTemp = (float *) g_alloca(2 * cci * sizeof(float));
     cubeinfo *aci = (cubeinfo *) g_alloca(2 * cci * sizeof(cubeinfo));
 
-    float w;
-    int n0, n1;
-
     pc = ClassifyPosition(anBoard, pciMove->bgv);
 
     if (pc > CLASS_OVER && nPlies > 0 && !(pc <= CLASS_PERFECT && !pciMove->nMatchTo)) {
         /* internal node; recurse */
 
         TanBoard anBoardNew;
+        int n0, n1;
+        float r;
 
         int const usePrune = pec->fUsePrune && pec->rNoise == 0.0f && pciMove->bgv == VARIATION_STANDARD;
 
@@ -6012,7 +6000,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
 
         for (n0 = 1; n0 <= 6; n0++) {
             for (n1 = 1; n1 <= n0; n1++) {
-                w = (n0 == n1) ? 1.0f : 2.0f;
+                float w = (n0 == n1) ? 1.0f : 2.0f;
 
                 for (i = 0; i < 25; i++) {
                     anBoardNew[0][i] = anBoard[0][i];
@@ -6086,6 +6074,9 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
 
     } else {
         /* at leaf node; use static evaluation */
+
+        float rCubeX;
+        int ici;
 
         if (pc == CLASS_HYPERGAMMON1 || pc == CLASS_HYPERGAMMON2 || pc == CLASS_HYPERGAMMON3) {
 
@@ -6228,7 +6219,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                         else
                             rCubeX = X;
 
-                        /* fabs(...) > 0.0001 above is not enough. We still get some
+                        /* fabsf(...) > 0.0001 above is not enough. We still get some
                          * nutty values for rCubeX and need more sanity checking */
 
                         if (rCubeX < 0.0f)
