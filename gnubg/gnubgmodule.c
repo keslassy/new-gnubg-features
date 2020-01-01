@@ -1120,7 +1120,7 @@ PythonMoveTuple2String(PyObject * UNUSED(self), PyObject * args)
         return NULL;
     }
 
-    if (pyBoard && !PyToBoard(pyBoard, anBoard)) {
+    if (!PyToBoard(pyBoard, anBoard)) {
         PyErr_SetString(PyExc_StandardError, _("Invalid board as argument "));
         return NULL;
     }
@@ -2867,7 +2867,6 @@ PythonMatch(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
         PyErr_SetString(PyExc_StandardError, "First game missing from match");
         return NULL;
     }
-    g_assert(g->i == 0);
 
     /* W,X,0
      * B,O,1 */
