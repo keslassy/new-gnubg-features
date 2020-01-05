@@ -4858,7 +4858,10 @@ GetRolloutSettings(GtkWidget * pw, rolloutwidget * prw)
     int fCubeEqChequer, fPlayersAreSame;
 
     prw->rcRollout.nTrials = (int) gtk_adjustment_get_value(prw->prwGeneral->padjTrials);
+
     prw->rcRollout.nTruncate = (unsigned short) gtk_adjustment_get_value(prw->prwGeneral->padjTruncPlies);
+
+    prw->rcRollout.fDoTruncate = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoTrunc));
 
     prw->rcRollout.nSeed = (int) gtk_adjustment_get_value(prw->prwGeneral->padjSeed);
 
@@ -4870,18 +4873,13 @@ GetRolloutSettings(GtkWidget * pw, rolloutwidget * prw)
 
     prw->rcRollout.fInitial = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwInitial));
 
-    prw->rcRollout.fDoTruncate = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoTrunc));
-
     prw->rcRollout.fTruncBearoff2 = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwTruncBearoff2));
 
     prw->rcRollout.fTruncBearoffOS = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwTruncBearoffOS));
 
-    if (prw->rcRollout.nTruncate == 0)
-        prw->rcRollout.fDoTruncate = FALSE;
+    prw->rcRollout.nLate = (unsigned short) gtk_adjustment_get_value(prw->prwGeneral->padjLatePlies);
 
     prw->rcRollout.fLateEvals = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwDoLate));
-
-    prw->rcRollout.nLate = (unsigned short) gtk_adjustment_get_value(prw->prwGeneral->padjLatePlies);
 
     fCubeEqChequer = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(prw->prwGeneral->pwCubeEqualChequer));
 
@@ -5115,7 +5113,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 #endif
     gtk_box_pack_end(GTK_BOX(pwh), pwHBox, FALSE, FALSE, 4);
 
-    prpw->padjTruncPlies = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nTruncate, 0, 1000, 1, 1, 0));
+    prpw->padjTruncPlies = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nTruncate, 1, 1000, 1, 1, 0));
     gtk_box_pack_end(GTK_BOX(pwHBox), gtk_spin_button_new(prpw->padjTruncPlies, 1, 0), FALSE, FALSE, 4);
     gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Truncate at ply:")), FALSE, FALSE, 4);
 
@@ -5143,7 +5141,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 #endif
     gtk_box_pack_end(GTK_BOX(pwh), pwHBox, FALSE, FALSE, 4);
 
-    prpw->padjLatePlies = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nLate, 0, 1000, 1, 1, 0));
+    prpw->padjLatePlies = GTK_ADJUSTMENT(gtk_adjustment_new(prw->rcRollout.nLate, 1, 1000, 1, 1, 0));
     gtk_box_pack_end(GTK_BOX(pwHBox), gtk_spin_button_new(prpw->padjLatePlies, 1, 0), FALSE, FALSE, 4);
     gtk_box_pack_end(GTK_BOX(pwHBox), gtk_label_new(_("Change eval after ply:")), FALSE, FALSE, 4);
 
@@ -5581,12 +5579,12 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
             }
 
             if (rw.rcRollout.fLateEvals != rcRollout.fLateEvals) {
-                sprintf(sz, "set rollout late enable  %s", rw.rcRollout.fLateEvals ? "on" : "off");
+                sprintf(sz, "set rollout late enable %s", rw.rcRollout.fLateEvals ? "on" : "off");
                 UserCommand(sz);
             }
 
             if (rw.rcRollout.fDoTruncate != rcRollout.fDoTruncate) {
-                sprintf(sz, "set rollout truncation enable  %s", rw.rcRollout.fDoTruncate ? "on" : "off");
+                sprintf(sz, "set rollout truncation enable %s", rw.rcRollout.fDoTruncate ? "on" : "off");
                 UserCommand(sz);
             }
 

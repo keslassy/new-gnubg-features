@@ -1785,18 +1785,17 @@ CommandSetRolloutLatePlies(char *sz)
 
     if (n < 1) {
         outputl(_("You must specify a valid ply at which to change evaluations "
-                  "(see `help set rollout late plies')."));
+                  "(see `help set rollout later plies')."));
 
         return;
     }
 
     prcSet->nLate = (unsigned short) n;
 
-    if (!n)
-        outputl(_("No evaluations changes will be made during rollouts."));
-    else
-        outputf(_("Evaluations will change after %d plies in rollouts.\n"), n);
+    outputf(_("Evaluations will change after %d plies in rollouts.\n"), n);
 
+    if (prcSet->fLateEvals == FALSE)
+        outputl(_("But separate evaluation for later plies is not currently enabled " "(see `help set rollout later enable')."));
 }
 
 
@@ -2264,19 +2263,19 @@ CommandSetRolloutTruncationPlies(char *sz)
 
     int n = ParseNumber(&sz);
 
-    if (n < 0) {
-        outputl(_("You must specify a valid ply at which to truncate rollouts " "(see `help set rollout')."));
+    if (n < 1) {
+        outputl(_("You must specify a valid ply at which to truncate rollouts " "(see `help set rollout truncation plies')."));
 
         return;
     }
 
     prcSet->nTruncate = (unsigned short) n;
 
-    if ((n == 0) || !prcSet->fDoTruncate)
-        outputl(_("Rollouts will not be truncated."));
-    else
-        outputf(ngettext
-                ("Rollouts will be truncated after %d ply.\n", "Rollouts will be truncated after %d plies.\n", n), n);
+    outputf(ngettext
+            ("Rollouts will be truncated after %d ply.\n", "Rollouts will be truncated after %d plies.\n", n), n);
+  
+    if (prcSet->fDoTruncate == FALSE)
+        outputl(_("But rollout truncation is not currently enabled " "(see `help set rollout truncation enable')."));
 
 }
 
