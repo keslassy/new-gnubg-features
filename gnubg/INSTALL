@@ -60,12 +60,12 @@ help it out, or to disable a certain feature. See ``configure --help´´ for mor
 info.
 
   --enable-simd=TYPE      enable SIMD for newer cpus (TYPE=yes,fma,avx,sse2,
-                          neon,no) default=yes)
-  --enable-gasserts       enable g_assert debugging macros (Default disabled)
-  --disable-cputest       disable runtime SIMD CPU test (Default no)
-  --enable-threads        enable multithread support (Default enabled)
-  --with-gtk              use GTK+ 2.0 (Default if found)
-  --with-board3d          compile with 3D boards (Default if found)
+                          neon,no) (default=yes)
+  --enable-gasserts       enable debugging assertions (default disabled)
+  --disable-cputest       disable runtime SIMD CPU test (default no)
+  --enable-threads        enable multithread support (default enabled)
+  --with-gtk              use GTK+ 2.0 (default if found)
+  --with-board3d          compile with 3D boards (default if found)
   --with-python[=PYTHON]  absolute path name of Python executable
   --with-eval-max-threads=size
                           define the maximum number of evaluation threads
