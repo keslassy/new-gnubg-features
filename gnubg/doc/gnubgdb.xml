@@ -592,10 +592,19 @@ gnubg moves 8/5 6/5.
     <sect2 id="gnubg-starting_ms">
       <title>Microsoft Windows</title>
       <para>The builds of <application moreinfo="none">GNU
-        Backgammon</application> which may be downloaded from the <ulink url="http://www.gnubg.org">main <application moreinfo="none">GNU
-            Backgammon</application> page</ulink> comes with an installation
-        system. The installation system will create a launch menu item in your
-        start menu. Usually the menu item can be found by choosing <menuchoice moreinfo="none"><guimenu moreinfo="none">Start</guimenu><guimenuitem moreinfo="none">Programs</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon</guimenuitem></menuchoice>.</para>
+      Backgammon</application> which may be downloaded from the <ulink
+      url="https://www.gnu.org/software/gnubg/#TOCdownloading">main
+      <application moreinfo="none">GNU Backgammon</application>
+      page</ulink> are packaged as an executable installer
+      file. Running it will install <application moreinfo="none">GNU
+      Backgammon</application> and create a launch menu item in your
+      start menu. Usually the menu item can be found by choosing
+      <menuchoice moreinfo="none"><guimenu
+      moreinfo="none">Start</guimenu><guimenuitem
+      moreinfo="none">Programs</guimenuitem><guimenuitem
+      moreinfo="none">GNU Backgammon</guimenuitem><guimenuitem
+      moreinfo="none">GNU
+      Backgammon</guimenuitem></menuchoice>.</para>
       <para><application moreinfo="none">GNU Backgammon</application> also has a
         command-line interface. This is supplied as a separate executable file
         on Microsoft Windows. You can start this version of <application moreinfo="none">GNU Backgammon</application> by choosing <menuchoice moreinfo="none"><guimenu moreinfo="none">Start</guimenu><guimenuitem moreinfo="none">Programs</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon</guimenuitem><guimenuitem moreinfo="none">GNU Backgammon CLI</guimenuitem></menuchoice>.
@@ -4616,9 +4625,12 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_general_getit">
         <title>Where do I get it?</title>
-        <para>The official website is <ulink url="http://www.gnubg.org/">http://www.gnubg.org</ulink>. Binaries and source code for
-            <application>GNU Backgammon</application> can be downloaded from
-          this site. Up to date source code can be accessed through <ulink url="https://savannah.gnu.org/cvs/?group=gnubg">CVS</ulink>.</para>
+        <para>The official website is <ulink
+        url="https://www.gnu.org/software/gnubg/">https://www.gnu.org/software/gnubg/</ulink>. Binaries
+        and source code for <application>GNU Backgammon</application>
+        can be downloaded from this site. Up to date source code can
+        be accessed through <ulink
+        url="https://savannah.gnu.org/cvs/?group=gnubg">CVS</ulink>.</para>
       </sect3>
       <sect3 id="gnubg-faq_general_pay">
         <title>What do I have to pay for <application>GNU
@@ -4683,8 +4695,12 @@ Equity
       </sect3>
       <sect3 id="gnubg-faq_install_compilelinux">
         <title>What software do I need for compiling under GNU/Linux?</title>
-        <para>Unpack a <application>GNU Backgammon</application> snapshot and
-          follow the instructions at <ulink url="http://www.gnubg.org/index.php?itemid=100">this page</ulink>.</para>
+        <para>Download <application>GNU Backgammon</application>
+        sources as described <ulink
+        url="https://www.gnu.org/software/gnubg/#downloading">here</ulink>
+        and follow the instructions from <ulink
+        url="http://cvs.savannah.gnu.org/viewvc/*checkout*/gnubg/gnubg/INSTALL">this
+        document</ulink>.</para>
         <para>Details like the exact names of the prerequisite packages will vary
           from a distribution to another but the general process will remain
           identical. If you are remotely familiar with software
@@ -4692,12 +4708,6 @@ Equity
 	  <application>GNU Backgammon</application> is straightforward to build.
 	</para>
       </sect3>
-<!-- link is dead!
-      <sect3 id="gnubg-faq_install_compilems">
-        <title>What software do I need for compiling under Microsoft Windows?</title>
-        <para>Follow the instructions at <ulink url="http://www.gnubg.org/index.php?itemid=50">http://www.gnubg.org/index.php?itemid=50</ulink>.</para>
-      </sect3>A
--->
       <sect3 id="gnubg-faq_install_nocompile">
         <title>It does not compile</title>
         <para>Check that you have installed all necessary development packages.</para>
