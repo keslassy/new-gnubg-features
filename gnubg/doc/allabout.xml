@@ -156,13 +156,11 @@ the section entitled &#8220;GNU Free Documentation License&#8221;.<xref linkend=
   </sect1>
   <sect1 id="Where_to_get_it" xreflabel="Where to get it">
     <title>Where to get it</title>
-    <para>The official site of GNU Backgammon is either <ulink url="http://www.gnu.org/software/gnubg/">http://www.gnu.org/software/gnubg/</ulink> or <ulink url="http://www.gnubg.org/">http://www.gnubg.org</ulink> though to download an installable version of the program, you'll want to go to the second site. Go there and select Download </para>
-    <mediaobject>
-      <imageobject>
-        <imagedata align="center" fileref="images/md9b1995.png"/>
-      </imageobject>
-    </mediaobject>
-    <para>And then the version (Windows, Mac OS X, GNU/Linux, etc.) you want. </para>
+    <para>The official site of GNU Backgammon is <ulink
+    url="http://www.gnu.org/software/gnubg/">http://www.gnu.org/software/gnubg/</ulink>.</para>
+    <para>Go to its <ulink
+    url="https://www.gnu.org/software/gnubg/#downloading">Downloading
+    GNU Backgammon</ulink> section.</para>
   </sect1>
   <sect1 id="Playing_a_game" xreflabel="Playing a game">
     <title>Playing a game</title>
