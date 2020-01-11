@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1997-2003 Gary Wong <gary@cs.arizona.edu>
- * Copyright (C) 2002-2019 the AUTHORS
+ * Copyright (C) 2002-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1271,7 +1271,7 @@ version(void)
 extern int
 main(int argc, char **argv)
 {
-    /* static storage for options to keep picky comipler happy */
+    /* static storage for options to keep picky compiler happy */
     static int nOS = 0;
     static int fHeader = TRUE;
     static int fCompress = TRUE;
@@ -1352,8 +1352,8 @@ main(int argc, char **argv)
 
     if (nOS) {
 
-        if (nOS > 18) {
-            fprintf(stderr, _("Size of one-sided bearoff database must be between " "0 and 18\n"));
+        if (nOS > 13) {
+            fprintf(stderr, _("Size of one-sided bearoff database should be at most 13 points\n"));
             exit(2);
         }
         fprintf(stderr, "%-37s\n", _("One-sided database"));
@@ -1411,6 +1411,11 @@ main(int argc, char **argv)
     if (nTSC && nTSP) {
 
         int n = Combination(nTSP + nTSC, nTSC);
+
+        if (nTSC > 11) {
+            fprintf(stderr, _("Size of two-sided bearoff database must be at most 11 chequers\n"));
+            exit(2);
+        }
 
         r = n;
         r = r * r * (fCubeful ? 8.0 : 2.0);
