@@ -170,7 +170,7 @@ gnubg moves 8/5 6/5.
           Game Format).</para>
       </listitem>
       <listitem>
-        <para>Importing of positions, games, and matches from a number of
+        <para>Importing of positions, games and matches from a number of
           standard file formats, including: native GNU Backgammon file (.sgf),
           Jellyfish Match (.mat), GridGammon Save Game (.sgg),
           FIBS Oldmoves (.fibs), Jellyfish Position
@@ -178,7 +178,7 @@ gnubg moves 8/5 6/5.
           (.gam), PartyGammon Game (.gam), and BGRoom Game (.bgf).</para>
       </listitem>
       <listitem>
-        <para>Exporting of positions, games, and matches to a number of
+        <para>Exporting of positions, games and matches to a number of
           standard file formats, including: native GNU Backgammon file (.sgf),
           Hypertext Markup Language (.html), Jellyfish Game (.gam), Jellyfish
           Match (.mat), Jellyfish Position (.pos), LaTeX (.tex), Portable
@@ -187,11 +187,11 @@ gnubg moves 8/5 6/5.
           Graphics (.svg).</para>
       </listitem>
       <listitem>
-        <para>Python Scripting ability.</para>
+        <para>Python scripting ability.</para>
       </listitem>
       <listitem>
-        <para>Native language support; 13 languages are complete or in progress:
-          (cs_CZ, da_DK, en_GB, en_US, es_ES, fr_FR, de_DE, is_IS, it_IT,
+        <para>Native language support; 14 languages are complete or in progress:
+          (cs_CZ, da_DK, en_GB, en_US, es_ES, fr_FR, de_DE, el_GR, is_IS, it_IT,
           ja_JP, ro_RO, ru_RU and tr_TR)</para>
       </listitem>
     </itemizedlist>
@@ -5143,7 +5143,7 @@ Equity
           the left die shown on your board. Right click your mouse for the right
           die.</para>
         <para>If you always want the higher number displayed on the left, go to
-          the menu <menuchoice><guimenu>Settings</guimenu><guimenuitem>Appearance</guimenuitem><guimenuitem> General </guimenuitem></menuchoice> and select Show higher die on left.</para>
+          the menu <menuchoice><guimenu>Settings</guimenu><guimenuitem>Options</guimenuitem></menuchoice>, click on the `Dice' tab and select Show higher die on left.</para>
       </sect3>
       <sect3 id="gnubg-faq_play_5">
         <title>Why am I allowed to place more than 5 checkers on a point?</title>
@@ -5152,13 +5152,6 @@ Equity
           checkers, sometimes known as the Egyptian Rule, is no longer
           supported by
           <application>GNU Backgammon</application>.</para>
-      </sect3>
-      <sect3 id="gnubg-faq_play_poorly">
-        <title><application>GNU Backgammon</application> plays poorly</title>
-        <para>Are you sure? If the answer is yes you should think about going to
-          Monte Carlo this summer and win the Backgammon World Championship. If
-          this plan fails, check whether the weights file is loaded at start-up.
-          See also <xref linkend="gnubg-faq_start_missing"/></para>
       </sect3>
       <sect3 id="gnubg-faq_play_strong">
         <title><application>GNU Backgammon</application> is too strong for me</title>
@@ -5178,17 +5171,17 @@ Equity
       <title>Settings</title>
       <sect3 id="gnubg-faq_settings_name">
         <title>Where can I change the name of the human player?</title>
-        <para>Go to the menu <menuchoice><guimenu>Settings</guimenu><guimenuitem> Players....</guimenuitem></menuchoice> and click on Player 1. At the top there is a field to
+        <para>Go to the menu <menuchoice><guimenu>Settings</guimenu><guimenuitem>Players</guimenuitem></menuchoice> and click on Player 1. At the top there is a field to
           change the human player's name.</para>
       </sect3>
       <sect3 id="gnubg-faq_settings_colors">
         <title>How do I change the colors?</title>
-        <para>Go to the menu <menuchoice><guimenu>Settings</guimenu><guimenuitem> Appearance </guimenuitem></menuchoice>. Here you may change the color of checkers, the points
+        <para>Go to the menu <menuchoice><guimenu>Settings</guimenu><guimenuitem>Board Appearance</guimenuitem></menuchoice>. Here you may change the color of checkers, the points
           and the board itself.</para>
       </sect3>
       <sect3 id="gnubg-faq_settings_beeps">
         <title>How do I stop the annoying beeps?</title>
-        <para>Go to the menu<menuchoice><guimenu>Settings</guimenu><guimenuitem> Appearance </guimenuitem></menuchoice> and click on the `General' tab at the right. Disable the
+        <para>Go to the menu <menuchoice><guimenu>Settings</guimenu><guimenuitem>Options</guimenuitem></menuchoice> and click on the `Sound' tab. Disable the
           option `Beep on illegal input'.</para>
       </sect3>
       <sect3 id="gnubg-faq_settings_plies">
@@ -5407,11 +5400,11 @@ Equity
             <para>Pip count: 5x1 + 4x2 = 13 </para>
           </listitem>
           <listitem>
-            <para>EPC: 2.189 (expected number of remaining rolls) * 8.167 =
-              17.878 </para>
+            <para>EPC: 4.41 (expected number of remaining rolls) x 8.167 =
+              36.02 </para>
           </listitem>
           <listitem>
-            <para>Wasted: 17.878 - 13 = 4.878 </para>
+            <para>Wasted: 36.02 - 13 = 23.02 </para>
           </listitem>
         </orderedlist>
         <para>It's clear (hopefully) that the expected pip wastage (and hence
@@ -5490,11 +5483,6 @@ Equity
       <sect3 id="gnubg-faq_abbr_epc">
         <title>EPC?</title>
 	<para>See <xref linkend="gnubg-faq_analysing_epc"/>
-        </para>
-        <para>
-          <emphasis>This should be an internal link, not an external one. But I
-            can't figure out how to link internally to a subsection.
-          Anyone?</emphasis>
         </para>
       </sect3>
     </sect2>
