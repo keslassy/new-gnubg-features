@@ -24,9 +24,6 @@
 #include "boardpos.h"
 #include "gtkboard.h"
 
-extern Flag3d flag;
-extern void getFlagPos(const BoardData* bd, float v[3]);
-
 #include "Shapes.inc"
 
 extern void

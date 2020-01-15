@@ -58,8 +58,6 @@ void ModelManagerStart(ModelManager* modelHolder)
 	modelHolder->numModels = 0;
 }
 
-float* GetModelViewMatrix();
-
 #ifndef USE_GTK3
 void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Material* pMat)
 {

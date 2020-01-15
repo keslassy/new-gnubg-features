@@ -366,7 +366,7 @@ struct _BoardData3d {
     unsigned int dotTexture;    /* Holds texture used to draw dots on dice */
 };
 
-extern struct _Flag3d flag;
+extern Flag3d flag;
 
 /* Define relative sizes of objects from arbitrary unit .05 */
 #define base_unit .05f
