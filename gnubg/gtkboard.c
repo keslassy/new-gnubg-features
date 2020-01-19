@@ -94,9 +94,12 @@ G_DEFINE_TYPE(Board, board, GTK_TYPE_BOX)
 G_DEFINE_TYPE(Board, board, GTK_TYPE_VBOX)
 #endif
 
+int inPreviewWindow;
+
 extern GtkWidget *
-board_new(renderdata * prd)
+board_new(renderdata * prd, int inPreview)
 {
+    inPreviewWindow = inPreview;
     /* Create widget */
     GtkWidget *board = g_object_new(TYPE_BOARD, NULL);
     /* Initialize board data members */
@@ -3639,9 +3642,11 @@ board_init(Board * board)
     bd->drawing_area = gtk_drawing_area_new();
     /* gtk_widget_set_name(GTK_WIDGET(bd->drawing_area), "background"); */
     gtk_widget_set_size_request(bd->drawing_area, BOARD_WIDTH, BOARD_HEIGHT);
-    gtk_widget_add_events(GTK_WIDGET(bd->drawing_area), GDK_EXPOSURE_MASK |
-                          GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK |
-                          GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK);
+
+    int signals = GDK_EXPOSURE_MASK | GDK_STRUCTURE_MASK;
+    if (!inPreviewWindow)
+        signals |= GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK;
+    gtk_widget_add_events(GTK_WIDGET(bd->drawing_area), signals);
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_hexpand(bd->drawing_area, TRUE);
     gtk_widget_set_vexpand(bd->drawing_area, TRUE);
@@ -3650,7 +3655,7 @@ board_init(Board * board)
 
 #if defined(USE_BOARD3D)
     /* 3d board drawing area */
-    widget3dValid = widget3dValid ? CreateGLWidget(bd) : FALSE;
+    widget3dValid = widget3dValid ? CreateGLWidget(bd, !inPreviewWindow) : FALSE;
     if (widget3dValid) {
         gtk_box_pack_start(GTK_BOX(board), GetDrawingArea3d(bd->bd3d), TRUE, TRUE, 0);
     } else

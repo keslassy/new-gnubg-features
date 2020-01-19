@@ -134,7 +134,7 @@ extern int fGUIGrayEdit;
 extern unsigned int nGUIAnimSpeed;
 
 extern GType board_get_type(void);
-extern GtkWidget *board_new(renderdata * prd);
+extern GtkWidget *board_new(renderdata * prd, int inPreview);
 extern GtkWidget *board_cube_widget(Board * board);
 extern void DestroySetCube(GObject * po, GtkWidget * pw);
 extern void Copy3dDiceColour(renderdata * prd);

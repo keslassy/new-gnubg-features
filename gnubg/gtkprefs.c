@@ -3126,7 +3126,7 @@ BoardPreferences(GtkWidget * pwBoard)
     rdPrefs.fDiceArea = FALSE;
     rdPrefs.fShowGameInfo = FALSE;
     /* Create preview board */
-    pwPrevBoard = board_new(&rdPrefs);
+    pwPrevBoard = board_new(&rdPrefs, TRUE);
 
     bd = BOARD(pwPrevBoard)->board_data;
 #if defined(USE_BOARD3D)

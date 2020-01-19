@@ -95,7 +95,7 @@ expose_3dCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(exposeEvent), void
 }
 
 extern int
-CreateGLWidget(BoardData * bd)
+CreateGLWidget(BoardData * bd, int useMouseEvents)
 {
     GtkWidget *p3dWidget;
     bd->bd3d = (BoardData3d *) malloc(sizeof(BoardData3d));
@@ -106,12 +106,17 @@ CreateGLWidget(BoardData * bd)
         return FALSE;
 
     /* set up events and signals for OpenGL widget */
-    gtk_widget_set_events(p3dWidget, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK |
-                          GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK);
-    g_signal_connect(G_OBJECT(p3dWidget), "button_press_event", G_CALLBACK(board_button_press), bd);
-    g_signal_connect(G_OBJECT(p3dWidget), "button_release_event", G_CALLBACK(board_button_release), bd);
-    g_signal_connect(G_OBJECT(p3dWidget), "motion_notify_event", G_CALLBACK(board_motion_notify), bd);
+    int signals = GDK_EXPOSURE_MASK;
+    if (useMouseEvents)
+        signals |= GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK;
 
+    gtk_widget_set_events(p3dWidget, signals);
+    if (useMouseEvents)
+    {
+        g_signal_connect(G_OBJECT(p3dWidget), "button_press_event", G_CALLBACK(board_button_press), bd);
+        g_signal_connect(G_OBJECT(p3dWidget), "button_release_event", G_CALLBACK(board_button_release), bd);
+        g_signal_connect(G_OBJECT(p3dWidget), "motion_notify_event", G_CALLBACK(board_motion_notify), bd);
+    }
     return TRUE;
 }
 

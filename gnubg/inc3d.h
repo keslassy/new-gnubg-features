@@ -89,7 +89,7 @@ extern void RecalcViewingVolume(const BoardData* bd);
 extern void ShowFlag3d(BoardData* bd, BoardData3d* bd3d, const renderdata* prd);
 extern void AnimateMove3d(BoardData* bd, BoardData3d* bd3d);
 extern void UpdateShadows(BoardData3d* bd3d);
-extern int CreateGLWidget(BoardData* bd);
+extern int CreateGLWidget(BoardData* bd, int useMouseEvents);
 extern void InitColourSelectionDialog(void);
 extern void MakeCurrent3d(const BoardData3d* bd3d);
 extern void preDraw3d(const BoardData* bd, BoardData3d* bd3d, renderdata* prd);
