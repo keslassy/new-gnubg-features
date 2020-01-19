@@ -40,12 +40,16 @@ static void MatStackInit(MatStack* matStack)
 
 static void MatStackPush(MatStack* matStack)
 {
+	g_assert(matStack->level < (MAX_STACK_LEVEL - 1));
+
 	matStack->level++;
 	glm_mat4_copy(matStack->stack[matStack->level - 1], matStack->stack[matStack->level]);
 }
 
 static void MatStackPop(MatStack* matStack)
 {
+	g_assert(matStack->level > 0);
+
 	matStack->level--;
 }
 
