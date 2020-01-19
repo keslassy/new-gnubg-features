@@ -148,15 +148,15 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
     }
     glLightfv(GL_LIGHT0, GL_POSITION, lp);
 
-    al[0] = al[1] = al[2] = prd->lightLevels[0] / 100.0f;
+    al[0] = al[1] = al[2] = (float) prd->lightLevels[0] / 100.0f;
     al[3] = 1;
     glLightfv(GL_LIGHT0, GL_AMBIENT, al);
 
-    dl[0] = dl[1] = dl[2] = prd->lightLevels[1] / 100.0f;
+    dl[0] = dl[1] = dl[2] = (float) prd->lightLevels[1] / 100.0f;
     dl[3] = 1;
     glLightfv(GL_LIGHT0, GL_DIFFUSE, dl);
 
-    sl[0] = sl[1] = sl[2] = prd->lightLevels[2] / 100.0f;
+    sl[0] = sl[1] = sl[2] = (float) prd->lightLevels[2] / 100.0f;
     sl[3] = 1;
     glLightfv(GL_LIGHT0, GL_SPECULAR, sl);
 
@@ -755,7 +755,7 @@ moveAlong(float d, PathType type, const float start[3], const float end[3], floa
         float xRad = end[0] - start[0];
         float zRad = end[2] - start[2];
 
-        lineLen = (float) F_PI *((fabsf(xRad) + fabsf(zRad)) / 2.0f) / 2.0f;
+        lineLen = F_PI *((fabsf(xRad) + fabsf(zRad)) / 2.0f) / 2.0f;
         if (d <= lineLen) {
             float xCent, zCent;
             float yOff;
@@ -767,21 +767,21 @@ moveAlong(float d, PathType type, const float start[3], const float end[3], floa
             if (type == PATH_CURVE_9TO12) {
                 xCent = end[0];
                 zCent = start[2];
-                yOff = yDiff * cosf((float)F_PI_2 * per);
+                yOff = yDiff * cosf(F_PI_2 * per);
             } else {
                 xCent = start[0];
                 zCent = end[2];
-                yOff = yDiff * sinf((float)F_PI_2 * per);
+                yOff = yDiff * sinf(F_PI_2 * per);
             }
 
             if (type == PATH_CURVE_9TO12) {
-                v[0] = xCent - xRad * cosf((float)F_PI_2 * per);
+                v[0] = xCent - xRad * cosf(F_PI_2 * per);
                 v[1] = end[1] - yOff;
-                v[2] = zCent + zRad * sinf((float)F_PI_2 * per);
+                v[2] = zCent + zRad * sinf(F_PI_2 * per);
             } else {
-                v[0] = xCent + xRad * sinf((float)F_PI_2 * per);
+                v[0] = xCent + xRad * sinf(F_PI_2 * per);
                 v[1] = start[1] + yOff;
-                v[2] = zCent - zRad * cosf((float)F_PI_2 * per);
+                v[2] = zCent - zRad * cosf(F_PI_2 * per);
             }
             return -1;
         }
@@ -918,7 +918,7 @@ calculateEigthPoints(EigthPoints* eigthPoints, float radius, unsigned int accura
 	eigthPoints->accuracy = accuracy;
 
     lat_angle = 0;
-    lat_step = (2 * (float) F_PI) / accuracy;
+    lat_step = (2 * F_PI) / (float) accuracy;
 
     /* Calculate corner 1/8th sphere points */
     for (i = 0; i < (accuracy / 4) + 1; i++) {
@@ -928,7 +928,7 @@ calculateEigthPoints(EigthPoints* eigthPoints, float radius, unsigned int accura
         unsigned int ns = (accuracy / 4) - i;
 
         if (ns > 0)
-            step = (2.f * (float) F_PI) / (ns * 4.f);
+            step = (2.f * F_PI) / ((float) ns * 4.f);
 
         for (j = 0; j <= ns; j++) {
             eigthPoints->points[i][j][0] = sinf(angle) * new_radius;
@@ -1045,7 +1045,7 @@ idleAnimate(BoardData3d * bd3d)
 {
     BoardData *bd = pIdleBD;
     float elapsedTime = (float) (get_time() - animStartTime) / 1000.0f;
-    float vel = .2f + nGUIAnimSpeed * .3f;
+    float vel = .2f + (float) nGUIAnimSpeed * .3f;
     float animateDistance = elapsedTime * vel;
 
     if (stopNextTime) {         /* Stop now - last animation frame has been drawn */
@@ -1209,7 +1209,7 @@ TestPerformance3d(BoardData * bd)
     gtk_main();
     elapsedTime = (float) (get_time() - testStartTime);
 
-    return (numFrames / (elapsedTime / 1000.0f));
+    return ((float) numFrames / (elapsedTime / 1000.0f));
 }
 
 NTH_STATIC void
