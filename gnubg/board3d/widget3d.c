@@ -56,9 +56,6 @@ realize_3dCB(void* data)
     GetTextures(bd->bd3d, bd->rd);
     preDraw3d(bd, bd->bd3d, bd->rd);
 
-	/* Make sure viewing area is correct (in preview) */	//TODO: Still needed?
-	RecalcViewingVolume(bd);
-
 #ifdef WIN32
     if (fResetSync) {
         fResetSync = FALSE;

@@ -372,7 +372,6 @@ option_changed(GtkWidget * UNUSED(widget), GtkWidget * UNUSED(pw))
             GetTextures(bd3d, prd);
 
             preDraw3d(bd, bd3d, prd);
-            RecalcViewingVolume(bd);
         } else
 #endif
         {
@@ -1197,7 +1196,6 @@ BoardPrefsOK(GtkWidget * pw, GtkWidget * mainBoard)
             MakeCurrent3d(bd3d);
             GetTextures(bd3d, prd);
             preDraw3d(bd, bd3d, prd);
-			RecalcViewingVolume(bd);
             ShowFlag3d(bd, bd3d, prd);
             if (bd->diceShown == DICE_ON_BOARD)
                 setDicePos(bd, bd3d);   /* Make sure dice appear ok */

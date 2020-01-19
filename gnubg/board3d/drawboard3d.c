@@ -2036,6 +2036,7 @@ preDraw3d(const BoardData * bd, BoardData3d * bd3d, renderdata * prd)
 #ifndef USE_GTK3
 	MakeShadowModel(bd, bd3d, prd);
 #endif
+	RecalcViewingVolume(bd);
 }
 
 #include <ft2build.h>
