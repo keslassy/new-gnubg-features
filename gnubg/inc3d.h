@@ -49,7 +49,7 @@ typedef enum _PieceType {
 } PieceType;
 
 typedef enum _PieceTextureType {
-	PTT_TOP, PTT_BOTTOM, PTT_ALL, NUM_TEXTURE_TYPES
+	PTT_TOP, PTT_ALL, PTT_BOTTOM, NUM_TEXTURE_TYPES
 } PieceTextureType;
 
 typedef enum _TextureType {
