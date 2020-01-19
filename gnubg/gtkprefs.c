@@ -371,8 +371,8 @@ option_changed(GtkWidget * UNUSED(widget), GtkWidget * UNUSED(pw))
             GetPrefs(&rdPrefs);
             GetTextures(bd3d, prd);
 
-			RecalcViewingVolume(bd);
             preDraw3d(bd, bd3d, prd);
+            RecalcViewingVolume(bd);
         } else
 #endif
         {
