@@ -909,10 +909,10 @@ moveToDicePos(const BoardData * bd, int num, float diceRotation)
 }
 
 static void
-MoveToFlagPos(const BoardData * bd)
+MoveToFlagPos(int turn)
 {
     float v[3];
-    getFlagPos(bd, v);
+    getFlagPos(turn, v);
     glTranslatef(v[0], v[1], v[2]);
 }
 

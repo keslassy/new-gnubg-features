@@ -1485,13 +1485,13 @@ DiceShowing(const BoardData * bd)
 }
 
 extern void
-getFlagPos(const BoardData * bd, float v[3])
+getFlagPos(int turn, float v[3])
 {
     v[0] = (TRAY_WIDTH + BOARD_WIDTH) / 2.0f;
     v[1] = TOTAL_HEIGHT / 2.0f;
     v[2] = BASE_DEPTH + EDGE_DEPTH;
 
-    if (bd->turn == -1)         /* Move to other side of board */
+    if (turn == -1)         /* Move to other side of board */
         v[0] += BOARD_WIDTH + BAR_WIDTH;
 }
 
@@ -2193,7 +2193,6 @@ void getPickMatrices(float x, float y, const BoardData* bd, int* viewport, float
 	glPopMatrix();
 
 	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
 }
 
 void drawTableBase(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
@@ -2461,18 +2460,19 @@ extern void MoveToFlagMiddle()
 	glRotatef(degAng, 0.f, 1.f, 0.f);
 }
 
-extern void PopMatrix()
-{
-	glPopMatrix();
-}
-
 extern void
-renderFlag(const ModelManager* modelHolder, const BoardData3d* bd3d, int curveAccuracy)
+renderFlag(const ModelManager* modelHolder, const BoardData3d* bd3d, int curveAccuracy, int turn, int resigned)
 {
-	/* Draw flag surface */
-	SetColour3d(1.f, 1.f, 1.f, 0.f);    /* White flag */
-	gluNurbFlagRender(curveAccuracy);
+	glPushMatrix();
+		MoveToFlagPos(turn);
 
-	/* Draw flag pole */
-	OglModelDraw(modelHolder, MT_FLAG, &bd3d->flagMat);
+		/* Draw flag surface */
+		SetColour3d(1.f, 1.f, 1.f, 0.f);    /* White flag */
+		gluNurbFlagRender(curveAccuracy);
+
+		/* Draw flag pole */
+		OglModelDraw(modelHolder, MT_FLAG, &bd3d->flagMat);
+
+		renderFlagNumbers(bd3d, resigned);
+	glPopMatrix();	/* Move back to origin */
 }

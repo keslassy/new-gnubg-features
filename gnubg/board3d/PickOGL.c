@@ -39,7 +39,7 @@ drawFlagPick(const BoardData* bd, void* UNUSED(data))
 
 	glPushMatrix();
 
-	MoveToFlagPos(bd);
+	MoveToFlagPos(bd->turn);
 
 	/* Draw flag surface (approximation) */
 	glBegin(GL_QUAD_STRIP);
@@ -278,7 +278,6 @@ PickDraw(int x, int y, PickDrawFun drawFun, const BoardData* bd, void* data)
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 
-	PopMatrix();
 	return hits;
 }
 

@@ -810,11 +810,7 @@ drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d
 
 	waveFlag(bd3d->flagWaved);
 
-	glPushMatrix();
-		MoveToFlagPos(bd);
-		renderFlag(modelHolder, bd3d, bd->rd->curveAccuracy);
-		renderFlagNumbers(bd3d, bd->resigned);
-	PopMatrix();	/* Move back to origin */
+	renderFlag(modelHolder, bd3d, bd->rd->curveAccuracy, bd->turn, bd->resigned);
 
 	if (isStencil)
 		glEnable(GL_STENCIL_TEST);

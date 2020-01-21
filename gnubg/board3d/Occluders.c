@@ -209,7 +209,7 @@ updateFlagOccPos(const BoardData* bd, BoardData3d* bd3d)
 
 		bd3d->Occluders[OCC_FLAG].show = 1;
 
-		getFlagPos(bd, bd3d->Occluders[OCC_FLAG].trans);
+		getFlagPos(bd->turn, bd3d->Occluders[OCC_FLAG].trans);
 		makeInverseTransposeMatrix(bd3d->Occluders[OCC_FLAG].invMat, bd3d->Occluders[OCC_FLAG].trans);
 
 		/* Flag pole */
