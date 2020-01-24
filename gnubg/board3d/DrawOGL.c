@@ -669,7 +669,7 @@ void MAApoints(const renderdata* prd)
 }
 
 extern void drawTableBase(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
-extern void drawTableBox(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
+extern void drawHinges(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
 
 void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
 {
@@ -689,12 +689,16 @@ void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const r
 
 	glDepthFunc(GL_LEQUAL);
 
-	drawTableBox(modelHolder, bd3d, prd);
+	OglModelDraw(modelHolder, MT_TABLE, &prd->BoxMat);
 
 	if (prd->fHinges3d)
-	{	/* Shade in gap between boards */	//TODO: Add as separate model...
-		setMaterial(&bd3d->gapColour);
-		drawRect((TOTAL_WIDTH - HINGE_GAP * 1.5f) / 2.0f, 0.f, LIFT_OFF, HINGE_GAP * 2, TOTAL_HEIGHT + LIFT_OFF, 0);
+	{
+		/* Shade in gap between boards */
+		glDepthFunc(GL_ALWAYS);
+		OglModelDraw(modelHolder, MT_HINGEGAP, &bd3d->gapColour);
+		glDepthFunc(GL_LEQUAL);
+
+		drawHinges(modelHolder, bd3d, prd);
 	}
 }
 

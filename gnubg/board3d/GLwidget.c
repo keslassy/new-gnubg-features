@@ -248,7 +248,7 @@ void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Mater
 	/* use the buffers in the VAO */
 	glBindVertexArray(modelManager->vao);
 
-	/* draw the three vertices as a triangle */
+	/* draw the vertices in the model */
 	glDrawArrays(GL_TRIANGLES, modelManager->models[modelNumber].dataStart / VERTEX_STRIDE, modelManager->models[modelNumber].dataLength / VERTEX_STRIDE);
 }
 
