@@ -956,7 +956,7 @@ freeEigthPoints(EigthPoints* eigthPoints)
 void
 SetColour3d(float r, float g, float b, float a)
 {
-    Material col;
+    static Material col;
     SetupSimpleMatAlpha(&col, r, g, b, a);
     setMaterial(&col);
 }
