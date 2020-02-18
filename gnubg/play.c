@@ -109,7 +109,7 @@ GetDice(unsigned int anDice[2], int fTurn, rng * prng, rngcontext * rngctx, TanB
     static int dice0, dice1, turn;
     positionkey key;
 
-    PositionKey(anBoard, &key);
+    PositionKey((ConstTanBoard) anBoard, &key);
 
     if (fTurn == turn && EqualKeys(key, currentkey)) {
         anDice[0] = dice0;
