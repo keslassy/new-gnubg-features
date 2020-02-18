@@ -103,28 +103,29 @@ static annotatetype at;
 
 static positionkey currentkey;
 
-static int GetDice(unsigned int anDice[2], int fTurn, rng * prng, rngcontext * rngctx, TanBoard anBoard) 
+static int
+GetDice(unsigned int anDice[2], int fTurn, rng * prng, rngcontext * rngctx, TanBoard anBoard)
 {
-   static int dice0, dice1, turn;
-   positionkey key;
+    static int dice0, dice1, turn;
+    positionkey key;
 
-   PositionKey(anBoard, &key);
+    PositionKey(anBoard, &key);
 
-   if (fTurn == turn && EqualKeys(key, currentkey)) {
-       anDice[0] = dice0;
-       anDice[1] = dice1;
+    if (fTurn == turn && EqualKeys(key, currentkey)) {
+        anDice[0] = dice0;
+        anDice[1] = dice1;
 
-       return 0;
-   } else {
-       int rc = RollDice(anDice, prng, rngctx);
+        return 0;
+    } else {
+        int rc = RollDice(anDice, prng, rngctx);
 
-       dice0 = anDice[0];
-       dice1 = anDice[1];
-       turn = fTurn;
-       CopyKey(key, currentkey);
+        dice0 = anDice[0];
+        dice1 = anDice[1];
+        turn = fTurn;
+        CopyKey(key, currentkey);
 
-       return rc;
-   }
+        return rc;
+    }
 }
 
 extern moverecord *
@@ -197,7 +198,7 @@ PlayMove(matchstate * pms, int const anMove[8], int const fPlayer)
         SwapSides(pms->anBoard);
 
     for (i = 0; i < 8; i += 2) {
-        int  nSrc, nDest;
+        int nSrc, nDest;
 
         nSrc = anMove[i];
         nDest = anMove[i | 1];
@@ -238,7 +239,7 @@ ApplyGameOver(matchstate * pms, const listOLD * plGame)
     pms->anScore[pmgi->fWinner] += pmgi->nPoints;
     pms->cGames++;
     if (fEndGame)
-        outputf(ngettext("End Game done.\n%s wins %d point\n", "End Game done.\n%s wins %d points\n", pmgi->nPoints),
+        outputf(ngettext("Game complete.\n%s wins %d point\n", "Game complete.\n%s wins %d points\n", pmgi->nPoints),
                 ap[pmgi->fWinner].szName, pmgi->nPoints);
 }
 
@@ -632,7 +633,7 @@ add_moverecord_sanity_check(moverecord * pmr)
 }
 
 extern void
-AddMoveRecord(moverecord *pmr)
+AddMoveRecord(moverecord * pmr)
 {
     moverecord *pmrOld;
 
@@ -694,7 +695,7 @@ move_not_last_in_match_ok(void)
 }
 
 extern void
-SetMoveRecord(moverecord *pmr)
+SetMoveRecord(moverecord * pmr)
 {
 
 #if defined (USE_GTK)
@@ -789,7 +790,6 @@ NewGame(void)
 
         PopGame(lMatch.plNext->p, TRUE);
     }
-
 #if defined (USE_GTK)
     if (fX)
         GTKClearMoveRecord();
@@ -1476,8 +1476,8 @@ ComputerTurn(void)
             SwapSides(anBoardTemp);
 
         FIBSBoard(szBoard, anBoardTemp, ms.fMove,
-                  ap[ms.fTurn^ms.fMove].szName, ap[ms.fTurn^(!ms.fMove)].szName,
-                  ms.nMatchTo, ms.anScore[ms.fTurn^ms.fMove], ms.anScore[ms.fTurn^(!ms.fMove)],
+                  ap[ms.fTurn ^ ms.fMove].szName, ap[ms.fTurn ^ (!ms.fMove)].szName,
+                  ms.nMatchTo, ms.anScore[ms.fTurn ^ ms.fMove], ms.anScore[ms.fTurn ^ (!ms.fMove)],
                   ms.anDice[0], ms.anDice[1], ms.nCube, ms.fCubeOwner, ms.fDoubled, 0 /* turn */ , ms.fCrawford,
                   anChequers[ms.bgv], ms.fPostCrawford);
         strcat(szBoard, "\n");
@@ -3310,7 +3310,7 @@ CommandNext(char *sz)
         return;
     }
 
-	n = 1;
+    n = 1;
 
     if ((pch = NextToken(&sz))) {
         if (!StrCaseCmp(pch, "game")) {
@@ -4427,8 +4427,7 @@ getFinalScore(int *anScore)
     for (plg = lMatch.plNext; plg->plNext->p; plg = plg->plNext);
 
     if (plg->p && ((listOLD *) plg->p)->plNext &&
-        ((listOLD *) plg->p)->plNext->p &&
-        ((moverecord *) ((listOLD *) plg->p)->plNext->p)->mt == MOVE_GAMEINFO) {
+        ((listOLD *) plg->p)->plNext->p && ((moverecord *) ((listOLD *) plg->p)->plNext->p)->mt == MOVE_GAMEINFO) {
         anScore[0] = ((moverecord *) ((listOLD *) plg->p)->plNext->p)->g.anScore[0];
         anScore[1] = ((moverecord *) ((listOLD *) plg->p)->plNext->p)->g.anScore[1];
         if (((moverecord *) ((listOLD *) plg->p)->plNext->p)->g.fWinner != -1)
