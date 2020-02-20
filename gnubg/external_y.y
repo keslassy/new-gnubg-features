@@ -102,7 +102,7 @@ void yyerror(scancontext *scanner, const char *str)
 #endif
 
 %}
-%pure-parser
+%define api.pure
 %file-prefix "y"
 %lex-param   {void *scanner}
 %parse-param {scancontext *scanner}
@@ -579,7 +579,7 @@ list_elements:
 #ifdef EXTERNAL_TEST
 
 /* 
- * Test code can be built by configuring GNUBG with --without-gtk option and doing the following:
+ * Test code can be built by configuring GNUbg with --without-gtk option and doing the following:
  *
  * ./ylwrap external_l.l lex.yy.c external_l.c -- flex 
  * ./ylwrap external_y.y y.tab.c external_y.c y.tab.h test1_y.h -- bison 
