@@ -2158,7 +2158,7 @@ DesignSave(GtkWidget * UNUSED(pw), gpointer data)
 
     gchar *szFile;
     FILE *pf;
-    GList *plBoardDesigns = (GList *) data;
+    GList *plBDs = (GList *) data;
 
     szFile = g_build_filename(szHomeDirectory, "boards.xml", NULL);
 
@@ -2169,7 +2169,7 @@ DesignSave(GtkWidget * UNUSED(pw), gpointer data)
     }
 
     WriteDesignHeader(szFile, pf);
-    g_list_foreach(plBoardDesigns, WriteDesignOnlyDeletables, pf);
+    g_list_foreach(plBDs, WriteDesignOnlyDeletables, pf);
     WriteDesignFooter(pf);
 
     fclose(pf);
@@ -2498,7 +2498,7 @@ static void
 DesignAdd(GtkWidget * pw, gpointer data)
 {
     boarddesign *pbde;
-    GList *plBoardDesigns = data;
+    GList *plBDs = data;
     renderdata rdNew;
 
     if ((pbde = (boarddesign *) g_malloc(sizeof(boarddesign))) == 0) {
@@ -2528,10 +2528,10 @@ DesignAdd(GtkWidget * pw, gpointer data)
 
     pbde->fDeletable = TRUE;
 
-    plBoardDesigns = g_list_append(plBoardDesigns, (gpointer) pbde);
+    plBDs = g_list_append(plBDs, (gpointer) pbde);
     AddDesignRow(pbde, pwDesignList);
 
-    DesignSave(pw, plBoardDesigns);
+    DesignSave(pw, plBDs);
 
     pbdeSelected = pbde;
 
@@ -2614,7 +2614,7 @@ ImportDesign(GtkWidget * pw, gpointer data)
     GList *new_designs;
     gint old_length;
     gint num_added;
-    GList *plBoardDesigns = (GList *) data;
+    GList *plBDs = (GList *) data;
 
     if ((pch = szFile = GTKFileSelect(_("Import Design"), NULL, NULL, NULL, GTK_FILE_CHOOSER_ACTION_OPEN)) == 0)
         return;
@@ -2637,18 +2637,18 @@ ImportDesign(GtkWidget * pw, gpointer data)
     /* FIXME: show dialog instead */
     outputl(_("Adding new designs:"));
 
-    old_length = g_list_length(plBoardDesigns);
+    old_length = g_list_length(plBDs);
 
     g_list_foreach(new_designs, AddDesignRowIfNew, pwDesignList);
 
-    num_added = g_list_length(plBoardDesigns) - old_length;
+    num_added = g_list_length(plBDs) - old_length;
 
     outputf(ngettext("%d design added.\n", "%d designs added.\n", num_added), num_added);
     outputx();
 
     if (num_added > 0) {
-        DesignSave(pw, plBoardDesigns);
-        pbdeSelected = g_list_nth_data(plBoardDesigns, old_length);
+        DesignSave(pw, plBDs);
+        pbdeSelected = g_list_nth_data(plBDs, old_length);
         UseDesign();
     }
 }
@@ -2656,7 +2656,7 @@ ImportDesign(GtkWidget * pw, gpointer data)
 static void
 RemoveDesign(GtkWidget * pw, gpointer data)
 {
-    GList *plBoardDesigns = (GList *) data;
+    GList *plBDs = (GList *) data;
     char prompt[200];
     sprintf(prompt, _("Permanently remove design %s?"), pbdeSelected->szTitle);
     if (!GetInputYN(prompt))
@@ -2664,11 +2664,11 @@ RemoveDesign(GtkWidget * pw, gpointer data)
 
     gtk_widget_set_sensitive(GTK_WIDGET(pwDesignRemove), FALSE);
 
-    plBoardDesigns = g_list_remove(plBoardDesigns, pbdeSelected);
+    plBDs = g_list_remove(plBDs, pbdeSelected);
 
     RemoveListDesign(pbdeSelected);
 
-    DesignSave(pw, plBoardDesigns);
+    DesignSave(pw, plBDs);
 
     SetTitle();
 }
