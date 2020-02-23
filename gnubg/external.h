@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001-2002 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2003-2014 the AUTHORS
+ * Copyright (C) 2003-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,11 @@ typedef struct _commandinfo {
 } commandinfo;
 
 typedef struct _FIBSBoardInfo {
-    /* These must be in the same order of the fibs board string definition */
+    /*
+     * These must be in the same order of the fibs board string definition,
+     * starting at Match Length.
+     * See description at http://www.fibs.com/fibs_interface.html#board_state
+     */
     int nMatchTo;
     int nScore;
     int nScoreOpp;
@@ -76,9 +80,20 @@ typedef struct _FIBSBoardInfo {
     int fDoubled;
     int nColor;
     int nDirection;
-    int fNonCrawford;
+    int nHome;                  /* unused, set to  0 */
+    int nBar;                   /* unused, set to 25 */
+    int nOnHome;                /* unused */
+    int nOnHomeOpp;             /* unused */
+    int nOnBar;                 /* unused */
+    int nOnBarOpp;              /* unused */
+    int nCanMove;               /* unused */
+    int fForcedMOve;            /* unused */
     int fPostCrawford;
-    int unused[8];
+    /*
+     * Redoubles from FIBS board is not usable by GNUbg.
+     * A flag for match play is put at the same place
+     */
+    int fNonCrawford;
     int nVersion;
     int padding[51];
 
@@ -115,7 +130,7 @@ typedef struct _scancontext {
     /* command type */
     cmdtype ct;
     void *pCmdData;
-    
+
     /* evalcontext */
     int nPlies;
     float rNoise;

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2002 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2000-2015 the AUTHORS
+ * Copyright (C) 2000-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -918,11 +918,10 @@ extern char *
 FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
           const char *szPlayer, const char *szOpp, int nMatchTo,
           int nScore, int nOpponent, int nDice0, int nDice1,
-          int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers, int UNUSED(fPostCrawford))
+          int nCube, int fCubeOwner, int fDoubled, int fTurn, int fCrawford, int nChequers, int fPostCrawford)
 {
     char *sz = pch;
     int i, anOff[2];
-    /* int fNonCrawford = !(!fPostCrawford && (nScore == nMatchTo - 1 || nOpponent == nMatchTo - 1)); */
 
     /* Names and match length/score */
     strcpy(sz, "board:");
@@ -957,20 +956,9 @@ FIBSBoard(char *pch, TanBoard anBoard, int fRoll,
     }
 
     sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:0:25:%d:%d:0:0:0:"
-            "0:%d:0", nDice0, nDice1, nDice0, nDice1, fTurn < 0 ? 1 : nCube,
+            "0:%d:%d", nDice0, nDice1, nDice0, nDice1, fTurn < 0 ? 1 : nCube,
             fTurn < 0 || fCubeOwner != 0, fTurn < 0 || fCubeOwner != 1,
-            fDoubled ? (fTurn ? -1 : 1) : 0, anOff[1], anOff[0], fCrawford);
-
-#if 0
-    /*  Temporarily remove this code as it breaks the GUI by preventing a player
-     * from hitting an opponents blot. It appears to the user as an illegal play
-     * Reported by Wolfgang Nelles */
-
-    sprintf(strchr(sz, 0), "%d:%d:%d:%d:%d:%d:%d:%d:1:-1:%d:%d:%d:%d:0:0:0:"
-            "0:%d:0", nDice0, nDice1, nDice0, nDice1, fTurn < 0 ? 1 : nCube,
-            fTurn < 0 || fCubeOwner != 0, fTurn < 0 || fCubeOwner != 1,
-            fDoubled ? (fTurn ? -1 : 1) : 0, fNonCrawford, fPostCrawford, anOff[1], anOff[0], fCrawford);
-#endif
+            fDoubled ? (fTurn ? -1 : 1) : 0, anOff[1], anOff[0], fPostCrawford, !fCrawford);
 
     return pch;
 }
@@ -1126,7 +1114,7 @@ ProcessFIBSBoardInfo(FIBSBoardInfo * brdInfo, ProcessedFIBSBoard * procBrd)
      *
      * Since we cannot find out whether the Crawford rule is in use or not
      * in the pre-Crawford games, the cubeful evaluation can be slightly
-     * biased.  But since we the vast majority of matches on FIBS is played
+     * biased.  But since the vast majority of matches on FIBS is played
      * with the Crawford rule and we assume usage of the Crawford rule
      * as a default, the bias is negligible.
      */
