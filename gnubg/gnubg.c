@@ -1364,11 +1364,8 @@ DisplayAnalysis(moverecord * pmr)
 extern void
 ShowBoard(void)
 {
-    char szBoard[2048];
     char sz[50], szCube[50], szPlayer0[MAX_NAME_LEN + 3], szPlayer1[MAX_NAME_LEN + 3],
         szScore0[50], szScore1[50], szMatch[50];
-    char *apch[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-    moverecord *pmr;
     TanBoard an;
 
     if (cOutputDisabled || !foutput_on)
@@ -1394,8 +1391,13 @@ ShowBoard(void)
         SwapSides(an);
 
 #if defined(USE_GTK)
-    if (!fX) {
+    if (!fX)
 #endif
+    {
+        char szBoard[2048];
+        char *apch[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+        moverecord *pmr;
+
         if (fOutputRawboard) {
             outputl(FIBSBoard(szBoard, an, ms.fMove, ap[1].szName,
                               ap[0].szName, ms.nMatchTo, ms.anScore[1],
@@ -1475,8 +1477,9 @@ ShowBoard(void)
             if (pmr->sz)
                 outputl(pmr->sz);       /* FIXME word wrap */
         }
+    }
 #if defined(USE_GTK)
-    } else {
+    else {
         game_set(BOARD(pwBoard), an, ms.fMove, ap[1].szName,
                  ap[0].szName, ms.nMatchTo, ms.anScore[1],
                  ms.anScore[0], ms.anDice[0], ms.anDice[1],
@@ -3688,9 +3691,9 @@ ProcessInput(char *sz)
     if (nNextTurn)
         fNeedPrompt = TRUE;
     else {
-        char *sz = locale_from_utf8(FormatPrompt());
-        rl_callback_handler_install(sz, ProcessInput);
-        g_free(sz);
+        char *szp = locale_from_utf8(FormatPrompt());
+        rl_callback_handler_install(szp, ProcessInput);
+        g_free(szp);
         fReadingCommand = TRUE;
     }
 }
