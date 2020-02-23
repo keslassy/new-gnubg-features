@@ -397,45 +397,42 @@ ExtEvaluation(scancontext * pec)
     evalcontext ec;
 
     if (ProcessFIBSBoardInfo(&pec->bi, &processedBoard)) {
-        szResponse = g_strdup_printf("Error: badly formed board\n");
-    } else {
-
-        anScore[0] = processedBoard.nScore;
-        anScore[1] = processedBoard.nScoreOpp;
-        /* If the session isn't using Crawford rule, set crawford flag to false */
-        processedBoard.fCrawford = pec->fCrawfordRule ? processedBoard.fCrawford : FALSE;
-        /* Set the Jacoby flag appropriately from the external interface settings */
-        processedBoard.fJacoby = pec->fJacobyRule;
-
-        /* printf ("Jacoby Setting: %d\n", fJacoby); */
-        /* printf ("Crawford Setting: %d\n", fCrawford); */
-
-        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, 1, processedBoard.nMatchTo,
-                    anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
-
-        ec.fCubeful = pec->fCubeful;
-        ec.nPlies = pec->nPlies;
-        ec.fUsePrune = pec->fUsePrune;
-        ec.fDeterministic = pec->fDeterministic;
-        ec.rNoise = pec->rNoise;
-
-        if (GeneralEvaluationE(arOutput, (ConstTanBoard) processedBoard.anBoard, &ci, &ec))
-            return NULL;
-
-        if (processedBoard.nMatchTo) {
-            if (ec.fCubeful)
-                r = arOutput[OUTPUT_CUBEFUL_EQUITY];
-            else
-                r = eq2mwc(arOutput[OUTPUT_EQUITY], &ci);
-        } else
-            r = ec.fCubeful ? arOutput[6] : arOutput[5];
-
-        szResponse = g_strdup_printf("%f %f %f %f %f %f\n",
-                                     arOutput[0], arOutput[1], arOutput[2], arOutput[3], arOutput[4], r);
+        return szResponse = g_strdup_printf("Error: badly formed board\n");
     }
 
-    return szResponse;
+    anScore[0] = processedBoard.nScore;
+    anScore[1] = processedBoard.nScoreOpp;
+    /* If the session isn't using Crawford rule, set crawford flag to false */
+    processedBoard.fCrawford = pec->fCrawfordRule ? processedBoard.fCrawford : FALSE;
+    /* Set the Jacoby flag appropriately from the external interface settings */
+    processedBoard.fJacoby = pec->fJacobyRule;
 
+    /* printf ("Jacoby Setting: %d\n", fJacoby); */
+    /* printf ("Crawford Setting: %d\n", fCrawford); */
+
+    SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, 1, processedBoard.nMatchTo,
+                anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
+
+    ec.fCubeful = pec->fCubeful;
+    ec.nPlies = pec->nPlies;
+    ec.fUsePrune = pec->fUsePrune;
+    ec.fDeterministic = pec->fDeterministic;
+    ec.rNoise = pec->rNoise;
+
+    if (GeneralEvaluationE(arOutput, (ConstTanBoard) processedBoard.anBoard, &ci, &ec))
+        return NULL;
+
+    if (processedBoard.nMatchTo) {
+        if (ec.fCubeful)
+            r = arOutput[OUTPUT_CUBEFUL_EQUITY];
+        else
+            r = eq2mwc(arOutput[OUTPUT_EQUITY], &ci);
+    } else
+        r = ec.fCubeful ? arOutput[6] : arOutput[5];
+
+    szResponse = g_strdup_printf("%f %f %f %f %f %f\n",
+                                 arOutput[0], arOutput[1], arOutput[2], arOutput[3], arOutput[4], r);
+    return szResponse;
 }
 
 static char *
@@ -449,153 +446,149 @@ ExtFIBSBoard(scancontext * pec)
     cubeinfo ci;
     char *szResponse;
 
-    if (ProcessFIBSBoardInfo(&pec->bi, &processedBoard)) {
-        szResponse = g_strdup_printf("Error: badly formed board\n");
-    } else {
+    if (ProcessFIBSBoardInfo(&pec->bi, &processedBoard))
+        return szResponse = g_strdup_printf("Error: badly formed board\n");
 
-        anScore[0] = processedBoard.nScore;
-        anScore[1] = processedBoard.nScoreOpp;
+    anScore[0] = processedBoard.nScore;
+    anScore[1] = processedBoard.nScoreOpp;
 
-        /* If the session isn't using Crawford rule, set crawford flag to false */
-        processedBoard.fCrawford = pec->fCrawfordRule ? processedBoard.fCrawford : FALSE;
-        /* Set the Jacoby flag appropriately from the external interface settings */
-        processedBoard.fJacoby = pec->fJacobyRule;
+    /* If the session isn't using Crawford rule, set crawford flag to false */
+    processedBoard.fCrawford = pec->fCrawfordRule ? processedBoard.fCrawford : FALSE;
+    /* Set the Jacoby flag appropriately from the external interface settings */
+    processedBoard.fJacoby = pec->fJacobyRule;
 
-        /* printf ("Crawford Setting: %d\n", fCrawford); */
-        /* printf ("Jacoby Setting: %d\n", fJacoby); */
+    /* printf ("Crawford Setting: %d\n", fCrawford); */
+    /* printf ("Jacoby Setting: %d\n", fJacoby); */
 
-        fTurn = 1;
-        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo,
-                    anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
+    fTurn = 1;
+    SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo,
+                anScore, processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
 
-        memcpy(anBoardOrig, processedBoard.anBoard, sizeof(processedBoard.anBoard));
+    memcpy(anBoardOrig, processedBoard.anBoard, sizeof(processedBoard.anBoard));
 
-        if (processedBoard.fDoubled) {
-            /* take decision */
+    if (processedBoard.fDoubled) {
+        /* take decision */
 
-            SwapSides(processedBoard.anBoard);
-            processedBoard.fCubeOwner = (processedBoard.fCubeOwner == -1 ? -1 : !processedBoard.fCubeOwner);
+        SwapSides(processedBoard.anBoard);
+        processedBoard.fCubeOwner = (processedBoard.fCubeOwner == -1 ? -1 : !processedBoard.fCubeOwner);
 
-            SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo, anScore,
-                        processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
+        SetCubeInfo(&ci, processedBoard.nCube, processedBoard.fCubeOwner, fTurn, processedBoard.nMatchTo, anScore,
+                    processedBoard.fCrawford, processedBoard.fJacoby, nBeavers, bgvDefault);
 
-            if (GeneralCubeDecision(aarOutput, aarStdDev,
-                                    aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(), NULL,
-                                    NULL) < 0)
-                return NULL;
+        if (GeneralCubeDecision(aarOutput, aarStdDev,
+                                aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(), NULL,
+                                NULL) < 0)
+            return NULL;
 
-            switch (FindCubeDecision(arDouble, aarOutput, &ci)) {
+        switch (FindCubeDecision(arDouble, aarOutput, &ci)) {
 
-            case DOUBLE_TAKE:
-            case NODOUBLE_TAKE:
-            case TOOGOOD_TAKE:
-            case REDOUBLE_TAKE:
-            case NO_REDOUBLE_TAKE:
-            case TOOGOODRE_TAKE:
-            case NODOUBLE_DEADCUBE:
-            case NO_REDOUBLE_DEADCUBE:
-            case OPTIONAL_DOUBLE_TAKE:
-            case OPTIONAL_REDOUBLE_TAKE:
-                szResponse = g_strdup("take\n");
-                break;
+        case DOUBLE_TAKE:
+        case NODOUBLE_TAKE:
+        case TOOGOOD_TAKE:
+        case REDOUBLE_TAKE:
+        case NO_REDOUBLE_TAKE:
+        case TOOGOODRE_TAKE:
+        case NODOUBLE_DEADCUBE:
+        case NO_REDOUBLE_DEADCUBE:
+        case OPTIONAL_DOUBLE_TAKE:
+        case OPTIONAL_REDOUBLE_TAKE:
+            szResponse = g_strdup("take\n");
+            break;
 
-            case DOUBLE_PASS:
-            case TOOGOOD_PASS:
-            case REDOUBLE_PASS:
-            case TOOGOODRE_PASS:
-            case OPTIONAL_DOUBLE_PASS:
-            case OPTIONAL_REDOUBLE_PASS:
-                szResponse = g_strdup("drop\n");
-                break;
+        case DOUBLE_PASS:
+        case TOOGOOD_PASS:
+        case REDOUBLE_PASS:
+        case TOOGOODRE_PASS:
+        case OPTIONAL_DOUBLE_PASS:
+        case OPTIONAL_REDOUBLE_PASS:
+            szResponse = g_strdup("drop\n");
+            break;
 
-            case NODOUBLE_BEAVER:
-            case DOUBLE_BEAVER:
-            case NO_REDOUBLE_BEAVER:
-            case OPTIONAL_DOUBLE_BEAVER:
-                szResponse = g_strdup("beaver\n");
-                break;
+        case NODOUBLE_BEAVER:
+        case DOUBLE_BEAVER:
+        case NO_REDOUBLE_BEAVER:
+        case OPTIONAL_DOUBLE_BEAVER:
+            szResponse = g_strdup("beaver\n");
+            break;
 
-            default:
-                g_assert_not_reached();
-                szResponse = g_strdup("take\n");
-            }
-
-        } else if (pec->nResignation) {
-
-            /* if opp wants to resign (extension to FIBS board) */
-
-            float arOutput[NUM_ROLLOUT_OUTPUTS];
-            float rEqBefore, rEqAfter;
-            const float epsilon = 1.0e-6f;
-
-            getResignation(arOutput, processedBoard.anBoard, &ci, &esEvalCube);
-
-            getResignEquities(arOutput, &ci, pec->nResignation, &rEqBefore, &rEqAfter);
-
-            /* if opponent gives up equity by resigning */
-            if ((rEqAfter - epsilon) < rEqBefore)
-                szResponse = g_strdup("accept\n");
-            else
-                szResponse = g_strdup("reject\n");
-
-        } else if (processedBoard.anDice[0]) {
-            /* move */
-            char szMove[FORMATEDMOVESIZE];
-            if (FindBestMove(anMove, processedBoard.anDice[0], processedBoard.anDice[1],
-                             processedBoard.anBoard, &ci, &GetEvalChequer()->ec, *GetEvalMoveFilter()) < 0)
-                return NULL;
-
-            FormatMovePlain(szMove, anBoardOrig, anMove);
-            szResponse = g_strconcat(szMove, "\n", NULL);
-        } else {
-            /* double decision */
-            if (GeneralCubeDecision(aarOutput, aarStdDev,
-                                    aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(),
-                                    NULL, NULL) < 0)
-                return NULL;
-
-            switch (FindCubeDecision(arDouble, aarOutput, &ci)) {
-            case DOUBLE_TAKE:
-            case DOUBLE_PASS:
-            case DOUBLE_BEAVER:
-            case REDOUBLE_TAKE:
-            case REDOUBLE_PASS:
-                szResponse = g_strdup("double\n");
-                break;
-
-            case NODOUBLE_TAKE:
-            case TOOGOOD_TAKE:
-            case NO_REDOUBLE_TAKE:
-            case TOOGOODRE_TAKE:
-            case TOOGOOD_PASS:
-            case TOOGOODRE_PASS:
-            case NODOUBLE_BEAVER:
-            case NO_REDOUBLE_BEAVER:
-                szResponse = g_strdup("roll\n");
-                break;
-
-            case OPTIONAL_DOUBLE_BEAVER:
-            case OPTIONAL_DOUBLE_TAKE:
-            case OPTIONAL_REDOUBLE_TAKE:
-            case OPTIONAL_DOUBLE_PASS:
-            case OPTIONAL_REDOUBLE_PASS:
-                if (pec->nPlies == 0 && aarOutput[fTurn][0] > 0.001f)
-                    /* double if 0-ply except when about to lose game */
-                    szResponse = g_strdup("double\n");
-                else
-                    szResponse = g_strdup("roll\n");
-                break;
-
-            default:
-                g_assert_not_reached();
-                szResponse = g_strdup("roll\n");
-            }
+        default:
+            g_assert_not_reached();
+            szResponse = g_strdup("take\n");
         }
 
+    } else if (pec->nResignation) {
+
+        /* if opp wants to resign (extension to FIBS board) */
+
+        float arOutput[NUM_ROLLOUT_OUTPUTS];
+        float rEqBefore, rEqAfter;
+        const float epsilon = 1.0e-6f;
+
+        getResignation(arOutput, processedBoard.anBoard, &ci, &esEvalCube);
+
+        getResignEquities(arOutput, &ci, pec->nResignation, &rEqBefore, &rEqAfter);
+
+        /* if opponent gives up equity by resigning */
+        if ((rEqAfter - epsilon) < rEqBefore)
+            szResponse = g_strdup("accept\n");
+        else
+            szResponse = g_strdup("reject\n");
+
+    } else if (processedBoard.anDice[0]) {
+        /* move */
+        char szMove[FORMATEDMOVESIZE];
+        if (FindBestMove(anMove, processedBoard.anDice[0], processedBoard.anDice[1],
+                         processedBoard.anBoard, &ci, &GetEvalChequer()->ec, *GetEvalMoveFilter()) < 0)
+            return NULL;
+
+        FormatMovePlain(szMove, anBoardOrig, anMove);
+        szResponse = g_strconcat(szMove, "\n", NULL);
+    } else {
+        /* double decision */
+        if (GeneralCubeDecision(aarOutput, aarStdDev,
+                                aarsStatistics, (ConstTanBoard) processedBoard.anBoard, &ci, GetEvalCube(),
+                                NULL, NULL) < 0)
+            return NULL;
+
+        switch (FindCubeDecision(arDouble, aarOutput, &ci)) {
+        case DOUBLE_TAKE:
+        case DOUBLE_PASS:
+        case DOUBLE_BEAVER:
+        case REDOUBLE_TAKE:
+        case REDOUBLE_PASS:
+            szResponse = g_strdup("double\n");
+            break;
+
+        case NODOUBLE_TAKE:
+        case TOOGOOD_TAKE:
+        case NO_REDOUBLE_TAKE:
+        case TOOGOODRE_TAKE:
+        case TOOGOOD_PASS:
+        case TOOGOODRE_PASS:
+        case NODOUBLE_BEAVER:
+        case NO_REDOUBLE_BEAVER:
+            szResponse = g_strdup("roll\n");
+            break;
+
+        case OPTIONAL_DOUBLE_BEAVER:
+        case OPTIONAL_DOUBLE_TAKE:
+        case OPTIONAL_REDOUBLE_TAKE:
+        case OPTIONAL_DOUBLE_PASS:
+        case OPTIONAL_REDOUBLE_PASS:
+            if (pec->nPlies == 0 && aarOutput[fTurn][0] > 0.001f)
+                /* double if 0-ply except when about to lose game */
+                szResponse = g_strdup("double\n");
+            else
+                szResponse = g_strdup("roll\n");
+            break;
+
+        default:
+            g_assert_not_reached();
+            szResponse = g_strdup("roll\n");
+        }
     }
 
     return szResponse;
-
 }
 #endif
 
@@ -704,16 +697,6 @@ CommandExternal(char *sz)
                 szResponse = scanctx.szError;
             } else {
                 ProcessedFIBSBoard processedBoard;
-                GValue *optionsmapgv;
-                GValue *boarddatagv;
-                GString *dbgStr;
-                int anScore[2];
-                int fCrawford, fJacoby;
-                char *asz[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-                char szBoard[10000];
-                char **aszLines;
-                char **aszLinesOrig;
-                char *szMatchID;
                 gchar *szOptStr;
 
                 switch (scanctx.ct) {
@@ -750,6 +733,16 @@ CommandExternal(char *sz)
                 case COMMAND_FIBSBOARD:
                 case COMMAND_EVALUATION:
                     if (scanctx.fDebug) {
+                        GValue *optionsmapgv;
+                        GValue *boarddatagv;
+                        GString *dbgStr;
+                        int anScore[2];
+                        int fcrawford, fjacoby;
+                        char *asz[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+                        char szBoard[10000];
+                        char **aszLines, **aszLinesOrig;
+                        char *szMatchID;
+
                         optionsmapgv = (GValue *) g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 1);
                         boarddatagv = (GValue *) g_list_nth_data(g_value_get_boxed(scanctx.pCmdData), 0);
                         dbgStr = g_string_new(DEBUG_PREFIX);
@@ -762,14 +755,14 @@ CommandExternal(char *sz)
 
                         anScore[0] = processedBoard.nScoreOpp;
                         anScore[1] = processedBoard.nScore;
-                        /* If the session isn't using Crawford rule, set crawford flag to false */
-                        fCrawford = scanctx.fCrawfordRule ? processedBoard.fCrawford : FALSE;
+                        /* If the session isn't using Crawford rule, set Crawford flag to false */
+                        fcrawford = scanctx.fCrawfordRule ? processedBoard.fCrawford : FALSE;
                         /* Set the Jacoby flag appropriately from the external interface settings */
-                        fJacoby = scanctx.fJacobyRule;
+                        fjacoby = scanctx.fJacobyRule;
 
                         szMatchID = MatchID((unsigned int *) processedBoard.anDice, 1, processedBoard.nResignation,
-                                            processedBoard.fDoubled, 1, processedBoard.fCubeOwner, fCrawford,
-                                            processedBoard.nMatchTo, anScore, processedBoard.nCube, fJacoby,
+                                            processedBoard.fDoubled, 1, processedBoard.fCubeOwner, fcrawford,
+                                            processedBoard.nMatchTo, anScore, processedBoard.nCube, fjacoby,
                                             GAME_PLAYING);
 
                         DrawBoard(szBoard, (ConstTanBoard) & processedBoard.anBoard, 1, asz, szMatchID, 15);
@@ -791,7 +784,7 @@ CommandExternal(char *sz)
                                                    scanctx.fCrawfordRule ? "with" : "without");
                             g_string_append_printf(dbgStr, DEBUG_PREFIX "Score: %d-%d/%d%s, ", processedBoard.nScore,
                                                    processedBoard.nScoreOpp, processedBoard.nMatchTo,
-                                                   fCrawford ? "*" : "");
+                                                   fcrawford ? "*" : "");
                         } else {
                             g_string_append_printf(dbgStr, DEBUG_PREFIX "Money Session %s Jacoby Rule, %s Beavers\n",
                                                    scanctx.fJacobyRule ? "with" : "without",
