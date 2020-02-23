@@ -24,7 +24,6 @@
 
 /*#define RANDOMORG_DEBUG 1 */
 
-#define SUPPORT_EMAIL "support@gnubg.org"
 #define STRINGIZEAUX(num) #num
 #define STRINGIZE(num) STRINGIZEAUX(num)
 
@@ -34,7 +33,7 @@
 
 #define RANDOMORG_URL "https://" RANDOMORGSITE "/integers/?num=" \
 	BUFLENGTH_STR "&min=0&max=5&col=1&base=10&format=plain&rnd=new"
-#define RANDOMORG_USERAGENT "GNUBG/" VERSION " (email: " SUPPORT_EMAIL ")"
+#define RANDOMORG_USERAGENT "GNUbg/" VERSION " (" PACKAGE_BUGREPORT ")"
 #define RANDOMORG_CERTPATH ".\\etc\\ssl\\"
 #define RANDOMORG_CABUNDLE "ca-bundle.crt"
 
