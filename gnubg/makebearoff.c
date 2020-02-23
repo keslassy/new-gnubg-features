@@ -485,7 +485,7 @@ BearOff(int nId, unsigned int nPoints,
             iMode = i;
     }
 
-    aOutProb[iMode] -= (j - 0xFFFF);
+    aOutProb[iMode] -= (unsigned short int) (j - 0xFFFF);
 
     /* gammon probs */
 
@@ -496,7 +496,7 @@ BearOff(int nId, unsigned int nPoints,
                 iMode = i;
         }
 
-        aOutProb[32 + iMode] -= (j - 0xFFFF);
+        aOutProb[32 + iMode] -= (unsigned short int) (j - 0xFFFF);
     }
 
 }
@@ -843,7 +843,7 @@ generate_nd(const int nPoints, const int nHashSize, const int fHeader, bearoffco
     /* initialise xhash */
 
 
-    if (XhashCreate(&h, nHashSize / (4 * sizeof(float)))) {
+    if (XhashCreate(&h, (int) (nHashSize / (4 * sizeof(float))))) {
         fprintf(stderr, "Error creating cache\n");
         return;
     }
@@ -893,7 +893,7 @@ CubeEquity(const short int siND, const short int siDT, const short int siDP)
             return siDP;
         else
             /* double, take */
-            return 2 * siDT;
+            return (short int) (2 * siDT);
 
     } else
         /* no double */
@@ -960,7 +960,7 @@ TSLookup(const int nUs, const int nThem,
     }
 
     for (i = 0; i < (fCubeful ? 4 : 1); ++i)
-        arEquity[i] = (unsigned short) (ac[2 * i] | ac[2 * i + 1] << 8) - 0x8000;
+        arEquity[i] = (unsigned short) ((ac[2 * i] | ac[2 * i + 1] << 8) - 0x8000);
 
     ++cLookup;
 
@@ -1031,7 +1031,7 @@ BearOff2(int nUs, int nThem,
         BearoffCubeful(pbc, iPos, NULL, aus);
 
         for (i = 0; i < 4; ++i)
-            asiEquity[i] = aus[i] - 0x8000;
+            asiEquity[i] = (short int) (aus[i] - 0x8000);
 
         return;
     }
@@ -1139,7 +1139,7 @@ static void
 WriteEquity(FILE * pf, const short int si)
 {
 
-    unsigned short int us = si + (unsigned short int) 0x8000;
+    unsigned short int us = (unsigned short int) (si + 0x8000);
 
     putc(us & 0xFF, pf);
     putc((us >> 8) & 0xFF, pf);
