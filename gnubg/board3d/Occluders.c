@@ -38,10 +38,12 @@ extern void initOccluders(BoardData3d* bd3d)
 extern void
 DrawShadows(const BoardData3d* bd3d)
 {
+#ifndef USE_GTK3
 	for (int i = 0; i < NUM_OCC; i++) {
 		if (bd3d->Occluders[i].show)
 			glCallList(bd3d->Occluders[i].shadow_list);
 	}
+#endif
 }
 
 extern void
@@ -216,24 +218,19 @@ updateFlagOccPos(const BoardData* bd, BoardData3d* bd3d)
 		addCube(&bd3d->Occluders[OCC_FLAG], -FLAGPOLE_WIDTH * 1.95f, -FLAG_HEIGHT, -LIFT_OFF,
 			FLAGPOLE_WIDTH * 1.95f, FLAGPOLE_HEIGHT, LIFT_OFF * 2);
 
-		/* Flag surface (approximation) */
+		/* Flag surface */
 		{
-			int s;
-			/* Change first ctlpoint to better match flag shape */
-			float p1x = flag.ctlpoints[1][0][2];
-			flag.ctlpoints[1][0][2] *= .7f;
-
-			for (s = 0; s < S_NUMPOINTS - 1; s++) {     /* Reduce shadow size a bit to remove artifacts */
-				float h = (flag.ctlpoints[s][1][1] - flag.ctlpoints[s][0][1]) * .92f - (FLAG_HEIGHT * .05f);
-				float y = flag.ctlpoints[s][0][1] + FLAG_HEIGHT * .05f;
-				float w = flag.ctlpoints[s + 1][0][0] - flag.ctlpoints[s][0][0];
-				if (s == 2)
-					w *= .95f;
-				addWonkyCube(&bd3d->Occluders[OCC_FLAG], flag.ctlpoints[s][0][0], y, flag.ctlpoints[s][0][2],
-					w, h, base_unit / 10.0f, flag.ctlpoints[s + 1][0][2] - flag.ctlpoints[s][0][2], s);
+			int segment;
+			for (segment = 0; segment < S_NUMSEGMENTS - 1; segment++) {
+				float h = (flag.ctlpoints[segment][1][1] - flag.ctlpoints[segment][0][1]);
+				float w = flag.ctlpoints[segment + 1][0][0] - flag.ctlpoints[segment][0][0];
+				float s = flag.ctlpoints[segment + 1][0][2] - flag.ctlpoints[segment][0][2];
+				int full = (segment == 0) ? 0 : (segment < S_NUMSEGMENTS - 2) ? 1 : 2;
+				addWonkyCube(&bd3d->Occluders[OCC_FLAG], flag.ctlpoints[segment][0][0], flag.ctlpoints[segment][0][1], flag.ctlpoints[segment][0][2],
+					w, h, base_unit / 10.0f, s, full);
 			}
-			flag.ctlpoints[1][0][2] = p1x;
 		}
+
 		if (ShadowsInitilised(bd3d))
 			draw_shadow_volume_extruded_edges(&bd3d->Occluders[OCC_FLAG], bd3d->shadow_light_position, GL_QUADS);
 	}

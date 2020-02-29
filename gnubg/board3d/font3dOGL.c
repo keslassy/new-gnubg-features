@@ -19,6 +19,9 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
+
+#include <GL/glu.h>	/* Used for vertex tesselation */
+
 #include "fun3d.h"
 #include "util.h"
 #include "output.h"
@@ -26,6 +29,14 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+void
+CheckOpenglError(void)
+{
+	GLenum glErr = glGetError();
+	if (glErr != GL_NO_ERROR)
+		g_print("OpenGL Error: %s\n", gluErrorString(glErr));
+}
 
 extern void PopulateVectoriser(Vectoriser* pVect, const FT_Outline* pOutline);
 extern void TidyMemory(const Vectoriser* pVect, const Mesh* pMesh);
@@ -40,6 +51,7 @@ int MAArenderGlyph(const FT_Outline* pOutline, int AA);
 void PopulateMesh(const Vectoriser* pVect, Mesh* pMesh);
 extern int RenderGlyph(const FT_Outline* pOutline);
 
+#ifndef USE_GTK3
 int
 RenderText(const char* text, FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize, float scale,
 	float heightRatio)
@@ -117,6 +129,7 @@ CreateFontText(OGLFont* ppFont, const char* text, const char* fontFile, int pitc
 	g_free(filename);
 	return !FT_Done_FreeType(ftLib);
 }
+#endif
 
 int
 CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize, float scale, float heightRatio)
@@ -187,6 +200,7 @@ CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize
 	return !FT_Done_Face(face);
 }
 
+#ifndef USE_GTK3
 int
 MAArenderGlyph(const FT_Outline* pOutline, int AA)
 {
@@ -234,16 +248,20 @@ MAArenderGlyph(const FT_Outline* pOutline, int AA)
 
 	return 1;
 }
+#endif
 
 void
 FreeNumberFont(OGLFont* ppFont)
 {
 	if (ppFont->AAglyphs != 0) {
+#ifndef USE_GTK3
 		glDeleteLists(ppFont->AAglyphs, 10);
+#endif
 		ppFont->AAglyphs = 0;
 	}
 }
 
+#ifndef USE_GTK3
 void
 FreeTextFont(OGLFont* ppFont)
 {
@@ -252,6 +270,7 @@ FreeTextFont(OGLFont* ppFont)
 		ppFont->textGlyphs = 0;
 	}
 }
+#endif
 
 #if defined(USE_APPLE_OPENGL)
 #define GLUFUN(X) X
@@ -306,6 +325,7 @@ PopulateMesh(const Vectoriser* pVect, Mesh* pMesh)
 	gluDeleteTess(tobj);
 }
 
+#ifndef USE_GTK3
 extern void
 glPrintNumbersRA(const OGLFont* numberFont, const char* text)
 {
@@ -321,3 +341,11 @@ glDrawText(const OGLFont* font)
 	glScalef(font->scale, font->scale, 1.f);
 	glCallList(font->textGlyphs);
 }
+#endif
+
+#ifdef USE_GTK3
+int CreateFontText(OGLFont* ppFont, const char* text, const char* fontFile, int pitch, float size, float heightRatio) { return 0; }
+void FreeTextFont(OGLFont* ppFont) {}
+void glPrintNumbersRA(const OGLFont* numberFont, const char* text) {}
+void glDrawText(const OGLFont* font) {}
+#endif

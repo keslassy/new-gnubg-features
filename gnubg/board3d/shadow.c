@@ -67,13 +67,16 @@ extern void
 draw_shadow_volume_edges(Occluder * pOcc)
 {
     if (pOcc->show) {
+#ifndef USE_GTK3
         glPushMatrix();
         moveToOcc(pOcc);
         GenerateShadowEdges(pOcc);
         glPopMatrix();
+#endif
     }
 }
 #endif
+
 extern void
 draw_shadow_volume_extruded_edges( /*lint -e{818} */ Occluder * pOcc, const float light_position[4], unsigned int prim)
 {
@@ -81,6 +84,7 @@ draw_shadow_volume_extruded_edges( /*lint -e{818} */ Occluder * pOcc, const floa
         float olight[4];
         mult_matrix_vec((ConstMatrix) pOcc->invMat, light_position, olight);
 
+#ifndef USE_GTK3
         glNewList(pOcc->shadow_list, GL_COMPILE);
         glPushMatrix();
         moveToOcc(pOcc);
@@ -89,9 +93,11 @@ draw_shadow_volume_extruded_edges( /*lint -e{818} */ Occluder * pOcc, const floa
         glEnd();
         glPopMatrix();
         glEndList();
+#endif
     }
 }
 
+#ifndef USE_GTK3
 static void
 draw_shadow_volume_to_stencil(const BoardData3d * bd3d)
 {
@@ -121,10 +127,12 @@ draw_shadow_volume_to_stencil(const BoardData3d * bd3d)
     glEnable(GL_LIGHTING);
     glDepthMask(GL_TRUE);
 }
+#endif
 
 void
 shadowDisplay(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd)
 {
+#ifndef USE_GTK3
     float zero[4] = { 0, 0, 0, 0 };
     float d1[4];
     float specular[4];
@@ -151,4 +159,5 @@ shadowDisplay(const BoardData * bd, const BoardData3d * bd3d, const renderdata *
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 
     glDisable(GL_STENCIL_TEST);
+#endif
 }

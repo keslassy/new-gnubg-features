@@ -433,6 +433,39 @@ renderCube(const renderdata* prd, float size)
 	freeEigthPoints(&corner_points);
 }
 
+void drawFlagVertices(unsigned int curveAccuracy)
+{
+	glPushMatrix();
+	glLoadIdentity();	/* Always draw flag from origin */
+
+	glBegin(GL_TRIANGLES);
+	for (int s = 1; s < S_NUMSEGMENTS; s++) {
+		vec3 normal1, normal2;
+		if (s == 1)
+			glm_vec3(GLM_ZUP, normal1);
+		else
+			glm_vec3(normal2, normal1);
+
+		computeNormal(flag.ctlpoints[s - 1][1], flag.ctlpoints[s - 1][0], flag.ctlpoints[s][0], normal2);
+
+		glNormal3fv(normal1);
+		glVertex3fv(flag.ctlpoints[s - 1][1]);
+		glNormal3fv(normal1);
+		glVertex3fv(flag.ctlpoints[s - 1][0]);
+		glNormal3fv(normal2);
+		glVertex3fv(flag.ctlpoints[s][0]);
+		glNormal3fv(normal1);
+		glVertex3fv(flag.ctlpoints[s - 1][1]);
+		glNormal3fv(normal2);
+		glVertex3fv(flag.ctlpoints[s][0]);
+		glNormal3fv(normal2);
+		glVertex3fv(flag.ctlpoints[s][1]);
+	}
+	glEnd();
+
+	glPopMatrix();
+}
+
 void drawFlagPole(unsigned int curveAccuracy)
 {
 	glPushMatrix();
@@ -1493,7 +1526,7 @@ DiceShowing(const BoardData * bd)
 extern void
 getFlagPos(int turn, float v[3])
 {
-    v[0] = (TRAY_WIDTH + BOARD_WIDTH) / 2.0f;
+	v[0] = TRAY_WIDTH + (BOARD_WIDTH - FLAG_WIDTH) / 2.0f;
     v[1] = TOTAL_HEIGHT / 2.0f;
     v[2] = BASE_DEPTH + EDGE_DEPTH;
 
@@ -1507,9 +1540,15 @@ waveFlag(float wag)
     int i, j;
 
     /* wave the flag by rotating Z coords though a sine wave */
-    for (i = 1; i < S_NUMPOINTS; i++)
-        for (j = 0; j < T_NUMPOINTS; j++)
-            flag.ctlpoints[i][j][2] = sinf((float) i + wag) * FLAG_WAG;
+	for (i = 1; i < S_NUMSEGMENTS; i++)
+	{
+		for (j = 0; j < 2; j++)
+		{
+			flag.ctlpoints[i][j][2] = sinf((float)i / 3.0f + wag) * FLAG_WAG;
+			/* Fixed at pole and more wavy towards end */
+			flag.ctlpoints[i][j][2] *= (1.0f / S_NUMSEGMENTS) * i;
+		}
+	}
 }
 
 void
@@ -1967,16 +2006,14 @@ SetupFlag(void)
     float width = FLAG_WIDTH;
     float height = FLAG_HEIGHT;
 
-    flag.flagNurb = NULL;
-
-    for (i = 0; i < S_NUMPOINTS; i++) {
-        flag.ctlpoints[i][0][0] = width / (S_NUMPOINTS - 1) * i;
-        flag.ctlpoints[i][1][0] = width / (S_NUMPOINTS - 1) * i;
-        flag.ctlpoints[i][0][1] = 0;
-        flag.ctlpoints[i][1][1] = height;
-        flag.ctlpoints[i][0][2] = 0;
-        flag.ctlpoints[i][1][2] = 0;
-    }
+	for (i = 0; i < S_NUMSEGMENTS; i++) {
+		flag.ctlpoints[i][0][0] = width / (S_NUMSEGMENTS - 1) * i;
+		flag.ctlpoints[i][1][0] = width / (S_NUMSEGMENTS - 1) * i;
+		flag.ctlpoints[i][0][1] = 0;
+		flag.ctlpoints[i][1][1] = height;
+		flag.ctlpoints[i][0][2] = 0;
+		flag.ctlpoints[i][1][2] = 0;
+	}
 }
 
 static void
@@ -2027,7 +2064,9 @@ void Create3dModels(BoardData3d* bd3d, renderdata* prd)
 	}
 
 	CALL_OGL(&bd3d->modelHolder, MT_DICE, renderDice, prd);
-	CALL_OGL(&bd3d->modelHolder, MT_FLAG, drawFlagPole, prd->curveAccuracy);
+
+	CALL_OGL(&bd3d->modelHolder, MT_FLAG, drawFlagVertices, prd->curveAccuracy);
+	CALL_OGL(&bd3d->modelHolder, MT_FLAGPOLE, drawFlagPole, prd->curveAccuracy);
 
 	ModelManagerCreate(&bd3d->modelHolder);
 }
@@ -2449,15 +2488,16 @@ extern void MoveToFlagMiddle()
 {
 	float v[3];
 	/* Move to middle of flag */
-	v[0] = (flag.ctlpoints[1][0][0] + flag.ctlpoints[2][0][0]) / 2.0f;
-	v[1] = (flag.ctlpoints[1][0][0] + flag.ctlpoints[1][1][0]) / 2.0f;
-	v[2] = (flag.ctlpoints[1][0][2] + flag.ctlpoints[2][0][2]) / 2.0f;
+	int midPoint = (S_NUMSEGMENTS - 1) / 2;
+	v[0] = flag.ctlpoints[midPoint][0][0];
+	v[1] = (flag.ctlpoints[0][0][1] + flag.ctlpoints[0][1][1]) / 2.0f;
+	v[2] = flag.ctlpoints[midPoint][0][2];
 	glTranslatef(v[0], v[1], v[2]);
 
 	/* Work out approx angle of number based on control points */
 	float ang =
-		atanf(-(flag.ctlpoints[2][0][2] - flag.ctlpoints[1][0][2]) /
-		(flag.ctlpoints[2][0][0] - flag.ctlpoints[1][0][0]));
+		atanf(-(flag.ctlpoints[midPoint + 1][0][2] - flag.ctlpoints[midPoint][0][2]) /
+		(flag.ctlpoints[midPoint + 1][0][0] - flag.ctlpoints[midPoint][0][0]));
 	float degAng = (ang) * 180 / F_PI;
 
 	glRotatef(degAng, 0.f, 1.f, 0.f);
@@ -2470,12 +2510,26 @@ renderFlag(const ModelManager* modelHolder, const BoardData3d* bd3d, int curveAc
 		MoveToFlagPos(turn);
 
 		/* Draw flag surface */
-		SetColour3d(1.f, 1.f, 1.f, 0.f);    /* White flag */
-		gluNurbFlagRender(curveAccuracy);
+		OglModelDraw(modelHolder, MT_FLAG, &bd3d->flagMat);
 
 		/* Draw flag pole */
-		OglModelDraw(modelHolder, MT_FLAG, &bd3d->flagMat);
+		OglModelDraw(modelHolder, MT_FLAGPOLE, &bd3d->flagPoleMat);
 
 		renderFlagNumbers(bd3d, resigned);
 	glPopMatrix();	/* Move back to origin */
+}
+
+extern void
+drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
+{
+	if (bd->resigned)
+	{
+		waveFlag(bd->bd3d->flagWaved);
+#ifdef USE_GTK3
+		OglBindBuffer(&bd->bd3d->modelHolder);
+#endif
+		UPDATE_OGL(&bd->bd3d->modelHolder, MT_FLAG, drawFlagVertices, bd->rd->curveAccuracy);	/* Update waving flag */
+	}
+
+	renderFlag(modelHolder, bd3d, bd->rd->curveAccuracy, bd->turn, bd->resigned);
 }

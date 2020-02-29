@@ -124,14 +124,6 @@ CheckNormal()
 }
 #endif
 
-void
-CheckOpenglError(void)
-{
-    GLenum glErr = glGetError();
-    if (glErr != GL_NO_ERROR)
-        g_print("OpenGL Error: %s\n", gluErrorString(glErr));
-}
-
 NTH_STATIC void
 SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
 {
@@ -146,21 +138,24 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
         lp[0] -= getBoardWidth() / 2.0f;
         lp[1] -= getBoardHeight() / 2.0f;
     }
-    glLightfv(GL_LIGHT0, GL_POSITION, lp);
 
     al[0] = al[1] = al[2] = (float) prd->lightLevels[0] / 100.0f;
     al[3] = 1;
-    glLightfv(GL_LIGHT0, GL_AMBIENT, al);
 
     dl[0] = dl[1] = dl[2] = (float) prd->lightLevels[1] / 100.0f;
     dl[3] = 1;
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, dl);
 
     sl[0] = sl[1] = sl[2] = (float) prd->lightLevels[2] / 100.0f;
     sl[3] = 1;
+
+#ifndef USE_GTK3
+    glLightfv(GL_LIGHT0, GL_POSITION, lp);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, al);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, dl);
     glLightfv(GL_LIGHT0, GL_SPECULAR, sl);
 
 	UpdateShadowLightPosition(bd3d, lp);
+#endif
 }
 
 #ifdef WIN32
@@ -317,11 +312,13 @@ InitGL(const BoardData * bd)
             g_print("Error creating fonts\n");
 
         shadowInit(bd3d, bd->rd);
+#ifndef USE_GTK3
 #ifdef GL_VERSION_1_2
         glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 #else
         if (extensionSupported("GL_EXT_separate_specular_color"))
             glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL_EXT, GL_SEPARATE_SPECULAR_COLOR_EXT);
+#endif
 #endif
         CreateDotTexture(&bd3d->dotTexture);
     }
@@ -902,7 +899,9 @@ Free3d(float ***array, unsigned int x, unsigned int y)
     free(array);
 }
 
+#ifndef USE_GTK3
 #include "Shapes.inc"
+#endif
 
 void
 calculateEigthPoints(EigthPoints* eigthPoints, float radius, unsigned int accuracy)
@@ -972,25 +971,6 @@ PlaceMovingPieceRotation(const BoardData * bd, BoardData3d * bd3d, unsigned int 
 {                               /* Make sure rotation is correct in new position */
     bd3d->pieceRotation[src][Abs(bd->points[src])] = bd3d->pieceRotation[dest][Abs(bd->points[dest] - 1)];
     bd3d->pieceRotation[dest][Abs(bd->points[dest]) - 1] = bd3d->movingPieceRotation;
-}
-
-static void
-getProjectedCoord(const float pos[3], float *x, float *y)
-{                               /* Work out where point (x, y, z) is on the screen */
-    int viewport[4];
-    GLdouble mvmatrix[16], projmatrix[16], xd, yd, zd;
-
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
-    glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
-
-    if (gluProject
-        ((GLdouble) pos[0], (GLdouble) pos[1], (GLdouble) pos[2], mvmatrix, projmatrix, viewport, &xd, &yd,
-         &zd) == GL_FALSE)
-        g_print("Error calling gluProject()\n");
-
-    *x = (float) xd;
-    *y = (float) yd;
 }
 
 int
@@ -1220,6 +1200,7 @@ EmptyPos(BoardData * bd)
     updatePieceOccPos(bd, bd->bd3d);
 }
 
+extern OglModel* curModel;
 void
 SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd, int viewport[4])
 {
@@ -1239,9 +1220,7 @@ SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata 
 	calculateBackgroundSize(bd3d, viewport);
 	if (bd3d->modelHolder.vertexData != NULL)
 	{	/* Update background to new size */
-		CALL_OGL(&bd3d->modelHolder, MT_BACKGROUND, drawBackground, prd, bd3d->backGroundPos, bd3d->backGroundSize);
-		bd3d->modelHolder.numModels--;	// Not a new model
-		ModelManagerCopyModelToBuffer(&bd3d->modelHolder, MT_BACKGROUND);
+        UPDATE_OGL(&bd3d->modelHolder, MT_BACKGROUND, drawBackground, prd, bd3d->backGroundPos, bd3d->backGroundSize);
 	}
 }
 
@@ -1353,7 +1332,8 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
     bd->DragTargetHelp = 0;
 
     SetupSimpleMat(&bd3d->gapColour, 0.f, 0.f, 0.f);
-	SetupSimpleMat(&bd3d->flagMat, .2f, .2f, .4f);	/* Blue pole */
+	SetupSimpleMat(&bd3d->flagMat, 1.f, 1.f, 1.f);    /* White flag */
+	SetupSimpleMat(&bd3d->flagPoleMat, .2f, .2f, .4f);	/* Blue pole */
     SetupMat(&bd3d->flagNumberMat, 0.f, 0.f, .4f, 0.f, 0.f, .4f, 1.f, 1.f, 1.f, 100, 1.f);
 
     bd3d->numTextures = 0;
@@ -1461,4 +1441,14 @@ void RecalcViewingVolume(const BoardData* bd)
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	SetupViewingVolume3d(bd, bd->bd3d, bd->rd, viewport);
+}
+
+void computeNormal(vec3 a, vec3 b, vec3 c, vec3 ret)
+{
+    vec3 diff1, diff2;
+    glm_vec3_sub(c, a, diff1);
+    glm_vec3_sub(b, a, diff2);
+    glm_vec3_cross(diff1, diff2, ret);
+    glm_vec3_normalize(ret);
+    ret[2] = -ret[2];
 }

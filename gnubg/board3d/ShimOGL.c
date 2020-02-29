@@ -142,6 +142,16 @@ void SHIMglNormal3f(GLfloat nx, GLfloat ny, GLfloat nz)
 	}
 }
 
+void SHIMglNormal3fv(vec3 n)
+{
+	if (curModel->data)
+	{
+		curNormal[0] = n[0];
+		curNormal[1] = n[1];
+		curNormal[2] = n[2];
+	}
+}
+
 void SHIMglTexCoord2f(GLfloat s, GLfloat t)
 {
 	if (curModel->data)
@@ -166,6 +176,11 @@ static void AddVertex(int offset)
 	}
 
 	curModel->dataLength += VERTEX_STRIDE;
+}
+
+void SHIMglVertex3fv(vec3 vertex)
+{
+	SHIMglVertex3f(vertex[0], vertex[1], vertex[2]);
 }
 
 void SHIMglVertex3f(GLfloat x, GLfloat y, GLfloat z)
@@ -286,4 +301,14 @@ float* GetModelViewMatrix()
 float* GetProjectionMatrix()
 {
 	return (float*)pjMatStack.stack[pjMatStack.level];
+}
+
+void GetModelViewMatrixMat(mat4 ret)
+{
+	glm_mat4_copy(mvMatStack.stack[mvMatStack.level], ret);
+}
+
+void GetProjectionMatrixMat(mat4 ret)
+{
+	glm_mat4_copy(pjMatStack.stack[pjMatStack.level], ret);
 }

@@ -29,6 +29,7 @@
 #include <unistd.h>
 #endif
 
+#include <cglm/vec3.h>
 #include "common.h"
 #include "inc3d.h"
 #include "matrix.h"
@@ -61,9 +62,8 @@ typedef struct _OglModel
 	int dataStart;
 } OglModel;
 
-enum ModelType { MT_BACKGROUND, MT_BASE, MT_ODDPOINTS, MT_EVENPOINTS, MT_TABLE, MT_HINGE, MT_HINGEGAP, MT_CUBE, MT_MOVEINDICATOR, MT_PIECE, MT_PIECETOP, MT_DICE, MT_FLAG };
+enum ModelType { MT_BACKGROUND, MT_BASE, MT_ODDPOINTS, MT_EVENPOINTS, MT_TABLE, MT_HINGE, MT_HINGEGAP, MT_CUBE, MT_MOVEINDICATOR, MT_PIECE, MT_PIECETOP, MT_DICE, MT_FLAG, MT_FLAGPOLE, MAX_MODELS };
 
-#define MAX_MODELS 12
 typedef struct _ModelManager
 {
 	int totalNumVertices;
@@ -81,6 +81,7 @@ typedef struct _ModelManager
 void OglModelInit(ModelManager* modelHolder, int modelNumber);
 void OglModelAlloc(ModelManager* modelHolder, int modelNumber);
 void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Material* pMat);
+void OglBindBuffer(ModelManager* modelHolder);
 
 void ModelManagerInit(ModelManager* modelHolder);
 void ModelManagerStart(ModelManager* modelHolder);
@@ -98,6 +99,14 @@ extern OglModel* curModel;
 	fun(__VA_ARGS__);\
 	OglModelAlloc(modelManager, modelNumber);\
 	fun(__VA_ARGS__); \
+}
+#define UPDATE_OGL(modelManager, modelNumber, fun, ...) \
+{ \
+    curModel = modelManager.models[modelNumber]; \
+    curModel->data = malloc(sizeof(float) * (int)curModel->dataLength); \
+    curModel->dataLength = 0; \
+	fun(__VA_ARGS__);\
+    ModelManagerCopyModelToBuffer((ModelManager*)modelManager, modelNumber); \
 }
 
 typedef signed long  FT_Pos;
@@ -177,17 +186,10 @@ typedef struct _viewArea {
 	float width;
 } viewArea;
 
-//TODO: Sort out (remove gluNurb?)
-typedef struct GLUnurbs GLUnurbsObj;
 typedef struct _Flag3d {
-	/* Define nurbs surface - for flag */
-	GLUnurbsObj* flagNurb;
-#define S_NUMPOINTS 4
-#define S_NUMKNOTS (S_NUMPOINTS * 2)
-#define T_NUMPOINTS 2
-#define T_NUMKNOTS (T_NUMPOINTS * 2)
-	/* Control points for the flag. The Z values are modified to make it wave */
-	float ctlpoints[S_NUMPOINTS][T_NUMPOINTS][3];
+#define S_NUMSEGMENTS 11
+    /* Control points for the flag. The Z values are modified to make it wave */
+    vec3 ctlpoints[S_NUMSEGMENTS][2];
 } Flag3d;
 
 /* Font info */
@@ -322,7 +324,7 @@ struct _BoardData3d {
     /* Misc 3d objects */
     Material gapColour;
     Material logoMat;
-    Material flagMat, flagNumberMat;
+    Material flagMat, flagPoleMat, flagNumberMat;
 
     /* Store how "big" the screen maps to in 3d */
     float backGroundPos[2], backGroundSize[2];
@@ -437,6 +439,8 @@ extern void SetupViewingVolume3dNew(const BoardData* bd, BoardData3d* bd3d, cons
 extern void ClearScreen(const renderdata* prd);
 extern float* GetModelViewMatrix(void);
 extern float* GetProjectionMatrix(void);
+extern void GetModelViewMatrixMat(mat4 ret);
+extern void GetProjectionMatrixMat(mat4 ret);
 extern void LegacyStartAA(float width);
 extern void LegacyEndAA(void);
 extern void ShowMoveIndicator(const ModelManager* modelHolder, const BoardData* bd);
@@ -449,8 +453,8 @@ extern void MAApiece(int roundPiece, int curveAccuracy);
 extern void renderPiece(const ModelManager* modelHolder, int separateTop);
 extern void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol);
 extern void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol);
-extern void gluNurbFlagRender(int curveAccuracy);
 extern void RenderCharAA(unsigned int glyph);
 extern void renderFlagNumbers(const BoardData3d* bd3d, int resignedValue);
+extern void computeNormal(vec3 a, vec3 b, vec3 c, vec3 ret);
 
 #endif

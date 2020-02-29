@@ -19,9 +19,13 @@
 
 #include "config.h"
 #include "legacyGLinc.h"
+
 #include "fun3d.h"
 #include "BoardDimensions.h"
 #include "gtkboard.h"
+
+#include <cglm/affine.h>
+#include <cglm/cam.h>
 
 extern void drawTableGrayed(const ModelManager* modelHolder, const BoardData3d* bd3d, renderdata tmp);
 extern void WorkOutViewArea(const BoardData* bd, viewArea* pva, float* pHalfRadianFOV, float aspectRatio);
@@ -33,11 +37,12 @@ extern void drawDC(const ModelManager* modelHolder, const BoardData* bd, const B
 extern void drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 extern void drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd, int num);
 static void drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-static void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
+extern void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 
 ///////////////////////////////////////
 // Legacy Opengl board rendering code
 
+#ifndef USE_GTK3
 #include "Shapes.inc"
 
 void LegacyStartAA(float width)
@@ -60,6 +65,7 @@ void RenderCharAA(unsigned int glyph)
 		glCallList(glyph);
 	glPopMatrix();
 }
+#endif
 
 void
 drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
@@ -106,22 +112,25 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 		drawPieces(modelHolder, bd, bd3d, prd);
 		glCullFace(GL_BACK);
 	}
+
 	drawPieces(modelHolder, bd, bd3d, prd);
+
 	if (transparentPieces)
 		glDisable(GL_BLEND);
 
 	if (bd->DragTargetHelp) {   /* highlight target points */
 		glPolygonMode(GL_FRONT, GL_LINE);
+
 		SetColour3d(0.f, 1.f, 0.f, 0.f);        /* Nice bright green... */
 
 		for (int i = 0; i <= 3; i++) {
 			int target = bd->iTargetHelpPoints[i];
 			if (target != -1) { /* Make sure texturing is disabled */
 				int separateTop = (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP);
-#ifndef USE_GTK3
+
 				if (prd->ChequerMat[0].pTexture)
 					glDisable(GL_TEXTURE_2D);
-#endif
+
 				drawPiece(modelHolder, bd3d, (unsigned int)target, Abs(bd->points[target]) + 1, TRUE, (prd->pieceType == PT_ROUNDED), prd->curveAccuracy, separateTop);
 			}
 		}
@@ -137,8 +146,16 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 		drawSpecialPieces(modelHolder, bd, bd3d, prd);
 
 	if (bd->resigned)
+	{
+		int isStencil = glIsEnabled(GL_STENCIL_TEST);
+		if (isStencil)
+			glDisable(GL_STENCIL_TEST);
 		drawFlag(modelHolder, bd, bd3d, prd);
+		if (isStencil)
+			glEnable(GL_STENCIL_TEST);
+	}
 }
+
 
 /* Define position of dots on dice */
 static int dots1[] = { 2, 2, 0 };
@@ -153,6 +170,7 @@ static int dot_pos[] = { 0, 20, 50, 80 };       /* percentages across face */
 static void
 drawDots(const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTest* dt, int showFront)
 {
+#ifndef USE_GTK3
 	int dot;
 	int c;
 	int* dp;
@@ -227,6 +245,7 @@ drawDots(const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTes
 			glRotatef(90.f, 1.f, 0.f, 0.f);
 	}
 	glPopMatrix();
+#endif
 }
 
 extern void DrawNumbers(const OGLFont* numberFont, unsigned int sides, int swapNumbers, int MAA);
@@ -238,6 +257,7 @@ drawNumbers(const BoardData* bd, int MAA)
 
 	/* No need to depth test as on top of board (depth test could cause alias problems too) */
 	glDisable(GL_DEPTH_TEST);
+
 	/* Draw inside then anti-aliased outline of numbers */
 	setMaterial(&bd->rd->PointNumberMat);
 
@@ -247,6 +267,7 @@ drawNumbers(const BoardData* bd, int MAA)
 	glEnable(GL_DEPTH_TEST);
 }
 
+#ifndef USE_GTK3
 static void
 MAAtidyEdges(const renderdata* prd)
 {                               /* Anti-alias board edges */
@@ -402,7 +423,7 @@ extern void MAAdie(const renderdata* prd)
 	glDepthMask(GL_TRUE);
 	LegacyEndAA();
 }
-
+#endif
 void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
 {
 	glCullFace(GL_FRONT);
@@ -423,6 +444,7 @@ void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, cons
 
 void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
 {
+#ifndef USE_GTK3
 	Material whiteMat;
 	SetupSimpleMat(&whiteMat, 1.f, 1.f, 1.f);
 
@@ -446,6 +468,7 @@ void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const re
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glPopMatrix();
+#endif
 }
 
 void renderPiece(const ModelManager* modelHolder, int separateTop)
@@ -453,13 +476,9 @@ void renderPiece(const ModelManager* modelHolder, int separateTop)
 	const Material* mat = currentMat;
 	if (separateTop)
 	{
-#ifndef USE_GTK3
 		glEnable(GL_TEXTURE_2D);
-#endif
 		OglModelDraw(modelHolder, MT_PIECETOP, mat);
-#ifndef USE_GTK3
 		glDisable(GL_TEXTURE_2D);
-#endif
 		mat = NULL;
 	}
 
@@ -473,7 +492,6 @@ static void
 drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {                               /* Draw animated or dragged pieces */
 	int transparentPieces = (prd->ChequerMat[0].alphaBlend) || (prd->ChequerMat[1].alphaBlend);
-
 	if (transparentPieces) {                /* Draw back of piece separately */
 		glCullFace(GL_FRONT);
 		glEnable(GL_BLEND);
@@ -481,12 +499,14 @@ drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const Bo
 		glCullFace(GL_BACK);
 		glEnable(GL_BLEND);
 	}
+
 	renderSpecialPieces(modelHolder, bd, bd3d, prd);
 
 	if (transparentPieces)
 		glDisable(GL_BLEND);
 }
 
+#ifndef USE_GTK3
 void MAApiece(int roundPiece, int curveAccuracy)
 {
 	/* Anti-alias piece edges */
@@ -524,6 +544,7 @@ void MAApiece(int roundPiece, int curveAccuracy)
 	if (textureEnabled)
 		glEnable(GL_TEXTURE_2D);
 }
+#endif
 
 extern void
 drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
@@ -552,6 +573,7 @@ drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData
 	}
 }
 
+#ifndef USE_GTK3
 extern void
 drawPointLegacy(const renderdata* prd, float tuv, unsigned int i, int p, int outline)
 {                               /* Draw point with correct texture co-ords */
@@ -667,6 +689,7 @@ void MAApoints(const renderdata* prd)
 
 	LegacyEndAA();
 }
+#endif
 
 extern void drawTableBase(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
 extern void drawHinges(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
@@ -702,32 +725,66 @@ void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const r
 	}
 }
 
+GLint 
+gluUnProjectMine(GLfloat winx, GLfloat winy, GLfloat winz,
+	mat4 modelMatrix,
+	mat4 projmatrix,
+	const GLint viewport[4],
+	GLfloat* objx, GLfloat* objy, GLfloat* objz)
+{
+	float Fin[4];
+	float Fout[4];
+
+	mat4 finalMatrix;
+	glm_mat4_mul(projmatrix, modelMatrix, finalMatrix);
+	glm_mat4_inv(finalMatrix, finalMatrix);
+
+	Fin[0] = winx;
+	Fin[1] = winy;
+	Fin[2] = winz;
+	Fin[3] = 1.0;
+
+	/* Map x and y from window coordinates */
+	Fin[0] = (Fin[0] - viewport[0]) / viewport[2];
+	Fin[1] = (Fin[1] - viewport[1]) / viewport[3];
+
+	/* Map to range -1 to 1 */
+	Fin[0] = Fin[0] * 2 - 1;
+	Fin[1] = Fin[1] * 2 - 1;
+	Fin[2] = Fin[2] * 2 - 1;
+	glm_mat4_mulv(finalMatrix, Fin, Fout);
+
+	if (Fout[3] == 0.0) return(GL_FALSE);
+	Fout[0] /= Fout[3];
+	Fout[1] /= Fout[3];
+	Fout[2] /= Fout[3];
+	*objx = Fout[0];
+	*objy = Fout[1];
+	*objz = Fout[2];
+	return(GL_TRUE);
+}
+
 static void
 getProjectedPos(int x, int y, float atDepth, float pos[3])
 {                               /* Work out where point (x, y) projects to at depth atDepth */
 	int viewport[4];
-	GLdouble mvmatrix[16], projmatrix[16];
-	double nearX, nearY, nearZ, farX, farY, farZ, zRange;
+	mat4 mvmatrix, projmatrix;
+	float nearX, nearY, nearZ, farX, farY, farZ, zRange;
+	int ret;
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
-	glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
+	GetModelViewMatrixMat(mvmatrix);
+	GetProjectionMatrixMat(projmatrix);
 
-	if ((gluUnProject((GLdouble)x, (GLdouble)y, 0.0, mvmatrix, projmatrix, viewport, &nearX, &nearY, &nearZ) ==
-		GL_FALSE)
-		|| (gluUnProject((GLdouble)x, (GLdouble)y, 1.0, mvmatrix, projmatrix, viewport, &farX, &farY, &farZ) ==
-			GL_FALSE)) {
-		/* Maybe a g_assert_not_reached() would be appropriate here
-		 * Don't leave output parameters undefined anyway */
-		pos[0] = pos[1] = pos[2] = 0.0f;
-		g_print("gluUnProject failed!\n");
-		return;
-	}
+	ret = gluUnProjectMine((GLfloat)x, (GLfloat)y, 0.0, mvmatrix, projmatrix, viewport, &nearX, &nearY, &nearZ);
+	g_assert(ret == GL_TRUE);	/* Should always work */
+	ret = gluUnProjectMine((GLfloat)x, (GLfloat)y, 1.0, mvmatrix, projmatrix, viewport, &farX, &farY, &farZ);
+	g_assert(ret == GL_TRUE);	/* Should always work */
 
-	zRange = (fabs(nearZ) - atDepth) / (fabs(farZ) + fabs(nearZ));
-	pos[0] = (float)(nearX - (-farX + nearX) * zRange);
-	pos[1] = (float)(nearY - (-farY + nearY) * zRange);
-	pos[2] = (float)(nearZ - (-farZ + nearZ) * zRange);
+	zRange = (fabsf(nearZ) - atDepth) / (fabsf(farZ) + fabsf(nearZ));
+	pos[0] = nearX - (-farX + nearX) * zRange;
+	pos[1] = nearY - (-farY + nearY) * zRange;
+	pos[2] = nearZ - (-farZ + nearZ) * zRange;
 }
 
 void
@@ -751,29 +808,6 @@ calculateBackgroundSize(BoardData3d* bd3d, const int viewport[4])
 	bd3d->backGroundSize[1] = pos1[1] - pos3[1];
 }
 
-void gluNurbFlagRender(int curveAccuracy)
-{
-	/* Simple knots i.e. no weighting */
-	float s_knots[S_NUMKNOTS] = { 0, 0, 0, 0, 1, 1, 1, 1 };
-	float t_knots[T_NUMKNOTS] = { 0, 0, 1, 1 };
-
-	if (flag.flagNurb == NULL)
-		flag.flagNurb = gluNewNurbsRenderer();
-
-	glPushMatrix();
-	glLoadMatrixf(GetModelViewMatrix());
-
-	/* Set size of polygons */
-	gluNurbsProperty(flag.flagNurb, GLU_SAMPLING_TOLERANCE, 500.0f / curveAccuracy);
-
-	gluBeginSurface(flag.flagNurb);
-	gluNurbsSurface(flag.flagNurb, S_NUMKNOTS, s_knots, T_NUMKNOTS, t_knots, 3 * T_NUMPOINTS, 3,
-		&flag.ctlpoints[0][0][0], S_NUMPOINTS, T_NUMPOINTS, GL_MAP2_VERTEX_3);
-	gluEndSurface(flag.flagNurb);
-
-	glPopMatrix();
-}
-
 void renderFlagNumbers(const BoardData3d* bd3d, int resignedValue)
 {
 	/* Draw number on flag */
@@ -783,11 +817,12 @@ void renderFlagNumbers(const BoardData3d* bd3d, int resignedValue)
 
 	glDisable(GL_DEPTH_TEST);
 	/* No specular light */
-	float specular[4];
 	float zero[4] = { 0, 0, 0, 0 };
+#ifndef USE_GTK3
+	float specular[4];
 	glGetLightfv(GL_LIGHT0, GL_SPECULAR, specular);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
-
+#endif
 	/* Draw number */
 	char flagValue[2] = " ";
 
@@ -800,22 +835,8 @@ void renderFlagNumbers(const BoardData3d* bd3d, int resignedValue)
 	glPrintCube(&bd3d->cubeFont, flagValue, /*MAA*/0);
 	((BoardData3d*)bd3d)->cubeFont.scale = oldScale;
 
+#ifndef USE_GTK3
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+#endif
 	glEnable(GL_DEPTH_TEST);
-}
-
-static void
-drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
-{
-	int isStencil = glIsEnabled(GL_STENCIL_TEST);
-
-	if (isStencil)
-		glDisable(GL_STENCIL_TEST);
-
-	waveFlag(bd3d->flagWaved);
-
-	renderFlag(modelHolder, bd3d, bd->rd->curveAccuracy, bd->turn, bd->resigned);
-
-	if (isStencil)
-		glEnable(GL_STENCIL_TEST);
 }

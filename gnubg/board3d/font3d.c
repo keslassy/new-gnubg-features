@@ -295,7 +295,9 @@ RenderString3d(const OGLFont* pFont, const char* str, float scale, int MAA)
 		else
 		{
 			/* AA outline of character */
+#ifndef USE_GTK3
 			RenderCharAA(pFont->AAglyphs + (unsigned int)offset);
+#endif
 		}
 		/* Move on to next place */
 		glTranslatef((float)(pFont->advance + GetKern(pFont, str[0], str[1])) / 64.0f, 0.f, 0.f);

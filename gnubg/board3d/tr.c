@@ -309,6 +309,7 @@ trPerspective(TRcontext * tr, GLdouble fovy, GLdouble aspect, GLdouble znear, GL
 void
 trBeginTile(TRcontext * tr)
 {
+#ifndef USE_GTK3
     int matrixMode;
     int tileWidth, tileHeight, border;
     GLdouble left, right, bottom, top;
@@ -373,6 +374,7 @@ trBeginTile(TRcontext * tr)
 
     /* restore user's matrix mode */
     glMatrixMode((GLenum) matrixMode);
+#endif
 }
 
 

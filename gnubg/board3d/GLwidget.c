@@ -252,6 +252,12 @@ void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Mater
 	glDrawArrays(GL_TRIANGLES, modelManager->models[modelNumber].dataStart / VERTEX_STRIDE, modelManager->models[modelNumber].dataLength / VERTEX_STRIDE);
 }
 
+void OglBindBuffer(ModelManager* modelHolder)
+{
+	/* this is the VBO that holds the vertex data */
+	glBindBuffer(GL_ARRAY_BUFFER, modelHolder->buffer);
+}
+
 gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* eventDetails, void* data)
 {
 	CheckOpenglError();

@@ -45,9 +45,11 @@ void SHIMglRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 void SHIMglTranslatef(GLfloat x, GLfloat y, GLfloat z);
 void SHIMglScalef(GLfloat x, GLfloat y, GLfloat z);
 void SHIMglNormal3f(GLfloat nx, GLfloat ny, GLfloat nz);
+void SHIMglNormal3fv(vec3 normal);
 void SHIMglTexCoord2f(GLfloat s, GLfloat t);
 void SHIMglVertex2f(GLfloat x, GLfloat y);
 void SHIMglVertex3f(GLfloat x, GLfloat y, GLfloat z);
+void SHIMglVertex3fv(vec3 vertex);
 void SHIMglFrustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
 void SHIMglOrtho(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
 void SHIMglLoadIdentity(void);
@@ -57,9 +59,11 @@ void SHIMglLoadIdentity(void);
 #define glTranslatef SHIMglTranslatef
 #define glScalef SHIMglScalef
 #define glNormal3f SHIMglNormal3f
+#define glNormal3fv SHIMglNormal3fv
 #define glTexCoord2f SHIMglTexCoord2f
 #define glVertex2f SHIMglVertex2f
 #define glVertex3f SHIMglVertex3f
+#define glVertex3fv SHIMglVertex3fv
 #define glBegin SHIMglBegin
 #define glEnd SHIMglEnd
 #define glMatrixMode SHIMglMatrixMode

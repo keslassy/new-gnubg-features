@@ -18,6 +18,7 @@
  */
 
 #include "config.h"
+
 #include "legacyGLinc.h"
 #include "fun3d.h"
 
@@ -44,7 +45,9 @@ initOccluder(Occluder * pOcc)
     pOcc->handle->edges = g_array_new(FALSE, FALSE, sizeof(winged_edge));
     pOcc->handle->points = g_array_new(FALSE, FALSE, sizeof(position));
 
+#ifndef USE_GTK3
     pOcc->shadow_list = glGenLists(1);
+#endif
     pOcc->rotator = 0;
     pOcc->show = 1;
 }
@@ -58,7 +61,9 @@ freeOccluder(Occluder * pOcc)
         g_array_free(pOcc->handle->points, TRUE);
         free(pOcc->handle);
         pOcc->handle = NULL;
+#ifndef USE_GTK3
         glDeleteLists(pOcc->shadow_list, 1);
+#endif
     }
 }
 
@@ -68,12 +73,15 @@ copyOccluder(const Occluder * fromOcc, Occluder * toOcc)
     toOcc->handle = fromOcc->handle;
     toOcc->show = fromOcc->show;
     toOcc->rotator = fromOcc->rotator;
+#ifndef USE_GTK3
     toOcc->shadow_list = glGenLists(1);
+#endif
 }
 
 void
 moveToOcc(const Occluder * pOcc)
 {
+#ifndef USE_GTK3
     glTranslatef(pOcc->trans[0], pOcc->trans[1], pOcc->trans[2]);
 
     if (pOcc->rotator) {
@@ -81,6 +89,7 @@ moveToOcc(const Occluder * pOcc)
         glRotatef(pOcc->rot[1], 1.f, 0.f, 0.f);
         glRotatef(pOcc->rot[2], 0.f, 0.f, 1.f);
     }
+#endif
 }
 
 static unsigned int
@@ -155,6 +164,7 @@ AddPlane(GArray * planes, const position * a, const position * b, const position
 void
 GenerateShadowEdges(const Occluder * pOcc)
 {
+#ifndef USE_GTK3
     unsigned int i, numEdges = pOcc->handle->edges->len;
     for (i = 0; i < numEdges; i++) {
         winged_edge *we = &g_array_index(pOcc->handle->edges, winged_edge, i);
@@ -187,6 +197,7 @@ GenerateShadowEdges(const Occluder * pOcc)
             }
         }
     }
+#endif
 }
 #endif
 
@@ -230,6 +241,7 @@ GenerateShadowVolume(const Occluder * pOcc, const float olight[4])
             position *pn0 = &g_array_index(pOcc->handle->points, position, edgeOrder[0]);
             position *pn1 = &g_array_index(pOcc->handle->points, position, edgeOrder[1]);
 
+#ifndef USE_GTK3
             /* local segment */
             glVertex3f(pn0->x, pn0->y, pn0->z);
             glVertex3f(pn1->x, pn1->y, pn1->z);
@@ -239,6 +251,7 @@ GenerateShadowVolume(const Occluder * pOcc, const float olight[4])
 
             glVertex4f(pn0->x * olight[3] - olight[0],
                        pn0->y * olight[3] - olight[1], pn0->z * olight[3] - olight[2], 0.f);
+#endif
         }
     }
 }

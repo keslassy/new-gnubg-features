@@ -23,6 +23,8 @@
 #include "fun3d.h"
 #include "gtklocdefs.h"
 
+#include <GL/glu.h>	/* Used for colour widget - todo: remove? */
+
 #include "gtkprefs.h"
 
 typedef struct UpdateDetails_T {

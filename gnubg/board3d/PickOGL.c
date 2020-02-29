@@ -24,41 +24,21 @@
 #include "boardpos.h"
 #include "gtkboard.h"
 
+#ifndef USE_GTK3
 #include "Shapes.inc"
 
 extern void
-drawFlagPick(const BoardData* bd, void* UNUSED(data))
+drawPickFlag(const BoardData* bd, void* UNUSED(data))
 {
 	BoardData3d* bd3d = bd->bd3d;
 	renderdata* prd = bd->rd;
-	int s;
 
 	waveFlag(bd3d->flagWaved);
 
 	glLoadName(POINT_RESIGN);
 
-	glPushMatrix();
-
-	MoveToFlagPos(bd->turn);
-
-	/* Draw flag surface (approximation) */
-	glBegin(GL_QUAD_STRIP);
-	for (s = 0; s < /*S_NUMPOINTS*/4; s++) {
-		glVertex3fv(flag.ctlpoints[s][1]);
-		glVertex3fv(flag.ctlpoints[s][0]);
-	}
-	glEnd();
-
-	/* Draw flag pole */
-	glTranslatef(0.f, -FLAG_HEIGHT, 0.f);
-
-	drawRect(-FLAGPOLE_WIDTH * 2, 0, 0, FLAGPOLE_WIDTH * 2, FLAGPOLE_HEIGHT, NULL);
-	glRotatef(-90.f, 1.f, 0.f, 0.f);
-
-	circleRev(FLAGPOLE_WIDTH, 0.f, prd->curveAccuracy);
-	circleRev(FLAGPOLE_WIDTH * 2, FLAGPOLE_HEIGHT, prd->curveAccuracy);
-
-	glPopMatrix();
+	const ModelManager* modelHolder = &bd3d->modelHolder;
+	renderFlag(modelHolder, bd3d, prd->curveAccuracy, bd->turn, bd->resigned);
 }
 
 NTH_STATIC void
@@ -133,19 +113,6 @@ drawPickAreas(const BoardData* bd, void* UNUSED(data))
 	glPopMatrix();
 }
 
-static void
-drawPieceSimplified(const BoardData3d* UNUSED(bd3d), unsigned int point, unsigned int pos)
-{
-	float v[3];
-	glPushMatrix();
-
-	getPiecePos(point, pos, v);
-	drawBox(BOX_ALL, v[0] - PIECE_HOLE / 2.f, v[1] - PIECE_HOLE / 2.f, v[2] - PIECE_DEPTH / 2.f, PIECE_HOLE, PIECE_HOLE,
-		PIECE_DEPTH, NULL);
-
-	glPopMatrix();
-}
-
 NTH_STATIC void
 drawPickBoard(const BoardData* bd, void* data)
 {                               /* Draw points and piece objects for selected board */
@@ -155,10 +122,13 @@ drawPickBoard(const BoardData* bd, void* data)
 
 	unsigned int firstPoint = (selectedBoard - 1) * 6;
 	/* pieces */
+	int separateTop = (bd->rd->ChequerMat[0].pTexture && bd->rd->pieceTextureType == PTT_TOP);
+	const ModelManager* modelHolder = &bd3d->modelHolder;
+
 	for (i = firstPoint + 1; i <= firstPoint + 6; i++) {
 		glLoadName(i);
 		for (j = 1; j <= Abs(bd->points[i]); j++)
-			drawPieceSimplified(bd3d, i, j);
+			drawPiece(modelHolder, bd3d, i, j, TRUE, (bd->rd->pieceType == PT_ROUNDED), bd->rd->curveAccuracy, separateTop);
 	}
 	/* points */
 	if (fClockwise) {
@@ -229,7 +199,7 @@ DrawPickIndividualPoint(const BoardData* bd, int point)
 }
 
 NTH_STATIC void
-drawPickPoint(const BoardData* bd, void* data)
+drawPickPointCheck(const BoardData* bd, void* data)
 {                               /* Draw two points to see which is selected */
 	int pointA = (GPOINTER_TO_INT(data)) / 100;
 	int pointB = (GPOINTER_TO_INT(data)) - pointA * 100;
@@ -282,7 +252,7 @@ PickDraw(int x, int y, PickDrawFun drawFun, const BoardData* bd, void* data)
 }
 
 extern void
-drawPointPick(const BoardData* UNUSED(bd), void* data)
+drawPickPoint(const BoardData* UNUSED(bd), void* data)
 {                               /* Draw sub parts of point to work out which part of point clicked */
 	unsigned int point = GPOINTER_TO_UINT(data);
 
@@ -352,7 +322,7 @@ NearestHit(int hits, const unsigned int* ptr)
 			depth = (float)*ptr++ / 0x7fffffff;
 			ptr++;              /* Skip max depth value */
 			/* Ignore clicks on the board base as other objects must be closer */
-			if (*ptr >= POINT_DICE && !(*ptr == POINT_LEFT || *ptr == POINT_RIGHT) && depth < minDepth) {
+			if (/* *ptr >= POINT_DICE && !(*ptr == POINT_LEFT || *ptr == POINT_RIGHT) && */ depth < minDepth) {
 				minDepth = depth;
 				sel = (int)*ptr;
 			}
@@ -365,7 +335,7 @@ NearestHit(int hits, const unsigned int* ptr)
 int
 BoardSubPoint3d(const BoardData* bd, int x, int y, unsigned int point)
 {
-	int hits = PickDraw(x, y, drawPointPick, bd, GUINT_TO_POINTER(point));
+	int hits = PickDraw(x, y, drawPickPoint, bd, GUINT_TO_POINTER(point));
 	return NearestHit(hits, (unsigned int*)selectBuf);
 }
 
@@ -374,11 +344,11 @@ BoardPoint3d(const BoardData* bd, int x, int y)
 {
 	int hits;
 	if (bd->resigned) {         /* Flag showing - just pick this */
-		hits = PickDraw(x, y, drawFlagPick, bd, NULL);
+		hits = PickDraw(x, y, drawPickFlag, bd, NULL);
 		return NearestHit(hits, (unsigned int*)selectBuf);
 	}
 	else {
-		int picked, firstPoint, secondPoint;
+		int picked;
 		hits = PickDraw(x, y, drawPickAreas, bd, NULL);
 		picked = NearestHit(hits, (unsigned int*)selectBuf);
 		if (picked <= 0 || picked > 24)
@@ -387,16 +357,17 @@ BoardPoint3d(const BoardData* bd, int x, int y)
 
 		/* Work out which point in board was clicked */
 		hits = PickDraw(x, y, drawPickBoard, bd, GINT_TO_POINTER(picked));
-		firstPoint = (int)selectBuf[3];
-		if (hits == 1)
-			return firstPoint;  /* Board point clicked */
-
-		secondPoint = (int)selectBuf[selectBuf[0] + 6];
-		if (firstPoint == secondPoint)
-			return firstPoint;  /* Chequer clicked over point (common) */
-
-		/* Could be either chequer or point - work out which one */
-		hits = PickDraw(x, y, drawPickPoint, bd, GINT_TO_POINTER(firstPoint * 100 + secondPoint));
 		return NearestHit(hits, (unsigned int*)selectBuf);
 	}
 }
+#else
+int BoardPoint3d(const BoardData* bd, int x, int y)
+{
+	return 0;
+}
+extern int BoardSubPoint3d(const BoardData* bd, int x, int y, unsigned int point)
+{
+	return 0;
+}
+
+#endif
