@@ -1053,7 +1053,7 @@ append_dice_options(optionswidget * pow)
 #endif
     int rngsAdded = 0, rngSelected = -1;
 
-    free(InitRNG(&nRandom, NULL, TRUE, rngCurrent));
+    free(InitRNG(&nRandom, NULL, FALSE, rngCurrent));
 
     pwp = gtk_alignment_new(0, 0, 0, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
