@@ -4016,17 +4016,17 @@ SetMatchID(const char *szMatchID)
         outputf(_("Illegal match ID '%s'\n"), szMatchID);
 #if 0
         /* debugging details */
-        outputf(_("Dice %u %u, "), anDice[0], anDice[1]);
-        outputf(_("player on roll %d (turn %d), "), fMove, fTurn);
-        outputf(_("resigned %d,\n"), fResigned);
-        outputf(_("doubled %d, "), fDoubled);
-        outputf(_("cube owner %d, "), fCubeOwner);
-        outputf(_("crawford game %d,\n"), fCrawford);
-        outputf(_("jacoby %d,\n"), lfJacoby);
-        outputf(_("match length %d, "), nMatchTo);
-        outputf(_("score %d-%d, "), anScore[0], anScore[1]);
-        outputf(_("cube %d, "), nCube);
-        outputf(_("game state %d\n"), (int) gs);
+        outputf("Dice %u %u, ", anDice[0], anDice[1]);
+        outputf("player on roll %d (turn %d), ", fMove, fTurn);
+        outputf("resigned %d,\n", fResigned);
+        outputf("doubled %d, ", fDoubled);
+        outputf("cube owner %d, ", fCubeOwner);
+        outputf("crawford game %d,\n", fCrawford);
+        outputf("jacoby %d,\n", lfJacoby);
+        outputf("match length %d, ", nMatchTo);
+        outputf("score %d-%d, ", anScore[0], anScore[1]);
+        outputf("cube %d, ", nCube);
+        outputf("game state %d\n", (int) gs);
 #endif
         outputx();
         return;
@@ -4504,7 +4504,7 @@ GetMoveString(moverecord * pmr, int *pPlayer, gboolean addSkillMarks)
 
     case MOVE_RESIGN:
         *pPlayer = pmr->fPlayer;
-        pch = _(" Resigns");    /* FIXME show value */
+        pch = _("Resigns");     /* FIXME show value */
         break;
 
     case MOVE_SETDICE:
