@@ -25,8 +25,6 @@
 #define EXTERNAL_Y_H
 #include "external_y.h"
 
-extern int ext_get_column (yyscan_t yyscanner );
-extern void ext_set_column (int column_no, yyscan_t yyscanner );
 extern int ext_parse(yyscan_t scanner);
 
 void escapes(const char *cp, char *tp);
