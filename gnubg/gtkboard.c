@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2000-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2002-2019 the AUTHORS
+ * Copyright (C) 2002-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2421,8 +2421,8 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
     bd->on_bar_opponent = board_text_to_setting(&board_text, &failed);
     bd->to_move = board_text_to_setting(&board_text, &failed);
     bd->forced = board_text_to_setting(&board_text, &failed);
-    bd->crawford_game = board_text_to_setting(&board_text, &failed);
-    bd->redoubles = board_text_to_setting(&board_text, &failed);
+    board_text_to_setting(&board_text, &failed);	/* skip fPostCrawford */
+    bd->crawford_game = !board_text_to_setting(&board_text, &failed);
     bd->jacoby_flag = ms.fJacoby;
     if (failed)
         return -1;
