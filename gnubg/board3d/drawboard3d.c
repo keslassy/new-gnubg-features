@@ -752,7 +752,7 @@ drawHinge(const renderdata* prd)
 }
 
 void
-drawHingeGap()
+drawHingeGap(void)
 {
 	drawRect((TOTAL_WIDTH - HINGE_GAP * 1.5f) / 2.0f, 0.f, BASE_DEPTH + EDGE_DEPTH, HINGE_GAP * 1.5f, TOTAL_HEIGHT + LIFT_OFF, 0);
 }
