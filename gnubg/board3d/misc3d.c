@@ -1200,7 +1200,6 @@ EmptyPos(BoardData * bd)
     updatePieceOccPos(bd, bd->bd3d);
 }
 
-extern OglModel* curModel;
 void
 SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd, int viewport[4])
 {
