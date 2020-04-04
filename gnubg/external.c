@@ -397,7 +397,7 @@ ExtEvaluation(scancontext * pec)
     evalcontext ec;
 
     if (ProcessFIBSBoardInfo(&pec->bi, &processedBoard)) {
-        return szResponse = g_strdup_printf("Error: badly formed board\n");
+        return g_strdup_printf("Error: badly formed board\n");
     }
 
     anScore[0] = processedBoard.nScore;
@@ -447,7 +447,7 @@ ExtFIBSBoard(scancontext * pec)
     char *szResponse;
 
     if (ProcessFIBSBoardInfo(&pec->bi, &processedBoard))
-        return szResponse = g_strdup_printf("Error: badly formed board\n");
+        return g_strdup_printf("Error: badly formed board\n");
 
     anScore[0] = processedBoard.nScore;
     anScore[1] = processedBoard.nScoreOpp;
