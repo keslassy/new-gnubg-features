@@ -365,16 +365,16 @@ ImportJF(FILE * fp, char *UNUSED(szFileName))
 
     moverecord *pmr;
     int nMatchTo = 0;
-    int fJacoby = 0;
+    int fJacobyRule = FALSE;
     int fTurn = 0;
-    int fCrawfordGame = 0;
-    int fPostCrawford = 0;
+    int fCrawfordGame = FALSE;
+    int fPostCrawfordGame = FALSE;
     int anScore[2] = { 0, 0 };
     int nCube = 0;
     int fCubeOwner = 0;
     int anDice[2] = { 0, 0 };
     TanBoard anBoard;
-    int fCubeUse = 0;
+    int fCubeUsage = FALSE;
     int fBeavers = 0;
     char aszPlayer[2][MAX_NAME_LEN];
     int i;
@@ -389,9 +389,9 @@ ImportJF(FILE * fp, char *UNUSED(szFileName))
     }
 #endif
 
-    if (ParseJF(fp, &nMatchTo, &fJacoby, &fTurn, aszPlayer,
-                &fCrawfordGame, &fPostCrawford, anScore, &nCube, &fCubeOwner,
-                anBoard, anDice, &fCubeUse, &fBeavers) < 0) {
+    if (ParseJF(fp, &nMatchTo, &fJacobyRule, &fTurn, aszPlayer,
+                &fCrawfordGame, &fPostCrawfordGame, anScore, &nCube, &fCubeOwner,
+                anBoard, anDice, &fCubeUsage, &fBeavers) < 0) {
         outputl(_("This file is not a valid Jellyfish .pos file!\n"));
         return -1;
     }
@@ -416,13 +416,13 @@ ImportJF(FILE * fp, char *UNUSED(szFileName))
     pmr->g.anScore[1] = anScore[1];
     pmr->g.fCrawford = TRUE;
     pmr->g.fCrawfordGame = fCrawfordGame;
-    pmr->g.fJacoby = fJacoby;
+    pmr->g.fJacoby = fJacobyRule;
     pmr->g.fWinner = -1;
     pmr->g.nPoints = 0;
     pmr->g.fResigned = FALSE;
     pmr->g.nAutoDoubles = 0;
     pmr->g.bgv = VARIATION_STANDARD;    /* assume standard backgammon */
-    pmr->g.fCubeUse = fCubeUse; /* assume use of cube */
+    pmr->g.fCubeUse = fCubeUsage; /* assume use of cube */
     IniStatcontext(&pmr->g.sc);
 
     AddMoveRecord(pmr);
@@ -642,7 +642,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
         if (!StrNCaseCmp(sz + 4, "illegal play", 12)) {
             /* Snowie type illegal play */
 
-            int nMatchTo, fJacoby, fUnused1, fUnused2, fTurn, fCrawfordGame;
+            int nMatchTo, fJacobyRule, fUnused1, fUnused2, fTurn, fCrawfordGame;
             int anScore[2], nCube, fCubeOwner, anDice[2];
             TanBoard anBoard;
             char aszPlayer[2][MAX_NAME_LEN];
@@ -655,7 +655,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
             /* step over '(' */
             ++pch;
 
-            if (ParseSnowieTxt(pch, &nMatchTo, &fJacoby, &fUnused1, &fUnused2,
+            if (ParseSnowieTxt(pch, &nMatchTo, &fJacobyRule, &fUnused1, &fUnused2,
                                &fTurn, aszPlayer, &fCrawfordGame, anScore, &nCube, &fCubeOwner, anBoard, anDice)) {
                 outputl(_("Illegal Snowie position format for illegal play."));
                 return;
@@ -1667,7 +1667,7 @@ ImportOldmoves(FILE * pf, char *szFilename)
 static void
 ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
               int fCrawford,
-              int fCrawfordRule, int UNUSED(fAutoDoubles), int fJacobyRule, bgvariation bgv, int fCubeUse)
+              int fCrawfordRule, int UNUSED(fAutoDoubles), int fJacobyRule, bgvariation bgv, int fCubeUsage)
 {
     char sz[1024];
     char *pch = NULL;
@@ -1702,7 +1702,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
     pmgi->g.fResigned = FALSE;
     pmgi->g.nAutoDoubles = 0;   /* we check for automatic doubles later */
     pmgi->g.bgv = bgv;
-    pmgi->g.fCubeUse = fCubeUse;
+    pmgi->g.fCubeUse = fCubeUsage;
     IniStatcontext(&pmgi->g.sc);
     AddMoveRecord(pmgi);
 
@@ -2341,7 +2341,7 @@ ImportSGG(FILE * pf, char *szFilename)
     int fCrawfordRule = TRUE;
     int fJacobyRule = TRUE;
     int fAutoDoubles = 0;
-    int fCubeUse = TRUE;
+    int fCubeUsage = TRUE;
     char buf[256], *pNext, *psz;
     bgvariation bgv = VARIATION_STANDARD;
 
@@ -2397,12 +2397,12 @@ ImportSGG(FILE * pf, char *szFilename)
         if (!ParseSGGGame(sz, &i, &n0, &n1, &fCrawford, &nLength))
             break;
 
-        ParseSGGOptions(sz, &mi, &fCrawfordRule, &fAutoDoubles, &fJacobyRule, &bgv, &fCubeUse);
+        ParseSGGOptions(sz, &mi, &fCrawfordRule, &fAutoDoubles, &fJacobyRule, &bgv, &fCubeUsage);
 
     }
 
     while (!feof(pf)) {
-        ImportSGGGame(pf, i, nLength, n0, n1, fCrawford, fCrawfordRule, fAutoDoubles, fJacobyRule, bgv, fCubeUse);
+        ImportSGGGame(pf, i, nLength, n0, n1, fCrawford, fCrawfordRule, fAutoDoubles, fJacobyRule, bgv, fCubeUsage);
 
         while (fgets(sz, 80, pf))
             if (!ParseSGGGame(sz, &i, &n0, &n1, &fCrawford, &nLength))
@@ -2568,11 +2568,11 @@ ParseTMGGame(const char *sz, int *piGame, int *pn0, int *pn1, int *pfCrawford, i
 static void
 ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
               int fCrawford,
-              int fCrawfordRule, int UNUSED(fAutoDoubles), int fJacobyRule, bgvariation bgv, int fCubeUse)
+              int fCrawfordRule, int UNUSED(fAutoDoubles), int fJacobyRule, bgvariation bgv, int fCubeUsage)
 {
     char sz[1024];
     char *pch;
-    int c, fPlayer = 0, anRoll[2];
+    int c, anRoll[2];
     moverecord *pmgi, *pmr;
     int j;
 
@@ -2613,7 +2613,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
     pmgi->g.fResigned = FALSE;
     pmgi->g.nAutoDoubles = 0;   /* we check for automatic doubles later */
     pmgi->g.bgv = bgv;
-    pmgi->g.fCubeUse = fCubeUse;
+    pmgi->g.fCubeUse = fCubeUsage;
     IniStatcontext(&pmgi->g.sc);
     AddMoveRecord(pmgi);
 
@@ -2635,7 +2635,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
 
         if (isdigit(*pch) || *pch == '-') {
 
-            fPlayer = (*pch == '-');    /* player: +n for player 0,
+            int fPlayer = (*pch == '-');    /* player: +n for player 0,
                                          * -n for player 1 */
 
             /* step over move number */
@@ -2793,7 +2793,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
             /* it's most likely an option: the players may enable or
              * disable beavers and auto doubles during play */
 
-            ParseTMGOptions(sz, &mi, &pmgi->g.fCrawford, &j, &pmgi->g.fJacoby, &j, &bgv, &fCubeUse);
+            ParseTMGOptions(sz, &mi, &pmgi->g.fCrawford, &j, &pmgi->g.fJacoby, &j, &bgv, &fCubeUsage);
 
         }
 
@@ -2811,7 +2811,7 @@ ImportTMG(FILE * pf, const char *UNUSED(szFilename))
     int fAutoDoubles = 0;
     int nLength = 0;
     int fCrawford = FALSE;
-    int fCubeUse = TRUE;
+    int fCubeUsage = TRUE;
     int n0 = 0, n1 = 0;
     int i = 0, j;
     int post_crawford = FALSE;
@@ -2845,7 +2845,7 @@ ImportTMG(FILE * pf, const char *UNUSED(szFilename))
         if (ParseTMGGame(sz, &i, &n0, &n1, &fCrawford, &post_crawford, nLength))
             break;
 
-        ParseTMGOptions(sz, &mi, &fCrawfordRule, &fAutoDoubles, &fJacobyRule, &nLength, &bgv, &fCubeUse);
+        ParseTMGOptions(sz, &mi, &fCrawfordRule, &fAutoDoubles, &fJacobyRule, &nLength, &bgv, &fCubeUsage);
 
     }
 
@@ -2853,7 +2853,7 @@ ImportTMG(FILE * pf, const char *UNUSED(szFilename))
 
     while (!feof(pf)) {
 
-        ImportTMGGame(pf, i, nLength, n0, n1, fCrawford, fCrawfordRule, fAutoDoubles, fJacobyRule, bgv, fCubeUse);
+        ImportTMGGame(pf, i, nLength, n0, n1, fCrawford, fCrawfordRule, fAutoDoubles, fJacobyRule, bgv, fCubeUsage);
 
         while (fgets(sz, 80, pf))
             if (ParseTMGGame(sz, &i, &n0, &n1, &fCrawford, &post_crawford, nLength))
@@ -3024,7 +3024,7 @@ ImportSnowieTxt(FILE * pf)
     moverecord *pmr;
     moverecord *pmgi;
 
-    int nMatchTo, fJacoby, fUnused1, fUnused2, fTurn, fCrawfordGame;
+    int nMatchTo, fJacobyRule, fUnused1, fUnused2, fTurn, fCrawfordGame;
     int fCubeOwner, nCube;
     int anScore[2], anDice[2];
     TanBoard anBoard;
@@ -3058,7 +3058,7 @@ ImportSnowieTxt(FILE * pf)
     /* parse string */
 
     if (ParseSnowieTxt(sz,
-                       &nMatchTo, &fJacoby, &fUnused1, &fUnused2,
+                       &nMatchTo, &fJacobyRule, &fUnused1, &fUnused2,
                        &fTurn, aszPlayer, &fCrawfordGame, anScore, &nCube, &fCubeOwner, anBoard, anDice) < 0) {
         outputl("This file is not a valid Snowie .txt file!");
         return -1;
@@ -3084,7 +3084,7 @@ ImportSnowieTxt(FILE * pf)
     pmgi->g.anScore[1] = anScore[1];
     pmgi->g.fCrawford = TRUE;
     pmgi->g.fCrawfordGame = fCrawfordGame;
-    pmgi->g.fJacoby = fJacoby;
+    pmgi->g.fJacoby = fJacobyRule;
     pmgi->g.fWinner = -1;
     pmgi->g.nPoints = 0;
     pmgi->g.fResigned = FALSE;
