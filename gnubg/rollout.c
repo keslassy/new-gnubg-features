@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2000-2019 the AUTHORS
+ * Copyright (C) 2000-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -222,10 +222,10 @@ RolloutDice(int iTurn, int iGame,
         if (fRotate) {
 
             if (!iGame)
-                nSkip = 0;
+                MT_SafeSet(&nSkip, 0);
 
-            for (;; nSkip++) {
-                unsigned int j = dicePerms->aaanPermutation[0][0][(iGame + nSkip) % 36];
+            for (;; MT_SafeInc(&nSkip)) {
+                unsigned int j = dicePerms->aaanPermutation[0][0][(iGame + MT_SafeGet(&nSkip)) % 36];
 
                 anDice[0] = j / 6 + 1;
                 anDice[1] = j % 6 + 1;
@@ -250,7 +250,7 @@ RolloutDice(int iTurn, int iGame,
          k;                     /* 36**i */
 
         for (i = 0, j = 0, k = 1; i < 6 && i <= (unsigned int) iTurn; i++, k *= 36)
-            j = dicePerms->aaanPermutation[i][iTurn][((iGame + nSkip) / k + j) % 36];
+            j = dicePerms->aaanPermutation[i][iTurn][((iGame + MT_SafeGet(&nSkip)) / k + j) % 36];
 
         anDice[0] = j / 6 + 1;
         anDice[1] = j % 6 + 1;
@@ -1072,7 +1072,7 @@ check_sds(int *active)
             continue;
         prc = &ro_apes[alt]->rc;
         for (ioutput = OUTPUT_EQUITY; ioutput < NUM_ROLLOUT_OUTPUTS; ioutput++) {
-            if (ioutput == OUTPUT_EQUITY) {      /* cubeless */
+            if (ioutput == OUTPUT_EQUITY) {     /* cubeless */
                 if (!ms.nMatchTo) {     /* money game */
                     s = fabsf(aarSigma[alt][ioutput]);
                     if (ro_fCubeRollout) {
@@ -1149,7 +1149,7 @@ RolloutLoopMT(void *UNUSED(unused))
             if (prc->fRotate)
                 QuasiRandomSeed(&dicePerms, (int) prc->nSeed);
 
-            nSkip = 0;          /* not multi-thread safe do quasi random dice for initial positions */
+            MT_SafeSet(&nSkip, 0);      /* not multi-thread safe do quasi random dice for initial positions */
 
             /* ... and the RNG */
             if (prc->rngRollout != RNG_MANUAL)
@@ -1687,11 +1687,11 @@ GeneralCubeDecisionR(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
     }
 
     if ((nTrials = RolloutGeneral(apBoard, apOutput, apStdDev,
-                                 aarsStatistics, apes, apci, apCubeDecTop, 2, FALSE, TRUE, pf, p)) <= 0)
+                                  aarsStatistics, apes, apci, apCubeDecTop, 2, FALSE, TRUE, pf, p)) <= 0)
         return -1;
 
     pes->rc.nGamesDone = nTrials;
-    pes->rc.nSkip = nSkip;
+    pes->rc.nSkip = MT_SafeGet(&nSkip);
 
     return 0;
 }
@@ -1840,7 +1840,8 @@ ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc 
     }
 
     nGamesDone = RolloutGeneral(apBoard,
-                                apOutput, apStdDev, NULL, apes, apci, apCubeDecTop, cMoves, TRUE, FALSE, pfRolloutProgress, pUserData);
+                                apOutput, apStdDev, NULL, apes, apci, apCubeDecTop, cMoves, TRUE, FALSE,
+                                pfRolloutProgress, pUserData);
     /* put fMove back again */
     for (i = 0; i < cMoves; ++i) {
         aci[i].fMove = !aci[i].fMove;
