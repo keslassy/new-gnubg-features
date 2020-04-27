@@ -1,14 +1,11 @@
 /*
- * multithread.c
+ * Copyright (C) 2007-2009 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2007-2020 the AUTHORS
  *
- * by Jon Kinsey, 2008
- *
- * Multithreaded operations
- *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 
  * $Id$
  */
@@ -105,7 +101,7 @@ MT_AbortTasks(void)
     while ((task = MT_GetTask()) != NULL)
         MT_TaskDone(task);
 
-    td.result = -1;
+    MT_SafeSet(&td.result, -1);
 }
 
 static SIMD_STACKALIGN gpointer
@@ -168,7 +164,7 @@ MT_CreateThreads(void)
     multi_debug(buf);
     g_free(buf);
 #endif
-    td.result = 0;
+    MT_SafeSet(&td.result, 0);
     MT_SafeSet(&td.closingThreads, FALSE);
     for (i = 0; i < td.numThreads; i++) {
         ThreadLocalData *pTLD = MT_CreateThreadLocalData(i);
@@ -240,7 +236,7 @@ MT_AddTask(Task * pt, gboolean lock)
         multi_debug("add task gets lock (queueLock)");
     }
     if (td.addedTasks == 0)
-        td.result = 0;          /* Reset result for new tasks */
+        MT_SafeSet(&td.result, 0);          /* Reset result for new tasks */
     td.addedTasks++;
     td.tasks = g_list_append(td.tasks, pt);
     if (g_list_length(td.tasks) == 1) { /* New tasks */
@@ -280,6 +276,7 @@ static gboolean
 WaitForAllTasks(int time)
 {
     int j = 0;
+
     while (!MT_SafeCompare(&td.doneTasks, td.totalTasks)) {
         if (j == 10)
             return FALSE;       /* Not done yet */
@@ -328,13 +325,13 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
 #if defined(USE_GTK)
     GTKResumeInput();
 #endif
-    return td.result;
+    return MT_SafeGet(&td.result);
 }
 
 extern void
 MT_SetResultFailed(void)
 {
-    td.result = -1;
+    MT_SafeSet(&td.result, -1);
 }
 
 extern int
@@ -390,7 +387,7 @@ MT_SyncEnd(void)
     }
 }
 
-#else
+#else	/* !defined(USE_MULTITHREAD) */
 #include "multithread.h"
 #include <stdlib.h>
 #if defined(USE_GTK)
