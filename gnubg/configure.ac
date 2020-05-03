@@ -295,6 +295,7 @@ AC_CHECK_LIB(readline,readline,
               READLINE_LIBS="")
 if test "$bcrl" = "y" ; then
     AC_DEFINE([HAVE_LIB_READLINE],1,Define if you have libreadline)
+    AC_CHECK_HEADERS(stdarg.h)
     fi
 AC_SUBST(READLINE_LIBS)
 
