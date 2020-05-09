@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2004-2017 the AUTHORS
+ * Copyright (C) 2004-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,8 +125,9 @@ main(int argc, char **argv)
     {
         char szOut[2048];
         char *apc[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+        int nc = pbc->bt == BEAROFF_HYPERGAMMON ? pbc->nChequers : 15;
 
-        puts(DrawBoard(szOut, (ConstTanBoard) anBoard, TRUE, apc, NULL, 15));
+        puts(DrawBoard(szOut, (ConstTanBoard) anBoard, TRUE, apc, NULL, nc));
     }
 
     /* dump req. position */
