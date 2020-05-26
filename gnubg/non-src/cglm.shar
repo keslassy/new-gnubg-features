@@ -17,7 +17,10 @@
 #	cglm/io.h
 #	cglm/mat4.h
 #	cglm/mat3.h
+#	cglm/mat2.h
 #	cglm/affine.h
+#	cglm/vec2.h
+#	cglm/vec2-ext.h
 #	cglm/vec3.h
 #	cglm/vec3-ext.h
 #	cglm/vec4.h
@@ -36,9 +39,12 @@
 #	cglm/curve.h
 #	cglm/bezier.h
 #	cglm/applesimd.h
+#	cglm/ray.h
 #	cglm/call
 #	cglm/call/mat4.h
 #	cglm/call/mat3.h
+#	cglm/call/mat2.h
+#	cglm/call/vec2.h
 #	cglm/call/vec3.h
 #	cglm/call/vec4.h
 #	cglm/call/affine.h
@@ -54,6 +60,7 @@
 #	cglm/call/ease.h
 #	cglm/call/curve.h
 #	cglm/call/bezier.h
+#	cglm/call/ray.h
 #	cglm/simd
 #	cglm/simd/intrin.h
 #	cglm/simd/x86.h
@@ -67,10 +74,14 @@
 #	cglm/simd/sse2/affine.h
 #	cglm/simd/sse2/mat4.h
 #	cglm/simd/sse2/mat3.h
+#	cglm/simd/sse2/mat2.h
 #	cglm/simd/sse2/quat.h
 #	cglm/struct
 #	cglm/struct/mat4.h
 #	cglm/struct/mat3.h
+#	cglm/struct/mat2.h
+#	cglm/struct/vec2.h
+#	cglm/struct/vec2-ext.h
 #	cglm/struct/vec3.h
 #	cglm/struct/vec3-ext.h
 #	cglm/struct/vec4.h
@@ -103,8 +114,8 @@ X#ifndef cglm_version_h
 X#define cglm_version_h
 X
 X#define CGLM_VERSION_MAJOR 0
-X#define CGLM_VERSION_MINOR 6
-X#define CGLM_VERSION_PATCH 1
+X#define CGLM_VERSION_MINOR 7
+X#define CGLM_VERSION_PATCH 6
 X
 X#endif /* cglm_version_h */
 50b96efae597911eaecef81f66f605ed
@@ -120,7 +131,13 @@ X
 X#ifndef cglm_common_h
 X#define cglm_common_h
 X
-X#define _USE_MATH_DEFINES /* for windows */
+X#ifndef _USE_MATH_DEFINES
+X#  define _USE_MATH_DEFINES       /* for windows */
+X#endif
+X
+X#ifndef _CRT_SECURE_NO_WARNINGS
+X#  define _CRT_SECURE_NO_WARNINGS /* for windows */
+X#endif
 X
 X#include <stdint.h>
 X#include <stddef.h>
@@ -188,9 +205,15 @@ Xtypedef float                   vec2[2];
 Xtypedef float                   vec3[3];
 Xtypedef int                    ivec3[3];
 Xtypedef CGLM_ALIGN_IF(16) float vec4[4];
-Xtypedef vec4                    versor;
+Xtypedef vec4                    versor;     /* |x, y, z, w| -> w is the last */
 Xtypedef vec3                    mat3[3];
-Xtypedef CGLM_ALIGN_MAT vec4     mat4[4];
+Xtypedef CGLM_ALIGN_IF(16) vec2  mat2[2];
+Xtypedef CGLM_ALIGN_MAT    vec4  mat4[4];
+X
+X/*
+X  Important: cglm stores quaternion as [x, y, z, w] in memory since v0.4.0 
+X  it was [w, x, y, z] before v0.4.0 ( v0.3.5 and earlier ). w is real part.
+X*/
 X
 X#define GLM_E         2.71828182845904523536028747135266250   /* e           */
 X#define GLM_LOG2E     1.44269504088896340735992468100189214   /* log2(e)     */
@@ -249,22 +272,26 @@ X * anonymous structs and your application without them and they'll still be
 X * compatible, cglm doesn't use the anonymous structs internally.
 X */
 X#ifndef CGLM_USE_ANONYMOUS_STRUCT
-X    /* If the user doesn't explicitly specify if they want anonymous structs or
-X     * not, then we'll try to intuit an appropriate choice. */
-X#   if defined(CGLM_NO_ANONYMOUS_STRUCT)
-X        /* The user has defined CGLM_NO_ANONYMOUS_STRUCT. This used to be the
-X         * only #define governing the use of anonymous structs, so for backward
-X         * compatibility, we still honor that choice and disable them. */
-X#       define CGLM_USE_ANONYMOUS_STRUCT 0
-X#   elif __STDC_VERSION__ >= 20112L || defined(_MSVC_VER)
-X        /* We're compiling for C11 or this is the MSVC compiler. In either
-X         * case, anonymous structs are available, so use them. */
-X#       define CGLM_USE_ANONYMOUS_STRUCT 1
-X#   else
-X        /* Otherwise, we're presumably building for C99 or C89 and can't rely
-X         * on anonymous structs being available. Turn them off. */
-X#       define CGLM_USE_ANONYMOUS_STRUCT 0
-X#   endif
+X   /* If the user doesn't explicitly specify if they want anonymous structs or
+X    * not, then we'll try to intuit an appropriate choice. */
+X#  if defined(CGLM_NO_ANONYMOUS_STRUCT)
+X     /* The user has defined CGLM_NO_ANONYMOUS_STRUCT. This used to be the
+X      * only #define governing the use of anonymous structs, so for backward
+X      * compatibility, we still honor that choice and disable them. */
+X#    define CGLM_USE_ANONYMOUS_STRUCT 0
+X#  elif __STDC_VERSION__ >= 20112L || defined(_MSVC_VER)
+X     /* We're compiling for C11 or this is the MSVC compiler. In either
+X      * case, anonymous structs are available, so use them. */
+X#    define CGLM_USE_ANONYMOUS_STRUCT 1
+X#  elif defined(_MSC_VER) && (_MSC_VER >= 1900) /*  Visual Studio 2015 */
+X     /* We can support anonymous structs
+X      * since Visual Studio 2015 or 2017 (1910) maybe? */
+X#    define CGLM_USE_ANONYMOUS_STRUCT 1
+X#  else
+X     /* Otherwise, we're presumably building for C99 or C89 and can't rely
+X      * on anonymous structs being available. Turn them off. */
+X#    define CGLM_USE_ANONYMOUS_STRUCT 0
+X#  endif
 X#endif
 X
 Xtypedef union vec2s {
@@ -328,8 +355,19 @@ X  };
 X#endif
 X} versors;
 X
+Xtypedef union mat2s {
+X  mat2  raw;
+X  vec2s col[2];
+X#if CGLM_USE_ANONYMOUS_STRUCT
+X  struct {
+X    float m00, m01;
+X    float m10, m11;
+X  };
+X#endif
+X} mat2s;
+X
 Xtypedef union mat3s {
-X  mat3 raw;
+X  mat3  raw;
 X  vec3s col[3];
 X#if CGLM_USE_ANONYMOUS_STRUCT
 X  struct {
@@ -341,7 +379,7 @@ X#endif
 X} mat3s;
 X
 Xtypedef union CGLM_ALIGN_MAT mat4s {
-X  mat4 raw;
+X  mat4  raw;
 X  vec4s col[4];
 X#if CGLM_USE_ANONYMOUS_STRUCT
 X  struct {
@@ -368,10 +406,12 @@ X#ifndef cglm_h
 X#define cglm_h
 X
 X#include "common.h"
+X#include "vec2.h"
 X#include "vec3.h"
 X#include "vec4.h"
 X#include "mat4.h"
 X#include "mat3.h"
+X#include "mat2.h"
 X#include "affine.h"
 X#include "cam.h"
 X#include "frustum.h"
@@ -387,6 +427,7 @@ X#include "sphere.h"
 X#include "ease.h"
 X#include "curve.h"
 X#include "bezier.h"
+X#include "ray.h"
 X
 X#endif /* cglm_h */
 a5fcc937e4d34d183c96ec7c4bd88a0f
@@ -406,10 +447,12 @@ Xextern "C" {
 X#endif
 X
 X#include "cglm.h"
+X#include "call/vec2.h"
 X#include "call/vec3.h"
 X#include "call/vec4.h"
-X#include "call/mat4.h"
+X#include "call/mat2.h"
 X#include "call/mat3.h"
+X#include "call/mat4.h"
 X#include "call/affine.h"
 X#include "call/cam.h"
 X#include "call/quat.h"
@@ -423,6 +466,7 @@ X#include "call/sphere.h"
 X#include "call/ease.h"
 X#include "call/curve.h"
 X#include "call/bezier.h"
+X#include "call/ray.h"
 X
 X#ifdef __cplusplus
 X}
@@ -446,8 +490,10 @@ X#endif
 X
 X#include "cglm.h"
 X#include "types-struct.h"
+X#include "struct/vec2.h"
 X#include "struct/vec3.h"
 X#include "struct/vec4.h"
+X#include "struct/mat2.h"
 X#include "struct/mat3.h"
 X#include "struct/mat4.h"
 X#include "struct/affine.h"
@@ -791,10 +837,7 @@ X * @param[out] dest   result matrix
 X */
 XCGLM_INLINE
 Xvoid
-Xglm_lookat(vec3 eye,
-X           vec3 center,
-X           vec3 up,
-X           mat4 dest) {
+Xglm_lookat(vec3 eye, vec3 center, vec3 up, mat4 dest) {
 X  CGLM_ALIGN(8) vec3 f, u, s;
 X
 X  glm_vec3_sub(center, eye, f);
@@ -1077,37 +1120,99 @@ X */
 X
 X#ifndef cglm_io_h
 X#define cglm_io_h
+X#if defined(DEBUG) || defined(_DEBUG) \
+X   || defined(CGLM_DEFINE_PRINTS) || defined(CGLM_LIB_SRC)
 X
 X#include "common.h"
 X
 X#include <stdio.h>
 X#include <stdlib.h>
 X
+X#define CGLM_PRINT_PRECISION    5
+X#define CGLM_PRINT_MAX_TO_SHORT 1e5
+X#define CGLM_PRINT_COLOR        "\033[36m"
+X#define CGLM_PRINT_COLOR_RESET  "\033[0m"
+X
 XCGLM_INLINE
 Xvoid
 Xglm_mat4_print(mat4              matrix,
 X               FILE * __restrict ostream) {
-X  int i;
-X  int j;
+X  char buff[16];
+X  int  i, j, cw[4], cwi;
 X
 X#define m 4
 X#define n 4
 X
-X  fprintf(ostream, "Matrix (float%dx%d):\n", m, n);
+X  fprintf(ostream, "Matrix (float%dx%d): " CGLM_PRINT_COLOR "\n" , m, n);
+X
+X  cw[0] = cw[1] = cw[2] = cw[3] = 0;
 X
 X  for (i = 0; i < m; i++) {
-X    fprintf(ostream, "\t|");
 X    for (j = 0; j < n; j++) {
-X      fprintf(ostream, "%0.4f", matrix[j][i]);;
-X
-X      if (j != n - 1)
-X        fprintf(ostream, "\t");
+X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
+X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, matrix[i][j]);
+X      else
+X        cwi = sprintf(buff, "% g", matrix[i][j]);
+X      cw[i] = GLM_MAX(cw[i], cwi);
 X    }
-X
-X    fprintf(ostream, "|\n");
 X  }
 X
-X  fprintf(ostream, "\n");
+X  for (i = 0; i < m; i++) {
+X    fprintf(ostream, "  |");
+X
+X    for (j = 0; j < n; j++)
+X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
+X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, matrix[j][i]);
+X      else
+X        fprintf(ostream, " % *g", cw[j], matrix[j][i]);
+X
+X    fprintf(ostream, "  |\n");
+X  }
+X
+X  fprintf(ostream, CGLM_PRINT_COLOR_RESET "\n");
+X
+X#undef m
+X#undef n
+X}
+X
+X
+XCGLM_INLINE
+Xvoid
+Xglm_mat3_print(mat3              matrix,
+X               FILE * __restrict ostream) {
+X  char buff[16];
+X  int  i, j, cw[4], cwi;
+X
+X#define m 3
+X#define n 3
+X
+X  fprintf(ostream, "Matrix (float%dx%d): " CGLM_PRINT_COLOR "\n", m, n);
+X
+X  cw[0] = cw[1] = cw[2] = 0;
+X
+X  for (i = 0; i < m; i++) {
+X    for (j = 0; j < n; j++) {
+X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
+X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, matrix[i][j]);
+X      else
+X        cwi = sprintf(buff, "% g", matrix[i][j]);
+X      cw[i] = GLM_MAX(cw[i], cwi);
+X    }
+X  }
+X
+X  for (i = 0; i < m; i++) {
+X    fprintf(ostream, "  |");
+X    
+X    for (j = 0; j < n; j++)
+X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
+X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, matrix[j][i]);
+X      else
+X        fprintf(ostream, " % *g", cw[j], matrix[j][i]);
+X    
+X    fprintf(ostream, "  |\n");
+X  }
+X
+X  fprintf(ostream, CGLM_PRINT_COLOR_RESET "\n");
 X
 X#undef m
 X#undef n
@@ -1115,29 +1220,41 @@ X}
 X
 XCGLM_INLINE
 Xvoid
-Xglm_mat3_print(mat3              matrix,
+Xglm_mat2_print(mat2              matrix,
 X               FILE * __restrict ostream) {
-X  int i;
-X  int j;
+X  char buff[16];
+X  int  i, j, cw[4], cwi;
 X
-X#define m 3
-X#define n 3
+X#define m 2
+X#define n 2
 X
-X  fprintf(ostream, "Matrix (float%dx%d):\n", m, n);
+X  fprintf(ostream, "Matrix (float%dx%d): " CGLM_PRINT_COLOR "\n", m, n);
+X
+X  cw[0] = cw[1] = 0;
 X
 X  for (i = 0; i < m; i++) {
-X    fprintf(ostream, "\t|");
 X    for (j = 0; j < n; j++) {
-X      fprintf(ostream, "%0.4f", matrix[j][i]);;
-X
-X      if (j != n - 1)
-X        fprintf(ostream, "\t");
+X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
+X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, matrix[i][j]);
+X      else
+X        cwi = sprintf(buff, "% g", matrix[i][j]);
+X      cw[i] = GLM_MAX(cw[i], cwi);
 X    }
-X
-X    fprintf(ostream, "|\n");
 X  }
 X
-X  fprintf(ostream, "\n");
+X  for (i = 0; i < m; i++) {
+X    fprintf(ostream, "  |");
+X    
+X    for (j = 0; j < n; j++)
+X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
+X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, matrix[j][i]);
+X      else
+X        fprintf(ostream, " % *g", cw[j], matrix[j][i]);
+X    
+X    fprintf(ostream, "  |\n");
+X  }
+X
+X  fprintf(ostream, CGLM_PRINT_COLOR_RESET "\n");
 X
 X#undef m
 X#undef n
@@ -1151,16 +1268,16 @@ X  int i;
 X
 X#define m 4
 X
-X  fprintf(ostream, "Vector (float%d):\n\t|", m);
+X  fprintf(ostream, "Vector (float%d): " CGLM_PRINT_COLOR "\n  (", m);
 X
 X  for (i = 0; i < m; i++) {
-X    fprintf(ostream, "%0.4f", vec[i]);
-X
-X    if (i != m - 1)
-X      fprintf(ostream, "\t");
+X    if (vec[i] < CGLM_PRINT_MAX_TO_SHORT)
+X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, vec[i]);
+X    else
+X      fprintf(ostream, " % g", vec[i]);
 X  }
 X
-X  fprintf(ostream, "|\n\n");
+X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
 X
 X#undef m
 X}
@@ -1173,16 +1290,16 @@ X  int i;
 X
 X#define m 3
 X
-X  fprintf(ostream, "Vector (float%d):\n\t|", m);
+X  fprintf(ostream, "Vector (float%d): " CGLM_PRINT_COLOR "\n  (", m);
 X
 X  for (i = 0; i < m; i++) {
-X    fprintf(ostream, "%0.4f", vec[i]);
-X
-X    if (i != m - 1)
-X      fprintf(ostream, "\t");
+X    if (vec[i] < CGLM_PRINT_MAX_TO_SHORT)
+X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, vec[i]);
+X    else
+X      fprintf(ostream, " % g", vec[i]);
 X  }
 X
-X  fprintf(ostream, "|\n\n");
+X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
 X
 X#undef m
 X}
@@ -1195,17 +1312,35 @@ X  int i;
 X
 X#define m 3
 X
-X  fprintf(ostream, "Vector (int%d):\n\t|", m);
+X  fprintf(ostream, "Vector (int%d): " CGLM_PRINT_COLOR "\n  (", m);
+X
+X  for (i = 0; i < m; i++)
+X    fprintf(ostream, " % d", vec[i]);
+X
+X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
+X  
+X#undef m
+X}
+X
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_print(vec2              vec,
+X               FILE * __restrict ostream) {
+X  int i;
+X
+X#define m 2
+X
+X  fprintf(ostream, "Vector (float%d): " CGLM_PRINT_COLOR "\n  (", m);
 X
 X  for (i = 0; i < m; i++) {
-X    fprintf(ostream, "%d", vec[i]);
-X
-X    if (i != m - 1)
-X      fprintf(ostream, "\t");
+X    if (vec[i] < CGLM_PRINT_MAX_TO_SHORT)
+X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, vec[i]);
+X    else
+X      fprintf(ostream, " % g", vec[i]);
 X  }
 X
-X  fprintf(ostream, "|\n\n");
-X  
+X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
+X
 X#undef m
 X}
 X
@@ -1217,16 +1352,17 @@ X  int i;
 X
 X#define m 4
 X
-X  fprintf(ostream, "Versor (float%d):\n\t|", m);
+X  fprintf(ostream, "Quaternion (float%d): " CGLM_PRINT_COLOR "\n  (", m);
 X
 X  for (i = 0; i < m; i++) {
-X    fprintf(ostream, "%0.4f", vec[i]);
-X
-X    if (i != m - 1)
-X      fprintf(ostream, "\t");
+X    if (vec[i] < CGLM_PRINT_MAX_TO_SHORT)
+X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, vec[i]);
+X    else
+X      fprintf(ostream, " % g", vec[i]);
 X  }
 X
-X  fprintf(ostream, "|\n\n");
+X
+X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
 X
 X#undef m
 X}
@@ -1240,26 +1376,45 @@ X  int i, j;
 X
 X#define m 3
 X
-X  fprintf(ostream, "AABB (%s):\n", tag ? tag: "float");
+X  fprintf(ostream, "AABB (%s): " CGLM_PRINT_COLOR "\n", tag ? tag: "float");
 X
 X  for (i = 0; i < 2; i++) {
-X    fprintf(ostream, "\t|");
-X
+X    fprintf(ostream, "  (");
+X    
 X    for (j = 0; j < m; j++) {
-X      fprintf(ostream, "%0.4f", bbox[i][j]);
-X
-X      if (j != m - 1)
-X        fprintf(ostream, "\t");
+X      if (bbox[i][j] < CGLM_PRINT_MAX_TO_SHORT)
+X        fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, bbox[i][j]);
+X      else
+X        fprintf(ostream, " % g", bbox[i][j]);
 X    }
 X
-X    fprintf(ostream, "|\n");
+X    fprintf(ostream, "  )\n");
 X  }
 X
-X  fprintf(ostream, "\n");
+X  fprintf(ostream, CGLM_PRINT_COLOR_RESET "\n");
 X
 X#undef m
 X}
 X
+X#elif !defined(CGLM_NO_PRINTS_NOOP)
+X
+X#include "common.h"
+X
+X#include <stdio.h>
+X#include <stdlib.h>
+X
+X/* NOOP: Remove print from DEBUG */
+X#define glm_mat4_print(...)
+X#define glm_mat3_print(...)
+X#define glm_mat2_print(...)
+X#define glm_vec4_print(...)
+X#define glm_vec3_print(...)
+X#define glm_ivec3_print(...)
+X#define glm_vec2_print(...)
+X#define glm_versor_print(...)
+X#define glm_aabb_print(...)
+X
+X#endif
 X#endif /* cglm_io_h */
 63693ed6831842533808e4e88fabc9d9
 echo x - cglm/mat4.h
@@ -2416,6 +2571,331 @@ X}
 X
 X#endif /* cglm_mat3_h */
 7b299bcaf63cee6af26f15e451462141
+echo x - cglm/mat2.h
+sed 's/^X//' >cglm/mat2.h << '00da78bf771207805694989428f0a451'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X/*
+X Macros:
+X   GLM_MAT2_IDENTITY_INIT
+X   GLM_MAT2_ZERO_INIT
+X   GLM_MAT2_IDENTITY
+X   GLM_MAT2_ZERO
+X
+X Functions:
+X   CGLM_INLINE void  glm_mat2_copy(mat2 mat, mat2 dest)
+X   CGLM_INLINE void  glm_mat2_identity(mat2 mat)
+X   CGLM_INLINE void  glm_mat2_identity_array(mat2 * restrict mat, size_t count)
+X   CGLM_INLINE void  glm_mat2_zero(mat2 mat)
+X   CGLM_INLINE void  glm_mat2_mul(mat2 m1, mat2 m2, mat2 dest)
+X   CGLM_INLINE void  glm_mat2_transpose_to(mat2 m, mat2 dest)
+X   CGLM_INLINE void  glm_mat2_transpose(mat2 m)
+X   CGLM_INLINE void  glm_mat2_mulv(mat2 m, vec2 v, vec2 dest)
+X   CGLM_INLINE float glm_mat2_trace(mat2 m)
+X   CGLM_INLINE void  glm_mat2_scale(mat2 m, float s)
+X   CGLM_INLINE float glm_mat2_det(mat2 mat)
+X   CGLM_INLINE void  glm_mat2_inv(mat2 mat, mat2 dest)
+X   CGLM_INLINE void  glm_mat2_swap_col(mat2 mat, int col1, int col2)
+X   CGLM_INLINE void  glm_mat2_swap_row(mat2 mat, int row1, int row2)
+X   CGLM_INLINE float glm_mat2_rmc(vec2 r, mat2 m, vec2 c)
+X */
+X
+X#ifndef cglm_mat2_h
+X#define cglm_mat2_h
+X
+X#include "common.h"
+X#include "vec2.h"
+X
+X#ifdef CGLM_SSE_FP
+X#  include "simd/sse2/mat2.h"
+X#endif
+X
+X#define GLM_MAT2_IDENTITY_INIT  {{1.0f, 0.0f}, {0.0f, 1.0f}}
+X#define GLM_MAT2_ZERO_INIT      {{0.0f, 0.0f}, {0.0f, 0.0f}}
+X
+X/* for C only */
+X#define GLM_MAT2_IDENTITY ((mat2)GLM_MAT2_IDENTITY_INIT)
+X#define GLM_MAT2_ZERO     ((mat2)GLM_MAT2_ZERO_INIT)
+X
+X/*!
+X * @brief copy all members of [mat] to [dest]
+X *
+X * @param[in]  mat  source
+X * @param[out] dest destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_copy(mat2 mat, mat2 dest) {
+X  glm_vec4_copy(mat[0], dest[0]);
+X}
+X
+X/*!
+X * @brief make given matrix identity. It is identical with below,
+X *        but it is more easy to do that with this func especially for members
+X *        e.g. glm_mat2_identity(aStruct->aMatrix);
+X *
+X * @code
+X * glm_mat2_copy(GLM_MAT2_IDENTITY, mat); // C only
+X *
+X * // or
+X * mat2 mat = GLM_MAT2_IDENTITY_INIT;
+X * @endcode
+X *
+X * @param[in, out]  mat  destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_identity(mat2 mat) {
+X  CGLM_ALIGN_MAT mat2 t = GLM_MAT2_IDENTITY_INIT;
+X  glm_mat2_copy(t, mat);
+X}
+X
+X/*!
+X * @brief make given matrix array's each element identity matrix
+X *
+X * @param[in, out]  mat   matrix array (must be aligned (16)
+X *                        if alignment is not disabled)
+X *
+X * @param[in]       count count of matrices
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_identity_array(mat2 * __restrict mat, size_t count) {
+X  CGLM_ALIGN_MAT mat2 t = GLM_MAT2_IDENTITY_INIT;
+X  size_t i;
+X
+X  for (i = 0; i < count; i++) {
+X    glm_mat2_copy(t, mat[i]);
+X  }
+X}
+X
+X/*!
+X * @brief make given matrix zero.
+X *
+X * @param[in, out]  mat  matrix
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_zero(mat2 mat) {
+X  CGLM_ALIGN_MAT mat2 t = GLM_MAT2_ZERO_INIT;
+X  glm_mat2_copy(t, mat);
+X}
+X
+X/*!
+X * @brief multiply m1 and m2 to dest
+X *
+X * m1, m2 and dest matrices can be same matrix, it is possible to write this:
+X *
+X * @code
+X * mat2 m = GLM_MAT2_IDENTITY_INIT;
+X * glm_mat2_mul(m, m, m);
+X * @endcode
+X *
+X * @param[in]  m1   left matrix
+X * @param[in]  m2   right matrix
+X * @param[out] dest destination matrix
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_mul(mat2 m1, mat2 m2, mat2 dest) {
+X#if defined( __SSE__ ) || defined( __SSE2__ )
+X  glm_mat2_mul_sse2(m1, m2, dest);
+X#else
+X  float a00 = m1[0][0], a01 = m1[0][1],
+X        a10 = m1[1][0], a11 = m1[1][1],
+X        b00 = m2[0][0], b01 = m2[0][1],
+X        b10 = m2[1][0], b11 = m2[1][1];
+X
+X  dest[0][0] = a00 * b00 + a10 * b01;
+X  dest[0][1] = a01 * b00 + a11 * b01;
+X  dest[1][0] = a00 * b10 + a10 * b11;
+X  dest[1][1] = a01 * b10 + a11 * b11;
+X#endif
+X}
+X
+X/*!
+X * @brief transpose mat2 and store in dest
+X *
+X * source matrix will not be transposed unless dest is m
+X *
+X * @param[in]  m     matrix
+X * @param[out] dest  result
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_transpose_to(mat2 m, mat2 dest) {
+X#if defined( __SSE__ ) || defined( __SSE2__ )
+X  glm_mat2_transp_sse2(m, dest);
+X#else
+X  dest[0][0] = m[0][0];
+X  dest[0][1] = m[1][0];
+X  dest[1][0] = m[0][1];
+X  dest[1][1] = m[1][1];
+X#endif
+X}
+X
+X/*!
+X * @brief tranpose mat2 and store result in same matrix
+X *
+X * @param[in, out] m source and dest
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_transpose(mat2 m) {
+X  float tmp;
+X  tmp     = m[0][1];
+X  m[0][1] = m[1][0];
+X  m[1][0] = tmp;
+X}
+X
+X/*!
+X * @brief multiply mat2 with vec2 (column vector) and store in dest vector
+X *
+X * @param[in]  m    mat2 (left)
+X * @param[in]  v    vec2 (right, column vector)
+X * @param[out] dest vec2 (result, column vector)
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_mulv(mat2 m, vec2 v, vec2 dest) {
+X  dest[0] = m[0][0] * v[0] + m[1][0] * v[1];
+X  dest[1] = m[0][1] * v[0] + m[1][1] * v[1];
+X}
+X
+X/*!
+X * @brief trace of matrix
+X *
+X * sum of the elements on the main diagonal from upper left to the lower right
+X *
+X * @param[in]  m matrix
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_mat2_trace(mat2 m) {
+X  return m[0][0] + m[1][1];
+X}
+X
+X/*!
+X * @brief scale (multiply with scalar) matrix
+X *
+X * multiply matrix with scalar
+X *
+X * @param[in, out] m matrix
+X * @param[in]      s scalar
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_scale(mat2 m, float s) {
+X  glm_vec4_scale(m[0], s, m[0]);
+X}
+X
+X/*!
+X * @brief mat2 determinant
+X *
+X * @param[in] mat matrix
+X *
+X * @return determinant
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_mat2_det(mat2 mat) {
+X  return mat[0][0] * mat[1][1] - mat[1][0] * mat[0][1];
+X}
+X
+X/*!
+X * @brief inverse mat2 and store in dest
+X *
+X * @param[in]  mat  matrix
+X * @param[out] dest inverse matrix
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_inv(mat2 mat, mat2 dest) {
+X  float det;
+X  float a = mat[0][0], b = mat[0][1],
+X        c = mat[1][0], d = mat[1][1];
+X
+X  det = 1.0f / (a * d - b * c);
+X
+X  dest[0][0] =  d * det;
+X  dest[0][1] = -b * det;
+X  dest[1][0] = -c * det;
+X  dest[1][1] =  a * det;
+X}
+X
+X/*!
+X * @brief swap two matrix columns
+X *
+X * @param[in,out] mat  matrix
+X * @param[in]     col1 col1
+X * @param[in]     col2 col2
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_swap_col(mat2 mat, int col1, int col2) {
+X  float a, b;
+X
+X  a = mat[col1][0];
+X  b = mat[col1][1];
+X
+X  mat[col1][0] = mat[col2][0];
+X  mat[col1][1] = mat[col2][1];
+X
+X  mat[col2][0] = a;
+X  mat[col2][1] = b;
+X}
+X
+X/*!
+X * @brief swap two matrix rows
+X *
+X * @param[in,out] mat  matrix
+X * @param[in]     row1 row1
+X * @param[in]     row2 row2
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_swap_row(mat2 mat, int row1, int row2) {
+X  float a, b;
+X
+X  a = mat[0][row1];
+X  b = mat[1][row1];
+X
+X  mat[0][row1] = mat[0][row2];
+X  mat[1][row1] = mat[1][row2];
+X
+X  mat[0][row2] = a;
+X  mat[1][row2] = b;
+X}
+X
+X/*!
+X * @brief helper for  R (row vector) * M (matrix) * C (column vector)
+X *
+X * rmc stands for Row * Matrix * Column
+X *
+X * the result is scalar because R * M = Matrix1x2 (row vector),
+X * then Matrix1x2 * Vec2 (column vector) = Matrix1x1 (Scalar)
+X *
+X * @param[in]  r   row vector or matrix1x2
+X * @param[in]  m   matrix2x2
+X * @param[in]  c   column vector or matrix2x1
+X *
+X * @return scalar value e.g. Matrix1x1
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_mat2_rmc(vec2 r, mat2 m, vec2 c) {
+X  vec2 tmp;
+X  glm_mat2_mulv(m, c, tmp);
+X  return glm_vec2_dot(r, tmp);
+X}
+X
+X#endif /* cglm_mat2_h */
+00da78bf771207805694989428f0a451
 echo x - cglm/affine.h
 sed 's/^X//' >cglm/affine.h << '43b5489fcd1d208f21cb3a378edfce43'
 X/*
@@ -2459,10 +2939,6 @@ X#include "vec3.h"
 X#include "vec4.h"
 X#include "mat4.h"
 X#include "affine-mat.h"
-X
-XCGLM_INLINE
-Xvoid
-Xglm_mat4_mul(mat4 m1, mat4 m2, mat4 dest);
 X
 X/*!
 X * @brief translate existing transform matrix by v vector
@@ -2909,6 +3385,786 @@ X}
 X
 X#endif /* cglm_affine_h */
 43b5489fcd1d208f21cb3a378edfce43
+echo x - cglm/vec2.h
+sed 's/^X//' >cglm/vec2.h << '4001921be909fdebb392c47ed9d6f0f5'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X/*
+X Macros:
+X   GLM_VEC2_ONE_INIT
+X   GLM_VEC2_ZERO_INIT
+X   GLM_VEC2_ONE
+X   GLM_VEC2_ZERO
+X
+X Functions:
+X   CGLM_INLINE void  glm_vec2(float * __restrict v, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_copy(vec2 a, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_zero(vec2 v)
+X   CGLM_INLINE void  glm_vec2_one(vec2 v)
+X   CGLM_INLINE float glm_vec2_dot(vec2 a, vec2 b)
+X   CGLM_INLINE float glm_vec2_cross(vec2 a, vec2 b)
+X   CGLM_INLINE float glm_vec2_norm2(vec2 v)
+X   CGLM_INLINE float glm_vec2_norm(vec2 vec)
+X   CGLM_INLINE void  glm_vec2_add(vec2 a, vec2 b, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_adds(vec2 v, float s, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_sub(vec2 a, vec2 b, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_subs(vec2 v, float s, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_mul(vec2 a, vec2 b, vec2 d)
+X   CGLM_INLINE void  glm_vec2_scale(vec2 v, float s, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_scale_as(vec2 v, float s, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_div(vec2 a, vec2 b, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_divs(vec2 v, float s, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_addadd(vec2 a, vec2 b, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_subadd(vec2 a, vec2 b, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_muladd(vec2 a, vec2 b, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_muladds(vec2 a, float s, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_maxadd(vec2 a, vec2 b, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_minadd(vec2 a, vec2 b, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_negate_to(vec2 v, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_negate(vec2 v)
+X   CGLM_INLINE void  glm_vec2_normalize(vec2 v)
+X   CGLM_INLINE void  glm_vec2_normalize_to(vec2 vec, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_rotate(vec2 v, float angle, vec2 dest)
+X   CGLM_INLINE float glm_vec2_distance2(vec2 a, vec2 b)
+X   CGLM_INLINE float glm_vec2_distance(vec2 a, vec2 b)
+X   CGLM_INLINE void  glm_vec2_maxv(vec2 v1, vec2 v2, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_minv(vec2 v1, vec2 v2, vec2 dest)
+X   CGLM_INLINE void  glm_vec2_clamp(vec2 v, float minVal, float maxVal)
+X   CGLM_INLINE void  glm_vec2_lerp(vec2 from, vec2 to, float t, vec2 dest)
+X
+X */
+X
+X#ifndef cglm_vec2_h
+X#define cglm_vec2_h
+X
+X#include "common.h"
+X#include "util.h"
+X#include "vec2-ext.h"
+X
+X#define GLM_VEC2_ONE_INIT   {1.0f, 1.0f}
+X#define GLM_VEC2_ZERO_INIT  {0.0f, 0.0f}
+X
+X#define GLM_VEC2_ONE  ((vec2)GLM_VEC2_ONE_INIT)
+X#define GLM_VEC2_ZERO ((vec2)GLM_VEC2_ZERO_INIT)
+X
+X/*!
+X * @brief init vec2 using another vector
+X *
+X * @param[in]  v    a vector
+X * @param[out] dest destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2(float * __restrict v, vec2 dest) {
+X  dest[0] = v[0];
+X  dest[1] = v[1];
+X}
+X
+X/*!
+X * @brief copy all members of [a] to [dest]
+X *
+X * @param[in]  a    source
+X * @param[out] dest destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_copy(vec2 a, vec2 dest) {
+X  dest[0] = a[0];
+X  dest[1] = a[1];
+X}
+X
+X/*!
+X * @brief make vector zero
+X *
+X * @param[in, out]  v vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_zero(vec2 v) {
+X  v[0] = v[1] = 0.0f;
+X}
+X
+X/*!
+X * @brief make vector one
+X *
+X * @param[in, out]  v vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_one(vec2 v) {
+X  v[0] = v[1] = 1.0f;
+X}
+X
+X/*!
+X * @brief vec2 dot product
+X *
+X * @param[in] a vector1
+X * @param[in] b vector2
+X *
+X * @return dot product
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_vec2_dot(vec2 a, vec2 b) {
+X  return a[0] * b[0] + a[1] * b[1];
+X}
+X
+X/*!
+X * @brief vec2 cross product
+X *
+X * REF: http://allenchou.net/2013/07/cross-product-of-2d-vectors/
+X *
+X * @param[in]  a vector1
+X * @param[in]  b vector2
+X *
+X * @return Z component of cross product
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_vec2_cross(vec2 a, vec2 b) {
+X  /* just calculate the z-component */
+X  return a[0] * b[1] - a[1] * b[0];
+X}
+X
+X/*!
+X * @brief norm * norm (magnitude) of vec
+X *
+X * we can use this func instead of calling norm * norm, because it would call
+X * sqrtf fuction twice but with this func we can avoid func call, maybe this is
+X * not good name for this func
+X *
+X * @param[in] v vector
+X *
+X * @return norm * norm
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_vec2_norm2(vec2 v) {
+X  return glm_vec2_dot(v, v);
+X}
+X
+X/*!
+X * @brief norm (magnitude) of vec2
+X *
+X * @param[in] vec vector
+X *
+X * @return norm
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_vec2_norm(vec2 vec) {
+X  return sqrtf(glm_vec2_norm2(vec));
+X}
+X
+X/*!
+X * @brief add a vector to b vector store result in dest
+X *
+X * @param[in]  a    vector1
+X * @param[in]  b    vector2
+X * @param[out] dest destination vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_add(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] = a[0] + b[0];
+X  dest[1] = a[1] + b[1];
+X}
+X
+X/*!
+X * @brief add scalar to v vector store result in dest (d = v + s)
+X *
+X * @param[in]  v    vector
+X * @param[in]  s    scalar
+X * @param[out] dest destination vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_adds(vec2 v, float s, vec2 dest) {
+X  dest[0] = v[0] + s;
+X  dest[1] = v[1] + s;
+X}
+X
+X/*!
+X * @brief subtract b vector from a vector store result in dest
+X *
+X * @param[in]  a    vector1
+X * @param[in]  b    vector2
+X * @param[out] dest destination vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_sub(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] = a[0] - b[0];
+X  dest[1] = a[1] - b[1];
+X}
+X
+X/*!
+X * @brief subtract scalar from v vector store result in dest (d = v - s)
+X *
+X * @param[in]  v    vector
+X * @param[in]  s    scalar
+X * @param[out] dest destination vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_subs(vec2 v, float s, vec2 dest) {
+X  dest[0] = v[0] - s;
+X  dest[1] = v[1] - s;
+X}
+X
+X/*!
+X * @brief multiply two vector (component-wise multiplication)
+X *
+X * @param a    v1
+X * @param b    v2
+X * @param dest v3 = (a[0] * b[0], a[1] * b[1])
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_mul(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] = a[0] * b[0];
+X  dest[1] = a[1] * b[1];
+X}
+X
+X/*!
+X * @brief multiply/scale vector with scalar: result = v * s
+X *
+X * @param[in]  v    vector
+X * @param[in]  s    scalar
+X * @param[out] dest destination vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_scale(vec2 v, float s, vec2 dest) {
+X  dest[0] = v[0] * s;
+X  dest[1] = v[1] * s;
+X}
+X
+X/*!
+X * @brief scale as vector specified: result = unit(v) * s
+X *
+X * @param[in]  v    vector
+X * @param[in]  s    scalar
+X * @param[out] dest destination vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_scale_as(vec2 v, float s, vec2 dest) {
+X  float norm;
+X  norm = glm_vec2_norm(v);
+X
+X  if (norm == 0.0f) {
+X    glm_vec2_zero(dest);
+X    return;
+X  }
+X
+X  glm_vec2_scale(v, s / norm, dest);
+X}
+X
+X/*!
+X * @brief div vector with another component-wise division: d = a / b
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @param[out] dest result = (a[0]/b[0], a[1]/b[1])
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_div(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] = a[0] / b[0];
+X  dest[1] = a[1] / b[1];
+X}
+X
+X/*!
+X * @brief div vector with scalar: d = v / s
+X *
+X * @param[in]  v    vector
+X * @param[in]  s    scalar
+X * @param[out] dest result = (a[0]/s, a[1]/s)
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_divs(vec2 v, float s, vec2 dest) {
+X  dest[0] = v[0] / s;
+X  dest[1] = v[1] / s;
+X}
+X
+X/*!
+X * @brief add two vectors and add result to sum
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @param[out] dest dest += (a + b)
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_addadd(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] += a[0] + b[0];
+X  dest[1] += a[1] + b[1];
+X}
+X
+X/*!
+X * @brief sub two vectors and add result to dest
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @param[out] dest dest += (a + b)
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_subadd(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] += a[0] - b[0];
+X  dest[1] += a[1] - b[1];
+X}
+X
+X/*!
+X * @brief mul two vectors and add result to dest
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @param[out] dest dest += (a * b)
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_muladd(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] += a[0] * b[0];
+X  dest[1] += a[1] * b[1];
+X}
+X
+X/*!
+X * @brief mul vector with scalar and add result to sum
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector
+X * @param[in]  s    scalar
+X * @param[out] dest dest += (a * b)
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_muladds(vec2 a, float s, vec2 dest) {
+X  dest[0] += a[0] * s;
+X  dest[1] += a[1] * s;
+X}
+X
+X/*!
+X * @brief add max of two vector to result/dest
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @param[out] dest dest += max(a, b)
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_maxadd(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] += glm_max(a[0], b[0]);
+X  dest[1] += glm_max(a[1], b[1]);
+X}
+X
+X/*!
+X * @brief add min of two vector to result/dest
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @param[out] dest dest += min(a, b)
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_minadd(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] += glm_min(a[0], b[0]);
+X  dest[1] += glm_min(a[1], b[1]);
+X}
+X
+X/*!
+X * @brief negate vector components and store result in dest
+X *
+X * @param[in]   v     vector
+X * @param[out]  dest  result vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_negate_to(vec2 v, vec2 dest) {
+X  dest[0] = -v[0];
+X  dest[1] = -v[1];
+X}
+X
+X/*!
+X * @brief negate vector components
+X *
+X * @param[in, out]  v  vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_negate(vec2 v) {
+X  glm_vec2_negate_to(v, v);
+X}
+X
+X/*!
+X * @brief normalize vector and store result in same vec
+X *
+X * @param[in, out] v vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_normalize(vec2 v) {
+X  float norm;
+X
+X  norm = glm_vec2_norm(v);
+X
+X  if (norm == 0.0f) {
+X    v[0] = v[1] = 0.0f;
+X    return;
+X  }
+X
+X  glm_vec2_scale(v, 1.0f / norm, v);
+X}
+X
+X/*!
+X * @brief normalize vector to dest
+X *
+X * @param[in]  v    source
+X * @param[out] dest destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_normalize_to(vec2 v, vec2 dest) {
+X  float norm;
+X
+X  norm = glm_vec2_norm(v);
+X
+X  if (norm == 0.0f) {
+X    glm_vec2_zero(dest);
+X    return;
+X  }
+X
+X  glm_vec2_scale(v, 1.0f / norm, dest);
+X}
+X
+X/*!
+X * @brief rotate vec2 around origin by angle (CCW: counterclockwise)
+X *
+X * Formula:
+X *   𝑥2 = cos(a)𝑥1 − sin(a)𝑦1
+X *   𝑦2 = sin(a)𝑥1 + cos(a)𝑦1
+X *
+X * @param[in]  v     vector to rotate
+X * @param[in]  angle angle by radians
+X * @param[out] dest  destination vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_rotate(vec2 v, float angle, vec2 dest) {
+X  float c, s, x1, y1;
+X
+X  c  = cosf(angle);
+X  s  = sinf(angle);
+X
+X  x1 = v[0];
+X  y1 = v[1];
+X
+X  dest[0] = c * x1 - s * y1;
+X  dest[1] = s * x1 + c * y1;
+X}
+X
+X/**
+X * @brief squared distance between two vectors
+X *
+X * @param[in] a vector1
+X * @param[in] b vector2
+X * @return returns squared distance (distance * distance)
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_vec2_distance2(vec2 a, vec2 b) {
+X  return glm_pow2(b[0] - a[0]) + glm_pow2(b[1] - a[1]);
+X}
+X
+X/**
+X * @brief distance between two vectors
+X *
+X * @param[in] a vector1
+X * @param[in] b vector2
+X * @return returns distance
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_vec2_distance(vec2 a, vec2 b) {
+X  return sqrtf(glm_vec2_distance2(a, b));
+X}
+X
+X/*!
+X * @brief max values of vectors
+X *
+X * @param[in]  a    vector1
+X * @param[in]  b    vector2
+X * @param[out] dest destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_maxv(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] = glm_max(a[0], b[0]);
+X  dest[1] = glm_max(a[1], b[1]);
+X}
+X
+X/*!
+X * @brief min values of vectors
+X *
+X * @param[in]  a    vector1
+X * @param[in]  b    vector2
+X * @param[out] dest destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_minv(vec2 a, vec2 b, vec2 dest) {
+X  dest[0] = glm_min(a[0], b[0]);
+X  dest[1] = glm_min(a[1], b[1]);
+X}
+X
+X/*!
+X * @brief clamp vector's individual members between min and max values
+X *
+X * @param[in, out]  v      vector
+X * @param[in]       minval minimum value
+X * @param[in]       maxval maximum value
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_clamp(vec2 v, float minval, float maxval) {
+X  v[0] = glm_clamp(v[0], minval, maxval);
+X  v[1] = glm_clamp(v[1], minval, maxval);
+X}
+X
+X/*!
+X * @brief linear interpolation between two vector
+X *
+X * formula:  from + s * (to - from)
+X *
+X * @param[in]   from from value
+X * @param[in]   to   to value
+X * @param[in]   t    interpolant (amount) clamped between 0 and 1
+X * @param[out]  dest destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_lerp(vec2 from, vec2 to, float t, vec2 dest) {
+X  vec2 s, v;
+X
+X  /* from + s * (to - from) */
+X  glm_vec2_fill(s, glm_clamp_zo(t));
+X  glm_vec2_sub(to, from, v);
+X  glm_vec2_mul(s, v, v);
+X  glm_vec2_add(from, v, dest);
+X}
+X
+X#endif /* cglm_vec2_h */
+4001921be909fdebb392c47ed9d6f0f5
+echo x - cglm/vec2-ext.h
+sed 's/^X//' >cglm/vec2-ext.h << '749867399e3219477a269f74f6512694'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X/*
+X Functions:
+X   CGLM_INLINE void  glm_vec2_fill(vec2 v, float val)
+X   CGLM_INLINE bool  glm_vec2_eq(vec2 v, float val);
+X   CGLM_INLINE bool  glm_vec2_eq_eps(vec2 v, float val);
+X   CGLM_INLINE bool  glm_vec2_eq_all(vec2 v);
+X   CGLM_INLINE bool  glm_vec2_eqv(vec2 a, vec2 b);
+X   CGLM_INLINE bool  glm_vec2_eqv_eps(vec2 a, vec2 b);
+X   CGLM_INLINE float glm_vec2_max(vec2 v);
+X   CGLM_INLINE float glm_vec2_min(vec2 v);
+X   CGLM_INLINE bool  glm_vec2_isnan(vec2 v);
+X   CGLM_INLINE bool  glm_vec2_isinf(vec2 v);
+X   CGLM_INLINE bool  glm_vec2_isvalid(vec2 v);
+X   CGLM_INLINE void  glm_vec2_sign(vec2 v, vec2 dest);
+X   CGLM_INLINE void  glm_vec2_sqrt(vec2 v, vec2 dest);
+X */
+X
+X#ifndef cglm_vec2_ext_h
+X#define cglm_vec2_ext_h
+X
+X#include "common.h"
+X#include "util.h"
+X
+X/*!
+X * @brief fill a vector with specified value
+X *
+X * @param[out] v   dest
+X * @param[in]  val value
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_fill(vec2 v, float val) {
+X  v[0] = v[1] = val;
+X}
+X
+X/*!
+X * @brief check if vector is equal to value (without epsilon)
+X *
+X * @param[in] v   vector
+X * @param[in] val value
+X */
+XCGLM_INLINE
+Xbool
+Xglm_vec2_eq(vec2 v, float val) {
+X  return v[0] == val && v[0] == v[1];
+X}
+X
+X/*!
+X * @brief check if vector is equal to value (with epsilon)
+X *
+X * @param[in] v   vector
+X * @param[in] val value
+X */
+XCGLM_INLINE
+Xbool
+Xglm_vec2_eq_eps(vec2 v, float val) {
+X  return fabsf(v[0] - val) <= FLT_EPSILON
+X         && fabsf(v[1] - val) <= FLT_EPSILON;
+X}
+X
+X/*!
+X * @brief check if vectors members are equal (without epsilon)
+X *
+X * @param[in] v   vector
+X */
+XCGLM_INLINE
+Xbool
+Xglm_vec2_eq_all(vec2 v) {
+X  return v[0] == v[1];
+X}
+X
+X/*!
+X * @brief check if vector is equal to another (without epsilon)
+X *
+X * @param[in] a vector
+X * @param[in] b vector
+X */
+XCGLM_INLINE
+Xbool
+Xglm_vec2_eqv(vec2 a, vec2 b) {
+X  return a[0] == b[0] && a[1] == b[1];
+X}
+X
+X/*!
+X * @brief check if vector is equal to another (with epsilon)
+X *
+X * @param[in] a vector
+X * @param[in] b vector
+X */
+XCGLM_INLINE
+Xbool
+Xglm_vec2_eqv_eps(vec2 a, vec2 b) {
+X  return fabsf(a[0] - b[0]) <= FLT_EPSILON
+X         && fabsf(a[1] - b[1]) <= FLT_EPSILON;
+X}
+X
+X/*!
+X * @brief max value of vector
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_vec2_max(vec2 v) {
+X  return glm_max(v[0], v[1]);
+X}
+X
+X/*!
+X * @brief min value of vector
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xfloat
+Xglm_vec2_min(vec2 v) {
+X  return glm_min(v[0], v[1]);
+X}
+X
+X/*!
+X * @brief check if all items are NaN (not a number)
+X *        you should only use this in DEBUG mode or very critical asserts
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xbool
+Xglm_vec2_isnan(vec2 v) {
+X  return isnan(v[0]) || isnan(v[1]);
+X}
+X
+X/*!
+X * @brief check if all items are INFINITY
+X *        you should only use this in DEBUG mode or very critical asserts
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xbool
+Xglm_vec2_isinf(vec2 v) {
+X  return isinf(v[0]) || isinf(v[1]);
+X}
+X
+X/*!
+X * @brief check if all items are valid number
+X *        you should only use this in DEBUG mode or very critical asserts
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xbool
+Xglm_vec2_isvalid(vec2 v) {
+X  return !glm_vec2_isnan(v) && !glm_vec2_isinf(v);
+X}
+X
+X/*!
+X * @brief get sign of 32 bit float as +1, -1, 0
+X *
+X * Important: It returns 0 for zero/NaN input
+X *
+X * @param v vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_sign(vec2 v, vec2 dest) {
+X  dest[0] = glm_signf(v[0]);
+X  dest[1] = glm_signf(v[1]);
+X}
+X
+X/*!
+X * @brief square root of each vector item
+X *
+X * @param[in]  v    vector
+X * @param[out] dest destination vector
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_sqrt(vec2 v, vec2 dest) {
+X  dest[0] = sqrtf(v[0]);
+X  dest[1] = sqrtf(v[1]);
+X}
+X
+X#endif /* cglm_vec2_ext_h */
+749867399e3219477a269f74f6512694
 echo x - cglm/vec3.h
 sed 's/^X//' >cglm/vec3.h << '76cbf42507315cc0767578bd22730a73'
 X/*
@@ -3024,9 +4280,10 @@ X
 X#define GLM_VEC3_ONE  ((vec3)GLM_VEC3_ONE_INIT)
 X#define GLM_VEC3_ZERO ((vec3)GLM_VEC3_ZERO_INIT)
 X
-X#define GLM_YUP  ((vec3){0.0f, 1.0f, 0.0f})
-X#define GLM_ZUP  ((vec3){0.0f, 0.0f, 1.0f})
-X#define GLM_XUP  ((vec3){1.0f, 0.0f, 0.0f})
+X#define GLM_YUP       ((vec3){0.0f,  1.0f,  0.0f})
+X#define GLM_ZUP       ((vec3){0.0f,  0.0f,  1.0f})
+X#define GLM_XUP       ((vec3){1.0f,  0.0f,  0.0f})
+X#define GLM_FORWARD   ((vec3){0.0f,  0.0f, -1.0f})
 X
 X#define GLM_XXX GLM_SHUFFLE3(0, 0, 0)
 X#define GLM_YYY GLM_SHUFFLE3(1, 1, 1)
@@ -4949,7 +6206,7 @@ Xglm_vec4_negate_to(vec4 v, vec4 dest) {
 X#if defined( __SSE__ ) || defined( __SSE2__ )
 X  glmm_store(dest, _mm_xor_ps(glmm_load(v), _mm_set1_ps(-0.0f)));
 X#elif defined(CGLM_NEON_FP)
-X  vst1q_f32(dest, veorq_s32(vld1q_f32(v), vdupq_n_f32(-0.0f)));
+X  vst1q_f32(dest, vnegq_f32(vld1q_f32(v)));
 X#else
 X  dest[0] = -v[0];
 X  dest[1] = -v[1];
@@ -5602,7 +6859,7 @@ Xglm_vec4_abs(vec4 v, vec4 dest) {
 X#if defined( __SSE__ ) || defined( __SSE2__ )
 X  glmm_store(dest, glmm_abs(glmm_load(v)));
 X#elif defined(CGLM_NEON_FP)
-X  vst1q_f32(dest, vabsq_f32(vld1q_f32(a)));
+X  vst1q_f32(dest, vabsq_f32(vld1q_f32(v)));
 X#else
 X  dest[0] = fabsf(v[0]);
 X  dest[1] = fabsf(v[1]);
@@ -5722,8 +6979,6 @@ X  GLM_EULER_YXZ = 1 << 0 | 0 << 2 | 2 << 4,
 X  GLM_EULER_ZXY = 2 << 0 | 0 << 2 | 1 << 4,
 X  GLM_EULER_ZYX = 2 << 0 | 1 << 2 | 0 << 4
 X} glm_euler_seq;
-X
-Xtypedef glm_euler_seq glm_euler_sq;
 X
 XCGLM_INLINE
 Xglm_euler_seq
@@ -6446,7 +7701,22 @@ X */
 XCGLM_INLINE
 Xfloat
 Xglm_percentc(float from, float to, float current) {
-X  return glm_clamp(glm_percent(from, to, current), 0.0f, 1.0f);
+X  return glm_clamp_zo(glm_percent(from, to, current));
+X}
+X
+X/*!
+X* @brief swap two float values
+X*
+X* @param[in]   a float value 1 (pointer)
+X* @param[in]   b float value 2 (pointer)
+X*/
+XCGLM_INLINE
+Xvoid
+Xglm_swapf(float * __restrict a, float * __restrict b) {
+X  float t;
+X  t  = *a;
+X  *a = *b;
+X  *b = t;
 X}
 X
 X#endif /* cglm_util_h */
@@ -6517,10 +7787,6 @@ X
 X#ifdef CGLM_SSE_FP
 X#  include "simd/sse2/quat.h"
 X#endif
-X
-XCGLM_INLINE
-Xvoid
-Xglm_mat4_identity(mat4 mat);
 X
 XCGLM_INLINE
 Xvoid
@@ -7148,32 +8414,23 @@ X/*!
 X * @brief creates look rotation quaternion
 X *
 X * @param[in]   dir   direction to look
-X * @param[in]   fwd   forward vector
 X * @param[in]   up    up vector
 X * @param[out]  dest  destination quaternion
 X */
 XCGLM_INLINE
 Xvoid
-Xglm_quat_for(vec3 dir, vec3 fwd, vec3 up, versor dest) {
-X  CGLM_ALIGN(8) vec3 axis;
-X  float dot, angle;
+Xglm_quat_for(vec3 dir, vec3 up, versor dest) {
+X  CGLM_ALIGN_MAT mat3 m;
 X
-X  dot = glm_vec3_dot(dir, fwd);
-X  if (fabsf(dot + 1.0f)  < 0.000001f) {
-X    glm_quat_init(dest, up[0], up[1], up[2], GLM_PIf);
-X    return;
-X  }
+X  glm_vec3_normalize_to(dir, m[2]); 
 X
-X  if (fabsf(dot - 1.0f) < 0.000001f) {
-X    glm_quat_identity(dest);
-X    return;
-X  }
+X  /* No need to negate in LH, but we use RH here */
+X  glm_vec3_negate(m[2]);
+X  
+X  glm_vec3_crossn(up, m[2], m[0]);
+X  glm_vec3_cross(m[2], m[0], m[1]);
 X
-X  angle = acosf(dot);
-X  glm_cross(fwd, dir, axis);
-X  glm_normalize(axis);
-X
-X  glm_quatv(dest, angle, axis);
+X  glm_mat3_quat(m, dest);
 X}
 X
 X/*!
@@ -7182,16 +8439,15 @@ X *        destination positions p suffix stands for position
 X *
 X * @param[in]   from  source point
 X * @param[in]   to    destination point
-X * @param[in]   fwd   forward vector
 X * @param[in]   up    up vector
 X * @param[out]  dest  destination quaternion
 X */
 XCGLM_INLINE
 Xvoid
-Xglm_quat_forp(vec3 from, vec3 to, vec3 fwd, vec3 up, versor dest) {
+Xglm_quat_forp(vec3 from, vec3 to, vec3 up, versor dest) {
 X  CGLM_ALIGN(8) vec3 dir;
 X  glm_vec3_sub(to, from, dir);
-X  glm_quat_for(dir, fwd, up, dest);
+X  glm_quat_for(dir, up, dest);
 X}
 X
 X/*!
@@ -7487,7 +8743,14 @@ X */
 XCGLM_INLINE
 Xvoid
 Xglm_plane_normalize(vec4 plane) {
-X  glm_vec4_scale(plane, 1.0f / glm_vec3_norm(plane), plane);
+X  float norm;
+X  
+X  if ((norm = glm_vec3_norm(plane)) == 0.0f) {
+X    glm_vec4_zero(plane);
+X    return;
+X  }
+X  
+X  glm_vec4_scale(plane, 1.0f / norm, plane);
 X}
 X
 X#endif /* cglm_plane_h */
@@ -8902,6 +10165,86 @@ X
 X#endif
 X#endif /* cglm_applesimd_h */
 d98bdb2b357fab453623f93915a548fe
+echo x - cglm/ray.h
+sed 's/^X//' >cglm/ray.h << 'b81b55c3ab609e2501627a166b4359b9'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X/*
+X Functions:
+X   CGLM_INLINE bool glm_line_triangle_intersect(vec3   origin,
+X                                                vec3   direction,
+X                                                vec3   v0,
+X                                                vec3   v1,
+X                                                vec3   v2,
+X                                                float *d);
+X*/
+X
+X#ifndef cglm_ray_h
+X#define cglm_ray_h
+X
+X#include "vec3.h"
+X
+X/*!
+X * @brief Möller–Trumbore ray-triangle intersection algorithm
+X * 
+X * @param[in] origin         origin of ray
+X * @param[in] direction      direction of ray
+X * @param[in] v0             first vertex of triangle
+X * @param[in] v1             second vertex of triangle
+X * @param[in] v2             third vertex of triangle
+X * @param[in, out] d         distance to intersection
+X * @return whether there is intersection
+X */
+X
+XCGLM_INLINE
+Xbool
+Xglm_ray_triangle(vec3   origin,
+X                 vec3   direction,
+X                 vec3   v0,
+X                 vec3   v1,
+X                 vec3   v2,
+X                 float *d) {
+X  vec3        edge1, edge2, p, t, q;
+X  float       det, inv_det, u, v, dist;
+X  const float epsilon = 0.000001f;
+X
+X  glm_vec3_sub(v1, v0, edge1);
+X  glm_vec3_sub(v2, v0, edge2);
+X  glm_vec3_cross(direction, edge2, p);
+X
+X  det = glm_vec3_dot(edge1, p);
+X  if (det > -epsilon && det < epsilon)
+X    return false;
+X
+X  inv_det = 1.0f / det;
+X  
+X  glm_vec3_sub(origin, v0, t);
+X
+X  u = inv_det * glm_vec3_dot(t, p);
+X  if (u < 0.0f || u > 1.0f)
+X    return false;
+X
+X  glm_vec3_cross(t, edge1, q);
+X
+X  v = inv_det * glm_vec3_dot(direction, q);
+X  if (v < 0.0f || u + v > 1.0f)
+X    return false;
+X
+X  dist = inv_det * glm_vec3_dot(edge2, q);
+X
+X  if (d)
+X    *d = dist;
+X
+X  return dist > epsilon;
+X}
+X
+X#endif
+b81b55c3ab609e2501627a166b4359b9
 echo c - cglm/call
 mkdir -p cglm/call > /dev/null 2>&1
 echo x - cglm/call/mat4.h
@@ -9123,6 +10466,246 @@ X}
 X#endif
 X#endif /* cglmc_mat3_h */
 bef8d4ac2c3b0d0be7520619180c9e61
+echo x - cglm/call/mat2.h
+sed 's/^X//' >cglm/call/mat2.h << 'a383f2a736991f33f39ca56a7c20a816'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X#ifndef cglmc_mat2_h
+X#define cglmc_mat2_h
+X#ifdef __cplusplus
+Xextern "C" {
+X#endif
+X
+X#include "../cglm.h"
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_copy(mat2 mat, mat2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_identity(mat2 mat);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_identity_array(mat2 * __restrict mat, size_t count);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_zero(mat2 mat);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_mul(mat2 m1, mat2 m2, mat2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_transpose_to(mat2 m, mat2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_transpose(mat2 m);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_mulv(mat2 m, vec2 v, vec2 dest);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_mat2_trace(mat2 m);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_scale(mat2 m, float s);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_mat2_det(mat2 mat);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_inv(mat2 mat, mat2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_swap_col(mat2 mat, int col1, int col2);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_mat2_swap_row(mat2 mat, int row1, int row2);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_mat2_rmc(vec2 r, mat2 m, vec2 c);
+X
+X#ifdef __cplusplus
+X}
+X#endif
+X#endif /* cglmc_mat2_h */
+a383f2a736991f33f39ca56a7c20a816
+echo x - cglm/call/vec2.h
+sed 's/^X//' >cglm/call/vec2.h << 'd54e3dacd1c830b3575034f71ba3b283'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X#ifndef cglmc_vec2_h
+X#define cglmc_vec2_h
+X#ifdef __cplusplus
+Xextern "C" {
+X#endif
+X
+X#include "../cglm.h"
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2(float * __restrict v, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_copy(vec2 a, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_zero(vec2 v);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_one(vec2 v);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_vec2_dot(vec2 a, vec2 b);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_vec2_cross(vec2 a, vec2 b);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_vec2_norm2(vec2 v);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_vec2_norm(vec2 v);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_add(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_adds(vec2 v, float s, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_sub(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_subs(vec2 v, float s, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_mul(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_scale(vec2 v, float s, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_scale_as(vec2 v, float s, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_div(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_divs(vec2 v, float s, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_addadd(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_subadd(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_muladd(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_muladds(vec2 a, float s, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_maxadd(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_minadd(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_negate_to(vec2 v, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_negate(vec2 v);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_normalize(vec2 v);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_normalize_to(vec2 v, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_rotate(vec2 v, float angle, vec2 dest);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_vec2_distance2(vec2 a, vec2 b);
+X
+XCGLM_EXPORT
+Xfloat
+Xglmc_vec2_distance(vec2 a, vec2 b);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_maxv(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_minv(vec2 a, vec2 b, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_clamp(vec2 v, float minval, float maxval);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_vec2_lerp(vec2 from, vec2 to, float t, vec2 dest);
+X
+X#ifdef __cplusplus
+X}
+X#endif
+X#endif /* cglmc_vec2_h */
+d54e3dacd1c830b3575034f71ba3b283
 echo x - cglm/call/vec3.h
 sed 's/^X//' >cglm/call/vec3.h << '01a5053946175fd441c0055c8f08c8e7'
 X/*
@@ -9862,6 +11445,7 @@ X */
 X
 X#ifndef cglmc_io_h
 X#define cglmc_io_h
+X
 X#ifdef __cplusplus
 Xextern "C" {
 X#endif
@@ -10179,11 +11763,11 @@ Xglmc_quat_look(vec3 eye, versor ori, mat4 dest);
 X
 XCGLM_EXPORT
 Xvoid
-Xglmc_quat_for(vec3 dir, vec3 fwd, vec3 up, versor dest);
+Xglmc_quat_for(vec3 dir, vec3 up, versor dest);
 X
 XCGLM_EXPORT
 Xvoid
-Xglmc_quat_forp(vec3 from, vec3 to, vec3 fwd, vec3 up, versor dest);
+Xglmc_quat_forp(vec3 from, vec3 to, vec3 up, versor dest);
 X
 XCGLM_EXPORT
 Xvoid
@@ -10700,6 +12284,36 @@ X}
 X#endif
 X#endif /* cglmc_bezier_h */
 2321d08cf4d33eaba2b9056577b4509b
+echo x - cglm/call/ray.h
+sed 's/^X//' >cglm/call/ray.h << '799e04e7b55497b678bfcc85ae107391'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X#ifndef cglmc_ray_h
+X#define cglmc_ray_h
+X#ifdef __cplusplus
+Xextern "C" {
+X#endif
+X#include "../cglm.h"
+X
+XCGLM_EXPORT
+Xbool
+Xglmc_ray_triangle(vec3   origin,
+X                  vec3   direction,
+X                  vec3   v0,
+X                  vec3   v1,
+X                  vec3   v2,
+X                  float *d);
+X    
+X#ifdef __cplusplus
+X}
+X#endif
+X#endif /* cglmc_ray_h */
+799e04e7b55497b678bfcc85ae107391
 echo c - cglm/simd
 mkdir -p cglm/simd > /dev/null 2>&1
 echo x - cglm/simd/intrin.h
@@ -11028,17 +12642,19 @@ X
 Xstatic inline
 Xfloat
 Xglmm_hmin(float32x4_t v) {
-X  v = vpmin_f32(vget_low_f32(v), vget_high_f32(v));
-X  v = vpmin_f32(v, v);
-X  return vget_lane_f32(v, 0);
+X  float32x2_t t;
+X  t = vpmin_f32(vget_low_f32(v), vget_high_f32(v));
+X  t = vpmin_f32(t, t);
+X  return vget_lane_f32(t, 0);
 X}
 X
 Xstatic inline
 Xfloat
 Xglmm_hmax(float32x4_t v) {
-X  v = vpmax_f32(vget_low_f32(v), vget_high_f32(v));
-X  v = vpmax_f32(v, v);
-X  return vget_lane_f32(v, 0);
+X  float32x2_t t;
+X  t = vpmax_f32(vget_low_f32(v), vget_high_f32(v));
+X  t = vpmax_f32(t, t);
+X  return vget_lane_f32(t, 0);
 X}
 X
 Xstatic inline
@@ -11862,6 +13478,54 @@ X
 X#endif
 X#endif /* cglm_mat3_sse_h */
 0f164d334a0cb2dfb8db09d8489abc86
+echo x - cglm/simd/sse2/mat2.h
+sed 's/^X//' >cglm/simd/sse2/mat2.h << '87b9e0f884b058c0ab097db3af8fc3dc'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X#ifndef cglm_mat2_sse_h
+X#define cglm_mat2_sse_h
+X#if defined( __SSE__ ) || defined( __SSE2__ )
+X
+X#include "../../common.h"
+X#include "../intrin.h"
+X
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_mul_sse2(mat2 m1, mat2 m2, mat2 dest) {
+X  __m128 x0, x1, x2;
+X
+X  x1 = glmm_load(m1[0]); /* d c b a */
+X  x2 = glmm_load(m2[0]); /* h g f e */
+X
+X  /*
+X   dest[0][0] = a * e + c * f;
+X   dest[0][1] = b * e + d * f;
+X   dest[1][0] = a * g + c * h;
+X   dest[1][1] = b * g + d * h;
+X   */
+X  x0 = _mm_mul_ps(_mm_movelh_ps(x1, x1), glmm_shuff1(x2, 2, 2, 0, 0));
+X  x1 = _mm_mul_ps(_mm_movehl_ps(x1, x1), glmm_shuff1(x2, 3, 3, 1, 1));
+X  x1 = _mm_add_ps(x0, x1);
+X
+X  glmm_store(dest[0], x1);
+X}
+X
+XCGLM_INLINE
+Xvoid
+Xglm_mat2_transp_sse2(mat2 m, mat2 dest) {
+X  /* d c b a */
+X  /* d b c a */
+X  glmm_store(dest[0], glmm_shuff1(glmm_load(m[0]), 3, 1, 2, 0));
+X}
+X
+X#endif
+X#endif /* cglm_mat2_sse_h */
+87b9e0f884b058c0ab097db3af8fc3dc
 echo x - cglm/simd/sse2/quat.h
 sed 's/^X//' >cglm/simd/sse2/quat.h << '4c27eba24ad06de2a67fc455944323ba'
 X/*
@@ -12663,6 +14327,1032 @@ X}
 X
 X#endif /* cglms_mat3s_h */
 1a123a2ad7db2666d2dbb9fecacecc2c
+echo x - cglm/struct/mat2.h
+sed 's/^X//' >cglm/struct/mat2.h << 'cadcf99b50ea8b6be5af44e58ccf2c62'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X/*
+X Macros:
+X   GLM_MAT2_IDENTITY_INIT
+X   GLM_MAT2_ZERO_INIT
+X   GLM_MAT2_IDENTITY
+X   GLM_MAT2_ZERO
+X
+X Functions:
+X   CGLM_INLINE void  glms_mat2_identity(mat2 mat)
+X   CGLM_INLINE void  glms_mat2_identity_array(mat2 * restrict mat, size_t count)
+X   CGLM_INLINE void  glms_mat2_zero(mat2 mat)
+X   CGLM_INLINE void  glms_mat2_mul(mat2 m1, mat2 m2, mat2 dest)
+X   CGLM_INLINE void  glms_mat2_transpose_to(mat2 m, mat2 dest)
+X   CGLM_INLINE void  glms_mat2_transpose(mat2 m)
+X   CGLM_INLINE void  glms_mat2_mulv(mat2 m, vec2 v, vec2 dest)
+X   CGLM_INLINE float glms_mat2_trace(mat2 m)
+X   CGLM_INLINE void  glms_mat2_scale(mat2 m, float s)
+X   CGLM_INLINE float glms_mat2_det(mat2 mat)
+X   CGLM_INLINE void  glms_mat2_inv(mat2 mat, mat2 dest)
+X   CGLM_INLINE void  glms_mat2_swap_col(mat2 mat, int col1, int col2)
+X   CGLM_INLINE void  glms_mat2_swap_row(mat2 mat, int row1, int row2)
+X   CGLM_INLINE float glms_mat2_rmc(vec2 r, mat2 m, vec2 c)
+X */
+X
+X#ifndef cglms_mat2_h
+X#define cglms_mat2_h
+X
+X#include "../common.h"
+X#include "../types-struct.h"
+X#include "../mat2.h"
+X
+X#define GLMS_MAT2_IDENTITY_INIT {1.0f, 0.0f, 0.0f, 1.0f}
+X#define GLMS_MAT2_ZERO_INIT     {0.0f, 0.0f, 0.0f, 0.0f}
+X
+X/* for C only */
+X#define GLMS_MAT2_IDENTITY ((mat3s)GLMS_MAT2_IDENTITY_INIT)
+X#define GLMS_MAT2_ZERO     ((mat3s)GLMS_MAT2_ZERO_INIT)
+X
+X/*!
+X * @brief make given matrix identity. It is identical with below,
+X *        but it is more easy to do that with this func especially for members
+X *        e.g. glm_mat2_identity(aStruct->aMatrix);
+X *
+X * @code
+X * glm_mat2_copy(GLM_MAT2_IDENTITY, mat); // C only
+X *
+X * // or
+X * mat2 mat = GLM_MAT2_IDENTITY_INIT;
+X * @endcode
+X *
+X * @returns identity matrix
+X */
+XCGLM_INLINE
+Xmat2s
+Xglms_mat2_identity(void) {
+X  mat2s r;
+X  glm_mat2_identity(r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief make given matrix array's each element identity matrix
+X *
+X * @param[in, out]  mat   matrix array (must be aligned (16)
+X *                        if alignment is not disabled)
+X *
+X * @param[in]       count count of matrices
+X */
+XCGLM_INLINE
+Xvoid
+Xglms_mat2_identity_array(mat2s * __restrict mat, size_t count) {
+X  CGLM_ALIGN_MAT mat2s t = GLMS_MAT2_IDENTITY_INIT;
+X  size_t i;
+X
+X  for (i = 0; i < count; i++) {
+X    glm_mat2_copy(t.raw, mat[i].raw);
+X  }
+X}
+X
+X/*!
+X * @brief make given matrix zero.
+X *
+X * @returns  matrix
+X */
+XCGLM_INLINE
+Xmat2s
+Xglms_mat2_zero(void) {
+X  mat2s r;
+X  glm_mat2_zero(r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief multiply m1 and m2 to dest
+X *
+X * m1, m2 and dest matrices can be same matrix, it is possible to write this:
+X *
+X * @code
+X * mat2 m = GLM_MAT2_IDENTITY_INIT;
+X * glm_mat2_mul(m, m, m);
+X * @endcode
+X *
+X * @param[in]  m1   left matrix
+X * @param[in]  m2   right matrix
+X *
+X * @returns matrix
+X */
+XCGLM_INLINE
+Xmat2s
+Xglms_mat2_mul(mat2s m1, mat2s m2) {
+X  mat2s r;
+X  glm_mat2_mul(m1.raw, m2.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief transpose mat2
+X *
+X * @param[in] m matrix to transpose
+X *
+X * @returns transposed matrix
+X */
+XCGLM_INLINE
+Xmat2s
+Xglms_mat2_transpose(mat2s m) {
+X  glm_mat2_transpose(m.raw);
+X  return m;
+X}
+X
+X/*!
+X * @brief multiply mat2 with vec2 (column vector) and store in dest vector
+X *
+X * @param[in]  m    mat2 (left)
+X * @param[in]  v    vec2 (right, column vector)
+X * @returns         vec2 (result, column vector)
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_mat2_mulv(mat2s m, vec2s v) {
+X  vec2s r;
+X  glm_mat2_mulv(m.raw, v.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief trace of matrix
+X *
+X * sum of the elements on the main diagonal from upper left to the lower right
+X *
+X * @param[in]  m matrix
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_mat2_trace(mat2s m) {
+X  return glm_mat2_trace(m.raw);
+X}
+X
+X/*!
+X * @brief scale (multiply with scalar) matrix
+X *
+X * multiply matrix with scalar
+X *
+X * @param[in, out] m matrix
+X * @param[in]      s scalar
+X * @returns matrix
+X */
+XCGLM_INLINE
+Xmat2s
+Xglms_mat2_scale(mat2s m, float s) {
+X  glm_mat2_scale(m.raw, s);
+X  return m;
+X}
+X
+X/*!
+X * @brief mat2 determinant
+X *
+X * @param[in] mat matrix
+X *
+X * @return determinant
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_mat2_det(mat2s mat) {
+X  return glm_mat2_det(mat.raw);
+X}
+X
+X/*!
+X * @brief inverse mat2 and store in dest
+X *
+X * @param[in]  mat  matrix
+X * @returns matrix
+X */
+XCGLM_INLINE
+Xmat2s
+Xglms_mat2_inv(mat2s mat) {
+X  mat2s r;
+X  glm_mat2_inv(mat.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief swap two matrix columns
+X *
+X * @param[in] mat  matrix
+X * @param[in] col1 col1
+X * @param[in] col2 col2
+X * @returns matrix
+X */
+XCGLM_INLINE
+Xmat2s
+Xglms_mat2_swap_col(mat2s mat, int col1, int col2) {
+X  glm_mat2_swap_col(mat.raw, col1, col2);
+X  return mat;
+X}
+X
+X/*!
+X * @brief swap two matrix rows
+X *
+X * @param[in] mat  matrix
+X * @param[in] row1 row1
+X * @param[in] row2 row2
+X * @returns matrix
+X */
+XCGLM_INLINE
+Xmat2s
+Xglms_mat2_swap_row(mat2s mat, int row1, int row2) {
+X  glm_mat2_swap_row(mat.raw, row1, row2);
+X  return mat;
+X}
+X
+X/*!
+X * @brief helper for  R (row vector) * M (matrix) * C (column vector)
+X *
+X * rmc stands for Row * Matrix * Column
+X *
+X * the result is scalar because R * M = Matrix1x2 (row vector),
+X * then Matrix1x2 * Vec2 (column vector) = Matrix1x1 (Scalar)
+X *
+X * @param[in]  r   row vector or matrix1x2
+X * @param[in]  m   matrix2x2
+X * @param[in]  c   column vector or matrix2x1
+X *
+X * @return scalar value e.g. Matrix1x1
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_mat2_rmc(vec2s r, mat2s m, vec2s c) {
+X  return glm_mat2_rmc(r.raw, m.raw, c.raw);
+X}
+X
+X#endif /* cglms_mat2_h */
+cadcf99b50ea8b6be5af44e58ccf2c62
+echo x - cglm/struct/vec2.h
+sed 's/^X//' >cglm/struct/vec2.h << 'a1a66918be58eb5ffcb91da0ed261034'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X/*
+X Macros:
+X   GLMS_VEC2_ONE_INIT
+X   GLMS_VEC2_ZERO_INIT
+X   GLMS_VEC2_ONE
+X   GLMS_VEC2_ZERO
+X
+X Functions:
+X   CGLM_INLINE vec2s glms_vec2(vec3s v3)
+X   CGLM_INLINE void  glms_vec2_pack(vec2s dst[], vec2 src[], size_t len)
+X   CGLM_INLINE void  glms_vec2_unpack(vec2 dst[], vec2s src[], size_t len)
+X   CGLM_INLINE vec2s glms_vec2_zero(void)
+X   CGLM_INLINE vec2s glms_vec2_one(void)
+X   CGLM_INLINE float glms_vec2_dot(vec2s a, vec2s b)
+X   CGLM_INLINE float glms_vec2_cross(vec2s a, vec2s b)
+X   CGLM_INLINE float glms_vec2_norm2(vec2s v)
+X   CGLM_INLINE float glms_vec2_norm(vec2s v)
+X   CGLM_INLINE vec2s glms_vec2_add(vec2s a, vec2s b)
+X   CGLM_INLINE vec2s glms_vec2_adds(vec2s a, float s)
+X   CGLM_INLINE vec2s glms_vec2_sub(vec2s a, vec2s b)
+X   CGLM_INLINE vec2s glms_vec2_subs(vec2s a, float s)
+X   CGLM_INLINE vec2s glms_vec2_mul(vec2s a, vec2s b)
+X   CGLM_INLINE vec2s glms_vec2_scale(vec2s v, float s)
+X   CGLM_INLINE vec2s glms_vec2_scale_as(vec2s v, float s)
+X   CGLM_INLINE vec2s glms_vec2_div(vec2s a, vec2s b)
+X   CGLM_INLINE vec2s glms_vec2_divs(vec2s a, float s)
+X   CGLM_INLINE vec2s glms_vec2_addadd(vec2s a, vec2s b, vec2s dest)
+X   CGLM_INLINE vec2s glms_vec2_subadd(vec2s a, vec2s b, vec2s dest)
+X   CGLM_INLINE vec2s glms_vec2_muladd(vec2s a, vec2s b, vec2s dest)
+X   CGLM_INLINE vec2s glms_vec2_muladds(vec2s a, float s, vec2s dest)
+X   CGLM_INLINE vec2s glms_vec2_maxadd(vec2s a, vec2s b, vec2s dest)
+X   CGLM_INLINE vec2s glms_vec2_minadd(vec2s a, vec2s b, vec2s dest)
+X   CGLM_INLINE vec2s glms_vec2_negate(vec2s v)
+X   CGLM_INLINE vec2s glms_vec2_normalize(vec2s v)
+X   CGLM_INLINE vec2s glms_vec2_rotate(vec2s v, float angle, vec2s axis)
+X   CGLM_INLINE float glms_vec2_distance(vec2s a, vec2s b)
+X   CGLM_INLINE float glms_vec2_distance2(vec2s a, vec2s b)
+X   CGLM_INLINE vec2s glms_vec2_maxv(vec2s a, vec2s b)
+X   CGLM_INLINE vec2s glms_vec2_minv(vec2s a, vec2s b)
+X   CGLM_INLINE vec2s glms_vec2_clamp(vec2s v, float minVal, float maxVal)
+X   CGLM_INLINE vec2s glms_vec2_lerp(vec2s from, vec2s to, float t)
+X */
+X
+X#ifndef cglms_vec2s_h
+X#define cglms_vec2s_h
+X
+X#include "../common.h"
+X#include "../types-struct.h"
+X#include "../util.h"
+X#include "../vec2.h"
+X#include "vec2-ext.h"
+X
+X#define GLMS_VEC2_ONE_INIT   {GLM_VEC2_ONE_INIT}
+X#define GLMS_VEC2_ZERO_INIT  {GLM_VEC2_ZERO_INIT}
+X
+X#define GLMS_VEC2_ONE  ((vec2s)GLMS_VEC2_ONE_INIT)
+X#define GLMS_VEC2_ZERO ((vec2s)GLMS_VEC2_ZERO_INIT)
+X
+X/*!
+X * @brief init vec2 using vec2
+X *
+X * @param[in]  v3   vector3
+X * @returns         destination
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2(vec3s v3) {
+X  vec2s r;
+X  glm_vec2(v3.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief pack an array of vec2 into an array of vec2s
+X *
+X * @param[out] dst array of vec2
+X * @param[in]  src array of vec2s
+X * @param[in]  len number of elements
+X */
+XCGLM_INLINE
+Xvoid
+Xglms_vec2_pack(vec2s dst[], vec2 src[], size_t len) {
+X  size_t i;
+X
+X  for (i = 0; i < len; i++) {
+X    glm_vec2_copy(src[i], dst[i].raw);
+X  }
+X}
+X
+X/*!
+X * @brief unpack an array of vec2s into an array of vec2
+X *
+X * @param[out] dst array of vec2s
+X * @param[in]  src array of vec2
+X * @param[in]  len number of elements
+X */
+XCGLM_INLINE
+Xvoid
+Xglms_vec2_unpack(vec2 dst[], vec2s src[], size_t len) {
+X  size_t i;
+X
+X  for (i = 0; i < len; i++) {
+X    glm_vec2_copy(src[i].raw, dst[i]);
+X  }
+X}
+X
+X/*!
+X * @brief make vector zero
+X *
+X * @returns zero vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_zero(void) {
+X  vec2s r;
+X  glm_vec2_zero(r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief make vector one
+X *
+X * @returns one vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_one(void) {
+X  vec2s r;
+X  glm_vec2_one(r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief vec2 dot product
+X *
+X * @param[in] a vector1
+X * @param[in] b vector2
+X *
+X * @return dot product
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_vec2_dot(vec2s a, vec2s b) {
+X  return glm_vec2_dot(a.raw, b.raw);
+X}
+X
+X/*!
+X * @brief vec2 cross product
+X *
+X * REF: http://allenchou.net/2013/07/cross-product-of-2d-vectors/
+X *
+X * @param[in]  a vector1
+X * @param[in]  b vector2
+X *
+X * @return Z component of cross product
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_vec2_cross(vec2s a, vec2s b) {
+X  return glm_vec2_cross(a.raw, b.raw);
+X}
+X
+X/*!
+X * @brief norm * norm (magnitude) of vec
+X *
+X * we can use this func instead of calling norm * norm, because it would call
+X * sqrtf fuction twice but with this func we can avoid func call, maybe this is
+X * not good name for this func
+X *
+X * @param[in] v vector
+X *
+X * @return norm * norm
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_vec2_norm2(vec2s v) {
+X  return glm_vec2_norm2(v.raw);
+X}
+X
+X/*!
+X * @brief norm (magnitude) of vec2
+X *
+X * @param[in] v vector
+X *
+X * @return norm
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_vec2_norm(vec2s v) {
+X  return glm_vec2_norm(v.raw);
+X}
+X
+X/*!
+X * @brief add a vector to b vector store result in dest
+X *
+X * @param[in]  a    vector1
+X * @param[in]  b    vector2
+X * @returns         destination vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_add(vec2s a, vec2s b) {
+X  vec2s r;
+X  glm_vec2_add(a.raw, b.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief add scalar to v vector store result in dest (d = v + s)
+X *
+X * @param[in]  a    vector
+X * @param[in]  s    scalar
+X * @returns         destination vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_adds(vec2s a, float s) {
+X  vec2s r;
+X  glm_vec2_adds(a.raw, s, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief subtract b vector from a vector store result in dest
+X *
+X * @param[in]  a    vector1
+X * @param[in]  b    vector2
+X * @returns         destination vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_sub(vec2s a, vec2s b) {
+X  vec2s r;
+X  glm_vec2_sub(a.raw, b.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief subtract scalar from v vector store result in dest (d = v - s)
+X *
+X * @param[in]  a    vector
+X * @param[in]  s    scalar
+X * @returns         destination vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_subs(vec2s a, float s) {
+X  vec2s r;
+X  glm_vec2_subs(a.raw, s, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief multiply two vector (component-wise multiplication)
+X *
+X * @param     a     vector1
+X * @param     b     vector2
+X * @returns         v3 = (a[0] * b[0], a[1] * b[1], a[2] * b[2])
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_mul(vec2s a, vec2s b) {
+X  vec2s r;
+X  glm_vec2_mul(a.raw, b.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief multiply/scale vec2 vector with scalar: result = v * s
+X *
+X * @param[in]  v    vector
+X * @param[in]  s    scalar
+X * @returns         destination vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_scale(vec2s v, float s) {
+X  vec2s r;
+X  glm_vec2_scale(v.raw, s, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief make vec2 vector scale as specified: result = unit(v) * s
+X *
+X * @param[in]  v    vector
+X * @param[in]  s    scalar
+X * @returns         destination vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_scale_as(vec2s v, float s) {
+X  vec2s r;
+X  glm_vec2_scale_as(v.raw, s, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief div vector with another component-wise division: d = a / b
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @returns         result = (a[0]/b[0], a[1]/b[1], a[2]/b[2])
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_div(vec2s a, vec2s b) {
+X  vec2s r;
+X  glm_vec2_div(a.raw, b.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief div vector with scalar: d = v / s
+X *
+X * @param[in]  a    vector
+X * @param[in]  s    scalar
+X * @returns         result = (a[0]/s, a[1]/s, a[2]/s)
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_divs(vec2s a, float s) {
+X  vec2s r;
+X  glm_vec2_divs(a.raw, s, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief add two vectors and add result to sum
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @returns         dest += (a + b)
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_addadd(vec2s a, vec2s b, vec2s dest) {
+X  glm_vec2_addadd(a.raw, b.raw, dest.raw);
+X  return dest;
+X}
+X
+X/*!
+X * @brief sub two vectors and add result to dest
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @returns         dest += (a + b)
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_subadd(vec2s a, vec2s b, vec2s dest) {
+X  glm_vec2_subadd(a.raw, b.raw, dest.raw);
+X  return dest;
+X}
+X
+X/*!
+X * @brief mul two vectors and add result to dest
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @returns         dest += (a * b)
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_muladd(vec2s a, vec2s b, vec2s dest) {
+X  glm_vec2_muladd(a.raw, b.raw, dest.raw);
+X  return dest;
+X}
+X
+X/*!
+X * @brief mul vector with scalar and add result to sum
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector
+X * @param[in]  s    scalar
+X * @returns         dest += (a * b)
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_muladds(vec2s a, float s, vec2s dest) {
+X  glm_vec2_muladds(a.raw, s, dest.raw);
+X  return dest;
+X}
+X
+X/*!
+X * @brief add max of two vector to result/dest
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @returns         dest += max(a, b)
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_maxadd(vec2s a, vec2s b, vec2s dest) {
+X  glm_vec2_maxadd(a.raw, b.raw, dest.raw);
+X  return dest;
+X}
+X
+X/*!
+X * @brief add min of two vector to result/dest
+X *
+X * it applies += operator so dest must be initialized
+X *
+X * @param[in]  a    vector 1
+X * @param[in]  b    vector 2
+X * @returns         dest += min(a, b)
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_minadd(vec2s a, vec2s b, vec2s dest) {
+X  glm_vec2_minadd(a.raw, b.raw, dest.raw);
+X  return dest;
+X}
+X
+X/*!
+X * @brief negate vector components
+X *
+X * @param[in]  v  vector
+X * @returns       negated vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_negate(vec2s v) {
+X  glm_vec2_negate(v.raw);
+X  return v;
+X}
+X
+X/*!
+X * @brief normalize vec2 and store result in same vec
+X *
+X * @param[in] v vector
+X * @returns     normalized vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_normalize(vec2s v) {
+X  glm_vec2_normalize(v.raw);
+X  return v;
+X}
+X
+X/*!
+X * @brief rotate vec2 by angle using Rodrigues' rotation formula
+X *
+X * @param[in]     v     vector
+X * @param[in]     angle angle by radians
+X * @returns             rotated vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_rotate(vec2s v, float angle) {
+X  vec2s r;
+X  glm_vec2_rotate(v.raw, angle, r.raw);
+X  return r;
+X}
+X
+X/**
+X * @brief distance between two vectors
+X *
+X * @param[in] a vector1
+X * @param[in] b vector2
+X * @return      distance
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_vec2_distance(vec2s a, vec2s b) {
+X  return glm_vec2_distance(a.raw, b.raw);
+X}
+X
+X/**
+X * @brief squared distance between two vectors
+X *
+X * @param[in] a vector1
+X * @param[in] b vector2
+X * @return      squared distance (distance * distance)
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_vec2_distance2(vec2s a, vec2s b) {
+X  return glm_vec2_distance2(a.raw, b.raw);
+X}
+X
+X/*!
+X * @brief max values of vectors
+X *
+X * @param[in]  a    vector1
+X * @param[in]  b    vector2
+X * @returns         destination
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_maxv(vec2s a, vec2s b) {
+X  vec2s r;
+X  glm_vec2_maxv(a.raw, b.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief min values of vectors
+X *
+X * @param[in]  a    vector1
+X * @param[in]  b    vector2
+X * @returns         destination
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_minv(vec2s a, vec2s b) {
+X  vec2s r;
+X  glm_vec2_minv(a.raw, b.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief clamp vector's individual members between min and max values
+X *
+X * @param[in]       v       vector
+X * @param[in]       minVal  minimum value
+X * @param[in]       maxVal  maximum value
+X * @returns                 clamped vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_clamp(vec2s v, float minVal, float maxVal) {
+X  glm_vec2_clamp(v.raw, minVal, maxVal);
+X  return v;
+X}
+X
+X/*!
+X * @brief linear interpolation between two vectors
+X *
+X * formula:  from + s * (to - from)
+X *
+X * @param[in]   from  from value
+X * @param[in]   to    to value
+X * @param[in]   t     interpolant (amount)
+X * @returns           destination
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_lerp(vec2s from, vec2s to, float t) {
+X  vec2s r;
+X  glm_vec2_lerp(from.raw, to.raw, t, r.raw);
+X  return r;
+X}
+X
+X#endif /* cglms_vec2s_h */
+a1a66918be58eb5ffcb91da0ed261034
+echo x - cglm/struct/vec2-ext.h
+sed 's/^X//' >cglm/struct/vec2-ext.h << '9fe7ebdb3cc161e6eb07c95c77540fca'
+X/*
+X * Copyright (c), Recep Aslantas.
+X *
+X * MIT License (MIT), http://opensource.org/licenses/MIT
+X * Full license can be found in the LICENSE file
+X */
+X
+X/*!
+X * @brief SIMD like functions
+X */
+X
+X/*
+X Functions:
+X   CGLM_INLINE vec2s glms_vec2_fill(float val)
+X   CGLM_INLINE bool  glms_vec2_eq(vec2s v, float val)
+X   CGLM_INLINE bool  glms_vec2_eq_eps(vec2s v, float val)
+X   CGLM_INLINE bool  glms_vec2_eq_all(vec2s v)
+X   CGLM_INLINE bool  glms_vec2_eqv(vec2s a, vec2s b)
+X   CGLM_INLINE bool  glms_vec2_eqv_eps(vec2s a, vec2s b)
+X   CGLM_INLINE float glms_vec2_max(vec2s v)
+X   CGLM_INLINE float glms_vec2_min(vec2s v)
+X   CGLM_INLINE bool  glms_vec2_isnan(vec2s v)
+X   CGLM_INLINE bool  glms_vec2_isinf(vec2s v)
+X   CGLM_INLINE bool  glms_vec2_isvalid(vec2s v)
+X   CGLM_INLINE vec2s glms_vec2_sign(vec2s v)
+X   CGLM_INLINE vec2s glms_vec2_sqrt(vec2s v)
+X */
+X
+X#ifndef cglms_vec2s_ext_h
+X#define cglms_vec2s_ext_h
+X
+X#include "../common.h"
+X#include "../types-struct.h"
+X#include "../util.h"
+X#include "../vec2-ext.h"
+X
+X/*!
+X * @brief fill a vector with specified value
+X *
+X * @param[in]  val  value
+X * @returns         dest
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_fill(float val) {
+X  vec2s r;
+X  glm_vec2_fill(r.raw, val);
+X  return r;
+X}
+X
+X/*!
+X * @brief check if vector is equal to value (without epsilon)
+X *
+X * @param[in] v   vector
+X * @param[in] val value
+X */
+XCGLM_INLINE
+Xbool
+Xglms_vec2_eq(vec2s v, float val) {
+X  return glm_vec2_eq(v.raw, val);
+X}
+X
+X/*!
+X * @brief check if vector is equal to value (with epsilon)
+X *
+X * @param[in] v   vector
+X * @param[in] val value
+X */
+XCGLM_INLINE
+Xbool
+Xglms_vec2_eq_eps(vec2s v, float val) {
+X  return glm_vec2_eq_eps(v.raw, val);
+X}
+X
+X/*!
+X * @brief check if vectors members are equal (without epsilon)
+X *
+X * @param[in] v   vector
+X */
+XCGLM_INLINE
+Xbool
+Xglms_vec2_eq_all(vec2s v) {
+X  return glm_vec2_eq_all(v.raw);
+X}
+X
+X/*!
+X * @brief check if vector is equal to another (without epsilon)
+X *
+X * @param[in] a vector
+X * @param[in] b vector
+X */
+XCGLM_INLINE
+Xbool
+Xglms_vec2_eqv(vec2s a, vec2s b) {
+X  return glm_vec2_eqv(a.raw, b.raw);
+X}
+X
+X/*!
+X * @brief check if vector is equal to another (with epsilon)
+X *
+X * @param[in] a vector
+X * @param[in] b vector
+X */
+XCGLM_INLINE
+Xbool
+Xglms_vec2_eqv_eps(vec2s a, vec2s b) {
+X  return glm_vec2_eqv_eps(a.raw, b.raw);
+X}
+X
+X/*!
+X * @brief max value of vector
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_vec2_max(vec2s v) {
+X  return glm_vec2_max(v.raw);
+X}
+X
+X/*!
+X * @brief min value of vector
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xfloat
+Xglms_vec2_min(vec2s v) {
+X  return glm_vec2_min(v.raw);
+X}
+X
+X/*!
+X * @brief check if all items are NaN (not a number)
+X *        you should only use this in DEBUG mode or very critical asserts
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xbool
+Xglms_vec2_isnan(vec2s v) {
+X  return glm_vec2_isnan(v.raw);
+X}
+X
+X/*!
+X * @brief check if all items are INFINITY
+X *        you should only use this in DEBUG mode or very critical asserts
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xbool
+Xglms_vec2_isinf(vec2s v) {
+X  return glm_vec2_isinf(v.raw);
+X}
+X
+X/*!
+X * @brief check if all items are valid number
+X *        you should only use this in DEBUG mode or very critical asserts
+X *
+X * @param[in] v vector
+X */
+XCGLM_INLINE
+Xbool
+Xglms_vec2_isvalid(vec2s v) {
+X  return glm_vec2_isvalid(v.raw);
+X}
+X
+X/*!
+X * @brief get sign of 32 bit float as +1, -1, 0
+X *
+X * Important: It returns 0 for zero/NaN input
+X *
+X * @param   v   vector
+X * @returns     sign vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_sign(vec2s v) {
+X  vec2s r;
+X  glm_vec2_sign(v.raw, r.raw);
+X  return r;
+X}
+X
+X/*!
+X * @brief square root of each vector item
+X *
+X * @param[in]  v    vector
+X * @returns         destination vector
+X */
+XCGLM_INLINE
+Xvec2s
+Xglms_vec2_sqrt(vec2s v) {
+X  vec2s r;
+X  glm_vec2_sqrt(v.raw, r.raw);
+X  return r;
+X}
+X
+X#endif /* cglms_vec2s_ext_h */
+9fe7ebdb3cc161e6eb07c95c77540fca
 echo x - cglm/struct/vec3.h
 sed 's/^X//' >cglm/struct/vec3.h << '2b28b2853bd04cae97aa27342ff40c44'
 X/*
@@ -14993,7 +17683,7 @@ X   CGLM_INLINE mat4s glms_scale_to(mat4s m, vec3s v);
 X   CGLM_INLINE mat4s glms_scale_make(vec3s v);
 X   CGLM_INLINE mat4s glms_scale(mat4s m, vec3s v);
 X   CGLM_INLINE mat4s glms_scale_uni(mat4s m, float s);
-X   CGLM_INLINE mat4s glmx_rotate_x(mat4s m, float angle);
+X   CGLM_INLINE mat4s glms_rotate_x(mat4s m, float angle);
 X   CGLM_INLINE mat4s glms_rotate_y(mat4s m, float angle);
 X   CGLM_INLINE mat4s glms_rotate_z(mat4s m, float angle);
 X   CGLM_INLINE mat4s glms_rotate_make(float angle, vec3s axis);
@@ -15015,10 +17705,6 @@ X#include "../affine.h"
 X#include "vec3.h"
 X#include "vec4.h"
 X#include "mat4.h"
-X
-XCGLM_INLINE
-Xmat4s
-Xglms_mat4_mul(mat4s m1, mat4s m2);
 X
 X/*!
 X * @brief translate existing transform matrix by v vector
@@ -15146,7 +17832,7 @@ X * @returns             rotated matrix
 X */
 XCGLM_INLINE
 Xmat4s
-Xglmx_rotate_x(mat4s m, float angle) {
+Xglms_rotate_x(mat4s m, float angle) {
 X  mat4s r;
 X  glm_rotate_x(m.raw, angle, r.raw);
 X  return r;
@@ -16107,7 +18793,7 @@ XCGLM_INLINE
 Xvec3s
 Xglms_quat_imagn(versors q) {
 X  vec3s dest;
-X  glm_normalize_to(q.imag.raw, dest.raw);
+X  glm_normalize_to(q.raw, dest.raw);
 X  return dest;
 X}
 X
@@ -16293,15 +18979,14 @@ X/*!
 X * @brief creates look rotation quaternion
 X *
 X * @param[in]   dir   direction to look
-X * @param[in]   fwd   forward vector
 X * @param[in]   up    up vector
 X * @returns  destination quaternion
 X */
 XCGLM_INLINE
 Xversors
-Xglms_quat_for(vec3s dir, vec3s fwd, vec3s up) {
+Xglms_quat_for(vec3s dir, vec3s up) {
 X  versors dest;
-X  glm_quat_for(dir.raw, fwd.raw, up.raw, dest.raw);
+X  glm_quat_for(dir.raw, up.raw, dest.raw);
 X  return dest;
 X}
 X
@@ -16311,15 +18996,14 @@ X *        destination positions p suffix stands for position
 X *
 X * @param[in]   from  source point
 X * @param[in]   to    destination point
-X * @param[in]   fwd   forward vector
 X * @param[in]   up    up vector
 X * @returns  destination quaternion
 X */
 XCGLM_INLINE
 Xversors
-Xglms_quat_forp(vec3s from, vec3s to, vec3s fwd, vec3s up) {
+Xglms_quat_forp(vec3s from, vec3s to, vec3s up) {
 X  versors dest;
-X  glm_quat_forp(from.raw, to.raw, fwd.raw, up.raw, dest.raw);
+X  glm_quat_forp(from.raw, to.raw, up.raw, dest.raw);
 X  return dest;
 X}
 X
@@ -17155,9 +19839,9 @@ X * @returns         transformed sphere
 X */
 XCGLM_INLINE
 Xvec4s
-Xglms_sphere_transform(vec4s s, mat4 m) {
+Xglms_sphere_transform(vec4s s, mat4s m) {
 X  vec4s r;
-X  glm_sphere_transform(s.raw, m, r.raw);
+X  glm_sphere_transform(s.raw, m.raw, r.raw);
 X  return r;
 X}
 X
