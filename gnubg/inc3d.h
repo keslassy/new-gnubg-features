@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2019-2020 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2019-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,50 +22,19 @@
 #define INC3D3D_H
 
 #include <glib.h>
+#include <gtk/gtk.h>
 
-typedef struct _BoardData BoardData;
-typedef struct _BoardData3d BoardData3d;
-typedef struct _Material Material;
-typedef struct _TextureInfo TextureInfo;
-typedef struct _renderdata renderdata;
-typedef struct _Texture Texture;
+#include "analysis.h"	/* for statcontext */
+#include "gtkboard.h"	/* for BoardData */ 
+#include "render.h"	/* for renderdata */
+
+#include "board3d/types3d.h"
+
 typedef struct _GraphData GraphData;
-typedef struct _statcontext statcontext;
-typedef struct _GtkWidget GtkWidget;
 
 #define DF_VARIABLE_OPACITY 1
 #define DF_NO_ALPHA 2
 #define DF_FULL_ALPHA 4
-
-typedef enum _displaytype {
-	DT_2D, DT_3D
-} displaytype;
-
-typedef enum _lighttype {
-	LT_POSITIONAL, LT_DIRECTIONAL
-} lighttype;
-
-typedef enum _PieceType {
-	PT_ROUNDED, PT_FLAT
-} PieceType;
-
-typedef enum _PieceTextureType {
-	PTT_TOP, PTT_ALL, PTT_BOTTOM, NUM_TEXTURE_TYPES
-} PieceTextureType;
-
-typedef enum _TextureType {
-	TT_NONE = 1, TT_GENERAL = 2, TT_PIECE = 4, TT_HINGE = 8, TT_DISABLED = 16
-} TextureType;
-
-struct _Material {
-	float ambientColour[4];
-	float diffuseColour[4];
-	float specularColour[4];
-	int shine;
-	int alphaBlend;
-	TextureInfo* textureInfo;
-	Texture* pTexture;
-};
 
 extern void StopIdle3d(const BoardData* bd, BoardData3d* bd3d);
 extern void Tidy3dObjects(BoardData3d* bd3d, const renderdata* prd);

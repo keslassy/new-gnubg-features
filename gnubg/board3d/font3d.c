@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005-2019 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2006-2016 the AUTHORS
+ * Copyright (C) 2006-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 
 #include "config.h"
 
+#include "types3d.h"
 #include "fun3d.h"
 #include "util.h"
 #include "output.h"

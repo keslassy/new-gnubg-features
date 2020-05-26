@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006-2019 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2007-2016 the AUTHORS
+ * Copyright (C) 2007-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,54 +29,21 @@
 #include <unistd.h>
 #endif
 
+#include <glib.h>
+
 #include <cglm/vec3.h>
 #include "common.h"
 #include "inc3d.h"
 #include "matrix.h"
 #include "gtkwindows.h"
 
+#include "types3d.h"
+
 #include "model.h"
 
 extern int fClockwise;          /* Player 1 moves clockwise */
 
 extern const Material* currentMat;
-
-#ifndef TYPES3D_H
-#define TYPES3D_H
-
-typedef struct _Path Path;
-typedef struct _OGLFont OGLFont;
-typedef float GLfloat;
-typedef unsigned int GLenum;
-
-struct _Texture {
-	unsigned int texID;
-	int width;
-	int height;
-};
-
-typedef struct _OglModel
-{
-	float* data;
-	int dataLength;
-	int dataStart;
-} OglModel;
-
-enum ModelType { MT_BACKGROUND, MT_BASE, MT_ODDPOINTS, MT_EVENPOINTS, MT_TABLE, MT_HINGE, MT_HINGEGAP, MT_CUBE, MT_MOVEINDICATOR, MT_PIECE, MT_PIECETOP, MT_DICE, MT_FLAG, MT_FLAGPOLE, MAX_MODELS };
-
-typedef struct _ModelManager
-{
-	int totalNumVertices;
-	int allocNumVertices;
-	float* vertexData;
-	int numModels;
-	OglModel models[MAX_MODELS];
-
-#ifdef USE_GTK3
-	guint vao;
-	guint buffer;
-#endif
-} ModelManager;
 
 void OglModelInit(ModelManager* modelHolder, int modelNumber);
 void OglModelAlloc(ModelManager* modelHolder, int modelNumber);
@@ -109,20 +76,6 @@ extern OglModel* curModel;
     ModelManagerCopyModelToBuffer((ModelManager*)modelManager, modelNumber); \
 }
 
-typedef signed long  FT_Pos;
-
-struct _OGLFont {
-	unsigned int textGlyphs;	// Used in graph
-	unsigned int AAglyphs;	// For Anti-aliasing
-	FT_Pos advance;
-	FT_Pos kern[10][10];
-	float scale;
-	float heightRatio;
-	float height;
-	float length;
-	ModelManager modelManager;
-};
-
 typedef struct _Point3d {
 	double data[3];
 } Point3d;
@@ -133,9 +86,6 @@ typedef struct _Point3d {
 #else
 #define TESS_CALLBACK
 #endif
-
-typedef struct _GArray		GArray;
-typedef unsigned char GLboolean;
 
 typedef struct _Contour {
 	GArray* conPoints;
@@ -158,23 +108,6 @@ typedef struct _Mesh {
 #define TT_COUNT 3              /* 3 texture types: general, piece and hinge */
 
 typedef int idleFunc(BoardData3d* bd3d);
-
-/* Work out which sides of dice to draw */
-typedef struct _diceTest {
-	int top, bottom, side[4];
-} diceTest;
-
-typedef struct _DiceRotation {
-	float xRotStart, yRotStart;
-	float xRot, yRot;
-	float xRotFactor, yRotFactor;
-} DiceRotation;
-
-typedef struct _EigthPoints
-{	/* Used for rounded corners */
-	float*** points;
-	unsigned int accuracy;
-} EigthPoints;
 
 extern void freeEigthPoints(EigthPoints* eigthPoints);
 void calculateEigthPoints(EigthPoints* eigthPoints, float radius, unsigned int accuracy);
@@ -204,8 +137,6 @@ typedef struct _Flag3d {
 
 #define FONT_VERA "fonts/Vera.ttf"
 #define FONT_VERA_SERIF_BOLD "fonts/VeraSeBd.ttf"
-
-#endif
 
 /* Setup functions */
 void InitGL(const BoardData* bd);
@@ -288,86 +219,6 @@ extern int CreateNumberFont(OGLFont* ppFont, const char* fontFile, int pitch, fl
 #define zNearVAL .1f
 #define zFarVAL 70.0f
 
-/* Animation paths */
-#define MAX_PATHS 3
-typedef enum _PathType {
-    PATH_LINE, PATH_CURVE_9TO12, PATH_CURVE_12TO3, PATH_PARABOLA, PATH_PARABOLA_12TO3
-} PathType;
-
-struct _Path {
-    float pts[MAX_PATHS + 1][3];
-    PathType pathType[MAX_PATHS];
-    int state;
-    float mileStone;
-    int numSegments;
-};
-
-#define FILENAME_SIZE 15
-#define NAME_SIZE 20
-
-struct _TextureInfo {
-    char file[FILENAME_SIZE + 1];
-    char name[NAME_SIZE + 1];
-    TextureType type;
-};
-
-struct _BoardData3d {
-    GtkWidget *drawing_area3d;  /* main 3d widget */
-
-	/* Store models for each board part */
-	ModelManager modelHolder;
-
-    /* Bit of a hack - assign each possible position a set rotation */
-    int pieceRotation[28][15];
-    int movingPieceRotation;
-
-    /* Misc 3d objects */
-    Material gapColour;
-    Material logoMat;
-    Material flagMat, flagPoleMat, flagNumberMat;
-
-    /* Store how "big" the screen maps to in 3d */
-    float backGroundPos[2], backGroundSize[2];
-
-    float perOpen;              /* Percentage open when opening/closing board */
-
-    int moving;                 /* Is a piece moving (animating) */
-    Path piecePath;             /* Animation path for moving pieces */
-    float rotateMovingPiece;    /* Piece going home? */
-    int shakingDice;            /* Are dice being animated */
-    Path dicePaths[2];          /* Dice shaking paths */
-
-    /* Some positions of dice, moving/dragging pieces */
-    float movingPos[3];
-    float dragPos[3];
-    float dicePos[2][3];
-    float diceMovingPos[2][3];
-    DiceRotation diceRotation[2];
-
-    float flagWaved;            /* How much has flag waved */
-
-	OGLFont numberFont, cubeFont;     /* OpenGL fonts */
-
-    /* Saved viewing values - for offscreen render */
-    float vertFrustrum, horFrustrum;
-
-    /* Shadow casters */
-    Occluder Occluders[/*NUM_OCC*/37];
-    float shadow_light_position[4];
-    int shadowsInitialised;
-    int fBuffers;
-    int shadowsOutofDate;
-
-	EigthPoints boardPoints;       /* Used for rounded corners */
-
-    /* Textures */
-#define MAX_TEXTURES 10
-    Texture textureList[MAX_TEXTURES];
-    char *textureName[MAX_TEXTURES];
-    int numTextures;
-    unsigned int dotTexture;    /* Holds texture used to draw dots on dice */
-};
-
 extern Flag3d flag;
 
 /* Define relative sizes of objects from arbitrary unit .05 */
@@ -403,8 +254,7 @@ extern void TestHarnessDraw(const BoardData * bd);
 /* Some 3d functions */
 extern float getDiceSize(const renderdata * prd);
 extern void SetupFlag(void);
-extern void setupDicePaths(const BoardData * bd, Path dicePaths[2], float diceMovingPos[2][3],
-                           DiceRotation diceRotation[2]);
+extern void setupDicePaths(const BoardData * bd, Path dicePaths[2], float diceMovingPos[2][3], DiceRotation diceRotation[2]);
 extern void waveFlag(float wag);
 
 /* Other functions */

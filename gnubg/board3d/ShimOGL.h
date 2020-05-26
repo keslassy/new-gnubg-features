@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2019-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +18,10 @@
  * $Id$
  */
 
-typedef unsigned int GLenum;
-typedef float GLfloat;
+#ifndef SHIMOGL_H
+#define SHIMOGL_H
+
+#include "types3d.h"
 
 #define GL_MODELVIEW                      0x1700
 #define GL_PROJECTION                     0x1701
@@ -71,3 +74,5 @@ void SHIMglLoadIdentity(void);
 #define glFrustum SHIMglFrustum
 #define glOrtho SHIMglOrtho
 #define glLoadIdentity SHIMglLoadIdentity
+
+#endif

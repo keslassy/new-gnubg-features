@@ -1,5 +1,5 @@
 # Copyright (C) 2003-2019 Jon Kinsey <jonkinsey@gmail.com>
-# Copyright (C) 2006-2019 the AUTHORS
+# Copyright (C) 2006-2020 the AUTHORS
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ libboard3d_la_SOURCES = DrawOGL.c font3dOGL.c ModelOGL.c Occluders.c PickOGL.c \
 			Shapes.inc GLwidget.c \
 			drawboard3d.c font3d.c fun3d.h graph.c gtkcolour3d.c \
 			matrix.c matrix.h misc3d.c model.c model.h \
-			shadow.c widget3d.c tr.c tr.h
+			shadow.c widget3d.c tr.c tr.h types3d.h
 			
 libboard3d_la_CFLAGS = $(AM_CFLAGS)
 

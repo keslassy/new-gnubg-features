@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1997-2002 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2003-2015 the AUTHORS
+ * Copyright (C) 2003-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #include "gnubg-types.h"
 
 #if defined(USE_BOARD3D)
-#include "inc3d.h"
+#include "board3d/types3d.h"
 #endif
 
 typedef enum _woodtype {
