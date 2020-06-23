@@ -243,11 +243,11 @@ CreateDotTexture(unsigned int *pDotTexture)
             float xdiff = ((float) i) + .5f - DOT_SIZE / 2;
             float ydiff = ((float) j) + .5f - DOT_SIZE / 2;
             float dist = xdiff * xdiff + ydiff * ydiff;
-            float percentage = 1 - ((dist - MIN_DIST) / (MAX_DIST - MIN_DIST));
+            float percentage = 1.0f - ((dist - MIN_DIST) / (MAX_DIST - MIN_DIST));
             unsigned char value;
-            if (percentage <= 0)
+            if (percentage <= 0.0f)
                 value = 0;
-            else if (percentage >= 1)
+            else if (percentage >= 1.0f)
                 value = 255;
             else
                 value = (unsigned char) (255 * percentage);
