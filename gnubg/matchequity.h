@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2003 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2000-2020 the AUTHORS
+ * Copyright (C) 2000-2013 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,10 @@ getME(const int nScore0, const int nScore1, const int nMatchTo,
       const int nPoints, const int fWhoWins,
       const int fCrawford, float aafMET[MAXSCORE][MAXSCORE], float aafMETPostCrawford[2][MAXSCORE]);
 
-#define getMEAtScore(nScore0, nScore1, nMatchTo, fPlayer, fCrawford, aafMET, aafMETPostCrawford) getME((nScore0), (nScore1), (nMatchTo), (fPlayer), 0, 0, (fCrawford), (aafMET), (aafMETPostCrawford))
+extern float
+getMEAtScore(const int nScore0, const int nScore1, const int nMatchTo,
+             const int fPlayer, const int fCrawford,
+             float aafMET[MAXSCORE][MAXSCORE], float aafMETPostCrawford[2][MAXSCORE]);
 
 /* Initialise match equity table */
 
