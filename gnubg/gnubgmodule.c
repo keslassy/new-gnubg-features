@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2004 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2003-2019 the AUTHORS
+ * Copyright (C) 2003-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -3459,7 +3459,7 @@ PythonRun(const char *sz)
     int success = FALSE;
 #endif
 
-    if (*sz) {
+    if (sz && *sz) {
         PyRun_SimpleString(sz);
     } else {
         /* Run python interactively with history and auto completion
