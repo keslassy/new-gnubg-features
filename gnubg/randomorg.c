@@ -42,13 +42,21 @@ RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserDa
     char *szRawData = (char *) pvRawData;
 
 #if defined(RANDOMORG_DEBUG)
-    output("Random rolls received: ");
+    int count = 0;
+
+    if (iNumRead > 0)
+        outputl("");
+
+    output("Random rolls received:");
 #endif
     for (i = 0; i < nNewDataLen; i++) {
         if ((szRawData[i] >= '0') && (szRawData[i] <= '5')) {
             /* Get a number */
             pvRandomData->anBuf[iNumRead] = 1 + (unsigned int) (szRawData[i] - '0');
 #if defined(RANDOMORG_DEBUG)
+            if (count++ % 100 == 0)
+                outputl("");
+
             outputf("%d", pvRandomData->anBuf[iNumRead]);
 #endif
             iNumRead++;
