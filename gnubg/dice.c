@@ -863,6 +863,9 @@ ReadDiceFile(rngcontext * rngctx)
     unsigned char uch;
     size_t n;
 
+    if (rngctx->fDice == NULL)
+        return (unsigned int) (-1);
+
   uglyloop:
     {
 
