@@ -45,7 +45,7 @@
         <para><option>-c, --commands=FILE</option> Evaluate commands in FILE and exit</para>
         <para><option>-d, --debug</option> Turn on debug</para>
         <para><option>-l, --lang=LANG</option> Set language to LANG</para>
-        <para><option>-p, --python=FILE</option> Evaluate Python code in FILE and exit</para>
+        <para><option>-p, --python=FILE</option> Start in Python mode or evaluate code in FILE and exit</para>
         <para><option>-q, --quiet</option> Disable sound effects</para>
         <para><option>-r, --no-rc</option> Do not read .gnubgrc and .gnubgautorc commands</para>
         <para><option>-S, --splash</option> Show GTK splash screen</para>

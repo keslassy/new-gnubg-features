@@ -1042,7 +1042,7 @@ UpdateSettings(void)
  * inputs: szName - the setting being adjusted
  * pf = pointer to current on/off state (will be updated)
  * sz = pointer to command line - a token will be extracted, 
- * but furhter calls to NextToken will return only the on/off
+ * but further calls to NextToken will return only the on/off
  * value, so you can't have commands in the form
  * set something on <more tokens>
  * szOn - text to output when turning setting on
@@ -4500,6 +4500,22 @@ null_debug(const gchar * UNUSED(dom), GLogLevelFlags UNUSED(logflags), const gch
 {
 }
 
+static char *pchPythonScript = NULL;
+static int fPython = FALSE;
+
+static gboolean
+callback_parse_python_option(const gchar *UNUSED(name), const gchar *value, gpointer UNUSED(data), GError **UNUSED(error))
+{
+    if (value)
+        pchPythonScript = g_strdup(value);
+    else
+        pchPythonScript = NULL;
+
+    fPython = TRUE;
+
+    return TRUE;
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -4511,7 +4527,7 @@ main(int argc, char *argv[])
     char *pchMatch = NULL;
     char *met = NULL;
 
-    static char *pchCommands = NULL, *pchPythonScript = NULL, *lang = NULL;
+    static char *pchCommands = NULL, *lang = NULL;
     static int fNoBearoff = FALSE, fNoX = FALSE, fSplash = FALSE, fNoTTY = FALSE, show_version = FALSE, debug = FALSE;
     GOptionEntry ao[] = {
         {"no-bearoff", 'b', 0, G_OPTION_ARG_NONE, &fNoBearoff,
@@ -4520,8 +4536,8 @@ main(int argc, char *argv[])
          N_("Evaluate commands in FILE and exit"), "FILE"},
         {"lang", 'l', 0, G_OPTION_ARG_STRING, &lang,
          N_("Set language to LANG"), "LANG"},
-        {"python", 'p', 0, G_OPTION_ARG_FILENAME, &pchPythonScript,
-         N_("Evaluate Python code in FILE and exit"), "FILE"},
+        {"python", 'p', G_OPTION_FLAG_OPTIONAL_ARG, G_OPTION_ARG_CALLBACK, callback_parse_python_option,
+         N_("Start in Python mode or evaluate code in FILE and exit"), "FILE"},
         {"quiet", 'q', 0, G_OPTION_ARG_NONE, &fQuiet,
          N_("Disable sound effects"), NULL},
         {"no-rc", 'r', 0, G_OPTION_ARG_NONE, &fNoRC,
@@ -4714,12 +4730,17 @@ main(int argc, char *argv[])
     }
 
     /* -p option given */
-    if (pchPythonScript) {
+    if (fPython) {
 #if defined(USE_PYTHON)
-        fInteractive = FALSE;
-        LoadPythonFile(pchPythonScript, FALSE);
-        Shutdown();
-        exit(EXIT_SUCCESS);
+        if (pchPythonScript) {
+            fInteractive = FALSE;
+            LoadPythonFile(pchPythonScript, FALSE);
+            Shutdown();
+            exit(EXIT_SUCCESS);
+        } else {
+            PythonRun(NULL);
+            exit(EXIT_SUCCESS);
+        }
 #else
         outputerrf(_("GNU Backgammon build without Python."));
         exit(EXIT_FAILURE);
