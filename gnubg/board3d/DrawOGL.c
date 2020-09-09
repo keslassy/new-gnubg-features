@@ -165,7 +165,7 @@ static int dots4[] = { 1, 1, 1, 3, 3, 1, 3, 3, 0 };
 static int dots5[] = { 1, 1, 1, 3, 2, 2, 3, 1, 3, 3, 0 };
 static int dots6[] = { 1, 1, 1, 3, 2, 1, 2, 3, 3, 1, 3, 3, 0 };
 static int* dots[6] = { dots1, dots2, dots3, dots4, dots5, dots6 };
-static int dot_pos[] = { 0, 20, 50, 80 };       /* percentages across face */
+static float dot_pos[] = { 0, 20, 50, 80 };       /* percentages across face */
 
 static void
 drawDots(const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTest* dt, int showFront)
@@ -442,7 +442,7 @@ void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, cons
 	// NB. GL_BLEND still enabled here (so front blends with back)
 }
 
-void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
+void DrawDots(const ModelManager* UNUSED(modelHolder), const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
 {
 #ifndef USE_GTK3
 	Material whiteMat;
@@ -582,11 +582,11 @@ drawPointLegacy(const renderdata* prd, float tuv, unsigned int i, int p, int out
 	float x, y;
 
 	if (p) {
-		x = TRAY_WIDTH - EDGE_WIDTH + PIECE_HOLE * i;
+		x = TRAY_WIDTH - EDGE_WIDTH + (PIECE_HOLE * (float)i);
 		y = -LIFT_OFF;
 	}
 	else {
-		x = TRAY_WIDTH - EDGE_WIDTH + BOARD_WIDTH - (PIECE_HOLE * i);
+		x = TRAY_WIDTH - EDGE_WIDTH + BOARD_WIDTH - (PIECE_HOLE * (float)i);
 		y = TOTAL_HEIGHT - EDGE_HEIGHT * 2 + LIFT_OFF;
 		w = -w;
 		h = -h;
@@ -618,8 +618,8 @@ drawPointLegacy(const renderdata* prd, float tuv, unsigned int i, int p, int out
 			float angle, step;
 			float radius = w / 2.0f;
 
-			step = (2 * F_PI) / prd->curveAccuracy;
-			angle = -step * (int)(prd->curveAccuracy / 4);
+			step = (2 * F_PI) / (float)prd->curveAccuracy;
+			angle = -step * (float)(prd->curveAccuracy / 4);
 			glNormal3f(0.f, 0.f, 1.f);
 			glBegin(outline ? GL_LINE_STRIP : GL_TRIANGLE_FAN);
 			glTexCoord2f(xoff * tuv, y * tuv);
@@ -659,7 +659,7 @@ void MAApoints(const renderdata* prd)
 	setMaterial(&prd->PointMat[0]);
 
 	if (prd->PointMat[0].pTexture)
-		tuv = (TEXTURE_SCALE) / prd->PointMat[0].pTexture->width;
+		tuv = (TEXTURE_SCALE) / (float)prd->PointMat[0].pTexture->width;
 	else
 		tuv = 0;
 
@@ -676,7 +676,7 @@ void MAApoints(const renderdata* prd)
 	setMaterial(&prd->PointMat[1]);
 
 	if (prd->PointMat[1].pTexture)
-		tuv = (TEXTURE_SCALE) / prd->PointMat[1].pTexture->width;
+		tuv = (TEXTURE_SCALE) / (float)prd->PointMat[1].pTexture->width;
 	else
 		tuv = 0;
 
@@ -745,8 +745,8 @@ gluUnProjectMine(GLfloat winx, GLfloat winy, GLfloat winz,
 	Fin[3] = 1.0;
 
 	/* Map x and y from window coordinates */
-	Fin[0] = (Fin[0] - viewport[0]) / viewport[2];
-	Fin[1] = (Fin[1] - viewport[1]) / viewport[3];
+	Fin[0] = (Fin[0] - (float)viewport[0]) / (float)viewport[2];
+	Fin[1] = (Fin[1] - (float)viewport[1]) / (float)viewport[3];
 
 	/* Map to range -1 to 1 */
 	Fin[0] = Fin[0] * 2 - 1;
@@ -754,7 +754,15 @@ gluUnProjectMine(GLfloat winx, GLfloat winy, GLfloat winz,
 	Fin[2] = Fin[2] * 2 - 1;
 	glm_mat4_mulv(finalMatrix, Fin, Fout);
 
-	if (Fout[3] == 0.0) return(GL_FALSE);
+	if (Fout[3] == 0.0f) {
+		g_assert_not_reached();
+        	/* avoid -Wmaybe-uninitialized warnings in caller */
+		*objx = 0.0f;
+		*objy = 0.0f;
+		*objz = 1.0f;
+        	return(GL_FALSE);
+        }
+
 	Fout[0] /= Fout[3];
 	Fout[1] /= Fout[3];
 	Fout[2] /= Fout[3];
@@ -770,16 +778,13 @@ getProjectedPos(int x, int y, float atDepth, float pos[3])
 	int viewport[4];
 	mat4 mvmatrix, projmatrix;
 	float nearX, nearY, nearZ, farX, farY, farZ, zRange;
-	int ret;
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	GetModelViewMatrixMat(mvmatrix);
 	GetProjectionMatrixMat(projmatrix);
 
-	ret = gluUnProjectMine((GLfloat)x, (GLfloat)y, 0.0, mvmatrix, projmatrix, viewport, &nearX, &nearY, &nearZ);
-	g_assert(ret == GL_TRUE);	/* Should always work */
-	ret = gluUnProjectMine((GLfloat)x, (GLfloat)y, 1.0, mvmatrix, projmatrix, viewport, &farX, &farY, &farZ);
-	g_assert(ret == GL_TRUE);	/* Should always work */
+	gluUnProjectMine((GLfloat)x, (GLfloat)y, 0.0, mvmatrix, projmatrix, viewport, &nearX, &nearY, &nearZ);
+	gluUnProjectMine((GLfloat)x, (GLfloat)y, 1.0, mvmatrix, projmatrix, viewport, &farX, &farY, &farZ);
 
 	zRange = (fabsf(nearZ) - atDepth) / (fabsf(farZ) + fabsf(nearZ));
 	pos[0] = nearX - (-farX + nearX) * zRange;
@@ -816,9 +821,9 @@ void renderFlagNumbers(const BoardData3d* bd3d, int resignedValue)
 	MoveToFlagMiddle();
 
 	glDisable(GL_DEPTH_TEST);
+#ifndef USE_GTK3
 	/* No specular light */
 	float zero[4] = { 0, 0, 0, 0 };
-#ifndef USE_GTK3
 	float specular[4];
 	glGetLightfv(GL_LIGHT0, GL_SPECULAR, specular);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
