@@ -93,7 +93,6 @@ G_DEFINE_TYPE(Board, board, GTK_TYPE_BOX)
 #else
 G_DEFINE_TYPE(Board, board, GTK_TYPE_VBOX)
 #endif
-
 static int inPreviewWindow;
 
 extern GtkWidget *
@@ -1470,11 +1469,11 @@ board_quick_edit(GtkWidget * board, BoardData * bd, int x, int y, int dragging)
 #if defined(USE_BOARD3D)
         if (!display_is_3d(bd->rd))
 #endif
-           {
-                board_invalidate_cube(bd);
-                for (i = 0; i < 28; i++)
-                    board_invalidate_point(bd, i);
-           }
+        {
+            board_invalidate_cube(bd);
+            for (i = 0; i < 28; i++)
+                board_invalidate_point(bd, i);
+        }
 
         updateBoard(board, bd);
     }
@@ -2421,7 +2420,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
     bd->on_bar_opponent = board_text_to_setting(&board_text, &failed);
     bd->to_move = board_text_to_setting(&board_text, &failed);
     bd->forced = board_text_to_setting(&board_text, &failed);
-    board_text_to_setting(&board_text, &failed);	/* skip fPostCrawford */
+    board_text_to_setting(&board_text, &failed);        /* skip fPostCrawford */
     bd->crawford_game = !board_text_to_setting(&board_text, &failed);
     bd->jacoby_flag = ms.fJacoby;
     if (failed)
@@ -2576,7 +2575,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
 
 #if defined(USE_BOARD3D)
         if (display_is_3d(bd->rd)) {
-			RecalcViewingVolume(bd); /* Cube may be out of top of screen */
+            RecalcViewingVolume(bd);    /* Cube may be out of top of screen */
         } else
 #endif
         {
@@ -2989,6 +2988,7 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
         auchBoard[BOARD_WIDTH * 3 * BOARD_HEIGHT * 3 * 3], auchChequers[2][CHEQUER_WIDTH * 3 * CHEQUER_HEIGHT * 3 * 4];
     unsigned short asRefract[2][CHEQUER_WIDTH * 3 * CHEQUER_HEIGHT * 3];
     int i, nSizeReal;
+    int fgrayBoard = FALSE;
 
     unsigned char aanBoardColourTemp[4][4];
 #if defined(USE_BOARD3D)
@@ -2997,8 +2997,13 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
     float aarDiceColourTemp[2][4];
     float aarDiceDotColourTemp[2][4];
 
+    int fdisp3d = FALSE;
+
     if (display_is_3d(bd->rd)) {
         int j;
+
+        fdisp3d = TRUE;
+
         /* As settings currently separate, copy 3d colours so 2d dialog colours (small chequers, dice etc.) are correct */
         memcpy(aarColourTemp, bd->rd->aarColour, sizeof(bd->rd->aarColour));
         memcpy(aanBoardColourTemp[0], bd->rd->aanBoardColour[0], sizeof(bd->rd->aanBoardColour[0]));
@@ -3021,6 +3026,8 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
     {
         if (bd->grayBoard) {
             showingGray = bd->grayBoard;
+            fgrayBoard = TRUE;
+
             memcpy(aanBoardColourTemp, bd->rd->aanBoardColour, sizeof(bd->rd->aanBoardColour));
             for (i = 0; i < 4; i++)
                 GrayScaleColC(bd->rd->aanBoardColour[i]);
@@ -3054,7 +3061,8 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
         cairo_destroy(cr);
     }
 #if defined(USE_BOARD3D)
-    if (display_is_3d(bd->rd)) {        /* Restore 2d colours */
+    if (fdisp3d) {              /* Restore 2d colours */
+        g_assert(display_is_3d(bd->rd));
         memcpy(bd->rd->aarColour, aarColourTemp, sizeof(bd->rd->aarColour));
         memcpy(bd->rd->aanBoardColour[0], aanBoardColourTemp[0], sizeof(bd->rd->aanBoardColour[0]));
         memcpy(bd->rd->arCubeColour, arCubeColourTemp, sizeof(bd->rd->arCubeColour));
@@ -3063,7 +3071,8 @@ board_create_pixmaps(GtkWidget * UNUSED(board), BoardData * bd)
     } else
 #endif
     {
-        if (bd->grayBoard) {
+        if (fgrayBoard) {
+            g_assert(bd->grayBoard);
             showingGray = FALSE;
             memcpy(bd->rd->aanBoardColour, aanBoardColourTemp, sizeof(bd->rd->aanBoardColour));
         }
@@ -3442,12 +3451,11 @@ board_edit(BoardData * bd)
                 bd->diceRoll[0] = bd->diceRoll[1] = 0;
             }
             sprintf(sz, "set matchid %s",
-                                 MatchID(bd->diceRoll,
-                                         ms.fTurn,
-                                         ms.fResigned,
-                                         ms.fDoubled,
-                                         ms.fMove, ms.fCubeOwner, crawford, nMatchToNew, anScoreNew, bd->cube,
-                                         jacoby, ms.gs));
+                    MatchID(bd->diceRoll,
+                            ms.fTurn,
+                            ms.fResigned,
+                            ms.fDoubled,
+                            ms.fMove, ms.fCubeOwner, crawford, nMatchToNew, anScoreNew, bd->cube, jacoby, ms.gs));
             UserCommand(sz);
         }
 
@@ -3620,7 +3628,7 @@ board_init(Board * board)
     GtkWidget *pwvbox;
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_orientable_set_orientation(GTK_ORIENTABLE (board), GTK_ORIENTATION_VERTICAL);
+    gtk_orientable_set_orientation(GTK_ORIENTABLE(board), GTK_ORIENTATION_VERTICAL);
 #endif
 
     board->board_data = bd;
