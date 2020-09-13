@@ -170,7 +170,7 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
     }
 
     gtk_box_pack_start(GTK_BOX(pwvbox),
-                       pw = gtk_label_new(_("EPC = Effective pip count = " "Avg. rolls * 8.167")), FALSE, FALSE, 0);
+                       pw = gtk_label_new(_("EPC = Effective pip count = Avg. rolls * 8.167")), FALSE, FALSE, 0);
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
@@ -229,7 +229,7 @@ PerformOSR(GtkWidget * UNUSED(pw), racewidget * prw)
         gtk_label_set_text(GTK_LABEL(prw->epcwOSR.apwEPC[i]), pch);
         g_free(pch);
 
-        pch = g_strdup_printf("%7.3f", arMu[j] * x - (float)anPips[j]);
+        pch = g_strdup_printf("%7.3f", arMu[j] * x - (float) anPips[j]);
         gtk_label_set_text(GTK_LABEL(prw->epcwOSR.apwWastage[i]), pch);
         g_free(pch);
 
@@ -247,7 +247,7 @@ do_rollout_view(void)
     int i;
 
     const char *aszTitle[] = {
-        NULL,
+        " ",                    /* neither NULL (undefined behaviour as gettext argument) nor "" (special meaning) */
         N_("Win"),
         N_("W g"),
         N_("W bg"),
@@ -396,7 +396,8 @@ GTKShowRace(TanBoard anBoard)
 
     /* Isight */
 
-    gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), IsightPage(anBoard, prw->fMove), gtk_label_new(_("Isight Count")));
+    gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), IsightPage(anBoard, prw->fMove),
+                             gtk_label_new(_("Isight Count")));
 
     /* One sided rollout */
 
