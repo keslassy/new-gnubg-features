@@ -1,8 +1,6 @@
 --
--- gnubg.sql
---
--- by Joern Thyssen <jth@gnubg.org>, 2004.
---
+-- Copyright (C) 2004 Joern Thyssen <jth@gnubg.org>
+-- Copyright (C) 2004-2008 the AUTHORS
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -15,7 +13,7 @@
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --
 -- $Id$
 --
