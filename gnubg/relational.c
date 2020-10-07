@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2004-2019 the AUTHORS
+ * Copyright (C) 2004-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,9 +128,9 @@ MatchResult(int nMatchTo)
     int result = 0;
     int anFinalScore[2];
     if (nMatchTo && getFinalScore(anFinalScore)) {
-        if (anFinalScore[0] > nMatchTo)
+        if (anFinalScore[0] >= nMatchTo)
             result = -1;
-        else if (anFinalScore[1] > nMatchTo)
+        else if (anFinalScore[1] >= nMatchTo)
             result = 1;
     }
     return result;
