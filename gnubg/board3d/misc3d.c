@@ -629,8 +629,7 @@ SetTexture(BoardData3d * bd3d, Material * pMat, const char *filename)
 
     if (LoadTexture(&bd3d->textureList[bd3d->numTextures], filename)) {
         /* Remember name */
-        bd3d->textureName[bd3d->numTextures] = (char *) malloc(strlen(nameStart) + 1);
-        strcpy(bd3d->textureName[bd3d->numTextures], nameStart);
+        bd3d->textureName[bd3d->numTextures] = strdup(nameStart);
 
         pMat->pTexture = &bd3d->textureList[bd3d->numTextures];
         bd3d->numTextures++;

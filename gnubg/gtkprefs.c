@@ -2414,8 +2414,7 @@ WriteDesignString(boarddesign * pbde, renderdata * prd)
             WriteMaterial(&prd->HingeMat), WriteMaterial(&prd->PointNumberMat), WriteMaterial(&prd->BackGroundMat));
 #endif
 
-    pbde->szBoardDesign = g_malloc(strlen(szTemp) + 1);
-    strcpy(pbde->szBoardDesign, szTemp);
+    pbde->szBoardDesign = strdup(szTemp);
 }
 
 #if defined(USE_BOARD3D)

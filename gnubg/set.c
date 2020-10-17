@@ -1431,7 +1431,7 @@ CommandSetPlayerExternal(char *sz)
         return;
     }
 
-    pch = strcpy(malloc(strlen(sz) + 1), sz);
+    pch = strdup(sz);
 
     if ((h = ExternalSocket(&psa, &cb, sz)) < 0) {
         SockErr(pch);

@@ -3389,13 +3389,8 @@ GenerateKeywords(const char *sz, int nState)
 
     while (pc && pc->sz) {
         if (!StrNCaseCmp(sz, pc->sz, cch) && pc->szHelp) {
-            if (!(szDup = malloc(strlen(pc->sz) + 1)))
-                return NULL;
-
-            strcpy(szDup, pc->sz);
-
+            szDup = strdup(pc->sz);
             pc++;
-
             return szDup;
         }
 
@@ -3410,7 +3405,6 @@ ERCompletion(const char *sz, int nState)
 {
     static int i;
     static size_t cch;
-    char *szDup;
 
     if (!nState) {
         cch = strlen(sz);
@@ -3420,12 +3414,9 @@ ERCompletion(const char *sz, int nState)
     while (i < 2) {
         const char *pch = i++ ? "rollout" : "evaluation";
 
-        if (!StrNCaseCmp(sz, pch, cch)) {
-            if (!(szDup = malloc(strlen(pch) + 1)))
-                return NULL;
+        if (!StrNCaseCmp(sz, pch, cch))
+            return strdup(pch);
 
-            return strcpy(szDup, pch);
-        }
         ++i;
     }
 
@@ -3438,7 +3429,6 @@ OnOffCompletion(const char *sz, int nState)
     static unsigned int i;
     static size_t cch;
     static const char *asz[] = { "false", "no", "off", "on", "true", "yes" };
-    char *szDup;
 
     if (!nState) {
         cch = strlen(sz);
@@ -3448,12 +3438,8 @@ OnOffCompletion(const char *sz, int nState)
     while (i < sizeof(asz) / sizeof(asz[0])) {
         const char *pch = asz[i++];
 
-        if (!StrNCaseCmp(sz, pch, cch)) {
-            if (!(szDup = malloc(strlen(pch) + 1)))
-                return NULL;
-
-            return strcpy(szDup, pch);
-        }
+        if (!StrNCaseCmp(sz, pch, cch))
+            return strdup(pch);
     }
 
     return NULL;
@@ -3465,7 +3451,6 @@ PlayerCompletionGen(const char *sz, int nState, int fBoth)
     static int i;
     static size_t cch;
     const char *pch;
-    char *szDup;
 
     if (!nState) {
         cch = strlen(sz);
@@ -3495,12 +3480,8 @@ PlayerCompletionGen(const char *sz, int nState, int fBoth)
 
         i++;
 
-        if (!StrNCaseCmp(sz, pch, cch)) {
-            if (!(szDup = malloc(strlen(pch) + 1)))
-                return NULL;
-
-            return strcpy(szDup, pch);
-        }
+        if (!StrNCaseCmp(sz, pch, cch))
+            return strdup(pch);
     }
 
     return NULL;
