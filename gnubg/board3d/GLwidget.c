@@ -287,7 +287,7 @@ GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB
 		return NULL;
 	}
 
-	GLWidgetData* glwData = malloc(sizeof(GLWidgetData));
+	GLWidgetData* glwData = g_malloc(sizeof(GLWidgetData));
 	if (!glwData) return NULL;
 
 	glwData->cbData = data;
@@ -301,6 +301,8 @@ GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB
 		g_signal_connect(G_OBJECT(pw), "resize", G_CALLBACK(resize_event), glwData);
 	if (exposeCB != NULL)
 		g_signal_connect(G_OBJECT(pw), "render", G_CALLBACK(expose_event), glwData);
+
+	g_object_set_data_full(G_OBJECT(pw), "GLWidgetData", glwData, g_free);
 
 	return pw;
 }
@@ -404,7 +406,7 @@ GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, 
 		return NULL;
 	}
 
-	GLWidgetData* glwData = malloc(sizeof(GLWidgetData));
+	GLWidgetData* glwData = g_malloc(sizeof(GLWidgetData));
 	glwData->cbData = data;
 	glwData->realizeCB = realizeCB;
 	glwData->configureCB = configureCB;
@@ -417,7 +419,7 @@ GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, 
 	if (exposeCB != NULL)
 		g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(expose_event), glwData);
 
-	g_object_set_data_full(G_OBJECT(pw), "GLWidgetData", glwData, free);
+	g_object_set_data_full(G_OBJECT(pw), "GLWidgetData", glwData, g_free);
 
 	return pw;
 }
