@@ -417,6 +417,8 @@ GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, 
 	if (exposeCB != NULL)
 		g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(expose_event), glwData);
 
+	g_object_set_data_full(G_OBJECT(pw), "GLWidgetData", glwData, free);
+
 	return pw;
 }
 
