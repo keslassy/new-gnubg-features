@@ -985,7 +985,7 @@ extern void
 CommandShowScoreSheet(char *UNUSED(sz))
 {
     size_t i, width1, width2;
-    char *data[2];
+    gchar *data0 = NULL, *data1 = NULL;
     listOLD *pl;
 
 #if USE_GTK
@@ -1010,9 +1010,6 @@ CommandShowScoreSheet(char *UNUSED(sz))
     for (i = 0; i < width1 + width2 + 3; i++)
         outputc('-');
     output("\n");
-
-    data[0] = malloc(50);
-    data[1] = malloc(50);
 
     for (pl = lMatch.plNext; pl->p; pl = pl->plNext) {
         int score[2];
@@ -1042,13 +1039,13 @@ CommandShowScoreSheet(char *UNUSED(sz))
                     score[pmr->g.fWinner] += pmr->g.nPoints;
             }
         }
-        sprintf(data[0], "%d", score[0]);
-        sprintf(data[1], "%d", score[1]);
-        outputf("%*s | %s\n", (int) width1, data[0], data[1]);
+        data0 = g_strdup_printf("%d", score[0]);
+        data1 = g_strdup_printf("%d", score[1]);
+        outputf("%*s | %s\n", (int) width1, data0, data1);
     }
 
-    free(data[0]);
-    free(data[1]);
+    g_free(data0);
+    g_free(data1);
 
     output("\n");
     outputx();
