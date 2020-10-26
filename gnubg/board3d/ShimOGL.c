@@ -74,7 +74,8 @@ static MatStack* GetCurMatStack(void)
 	case GL_PROJECTION:
 		return &pjMatStack;
 	}
-	return NULL;
+	g_assert_not_reached();
+	abort();
 }
 
 static mat4* GetCurMatStackMat(void)
