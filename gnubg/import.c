@@ -3387,7 +3387,7 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
                     PartyGame *newGame;
                     pg.s2 = atoi(value);
                     /* Add this game */
-                    newGame = malloc(sizeof(PartyGame));
+                    newGame = g_malloc(sizeof(PartyGame));
                     memcpy(newGame, &pg, sizeof(PartyGame));
                     games = g_list_append(games, newGame);
                 }
@@ -3413,7 +3413,7 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
             s1 = pGame->s1;
             s2 = pGame->s2;
             free(pGame->gameStr);
-            free(pGame);
+            g_free(pGame);
         }
         free(pg.gameStr);
         fclose(matFP);
@@ -3614,7 +3614,7 @@ CommandImportParty(char *sz)
         return;
     }
 
-    if ((gamf = g_fopen(sz, "r")) == 0) {
+    if ((gamf = g_fopen(sz, "r")) == NULL) {
         outputerr(sz);
         return;
     }
@@ -3627,7 +3627,7 @@ CommandImportParty(char *sz)
         return;
     }
 
-    if ((matf = g_fopen(tmpfile, "w")) == 0) {
+    if ((matf = g_fopen(tmpfile, "w")) == NULL) {
         outputerr(tmpfile);
         g_free(tmpfile);
         fclose(gamf);
@@ -3636,7 +3636,7 @@ CommandImportParty(char *sz)
 
     if (ConvertPartyGammonFileToMat(gamf, matf)) {
         FILE *pf;
-        if ((pf = g_fopen(tmpfile, "r")) != 0) {
+        if ((pf = g_fopen(tmpfile, "r")) != NULL) {
             int rc = ImportMat(pf, tmpfile);
             fclose(pf);
             if (!rc) {
@@ -3708,16 +3708,15 @@ OutputMove(FILE * fpOut, int side, const char *outBuf)
 static int
 ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
 {
-
-    char *player1 = NULL;
-    char *player2 = NULL;
+    char *player1;
+    char *player2;
     int p1Score = 0, p2Score = 0;
     int dice1, dice2;
     int doubled, stake, side = 0;
     int gameCount = 0, moveCount;
     char buffer[1024 * 4];
-    player1 = malloc(sizeof(char) * 128);
-    player2 = malloc(sizeof(char) * 128);
+    player1 = g_malloc(sizeof(char) * 128);
+    player2 = g_malloc(sizeof(char) * 128);
 
     while (fgets(buffer, sizeof(buffer), bgrFP) != NULL) {
         if (strncmp(buffer, BGR_STRING, strlen(BGR_STRING)) == 0)
@@ -3726,14 +3725,14 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
 
     if (ferror(bgrFP)) {
         outputerr("Error opening file");
-        free(player2);
-        free(player1);
+        g_free(player2);
+        g_free(player1);
         return FALSE;
     }
 
     if (feof(bgrFP)) {
-        free(player2);
-        free(player1);
+        g_free(player2);
+        g_free(player1);
         return FALSE;
     }
 
@@ -3745,8 +3744,8 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
             if (fgets(buffer, sizeof(buffer), bgrFP) == NULL) {
                 if (ferror(bgrFP))
                     outputerr("Error reading file");
-                free(player2);
-                free(player1);
+                g_free(player2);
+                g_free(player1);
                 return FALSE;
             }
             if (strstr(buffer, "Win the Match"))
@@ -3785,8 +3784,8 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
         if (fgets(buffer, sizeof(buffer), bgrFP) == NULL) {
             if (ferror(bgrFP))
                 outputerr("Error reading file");
-            free(player2);
-            free(player1);
+            g_free(player2);
+            g_free(player1);
             return FALSE;
         }
 
@@ -3810,8 +3809,8 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
             if (fgets(buffer, sizeof(buffer), bgrFP) == NULL) {
                 if (ferror(bgrFP))
                     outputerr("Error reading file");
-                free(player2);
-                free(player1);
+                g_free(player2);
+                g_free(player1);
                 return FALSE;
             }
             while (buffer[strlen(buffer) - 1] == '\n' || buffer[strlen(buffer) - 1] == '\r')
@@ -3880,8 +3879,8 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
         }
     }
   done:
-    free(player2);
-    free(player1);
+    g_free(player2);
+    g_free(player1);
 
     return TRUE;
 }
