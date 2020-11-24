@@ -121,10 +121,11 @@ LaTeXEpilogue(FILE * pf)
 }
 
 static void
-DrawLaTeXPoint(FILE * pf, int i, int fPlayer, int c)
+DrawLaTeXPoint(FILE * pf, int i, int fPlayer, unsigned int c)
 {
 
-    int j, x, y = 0;
+    unsigned int j;
+    int x, y = 0;
 
     if (i < 6)
         x = 320 - 20 * i;
@@ -146,7 +147,7 @@ DrawLaTeXPoint(FILE * pf, int i, int fPlayer, int c)
         if (j == 5 || (i == 24 && j == 3)) {
             fprintf(pf, "\\whiten\\path(%d,%d)(%d,%d)(%d,%d)(%d,%d)(%d,%d)\n"
                     "\\path(%d,%d)(%d,%d)(%d,%d)(%d,%d)(%d,%d)\n"
-                    "\\put(%d,%d){\\makebox(10,10){\\textsf{\\tiny %d}}}\n",
+                    "\\put(%d,%d){\\makebox(10,10){\\textsf{\\tiny %u}}}\n",
                     x - 5, y - 5, x + 5, y - 5, x + 5, y + 5, x - 5, y + 5,
                     x - 5, y - 5,
                     x - 5, y - 5, x + 5, y - 5, x + 5, y + 5, x - 5, y + 5, x - 5, y - 5, x - 5, y - 5, c);
@@ -171,7 +172,8 @@ static void
 PrintLaTeXBoard(FILE * pf, matchstate * pms, int fPlayer)
 {
 
-    int anOff[2] = { 15, 15 }, i, x, y;
+    unsigned int anOff[2] = { 15, 15 };
+    int i, x, y;
 
     /* FIXME print position ID and pip count, and the player on roll.
      * Print player names too? */
@@ -220,10 +222,10 @@ static void
 LaTeXEscape(FILE * pf, char *pch)
 {
 
-    /* Translation table from GNU recode, by François Pinard. */
+    /* Translation table from GNU recode, by Francois Pinard. */
     static struct translation {
-        unsigned char uch;
-        char *sz;
+        const unsigned char uch;
+        const char *sz;
     } at[] = {
         {
         10, "\n\n"},            /* \n */
