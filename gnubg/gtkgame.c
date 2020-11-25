@@ -174,6 +174,8 @@ typedef enum _gnubgcommand {
     CMD_SHOW_STATISTICS_MATCH,
     CMD_SHOW_TEMPERATURE_MAP,
     CMD_SHOW_TEMPERATURE_MAP_CUBE,
+    CMD_SHOW_SCORE_MAP,    
+    CMD_SHOW_SCORE_MAP_MOVE,    
     CMD_SHOW_VERSION,
     CMD_SHOW_WARRANTY,
     CMD_SWAP_PLAYERS,
@@ -379,6 +381,8 @@ CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_ROLLS, "show rolls");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_STATISTICS_MATCH, "show statistics match");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_TEMPERATURE_MAP, "show temperaturemap");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_TEMPERATURE_MAP_CUBE, "show temperaturemap =cube");
+CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_SCORE_MAP, "show scoremap");
+CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_SCORE_MAP_MOVE, "show scoremap =move");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_VERSION, "show version");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_WARRANTY, "show warranty");
 CREATE_CMD_ACTION_CALLBACK(CMD_SWAP_PLAYERS, "swap players");
@@ -457,6 +461,8 @@ static const char *aszCommands[NUM_CMDS] = {
     "show statistics match",
     "show temperaturemap",
     "show temperaturemap =cube",
+    "show scoremap",  
+    "show scoremap =move",  
     "show version",
     "show warranty",
     "swap players",
@@ -1132,7 +1138,7 @@ SetAnnotation(moverecord * pmr)
                 gtk_box_pack_start(GTK_BOX(pwAnalysis), pw, TRUE, TRUE, 0);
 
                 gtk_notebook_append_page(GTK_NOTEBOOK(pw), pwMoveAnalysis, gtk_label_new(_("Chequer play")));
-
+                //new tab
                 gtk_notebook_append_page(GTK_NOTEBOOK(pw), pwCubeAnalysis, gtk_label_new(_("Cube decision")));
 
 
@@ -3429,6 +3435,8 @@ static GtkActionEntry actionEntries[] = {
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_TEMPERATURE_MAP)},
     {"TemperatureMapCubeAction", NULL, N_("Temperature Map (cube decision)"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_TEMPERATURE_MAP_CUBE)},
+    {"ScoreMapAction", NULL, N_("Score Map"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_SCORE_MAP)},
     {"RaceTheoryAction", NULL, N_("_Race Theory"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_KLEINMAN)},
     {"MarketWindowAction", NULL, N_("_Market window"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MARKETWINDOW)},
     {"MatchEquityTableAction", NULL, N_("M_atch equity table"), NULL, NULL,
@@ -3669,6 +3677,8 @@ static GtkItemFactoryEntry aife[] = {
      CMD_SHOW_TEMPERATURE_MAP, NULL, NULL},
     {N_("/_Analyse/Temperature Map (cube decision)"), NULL, Command,
      CMD_SHOW_TEMPERATURE_MAP_CUBE, NULL, NULL},
+    {N_("/_Analyse/Score Map (cube decision)"), NULL, Command,
+     CMD_SHOW_SCORE_MAP, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/_Race Theory"),
      NULL, Command, CMD_SHOW_KLEINMAN, NULL, NULL},
@@ -5759,9 +5769,19 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
     if (GetPanelWidget(WINDOW_HINT))
         gtk_widget_destroy(GetPanelWidget(WINDOW_HINT));
 
+    // The function CreateCubeAnalysis() from gtkcube.c is later called to build a hint window 
+    // with a new cube analysis. Unfortunately it resets the pchd data structure defined there, and is only
+    // partially (i.e. somewhat erratically) synced with the main window, which can create a mess to MoneyEval. 
+    // Therefore, each time this function is called, if we are in MoneyEval mode, we want to 
+    // urgently toggle it off, even though we don't have a handle on pchd.
+    // A nicer alternative may be to set the hint window in a modal mode.
+
+//    CancelMoneyEval(); // Sometimes causes seg faults.
+
     pwHint = GTKCreateDialog(_("GNU Backgammon - Hint"), DT_INFO, NULL, DIALOG_FLAG_NOTIDY, G_CALLBACK(HintOK), NULL);
     SetPanelWidget(WINDOW_HINT, pwHint);
 
+    // this is probably where hint builds its cube eval in the window; it builds a pchd from scratch
     pw = CreateCubeAnalysis(pmr, pms, did_double, did_take, hist);
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pw);

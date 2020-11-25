@@ -530,7 +530,7 @@ FormatPointPlain(char *pch, int n)
 }
 
 extern char *
-FormatMovePlain(char *sz, TanBoard anBoard, int anMove[8])
+FormatMovePlain(char *sz, const TanBoard anBoard, const int anMove[8])
 {
 
     char *pch = sz;
@@ -583,7 +583,7 @@ CanonicalMoveOrder(int an[])
 }
 
 extern char *
-FormatMove(char *sz, const TanBoard anBoard, int anMove[8])
+FormatMove(char *sz, const TanBoard anBoard, const int anMove[8])
 {
 
     char *pch = sz;
