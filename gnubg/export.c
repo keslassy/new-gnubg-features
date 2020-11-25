@@ -1241,6 +1241,7 @@ ExportGameGam(char *sz, int fSst)
 {
 
     FILE *pf;
+    int fDontClose = FALSE;
 
     sz = NextToken(&sz);
 
@@ -1255,16 +1256,17 @@ ExportGameGam(char *sz, int fSst)
     if (!confirmOverwrite(sz, fConfirmSave))
         return;
 
-    if (!strcmp(sz, "-"))
+    if (!strcmp(sz, "-")) {
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+        fDontClose = TRUE;
+    } else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
 
     ExportGameJF(pf, plGame, -1, FALSE, fSst);
 
-    if (pf != stdout)
+    if (!fDontClose)
         fclose(pf);
 
     setDefaultFileName(sz);
@@ -1289,8 +1291,9 @@ ExportMatchMat(char *sz, int fSst)
 {
 
     FILE *pf;
-    int i;
     listOLD *pl;
+    int i;
+    int fDontClose = FALSE;
 
     /* FIXME what should be done if nMatchTo == 0? */
 
@@ -1307,9 +1310,10 @@ ExportMatchMat(char *sz, int fSst)
     if (!confirmOverwrite(sz, fConfirmSave))
         return;
 
-    if (!strcmp(sz, "-"))
+    if (!strcmp(sz, "-")) {
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+        fDontClose = TRUE;
+    } else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -1363,7 +1367,7 @@ ExportMatchMat(char *sz, int fSst)
     for (i = 0, pl = lMatch.plNext; pl != &lMatch; i++, pl = pl->plNext)
         ExportGameJF(pf, pl->p, i, TRUE, fSst);
 
-    if (pf != stdout)
+    if (!fDontClose)
         fclose(pf);
 
     setDefaultFileName(sz);

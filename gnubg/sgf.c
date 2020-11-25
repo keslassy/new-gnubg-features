@@ -2349,6 +2349,7 @@ CommandSaveMatch(char *sz)
 
     FILE *pf;
     listOLD *pl;
+    int fDontClose = FALSE;
 
     sz = NextToken(&sz);
 
@@ -2367,9 +2368,10 @@ CommandSaveMatch(char *sz)
     if (!confirmOverwrite(sz, fConfirmSave))
         return;
 
-    if (!strcmp(sz, "-"))
+   if (!strcmp(sz, "-")) {
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+        fDontClose = TRUE;
+    } else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -2377,7 +2379,7 @@ CommandSaveMatch(char *sz)
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext)
         SaveGame(pf, pl->p);
 
-    if (pf != stdout)
+    if (!fDontClose)
         fclose(pf);
 
     setDefaultFileName(sz);
@@ -2397,6 +2399,7 @@ CommandSavePosition(char *sz)
     moverecord *pmr_cur = NULL;
     moverecord *pmscv;
     moverecord *pmscp;
+    int fDontClose = FALSE;
 
     sz = NextToken(&sz);
 
@@ -2413,9 +2416,10 @@ CommandSavePosition(char *sz)
     if (!confirmOverwrite(sz, fConfirmSave))
         return;
 
-    if (!strcmp(sz, "-"))
+    if (!strcmp(sz, "-")) {
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+        fDontClose = TRUE;
+    } else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -2496,7 +2500,7 @@ CommandSavePosition(char *sz)
 
     SaveGame(pf, &l);
 
-    if (pf != stdout)
+    if (!fDontClose)
         fclose(pf);
 
     while (l.plNext->p)

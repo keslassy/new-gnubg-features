@@ -798,6 +798,7 @@ CommandExportGameText(char *sz)
 {
 
     FILE *pf;
+    int fDontClose = FALSE;
 
     sz = NextToken(&sz);
 
@@ -814,16 +815,17 @@ CommandExportGameText(char *sz)
     if (!confirmOverwrite(sz, fConfirmSave))
         return;
 
-    if (!strcmp(sz, "-"))
+    if (!strcmp(sz, "-")) {
         pf = stdout;
-    else if ((pf = g_fopen(sz, "w")) == 0) {
+        fDontClose = TRUE;
+    } else if ((pf = g_fopen(sz, "w")) == 0) {
         outputerr(sz);
         return;
     }
 
     ExportGameText(pf, plGame, getGameNumber(plGame), FALSE);
 
-    if (pf != stdout)
+    if (!fDontClose)
         fclose(pf);
 
     setDefaultFileName(sz);

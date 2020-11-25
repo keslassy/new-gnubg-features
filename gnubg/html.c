@@ -2905,6 +2905,7 @@ CommandExportGameHtml(char *sz)
 {
 
     FILE *pf;
+    int fDontClose = FALSE;
 
     sz = NextToken(&sz);
 
@@ -2921,9 +2922,10 @@ CommandExportGameHtml(char *sz)
     if (!confirmOverwrite(sz, fConfirmSave))
         return;
 
-    if (!strcmp(sz, "-"))
+    if (!strcmp(sz, "-")) {
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+        fDontClose = TRUE;
+    } else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
@@ -2936,7 +2938,7 @@ CommandExportGameHtml(char *sz)
                    exsExport.het, exsExport.hecss, getGameNumber(plGame), FALSE, NULL);
 
 
-    if (pf != stdout)
+    if (!fDontClose)
         fclose(pf);
 
     setDefaultFileName(sz);
@@ -3171,6 +3173,7 @@ CommandExportPositionGammOnLine(char *sz)
 {
 
     FILE *pf;
+    int fDontClose = FALSE;
 
     sz = NextToken(&sz);
 
@@ -3187,16 +3190,17 @@ CommandExportPositionGammOnLine(char *sz)
     if (!confirmOverwrite(sz, fConfirmSave))
         return;
 
-    if (!strcmp(sz, "-"))
+    if (!strcmp(sz, "-")) {
         pf = stdout;
-    else if (!(pf = g_fopen(sz, "w"))) {
+        fDontClose = TRUE;
+    } else if (!(pf = g_fopen(sz, "w"))) {
         outputerr(sz);
         return;
     }
 
     ExportPositionGammOnLine(pf);
 
-    if (pf != stdout)
+    if (!fDontClose)
         fclose(pf);
 
 }

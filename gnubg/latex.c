@@ -1,11 +1,11 @@
 /*
- * latex.c
+ * Copyright (C) 2001-2002 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2002-2011 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 2001, 2002
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -559,6 +558,7 @@ CommandExportMatchLaTeX(char *sz)
 
     FILE *pf;
     listOLD *pl;
+    int fDontClose = FALSE;
 
     sz = NextToken(&sz);
 
@@ -570,9 +570,10 @@ CommandExportMatchLaTeX(char *sz)
     if (!confirmOverwrite(sz, fConfirmSave))
         return;
 
-    if (!strcmp(sz, "-"))
+    if (!strcmp(sz, "-")) {
         pf = stdout;
-    else if ((pf = g_fopen(sz, "w")) == 0) {
+        fDontClose = TRUE;
+    } else if ((pf = g_fopen(sz, "w")) == 0) {
         outputerr(sz);
         return;
     }
@@ -586,7 +587,7 @@ CommandExportMatchLaTeX(char *sz)
 
     LaTeXEpilogue(pf);
 
-    if (pf != stdout)
+    if (!fDontClose)
         fclose(pf);
 
     setDefaultFileName(sz);
