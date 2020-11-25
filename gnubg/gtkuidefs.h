@@ -176,6 +176,7 @@
 	      "<menuitem name='DistributionOfRolls' action='DistributionOfRollsAction' />" \
 	      "<menuitem name='TemperatureMap' action='TemperatureMapAction' />" \
 	      "<menuitem name='TemperatureMapCube' action='TemperatureMapCubeAction' />" \
+	      "<menuitem name='ScoreMapCube' action='ScoreMapCubeAction' />" \
 	      "<separator/>" \
 	      "<menuitem name='RaceTheory' action='RaceTheoryAction' />" \
 	      "<separator/>" \

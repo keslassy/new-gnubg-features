@@ -28,6 +28,13 @@
 #include "eval.h"
 #include "rollout.h"
 
+//for GTKWidget: neither of these
+// //#include <gtk/gtk.h>
+// #include "gtkwindows.h"
+// #include "gtkpanels.h"
+// #include "gtkchequer.h"
+
+
 #define STRINGIZEAUX(num) #num
 #define STRINGIZE(num) STRINGIZEAUX(num)
 
@@ -193,6 +200,7 @@ typedef struct _moverecord {
     /* the evaluation and settings */
     cubedecisiondata *CubeDecPtr;
     cubedecisiondata CubeDec;
+    cubedecisiondata *MoneyCubeDecPtr; /* In case the cube has been evaluated at money. */
     /* skill for the cube decision */
     skilltype stCube;
     /* "private" data */
@@ -202,8 +210,9 @@ typedef struct _moverecord {
     xmovesetboard sb;           /* setting up board */
     xmovesetcubeval scv;        /* setting cube */
     xmovesetcubepos scp;        /* setting cube owner */
+//    int evalAtMoney;            // =1 if the MoneyEval button if toggled (on), 0 otherwise  
+//    moneydata * pmd;            // structure for MoneyEval: * malloc()ed, or NULL if unknown */
 } moverecord;
-
 
 typedef struct _matchinfo {     /* SGF match information */
     char *pchRating[2];
@@ -979,6 +988,7 @@ extern void CommandShowStatisticsGame(char *);
 extern void CommandShowStatisticsMatch(char *);
 extern void CommandShowStatisticsSession(char *);
 extern void CommandShowTemperatureMap(char *);
+extern void CommandShowScoreMap(char *);
 extern void CommandShowThorp(char *);
 extern void CommandShowThreads(char *);
 extern void CommandShowTurn(char *);
