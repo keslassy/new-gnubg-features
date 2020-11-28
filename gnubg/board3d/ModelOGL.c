@@ -21,7 +21,6 @@
 #include "legacyGLinc.h"
 #include <stdlib.h>
 #include "fun3d.h"
-#include "ShimOGL.h"
 
 void OglModelInit(ModelManager* modelHolder, int modelNumber)
 {

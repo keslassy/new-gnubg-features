@@ -45,6 +45,8 @@ extern int fClockwise;          /* Player 1 moves clockwise */
 
 extern const Material* currentMat;
 
+void InitMatStacks(void);
+
 void OglModelInit(ModelManager* modelHolder, int modelNumber);
 void OglModelAlloc(ModelManager* modelHolder, int modelNumber);
 void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Material* pMat);

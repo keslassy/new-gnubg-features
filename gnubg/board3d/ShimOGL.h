@@ -39,8 +39,6 @@
 #define GL_TRUE                           1
 #define GL_FALSE                          0
 
-void InitMatStacks(void);
-
 void SHIMglBegin(GLenum mode);
 void SHIMglEnd(void);
 void SHIMglMatrixMode(GLenum mode);
