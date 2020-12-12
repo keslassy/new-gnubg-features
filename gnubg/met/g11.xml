@@ -4,16 +4,16 @@
 
 <!--
 
-     g11.xml
+     Copyright (C) 2003-2004 Robert-Jan Veldhuizen (Zorba)
 
-     Table generated using gnubg 0.14 full rollouts,
-     by Robert-Jan Veldhuizen (Zorba), 2003-2004.
+     Table generated using GNUbg 0.14 full rollouts,
 
      This file is distributed as a part of the GNU Backgammon program.
 
-     Copying and distribution of verbatim and modified versions of this file
-     is permitted in any medium provided the copyright notice and this
-     permission notice are preserved.
+     Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
 
      $Id$
 
@@ -21,8 +21,8 @@
 
 <met>
   <info>
-    <name>GNUBG 11 point MET</name>
-    <description>generated using GNUBG full rollouts by Zorba. Extended to 25pts using Claes Tornberg's MEC</description>
+    <name>GNUbg 11 point MET</name>
+    <description>generated using GNUbg full rollouts by Zorba. Extended to 25pts using Claes Tornberg's MEC</description>
     <length>25</length>
   </info>
 

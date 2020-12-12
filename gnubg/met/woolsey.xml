@@ -4,16 +4,19 @@
 
 <!--
 
-     woolsey.xml
+     Copyright (C) 1992 Kit Woolsey
 
-     by Joern Thyssen <jthyssen@dk.ibm.com>, 2002
+     First published in _Inside Backgammon_  magazine
+     Volume 2, Number 2, March-April 1992
 
+     Transcribed for use by GNUbg by Joern Thyssen <jthyssen@dk.ibm.com>
 
      This file is distributed as a part of the GNU Backgammon program.
 
-     Copying and distribution of verbatim and modified versions of this file
-     is permitted in any medium provided the copyright notice and this
-     permission notice are preserved.
+     Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
 
      $Id$
 
@@ -23,7 +26,7 @@
 <met>
   <info>
     <name>Kit Woolsey</name>
-    <description>Kit Woolsey, "How to play Tournament Backgammon", GammonPress, 1993</description>
+    <description>Kit Woolsey, "Inside Backgammon, Vol.2, Num.2", 1992</description>
     <length>15</length>
   </info>
 

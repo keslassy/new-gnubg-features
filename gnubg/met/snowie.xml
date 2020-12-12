@@ -4,15 +4,18 @@
 
 <!--
 
-     snowie.xml
+     Copyright (C) 1999 Oasya SA
 
-     by Joern Thyssen <jthyssen@dk.ibm.com>, 2002
+     Match equity table used by Snowie 2.1
+
+     Transcribed for use by GNUbg by Joern Thyssen <jthyssen@dk.ibm.com>
 
      This file is distributed as a part of the GNU Backgammon program.
 
-     Copying and distribution of verbatim and modified versions of this file
-     is permitted in any medium provided the copyright notice and this
-     permission notice are preserved.
+     Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
 
      $Id$
 

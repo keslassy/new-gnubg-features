@@ -4,17 +4,19 @@
 
 <!--
 
-     Kazaross-XG2.xml
+     Copyright (C) 2011 Neil Kazaross
 
-     Table rolled up to 9 point match. Then uses R/K MET 
-     which was rolled up to 15 and extrapolated to  25 points
-     by Neil Kazaross 2011.
+     Table rolled up to 9 point match by eXtreme Gammon. Then uses
+     R/K MET which was rolled up to 15 and extrapolated to 25 points
+
+     Transcribed for use by GNUbg by Michael Petch  <mpetch@capp-sysware.com>
 
      This file is distributed as a part of the GNU Backgammon program.
 
-     Copying and distribution of verbatim and modified versions of this file
-     is permitted in any medium provided the copyright notice and this
-     permission notice are preserved.
+     Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
 
      $Id$
 
@@ -23,7 +25,7 @@
 <met>
   <info>
     <name>Kazaross XG2 25 point MET</name>
-    <description>Generated using XG rollouts to 9pts, GNUBG Supremo full rollouts to 15 points. Extended to 25pts by projecting take points.</description>
+    <description>Generated using XG rollouts to 9pts, GNUbg Supremo full rollouts to 15 points. Extended to 25pts by projecting take points.</description>
     <length>25</length>
   </info>
 

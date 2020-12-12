@@ -4,15 +4,17 @@
 
 <!--
 
-     mec.xml
+     Copyright (C) 2002 Joern Thyssen <jthyssen@dk.ibm.com>
 
-     by Joern Thyssen <jthyssen@dk.ibm.com>, 2002
+     Parameters for a match equity table computed by
+     Claes Tornberg's match equity calculator.
 
      This file is distributed as a part of the GNU Backgammon program.
 
-     Copying and distribution of verbatim and modified versions of this file
-     is permitted in any medium provided the copyright notice and this
-     permission notice are preserved.
+     Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
 
      $Id$
 

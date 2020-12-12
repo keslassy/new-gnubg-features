@@ -1,19 +1,21 @@
-<?xml version = "1.0" encoding = "ISO-8859-1"?>
+<?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE met PUBLIC "-//GNU Backgammon//DTD Match Equity Tables//EN"
                      "met.dtd">
 
 <!--
 
-     ortega.xml
+     Copyright (C) 2001 Antonio Ortega and Danny Kleinman
 
-     by Øystein Johansen <oeysteij@online.no>, 2002
+     From _Backgammon With the Giants, Neil Kazaross_
 
+     Transcribed for use by GNUbg by Oystein Johansen  <oystein@gnubg.org>
 
      This file is distributed as a part of the GNU Backgammon program.
 
-     Copying and distribution of verbatim and modified versions of this file
-     is permitted in any medium provided the copyright notice and this
-     permission notice are preserved.
+     Copying and distribution of this file, with or without modification,
+     are permitted in any medium without royalty provided the copyright
+     notice and this notice are preserved.  This file is offered as-is,
+     without any warranty.
 
      $Id$
 
