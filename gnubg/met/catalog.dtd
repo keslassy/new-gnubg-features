@@ -1,4 +1,9 @@
-<!-- $Id$ -->
+<!--
+    Local copy of
+    http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd
+
+    $Id$
+-->
 
 <!ENTITY % pubIdChars "CDATA">
 <!ENTITY % publicIdentifier "%pubIdChars;">
