@@ -1,13 +1,13 @@
 /*
- *
  * mec - match equity calculator for backgammon. calculate equity table
  * given match length, gammon rate and winning probabilities.
  *
- * Copyright (C) 1996  Claes Thornberg (claest@it.kth.se)
+ * Copyright (C) 1996 Claes Tornberg <claest@it.kth.se>
+ * Copyright (C) 2004-2013 the AUTHORS
  *
- * This program is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -16,15 +16,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Modified for usage with gnubg by Joern Thyssen <jth@gnubg.org>:
  *
- * (1) make external entry for usage in gnubg
+ * Modified for usage with GNUbg by Joern Thyssen <jth@gnubg.org>:
+ *
+ * (1) make external entry for usage in GNUbg
  * (2) change "double" to "metentry", and typedef metentry to float
  *     or double depending on MEC_STANDALONE
- * (3) Compile with MEC_STANDALONE to get Thornberg's original program, e.g.,
+ * (3) Compile with MEC_STANDALONE to get Tornberg's original program, e.g.,
  *
  *     gcc -DMEC_STANDALONE mec.c -o mec
  *
