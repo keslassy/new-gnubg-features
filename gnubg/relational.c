@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2004-2020 the AUTHORS
+ * Copyright (C) 2004-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -382,14 +382,29 @@ AddGames(DBProvider * pdb, int session_id, int player_id0, int player_id1)
     listOLD *plg, *pl = lMatch.plNext;
     while ((plg = pl->p) != NULL) {
         int game_id = GetNextId(pdb, "game");
+        int result = 0;
         moverecord *pmr = plg->plNext->p;
         xmovegameinfo *pmgi = &pmr->g;
+        char *buf;
 
-        char *buf = g_strdup_printf("INSERT INTO game(game_id, session_id, player_id0, player_id1, "
+        switch(pmgi->fWinner) {
+            case 0:
+                result = pmgi->nPoints;
+                break;
+            case 1:
+                result = -pmgi->nPoints;
+                break;
+            case -1:
+                break;
+            default:
+                g_assert_not_reached();
+        }
+
+        buf = g_strdup_printf("INSERT INTO game(game_id, session_id, player_id0, player_id1, "
                                     "score_0, score_1, result, added, game_number, crawford) "
                                     "VALUES (%d, %d, %d, %d, %d, %d, %d, CURRENT_TIMESTAMP, %d, %d )",
                                     game_id, session_id, player_id0, player_id1,
-                                    pmgi->anScore[0], pmgi->anScore[1], pmgi->nPoints, ++gamenum, pmr->g.fCrawfordGame);
+                                    pmgi->anScore[0], pmgi->anScore[1], result, ++gamenum, pmr->g.fCrawfordGame);
 
         if (pdb->UpdateCommand(buf)) {
             AddStats(pdb, game_id, player_id0, 0, "gamestat", ms.nMatchTo, &(pmgi->sc));
