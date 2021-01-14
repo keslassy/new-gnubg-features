@@ -154,13 +154,15 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, dl);
     glLightfv(GL_LIGHT0, GL_SPECULAR, sl);
 
-	UpdateShadowLightPosition(bd3d, lp);
+    UpdateShadowLightPosition(bd3d, lp);
 #endif
 }
 
 #ifdef WIN32
 /* Determine if a particular extension is supported */
+
 typedef char *(WINAPI * fGetExtStr) (HDC);
+
 extern int
 extensionSupported(const char *extension)
 {
@@ -945,9 +947,9 @@ freeEigthPoints(EigthPoints* eigthPoints)
 	if (eigthPoints->points != NULL)
 	{
 		unsigned int corner_steps = (eigthPoints->accuracy / 4) + 1;
-		if (eigthPoints->points)
-			Free3d(eigthPoints->points, corner_steps, corner_steps);
-		eigthPoints->points = 0;
+
+		Free3d(eigthPoints->points, corner_steps, corner_steps);
+		eigthPoints->points = NULL;
 	}
 }
 
