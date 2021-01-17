@@ -2085,7 +2085,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 #endif
     gtk_container_set_border_width(GTK_CONTAINER(pwEval), 8);
 
-    pew = malloc(sizeof *pew);
+    pew = g_malloc(sizeof *pew);
 
     /*
      * Frame with prefined settings
@@ -2288,7 +2288,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     g_signal_connect(G_OBJECT(pew->pwUsePrune), "toggled", G_CALLBACK(EvalChanged), pew);
 
-    g_object_set_data_full(G_OBJECT(pwEval), "user_data", pew, free);
+    g_object_set_data_full(G_OBJECT(pwEval), "user_data", pew, g_free);
 
     return pwEval;
 }
@@ -2635,7 +2635,7 @@ static AnalysisDetails *
 CreateEvalSettings(GtkWidget * pwParent, const char *title, evalcontext * pechequer, movefilter * pmfchequer,
                    evalcontext * pecube, movefilter * pmfcube, int fWeakLevels)
 {
-    AnalysisDetails *pAnalDetail = malloc(sizeof(AnalysisDetails));
+    AnalysisDetails *pAnalDetail = g_malloc(sizeof(AnalysisDetails));
     pAnalDetail->title = title;
     pAnalDetail->esChequer = pechequer;
     pAnalDetail->mfChequer = pmfchequer;
@@ -2847,8 +2847,8 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     HintSameToggled(NULL, &aw);
     GTKRunDialog(pwDialog);
-    free(pAnalDetailSettings1);
-    free(pAnalDetailSettings2);
+    g_free(pAnalDetailSettings2);
+    g_free(pAnalDetailSettings1);
 }
 
 typedef struct _playerswidget {
@@ -4673,9 +4673,9 @@ NewWidget(newwidget * pnw)
 
         g_free(sz);
 
-        pi = malloc(sizeof(int));
+        pi = g_malloc(sizeof(int));
         *pi = i;
-        g_object_set_data_full(G_OBJECT(pwToolButton), "user_data", pi, free);
+        g_object_set_data_full(G_OBJECT(pwToolButton), "user_data", pi, g_free);
 
         g_signal_connect(G_OBJECT(pwToolButton), "clicked", G_CALLBACK(ToolButtonPressed), pnw);
     }
@@ -6372,7 +6372,6 @@ GTKHelpAdd(GtkTreeStore * pts, GtkTreeIter * ptiParent, command * pc)
 static void
 GTKHelpSelect(GtkTreeSelection * pts, gpointer UNUSED(p))
 {
-
     GtkTreeModel *ptm;
     GtkTreeIter ti;
     command **apc;
@@ -6384,7 +6383,7 @@ GTKHelpSelect(GtkTreeSelection * pts, gpointer UNUSED(p))
         GtkTreePath *ptp = gtk_tree_model_get_path(ptm, &ti);
         int c = gtk_tree_path_get_depth(ptp);
 
-        apc = malloc(c * sizeof(command *));
+        apc = g_malloc(c * sizeof(command *));
         for (int i = c - 1;; i--) {
             gtk_tree_model_get(ptm, &ti, 2, apc + i, -1);
             if (!i)
@@ -6418,7 +6417,7 @@ GTKHelpSelect(GtkTreeSelection * pts, gpointer UNUSED(p))
         gtk_label_set_text(GTK_LABEL(pwHelpLabel), pLabel);
         g_free(pLabel);
 
-        free(apc);
+        g_free(apc);
         gtk_tree_path_free(ptp);
     } else
         gtk_label_set_text(GTK_LABEL(pwHelpLabel), NULL);
