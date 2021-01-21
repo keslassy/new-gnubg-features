@@ -1,12 +1,11 @@
 /*
- * openurl.c
+ * Copyright (C) 2002-2004 Joern Thyssen <jthyssen@dk.ibm.com>
+ * Copyright (C) 2003-2017 the AUTHORS
  *
- * by Joern Thyssen <jthyssen@dk.ibm.com>, 2002.
- * (after inspiration from osr.cc from fibs2html <fibs2html.sourceforge.net>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,11 +13,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
+
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,8 +38,10 @@ get_web_browser(void)
 #if defined(_WIN32)
     if (!web_browser || !*web_browser)
         return ("");
-#endif
+    else
+#else
     if (web_browser && *web_browser)
+#endif
         return web_browser;
     if ((pch = g_getenv("BROWSER")) == NULL) {
 #if defined(__APPLE__)
