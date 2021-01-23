@@ -1,15 +1,11 @@
-
 /*
- * osr.c
+ * Copyright (C) 2002-2004 Joern Thyssen <jthyssen@dk.ibm.com>
+ * Copyright (C) 2004-2015 the AUTHORS
  *
- * one-sided race rollouts
- *
- * by Joern Thyssen <jthyssen@dk.ibm.com>, 2002.
- * (after inspiration from osr.cc from fibs2html <fibs2html.sourceforge.net>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,8 +13,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ * Inspired from osr.cc from fibs2html <fibs2html.sourceforge.net>
  *
  * $Id$
  */
@@ -54,8 +52,8 @@ OSRQuasiRandomDice(const unsigned int iTurn, const unsigned int iGame, const uns
         anDice[1] = ((iGame / 216) % 6) + 1;
         return TRUE;
     } else {
-        anDice[0] = (genrand_int32(&mti, mt) % 6) + 1;
-        anDice[1] = (genrand_int32(&mti, mt) % 6) + 1;
+        anDice[0] = (unsigned int) (genrand_int32(&mti, mt) % 6) + 1;
+        anDice[1] = (unsigned int) (genrand_int32(&mti, mt) % 6) + 1;
         return (anDice[0] > 0 && anDice[1] > 0);
     }
 }
