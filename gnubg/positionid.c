@@ -268,9 +268,9 @@ PositionFromXG(TanBoard anBoard, const char *pos)
         if (pos[i] >= 'A' && pos[i] <= 'P') {
             if (p0 > -1)
                 anBoard[0][p0] = 0;
-            anBoard[1][p1] = pos[i] - 'A' + 1;
+            anBoard[1][p1] = (unsigned int) (pos[i] - 'A' + 1);
         } else if (pos[i] >= 'a' && pos[i] <= 'p') {
-            anBoard[0][p0] = pos[i] - 'a' + 1;
+            anBoard[0][p0] = (unsigned int) (pos[i] - 'a' + 1);
             if (p1 > -1)
                 anBoard[1][p1] = 0;
         } else if (pos[i] == '-') {
@@ -354,13 +354,13 @@ extern unsigned char
 Base64(const unsigned char ch)
 {
     if (ch >= 'A' && ch <= 'Z')
-        return ch - 'A';
+        return (unsigned char)(ch - 'A');
 
     if (ch >= 'a' && ch <= 'z')
-        return (ch - 'a') + 26;
+        return (unsigned char)(ch - 'a' + 26);
 
     if (ch >= '0' && ch <= '9')
-        return (ch - '0') + 52;
+        return (unsigned char)(ch - '0' + 52);
 
     if (ch == '+')
         return 62;
@@ -460,6 +460,11 @@ PositionBearoff(const unsigned int anBoard[], unsigned int nPoints, unsigned int
 {
     unsigned int i, fBits, j;
 
+    if (nPoints == 0) {
+        g_assert_not_reached();
+        return 0;
+    }
+
     for (j = nPoints - 1, i = 0; i < nPoints; i++)
         j += anBoard[i];
 
@@ -512,7 +517,14 @@ extern unsigned short
 PositionIndex(unsigned int g, const unsigned int anBoard[6])
 {
     unsigned int i, fBits;
-    unsigned int j = g - 1;
+    unsigned int j;
+
+    if (g == 0) {
+        g_assert_not_reached();
+        return 0;
+    }
+
+    j = g - 1;
 
     for (i = 0; i < g; i++)
         j += anBoard[i];
