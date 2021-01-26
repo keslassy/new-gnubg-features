@@ -1,11 +1,11 @@
 /*
- * positionid.h
+ * Copyright (C) 1998-2002 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2000-2014 the AUTHORS
  *
- * by Gary Wong, 1998, 1999, 2002
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -46,9 +45,9 @@ extern void PositionFromBearoff(unsigned int anBoard[], unsigned int usID,
 
 extern unsigned short PositionIndex(unsigned int g, const unsigned int anBoard[6]);
 
-#define EqualKeys(k1, k2) (k1.data[0]==k2.data[0]&&k1.data[1]==k2.data[1]&&k1.data[2]==k2.data[2]&&k1.data[3]==k2.data[3]&&k1.data[4]==k2.data[4]&&k1.data[5]==k2.data[5]&&k1.data[6]==k2.data[6])
+#define EqualKeys(k1, k2) ((k1).data[0]==(k2).data[0]&&(k1).data[1]==(k2).data[1]&&(k1).data[2]==(k2).data[2]&&(k1).data[3]==(k2).data[3]&&(k1).data[4]==(k2).data[4]&&(k1).data[5]==(k2).data[5]&&(k1).data[6]==(k2).data[6])
 
-#define CopyKey(ks, kd) kd.data[0]=ks.data[0],kd.data[1]=ks.data[1],kd.data[2]=ks.data[2],kd.data[3]=ks.data[3],kd.data[4]=ks.data[4],kd.data[5]=ks.data[5],kd.data[6]=ks.data[6]
+#define CopyKey(ks, kd) (kd).data[0]=(ks).data[0],(kd).data[1]=(ks).data[1],(kd).data[2]=(ks).data[2],(kd).data[3]=(ks).data[3],(kd).data[4]=(ks).data[4],(kd).data[5]=(ks).data[5],(kd).data[6]=(ks).data[6]
 
 extern int EqualBoards(const TanBoard anBoard0, const TanBoard anBoard1);
 
