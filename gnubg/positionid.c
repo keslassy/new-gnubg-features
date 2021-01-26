@@ -1,16 +1,29 @@
 /*
- * positionid.c
+ * Copyright (C) 1998-2002 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2000-2014 the AUTHORS
  *
- * by Gary Wong <gary@cs.arizona.edu>, 1998-1999.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * An implementation of the position "external" key/IDs at:
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   http://www.gnu.org/manual/gnubg/html_node/A-technical-description-of-the-Position-ID.html
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Please see that page for more information.
  *
- * For internal use, we use another "key", much faster to encode or decode
- * that is essentially the raw board squeezed down to 4 bits/point.
+ * An implementation of the legacy position key/ID described at:
+ *   https://www.gnu.org/software/gnubg/manual/gnubg.html#gnubg-tech_postionid
+ *
+ * This encoding creates IDs as compact as possible.
+ *
+ * For internal use in moves generation and evaluation we now use another
+ * key, much faster to encode or decode, that is essentially the raw board
+ * squeezed down to 4 bits/point.
  *
  * This library also calculates bearoff IDs, which are enumerations of the
  *
@@ -20,19 +33,6 @@
  *
  * combinations of (up to c) chequers among 6 points.
  *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Id$
  */
