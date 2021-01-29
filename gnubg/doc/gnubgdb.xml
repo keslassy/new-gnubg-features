@@ -3202,9 +3202,9 @@ To roll the dice the CL version type 'roll'.
       <sect3 id="gnubg-tech_databases_download">
         <title>Download</title>
         <para>You may download the two sided database with 6 checkers on 6
-          points from <ulink url="ftp://alpha.gnu.org/gnu/gnubg/gnubg_ts0.bd.gz">ftp://alpha.gnu.org/gnu/gnubg/gnubg_ts0.bd.gz</ulink> and the one
-          sided database with 15 checkers 6 points from <ulink url="ftp://alpha.gnu.org/gnu/gnubg/gnubg_os0.bd.gz">ftp://alpha.gnu.org/gnu/gnubg/gnubg_os0.bd.gz</ulink>. </para>
-	  <para>Larger databases are available for download from <ulink url="ftp://ftp.demon.nl/pub/Museum/Demon/games/gnubg/databases/">ftp://ftp.demon.nl/pub/Museum/Demon/games/gnubg/databases/</ulink>. </para>
+          points from <ulink url="https://alpha.gnu.org/gnu/gnubg/gnubg_ts0.bd.gz">https://alpha.gnu.org/gnu/gnubg/gnubg_ts0.bd.gz</ulink> and the one
+          sided database with 15 checkers 6 points from <ulink url="https://alpha.gnu.org/gnu/gnubg/gnubg_os0.bd.gz">https://alpha.gnu.org/gnu/gnubg/gnubg_os0.bd.gz</ulink>. </para>
+	  <para>Larger databases are available for download from <ulink url="https://dl.xs4all.nl/Museum/Demon/games/gnubg/databases/">https://dl.xs4all.nl/Museum/Demon/games/gnubg/databases/</ulink>. </para>
       </sect3>
       <sect3 id="gnubg-tech_databases_install">
         <title>Installation of the databases</title>
