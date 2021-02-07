@@ -36,7 +36,7 @@
 /*! \brief get number of checkers from a backgammon variation
  *
  */
-static gint
+static guint
 checkers_from_bgv(bgvariation bgv)
 {
     switch (bgv) {
@@ -364,9 +364,9 @@ draw_turn(SimpleBoard * board)
 }
 
 static void
-draw_checkers_on_xy(cairo_t * cr, gint x, gint y, gint direction, gint max, gint number, SimpleBoardColor color)
+draw_checkers_on_xy(cairo_t * cr, gint x, gint y, gint direction, guint max, guint number, SimpleBoardColor color)
 {
-    gint p;
+    guint p;
     for (p = 0; number > 0 && p < max; number--, p++) {
         y += 20 * direction;
         cairo_move_to(cr, x + 9, y);
@@ -375,7 +375,7 @@ draw_checkers_on_xy(cairo_t * cr, gint x, gint y, gint direction, gint max, gint
         fill_and_stroke(cr, color);
     }
     if (number) {
-        gchar *checker_text = g_strdup_printf("%d", number + max);
+        gchar *checker_text = g_strdup_printf("%u", number + max);
         cairo_move_to(cr, x, y);
         draw_centered_text(cr, color.text, 7.0, checker_text);
         g_free(checker_text);
@@ -383,7 +383,7 @@ draw_checkers_on_xy(cairo_t * cr, gint x, gint y, gint direction, gint max, gint
 }
 
 static void
-draw_checkers_on_point(cairo_t * cr, gint point, gint number, SimpleBoardColor color)
+draw_checkers_on_point(cairo_t * cr, gint point, guint number, SimpleBoardColor color)
 {
     gint x, y, direction;
 
@@ -398,7 +398,7 @@ draw_checkers_on_point(cairo_t * cr, gint point, gint number, SimpleBoardColor c
 }
 
 static void
-draw_checkers_on_bar(cairo_t * cr, gint i, gint n, SimpleBoardColor color)
+draw_checkers_on_bar(cairo_t * cr, gint i, guint n, SimpleBoardColor color)
 {
     gint x = 150;
     gint y = i ? 50 : 250;
@@ -408,7 +408,7 @@ draw_checkers_on_bar(cairo_t * cr, gint i, gint n, SimpleBoardColor color)
 }
 
 static void
-draw_checkers_off(cairo_t * cr, gint i, gint n, SimpleBoardColor color)
+draw_checkers_off(cairo_t * cr, gint i, guint n, SimpleBoardColor color)
 {
     gint x = 290;
     gint y = i ? 280 : 20;
@@ -420,7 +420,8 @@ draw_checkers_off(cairo_t * cr, gint i, gint n, SimpleBoardColor color)
 static void
 draw_checkers(SimpleBoard * board)
 {
-    gint player, point, p, n, i, unplaced;
+    gint player, point, p, i;
+    guint n, unplaced;
     SimpleBoardColor c;
     for (i = 0; i < 2; i++) {
         player = (board->ms.fMove) ? i : !i;
@@ -490,7 +491,7 @@ simple_board_draw(SimpleBoard * board)
 }
 
 extern SimpleBoard *
-simple_board_new(matchstate * ms, cairo_t * cr, float simple_board_size)
+simple_board_new(matchstate * state, cairo_t * cr, float simple_board_size)
 {
     SimpleBoard *board;
     SimpleBoardColor black_black_white = { {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f} };
@@ -505,8 +506,8 @@ simple_board_new(matchstate * ms, cairo_t * cr, float simple_board_size)
     board->color_cube = white_black_black;
     board->size = simple_board_size;
     board->text_size = 6;
-    if (ms)
-        board->ms = *ms;
+    if (state)
+        board->ms = *state;
     board->cr = cr;
     return board;
 }
