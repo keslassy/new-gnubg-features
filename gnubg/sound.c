@@ -1,11 +1,13 @@
 /*
- * sound.c from GAIM.
+ * sound.c from GAIM, modified by Joern Thyssen for use with GNU Backgammon.
  *
- * Copyright (C) 1998-1999, Mark Spencer <markster@marko.net>
+ * Copyright (C) 1998-1999 Mark Spencer <markster@marko.net>
+ * Copyright (C) 2002-2004 Joern Thyssen <jthyssen@dk.ibm.com>
+ * Copyright (C) 2002-2018 the AUTHORS
  *
- * This program is free software; you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -14,18 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * File modified by Joern Thyssen <jthyssen@dk.ibm.com> for use with
- * GNU Backgammon.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
 
 #include "config.h"
 #include <string.h>
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkgame.h"
 #else
 #include "backgammon.h"
@@ -40,7 +38,7 @@
 #include <windows.h>
 #include <mmsystem.h>
 
-#elif HAVE_APPLE_QUICKTIME
+#elif defined(HAVE_APPLE_QUICKTIME)
 #include <QuickTime/QuickTime.h>
 #include <pthread.h>
 #include "lib/list.h"
@@ -142,7 +140,6 @@ PlaySound_QuickTime(const char *cSoundFilename)
 
     if (!fQTPlaying) {
         /* launch playing thread if necessary */
-        int err;
         pthread_t qtthread;
         fQTPlaying = TRUE;
         err = pthread_create(&qtthread, 0L, Thread_PlaySound_QuickTime, NULL);
@@ -152,7 +149,7 @@ PlaySound_QuickTime(const char *cSoundFilename)
             fQTPlaying = FALSE;
     }
 }
-#elif HAVE_APPLE_COREAUDIO
+#elif defined(HAVE_APPLE_COREAUDIO)
 /* Apple CoreAudio Sound support 
  * Written by Michael Petch */
 
@@ -176,7 +173,7 @@ static Float64 fileDuration = 0.0;
 			return ret; \
 		} \
 	}
-double CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat, AudioFileID audioFile);
+void CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat, AudioFileID audioFile);
 void CoreAudio_MakeSimpleGraph(AUGraph * theGraph, AudioUnit * fileAU,
                                AudioStreamBasicDescription * fileFormat, AudioFileID audioFile);
 
@@ -250,7 +247,7 @@ CoreAudio_PlayFile(char *const fileName)
     }
 }
 
-double
+void
 CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat, AudioFileID audioFile)
 {
     UInt64 nPackets;
@@ -259,7 +256,7 @@ CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat
                                            &propsize, &nPackets), "AudioFileGetProperty PacketCount", 0.0);
 
     /* Get playing time in seconds */
-    Float64 fileDuration = (nPackets * fileFormat->mFramesPerPacket) / fileFormat->mSampleRate;
+    fileDuration = (nPackets * fileFormat->mFramesPerPacket) / fileFormat->mSampleRate;
 
     /* Initialize the region */
     ScheduledAudioFileRegion rgn;
@@ -292,7 +289,7 @@ CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat
                                            kAudioUnitScope_Global, 0, &startTime, sizeof(startTime)),
                       "AudioUnitSetproperty StartTime", 0.0);
 
-    return fileDuration;
+    return;
 }
 
 void
@@ -336,7 +333,7 @@ CoreAudio_MakeSimpleGraph(AUGraph * theGraph, AudioUnit * fileAU, AudioStreamBas
     CoreAudioChkError(AUGraphInitialize(*theGraph), "AUGraphInitialize",);
 }
 
-#elif HAVE_CANBERRA
+#elif defined(HAVE_CANBERRA)
 #include <canberra.h>
 #include <canberra-gtk.h>
 #endif
@@ -427,15 +424,15 @@ playSoundFile(char *file, gboolean UNUSED(sync))
         }
         Sleep(1);               /* Wait (1ms) for current sound to finish */
     }
-#elif HAVE_APPLE_QUICKTIME
+#elif defined(HAVE_APPLE_QUICKTIME)
     PlaySound_QuickTime(file);
-#elif HAVE_APPLE_COREAUDIO
+#elif defined(HAVE_APPLE_COREAUDIO)
     CoreAudio_PlayFile(file);
-#elif HAVE_CANBERRA
+#elif defined(HAVE_CANBERRA)
     {
         static ca_context *canberracontext = NULL;
         if (!canberracontext) {
-#if USE_GTK
+#if defined(USE_GTK)
             if (fX)
                 canberracontext = ca_gtk_context_get();
             else
@@ -462,7 +459,7 @@ playSound(const gnubgsound gs)
         g_free(sound);
         return;
     }
-#if USE_GTK
+#if defined(USE_GTK)
     if (!fX || gs == SOUND_EXIT)
         playSoundFile(sound, TRUE);
     else
