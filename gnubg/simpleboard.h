@@ -38,9 +38,9 @@ struct _SimpleBoard {
     SimpleBoardColor color_point[2];
     SimpleBoardColor color_cube;
     matchstate ms;
+    gint text_size;
     gchar *annotation;
     gchar *header;
-    gint text_size;
     gdouble size;
     gdouble surface_x;
     gdouble surface_y;
