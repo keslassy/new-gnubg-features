@@ -387,7 +387,7 @@ draw_checkers_on_point(cairo_t * cr, gint point, guint number, SimpleBoardColor 
 {
     gint x, y, direction;
 
-    g_assert(number >= 0 && number <= 15);
+    g_assert(number <= 15);
 
     if (!number)
         return;
