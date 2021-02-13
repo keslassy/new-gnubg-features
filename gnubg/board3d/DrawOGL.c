@@ -47,7 +47,7 @@ extern void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const
 
 void LegacyStartAA(float width)
 {
-	glLineWidth(.5f);
+	glLineWidth(width);
 	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_BLEND);
 }
