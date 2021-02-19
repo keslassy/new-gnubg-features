@@ -52,6 +52,13 @@ setMaterial(const Material* pMat)
 	}
 }
 
+void
+setMaterialReset(const Material* pMat)
+{
+	currentMat = NULL;
+	setMaterial(pMat);
+}
+
 void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber)
 {
 	glBufferSubData(GL_ARRAY_BUFFER, modelHolder->models[modelNumber].dataStart * sizeof(float), modelHolder->models[modelNumber].dataLength * sizeof(float), modelHolder->models[modelNumber].data);

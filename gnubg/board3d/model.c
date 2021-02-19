@@ -55,16 +55,16 @@ initOccluder(Occluder * pOcc)
 void
 freeOccluder(Occluder * pOcc)
 {
+#ifndef USE_GTK3
     if (pOcc->handle) {
         g_array_free(pOcc->handle->planes, TRUE);
         g_array_free(pOcc->handle->edges, TRUE);
         g_array_free(pOcc->handle->points, TRUE);
         free(pOcc->handle);
         pOcc->handle = NULL;
-#ifndef USE_GTK3
         glDeleteLists(pOcc->shadow_list, 1);
-#endif
     }
+#endif
 }
 
 void

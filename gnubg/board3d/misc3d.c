@@ -321,12 +321,18 @@ InitGL(const BoardData * bd)
         if (extensionSupported("GL_EXT_separate_specular_color"))
             glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL_EXT, GL_SEPARATE_SPECULAR_COLOR_EXT);
 #endif
-#endif
         CreateDotTexture(&bd3d->dotTexture);
+#endif
     }
 }
 
 const Material* currentMat = NULL;
+
+const Material* GetCurrentMaterial()
+{
+    return currentMat;
+}
+
 #ifndef USE_GTK3
 void
 setMaterial(const Material * pMat)
@@ -348,6 +354,12 @@ setMaterial(const Material * pMat)
 			glDisable(GL_TEXTURE_2D);
 		}
 	}
+}
+void
+setMaterialReset(const Material* pMat)
+{
+    currentMat = NULL;
+    setMaterial(pMat);
 }
 #endif
 
@@ -900,10 +912,6 @@ Free3d(float ***array, unsigned int x, unsigned int y)
     free(array);
 }
 
-#ifndef USE_GTK3
-#include "Shapes.inc"
-#endif
-
 void
 calculateEigthPoints(EigthPoints* eigthPoints, float radius, unsigned int accuracy)
 {
@@ -958,7 +966,7 @@ SetColour3d(float r, float g, float b, float a)
 {
     static Material col;
     SetupSimpleMatAlpha(&col, r, g, b, a);
-    setMaterial(&col);
+    setMaterialReset(&col);
 }
 
 void
@@ -978,6 +986,8 @@ int
 MouseMove3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * UNUSED(prd), int x, int y)
 {
     if (bd->drag_point >= 0) {
+
+        MakeCurrent3d(bd3d);
         getProjectedPieceDragPos(x, y, bd3d->dragPos);
         updateMovingPieceOccPos(bd, bd3d);
         return 1;

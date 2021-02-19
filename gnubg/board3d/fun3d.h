@@ -157,6 +157,7 @@ void SetupSimpleMat(Material* pMat, float r, float g, float b);
 void SetupMat(Material* pMat, float r, float g, float b, float dr, float dg, float db, float sr, float sg, float sb,
 	int shin, float a);
 void setMaterial(const Material* pMat);
+void setMaterialReset(const Material* pMat);
 void SetColour3d(float r, float g, float b, float a);
 float randRange(float range);
 void setupPath(const BoardData* bd, Path* p, float* pRotate, unsigned int fromPoint, unsigned int fromDepth,
@@ -216,6 +217,10 @@ extern void drawFlagPole(unsigned int curveAccuracy);
 extern void drawPoint(const renderdata* prd, float tuv, unsigned int i, int p, int outline);
 extern void drawBackground(const renderdata* prd, const float* bd3dbackGroundPos, const float* bd3dbackGroundSize);
 extern int CreateNumberFont(OGLFont* ppFont, const char* fontFile, int pitch, float size, float heightRatio);
+extern void drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd, const Material* diceMat, int num, int drawDots);
+extern void drawDC(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const Material* cubeMat, int drawNumbers);
+extern const Material* GetCurrentMaterial();
+extern void renderRect(const ModelManager* modelHolder, float x, float y, float z, float w, float h);
 
 /* Clipping planes */
 #define zNearVAL .1f
@@ -275,6 +280,9 @@ gboolean GLInit(int* argc, char*** argv);
 // Functions required for 3d test harness
 void SetupSimpleMatAlpha(Material* pMat, float r, float g, float b, float a);
 int movePath(Path* p, float d, float* rotate, float v[3]);
+
+extern void drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTest* dt, int showFront);
+extern void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol);
 
 extern int DiceShowing(const BoardData* bd);
 extern void getFlagPos(int turn, float v[3]);

@@ -22,8 +22,8 @@
 
 #include "config.h"
 
-#include "types3d.h"
 #include "fun3d.h"
+#include "types3d.h"
 #include "util.h"
 #include "output.h"
 #include <glib/gi18n.h>

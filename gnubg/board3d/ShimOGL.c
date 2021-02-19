@@ -18,12 +18,12 @@
  */
 
 #include "config.h"
+#include "fun3d.h"
 #include <memory.h>
 #include "render.h"
 #include <cglm/affine.h>
 #include <cglm/cam.h>
 #include "ShimOGL.h"
-#include "fun3d.h"
 
 typedef struct _MatStack
 {

@@ -33,9 +33,7 @@ extern float getAreaRatio(const viewArea* pva);
 extern float getViewAreaHeight(const viewArea* pva);
 static void drawNumbers(const BoardData* bd, int MAA);
 static void MAAtidyEdges(const renderdata* prd);
-extern void drawDC(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 extern void drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-extern void drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd, int num);
 static void drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 extern void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 
@@ -43,8 +41,6 @@ extern void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const
 // Legacy Opengl board rendering code
 
 #ifndef USE_GTK3
-#include "Shapes.inc"
-
 void LegacyStartAA(float width)
 {
 	glLineWidth(width);
@@ -93,7 +89,7 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 #endif
 
 	if (bd->cube_use && !bd->crawford_game)
-		drawDC(modelHolder, bd, bd3d, prd);
+		drawDC(modelHolder, bd, bd3d, &prd->CubeMat, 1);
 
 	if (prd->showMoveIndicator)
 	{
@@ -138,8 +134,9 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 	}
 
 	if (DiceShowing(bd)) {
-		drawDie(modelHolder, bd, bd3d, prd, 0);
-		drawDie(modelHolder, bd, bd3d, prd, 1);
+		const Material* diceMat = &prd->DiceMat[(bd->turn == 1)];
+		drawDie(modelHolder, bd, bd3d, prd, diceMat, 0, TRUE);
+		drawDie(modelHolder, bd, bd3d, prd, diceMat, 1, TRUE);
 	}
 
 	if (bd3d->moving || bd->drag_point >= 0)
@@ -156,7 +153,6 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 	}
 }
 
-
 /* Define position of dots on dice */
 static int dots1[] = { 2, 2, 0 };
 static int dots2[] = { 1, 1, 3, 3, 0 };
@@ -167,25 +163,29 @@ static int dots6[] = { 1, 1, 1, 3, 2, 1, 2, 3, 3, 1, 3, 3, 0 };
 static int* dots[6] = { dots1, dots2, dots3, dots4, dots5, dots6 };
 static float dot_pos[] = { 0, 20, 50, 80 };       /* percentages across face */
 
-static void
-drawDots(const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTest* dt, int showFront)
+extern DrawDotTemp(const ModelManager* modelHolder, float dotSize, float ds, float zOffset, int* dp, int c);
+
+extern void
+drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTest* dt, int showFront)
 {
-#ifndef USE_GTK3
 	int dot;
 	int c;
-	int* dp;
 	float radius;
 	float ds = (diceSize * 5.0f / 7.0f);
 	float hds = (ds / 2);
-	float x, y;
 	float dotSize = diceSize / 10.0f;
+
+#ifndef USE_GTK3
+	float x, y;
+	int* dp;
 	/* Remove specular effects */
 	float zero[4] = { 0, 0, 0, 0 };
 	glMaterialfv(GL_FRONT, GL_SPECULAR, zero);
+	glPushMatrix();
+#endif
 
 	radius = diceSize / 7.0f;
 
-	glPushMatrix();
 	for (c = 0; c < 6; c++) {
 		int nd;
 
@@ -194,13 +194,24 @@ drawDots(const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTes
 		else
 			dot = 8 - c;
 
-		/* Make sure top dot looks nice */
+		/* Make sure top dots looks nice */
 		nd = !bd3d->shakingDice && (dot == dt->top);
 
+#ifndef USE_GTK3
 		if (bd3d->shakingDice || (showFront && dot != dt->bottom && dot != dt->side[0])
-			|| (!showFront && dot != dt->top && dot != dt->side[2])) {
+			|| (!showFront && dot != dt->top && dot != dt->side[2]))
+#endif
+		{
+#ifdef USE_GTK3
+			float zOffset = 0;
+			if (dot == dt->top)
+				zOffset = LIFT_OFF;
+			zOffset += hds + radius;
+			DrawDotTemp(modelHolder, dotSize, ds, zOffset, dots[dot], c);
+#else
 			if (nd)
 				glDisable(GL_DEPTH_TEST);
+
 			glPushMatrix();
 			glTranslatef(0.f, 0.f, hds + radius);
 
@@ -237,14 +248,69 @@ drawDots(const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTes
 			glPopMatrix();
 			if (nd)
 				glEnable(GL_DEPTH_TEST);
+#endif
 		}
 
+#ifndef USE_GTK3
 		if (c % 2 == 0)
 			glRotatef(-90.f, 0.f, 1.f, 0.f);
 		else
 			glRotatef(90.f, 1.f, 0.f, 0.f);
+#endif
 	}
+#ifndef USE_GTK3
 	glPopMatrix();
+#endif
+}
+
+void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
+{
+	Material whiteMat;
+	SetupSimpleMat(&whiteMat, 1.f, 1.f, 1.f);
+
+#ifndef USE_GTK3
+	glPushMatrix();
+	glLoadMatrixf(GetModelViewMatrix());
+	/* Draw (front) dots */
+	glEnable(GL_BLEND);
+#endif
+	/* First blank out space for dots */
+	setMaterial(&whiteMat);
+#ifndef USE_GTK3
+	glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
+#endif
+	drawDots(modelHolder, bd3d, getDiceSize(prd), LIFT_OFF, dt, 1);
+
+#ifndef USE_GTK3
+	/* Now fill space with coloured dots */
+	setMaterial(&prd->DiceDotMat[diceCol]);
+	glBlendFunc(GL_ONE, GL_ONE);
+	drawDots(modelHolder, bd3d, getDiceSize(prd), LIFT_OFF, dt, 1);
+
+	/* Restore blending defaults */
+	glDisable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glPopMatrix();
+#endif
+}
+
+void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
+{
+#ifndef USE_GTK3
+	glCullFace(GL_FRONT);
+	glEnable(GL_BLEND);
+
+	/* Draw dice */
+	OglModelDraw(modelHolder, MT_DICE, &prd->DiceMat[diceCol]);
+
+	/* Place back dots inside dice */
+	setMaterial(&prd->DiceDotMat[diceCol]);
+	glEnable(GL_BLEND);     /* NB. Disabled in diceList */
+	glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+	drawDots(modelHolder, bd3d, getDiceSize(prd), -LIFT_OFF, dt, 0);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glCullFace(GL_BACK);
+	// NB. GL_BLEND still enabled here (so front blends with back)
 #endif
 }
 
@@ -397,6 +463,41 @@ MAAmoveIndicator(void)
 	glPopMatrix();
 }
 
+static void
+circleOutlineOutward(float radius, float height, unsigned int accuracy)
+{                               /* Draw an ouline of a disc in current z plane with outfacing normals */
+	unsigned int i;
+	float angle, step;
+
+	step = (2 * F_PI) / (float)accuracy;
+	angle = 0;
+	glNormal3f(0.f, 0.f, 1.f);
+	glBegin(GL_LINE_STRIP);
+	for (i = 0; i <= accuracy; i++) {
+		glNormal3f(sinf(angle), cosf(angle), 0.f);
+		glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
+		angle -= step;
+	}
+	glEnd();
+}
+
+static void
+circleOutline(float radius, float height, unsigned int accuracy)
+{                               /* Draw an ouline of a disc in current z plane */
+	unsigned int i;
+	float angle, step;
+
+	step = (2 * F_PI) / (float)accuracy;
+	angle = 0;
+	glNormal3f(0.f, 0.f, 1.f);
+	glBegin(GL_LINE_STRIP);
+	for (i = 0; i <= accuracy; i++) {
+		glVertex3f(sinf(angle) * radius, cosf(angle) * radius, height);
+		angle -= step;
+	}
+	glEnd();
+}
+
 extern void MAAdie(const renderdata* prd)
 {
 	/* Anti-alias dice edges */
@@ -424,52 +525,6 @@ extern void MAAdie(const renderdata* prd)
 	LegacyEndAA();
 }
 #endif
-void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
-{
-	glCullFace(GL_FRONT);
-	glEnable(GL_BLEND);
-
-	/* Draw dice */
-	OglModelDraw(modelHolder, MT_DICE, &prd->DiceMat[diceCol]);
-
-	/* Place back dots inside dice */
-	setMaterial(&prd->DiceDotMat[diceCol]);
-	glEnable(GL_BLEND);     /* NB. Disabled in diceList */
-	glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-	drawDots(bd3d, getDiceSize(prd), -LIFT_OFF, dt, 0);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glCullFace(GL_BACK);
-	// NB. GL_BLEND still enabled here (so front blends with back)
-}
-
-void DrawDots(const ModelManager* UNUSED(modelHolder), const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
-{
-#ifndef USE_GTK3
-	Material whiteMat;
-	SetupSimpleMat(&whiteMat, 1.f, 1.f, 1.f);
-
-	glPushMatrix();
-	glLoadMatrixf(GetModelViewMatrix());
-
-	/* Draw (front) dots */
-	glEnable(GL_BLEND);
-	/* First blank out space for dots */
-	setMaterial(&whiteMat);
-	glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
-	drawDots(bd3d, getDiceSize(prd), LIFT_OFF, dt, 1);
-
-	/* Now fill space with coloured dots */
-	setMaterial(&prd->DiceDotMat[diceCol]);
-	glBlendFunc(GL_ONE, GL_ONE);
-	drawDots(bd3d, getDiceSize(prd), LIFT_OFF, dt, 1);
-
-	/* Restore blending defaults */
-	glDisable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glPopMatrix();
-#endif
-}
 
 void renderPiece(const ModelManager* modelHolder, int separateTop)
 {
@@ -778,13 +833,16 @@ getProjectedPos(int x, int y, float atDepth, float pos[3])
 	int viewport[4];
 	mat4 mvmatrix, projmatrix;
 	float nearX, nearY, nearZ, farX, farY, farZ, zRange;
+	int ret;
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	GetModelViewMatrixMat(mvmatrix);
 	GetProjectionMatrixMat(projmatrix);
 
-	gluUnProjectMine((GLfloat)x, (GLfloat)y, 0.0, mvmatrix, projmatrix, viewport, &nearX, &nearY, &nearZ);
-	gluUnProjectMine((GLfloat)x, (GLfloat)y, 1.0, mvmatrix, projmatrix, viewport, &farX, &farY, &farZ);
+	ret = gluUnProjectMine((GLfloat)x, (GLfloat)y, 0.0, mvmatrix, projmatrix, viewport, &nearX, &nearY, &nearZ);
+	g_assert(ret == GL_TRUE);	/* Should always work */
+	ret = gluUnProjectMine((GLfloat)x, (GLfloat)y, 1.0, mvmatrix, projmatrix, viewport, &farX, &farY, &farZ);
+	g_assert(ret == GL_TRUE);	/* Should always work */
 
 	zRange = (fabsf(nearZ) - atDepth) / (fabsf(farZ) + fabsf(nearZ));
 	pos[0] = nearX - (-farX + nearX) * zRange;
