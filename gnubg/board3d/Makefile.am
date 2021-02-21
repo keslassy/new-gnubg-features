@@ -1,5 +1,5 @@
-# Copyright (C) 2003-2019 Jon Kinsey <jonkinsey@gmail.com>
-# Copyright (C) 2006-2020 the AUTHORS
+# Copyright (C) 2003-2021 Jon Kinsey <jonkinsey@gmail.com>
+# Copyright (C) 2006-2021 the AUTHORS
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,3 +43,9 @@ libboard3d_la_SOURCES = DrawOGL.c font3dOGL.c ModelOGL.c Occluders.c PickOGL.c \
 libboard3d_la_CFLAGS = $(AM_CFLAGS)
 
 noinst_HEADERS = fun3d.h matrix.h model.h
+
+shadersfiles = Shaders/basic-fragment.glsl Shaders/basic-vertex.glsl
+shadersdir = $(pkgdatadir)/Shaders
+shaders_DATA = $(shadersfiles)
+EXTRA_DIST = $(shadersfiles)
+
