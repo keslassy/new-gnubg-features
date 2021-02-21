@@ -1,5 +1,5 @@
 # Copyright (C) 1998-2003 Gary Wong <gtw@gnu.org>
-# Copyright (C) 2003-2017 the AUTHORS
+# Copyright (C) 2003-2021 the AUTHORS
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -191,7 +191,7 @@ if USE_PYTHON
 gnubg_LDADD += @PYTHON_LIBS@
 endif
 if USE_BOARD3D
-gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS)
+gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS) $(EPOXY_LIBS)
 endif
 
 if WIN32
