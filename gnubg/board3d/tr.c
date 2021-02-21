@@ -309,7 +309,7 @@ trPerspective(TRcontext * tr, GLdouble fovy, GLdouble aspect, GLdouble znear, GL
 void
 trBeginTile(TRcontext * tr)
 {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     int matrixMode;
     int tileWidth, tileHeight, border;
     GLdouble left, right, bottom, top;

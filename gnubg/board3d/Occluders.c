@@ -38,7 +38,7 @@ extern void initOccluders(BoardData3d* bd3d)
 extern void
 DrawShadows(const BoardData3d* bd3d)
 {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	for (int i = 0; i < NUM_OCC; i++) {
 		if (bd3d->Occluders[i].show)
 			glCallList(bd3d->Occluders[i].shadow_list);

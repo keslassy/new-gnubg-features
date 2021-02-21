@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2003-2021 Jon Kinsey <jonkinsey@gmail.com>
  * Copyright (C) 2003-2019 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
@@ -148,7 +148,7 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
     sl[0] = sl[1] = sl[2] = (float) prd->lightLevels[2] / 100.0f;
     sl[3] = 1;
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     glLightfv(GL_LIGHT0, GL_POSITION, lp);
     glLightfv(GL_LIGHT0, GL_AMBIENT, al);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, dl);
@@ -276,7 +276,7 @@ CreateFonts(BoardData3d * bd3d)
 void
 InitGL(const BoardData * bd)
 {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     float gal[4];
     /* Turn on light 0 */
     glEnable(GL_LIGHT0);
@@ -314,7 +314,7 @@ InitGL(const BoardData * bd)
             g_print("Error creating fonts\n");
 
         shadowInit(bd3d, bd->rd);
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 #ifdef GL_VERSION_1_2
         glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 #else
@@ -333,7 +333,7 @@ const Material* GetCurrentMaterial()
     return currentMat;
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 void
 setMaterial(const Material * pMat)
 {
@@ -1217,7 +1217,7 @@ SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata 
    	float *projMat, *modelMat;
 	SetupViewingVolume3dNew(bd, bd3d, prd, &projMat, &modelMat, viewport);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	/* Setup openGL legacy matrices */
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(projMat);

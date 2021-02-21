@@ -296,7 +296,7 @@ RenderString3d(const OGLFont* pFont, const char* str, float scale, int MAA)
 		else
 		{
 			/* AA outline of character */
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 			RenderCharAA(pFont->AAglyphs + (unsigned int)offset);
 #endif
 		}

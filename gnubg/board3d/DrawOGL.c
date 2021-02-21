@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2019-2021 Jon Kinsey <jonkinsey@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ extern void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const
 ///////////////////////////////////////
 // Legacy Opengl board rendering code
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 void LegacyStartAA(float width)
 {
 	glLineWidth(width);
@@ -77,14 +77,14 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 	{
 		drawNumbers(bd, 0);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 		LegacyStartAA(0.5f);
 		drawNumbers(bd, 1);
 		LegacyEndAA();
 #endif
 	}
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	MAAtidyEdges(prd);
 #endif
 
@@ -175,7 +175,7 @@ drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSiz
 	float hds = (ds / 2);
 	float dotSize = diceSize / 10.0f;
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	float x, y;
 	int* dp;
 	/* Remove specular effects */
@@ -197,12 +197,12 @@ drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSiz
 		/* Make sure top dots looks nice */
 		nd = !bd3d->shakingDice && (dot == dt->top);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 		if (bd3d->shakingDice || (showFront && dot != dt->bottom && dot != dt->side[0])
 			|| (!showFront && dot != dt->top && dot != dt->side[2]))
 #endif
 		{
-#ifdef USE_GTK3
+#if GTK_CHECK_VERSION(3,0,0)
 			float zOffset = 0;
 			if (dot == dt->top)
 				zOffset = LIFT_OFF;
@@ -251,14 +251,14 @@ drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSiz
 #endif
 		}
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 		if (c % 2 == 0)
 			glRotatef(-90.f, 0.f, 1.f, 0.f);
 		else
 			glRotatef(90.f, 1.f, 0.f, 0.f);
 #endif
 	}
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	glPopMatrix();
 #endif
 }
@@ -268,7 +268,7 @@ void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const re
 	Material whiteMat;
 	SetupSimpleMat(&whiteMat, 1.f, 1.f, 1.f);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	glPushMatrix();
 	glLoadMatrixf(GetModelViewMatrix());
 	/* Draw (front) dots */
@@ -276,12 +276,12 @@ void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const re
 #endif
 	/* First blank out space for dots */
 	setMaterial(&whiteMat);
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
 #endif
 	drawDots(modelHolder, bd3d, getDiceSize(prd), LIFT_OFF, dt, 1);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	/* Now fill space with coloured dots */
 	setMaterial(&prd->DiceDotMat[diceCol]);
 	glBlendFunc(GL_ONE, GL_ONE);
@@ -296,7 +296,7 @@ void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const re
 
 void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
 {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	glCullFace(GL_FRONT);
 	glEnable(GL_BLEND);
 
@@ -333,7 +333,7 @@ drawNumbers(const BoardData* bd, int MAA)
 	glEnable(GL_DEPTH_TEST);
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 static void
 MAAtidyEdges(const renderdata* prd)
 {                               /* Anti-alias board edges */
@@ -561,7 +561,7 @@ drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const Bo
 		glDisable(GL_BLEND);
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 void MAApiece(int roundPiece, int curveAccuracy)
 {
 	/* Anti-alias piece edges */
@@ -628,7 +628,7 @@ drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData
 	}
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 extern void
 drawPointLegacy(const renderdata* prd, float tuv, unsigned int i, int p, int outline)
 {                               /* Draw point with correct texture co-ords */
@@ -756,7 +756,7 @@ void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const r
 
 	drawTableBase(modelHolder, bd3d, prd);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	MAApoints(prd);
 	glPushMatrix();
 	glTranslatef(TOTAL_WIDTH, TOTAL_HEIGHT, 0.f);
@@ -879,7 +879,7 @@ void renderFlagNumbers(const BoardData3d* bd3d, int resignedValue)
 	MoveToFlagMiddle();
 
 	glDisable(GL_DEPTH_TEST);
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	/* No specular light */
 	float zero[4] = { 0, 0, 0, 0 };
 	float specular[4];
@@ -898,7 +898,7 @@ void renderFlagNumbers(const BoardData3d* bd3d, int resignedValue)
 	glPrintCube(&bd3d->cubeFont, flagValue, /*MAA*/0);
 	((BoardData3d*)bd3d)->cubeFont.scale = oldScale;
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
 #endif
 	glEnable(GL_DEPTH_TEST);

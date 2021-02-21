@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2006-2021 Jon Kinsey <jonkinsey@gmail.com>
  * Copyright (C) 2007-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
@@ -97,7 +97,7 @@ typedef struct _ModelManager
     float* vertexData;
     int numModels;
     OglModel models[MAX_MODELS];
-#ifdef USE_GTK3
+#if GTK_CHECK_VERSION(3,0,0)
     guint vao;
     guint buffer;
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2012 Jon Kinsey <jon_kinsey@hotmail.com>
+ * Copyright (C) 2003-2021 Jon Kinsey <jonkinsey@gmail.com>
  * Copyright (C) 2004-2018 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
@@ -2940,7 +2940,7 @@ preDraw3d(const BoardData * bd, BoardData3d * bd3d, renderdata * prd)
 	getCheqSize(prd);
 	Create3dModels(bd3d, prd);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	MakeShadowModel(bd, bd3d, prd);
 #endif
 	RecalcViewingVolume(bd);
@@ -3198,7 +3198,7 @@ DrawDCNumbers(const BoardData* bd)
 	setMaterial(&bd->rd->CubeNumberMat);
 	drawDCNumbers(bd, &dt, 0);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	LegacyStartAA(0.5f);
 	drawDCNumbers(bd, &dt, 1);
 	LegacyEndAA();
@@ -3250,7 +3250,7 @@ void ShowMoveIndicator(const ModelManager* modelHolder, const BoardData* bd)
 
 	OglModelDraw(modelHolder, MT_MOVEINDICATOR, &bd->rd->ChequerMat[(bd->turn == 1) ? 1 : 0]);
 
- #ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	//TODO: Enlarge and draw black outline before overlaying arrow in modern OGL...
 	MAAmoveIndicator();
 #endif
@@ -3278,7 +3278,7 @@ drawPiece(const ModelManager* modelHolder, const BoardData3d* bd3d, unsigned int
 
 	renderPiece(modelHolder, separateTop);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	MAApiece(roundPiece, curveAccuracy);
 #endif
 
@@ -3391,7 +3391,7 @@ drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d*
 	/* Draw dice */
 	OglModelDraw(modelHolder, MT_DICE, diceMat);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	MAAdie(prd);
 #endif
 
@@ -3450,7 +3450,7 @@ drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d
 	if (bd->resigned)
 	{
 		waveFlag(bd->bd3d->flagWaved);
-#ifdef USE_GTK3
+#if GTK_CHECK_VERSION(3,0,0)
 		OglBindBuffer(&bd->bd3d->modelHolder);
 #endif
 		UPDATE_OGL(&bd->bd3d->modelHolder, MT_FLAG, drawFlagVertices, bd->rd->curveAccuracy);	/* Update waving flag */

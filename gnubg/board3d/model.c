@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2003-2021 Jon Kinsey <jonkinsey@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ initOccluder(Occluder * pOcc)
     pOcc->handle->edges = g_array_new(FALSE, FALSE, sizeof(winged_edge));
     pOcc->handle->points = g_array_new(FALSE, FALSE, sizeof(position));
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     pOcc->shadow_list = glGenLists(1);
 #endif
     pOcc->rotator = 0;
@@ -55,7 +55,7 @@ initOccluder(Occluder * pOcc)
 void
 freeOccluder(Occluder * pOcc)
 {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     if (pOcc->handle) {
         g_array_free(pOcc->handle->planes, TRUE);
         g_array_free(pOcc->handle->edges, TRUE);
@@ -73,7 +73,7 @@ copyOccluder(const Occluder * fromOcc, Occluder * toOcc)
     toOcc->handle = fromOcc->handle;
     toOcc->show = fromOcc->show;
     toOcc->rotator = fromOcc->rotator;
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     toOcc->shadow_list = glGenLists(1);
 #endif
 }
@@ -81,7 +81,7 @@ copyOccluder(const Occluder * fromOcc, Occluder * toOcc)
 void
 moveToOcc(const Occluder * pOcc)
 {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     glTranslatef(pOcc->trans[0], pOcc->trans[1], pOcc->trans[2]);
 
     if (pOcc->rotator) {
@@ -164,7 +164,7 @@ AddPlane(GArray * planes, const position * a, const position * b, const position
 void
 GenerateShadowEdges(const Occluder * pOcc)
 {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     unsigned int i, numEdges = pOcc->handle->edges->len;
     for (i = 0; i < numEdges; i++) {
         winged_edge *we = &g_array_index(pOcc->handle->edges, winged_edge, i);
@@ -241,7 +241,7 @@ GenerateShadowVolume(const Occluder * pOcc, const float olight[4])
             position *pn0 = &g_array_index(pOcc->handle->points, position, edgeOrder[0]);
             position *pn1 = &g_array_index(pOcc->handle->points, position, edgeOrder[1]);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
             /* local segment */
             glVertex3f(pn0->x, pn0->y, pn0->z);
             glVertex3f(pn1->x, pn1->y, pn1->z);

@@ -43,7 +43,7 @@ void ModelManagerInit(ModelManager* modelHolder)
 	modelHolder->allocNumVertices = 0;
 	modelHolder->vertexData = NULL;
 
-#ifdef USE_GTK3
+#if GTK_CHECK_VERSION(3,0,0)
 	modelHolder->vao = GL_INVALID_VALUE;
 #endif
 }
@@ -56,7 +56,7 @@ void ModelManagerStart(ModelManager* modelHolder)
 	modelHolder->numModels = 0;
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Material* pMat)
 {
 	float* data = &modelManager->vertexData[modelManager->models[modelNumber].dataStart];

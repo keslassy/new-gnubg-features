@@ -51,7 +51,7 @@ int MAArenderGlyph(const FT_Outline* pOutline, int AA);
 void PopulateMesh(const Vectoriser* pVect, Mesh* pMesh);
 extern int RenderGlyph(const FT_Outline* pOutline);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 int
 RenderText(const char* text, FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize, float scale,
 	float heightRatio)
@@ -163,7 +163,7 @@ CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize
 	}
 
 	/* Create digit glyphs */
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	pFont->AAglyphs = glGenLists(10);
 #endif
 
@@ -178,7 +178,7 @@ CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize
 
 		CALL_OGL(&pFont->modelManager, i, RenderGlyph, &face->glyph->outline);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 		glNewList(pFont->AAglyphs + i, GL_COMPILE);
 		if (!MAArenderGlyph(&face->glyph->outline, 1))
 			return 0;
@@ -200,7 +200,7 @@ CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize
 	return !FT_Done_Face(face);
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 int
 MAArenderGlyph(const FT_Outline* pOutline, int AA)
 {
@@ -254,14 +254,14 @@ void
 FreeNumberFont(OGLFont* ppFont)
 {
 	if (ppFont->AAglyphs != 0) {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 		glDeleteLists(ppFont->AAglyphs, 10);
 #endif
 		ppFont->AAglyphs = 0;
 	}
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 void
 FreeTextFont(OGLFont* ppFont)
 {
@@ -325,7 +325,7 @@ PopulateMesh(const Vectoriser* pVect, Mesh* pMesh)
 	gluDeleteTess(tobj);
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 extern void
 glPrintNumbersRA(const OGLFont* numberFont, const char* text)
 {
@@ -343,7 +343,7 @@ glDrawText(const OGLFont* font)
 }
 #endif
 
-#ifdef USE_GTK3
+#if GTK_CHECK_VERSION(3,0,0)
 int CreateFontText(OGLFont* ppFont, const char* text, const char* fontFile, int pitch, float size, float heightRatio) { return 0; }
 void FreeTextFont(OGLFont* ppFont) {}
 void glPrintNumbersRA(const OGLFont* numberFont, const char* text) {}

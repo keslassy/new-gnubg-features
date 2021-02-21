@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2019 Jon Kinsey <jon_kinsey@hotmail.com>
+ * Copyright (C) 2003-2020 Jon Kinsey <jon_kinsey@hotmail.com>
  * Copyright (C) 2003-2018 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ shadowInit(BoardData3d * bd3d, renderdata * prd)
     if (bd3d->shadowsInitialised)
         return;
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 	int stencilBits;
 	
 	/* Darkness as percentage of ambient light */
@@ -67,7 +67,7 @@ extern void
 draw_shadow_volume_edges(Occluder * pOcc)
 {
     if (pOcc->show) {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
         glPushMatrix();
         moveToOcc(pOcc);
         GenerateShadowEdges(pOcc);
@@ -84,7 +84,7 @@ draw_shadow_volume_extruded_edges( /*lint -e{818} */ Occluder * pOcc, const floa
         float olight[4];
         mult_matrix_vec((ConstMatrix) pOcc->invMat, light_position, olight);
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
         glNewList(pOcc->shadow_list, GL_COMPILE);
         glPushMatrix();
         moveToOcc(pOcc);
@@ -97,7 +97,7 @@ draw_shadow_volume_extruded_edges( /*lint -e{818} */ Occluder * pOcc, const floa
     }
 }
 
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
 static void
 draw_shadow_volume_to_stencil(const BoardData3d * bd3d)
 {
@@ -132,7 +132,7 @@ draw_shadow_volume_to_stencil(const BoardData3d * bd3d)
 void
 shadowDisplay(const BoardData * bd, const BoardData3d * bd3d, const renderdata * prd)
 {
-#ifndef USE_GTK3
+#if !GTK_CHECK_VERSION(3,0,0)
     float zero[4] = { 0, 0, 0, 0 };
     float d1[4];
     float specular[4];

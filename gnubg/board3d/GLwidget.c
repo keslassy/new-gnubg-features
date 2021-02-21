@@ -18,9 +18,13 @@
  */
 
 #include "config.h"
-#ifdef USE_GTK3
+
+#include <gtk/gtk.h>
+
+#if GTK_CHECK_VERSION(3,0,0)
 #include <epoxy/gl.h>
 #endif
+
 #include "fun3d.h"
 #include "util.h"
 #include "common.h"
@@ -35,7 +39,7 @@ typedef struct _GLWidgetData
 	void* cbData;
 } GLWidgetData;
 
-#ifdef USE_GTK3
+#if GTK_CHECK_VERSION(3,0,0)
 
 guint basicShader;
 guint projection_location;
