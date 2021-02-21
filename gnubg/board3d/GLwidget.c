@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2019-2021 Jon Kinsey <jonkinsey@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -158,15 +158,16 @@ guint CreateShader(int shader_type, const char* shader_name)
 	int status;
 	char* source;
 	char* pathname = BuildFilename(shader_name);
-	char filename[_MAX_PATH];
-	strcpy(filename, pathname);
+	char* filename;
+
 	if (shader_type == GL_VERTEX_SHADER)
-		strcat(filename, "-vertex.glsl");
+		filename = g_strdup_printf("%s-vertex.glsl", pathname);
 	else
-		strcat(filename, "-fragment.glsl");
+		filename = g_strdup_printf("%s-fragment.glsl", pathname);
 	g_free(pathname);
 
 	source = LoadFile(filename);
+	g_free(filename);
 
 	guint shader = glCreateShader(shader_type);
 	glShaderSource(shader, 1, &source, NULL);
