@@ -199,9 +199,10 @@ if test "x$with_gtk" != "xno"; then
     fi
 
     if test "x$with_board3d" != "xno"; then
-        PKG_CHECK_MODULES(GTKGLEXT, [gtkglext-1.0 >= 1.0], have_gtkglext="yes" , AC_MSG_WARN([no gtkglext support]))
         if test "x$with_gtk3" = "xyes"; then
             PKG_CHECK_MODULES(EPOXY, [epoxy], have_epoxy="yes", AC_MSG_WARN([no epoxy support]))
+        else
+            PKG_CHECK_MODULES(GTKGLEXT, [gtkglext-1.0 >= 1.0], have_gtkglext="yes" , AC_MSG_WARN([no gtkglext support]))
         fi
     fi
 fi
@@ -379,7 +380,6 @@ dnl
 
 no_gtk="yes"
 no_board3d="yes"
-no_gtkglext="yes"
 AC_ARG_WITH(gtk,[  --with-gtk              use GTK+ 2.0 (Default if found)])
 AC_ARG_WITH(gtk3,[  --with-gtk3             use GTK+ 3.0 (Experimental, disabled by default)])
 AC_ARG_WITH(board3d,[  --with-board3d          compile with 3D boards (Default if found)])
@@ -394,9 +394,16 @@ fi
 
 AC_CHECK_HEADERS(GL/glx.h)
 
-if test "$with_board3d" != "no" && test "$with_gtk" != "no" && test "x$have_gtk" = "xyes" && test "x$have_gtkglext" = "xyes" && test "x$have_glu" = "xyes"; then
-	AC_DEFINE(USE_BOARD3D,1, [Define if you want to use the 3D boards])
-	no_board3d="no"
+if test "$with_board3d" != "no" && test "$with_gtk3" = "yes"; then
+	if test "x$have_gtk" = "xyes" && test "x$have_epoxy" = "xyes"; then
+		AC_DEFINE(USE_BOARD3D,1, [Define if you want to use the 3D boards])
+		no_board3d="no"
+	fi
+else
+	if test "x$have_gtk" = "xyes" && test "x$have_gtkglext" = "xyes" && test "x$have_glu" = "xyes"; then
+		AC_DEFINE(USE_BOARD3D,1, [Define if you want to use the 3D boards])
+		no_board3d="no"
+	fi
 fi
 
 if test "$with_board3d" = "yes" && test "$no_board3d" = "yes"; then
