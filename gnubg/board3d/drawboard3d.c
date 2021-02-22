@@ -3311,7 +3311,7 @@ renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const 
 	}
 }
 
-extern DrawDotTemp(const ModelManager* modelHolder, float dotSize, float ds, float zOffset, int* dp, int c)
+extern void DrawDotTemp(const ModelManager* modelHolder, float dotSize, float ds, float zOffset, int* dp, int c)
 {
 	float hds = (ds / 2);
 
