@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2019 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2006-2021 Jon Kinsey <jonkinsey@gmail.com>
  * Copyright (C) 2007-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
@@ -219,7 +219,7 @@ extern void drawBackground(const renderdata* prd, const float* bd3dbackGroundPos
 extern int CreateNumberFont(OGLFont* ppFont, const char* fontFile, int pitch, float size, float heightRatio);
 extern void drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd, const Material* diceMat, int num, int drawDots);
 extern void drawDC(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const Material* cubeMat, int drawNumbers);
-extern const Material* GetCurrentMaterial();
+extern const Material* GetCurrentMaterial(void);
 extern void renderRect(const ModelManager* modelHolder, float x, float y, float z, float w, float h);
 
 /* Clipping planes */
