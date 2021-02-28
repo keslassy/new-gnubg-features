@@ -203,11 +203,7 @@ drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSiz
 #endif
 		{
 #if GTK_CHECK_VERSION(3,0,0)
-			float zOffset = 0;
-			if (dot == dt->top)
-				zOffset = LIFT_OFF;
-			zOffset += hds + radius;
-			DrawDotTemp(modelHolder, dotSize, ds, zOffset, dots[dot], c);
+			DrawDotTemp(modelHolder, dotSize, ds, hds + radius + LIFT_OFF, dots[dot], c);
 #else
 			if (nd)
 				glDisable(GL_DEPTH_TEST);

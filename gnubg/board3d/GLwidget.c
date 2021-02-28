@@ -41,10 +41,19 @@ typedef struct _GLWidgetData
 
 #if GTK_CHECK_VERSION(3,0,0)
 
-guint basicShader;
-guint projection_location;
-guint modelView_location;
-guint colour_location;
+typedef struct _ShaderDetails
+{
+	guint shader;
+	guint projection_location, modelView_location, textureMat_location;
+} ShaderDetails;
+
+ShaderDetails mainShader, basicShader, *currentShader;
+
+guint pick_colour_location;
+gint materialDiffuse_location;
+
+guint light_ambient_location, light_diffuse_location, light_specModel_location, light_specular_location, light_shininess_location;
+guint light_dirLight_location, light_lightDirection_location, light_lightPos_location, light_viewPos_location;
 
 void
 setMaterial(const Material* pMat)
@@ -52,8 +61,48 @@ setMaterial(const Material* pMat)
 	if (pMat != NULL && pMat != currentMat)
 	{
 		currentMat = pMat;
-		glUniform3fv(colour_location, 1, pMat->diffuseColour);
+		glUniform3fv(light_ambient_location, 1, pMat->ambientColour);
+		glUniform3fv(light_diffuse_location, 1, pMat->diffuseColour);
+		glUniform3fv(light_specular_location, 1, pMat->specularColour);
+		glUniform1f(light_shininess_location, (float)pMat->shine);
+		glUniform1i(light_specModel_location, 1);
+		glUniform1i(light_dirLight_location, 0);
+
+		if (pMat->pTexture) {
+			glActiveTexture(GL_TEXTURE0);
+			glUniform1i(materialDiffuse_location, 0);
+			glBindTexture(GL_TEXTURE_2D, pMat->pTexture->texID);
+		}
 	}
+}
+
+void SetPickColour(float colour)
+{
+	float value[3] = { 0 };
+	value[0] = colour;
+	glUniform3fv(pick_colour_location, 1, value);
+}
+
+void GetViewPos(float* viewPos)
+{
+	mat4 mvMat, mvInv;
+	vec3 origin;
+	GetModelViewMatrixMat(mvMat);
+	glm_mat4_inv(mvMat, mvInv);
+	glm_vec3_zero(origin);
+	glm_mat4_mulv3(mvInv, origin, 1, viewPos);
+}
+
+void SetViewPos()
+{
+	float viewPos[3];
+	GetViewPos(viewPos);
+	glUniform3fv(light_viewPos_location, 1, viewPos);
+}
+
+void SetLightPos(float* lp)
+{
+	glUniform3fv(light_lightPos_location, 1, lp);
 }
 
 void
@@ -65,6 +114,7 @@ setMaterialReset(const Material* pMat)
 
 void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber)
 {
+	glBindBuffer(GL_ARRAY_BUFFER, modelHolder->buffer);	/* this is the VBO that holds the vertex data */
 	glBufferSubData(GL_ARRAY_BUFFER, modelHolder->models[modelNumber].dataStart * sizeof(float), modelHolder->models[modelNumber].dataLength * sizeof(float), modelHolder->models[modelNumber].data);
 	free(modelHolder->models[modelNumber].data);
 	modelHolder->models[modelNumber].data = NULL;
@@ -84,18 +134,18 @@ void ModelManagerCreate(ModelManager* modelHolder)
 		glBindBuffer(GL_ARRAY_BUFFER, modelHolder->buffer);
 
 		/* get the location of the "position" and "color" attributes */
-		guint texCoord_index = glGetAttribLocation(basicShader, "texCoordAttrib");
-		guint normal_index = glGetAttribLocation(basicShader, "normalAttrib");
-		guint position_index = glGetAttribLocation(basicShader, "positionAttrib");
+		guint position_index = glGetAttribLocation(mainShader.shader, "positionAttrib");
+		guint texCoord_index = glGetAttribLocation(mainShader.shader, "texCoordAttrib");
+		guint normal_index = glGetAttribLocation(mainShader.shader, "normalAttrib");
 
 		int stride = VERTEX_STRIDE * sizeof(float);
 		/* enable and set the attributes */
+		glEnableVertexAttribArray(position_index);
+		glVertexAttribPointer(position_index, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(float)));
 		glEnableVertexAttribArray(texCoord_index);
 		glVertexAttribPointer(texCoord_index, 2, GL_FLOAT, GL_FALSE, stride, 0);
 		glEnableVertexAttribArray(normal_index);
 		glVertexAttribPointer(normal_index, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(2 * sizeof(float)));
-		glEnableVertexAttribArray(position_index);
-		glVertexAttribPointer(position_index, 3, GL_FLOAT, GL_FALSE, stride, (GLvoid*)(5 * sizeof(float)));
 	}
 	if (modelHolder->totalNumVertices > modelHolder->allocNumVertices)
 	{
@@ -119,8 +169,18 @@ void ModelManagerCreate(ModelManager* modelHolder)
 
 void GLWidgetMakeCurrent(GtkWidget* widget)
 {
-	//TODO: gtk_gl_area_make_current "not usually needed to be called"?
 	gtk_gl_area_make_current(GTK_GL_AREA(widget));
+}
+
+void SelectProgram(ShaderDetails* pShader)
+{
+	currentShader = pShader;
+	glUseProgram(currentShader->shader);
+}
+
+void SelectPickProgram()
+{
+	SelectProgram(&basicShader);
 }
 
 char* LoadFile(const char* filename)
@@ -224,20 +284,54 @@ init_shaders(const char* shader_name)
 	return program;
 }
 
+static guint
+LookupUniform(ShaderDetails *pShader, const char* name)
+{
+	GLint loc = glGetUniformLocation(pShader->shader, name);
+	if (loc == -1)
+	{
+		printf("Didn't find loc %s\n", name);
+	}
+	return loc;
+}
+
 static void
 realize_event(GtkWidget* widget, const GLWidgetData* glwData)
 {
 	GLWidgetMakeCurrent(widget);
+
 	if (gtk_gl_area_get_error(GTK_GL_AREA(widget)) != NULL)
 		return;
 	gtk_gl_area_set_has_depth_buffer(GTK_GL_AREA(widget), TRUE);
 
 	/* initialize the shaders and retrieve the program data */
-	basicShader = init_shaders("/Shaders/basic");
+	basicShader.shader = init_shaders("/Shaders/basic");
+	basicShader.projection_location = LookupUniform(&basicShader, "projection");
+	basicShader.modelView_location = LookupUniform(&basicShader, "modelView");
+	basicShader.textureMat_location = GL_INVALID_VALUE;
+	pick_colour_location = LookupUniform(&basicShader, "colour");
+
+	mainShader.shader = init_shaders("/Shaders/main");
+
 	/* get the location of the matrices uniforms */
-	projection_location = glGetUniformLocation(basicShader, "projection");
-	modelView_location = glGetUniformLocation(basicShader, "modelView");
-	colour_location = glGetUniformLocation(basicShader, "colour");
+	mainShader.projection_location = LookupUniform(&mainShader, "projection");
+	mainShader.modelView_location = LookupUniform(&mainShader, "modelView");
+	mainShader.textureMat_location = LookupUniform(&mainShader, "textureMat");
+
+	materialDiffuse_location = LookupUniform(&mainShader, "materialDiffuse");
+
+	light_ambient_location = LookupUniform(&mainShader, "light.ambient");
+	light_diffuse_location = LookupUniform(&mainShader, "light.diffuse");
+	light_specular_location = LookupUniform(&mainShader, "light.specular");
+	light_shininess_location = LookupUniform(&mainShader, "light.shininess");
+	light_specModel_location = LookupUniform(&mainShader, "light.specModel");
+	light_dirLight_location = LookupUniform(&mainShader, "light.dirLight");
+	light_lightDirection_location = LookupUniform(&mainShader, "light.lightDirection");
+	light_lightPos_location = LookupUniform(&mainShader, "light.lightPos");
+	light_viewPos_location = LookupUniform(&mainShader, "light.viewPos");
+
+	glUseProgram(mainShader.shader);
+
 	glwData->realizeCB(glwData->cbData);
 
 	gtk_widget_queue_draw(widget);
@@ -246,6 +340,7 @@ realize_event(GtkWidget* widget, const GLWidgetData* glwData)
 void
 resize_event(GtkGLArea* widget, gint width, gint height, const GLWidgetData* glwData)
 {
+	GLWidgetMakeCurrent(GTK_WIDGET(widget));
 	glwData->configureCB(GTK_WIDGET(widget), glwData->cbData);
 }
 
@@ -254,20 +349,20 @@ void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Mater
 	setMaterial(pMat);
 
 	/* update the projection matrices we use in the shader */
-	glUniformMatrix4fv(projection_location, 1, GL_FALSE, GetProjectionMatrix());
-	glUniformMatrix4fv(modelView_location, 1, GL_FALSE, GetModelViewMatrix());
+	glUniformMatrix4fv(currentShader->projection_location, 1, GL_FALSE, GetProjectionMatrix());
+	glUniformMatrix4fv(currentShader->modelView_location, 1, GL_FALSE, GetModelViewMatrix());
+	if (currentShader->textureMat_location != GL_INVALID_VALUE)
+	{
+		mat3 textureMat;
+		GetTextureMatrix(&textureMat);
+		glUniformMatrix3fv(currentShader->textureMat_location, 1, GL_FALSE, (float*)textureMat);
+	}
 
 	/* use the buffers in the VAO */
 	glBindVertexArray(modelManager->vao);
 
 	/* draw the vertices in the model */
 	glDrawArrays(GL_TRIANGLES, modelManager->models[modelNumber].dataStart / VERTEX_STRIDE, modelManager->models[modelNumber].dataLength / VERTEX_STRIDE);
-}
-
-void OglBindBuffer(ModelManager* modelHolder)
-{
-	/* this is the VBO that holds the vertex data */
-	glBindBuffer(GL_ARRAY_BUFFER, modelHolder->buffer);
 }
 
 gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* eventDetails, void* data)
@@ -277,7 +372,7 @@ gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* ev
 	glClearColor(0.5, 0.5, 0.5, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(basicShader);
+	SelectProgram(&mainShader);
 
 	exposeCB(widget, eventDetails, data);
 

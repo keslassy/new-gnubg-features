@@ -34,7 +34,7 @@ void SetPickObject(int value)
 #else
 void SetPickObject(int value)
 {
-	SetColour3d(((value + 1) & 0xFF) / (float)0xFF, 0.f, 0.f, 0.f);
+	SetPickColour(((value + 1) & 0xFF) / (float)0xFF);
 }
 #endif
 
@@ -289,6 +289,8 @@ PickDraw(int x, int y, PickDrawFun drawFun, const BoardData* bd, void* data)
 static int
 PickDraw(int x, int y, PickDrawFun drawFun, const BoardData* bd, void* data)
 {                               /* Identify if anything is below point (x,y) */
+	SelectPickProgram();
+
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

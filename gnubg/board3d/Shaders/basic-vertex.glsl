@@ -1,8 +1,6 @@
 #version 330 core
 
-in vec2 texCoordAttrib;
-in vec3 normalAttrib;
-in vec3 positionAttrib;
+layout(location = 0) in vec3 positionAttrib;	// Shared attribute - make sure it's in location 0
 
 uniform mat4 projection;
 uniform mat4 modelView;

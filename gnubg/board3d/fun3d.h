@@ -50,7 +50,6 @@ void InitMatStacks(void);
 void OglModelInit(ModelManager* modelHolder, int modelNumber);
 void OglModelAlloc(ModelManager* modelHolder, int modelNumber);
 void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Material* pMat);
-void OglBindBuffer(ModelManager* modelHolder);
 
 void ModelManagerInit(ModelManager* modelHolder);
 void ModelManagerStart(ModelManager* modelHolder);
@@ -157,6 +156,7 @@ void SetupSimpleMat(Material* pMat, float r, float g, float b);
 void SetupMat(Material* pMat, float r, float g, float b, float dr, float dg, float db, float sr, float sg, float sb,
 	int shin, float a);
 void setMaterial(const Material* pMat);
+void SetPickColour(float colour);
 void setMaterialReset(const Material* pMat);
 void SetColour3d(float r, float g, float b, float a);
 float randRange(float range);
@@ -272,8 +272,11 @@ void initDT(diceTest * dt, int x, int y, int z);
 typedef void (*RealizeCB)(void*);
 typedef void (*ConfigureCB)(GtkWidget*, void*);
 typedef gboolean (*ExposeCB)(GtkWidget*, GdkEventExpose*, void*);
-GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, void* data);
-void GLWidgetMakeCurrent(GtkWidget* widget);
+extern GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, void* data);
+extern void GLWidgetMakeCurrent(GtkWidget* widget);
+extern void SelectPickProgram();
+extern void SetLightPos(float* lp);
+extern void SetViewPos();
 gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* eventDetails, void* data);
 gboolean GLInit(int* argc, char*** argv);
 
@@ -299,6 +302,7 @@ extern void SetupViewingVolume3dNew(const BoardData* bd, BoardData3d* bd3d, cons
 extern void ClearScreen(const renderdata* prd);
 extern float* GetModelViewMatrix(void);
 extern float* GetProjectionMatrix(void);
+extern void GetTextureMatrix(mat3 *textureMat);
 extern void GetModelViewMatrixMat(mat4 ret);
 extern void GetProjectionMatrixMat(mat4 ret);
 extern void LegacyStartAA(float width);

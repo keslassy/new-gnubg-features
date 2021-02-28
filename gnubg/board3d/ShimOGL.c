@@ -304,6 +304,11 @@ float* GetProjectionMatrix()
 	return (float*)pjMatStack.stack[pjMatStack.level];
 }
 
+void GetTextureMatrix(mat3 *textureMat)
+{
+	glm_mat4_pick3(txMatStack.stack[txMatStack.level], *textureMat);
+}
+
 void GetModelViewMatrixMat(mat4 ret)
 {
 	glm_mat4_copy(mvMatStack.stack[mvMatStack.level], ret);

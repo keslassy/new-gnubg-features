@@ -1279,7 +1279,7 @@ renderCube(const renderdata* prd, float size)
 		glTranslatef(hds, -hds, -radius);
 		glRotatef(-90.f, 0.f, 0.f, 1.f);
 
-		drawCornerEigth(&corner_points, radius, prd->BoxMat.pTexture);
+		drawCornerEigth(&corner_points, radius, NULL);
 
 		glPopMatrix();
 		if (c == 3)
@@ -3450,9 +3450,6 @@ drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d
 	if (bd->resigned)
 	{
 		waveFlag(bd->bd3d->flagWaved);
-#if GTK_CHECK_VERSION(3,0,0)
-		OglBindBuffer(&bd->bd3d->modelHolder);
-#endif
 		UPDATE_OGL(&bd->bd3d->modelHolder, MT_FLAG, drawFlagVertices, bd->rd->curveAccuracy);	/* Update waving flag */
 	}
 

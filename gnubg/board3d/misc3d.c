@@ -155,6 +155,8 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
     glLightfv(GL_LIGHT0, GL_SPECULAR, sl);
 
     UpdateShadowLightPosition(bd3d, lp);
+#else
+    SetLightPos(lp);
 #endif
 }
 
@@ -229,7 +231,7 @@ CreateTexture(unsigned int *pID, int width, int height, const unsigned char *bit
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     /* Read bits */
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, bits);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, bits);
 }
 
 static void
@@ -1215,6 +1217,7 @@ void
 SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd, int viewport[4])
 {
    	float *projMat, *modelMat;
+
 	SetupViewingVolume3dNew(bd, bd3d, prd, &projMat, &modelMat, viewport);
 
 #if !GTK_CHECK_VERSION(3,0,0)
@@ -1223,12 +1226,16 @@ SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata 
 	glLoadMatrixf(projMat);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(modelMat);
-
-	SetupLight3d(bd3d, prd);
+#else
+    SetViewPos();
 #endif
 
+    SetupLight3d(bd3d, prd);
+
 	calculateBackgroundSize(bd3d, viewport);
-	if (bd3d->modelHolder.vertexData != NULL)
+#if !GTK_CHECK_VERSION(3,0,0)
+    if (bd3d->modelHolder.vertexData != NULL)
+#endif
 	{	/* Update background to new size */
         UPDATE_OGL(&bd3d->modelHolder, MT_BACKGROUND, drawBackground, prd, bd3d->backGroundPos, bd3d->backGroundSize);
 	}

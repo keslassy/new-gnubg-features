@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006-2021 Jon Kinsey <jonkinsey@gmail.com>
+ * Copyright (C) 2006-2019 Jon Kinsey <jonkinsey@gmail.com>
  * Copyright (C) 2007-2020 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
