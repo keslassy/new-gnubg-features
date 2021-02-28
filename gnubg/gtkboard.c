@@ -3666,6 +3666,10 @@ board_init(Board * board)
     widget3dValid = widget3dValid ? CreateGLWidget(bd, !inPreviewWindow) : FALSE;
     if (widget3dValid) {
         gtk_box_pack_start(GTK_BOX(board), GetDrawingArea3d(bd->bd3d), TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_set_hexpand(GetDrawingArea3d(bd->bd3d), TRUE);
+        gtk_widget_set_vexpand(GetDrawingArea3d(bd->bd3d), TRUE);
+#endif
     } else
         bd->bd3d = NULL;
 #endif

@@ -279,6 +279,7 @@ extern void SetLightPos(float* lp);
 extern void SetViewPos();
 gboolean GLWidgetRender(GtkWidget* widget, ExposeCB exposeCB, GdkEventExpose* eventDetails, void* data);
 gboolean GLInit(int* argc, char*** argv);
+extern void SetLineDrawingmode(int enable);
 
 // Functions required for 3d test harness
 void SetupSimpleMatAlpha(Material* pMat, float r, float g, float b, float a);

@@ -61,6 +61,14 @@ void RenderCharAA(unsigned int glyph)
 		glCallList(glyph);
 	glPopMatrix();
 }
+
+void SetLineDrawingmode(int enable)
+{
+	if (enable == GL_TRUE)
+		glPolygonMode(GL_FRONT, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT, GL_FILL);
+}
 #endif
 
 void
@@ -115,7 +123,7 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 		glDisable(GL_BLEND);
 
 	if (bd->DragTargetHelp) {   /* highlight target points */
-		glPolygonMode(GL_FRONT, GL_LINE);
+		SetLineDrawingmode(GL_TRUE);
 
 		SetColour3d(0.f, 1.f, 0.f, 0.f);        /* Nice bright green... */
 
@@ -124,13 +132,15 @@ drawBoard(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 			if (target != -1) { /* Make sure texturing is disabled */
 				int separateTop = (prd->ChequerMat[0].pTexture && prd->pieceTextureType == PTT_TOP);
 
+#if !GTK_CHECK_VERSION(3,0,0)
 				if (prd->ChequerMat[0].pTexture)
 					glDisable(GL_TEXTURE_2D);
+#endif
 
 				drawPiece(modelHolder, bd3d, (unsigned int)target, Abs(bd->points[target]) + 1, TRUE, (prd->pieceType == PT_ROUNDED), prd->curveAccuracy, separateTop);
 			}
 		}
-		glPolygonMode(GL_FRONT, GL_FILL);
+		SetLineDrawingmode(GL_FALSE);
 	}
 
 	if (DiceShowing(bd)) {
