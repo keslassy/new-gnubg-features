@@ -2155,7 +2155,7 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
             GdkColor *TargetHelpColor;
             cairo_t *cr;
 
-            TargetHelpColor = (GdkColor *) malloc(sizeof(GdkColor));
+            TargetHelpColor = (GdkColor *) g_malloc(sizeof(GdkColor));
             /* values of RGB components within GdkColor are
              * taken from 0 to 65535, not 0 to 255. */
             TargetHelpColor->red = 0 * (65535 / 255);
@@ -2180,7 +2180,7 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
             }
 
             cairo_destroy(cr);
-            free(TargetHelpColor);
+            g_free(TargetHelpColor);
         }
     }
 
@@ -4158,7 +4158,7 @@ DestroySetDice(GtkWidget * po, void *data)
     free(sdd->TTachGrayDice);
     free(sdd->TTachGrayPip);
     gtk_widget_destroy(gtk_widget_get_toplevel(po));
-    free(sdd);
+    g_free(sdd);
 }
 
 #if defined(USE_BOARD3D)
@@ -4192,7 +4192,7 @@ board_dice_widget(Board * board, manualDiceType mdt)
     int diceStride = setSize * DIE_WIDTH * 4;
     int pipStride = setSize * 3;
     renderdata rd;
-    SetDiceData *sdd = (SetDiceData *) malloc(sizeof(SetDiceData));
+    SetDiceData *sdd = (SetDiceData *) g_malloc(sizeof(SetDiceData));
     sdd->bd = bd;
     sdd->mdt = mdt;
 
