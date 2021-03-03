@@ -60,9 +60,9 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
 
     /* setup rollout dialog */
     {
-        move **ppm = (move **) malloc(c * sizeof(move *));
-        cubeinfo **ppci = (cubeinfo **) malloc(c * sizeof(cubeinfo *));
-        char (*asz)[FORMATEDMOVESIZE] = (char (*)[FORMATEDMOVESIZE]) malloc(FORMATEDMOVESIZE * c);
+        move **ppm = (move **) g_malloc(c * sizeof(move *));
+        cubeinfo **ppci = (cubeinfo **) g_malloc(c * sizeof(cubeinfo *));
+        char (*asz)[FORMATEDMOVESIZE] = (char (*)[FORMATEDMOVESIZE]) g_malloc(FORMATEDMOVESIZE * c);
         int i, res;
 
         for (i = 0, pl = plSelList; i < c; pl = pl->next, i++) {
@@ -80,9 +80,9 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
 
         RolloutProgressEnd(&p, FALSE);
 
-        free(asz);
-        free(ppm);
-        free(ppci);
+        g_free(asz);
+        g_free(ppm);
+        g_free(ppci);
 
         if (res < 0)
             return;
@@ -99,13 +99,13 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
 
     MoveListClearSelection(0, 0, phd);
 
-    ai = (int *) malloc(phd->pml->cMoves * sizeof(int));
+    ai = (int *) g_malloc(phd->pml->cMoves * sizeof(int));
     RefreshMoveList(phd->pml, ai);
 
     if (phd->piHighlight && phd->pml->cMoves)
         *phd->piHighlight = ai[*phd->piHighlight];
 
-    free(ai);
+    g_free(ai);
 
     find_skills(phd->pmr, &ms, -1, -1);
     MoveListUpdate(phd);
@@ -274,13 +274,13 @@ EvalMoves(hintdata * phd, evalcontext * pec)
 
     MoveListClearSelection(0, 0, phd);
 
-    ai = (int *) malloc(phd->pml->cMoves * sizeof(int));
+    ai = (int *) g_malloc(phd->pml->cMoves * sizeof(int));
     RefreshMoveList(phd->pml, ai);
 
     if (phd->piHighlight && phd->pml->cMoves)
         *phd->piHighlight = ai[*phd->piHighlight];
 
-    free(ai);
+    g_free(ai);
 
     find_skills(phd->pmr, &ms, -1, -1);
     MoveListUpdate(phd);
@@ -374,10 +374,10 @@ MoveListCopyData(hintdata * phd)
     GList *plSelList = MoveListGetSelectionList(phd);
     c = g_list_length(plSelList);
 
-    an = (int *) malloc(c * sizeof(an[0]));
+    an = (int *) g_malloc(c * sizeof(an[0]));
     /* TODO: This needs to be cleaned up since the maximum number of
      * lines or length of a string can vary depending on settings */
-    sz = (char *) malloc(c * 25 * 80);
+    sz = (char *) g_malloc(c * 25 * 80);
 
     *sz = 0;
 
@@ -396,7 +396,7 @@ MoveListCopyData(hintdata * phd)
     for (i = 0, pch = sz; i < c; i++, pch = strchr(pch, 0))
         FormatMoveHint(pch, &ms, phd->pml, an[i], TRUE, TRUE, TRUE);
 
-    free(an);
+    g_free(an);
 
     return sz;
 }
@@ -441,7 +441,7 @@ MoveListCopy(GtkWidget * UNUSED(pw), hintdata * phd)
     char *pc = MoveListCopyData(phd);
     if (pc) {
         GTKTextWindow(pc, _("Move details"), DT_INFO, NULL);
-        free(pc);
+        g_free(pc);
     }
 }
 
@@ -681,7 +681,7 @@ CreateMoveList(moverecord * pmr, const int fButtonsValid, const int fDestroyOnMo
     GtkWidget *pw;
     GtkWidget *pwVBox, *mlt;
 
-    hintdata *phd = (hintdata *) malloc(sizeof(hintdata));
+    hintdata *phd = (hintdata *) g_malloc(sizeof(hintdata));
 
     /* This function should only be called when the game state matches
      * the move list. */
@@ -713,7 +713,7 @@ CreateMoveList(moverecord * pmr, const int fButtonsValid, const int fDestroyOnMo
     gtk_box_pack_start(GTK_BOX(pwVBox), pw, TRUE, TRUE, 0);
     gtk_box_pack_end(GTK_BOX(pwVBox), mlt, FALSE, FALSE, 0);
 
-    g_object_set_data_full(G_OBJECT(pwVBox), "user_data", phd, free);
+    g_object_set_data_full(G_OBJECT(pwVBox), "user_data", phd, g_free);
 
     CheckHintButtons(phd);
 
