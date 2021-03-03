@@ -66,7 +66,7 @@ MT_TaskDone(Task * pt)
 
     if (pt) {
         free(pt->pLinkedTask);
-        free(pt);
+        g_free(pt);
     }
 }
 
@@ -262,7 +262,7 @@ mt_add_tasks(unsigned int num_tasks, AsyncFun pFun, void *taskData, gpointer lin
 #endif
     }
     for (i = 0; i < num_tasks; i++) {
-        Task *pt = (Task *) malloc(sizeof(Task));
+        Task *pt = (Task *) g_malloc(sizeof(Task));
         pt->fun = pFun;
         pt->data = taskData;
         pt->pLinkedTask = linked;
