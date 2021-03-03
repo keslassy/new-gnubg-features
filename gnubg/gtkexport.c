@@ -474,7 +474,7 @@ GTKShowExport(exportsetup * pexs)
 
     exportwidget *pew;
 
-    pew = (exportwidget *) malloc(sizeof(exportwidget));
+    pew = (exportwidget *) g_malloc(sizeof(exportwidget));
 
     pew->pexs = pexs;
 
@@ -791,7 +791,7 @@ GTKShowExport(exportsetup * pexs)
     g_signal_connect(G_OBJECT(genHtml), "clicked", G_CALLBACK(GenHtmlImages), pew->adjHtmlSize);
     g_signal_connect(G_OBJECT(pew->adjHtmlSize), "value-changed", G_CALLBACK(SizeChanged), pew->pwHtmlSize);
 
-    g_object_set_data_full(G_OBJECT(pwDialog), "exportwidget", pew, free);
+    g_object_set_data_full(G_OBJECT(pwDialog), "exportwidget", pew, g_free);
 
     /* show dialog */
 
