@@ -615,15 +615,16 @@ GetFilenameBase(char *sz)
 
     if (!sz || !*sz) {
         outputf(_("You must specify a directory to export to (see `%s')\n"), "help export htmlimages");
-        return 0;
+        return NULL;
     }
 
     if (!g_file_test(sz, G_FILE_TEST_IS_DIR) && g_mkdir(sz, 0777) < 0) {
         outputerr(sz);
-        return 0;
+        return NULL;
     }
 
-    szFile = malloc(strlen(sz) + 32);
+    szFile = g_malloc(strlen(sz) + 32);
+
     strcpy(szFile, sz);
 
     if (szFile[strlen(szFile) - 1] != '/')
@@ -684,7 +685,7 @@ TidyObjects(void)
     free(auchArrow[0]);
     free(auchArrow[1]);
 #endif
-    free(szFile);
+    g_free(szFile);
     free(auchBoard);
     for (i = 0; i < 2; i++)
         free(auchChequer[i]);
@@ -717,8 +718,6 @@ extern void
 CommandExportHTMLImages(char *sz)
 {
     szFile = GetFilenameBase(sz);
-    if (!szFile)
-        return;
 
     ProgressStartValue(_("Generating image:"), NUM_IMAGES);
     AllocObjects();
