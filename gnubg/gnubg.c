@@ -2937,7 +2937,7 @@ SaveRolloutSettings(FILE * pf, const char *sz, rolloutcontext * prc)
 
     /* chequer play and cube decision evalcontexts */
 
-    pch = malloc(strlen(sz) + 50);
+    pch = g_malloc(strlen(sz) + 50);
 
     strcpy(pch, sz);
 
@@ -2972,7 +2972,7 @@ SaveRolloutSettings(FILE * pf, const char *sz, rolloutcontext * prc)
     sprintf(pch, "%s truncation chequerplay", sz);
     SaveEvalSettings(pf, pch, &prc->aecChequerTrunc);
 
-    free(pch);
+    g_free(pch);
 
 }
 
@@ -3802,13 +3802,13 @@ GetInput(char *szPrompt)
     g_print("%s", szPrompt);
     fflush(stdout);
 
-    sz = malloc(256);           /* FIXME it would be nice to handle longer strings */
+    sz = g_malloc(256);           /* FIXME it would be nice to handle longer strings */
 
     clearerr(stdin);
     pch = fgets(sz, 256, stdin);
 
     if (fInterrupt) {
-        free(sz);
+        g_free(sz);
         return NULL;
     }
 
@@ -3826,7 +3826,7 @@ GetInput(char *szPrompt)
         *pch = 0;
 
     pchConverted = locale_to_utf8(sz);
-    free(sz);
+    g_free(sz);
     return pchConverted;
 }
 
@@ -5352,7 +5352,8 @@ RunAsyncProcess(AsyncFun fun, void *data, const char *msg)
 {
     int ret;
 #if defined(USE_MULTITHREAD)
-    Task *pt = (Task *) malloc(sizeof(Task));
+    Task *pt = (Task *) g_malloc(sizeof(Task));
+
     pt->pLinkedTask = NULL;
     pt->fun = fun;
     pt->data = data;
