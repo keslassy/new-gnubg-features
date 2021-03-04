@@ -1443,7 +1443,7 @@ CommandSetPlayerExternal(char *sz)
         if (errno == EINTR) {
             if (fInterrupt) {
                 closesocket(h);
-                free(psa);
+                g_free(psa);
                 free(pch);
                 return;
             }
@@ -1452,7 +1452,7 @@ CommandSetPlayerExternal(char *sz)
 
         SockErr(pch);
         closesocket(h);
-        free(psa);
+        g_free(psa);
         free(pch);
         return;
     }
@@ -1463,7 +1463,7 @@ CommandSetPlayerExternal(char *sz)
         free(ap[iPlayerSet].szSocket);
     ap[iPlayerSet].szSocket = pch;
 
-    free(psa);
+    g_free(psa);
 #endif                          /* !HAVE_SOCKETS */
 }
 
