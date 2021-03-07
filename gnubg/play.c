@@ -4557,7 +4557,7 @@ AddString(listOLD * buffers, char *str)
 {
     listOLD *pCurrent = buffers->plPrev;
     if (!pCurrent->p || strlen(str) + strlen(pCurrent->p) > STRBUF_SIZE) {
-        char *newBuf = malloc(STRBUF_SIZE + 1);
+        char *newBuf = g_malloc(STRBUF_SIZE + 1);
         *newBuf = '\0';
         pCurrent = ListInsert(buffers, newBuf);
     }
@@ -4602,7 +4602,7 @@ GetMatchCheckSum(void)
     for (pList = buffers.plNext; pList->p; pList = pList->plNext)
         size += strlen(pList->p);
 
-    gameStr = malloc(size + 1);
+    gameStr = g_malloc(size + 1);
     *gameStr = '\0';
     for (pList = buffers.plNext; pList->p; pList = pList->plNext)
         strcat(gameStr, pList->p);
@@ -4610,7 +4610,7 @@ GetMatchCheckSum(void)
     ListDeleteAll(&buffers);
 
     md5_buffer(gameStr, strlen(gameStr), auch);
-    free(gameStr);
+    g_free(gameStr);
     /* Convert to hex so stores easily in database - is there a better way? */
     for (i = 0; i < 16; i++)
         sprintf(auchHex + (i * 2), "%02x", auch[i]);
