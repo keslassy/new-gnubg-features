@@ -38,24 +38,24 @@ SSE_ALIGN(ThreadData td);
 extern ThreadLocalData *
 MT_CreateThreadLocalData(int id)
 {
-    ThreadLocalData *tld = (ThreadLocalData *) malloc(sizeof(ThreadLocalData));
+    ThreadLocalData *tld = (ThreadLocalData *) g_malloc(sizeof(ThreadLocalData));
     tld->id = id;
-    tld->pnnState = (NNState *) malloc(sizeof(NNState) * 3);
+    tld->pnnState = (NNState *) g_malloc(sizeof(NNState) * 3);
     memset(tld->pnnState, 0, sizeof(NNState) * 3);
-    tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase = malloc(nnRace.cHidden * sizeof(float));
+    tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase = g_malloc(nnRace.cHidden * sizeof(float));
     memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase, 0, nnRace.cHidden * sizeof(float));
-    tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase = malloc(nnRace.cInput * sizeof(float));
+    tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase = g_malloc(nnRace.cInput * sizeof(float));
     memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase, 0, nnRace.cInput * sizeof(float));
-    tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase = malloc(nnCrashed.cHidden * sizeof(float));
+    tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase = g_malloc(nnCrashed.cHidden * sizeof(float));
     memset(tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase, 0, nnCrashed.cHidden * sizeof(float));
-    tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedIBase = malloc(nnCrashed.cInput * sizeof(float));
+    tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedIBase = g_malloc(nnCrashed.cInput * sizeof(float));
     memset(tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedIBase, 0, nnCrashed.cInput * sizeof(float));
-    tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedBase = malloc(nnContact.cHidden * sizeof(float));
+    tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedBase = g_malloc(nnContact.cHidden * sizeof(float));
     memset(tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedBase, 0, nnContact.cHidden * sizeof(float));
-    tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedIBase = malloc(nnContact.cInput * sizeof(float));
+    tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedIBase = g_malloc(nnContact.cInput * sizeof(float));
     memset(tld->pnnState[CLASS_CONTACT - CLASS_RACE].savedIBase, 0, nnContact.cInput * sizeof(float));
 
-    tld->aMoves = (move *) malloc(sizeof(move) * MAX_INCOMPLETE_MOVES);
+    tld->aMoves = (move *) g_malloc(sizeof(move) * MAX_INCOMPLETE_MOVES);
     memset(tld->aMoves, 0, sizeof(move) * MAX_INCOMPLETE_MOVES);
     return tld;
 }
@@ -97,7 +97,7 @@ TLSFree(TLSItem UNUSED(pItem))
 extern void
 TLSSetValue(TLSItem pItem, size_t value)
 {
-    size_t *pNew = (size_t *) malloc(sizeof(size_t));
+    size_t *pNew = (size_t *) g_malloc(sizeof(size_t));
     *pNew = value;
     g_private_set(pItem, (gpointer) pNew);
 }
@@ -400,14 +400,14 @@ MT_Close(void)
     if (!td.tld)
         return;
 
-    free(td.tld->aMoves);
+    g_free(td.tld->aMoves);
     pnnState = td.tld->pnnState;
     for (i = 0; i < 3; i++) {
-        free(pnnState[i].savedBase);
-        free(pnnState[i].savedIBase);
+        g_free(pnnState[i].savedBase);
+        g_free(pnnState[i].savedIBase);
     }
-    free(pnnState);
-    free(td.tld);
+    g_free(pnnState);
+    g_free(td.tld);
 }
 
 #endif
