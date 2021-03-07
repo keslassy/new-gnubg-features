@@ -1591,7 +1591,7 @@ WriteEscapedString(FILE * pf, char *pch, int fEscapeColons)
 
     char *sz, *pc;
 
-    sz = (char *) malloc(2 * strlen(pch) + 1);
+    sz = (char *) g_malloc(2 * strlen(pch) + 1);
 
     for (pc = sz; *pch; pch++)
         switch (*pch) {
@@ -1616,7 +1616,7 @@ WriteEscapedString(FILE * pf, char *pch, int fEscapeColons)
     *pc++ = 0;
 
     fputs(sz, pf);
-    free(sz);
+    g_free(sz);
 }
 
 static void
