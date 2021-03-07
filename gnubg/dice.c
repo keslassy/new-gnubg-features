@@ -896,7 +896,7 @@ GetDiceFileName(rngcontext * rngctx)
 rngcontext *
 CopyRNGContext(rngcontext * rngctx)
 {
-    rngcontext *newCtx = (rngcontext *) malloc(sizeof(rngcontext));
+    rngcontext *newCtx = (rngcontext *) g_malloc(sizeof(rngcontext));
     *newCtx = *rngctx;
     return newCtx;
 }
