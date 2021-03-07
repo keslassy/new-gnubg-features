@@ -86,10 +86,7 @@ XhashCreate(xhash * ph, const int nHashSize)
 
     int i;
 
-    if (!(ph->phe = (xhashent *) malloc(nHashSize * sizeof(xhashent)))) {
-        perror("xhashtable");
-        return -1;
-    }
+    ph->phe = (xhashent *) g_malloc(nHashSize * sizeof(xhashent));
 
     ph->nQueries = 0;
     ph->nHits = 0;
@@ -113,7 +110,7 @@ XhashDestroy(xhash * ph)
 
     for (i = 0; i < ph->nHashSize; ++i)
         if (ph->phe[i].p)
-            free(ph->phe[i].p);
+            g_free(ph->phe[i].p);
     free(ph->phe);
 }
 
@@ -126,7 +123,7 @@ XhashAdd(xhash * ph, const unsigned int iKey, const void *data, const int size)
 
     if (ph->phe[l].p) {
         /* occupied */
-        free(ph->phe[l].p);
+        g_free(ph->phe[l].p);
         ph->nOverwrites++;
     } else {
 
@@ -136,7 +133,7 @@ XhashAdd(xhash * ph, const unsigned int iKey, const void *data, const int size)
     }
 
     ph->phe[l].iKey = iKey;
-    ph->phe[l].p = malloc(size);
+    ph->phe[l].p = g_malloc(size);
     memcpy(ph->phe[l].p, data, size);
 
 }
