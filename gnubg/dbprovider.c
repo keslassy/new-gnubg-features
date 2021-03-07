@@ -93,15 +93,14 @@ static RowSet *
 MallocRowset(size_t rows, size_t cols)
 {
     size_t i;
-    RowSet *pRow = malloc(sizeof(RowSet));
-    g_assert(pRow);
+    RowSet *pRow = g_malloc(sizeof(RowSet));
 
-    pRow->widths = (size_t *) malloc(cols * sizeof(size_t));
+    pRow->widths = (size_t *) g_malloc(cols * sizeof(size_t));
     memset(pRow->widths, 0, cols * sizeof(size_t));
 
-    pRow->data = malloc(rows * sizeof(char **));
+    pRow->data = g_malloc(rows * sizeof(char **));
     for (i = 0; i < rows; i++) {
-        pRow->data[i] = malloc(cols * sizeof(char *));
+        pRow->data[i] = g_malloc(cols * sizeof(char *));
         memset(pRow->data[i], 0, cols * sizeof(char *));
     }
 
@@ -130,7 +129,7 @@ extern void
 FreeRowset(RowSet * pRow)
 {
     if (pRow != NULL) {
-        free(pRow->widths);
+        g_free(pRow->widths);
 
         if (pRow->data != NULL) {
             unsigned int i, j;
@@ -139,14 +138,14 @@ FreeRowset(RowSet * pRow)
                 for (j = 0; j < pRow->cols; j++) {
                     g_free(pRow->data[i][j]);
                 }
-            free(pRow->data[i]);
+            g_free(pRow->data[i]);
             }
         }
 
-        free(pRow->data);
+        g_free(pRow->data);
     }   
 
-    free(pRow);
+    g_free(pRow);
 }
 
 int
