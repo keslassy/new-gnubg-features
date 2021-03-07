@@ -76,12 +76,12 @@ AllocTextList(rolloutprogress * prp)
 {                               /* 2d array to cache displayed widget text */
     int i;
     int lines = prp->n;
-    prp->pListText = malloc(sizeof(char **) * lines * 2);
+    prp->pListText = g_malloc(sizeof(char **) * lines * 2);
 
     for (i = 0; i < lines; i++) {
-        prp->pListText[i * 2] = malloc(sizeof(char *) * (N_ROLLOUT_COLS));
+        prp->pListText[i * 2] = g_malloc(sizeof(char *) * (N_ROLLOUT_COLS));
         memset(prp->pListText[i * 2], 0, sizeof(char *) * (N_ROLLOUT_COLS));
-        prp->pListText[i * 2 + 1] = malloc(sizeof(char *) * (N_ROLLOUT_COLS));
+        prp->pListText[i * 2 + 1] = g_malloc(sizeof(char *) * (N_ROLLOUT_COLS));
         memset(prp->pListText[i * 2 + 1], 0, sizeof(char *) * (N_ROLLOUT_COLS));
     }
 }
@@ -93,10 +93,10 @@ FreeTextList(rolloutprogress * prp)
     int lines = prp->n;
 
     for (i = 0; i < lines; i++) {
-        free(prp->pListText[i * 2]);
-        free(prp->pListText[i * 2 + 1]);
+        g_free(prp->pListText[i * 2]);
+        g_free(prp->pListText[i * 2 + 1]);
     }
-    free(prp->pListText);
+    g_free(prp->pListText);
 }
 #endif
 
