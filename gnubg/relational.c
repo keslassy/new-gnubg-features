@@ -811,7 +811,7 @@ CommandRelationalSelect(char *sz)
                     if (k != 0)
                         totalwidth += 2;
                 }
-                line = malloc(totalwidth + 1);
+                line = g_malloc(totalwidth + 1);
                 memset(line, '-', totalwidth);
                 p = line;
                 for (k = 0; k < rs->cols - 1; k++) {
@@ -821,7 +821,7 @@ CommandRelationalSelect(char *sz)
                 }
                 line[totalwidth] = '\0';
                 outputl(line);
-                free(line);
+                g_free(line);
             }
 
             for (unsigned int j = 0; j < rs->cols; j++) {
