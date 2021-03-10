@@ -810,7 +810,7 @@ getDefaultMET(metdata * pmd)
     initMD(pmd);
 
     for (i = 0; i < 4; i++) {
-        pp = (parameter *) malloc(sizeof(parameter));
+        pp = (parameter *) g_malloc(sizeof(parameter));
         pp->szName = g_strdup(apPreCrawford[i].szName);
         pp->value = apPreCrawford[i].value;
         ListInsert(&pmd->mpPreCrawford.lParameters, pp);
@@ -818,7 +818,7 @@ getDefaultMET(metdata * pmd)
 
     for (j = 0; j < 2; j++) {
         for (i = 0; i < 3; i++) {
-            pp = (parameter *) malloc(sizeof(parameter));
+            pp = (parameter *) g_malloc(sizeof(parameter));
             pp->szName = g_strdup(apPostCrawford[i].szName);
             pp->value = apPostCrawford[i].value;
             ListInsert(&pmd->ampPostCrawford[j].lParameters, pp);
