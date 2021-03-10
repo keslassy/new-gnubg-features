@@ -2253,7 +2253,7 @@ Noise(const evalcontext * pec, const TanBoard anBoard, int iOutput)
             auchBoard[(i << 1) + 1] = (char) anBoard[1][i];
         }
 
-        auchBoard[0] += iOutput;
+        auchBoard[0] += (char) iOutput;
 
         md5_buffer(auchBoard, 50, auch);
 
@@ -2926,8 +2926,7 @@ extern int
 IsightCount(const TanBoard anBoard, int pn[2])
 {
     unsigned int anPips[2];
-    int anMenLeft[2] = { 0, 0 }, anCrossOver[2] = {
-    0, 0};
+    int anMenLeft[2] = { 0, 0 }, anCrossOver[2] = { 0, 0 };
     int i, x;
 
     PipCount(anBoard, anPips);
@@ -5037,7 +5036,7 @@ RefreshMoveList(movelist * pml, int *ai)
             }
         }
 
-        free(ml.amMoves);
+        g_free(ml.amMoves);
     }
 }
 
@@ -5056,7 +5055,7 @@ CopyMoveList(movelist * pmlDest, const movelist * pmlSrc)
     pmlDest->rBestScore = pmlSrc->rBestScore;
 
     if (pmlSrc->cMoves) {
-        pmlDest->amMoves = (move *) malloc(pmlSrc->cMoves * sizeof(move));
+        pmlDest->amMoves = (move *) g_malloc(pmlSrc->cMoves * sizeof(move));
         memcpy(pmlDest->amMoves, pmlSrc->amMoves, pmlSrc->cMoves * sizeof(move));
     } else
         pmlDest->amMoves = NULL;
@@ -5676,7 +5675,7 @@ FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
             anMove[i] = -1;
 
     if (FindnSaveBestMoves(&ml, nDice0, nDice1, (ConstTanBoard) anBoard, NULL, 0.0f, pci, &ec, aamf) < 0) {
-        free(ml.amMoves);
+        g_free(ml.amMoves);
         return -1;
     }
 
@@ -5688,7 +5687,7 @@ FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
     if (ml.cMoves)
         PositionFromKey(anBoard, &ml.amMoves[ml.iMoveBest].key);
 
-    free(ml.amMoves);
+    g_free(ml.amMoves);
 
     return ml.cMaxMoves * 2;
 }
@@ -5733,7 +5732,7 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
     }
 
     /* Save moves */
-    pm = (move *) malloc(pml->cMoves * sizeof(move));
+    pm = (move *) g_malloc(pml->cMoves * sizeof(move));
     memcpy(pm, pml->amMoves, pml->cMoves * sizeof(move));
     pml->amMoves = pm;
     nMoves = pml->cMoves;
@@ -5752,7 +5751,7 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
         }
 
         if (ScoreMoves(pml, pci, pec, iPly) < 0) {
-            free(pm);
+            g_free(pm);
             pml->cMoves = 0;
             pml->amMoves = NULL;
             return -1;
@@ -5787,7 +5786,7 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
     /* evaluate moves on top ply */
 
     if (ScoreMoves(pml, pci, pec, pec->nPlies) < 0) {
-        free(pm);
+        g_free(pm);
         pml->cMoves = 0;
         pml->amMoves = NULL;
         return -1;
