@@ -36,8 +36,6 @@ void escapes(const char *cp, char *tp);
         } \
         yylval->str = g_string_new(yytext)
 
-#define BUFFERSIZE 2048
-
 %}
 
 %option prefix="ext_"
