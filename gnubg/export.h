@@ -21,7 +21,6 @@
 #include <glib.h>
 
 #include "backgammon.h"
-#include "render.h"
 #include "list.h"
 
 #ifndef EXPORT_H
