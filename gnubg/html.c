@@ -1562,7 +1562,7 @@ HTMLPrologue(FILE * pf, const matchstate * pms,
 
 
 /*
- * Print html header: dtd, head etc.
+ * Print html footer
  *
  * Input:
  *   pf: output file
@@ -1634,7 +1634,7 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
 
 
 /*
- * Print html header: dtd, head etc.
+ * Print html footer.
  *
  * Input:
  *   pf: output file
