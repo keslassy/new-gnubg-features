@@ -27,7 +27,7 @@
 
 extern void
 RolloutProgressStart(const cubeinfo * pci, const int n,
-                     rolloutstat aars[][2], rolloutcontext * pes, char asz[][FORMATEDMOVESIZE], gboolean multiple,
+                     rolloutstat aars[2][2], rolloutcontext * pes, char asz[][FORMATEDMOVESIZE], gboolean multiple,
                      void **pp);
 
 extern void
