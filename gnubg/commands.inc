@@ -1265,9 +1265,9 @@ static command acSetVariation[] = {
       N_("Compute statistics for every game in the session"), NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }
 }, acShowManual[] = {
-    { "about", CommandShowManualAbout, N_("Show all about gnu backgammon in a web browser"), 
+    { "about", CommandShowManualAbout, N_("Show All about GNU Backgammon tutorial in a web browser"), 
       NULL, NULL },
-    { "web", CommandShowManualWeb, N_("Show manual in a web browser"), 
+    { "web", CommandShowManualWeb, N_("Show reference manual in a web browser"), 
       NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }
 }, acShow[] = {
