@@ -48,7 +48,7 @@ extern char *OutputEquityDiff(const float r1, const float r2, const cubeinfo * p
 extern char *OutputEquityScale(const float r, const cubeinfo * pci, const cubeinfo * pciBase, const int f);
 
 extern char *OutputRolloutResult(const char *szIndent,
-                                 char asz[][1024],
+                                 char asz[][FORMATEDMOVESIZE],
                                  float aarOutput[][NUM_ROLLOUT_OUTPUTS],
                                  float aarStdDev[][NUM_ROLLOUT_OUTPUTS],
                                  const cubeinfo aci[], const int alt, const int cci, const int fCubeful);

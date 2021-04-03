@@ -1055,7 +1055,7 @@ TextRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
         outputl("");
 
     pch = OutputRolloutResult(NULL,
-                              (char (*)[1024]) prp->ppch[iAlternative],
+                              (char (*)[FORMATEDMOVESIZE]) prp->ppch[iAlternative],
                               (float (*)[NUM_ROLLOUT_OUTPUTS]) aarOutput[iAlternative],
                               (float (*)[NUM_ROLLOUT_OUTPUTS]) aarStdDev[iAlternative],
                               &aci[0], iAlternative, 1, prc->fCubeful);
