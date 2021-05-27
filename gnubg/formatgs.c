@@ -437,7 +437,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
                 /* luck adj. result */
 
-                if ((psc->arActualResult[0] > 0.0f || psc->arActualResult[1] > 0.0f) && psc->fDice) {
+                if (psc->arActualResult[0] > 0.0f || psc->arActualResult[1] > 0.0f) {
 
                     list = g_list_append(list, luckAdjust(_("Actual result"), psc->arActualResult, nMatchTo));
 
@@ -524,12 +524,12 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
             if (psc->fDice && !nMatchTo && psc->nGames > 1) {
 
                 static const char *asz[2][2] = {
-                    {N_("Advantage (actual) in ppg"),
+                    { N_("Advantage (actual) in ppg"),
                      /* xgettext: no-c-format */
-                     N_("95% confidence interval (ppg)")},
-                    {N_("Advantage (luck adjusted) in ppg"),
+                     N_("95% confidence interval (ppg)") },
+                    { N_("Advantage (luck adjusted) in ppg"),
                      /* xgettext: no-c-format */
-                     N_("95% confidence interval (ppg)")}
+                     N_("95% confidence interval (ppg)") }
                 };
                 const float *af[2][2];
                 af[0][0] = psc->arActualResult;
