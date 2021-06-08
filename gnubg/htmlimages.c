@@ -723,8 +723,8 @@ CommandExportHTMLImages(char *sz)
     AllocObjects();
     RenderObjects();
     WriteImages();
-    ProgressEnd();
     TidyObjects();
+    ProgressEnd();
 }
 
 #else                           /* not HAVE_LIBPNG */
