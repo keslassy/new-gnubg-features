@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001-2002 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2002-2011 the AUTHORS
+ * Copyright (C) 2002-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -336,7 +336,7 @@ PrintLaTeXComment(FILE * pf, char *pch)
 static void
 PrintLaTeXCubeAnalysis(FILE * pf, const matchstate * pms, int fPlayer,
                        float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
-                       float aarStdDev[2][NUM_ROLLOUT_OUTPUTS], const evalsetup * pes)
+                       float aarStdDev[2][NUM_ROLLOUT_OUTPUTS], const evalsetup * pes, int fTake)
 {
 
     cubeinfo ci;
@@ -349,7 +349,7 @@ PrintLaTeXCubeAnalysis(FILE * pf, const matchstate * pms, int fPlayer,
 
     /* FIXME use center and tabular environment instead of verbatim */
     fputs("{\\begin{quote}\\footnotesize\\begin{verbatim}\n", pf);
-    fputs(OutputCubeAnalysis(aarOutput, aarStdDev, pes, &ci), pf);
+    fputs(OutputCubeAnalysis(aarOutput, aarStdDev, pes, &ci, fTake), pf);
     fputs("\\end{verbatim}\\end{quote}}\n", pf);
 }
 
@@ -413,7 +413,7 @@ ExportGameLaTeX(FILE * pf, listOLD * plGame)
                 PrintLaTeXBoard(pf, &msExport, pmr->fPlayer);
 
             PrintLaTeXCubeAnalysis(pf, &msExport, pmr->fPlayer,
-                                   pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble);
+                                   pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble, -1);
             /* FIXME: output cube skill */
 
             sprintf(sz, "%s %u%u%s: ", PlayerSymbol(pmr->fPlayer),
@@ -447,7 +447,7 @@ ExportGameLaTeX(FILE * pf, listOLD * plGame)
             PrintLaTeXBoard(pf, &msExport, pmr->fPlayer);
 
             PrintLaTeXCubeAnalysis(pf, &msExport, pmr->fPlayer,
-                                   pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble);
+                                   pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble, -1);
 
             /* FIXME what about beavers? */
             fprintf(pf, "\\begin{center}%s %s%s\\end{center}\n\n",

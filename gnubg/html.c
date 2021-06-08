@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2004 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2002-2019 the AUTHORS
+ * Copyright (C) 2002-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1735,6 +1735,11 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
     fputs("\n<!-- Cube Analysis -->\n\n", pf);
 
 
+    if (fTake >= 0) { /* take or drop */
+        InvertEvaluationR(aarOutput[0], pci);
+        InvertEvaluationR(aarOutput[1], pci);
+    }
+
     /* print alerts */
 
     if (fMissed) {
@@ -1918,13 +1923,21 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
     for (i = 0; i < 3; i++) {
 
         fprintf(pf, "<tr><td>%d.</td><td>%s</td>", i + 1, gettext(aszCube[ai[i]]));
+        if (fTake == -1) { /* double */
+            fprintf(pf, "<td %s>%s</td>", GetStyle(CLASS_CUBE_EQUITY, hecss), OutputEquity(arDouble[ai[i]], pci, TRUE));
 
-        fprintf(pf, "<td %s>%s</td>", GetStyle(CLASS_CUBE_EQUITY, hecss), OutputEquity(arDouble[ai[i]], pci, TRUE));
+            if (i)
+                fprintf(pf, "<td>%s</td>", OutputEquityDiff(arDouble[ai[i]], arDouble[OUTPUT_OPTIMAL], pci));
+            else
+                fputs("<td>&nbsp;</td>", pf);
+        } else { /* take or drop */
+            fprintf(pf, "<td %s>%s</td>", GetStyle(CLASS_CUBE_EQUITY, hecss), OutputEquity(-arDouble[ai[i]], pci, TRUE));
 
-        if (i)
-            fprintf(pf, "<td>%s</td>", OutputEquityDiff(arDouble[ai[i]], arDouble[OUTPUT_OPTIMAL], pci));
-        else
-            fputs("<td>&nbsp;</td>", pf);
+            if (i)
+                fprintf(pf, "<td>%s</td>", OutputEquityDiff(-arDouble[ai[i]], -arDouble[OUTPUT_OPTIMAL], pci));
+            else
+                fputs("<td>&nbsp;</td>", pf);
+        }
 
         fputs("</tr>\n", pf);
 
@@ -1976,6 +1989,11 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
 
         fputs("</td></tr>\n", pf);
 
+    }
+
+    if (fTake >= 0) { /* take or drop */
+        InvertEvaluationR(aarOutput[0], pci);
+        InvertEvaluationR(aarOutput[1], pci);
     }
 
     if (pes->et == EVAL_ROLLOUT && exsExport.afCubeParameters[1]) {

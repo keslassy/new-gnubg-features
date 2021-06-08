@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2002-2019 the AUTHORS
+ * Copyright (C) 2002-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -872,7 +872,7 @@ GetContent(cubehintdata * pchd)
     cubedecisiondata *cdec = pchd->pmr->CubeDecPtr;
 
     GetMatchStateCubeInfo(&ci, &pchd->ms);
-    pc = OutputCubeAnalysis(cdec->aarOutput, cdec->aarStdDev, &cdec->esDouble, &ci);
+    pc = OutputCubeAnalysis(cdec->aarOutput, cdec->aarStdDev, &cdec->esDouble, &ci, -1);
 
     return pc;
 }

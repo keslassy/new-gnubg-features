@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2003-2019 the AUTHORS
+ * Copyright (C) 2003-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -548,13 +548,13 @@ OutputEquityDiff(const float r1, const float r2, const cubeinfo * pci)
                 snprintf(sz, OUTPUT_SZ_LENGTH, " -%*.*f%%", fOutputDigits + 1,
                          fOutputDigits > 1 ? fOutputDigits - 1 : 0, 0.0);
             else
-                snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
+                snprintf(sz, OUTPUT_SZ_LENGTH, "%+*.*f%%", fOutputDigits + 3, fOutputDigits > 1 ? fOutputDigits - 1 : 0,
                          100.0f * eq2mwc(r1, pci) - 100.0f * eq2mwc(r2, pci));
         } else {
             if (r1 == r2)
                 snprintf(sz, OUTPUT_SZ_LENGTH, "-%*.*f", fOutputDigits + 2, fOutputDigits + 1, 0.0);
             else
-                snprintf(sz, OUTPUT_SZ_LENGTH, "%*.*f", fOutputDigits + 3, fOutputDigits + 1,
+                snprintf(sz, OUTPUT_SZ_LENGTH, "+%*.*f", fOutputDigits + 3, fOutputDigits + 1,
                          eq2mwc(r1, pci) - eq2mwc(r2, pci));
         }
     }
@@ -785,7 +785,7 @@ OutputCubeAnalysisFull(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
     }
 
-    strcat(sz, OutputCubeAnalysis(aarOutput, aarStdDev, pes, pci));
+    strcat(sz, OutputCubeAnalysis(aarOutput, aarStdDev, pes, pci, fTake));
 
     return sz;
 
@@ -793,7 +793,7 @@ OutputCubeAnalysisFull(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
 extern char *
 OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
-                   float aarStdDev[2][NUM_ROLLOUT_OUTPUTS], const evalsetup * pes, const cubeinfo * pci)
+                   float aarStdDev[2][NUM_ROLLOUT_OUTPUTS], const evalsetup * pes, const cubeinfo * pci, int fTake)
 {
 
     static char sz[4096];
@@ -828,6 +828,11 @@ OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
     case EVAL_ROLLOUT:
         strcat(sz, _("Rollout"));
         break;
+    }
+
+    if (fTake >= 0) { /* take or drop */
+        InvertEvaluationR(aarOutput[0], pci);
+        InvertEvaluationR(aarOutput[1], pci);
     }
 
     if (pci->nMatchTo)
@@ -869,10 +874,17 @@ OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
         sprintf(strchr(sz, 0), "%d. %-20s", i + 1, gettext(aszCube[ai[i]]));
 
-        strcat(sz, OutputEquity(arDouble[ai[i]], pci, TRUE));
+        if (fTake == -1) { /* double */
+            strcat(sz, OutputEquity(arDouble[ai[i]], pci, TRUE));
 
-        if (i)
-            sprintf(strchr(sz, 0), "  (%s)", OutputEquityDiff(arDouble[ai[i]], arDouble[OUTPUT_OPTIMAL], pci));
+            if (i)
+                sprintf(strchr(sz, 0), "  (%s)", OutputEquityDiff(arDouble[ai[i]], arDouble[OUTPUT_OPTIMAL], pci));
+        } else { /* take or drop */
+            strcat(sz, OutputEquity(-arDouble[ai[i]], pci, TRUE));
+
+            if (i)
+                sprintf(strchr(sz, 0), "  (%s)", OutputEquityDiff(-arDouble[ai[i]], -arDouble[OUTPUT_OPTIMAL], pci));
+        }
         strcat(sz, "\n");
 
     }
@@ -913,6 +925,11 @@ OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
         strcat(strchr(sz, 0), OutputRolloutResult(NULL, asz, aarOutput, aarStdDev, aci, 0, 2, pes->rc.fCubeful));
 
 
+    }
+
+    if (fTake >= 0) { /* take or drop */
+        InvertEvaluationR(aarOutput[0], pci);
+        InvertEvaluationR(aarOutput[1], pci);
     }
 
     if (pes->et == EVAL_ROLLOUT && exsExport.afCubeParameters[1])
@@ -1198,7 +1215,7 @@ DumpPosition(const TanBoard anBoard, char *szOutput,
         es.ec = *pec;
 
         strcat(szOutput, "\n\n");
-        strcat(szOutput, OutputCubeAnalysis(aarOutput, NULL, &es, pci));
+        strcat(szOutput, OutputCubeAnalysis(aarOutput, NULL, &es, pci, -1));
 
     }
 
