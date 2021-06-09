@@ -1,11 +1,11 @@
 /*
- * gnubg-types.h
+ * Copyright (C) 2007-2009 Christian Anthon <anthon@kiku.dk>
+ * Copyright (C) 2007-2011 the AUTHORS
  *
- * by Christian Anthon
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -25,7 +24,7 @@
 typedef unsigned int TanBoard[2][25];
 typedef const unsigned int (*ConstTanBoard)[25];
 
-typedef enum _bgvariation {
+typedef enum {
     VARIATION_STANDARD,         /* standard backgammon */
     VARIATION_NACKGAMMON,       /* standard backgammon with nackgammon starting
                                  * position */
@@ -35,11 +34,11 @@ typedef enum _bgvariation {
     NUM_VARIATIONS
 } bgvariation;
 
-typedef enum _gamestate {
+typedef enum {
     GAME_NONE, GAME_PLAYING, GAME_OVER, GAME_RESIGNED, GAME_DROP
 } gamestate;
 
-typedef struct _matchstate {
+typedef struct {
     TanBoard anBoard;
     unsigned int anDice[2];     /* (0,0) for unrolled dice */
     int fTurn;                  /* who makes the next decision */
@@ -61,11 +60,11 @@ typedef struct _matchstate {
     gamestate gs;
 } matchstate;
 
-typedef union _positionkey {
+typedef union {
     unsigned int data[7];
 } positionkey;
 
-typedef union _oldpositionkey {
+typedef union {
     unsigned char auch[10];
 } oldpositionkey;
 
