@@ -1,10 +1,11 @@
 /*
- * Subset of inputs computed with SSE
+ * Copyright (C) 2006 Oystein Johansen <oystein@gnubg.org>
+ * Copyright (C) 2011-2018 the AUTHORS
  *
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
@@ -40,72 +40,40 @@ typedef float float_vector[4];
 typedef SSE_ALIGN(float float_vec_aligned[sizeof(float_vector)/sizeof(float)]);
 
 SSE_ALIGN (static float_vec_aligned inpvec[16]) = {
-    /*  0 */  {
-    0.0, 0.0, 0.0, 0.0},
-        /*  1 */  {
-    1.0, 0.0, 0.0, 0.0},
-        /*  2 */  {
-    0.0, 1.0, 0.0, 0.0},
-        /*  3 */  {
-    0.0, 0.0, 1.0, 0.0},
-        /*  4 */  {
-    0.0, 0.0, 1.0, 0.5},
-        /*  5 */  {
-    0.0, 0.0, 1.0, 1.0},
-        /*  6 */  {
-    0.0, 0.0, 1.0, 1.5},
-        /*  7 */  {
-    0.0, 0.0, 1.0, 2.0},
-        /*  8 */  {
-    0.0, 0.0, 1.0, 2.5},
-        /*  9 */  {
-    0.0, 0.0, 1.0, 3.0},
-        /* 10 */  {
-    0.0, 0.0, 1.0, 3.5},
-        /* 11 */  {
-    0.0, 0.0, 1.0, 4.0},
-        /* 12 */  {
-    0.0, 0.0, 1.0, 4.5},
-        /* 13 */  {
-    0.0, 0.0, 1.0, 5.0},
-        /* 14 */  {
-    0.0, 0.0, 1.0, 5.5},
-        /* 15 */  {
-0.0, 0.0, 1.0, 6.0}};
+    /*  0 */  { 0.0, 0.0, 0.0, 0.0},
+    /*  1 */  { 1.0, 0.0, 0.0, 0.0},
+    /*  2 */  { 0.0, 1.0, 0.0, 0.0},
+    /*  3 */  { 0.0, 0.0, 1.0, 0.0},
+    /*  4 */  { 0.0, 0.0, 1.0, 0.5},
+    /*  5 */  { 0.0, 0.0, 1.0, 1.0},
+    /*  6 */  { 0.0, 0.0, 1.0, 1.5},
+    /*  7 */  { 0.0, 0.0, 1.0, 2.0},
+    /*  8 */  { 0.0, 0.0, 1.0, 2.5},
+    /*  9 */  { 0.0, 0.0, 1.0, 3.0},
+    /* 10 */  { 0.0, 0.0, 1.0, 3.5},
+    /* 11 */  { 0.0, 0.0, 1.0, 4.0},
+    /* 12 */  { 0.0, 0.0, 1.0, 4.5},
+    /* 13 */  { 0.0, 0.0, 1.0, 5.0},
+    /* 14 */  { 0.0, 0.0, 1.0, 5.5},
+    /* 15 */  { 0.0, 0.0, 1.0, 6.0}};
 
 SSE_ALIGN(static float_vec_aligned inpvecb[16]) = {
-    /*  0 */  {
-    0.0, 0.0, 0.0, 0.0},
-        /*  1 */  {
-    1.0, 0.0, 0.0, 0.0},
-        /*  2 */  {
-    1.0, 1.0, 0.0, 0.0},
-        /*  3 */  {
-    1.0, 1.0, 1.0, 0.0},
-        /*  4 */  {
-    1.0, 1.0, 1.0, 0.5},
-        /*  5 */  {
-    1.0, 1.0, 1.0, 1.0},
-        /*  6 */  {
-    1.0, 1.0, 1.0, 1.5},
-        /*  7 */  {
-    1.0, 1.0, 1.0, 2.0},
-        /*  8 */  {
-    1.0, 1.0, 1.0, 2.5},
-        /*  9 */  {
-    1.0, 1.0, 1.0, 3.0},
-        /* 10 */  {
-    1.0, 1.0, 1.0, 3.5},
-        /* 11 */  {
-    1.0, 1.0, 1.0, 4.0},
-        /* 12 */  {
-    1.0, 1.0, 1.0, 4.5},
-        /* 13 */  {
-    1.0, 1.0, 1.0, 5.0},
-        /* 14 */  {
-    1.0, 1.0, 1.0, 5.5},
-        /* 15 */  {
-1.0, 1.0, 1.0, 6.0}};
+    /*  0 */  { 0.0, 0.0, 0.0, 0.0},
+    /*  1 */  { 1.0, 0.0, 0.0, 0.0},
+    /*  2 */  { 1.0, 1.0, 0.0, 0.0},
+    /*  3 */  { 1.0, 1.0, 1.0, 0.0},
+    /*  4 */  { 1.0, 1.0, 1.0, 0.5},
+    /*  5 */  { 1.0, 1.0, 1.0, 1.0},
+    /*  6 */  { 1.0, 1.0, 1.0, 1.5},
+    /*  7 */  { 1.0, 1.0, 1.0, 2.0},
+    /*  8 */  { 1.0, 1.0, 1.0, 2.5},
+    /*  9 */  { 1.0, 1.0, 1.0, 3.0},
+    /* 10 */  { 1.0, 1.0, 1.0, 3.5},
+    /* 11 */  { 1.0, 1.0, 1.0, 4.0},
+    /* 12 */  { 1.0, 1.0, 1.0, 4.5},
+    /* 13 */  { 1.0, 1.0, 1.0, 5.0},
+    /* 14 */  { 1.0, 1.0, 1.0, 5.5},
+    /* 15 */  { 1.0, 1.0, 1.0, 6.0}};
 
 #if defined(USE_SIMD_INSTRUCTIONS)
 extern SIMD_AVX_STACKALIGN void
