@@ -263,8 +263,10 @@ dnl have_gthread, have_gtk and have_gtk are handled later, not having glib is fa
 AX_C___ATTRIBUTE__()
 
 if test "x$ax_cv___attribute__" = "xyes"; then
+AX_GCC_FUNC_ATTRIBUTE(const)
 AX_GCC_FUNC_ATTRIBUTE(fallthrough)
 AX_GCC_FUNC_ATTRIBUTE(format)
+AX_GCC_FUNC_ATTRIBUTE(pure)
 AX_GCC_FUNC_ATTRIBUTE(returns_nonnull)
 AX_GCC_FUNC_ATTRIBUTE(unused)
 fi
