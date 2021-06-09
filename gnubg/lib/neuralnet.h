@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include "common.h"
 
-typedef struct _neuralnet {
+typedef struct {
     unsigned int cInput;
     unsigned int cHidden;
     unsigned int cOutput;
@@ -49,7 +49,7 @@ typedef enum {
     NNSTATE_DONE
 } NNStateType;
 
-typedef struct _NNState {
+typedef struct {
     NNStateType state;
     float *savedBase;
     float *savedIBase;
