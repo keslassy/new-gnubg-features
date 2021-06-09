@@ -24,7 +24,7 @@
 #define MAXHIT 50               /* for statistics */
 #define STAT_MAXCUBE 10
 
-typedef struct _rolloutstat {
+typedef struct {
 
     /* Regular win statistics (dimension is cube turns) */
 
@@ -134,7 +134,7 @@ extern void RolloutLoopMT(void *unused);
  * so we use pseudo-random dice after that); the last is the permutation
  * itself.  6 generations are enough for 36^6 > 2^31 trials. */
 #define QRLEN 128
-typedef struct _perArray {
+typedef struct {
     unsigned char aaanPermutation[6][QRLEN][36];
     int nPermutationSeed;
 } perArray;
