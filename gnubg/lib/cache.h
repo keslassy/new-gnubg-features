@@ -1,6 +1,11 @@
-/* This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+/*
+ * Copyright (C) 1997-2000 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2002-2018 the AUTHORS
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -8,13 +13,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- *
- * cache.h
- *
- * by Gary Wong, 1997-2000
  * $Id$
  */
 
@@ -36,13 +36,13 @@ typedef unsigned int uint32_t;
 /* Set to calculate simple cache stats */
 #define CACHE_STATS 0
 
-typedef struct _cacheNodeDetail {
+typedef struct {
     positionkey key;
     int nEvalContext;
     float ar[6];
 } cacheNodeDetail;
 
-typedef struct _cacheNode {
+typedef struct {
     cacheNodeDetail nd_primary;
     cacheNodeDetail nd_secondary;
 #if defined(USE_MULTITHREAD)
@@ -53,7 +53,7 @@ typedef struct _cacheNode {
 /* name used in eval.c */
 typedef cacheNodeDetail evalcache;
 
-typedef struct _cache {
+typedef struct {
     cacheNode *entries;
 
     unsigned int size;
@@ -92,6 +92,10 @@ void CacheFlush(const evalCache * pc);
 void CacheDestroy(const evalCache * pc);
 void CacheStats(const evalCache * pc, unsigned int *pcLookup, unsigned int *pcHit, unsigned int *pcUsed);
 
+#if defined(HAVE_FUNC_ATTRIBUTE_PURE)
+uint32_t GetHashKey(uint32_t hashMask, const cacheNodeDetail * e) __attribute((pure));
+#else
 uint32_t GetHashKey(uint32_t hashMask, const cacheNodeDetail * e);
+#endif
 
 #endif
