@@ -1738,6 +1738,10 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
     if (fTake >= 0) { /* take or drop */
         InvertEvaluationR(aarOutput[0], pci);
         InvertEvaluationR(aarOutput[1], pci);
+        if (pes->et == EVAL_ROLLOUT) {
+            InvertStdDev(aarStdDev[0]);
+            InvertStdDev(aarStdDev[1]);
+        }
     }
 
     /* print alerts */
@@ -1994,6 +1998,10 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
     if (fTake >= 0) { /* take or drop */
         InvertEvaluationR(aarOutput[0], pci);
         InvertEvaluationR(aarOutput[1], pci);
+        if (pes->et == EVAL_ROLLOUT) {
+            InvertStdDev(aarStdDev[0]);
+            InvertStdDev(aarStdDev[1]);
+        }
     }
 
     if (pes->et == EVAL_ROLLOUT && exsExport.afCubeParameters[1]) {
