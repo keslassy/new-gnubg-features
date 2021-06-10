@@ -37,7 +37,7 @@
 #include "gtklocdefs.h"
 
 
-typedef struct _cubehintdata {
+typedef struct {
     GtkWidget *pwFrame;         /* the table */
     GtkWidget *pw;              /* the box */
     GtkWidget *pwTools;         /* the tools */
@@ -870,9 +870,26 @@ GetContent(cubehintdata * pchd)
     static char *pc;
     cubeinfo ci;
     cubedecisiondata *cdec = pchd->pmr->CubeDecPtr;
+    int fTake;
 
     GetMatchStateCubeInfo(&ci, &pchd->ms);
-    pc = OutputCubeAnalysis(cdec->aarOutput, cdec->aarStdDev, &cdec->esDouble, &ci, -1);
+
+    switch (pchd->pmr->mt) {
+    case MOVE_DOUBLE:
+        fTake = -1;
+        break;
+    case MOVE_DROP:
+        fTake = 0;
+        break;
+    case MOVE_TAKE:
+        fTake = 1;
+        break;
+    default:
+        g_assert_not_reached();
+        break;
+    }
+
+    pc = OutputCubeAnalysis(cdec->aarOutput, cdec->aarStdDev, &cdec->esDouble, &ci, fTake);
 
     return pc;
 }
