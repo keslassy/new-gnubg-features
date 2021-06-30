@@ -45,7 +45,7 @@ extern void ExtDestroyParse(void *scancontext);
 #define KEY_STR_DEBUG "debug"
 #define KEY_STR_PROMPT "prompt"
 
-typedef enum _cmdtype {
+typedef enum {
     COMMAND_NONE = 0,
     COMMAND_FIBSBOARD = 1,
     COMMAND_EVALUATION = 2,
@@ -56,14 +56,48 @@ typedef enum _cmdtype {
     COMMAND_LIST = 7
 } cmdtype;
 
-typedef struct _commandinfo {
+typedef struct {
     cmdtype cmdType;
     void *pvData;
 } commandinfo;
 
-typedef struct _FIBSBoardInfo {
+/* 
+ * When sending positions to be evaluated by GNUbg as external player,
+ * they are sent using the struct below in the following way:
+ * - anFIBSBoard is from player 1 point of view in all cases
+ * - the unnamed player in the struct fields is the external player and Opp
+ *   is the other player from the instance connecting to it,
+ *   except in the take case (where what is really evaluated is the full
+ *   doubling decision, take/pass and take/drop, from the doubling side)
+ *
+ * For instance, with the external player as player 0 winning the opening roll,
+ * the short game 52 (split) / 55 / fans / double / pass would have the strings
+ * starting with "board:" sent to it:
+ * 
+ * player0 : 52
+ * board:<player0>:<player1>:0:0:0:0:-2:0:0:0:0:5:0:3:0:0:0:-5:5:0:0:0:-3:0:-5:0:0:0:0:2:0:-1:5:2:5:2:1:1:1:0:1:-1:0:25:0:0:0:0:0:0:0:1
+ * 24/22 13/8
+ * 
+ * player1 : 55
+ * 13/8*(2) 6/1*(2)
+ * 
+ * player0 : double ?
+ * board:<player0>:<player1>:0:0:0:-2:2:0:2:0:0:3:0:1:0:0:0:-4:5:0:0:0:-4:0:-5:0:0:0:0:2:0:-1:0:0:0:0:1:1:1:0:1:-1:0:25:0:0:0:0:0:0:0:1
+ * no double
+ * 
+ * player0 : 66
+ * board:<player0>:<player1>:0:0:0:-2:2:0:2:0:0:3:0:1:0:0:0:-4:5:0:0:0:-4:0:-5:0:0:0:0:2:0:-1:6:6:6:6:1:1:1:0:1:-1:0:25:0:0:0:0:0:0:0:1
+ * fans
+ * 
+ * player1 : double
+ * 
+ * player0 : take ?
+ * board:<player1>:<player0>:0:0:0:-2:2:0:2:0:0:3:0:1:0:0:0:-4:5:0:0:0:-4:0:-5:0:0:0:0:2:0:1:0:0:0:0:1:1:1:1:1:-1:0:25:0:0:0:0:0:0:0:1
+ */
+
+typedef struct {
     /*
-     * These must be in the same order of the fibs board string definition,
+     * These must be in the same order than the FIBS board string definition,
      * starting at Match Length.
      * See description at http://www.fibs.com/fibs_interface.html#board_state
      */
@@ -102,7 +136,7 @@ typedef struct _FIBSBoardInfo {
     GString *gsOpp;
 } FIBSBoardInfo;
 
-typedef struct _ProcessedFIBSBoard {
+typedef struct {
     char szPlayer[MAX_NAME_LEN];
     char szOpp[MAX_NAME_LEN];
     int nMatchTo;
@@ -118,10 +152,10 @@ typedef struct _ProcessedFIBSBoard {
     TanBoard anBoard;
 } ProcessedFIBSBoard;
 
-typedef struct _scancontext {
+typedef struct scancontext {
     /* scanner ptr must be first element in structure */
     void *scanner;
-    void (*ExtErrorHandler) (struct _scancontext *, const char *);
+    void (*ExtErrorHandler) (struct scancontext *, const char *);
     int fError;
     int fDebug;
     int fNewInterface;
