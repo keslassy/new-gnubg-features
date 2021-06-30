@@ -25,15 +25,15 @@
 
 #include "analysis.h"
 
-enum _formatgs {
+typedef enum {
     FORMATGS_ALL = -1,
     FORMATGS_CHEQUER = 0,
     FORMATGS_CUBE = 1,
     FORMATGS_LUCK = 2,
     FORMATGS_OVERALL = 3
-};
+} formatgs;
 
-extern GList *formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg);
+extern GList *formatGS(const statcontext * psc, const int nMatchTo, const formatgs fg);
 
 extern void freeGS(GList * list);
 

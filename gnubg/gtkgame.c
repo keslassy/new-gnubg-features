@@ -109,7 +109,7 @@ int inCallback = FALSE;
  * (since GTK will only let us put integers into a GtkItemFactoryEntry,
  * and that might not be big enough to hold a pointer).  Must be kept in
  * sync with the string array! */
-typedef enum _gnubgcommand {
+typedef enum {
     CMD_ACCEPT,
     CMD_ANALYSE_CLEAR_MOVE,
     CMD_ANALYSE_CLEAR_GAME,
@@ -509,7 +509,7 @@ Command(gpointer UNUSED(p), guint iCommand, GtkWidget * widget)
 
 #endif
 
-typedef struct _analysiswidget {
+typedef struct {
 
     evalsetup esChequer;
     evalsetup esCube;
@@ -1943,7 +1943,7 @@ FinishMove(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 }
 
 
-typedef struct _evalwidget {
+typedef struct {
     evalcontext *pec;
     movefilter *pmf;
     GtkWidget *pwCubeful, *pwUsePrune, *pwDeterministic;
@@ -2346,7 +2346,7 @@ SetEvalCommands(const char *szPrefix, evalcontext * pec, evalcontext * pecOrig)
     outputresume();
 }
 
-typedef struct _AnalysisDetails {
+typedef struct {
     const char *title;
     evalcontext *esChequer;
     movefilter *mfChequer;
@@ -2851,7 +2851,7 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     g_free(pAnalDetailSettings1);
 }
 
-typedef struct _playerswidget {
+typedef struct {
     int *pfOK;
     player *ap;
     GtkWidget *apwName[2], *apwRadio[2][3], *apwSocket[2], *apwExternal[2];
@@ -4502,7 +4502,7 @@ GTKOutputNew(void)
     while (!fFinishedPopping);
 }
 
-typedef struct _newwidget {
+typedef struct {
     GtkWidget *pwCPS, *pwML, *pwGNUvsHuman, *pwHumanHuman, *pwManualDice, *pwTutorMode;
 } newwidget;
 
@@ -4811,13 +4811,13 @@ SetMET(GtkWidget * UNUSED(pw), gpointer p)
     UserCommand("save settings");
 }
 
-typedef struct _rolloutpagewidget {
+typedef struct {
     int *pfOK;
     evalcontext *precCube, *precCheq;
     movefilter *pmf;
 } rolloutpagewidget;
 
-typedef struct _rolloutpagegeneral {
+typedef struct {
     int *pfOK;
     GtkWidget *pwCubeful, *pwVarRedn, *pwInitial, *pwRotate, *pwDoLate;
     GtkWidget *pwDoTrunc, *pwCubeEqualChequer, *pwPlayersAreSame;
@@ -4834,7 +4834,7 @@ typedef struct _rolloutpagegeneral {
     GtkWidget *pwMinGames, *pwMaxError, *pwJsdLimit;
 } rolloutpagegeneral;
 
-typedef struct _rolloutwidget {
+typedef struct {
     rolloutcontext rcRollout;
     rolloutpagegeneral *prwGeneral;
     rolloutpagewidget *prpwPages[4], *prpwTrunc;
@@ -6975,7 +6975,7 @@ CopyAll(GtkWidget * UNUSED(pwWidget), GtkWidget * pwNotebook)
 }
 
 static void
-FillStats(const statcontext * psc, const matchstate * pms, const enum _formatgs gs, GtkWidget * statView)
+FillStats(const statcontext * psc, const matchstate * pms, const formatgs gs, GtkWidget * statView)
 {
 
     GList *list = formatGS(psc, pms->nMatchTo, gs);

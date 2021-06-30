@@ -129,7 +129,7 @@ luckAdjust(const char *sz, const float ar[2], const int nMatchTo)
 }
 
 extern GList *
-formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
+formatGS(const statcontext * psc, const int nMatchTo, const formatgs fg)
 {
 
     GList *list = NULL;
@@ -400,7 +400,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 
                 list = g_list_append(list, aasz);
 
-                /* eq. snowie error rate */
+                /* eq. Snowie error rate */
 
                 aasz = g_malloc(3 * sizeof(*aasz));
 
@@ -586,7 +586,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const enum _formatgs fg)
 }
 
 static void
-_freeGS(gpointer data, gpointer UNUSED(userdata))
+freeGSelement(gpointer data, gpointer UNUSED(userdata))
 {
 
     char **aasz = data;
@@ -604,7 +604,7 @@ extern void
 freeGS(GList * list)
 {
 
-    g_list_foreach(list, _freeGS, NULL);
+    g_list_foreach(list, freeGSelement, NULL);
 
     g_list_free(list);
 }
