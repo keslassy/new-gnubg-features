@@ -886,7 +886,7 @@ GetContent(cubehintdata * pchd)
         break;
     default:
         g_assert_not_reached();
-        break;
+        return NULL;
     }
 
     pc = OutputCubeAnalysis(cdec->aarOutput, cdec->aarStdDev, &cdec->esDouble, &ci, fTake);
