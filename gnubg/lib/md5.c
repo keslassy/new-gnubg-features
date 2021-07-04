@@ -1,17 +1,19 @@
 /*
- * md5.c
- *
- * by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
- *
- * Modified by Gary Wong, 2000, 2001.
- *
  * Functions to compute MD5 message digest of files or memory blocks.
- * according to the definition of MD5 in RFC 1321 from April 1992.
+ * according to the definition of MD5 in RFC 1321 from April 1992,
+ * by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
  * Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * Minor modifications for use with GNU Backgammon.
+ * Copyright (C) 2000-2019 the AUTHORS
+ *
+ * License changed from the GNU LGPL to the GNU GPL (as permitted under Term 3
+ * of the GNU LGPL) by Gary Wong for distribution with GNU Backgammon.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,15 +21,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
-
-/* License changed from the GNU LGPL to the GNU GPL (as permitted
- * under Term 3 of the GNU LGPL) by Gary Wong for distribution
- * with GNU Backgammon. */
 
 #include "config.h"
 #include <stdlib.h>
@@ -208,11 +205,11 @@ md5_process_bytes(const void *buffer, size_t len, struct md5_ctx *ctx)
         ctx->buflen += (md5_uint32) add;
 
         if (ctx->buflen > 64) {
-            md5_process_block(ctx->buffer, ctx->buflen & ~63, ctx);
+            md5_process_block(ctx->buffer, ctx->buflen & ~63U, ctx);
 
             ctx->buflen &= 63;
             /* The regions in the following copy operation cannot overlap.  */
-            memcpy(ctx->buffer, &ctx->buffer[(left_over + add) & ~63], ctx->buflen);
+            memcpy(ctx->buffer, &ctx->buffer[(left_over + add) & ~63U], ctx->buflen);
         }
 
         buffer = (const char *) buffer + add;
@@ -221,8 +218,8 @@ md5_process_bytes(const void *buffer, size_t len, struct md5_ctx *ctx)
 
     /* Process available complete blocks.  */
     if (len > 64) {
-        md5_process_block(buffer, len & ~63, ctx);
-        buffer = (const char *) buffer + (len & ~63);
+        md5_process_block(buffer, len & ~63U, ctx);
+        buffer = (const char *) buffer + (len & ~63U);
         len &= 63;
     }
 
