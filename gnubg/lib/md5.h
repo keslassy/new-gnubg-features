@@ -1,13 +1,18 @@
 /*
- * md5.h
- *
  * Declaration of functions and data types used for MD5 sum computing
  * library functions.
  * Copyright (C) 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * Minor modifications for use with GNU Backgammon.
+ * Copyright (C) 2009-2021 the AUTHORS
+ *
+ * License changed from the GNU LGPL to the GNU GPL (as permitted under Term 3
+ * of the GNU LGPL) by Gary Wong for distribution with GNU Backgammon.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,22 +20,18 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
 
-/* License changed from the GNU LGPL to the GNU GPL (as permitted
- * under Term 3 of the GNU LGPL) by Gary Wong for distribution
- * with GNU Backgammon. */
-
 #ifndef MD5_H
 #define MD5_H 1
-#include <glib.h>
+#include <stdint.h>
 #include <stdio.h>
 #include "common.h"
-typedef guint32 md5_uint32;
+
+typedef uint32_t md5_uint32;
 
 /* Structure to save state of computation between the single steps.  */
 struct md5_ctx {
