@@ -23,13 +23,13 @@
 
 #include <stdio.h>
 
-typedef enum _rng {
+typedef enum {
     RNG_BBS, RNG_ISAAC, RNG_MD5, RNG_MERSENNE,
     RNG_MANUAL, RNG_RANDOM_DOT_ORG, RNG_FILE,
     NUM_RNGS
 } rng;
 
-typedef struct _rngcontext rngcontext;
+typedef struct rngcontext rngcontext;
 
 extern const char *aszRNG[NUM_RNGS];
 extern const char *aszRNGTip[NUM_RNGS];

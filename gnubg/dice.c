@@ -75,7 +75,7 @@ const char *aszRNGTip[NUM_RNGS] = {
 rng rngCurrent = RNG_MERSENNE;
 rngcontext *rngctxCurrent = NULL;
 
-struct _rngcontext {
+struct rngcontext {
 
     /* RNG_FILE */
     FILE *fDice;
