@@ -520,7 +520,8 @@ InitRNGSeedMP(mpz_t n, rng rng, rngcontext * rngctx)
 
                 achState = mpz_export(NULL, &cb, -1, sizeof(gint32), 0, 0, n);
                 for (i = 0; i < MT_ARRAY_N && i < cb; i++) {
-                    tempmtkey[i] = achState[i];
+                    /* FIXME?  Initializing an unsigned long with a guint32 */
+                    tempmtkey[i] = (unsigned long) achState[i];
                 }
                 for (; i < MT_ARRAY_N; i++) {
                     tempmtkey[i] = 0;
@@ -610,6 +611,7 @@ CloseRNG(const rng rngx, rngcontext * rngctx)
     case RNG_FILE:
         /* close file */
         CloseDiceFile(rngctx);
+        break;
 
     default:
         /* no-op */
@@ -834,6 +836,8 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
         anDice[0] = ReadDiceFile(rngctx);
         anDice[1] = ReadDiceFile(rngctx);
         rngctx->c += 2;
+
+        break;
 
     default:
         break;
