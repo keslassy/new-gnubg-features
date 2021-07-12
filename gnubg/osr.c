@@ -39,22 +39,18 @@
 static unsigned long mt[MT_ARRAY_N];
 static int mti = MT_ARRAY_N + 1;
 
-static unsigned int
-OSRQuasiRandomDice(const unsigned int iTurn, const unsigned int iGame, const unsigned int cGames,
-                   unsigned int anDice[2])
+static void
+OSRQuasiRandomDice(const unsigned int iTurn, const unsigned int iGame, const unsigned int cGames, unsigned int anDice[2])
 {
     if (!iTurn && !(cGames % 36)) {
         anDice[0] = (iGame % 6) + 1;
         anDice[1] = ((iGame / 6) % 6) + 1;
-        return TRUE;
     } else if (iTurn == 1 && !(cGames % 1296)) {
         anDice[0] = ((iGame / 36) % 6) + 1;
         anDice[1] = ((iGame / 216) % 6) + 1;
-        return TRUE;
     } else {
         anDice[0] = (unsigned int) (genrand_int32(&mti, mt) % 6) + 1;
         anDice[1] = (unsigned int) (genrand_int32(&mti, mt) % 6) + 1;
-        return (anDice[0] > 0 && anDice[1] > 0);
     }
 }
 
@@ -569,8 +565,7 @@ osr(unsigned int anBoard[25], const unsigned int iGame, const unsigned int nGame
 
     while (nOut) {
         /* roll dice */
-        if (OSRQuasiRandomDice(iTurn, iGame, nGames, anDice) == FALSE)
-            g_warning("Error in function OSRQuasiRandomDice");
+        OSRQuasiRandomDice(iTurn, iGame, nGames, anDice);
 
         if (anDice[0] < anDice[1])
             swap_us(anDice, anDice + 1);
