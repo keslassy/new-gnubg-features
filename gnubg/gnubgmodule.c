@@ -3045,7 +3045,7 @@ PythonNavigate(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
                         pl = pl->plNext;
                         --n;
                     }
-                } else if (n < 0) {
+                } else { /* n < 0 since n = nextGame != 0 */
                     while (n < 0 && pl->plPrev->p) {
                         pl = pl->plPrev;
                         ++n;
