@@ -1,14 +1,21 @@
 /*
- * $Id$
- * ------------------------------------------------------------------------------
- * isaac.h: definitions for a random number generator
+ * -----------------------------------------------------------------------------
+ * rand.h: definitions for a random number generator
+ * By Bob Jenkins, 1996, Public Domain
  * MODIFIED:
  * 960327: Creation (addition of randinit, really)
  * 970719: use context, not global variables, for internal state
  * 980324: renamed seed to flag
  * 980605: recommend RANDSIZL=4 for noncryptography.
- * 991209: modified for inclusion with GNU Backgammon by Gary Wong
- * ------------------------------------------------------------------------------
+ * 010626: note this is public domain
+ * -----------------------------------------------------------------------------
+ */
+
+/*
+ * Minor modifications for use with GNU Backgammon.
+ * Copyright (C) 1999-2006 the AUTHORS
+ *
+ * $Id$
  */
 
 #include "isaacs.h"
