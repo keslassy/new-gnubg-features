@@ -1431,11 +1431,11 @@ CommandSetPlayerExternal(char *sz)
         return;
     }
 
-    pch = strdup(sz);
+    pch = g_strdup(sz);
 
     if ((h = ExternalSocket(&psa, &cb, sz)) < 0) {
         SockErr(pch);
-        free(pch);
+        g_free(pch);
         return;
     }
 
@@ -1444,7 +1444,7 @@ CommandSetPlayerExternal(char *sz)
             if (fInterrupt) {
                 closesocket(h);
                 g_free(psa);
-                free(pch);
+                g_free(pch);
                 return;
             }
             continue;
@@ -1453,14 +1453,13 @@ CommandSetPlayerExternal(char *sz)
         SockErr(pch);
         closesocket(h);
         g_free(psa);
-        free(pch);
+        g_free(pch);
         return;
     }
 
     ap[iPlayerSet].pt = PLAYER_EXTERNAL;
     ap[iPlayerSet].h = h;
-    if (ap[iPlayerSet].szSocket)
-        free(ap[iPlayerSet].szSocket);
+    g_free(ap[iPlayerSet].szSocket);
     ap[iPlayerSet].szSocket = pch;
 
     g_free(psa);
@@ -1758,10 +1757,7 @@ CommandSetRolloutLogEnable(char *sz)
 extern void
 CommandSetRolloutLogFile(char *sz)
 {
-
-    if (log_file_name) {
-        free(log_file_name);
-    }
+    g_free(log_file_name);
 
     log_file_name = g_strdup(sz);
 }
@@ -3540,8 +3536,7 @@ static void
 SetExportHTMLType(const htmlexporttype het, const char *szExtension)
 {
 
-    if (exsExport.szHTMLExtension)
-        g_free(exsExport.szHTMLExtension);
+    g_free(exsExport.szHTMLExtension);
 
     exsExport.het = het;
     exsExport.szHTMLExtension = g_strdup(szExtension);
@@ -3626,8 +3621,7 @@ CommandSetExportHTMLPictureURL(char *sz)
         return;
     }
 
-    if (exsExport.szHTMLPictureURL)
-        g_free(exsExport.szHTMLPictureURL);
+    g_free(exsExport.szHTMLPictureURL);
 
     sz = NextToken(&sz);
     exsExport.szHTMLPictureURL = g_strdup(sz);
@@ -3679,7 +3673,7 @@ CommandSetTutorChequer(char *sz)
 }
 
 static void
-_set_tutor_skill(skilltype Skill, int skillno, char *skill)
+set_tutor_skill(skilltype Skill, int skillno, char *skill)
 {
 
     nTutorSkillCurrent = skillno;
@@ -3691,21 +3685,21 @@ extern void
 CommandSetTutorSkillDoubtful(char *UNUSED(sz))
 {
 
-    _set_tutor_skill(SKILL_DOUBTFUL, 0, _("doubtful"));
+    set_tutor_skill(SKILL_DOUBTFUL, 0, _("doubtful"));
 }
 
 extern void
 CommandSetTutorSkillBad(char *UNUSED(sz))
 {
 
-    _set_tutor_skill(SKILL_BAD, 1, _("bad"));
+    set_tutor_skill(SKILL_BAD, 1, _("bad"));
 }
 
 extern void
 CommandSetTutorSkillVeryBad(char *UNUSED(sz))
 {
 
-    _set_tutor_skill(SKILL_VERYBAD, 2, _("very bad"));
+    set_tutor_skill(SKILL_VERYBAD, 2, _("very bad"));
 }
 
 /*
