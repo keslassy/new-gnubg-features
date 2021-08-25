@@ -45,7 +45,7 @@
 #endif
 #include "util.h"
 
-typedef enum _stylesheetclass {
+typedef enum {
     CLASS_MOVETABLE,
     CLASS_MOVEHEADER,
     CLASS_MOVENUMBER,
@@ -383,16 +383,14 @@ printStatTableRow(FILE * pf, const char *format1, const char *format2, ...)
 
     va_list val;
     char *sz;
-    size_t l = 100 + strlen(format1) + 2 * strlen(format2);
 
     va_start(val, format2);
 
-    sprintf(sz = (char *) malloc(l),
-            "<tr>\n" "<td>%s</td>\n" "<td>%s</td>\n" "<td>%s</td>\n" "</tr>\n", format1, format2, format2);
+    sz = g_strdup_printf("<tr>\n" "<td>%s</td>\n" "<td>%s</td>\n" "<td>%s</td>\n" "</tr>\n", format1, format2, format2);
 
     vfprintf(pf, sz, val);
 
-    free(sz);
+    g_free(sz);
 
     va_end(val);
 
