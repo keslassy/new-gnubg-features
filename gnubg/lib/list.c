@@ -24,6 +24,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include <glib.h>
+
 int
 ListCreate(listOLD * pl)
 {
@@ -38,10 +40,7 @@ listOLD *
 ListInsert(listOLD * pl, void *p)
 {
 
-    listOLD *plNew;
-
-    if ((plNew = (listOLD *) malloc(sizeof(*plNew))) == NULL)
-        return NULL;
+    listOLD *plNew = g_malloc(sizeof(listOLD));
 
     plNew->p = p;
 
@@ -61,7 +60,7 @@ ListDelete(listOLD * pl)
     pl->plPrev->plNext = pl->plNext;
     pl->plNext->plPrev = pl->plPrev;
 
-    free(pl);
+    g_free(pl);
 }
 
 void
@@ -69,7 +68,7 @@ ListDeleteAll(const listOLD * pl)
 {
 
     while (pl->plNext->p) {
-        free(pl->plNext->p);
+        g_free(pl->plNext->p);
         ListDelete(pl->plNext);
     }
 }

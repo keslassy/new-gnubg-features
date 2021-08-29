@@ -94,7 +94,7 @@ static int fEndGame = FALSE;
 static int fCrawfordState = -1;
 int automaticTask = FALSE;
 
-typedef enum _annotatetype {
+typedef enum {
     ANNOTATE_ACCEPT, ANNOTATE_CUBE, ANNOTATE_DOUBLE, ANNOTATE_DROP,
     ANNOTATE_MOVE, ANNOTATE_ROLL, ANNOTATE_RESIGN, ANNOTATE_REJECT
 } annotatetype;
@@ -464,7 +464,7 @@ FreeGame(listOLD * pl)
         ListDelete(pl->plNext);
     }
 
-    free(pl);
+    g_free(pl);
 }
 
 static int
@@ -709,7 +709,7 @@ SetMoveRecord(moverecord * pmr)
 extern void
 ClearMoveRecord(void)
 {
-    plLastMove = plGame = malloc(sizeof(*plGame));
+    plLastMove = plGame = g_malloc(sizeof(*plGame));
     ListCreate(plGame);
 }
 
@@ -4303,7 +4303,7 @@ CheatDice(unsigned int anDice[2], matchstate * pms, const int fBest)
  *
  */
 
-typedef struct _rollequity {
+typedef struct {
     float r;
     int anDice[2];
 } rollequity;

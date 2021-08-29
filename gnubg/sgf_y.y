@@ -53,7 +53,7 @@ static int sgferror( const char *s ) {
 }
 
 static listOLD *NewList( void ) {
-    listOLD *pl = malloc( sizeof( *pl ) );
+    listOLD *pl = g_malloc( sizeof( listOLD ) );
     ListCreate( pl );
     return pl;
 }
@@ -66,7 +66,7 @@ static char *Concatenate( listOLD *pl ) {
     for( pl = pl->plNext; pl->p; pl = pl->plNext )
 	cch += strlen( pl->p );
 
-    pchDest = sz = calloc(1, cch + 1 );
+    pchDest = sz = g_malloc0( cch + 1 );
     
     while( pl->plNext != pl ) {
 	for( pchSrc = pl->plNext->p; ( *pchDest++ = *pchSrc++ ); )
@@ -74,11 +74,11 @@ static char *Concatenate( listOLD *pl ) {
 
 	pchDest--;
 	
-	free( pl->plNext->p );
+	g_free( pl->plNext->p );
 	ListDelete( pl->plNext );
     }
 
-    free( pl );
+    g_free( pl );
     
     return sz;
 }
@@ -147,7 +147,7 @@ PropertySeq:	/* empty */
 Property:	PROPERTY ValueSeq Value
 		{ 
 		    ListInsert( $2, $3 );
-		    $$ = malloc( sizeof(property) ); $$->pl = $2;
+		    $$ = g_malloc( sizeof(property) ); $$->pl = $2;
 		    $$->ach[ 0 ] = $1[ 0 ]; $$->ach[ 1 ] = $1[ 1 ];
 		}
 	;
