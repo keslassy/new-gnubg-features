@@ -8,11 +8,17 @@
 
 #define yy_create_buffer sgf_create_buffer
 #define yy_delete_buffer sgf_delete_buffer
-#define yy_flex_debug sgf_flex_debug
+#define yy_scan_buffer sgf_scan_buffer
+#define yy_scan_string sgf_scan_string
+#define yy_scan_bytes sgf_scan_bytes
 #define yy_init_buffer sgf_init_buffer
 #define yy_flush_buffer sgf_flush_buffer
 #define yy_load_buffer_state sgf_load_buffer_state
 #define yy_switch_to_buffer sgf_switch_to_buffer
+#define yypush_buffer_state sgfpush_buffer_state
+#define yypop_buffer_state sgfpop_buffer_state
+#define yyensure_buffer_stack sgfensure_buffer_stack
+#define yy_flex_debug sgf_flex_debug
 #define yyin sgfin
 #define yyleng sgfleng
 #define yylex sgflex
@@ -28,9 +34,243 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 6
-#define YY_FLEX_SUBMINOR_VERSION 0
+#define YY_FLEX_SUBMINOR_VERSION 4
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
+#endif
+
+#ifdef yy_create_buffer
+#define sgf_create_buffer_ALREADY_DEFINED
+#else
+#define yy_create_buffer sgf_create_buffer
+#endif
+
+#ifdef yy_delete_buffer
+#define sgf_delete_buffer_ALREADY_DEFINED
+#else
+#define yy_delete_buffer sgf_delete_buffer
+#endif
+
+#ifdef yy_scan_buffer
+#define sgf_scan_buffer_ALREADY_DEFINED
+#else
+#define yy_scan_buffer sgf_scan_buffer
+#endif
+
+#ifdef yy_scan_string
+#define sgf_scan_string_ALREADY_DEFINED
+#else
+#define yy_scan_string sgf_scan_string
+#endif
+
+#ifdef yy_scan_bytes
+#define sgf_scan_bytes_ALREADY_DEFINED
+#else
+#define yy_scan_bytes sgf_scan_bytes
+#endif
+
+#ifdef yy_init_buffer
+#define sgf_init_buffer_ALREADY_DEFINED
+#else
+#define yy_init_buffer sgf_init_buffer
+#endif
+
+#ifdef yy_flush_buffer
+#define sgf_flush_buffer_ALREADY_DEFINED
+#else
+#define yy_flush_buffer sgf_flush_buffer
+#endif
+
+#ifdef yy_load_buffer_state
+#define sgf_load_buffer_state_ALREADY_DEFINED
+#else
+#define yy_load_buffer_state sgf_load_buffer_state
+#endif
+
+#ifdef yy_switch_to_buffer
+#define sgf_switch_to_buffer_ALREADY_DEFINED
+#else
+#define yy_switch_to_buffer sgf_switch_to_buffer
+#endif
+
+#ifdef yypush_buffer_state
+#define sgfpush_buffer_state_ALREADY_DEFINED
+#else
+#define yypush_buffer_state sgfpush_buffer_state
+#endif
+
+#ifdef yypop_buffer_state
+#define sgfpop_buffer_state_ALREADY_DEFINED
+#else
+#define yypop_buffer_state sgfpop_buffer_state
+#endif
+
+#ifdef yyensure_buffer_stack
+#define sgfensure_buffer_stack_ALREADY_DEFINED
+#else
+#define yyensure_buffer_stack sgfensure_buffer_stack
+#endif
+
+#ifdef yylex
+#define sgflex_ALREADY_DEFINED
+#else
+#define yylex sgflex
+#endif
+
+#ifdef yyrestart
+#define sgfrestart_ALREADY_DEFINED
+#else
+#define yyrestart sgfrestart
+#endif
+
+#ifdef yylex_init
+#define sgflex_init_ALREADY_DEFINED
+#else
+#define yylex_init sgflex_init
+#endif
+
+#ifdef yylex_init_extra
+#define sgflex_init_extra_ALREADY_DEFINED
+#else
+#define yylex_init_extra sgflex_init_extra
+#endif
+
+#ifdef yylex_destroy
+#define sgflex_destroy_ALREADY_DEFINED
+#else
+#define yylex_destroy sgflex_destroy
+#endif
+
+#ifdef yyget_debug
+#define sgfget_debug_ALREADY_DEFINED
+#else
+#define yyget_debug sgfget_debug
+#endif
+
+#ifdef yyset_debug
+#define sgfset_debug_ALREADY_DEFINED
+#else
+#define yyset_debug sgfset_debug
+#endif
+
+#ifdef yyget_extra
+#define sgfget_extra_ALREADY_DEFINED
+#else
+#define yyget_extra sgfget_extra
+#endif
+
+#ifdef yyset_extra
+#define sgfset_extra_ALREADY_DEFINED
+#else
+#define yyset_extra sgfset_extra
+#endif
+
+#ifdef yyget_in
+#define sgfget_in_ALREADY_DEFINED
+#else
+#define yyget_in sgfget_in
+#endif
+
+#ifdef yyset_in
+#define sgfset_in_ALREADY_DEFINED
+#else
+#define yyset_in sgfset_in
+#endif
+
+#ifdef yyget_out
+#define sgfget_out_ALREADY_DEFINED
+#else
+#define yyget_out sgfget_out
+#endif
+
+#ifdef yyset_out
+#define sgfset_out_ALREADY_DEFINED
+#else
+#define yyset_out sgfset_out
+#endif
+
+#ifdef yyget_leng
+#define sgfget_leng_ALREADY_DEFINED
+#else
+#define yyget_leng sgfget_leng
+#endif
+
+#ifdef yyget_text
+#define sgfget_text_ALREADY_DEFINED
+#else
+#define yyget_text sgfget_text
+#endif
+
+#ifdef yyget_lineno
+#define sgfget_lineno_ALREADY_DEFINED
+#else
+#define yyget_lineno sgfget_lineno
+#endif
+
+#ifdef yyset_lineno
+#define sgfset_lineno_ALREADY_DEFINED
+#else
+#define yyset_lineno sgfset_lineno
+#endif
+
+#ifdef yywrap
+#define sgfwrap_ALREADY_DEFINED
+#else
+#define yywrap sgfwrap
+#endif
+
+#ifdef yyalloc
+#define sgfalloc_ALREADY_DEFINED
+#else
+#define yyalloc sgfalloc
+#endif
+
+#ifdef yyrealloc
+#define sgfrealloc_ALREADY_DEFINED
+#else
+#define yyrealloc sgfrealloc
+#endif
+
+#ifdef yyfree
+#define sgffree_ALREADY_DEFINED
+#else
+#define yyfree sgffree
+#endif
+
+#ifdef yytext
+#define sgftext_ALREADY_DEFINED
+#else
+#define yytext sgftext
+#endif
+
+#ifdef yyleng
+#define sgfleng_ALREADY_DEFINED
+#else
+#define yyleng sgfleng
+#endif
+
+#ifdef yyin
+#define sgfin_ALREADY_DEFINED
+#else
+#define yyin sgfin
+#endif
+
+#ifdef yyout
+#define sgfout_ALREADY_DEFINED
+#else
+#define yyout sgfout
+#endif
+
+#ifdef yy_flex_debug
+#define sgf_flex_debug_ALREADY_DEFINED
+#else
+#define yy_flex_debug sgf_flex_debug
+#endif
+
+#ifdef yylineno
+#define sgflineno_ALREADY_DEFINED
+#else
+#define yylineno sgflineno
 #endif
 
 /* First, we deal with  platform-specific or compiler-specific issues. */
@@ -103,60 +343,48 @@ typedef unsigned int flex_uint32_t;
 #define UINT32_MAX             (4294967295U)
 #endif
 
+#ifndef SIZE_MAX
+#define SIZE_MAX               (~(size_t)0)
+#endif
+
 #endif /* ! C99 */
 
 #endif /* ! FLEXINT_H */
 
-#ifdef __cplusplus
+/* begin standard C++ headers. */
 
-/* The "const" storage-class-modifier is valid. */
-#define YY_USE_CONST
-
-#else	/* ! __cplusplus */
-
-/* C99 requires __STDC__ to be defined as 1. */
-#if defined (__STDC__)
-
-#define YY_USE_CONST
-
-#endif	/* defined (__STDC__) */
-#endif	/* ! __cplusplus */
-
-#ifdef YY_USE_CONST
+/* TODO: this is always defined, so inline it */
 #define yyconst const
+
+#if defined(__GNUC__) && __GNUC__ >= 3
+#define yynoreturn __attribute__((__noreturn__))
 #else
-#define yyconst
+#define yynoreturn
 #endif
 
 /* Returned upon end-of-file. */
 #define YY_NULL 0
 
-/* Promotes a possibly negative, possibly signed char to an unsigned
- * integer for use as an array index.  If the signed char is negative,
- * we want to instead treat it as an 8-bit unsigned char, hence the
- * double cast.
+/* Promotes a possibly negative, possibly signed char to an
+ *   integer in range [0..255] for use as an array index.
  */
-#define YY_SC_TO_UI(c) ((unsigned int) (unsigned char) c)
+#define YY_SC_TO_UI(c) ((YY_CHAR) (c))
 
 /* Enter a start condition.  This macro really ought to take a parameter,
  * but we do it the disgusting crufty way forced on us by the ()-less
  * definition of BEGIN.
  */
 #define BEGIN (yy_start) = 1 + 2 *
-
 /* Translate the current start state into a value that can be later handed
  * to BEGIN to return to the state.  The YYSTATE alias is for lex
  * compatibility.
  */
 #define YY_START (((yy_start) - 1) / 2)
 #define YYSTATE YY_START
-
 /* Action number for EOF rule of a given start state. */
 #define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)
-
 /* Special action meaning "start processing a new file". */
-#define YY_NEW_FILE sgfrestart(sgfin  )
-
+#define YY_NEW_FILE yyrestart( yyin  )
 #define YY_END_OF_BUFFER_CHAR 0
 
 /* Size of default input buffer. */
@@ -186,14 +414,14 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 typedef size_t yy_size_t;
 #endif
 
-extern yy_size_t sgfleng;
+extern int yyleng;
 
-extern FILE *sgfin, *sgfout;
+extern FILE *yyin, *yyout;
 
 #define EOB_ACT_CONTINUE_SCAN 0
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
-
+    
     #define YY_LESS_LINENO(n)
     #define YY_LINENO_REWIND_TO(ptr)
     
@@ -201,16 +429,15 @@ extern FILE *sgfin, *sgfout;
 #define yyless(n) \
 	do \
 		{ \
-		/* Undo effects of setting up sgftext. */ \
+		/* Undo effects of setting up yytext. */ \
         int yyless_macro_arg = (n); \
         YY_LESS_LINENO(yyless_macro_arg);\
 		*yy_cp = (yy_hold_char); \
 		YY_RESTORE_YY_MORE_OFFSET \
 		(yy_c_buf_p) = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
-		YY_DO_BEFORE_ACTION; /* set up sgftext again */ \
+		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
 		} \
 	while ( 0 )
-
 #define unput(c) yyunput( c, (yytext_ptr)  )
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
@@ -225,7 +452,7 @@ struct yy_buffer_state
 	/* Size of input buffer in bytes, not including room for EOB
 	 * characters.
 	 */
-	yy_size_t yy_buf_size;
+	int yy_buf_size;
 
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
@@ -253,7 +480,7 @@ struct yy_buffer_state
 
     int yy_bs_lineno; /**< The line count. */
     int yy_bs_column; /**< The column count. */
-    
+
 	/* Whether to try to fill the input buffer when we reach the
 	 * end of it.
 	 */
@@ -270,8 +497,8 @@ struct yy_buffer_state
 	 * possible backing-up.
 	 *
 	 * When we actually see the EOF, we change the status to "new"
-	 * (via sgfrestart()), so that the user can continue scanning by
-	 * just pointing sgfin at a new input file.
+	 * (via yyrestart()), so that the user can continue scanning by
+	 * just pointing yyin at a new input file.
 	 */
 #define YY_BUFFER_EOF_PENDING 2
 
@@ -281,7 +508,7 @@ struct yy_buffer_state
 /* Stack of input buffers. */
 static size_t yy_buffer_stack_top = 0; /**< index of top of stack. */
 static size_t yy_buffer_stack_max = 0; /**< capacity of stack. */
-static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
+static YY_BUFFER_STATE * yy_buffer_stack = NULL; /**< Stack as an array. */
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
@@ -292,112 +519,101 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
 #define YY_CURRENT_BUFFER ( (yy_buffer_stack) \
                           ? (yy_buffer_stack)[(yy_buffer_stack_top)] \
                           : NULL)
-
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
  */
 #define YY_CURRENT_BUFFER_LVALUE (yy_buffer_stack)[(yy_buffer_stack_top)]
 
-/* yy_hold_char holds the character lost when sgftext is formed. */
+/* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
 static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-yy_size_t sgfleng;
+int yyleng;
 
 /* Points to current character in buffer. */
-static char *yy_c_buf_p = (char *) 0;
+static char *yy_c_buf_p = NULL;
 static int yy_init = 0;		/* whether we need to initialize */
 static int yy_start = 0;	/* start state number */
 
-/* Flag which is used to allow sgfwrap()'s to do buffer switches
- * instead of setting up a fresh sgfin.  A bit of a hack ...
+/* Flag which is used to allow yywrap()'s to do buffer switches
+ * instead of setting up a fresh yyin.  A bit of a hack ...
  */
 static int yy_did_buffer_switch_on_eof;
 
-void sgfrestart (FILE *input_file  );
-void sgf_switch_to_buffer (YY_BUFFER_STATE new_buffer  );
-YY_BUFFER_STATE sgf_create_buffer (FILE *file,int size  );
-void sgf_delete_buffer (YY_BUFFER_STATE b  );
-void sgf_flush_buffer (YY_BUFFER_STATE b  );
-void sgfpush_buffer_state (YY_BUFFER_STATE new_buffer  );
-void sgfpop_buffer_state (void );
+void yyrestart ( FILE *input_file  );
+void yy_switch_to_buffer ( YY_BUFFER_STATE new_buffer  );
+YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size  );
+void yy_delete_buffer ( YY_BUFFER_STATE b  );
+void yy_flush_buffer ( YY_BUFFER_STATE b  );
+void yypush_buffer_state ( YY_BUFFER_STATE new_buffer  );
+void yypop_buffer_state ( void );
 
-static void sgfensure_buffer_stack (void );
-static void sgf_load_buffer_state (void );
-static void sgf_init_buffer (YY_BUFFER_STATE b,FILE *file  );
+static void yyensure_buffer_stack ( void );
+static void yy_load_buffer_state ( void );
+static void yy_init_buffer ( YY_BUFFER_STATE b, FILE *file  );
+#define YY_FLUSH_BUFFER yy_flush_buffer( YY_CURRENT_BUFFER )
 
-#define YY_FLUSH_BUFFER sgf_flush_buffer(YY_CURRENT_BUFFER )
+YY_BUFFER_STATE yy_scan_buffer ( char *base, yy_size_t size  );
+YY_BUFFER_STATE yy_scan_string ( const char *yy_str  );
+YY_BUFFER_STATE yy_scan_bytes ( const char *bytes, int len  );
 
-YY_BUFFER_STATE sgf_scan_buffer (char *base,yy_size_t size  );
-YY_BUFFER_STATE sgf_scan_string (yyconst char *yy_str  );
-YY_BUFFER_STATE sgf_scan_bytes (yyconst char *bytes,yy_size_t len  );
+void *yyalloc ( yy_size_t  );
+void *yyrealloc ( void *, yy_size_t  );
+void yyfree ( void *  );
 
-void *sgfalloc (yy_size_t  );
-void *sgfrealloc (void *,yy_size_t  );
-void sgffree (void *  );
-
-#define yy_new_buffer sgf_create_buffer
-
+#define yy_new_buffer yy_create_buffer
 #define yy_set_interactive(is_interactive) \
 	{ \
 	if ( ! YY_CURRENT_BUFFER ){ \
-        sgfensure_buffer_stack (); \
+        yyensure_buffer_stack (); \
 		YY_CURRENT_BUFFER_LVALUE =    \
-            sgf_create_buffer(sgfin,YY_BUF_SIZE ); \
+            yy_create_buffer( yyin, YY_BUF_SIZE ); \
 	} \
 	YY_CURRENT_BUFFER_LVALUE->yy_is_interactive = is_interactive; \
 	}
-
 #define yy_set_bol(at_bol) \
 	{ \
 	if ( ! YY_CURRENT_BUFFER ){\
-        sgfensure_buffer_stack (); \
+        yyensure_buffer_stack (); \
 		YY_CURRENT_BUFFER_LVALUE =    \
-            sgf_create_buffer(sgfin,YY_BUF_SIZE ); \
+            yy_create_buffer( yyin, YY_BUF_SIZE ); \
 	} \
 	YY_CURRENT_BUFFER_LVALUE->yy_at_bol = at_bol; \
 	}
-
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 
 /* Begin user sect3 */
 
 #define sgfwrap() (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
+typedef flex_uint8_t YY_CHAR;
 
-typedef unsigned char YY_CHAR;
+FILE *yyin = NULL, *yyout = NULL;
 
-FILE *sgfin = (FILE *) 0, *sgfout = (FILE *) 0;
+typedef const struct yy_trans_info *yy_state_type;
 
-typedef yyconst struct yy_trans_info *yy_state_type;
+extern int yylineno;
+int yylineno = 1;
 
-extern int sgflineno;
-
-int sgflineno = 1;
-
-extern char *sgftext;
+extern char *yytext;
 #ifdef yytext_ptr
 #undef yytext_ptr
 #endif
-#define yytext_ptr sgftext
+#define yytext_ptr yytext
 
-static yy_state_type yy_get_previous_state (void );
-static yy_state_type yy_try_NUL_trans (yy_state_type current_state  );
-static int yy_get_next_buffer (void );
-#if defined(__GNUC__) && __GNUC__ >= 3
-__attribute__((__noreturn__))
-#endif
-static void yy_fatal_error (yyconst char msg[]  );
+static yy_state_type yy_get_previous_state ( void );
+static yy_state_type yy_try_NUL_trans ( yy_state_type current_state  );
+static int yy_get_next_buffer ( void );
+static void yynoreturn yy_fatal_error ( const char* msg  );
 
 /* Done after the current pattern has been matched and before the
- * corresponding action - sets up sgftext.
+ * corresponding action - sets up yytext.
  */
 #define YY_DO_BEFORE_ACTION \
 	(yytext_ptr) = yy_bp; \
-	sgfleng = (size_t) (yy_cp - yy_bp); \
+	yyleng = (int) (yy_cp - yy_bp); \
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-
 #define YY_NUM_RULES 13
 #define YY_END_OF_BUFFER 14
 struct yy_trans_info
@@ -405,7 +621,7 @@ struct yy_trans_info
 	flex_int16_t yy_verify;
 	flex_int16_t yy_nxt;
 	};
-static yyconst struct yy_trans_info yy_transition[2845] =
+static const struct yy_trans_info yy_transition[2845] =
     {
  {   0,   0 }, {   0,2589 }, {   0,   0 }, {   0,2587 }, {   1,1032 },
  {   2,1032 }, {   3,1032 }, {   4,1032 }, {   5,1032 }, {   6,1032 },
@@ -978,7 +1194,7 @@ static yyconst struct yy_trans_info yy_transition[2845] =
  {   0,   0 }, {   0,   0 }, {   0,   0 }, {   0,   0 }, { 257,  14 },
  {   1,   0 },    };
 
-static yyconst struct yy_trans_info *yy_start_state_list[5] =
+static const struct yy_trans_info *yy_start_state_list[5] =
     {
     &yy_transition[1],
     &yy_transition[3],
@@ -988,8 +1204,8 @@ static yyconst struct yy_trans_info *yy_start_state_list[5] =
 
     } ;
 
-extern int sgf_flex_debug;
-int sgf_flex_debug = 0;
+extern int yy_flex_debug;
+int yy_flex_debug = 0;
 
 /* The intent behind this definition is that it'll catch
  * any uses of REJECT which flex missed.
@@ -998,16 +1214,16 @@ int sgf_flex_debug = 0;
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-char *sgftext;
+char *yytext;
 #line 1 "sgf_l.l"
 /*
- * sgf.l
+ * Copyright (C) 2000 Gary Wong <gtw@gnu.org>
+ * Copyright (C) 2002-2015 the AUTHORS
  *
- * by Gary Wong <gtw@gnu.org>, 2000.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -1015,12 +1231,11 @@ char *sgftext;
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * $Id$
  */
-#line 23 "sgf_l.l"
+#line 22 "sgf_l.l"
 #include "common.h"
 #include <ctype.h>
 #include "list.h"
@@ -1046,9 +1261,10 @@ static int error( char *s ) {
 }
 
 #define YY_FATAL_ERROR(m) error(m)
+#line 1265 "sgf_l.c"
 #define YY_NO_INPUT 1
 
-#line 1052 "sgf_l.c"
+#line 1268 "sgf_l.c"
 
 #define INITIAL 0
 #define value 1
@@ -1065,36 +1281,36 @@ static int error( char *s ) {
 #define YY_EXTRA_TYPE void *
 #endif
 
-static int yy_init_globals (void );
+static int yy_init_globals ( void );
 
 /* Accessor methods to globals.
    These are made visible to non-reentrant scanners for convenience. */
 
-int sgflex_destroy (void );
+int yylex_destroy ( void );
 
-int sgfget_debug (void );
+int yyget_debug ( void );
 
-void sgfset_debug (int debug_flag  );
+void yyset_debug ( int debug_flag  );
 
-YY_EXTRA_TYPE sgfget_extra (void );
+YY_EXTRA_TYPE yyget_extra ( void );
 
-void sgfset_extra (YY_EXTRA_TYPE user_defined  );
+void yyset_extra ( YY_EXTRA_TYPE user_defined  );
 
-FILE *sgfget_in (void );
+FILE *yyget_in ( void );
 
-void sgfset_in  (FILE * _in_str  );
+void yyset_in  ( FILE * _in_str  );
 
-FILE *sgfget_out (void );
+FILE *yyget_out ( void );
 
-void sgfset_out  (FILE * _out_str  );
+void yyset_out  ( FILE * _out_str  );
 
-yy_size_t sgfget_leng (void );
+			int yyget_leng ( void );
 
-char *sgfget_text (void );
+char *yyget_text ( void );
 
-int sgfget_lineno (void );
+int yyget_lineno ( void );
 
-void sgfset_lineno (int _line_number  );
+void yyset_lineno ( int _line_number  );
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -1102,9 +1318,9 @@ void sgfset_lineno (int _line_number  );
 
 #ifndef YY_SKIP_YYWRAP
 #ifdef __cplusplus
-extern "C" int sgfwrap (void );
+extern "C" int yywrap ( void );
 #else
-extern int sgfwrap (void );
+extern int yywrap ( void );
 #endif
 #endif
 
@@ -1113,19 +1329,18 @@ extern int sgfwrap (void );
 #endif
 
 #ifndef yytext_ptr
-static void yy_flex_strncpy (char *,yyconst char *,int );
+static void yy_flex_strncpy ( char *, const char *, int );
 #endif
 
 #ifdef YY_NEED_STRLEN
-static int yy_flex_strlen (yyconst char * );
+static int yy_flex_strlen ( const char * );
 #endif
 
 #ifndef YY_NO_INPUT
-
 #ifdef __cplusplus
-static int yyinput (void );
+static int yyinput ( void );
 #else
-static int input (void );
+static int input ( void );
 #endif
 
 #endif
@@ -1145,7 +1360,7 @@ static int input (void );
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO do { if (fwrite( sgftext, sgfleng, 1, sgfout )) {} } while (0)
+#define ECHO do { if (fwrite( yytext, (size_t) yyleng, 1, yyout )) {} } while (0)
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -1156,20 +1371,20 @@ static int input (void );
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
 		{ \
 		int c = '*'; \
-		size_t n; \
+		int n; \
 		for ( n = 0; n < max_size && \
-			     (c = getc( sgfin )) != EOF && c != '\n'; ++n ) \
+			     (c = getc( yyin )) != EOF && c != '\n'; ++n ) \
 			buf[n] = (char) c; \
 		if ( c == '\n' ) \
 			buf[n++] = (char) c; \
-		if ( c == EOF && ferror( sgfin ) ) \
+		if ( c == EOF && ferror( yyin ) ) \
 			YY_FATAL_ERROR( "input in flex scanner failed" ); \
 		result = n; \
 		} \
 	else \
 		{ \
 		errno=0; \
-		while ( (result = fread(buf, 1, max_size, sgfin))==0 && ferror(sgfin)) \
+		while ( (result = (int) fread(buf, 1, (yy_size_t) max_size, yyin)) == 0 && ferror(yyin)) \
 			{ \
 			if( errno != EINTR) \
 				{ \
@@ -1177,7 +1392,7 @@ static int input (void );
 				break; \
 				} \
 			errno=0; \
-			clearerr(sgfin); \
+			clearerr(yyin); \
 			} \
 		}\
 \
@@ -1210,12 +1425,12 @@ static int input (void );
 #ifndef YY_DECL
 #define YY_DECL_IS_OURS 1
 
-extern int sgflex (void);
+extern int yylex (void);
 
-#define YY_DECL int sgflex (void)
+#define YY_DECL int yylex (void)
 #endif /* !YY_DECL */
 
-/* Code executed at the beginning of each rule, after sgftext and sgfleng
+/* Code executed at the beginning of each rule, after yytext and yyleng
  * have been set up.
  */
 #ifndef YY_USER_ACTION
@@ -1249,31 +1464,31 @@ YY_DECL
 		if ( ! (yy_start) )
 			(yy_start) = 1;	/* first start state */
 
-		if ( ! sgfin )
-			sgfin = stdin;
+		if ( ! yyin )
+			yyin = stdin;
 
-		if ( ! sgfout )
-			sgfout = stdout;
+		if ( ! yyout )
+			yyout = stdout;
 
 		if ( ! YY_CURRENT_BUFFER ) {
-			sgfensure_buffer_stack ();
+			yyensure_buffer_stack ();
 			YY_CURRENT_BUFFER_LVALUE =
-				sgf_create_buffer(sgfin,YY_BUF_SIZE );
+				yy_create_buffer( yyin, YY_BUF_SIZE );
 		}
 
-		sgf_load_buffer_state( );
+		yy_load_buffer_state(  );
 		}
 
 	{
-#line 67 "sgf_l.l"
+#line 66 "sgf_l.l"
 
-#line 1271 "sgf_l.c"
+#line 1486 "sgf_l.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = (yy_c_buf_p);
 
-		/* Support of sgftext. */
+		/* Support of yytext. */
 		*yy_cp = (yy_hold_char);
 
 		/* yy_bp points to the position in yy_ch_buf of the start of
@@ -1284,12 +1499,12 @@ YY_DECL
 		yy_current_state = yy_start_state_list[(yy_start)];
 yy_match:
 		{
-		yyconst struct yy_trans_info *yy_trans_info;
+		const struct yy_trans_info *yy_trans_info;
 
 		YY_CHAR yy_c;
 
 		for ( yy_c = YY_SC_TO_UI(*yy_cp);
-		      (yy_trans_info = &yy_current_state[(unsigned int) yy_c])->
+		      (yy_trans_info = &yy_current_state[yy_c])->
 		yy_verify == yy_c;
 		      yy_c = YY_SC_TO_UI(*++yy_cp) )
 			yy_current_state += yy_trans_info->yy_nxt;
@@ -1307,23 +1522,23 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 68 "sgf_l.l"
+#line 67 "sgf_l.l"
 /* ignore */
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 69 "sgf_l.l"
-return *sgftext;
+#line 68 "sgf_l.l"
+return *yytext;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 70 "sgf_l.l"
+#line 69 "sgf_l.l"
 {
 			    char *pch;
 
 			    sgflval.ach[ 1 ] = 0;
 
-			    for( pch = sgftext; *pch; pch++ )
+			    for( pch = yytext; *pch; pch++ )
 			        if( isupper( *pch ) ) {
 				    sgflval.ach[ 0 ] = *pch;    
 				    break;
@@ -1340,57 +1555,57 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 89 "sgf_l.l"
+#line 88 "sgf_l.l"
 /* ignore -- this rule avoids making flex back up */
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 90 "sgf_l.l"
+#line 89 "sgf_l.l"
 BEGIN(value); return '[';
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 91 "sgf_l.l"
+#line 90 "sgf_l.l"
 { error( _("illegal character in SGF file" )); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 93 "sgf_l.l"
+#line 92 "sgf_l.l"
 /* ignore -- we want value strings null-terminated */
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 94 "sgf_l.l"
+#line 93 "sgf_l.l"
 { sgflval.pch = strdup( "]" ); return VALUETEXT; }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 95 "sgf_l.l"
+#line 94 "sgf_l.l"
 /* ignore */
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 96 "sgf_l.l"
+#line 95 "sgf_l.l"
 BEGIN(INITIAL); return ']';
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 97 "sgf_l.l"
-{ sgflval.pch = strdup( sgftext ); return VALUETEXT; }
+#line 96 "sgf_l.l"
+{ sgflval.pch = strdup( yytext ); return VALUETEXT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 98 "sgf_l.l"
-{ sgflval.pch = strdup( sgftext ); return VALUETEXT; }
+#line 97 "sgf_l.l"
+{ sgflval.pch = strdup( yytext ); return VALUETEXT; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 100 "sgf_l.l"
+#line 99 "sgf_l.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1394 "sgf_l.c"
+#line 1609 "sgf_l.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(value):
 				yyterminate();
@@ -1408,15 +1623,15 @@ YY_FATAL_ERROR( "flex scanner jammed" );
 			{
 			/* We're scanning a new file or input source.  It's
 			 * possible that this happened because the user
-			 * just pointed sgfin at a new source and called
-			 * sgflex().  If so, then we have to assure
+			 * just pointed yyin at a new source and called
+			 * yylex().  If so, then we have to assure
 			 * consistency between YY_CURRENT_BUFFER and our
 			 * globals.  Here is the right place to do so, because
 			 * this is the first action (other than possibly a
 			 * back-up) that will match for the new input source.
 			 */
 			(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
-			YY_CURRENT_BUFFER_LVALUE->yy_input_file = sgfin;
+			YY_CURRENT_BUFFER_LVALUE->yy_input_file = yyin;
 			YY_CURRENT_BUFFER_LVALUE->yy_buffer_status = YY_BUFFER_NORMAL;
 			}
 
@@ -1469,11 +1684,11 @@ YY_FATAL_ERROR( "flex scanner jammed" );
 				{
 				(yy_did_buffer_switch_on_eof) = 0;
 
-				if ( sgfwrap( ) )
+				if ( yywrap(  ) )
 					{
 					/* Note: because we've taken care in
 					 * yy_get_next_buffer() to have set up
-					 * sgftext, we can now set up
+					 * yytext, we can now set up
 					 * yy_c_buf_p so that if some total
 					 * hoser (like flex itself) wants to
 					 * call the scanner after we return the
@@ -1523,7 +1738,7 @@ YY_FATAL_ERROR( "flex scanner jammed" );
 	} /* end of action switch */
 		} /* end of scanning one token */
 	} /* end of user's declarations */
-} /* end of sgflex */
+} /* end of yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
  *
@@ -1536,7 +1751,7 @@ static int yy_get_next_buffer (void)
 {
     	char *dest = YY_CURRENT_BUFFER_LVALUE->yy_ch_buf;
 	char *source = (yytext_ptr);
-	yy_size_t number_to_move, i;
+	int number_to_move, i;
 	int ret_val;
 
 	if ( (yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[(yy_n_chars) + 1] )
@@ -1565,7 +1780,7 @@ static int yy_get_next_buffer (void)
 	/* Try to read more data. */
 
 	/* First move last chars to start of buffer. */
-	number_to_move = (yy_size_t) ((yy_c_buf_p) - (yytext_ptr)) - 1;
+	number_to_move = (int) ((yy_c_buf_p) - (yytext_ptr) - 1);
 
 	for ( i = 0; i < number_to_move; ++i )
 		*(dest++) = *(source++);
@@ -1578,7 +1793,7 @@ static int yy_get_next_buffer (void)
 
 	else
 		{
-			yy_size_t num_to_read =
+			int num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
@@ -1592,7 +1807,7 @@ static int yy_get_next_buffer (void)
 
 			if ( b->yy_is_our_buffer )
 				{
-				yy_size_t new_size = b->yy_buf_size * 2;
+				int new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -1601,11 +1816,12 @@ static int yy_get_next_buffer (void)
 
 				b->yy_ch_buf = (char *)
 					/* Include room in for 2 EOB chars. */
-					sgfrealloc((void *) b->yy_ch_buf,b->yy_buf_size + 2  );
+					yyrealloc( (void *) b->yy_ch_buf,
+							 (yy_size_t) (b->yy_buf_size + 2)  );
 				}
 			else
 				/* Can't grow it, we don't own it. */
-				b->yy_ch_buf = 0;
+				b->yy_ch_buf = NULL;
 
 			if ( ! b->yy_ch_buf )
 				YY_FATAL_ERROR(
@@ -1633,7 +1849,7 @@ static int yy_get_next_buffer (void)
 		if ( number_to_move == YY_MORE_ADJ )
 			{
 			ret_val = EOB_ACT_END_OF_FILE;
-			sgfrestart(sgfin  );
+			yyrestart( yyin  );
 			}
 
 		else
@@ -1647,12 +1863,15 @@ static int yy_get_next_buffer (void)
 	else
 		ret_val = EOB_ACT_CONTINUE_SCAN;
 
-	if ((int) ((yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
+	if (((yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
 		int new_size = (yy_n_chars) + number_to_move + ((yy_n_chars) >> 1);
-		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) sgfrealloc((void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf,new_size  );
+		YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *) yyrealloc(
+			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, (yy_size_t) new_size  );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
 			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
+		/* "- 2" to take care of EOB's */
+		YY_CURRENT_BUFFER_LVALUE->yy_buf_size = (int) (new_size - 2);
 	}
 
 	(yy_n_chars) += number_to_move;
@@ -1691,7 +1910,7 @@ static int yy_get_next_buffer (void)
 	int yy_is_jam;
     
 	int yy_c = 256;
-	yyconst struct yy_trans_info *yy_trans_info;
+	const struct yy_trans_info *yy_trans_info;
 
 	yy_trans_info = &yy_current_state[(unsigned int) yy_c];
 	yy_current_state += yy_trans_info->yy_nxt;
@@ -1728,7 +1947,7 @@ static int yy_get_next_buffer (void)
 
 		else
 			{ /* need more input */
-			yy_size_t offset = (yy_c_buf_p) - (yytext_ptr);
+			int offset = (int) ((yy_c_buf_p) - (yytext_ptr));
 			++(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer(  ) )
@@ -1745,14 +1964,14 @@ static int yy_get_next_buffer (void)
 					 */
 
 					/* Reset buffer status. */
-					sgfrestart(sgfin );
+					yyrestart( yyin );
 
 					/*FALLTHROUGH*/
 
 				case EOB_ACT_END_OF_FILE:
 					{
-					if ( sgfwrap( ) )
-						return EOF;
+					if ( yywrap(  ) )
+						return 0;
 
 					if ( ! (yy_did_buffer_switch_on_eof) )
 						YY_NEW_FILE;
@@ -1771,7 +1990,7 @@ static int yy_get_next_buffer (void)
 		}
 
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
-	*(yy_c_buf_p) = '\0';	/* preserve sgftext */
+	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
 
 	return c;
@@ -1783,32 +2002,32 @@ static int yy_get_next_buffer (void)
  * 
  * @note This function does not reset the start condition to @c INITIAL .
  */
-    void sgfrestart  (FILE * input_file )
+    void yyrestart  (FILE * input_file )
 {
     
 	if ( ! YY_CURRENT_BUFFER ){
-        sgfensure_buffer_stack ();
+        yyensure_buffer_stack ();
 		YY_CURRENT_BUFFER_LVALUE =
-            sgf_create_buffer(sgfin,YY_BUF_SIZE );
+            yy_create_buffer( yyin, YY_BUF_SIZE );
 	}
 
-	sgf_init_buffer(YY_CURRENT_BUFFER,input_file );
-	sgf_load_buffer_state( );
+	yy_init_buffer( YY_CURRENT_BUFFER, input_file );
+	yy_load_buffer_state(  );
 }
 
 /** Switch to a different input buffer.
  * @param new_buffer The new input buffer.
  * 
  */
-    void sgf_switch_to_buffer  (YY_BUFFER_STATE  new_buffer )
+    void yy_switch_to_buffer  (YY_BUFFER_STATE  new_buffer )
 {
     
 	/* TODO. We should be able to replace this entire function body
 	 * with
-	 *		sgfpop_buffer_state();
-	 *		sgfpush_buffer_state(new_buffer);
+	 *		yypop_buffer_state();
+	 *		yypush_buffer_state(new_buffer);
      */
-	sgfensure_buffer_stack ();
+	yyensure_buffer_stack ();
 	if ( YY_CURRENT_BUFFER == new_buffer )
 		return;
 
@@ -1821,21 +2040,21 @@ static int yy_get_next_buffer (void)
 		}
 
 	YY_CURRENT_BUFFER_LVALUE = new_buffer;
-	sgf_load_buffer_state( );
+	yy_load_buffer_state(  );
 
 	/* We don't actually know whether we did this switch during
-	 * EOF (sgfwrap()) processing, but the only time this flag
-	 * is looked at is after sgfwrap() is called, so it's safe
+	 * EOF (yywrap()) processing, but the only time this flag
+	 * is looked at is after yywrap() is called, so it's safe
 	 * to go ahead and always set it.
 	 */
 	(yy_did_buffer_switch_on_eof) = 1;
 }
 
-static void sgf_load_buffer_state  (void)
+static void yy_load_buffer_state  (void)
 {
     	(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_n_chars;
 	(yytext_ptr) = (yy_c_buf_p) = YY_CURRENT_BUFFER_LVALUE->yy_buf_pos;
-	sgfin = YY_CURRENT_BUFFER_LVALUE->yy_input_file;
+	yyin = YY_CURRENT_BUFFER_LVALUE->yy_input_file;
 	(yy_hold_char) = *(yy_c_buf_p);
 }
 
@@ -1845,35 +2064,35 @@ static void sgf_load_buffer_state  (void)
  * 
  * @return the allocated buffer state.
  */
-    YY_BUFFER_STATE sgf_create_buffer  (FILE * file, int  size )
+    YY_BUFFER_STATE yy_create_buffer  (FILE * file, int  size )
 {
 	YY_BUFFER_STATE b;
     
-	b = (YY_BUFFER_STATE) sgfalloc(sizeof( struct yy_buffer_state )  );
+	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state )  );
 	if ( ! b )
-		YY_FATAL_ERROR( "out of dynamic memory in sgf_create_buffer()" );
+		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
-	b->yy_buf_size = (yy_size_t)size;
+	b->yy_buf_size = size;
 
 	/* yy_ch_buf has to be 2 characters longer than the size given because
 	 * we need to put in 2 end-of-buffer characters.
 	 */
-	b->yy_ch_buf = (char *) sgfalloc(b->yy_buf_size + 2  );
+	b->yy_ch_buf = (char *) yyalloc( (yy_size_t) (b->yy_buf_size + 2)  );
 	if ( ! b->yy_ch_buf )
-		YY_FATAL_ERROR( "out of dynamic memory in sgf_create_buffer()" );
+		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
 
 	b->yy_is_our_buffer = 1;
 
-	sgf_init_buffer(b,file );
+	yy_init_buffer( b, file );
 
 	return b;
 }
 
 /** Destroy the buffer.
- * @param b a buffer created with sgf_create_buffer()
+ * @param b a buffer created with yy_create_buffer()
  * 
  */
-    void sgf_delete_buffer (YY_BUFFER_STATE  b )
+    void yy_delete_buffer (YY_BUFFER_STATE  b )
 {
     
 	if ( ! b )
@@ -1883,27 +2102,27 @@ static void sgf_load_buffer_state  (void)
 		YY_CURRENT_BUFFER_LVALUE = (YY_BUFFER_STATE) 0;
 
 	if ( b->yy_is_our_buffer )
-		sgffree((void *) b->yy_ch_buf  );
+		yyfree( (void *) b->yy_ch_buf  );
 
-	sgffree((void *) b  );
+	yyfree( (void *) b  );
 }
 
 /* Initializes or reinitializes a buffer.
  * This function is sometimes called more than once on the same buffer,
- * such as during a sgfrestart() or at EOF.
+ * such as during a yyrestart() or at EOF.
  */
-    static void sgf_init_buffer  (YY_BUFFER_STATE  b, FILE * file )
+    static void yy_init_buffer  (YY_BUFFER_STATE  b, FILE * file )
 
 {
 	int oerrno = errno;
     
-	sgf_flush_buffer(b );
+	yy_flush_buffer( b );
 
 	b->yy_input_file = file;
 	b->yy_fill_buffer = 1;
 
-    /* If b is the current buffer, then sgf_init_buffer was _probably_
-     * called from sgfrestart() or through yy_get_next_buffer.
+    /* If b is the current buffer, then yy_init_buffer was _probably_
+     * called from yyrestart() or through yy_get_next_buffer.
      * In that case, we don't want to reset the lineno or column.
      */
     if (b != YY_CURRENT_BUFFER){
@@ -1920,7 +2139,7 @@ static void sgf_load_buffer_state  (void)
  * @param b the buffer state to be flushed, usually @c YY_CURRENT_BUFFER.
  * 
  */
-    void sgf_flush_buffer (YY_BUFFER_STATE  b )
+    void yy_flush_buffer (YY_BUFFER_STATE  b )
 {
     	if ( ! b )
 		return;
@@ -1940,7 +2159,7 @@ static void sgf_load_buffer_state  (void)
 	b->yy_buffer_status = YY_BUFFER_NEW;
 
 	if ( b == YY_CURRENT_BUFFER )
-		sgf_load_buffer_state( );
+		yy_load_buffer_state(  );
 }
 
 /** Pushes the new state onto the stack. The new state becomes
@@ -1949,14 +2168,14 @@ static void sgf_load_buffer_state  (void)
  *  @param new_buffer The new state.
  *  
  */
-void sgfpush_buffer_state (YY_BUFFER_STATE new_buffer )
+void yypush_buffer_state (YY_BUFFER_STATE new_buffer )
 {
     	if (new_buffer == NULL)
 		return;
 
-	sgfensure_buffer_stack();
+	yyensure_buffer_stack();
 
-	/* This block is copied from sgf_switch_to_buffer. */
+	/* This block is copied from yy_switch_to_buffer. */
 	if ( YY_CURRENT_BUFFER )
 		{
 		/* Flush out information for old buffer. */
@@ -1970,8 +2189,8 @@ void sgfpush_buffer_state (YY_BUFFER_STATE new_buffer )
 		(yy_buffer_stack_top)++;
 	YY_CURRENT_BUFFER_LVALUE = new_buffer;
 
-	/* copied from sgf_switch_to_buffer. */
-	sgf_load_buffer_state( );
+	/* copied from yy_switch_to_buffer. */
+	yy_load_buffer_state(  );
 	(yy_did_buffer_switch_on_eof) = 1;
 }
 
@@ -1979,18 +2198,18 @@ void sgfpush_buffer_state (YY_BUFFER_STATE new_buffer )
  *  The next element becomes the new top.
  *  
  */
-void sgfpop_buffer_state (void)
+void yypop_buffer_state (void)
 {
     	if (!YY_CURRENT_BUFFER)
 		return;
 
-	sgf_delete_buffer(YY_CURRENT_BUFFER );
+	yy_delete_buffer(YY_CURRENT_BUFFER );
 	YY_CURRENT_BUFFER_LVALUE = NULL;
 	if ((yy_buffer_stack_top) > 0)
 		--(yy_buffer_stack_top);
 
 	if (YY_CURRENT_BUFFER) {
-		sgf_load_buffer_state( );
+		yy_load_buffer_state(  );
 		(yy_did_buffer_switch_on_eof) = 1;
 	}
 }
@@ -1998,7 +2217,7 @@ void sgfpop_buffer_state (void)
 /* Allocates the stack if it does not exist.
  *  Guarantees space for at least one push.
  */
-static void sgfensure_buffer_stack (void)
+static void yyensure_buffer_stack (void)
 {
 	yy_size_t num_to_alloc;
     
@@ -2008,15 +2227,15 @@ static void sgfensure_buffer_stack (void)
 		 * scanner will even need a stack. We use 2 instead of 1 to avoid an
 		 * immediate realloc on the next call.
          */
-		num_to_alloc = 1; /* After all that talk, this was set to 1 anyways... */
-		(yy_buffer_stack) = (struct yy_buffer_state**)sgfalloc
+      num_to_alloc = 1; /* After all that talk, this was set to 1 anyways... */
+		(yy_buffer_stack) = (struct yy_buffer_state**)yyalloc
 								(num_to_alloc * sizeof(struct yy_buffer_state*)
 								);
 		if ( ! (yy_buffer_stack) )
-			YY_FATAL_ERROR( "out of dynamic memory in sgfensure_buffer_stack()" );
-								  
+			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
+
 		memset((yy_buffer_stack), 0, num_to_alloc * sizeof(struct yy_buffer_state*));
-				
+
 		(yy_buffer_stack_max) = num_to_alloc;
 		(yy_buffer_stack_top) = 0;
 		return;
@@ -2028,12 +2247,12 @@ static void sgfensure_buffer_stack (void)
 		yy_size_t grow_size = 8 /* arbitrary grow size */;
 
 		num_to_alloc = (yy_buffer_stack_max) + grow_size;
-		(yy_buffer_stack) = (struct yy_buffer_state**)sgfrealloc
+		(yy_buffer_stack) = (struct yy_buffer_state**)yyrealloc
 								((yy_buffer_stack),
 								num_to_alloc * sizeof(struct yy_buffer_state*)
 								);
 		if ( ! (yy_buffer_stack) )
-			YY_FATAL_ERROR( "out of dynamic memory in sgfensure_buffer_stack()" );
+			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
 
 		/* zero only the new slots.*/
 		memset((yy_buffer_stack) + (yy_buffer_stack_max), 0, grow_size * sizeof(struct yy_buffer_state*));
@@ -2045,9 +2264,9 @@ static void sgfensure_buffer_stack (void)
 #define YY_EXIT_FAILURE 2
 #endif
 
-static void yy_fatal_error (yyconst char* msg )
+static void yynoreturn yy_fatal_error (const char* msg )
 {
-			(void) fprintf( stderr, "%s\n", msg );
+			fprintf( stderr, "%s\n", msg );
 	exit( YY_EXIT_FAILURE );
 }
 
@@ -2057,14 +2276,14 @@ static void yy_fatal_error (yyconst char* msg )
 #define yyless(n) \
 	do \
 		{ \
-		/* Undo effects of setting up sgftext. */ \
+		/* Undo effects of setting up yytext. */ \
         int yyless_macro_arg = (n); \
         YY_LESS_LINENO(yyless_macro_arg);\
-		sgftext[sgfleng] = (yy_hold_char); \
-		(yy_c_buf_p) = sgftext + yyless_macro_arg; \
+		yytext[yyleng] = (yy_hold_char); \
+		(yy_c_buf_p) = yytext + yyless_macro_arg; \
 		(yy_hold_char) = *(yy_c_buf_p); \
 		*(yy_c_buf_p) = '\0'; \
-		sgfleng = yyless_macro_arg; \
+		yyleng = yyless_macro_arg; \
 		} \
 	while ( 0 )
 
@@ -2073,126 +2292,126 @@ static void yy_fatal_error (yyconst char* msg )
 /** Get the current line number.
  * 
  */
-int sgfget_lineno  (void)
+int yyget_lineno  (void)
 {
-        
-    return sgflineno;
+    
+    return yylineno;
 }
 
 /** Get the input stream.
  * 
  */
-FILE *sgfget_in  (void)
+FILE *yyget_in  (void)
 {
-        return sgfin;
+        return yyin;
 }
 
 /** Get the output stream.
  * 
  */
-FILE *sgfget_out  (void)
+FILE *yyget_out  (void)
 {
-        return sgfout;
+        return yyout;
 }
 
 /** Get the length of the current token.
  * 
  */
-yy_size_t sgfget_leng  (void)
+int yyget_leng  (void)
 {
-        return sgfleng;
+        return yyleng;
 }
 
 /** Get the current token.
  * 
  */
 
-char *sgfget_text  (void)
+char *yyget_text  (void)
 {
-        return sgftext;
+        return yytext;
 }
 
 /** Set the current line number.
  * @param _line_number line number
  * 
  */
-void sgfset_lineno (int  _line_number )
+void yyset_lineno (int  _line_number )
 {
     
-    sgflineno = _line_number;
+    yylineno = _line_number;
 }
 
 /** Set the input stream. This does not discard the current
  * input buffer.
  * @param _in_str A readable stream.
  * 
- * @see sgf_switch_to_buffer
+ * @see yy_switch_to_buffer
  */
-void sgfset_in (FILE *  _in_str )
+void yyset_in (FILE *  _in_str )
 {
-        sgfin = _in_str ;
+        yyin = _in_str ;
 }
 
-void sgfset_out (FILE *  _out_str )
+void yyset_out (FILE *  _out_str )
 {
-        sgfout = _out_str ;
+        yyout = _out_str ;
 }
 
-int sgfget_debug  (void)
+int yyget_debug  (void)
 {
-        return sgf_flex_debug;
+        return yy_flex_debug;
 }
 
-void sgfset_debug (int  _bdebug )
+void yyset_debug (int  _bdebug )
 {
-        sgf_flex_debug = _bdebug ;
+        yy_flex_debug = _bdebug ;
 }
 
 static int yy_init_globals (void)
 {
         /* Initialization is the same as for the non-reentrant scanner.
-     * This function is called from sgflex_destroy(), so don't allocate here.
+     * This function is called from yylex_destroy(), so don't allocate here.
      */
 
-    (yy_buffer_stack) = 0;
+    (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
-    (yy_c_buf_p) = (char *) 0;
+    (yy_c_buf_p) = NULL;
     (yy_init) = 0;
     (yy_start) = 0;
 
 /* Defined in main.c */
 #ifdef YY_STDINIT
-    sgfin = stdin;
-    sgfout = stdout;
+    yyin = stdin;
+    yyout = stdout;
 #else
-    sgfin = (FILE *) 0;
-    sgfout = (FILE *) 0;
+    yyin = NULL;
+    yyout = NULL;
 #endif
 
     /* For future reference: Set errno on error, since we are called by
-     * sgflex_init()
+     * yylex_init()
      */
     return 0;
 }
 
-/* sgflex_destroy is for both reentrant and non-reentrant scanners. */
-int sgflex_destroy  (void)
+/* yylex_destroy is for both reentrant and non-reentrant scanners. */
+int yylex_destroy  (void)
 {
     
     /* Pop the buffer stack, destroying each element. */
 	while(YY_CURRENT_BUFFER){
-		sgf_delete_buffer(YY_CURRENT_BUFFER  );
+		yy_delete_buffer( YY_CURRENT_BUFFER  );
 		YY_CURRENT_BUFFER_LVALUE = NULL;
-		sgfpop_buffer_state();
+		yypop_buffer_state();
 	}
 
 	/* Destroy the stack itself. */
-	sgffree((yy_buffer_stack) );
+	yyfree((yy_buffer_stack) );
 	(yy_buffer_stack) = NULL;
 
     /* Reset the globals. This is important in a non-reentrant scanner so the next time
-     * sgflex() is called, initialization will occur. */
+     * yylex() is called, initialization will occur. */
     yy_init_globals( );
 
     return 0;
@@ -2203,7 +2422,7 @@ int sgflex_destroy  (void)
  */
 
 #ifndef yytext_ptr
-static void yy_flex_strncpy (char* s1, yyconst char * s2, int n )
+static void yy_flex_strncpy (char* s1, const char * s2, int n )
 {
 		
 	int i;
@@ -2213,7 +2432,7 @@ static void yy_flex_strncpy (char* s1, yyconst char * s2, int n )
 #endif
 
 #ifdef YY_NEED_STRLEN
-static int yy_flex_strlen (yyconst char * s )
+static int yy_flex_strlen (const char * s )
 {
 	int n;
 	for ( n = 0; s[n]; ++n )
@@ -2223,12 +2442,12 @@ static int yy_flex_strlen (yyconst char * s )
 }
 #endif
 
-void *sgfalloc (yy_size_t  size )
+void *yyalloc (yy_size_t  size )
 {
-			return (void *) malloc( size );
+			return malloc(size);
 }
 
-void *sgfrealloc  (void * ptr, yy_size_t  size )
+void *yyrealloc  (void * ptr, yy_size_t  size )
 {
 		
 	/* The cast to (char *) in the following accommodates both
@@ -2238,17 +2457,16 @@ void *sgfrealloc  (void * ptr, yy_size_t  size )
 	 * any pointer type to void*, and deal with argument conversions
 	 * as though doing an assignment.
 	 */
-	return (void *) realloc( (char *) ptr, size );
+	return realloc(ptr, size);
 }
 
-void sgffree (void * ptr )
+void yyfree (void * ptr )
 {
-			free( (char *) ptr );	/* see sgfrealloc() for (char *) cast */
+			free( (char *) ptr );	/* see yyrealloc() for (char *) cast */
 }
 
 #define YYTABLES_NAME "yytables"
 
-#line 100 "sgf_l.l"
-
+#line 99 "sgf_l.l"
 
 
