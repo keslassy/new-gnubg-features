@@ -41,14 +41,14 @@
 static cubeinfo ci;
 static cubeinfo ciJacoby;
 
-typedef enum _hyperclass {
+typedef enum {
     HYPER_OVER,
     HYPER_BEAROFF,
     HYPER_CONTACT,
     HYPER_ILLEGAL
 } hyperclass;
 
-enum _xxx {
+enum {
     EQUITY_CUBELESS = 0,
     EQUITY_OWNED = 1,
     EQUITY_CENTER = 2,
@@ -56,7 +56,7 @@ enum _xxx {
     EQUITY_OPPONENT = 4
 };
 
-typedef struct _hyperequity {
+typedef struct {
 
     float arOutput[NUM_OUTPUTS];
     float arEquity[5];
@@ -662,7 +662,7 @@ main(int argc, char **argv)
     SetCubeInfo(&ci, 1, -1, 0, 0, NULL, FALSE, FALSE, FALSE, VARIATION_HYPERGAMMON_1 + nC - 1);
     SetCubeInfo(&ciJacoby, 1, -1, 0, 0, NULL, FALSE, TRUE, FALSE, VARIATION_HYPERGAMMON_1 + nC - 1);
 
-    aheEquity = (hyperequity *) malloc(nPos * nPos * sizeof(hyperequity));
+    aheEquity = (hyperequity *) g_malloc(nPos * nPos * sizeof(hyperequity));
 
     if (!szRestart) {
         printf(_("0-vector start guess\n"));
@@ -715,7 +715,7 @@ main(int argc, char **argv)
 
     printf(_("Time for writing final file: %d seconds\n"), (int) (t1 - t0));
 
-    free(aheEquity);
+    g_free(aheEquity);
     g_free(szOutput);
 
     time(&t3);
