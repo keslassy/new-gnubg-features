@@ -215,6 +215,8 @@ drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSiz
 #if GTK_CHECK_VERSION(3,0,0)
 			DrawDotTemp(modelHolder, dotSize, ds, hds + radius + LIFT_OFF, dots[dot], c);
 #else
+			(void)modelHolder;	/* suppress unused parameter compiler warning */
+
 			if (nd)
 				glDisable(GL_DEPTH_TEST);
 
@@ -849,6 +851,10 @@ getProjectedPos(int x, int y, float atDepth, float pos[3])
 	g_assert(ret == GL_TRUE);	/* Should always work */
 	ret = gluUnProjectMine((GLfloat)x, (GLfloat)y, 1.0, mvmatrix, projmatrix, viewport, &farX, &farY, &farZ);
 	g_assert(ret == GL_TRUE);	/* Should always work */
+
+#if defined(G_DISABLE_ASSERT)
+	(void)ret;	/* silence warning about unused variable */
+#endif
 
 	zRange = (fabsf(nearZ) - atDepth) / (fabsf(farZ) + fabsf(nearZ));
 	pos[0] = nearX - (-farX + nearX) * zRange;
