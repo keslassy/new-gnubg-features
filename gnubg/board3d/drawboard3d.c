@@ -1216,7 +1216,7 @@ renderDot(const renderdata* prd)
 	circle(1, 0, prd->curveAccuracy);
 }
 
-static void drawSimpleRect()
+static void drawSimpleRect(void)
 {
 	glBegin(GL_QUADS);
 	glVertex3f(-1.f, -1.f, 0.f);
