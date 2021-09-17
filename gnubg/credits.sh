@@ -71,6 +71,7 @@ Renzo Campagna,Italian
 Yoshito Takeuchi,Japanese
 Mihai Varzaru,Romanian
 Dmitri I Gouliaev,Russian
+Fernando García García,Spanish
 Akif Dinc,Turkish
 EOF
 
@@ -222,12 +223,12 @@ cat > credits.h <<EOF
 
 #include <glib/gi18n.h>
 
-typedef struct _credEntry {
+typedef struct {
 	char* Name;
 	char* Type;
 } credEntry;
 
-typedef struct _credits {
+typedef struct {
 	const char* Title;
 	credEntry *Entry;
 } credits;
