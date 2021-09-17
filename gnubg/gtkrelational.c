@@ -791,7 +791,7 @@ RelationalOptions(void)
     g_signal_connect(hostname, "changed", G_CALLBACK(CredentialsChanged), dbList);
     gtk_table_attach(GTK_TABLE(table), hostname, 1, 2, 2, 3, 0, 0, 0, 0);
 
-    login = gtk_button_new_with_label("Login");
+    login = gtk_button_new_with_label(_("Login"));
     g_signal_connect(login, "clicked", G_CALLBACK(LoginClicked), dbList);
 
     align = gtk_alignment_new(1, 0, 0, 0);
@@ -838,10 +838,10 @@ RelationalOptions(void)
     hb1 = gtk_hbox_new(FALSE, 0);
 #endif
     gtk_box_pack_start(GTK_BOX(vb1), hb1, FALSE, FALSE, 0);
-    adddb = gtk_button_new_with_label("Add database");
+    adddb = gtk_button_new_with_label(_("Add database"));
     g_signal_connect(adddb, "clicked", G_CALLBACK(AddDBClicked), dbList);
     gtk_box_pack_start(GTK_BOX(hb1), adddb, FALSE, FALSE, 0);
-    deldb = gtk_button_new_with_label("Delete database");
+    deldb = gtk_button_new_with_label(_("Delete database"));
     g_signal_connect(deldb, "clicked", G_CALLBACK(DelDBClicked), dbList);
     gtk_box_pack_start(GTK_BOX(hb1), deldb, FALSE, FALSE, 4);
 
@@ -897,11 +897,11 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox2, FALSE, FALSE, 0);
 
-    pwOpen = gtk_button_new_with_label("Open");
+    pwOpen = gtk_button_new_with_label(_("Open"));
     g_signal_connect(G_OBJECT(pwOpen), "clicked", G_CALLBACK(ShowRelationalClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwHbox2), pwOpen, FALSE, FALSE, 0);
 
-    pwErase = gtk_button_new_with_label("Erase");
+    pwErase = gtk_button_new_with_label(_("Erase"));
     g_signal_connect(G_OBJECT(pwErase), "clicked", G_CALLBACK(ShowRelationalErase), NULL);
     gtk_box_pack_start(GTK_BOX(pwHbox2), pwErase, FALSE, FALSE, BUTTON_GAP);
 
@@ -928,7 +928,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox2, FALSE, FALSE, 0);
 
-    pwLabel = gtk_label_new("Name");
+    pwLabel = gtk_label_new(_("Name"));
     gtk_box_pack_start(GTK_BOX(pwHbox2), pwLabel, FALSE, FALSE, 0);
     pwPlayerName = gtk_entry_new();
     gtk_box_pack_start(GTK_BOX(pwHbox2), pwPlayerName, TRUE, TRUE, 0);
@@ -940,7 +940,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwVbox2, TRUE, TRUE, 0);
 
-    pwLabel = gtk_label_new("Notes");
+    pwLabel = gtk_label_new(_("Notes"));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
@@ -964,7 +964,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox2, FALSE, FALSE, 0);
 
-    pwUpdate = gtk_button_new_with_label("Update Details");
+    pwUpdate = gtk_button_new_with_label(_("Update Details"));
     gtk_box_pack_start(GTK_BOX(pwHbox2), pwUpdate, FALSE, FALSE, 0);
     g_signal_connect(G_OBJECT(pwUpdate), "clicked", G_CALLBACK(UpdatePlayerDetails), NULL);
 
@@ -981,7 +981,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_notebook_append_page(GTK_NOTEBOOK(pwn), pwVbox, gtk_label_new(_("Query")));
     gtk_container_set_border_width(GTK_CONTAINER(pwVbox), INSIDE_FRAME_GAP);
 
-    pwLabel = gtk_label_new("Query text");
+    pwLabel = gtk_label_new(_("Query text"));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
@@ -1014,7 +1014,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     pwHbox = gtk_hbox_new(FALSE, 0);
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox, FALSE, FALSE, 0);
-    pwLabel = gtk_label_new("Result");
+    pwLabel = gtk_label_new(_("Result"));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
@@ -1023,7 +1023,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
     gtk_box_pack_start(GTK_BOX(pwHbox), pwLabel, TRUE, TRUE, 0);
 
-    pwRun = gtk_button_new_with_label("Run Query");
+    pwRun = gtk_button_new_with_label(_("Run Query"));
     g_signal_connect(G_OBJECT(pwRun), "clicked", G_CALLBACK(RelationalQuery), pwVbox);
     gtk_box_pack_start(GTK_BOX(pwHbox), pwRun, FALSE, FALSE, 0);
 

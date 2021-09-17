@@ -48,7 +48,7 @@
 #include "gtkoptions.h"
 #include "gtkrelational.h"
 
-typedef struct _optionswidget {
+typedef struct {
     GtkWidget *pwNoteBook;
     GtkWidget *pwAutoBearoff;
     GtkWidget *pwAutoCrawford;
@@ -120,7 +120,7 @@ typedef struct _optionswidget {
     int fChanged;
 } optionswidget;
 
-typedef struct _SoundDetail {
+typedef struct {
     char *Path;
 } SoundDetail;
 
@@ -1008,7 +1008,7 @@ append_sound_options(optionswidget * pow)
     soundPath = gtk_entry_new();
     g_signal_connect(soundPath, "changed", G_CALLBACK(PathChanged), NULL);
     gtk_box_pack_start(GTK_BOX(pwhbox), soundPath, TRUE, TRUE, 0);
-    soundPathButton = gtk_button_new_with_label("Browse");
+    soundPathButton = gtk_button_new_with_label(_("Browse"));
     g_signal_connect(soundPathButton, "clicked", G_CALLBACK(SoundChangePathClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwhbox), soundPathButton, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwvboxDetails), pwhbox, FALSE, FALSE, 0);
@@ -1018,16 +1018,16 @@ append_sound_options(optionswidget * pow)
 #else
     pwhbox = gtk_hbox_new(FALSE, 4);
 #endif
-    soundPlayButton = gtk_button_new_with_label("Play Sound");
+    soundPlayButton = gtk_button_new_with_label(_("Play Sound"));
     g_signal_connect(soundPlayButton, "clicked", G_CALLBACK(SoundPlayClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwhbox), soundPlayButton, FALSE, FALSE, 0);
     /* sound default button */
-    soundDefaultButton = gtk_button_new_with_label("Reset Default");
+    soundDefaultButton = gtk_button_new_with_label(_("Reset Default"));
     g_signal_connect(soundDefaultButton, "clicked", G_CALLBACK(SoundDefaultClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwhbox), soundDefaultButton, FALSE, FALSE, 0);
 
     /* sound all defaults button */
-    soundAllDefaultButton = gtk_button_new_with_label("Reset All to Defaults");
+    soundAllDefaultButton = gtk_button_new_with_label(_("Reset All to Defaults"));
     g_signal_connect(soundAllDefaultButton, "clicked", G_CALLBACK(SoundAllDefaultClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwhbox), soundAllDefaultButton, FALSE, FALSE, 0);
 
