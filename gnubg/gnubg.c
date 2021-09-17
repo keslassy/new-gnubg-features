@@ -1429,7 +1429,7 @@ ShowBoard(void)
             apch[ms.fMove ? 4 : 2] = sz;
 
             if (ms.anDice[0])
-                sprintf(sz, _("%s %u%u"), _("Rolled"), ms.anDice[0], ms.anDice[1]);
+                sprintf(sz, "%s %u%u", _("Rolled"), ms.anDice[0], ms.anDice[1]);
             else if (!GameStatus(msBoard(), ms.bgv))
                 strcpy(sz, _("On roll"));
             else
