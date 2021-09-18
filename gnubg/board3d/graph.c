@@ -27,11 +27,11 @@
 #include "common.h"
 #include "analysis.h"
 
-struct _GraphData {
+typedef struct GraphData {
     float ***data;
     unsigned int numGames;
     float maxY;
-};
+} GraphData;
 
 #define COL_WIDTH 5.f
 #define MID_GAP 1

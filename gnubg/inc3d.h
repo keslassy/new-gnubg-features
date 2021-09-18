@@ -30,7 +30,7 @@
 
 #include "board3d/types3d.h"
 
-typedef struct _GraphData GraphData;
+typedef struct GraphData GraphData;
 
 #define DF_VARIABLE_OPACITY 1
 #define DF_NO_ALPHA 2
