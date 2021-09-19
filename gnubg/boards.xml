@@ -2,9 +2,8 @@
 
 <!--
 
-     boards.xml
-
-     by Joern Thyssen <jthyssen@dk.ibm.com>, 2002
+     Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
+     Copyright (C) 2002-2021 multiple contributors, see <author> tags
 
      This program is free software: you can redistribute it and/or modify
      it under the terms of the GNU General Public License as published by
@@ -17,7 +16,7 @@
      GNU General Public License for more details.
 
      You should have received a copy of the GNU General Public License
-     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
      $Id$
 
@@ -230,7 +229,6 @@
 
    </board-design>
 
-
    <board-design>
 
       <about>
@@ -282,7 +280,6 @@
 
    </board-design>
 
-
    <board-design>
 
       <about>
@@ -330,10 +327,9 @@
          hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
          numbers3d=#AB78CC;#E7E675;#010101;116;100
          background3d=#A2B2D4;#609895;#68ACCA;116;0
-   </design>
+      </design>
 
    </board-design>
-
 
    <board-design>
   
@@ -439,11 +435,11 @@
 
    <board-design>
 
-     <about> 
+      <about> 
          <title>GoL Blue and White</title>  
          <author>Ian Shaw</author>
       </about>
-  
+
       <design>
          board=#F6F6FF;0.09
          border=#E6E9FF
@@ -488,14 +484,13 @@
 
    </board-design>
 
-
    <board-design>
   
-     <about> 
+      <about> 
          <title>Jellyfish</title>
          <author>Øystein Johansen</author>
       </about>
-  
+
       <design>
          board=#A5ADAF;0.00 
          border=#2F3030
@@ -542,11 +537,11 @@
 
    <board-design>
 
-     <about> 
+      <about> 
          <title>Red/Blue - Gold/Silver</title>  
          <author>Ian Shaw</author>
       </about>
-  
+
       <design>
          board=#020532;0.20
          border=#004000
@@ -587,17 +582,17 @@
          hinge3d=#DEDD5D;#E3CC8A;#C6B985;100;0;hinge.png
          numbers3d=#FFFFFF;#FFFFFF;#E5E5E5;100;100
          background3d=#9BB149;#8D4B7D;#6E6E6E;100;0;Water01.png
-   </design>
+      </design>
 
    </board-design>
 
    <board-design>
 
-     <about> 
+      <about> 
          <title>Red Green</title>  
          <author>Nardy Pillards</author>
       </about>
-  
+
       <design>
          board=#6C9856;0.00
          border=#004000
@@ -642,14 +637,13 @@
 
    </board-design>
 
-
    <board-design>
 
-     <about>
+      <about>
          <title>Zox-Vegas</title>
          <author>Greg Cattanach/Albert Silver</author>
       </about>
-  
+
       <design>
          board=#72CE70;0.09
          border=#003F00
@@ -693,7 +687,6 @@
       </design> 
   
    </board-design>
-
 
    <board-design>
 
@@ -746,7 +739,6 @@
 
    </board-design>
 
-
    <board-design>
 
       <about>
@@ -797,7 +789,6 @@
       </design>
 
    </board-design>
-
 
    <board-design>
 
@@ -1049,7 +1040,7 @@
          hinge3d=#895B49;#7D613D;#EACE8E;100;0;hinge.png
          numbers3d=#FFFFFF;#FFFFFF;#E5E5E5;100;100
          background3d=#FBFFB5;#FEFFAA;#FEFF7E;100;0;oak.png
-   </design>
+      </design>
 
    </board-design>
 
@@ -1100,7 +1091,7 @@
          hinge3d=#D8F233;#99BF0C;#E9C944;63;0;hinge.png
          numbers3d=#AB78CC;#E7E675;#010101;116;100
          background3d=#D45588;#933E98;#CA41C7;116;0;felt.png
-   </design>
+      </design>
 
    </board-design>
 
@@ -1151,7 +1142,7 @@
          hinge3d=#CC975B;#DAB056;#FFEFC6;100;0
          numbers3d=#070707;#030303;#E5E5E5;100;100
          background3d=#E06A35;#AA5344;#515151;100;0;Grass01.png
-   </design>
+      </design>
 
    </board-design>
 
@@ -1257,7 +1248,7 @@
 
    </board-design>
 
-  <board-design>
+   <board-design>
 
       <about>
          <title>Playok</title>
@@ -1306,6 +1297,108 @@
          background3d=#8FCFEF;#8FCFEF;#FEFF7E;100;0
       </design>
 
+   </board-design>
+
+   <board-design>
+    
+      <about>
+         <title>Waves</title>
+         <author>Matti Kamppinen</author>
+      </about>
+    
+      <design>
+         board=#FFFFFF;0.09
+         border=#737B88
+         wood=paint
+         hinges=y
+         light=150;50
+         shape=0.5
+         chequers0=#FDDBB9;1.00;1.00;0.20;3.00
+         chequers1=#9D3355;1.00;1.50;1.00;30.00
+         dice0=#FDDBB9;0.20;3.00;y
+         dice1=#9D3355;1.00;30.00;y
+         dot0=#000000
+         dot1=#F2F2F2
+         cube=#E2E2E2
+         points0=#A0C1E3;0.20
+         points1=#223F89;0.20
+         hinges3d=y
+         piecetype=0
+         piecetexturetype=1
+         roundededges=y
+         bgintrays=y
+         roundedpoints=n
+         lighttype=d
+         lightposx=3.000000 lightposy=0.200000 lightposz=2.600000
+         lightambient=55 lightdiffuse=70 lightspecular=70
+         chequers3d0=#FFDFBC;#FBD8B6;#FFFFFF;81;100
+         chequers3d1=#CD236D;#6E433E;#E5EBEE;100;100
+         dice3d0=#FFDFBC;#FBD8B6;#FFFFFF;81;100;y
+         dice3d1=#CD236D;#6E433E;#E5EBEE;100;100;y
+         dot3d0=#000000;#000000;#000000;100;100
+         dot3d1=#FFFFFF;#E5E5E5;#E5E5E5;100;100
+         cube3d=#E5E5E5;#E0E0E0;#E5E5E5;81;0
+         cubetext3d=#000000;#000000;#000000;100;100
+         base3d=#FFFFFF;#FFFFFF;#707070;61;0;Water01.png
+         points3d0=#BCCEE0;#84B4E6;#C5C5C5;100;100;Grass01.png
+         points3d1=#354CA9;#10336A;#C5C5C5;100;100;Grass01.png
+         border3d=#5D666D;#8991A4;#FFFFFF;71;100;marble.png
+         hinge3d=#CC975B;#DAB056;#FFE09A;100;0;hinge2.png
+         numbers3d=#FFFFFF;#FFFFFF;#E5E5E5;100;100
+         background3d=#FFFFFF;#FFFFFF;#FFFFFF;100;0;wavesand01.png
+      </design>
+    
+   </board-design>
+  
+   <board-design>
+    
+      <about>
+         <title>Vuitton</title>
+         <author>Matti Kamppinen</author>
+      </about>
+    
+      <design>
+         board=#383531;0.09
+         border=#787781
+         wood=paint
+         hinges=y
+         light=150;50
+         shape=0.5
+         chequers0=#E5F1D7;1.00;1.00;0.20;3.00
+         chequers1=#753746;1.00;1.50;1.00;30.00
+         dice0=#E5F1D7;0.20;3.00;y
+         dice1=#753746;1.00;30.00;y
+         dot0=#000000
+         dot1=#F2F2F2
+         cube=#E2E2E2
+         points0=#E1CB9A;0.20
+         points1=#C68A43;0.20
+         hinges3d=y
+         piecetype=1
+         piecetexturetype=1
+         roundededges=y
+         bgintrays=y
+         roundedpoints=n
+         lighttype=d
+         lightposx=3.000000 lightposy=0.200000 lightposz=2.600000
+         lightambient=55 lightdiffuse=70 lightspecular=70
+         chequers3d0=#F2F9EA;#D8E9C4;#FFFFFF;81;100
+         chequers3d1=#7C2B4E;#6E433E;#E5EBEE;100;100
+         dice3d0=#F2F9EA;#D8E9C4;#FFFFFF;81;100;y
+         dice3d1=#7C2B4E;#6E433E;#E5EBEE;100;100;y
+         dot3d0=#000000;#000000;#000000;100;100
+         dot3d1=#FFFFFF;#E5E5E5;#E5E5E5;100;100
+         cube3d=#E5E5E5;#E0E0E0;#E5E5E5;81;0
+         cubetext3d=#000000;#000000;#000000;100;100
+         base3d=#383531;#383531;#707070;61;0
+         points3d0=#E1CB9A;#E1CB9A;#C5C5C5;100;100
+         points3d1=#C68A43;#C68A43;#C5C5C5;100;100
+         border3d=#675E5E;#8991A4;#FFFFFF;71;100;marble.png
+         hinge3d=#E6B885;#EDB94A;#FFE09A;100;0;hinge2.png
+         numbers3d=#FFFFFF;#FFFFFF;#E5E5E5;100;100
+         background3d=#FFFFFF;#FFFFFF;#FFFFFF;100;0;wavesand01.png
+      </design>
+    
    </board-design>
 
 </board-designs>
