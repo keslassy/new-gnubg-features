@@ -190,9 +190,9 @@ gnubg moves 8/5 6/5.
         <para>Python scripting ability.</para>
       </listitem>
       <listitem>
-        <para>Native language support; 14 languages are complete or in progress:
-          (cs_CZ, da_DK, en_GB, en_US, es_ES, fr_FR, de_DE, el_GR, is_IS, it_IT,
-          ja_JP, ro_RO, ru_RU and tr_TR)</para>
+        <para>Native language support; 15 languages are complete or in progress:
+          (cs_CZ, da_DK, en_GB, en_US, es_ES, fi_FI, fr_FR, de_DE, el_GR, is_IS,
+          it_IT, ja_JP, ro_RO, ru_RU and tr_TR)</para>
       </listitem>
     </itemizedlist>
     <sect2 id="gnubg-intro_gpl">

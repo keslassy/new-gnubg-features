@@ -623,7 +623,7 @@ dnl internationalization macros
 dnl
 AC_SUBST(GETTEXT_PACKAGE, gnubg)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [The package name, for gettext])
-ALL_LINGUAS="cs da de en_US el es fr is it ja ro ru tr"
+ALL_LINGUAS="cs da de en_US el es fi fr is it ja ro ru tr"
 AM_GLIB_GNU_GETTEXT
 
 

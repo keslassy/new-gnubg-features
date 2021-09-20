@@ -32,6 +32,8 @@
 
 <TR><TH> es.po <TD>Fernando García García
 
+<TR><TH> fi.po <TD>Matti Kamppinen
+
 <TR><TH> fr.po <TD>Olivier Baur
 
 <TR><TH> is.po <TD>Hlynur Sigurgislason

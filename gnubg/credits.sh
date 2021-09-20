@@ -63,6 +63,7 @@ EOF
 cat > $translations <<EOF
 Petr Kadlec,Czech
 Joern Thyssen,Danish
+Matti Kamppinen,Finnish
 Olivier Baur,French
 Achim Mueller,German
 Vangelis Skarmoutsos,Greek

@@ -18,6 +18,8 @@ $langnames = array(
 
     "es" => "Spanish",
 
+    "fi" => "Finnish",
+
     "fr" => "French",
 
     "is" => "Icelandic",
