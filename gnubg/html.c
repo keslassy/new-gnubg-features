@@ -2513,7 +2513,7 @@ HTMLDumpStatcontext(FILE * pf, const statcontext * psc,
         GList *list = formatGS(psc, nMatchTo, FORMATGS_CHEQUER);
         GList *pl;
 
-        printStatTableHeader(pf, hecss, _("Checker play statistics"));
+        printStatTableHeader(pf, hecss, _("Chequer play statistics"));
 
         for (pl = g_list_first(list); pl; pl = g_list_next(pl)) {
 

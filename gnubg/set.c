@@ -1150,7 +1150,7 @@ CommandSetGUIGrayEdit(char *sz)
 {
 
     SetToggle("gui grayedit", &fGUIGrayEdit, sz,
-              _("Board will be grayed in edit mode."), _("Board will not change color in edit mode."));
+              _("Board will be grayed in edit mode."), _("Board will not change colour in edit mode."));
 }
 
 

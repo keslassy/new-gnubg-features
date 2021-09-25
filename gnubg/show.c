@@ -839,7 +839,7 @@ CommandShowPlayer(char *UNUSED(sz))
             break;
         case PLAYER_GNU:
             outputf(_("gnubg:\n"));
-            outputl(_("    Checker play:"));
+            outputl(_("    Chequer play:"));
             ShowEvalSetup(&ap[i].esChequer);
             outputl(_("    Move filters:"));
             ShowMoveFilters(ap[i].aamf);
