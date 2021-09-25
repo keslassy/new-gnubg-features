@@ -210,9 +210,12 @@ clamp(float f)
 }
 
 static inline unsigned char
-iclamp(unsigned int f)
+iclamp(unsigned int u)
 {
-	return clamp((float)f);
+    if (u > 255)
+        return 0xFF;
+    else
+        return (unsigned char) u;
 }
 
 static int
@@ -397,7 +400,7 @@ AlphaBlendBase(unsigned char *puchDest, int nDestStride,
         for (x = cx; x; x--) {
             unsigned int a = puchFore[3];
 
-			*puchDest++ = iclamp((*puchBack++ * a) / 0xFF + *puchFore++);
+            *puchDest++ = iclamp((*puchBack++ * a) / 0xFF + *puchFore++);
             *puchDest++ = iclamp((*puchBack++ * a) / 0xFF + *puchFore++);
             *puchDest++ = iclamp((*puchBack++ * a) / 0xFF + *puchFore++);
             puchFore++;         /* skip the alpha channel */
@@ -1522,13 +1525,15 @@ BoardPixel(renderdata * prd, int i, int antialias, int j)
 {
     int rand1 = RAND;
     int rand2 = RAND;
-    return clamp((((int) prd->aanBoardColour[0][j] -
-                   (int) prd->aSpeckle[0] / 2 +
-                   (int) rand1 % (prd->aSpeckle[0] + 1)) *
+    return clamp((float)
+                 (((int) prd->aanBoardColour[0][j] -
+                   prd->aSpeckle[0] / 2 +
+                   rand1 % (prd->aSpeckle[0] + 1)) *
                   (20 - antialias) +
                   ((int) prd->aanBoardColour[i][j] -
-                   (int) prd->aSpeckle[i] / 2 +
-                   (int) rand2 % (prd->aSpeckle[i] + 1)) * antialias) * (prd->arLight[2] * 0.8f + 0.2f) / 20);
+                   prd->aSpeckle[i] / 2 +
+                   rand2 % (prd->aSpeckle[i] + 1)) * antialias)
+                * (prd->arLight[2] * 0.8f + 0.2f) / 20);
 }
 
 extern void
