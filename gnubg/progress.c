@@ -36,14 +36,14 @@
 #if defined(USE_GTK)
 #include "gtkgame.h"
 #include "gtkwindows.h"
-typedef enum _rollout_colls {
+typedef enum {
     TITLE_C, RANK_C, TRIALS_C, WIN_C, WIN_G_C, WIN_BG_C, LOSE_G_C, LOSE_BG_C, CLESS_C, CFUL_C, CFUL_S_C, JSD_C,
     N_ROLLOUT_COLS
 } rollout_cols;
 #endif                          /* USE_GTK */
 
 
-typedef struct _rolloutprogress {
+typedef struct {
     void *p;
     int n;
     char **ppch;
@@ -1103,8 +1103,10 @@ TextRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
 
     t = time_left(n_games_todo, n_games_done, initial_game_count, prp->tStart);
 
-    outputf(_("Time elapsed %s"), formatDelta(time(NULL) - prp->tStart));
-    outputf(_(" Estimated time left %s\n"), formatDelta(t));
+    outputf(_("Time elapsed"));
+    outputf(" %s ",formatDelta(time(NULL) - prp->tStart));
+    outputf(_("Estimated time left"));
+    outputf(" %s\n", formatDelta(t));
 
     /* estimated SE */
 

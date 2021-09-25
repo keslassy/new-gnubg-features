@@ -82,7 +82,8 @@ ShowMoveFilter(const movefilter * pmf, const int ply)
         return;
     }
 
-    outputf(_(" and up to %d more moves within equity %0.3g\n"), pmf->Extra, pmf->Threshold);
+    outputf(_(" and up to %d more moves within equity %0.3g"), pmf->Extra, pmf->Threshold);
+    outputf("\n");
 }
 
 
