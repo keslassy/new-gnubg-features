@@ -5,6 +5,12 @@
 	switch between at-score and money evaluations.
 	(Contributed by Aaron Tikuisis and Isaac Keslassy)
 
+2021-09-20  Philippe Michel  <philippe.michel7@free.fr>
+
+	* po/fi.po, configure.ac, gtkgame.c, flags/finland.png,
+	flags/Makefile.am, credits.sh, README: Finnish translation by
+	Matti Kamppinen.
+
 2019-02-24  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gnubg.c: Decrease doubtful/bad/very bad thresholds in analysis
