@@ -46,11 +46,13 @@ Holger Bochnig
 Guido Flohr
 Nis Joergensen
 Petr Kadlec
+Isaac Keslassy
 Kaoru Takahashi
 Stein Kulseth
 Ingo Macherius
 Jeremy Moore
 Rod Roark
+Aaron Tikuisis
 EOF
 
 cat > $support <<EOF

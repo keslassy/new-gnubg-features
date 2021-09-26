@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
+ * Copyright (C) 2021 Aaron Tikuisis and Isaac Keslassy (MoneyEval)
  * Copyright (C) 2002-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +37,14 @@
 #include "format.h"
 #include "gtklocdefs.h"
 
+//  -------------------------------------------------------------------------
+//   new functionality with a button performing an Eval in Money Play	    |
+//      (i.e. hypothetical eval independent of score)			            |
+//  -------------------------------------------------------------------------
+
+/* Notes:
+- One minor problem is left: When running a rollout in MoneyEval, the "JSDs" column displays "NaN"
+*/
 
 typedef struct {
     GtkWidget *pwFrame;         /* the table */
@@ -46,12 +55,44 @@ typedef struct {
     int did_double;
     int did_take;
     int hist;
+    GtkWidget *pwMWC;       // Remember the pwMWC and pwCmark buttons because they should be deactivated during money eval
+    GtkWidget *pwCmark; 
+    int evalAtMoney;        // Whether evalAtMoney is toggled
 } cubehintdata;
 
+// These two variables are extern, and used for the temperature map when the MoneyEval button is toggled on.
+// The temperature map can then provide an eval at money play rather than at the current score
+// The second variable determines whether to use a Jacoby rule or not
+int cubeTempMapAtMoney = 0;   
+int cubeTempMapJacoby = 0;     
+
+// Text to display when using MoneyEval
+static const char *MONEY_EVAL_TEXT=" (Hypothetical money game)";
+
+// here we can set an initial default preference for Jacoby -- else we use the system preference fJacoby
+#define UNDEF (-1000) // Different from TRUE
+static int moneyEvalJacoby=UNDEF;
+
+static void
+EvalCube(cubehintdata * pchd, const evalcontext * pec);
+
+static void
+JacobyToggled(GtkWidget *pwJ, cubehintdata *pchd)
+{
+/* This is called by gtk when the user clicks on the Jacoby check button during money eval.
+If the Jacoby setting is changed, it reruns the EvalCube()
+*/
+    g_assert(pchd->evalAtMoney);
+    if (moneyEvalJacoby!=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwJ)) ) {
+        moneyEvalJacoby = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pwJ));
+        EvalCube(pchd, &GetEvalCube()->ec);
+    }
+}
 
 static GtkWidget *
 OutputPercentsTable(const float ar[])
 {
+/* Creates the table showing win% etc. */
     GtkWidget *pwTable;
     GtkWidget *pw;
     int i;
@@ -85,7 +126,18 @@ OutputPercentsTable(const float ar[])
     return pwTable;
 }
 
+static void
+GetMoneyCubeInfo(cubeinfo * pci, const matchstate * pms) {
+/* Fills pci with cube info for a money game, i.e., same as given match state except with nMatchTo=0. */
+    matchstate moneyms = *pms; // Copy
+    moneyms.nMatchTo=0;
+    moneyms.fJacoby=moneyEvalJacoby;
+    GetMatchStateCubeInfo(pci, &moneyms);
+}
 
+// this function is used for the beavers in money play for example, and
+//      for the take decision frame; see the next CubeAnalysis function for 
+//      explanations, as the two functions are very similar 
 static GtkWidget *
 TakeAnalysis(cubehintdata * pchd)
 {
@@ -104,20 +156,25 @@ TakeAnalysis(cubehintdata * pchd)
     };
     float arDouble[4];
     gchar *sz;
-    cubedecisiondata *cdec = pchd->pmr->CubeDecPtr;
+    cubedecisiondata *cdec = (pchd->evalAtMoney ? pchd->pmr->MoneyCubeDecPtr : pchd->pmr->CubeDecPtr);
     const evalsetup *pes = &cdec->esDouble;
-
 
     if (pes->et == EVAL_NONE)
         return NULL;
 
-    GetMatchStateCubeInfo(&ci, &pchd->ms);
+    if (!pchd->evalAtMoney)
+        GetMatchStateCubeInfo(&ci, &pchd->ms);
+    else
+        GetMoneyCubeInfo(&ci, &pchd->ms);
 
-    cd = FindCubeDecision(arDouble, cdec->aarOutput, &ci);
-
+  
+    cd = FindCubeDecision(arDouble, cdec->aarOutput, &ci); 
+    
     /* header */
 
-    pwFrame = gtk_frame_new(_("Take analysis"));
+    sz=g_strdup_printf("Take analysis%s", pchd->evalAtMoney ? MONEY_EVAL_TEXT : "");
+    pwFrame = gtk_frame_new(_(sz));
+    g_free(sz);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
 
     pwTable = gtk_table_new(6, 4, FALSE);
@@ -126,7 +183,6 @@ TakeAnalysis(cubehintdata * pchd)
     /* if EVAL_EVAL include cubeless equity and winning percentages */
 
     iRow = 0;
-
     InvertEvaluationR(cdec->aarOutput[0], &ci);
     InvertEvaluationR(cdec->aarOutput[1], &ci);
 
@@ -137,28 +193,26 @@ TakeAnalysis(cubehintdata * pchd)
                                  pes->ec.nPlies,
                                  fOutputMWC ? _("MWC") : _("equity"),
                                  OutputEquity(cdec->aarOutput[0][OUTPUT_EQUITY],
-                                              &ci, TRUE), OutputMoneyEquity(cdec->aarOutput[0], TRUE));
+                                             &ci, TRUE),
+                                 OutputMoneyEquity(cdec->aarOutput[0], TRUE));
         else
             sz = g_strdup_printf(_("Cubeless %d-ply equity: %s"),
                                  pes->ec.nPlies, OutputMoneyEquity(cdec->aarOutput[0], TRUE));
-
         break;
 
     case EVAL_ROLLOUT:
         if (ci.nMatchTo)
             sz = g_strdup_printf(_("Cubeless rollout %s: %s (Money: %s)"),
-                                 fOutputMWC ? _("MWC") : _("equity"),
-                                 OutputEquity(cdec->aarOutput[0][OUTPUT_EQUITY],
-                                              &ci, TRUE), OutputMoneyEquity(cdec->aarOutput[0], TRUE));
+                                fOutputMWC ? _("MWC") : _("equity"),
+                                OutputEquity(cdec->aarOutput[0][OUTPUT_EQUITY],
+                                            &ci, TRUE),
+                                OutputMoneyEquity(cdec->aarOutput[0], TRUE));
         else
             sz = g_strdup_printf(_("Cubeless rollout equity: %s"), OutputMoneyEquity(cdec->aarOutput[0], TRUE));
-
         break;
 
     default:
-
         sz = g_strdup("");
-
     }
 
     pw = gtk_label_new(sz);
@@ -178,7 +232,6 @@ TakeAnalysis(cubehintdata * pchd)
     switch (pes->et) {
 
     case EVAL_EVAL:
-
         pw = OutputPercentsTable(cdec->aarOutput[0]);
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
@@ -361,13 +414,26 @@ TakeAnalysis(cubehintdata * pchd)
 
     gtk_table_attach(GTK_TABLE(pwTable), pw, 2, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
 
+    iRow++;
+
+    /* Jacoby rule */ 
+    if (pchd->ms.nMatchTo && pchd->evalAtMoney) {
+
+        GtkWidget *pwJ = gtk_check_button_new_with_label ("Jacoby"); 
+        gtk_table_attach(GTK_TABLE(pwTable), pwJ, 0, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
+        g_signal_connect(G_OBJECT (pwJ), "toggled", G_CALLBACK(JacobyToggled), pchd); 
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwJ), moneyEvalJacoby);
+        gtk_widget_set_tooltip_text(pwJ, _("Toggle Jacoby rule for money play"));
+        // gtk_widget_set_sensitive(pwJ, !pchd->ms.nMatchTo && pchd->pmr->evalAtMoney);
+    }
+
     return pwFrame;
 
 }
 
 
 /*
- * Make cube analysis widget 
+ * Make cube analysis widget. Used for doubling decisions.
  *
  * Input:
  *   aarOutput, aarStdDev: evaluations
@@ -377,7 +443,6 @@ TakeAnalysis(cubehintdata * pchd)
  *   nice and pretty widget with cube analysis
  *
  */
-
 static GtkWidget *
 CubeAnalysis(cubehintdata * pchd)
 {
@@ -398,16 +463,42 @@ CubeAnalysis(cubehintdata * pchd)
     };
     float arDouble[4];
     gchar *sz;
-    cubedecisiondata *cdec = pchd->pmr->CubeDecPtr;
+    cubedecisiondata *cdec = (pchd->evalAtMoney ? pchd->pmr->MoneyCubeDecPtr : pchd->pmr->CubeDecPtr);
     const evalsetup *pes = &cdec->esDouble;
-
 
     if (pes->et == EVAL_NONE)
         return NULL;
 
-    GetMatchStateCubeInfo(&ci, &pchd->ms);
+    if (!pchd->evalAtMoney)
+        GetMatchStateCubeInfo(&ci, &pchd->ms);
+    else
+        GetMoneyCubeInfo(&ci, &pchd->ms);
 
-    cd = FindCubeDecision(arDouble, cdec->aarOutput, &ci);
+    //  FindCubeDecision(arDouble, aarOutput, pci) is defined in eval.c:
+    //  extern cubedecision FindCubeDecision(float arDouble[], float aarOutput[][NUM_ROLLOUT_OUTPUTS], const cubeinfo * pci)
+    // cubedecision is from eval.h: "DOUBLE_TAKE", "DOUBLE_PASS", etc.
+    // It calls FindBestCubeDecision, which calculates the optimal cube decision and equity/mwc for this.
+    //  *
+    //  * Input:
+    //  *    arDouble    - array with equities or mwc's:
+    //  *                      arDouble[ 1 ]: no double,
+    //  *                      arDouble[ 2 ]: double take
+    //  *                      arDouble[ 3 ]: double pass
+    //  *    pci         - pointer to cube info
+    //  *
+    //  * Output:
+    //  *    arDouble    - array with equities or mwc's
+    //  *                      arDouble[ 0 ]: equity for optimal cube decision
+    //  *
+    //  * Returns:
+    //  *    cube decision
+    // Namely, the function takes aarOutput to get the 3 equities of ND,DT and DP, 
+    // (eg from aarOutput[5,6])
+    // then converts into mwc (when NMatchTo!=0) then stores them in arDouble[1,2,3]
+    // and stores the best in arDouble[0]
+    //reminder: typedef struct _cubedecisiondata {float aarOutput[2][NUM_ROLLOUT_OUTPUTS]; float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
+    //                      evalsetup esDouble; CMark cmark; } cubedecisiondata;
+    cd = FindCubeDecision(arDouble, cdec->aarOutput, &ci); 
 
     if (!GetDPEq(NULL, NULL, &ci) && !(pchd->pmr->mt == MOVE_DOUBLE))
         /* No cube action possible */
@@ -415,7 +506,9 @@ CubeAnalysis(cubehintdata * pchd)
 
     /* header */
 
-    pwFrame = gtk_frame_new(_("Cube analysis"));
+    sz = g_strdup_printf("Cube analysis%s", pchd->evalAtMoney ? MONEY_EVAL_TEXT : "");
+    pwFrame = gtk_frame_new(_(sz));
+    g_free(sz);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -436,12 +529,16 @@ CubeAnalysis(cubehintdata * pchd)
     switch (pes->et) {
     case EVAL_EVAL:
         if (ci.nMatchTo)
+        {
+            // OutputEquity: in format.c:
+            // extern char * OutputEquity(const float r, const cubeinfo * pci, const int f)
             sz = g_strdup_printf(_("Cubeless %d-ply %s: %s (Money: %s)"),
                                  pes->ec.nPlies,
                                  fOutputMWC ? _("MWC") : _("equity"),
                                  OutputEquity(cdec->aarOutput[0][OUTPUT_EQUITY],
-                                              &ci, TRUE), OutputMoneyEquity(cdec->aarOutput[0], TRUE));
-        else
+                                              &ci, TRUE),
+                                 OutputMoneyEquity(cdec->aarOutput[0], TRUE));
+        } else
             sz = g_strdup_printf(_("Cubeless %d-ply equity: %s"),
                                  pes->ec.nPlies, OutputMoneyEquity(cdec->aarOutput[0], TRUE));
 
@@ -452,7 +549,8 @@ CubeAnalysis(cubehintdata * pchd)
             sz = g_strdup_printf(_("Cubeless rollout %s: %s (Money: %s)"),
                                  fOutputMWC ? _("MWC") : _("equity"),
                                  OutputEquity(cdec->aarOutput[0][OUTPUT_EQUITY],
-                                              &ci, TRUE), OutputMoneyEquity(cdec->aarOutput[0], TRUE));
+                                              &ci, TRUE),
+                                 OutputMoneyEquity(cdec->aarOutput[0], TRUE));
         else
             sz = g_strdup_printf(_("Cubeless rollout equity: %s"), OutputMoneyEquity(cdec->aarOutput[0], TRUE));
 
@@ -483,12 +581,10 @@ CubeAnalysis(cubehintdata * pchd)
     if (pes->et == EVAL_EVAL) {
 
         pw = OutputPercentsTable(cdec->aarOutput[0]);
-
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
 
         iRow++;
-
     }
 
     pw = gtk_label_new(_("Cubeful equities:"));
@@ -500,7 +596,6 @@ CubeAnalysis(cubehintdata * pchd)
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
 #endif
     iRow++;
-
 
     getCubeDecisionOrdering(ai, arDouble, cdec->aarOutput, &ci);
 
@@ -551,9 +646,10 @@ CubeAnalysis(cubehintdata * pchd)
 
         /* difference */
 
-        if (i) {
+        if (i)
+        {
+            pw = gtk_label_new(OutputEquityDiff(arDouble[ai[i]], arDouble[OUTPUT_OPTIMAL], &ci)); //function from format.c
 
-            pw = gtk_label_new(OutputEquityDiff(arDouble[ai[i]], arDouble[OUTPUT_OPTIMAL], &ci));
 #if GTK_CHECK_VERSION(3,0,0)
             gtk_widget_set_halign(pw, GTK_ALIGN_END);
             gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
@@ -576,6 +672,7 @@ CubeAnalysis(cubehintdata * pchd)
             /*        probably along with rollout details */
 
             pw = gtk_label_new(OutputPercents(cdec->aarOutput[ai[i] - 1], TRUE));
+            
 #if GTK_CHECK_VERSION(3,0,0)
             gtk_widget_set_halign(pw, GTK_ALIGN_CENTER);
             gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
@@ -632,25 +729,51 @@ CubeAnalysis(cubehintdata * pchd)
                          3, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
 
     }
+    iRow++;
+
+    /* Jacoby option - only appears when using money eval */
+    if (pchd->evalAtMoney) {
+
+        GtkWidget *pwJ = gtk_check_button_new_with_label ("Jacoby"); 
+        gtk_table_attach(GTK_TABLE(pwTable), pwJ, 0, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
+        g_signal_connect(G_OBJECT (pwJ), "toggled", G_CALLBACK(JacobyToggled), pchd); 
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwJ), moneyEvalJacoby);
+        gtk_widget_set_tooltip_text(pwJ, _("Toggle Jacoby rule for money play"));
+    }
 
     return pwFrame;
 }
 
 static void
 UpdateCubeAnalysis(cubehintdata * pchd)
+/* This function destroys the existing analysis widget, replacing it with a new one.
+It is called after something in pchd has changed, e.g., eval at different ply.
+*/
 {
-
     GtkWidget *pw = 0;
-    doubletype dt = DoubleType(ms.fDoubled, ms.fMove, ms.fTurn);
+    //doubletype dt = DoubleType(ms.fDoubled, ms.fMove, ms.fTurn);//for the beaver etc; ms is extern (global) 
+    /* ^ this is the original code. It does not make sense that we should be looking at the double type of ms, instead of pchd->ms!!
+    */
+    doubletype dt = DoubleType(pchd->ms.fDoubled, pchd->ms.fMove, pchd->ms.fTurn);
 
-    find_skills(pchd->pmr, &ms, pchd->did_double, pchd->did_take);
+    if(!pchd->evalAtMoney) 
+        find_skills(pchd->pmr, &pchd->ms, pchd->did_double, pchd->did_take);//gnubg.c / backgammon.h: 
+    // Don't find skills for hypothetical money decision, because this is not relevant.
+
+
 
     switch (pchd->pmr->mt) {
     case MOVE_NORMAL:
     case MOVE_SETDICE:
+        /*
+         * We're stepping back in the game record after rolling and
+         * asking for a hint on the missed cube decision, for instance
+         */
     case MOVE_SETCUBEPOS:
     case MOVE_SETCUBEVAL:
-        /* See CreateCubeAnalysis() for these  MOVE_SET* cases */
+        /*
+         * These two happen in cube decisions loaded from a .sgf file
+         */
     case MOVE_DOUBLE:
         if (dt == DT_NORMAL)
             pw = CubeAnalysis(pchd);
@@ -668,34 +791,46 @@ UpdateCubeAnalysis(cubehintdata * pchd)
         break;
 
     }
+   
+    g_assert(pchd->pw!=NULL);
 
-    /* destroy current analysis */
+    /* Remove old analysis */
+    if (pchd->pwFrame != NULL) // This is null when first called from CreateCubeAnalysis()
+        gtk_container_remove(GTK_CONTAINER(pchd->pw), pchd->pwFrame);
 
-    gtk_container_remove(GTK_CONTAINER(pchd->pw), pchd->pwFrame);
-
-    /* re-create analysis + tools */
-
-    gtk_box_pack_start(GTK_BOX(pchd->pw), pchd->pwFrame = pw, FALSE, FALSE, 0);
-
+    /* Insert new analysis */
+    if (pw != NULL) // This is null if there is no cube decision (see TakeAnalysis() and CubeAnalysis())
+        gtk_box_pack_start(GTK_BOX(pchd->pw), pchd->pwFrame = pw, FALSE, FALSE, 0);
+    
     gtk_widget_show_all(pchd->pw);
-
 }
-
-
-
 
 static void
 CubeAnalysisRollout(GtkWidget * pw, cubehintdata * pchd)
+/* Called by GTK when the rollout button is clicked. */
 {
 
     cubeinfo ci;
     float aarOutput[2][NUM_ROLLOUT_OUTPUTS];
     float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
-    cubedecisiondata *cdec = pchd->pmr->CubeDecPtr;
+    cubedecisiondata *cdec = (pchd->evalAtMoney ? pchd->pmr->MoneyCubeDecPtr : pchd->pmr->CubeDecPtr);
     rolloutstat aarsStatistics[2][2];
-    evalsetup *pes = &cdec->esDouble;
+    evalsetup *pes;
     char asz[2][FORMATEDMOVESIZE];
     void *p;
+
+#if 0
+    if (cdec==NULL) { // Should not happen, but just in case
+        g_assert(pchd->evalAtMoney);
+        cdec=pchd->pmr->MoneyCubeDecPtr=g_malloc(sizeof(cubedecisiondata));
+        cdec->esDouble.et = EVAL_NONE;
+        cdec->cmark = CMARK_NONE;
+    }
+#else
+    g_assert(cdec != NULL);
+#endif 
+
+    pes = &cdec->esDouble;   // see function EvalCube for explanations on esDouble
 
     if (pes->et != EVAL_ROLLOUT) {
         pes->rc = rcRollout;
@@ -709,11 +844,14 @@ CubeAnalysisRollout(GtkWidget * pw, cubehintdata * pchd)
         memcpy(aarStdDev, cdec->aarStdDev, 2 * NUM_ROLLOUT_OUTPUTS * sizeof(float));
     }
 
-    GetMatchStateCubeInfo(&ci, &pchd->ms);
+    if (!pchd->evalAtMoney)
+        GetMatchStateCubeInfo(&ci, &pchd->ms);
+    else 
+        GetMoneyCubeInfo(&ci, &pchd->ms);
 
     FormatCubePositions(&ci, asz);
     GTKSetCurrentParent(pw);
-    RolloutProgressStart(&ci, 2, aarsStatistics, &pes->rc, asz, FALSE, &p);
+    RolloutProgressStart(&ci, 2, aarsStatistics, &pes->rc, asz, FALSE, &p); // from progress.c
 
     if (GeneralCubeDecisionR(aarOutput, aarStdDev, aarsStatistics,
                              (ConstTanBoard) pchd->ms.anBoard, &ci, &pes->rc, pes, RolloutProgress, p) < 0) {
@@ -722,12 +860,11 @@ CubeAnalysisRollout(GtkWidget * pw, cubehintdata * pchd)
     }
 
     RolloutProgressEnd(&p, FALSE);
-
     memcpy(cdec->aarOutput, aarOutput, 2 * NUM_ROLLOUT_OUTPUTS * sizeof(float));
     memcpy(cdec->aarStdDev, aarStdDev, 2 * NUM_ROLLOUT_OUTPUTS * sizeof(float));
 
     if (pes->et != EVAL_ROLLOUT)
-        memcpy(&pes->rc, &rcRollout, sizeof(rcRollout));
+        memcpy(&pes->rc, &rcRollout, sizeof(rcRollout)); //rcRollout: extrern rolloutcontext: includes rollout parameters (truncation etc)
 
     pes->et = EVAL_ROLLOUT;
 
@@ -737,19 +874,38 @@ CubeAnalysisRollout(GtkWidget * pw, cubehintdata * pchd)
         return;
 
     UpdateCubeAnalysis(pchd);
-    if (pchd->hist)
+    if (pchd->hist && !pchd->evalAtMoney) // What is the point of this behaviour? I don't like it!
         ChangeGame(NULL);
 }
 
 static void
-EvalCube(cubehintdata * pchd, evalcontext * pec)
+EvalCube(cubehintdata * pchd, const evalcontext * pec)
 {
+/* Evaluate the cube action based on the given eval context. */
+
     cubeinfo ci;
     decisionData dd;
-    cubedecisiondata *cdec = pchd->pmr->CubeDecPtr;
-    evalsetup *pes = &cdec->esDouble;
-
-    GetMatchStateCubeInfo(&ci, &pchd->ms);
+    cubedecisiondata *cdec = (pchd->evalAtMoney ? pchd->pmr->MoneyCubeDecPtr : pchd->pmr->CubeDecPtr);
+    evalsetup *pes;
+    
+    if (cdec==NULL) {  
+        /* This happens if money eval is toggled, and it hasn't been toggled before (for this move record).
+           Initialize the MoneyCubeDecPtr for this move record. */
+        g_assert(pchd->evalAtMoney);
+        cdec=pchd->pmr->MoneyCubeDecPtr=g_malloc(sizeof(cubedecisiondata));
+        cdec->esDouble.et = EVAL_NONE;
+        cdec->cmark = CMARK_NONE;
+    }
+    
+    pes = &cdec->esDouble;   //eval.h: 
+                // evalsetup: struct {evaltype et; evalcontext ec; rolloutcontext rc; } 
+                // evaltype: enum {EVAL_NONE, EVAL_EVAL, EVAL_ROLLOUT}
+                // likewise, evalcontext: fCubeful, nPlies, etc.; rolloutcontext for rollout
+                // => they only contain int, float, etc, no pointers
+    if (!pchd->evalAtMoney)
+        GetMatchStateCubeInfo(&ci, &pchd->ms);
+    else
+        GetMoneyCubeInfo(&ci, &pchd->ms);
 
     dd.pboard = (ConstTanBoard) pchd->ms.anBoard;
     dd.pci = &ci;
@@ -759,55 +915,59 @@ EvalCube(cubehintdata * pchd, evalcontext * pec)
         return;
 
     /* save evaluation */
-
-
     memcpy(cdec->aarOutput, dd.aarOutput, 2 * NUM_ROLLOUT_OUTPUTS * sizeof(float));
 
     pes->et = EVAL_EVAL;
-    memcpy(&pes->ec, dd.pec, sizeof(evalcontext));
+    memcpy(&pes->ec, dd.pec, sizeof(evalcontext)); //here the n-ply may change
 
     UpdateCubeAnalysis(pchd);
-    if (pchd->hist)
+    if (pchd->hist && !pchd->evalAtMoney) // What is the point of this behaviour? I don't like it!
         ChangeGame(NULL);
 }
 
 static void
 CubeAnalysisEvalPly(GtkWidget * pw, cubehintdata * pchd)
 {
+/* Called by GTK when one of the ply-evaluation buttons are clicked.
+   Evaluates the cube action at the given ply and updates the widget.
+*/
 
-    char *szPly = (char *) g_object_get_data(G_OBJECT(pw), "ply");
+    int *pi = (int *)g_object_get_data(G_OBJECT(pw), "ply");
     evalcontext ec = { 0, 0, 0, TRUE, 0.0 };
 
-    ec.fCubeful = esAnalysisCube.ec.fCubeful;
+    ec.fCubeful = esAnalysisCube.ec.fCubeful; //from backgammon.h: extern evalsetup esAnalysisCube;
     ec.fUsePrune = esAnalysisCube.ec.fUsePrune;
-    ec.nPlies = atoi(szPly);
+    ec.nPlies = *pi;
 
     EvalCube(pchd, &ec);
-
 }
 
 static void
 CubeAnalysisEval(GtkWidget * UNUSED(pw), cubehintdata * pchd)
 {
-
+/* Called by GTK when one of the "eval" button is clicked.
+   Evaluates the cube action at default settings, and updates the widget.
+*/
     EvalCube(pchd, &GetEvalCube()->ec);
-
 }
 
 static void
 CubeAnalysisEvalSettings(GtkWidget * pw, void *UNUSED(data))
 {
+/* Called by GTK when the eval settings button is clicked.
+*/
     GTKSetCurrentParent(pw);
     SetAnalysis(NULL, 0, NULL);
 
     /* bring the dialog holding this button to the top */
     gtk_window_present(GTK_WINDOW(gtk_widget_get_toplevel(pw)));
-
 }
 
 static void
 CubeAnalysisRolloutSettings(GtkWidget * pw, void *UNUSED(data))
 {
+/* Called by GTK when the rollout settings button is clicked.
+*/
     GTKSetCurrentParent(pw);
     SetRollouts(NULL, 0, NULL);
 
@@ -816,10 +976,14 @@ CubeAnalysisRolloutSettings(GtkWidget * pw, void *UNUSED(data))
 
 }
 
-
 static void
 CubeRolloutPresets(GtkWidget * pw, cubehintdata * pchd)
 {
+/* Called by GTK when one of the rollout presents buttons are clicked.
+Changes the rollout settings to the given preset and does a rollout.
+Note: settings remain changed.
+Note: settings are stored as commands in a file.
+*/
     const gchar *preset;
     gchar *file = NULL;
     gchar *path = NULL;
@@ -846,6 +1010,10 @@ CubeRolloutPresets(GtkWidget * pw, cubehintdata * pchd)
 static void
 CubeAnalysisMWC(GtkWidget * pw, cubehintdata * pchd)
 {
+/* Called by GTK when the MWC button is toggled. Switches output between MWC and equity. Only applicable during match play.
+*/
+    g_assert(pchd->ms.nMatchTo);
+    g_assert(!pchd->evalAtMoney);
 
     int f = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
 
@@ -867,13 +1035,19 @@ CubeAnalysisMWC(GtkWidget * pw, cubehintdata * pchd)
 static char *
 GetContent(cubehintdata * pchd)
 {
+/* Returns a string containing the information visible in this widget.
+*/
     static char *pc;
     cubeinfo ci;
-    cubedecisiondata *cdec = pchd->pmr->CubeDecPtr;
+    cubedecisiondata *cdec = (pchd->evalAtMoney ? pchd->pmr->MoneyCubeDecPtr : pchd->pmr->CubeDecPtr);
     int fTake;
 
-    GetMatchStateCubeInfo(&ci, &pchd->ms);
 
+    if(!pchd->evalAtMoney)
+        GetMatchStateCubeInfo(&ci, &pchd->ms);
+    else
+        GetMoneyCubeInfo(&ci, &pchd->ms);
+    
     switch (pchd->pmr->mt) {
     case MOVE_DOUBLE:
         fTake = -1;
@@ -895,8 +1069,28 @@ GetContent(cubehintdata * pchd)
 }
 
 static void
+CubeAnalysisMoneyEval(GtkWidget *pw, cubehintdata *pchd) 
+{
+/* Called by GTK when the money eval button is toggled. Should only be possible during match play.
+*/
+    g_assert(pchd->ms.nMatchTo);
+    pchd->evalAtMoney = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
+
+    //we want to hide (resp. unhide) the MWC and cmark buttons when money eval is toggled
+    gtk_widget_set_sensitive(pchd->pwMWC, !pchd->evalAtMoney); 
+    gtk_widget_set_sensitive(pchd->pwCmark, !pchd->evalAtMoney); 
+
+    if (pchd->evalAtMoney && (pchd->pmr->MoneyCubeDecPtr==NULL)) // Test if money eval has been toggled before for this move record
+        EvalCube(pchd, &GetEvalCube()->ec); // If not, eval at current settings - this forces MoneyCubeDecPtr to be created.
+    else
+        UpdateCubeAnalysis(pchd);            
+}
+
+static void
 CubeAnalysisCopy(GtkWidget * UNUSED(pw), cubehintdata * pchd)
 {
+/* Called by GTK when the copy button is clicked.
+*/
 
     char *pc = GetContent(pchd);
 
@@ -906,10 +1100,14 @@ CubeAnalysisCopy(GtkWidget * UNUSED(pw), cubehintdata * pchd)
 }
 
 static void
-CubeAnalysisTempMap(GtkWidget * UNUSED(pw), cubehintdata * UNUSED(pchd))
+CubeAnalysisTempMap(GtkWidget * UNUSED(pw), cubehintdata * pchd)
 {
+/* Called by GTK when the temp map button is clicked.  */
 
     gchar *sz = g_strdup("show temperaturemap =cube");
+    cubeTempMapAtMoney = pchd->evalAtMoney;
+    if (cubeTempMapAtMoney)
+        cubeTempMapJacoby = moneyEvalJacoby;
     UserCommand(sz);
     g_free(sz);
 
@@ -918,22 +1116,27 @@ CubeAnalysisTempMap(GtkWidget * UNUSED(pw), cubehintdata * UNUSED(pchd))
 static void
 CubeAnalysisCmark(GtkWidget * pw, cubehintdata * pchd)
 {
+/* Called by GTK when the Cmark button is clicked.
+*/
     pchd->pmr->CubeDecPtr->cmark = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
 }
 
 static GtkWidget *
 CreateCubeAnalysisTools(cubehintdata * pchd)
 {
+/* Creates the buttons that appear at the bottom of the cube widget, and places them into the gtk table which is returned.
+*/
     GtkWidget *pwTools;
     GtkWidget *pwEval = gtk_button_new_with_label(_("Eval"));
     GtkWidget *pwEvalSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwRollout = gtk_button_new_with_label(_("Rollout"));
     GtkWidget *pwRolloutPresets;
     GtkWidget *pwRolloutSettings = gtk_button_new_with_label(_("..."));
-    GtkWidget *pwMWC = gtk_toggle_button_new_with_label(_("MWC"));
+    GtkWidget *pwMWC = pchd->pwMWC = gtk_toggle_button_new_with_label(_("MWC"));
     GtkWidget *pwCopy = gtk_button_new_with_label(_("Copy"));
     GtkWidget *pwTempMap = gtk_button_new_with_label(_("Temp. Map"));
-    GtkWidget *pwCmark = gtk_toggle_button_new_with_label(_("Cmark"));
+    GtkWidget *pwCmark = pchd->pwCmark = gtk_toggle_button_new_with_label(_("Cmark"));
+    GtkWidget *pwMoneyEval = gtk_toggle_button_new_with_label(_("Money Eval"));   
     GtkWidget *pw;
     int i;
 
@@ -946,11 +1149,12 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     gtk_style_context_add_class(gtk_widget_get_style_context(pwCopy), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwTempMap), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwCmark), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwMoneyEval), "gnubg-analysis-button");  
 #endif
 
     /* toolbox on the left with buttons for eval, rollout and more */
 
-    pchd->pwTools = pwTools = gtk_table_new(2, 5, FALSE);
+    pchd->pwTools = pwTools = gtk_table_new(2, 6, FALSE);
 
     gtk_table_attach(GTK_TABLE(pwTools), pwEval, 0, 1, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
@@ -967,7 +1171,9 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     for (i = 0; i < 5; ++i) {
 
-        gchar *sz = g_strdup_printf("%d", i);  /* string is freed by set_data_full */
+        gchar *sz = g_strdup_printf("%d", i);  
+        int *pi = g_malloc(sizeof(int));
+        *pi=i;
         GtkWidget *pwply = gtk_button_new_with_label(sz);
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -977,7 +1183,7 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
         g_signal_connect(G_OBJECT(pwply), "clicked", G_CALLBACK(CubeAnalysisEvalPly), pchd);
 
-        g_object_set_data_full(G_OBJECT(pwply), "ply", sz, g_free);
+        g_object_set_data_full(G_OBJECT(pwply), "ply", pi, g_free);
 
         sz = g_strdup_printf(_("Evaluate play on cubeful %d-ply"), i);
         gtk_widget_set_tooltip_text(pwply, sz);
@@ -1031,13 +1237,24 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     }
 
     gtk_table_attach(GTK_TABLE(pwTools), pwCopy, 3, 4, 1, 2,
-                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+                     (GtkAttachOptions)(GTK_FILL), (GtkAttachOptions)(0), 0, 0);
 
-    gtk_widget_set_sensitive(pwMWC, pchd->ms.nMatchTo);
+    gtk_table_attach(GTK_TABLE(pwTools), pwMoneyEval, 5, 6, 0, 1,
+                     (GtkAttachOptions)(GTK_FILL), (GtkAttachOptions)(0), 0, 0);
+
+// Note: evalAtMoney should always be false here.
+    gtk_widget_set_sensitive(pwMWC, pchd->ms.nMatchTo && !pchd->evalAtMoney); //MWC not available in money play, i.e.
+                                                // either in true money play or in a hypothetical one
+    gtk_widget_set_sensitive(pwMoneyEval, pchd->ms.nMatchTo); //i.e., the Money Eval
+                                                          // button is not available at money play since it doesn't help there
+    //gtk_widget_set_sensitive(pwTempMap, !pchd->evalAtMoney);  
+    gtk_widget_set_sensitive(pwCmark, !pchd->evalAtMoney);   
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwCmark), pchd->pmr->CubeDecPtr->cmark);
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMWC), fOutputMWC);
+    
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMoneyEval), pchd->evalAtMoney);   
 
     /* signals */
 
@@ -1049,12 +1266,14 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     g_signal_connect(G_OBJECT(pwCopy), "clicked", G_CALLBACK(CubeAnalysisCopy), pchd);
     g_signal_connect(G_OBJECT(pwTempMap), "clicked", G_CALLBACK(CubeAnalysisTempMap), pchd);
     g_signal_connect(G_OBJECT(pwCmark), "toggled", G_CALLBACK(CubeAnalysisCmark), pchd);
-
+    // clicking pwMoneyEval launches CubeAnalysisMoneyEval
+    g_signal_connect(G_OBJECT(pwMoneyEval), "toggled", G_CALLBACK(CubeAnalysisMoneyEval), pchd);
+  
     /* tool tips */
 
-    gtk_widget_set_tooltip_text(pwRollout, _("Rollout cube decision with current settings"));
+    // gtk_widget_set_tooltip_text(pwRollout, _("Rollout cube decision with current settings"));
 
-    gtk_widget_set_tooltip_text(pwEval, _("Evaluate cube decision with current settings"));
+    // gtk_widget_set_tooltip_text(pwEval, _("Evaluate cube decision with current settings"));
 
     gtk_widget_set_tooltip_text(pwRolloutSettings, _("Modify rollout settings"));
 
@@ -1062,11 +1281,36 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     gtk_widget_set_tooltip_text(pwMWC, _("Toggle output as MWC or equity"));
 
-    gtk_widget_set_tooltip_text(pwCopy, _("Copy cube decision to clipboard"));
+    // gtk_widget_set_tooltip_text(pwCopy, _("Copy cube decision to clipboard"));
 
     gtk_widget_set_tooltip_text(pwCmark, _("Mark cube decision for later rollout"));
 
-    gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position"));
+    // gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position"));
+
+    gtk_widget_set_tooltip_text(pwMoneyEval, _("Provide hypothetical cube decision in Money Play"));
+    
+    if (!pchd->evalAtMoney) {
+        gtk_widget_set_tooltip_text(pwRollout, _("Rollout cube decision with current settings"));
+
+        gtk_widget_set_tooltip_text(pwEval, _("Evaluate cube decision with current settings"));
+
+        gtk_widget_set_tooltip_text(pwCopy, _("Copy cube decision to clipboard"));
+
+        gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position"));
+
+
+    } else {
+        gtk_widget_set_tooltip_text(pwRollout, _("Rollout cube decision in Money Play with current settings"));
+
+        gtk_widget_set_tooltip_text(pwEval, _("Evaluate cube decision in Money Play with current settings"));
+
+        gtk_widget_set_tooltip_text(pwCopy, _("Copy cube decision in Money Play to clipboard"));
+
+        gtk_widget_set_tooltip_text(pwTempMap, _("Temperature Map in Money Play of different rolls"));
+     
+    }
+
+// g_print("matchstate.evalAtMoney EndOf CubeAnalysisTools:%d\n",pchd->evalAtMoney);
 
     return pwTools;
 
@@ -1076,7 +1320,16 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 extern GtkWidget *
 CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int did_take, int hist)
 {
-    doubletype dt = DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
+/* Returns pwx, a box layed out as follows:
+-- pwx ---------------
+| --pchd->pw-------- |
+| | pchd->pwdFrame | |
+| ------------------ |
+| --pwhb------------ |
+| | pchd->pwTools  | |
+| ------------------ |
+---------------------|
+*/
     cubehintdata *pchd = g_new0(cubehintdata, 1);
 
     GtkWidget *pw, *pwhb, *pwx;
@@ -1086,6 +1339,10 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
     pchd->did_double = did_double;
     pchd->did_take = did_take;
     pchd->hist = hist;
+    pchd->evalAtMoney=FALSE;
+    if (moneyEvalJacoby==UNDEF)
+        moneyEvalJacoby=fJacoby; // Initially use value from preferences
+        
 
 #if GTK_CHECK_VERSION(3,0,0)
     pchd->pw = pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
@@ -1093,41 +1350,14 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
     pchd->pw = pw = gtk_hbox_new(FALSE, 2);
 #endif
 
-    switch (pmr->mt) {
-
-    case MOVE_NORMAL:
-    case MOVE_SETDICE:
-        /*
-         * We're stepping back in the game record after rolling and
-         * asking for a hint on the missed cube decision, for instance
-         */
-    case MOVE_SETCUBEPOS:
-    case MOVE_SETCUBEVAL:
-        /*
-         * These two happen in cube decisions loaded from a .sgf file
-         */
-    case MOVE_DOUBLE:
-        if (dt == DT_NORMAL)
-            pchd->pwFrame = CubeAnalysis(pchd);
-        else if (dt == DT_BEAVER)
-            pchd->pwFrame = TakeAnalysis(pchd);
-        break;
-    case MOVE_TAKE:
-    case MOVE_DROP:
-        pchd->pwFrame = TakeAnalysis(pchd);
-        break;
-    default:
-        g_assert_not_reached();
-        break;
-
-    }
-
-    if (!pchd->pwFrame) {
+    UpdateCubeAnalysis(pchd);
+    
+    if (pchd->pwFrame == NULL) {
         g_free(pchd);
         return NULL;
     }
 
-    gtk_box_pack_start(GTK_BOX(pw), pchd->pwFrame, FALSE, FALSE, 0);
+//    gtk_box_pack_start(GTK_BOX(pw), pchd->pwFrame, FALSE, FALSE, 0);
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwx = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -1142,7 +1372,7 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
 #else
     pwhb = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_box_pack_start(GTK_BOX(pwhb), CreateCubeAnalysisTools(pchd), FALSE, FALSE, 8);
+    gtk_box_pack_start(GTK_BOX(pwhb), CreateCubeAnalysisTools(pchd), FALSE, FALSE, 8); // calls CreateCubeAnalysisTools
 
     gtk_box_pack_start(GTK_BOX(pwx), pwhb, FALSE, FALSE, 0);
 

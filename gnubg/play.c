@@ -156,6 +156,7 @@ NewMoveRecord(void)
     pmr->stCube = SKILL_NONE;
     pmr->ml.cMoves = 0;
     pmr->ml.amMoves = NULL;
+    pmr->MoneyCubeDecPtr = NULL;
 
     /* movenormal */
     pmr->n.stMove = SKILL_NONE;
@@ -449,8 +450,9 @@ FreeMoveRecord(moverecord * pmr)
         break;
     }
 
-    if (pmr->sz)
-        free(pmr->sz);
+    free(pmr->sz);
+
+    free(pmr->MoneyCubeDecPtr);
 
     free(pmr);
 }

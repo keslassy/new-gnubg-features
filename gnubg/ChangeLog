@@ -1,3 +1,10 @@
+2021-09-26  Philippe Michel  <philippe.michel7@free.fr>
+
+	* backgammon.h, gtkcube.c, gtkcube.h, gtktempmap.c, play.c,
+	show.c,credits.sh: Add a button to the cube analysis widget to
+	switch between at-score and money evaluations.
+	(Contributed by Aaron Tikuisis and Isaac Keslassy)
+
 2019-02-24  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gnubg.c: Decrease doubtful/bad/very bad thresholds in analysis

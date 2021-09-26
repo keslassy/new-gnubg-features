@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 1999-2019 the AUTHORS
+ * Copyright (C) 1999-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@
 #include "openurl.h"
 #include "multithread.h"
 
-#if USE_GTK
+#if defined(USE_GTK)
 #include "gtkboard.h"
 #include "gtkgame.h"
 #include "gtktheory.h"
@@ -57,6 +57,7 @@
 #include "gtkrolls.h"
 #include "gtktempmap.h"
 #include "gtkoptions.h"
+#include "gtkcube.h"
 #endif
 
 #if defined(WIN32)
@@ -455,7 +456,7 @@ CommandShowBoard(char *sz)
     if (ParsePosition(an, &sz, NULL) < 0)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         game_set(BOARD(pwBoard), an, TRUE, "", "", 0, 0, 0, 0, 0, FALSE, anChequers[ms.bgv]);
     else
@@ -487,7 +488,7 @@ CommandShowFullBoard(char *sz)
     if (ParsePosition(an, &sz, NULL) < 0)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         game_set(BOARD(pwBoard), an, ms.fTurn,
                  ap[1].szName, ap[0].szName, ms.nMatchTo,
@@ -506,7 +507,7 @@ CommandShowFullBoard(char *sz)
 extern void
 CommandShowDelay(char *UNUSED(sz))
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (nDelay)
         outputf(_("The delay is set to %u ms.\n"), nDelay);
     else
@@ -552,7 +553,7 @@ extern void
 CommandShowCalibration(char *UNUSED(sz))
 {
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowCalibration();
         return;
@@ -632,7 +633,7 @@ extern void
 CommandShowCopying(char *UNUSED(sz))
 {
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowList(aszCopying, _("Copying"), NULL);
     else
@@ -759,7 +760,7 @@ extern void
 CommandShowMatchInfo(char *UNUSED(sz))
 {
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKMatchInfo();
         return;
@@ -817,7 +818,7 @@ CommandShowPipCount(char *sz)
 
     outputf(_("The pip counts are: %s %u, %s %u.\n"), ap[ms.fMove].szName, anPips[1], ap[!ms.fMove].szName, anPips[0]);
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX && fFullScreen) {    /* Display in dialog box in full screen mode (urgh) */
         output(" ");
         outputx();
@@ -971,7 +972,7 @@ CommandShowBuildInfo(char *UNUSED(sz))
 {
     const char *pch;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         GTKShowBuildInfo(pwMain, NULL);
 #endif
@@ -989,7 +990,7 @@ CommandShowScoreSheet(char *UNUSED(sz))
     gchar *data0 = NULL, *data1 = NULL;
     listOLD *pl;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowScoreSheet();
         return;
@@ -1055,7 +1056,7 @@ CommandShowScoreSheet(char *UNUSED(sz))
 extern void
 CommandShowCredits(char *UNUSED(sz))
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKCommandShowCredits(NULL, NULL);
         return;
@@ -1070,7 +1071,7 @@ extern void
 CommandShowWarranty(char *UNUSED(sz))
 {
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX)
         ShowList(aszWarranty, _("Warranty"), NULL);
     else
@@ -1119,7 +1120,7 @@ CommandShowKleinman(char *sz)
     if (ParsePosition(an, &sz, NULL) < 0)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowRace(an);
         return;
@@ -1173,7 +1174,7 @@ CommandShowThorp(char *sz)
     if (ParsePosition(an, &sz, NULL) < 0)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowRace(an);
         return;
@@ -1220,7 +1221,7 @@ CommandShow8912(char *sz)
     if (ParsePosition(anBoard, &sz, NULL) < 0)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowRace(anBoard);
         return;
@@ -1267,7 +1268,7 @@ CommandShowKeith(char *sz)
     if (ParsePosition(an, &sz, NULL) < 0)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowRace(an);
         return;
@@ -1315,7 +1316,7 @@ CommandShowIsight(char *sz)
     if (ParsePosition(an, &sz, NULL) < 0)
         return;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowRace(an);
         return;
@@ -1350,7 +1351,7 @@ CommandShowGammonValues(char *UNUSED(sz))
 
         return;
     }
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowTheory(1);
         return;
@@ -1432,7 +1433,7 @@ CommandShowOneSidedRollout(char *sz)
         return;
 
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowRace(anBoard);
         return;
@@ -1478,7 +1479,7 @@ CommandShowMatchEquityTable(char *sz)
         anScore[0] = anScore[1] = -1;
 
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowMatchEquityTable(n, anScore);
         return;
@@ -1520,7 +1521,7 @@ CommandShowOutput(char *UNUSED(sz))
             _("Game winning chances will be shown as percentages.\n") :
             _("Game winning chances will be shown as probabilities.\n"));
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (!fX)
 #endif
         outputf(fOutputRawboard ? _("Boards will be shown in raw format.\n") : _("Boards will be shown in ASCII.\n"));
@@ -1529,7 +1530,7 @@ CommandShowOutput(char *UNUSED(sz))
 extern void
 CommandShowVersion(char *UNUSED(sz))
 {
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowVersion();
         return;
@@ -1559,7 +1560,7 @@ CommandShowMarketWindow(char *sz)
 
         return;
     }
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowTheory(0);
         return;
@@ -1834,7 +1835,7 @@ CommandShowExport(char *UNUSED(sz))
 
     int i;
 
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowExport(&exsExport);
         return;
@@ -2021,7 +2022,7 @@ extern void
 CommandShowRolls(char *sz)
 {
 
-#if USE_GTK
+#if defined(USE_GTK)
     int nDepth = ParseNumber(&sz);
 #else
     (void) sz;                  /* suppress unused parameter compiler warning */
@@ -2032,7 +2033,7 @@ CommandShowRolls(char *sz)
 
         return;
     }
-#if USE_GTK
+#if defined(USE_GTK)
 
     if (fX) {
         static evalcontext ec0ply = { TRUE, 0, FALSE, TRUE, 0.0 };
@@ -2056,7 +2057,7 @@ CommandShowTemperatureMap(char *sz)
 
         return;
     }
-#if USE_GTK
+#if defined(USE_GTK)
 
     if (fX) {
 
@@ -2072,8 +2073,14 @@ CommandShowTemperatureMap(char *sz)
                 int i;
                 gchar *asz[2];
 
-                for (i = 0; i < 2; ++i)
+                for (i = 0; i < 2; ++i) {
                     memcpy(&ams[i], &ms, sizeof(matchstate));
+                    /* if MoneyEval is enabled, we evaluate in money play */
+                    if (cubeTempMapAtMoney) {
+                        ams[i].nMatchTo = 0;
+                        ams[i].fJacoby = cubeTempMapJacoby;
+                    }
+                }
 
                 ams[1].nCube *= 2;
                 ams[1].fCubeOwner = !ams[1].fMove;
@@ -2194,7 +2201,7 @@ CommandShowBearoff(char *sz)
 
     if (ParsePosition(an, &sz, NULL) < 0)
         return;
-#if USE_GTK
+#if defined(USE_GTK)
     if (fX) {
         GTKShowRace(an);
         return;

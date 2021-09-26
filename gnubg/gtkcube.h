@@ -23,4 +23,7 @@
 
 extern GtkWidget *CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int did_take, int hist);
 
+extern int cubeTempMapAtMoney;   // extern: for the temperature map when the MoneyEval button is toggled on
+extern int cubeTempMapJacoby;    // extern: also for the temperature map when the MoneyEval button is toggled on 
+
 #endif
