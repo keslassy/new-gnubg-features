@@ -95,7 +95,7 @@ ImportFormat import_format[] = {
     {N_IMPORT_TYPES, NULL, N_("Unknown file format"), NULL}
 };
 
-typedef struct _FileHelper {
+typedef struct {
     FILE *fp;
     size_t dataRead;
     unsigned int dataPos;
@@ -146,7 +146,7 @@ fhDataGetChar(FileHelper * fh)
 
 #define BLOCK_SIZE 1024
 #define MAX_READ_SIZE 5000
-    fh->data = realloc(fh->data, fh->dataRead + BLOCK_SIZE);
+    fh->data = g_realloc(fh->data, fh->dataRead + BLOCK_SIZE);
     if (fh->dataRead > MAX_READ_SIZE)
         numRead = 0;            /* Too big - should have worked things out by now! */
     else
