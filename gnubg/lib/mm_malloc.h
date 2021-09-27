@@ -27,7 +27,7 @@
 #ifndef MM_MALLOC_H_INCLUDED
 #define MM_MALLOC_H_INCLUDED
 
-#if !defined(__MINGW32__) || !defined(__GNUC__) || !defined( _CRT_ALLOCATION_DEFINED)
+#if (!defined(__MINGW32__) || !defined(__GNUC__) || !defined( _CRT_ALLOCATION_DEFINED)) || defined(USABLE_UNDER_MSYS)
 
 #include <stdlib.h>
 #include <errno.h>
