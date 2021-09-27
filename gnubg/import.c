@@ -3347,7 +3347,7 @@ WritePartyGame(FILE * fp, char *gameStr, int ns)
     fprintf(fp, "Wins %d point%s\n\n", abs(ns), (abs(ns) == 1) ? "" : "s");
 }
 
-typedef struct _PartyGame {
+typedef struct {
     int s1, s2;
     char *gameStr;
 } PartyGame;
@@ -3378,10 +3378,9 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
                     strcpy(p1, value);
                 else if (!StrCaseCmp(key, "PLAYER_2"))
                     strcpy(p2, value);
-                else if (!StrCaseCmp(key, "GAMEPLAY")) {
-                    pg.gameStr = (char *) realloc(pg.gameStr, strlen(value) + 1);
-                    strcpy(pg.gameStr, value);
-                } else if (!StrCaseCmp(key, "SCORE1"))
+                else if (!StrCaseCmp(key, "GAMEPLAY"))
+                    pg.gameStr = g_strdup(value);
+                else if (!StrCaseCmp(key, "SCORE1"))
                     pg.s1 = atoi(value);
                 else if (!StrCaseCmp(key, "SCORE2")) {
                     PartyGame *newGame;
@@ -3412,10 +3411,10 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
             WritePartyGame(matFP, pGame->gameStr, pts);
             s1 = pGame->s1;
             s2 = pGame->s2;
-            free(pGame->gameStr);
+            g_free(pGame->gameStr);
             g_free(pGame);
         }
-        free(pg.gameStr);
+        g_free(pg.gameStr);
         fclose(matFP);
         fclose(partyFP);
         g_list_free(pl);
@@ -3423,7 +3422,7 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
     }
     if (ferror(partyFP))
         outputerr("tomat");
-    free(pg.gameStr);
+    g_free(pg.gameStr);
     fclose(partyFP);
     return FALSE;
 }
