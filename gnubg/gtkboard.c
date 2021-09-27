@@ -73,7 +73,7 @@ int animate_player, *animate_move_list, animation_finished = TRUE;
 
 static GtkVBoxClass *parent_class = NULL;
 
-typedef struct _SetDiceData {
+typedef struct {
     unsigned char *TTachDice[2], *TTachPip[2], *TTachGrayDice, *TTachGrayPip;
     BoardData *bd;
     manualDiceType mdt;
@@ -806,7 +806,7 @@ Confirm(BoardData * bd)
         UserCommand("move");
     else if (bd->valid_move &&
              bd->valid_move->cMoves == bd->move_list.cMaxMoves && bd->valid_move->cPips == bd->move_list.cMaxPips) {
-        FormatMovePlain(move, bd->old_board, bd->valid_move->anMove);
+        FormatMovePlain(move, (ConstTanBoard)bd->old_board, bd->valid_move->anMove);
 
         UserCommand(move);
     } else

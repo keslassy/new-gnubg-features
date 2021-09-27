@@ -376,7 +376,7 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
     if (j >= 0 && ptmw->fShowBestMove) {
         char szMove[FORMATEDMOVESIZE];
 
-        FormatMovePlain(szMove, ptmw->atm[m].pms->anBoard, ptmw->atm[m].aaanMove[i][j]);
+        FormatMovePlain(szMove, (ConstTanBoard)ptmw->atm[m].pms->anBoard, ptmw->atm[m].aaanMove[i][j]);
         if (ptmw->fShowEquity)
             g_string_append_printf(str, " %s", szMove);
         else

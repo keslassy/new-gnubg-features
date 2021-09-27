@@ -478,7 +478,7 @@ CommandExportMatchPS(char *sz)
 
 #if defined(HAVE_LIBPNG)
 
-/* size of html images in steps of BOARD_WIDTH x BOARD_HEIGHT
+/* size of HTML images in steps of BOARD_WIDTH x BOARD_HEIGHT
  * as defined in boarddim.h */
 
 extern int
@@ -523,7 +523,7 @@ WritePNG(const char *sz, unsigned char *puch, unsigned int nStride, unsigned int
     atext[0].text = "Backgammon board";
     atext[0].compression = PNG_TEXT_COMPRESSION_NONE;
 
-    atext[1].key = "author";
+    atext[1].key = "Author";
     atext[1].text = VERSION_STRING;
     atext[1].compression = PNG_TEXT_COMPRESSION_NONE;
 
@@ -1090,11 +1090,11 @@ ExportGameJF(FILE * pf, listOLD * plGame, int iGame, int withScore, int fSst)
                          * editing position : don't export the move, only the dice */
                         diceRolled = 1;
                     else
-                        FormatMovePlain(sz + 4, anBoard, pmr->n.anMove);
+                        FormatMovePlain(sz + 4, (ConstTanBoard)anBoard, pmr->n.anMove);
                 } else
-                    FormatMovePlain(sz + 4, anBoard, pmr->n.anMove);
+                    FormatMovePlain(sz + 4, (ConstTanBoard)anBoard, pmr->n.anMove);
             } else
-                FormatMovePlain(sz + 4, anBoard, pmr->n.anMove);
+                FormatMovePlain(sz + 4, (ConstTanBoard)anBoard, pmr->n.anMove);
             ApplyMove(anBoard, pmr->n.anMove, FALSE);
             SwapSides(anBoard);
             /*   if (( sz[ strlen(sz)-1 ] == ' ') && (strlen(sz) > 5 ))

@@ -541,7 +541,7 @@ ExtFIBSBoard(scancontext * pec)
                          processedBoard.anBoard, &ci, &GetEvalChequer()->ec, *GetEvalMoveFilter()) < 0)
             return NULL;
 
-        FormatMovePlain(szMove, anBoardOrig, anMove);
+        FormatMovePlain(szMove, (ConstTanBoard)anBoardOrig, anMove);
         szResponse = g_strconcat(szMove, "\n", NULL);
     } else {
         /* double decision */
