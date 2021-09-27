@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2019 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2006-2011 the AUTHORS
+ * Copyright (C) 2006-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,12 +26,6 @@
 #include <glib/gi18n.h>
 #include "common.h"
 #include "analysis.h"
-
-typedef struct GraphData {
-    float ***data;
-    unsigned int numGames;
-    float maxY;
-} GraphData;
 
 #define COL_WIDTH 5.f
 #define MID_GAP 1

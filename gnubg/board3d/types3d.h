@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006-2019 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2007-2020 the AUTHORS
+ * Copyright (C) 2007-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,28 +33,28 @@ typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
 typedef float GLfloat;
 
-typedef enum _displaytype {
+typedef enum {
     DT_2D, DT_3D
 } displaytype;
 
-typedef enum _lighttype {
+typedef enum {
     LT_POSITIONAL, LT_DIRECTIONAL
 } lighttype;
 
-typedef enum _PieceType {
+typedef enum {
     PT_ROUNDED, PT_FLAT
 } PieceType;
 
-typedef enum _PieceTextureType {
+typedef enum {
     PTT_TOP, PTT_ALL, PTT_BOTTOM, NUM_TEXTURE_TYPES
 } PieceTextureType;
 
-typedef enum _TextureType {
+typedef enum {
     TT_NONE = 1, TT_GENERAL = 2, TT_PIECE = 4, TT_HINGE = 8, TT_DISABLED = 16
 } TextureType;
 
 
-typedef struct _Texture {
+typedef struct {
         unsigned int texID;
         int width;
         int height;
@@ -63,14 +63,14 @@ typedef struct _Texture {
 #define FILENAME_SIZE 15
 #define NAME_SIZE 20
 
-typedef struct _TextureInfo {
+typedef struct {
     char file[FILENAME_SIZE + 1];
     char name[NAME_SIZE + 1];
     TextureType type;
 } TextureInfo;
 
 
-typedef struct _Material {
+typedef struct {
     float ambientColour[4];
     float diffuseColour[4];
     float specularColour[4];
@@ -81,8 +81,7 @@ typedef struct _Material {
 } Material;
 
 
-typedef struct _OglModel
-{
+typedef struct {
         float* data;
         int dataLength;
         int dataStart;
@@ -90,8 +89,7 @@ typedef struct _OglModel
 
 enum ModelType { MT_BACKGROUND, MT_BASE, MT_ODDPOINTS, MT_EVENPOINTS, MT_TABLE, MT_HINGE, MT_HINGEGAP, MT_CUBE, MT_MOVEINDICATOR, MT_PIECE, MT_PIECETOP, MT_DICE, MT_DOT, MT_FLAG, MT_FLAGPOLE, MT_RECT, MAX_MODELS };
 
-typedef struct _ModelManager
-{
+typedef struct {
     int totalNumVertices;
     int allocNumVertices;
     float* vertexData;
@@ -107,11 +105,11 @@ typedef struct _ModelManager
 /* Animation paths */
 
 #define MAX_PATHS 3
-typedef enum _PathType {
+typedef enum {
     PATH_LINE, PATH_CURVE_9TO12, PATH_CURVE_12TO3, PATH_PARABOLA, PATH_PARABOLA_12TO3
 } PathType;
 
-typedef struct _Path {
+typedef struct {
     float pts[MAX_PATHS + 1][3];
     PathType pathType[MAX_PATHS];
     int state;
@@ -123,24 +121,24 @@ typedef struct _Path {
 /* Dice */
 
 /* Work out which sides of dice to draw */
-typedef struct _diceTest {
+typedef struct {
     int top, bottom, side[4];
 } diceTest;
 
-typedef struct _DiceRotation {
+typedef struct {
     float xRotStart, yRotStart;
     float xRot, yRot;
     float xRotFactor, yRotFactor;
 } DiceRotation;
 
-typedef struct _EigthPoints
+typedef struct
 {       /* Used for rounded corners */
     float*** points;
     unsigned int accuracy;
 } EigthPoints;
 
 
-typedef struct _OGLFont {
+typedef struct {
     unsigned int textGlyphs;        // Used in graph
     unsigned int AAglyphs;  // For Anti-aliasing
     FT_Pos advance;
@@ -153,7 +151,7 @@ typedef struct _OGLFont {
 } OGLFont;
 
 
-typedef struct _BoardData3d {
+typedef struct {
     GtkWidget *drawing_area3d;  /* main 3d widget */
 
     /* Store models for each board part */
@@ -209,5 +207,13 @@ typedef struct _BoardData3d {
     int numTextures;
     unsigned int dotTexture;    /* Holds texture used to draw dots on dice */
 } BoardData3d;
+
+
+/* GL related, but not specifically 3D */
+typedef struct {
+    float ***data;
+    unsigned int numGames;
+    float maxY;
+} GraphData;
 
 #endif
