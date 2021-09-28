@@ -174,6 +174,7 @@ typedef enum {
     CMD_SHOW_STATISTICS_MATCH,
     CMD_SHOW_TEMPERATURE_MAP,
     CMD_SHOW_TEMPERATURE_MAP_CUBE,
+    CMD_SHOW_SCORE_MAP,    
     CMD_SHOW_VERSION,
     CMD_SHOW_WARRANTY,
     CMD_SWAP_PLAYERS,
@@ -379,6 +380,7 @@ CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_ROLLS, "show rolls");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_STATISTICS_MATCH, "show statistics match");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_TEMPERATURE_MAP, "show temperaturemap");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_TEMPERATURE_MAP_CUBE, "show temperaturemap =cube");
+CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_SCORE_MAP, "show scoremap");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_VERSION, "show version");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_WARRANTY, "show warranty");
 CREATE_CMD_ACTION_CALLBACK(CMD_SWAP_PLAYERS, "swap players");
@@ -457,6 +459,7 @@ static const char *aszCommands[NUM_CMDS] = {
     "show statistics match",
     "show temperaturemap",
     "show temperaturemap =cube",
+    "show scoremap",  
     "show version",
     "show warranty",
     "swap players",
@@ -3429,6 +3432,8 @@ static GtkActionEntry actionEntries[] = {
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_TEMPERATURE_MAP)},
     {"TemperatureMapCubeAction", NULL, N_("Temperature Map (cube decision)"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_TEMPERATURE_MAP_CUBE)},
+    {"ScoreMapAction", NULL, N_("Score Map"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_SCORE_MAP)},
     {"RaceTheoryAction", NULL, N_("_Race Theory"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_KLEINMAN)},
     {"MarketWindowAction", NULL, N_("_Market window"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MARKETWINDOW)},
     {"MatchEquityTableAction", NULL, N_("M_atch equity table"), NULL, NULL,
@@ -3669,6 +3674,8 @@ static GtkItemFactoryEntry aife[] = {
      CMD_SHOW_TEMPERATURE_MAP, NULL, NULL},
     {N_("/_Analyse/Temperature Map (cube decision)"), NULL, Command,
      CMD_SHOW_TEMPERATURE_MAP_CUBE, NULL, NULL},
+    {N_("/_Analyse/Score Map (cube decision)"), NULL, Command,
+     CMD_SHOW_SCORE_MAP, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/_Race Theory"),
      NULL, Command, CMD_SHOW_KLEINMAN, NULL, NULL},
