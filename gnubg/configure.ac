@@ -55,6 +55,9 @@ case "$host" in
     win32=yes
     CFLAGS="$CFLAGS -mms-bitfields"
     LDFLAGS="$LDFLAGS -lws2_32 -lwinmm"
+    if [[[ "$(uname -or)" == *Msys ]]]; then
+        AC_DEFINE(USABLE_UNDER_MSYS, 1, [Using Msys])
+    fi
     ;;
   *-*-darwin*)
     darwin=yes
@@ -307,7 +310,7 @@ AC_SUBST(READLINE_LIBS)
 
 dnl
 dnl Check for gmp
-dnl 
+dnl
 
 bcgmp=n
 AC_CHECK_LIB(gmp,__gmpz_import,
@@ -413,7 +416,8 @@ if test "$with_board3d" = "yes" && test "$no_board3d" = "yes"; then
 fi
 
 if test "$with_board3d" != "no" && test "$have_cglm" = "no"; then
-	AC_MSG_ERROR([board3d requested but cglm headers not found ; extract GNUbg-provided snapshot of them with 'sh non-src/cglm.shar' and rerun configure])
+	AC_MSG_NOTICE([Extract cglm headers])
+	sh non-src/cglm.shar > /dev/null
 fi
 
 AM_CONDITIONAL(USE_GTK, test "$no_gtk" != "yes" )
@@ -472,11 +476,11 @@ AC_ARG_ENABLE( simd, [  --enable-simd=TYPE      enable SIMD usage for newer cpus
 if test "x$simdcpu" = "xundef" || test "x$simdcpu" = "xyes"; then
     if test "x$ax_cv_have_fma_ext" = "xyes"; then
         simdcpu="fma"
-    elif test "x$ax_cv_have_avx_ext" = "xyes"; then 
+    elif test "x$ax_cv_have_avx_ext" = "xyes"; then
         simdcpu="avx"
     elif test "x$ax_cv_have_sse2_ext" = "xyes"; then
         simdcpu="sse2"
-    elif test "x$ax_cv_have_sse_ext" = "xyes"; then 
+    elif test "x$ax_cv_have_sse_ext" = "xyes"; then
         simdcpu="sse"
 # not yet
 #    elif test "x$ax_cv_have_neon_ext" = "xyes"; then
@@ -507,7 +511,7 @@ if test "x$simdcpu" != "xno"; then
 				SIMD_CFLAGS="-mfma -mavx"
 			elif test "x$simdcpu" = "xavx"; then
 				SIMD_CFLAGS="-mavx"
-			elif test "x$simdcpu" = "xsse2"; then 
+			elif test "x$simdcpu" = "xsse2"; then
 				SIMD_CFLAGS="-msse -msse2"
 			elif test "x$simdcpu" = "xneon"; then
 				SIMD_CFLAGS="-mfpu=neon"
@@ -549,9 +553,9 @@ if test "x$enable_threads" != "xno"; then
 fi
 AS_IF( [test "x$enable_threads" != "xno"], [AC_MSG_RESULT($threads)], [AC_MSG_RESULT(no)] )
 
-dnl 
+dnl
 dnl Maximum number of threads
-dnl 
+dnl
 
 AC_ARG_WITH([eval_max_threads],
 AC_HELP_STRING([--with-eval-max-threads=size],
@@ -595,7 +599,7 @@ else
 fi
 
 AC_MSG_CHECKING([whether g_asserts are enabled])
-AC_ARG_ENABLE([gasserts], 
+AC_ARG_ENABLE([gasserts],
     AC_HELP_STRING([--enable-gasserts], [enable g_assert debugging macros (Default disabled)]), [gasserts="yes"], [gasserts="no"])
 if test x"$enable_gasserts" != x"yes"; then
     AM_CFLAGS="$AM_CFLAGS -DG_DISABLE_ASSERT"
@@ -603,13 +607,13 @@ fi
 AS_IF( [test x"$enable_gasserts" != x"yes"], [AC_MSG_RESULT($gasserts)], [AC_MSG_RESULT(yes)] )
 
 dnl Compiling with -O3 makes a useful difference with gcc, clang and Sun's
-dnl compiler ; -ffast-math helps as well when available.	 
-dnl For instance, some match analysis on a Core i5 CPU (gcc 4.4.7, -mavx) :	 
-dnl -O2             1:23	 
-dnl -O3             1:14	 
+dnl compiler ; -ffast-math helps as well when available.
+dnl For instance, some match analysis on a Core i5 CPU (gcc 4.4.7, -mavx) :
+dnl -O2             1:23
+dnl -O3             1:14
 dnl -O3 -ffast-math 1:11
 AM_CFLAGS="-O3 $AM_CFLAGS"
-if test x"$GCC" = "xyes"; then	 
+if test x"$GCC" = "xyes"; then
     AM_CFLAGS="-ffast-math $AM_CFLAGS"
 fi
 
