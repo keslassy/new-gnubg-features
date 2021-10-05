@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-20O9 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2008-2018 the AUTHORS
+ * Copyright (C) 2008-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1394,6 +1394,9 @@ static command acSetVariation[] = {
     { "temperaturemap", CommandShowTemperatureMap, 
       N_("Show temperature map (graphic overview of dice distribution)"), 
       NULL, NULL },
+    { "scoremap", CommandShowScoreMap, 
+      N_("Show score map (graphic overview of cube at different scores)"), 
+      NULL, NULL },      
 #if defined(USE_MULTITHREAD)
     { "threads", CommandShowThreads, N_("Show number of calculation threads"),
 	NULL, NULL },

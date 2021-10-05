@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2002-2019 the AUTHORS
+ * Copyright (C) 2002-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 #include "gtkgame.h"
 #include "gtkchequer.h"
 #include "gtktempmap.h"
+#include "gtkscoremap.h"
 #include "gtkwindows.h"
 #include "progress.h"
 #include "format.h"
@@ -193,6 +194,16 @@ MoveListTempMapClicked(GtkWidget * pw, hintdata * phd)
     for (i = 0; i < c; ++i)
         g_free(asz[i]);
     g_free(asz);
+}
+
+static void
+MoveListScoreMapClicked(GtkWidget * UNUSED(pw), hintdata * UNUSED(phd))
+{
+
+    char *sz = g_strdup("show scoremap =move"); //cf keyword -> gtkgame.c: CMD_SHOW_SCORE_MAP
+    UserCommand(sz);
+    g_free(sz);  
+
 }
 
 static void
@@ -459,6 +470,7 @@ CreateMoveListTools(hintdata * phd)
     GtkWidget *pwCopy = gtk_button_new_with_label(_("Copy"));
     GtkWidget *pwTempMap = gtk_button_new_with_label(_("TM"));
     GtkWidget *pwCmark = gtk_button_new_with_label(_("Cmark"));
+    GtkWidget *pwScoreMap = gtk_button_new_with_label(_("Score Map"));     
     int i;
 
     pwDetails = phd->fDetails ? NULL : gtk_toggle_button_new_with_label(_("Details"));
@@ -471,6 +483,7 @@ CreateMoveListTools(hintdata * phd)
     phd->pwCopy = pwCopy;
     phd->pwTempMap = pwTempMap;
     phd->pwCmark = pwCmark;
+    phd->pwScoreMap = pwScoreMap;
 
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_style_context_add_class(gtk_widget_get_style_context(pwEval), "gnubg-analysis-button");
@@ -487,7 +500,7 @@ CreateMoveListTools(hintdata * phd)
 
     /* toolbox on the left with buttons for eval, rollout and more */
 
-    pwTools = gtk_table_new(2, phd->fDetails ? 6 : 7, FALSE);
+    pwTools = gtk_table_new(2, 7, FALSE);
 
     gtk_table_attach(GTK_TABLE(pwTools), pwEval, 0, 1, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
@@ -530,7 +543,7 @@ CreateMoveListTools(hintdata * phd)
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     if (!phd->fDetails)
-        gtk_table_attach(GTK_TABLE(pwTools), pwDetails, 5, 7, 0, 1,
+        gtk_table_attach(GTK_TABLE(pwTools), pwDetails, 5, 6, 0, 1,
                          (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
 
     gtk_table_attach(GTK_TABLE(pwTools), pwRollout, 0, 1, 1, 2,
@@ -576,9 +589,11 @@ CreateMoveListTools(hintdata * phd)
     gtk_table_attach(GTK_TABLE(pwTools), pwCmark, 5, 6, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 6, 7, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 6, 7, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
+    gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 6, 7, 1, 2,
+                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0); 
 
     gtk_widget_set_sensitive(pwMWC, ms.nMatchTo);
     gtk_widget_set_sensitive(pwMove, FALSE);
@@ -600,6 +615,7 @@ CreateMoveListTools(hintdata * phd)
     g_signal_connect(G_OBJECT(pwShow), "toggled", G_CALLBACK(MoveListShowToggledClicked), phd);
     g_signal_connect(G_OBJECT(pwCopy), "clicked", G_CALLBACK(MoveListCopy), phd);
     g_signal_connect(G_OBJECT(pwTempMap), "clicked", G_CALLBACK(MoveListTempMapClicked), phd);
+    g_signal_connect(G_OBJECT(pwScoreMap), "clicked", G_CALLBACK(MoveListScoreMapClicked), phd);
     g_signal_connect(G_OBJECT(pwCmark), "clicked", G_CALLBACK(MoveListCmarkClicked), phd);
     if (!phd->fDetails)
         g_signal_connect(G_OBJECT(pwDetails), "clicked", G_CALLBACK(MoveListDetailsClicked), phd);
@@ -625,6 +641,8 @@ CreateMoveListTools(hintdata * phd)
     gtk_widget_set_tooltip_text(pwCmark, _("Mark selected moves for later rollout"));
 
     gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position" " after selected move"));
+
+    gtk_widget_set_tooltip_text(pwScoreMap, _("Show map of best moves at different scores"));
 
 
     return pwTools;

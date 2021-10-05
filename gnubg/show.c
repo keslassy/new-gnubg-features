@@ -56,6 +56,7 @@
 #include "gtkmet.h"
 #include "gtkrolls.h"
 #include "gtktempmap.h"
+#include "gtkscoremap.h"
 #include "gtkoptions.h"
 #include "gtkcube.h"
 #endif
@@ -2101,6 +2102,63 @@ CommandShowTemperatureMap(char *sz)
 
         } else
             GTKShowTempMap(&ms, 1, NULL, FALSE);
+
+        return;
+    }
+#else
+    (void) sz;                  /* suppress unused parameter compiler warning */
+#endif
+
+    CommandNotImplemented(NULL);
+
+}
+
+// defined in backgammon.h
+extern void
+CommandShowScoreMap(char *sz)
+{
+    if (ms.gs != GAME_PLAYING) {
+        outputl(_("No game in progress (type `new game' to start one)."));
+
+        return;
+    }
+#if defined(USE_GTK)
+
+    if (fX) {
+        
+// TODO: don't show score map if not a double. Perhaps start with doShowScoreMap=ms.fDoubled
+        int doShowScoreMap=TRUE; 
+        if ( sz && *sz && (strncmp(sz, "=move", 5) ==0) ) { //strncmp: returns 0 if same content => we enter if NOT move
+            GTKShowScoreMap(&ms, 0);
+        } else { 
+            cubeinfo ci;
+            GetMatchStateCubeInfo(&ci, &ms);
+            if (!GetDPEq(NULL, NULL, &ci)) {
+
+                /* cube is available 
+
+                matchstate ams[1];
+                int i;
+                gchar *asz[1];
+
+                memcpy(&ams[0], &ms, sizeof(matchstate));
+
+                asz[0] = g_malloc(200);
+                GetMatchStateCubeInfo(&ci, &ams[0]);
+                FormatCubePosition(asz[0], &ci);
+
+                GTKShowScoreMap(ams, 1, asz, FALSE);
+
+                for (i = 0; i < 2; ++i)
+                    g_free(asz[i]);
+
+            } else {*/
+                outputl(_("Cube is not available."));
+                doShowScoreMap=FALSE;
+            }
+        }
+        if (doShowScoreMap)
+            GTKShowScoreMap(&ms, 1); //NULL, FALSE);
 
         return;
     }

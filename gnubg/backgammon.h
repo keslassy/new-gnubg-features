@@ -43,7 +43,7 @@
 #define GNUBG_CHARSET "UTF-8"
 
 extern const char *intro_string;
-typedef struct _command {
+typedef struct command {
     /* Command name (NULL indicates end of list) */
     const char *sz;
     /* Command handler; NULL to use default subcommand handler */
@@ -52,12 +52,12 @@ typedef struct _command {
     const char *szHelp;
     const char *szUsage;
     /* List of subcommands (NULL if none) */
-    struct _command *pc;
+    struct command *pc;
 } command;
 
-typedef struct _procrecorddata {
+typedef struct procrecorddata {
     /* Record handler */
-    int (*pfProcessRecord) (struct _procrecorddata *);
+    int (*pfProcessRecord) (struct procrecorddata *);
     void *pvUserData;
     void *avInputData[8];
     void *avOutputData[8];
@@ -72,11 +72,11 @@ typedef struct _procrecorddata {
 #define PROCREC_HINT_ARGOUT_INDEX 4
 
 
-typedef enum _playertype {
+typedef enum {
     PLAYER_HUMAN, PLAYER_GNU, PLAYER_EXTERNAL
 } playertype;
 
-typedef struct _player {
+typedef struct {
     /* For all player types: */
     char szName[MAX_NAME_LEN];
     playertype pt;
@@ -89,7 +89,7 @@ typedef struct _player {
     char *szSocket;
 } player;
 
-typedef enum _movetype {
+typedef enum {
     MOVE_GAMEINFO,
     MOVE_NORMAL,
     MOVE_DOUBLE,
@@ -102,7 +102,7 @@ typedef enum _movetype {
     MOVE_SETCUBEPOS
 } movetype;
 
-typedef struct _movegameinfo {
+typedef struct {
     /* ordinal number of the game within a match */
     int i;
     /* match length */
@@ -129,14 +129,14 @@ typedef struct _movegameinfo {
     statcontext sc;
 } xmovegameinfo;
 
-typedef struct _cubedecisiondata {
+typedef struct {
     float aarOutput[2][NUM_ROLLOUT_OUTPUTS];
     float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
     evalsetup esDouble;
     CMark cmark;
 } cubedecisiondata;
 
-typedef struct _movenormal {
+typedef struct {
     /* Move made. */
     int anMove[8];
     /* index into the movelist of the move that was made */
@@ -144,7 +144,7 @@ typedef struct _movenormal {
     skilltype stMove;
 } xmovenormal;
 
-typedef struct _moveresign {
+typedef struct {
     int nResigned;
     evalsetup esResign;
     float arResign[NUM_ROLLOUT_OUTPUTS];
@@ -152,19 +152,19 @@ typedef struct _moveresign {
     skilltype stAccept;
 } xmoveresign;
 
-typedef struct _movesetboard {
+typedef struct {
     positionkey key;            /* always stored as if player 0 was on roll */
 } xmovesetboard;
 
-typedef struct _movesetcubeval {
+typedef struct {
     int nCube;
 } xmovesetcubeval;
 
-typedef struct _movesetcubepos {
+typedef struct {
     int fCubeOwner;
 } xmovesetcubepos;
 
-typedef struct _moverecord {
+typedef struct {
     /*
      * Common variables
      */
@@ -206,7 +206,7 @@ typedef struct _moverecord {
 } moverecord;
 
 
-typedef struct _matchinfo {     /* SGF match information */
+typedef struct {     /* SGF match information */
     char *pchRating[2];
     char *pchEvent;
     char *pchRound;
@@ -218,7 +218,7 @@ typedef struct _matchinfo {     /* SGF match information */
     unsigned int nDay;          /* 0 for nYear means date unknown */
 } matchinfo;
 
-typedef struct _decisionData {
+typedef struct {
     float aarOutput[2][NUM_ROLLOUT_OUTPUTS];
     float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
     rolloutstat aarsStatistics[2][2];
@@ -231,7 +231,7 @@ typedef struct _decisionData {
     int n;
 } decisionData;
 
-typedef struct _moveData {
+typedef struct {
     moverecord *pmr;
     matchstate *pms;
     const evalsetup *pesChequer;
@@ -239,7 +239,7 @@ typedef struct _moveData {
      movefilter(*aamf)[MAX_FILTER_PLIES];
 } moveData;
 
-typedef struct _findData {
+typedef struct {
     movelist *pml;
     ConstTanBoard pboard;
     positionkey *keyMove;
@@ -250,7 +250,7 @@ typedef struct _findData {
      movefilter(*aamf)[MAX_FILTER_PLIES];
 } findData;
 
-typedef struct _scoreData {
+typedef struct {
     move *pm;
     const cubeinfo *pci;
     const evalcontext *pec;
@@ -980,6 +980,7 @@ extern void CommandShowStatisticsGame(char *);
 extern void CommandShowStatisticsMatch(char *);
 extern void CommandShowStatisticsSession(char *);
 extern void CommandShowTemperatureMap(char *);
+extern void CommandShowScoreMap(char *);
 extern void CommandShowThorp(char *);
 extern void CommandShowThreads(char *);
 extern void CommandShowTurn(char *);

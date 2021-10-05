@@ -90,6 +90,8 @@ gtkrelational.c
 gtkrelational.h
 gtkrolls.c
 gtkrolls.h
+gtkscoremap.c
+gtkscoremap.h
 gtksplash.c
 gtksplash.h
 gtktempmap.c

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2004-2009 the AUTHORS
+ * Copyright (C) 2004-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 #include "backgammon.h"
 
-typedef struct _hintdata {
+typedef struct hintdata {
     GtkWidget *pwMoves;         /* the movelist */
     GtkWidget *pwRollout, *pwRolloutSettings;   /* rollout buttons */
     GtkWidget *pwEval, *pwEvalSettings; /* evaluation buttons */
@@ -34,6 +34,7 @@ typedef struct _hintdata {
     GtkWidget *pwShow;          /* button for showing moves */
     GtkWidget *pwTempMap;       /* button for showing temperature map */
     GtkWidget *pwCmark;         /* button for marking */
+    GtkWidget *pwScoreMap;      /* button for showing move score map */
     moverecord *pmr;
     movelist *pml;
     int fButtonsValid;

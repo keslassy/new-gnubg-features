@@ -1,7 +1,15 @@
+2021-10-05  Philippe Michel  <philippe.michel7@free.fr>
+
+	* Makefile.am, backgammon.h, commands.inc, gtkchequer.c,
+	gtkchequer.h, gtkcube.c, gtkgame.c, gtkuidefs.h, show.c,
+	gtkscoremap.c(+), gtkscoremap.h(+): Add a button to show a map of
+	chequer or cube evaluations at various scores.
+	(Contributed by Aaron Tikuisis and Isaac Keslassy)
+
 2021-09-26  Philippe Michel  <philippe.michel7@free.fr>
 
 	* backgammon.h, gtkcube.c, gtkcube.h, gtktempmap.c, play.c,
-	show.c,credits.sh: Add a button to the cube analysis widget to
+	show.c, credits.sh: Add a button to the cube analysis widget to
 	switch between at-score and money evaluations.
 	(Contributed by Aaron Tikuisis and Isaac Keslassy)
 

@@ -1114,6 +1114,16 @@ CubeAnalysisTempMap(GtkWidget * UNUSED(pw), cubehintdata * pchd)
 }
 
 static void
+CubeAnalysisScoreMap(GtkWidget * UNUSED(pw), cubehintdata * UNUSED(pchd))
+{
+/* Called by GTK when the score map button is clicked.
+*/
+
+    UserCommand("show scoremap"); //cf keyword -> gtkgame.c: CMD_SHOW_SCORE_MAP
+
+}
+
+static void
 CubeAnalysisCmark(GtkWidget * pw, cubehintdata * pchd)
 {
 /* Called by GTK when the Cmark button is clicked.
@@ -1137,6 +1147,7 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     GtkWidget *pwTempMap = gtk_button_new_with_label(_("Temp. Map"));
     GtkWidget *pwCmark = pchd->pwCmark = gtk_toggle_button_new_with_label(_("Cmark"));
     GtkWidget *pwMoneyEval = gtk_toggle_button_new_with_label(_("Money Eval"));   
+    GtkWidget *pwScoreMap = gtk_button_new_with_label(_("Score Map"));     
     GtkWidget *pw;
     int i;
 
@@ -1150,6 +1161,7 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     gtk_style_context_add_class(gtk_widget_get_style_context(pwTempMap), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwCmark), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwMoneyEval), "gnubg-analysis-button");  
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwScoreMap), "gnubg-analysis-button");      
 #endif
 
     /* toolbox on the left with buttons for eval, rollout and more */
@@ -1240,7 +1252,9 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
                      (GtkAttachOptions)(GTK_FILL), (GtkAttachOptions)(0), 0, 0);
 
     gtk_table_attach(GTK_TABLE(pwTools), pwMoneyEval, 5, 6, 0, 1,
-                     (GtkAttachOptions)(GTK_FILL), (GtkAttachOptions)(0), 0, 0);
+                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+    gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 5, 6, 1, 2,
+                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
 // Note: evalAtMoney should always be false here.
     gtk_widget_set_sensitive(pwMWC, pchd->ms.nMatchTo && !pchd->evalAtMoney); //MWC not available in money play, i.e.
@@ -1268,6 +1282,7 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     g_signal_connect(G_OBJECT(pwCmark), "toggled", G_CALLBACK(CubeAnalysisCmark), pchd);
     // clicking pwMoneyEval launches CubeAnalysisMoneyEval
     g_signal_connect(G_OBJECT(pwMoneyEval), "toggled", G_CALLBACK(CubeAnalysisMoneyEval), pchd);
+    g_signal_connect(G_OBJECT(pwScoreMap), "clicked", G_CALLBACK(CubeAnalysisScoreMap), pchd);    
   
     /* tool tips */
 
@@ -1289,6 +1304,8 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     gtk_widget_set_tooltip_text(pwMoneyEval, _("Provide hypothetical cube decision in Money Play"));
     
+    gtk_widget_set_tooltip_text(pwScoreMap, _("Provide cube decision at different scores"));
+
     if (!pchd->evalAtMoney) {
         gtk_widget_set_tooltip_text(pwRollout, _("Rollout cube decision with current settings"));
 
