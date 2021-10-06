@@ -2350,6 +2350,9 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
 
     editing = bd->playing && ToolbarIsEditing(pwToolbar);
 
+    if (!board_text)
+        return -1;
+
     if (strncmp(board_text, "board:", 6))
         return -1;
 
@@ -2360,18 +2363,12 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
 
     *dest = 0;
 
-    if (!board_text)
-        return -1;
-
     board_text++;
 
     for (dest = bd->name_opponent, i = 31; i && *board_text && *board_text != ':'; i--)
         *dest++ = *board_text++;
 
     *dest = 0;
-
-    if (!board_text)
-        return -1;
 
     for (i = 3, ppn = match_settings; i--;) {
         **ppn++ = board_text_to_setting(&board_text, &failed);
