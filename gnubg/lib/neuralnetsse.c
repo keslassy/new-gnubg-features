@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006-2009 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2007-2018 the AUTHORS
+ * Copyright (C) 2007-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,25 +50,27 @@
 float *
 sse_malloc(size_t size)
 {
-#if defined(HAVE_SSE)
-    return (float *) _mm_malloc(size, ALIGN_SIZE);
-#elif defined(HAVE_NEON)
+#if defined(HAVE_POSIX_MEMALIGN)
     void *ptr = NULL;
     
     posix_memalign(&ptr, ALIGN_SIZE, size);
     return (float *)ptr;
+#elif defined(HAVE__ALIGNED_MALLOC)
+    return (float *) _aligned_malloc(size, ALIGN_SIZE);
 #else
-    #error "Inconsistent SIMD defines"
+    return (float *) _mm_malloc(size, ALIGN_SIZE);
 #endif
 }
 
 void
 sse_free(float *ptr)
 {
-#if defined(HAVE_SSE)
-    _mm_free(ptr);
-#else
+#if defined(HAVE_POSIX_MEMALIGN)
     free(ptr);
+#elif defined(HAVE__ALIGNED_MALLOC)
+    _aligned_free(ptr);
+#else
+    _mm_free(ptr);
 #endif
 }
 

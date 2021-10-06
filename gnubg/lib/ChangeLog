@@ -1,3 +1,10 @@
+2021-10-06  Philippe Michel  <philippe.michel7@free.fr>
+
+	* neuralnetsse.c, mm_malloc.h(-) Makefile.am, ../configura.ac:
+	Modify preferred choices for aligned memory allocation. Try
+	posix_memalign(), then _aligned_malloc(), then a system/compiler
+	_mm_malloc() ; don't provide the latter any more.
+
 2018-05-12  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* simd.h, neuralnetsse.c, neuralnet.c, inputs.c: Add ARM NEON

@@ -117,7 +117,6 @@ lib/list.c
 lib/list.h
 lib/md5.c
 lib/md5.h
-lib/mm_malloc.h
 lib/mt19937ar.c
 lib/mt19937ar.h
 lib/neuralnet.c

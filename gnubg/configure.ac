@@ -349,10 +349,16 @@ dnl
 dnl Checks for library functions.
 dnl
 
-AC_CHECK_FUNCS(sigaction sigvec,break)
+AC_CHECK_FUNCS(sigaction sigvec break)
 AC_CHECK_FUNCS(strptime setpriority)
 AC_CHECK_FUNCS(mtrace)
 AC_CHECK_FUNCS(clock_gettime)
+
+dnl 
+dnl Check for aligned allocation functions
+dnl 
+
+AC_CHECK_FUNCS(posix_memalign _aligned_malloc)
 
 dnl
 dnl Checks for compiler builtins
