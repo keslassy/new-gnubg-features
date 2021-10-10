@@ -28,6 +28,8 @@
 
 <TR><TH> el.po <TD>Vangelis Skarmoutsos
 
+<TR><TH> en_GB.po <TD>
+
 <TR><TH> en_US.po <TD>Gary Wong
 
 <TR><TH> es.po <TD>Fernando García García

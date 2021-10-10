@@ -12,7 +12,7 @@ $langnames = array(
 
     "el" => "Greek",
 
-    "en" => "English",
+    "en_GB" => "English GB",
 
     "en_US" => "English US",
 
