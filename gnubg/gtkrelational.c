@@ -73,7 +73,8 @@ static GtkListStore *playerStore;
 static GtkListStore *dbStore;
 static GtkTreeIter selected_iter;
 static int optionsValid;
-static GtkWidget *playerTreeview, *adddb, *deldb, *gameStats, *dbList, *dbtype, *user, *password, *hostname, *login, *helptext;
+static GtkWidget *playerTreeview, *adddb, *deldb, *gameStats, *dbList, *dbtype, *user, *password, *hostname, *login,
+    *helptext;
 
 static void CheckDatabase(const char *database);
 static void DBListSelected(GtkTreeView * treeview, gpointer userdata);
@@ -199,7 +200,7 @@ add_columns(GtkTreeView * treeview)
 
     renderer = gtk_cell_renderer_text_new();
 
-    column = gtk_tree_view_column_new_with_attributes("Nick", renderer, "text", COLUMN_NICK, NULL);
+    column = gtk_tree_view_column_new_with_attributes(_("Nick"), renderer, "text", COLUMN_NICK, NULL);
     gtk_tree_view_column_set_sort_column_id(column, 0);
     gtk_tree_view_append_column(treeview, column);
 
@@ -461,7 +462,7 @@ TryConnection(DBProvider * pdb, GtkWidget * dbList)
         gtk_widget_set_sensitive(deldb, FALSE);
     } else {                    /* Test ok */
         GList *pl = pdb->GetDatabaseList(pdb->username, pdb->password, pdb->hostname);
-        if (g_list_find_custom(pl, pdb->database, (GCompareFunc) g_ascii_strcasecmp) == NULL) {        /* Somehow selected database not in list, so add it */
+        if (g_list_find_custom(pl, pdb->database, (GCompareFunc) g_ascii_strcasecmp) == NULL) { /* Somehow selected database not in list, so add it */
             pl = g_list_append(pl, g_strdup(pdb->database));
         }
         while (pl) {
@@ -909,7 +910,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 ** Start of right hand side of player screen...
 *******************************************************/
 
-    pwPlayerFrame = gtk_frame_new("Player");
+    pwPlayerFrame = gtk_frame_new(_("Player"));
     gtk_container_set_border_width(GTK_CONTAINER(pwPlayerFrame), OUTSIDE_FRAME_GAP);
     gtk_paned_add2(GTK_PANED(pwPaned), pwPlayerFrame);
 
