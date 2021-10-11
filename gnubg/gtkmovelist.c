@@ -76,7 +76,7 @@ MoveListCreate(hintdata * phd)
         GtkStyle *psDefault = gtk_widget_get_style(view);
 
         GtkCellRenderer *renderer = custom_cell_renderer_movelist_new();
-        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_RANK], renderer,
+        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_RANK]), renderer,
                                                     "movelist", 0, "rank", 1, NULL);
         gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(view), FALSE);
         g_object_set(renderer, "cell-background-gdk", &psDefault->bg[GTK_STATE_NORMAL],
@@ -87,33 +87,36 @@ MoveListCreate(hintdata * phd)
         GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
         g_object_set(renderer, "ypad", 0, NULL);
 
-        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_RANK], renderer,
+        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_RANK]), renderer,
                                                     "text", ML_COL_RANK, "foreground", ML_COL_FGCOL + offset, NULL);
-        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_TYPE], renderer,
+        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_TYPE]), renderer,
                                                     "text", ML_COL_TYPE, "foreground", ML_COL_FGCOL + offset, NULL);
 
         if (phd->fDetails) {
-            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_WIN], renderer,
-                                                        "text", ML_COL_WIN, "foreground", ML_COL_FGCOL + offset, NULL);
-            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_GWIN], renderer,
-                                                        "text", ML_COL_GWIN, "foreground", ML_COL_FGCOL + offset, NULL);
-            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_BGWIN],
+            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_WIN]),
+                                                        renderer, "text", ML_COL_WIN, "foreground",
+                                                        ML_COL_FGCOL + offset, NULL);
+            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_GWIN]),
+                                                        renderer, "text", ML_COL_GWIN, "foreground",
+                                                        ML_COL_FGCOL + offset, NULL);
+            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_BGWIN]),
                                                         renderer, "text", ML_COL_BGWIN, "foreground",
                                                         ML_COL_FGCOL + offset, NULL);
-            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_LOSS], renderer,
-                                                        "text", ML_COL_LOSS, "foreground", ML_COL_FGCOL + offset, NULL);
-            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_GLOSS],
+            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_LOSS]),
+                                                        renderer, "text", ML_COL_LOSS, "foreground",
+                                                        ML_COL_FGCOL + offset, NULL);
+            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_GLOSS]),
                                                         renderer, "text", ML_COL_GLOSS, "foreground",
                                                         ML_COL_FGCOL + offset, NULL);
-            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_BGLOSS],
+            gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_BGLOSS]),
                                                         renderer, "text", ML_COL_BGLOSS, "foreground",
                                                         ML_COL_FGCOL + offset, NULL);
         }
 
-        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_EQUITY], renderer,
-                                                    "text", ML_COL_EQUITY + offset, "foreground", ML_COL_FGCOL + offset,
-                                                    NULL);
-        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, aszTitleDetails[ML_COL_DIFF], renderer,
+        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_EQUITY]),
+                                                    renderer, "text", ML_COL_EQUITY + offset, "foreground",
+                                                    ML_COL_FGCOL + offset, NULL);
+        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_DIFF]), renderer,
                                                     "text", ML_COL_DIFF + offset, "foreground", ML_COL_FGCOL + offset,
                                                     NULL);
         gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, Q_(aszTitleDetails[ML_COL_MOVE]), renderer,
@@ -302,8 +305,8 @@ MoveListGetSelectionList(const hintdata * phd)
 }
 
 /* gtk_tree_path_free() is not the right function type
-   to be called directly from g_list_foreach() below
-*/
+ * to be called directly from g_list_foreach() below
+ */
 static inline void
 my_gtk_tree_path_free(gpointer data, gpointer UNUSED(user_data))
 {
