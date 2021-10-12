@@ -995,7 +995,7 @@ append_sound_options(optionswidget * pow)
     pwvboxDetails = gtk_vbox_new(FALSE, 4);
 #endif
     gtk_container_set_border_width(GTK_CONTAINER(pwvboxDetails), 4);
-    soundEnabled = gtk_check_button_new_with_label("Enabled");
+    soundEnabled = gtk_check_button_new_with_label(_("Enabled"));
     g_signal_connect(soundEnabled, "clicked", G_CALLBACK(SoundEnabledClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwvboxDetails), soundEnabled, FALSE, FALSE, 0);
 
