@@ -535,7 +535,7 @@ static int
 CompareDecisionFrequencies (const void *a, const void *b)
 {
 /* qsort compare function */
-    return ((weightedDecision *)b)->numMatches-((weightedDecision *)a)->numMatches;
+    return ((const weightedDecision *)b)->numMatches-((const weightedDecision *)a)->numMatches;
 }
 
 static void
@@ -732,7 +732,7 @@ ColorInterpolate(float rgbResult[3], float x, const float rgbvals0[3], const flo
 /*  fills rgbResult with a linearly-interpolated color at x \in [0,1] between color rgbvals0 and color rgbval1, such that 
  x=0 yields rgbvals0 and x=1 yields rgbvals1,
 */     
-    x=MAX(0.0,MIN(1.0,x));
+    x=MAX(0.0f,MIN(1.0f,x));
     for (int i=0; i<3; i++) {
         rgbResult[i] = (1.0f-x)*rgbvals0[i]+x*rgbvals1[i];
     }
@@ -2039,7 +2039,6 @@ A pointer to the containing box is kept in psm->pwCubeBox.
 // E.g., match size 3 -> MAX_CUBE_VAL=5 (so actual max value 4). match size 4 -> MAX_CUBE_VAL=7 (so 4). match size 5 -> MAX_CUBE_VAL=9 (so 8). 
     char sz[100];     
 //  char szLabel[100]; 
-    const char * current; // We use a pointer here because we will always point to a constant string.
 //  GtkWidget *pwFrame;
 //  GtkWidget *pwv;
     GtkWidget *pw;
@@ -2063,7 +2062,6 @@ A pointer to the containing box is kept in psm->pwCubeBox.
     psm->pwCubeBox = gtk_hbox_new(FALSE, 8);
 #endif     
 
-
     // in cube scoremap, we attach everything to the same row
     // while in move scoremap, we attach the "1" to an initial row,
     //      then the first set of cubes >=2 to the top right row  
@@ -2073,14 +2071,16 @@ A pointer to the containing box is kept in psm->pwCubeBox.
 
         for (i=1; i<= MAX_CUBE_VAL; i=2*i) { 
             // Iterate i=allowed cube values. (Only powers of two, up to and including the max score in the table)
-            current= (i==psm->pms->nCube) ?  " (current)" : "";
-            sprintf(sz,"%d%s",i,current);            
-            
+            if (i == psm->pms->nCube)
+                 sprintf(sz,"%d (%s) ", i, _("current"));
+             else
+                 sprintf(sz,"%d", i);
+
             if (i==1)
                 pw = pwx = gtk_radio_button_new_with_label(NULL, _(sz)); // (centered)"));
             else {
 
-                pw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx),sz);
+                pw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx), _(sz));
             }
             gtk_box_pack_start(GTK_BOX(psm->pwCubeBox), pw, FALSE, FALSE, 0);
             pi = (int *)g_malloc(sizeof(int)); 
@@ -2104,7 +2104,7 @@ A pointer to the containing box is kept in psm->pwCubeBox.
 
         gtk_box_pack_start(GTK_BOX(psm->pwCubeBox), pwTable, FALSE, FALSE, 0);
         for (i=0; i<2; i++) {
-            sprintf(sz,"%s doubled to: ", ((psm->pms->fMove) ? (ap[i].szName) : (ap[1-i].szName)));
+            sprintf(sz,_("%s doubled to: "), ((psm->pms->fMove) ? (ap[i].szName) : (ap[1-i].szName)));
             pwLabel = gtk_label_new(_(sz));
 #if GTK_CHECK_VERSION(3,0,0)
                 gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
@@ -2121,11 +2121,11 @@ A pointer to the containing box is kept in psm->pwCubeBox.
             for (j=0; j<2; j++) {
                 if (m==psm->pms->nCube && (m==1 || (j==0 && psm->pms->fMove==psm->pms->fCubeOwner) || 
                             (j==1 && psm->pms->fMove!=psm->pms->fCubeOwner) )) { 
-                    current=" (current)"; 
+                    sprintf(sz,"%d (%s) ", m, _("current"));
                 } else {
-                    current="";
+                    sprintf(sz,"%d", m);
                 }
-                sprintf(sz,"%d%s",m,current);   //
+
                 pw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx),sz);
                 gtk_table_attach_defaults(GTK_TABLE(pwTable), pw, i, i+1, j, j+1);
                 pi = (int *)g_malloc(sizeof(int)); 
@@ -2330,9 +2330,9 @@ BuildLabelFrame(scoremap *psm, GtkWidget * pwv, const char * frameTitle, const c
 
     for(i=0; i<labelStringsLen; i++) {
         if (i==0) {
-            pw = pwx = gtk_radio_button_new_with_label(NULL, labelStrings[0]);// First radio button
+            pw = pwx = gtk_radio_button_new_with_label(NULL, _(labelStrings[0])); // First radio button
         } else {
-            pw =  gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx), labelStrings[i]); // Associate this to the other radio buttons
+            pw =  gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx), _(labelStrings[i])); // Associate this to the other radio buttons
         } 
         gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
         pi = (int *)g_malloc(sizeof(int)); 
@@ -2435,52 +2435,15 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
 
  /* eval ply */
 
-    const char * plyStrings[5]={"0-ply","1-ply","2-ply","3-ply","4-ply"};   
+    const char * plyStrings[5] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply")};
 /*    for (i = 0; i < 5; ++i) {
         plyStrings[i]= g_strdup_printf(_("%d-ply"), i);
     } */
 
-    BuildLabelFrame(psm, pwv, "Eval", plyStrings, 5, 0, ScoreMapPlyToggled, TRUE, vAlignExpand);  
+    BuildLabelFrame(psm, pwv, _("Evaluation"), plyStrings, 5, 0, ScoreMapPlyToggled, TRUE, vAlignExpand);  
 /*    for (i = 0; i < 5; ++i) {
         free(plyStrings[i]);
     }    */
-
-
-//     pwFrame=gtk_frame_new(_("Eval"));
-//     gtk_box_pack_start(GTK_BOX(pwv), pwFrame, FALSE, FALSE, 0);
-
-// // #if GTK_CHECK_VERSION(3,0,0)
-// //         pwv2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-// // #else
-// //         pwv2 = gtk_vbox_new(FALSE, 4);
-// // #endif
-// //     gtk_container_add(GTK_CONTAINER(pwFrame), pwv2);
-// #if GTK_CHECK_VERSION(3,0,0)
-//     pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-// #else
-//     pwh2 = gtk_hbox_new(FALSE, 8);
-// #endif     
-//     gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-
-//     for (i = 0; i < 5; ++i) {
-//         gchar *sz = g_strdup_printf(_("%d-ply"), i);
-//         if (i == 0)
-//             pw = pwx = gtk_radio_button_new_with_label(NULL, sz);
-//         else
-//             pw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx), sz);
-//         g_free(sz);
-        
-//         gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-
-//         pi = (int *) g_malloc(sizeof(int));
-//         *pi = i;
-
-//         g_object_set_data_full(G_OBJECT(pw), "user_data", pi, g_free);
-
-//         g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(ScoreMapPlyToggled), psm);
-
-//     }
-//     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwx), TRUE);
 
     /* Match length */
     pwFrame=gtk_frame_new(_("Match length"));
@@ -2491,23 +2454,6 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
     pwh2 = gtk_hbox_new(FALSE, 8);
 #endif     
     gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-
-// #if GTK_CHECK_VERSION(3,0,0)
-//     pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-// #else
-//     pwh = gtk_hbox_new(FALSE, 8);
-// #endif
-//     // pw=gtk_label_new(_("Match length: "));
-//     // gtk_box_pack_start(GTK_BOX(pwv), pwh, FALSE, FALSE, 0);
-//     // gtk_box_pack_start(GTK_BOX(pwh), pw, FALSE, FALSE, 0);
-//    gtk_box_pack_start(GTK_BOX(pwv2), pwh, FALSE, FALSE, 0);
-
-// #if GTK_CHECK_VERSION(3,0,0)
-//         gtk_widget_set_halign(pw, GTK_ALIGN_START);
-//         gtk_widget_set_valign(pw, GTK_ALIGN_START);
-// #else
-//         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0);
-// #endif
 
     pw= gtk_combo_box_text_new();
     gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
@@ -2546,7 +2492,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
 #endif     
         gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
         
-        pw = gtk_check_button_new_with_label ("Jacoby"); 
+        pw = gtk_check_button_new_with_label (_("Jacoby")); 
         gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);    
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), moneyJacoby);
         g_signal_connect(G_OBJECT (pw), "toggled", G_CALLBACK(JacobyToggled), psm); 
@@ -2567,18 +2513,18 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
     }
 
     /* Layout frame */
-    const char * layoutStrings[2]={"Vertical", "Horizontal"};   //xxx
+    const char * layoutStrings[2] = {N_("Vertical"), N_("Horizontal")};   //xxx
 
-    BuildLabelFrame(psm, pwv, "Layout", layoutStrings, 2, layout, LayoutToggled, TRUE, vAlignExpand); 
+    BuildLabelFrame(psm, pwv, _("Layout"), layoutStrings, 2, layout, LayoutToggled, TRUE, vAlignExpand); 
 
 
     /* Display Eval frame */
     if (psm->cubeScoreMap) {
-        const char * displayEvalStrings[4]={"None", "ND", "DT", "Relative"};
-        BuildLabelFrame(psm, pwv, "Display eval", displayEvalStrings, 4, displayEval, DisplayEvalToggled, TRUE, vAlignExpand); 
+        const char * displayEvalStrings[4] = {N_("None"), N_("ND"), N_("DT"), N_("Relative")};
+        BuildLabelFrame(psm, pwv, _("Display evaluation"), displayEvalStrings, 4, displayEval, DisplayEvalToggled, TRUE, vAlignExpand); 
     } else {
-        const char * displayEvalStrings[4]={"None", "Absolute", "Relative to second best"};
-        BuildLabelFrame(psm, pwv, "Display eval", displayEvalStrings, 3, displayEval, DisplayEvalToggled, TRUE, vAlignExpand); 
+        const char * displayEvalStrings[4] = {N_("None"), N_("Absolute"), N_("Relative to second best")};
+        BuildLabelFrame(psm, pwv, _("Display evaluation"), displayEvalStrings, 3, displayEval, DisplayEvalToggled, TRUE, vAlignExpand); 
     }
 
     /* colour by frame */
@@ -2588,62 +2534,17 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
         
         /* Colour by */
 
-        // setting parameters to build the colourBy frame
-        // char * colorFrameTitle = "Colour by";
-        // int colorLen=3;
-        const char * colorStrings[3]={"All", "ND vs D", "T vs P"};   
+        const char * colorStrings[3] = {N_("All"), N_("ND vs D"), N_("T vs P")};  
 
-        BuildLabelFrame(psm, pwv, "Colour by", colorStrings, 3, colourBasedOn, ColourByToggled, psm->cubeScoreMap, vAlignExpand);  
-
-        // pwFrame=gtk_frame_new(_("Colour by"));
-        // gtk_box_pack_start(GTK_BOX(pwv), pwFrame, FALSE, FALSE, 0);
-        // if (!psm->cubeScoreMap)
-        //     gtk_widget_set_sensitive(pwFrame, FALSE);
-
-    // #if GTK_CHECK_VERSION(3,0,0)
-    //     pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-    // #else
-    //     pwh2 = gtk_hbox_new(FALSE, 8);
-    // #endif     
-    //     gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-        
-
-    //     pw = pwx = gtk_radio_button_new_with_label(NULL, _("All"));// was: ND - D/T - D/P - TGTD")); // First radio button
-    //     gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-    //     pi = (int *)g_malloc(sizeof(int)); //It is freed by gtk (that's why we use "g_free" as one of the arguments to g_object_set_data_full).
-    //     *pi=(int)ALL;
-    //     g_object_set_data_full(G_OBJECT(pw), "user_data", pi, g_free);
-    //     g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(ColourByToggled), psm); 
-    //     // gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), 1);
-    //     if (colourBasedOn==ALL)
-    //         pwColourDefault = pw; //we set this to toggle it on in case it's the default option
-
-
-    //     pw =  gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx), _("ND vs D")); // Associate this to the other radio button
-    //     gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-    //     pi = (int *)g_malloc(sizeof(int));
-    //     *pi=(int)DND;
-    //     g_object_set_data_full(G_OBJECT(pw), "user_data", pi, g_free);
-    //     g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(ColourByToggled), psm);
-    //     if (colourBasedOn==DND)
-    //         pwColourDefault = pw; //we set this to toggle it on in case it's the default option
-
-    //     pw =  gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx), _("T vs P")); // Associate this to the other radio button
-    //     gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-    //     pi = (int *)g_malloc(sizeof(int));
-    //     *pi=(int)PT;
-    //     g_object_set_data_full(G_OBJECT(pw), "user_data", pi, g_free);
-    //     g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(ColourByToggled), psm); 
-    //     if (colourBasedOn==PT)
-    //         pwColourDefault = pw; //we set this to toggle it on in case it's the default option
+        BuildLabelFrame(psm, pwv, _("Colour by"), colorStrings, 3, colourBasedOn, ColourByToggled, psm->cubeScoreMap, vAlignExpand);  
    }  
 
     /* Label by toggle */
     // This button offers the choice between the display of true scores and away scores.
 
-    const char * labelByStrings[2]={"Away score", "True score"};
+    const char * labelByStrings[2] = {N_("Away score"), N_("True score")};
 
-    BuildLabelFrame(psm, pwv, "Label by", labelByStrings, 2, labelBasedOn, LabelByToggled, TRUE, vAlignExpand);  
+    BuildLabelFrame(psm, pwv, _("Label by"), labelByStrings, 2, labelBasedOn, LabelByToggled, TRUE, vAlignExpand);  
 
     /* Jacoby in move scoremap */
     if (! (psm->cubeScoreMap && layout == VERTICAL)) {
@@ -2657,41 +2558,12 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
 #endif     
         gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
         
-        pw = gtk_check_button_new_with_label ("Jacoby"); 
+        pw = gtk_check_button_new_with_label (_("Jacoby")); 
         gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);    
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), moneyJacoby);
         g_signal_connect(G_OBJECT (pw), "toggled", G_CALLBACK(JacobyToggled), psm); 
         gtk_widget_set_tooltip_text(pw, _("Toggle Jacoby option for money play"));
     }
-//     pwFrame=gtk_frame_new(_("Label by"));
-//     gtk_box_pack_start(GTK_BOX(pwv), pwFrame, FALSE, FALSE, 0);
-
-// #if GTK_CHECK_VERSION(3,0,0)
-//     pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-// #else
-//     pwh2 = gtk_hbox_new(FALSE, 8);
-// #endif     
-//     gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-     
-//     pw = pwx = gtk_radio_button_new_with_label(NULL, _("True score")); 
-//     gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-//     pi = (int *)g_malloc(sizeof(int));
-//     *pi=(int)LABEL_SCORE;
-//     g_object_set_data_full(G_OBJECT(pw), "label", pi, g_free);
-//     g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(LabelByToggled), psm);
-//     if (labelBasedOn==LABEL_SCORE)
-//         pwLabelDefault = pw; //we set this to toggle it on in case it's the default option
-//     // gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), labelBasedOn==LABEL_SCORE);
-
-//     pw =  gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx), _("Away score"));
-//     gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-//     pi = (int *)g_malloc(sizeof(int)); 
-//     *pi=(int)LABEL_AWAY;
-//     g_object_set_data_full(G_OBJECT(pw), "label", pi, g_free);
-//     g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(LabelByToggled), psm); 
-//     if (labelBasedOn==LABEL_AWAY)
-//         pwLabelDefault = pw; //we set this to toggle it on in case it's the default option
-//     // gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), labelBasedOn==LABEL_AWAY);
 
     gtk_widget_show_all(psm->pwLastContainer);
 
@@ -3000,8 +2872,6 @@ add hover on label with the full "Crawford" name?
 - Add radio buttons for "Colour based on ..." - done (but not yet operational)
 - Change how colouring is applied
 - multi-color scheme; 1) redraw gauge for ND/D, T/P 2) maybe make gauge to stop at SKILL_VERYBAD? 3) make DP more blue specifically?
-- The current version is based on the gnubg release code. However the code has been updated since, so we need to clean up
-    and merge with the latest files.
 - Display n-away vs score
 - Make non-modal
 - Emphasize current score even more
