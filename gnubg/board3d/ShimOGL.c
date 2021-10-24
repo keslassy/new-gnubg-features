@@ -25,7 +25,7 @@
 #include <cglm/cam.h>
 #include "ShimOGL.h"
 
-typedef struct _MatStack
+typedef struct
 {
 #define MAX_STACK_LEVEL 10	// Probably only using 3 or so...
 	mat4 stack[MAX_STACK_LEVEL];
@@ -53,8 +53,8 @@ static void MatStackPop(MatStack* matStack)
 	matStack->level--;
 }
 
-MatStack mvMatStack, txMatStack, pjMatStack;
-GLenum curMatStack;
+static MatStack mvMatStack, txMatStack, pjMatStack;
+static GLenum curMatStack;
 
 void InitMatStacks(void)
 {
@@ -83,11 +83,11 @@ static mat4* GetCurMatStackMat(void)
 	return &GetCurMatStack()->stack[GetCurMatStack()->level];
 }
 
-float curNormal[3], curTexture[2];
+static float curNormal[3], curTexture[2];
 
 OglModel* curModel = NULL;
-GLenum curMode;
-int modeVerts;
+static GLenum curMode;
+static int modeVerts;
 
 void SHIMglBegin(GLenum mode)
 {
@@ -143,7 +143,7 @@ void SHIMglNormal3f(GLfloat nx, GLfloat ny, GLfloat nz)
 	}
 }
 
-void SHIMglNormal3fv(vec3 n)
+void SHIMglNormal3fv(const vec3 n)
 {
 	if (curModel->data)
 	{
@@ -179,7 +179,7 @@ static void AddVertex(int offset)
 	curModel->dataLength += VERTEX_STRIDE;
 }
 
-void SHIMglVertex3fv(vec3 vertex)
+void SHIMglVertex3fv(const vec3 vertex)
 {
 	SHIMglVertex3f(vertex[0], vertex[1], vertex[2]);
 }
