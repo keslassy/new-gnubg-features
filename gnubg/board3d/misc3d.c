@@ -128,7 +128,9 @@ NTH_STATIC void
 SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
 {
     float lp[4];
+#if !GTK_CHECK_VERSION(3,0,0)
     float al[4], dl[4], sl[4];
+#endif
 
     copyPoint(lp, prd->lightPos);
     lp[3] = prd->lightType == LT_POSITIONAL ? 1.0f : 0.0f;
@@ -139,6 +141,7 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
         lp[1] -= getBoardHeight() / 2.0f;
     }
 
+#if !GTK_CHECK_VERSION(3,0,0)
     al[0] = al[1] = al[2] = (float) prd->lightLevels[0] / 100.0f;
     al[3] = 1;
 
@@ -148,7 +151,6 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
     sl[0] = sl[1] = sl[2] = (float) prd->lightLevels[2] / 100.0f;
     sl[3] = 1;
 
-#if !GTK_CHECK_VERSION(3,0,0)
     glLightfv(GL_LIGHT0, GL_POSITION, lp);
     glLightfv(GL_LIGHT0, GL_AMBIENT, al);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, dl);
@@ -157,6 +159,7 @@ SetupLight3d(BoardData3d * bd3d, const renderdata * prd)
     UpdateShadowLightPosition(bd3d, lp);
 #else
     SetLightPos(lp);
+    (void)  bd3d;	/* silence compiler warning */
 #endif
 }
 
@@ -234,6 +237,7 @@ CreateTexture(unsigned int *pID, int width, int height, const unsigned char *bit
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, bits);
 }
 
+#if !GTK_CHECK_VERSION(3,0,0)
 static void
 CreateDotTexture(unsigned int *pDotTexture)
 {
@@ -262,6 +266,7 @@ CreateDotTexture(unsigned int *pDotTexture)
     CreateTexture(pDotTexture, DOT_SIZE, DOT_SIZE, data);
     free(data);
 }
+#endif
 
 int
 CreateFonts(BoardData3d * bd3d)
@@ -1205,6 +1210,7 @@ TestPerformance3d(BoardData * bd)
     return ((float) numFrames / (elapsedTime / 1000.0f));
 }
 
+#if 0
 NTH_STATIC void
 EmptyPos(BoardData * bd)
 {                               /* All checkers home */
@@ -1212,6 +1218,7 @@ EmptyPos(BoardData * bd)
     memcpy(bd->points, ip, sizeof(bd->points));
     updatePieceOccPos(bd, bd->bd3d);
 }
+#endif
 
 void
 SetupViewingVolume3d(const BoardData * bd, BoardData3d * bd3d, const renderdata * prd, int viewport[4])
