@@ -74,7 +74,7 @@ int animate_player, *animate_move_list, animation_finished = TRUE;
 static GtkVBoxClass *parent_class = NULL;
 
 typedef struct {
-    unsigned char *TTachDice[2], *TTachPip[2], *TTachGrayDice, *TTachGrayPip;
+    unsigned char *TTachDice[2], *TTachPip[2], *TTachGrayDice[1], *TTachGrayPip[1];
     BoardData *bd;
     manualDiceType mdt;
 } SetDiceData;
@@ -867,7 +867,7 @@ generate_drag_moves(guint * dice, TanBoard real_board, TanBoard old_board, movel
  * \param perm the output permutations
  */
 static void
-setup_dice_perm(guint * dice, gint perm[][5])
+setup_dice_perm(const guint * const dice, gint perm[][5])
 {
     /* long but simple */
     if (dice[0] == dice[1]) {
@@ -888,7 +888,6 @@ setup_dice_perm(guint * dice, gint perm[][5])
         perm[3][2] = dice[0];
         perm[3][3] = dice[0];
         perm[3][4] = -1;
-
     } else {
         perm[0][0] = dice[0];
         perm[0][1] = -1;
@@ -903,7 +902,6 @@ setup_dice_perm(guint * dice, gint perm[][5])
         perm[3][0] = dice[1];
         perm[3][1] = dice[0];
         perm[3][2] = -1;
-
     }
 }
 
@@ -2194,7 +2192,7 @@ static void board_set_jacoby(GtkWidget * pw, BoardData * bd);
 static void match_change_val(GtkWidget * pw, BoardData * bd);
 
 static void
-score_changed(GtkAdjustment * adj, BoardData * bd)
+score_changed(const GtkAdjustment * const adj, BoardData * bd)
 {
 
     gchar buf[32];
@@ -3512,8 +3510,8 @@ DrawAlphaImage(cairo_t * cr, int x, int y, unsigned char *puchSrc, int nStride, 
 }
 
 extern void
-DrawDie(cairo_t * cr, unsigned char *achDice[2], unsigned
-        char *achPip[2], const int s, int x, int y, int
+DrawDie(cairo_t * cr, unsigned char *achDice[], unsigned
+        char *achPip[], const int s, int x, int y, int
         fColour, int n, int alpha)
 {
 
@@ -4099,8 +4097,8 @@ setdice_widget_draw(GtkWidget * dice, cairo_t * cr, SetDiceData * sdd)
     int n = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(dice), "user_data"));
 
     if (sdd->mdt == MT_FIRSTMOVE && (n % 6 == n / 6)) {
-        DrawDie(cr, &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize, 0, 0, 0, n % 6 + 1, FALSE);
-        DrawDie(cr, &sdd->TTachGrayDice, &sdd->TTachGrayPip, setSize, DIE_WIDTH * setSize, 0, 0, n / 6 + 1, FALSE);
+        DrawDie(cr, sdd->TTachGrayDice, sdd->TTachGrayPip, setSize, 0, 0, 0, n % 6 + 1, FALSE);
+        DrawDie(cr, sdd->TTachGrayDice, sdd->TTachGrayPip, setSize, DIE_WIDTH * setSize, 0, 0, n / 6 + 1, FALSE);
     } else {
         int col1, col2;
         if (sdd->mdt == MT_STANDARD)
@@ -4152,8 +4150,8 @@ DestroySetDice(GtkWidget * po, void *data)
     free(sdd->TTachDice[1]);
     free(sdd->TTachPip[0]);
     free(sdd->TTachPip[1]);
-    free(sdd->TTachGrayDice);
-    free(sdd->TTachGrayPip);
+    free(sdd->TTachGrayDice[0]);
+    free(sdd->TTachGrayPip[0]);
     gtk_widget_destroy(gtk_widget_get_toplevel(po));
     g_free(sdd);
 }
@@ -4237,8 +4235,8 @@ board_dice_widget(Board * board, manualDiceType mdt)
     RenderPips(&rd, sdd->TTachPip[0], sdd->TTachPip[1], pipStride);
 
     if (mdt == MT_FIRSTMOVE) {  /* Gray dice for doubles on first move */
-        sdd->TTachGrayDice = malloc(diceStride * setSize * DIE_HEIGHT);
-        sdd->TTachGrayPip = malloc(pipStride * setSize);
+        sdd->TTachGrayDice[0] = malloc(diceStride * setSize * DIE_HEIGHT);
+        sdd->TTachGrayPip[0] = malloc(pipStride * setSize);
 
         rd.aarDiceColour[0][0] = rd.aarDiceColour[0][1] = rd.aarDiceColour[0][2] = .75;
         rd.aarDiceColour[1][0] = rd.aarDiceColour[1][1] = rd.aarDiceColour[1][2] = .75;
@@ -4246,10 +4244,10 @@ board_dice_widget(Board * board, manualDiceType mdt)
         rd.aarDiceDotColour[1][0] = rd.aarDiceDotColour[1][1] = rd.aarDiceDotColour[1][2] = .25;
         rd.afDieColour[0] = rd.afDieColour[1] = 0;
 
-        RenderDice(&rd, sdd->TTachGrayDice, sdd->TTachGrayDice, diceStride, FALSE);
-        RenderPips(&rd, sdd->TTachGrayPip, sdd->TTachGrayPip, pipStride);
+        RenderDice(&rd, sdd->TTachGrayDice[0], sdd->TTachGrayDice[0], diceStride, FALSE);
+        RenderPips(&rd, sdd->TTachGrayPip[0], sdd->TTachGrayPip[0], pipStride);
     } else
-        sdd->TTachGrayDice = sdd->TTachGrayPip = NULL;
+        sdd->TTachGrayDice[0] = sdd->TTachGrayPip[0] = NULL;
 
     for (y = 0; y < 6; y++) {
         for (x = 0; x < 6; x++) {

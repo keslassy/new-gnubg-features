@@ -22,7 +22,9 @@
 #define GTKBOARD_H
 
 #include "backgammon.h"
+
 #include <gtk/gtk.h>
+
 #include "eval.h"
 #include "gtkpanels.h"
 #include "common.h"
@@ -36,26 +38,16 @@
 #define IS_BOARD_CLASS(klass)		(G_TYPE_CHECK_CLASS_TYPE ((obj), TYPE_BOARD))
 #define BOARD_GET_CLASS(obj)  		(G_TYPE_INSTANCE_GET_CLASS((obj), TYPE_BOARD, BoardClass))
 
-typedef struct _BoardData BoardData;    /* Forward declaration for use in Board */
-typedef struct _Board Board;
-typedef struct _BoardClass BoardClass;
-
-struct _BoardClass {
+typedef struct {
     GtkVBoxClass parent_class;
-};
+} BoardClass;
 
-struct _Board {
-    GtkVBox vbox;
-    /* private data */
-    BoardData *board_data;
-};
-
-typedef enum _DiceShown {
+typedef enum {
     DICE_NOT_SHOWN = 0, DICE_BELOW_BOARD, DICE_ON_BOARD, DICE_ROLLING
 } DiceShown;
 
 /* private data */
-struct _BoardData {
+typedef struct {
     GtkWidget *drawing_area, *dice_area, *table, *wmove,
         *reset, *edit, *name0, *name1, *score0, *score1,
         *crawford, *jacoby, *widget, *key0, *key1, *stop, *stopparent,
@@ -110,14 +102,19 @@ struct _BoardData {
     BoardData3d *bd3d;          /* extra members for 3d board */
 #endif
     renderdata *rd;             /* The board colour settings */
-};
+} BoardData;
 
+typedef struct {
+    GtkVBox vboxxx;
+    /* private data */
+    BoardData *board_data;
+} Board;
 
-typedef enum _animation {
+typedef enum {
     ANIMATE_NONE, ANIMATE_BLINK, ANIMATE_SLIDE
 } animation;
 
-typedef enum _GuiShowPips {
+typedef enum {
     GUI_SHOW_PIPS_NONE, GUI_SHOW_PIPS_PIPS, GUI_SHOW_PIPS_EPC, GUI_SHOW_PIPS_WASTAGE, N_GUI_SHOW_PIPS
 } GuiShowPips;
 
@@ -169,7 +166,7 @@ extern void RollDice2d(BoardData * bd);
 extern void DestroyPanel(gnubgwindow window);
 extern void
 DrawDie(cairo_t * pd,
-        unsigned char *achDice[2], unsigned char *achPip[2],
+        unsigned char *achDice[], unsigned char *achPip[],
         const int s, int x, int y, int fColour, int n, int alpha);
 
 extern int UpdateMove(BoardData * bd, TanBoard anBoard);
