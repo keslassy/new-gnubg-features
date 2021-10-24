@@ -27,18 +27,18 @@
 typedef void (*PickDrawFun) (const BoardData* bd, void* data);
 
 #if !GTK_CHECK_VERSION(3,0,0)
-void SetPickObject(int value)
+static void SetPickObject(int value)
 {
 	glLoadName(value);
 }
 #else
-void SetPickObject(int value)
+static void SetPickObject(int value)
 {
 	SetPickColour(((value + 1) & 0xFF) / (float)0xFF);
 }
 #endif
 
-extern void
+static void
 drawPickObjects(const BoardData* bd, void* UNUSED(data))
 {
 	BoardData3d* bd3d = bd->bd3d;
@@ -82,7 +82,6 @@ NTH_STATIC void
 drawPickAreas(const BoardData* bd, void* UNUSED(data))
 {                               /* Draw main board areas to see where user clicked */
 	BoardData3d* bd3d = bd->bd3d;
-	renderdata* prd = bd->rd;
 	float barHeight;
 
 	/* boards */
@@ -139,34 +138,35 @@ drawPickBoard(const BoardData* bd, void* data)
 
 	/* points */
 	if (fClockwise) {
-		int SwapBoard[4] = { 2, 1, 4, 3 };
+		const int SwapBoard[4] = { 2, 1, 4, 3 };
 		selectedBoard = SwapBoard[selectedBoard - 1];
 	}
 	for (i = 0; i < 6; i++) {
 		switch (selectedBoard) {
 		case 1:
 			SetPickObject(fClockwise ? i + 7 : 6 - i);
-			renderRect(&bd3d->modelHolder, TRAY_WIDTH + BOARD_WIDTH + BAR_WIDTH + PIECE_HOLE * i, EDGE_HEIGHT, BASE_DEPTH, PIECE_HOLE,
+			renderRect(&bd3d->modelHolder, TRAY_WIDTH + BOARD_WIDTH + BAR_WIDTH + PIECE_HOLE * (float)i, EDGE_HEIGHT, BASE_DEPTH, PIECE_HOLE,
 				POINT_HEIGHT);
 			break;
 		case 2:
 			SetPickObject(fClockwise ? i + 1 : 12 - i);
-			renderRect(&bd3d->modelHolder, TRAY_WIDTH + PIECE_HOLE * i, EDGE_HEIGHT, BASE_DEPTH, PIECE_HOLE, POINT_HEIGHT);
+			renderRect(&bd3d->modelHolder, TRAY_WIDTH + PIECE_HOLE * (float)i, EDGE_HEIGHT, BASE_DEPTH, PIECE_HOLE, POINT_HEIGHT);
 			break;
 		case 3:
 			SetPickObject(fClockwise ? i + 19 : 18 - i);
-			renderRect(&bd3d->modelHolder, TRAY_WIDTH + BOARD_WIDTH - (PIECE_HOLE * i), TOTAL_HEIGHT - EDGE_HEIGHT, BASE_DEPTH, -PIECE_HOLE,
+			renderRect(&bd3d->modelHolder, TRAY_WIDTH + BOARD_WIDTH - (PIECE_HOLE * (float)i), TOTAL_HEIGHT - EDGE_HEIGHT, BASE_DEPTH, -PIECE_HOLE,
 				-POINT_HEIGHT);
 			break;
 		case 4:
 			SetPickObject(fClockwise ? i + 13 : 24 - i);
-			renderRect(&bd3d->modelHolder, TOTAL_WIDTH - TRAY_WIDTH - (PIECE_HOLE * i), TOTAL_HEIGHT - EDGE_HEIGHT, BASE_DEPTH, -PIECE_HOLE,
+			renderRect(&bd3d->modelHolder, TOTAL_WIDTH - TRAY_WIDTH - (PIECE_HOLE * (float)i), TOTAL_HEIGHT - EDGE_HEIGHT, BASE_DEPTH, -PIECE_HOLE,
 				-POINT_HEIGHT);
 			break;
 		}
 	}
 }
 
+#if 0
 static void
 DrawPickIndividualPoint(const BoardData* bd, int point)
 {
@@ -215,6 +215,7 @@ drawPickPointCheck(const BoardData* bd, void* data)
 	DrawPickIndividualPoint(bd, pointA);
 	DrawPickIndividualPoint(bd, pointB);
 }
+#endif
 
 #if !GTK_CHECK_VERSION(3,0,0)
 /* 20 allows for 5 hit records (more than enough) */
@@ -236,7 +237,13 @@ NearestHit(int hits, const unsigned int* ptr)
 			float depth;
 
 			names = *ptr++;
+
+			/*
+                         * FIXME ? Does it really matter ?
+                         * implicit conversion from 'int' to 'float' changes value from 2147483647 to 2147483648 [-Wimplicit-const-int-float-conversion]
+                         */
 			depth = (float)*ptr++ / 0x7fffffff;
+
 			ptr++;              /* Skip max depth value */
 			/* Ignore clicks on the board base as other objects must be closer */
 			if (/* *ptr >= POINT_DICE && !(*ptr == POINT_LEFT || *ptr == POINT_RIGHT) && */ depth < minDepth) {
@@ -308,7 +315,7 @@ PickDraw(int x, int y, PickDrawFun drawFun, const BoardData* bd, void* data)
 
 #endif
 
-extern void
+static void
 drawPickPoint(const BoardData* bd, void* data)
 {                               /* Draw sub parts of point to work out which part of point clicked */
 	unsigned int point = GPOINTER_TO_UINT(data);
@@ -379,14 +386,12 @@ BoardPoint3d(const BoardData* bd, int x, int y)
 		return picked;	/* Object clicked */
 
 	/* Next check for areas on the board - 2 dice areas, 4 boards with 6 lots of 6 places */
-	{
-		int picked;
-		picked = PickDraw(x, y, drawPickAreas, bd, NULL);
-		if (picked <= 0 || picked > 24)
-			return picked;      /* Not a point so actual hit */
-		g_assert(picked >= 1 && picked <= 4);   /* one of 4 boards */
 
-		/* Work out which point in board was clicked */
-		return PickDraw(x, y, drawPickBoard, bd, GINT_TO_POINTER(picked));
-	}
+	picked = PickDraw(x, y, drawPickAreas, bd, NULL);
+	if (picked <= 0 || picked > 24)
+		return picked;      /* Not a point so actual hit */
+	g_assert(picked >= 1 && picked <= 4);   /* one of 4 boards */
+
+	/* Work out which point in board was clicked */
+	return PickDraw(x, y, drawPickBoard, bd, GINT_TO_POINTER(picked));
 }
