@@ -43,6 +43,8 @@ DrawShadows(const BoardData3d* bd3d)
 		if (bd3d->Occluders[i].show)
 			glCallList(bd3d->Occluders[i].shadow_list);
 	}
+#else
+	(void)bd3d;	/* suppress unused parameter compiler warning */
 #endif
 }
 
