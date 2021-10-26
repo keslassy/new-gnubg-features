@@ -23,9 +23,6 @@
 #include "fun3d.h"
 #include "render.h"
 
-extern void
-DrawShadows(const BoardData3d* bd3d);
-
 static int midStencilVal;
 
 extern int

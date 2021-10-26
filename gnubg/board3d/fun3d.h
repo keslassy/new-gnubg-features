@@ -77,7 +77,7 @@ extern OglModel* curModel;
     ModelManagerCopyModelToBuffer((ModelManager*)modelManager, modelNumber); \
 }
 
-typedef struct _Point3d {
+typedef struct {
 	double data[3];
 } Point3d;
 
@@ -88,21 +88,21 @@ typedef struct _Point3d {
 #define TESS_CALLBACK
 #endif
 
-typedef struct _Contour {
+typedef struct {
 	GArray* conPoints;
 } Contour;
 
-typedef struct _Vectoriser {
+typedef struct {
 	GArray* contours;
 	unsigned int numPoints;
 } Vectoriser;
 
-typedef struct _Tesselation {
+typedef struct {
 	GArray* tessPoints;
 	GLenum meshType;
 } Tesselation;
 
-typedef struct _Mesh {
+typedef struct {
 	GArray* tesselations;
 } Mesh;
 
@@ -114,13 +114,13 @@ extern void freeEigthPoints(EigthPoints* eigthPoints);
 void calculateEigthPoints(EigthPoints* eigthPoints, float radius, unsigned int accuracy);
 
 /* Used to calculate correct viewarea for board/fov angles */
-typedef struct _viewArea {
+typedef struct {
 	float top;
 	float bottom;
 	float width;
 } viewArea;
 
-typedef struct _Flag3d {
+typedef struct {
 #define S_NUMSEGMENTS 11
     /* Control points for the flag. The Z values are modified to make it wave */
     vec3 ctlpoints[S_NUMSEGMENTS][2];
@@ -178,13 +178,13 @@ void CheckOpenglError(void);
 extern void InitBoard3d(BoardData* bd, BoardData3d* bd3d);
 extern void SetupVisual(void);
 
-typedef struct _RenderToBufferData
-{
+typedef struct {
 	unsigned int width;
 	unsigned int height;
 	BoardData* bd;
 	unsigned char* puch;
 } RenderToBufferData;
+
 extern gboolean RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* eventData, void* data);
 extern void DeleteTextureList(void);
 
@@ -296,6 +296,7 @@ extern void getDoubleCubePos(const BoardData* bd, float v[3]);
 extern void TidyShadows(BoardData3d* bd3d);
 extern void MakeShadowModel(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd);
 extern void initOccluders(BoardData3d* bd3d);
+extern void DrawShadows(const BoardData3d* bd3d);
 extern void UpdateShadowLightPosition(BoardData3d* bd3d, float lp[4]);
 extern void getPickMatrices(float x, float y, const BoardData* bd, int* viewport, float** projMat, float** modelMat);
 extern void glSetViewport(int viewport[4]);
