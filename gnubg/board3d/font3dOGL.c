@@ -52,7 +52,7 @@ void PopulateMesh(const Vectoriser* pVect, Mesh* pMesh);
 extern int RenderGlyph(const FT_Outline* pOutline);
 
 #if !GTK_CHECK_VERSION(3,0,0)
-int
+static int
 RenderText(const char* text, FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize, float scale,
 	float heightRatio)
 {
@@ -253,12 +253,11 @@ MAArenderGlyph(const FT_Outline* pOutline, int AA)
 void
 FreeNumberFont(OGLFont* ppFont)
 {
-	if (ppFont->AAglyphs != 0) {
 #if !GTK_CHECK_VERSION(3,0,0)
+	if (ppFont->AAglyphs != 0)
 		glDeleteLists(ppFont->AAglyphs, 10);
 #endif
-		ppFont->AAglyphs = 0;
-	}
+	ppFont->AAglyphs = 0;
 }
 
 #if !GTK_CHECK_VERSION(3,0,0)
@@ -344,8 +343,8 @@ glDrawText(const OGLFont* font)
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
-int CreateFontText(OGLFont* ppFont, const char* text, const char* fontFile, int pitch, float size, float heightRatio) { return 0; }
-void FreeTextFont(OGLFont* ppFont) {}
-void glPrintNumbersRA(const OGLFont* numberFont, const char* text) {}
-void glDrawText(const OGLFont* font) {}
+int CreateFontText(OGLFont* UNUSED(ppFont), const char* UNUSED(text), const char* UNUSED(fontFile), int UNUSED(pitch), float UNUSED(size), float UNUSED(heightRatio)) { return 0; }
+void FreeTextFont(OGLFont* UNUSED(ppFont)) {}
+void glPrintNumbersRA(const OGLFont* UNUSED(numberFont), const char* UNUSED(text)) {}
+void glDrawText(const OGLFont* UNUSED(font)) {}
 #endif
