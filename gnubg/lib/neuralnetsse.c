@@ -52,9 +52,18 @@ sse_malloc(size_t size)
 {
 #if defined(HAVE_POSIX_MEMALIGN)
     void *ptr = NULL;
+    int ret;
     
-    posix_memalign(&ptr, ALIGN_SIZE, size);
-    return (float *)ptr;
+    ret = posix_memalign(&ptr, ALIGN_SIZE, size);
+    
+    g_assert(ret != EINVAL);
+
+    if (ret == 0)
+        return (float *)ptr;
+
+    /* mimic g_malloc() error message */
+    g_error("%s: failed to allocate %"G_GSIZE_FORMAT" bytes", G_STRLOC, size);
+
 #elif defined(HAVE__ALIGNED_MALLOC)
     return (float *) _aligned_malloc(size, ALIGN_SIZE);
 #else
