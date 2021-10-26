@@ -197,6 +197,7 @@ void shadowDisplay(const BoardData* bd, const BoardData3d* bd3d, const renderdat
 /* font functions */
 int CreateFonts(BoardData3d* bd3d);
 int CreateFontText(OGLFont* ppFont, const char* text, const char* fontFile, int pitch, float size, float heightRatio);
+int CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize, float size, float heightRatio);
 float GetFontHeight3d(const OGLFont* font);
 void glPrintPointNumbers(const OGLFont* numberFont, const char* text, int MAA);
 void glPrintCube(const OGLFont* cubeFont, const char* text, int MAA);

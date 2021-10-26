@@ -31,8 +31,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-extern int CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize, float size, float heightRatio);
-
 #define BEZIER_STEPS 5
 #define BEZIER_STEP_SIZE 0.2
 static double controlPoints[4][2];      /* 2D array storing values of de Casteljau algorithm */
