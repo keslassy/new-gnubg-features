@@ -31,8 +31,7 @@
 
 #include <cglm/affine.h>
 
-typedef struct _GLWidgetData
-{
+typedef struct {
 	RealizeCB realizeCB;
 	ConfigureCB configureCB;
 	ExposeCB exposeCB;
@@ -41,19 +40,18 @@ typedef struct _GLWidgetData
 
 #if GTK_CHECK_VERSION(3,0,0)
 
-typedef struct _ShaderDetails
-{
+typedef struct {
 	guint shader;
 	guint projection_location, modelView_location, textureMat_location;
 } ShaderDetails;
 
-ShaderDetails mainShader, basicShader, *currentShader;
+static ShaderDetails mainShader, basicShader, *currentShader;
 
-guint pick_colour_location;
-gint materialDiffuse_location;
+static guint pick_colour_location;
+static gint materialDiffuse_location;
 
-guint light_ambient_location, light_diffuse_location, light_specModel_location, light_specular_location, light_shininess_location;
-guint light_dirLight_location, light_lightDirection_location, light_lightPos_location, light_viewPos_location;
+static guint light_ambient_location, light_diffuse_location, light_specModel_location, light_specular_location, light_shininess_location;
+static guint light_dirLight_location, light_lightDirection_location, light_lightPos_location, light_viewPos_location;
 
 void
 setMaterial(const Material* pMat)
@@ -338,13 +336,13 @@ realize_event(GtkWidget* widget, const GLWidgetData* glwData)
 }
 
 void
-resize_event(GtkGLArea* widget, gint width, gint height, const GLWidgetData* glwData)
+resize_event(GtkGLArea* widget, gint UNUSED(width), gint UNUSED(height), const GLWidgetData* glwData)
 {
 	GLWidgetMakeCurrent(GTK_WIDGET(widget));
 	glwData->configureCB(GTK_WIDGET(widget), glwData->cbData);
 }
 
-int drawMode = GL_TRIANGLES;
+static int drawMode = GL_TRIANGLES;
 
 void SetLineDrawingmode(int enable)
 {
@@ -424,7 +422,7 @@ GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB
 	return pw;
 }
 
-gboolean GLInit(int* argc, char*** argv)
+gboolean GLInit(int* UNUSED(argc), char*** UNUSED(argv))
 {
 	return GL_TRUE;	// TODO: Anything to check here?
 }
@@ -439,7 +437,7 @@ void GLWidgetMakeCurrent(GtkWidget* widget)
 		g_print("gdk_gl_drawable_make_current failed!\n");
 }
 
-extern GdkGLConfig*
+static GdkGLConfig*
 getGlConfig(void)
 {
 	static GdkGLConfig* glconfig = NULL;

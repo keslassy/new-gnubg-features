@@ -32,7 +32,9 @@ extern void WorkOutViewArea(const BoardData* bd, viewArea* pva, float* pHalfRadi
 extern float getAreaRatio(const viewArea* pva);
 extern float getViewAreaHeight(const viewArea* pva);
 static void drawNumbers(const BoardData* bd, int MAA);
+#if !GTK_CHECK_VERSION(3,0,0)
 static void MAAtidyEdges(const renderdata* prd);
+#endif
 extern void drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 static void drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 extern void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
@@ -171,7 +173,9 @@ static int dots4[] = { 1, 1, 1, 3, 3, 1, 3, 3, 0 };
 static int dots5[] = { 1, 1, 1, 3, 2, 2, 3, 1, 3, 3, 0 };
 static int dots6[] = { 1, 1, 1, 3, 2, 1, 2, 3, 3, 1, 3, 3, 0 };
 static int* dots[6] = { dots1, dots2, dots3, dots4, dots5, dots6 };
+#if !GTK_CHECK_VERSION(3,0,0)
 static float dot_pos[] = { 0, 20, 50, 80 };       /* percentages across face */
+#endif
 
 extern void DrawDotTemp(const ModelManager* modelHolder, float dotSize, float ds, float zOffset, int* dp, int c);
 
@@ -213,6 +217,10 @@ drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSiz
 #endif
 		{
 #if GTK_CHECK_VERSION(3,0,0)
+			(void)dotOffset;	/* suppress unused parameter compiler warning */
+			(void)showFront;
+			(void)nd;
+
 			DrawDotTemp(modelHolder, dotSize, ds, hds + radius + LIFT_OFF, dots[dot], c);
 #else
 			(void)modelHolder;	/* suppress unused parameter compiler warning */
@@ -299,12 +307,14 @@ void DrawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, const re
 	glDisable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPopMatrix();
+#else
+	(void)diceCol;	/* suppress unused parameter compiler warning */
 #endif
 }
 
+#if !GTK_CHECK_VERSION(3,0,0)
 void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd, diceTest* dt, int diceCol)
 {
-#if !GTK_CHECK_VERSION(3,0,0)
 	glCullFace(GL_FRONT);
 	glEnable(GL_BLEND);
 
@@ -319,8 +329,10 @@ void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, cons
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 	// NB. GL_BLEND still enabled here (so front blends with back)
-#endif
 }
+#else
+void DrawBackDice(const ModelManager* UNUSED(modelHolder), const BoardData3d* UNUSED(bd3d), const renderdata* UNUSED(prd), diceTest* UNUSED(dt), int UNUSED(diceCol)) {}
+#endif
 
 extern void DrawNumbers(const OGLFont* numberFont, unsigned int sides, int swapNumbers, int MAA);
 
@@ -637,7 +649,7 @@ drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData
 }
 
 #if !GTK_CHECK_VERSION(3,0,0)
-extern void
+static void
 drawPointLegacy(const renderdata* prd, float tuv, unsigned int i, int p, int outline)
 {                               /* Draw point with correct texture co-ords */
 	float w = PIECE_HOLE;
@@ -715,7 +727,7 @@ drawPointLegacy(const renderdata* prd, float tuv, unsigned int i, int p, int out
 	glPopMatrix();
 }
 
-void MAApoints(const renderdata* prd)
+static void MAApoints(const renderdata* prd)
 {
 	float tuv;
 
@@ -788,7 +800,7 @@ void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const r
 	}
 }
 
-GLint 
+static GLint 
 gluUnProjectMine(GLfloat winx, GLfloat winy, GLfloat winz,
 	mat4 modelMatrix,
 	mat4 projmatrix,
