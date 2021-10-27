@@ -829,6 +829,7 @@ gluDiskMine(GLfloat innerRadius, GLfloat outerRadius, int slices, int loops, int
 	}
 }
 
+#if 0
 static void
 drawCube(float size)
 {                               /* Draw a simple cube */
@@ -865,6 +866,7 @@ drawCube(float size)
 
 	glPopMatrix();
 }
+#endif
 
 /////////////////////
 // Main drawing code
@@ -1290,7 +1292,7 @@ renderCube(const renderdata* prd, float size)
 	freeEigthPoints(&corner_points);
 }
 
-void drawFlagVertices(unsigned int curveAccuracy)
+void drawFlagVertices(unsigned int UNUSED(curveAccuracy))
 {
 	glPushMatrix();
 	glLoadIdentity();	/* Always draw flag from origin */
@@ -2950,9 +2952,7 @@ preDraw3d(const BoardData * bd, BoardData3d * bd3d, renderdata * prd)
 #include FT_FREETYPE_H
 #include <glib.h>
 
-extern void PopulateVectoriser(Vectoriser* pVect, const FT_Outline* pOutline);
 extern void PopulateMesh(const Vectoriser* pVect, Mesh* pMesh);
-extern void TidyMemory(const Vectoriser* pVect, const Mesh* pMesh);
 
 int RenderGlyph(const FT_Outline* pOutline)
 {
@@ -3102,7 +3102,7 @@ void getPickMatrices(float x, float y, const BoardData* bd, int* viewport, float
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void drawTableBase(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
+void drawTableBase(const ModelManager* modelHolder, const BoardData3d* UNUSED(bd3d), const renderdata* prd)
 {
 	OglModelDraw(modelHolder, MT_BACKGROUND, &prd->BackGroundMat);
 
@@ -3121,7 +3121,7 @@ void drawTableBase(const ModelManager* modelHolder, const BoardData3d* bd3d, con
 	glPopMatrix();
 }
 
-extern void drawHinges(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
+extern void drawHinges(const ModelManager* modelHolder, const BoardData3d* UNUSED(bd3d), const renderdata* prd)
 {
 	glPushMatrix();
 		glTranslatef((TOTAL_WIDTH) / 2.0f, ((TOTAL_HEIGHT / 2.0f) - HINGE_HEIGHT) / 2.0f, BASE_DEPTH + EDGE_DEPTH);
@@ -3429,7 +3429,7 @@ MoveToFlagPos(int turn)
 }
 
 extern void
-renderFlag(const ModelManager* modelHolder, const BoardData3d* bd3d, int curveAccuracy, int turn, int resigned)
+renderFlag(const ModelManager* modelHolder, const BoardData3d* bd3d, int UNUSED(curveAccuracy), int turn, int resigned)
 {
 	glPushMatrix();
 		MoveToFlagPos(turn);
@@ -3445,7 +3445,7 @@ renderFlag(const ModelManager* modelHolder, const BoardData3d* bd3d, int curveAc
 }
 
 extern void
-drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
+drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* UNUSED(prd))
 {
 	if (bd->resigned)
 	{

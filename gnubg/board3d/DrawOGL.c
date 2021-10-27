@@ -334,8 +334,6 @@ void DrawBackDice(const ModelManager* modelHolder, const BoardData3d* bd3d, cons
 void DrawBackDice(const ModelManager* UNUSED(modelHolder), const BoardData3d* UNUSED(bd3d), const renderdata* UNUSED(prd), diceTest* UNUSED(dt), int UNUSED(diceCol)) {}
 #endif
 
-extern void DrawNumbers(const OGLFont* numberFont, unsigned int sides, int swapNumbers, int MAA);
-
 static void
 drawNumbers(const BoardData* bd, int MAA)
 {

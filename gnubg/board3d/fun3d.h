@@ -185,12 +185,12 @@ typedef struct {
 	unsigned char* puch;
 } RenderToBufferData;
 
-extern gboolean RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* eventData, void* data);
-extern void DeleteTextureList(void);
+gboolean RenderToBuffer3d(GtkWidget* widget, GdkEventExpose* eventData, void* data);
+void DeleteTextureList(void);
 
-extern void updateOccPos(const BoardData* bd);
+void updateOccPos(const BoardData* bd);
 
-extern int ShadowsInitilised(const BoardData3d* bd3d);
+int ShadowsInitilised(const BoardData3d* bd3d);
 void shadowInit(BoardData3d* bd3d, renderdata* prd);
 void shadowDisplay(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 
@@ -199,14 +199,22 @@ int CreateFonts(BoardData3d* bd3d);
 int CreateFontText(OGLFont* ppFont, const char* text, const char* fontFile, int pitch, float size, float heightRatio);
 int CreateOGLFont(FT_Library ftLib, OGLFont* pFont, const char* pPath, int pointSize, float size, float heightRatio);
 float GetFontHeight3d(const OGLFont* font);
+void PopulateVectoriser(Vectoriser* pVect, const FT_Outline* pOutline);
+void TidyMemory(const Vectoriser* pVect, const Mesh* pMesh);
+void DrawNumbers(const OGLFont* numberFont, unsigned int sides, int swapNumbers, int MAA);
+void TESS_CALLBACK tcbError(GLenum error);
+void TESS_CALLBACK tcbVertex(void* data, Mesh* UNUSED(pMesh));
+void TESS_CALLBACK tcbCombine(const double coords[3], const double* UNUSED(vertex_data[4]), float UNUSED(weight[4]), void** outData);
+void TESS_CALLBACK tcbBegin(GLenum type, Mesh* UNUSED(pMesh));
+void TESS_CALLBACK tcbEnd( /*lint -e{818} */ Mesh* pMesh);
 void glPrintPointNumbers(const OGLFont* numberFont, const char* text, int MAA);
 void glPrintCube(const OGLFont* cubeFont, const char* text, int MAA);
 void glPrintNumbersRA(const OGLFont* numberFont, const char* text);
 void glDrawText(const OGLFont* font);
 float getTextLen3d(const OGLFont* pFont, const char* str);
-extern FT_Pos GetKern(const OGLFont* pFont, char cur, char next);
-extern void FreeNumberFont(OGLFont* ppFont);
-extern void FreeTextFont(OGLFont* ppFont);
+FT_Pos GetKern(const OGLFont* pFont, char cur, char next);
+void FreeNumberFont(OGLFont* ppFont);
+void FreeTextFont(OGLFont* ppFont);
 
 extern int extensionSupported(const char* extension);
 

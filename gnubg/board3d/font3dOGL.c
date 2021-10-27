@@ -38,15 +38,6 @@ CheckOpenglError(void)
 		g_print("OpenGL Error: %s\n", gluErrorString(glErr));
 }
 
-extern void PopulateVectoriser(Vectoriser* pVect, const FT_Outline* pOutline);
-extern void TidyMemory(const Vectoriser* pVect, const Mesh* pMesh);
-
-extern void TESS_CALLBACK tcbError(GLenum error);
-extern void TESS_CALLBACK tcbVertex(void* data, Mesh* UNUSED(pMesh));
-extern void TESS_CALLBACK tcbCombine(const double coords[3], const double* UNUSED(vertex_data[4]), float UNUSED(weight[4]), void** outData);
-extern void TESS_CALLBACK tcbBegin(GLenum type, Mesh* UNUSED(pMesh));
-extern void TESS_CALLBACK tcbEnd( /*lint -e{818} */ Mesh* pMesh);
-
 int MAArenderGlyph(const FT_Outline* pOutline, int AA);
 void PopulateMesh(const Vectoriser* pVect, Mesh* pMesh);
 extern int RenderGlyph(const FT_Outline* pOutline);
