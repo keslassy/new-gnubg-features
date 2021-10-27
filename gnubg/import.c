@@ -2267,8 +2267,7 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
             break;
 
         for (i = 0; i < 2; ++i) {
-            if (pmi->pchRating[i])
-                free(pmi->pchRating[i]);
+            g_free(pmi->pchRating[i]);
             sprintf(szTemp, "%.6g (Exp %d)", arRating[i], anExp[i]);
             pmi->pchRating[i] = g_strdup(szTemp);
         }
