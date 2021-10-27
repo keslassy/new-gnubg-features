@@ -318,7 +318,7 @@ CopyEscapedString(const char *pchOrig)
 
     char *sz, *pch;
 
-    for (pch = sz = malloc(strlen(pchOrig) + 1); *pchOrig; pchOrig++) {
+    for (pch = sz = g_malloc(strlen(pchOrig) + 1); *pchOrig; pchOrig++) {
         if (*pchOrig == '\\') {
             if (pchOrig[1] == '\\') {
                 *pch++ = '\\';
