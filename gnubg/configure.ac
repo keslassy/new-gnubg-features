@@ -80,6 +80,8 @@ dnl
 dnl Compiler setup
 dnl
 
+dnl Deprecated, but replacement depends on AC_USE_SYSTEM_EXTENSIONS that
+dnl depends on autoconf 2.60. For now we require only 2.59 (as in RHEL5)
 AC_GNU_SOURCE
 
 # the following needs to come before the expansion of AC_PROG_CC
@@ -91,6 +93,7 @@ if test "${CFLAGS+set}" = set; then
 fi
 AC_PROG_CC
 AM_PROG_CC_C_O
+dnl Deprecated but RHEL6/gcc 4.4 needs it
 AC_PROG_CC_STDC
 
 # Additional test below is mostly borrowed from varnish.
@@ -450,7 +453,7 @@ dnl Check for Python
 dnl
 
 AC_ARG_WITH([python],
-AC_HELP_STRING([--with-python=program],
+AS_HELP_STRING([--with-python=program],
         [specify the python interpreter to use: (default=yes)]),
     [
         if [ test x"$with_python" != x"no" && test x"$with_python" != x"yes" ]; then
@@ -564,7 +567,7 @@ dnl Maximum number of threads
 dnl
 
 AC_ARG_WITH([eval_max_threads],
-AC_HELP_STRING([--with-eval-max-threads=size],
+AS_HELP_STRING([--with-eval-max-threads=size],
 		[define the maximum number of evaluation threads allowed: (default=48)]),
 [
 	EVAL_THREAD_COUNT=$with_eval_max_threads
@@ -584,7 +587,7 @@ if test x"$win32" = x"no"; then
     AC_CHECK_PROGS([DEFAULT_WWW_PROG], [sensible-browser xdg-open firefox], [xdg-open])
     AC_MSG_CHECKING([for program to open URLs])
     AC_ARG_WITH([default_browser],
-    AC_HELP_STRING([--with-default-browser=program],
+    AS_HELP_STRING([--with-default-browser=program],
 	    	[specify the program to open URLs: (default=xdg-open, or default=sensible-browser on Debian distros)]),
     [
         if [test x"$with_default_browser" = x"no"]; then
@@ -606,7 +609,7 @@ fi
 
 AC_MSG_CHECKING([whether g_asserts are enabled])
 AC_ARG_ENABLE([gasserts],
-    AC_HELP_STRING([--enable-gasserts], [enable g_assert debugging macros (Default disabled)]), [gasserts="yes"], [gasserts="no"])
+    AS_HELP_STRING([--enable-gasserts], [enable g_assert debugging macros (Default disabled)]), [gasserts="yes"], [gasserts="no"])
 if test x"$enable_gasserts" != x"yes"; then
     AM_CFLAGS="$AM_CFLAGS -DG_DISABLE_ASSERT"
 fi
