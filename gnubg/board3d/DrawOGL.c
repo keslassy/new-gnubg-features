@@ -27,17 +27,12 @@
 #include <cglm/affine.h>
 #include <cglm/cam.h>
 
-extern void drawTableGrayed(const ModelManager* modelHolder, const BoardData3d* bd3d, renderdata tmp);
-extern void WorkOutViewArea(const BoardData* bd, viewArea* pva, float* pHalfRadianFOV, float aspectRatio);
-extern float getAreaRatio(const viewArea* pva);
-extern float getViewAreaHeight(const viewArea* pva);
 static void drawNumbers(const BoardData* bd, int MAA);
 #if !GTK_CHECK_VERSION(3,0,0)
 static void MAAtidyEdges(const renderdata* prd);
 #endif
 extern void drawPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 static void drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-extern void drawFlag(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 
 ///////////////////////////////////////
 // Legacy Opengl board rendering code
@@ -176,8 +171,6 @@ static int* dots[6] = { dots1, dots2, dots3, dots4, dots5, dots6 };
 #if !GTK_CHECK_VERSION(3,0,0)
 static float dot_pos[] = { 0, 20, 50, 80 };       /* percentages across face */
 #endif
-
-extern void DrawDotTemp(const ModelManager* modelHolder, float dotSize, float ds, float zOffset, int* dp, int c);
 
 extern void
 drawDots(const ModelManager* modelHolder, const BoardData3d* bd3d, float diceSize, float dotOffset, const diceTest* dt, int showFront)
@@ -558,9 +551,6 @@ void renderPiece(const ModelManager* modelHolder, int separateTop)
 	OglModelDraw(modelHolder, MT_PIECE, mat);
 }
 
-extern void
-renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
-
 static void
 drawSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd)
 {                               /* Draw animated or dragged pieces */
@@ -763,9 +753,6 @@ static void MAApoints(const renderdata* prd)
 	LegacyEndAA();
 }
 #endif
-
-extern void drawTableBase(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
-extern void drawHinges(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd);
 
 void drawTable(const ModelManager* modelHolder, const BoardData3d* bd3d, const renderdata* prd)
 {

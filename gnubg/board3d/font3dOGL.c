@@ -40,7 +40,6 @@ CheckOpenglError(void)
 
 int MAArenderGlyph(const FT_Outline* pOutline, int AA);
 void PopulateMesh(const Vectoriser* pVect, Mesh* pMesh);
-extern int RenderGlyph(const FT_Outline* pOutline);
 
 #if !GTK_CHECK_VERSION(3,0,0)
 static int

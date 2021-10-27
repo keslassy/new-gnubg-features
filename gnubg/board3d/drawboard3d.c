@@ -909,7 +909,7 @@ Tidy3dObjects(BoardData3d * bd3d, const renderdata * UNUSED(prd))
 	}
 }
 
-void
+static void
 drawPoints(const renderdata* prd, int side)
 {
 	/* texture unit value */
@@ -924,7 +924,7 @@ drawPoints(const renderdata* prd, int side)
 		drawPoint(prd, tuv, (point / 2) * 2 + side, point % 2, 0);
 }
 
-void
+static void
 drawBoardBase(const renderdata* prd)
 {
 	if (prd->bgInTrays)
@@ -935,7 +935,8 @@ drawBoardBase(const renderdata* prd)
 			prd->acrossCheq, prd->downCheq, prd->BaseMat.pTexture);
 }
 
-void drawRectTextureMatched(float x, float y, float z, float w, float h, const Texture* texture)
+static void
+drawRectTextureMatched(float x, float y, float z, float w, float h, const Texture* texture)
 {
 	if (texture)
 	{
@@ -1113,7 +1114,7 @@ preRenderPiece(const renderdata* prd, int display, PieceTextureType ptt)
 	}
 }
 
-void
+static void
 preDrawPiece(const BoardData3d* UNUSED(bd3d), const renderdata* prd, PieceTextureType ptt)
 {
 	preRenderPiece(prd, TRUE, ptt);
@@ -1129,7 +1130,7 @@ UnitNormal(float x, float y, float z)
 	glNormal3f(x / length, y / length, z / length);
 }
 
-extern void
+static void
 renderDice(const renderdata* prd)
 {
 	unsigned int ns, lns;
@@ -1218,7 +1219,8 @@ renderDot(const renderdata* prd)
 	circle(1, 0, prd->curveAccuracy);
 }
 
-static void drawSimpleRect(void)
+static void
+drawSimpleRect(void)
 {
 	glBegin(GL_QUADS);
 	glVertex3f(-1.f, -1.f, 0.f);
@@ -1228,7 +1230,7 @@ static void drawSimpleRect(void)
 	glEnd();
 }
 
-extern void
+static void
 renderCube(const renderdata* prd, float size)
 {
 	int i, c;
@@ -1292,7 +1294,8 @@ renderCube(const renderdata* prd, float size)
 	freeEigthPoints(&corner_points);
 }
 
-void drawFlagVertices(unsigned int UNUSED(curveAccuracy))
+static void
+drawFlagVertices(unsigned int UNUSED(curveAccuracy))
 {
 	glPushMatrix();
 	glLoadIdentity();	/* Always draw flag from origin */
@@ -1589,7 +1592,7 @@ drawMoveIndicator()
 	glEnd();
 }
 
-void
+static void
 drawHinge(const renderdata* prd)
 {
 	glMatrixMode(GL_TEXTURE);
@@ -1610,7 +1613,7 @@ drawHinge(const renderdata* prd)
 	glPopMatrix();
 }
 
-void
+static void
 drawHingeGap(void)
 {
 	drawRect((TOTAL_WIDTH - HINGE_GAP * 1.5f) / 2.0f, 0.f, BASE_DEPTH + EDGE_DEPTH, HINGE_GAP * 1.5f, TOTAL_HEIGHT + LIFT_OFF, 0);
@@ -1745,7 +1748,7 @@ InsideFillet(float x, float y, float z, float w, float h, float radius, unsigned
 	}
 }
 
-void
+static void
 drawTableModel(const renderdata* prd, const EigthPoints* bd3dboardPoints)
 {
 	float curveTextOff = 0;
@@ -2888,7 +2891,8 @@ getCheqSize(renderdata * prd)
     }
 }
 
-void Create3dModels(BoardData3d* bd3d, renderdata* prd)
+static void
+Create3dModels(BoardData3d* bd3d, renderdata* prd)
 {
 	ModelManagerStart(&bd3d->modelHolder);
 
@@ -2987,7 +2991,7 @@ int RenderGlyph(const FT_Outline* pOutline)
 	return 1;
 }
 
-void
+static void
 SetupPerspVolume(const BoardData* bd, BoardData3d* bd3d, const renderdata* prd, float** projMat, float** modelMat, float aspectRatio)
 {
 	if (!prd->planView) {
@@ -3133,7 +3137,7 @@ extern void drawHinges(const ModelManager* modelHolder, const BoardData3d* UNUSE
 	glPopMatrix();
 }
 
-extern void
+static void
 drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA)
 {
 	int c;
