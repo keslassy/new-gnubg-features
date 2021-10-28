@@ -81,7 +81,7 @@ void SetPickColour(float colour)
 	glUniform3fv(pick_colour_location, 1, value);
 }
 
-void GetViewPos(float* viewPos)
+static void GetViewPos(float* viewPos)
 {
 	mat4 mvMat, mvInv;
 	vec3 origin;
@@ -170,7 +170,7 @@ void GLWidgetMakeCurrent(GtkWidget* widget)
 	gtk_gl_area_make_current(GTK_GL_AREA(widget));
 }
 
-void SelectProgram(ShaderDetails* pShader)
+static void SelectProgram(ShaderDetails* pShader)
 {
 	currentShader = pShader;
 	glUseProgram(currentShader->shader);
@@ -181,7 +181,7 @@ void SelectPickProgram()
 	SelectProgram(&basicShader);
 }
 
-char* LoadFile(const char* filename)
+static char* LoadFile(const char* filename)
 {
 	long lSize;
 	char* buffer;
@@ -215,7 +215,7 @@ char* LoadFile(const char* filename)
 	return buffer;
 }
 
-guint CreateShader(int shader_type, const char* shader_name)
+static guint CreateShader(int shader_type, const char* shader_name)
 {
 	int status;
 	char* source;
@@ -251,7 +251,7 @@ guint CreateShader(int shader_type, const char* shader_name)
 	return shader;
 }
 
-guint
+static guint
 init_shaders(const char* shader_name)
 {
 	guint vertex = CreateShader(GL_VERTEX_SHADER, shader_name);
@@ -335,7 +335,7 @@ realize_event(GtkWidget* widget, const GLWidgetData* glwData)
 	gtk_widget_queue_draw(widget);
 }
 
-void
+static void
 resize_event(GtkGLArea* widget, gint UNUSED(width), gint UNUSED(height), const GLWidgetData* glwData)
 {
 	GLWidgetMakeCurrent(GTK_WIDGET(widget));
