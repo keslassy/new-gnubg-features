@@ -194,6 +194,9 @@ int ShadowsInitilised(const BoardData3d* bd3d);
 void shadowInit(BoardData3d* bd3d, renderdata* prd);
 void shadowDisplay(const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd);
 
+/* font-related global variables */
+extern GList* combineList;
+
 /* font functions */
 int CreateFonts(BoardData3d* bd3d);
 int CreateFontText(OGLFont* ppFont, const char* text, const char* fontFile, int pitch, float size, float heightRatio);

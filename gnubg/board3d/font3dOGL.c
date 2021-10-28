@@ -272,7 +272,6 @@ typedef APIENTRY GLvoid(*_GLUfuncptr) ();
 #define GLUFUN(X) X
 #endif
 
-extern GList* combineList;
 
 void
 PopulateMesh(const Vectoriser* pVect, Mesh* pMesh)
