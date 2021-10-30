@@ -3954,7 +3954,7 @@ CreateMainWindow(void)
 #else
     pwPanelHbox = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_paned_pack2(GTK_PANED(hpaned), pwPanelHbox, FALSE, FALSE);
+    gtk_paned_pack2(GTK_PANED(hpaned), pwPanelHbox, TRUE, FALSE);
 #if GTK_CHECK_VERSION(3,0,0)
     pwPanelVbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 1);
 #else
