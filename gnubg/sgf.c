@@ -1019,6 +1019,12 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
                 (void) strtol(pch, &pch, 10);   /* reduced evaluation -- no longer supported */
                 pm->esMove.ec.fDeterministic = (unsigned int) strtol(pch, &pch, 10);
                 pm->esMove.ec.rNoise = (float) g_ascii_strtod(pch, &pch);
+/*
+ * Alternatives for ver == 2 and ver > 2 (that is == 3) are identical,
+ * version 3 still writes a reduced evalution flag (set to 0) and
+ * discards it on reads. See comment in WriteMoveAnalysis()
+ */
+#if 0
             } else if (ver == 2) {
                 pm->esMove.ec.nPlies = (unsigned int) strtol(pch, &pch, 10);
                 if (*pch == 'C') {
@@ -1029,6 +1035,7 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
                 pm->esMove.ec.fDeterministic = (unsigned int) strtol(pch, &pch, 10);
                 pm->esMove.ec.rNoise = (float) g_ascii_strtod(pch, &pch);
                 fUsePrune = (int) strtol(pch, &pch, 10);
+#endif
             } else {
                 pm->esMove.ec.nPlies = (unsigned int) strtol(pch, &pch, 10);
                 if (*pch == 'C') {
@@ -1845,7 +1852,13 @@ WriteMoveAnalysis(FILE * pf, int fPlayer, movelist * pml, unsigned int iMove)
             fprintf(pf, "%u%s %d %u %s %u",
                     pml->amMoves[i].esMove.ec.nPlies,
                     pml->amMoves[i].esMove.ec.fCubeful ? "C" : "",
-                    0, pml->amMoves[i].esMove.ec.fDeterministic, buffer, pml->amMoves[i].esMove.ec.fUsePrune);
+                    /*
+                     * Former reduced evaluation flag
+                     * Kept for backward compatibility ?
+                     * Always 0 in SGF ver. 3
+                     */
+                    0,
+                    pml->amMoves[i].esMove.ec.fDeterministic, buffer, pml->amMoves[i].esMove.ec.fUsePrune);
             break;
 
         case EVAL_ROLLOUT:
