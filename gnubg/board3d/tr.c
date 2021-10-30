@@ -339,6 +339,8 @@ trBeginTile(TRcontext * tr)
 
     /* restore user's matrix mode */
     glMatrixMode((GLenum) matrixMode);
+#else
+    (void)tr;	/* suppress unused parameter compiler warning */
 #endif
 }
 
