@@ -238,11 +238,16 @@ NearestHit(int hits, const unsigned int* ptr)
 
 			names = *ptr++;
 
-			/*
-                         * FIXME ? Does it really matter ?
-                         * implicit conversion from 'int' to 'float' changes value from 2147483647 to 2147483648 [-Wimplicit-const-int-float-conversion]
-                         */
-			depth = (float)*ptr++ / 0x7fffffff;
+/*
+ * Used to be (float)*ptr++ / 0x7fffffff
+ *
+ * This may be a bit pedantic but avoids clang builds getting
+ * "implicit conversion from 'int' to 'float' changes value
+ *  from 2147483647 to 2147483648" warning
+ * with default-ish "-Wall -Wextra" CFLAGS
+ */
+			depth = (float)*ptr++ / 2147483648.f;
+                        
 
 			ptr++;              /* Skip max depth value */
 			/* Ignore clicks on the board base as other objects must be closer */
