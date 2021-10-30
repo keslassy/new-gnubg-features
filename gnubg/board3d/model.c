@@ -24,15 +24,15 @@
 
 #define TOP_EDGE (-2)
 
-typedef struct _position {
+typedef struct {
     float x, y, z;
 } position;
 
-typedef struct _plane {
+typedef struct {
     float a, b, c, d;
 } plane;
 
-typedef struct _winged_edge {
+typedef struct {
     unsigned int e[2];          /* vertex index */
     int w[2];                   /* plane index */
 } winged_edge;

@@ -24,13 +24,13 @@
 #include <glib.h>
 
 /* Occlusion model */
-typedef struct _OccModel {
+typedef struct {
     GArray *planes;
     GArray *edges;
     GArray *points;
 } OccModel;
 
-typedef struct Occluder_T {
+typedef struct {
     float invMat[4][4];
     float trans[3];
     float rot[3];
