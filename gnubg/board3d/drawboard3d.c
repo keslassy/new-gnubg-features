@@ -3284,6 +3284,9 @@ drawPiece(const ModelManager* modelHolder, const BoardData3d* bd3d, unsigned int
 
 #if !GTK_CHECK_VERSION(3,0,0)
 	MAApiece(roundPiece, curveAccuracy);
+#else
+	(void)roundPiece;	/* suppress unused parameter compiler warning */
+	(void)curveAccuracy;	/* suppress unused parameter compiler warning */
 #endif
 
 	glPopMatrix();

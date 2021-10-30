@@ -64,6 +64,8 @@ freeOccluder(Occluder * pOcc)
         pOcc->handle = NULL;
         glDeleteLists(pOcc->shadow_list, 1);
     }
+#else
+    (void)pOcc; /* suppress unused parameter compiler warning */
 #endif
 }
 
@@ -89,6 +91,8 @@ moveToOcc(const Occluder * pOcc)
         glRotatef(pOcc->rot[1], 1.f, 0.f, 0.f);
         glRotatef(pOcc->rot[2], 0.f, 0.f, 1.f);
     }
+#else
+    (void)pOcc;	/* suppress unused parameter compiler warning */
 #endif
 }
 
@@ -237,11 +241,11 @@ GenerateShadowVolume(const Occluder * pOcc, const float olight[4])
             continue;
         }
 
+#if !GTK_CHECK_VERSION(3,0,0)
         {
             position *pn0 = &g_array_index(pOcc->handle->points, position, edgeOrder[0]);
             position *pn1 = &g_array_index(pOcc->handle->points, position, edgeOrder[1]);
 
-#if !GTK_CHECK_VERSION(3,0,0)
             /* local segment */
             glVertex3f(pn0->x, pn0->y, pn0->z);
             glVertex3f(pn1->x, pn1->y, pn1->z);
@@ -251,8 +255,8 @@ GenerateShadowVolume(const Occluder * pOcc, const float olight[4])
 
             glVertex4f(pn0->x * olight[3] - olight[0],
                        pn0->y * olight[3] - olight[1], pn0->z * olight[3] - olight[2], 0.f);
-#endif
         }
+#endif
     }
 }
 
