@@ -56,8 +56,6 @@ sse_malloc(size_t size)
     
     ret = posix_memalign(&ptr, ALIGN_SIZE, size);
     
-    g_assert(ret != EINVAL);
-
     if (ret == 0)
         return (float *)ptr;
 
