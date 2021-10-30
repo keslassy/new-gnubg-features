@@ -24,7 +24,7 @@
 #include "list.h"
 #include <stdio.h>
 
-typedef struct _property {
+typedef struct {
     char ach[2];                /* 2 character tag; ach[ 1 ] = 0 for 1 character tags */
     listOLD *pl;                /* Values */
 } property;

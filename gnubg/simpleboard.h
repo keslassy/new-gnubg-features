@@ -23,17 +23,14 @@
 #define SIZE_1PERPAGE 250.0f
 #define SIZE_2PERPAGE 150.0f
 
-typedef struct _SimpleBoardColor SimpleBoardColor;
-
 /** \brief struct to hold the colors for points, dice, checkers, etc.*/
-struct _SimpleBoardColor {
+typedef struct {
     float fill[3];
     float stroke[3];
     float text[3];
-};
+} SimpleBoardColor;
 
-typedef struct _SimpleBoard SimpleBoard;
-struct _SimpleBoard {
+typedef struct {
     SimpleBoardColor color_checker[2];
     SimpleBoardColor color_point[2];
     SimpleBoardColor color_cube;
@@ -45,7 +42,7 @@ struct _SimpleBoard {
     gdouble surface_x;
     gdouble surface_y;
     cairo_t *cr;
-};
+} SimpleBoard;
 
 extern gint simple_board_draw(SimpleBoard * board);
 
