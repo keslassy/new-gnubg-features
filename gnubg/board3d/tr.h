@@ -96,9 +96,6 @@ extern "C" {
 #define TR_MINOR_VERSION 1
 
 
-    typedef struct _TRctx TRcontext;
-
-
     typedef enum {
         TR_TILE_WIDTH = 100,
         TR_TILE_HEIGHT,
@@ -116,6 +113,39 @@ extern "C" {
         TR_BOTTOM_TO_TOP
     } TRenum;
 
+
+
+    typedef struct {
+        /* Final image parameters */
+        int ImageWidth, ImageHeight;
+        GLenum ImageFormat, ImageType;
+        GLvoid *ImageBuffer;
+
+        /* Tile parameters */
+        int TileWidth, TileHeight;
+        int TileWidthNB, TileHeightNB;
+        int TileBorder;
+        GLenum TileFormat, TileType;
+        GLvoid *TileBuffer;
+
+        /* Projection parameters */
+        GLboolean Perspective;
+        GLdouble Left;
+        GLdouble Right;
+        GLdouble Bottom;
+        GLdouble Top;
+        GLdouble Near;
+        GLdouble Far;
+
+        /* Misc */
+        TRenum RowOrder;
+        int Rows, Columns;
+        int CurrentTile;
+        int CurrentTileWidth, CurrentTileHeight;
+        int CurrentRow, CurrentColumn;
+
+        int ViewportSave[4];
+    } TRcontext;
 
 
     extern TRcontext *trNew(void);

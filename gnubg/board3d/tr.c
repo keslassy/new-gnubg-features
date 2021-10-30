@@ -63,41 +63,6 @@
 #define DEFAULT_TILE_HEIGHT 256
 #define DEFAULT_TILE_BORDER 0
 
-
-struct _TRctx {
-    /* Final image parameters */
-    int ImageWidth, ImageHeight;
-    GLenum ImageFormat, ImageType;
-    GLvoid *ImageBuffer;
-
-    /* Tile parameters */
-    int TileWidth, TileHeight;
-    int TileWidthNB, TileHeightNB;
-    int TileBorder;
-    GLenum TileFormat, TileType;
-    GLvoid *TileBuffer;
-
-    /* Projection parameters */
-    GLboolean Perspective;
-    GLdouble Left;
-    GLdouble Right;
-    GLdouble Bottom;
-    GLdouble Top;
-    GLdouble Near;
-    GLdouble Far;
-
-    /* Misc */
-    TRenum RowOrder;
-    int Rows, Columns;
-    int CurrentTile;
-    int CurrentTileWidth, CurrentTileHeight;
-    int CurrentRow, CurrentColumn;
-
-    int ViewportSave[4];
-};
-
-
-
 /*
  * Misc setup including computing number of tiles (rows and columns).
  */
