@@ -21,7 +21,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-typedef enum _gnubgsound {
+typedef enum {
     /* start & exit of gnubg */
     SOUND_START = 0,
     SOUND_EXIT,
