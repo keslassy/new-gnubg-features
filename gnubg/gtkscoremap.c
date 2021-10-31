@@ -1368,7 +1368,6 @@ Specifically: (1) The color of each square (2) The hover text of each square (3)
     if  (psm->cubeScoreMap){
         /* update gauge */
         for (i = 0; i < GAUGE_SIZE; i++) {
-g_print("%d: ",i);
             DrawGauge(psm->apwFullGauge[i],i,colourBasedOn);
         }
         /* update labels on gauge */
