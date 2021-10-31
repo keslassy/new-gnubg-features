@@ -287,7 +287,7 @@ typedef struct {
 
 // ******************* DEFAULT STATIC OPTIONS ***********************
 // We now define the options to retain betweenn scoremap instances, corresponding to the respective radio buttons
-// Note: we do not define eval-ply and match length, as remembering high values may unexpectedly cause increased complexity
+// Note: we do not define eval-ply as remembering a high value may unexpectedly cause increased complexity
 //  when displaying a new scoremap; rather we focus on simple on presentation settings (and the Jacoby option for the money quadrant)
 static labelbasedonoptions labelBasedOn = LABEL_AWAY;
 static int moneyJacoby=0;
