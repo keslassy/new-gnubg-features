@@ -5176,8 +5176,8 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
                                 _("Standard Error (SE) of the candidate play equity is a measure of "
                                   "the accuracy of the current rollout result. "
                                   "If the rollout were to be continued indefinitely, its result would "
-                                  "have about 95% chances to be in an interval of +/-2 SE around the "
-                                  "current result."));
+                                  "have about 95 chances out of 100 to be in an interval of +/-2 SE "
+                                  "around the current result."));
 
     /* a vbox for the adjusters */
 #if GTK_CHECK_VERSION(3,0,0)
@@ -5233,7 +5233,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
                                   "the current favourite and another candidate decision is a "
                                   "measure of how unlikely continuing the rollout is to "
                                   "change the current result. "
-                                  "A candidate trailing by 2.33 JSD has about 1% chance to "
+                                  "A candidate trailing by 2.33 JSD has about 1 chance out of 100 to "
                                   "end as winner if the rollout were to be continued indefinitely."));
 
     /* a vbox for the adjusters */
