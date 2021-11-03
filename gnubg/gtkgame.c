@@ -3829,7 +3829,7 @@ static void
 CreateMainWindow(void)
 {
     GtkWidget *pwVbox, *pwHbox, *pwHbox2, *pwHandle, *pwPanelHbox, *pwStopButton, *idMenu, *menu_item, *pwFrame;
-#if defined(GTK_TARGET_OTHER_APP)       /* gtk 2.12+ */
+#if GTK_CHECK_VERSION(2,12,0)
     GtkTargetEntry fileDrop = { "text/uri-list", GTK_TARGET_OTHER_APP, 1 };
 #else
     GtkTargetEntry fileDrop = { "text/uri-list", 0, 1 };
