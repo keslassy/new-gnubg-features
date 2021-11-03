@@ -535,11 +535,12 @@ extern void
 MoveFilterSetPredefined(GtkWidget * pwMoveFilter, const int i)
 {
 
-
     movefilterwidget *pmfw = (movefilterwidget *)
         g_object_get_data(G_OBJECT(pwMoveFilter), "user_data");
 
-    if (i < 0)
+    g_assert(i < NUM_MOVEFILTER_SETTINGS);
+
+    if (i < 0 || i >= NUM_MOVEFILTER_SETTINGS)
         return;
 
     memcpy(pmfw->pmf, aaamfMoveFilterSettings[i], MAX_FILTER_PLIES * MAX_FILTER_PLIES * sizeof(movefilter));
