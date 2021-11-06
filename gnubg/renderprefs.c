@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2000-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2003-2019 the AUTHORS
+ * Copyright (C) 2003-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,34 +56,21 @@ CopyAppearance(renderdata * prd)
     memcpy(prd, &rdAppearance, sizeof(rdAppearance));
 }
 
-static char
-HexDigit(char ch)
-{
-    int n = toupper(ch);
-
-    if (n >= '0' && n <= '9')
-        return (char) (n - '0');
-    else if (n >= 'A' && n <= 'F')
-        return (char) (ch - 'A' + 0xA);
-    else
-        return (char) 0;
-}
-
 static int
 SetColour(const char *sz, unsigned char anColour[])
 {
-
-    int i;
+    unsigned long n;
 
     if (strlen(sz) < 7 || *sz != '#')
         return -1;
 
     sz++;
 
-    for (i = 0; i < 3; i++) {
-        anColour[i] = (char) (HexDigit(sz[0]) << 4) | HexDigit(sz[1]);
-        sz += 2;
-    }
+    n = strtoul(sz, 0, 16);
+
+    anColour[0] = (n & 0xFF0000) >> 16;
+    anColour[1] = (n & 0x00FF00) >> 8;
+    anColour[2] = (n & 0x0000FF);
 
     return 0;
 }
@@ -108,28 +95,6 @@ SetColourSpeckle(const char *sz, unsigned char anColour[], int *pnSpeckle)
     return 0;
 }
 
-/* Set colour (with floats) */
-static int
-SetColourX(float arColour[4], const char *sz)
-{
-
-    char *pch;
-    unsigned char anColour[3];
-
-    if ((pch = strchr(sz, ';')))
-        *pch++ = 0;
-
-    if (!SetColour(sz, anColour)) {
-        arColour[0] = anColour[0] / 255.0f;
-        arColour[1] = anColour[1] / 255.0f;
-        arColour[2] = anColour[2] / 255.0f;
-        return 0;
-    }
-
-    return -1;
-}
-
-#if defined(USE_BOARD3D)
 static int
 SetColourF(float arColour[4], const char *sz)
 {
@@ -149,7 +114,6 @@ SetColourF(float arColour[4], const char *sz)
 
     return -1;
 }
-#endif                          /* USE_BOARD3D */
 
 #if defined(USE_BOARD3D)
 static int
@@ -245,7 +209,7 @@ SetColourARSS(float aarColour[2][4],
     if ((pch = strchr(sz, ';')))
         *pch++ = 0;
 
-    if (!SetColourX(aarColour[i], sz)) {
+    if (!SetColourF(aarColour[i], sz)) {
 
         if (pch) {
             /* alpha */
@@ -299,7 +263,7 @@ SetColourSSF(float aarColour[2][4], gfloat arCoefficient[2], gfloat arExponent[2
     if ((pch = strchr(sz, ';')))
         *pch++ = 0;
 
-    if (!SetColourX(aarColour[i], sz)) {
+    if (!SetColourF(aarColour[i], sz)) {
 
         if (pch) {
             /* shine */
@@ -352,7 +316,7 @@ SetWood(const char *sz, woodtype * pbw)
 
 #if defined(USE_BOARD3D)
 static displaytype
-check_for_board3d(char *szValue)
+check_for_board3d(const char *szValue)
 {
     if (*szValue == '2')
         return DT_2D;
@@ -360,7 +324,9 @@ check_for_board3d(char *szValue)
         return DT_3D;
     return DT_2D;
 }
+
 #endif
+
 extern void
 RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
 {
@@ -379,7 +345,7 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         fValueError = SetColour(szValue, prd->aanBoardColour[1]);
     else if (!StrNCaseCmp(szParam, "cube", c))
         /* cube=colour */
-        fValueError = SetColourX(prd->arCubeColour, szValue);
+        fValueError = SetColourF(prd->arCubeColour, szValue);
     else if (!StrNCaseCmp(szParam, "translucent", c))
         /* deprecated option "translucent"; ignore */
         ;
@@ -572,7 +538,7 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
              (!StrNCaseCmp(szParam, "dot", c - 1) ||
               !StrNCaseCmp(szParam, "dot", c - 1)) && (szParam[c - 1] == '0' || szParam[c - 1] == '1'))
         /* dot=colour */
-        fValueError = SetColourX(prd->aarDiceDotColour[szParam[c - 1] - '0'], szValue);
+        fValueError = SetColourF(prd->aarDiceDotColour[szParam[c - 1] - '0'], szValue);
     else if (c > 1 && !StrNCaseCmp(szParam, "points", c - 1) && (szParam[c - 1] == '0' || szParam[c - 1] == '1'))
         /* pointsn=colour;speckle */
         fValueError = SetColourSpeckle(szValue,
