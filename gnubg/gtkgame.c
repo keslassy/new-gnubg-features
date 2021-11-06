@@ -4101,6 +4101,7 @@ gnubg_set_default_icon(void)
 #endif
 }
 
+#if GTK_CHECK_VERSION(3,0,0)
 static void
 ApplyDefaultCss(void)
 {
@@ -4108,15 +4109,18 @@ ApplyDefaultCss(void)
     char *cssPath;
 
     cssProvider = gtk_css_provider_new();
+    if (cssProvider == NULL)
+        return;
+
     cssPath = BuildFilename("gnubg.css");
     gtk_css_provider_load_from_path(cssProvider, cssPath, NULL);
     gtk_style_context_add_provider_for_screen(gtk_window_get_screen(GTK_WINDOW(pwMain)),
                                               GTK_STYLE_PROVIDER(cssProvider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     g_free(cssPath);
-    if (cssProvider)
-        g_object_unref(G_OBJECT(cssProvider));
+    g_object_unref(G_OBJECT(cssProvider));
 }
+#endif
 
 extern void
 InitGTK(int *argc, char ***argv)
@@ -4158,7 +4162,9 @@ InitGTK(int *argc, char ***argv)
     gnubg_set_default_icon();
 
     CreateMainWindow();
+#if GTK_CHECK_VERSION(3,0,0)
     ApplyDefaultCss();
+#endif
 
     /*Create string for handling messages from output* functions */
     output_str = g_string_new(NULL);

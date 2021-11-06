@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011-2014 Michael Petch <mpetch@capp-sysware.com>
- * Copyright (C) 2011-2017 the AUTHORS
+ * Copyright (C) 2011-2021 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,9 +68,6 @@ typedef void *GtkCssProvider;
     gtk_paint_layout (style, window, state_type, use_text, area, widget, detail, x, y, layout)
 #define gtk_locdef_paint_box(style, window, cr, state_type, shadow_type, area, widget, detail, x, y, width, height) \
     gtk_paint_box(style, window, state_type, shadow_type, area, widget, detail, x, y, width, height)
-#define gtk_css_provider_new() NULL
-#define gtk_css_provider_load_from_path(pr, path, err)
-#define gtk_style_context_add_provider_for_screen(scr, pr, pri)
 #endif
 
 #if ! GTK_CHECK_VERSION(2,24,0)
