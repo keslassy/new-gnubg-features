@@ -1236,13 +1236,14 @@ static void
 HingePixel(renderdata * prd, float xNorm, float yNorm, float xEye, float yEye, unsigned char auch[3])
 {
 
-    float arReflection[3], arAuxLight[2][3] = {
+    float arReflection[3];
+    const float arAuxLight[2][3] = {
         {0.6f, 0.7f, 0.5f},
         {0.5f, -0.6f, 0.7f}
     };
     float zNorm;
     float diffuse, specular = 0, cos_theta;
-    float *arLight[3];
+    const float *arLight[3];
     arLight[0] = prd->arLight;
     arLight[1] = arAuxLight[0];
     arLight[2] = arAuxLight[1];
@@ -2390,9 +2391,9 @@ CalculateArea(renderdata * prd, unsigned char *puch, int nStride,
               renderimages * pri, TanBoard anBoard,
               int anOff[2], const unsigned int anDice[2],
               int anDicePosition[2][2],
-              int fDiceColour, int anCubePosition[2],
+              int fDiceColour, const int anCubePosition[2],
               int nLogCube, int nCubeOrientation,
-              int anResignPosition[2],
+              const int anResignPosition[2],
               int fResign, int nResignOrientation,
               int anArrowPosition[2], int UNUSED(fPlaying), int nPlayer, int x, int y, int cx, int cy)
 {
