@@ -3140,7 +3140,7 @@ extern void drawHinges(const ModelManager* modelHolder, const BoardData3d* UNUSE
 }
 
 static void
-drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA)
+drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA, int nCube)
 {
 	int c;
 	float radius = DOUBLECUBE_SIZE / 7.0f;
@@ -3148,7 +3148,7 @@ drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA)
 	float hds = (ds / 2);
 	float depth = hds + radius;
 
-	const char* sides[] = { "4", "16", "32", "64", "8", "2" };
+	const char* sides[2][6] = {{ "4", "16", "32", "64", "8", "2" }, { "256", "1024", "2048", "4096", "512", "128" }};
 	int side;
 
 	glPushMatrix();
@@ -3163,7 +3163,7 @@ drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA)
 			glPushMatrix();
 			glTranslatef(0.f, 0.f, depth + LIFT_OFF);
 
-			glPrintCube(&bd->bd3d->cubeFont, sides[side], MAA);
+			glPrintCube(&bd->bd3d->cubeFont, sides[nCube][side], MAA);
 
 			glPopMatrix();
 		}
@@ -3182,7 +3182,8 @@ DrawDCNumbers(const BoardData* bd)
 	int extraRot = 0;
 	int rotDC[6][3] = { {1, 0, 0}, {2, 0, 3}, {0, 0, 0}, {0, 3, 1}, {0, 1, 0}, {3, 0, 3} };
 
-	int cubeIndex;
+	int nCube, cubeIndex;
+
 	/* Rotate to correct number + rotation */
 	if (!bd->doubled) {
 		cubeIndex = LogCube(bd->cube);
@@ -3192,8 +3193,15 @@ DrawDCNumbers(const BoardData* bd)
 		cubeIndex = LogCube(bd->cube * 2);      /* Show offered cube value */
 		extraRot = bd->turn + 1;
 	}
-	if (cubeIndex == 6)
-		cubeIndex = 0;	// 0 == show 64
+
+	g_assert(cubeIndex <= 12);
+
+        if (cubeIndex > 6)
+		nCube = 1;
+	else
+		nCube = 0;
+
+        cubeIndex = cubeIndex % 6;
 
 	glRotatef((float)(rotDC[cubeIndex][2] + extraRot) * 90.0f, 0.f, 0.f, 1.f);
 	glRotatef((float)rotDC[cubeIndex][0] * 90.0f, 1.f, 0.f, 0.f);
@@ -3202,11 +3210,11 @@ DrawDCNumbers(const BoardData* bd)
 	initDT(&dt, rotDC[cubeIndex][0], rotDC[cubeIndex][1], rotDC[cubeIndex][2] + extraRot);
 
 	setMaterial(&bd->rd->CubeNumberMat);
-	drawDCNumbers(bd, &dt, 0);
+	drawDCNumbers(bd, &dt, 0, nCube);
 
 #if !GTK_CHECK_VERSION(3,0,0)
 	LegacyStartAA(0.5f);
-	drawDCNumbers(bd, &dt, 1);
+	drawDCNumbers(bd, &dt, 1, nCube);
 	LegacyEndAA();
 #endif
 }
