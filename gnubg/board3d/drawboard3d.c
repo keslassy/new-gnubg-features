@@ -916,7 +916,7 @@ drawPoints(const renderdata* prd, int side)
 	float tuv;
 
 	if (prd->PointMat[side].pTexture)
-		tuv = (TEXTURE_SCALE) / prd->PointMat[side].pTexture->width;
+		tuv = TEXTURE_SCALE / (float)prd->PointMat[side].pTexture->width;
 	else
 		tuv = 0;
 
@@ -942,7 +942,7 @@ drawRectTextureMatched(float x, float y, float z, float w, float h, const Textur
 	{
 		glMatrixMode(GL_TEXTURE);
 		glPushMatrix();
-		float tuv = TEXTURE_SCALE / texture->width;
+		float tuv = TEXTURE_SCALE / (float)texture->width;
 		glTranslatef(x * tuv, y * tuv, 0.f);
 		glMatrixMode(GL_MODELVIEW);
 	}
@@ -987,7 +987,7 @@ preDrawPiece0(const renderdata* prd, int display, PieceTextureType ptt)
 	float*** p;
 	float*** n;
 
-	step = (2 * F_PI) / prd->curveAccuracy;
+	step = (2 * F_PI) /(float) prd->curveAccuracy;
 
 	/* Draw top/bottom of piece */
 	if (display) {
@@ -1146,7 +1146,7 @@ renderDice(const renderdata* prd)
 	float*** corner_points = Alloc3d(corner_steps, corner_steps, 3);
 
 	radius = size / 2.0f;
-	step = (2 * (float)F_PI) / prd->curveAccuracy;
+	step = (2 * F_PI) / (float)prd->curveAccuracy;
 
 	glPushMatrix();
 
@@ -1162,7 +1162,7 @@ renderDice(const renderdata* prd)
 
 	lat_angle = 0;
 	lns = (prd->curveAccuracy / 4);
-	lat_step = (F_PI / 2) / lns;
+	lat_step = F_PI_2 / (float)lns;
 
 	/* Calculate corner points */
 	for (i = 0; i < lns + 1; i++) {
@@ -1170,7 +1170,7 @@ renderDice(const renderdata* prd)
 
 		ns = (prd->curveAccuracy / 4) - i;
 		if (ns > 0)
-			step = (F_PI / 2 - lat_angle) / (ns);
+			step = (F_PI_2 - lat_angle) / (float)ns;
 
 		for (j = 0; j <= ns; j++) {
 			corner_points[i][j][0] = cosf(lat_angle) * radius;
@@ -1536,8 +1536,8 @@ drawPoint(const renderdata* prd, float tuv, unsigned int i, int p, int outline)
 			float angle, step;
 			float radius = w / 2.0f;
 
-			step = (2 * F_PI) / prd->curveAccuracy;
-			angle = -step * (int)(prd->curveAccuracy / 4);
+			step = (2 * F_PI) / (float)prd->curveAccuracy;
+			angle = -step * (float)(prd->curveAccuracy / 4);
 			glNormal3f(0.f, 0.f, 1.f);
 			glBegin(outline ? GL_LINE_STRIP : GL_TRIANGLE_FAN);
 			if (tuv != 0)
@@ -1762,11 +1762,11 @@ drawTableModel(const renderdata* prd, const EigthPoints* bd3dboardPoints)
 		if (prd->BoxMat.pTexture) {
 			float st, ct, dInc;
 
-			tuv = (TEXTURE_SCALE) / prd->BoxMat.pTexture->width;
-			st = sinf((2 * F_PI) / prd->curveAccuracy) * BOARD_FILLET;
-			ct = (cosf((2 * F_PI) / prd->curveAccuracy) - 1) * BOARD_FILLET;
+			tuv = (TEXTURE_SCALE) / (float)prd->BoxMat.pTexture->width;
+			st = sinf((2 * F_PI) / (float)prd->curveAccuracy) * BOARD_FILLET;
+			ct = (cosf((2 * F_PI) / (float)prd->curveAccuracy) - 1) * BOARD_FILLET;
 			dInc = sqrtf(st * st + ct * ct);
-			curveTextOff = (int)(prd->curveAccuracy / 4) * dInc;
+			curveTextOff = (float)(prd->curveAccuracy / 4) * dInc;
 		}
 
 		/* Right edge */
@@ -2408,7 +2408,7 @@ waveFlag(float wag)
 		{
 			flag.ctlpoints[i][j][2] = sinf((float)i / 3.0f + wag) * FLAG_WAG;
 			/* Fixed at pole and more wavy towards end */
-			flag.ctlpoints[i][j][2] *= (1.0f / S_NUMSEGMENTS) * i;
+			flag.ctlpoints[i][j][2] *= (1.0f / S_NUMSEGMENTS) * (float)i;
 		}
 	}
 }
@@ -2437,7 +2437,7 @@ setupPath(const BoardData * bd, Path * p, float *pRotate, unsigned int fromPoint
 
     /* Swap boards if displaying other way around */
     if (fClockwise) {
-        unsigned int swapBoard[] = { 0, 2, 1, 4, 3, 5 };
+        const unsigned int swapBoard[] = { 0, 2, 1, 4, 3, 5 };
         fromBoard = swapBoard[fromBoard];
         toBoard = swapBoard[toBoard];
     }
@@ -2659,7 +2659,7 @@ setupDicePath(int num, float stepSize, Path * p, const BoardData * bd)
 }
 
 static void
-randomDiceRotation(const Path * p, DiceRotation * diceRotation, int dir)
+randomDiceRotation(const Path * p, DiceRotation * diceRotation, float dir)
 {
     /* Dice rotation range values */
 #define XROT_MIN 1
@@ -2676,7 +2676,7 @@ randomDiceRotation(const Path * p, DiceRotation * diceRotation, int dir)
     diceRotation->yRotStart = 1 - (p->pts[p->numSegments][0] - p->pts[0][0]) * diceRotation->yRotFactor;
     diceRotation->yRot = diceRotation->yRotStart * 360;
 
-    if (dir == -1) {
+    if (dir < 0.f) {
         diceRotation->xRotFactor = -diceRotation->xRotFactor;
         diceRotation->yRotFactor = -diceRotation->yRotFactor;
     }
@@ -2687,7 +2687,7 @@ setupDicePaths(const BoardData * bd, Path dicePaths[2], float diceMovingPos[2][3
 {
     int firstDie = (bd->turn == 1);
     int secondDie = !firstDie;
-    int dir = (bd->turn == 1) ? -1 : 1;
+    float dir = (bd->turn == 1) ? -1 : 1;
 
     setupDicePath(firstDie, dir * DICE_STEP_SIZE0, &dicePaths[firstDie], bd);
     setupDicePath(secondDie, dir * DICE_STEP_SIZE1, &dicePaths[secondDie], bd);
@@ -2869,8 +2869,8 @@ SetupFlag(void)
     float height = FLAG_HEIGHT;
 
 	for (i = 0; i < S_NUMSEGMENTS; i++) {
-		flag.ctlpoints[i][0][0] = width / (S_NUMSEGMENTS - 1) * i;
-		flag.ctlpoints[i][1][0] = width / (S_NUMSEGMENTS - 1) * i;
+		flag.ctlpoints[i][0][0] = width / (S_NUMSEGMENTS - 1) * (float)i;
+		flag.ctlpoints[i][1][0] = width / (S_NUMSEGMENTS - 1) * (float)i;
 		flag.ctlpoints[i][0][1] = 0;
 		flag.ctlpoints[i][1][1] = height;
 		flag.ctlpoints[i][0][2] = 0;
@@ -3080,15 +3080,16 @@ SetupViewingVolume3dNew(const BoardData* bd, BoardData3d* bd3d, const renderdata
 	SetupPerspVolume(bd, bd3d, prd, projMat, modelMat, aspectRatio);
 }
 
-static void gluPickMatrix(GLfloat x, GLfloat y, GLfloat deltax, GLfloat deltay, int* viewport)
+#if !GTK_CHECK_VERSION(3, 0, 0)
+static void gluPickMatrix(GLfloat x, GLfloat y, GLfloat deltax, GLfloat deltay, const int* viewport)
 {
 	if (deltax <= 0 || deltay <= 0) {
 		return;
 	}
 
 	/* Translate and scale the picked region to the entire window */
-	glTranslatef((viewport[2] - 2 * (x - viewport[0])) / deltax, (viewport[3] - 2 * (y - viewport[1])) / deltay, 0);
-	glScalef(viewport[2] / deltax, viewport[3] / deltay, 1.0);
+	glTranslatef(((GLfloat)viewport[2] - 2 * (x - (GLfloat)viewport[0])) / deltax, ((GLfloat)viewport[3] - 2 * (y - (GLfloat)viewport[1])) / deltay, 0);
+	glScalef((GLfloat)viewport[2] / deltax, (GLfloat)viewport[3] / deltay, 1.0);
 }
 
 void getPickMatrices(float x, float y, const BoardData* bd, int* viewport, float** projMat, float** modelMat)
@@ -3105,6 +3106,7 @@ void getPickMatrices(float x, float y, const BoardData* bd, int* viewport, float
 
 	glMatrixMode(GL_MODELVIEW);
 }
+#endif
 
 void drawTableBase(const ModelManager* modelHolder, const BoardData3d* UNUSED(bd3d), const renderdata* prd)
 {
@@ -3193,9 +3195,9 @@ DrawDCNumbers(const BoardData* bd)
 	if (cubeIndex == 6)
 		cubeIndex = 0;	// 0 == show 64
 
-	glRotatef((rotDC[cubeIndex][2] + extraRot) * 90.0f, 0.f, 0.f, 1.f);
-	glRotatef(rotDC[cubeIndex][0] * 90.0f, 1.f, 0.f, 0.f);
-	glRotatef(rotDC[cubeIndex][1] * 90.0f, 0.f, 1.f, 0.f);
+	glRotatef((float)(rotDC[cubeIndex][2] + extraRot) * 90.0f, 0.f, 0.f, 1.f);
+	glRotatef((float)rotDC[cubeIndex][0] * 90.0f, 1.f, 0.f, 0.f);
+	glRotatef((float)rotDC[cubeIndex][1] * 90.0f, 0.f, 1.f, 0.f);
 
 	initDT(&dt, rotDC[cubeIndex][0], rotDC[cubeIndex][1], rotDC[cubeIndex][2] + extraRot);
 
@@ -3310,7 +3312,7 @@ renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const 
 		glPushMatrix();
 		glTranslatef(bd3d->movingPos[0], bd3d->movingPos[1], bd3d->movingPos[2]);
 		if (bd3d->rotateMovingPiece > 0)
-			glRotatef(-90 * bd3d->rotateMovingPiece * bd->turn, 1.f, 0.f, 0.f);
+			glRotatef(-90 * bd3d->rotateMovingPiece * (float)bd->turn, 1.f, 0.f, 0.f);
 		glRotatef((float)bd3d->movingPieceRotation, 0.f, 0.f, 1.f);
 		setMaterial(&prd->ChequerMat[(bd->turn == 1) ? 1 : 0]);
 		renderPiece(modelHolder, separateTop);
@@ -3318,6 +3320,7 @@ renderSpecialPieces(const ModelManager* modelHolder, const BoardData* bd, const 
 	}
 }
 
+#if GTK_CHECK_VERSION(3, 0, 0)
 extern void DrawDotTemp(const ModelManager* modelHolder, float dotSize, float ds, float zOffset, int* dp, int c)
 {
 	float hds = (ds / 2);
@@ -3355,6 +3358,7 @@ extern void DrawDotTemp(const ModelManager* modelHolder, float dotSize, float ds
 	if (c == 5)
 		glPopMatrix();
 }
+#endif
 
 extern void
 drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d* bd3d, const renderdata* prd, const Material* diceMat, int num, int drawDots)
@@ -3389,8 +3393,8 @@ drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d*
 		moveToDicePos(bd, num, (bd->diceShown == DICE_ON_BOARD) ? bd->bd3d->dicePos[num][2] : 0);
 
 	/* Orientate dice correctly */
-	glRotatef(90.0f * rotDice[value][0], 1.f, 0.f, 0.f);
-	glRotatef(90.0f * rotDice[value][1], 0.f, 1.f, 0.f);
+	glRotatef(90.0f * (float)rotDice[value][0], 1.f, 0.f, 0.f);
+	glRotatef(90.0f * (float)rotDice[value][1], 0.f, 1.f, 0.f);
 
 	if (diceMat->alphaBlend) { /* Draw back of dice separately */
 		DrawBackDice(modelHolder, bd3d, prd, &dt, diceCol);
