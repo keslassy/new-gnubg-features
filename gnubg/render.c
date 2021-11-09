@@ -1953,7 +1953,7 @@ RenderCubeFaces(renderdata * prd, unsigned char *puch, int nStride, unsigned cha
             FT_Get_Glyph(ftf->glyph, aftg + i);
         }
 
-        FT_Set_Pixel_Sizes(ftf, 0, 2 * prd->nSize);
+        FT_Set_Pixel_Sizes(ftf, 0, (15 * prd->nSize) / 8);
 
         for (i = 0; i < 10; i++) {
             FT_Load_Char(ftf, '0' + i, FT_LOAD_RENDER);
