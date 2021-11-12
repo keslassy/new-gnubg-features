@@ -72,11 +72,15 @@ OutputRolloutResult(const char *szIndent,
 
         strcat(sz, "  ");
         strcat(sz, OutputPercents(aarOutput[ici], TRUE));
-        strcat(sz, " CL ");
+        strcat(sz, " ");
+        strcat(sz, _("CL"));
+        strcat(sz, " ");
         strcat(sz, OutputEquityScale(aarOutput[ici][OUTPUT_EQUITY], &aci[alt + ici], &aci[0], TRUE));
 
         if (fCubeful) {
-            strcat(sz, " CF ");
+            strcat(sz, " ");
+            strcat(sz, _("CF"));
+            strcat(sz, " ");
             strcat(sz, OutputMWC(aarOutput[ici][OUTPUT_CUBEFUL_EQUITY], &aci[0], TRUE));
         }
 
@@ -89,11 +93,15 @@ OutputRolloutResult(const char *szIndent,
 
         strcat(sz, " [");
         strcat(sz, OutputPercents(aarStdDev[ici], FALSE));
-        strcat(sz, " CL ");
+        strcat(sz, " ");
+        strcat(sz, _("CL"));
+        strcat(sz, " ");
         strcat(sz, OutputEquityScale(aarStdDev[ici][OUTPUT_EQUITY], &aci[alt + ici], &aci[0], FALSE));
 
         if (fCubeful) {
-            strcat(sz, " CF ");
+            strcat(sz, " ");
+            strcat(sz, _("CF"));
+            strcat(sz, " ");
             strcat(sz, OutputMWC(aarStdDev[ici][OUTPUT_CUBEFUL_EQUITY], &aci[0], FALSE));
         }
 
@@ -116,7 +124,7 @@ OutputEvalContext(const evalcontext * pec, const int fChequer)
     sprintf(sz, "%u-%s %s", pec->nPlies, _("ply"), (!fChequer || pec->fCubeful) ? _("cubeful") : _("cubeless"));
 
     if (pec->fUsePrune) {
-        sprintf(strchr(sz, 0), " prune");
+        sprintf(strchr(sz, 0), " %s", _("prune"));
     }
 
     if (fChequer && pec->nPlies) {
@@ -124,7 +132,7 @@ OutputEvalContext(const evalcontext * pec, const int fChequer)
     }
 
     if (pec->rNoise > 0.0f)
-        sprintf(strchr(sz, 0), ", noise %0.3g (%s)", pec->rNoise, pec->fDeterministic ? "d" : "nd");
+        sprintf(strchr(sz, 0), ", %s %0.3g (%s)", _("noise"), pec->rNoise, pec->fDeterministic ? _("d") : _("nd"));
 
     for (i = 0; i < NUM_SETTINGS; i++)
 
