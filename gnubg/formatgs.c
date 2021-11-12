@@ -142,7 +142,7 @@ formatGS(const statcontext * psc, const int nMatchTo, const formatgs fg)
     case FORMATGS_CHEQUER:
         {
 
-            static int ai[4] = { SKILL_NONE, SKILL_DOUBTFUL,
+            static const int ai[4] = { SKILL_NONE, SKILL_DOUBTFUL,
                 SKILL_BAD, SKILL_VERYBAD
             };
             static const char *asz[4] = {
