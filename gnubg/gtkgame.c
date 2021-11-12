@@ -7220,12 +7220,12 @@ CreateList(void)
     /* list view (selections) */
     copyMenu = gtk_menu_new();
 
-    menu_item = gtk_menu_item_new_with_label("Copy selection");
+    menu_item = gtk_menu_item_new_with_label(_("Copy selection"));
     gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(StatcontextCopy), view);
 
-    menu_item = gtk_menu_item_new_with_label("Copy all");
+    menu_item = gtk_menu_item_new_with_label(_("Copy all"));
     gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(CopyAll), pwNotebook);
@@ -7315,7 +7315,7 @@ GTKDumpStatcontext(int game)
 #endif
 
     pwUsePanels = gtk_check_button_new_with_label(_("Split statistics into panels"));
-    gtk_widget_set_tooltip_text(pwUsePanels, "Show data in a single list or split into several panels");
+    gtk_widget_set_tooltip_text(pwUsePanels, _("Show data in a single list or split into several panels"));
     gtk_box_pack_start(GTK_BOX(pvbox), pwUsePanels, FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwUsePanels), fGUIUseStatsPanel);
     g_signal_connect(G_OBJECT(pwUsePanels), "toggled", G_CALLBACK(toggle_fGUIUseStatsPanel), NULL);
@@ -7323,12 +7323,12 @@ GTKDumpStatcontext(int game)
     /* list view (selections) */
     copyMenu = gtk_menu_new();
 
-    menu_item = gtk_menu_item_new_with_label("Copy selection");
+    menu_item = gtk_menu_item_new_with_label(_("Copy selection"));
     gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(StatcontextCopy), statView);
 
-    menu_item = gtk_menu_item_new_with_label("Copy all");
+    menu_item = gtk_menu_item_new_with_label(_("Copy all"));
     gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(CopyAll), pwNotebook);
@@ -7351,12 +7351,12 @@ GTKDumpStatcontext(int game)
 
     copyMenu = gtk_menu_new();
 
-    menu_item = gtk_menu_item_new_with_label("Copy page");
+    menu_item = gtk_menu_item_new_with_label(_("Copy page"));
     gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(CopyPage), pwNotebook);
 
-    menu_item = gtk_menu_item_new_with_label("Copy all pages");
+    menu_item = gtk_menu_item_new_with_label(_("Copy all pages"));
     gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(CopyAll), pwNotebook);
