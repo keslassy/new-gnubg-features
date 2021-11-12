@@ -1373,39 +1373,39 @@ Specifically: (1) The color of each square (2) The hover text of each square (3)
         /* update labels on gauge */
         switch (colourBasedOn) {
             case PT:
-                gtk_label_set_text(GTK_LABEL(psm->apwGauge[0]), "T");
+                gtk_label_set_text(GTK_LABEL(psm->apwGauge[0]), _("T"));
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[1]), "");
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[2]), "");
-                gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), "P");
+                gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), _("P"));
 #if GTK_CHECK_VERSION(2,12,0)
-                gtk_widget_set_tooltip_markup(psm->apwGauge[0], "Take");
+                gtk_widget_set_tooltip_markup(psm->apwGauge[0], _("Take"));
                 gtk_widget_set_tooltip_markup(psm->apwGauge[1], "");
                 gtk_widget_set_tooltip_markup(psm->apwGauge[2], "");
-                gtk_widget_set_tooltip_markup(psm->apwGauge[3], "Pass");
+                gtk_widget_set_tooltip_markup(psm->apwGauge[3], _("Pass"));
 #endif
                 break;
             case DND:
-                gtk_label_set_text(GTK_LABEL(psm->apwGauge[0]), "ND");
+                gtk_label_set_text(GTK_LABEL(psm->apwGauge[0]), _("ND"));
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[1]), "");
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[2]), "");
-                gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), "D");
+                gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), _("D"));
 #if GTK_CHECK_VERSION(2,12,0)
-                gtk_widget_set_tooltip_markup(psm->apwGauge[0], "No double");
+                gtk_widget_set_tooltip_markup(psm->apwGauge[0], _("No double"));
                 gtk_widget_set_tooltip_markup(psm->apwGauge[1], "");
                 gtk_widget_set_tooltip_markup(psm->apwGauge[2], "");
-                gtk_widget_set_tooltip_markup(psm->apwGauge[3], "Double");
+                gtk_widget_set_tooltip_markup(psm->apwGauge[3], _("Double"));
 #endif
                 break;
             case ALL:
-                gtk_label_set_text(GTK_LABEL(psm->apwGauge[0]), "ND");
-                gtk_label_set_text(GTK_LABEL(psm->apwGauge[1]), "D/T");
-                gtk_label_set_text(GTK_LABEL(psm->apwGauge[2]), "D/P");
-                gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), "TGTD");
+                gtk_label_set_text(GTK_LABEL(psm->apwGauge[0]), _("ND"));
+                gtk_label_set_text(GTK_LABEL(psm->apwGauge[1]), _("D/T"));
+                gtk_label_set_text(GTK_LABEL(psm->apwGauge[2]), _("D/P"));
+                gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), _("TGTD"));
 #if GTK_CHECK_VERSION(2,12,0)
-                gtk_widget_set_tooltip_markup(psm->apwGauge[0], "No double/take");
-                gtk_widget_set_tooltip_markup(psm->apwGauge[1], "Double/take");
-                gtk_widget_set_tooltip_markup(psm->apwGauge[2], "Double/pass");
-                gtk_widget_set_tooltip_markup(psm->apwGauge[3], "Too good to double");
+                gtk_widget_set_tooltip_markup(psm->apwGauge[0], _("No double/take"));
+                gtk_widget_set_tooltip_markup(psm->apwGauge[1], _("Double/take"));
+                gtk_widget_set_tooltip_markup(psm->apwGauge[2], _("Double/pass"));
+                gtk_widget_set_tooltip_markup(psm->apwGauge[3], _("Too good to double"));
 #endif
                 break;
             default:
@@ -2507,7 +2507,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
     }
 
     /* Layout frame */
-    const char * layoutStrings[2] = {N_("Vertical"), N_("Horizontal")};   //xxx
+    const char * layoutStrings[2] = {N_("Vertical"), N_("Horizontal")};
 
     BuildLabelFrame(psm, pwv, _("Layout"), layoutStrings, 2, layout, LayoutToggled, TRUE, vAlignExpand);
 
