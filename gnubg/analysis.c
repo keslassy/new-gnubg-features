@@ -2624,7 +2624,8 @@ CommandAnalyseRolloutMove(char *sz)
         cmark_move_set(pmr, sz, CMARK_ROLLOUT);
 
     if (cmark_move_rollout(pmr, FALSE) == 0) {
-        outputerrf("No moves marked for rollout\n");
+        outputerrf(_("No moves marked for rollout"));
+        outputerrf("\n");
         return;
     }
 
