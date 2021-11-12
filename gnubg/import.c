@@ -1950,7 +1950,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                             pmr->sz = szComment;
                             pmr->fPlayer = fPlayer;
                             if (!LinkToDouble(pmr)) {
-                                outputl(_("Beaver found but doesn't follow a double"));
+                                outputl(_("Beaver record found but doesn't follow a double"));
                                 free(pmr);
                                 return;
                             }
@@ -1970,7 +1970,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                             pmr->sz = szComment;
                             pmr->fPlayer = fPlayer;
                             if (!LinkToDouble(pmr)) {
-                                outputl(_("Raccoon found but doesn't follow a double"));
+                                outputl(_("Raccoon record found but doesn't follow a double"));
                                 free(pmr);
                                 return;
                             }
