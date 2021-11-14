@@ -1594,17 +1594,15 @@ The resulting string is written to "output".
 
     if (pch == NULL) { //nothing in 2nd half
         size_t halfLen = (len+1)/2;
-        char prefix[halfLen+2];
-
-        /* gcc 8 issues a warning here: "output between 1 and 29 bytes into a destination of size 14" */
-        snprintf(prefix, halfLen, "%s", input); //build prefix=1st half
+	char *prefix = g_strndup(input, halfLen);
 
         pch = strrchr(prefix,' '); // find last space in 1st half
         if (pch == NULL) // No space => no cut.
             return;
         else {
-            pch = (pch-prefix)+output;       //i.e. now point to the j_th character of output string, not of prefix string
+            pch = output + (pch-prefix);       // now point to the corresponding character of output string
         }
+    g_free(prefix);
     }
     *pch = '\n'; // Replace the space with a newline
 }
@@ -1760,7 +1758,7 @@ The function updates the decision text in each square.
 }
 
 
-//#if ! GTK_CHECK_VERSION(3,0,0)
+#if ! GTK_CHECK_VERSION(3,0,0)
 static void
 ExposeQuadrant(GtkWidget * pw, GdkEventExpose * UNUSED(pev), scoremap * psm)
 /* Called by gtk. */
@@ -1769,7 +1767,7 @@ ExposeQuadrant(GtkWidget * pw, GdkEventExpose * UNUSED(pev), scoremap * psm)
     DrawQuadrant(pw, cr, psm);
     cairo_destroy(cr);
 }
-//#endif
+#endif
 
 // #if ! GTK_CHECK_VERSION(3,0,0)
 // static void
