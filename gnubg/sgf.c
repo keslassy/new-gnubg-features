@@ -348,7 +348,7 @@ RestoreText(char *sz, char **ppch)
     if (!sz || !*sz)
         return;
 
-    free(*ppch);
+    g_free(*ppch);
 
     *ppch = CopyEscapedString(sz);
 }
