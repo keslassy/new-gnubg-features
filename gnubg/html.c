@@ -948,7 +948,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
     printImage(pf, szImageDir, "b-indent", szExtension, "", hecss, HTML_EXPORT_TYPE_FIBS2HTML);
 
     PipCount((ConstTanBoard) anBoard, anPips);
-    fprintf(pf, _("Pip counts: %s %u, %s %u<br/>\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
+    fprintf(pf, "%s %s %u, %s %u<br/>\n", _("Pip counts:"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
 
     /* position ID */
 
@@ -1370,7 +1370,7 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
     fputs("<p>", pf);
 
     PipCount((ConstTanBoard) anBoard, anPips);
-    fprintf(pf, _("Pip counts: %s %u, %s %u<br/>\n"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
+    fprintf(pf, "%s %s %u, %s %u<br/>\n", _("Pip counts:"), ap[0].szName, anPips[1], ap[1].szName, anPips[0]);
 
     /* position ID */
 

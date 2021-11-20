@@ -126,7 +126,7 @@ printTextBoard(FILE * pf, const matchstate * pms)
 
     PipCount((ConstTanBoard) anBoard, anPips);
 
-    fprintf(pf, "Pip counts: O %u, X %u\n\n", anPips[0], anPips[1]);
+    fprintf(pf, "%s O %u, X %u\n\n", _("Pip counts:"), anPips[0], anPips[1]);
 
 }
 
