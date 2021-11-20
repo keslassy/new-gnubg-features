@@ -1511,7 +1511,7 @@ CopyIDs(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 static void
 CopyMatchID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {                               /* Copy the position and match ids to the clipboard */
-    gchar *buffer;
+    gchar *sz;
 
     if (ms.gs == GAME_NONE) {
         output(_("No game in progress."));
@@ -1519,11 +1519,11 @@ CopyMatchID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         return;
     }
 
-    buffer = g_strdup_printf("%s %s", _("Match ID:"), MatchIDFromMatchState(&ms));
+    sz = g_strdup_printf("%s %s", _("Match ID:"), MatchIDFromMatchState(&ms));
 
-    GTKTextToClipboard(buffer);
+    GTKTextToClipboard(sz);
 
-    g_free(buffer);
+    g_free(sz);
 
     gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Match ID copied to the clipboard"));
 }
@@ -1531,7 +1531,7 @@ CopyMatchID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 static void
 CopyPositionID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {                               /* Copy the position and match ids to the clipboard */
-    gchar *buffer;
+    gchar *sz;
 
     if (ms.gs == GAME_NONE) {
         output(_("No game in progress."));
@@ -1539,11 +1539,11 @@ CopyPositionID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         return;
     }
 
-    buffer = g_strdup_printf("%s %s", _("Position ID:"), PositionID(msBoard()));
+    sz = g_strdup_printf("%s %s", _("Position ID:"), PositionID(msBoard()));
 
-    GTKTextToClipboard(buffer);
+    GTKTextToClipboard(sz);
 
-    g_free(buffer);
+    g_free(sz);
 
     gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Position ID copied to the clipboard"));
 }
@@ -2726,10 +2726,11 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     for (i = 0; i < 2; ++i) {
 
-        char *sz = g_strdup_printf(_("Analyse player %s"), ap[i].szName);
+        gchar *sz = g_strdup_printf(_("Analyse player %s"), ap[i].szName);
 
         aw.apwAnalysePlayers[i] = gtk_check_button_new_with_label(sz);
         gtk_box_pack_start(GTK_BOX(vbox2), aw.apwAnalysePlayers[i], FALSE, FALSE, 0);
+	g_free(sz);
 
     }
 
