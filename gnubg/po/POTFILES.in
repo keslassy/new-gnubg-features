@@ -24,6 +24,7 @@ board3d/widget3d.c
 boarddim.h
 boardpos.c
 boardpos.h
+commands.inc
 common.h
 non-src/copying.c
 non-src/credits.c

@@ -440,10 +440,10 @@ ShowHelp(GtkWidget * pwText, char *pStr)
                 }
             }
 
-            sprintf(szBuf, "Command: %s\n", szCommand);
+            sprintf(szBuf, "%s %s\n", _("Command:"), szCommand);
             gtk_text_buffer_insert(buffer, &iter, szBuf, -1);
             gtk_text_buffer_insert(buffer, &iter, gettext(pc->szHelp), -1);
-            sprintf(szBuf, "\n\nUsage: %s", szUsage);
+            sprintf(szBuf, "\n\n%s %s", _("Usage:"), szUsage);
             gtk_text_buffer_insert(buffer, &iter, szBuf, -1);
 
             if (!(pc->pc && pc->pc->sz))

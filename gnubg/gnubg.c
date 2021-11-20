@@ -1722,7 +1722,7 @@ CommandHelp(char *sz)
     }
 
     if (szHelp) {
-        outputf("%s- %s\n\n%s: %s", szCommand, szHelp, _("Usage"), szUsage);
+        outputf("%s- %s\n\n%s %s", szCommand, szHelp, _("Usage:"), szUsage);
 
         if (pc->pc && pc->pc->sz)
             outputf("<%s>\n", _("subcommand"));

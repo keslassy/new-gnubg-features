@@ -6380,7 +6380,7 @@ GTKHelpAdd(GtkTreeStore * pts, GtkTreeIter * ptiParent, command * pc)
     for (; pc->sz; pc++)
         if (pc->szHelp) {
             gtk_tree_store_append(pts, &ti, ptiParent);
-            gtk_tree_store_set(pts, &ti, 0, pc->sz, 1, pc->szHelp, 2, pc, -1);
+            gtk_tree_store_set(pts, &ti, 0, pc->sz, 1, gettext(pc->szHelp), 2, pc, -1);
             if (pc->pc && pc->pc->sz)
                 GTKHelpAdd(pts, &ti, pc->pc);
         }
@@ -6428,9 +6428,11 @@ GTKHelpSelect(GtkTreeSelection * pts, gpointer UNUSED(p))
             }
         }
 
-        pLabel = g_strdup_printf(_("%s- %s\n\nUsage: %s%s\n"), szCommand,
-                                 apc[c - 1]->szHelp, szUsage,
-                                 (apc[c - 1]->pc && apc[c - 1]->pc->sz) ? " <subcommand>" : "");
+/* Use szUsage as is, at this point it has already been translated by GTKHelpAdd() */
+
+        pLabel = g_strdup_printf("%s - %s\n\n%s %s%s\n", szCommand,
+                                 gettext(apc[c - 1]->szHelp), _("Usage:"), szUsage,
+                                 (apc[c - 1]->pc && apc[c - 1]->pc->sz) ? _(" <subcommand>") : "");
         gtk_label_set_text(GTK_LABEL(pwHelpLabel), pLabel);
         g_free(pLabel);
 

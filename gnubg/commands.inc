@@ -198,7 +198,7 @@ static command acAnnotateRoll[] = {
       "format"), szFILENAME, &cFilename },
     { "snowietxt", CommandExportGameSnowieTxt, N_("Records a log of the game in Snowie .txt format"), szFILENAME, &cFilename },
     { "html", CommandExportGameHtml,
-      N_("Records a log of the game in .html format"), szFILENAME,
+      N_("Records a log of the game in HTML format"), szFILENAME,
       &cFilename },
     { "latex", CommandExportGameLaTeX, N_("Records a log of the game in LaTeX "
       "format"), szFILENAME, &cFilename },
@@ -214,7 +214,7 @@ static command acAnnotateRoll[] = {
       "format"), szFILENAME, &cFilename },
     { "snowietxt", CommandExportMatchSnowieTxt, N_("Records a log of the match in Snowie .txt format"), szFILENAME, &cFilename },
     { "html", CommandExportMatchHtml,
-      N_("Records a log of the match in .html format"), szFILENAME,
+      N_("Records a log of the match in HTML format"), szFILENAME,
       &cFilename },
     { "latex", CommandExportMatchLaTeX, 
       N_("Records a log of the match in LaTeX "
@@ -229,11 +229,11 @@ static command acAnnotateRoll[] = {
     { NULL, NULL, NULL, NULL, NULL }
 }, acExportPosition[] = {
     { "bgo2clipboard", CommandExportPositionGOL2Clipboard,
-      N_("Copy the current position in .html format to clipboard"
+      N_("Copy the current position in HTML format to clipboard "
          "(special for BGonline)"),
       szFILENAME, &cFilename },
     { "bgonline", CommandExportPositionGammOnLine,
-      N_("Save the current position in .html format "
+      N_("Save the current position in HTML format "
          "(special for BGonline)"),
       szFILENAME, &cFilename },
 #if defined(HAVE_PANGOCAIRO)
@@ -245,7 +245,7 @@ static command acAnnotateRoll[] = {
       "SVG format"), szFILENAME, &cFilename },
 #endif /* HAVE_PANGOCAIRO */
     { "html", CommandExportPositionHtml,
-      N_("Save the current position in .html format"), 
+      N_("Save the current position in HTML format"), 
       szFILENAME, &cFilename },
 #if defined(HAVE_LIBPNG)
     { "png", CommandExportPositionPNG, N_("Save the current position in "
@@ -262,7 +262,7 @@ static command acAnnotateRoll[] = {
     { NULL, NULL, NULL, NULL, NULL }
 }, acExportSession[] = {
     { "html", CommandExportMatchHtml,
-      N_("Records a log of the session in .html format"), szFILENAME,
+      N_("Records a log of the session in HTML format"), szFILENAME,
       &cFilename },
     { "latex", CommandExportMatchLaTeX, N_("Records a log of the session in "
       "LaTeX format"), szFILENAME, &cFilename },
@@ -377,7 +377,7 @@ static command acAnnotateRoll[] = {
     { "show", NULL, N_("Show information from the relational database"),
       NULL, acRelationalShow },
     { "test", CommandRelationalTest, 
-      N_("Test the external relational database"), NULL, NULL },
+      N_("Test connexion to the external relational database"), NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }    
 }, acSave[] = {
     { "game", CommandSaveGame, N_("Record a log of the game so far to a "
@@ -784,7 +784,7 @@ command acSetRolloutLate[] = {
     { "initial", CommandSetRolloutInitial, 
       N_("Roll out as the initial position of a game"), szONOFF, &cOnOff },
     { "jsd", CommandSetRolloutJsd, 
-      N_("Stop truncations based on j.s.d. of equities"),
+      N_("Stop truncations based on J.S.D. of equities"),
       NULL, acSetRolloutJsd},
     {"later", CommandSetRolloutLate,
      N_("Control evaluation parameters for later plies of rollout"),
@@ -836,7 +836,7 @@ command acSetRolloutLate[] = {
     { "enable", CommandSetRolloutTruncationEnable, 
 	N_("Enable/Disable truncated rollouts"), szONOFF, &cOnOff },
     { "plies", CommandSetRolloutTruncationPlies,
-	N_("End rollouts at a particular depth"), szPLIES, NULL },
+	N_("End rollouts at a specific depth"), szPLIES, NULL },
     { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -865,7 +865,7 @@ command acSetExportParameters[] = {
 
 static command acSetExportHTMLType[] = {
   { "bbs", CommandSetExportHTMLTypeBBS,
-    N_("Use BBS-type images for posting to, e.g., GammOnLine"), NULL, NULL },
+    N_("Use BBS-type images for posting to, e.g., BGonline"), NULL, NULL },
   { "fibs2html", CommandSetExportHTMLTypeFibs2html,
     N_("Use fibs2html-type pictures"), NULL, NULL },
   { "gnu", CommandSetExportHTMLTypeGNU,
@@ -1215,7 +1215,7 @@ static command acSetVariation[] = {
       "players"), szPLAYER, acSetPlayer },
     { "postcrawford", CommandSetPostCrawford, 
       N_("Set whether this is a post-Crawford game"), szONOFF, &cOnOff },
-    { "priority", NULL, N_("Set the priority of gnubg"), NULL, acSetPriority },
+    { "priority", NULL, N_("Set the priority of the gnubg process"), NULL, acSetPriority },
     { "prompt", CommandSetPrompt, N_("Customise the prompt GNUbg prints when "
       "ready for commands"), szPROMPT, NULL },
     { "ratingoffset", CommandSetRatingOffset,
@@ -1285,7 +1285,7 @@ static command acSetVariation[] = {
     { "board", CommandShowBoard, 
       N_("Redisplay the board position"), szOPTPOSITION, NULL },
     { "buildinfo", CommandShowBuildInfo, 
-      N_("Display details of this build of gnubg"), NULL, NULL },
+      N_("Display details of this build of GNUbg"), NULL, NULL },
     { "browser", CommandShowBrowser, 
       N_("Display the currently used web browser"), NULL, NULL },
     { "cache", CommandShowCache, N_("Display statistics on the evaluation "
@@ -1306,7 +1306,7 @@ static command acSetVariation[] = {
     { "crawford", CommandShowCrawford, 
       N_("See if this is the Crawford game"), NULL, NULL },
     { "credits", CommandShowCredits, 
-      N_("Display contributors to gnubg"), NULL, NULL },
+      N_("Display contributors to GNUbg"), NULL, NULL },
     { "cube", CommandShowCube, N_("Display the current cube value and owner"),
       NULL, NULL },
     { "cubeefficiency", CommandShowCubeEfficiency, 
@@ -1434,7 +1434,7 @@ command acTop[] = {
     { "end", NULL, N_("Automatically make plays"), NULL, acEnd },
     { "beaver", CommandRedouble, N_("Synonym for `redouble'"), NULL, NULL },
     { "calibrate", CommandCalibrate,
-      N_("Measure evaluation speed, for later time estimates"), szOPTVALUE,
+      N_("Measure evaluation speed"), szOPTVALUE,
       NULL },
     { "clear", NULL, N_("Clear information"), NULL, acClear },
     { "cmark", NULL, N_("Mark candidates"), NULL, acCmark }, 
