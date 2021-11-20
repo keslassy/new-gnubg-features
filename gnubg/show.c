@@ -998,7 +998,7 @@ CommandShowScoreSheet(char *UNUSED(sz))
     }
 #endif
 
-    output(_("Score Sheet - "));
+    outputf("%s - ", _("Score Sheet"));
     if (ms.nMatchTo > 0)
         outputf(ms.nMatchTo == 1 ? _("Match to %d point") : _("Match to %d points"), ms.nMatchTo);
     else

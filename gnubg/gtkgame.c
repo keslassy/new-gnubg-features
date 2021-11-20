@@ -6002,7 +6002,7 @@ GTKShowScoreSheet(void)
     char title[100];
     listOLD *pl;
 
-    sprintf(title, _("Score Sheet - "));
+    sprintf(title, "%s - ", _("Score Sheet"));
     if (ms.nMatchTo > 0)
         sprintf(title + strlen(title), _("%d point match"), ms.nMatchTo);
     else
@@ -6914,7 +6914,7 @@ GTKSet(void *p)
 #define NUM_STAT_TYPES (FORMATGS_OVERALL - FORMATGS_ALL)
 
 static char *aszStatHeading[NUM_STAT_TYPES] = {
-    N_("Chequer Play Statistics:"),
+    N_("Chequer play Statistics:"),
     N_("Cube Statistics:"),
     N_("Luck Statistics:"),
     N_("Overall Statistics:")
@@ -6955,13 +6955,13 @@ CopyData(GtkWidget * UNUSED(pwNotebook), int page)
     sprintf(szOutput, "%-37s %-20s %-20s\n", "", ap[0].szName, ap[1].szName);
 
     if (page == FORMATGS_CHEQUER || page == FORMATGS_ALL)
-        AddList(szOutput, statViews[FORMATGS_CHEQUER], aszStatHeading[FORMATGS_CHEQUER]);
+        AddList(szOutput, statViews[FORMATGS_CHEQUER], gettext(aszStatHeading[FORMATGS_CHEQUER]));
     if (page == FORMATGS_LUCK || page == FORMATGS_ALL)
-        AddList(szOutput, statViews[FORMATGS_LUCK], aszStatHeading[FORMATGS_LUCK]);
+        AddList(szOutput, statViews[FORMATGS_LUCK], gettext(aszStatHeading[FORMATGS_LUCK]));
     if (page == FORMATGS_CUBE || page == FORMATGS_ALL)
-        AddList(szOutput, statViews[FORMATGS_CUBE], aszStatHeading[FORMATGS_CUBE]);
+        AddList(szOutput, statViews[FORMATGS_CUBE], gettext(aszStatHeading[FORMATGS_CUBE]));
     if (page == FORMATGS_OVERALL || page == FORMATGS_ALL)
-        AddList(szOutput, statViews[FORMATGS_OVERALL], aszStatHeading[FORMATGS_OVERALL]);
+        AddList(szOutput, statViews[FORMATGS_OVERALL], gettext(aszStatHeading[FORMATGS_OVERALL]));
 
     TextToClipboard(szOutput);
 }
@@ -7026,18 +7026,18 @@ SetStats(const statcontext * psc)
     store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
     gtk_tree_view_set_model(GTK_TREE_VIEW(statView), GTK_TREE_MODEL(store));
     g_object_unref(store);
-    aszLine[0] = aszStatHeading[FORMATGS_CHEQUER];
+    aszLine[0] = gettext(aszStatHeading[FORMATGS_CHEQUER]);
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store, &iter, 0, aszLine[0], -1);
     FillStats(psc, &ms, FORMATGS_CHEQUER, statView);
     FillStats(psc, &ms, FORMATGS_LUCK, statView);
 
-    aszLine[0] = aszStatHeading[FORMATGS_CUBE];
+    aszLine[0] = gettext(aszStatHeading[FORMATGS_CUBE]);
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store, &iter, 0, aszLine[0], -1);
     FillStats(psc, &ms, FORMATGS_CUBE, statView);
 
-    aszLine[0] = aszStatHeading[FORMATGS_OVERALL];
+    aszLine[0] = gettext(aszStatHeading[FORMATGS_OVERALL]);
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store, &iter, 0, aszLine[0], -1);
     FillStats(psc, &ms, FORMATGS_OVERALL, statView);
