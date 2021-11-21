@@ -976,11 +976,18 @@ FormatCubePositions(const cubeinfo * pci, char asz[2][FORMATEDMOVESIZE])
 extern char *
 FormatCubePosition(char *sz, cubeinfo * pci)
 {
-
+    /* FIXME: functions showing rollout progress can call either
+     * FormatMove() from drawboard.c where we know that sz is 
+     * shorter than FORMATEDMOVESIZE, or this one. Moreover they
+     * depend on it to be this short.
+     * Truncate the result if necessary to avoid crashes with long
+     * player names or some translations. Remove the initial
+     * "Player " to save a few characters.
+     */
     if (pci->fCubeOwner == -1)
-        sprintf(sz, _("Centered %d-cube"), pci->nCube);
+        snprintf(sz, FORMATEDMOVESIZE, _("Centered %d-cube"), pci->nCube);
     else
-        sprintf(sz, _("Player %s owns %d-cube"), ap[pci->fCubeOwner].szName, pci->nCube);
+        snprintf(sz, FORMATEDMOVESIZE, _("%s owns %d-cube"), ap[pci->fCubeOwner].szName, pci->nCube);
 
     return sz;
 
