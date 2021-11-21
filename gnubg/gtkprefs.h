@@ -28,7 +28,7 @@ extern void SetBoardPreferences(GtkWidget * pwBoard, char *sz);
 extern void Default3dSettings(BoardData * bd);
 extern void UpdatePreview(void);
 extern void gtk_color_button_get_array(GtkColorButton * button, float array[4]);
-extern void gtk_color_button_set_from_array(GtkColorButton * button, float array[4]);
+extern void gtk_color_button_set_from_array(GtkColorButton * button, float const array[4]);
 
 extern GtkWidget *pwPrevBoard;
 

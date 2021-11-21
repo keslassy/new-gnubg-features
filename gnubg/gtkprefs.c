@@ -117,7 +117,7 @@ typedef struct {
 static boarddesign *pbdeSelected = NULL, *pbdeModified;
 
 static int
-FindDesgin(GtkTreeModel * model, boarddesign * pbde, GtkTreeIter * pIter)
+FindDesgin(GtkTreeModel * model, boarddesign * const pbde, GtkTreeIter * pIter)
 {
     if (gtk_tree_model_get_iter_first(model, pIter)) {
         do {
@@ -732,7 +732,7 @@ gtk_color_button_get_array(GtkColorButton * button, float array[4])
 }
 
 extern void
-gtk_color_button_set_from_array(GtkColorButton * button, float colarray[4])
+gtk_color_button_set_from_array(GtkColorButton * button, float const colarray[4])
 {
     GdkColor color;
     guint16 alpha;
@@ -2438,7 +2438,7 @@ Set2dColourChar(unsigned char newcol[4], Material * pMat)
 }
 
 static void
-Set3dColour(Material * pMat, float col[4])
+Set3dColour(Material * pMat, float const col[4])
 {
     pMat->ambientColour[0] = pMat->diffuseColour[0] = col[0];
     pMat->ambientColour[1] = pMat->diffuseColour[1] = col[1];
