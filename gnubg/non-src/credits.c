@@ -1,8 +1,10 @@
-/* Do not modify this file!  It is created automatically by credits.sh.
-   Modify credits.sh instead. 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 3 or later of the GNU General Public License as
- * published by the Free Software Foundation.
+/* Do not modify this file!  It is created automatically by credits.sh. */
+
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -10,16 +12,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "common.h"
 #include <glib/gi18n.h>
 #include "credits.h"
 
-const char aszCOPYRIGHT[] = N_("Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 by Gary Wong.\n"
-                               "Copyright (C) 2018 by Gary Wong and the AUTHORS; for details type `show version'.");
+const char aszCOPYRIGHT[] = N_("Copyright (C) 1999-2004 Gary Wong.\n"
+                               "Copyright (C) 2004-2021 the AUTHORS; for details type `show version'.");
 
 credEntry ceAuthors[] = {
   {"Joseph Heled", 0},
@@ -41,11 +42,13 @@ credEntry ceContrib[] = {
   {"Guido Flohr", 0},
   {"Nis Joergensen", 0},
   {"Petr Kadlec", 0},
+  {"Isaac Keslassy", 0},
   {"Kaoru Takahashi", 0},
   {"Stein Kulseth", 0},
   {"Ingo Macherius", 0},
   {"Jeremy Moore", 0},
   {"Rod Roark", 0},
+  {"Aaron Tikuisis", 0},
   {0, 0}
 };
 
@@ -60,6 +63,7 @@ credEntry ceSupport[] = {
 credEntry ceTranslations[] = {
   {"Petr Kadlec", N_("Czech") },
   {"Joern Thyssen", N_("Danish") },
+  {"Matti Kamppinen", N_("Finnish") },
   {"Olivier Baur", N_("French") },
   {"Achim Mueller", N_("German") },
   {"Vangelis Skarmoutsos", N_("Greek") },
@@ -68,6 +72,7 @@ credEntry ceTranslations[] = {
   {"Yoshito Takeuchi", N_("Japanese") },
   {"Mihai Varzaru", N_("Romanian") },
   {"Dmitri I Gouliaev", N_("Russian") },
+  {"Fernando García García", N_("Spanish") },
   {"Akif Dinc", N_("Turkish") },
   {0, 0}
 };
@@ -217,15 +222,16 @@ const char aszAUTHORS[] =
 "\n"
 "                         Contributors of code include:\n"
 "\n"
-"    Olivier Baur            Petr Kadlec             Jeremy Moore\n"
-"    Holger Bochnig          Kaoru Takahashi         Rod Roark\n"
-"    Guido Flohr             Stein Kulseth\n"
-"    Nis Joergensen          Ingo Macherius\n"
+"    Olivier Baur            Petr Kadlec             Ingo Macherius\n"
+"    Holger Bochnig          Isaac Keslassy          Jeremy Moore\n"
+"    Guido Flohr             Kaoru Takahashi         Rod Roark\n"
+"    Nis Joergensen          Stein Kulseth           Aaron Tikuisis\n"
 "\n"
 "                            Translations by:\n"
 "\n"
 "     Petr Kadlec (Czech)\n"
 "     Joern Thyssen (Danish)\n"
+"     Matti Kamppinen (Finnish)\n"
 "     Olivier Baur (French)\n"
 "     Achim Mueller (German)\n"
 "     Vangelis Skarmoutsos (Greek)\n"
@@ -234,6 +240,7 @@ const char aszAUTHORS[] =
 "     Yoshito Takeuchi (Japanese)\n"
 "     Mihai Varzaru (Romanian)\n"
 "     Dmitri I Gouliaev (Russian)\n"
+"     Fernando García García (Spanish)\n"
 "     Akif Dinc (Turkish)\n"
 "\n"
 "             Contributors (of bug reports and suggestions) include:\n"
@@ -285,10 +292,10 @@ const char aszAUTHORS[] =
 "    Hans Berliner     Rick Janowski     Gerry Tesauro     Douglas Zare\n"
 "    Chuck Bower       Brian Sheppard    Morten Wang       Michael Zehr\n"
 "\n"
-"       \n"
+" \n"
 "    The manual for GNU Backgammon includes a chapter describing the rules of\n"
 "      backgammon, written by Tom Keith for his Backgammon Galore web site\n"
-"                             <http://www.bkgm.com/>.\n"
+"                             <https://www.bkgm.com/>.\n"
 "\n"
 "\n"
 "  Library code from the following authors has been included in GNU Backgammon:\n"
