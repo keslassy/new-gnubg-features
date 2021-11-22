@@ -1405,13 +1405,17 @@ getMWCFromError(const statcontext * psc, float aaaar[3][2][2][2])
         }
 }
 
+#define DSCFORMAT "%-40s %-23s %-23s\n"
+
 extern void
 DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, const char *op, int nMatchTo)
 {
 
     /* header */
 
-    sprintf(szOutput, "%-40s %-23s %-23s\n\n", _("Player"), player, op);
+    sprintf(szOutput, DSCFORMAT, _("Player"), player, op);
+
+    strcat(szOutput, "\n");
 
     if (psc->fMoves) {
         GList *list = formatGS(psc, nMatchTo, FORMATGS_CHEQUER);
@@ -1424,7 +1428,7 @@ DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, con
 
             char **asz = pl->data;
 
-            sprintf(strchr(szOutput, 0), "%-40s %-23s %-23s\n", asz[0], asz[1], asz[2]);
+            sprintf(strchr(szOutput, 0), DSCFORMAT, asz[0], asz[1], asz[2]);
 
         }
 
@@ -1446,7 +1450,7 @@ DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, con
 
             char **asz = pl->data;
 
-            sprintf(strchr(szOutput, 0), "%-40s %-23s %-23s\n", asz[0], asz[1], asz[2]);
+            sprintf(strchr(szOutput, 0), DSCFORMAT, asz[0], asz[1], asz[2]);
 
         }
 
@@ -1468,7 +1472,7 @@ DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, con
 
             char **asz = pl->data;
 
-            sprintf(strchr(szOutput, 0), "%-40s %-23s %-23s\n", asz[0], asz[1], asz[2]);
+            sprintf(strchr(szOutput, 0), DSCFORMAT, asz[0], asz[1], asz[2]);
 
         }
 
@@ -1490,7 +1494,7 @@ DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, con
 
             char **asz = pl->data;
 
-            sprintf(strchr(szOutput, 0), "%-40s %-23s %-23s\n", asz[0], asz[1], asz[2]);
+            sprintf(strchr(szOutput, 0), DSCFORMAT, asz[0], asz[1], asz[2]);
 
         }
 
