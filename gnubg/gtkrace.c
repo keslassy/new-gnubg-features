@@ -32,12 +32,12 @@
 #include "format.h"
 #include "gtkwindows.h"
 
-typedef struct _epcwidget {
+typedef struct {
     GtkWidget *apwEPC[2];
     GtkWidget *apwWastage[2];
 } epcwidget;
 
-typedef struct _racewidget {
+typedef struct {
     GtkAdjustment *padjTrials;
     GtkWidget *pwRollout, *pwOutput;
     TanBoard anBoard;
@@ -50,7 +50,6 @@ static gint current_page_num = 0;
 static GtkWidget *
 monospace_text(const char *szOutput)
 {
-
     GtkWidget *pwText;
     GtkTextBuffer *buffer;
     GtkTextIter iter;
@@ -358,11 +357,8 @@ GTKShowRace(TanBoard anBoard)
 
     racewidget *prw;
 
-    prw = malloc(sizeof(racewidget));
-    if (prw == NULL) {
-        outputerr("Memory allocation failure in GTKShowRace()");
-        return;
-    }
+    prw = g_malloc(sizeof(racewidget));
+
     memcpy(prw->anBoard, anBoard, 2 * 25 * sizeof(int));
     prw->fMove = ms.fMove;
 
@@ -410,7 +406,7 @@ GTKShowRace(TanBoard anBoard)
 
     g_signal_connect_after(G_OBJECT(pwNotebook), "switch-page", G_CALLBACK(set_current_page), pwNotebook);
 
-    g_object_set_data_full(G_OBJECT(pwDialog), "racewidget", prw, free);
+    g_object_set_data_full(G_OBJECT(pwDialog), "racewidget", prw, g_free);
 
     /* show dialog */
 
