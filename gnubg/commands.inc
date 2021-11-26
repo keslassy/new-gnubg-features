@@ -1388,7 +1388,7 @@ static command acSetVariation[] = {
       N_("View the score sheet for the match or session"), NULL, NULL },
     { "seed", CommandShowSeed, N_("Show the dice generator seed"), 
       NULL, NULL },
-    { "sound", CommandShowSound, N_("Show information abount sounds"), 
+    { "sound", CommandShowSound, N_("Show information about sounds"), 
       NULL, NULL },
     { "statistics", NULL, N_("Show statistics"), NULL, acShowStatistics },
     { "temperaturemap", CommandShowTemperatureMap, 
