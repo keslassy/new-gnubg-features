@@ -152,7 +152,7 @@ DrawBars(unsigned int num, float *const *values, int totalBar)
 static void
 PrintBottomNumber(unsigned int num, float width, float height, float x, float y)
 {
-    char numStr[10];
+    char numStr[11];
     sprintf(numStr, "%u", num);
 
     glPushMatrix();
