@@ -31,12 +31,14 @@
 #endif
 #include <math.h>
 #include <errno.h>
+#include <locale.h>
+#include <glib/gstdio.h>
+
 #include "eval.h"
 #include "positionid.h"
 #include "bearoff.h"
 #include "util.h"
 #include "backgammon.h"
-#include <glib/gstdio.h>
 #include "glib-ext.h"
 #include "multithread.h"
 
@@ -46,12 +48,12 @@ MT_CloseThreads(void)
     return;
 }
 
-typedef struct _xhashent {
+typedef struct {
     void *p;
     unsigned int iKey;
 } xhashent;
 
-typedef struct _xhash {
+typedef struct {
     unsigned long int nQueries, nHits, nEntries, nOverwrites;
     int nHashSize;
     xhashent *phe;
@@ -72,10 +74,10 @@ static void
 XhashStatus(xhash * ph)
 {
 
-    fprintf(stderr, "Xhash status:\n");
-    fprintf(stderr, "Size:    %d elements\n", ph->nHashSize);
-    fprintf(stderr, "Queries: %lu (hits: %lu)\n", ph->nQueries, ph->nHits);
-    fprintf(stderr, "Entries: %lu (overwrites: %lu)\n", ph->nEntries, ph->nOverwrites);
+    fprintf(stderr, _("Xhash status:\n"));
+    fprintf(stderr, _("Size:    %d elements\n"), ph->nHashSize);
+    fprintf(stderr, _("Queries: %lu (hits: %lu)\n"), ph->nQueries, ph->nHits);
+    fprintf(stderr, _("Entries: %lu (overwrites: %lu)\n"), ph->nEntries, ph->nOverwrites);
 
 }
 
@@ -1281,8 +1283,6 @@ main(int argc, char **argv)
     static char *szTwoSided = NULL;
     static int show_version = 0;
 
-    glib_ext_init();
-    MT_InitThreads();
     bearoffcontext *pbc = NULL;
     FILE *outfile;
     double r;
@@ -1316,6 +1316,14 @@ main(int argc, char **argv)
 
     GError *error = NULL;
     GOptionContext *context;
+
+    /* i18n */
+
+    glib_ext_init();
+    MT_InitThreads();
+    setlocale(LC_ALL, "");
+    bindtextdomain(PACKAGE, LOCALEDIR);
+    textdomain(PACKAGE);
 
     context = g_option_context_new(NULL);
     g_option_context_add_main_entries(context, ao, PACKAGE);
