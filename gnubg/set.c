@@ -372,7 +372,7 @@ SetLuckThreshold(lucktype lt, char *sz)
 {
 
     float r = ParseReal(&sz);
-    char *szCommand = gettext(aszLuckTypeCommand[lt]);
+    const char *szCommand = aszLuckTypeCommand[lt];
 
     if (r <= 0.0f) {
         outputf(_("You must specify a positive number for the threshold (see "
@@ -390,7 +390,7 @@ SetSkillThreshold(skilltype lt, char *sz)
 {
 
     float r = ParseReal(&sz);
-    char *szCommand = gettext(aszSkillTypeCommand[lt]);
+    const char *szCommand = aszSkillTypeCommand[lt];
 
     if (r < 0.0f) {
         outputf(_("You must specify a semi-positive number for the threshold (see "
