@@ -336,7 +336,8 @@ TextPrintCubeAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 
         dt = DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
         if (dt != DT_NORMAL) {
-            g_string_append(gsz, _("Cannot analyse beaver nor raccoons!\n"));
+            g_string_append(gsz, _("Cannot analyse beaver nor raccoons!"));
+            g_string_append(gsz, "\n");
             break;
         }
         TextPrintCubeAnalysisTable(gsz,
@@ -353,7 +354,8 @@ TextPrintCubeAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
 
         if (dt != DT_NORMAL) {
             dt = DT_NORMAL;
-            g_string_append(gsz, _("Cannot analyse beaver nor raccoons!\n"));
+            g_string_append(gsz, _("Cannot analyse beaver nor raccoons!"));
+            g_string_append(gsz, "\n");
             break;
         }
         TextPrintCubeAnalysisTable(gsz, pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, pmr->fPlayer, &pmr->CubeDecPtr->esDouble, &ci, TRUE, pmr->mt == MOVE_TAKE, SKILL_NONE,  /* FIXME: skill from prev. cube */

@@ -2073,8 +2073,8 @@ HTMLPrintCubeAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
 
         dt = DoubleType(pms->fDoubled, pms->fMove, pms->fTurn);
         if (dt != DT_NORMAL) {
-            fprintf(pf, "<p><span %s> Cannot analyse doubles nor raccoons!</span></p>\n",
-                    GetStyle(CLASS_BLUNDER, hecss));
+            fprintf(pf, "<p><span %s>%s</span></p>\n",
+                    GetStyle(CLASS_BLUNDER, hecss), _("Cannot analyse beaver nor raccoons!"));
             break;
         }
         HTMLPrintCubeAnalysisTable(pf,
@@ -2092,8 +2092,8 @@ HTMLPrintCubeAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
 
         if (dt != DT_NORMAL) {
             dt = DT_NORMAL;
-            fprintf(pf, "<p><span %s> Cannot analyse doubles nor raccoons!</span></p>\n",
-                    GetStyle(CLASS_BLUNDER, hecss));
+            fprintf(pf, "<p><span %s>%s</span></p>\n",
+                    GetStyle(CLASS_BLUNDER, hecss), _("Cannot analyse beaver nor raccoons!"));
             break;
         }
         HTMLPrintCubeAnalysisTable(pf, pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, pmr->fPlayer, &pmr->CubeDecPtr->esDouble, &ci, TRUE, pmr->mt == MOVE_TAKE, SKILL_NONE,   /* FIXME: skill from prev. cube */
