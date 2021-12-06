@@ -2462,7 +2462,7 @@ HTMLAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
             printImage(pf, szImageDir, "b-indent", szExtension, "", hecss, het);
 
         if (pmr->mt == MOVE_DOUBLE)
-            fprintf(pf, "%s%s doubles</p>\n", bullet, ap[pmr->fPlayer].szName);
+            fprintf(pf, "%s%s %s</p>\n", bullet, ap[pmr->fPlayer].szName, _("doubles"));
         else
             fprintf(pf,
                     "%s%s %s</p>\n", bullet,

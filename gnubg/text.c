@@ -525,7 +525,7 @@ TextAnalysis(GString * gsz, const matchstate * pms, moverecord * pmr)
     case MOVE_DROP:
 
         if (pmr->mt == MOVE_DOUBLE)
-            g_string_append_printf(gsz, "* %s doubles\n\n", ap[pmr->fPlayer].szName);
+            g_string_append_printf(gsz, "* %s %s\n\n", ap[pmr->fPlayer].szName, _("doubles"));
         else
             g_string_append_printf(gsz,
                                    "* %s %s\n\n",
