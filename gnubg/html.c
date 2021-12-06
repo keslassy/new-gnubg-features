@@ -1595,7 +1595,7 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
                 fputs("<p>\n", pf);
                 fFirst = FALSE;
             }
-            fprintf(pf, "<a href=\"%s\">%s</a>\n", aszLinks[i], aszLinkText[i]);
+            fprintf(pf, "<a href=\"%s\">%s</a>\n", aszLinks[i], gettext(aszLinkText[i]));
         }
 
 
