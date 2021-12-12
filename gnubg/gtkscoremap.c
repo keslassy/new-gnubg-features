@@ -334,16 +334,12 @@ REASON 3. more tricky: we don't allow an absurd cubing situation, eg someone lea
         //there are 3 squares we don't allow: (0,1), (1,0) and (1,1)
         if ( (i==0 && j==1) || (i==1 && j==0) || (i==1 && j==1) ) {
             psm->aaQuadrantData[i][j].isAllowedScore = MISMATCHED_SCORES;
-            // str = "This score is unallowed because one player is in Crawford while the other is in post-Crawford.";
-            // psm->aaQuadrantData[i][j].unallowedExplanation = g_strdup(str);
-            strcpy(psm->aaQuadrantData[i][j].unallowedExplanation,"This score is not allowed because one player is in Crawford while the other is in post-Crawford.");
-                    // char *s = "Global View";
-                    // psm->aaQuadrantData[i][j].unallowedExplanation = strdup(s);
+            strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("This score is not allowed because one player is in Crawford while the other is in post-Crawford"));
             return 0;
         } else if (abs(psm->signednCube)>1 && (i==1 || j==1)) {
             // REASON 2: no doubling in Crawford
             psm->aaQuadrantData[i][j].isAllowedScore = NO_CRAWFORD_DOUBLING;
-            strcpy(psm->aaQuadrantData[i][j].unallowedExplanation,"Doubling is not allowed in a Crawford game.");
+            strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("Doubling is not allowed in a Crawford game"));
             return 0;
         } else {
             psm->aaQuadrantData[i][j].isAllowedScore = UNREASONABLE_CUBE;
@@ -363,7 +359,6 @@ REASON 3. more tricky: we don't allow an absurd cubing situation, eg someone lea
                     sprintf(psm->aaQuadrantData[i][j].unallowedExplanation,
                                 _("It is unreasonable that %s will double to %d while being %d-away"),
                                 ap[0].szName, abs(psm->signednCube), iAway);
-                    //sprintf(str,"It is unreasonable that %s will double while being %d away",iAway);
                 } else if (abs(psm->signednCube) >= 4*jAway) {
                     sprintf(psm->aaQuadrantData[i][j].unallowedExplanation,
                                 _("It is unreasonable that %s will have previously doubled to %d while being %d-away"),
@@ -379,7 +374,6 @@ REASON 3. more tricky: we don't allow an absurd cubing situation, eg someone lea
                     sprintf(psm->aaQuadrantData[i][j].unallowedExplanation,
                                 _("It is unreasonable that %s will double to %d while being %d-away"),
                                 ap[1].szName, abs(psm->signednCube), jAway);
-                    //sprintf(str,"It is unreasonable that %s will double while being %d away",iAway);
                 } else if (abs(psm->signednCube) >= 4*iAway) {
                     sprintf(psm->aaQuadrantData[i][j].unallowedExplanation,
                                 _("It is unreasonable that %s will have previously doubled to %d while being %d-away"),
@@ -460,8 +454,7 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
         if (!GetDPEq(NULL, NULL, & pq->ci)) { // Cube not available
                 strcpy(pq->decisionString,"");
                 pq->isAllowedScore = UNALLOWED_DOUBLE;
-                // gchar * str = "Unallowed double: cube not available.";
-                strcpy(pq->unallowedExplanation,"Unallowed double: cube not available.");
+                strcpy(pq->unallowedExplanation, _("Unallowed double: cube not available"));
         } else {
             if (recomputeFully) {
                 float aarOutput[2][NUM_ROLLOUT_OUTPUTS];
