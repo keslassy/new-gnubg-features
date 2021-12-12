@@ -39,7 +39,7 @@ static int fDockPanels = TRUE;
 #define NUM_CMD_HISTORY 10
 #define KEY_TAB -247
 
-typedef struct _CommandEntryData_T {
+typedef struct {
     GtkWidget *pwEntry, *pwHelpText, *cmdEntryCombo;
     int showHelp;
     int numHistory;
@@ -71,7 +71,7 @@ static gboolean ShowAnalysis(void);
 static gboolean ShowTheoryWindow(void);
 static gboolean ShowCommandWindow(void);
 
-typedef struct _windowobject {
+typedef struct {
     const char *winName;
     int showing;
     int docked;
@@ -1716,7 +1716,7 @@ GetPanelWidth(gnubgwindow panel)
 #endif
 
 int
-IsPanelShowVar(gnubgwindow panel, void *p)
+IsPanelShowVar(gnubgwindow panel, void * const p)
 {
     return (p == &woPanel[panel].showing);
 }

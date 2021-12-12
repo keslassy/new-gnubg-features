@@ -23,7 +23,7 @@
 #ifndef GTKPANELS_H
 #define GTKPANELS_H
 
-typedef enum _gnubgwindow {
+typedef enum {
     WINDOW_MAIN = 0,
     WINDOW_GAME,
     WINDOW_ANALYSIS,
@@ -35,7 +35,7 @@ typedef enum _gnubgwindow {
     NUM_WINDOWS
 } gnubgwindow;
 
-typedef struct _windowgeometry {
+typedef struct {
     int nWidth, nHeight;
     int nPosX, nPosY, max;
 } windowgeometry;
