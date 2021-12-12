@@ -5303,7 +5303,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     pwTable = gtk_table_new(2, 2, TRUE);
     gtk_container_add(GTK_CONTAINER(pwPage), pwTable);
 
-    prpw->pwCubeful = gtk_check_button_new_with_label(_("Cubeful"));
+    prpw->pwCubeful = gtk_check_button_new_with_label(_("Cubeful rollout"));
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwCubeful, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwCubeful), prw->rcRollout.fCubeful);
