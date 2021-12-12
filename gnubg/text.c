@@ -55,15 +55,9 @@ printTextBoard(FILE * pf, const matchstate * pms)
     apch[0] = szPlayer0;
     apch[6] = szPlayer1;
 
-    if (pms->anScore[0] == 1)
-        sprintf(apch[1] = szScore0, _("%d point"), pms->anScore[0]);
-    else
-        sprintf(apch[1] = szScore0, _("%d points"), pms->anScore[0]);
+    sprintf(apch[1] = szScore0, ngettext("%d point", "%d points", pms->anScore[0]), pms->anScore[0]);;
 
-    if (pms->anScore[1] == 1)
-        sprintf(apch[5] = szScore1, _("%d point"), pms->anScore[1]);
-    else
-        sprintf(apch[5] = szScore1, _("%d points"), pms->anScore[1]);
+    sprintf(apch[5] = szScore1, ngettext("%d point", "%d points", pms->anScore[1]), pms->anScore[1]);;
 
     if (pms->fDoubled) {
         apch[pms->fTurn ? 4 : 2] = szCube;
@@ -149,7 +143,6 @@ TextBoardHeader(GString * gsz, const matchstate * pms, const int UNUSED(iGame), 
         g_string_append_printf(gsz, _("Move number %d: "), iMove + 1);
 
     if (pms->fResigned)
-
         /* resignation */
 
         g_string_append_printf(gsz,
@@ -159,14 +152,12 @@ TextBoardHeader(GString * gsz, const matchstate * pms, const int UNUSED(iGame), 
                                ap[pms->fTurn].szName, pms->fResigned * pms->nCube);
 
     else if (pms->anDice[0] && pms->anDice[1])
-
         /* chequer play decision */
 
         g_string_append_printf(gsz, _(" %s to play %u%u\n\n"), ap[pms->fMove].szName, pms->anDice[0], pms->anDice[1]
             );
 
     else if (pms->fDoubled)
-
         /* take decision */
 
         g_string_append_printf(gsz, _(" %s doubles to %d\n\n"), ap[!(pms->fTurn)].szName, pms->nCube * 2);
@@ -192,10 +183,10 @@ extern void
 TextPrologue(GString * gsz, const matchstate * pms, const int UNUSED(iGame))
 {
 
-    g_string_append_printf(gsz, pms->cGames == 1 ?
-                           _("The score (after %d game) is: %s %d, %s %d") :
-                           _("The score (after %d games) is: %s %d, %s %d"),
-                           pms->cGames, ap[0].szName, pms->anScore[0], ap[1].szName, pms->anScore[1]);
+    g_string_append_printf(gsz,
+                           ngettext("The score (after %d game) is: %s %d, %s %d",
+                                    "The score (after %d games) is: %s %d, %s %d", pms->cGames), pms->cGames,
+                           ap[0].szName, pms->anScore[0], ap[1].szName, pms->anScore[1]);
 
     if (pms->nMatchTo > 0) {
         g_string_append_printf(gsz,
@@ -234,7 +225,7 @@ TextEpilogue(FILE * pf, const matchstate * UNUSED(pms))
 
     time(&t);
 
-    fprintf(pf, _("Output generated %s" "by %s "), ctime(&t), VERSION_STRING);
+    fprintf(pf, _("Output generated %s by %s "), ctime(&t), VERSION_STRING);
 
     fprintf(pf, _("(Text Export version %d.%d)\n\n"), iMajor, iMinor);
 
@@ -810,7 +801,7 @@ CommandExportGameText(char *sz)
     }
 
     if (!sz || !*sz) {
-        outputl(_("You must specify a file to export to (see `help export " "game text')."));
+        outputl(_("You must specify a file to export to (see `help export game text')."));
         return;
     }
 
@@ -846,7 +837,7 @@ CommandExportMatchText(char *sz)
     sz = NextToken(&sz);
 
     if (!sz || !*sz) {
-        outputl(_("You must specify a file to export to (see `help export " "match text')."));
+        outputl(_("You must specify a file to export to (see `help export match text')."));
         return;
     }
 
@@ -909,7 +900,7 @@ CommandExportPositionText(char *sz)
     }
 
     if (!sz || !*sz) {
-        outputl(_("You must specify a file to export to (see `help export " "position text')."));
+        outputl(_("You must specify a file to export to (see `help export position text')."));
         return;
     }
     pmr = get_current_moverecord(&fHistory);
