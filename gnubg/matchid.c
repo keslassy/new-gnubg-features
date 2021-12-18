@@ -110,7 +110,7 @@ GetBits(const unsigned char *pc, const unsigned int bitPos, const unsigned int n
 }
 
 
-extern char *
+static char *
 MatchIDFromKey(unsigned char auchKey[9])
 {
     unsigned char *puch = auchKey;
