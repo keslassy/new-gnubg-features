@@ -110,15 +110,13 @@ GetBits(const unsigned char *pc, const unsigned int bitPos, const unsigned int n
 }
 
 
-extern char
-*
+extern char *
 MatchIDFromKey(unsigned char auchKey[9])
 {
-
     unsigned char *puch = auchKey;
     static char szID[L_MATCHID + 1];
     char *pch = szID;
-    static char aszBase64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    static const char aszBase64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     int i;
 
     for (i = 0; i < 3; i++) {

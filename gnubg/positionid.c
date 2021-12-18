@@ -198,11 +198,10 @@ oldPositionFromKey(TanBoard anBoard, const oldpositionkey * pkey)
 static char *
 oldPositionIDFromKey(const oldpositionkey * pkey)
 {
-
     unsigned char const *puch = pkey->auch;
     static char szID[L_POSITIONID + 1];
     char *pch = szID;
-    static char aszBase64[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    static const char aszBase64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     int i;
 
     for (i = 0; i < 3; i++) {
@@ -225,7 +224,6 @@ oldPositionIDFromKey(const oldpositionkey * pkey)
 extern char *
 PositionIDFromKey(const positionkey * pkey)
 {
-
     TanBoard anBoard;
     oldpositionkey okey;
 
@@ -238,7 +236,6 @@ PositionIDFromKey(const positionkey * pkey)
 extern char *
 PositionID(const TanBoard anBoard)
 {
-
     oldpositionkey key;
 
     oldPositionKey(anBoard, &key);
