@@ -1455,10 +1455,6 @@ To roll the dice the CL version type 'roll'.
             <colspec colname="c2" colnum="2" colwidth="1*"/>
             <tbody>
               <row>
-                <entry>Encapsulated Postscript</entry>
-<entry> <command>export &lt;P&gt; eps &lt;filepath&gt;</command> </entry>
-              </row>
-              <row>
                 <entry>HTML</entry>
 <entry> <command>export &lt;MGP&gt; html &lt;filepath&gt;</command> </entry>
               </row>
@@ -1489,14 +1485,18 @@ To roll the dice the CL version type 'roll'.
               <row>
                 <entry>Portable Network Graphics</entry>
 <entry> <command>export &lt;P&gt; pdf &lt;filepath&gt;</command> </entry>
-</row>
+              </row>
               <row>
                 <entry>PostScript</entry>
-<entry> <command>export &lt;MG&gt; postscript &lt;filepath&gt;</command> </entry>
-</row>
+<entry> <command>export &lt;MGP&gt; ps &lt;filepath&gt;</command> </entry>
+              </row>
+              <row>
+                <entry>Scalable Vector Graphics</entry>
+<entry> <command>export &lt;P&gt; svg &lt;filepath&gt;</command> </entry>
+              </row>
               <row>
                 <entry>Snowie Text</entry>
-<entry> <command>export &lt;P&gt; snowietxt &lt;filepath&gt;</command>
+<entry> <command>export &lt;MGP&gt; snowietxt &lt;filepath&gt;</command>
                 </entry>
               </row>
             </tbody>
@@ -1568,12 +1568,11 @@ To roll the dice the CL version type 'roll'.
           <para>The LaTeX export will export all board diagrams and analysis if
             available. The produced documents can therefore be quite large. Note
             that the LaTeX file produced needs the eepic package. You can get
-            this package at your nearest CTAN mirror((The produced LaTeX file
+            this package at your nearest CTAN mirror (the produced LaTeX file
             also needs epic, textcomp and ucs, but these are more common in
-            LaTeX distributions so you probably already have these.)).</para>
-          <para>You can not export a position to LaTeX. (At least not yet!)
-            However, you can export a position to EPS and include this EPS file
-            in your LaTeX document.</para>
+            LaTeX distributions so you probably already have these).</para>
+	  <para>Note that these prerequiste packages are only compatible with
+	    the original LaTeX, not PDFLaTeX.</para>
         </sect4>
       </sect3>
     </sect2>

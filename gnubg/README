@@ -61,10 +61,10 @@ Backgammon.
 * Loading and saving analyzed games and matches as .sgf files (Smart
   Game Format).
 
-* Exporting positions, games and matches to: (.eps) Encapsulated
-  Postscript, (.gam) Jellyfish Game, (.html) HTML, (.mat) Jellyfish
-  Match, (.pdf) PDF, (.png) Portable Network Graphics, (.pos)
-  Jellyfish Position, (.ps) PostScript, (.sgf) GNU Backgammon File,
+* Exporting positions, games and matches to: (.gam) Jellyfish Game,
+  (.html) HTML, (.mat) Jellyfish Match, (.pdf) PDF, (.png) Portable
+  Network Graphics, (.pos) Jellyfish Position, (.ps) PostScript,
+  (.sgf) GNU Backgammon File, (.svg) Scalable Vector Graphics,
   (.tex) LaTeX, (.txt) Plain Text, (.txt) Snowie Text
 
 * Import of matches and positions from a number of file formats:
