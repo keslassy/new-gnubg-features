@@ -90,11 +90,6 @@ TLSCreate(TLSItem * pItem)
 #endif
 
 extern void
-TLSFree(TLSItem UNUSED(pItem))
-{                               /* Done automaticaly by glib */
-}
-
-extern void
 TLSSetValue(TLSItem pItem, size_t value)
 {
     size_t *pNew = (size_t *) g_malloc(sizeof(size_t));
