@@ -4378,7 +4378,6 @@ OK(GtkWidget * pw, int *pf)
 static void
 TutorEnd(GtkWidget * pw, int *pf)
 {
-
     if (pf)
         *pf = TRUE;
 
@@ -4407,7 +4406,7 @@ GtkTutor(char *sz)
     GtkWidget *pwTutorDialog, *pwOK, *pwCancel, *pwEndTutor, *pwButtons, *pwPrompt, *pwHint;
 
     pwTutorDialog = GTKCreateDialog(_("GNU Backgammon - Tutor"),
-                                    DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(OK), (void *) &f);
+                                    DT_CUSTOM, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(OK), (void *) &f);
 
     pwOK = DialogArea(pwTutorDialog, DA_OK);
     gtk_button_set_label(GTK_BUTTON(pwOK), _("Play Anyway"));
