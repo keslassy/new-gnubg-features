@@ -1304,9 +1304,9 @@ drawFlagVertices(unsigned int UNUSED(curveAccuracy))
 	for (int s = 1; s < S_NUMSEGMENTS; s++) {
 		vec3 normal1, normal2;
 		if (s == 1)
-			glm_vec3(GLM_ZUP, normal1);
+			glm_vec3_copy(GLM_ZUP, normal1);
 		else
-			glm_vec3(normal2, normal1);
+			glm_vec3_copy(normal2, normal1);
 
 		computeNormal(flag.ctlpoints[s - 1][1], flag.ctlpoints[s - 1][0], flag.ctlpoints[s][0], normal2);
 
