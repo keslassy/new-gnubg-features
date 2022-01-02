@@ -668,7 +668,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
         if (!StrNCaseCmp(sz + 4, "illegal play", 12)) {
             /* Snowie type illegal play */
 
-            int nMatchTo, fJacobyRule, fUnused1, fUnused2, fTurn, fCrawfordGame;
+            int nMatchTo, fJacobyRule, fUnused1, fUnused2, fTurn = 0, fCrawfordGame;
             int anScore[2], nCube, fCubeOwner, anDice[2];
             TanBoard anBoard;
             char aszPlayer[2][MAX_NAME_LEN];
