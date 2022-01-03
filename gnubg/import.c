@@ -3300,39 +3300,44 @@ WritePartyGame(FILE * fp, char *gameStr, int ns)
             moveNum++;
         }
 
-        move = strchr(move, ' ') + 1;
-        if (isdigit(*move)) {
-            char *roll;
+        move = strchr(move, ' ');
+        g_assert(move);
+        if (move) {
+            move++;
 
-            move = strchr(move, ' ') + 1;
-            move = strchr(move, ' ') + 1;
-            roll = move;
-            move = strchr(move, ' ');
-            if (move) {
-                char *dest, *src;
-                *move = '\0';
-                moveStr = move + 1;
-                /* Change bar -> 25, off -> 0 */
-                src = dest = moveStr;
-                while (*src) {
-                    if (*src == 'b') {
-                        *dest++ = '2';
-                        *dest++ = '5';
-                        src += 3;
-                    } else if (*src == 'o') {
-                        *dest++ = '0';
-                        src += 3;
-                    } else {
-                        *dest = *src;
-                        dest++;
-                        src++;
+                if (isdigit(*move)) {
+                char *roll;
+
+                move = strchr(move, ' ') + 1;
+                move = strchr(move, ' ') + 1;
+                roll = move;
+                move = strchr(move, ' ');
+                if (move) {
+                    char *dest, *src;
+                    *move = '\0';
+                    moveStr = move + 1;
+                    /* Change bar -> 25, off -> 0 */
+                    src = dest = moveStr;
+                    while (*src) {
+                        if (*src == 'b') {
+                            *dest++ = '2';
+                            *dest++ = '5';
+                            src += 3;
+                        } else if (*src == 'o') {
+                            *dest++ = '0';
+                            src += 3;
+                        } else {
+                            *dest = *src;
+                            dest++;
+                            src++;
+                        }
                     }
+                    *dest = '\0';
                 }
-                *dest = '\0';
-            }
-            sprintf(buf, "%s: %s", roll, moveStr ? moveStr : "");
-        } else
-            strcpy(buf, move);  /* Double/Take */
+                sprintf(buf, "%s: %s", roll, moveStr ? moveStr : "");
+            } else /* !isdigit(*move) */
+                strcpy(buf, move);  /* Double/Take */
+        }
 
         if (side == 0)
             fprintf(fp, "%-30s ", buf);
