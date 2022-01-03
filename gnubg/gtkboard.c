@@ -382,7 +382,6 @@ static void
 board_invalidate_rect(GtkWidget * drawing_area, int x, int y, int
                       cx, int cy, BoardData * UNUSED(bd))
 {
-
     g_assert(GTK_IS_DRAWING_AREA(drawing_area));
 
     {
@@ -401,7 +400,6 @@ board_invalidate_rect(GtkWidget * drawing_area, int x, int y, int
 static void
 board_invalidate_point(BoardData * bd, int n)
 {
-
     int x, y, cx, cy;
 
     if (bd->rd->nSize == 0)
@@ -415,7 +413,6 @@ board_invalidate_point(BoardData * bd, int n)
 static void
 board_invalidate_dice(BoardData * bd)
 {
-
     int x, y, cx, cy;
 
     x = bd->x_dice[0] * bd->rd->nSize;
@@ -434,7 +431,6 @@ board_invalidate_dice(BoardData * bd)
 static void
 board_invalidate_labels(BoardData * bd)
 {
-
     int x, y, cx, cy;
 
     x = 0;
@@ -450,13 +446,11 @@ board_invalidate_labels(BoardData * bd)
     cy = BORDER_HEIGHT * bd->rd->nSize;
 
     board_invalidate_rect(bd->drawing_area, x, y, cx, cy, bd);
-
 }
 
 static void
 board_invalidate_cube(BoardData * bd)
 {
-
     int x, y, orient;
 
     CubePosition(bd->crawford_game, bd->cube_use, bd->doubled, bd->cube_owner, fClockwise, &x, &y, &orient);
@@ -468,7 +462,6 @@ board_invalidate_cube(BoardData * bd)
 static void
 board_invalidate_resign(BoardData * bd)
 {
-
     int x, y, orient;
 
     resign_position(bd, &x, &y, &orient);
@@ -480,7 +473,6 @@ board_invalidate_resign(BoardData * bd)
 static void
 board_invalidate_arrow(BoardData * bd)
 {
-
     int x, y;
 
     ArrowPosition(fClockwise, bd->turn, bd->rd->nSize, &x, &y);
@@ -491,7 +483,6 @@ board_invalidate_arrow(BoardData * bd)
 static int
 board_point(GtkWidget * UNUSED(board), BoardData * bd, int x0, int y0)
 {
-
     int i, x, y, cx, cy, xCube, yCube;
 
     x0 /= bd->rd->nSize;
@@ -541,7 +532,6 @@ board_point(GtkWidget * UNUSED(board), BoardData * bd, int x0, int y0)
 static void
 update_gnubg_id(BoardData * bd, const TanBoard points)
 {
-
     int anScore[2];
     int fCubeOwner;
     gchar *str;
@@ -570,7 +560,6 @@ update_gnubg_id(BoardData * bd, const TanBoard points)
 extern char *
 ReturnHits(TanBoard anBoard)
 {
-
     int aiHit[15];
     int i, j, k, l, m, n, c;
     movelist ml;
@@ -630,7 +619,6 @@ ReturnHits(TanBoard anBoard)
     }
 
     return NULL;
-
 }
 
 static void
@@ -2537,9 +2525,8 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
 
         /* bd->move_list contains pointers to static data, so we need to
          * copy the actual moves into private storage. */
-        if (bd->all_moves)
-            free(bd->all_moves);
-        bd->all_moves = malloc(bd->move_list.cMoves * sizeof(move));
+        g_free(bd->all_moves);
+        bd->all_moves = g_malloc(bd->move_list.cMoves * sizeof(move));
         bd->move_list.amMoves = memcpy(bd->all_moves, bd->move_list.amMoves, bd->move_list.cMoves * sizeof(move));
         bd->valid_move = NULL;
     }
@@ -3616,7 +3603,6 @@ chequer_key_new(int iPlayer, Board * board)
 static void
 board_init(Board * board)
 {
-
     BoardData *bd = g_malloc(sizeof(*bd));
     GtkWidget *pw;
     GtkWidget *pwFrame;
