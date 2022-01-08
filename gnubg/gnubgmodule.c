@@ -2245,7 +2245,7 @@ PyMoveAnalysis(const movelist * pml, PyMatchState * ms)
 SIMD_STACKALIGN static PyObject *
 PyDoubleAnalysis(const evalsetup * pes,
                  float aarOutput[][NUM_ROLLOUT_OUTPUTS],
-                 float const aarStdDev[][NUM_ROLLOUT_OUTPUTS],
+                 float aarStdDev[][NUM_ROLLOUT_OUTPUTS],
                  PyMatchState * ms, const int verbose)
 {
     PyObject *dict = 0;

@@ -2013,29 +2013,28 @@ A pointer to the table is put into psm->pwTable, and it is placed in the contain
 
 static void
 BuildCubeFrame(scoremap * psm)
-/* Creates and/or updates the frame with all the cube toggle buttons.
-A pointer to the containing box is kept in psm->pwCubeBox.
+/*
+   Creates and/or updates the frame with all the cube toggle buttons.
+   A pointer to the containing box is kept in psm->pwCubeBox.
 */
 {
-
     int *pi;
     int i, j, m;
-    const int MAX_CUBE_VAL=2*MATCH_SIZE(psm)-1; // Max cube value. (Overestimate; actual value is 2^(floor(ln2(MAX_CUBE_VAL))).)
-// E.g., match size 3 -> MAX_CUBE_VAL=5 (so actual max value 4). match size 4 -> MAX_CUBE_VAL=7 (so 4). match size 5 -> MAX_CUBE_VAL=9 (so 8).
+/*
+    Max cube value. Overestimate, actual value is 2^(floor(ln2(MAX_CUBE_VAL))).
+    E.g., match size 3 -> MAX_CUBE_VAL=5 (so actual max value 4),
+    match size 4 -> MAX_CUBE_VAL=7 (so 4), match size 5 -> MAX_CUBE_VAL=9 (so 8)
+*/
+    const int MAX_CUBE_VAL=2*MATCH_SIZE(psm)-1;
     char sz[100];
-//  char szLabel[100];
-//  GtkWidget *pwFrame;
-//  GtkWidget *pwv;
     GtkWidget *pw;
-//  GtkWidget *pwh;
-    GtkWidget *pwx;
-//  GtkWidget *pwv2;
-//  GtkWidget *pwh2;
+/*
+   initialization is not really needed but silences a
+   "may be used uninitialized" warning from gcc4 (not later versions)
+*/
+    GtkWidget *pwx = NULL; 
     GtkWidget *pwLabel;
     GtkWidget *pwTable;
-//  GtkWidget *pwhtop;
-//  GtkWidget *pwhbottom;
-
 
     /* Cube value */
     // pwFrame=gtk_frame_new(_("Cube value"));
