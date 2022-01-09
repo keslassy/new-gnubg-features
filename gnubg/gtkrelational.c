@@ -741,6 +741,7 @@ RelationalOptions(void)
     vb1 = gtk_vbox_new(FALSE, 0);
     hb1 = gtk_hbox_new(FALSE, 0);
 #endif
+    gtk_widget_set_tooltip_text(hb1, _("Database type can be SQLite (bundled with GNU Backgammon), MySQL/MariaDB or PostgreSQL. " "The first one needs only a database name. For the other two you need an external database server and to configure how to access it"));
     gtk_box_pack_start(GTK_BOX(hb1), gtk_label_new(_("DB Type")), FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hb1), dbtype, FALSE, FALSE, 0);
 
@@ -776,7 +777,8 @@ RelationalOptions(void)
     g_signal_connect(password, "changed", G_CALLBACK(CredentialsChanged), dbList);
     gtk_table_attach(GTK_TABLE(table), password, 1, 2, 1, 2, 0, 0, 0, 0);
 
-    lbl = gtk_label_new(_("Hostname"));
+    lbl = gtk_label_new(_("DB server"));
+    gtk_widget_set_tooltip_text(lbl, _("Entered as: hostname:port"));
 
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(lbl, GTK_ALIGN_END);
@@ -794,6 +796,7 @@ RelationalOptions(void)
 
     login = gtk_button_new_with_label(_("Login"));
     g_signal_connect(login, "clicked", G_CALLBACK(LoginClicked), dbList);
+    gtk_widget_set_tooltip_text(login, _("Check connection to database server"));
 
     align = gtk_alignment_new(1, 0, 0, 0);
     gtk_container_add(GTK_CONTAINER(align), login);
@@ -804,6 +807,7 @@ RelationalOptions(void)
     gameStats = gtk_check_button_new_with_label(_("Store game stats"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(gameStats), storeGameStats);
     gtk_box_pack_start(GTK_BOX(vb1), gameStats, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(gameStats, _("Store individual games statistics in addition to global match ones"));
 
     gtk_box_pack_start(GTK_BOX(hb2), vb1, FALSE, FALSE, 10);
 
