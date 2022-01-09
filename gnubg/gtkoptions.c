@@ -894,6 +894,8 @@ append_match_options(optionswidget * pow)
 
     pow->pwCubeInvert = gtk_check_button_new_with_label(_("Invert table"));
     gtk_box_pack_start(GTK_BOX(pwb), pow->pwCubeInvert, FALSE, FALSE, 0);
+
+    /* similar tooltip is used in gtkmet.c:GTKShowMatchEquityTable() */
     gtk_widget_set_tooltip_text(pow->pwCubeInvert,
                                 _("Use the specified match equity table "
                                   "around the other way (i.e., swap the players before "
