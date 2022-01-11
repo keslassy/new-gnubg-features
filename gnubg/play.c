@@ -3356,23 +3356,20 @@ CommandNext(char *sz)
 extern void
 CommandEndGame(char *UNUSED(sz))
 {
-    playertype pt_store[2] = { ap[0].pt, ap[1].pt };
+    const playertype pt_store[2] = { ap[0].pt, ap[1].pt };
+    const evalcontext ec_cheq_store[2] = { ap[0].esChequer.ec, ap[1].esChequer.ec};
+    const evalcontext ec_cube_store[2] = { ap[0].esCube.ec, ap[1].esCube.ec};
+    const evalcontext ec_quick = { .fCubeful=FALSE, .nPlies=0, .fUsePrune=FALSE, .fDeterministic=TRUE, .rNoise=0.0 };
+
     int fAutoGame_store = fAutoGame;
     int fDisplay_store = fDisplay;
     int fQuiet_store = fQuiet;
-    const evalcontext ec_quick = { FALSE, 0, FALSE, TRUE, 0.0 };
     int manual_dice = (rngCurrent == RNG_MANUAL);
-    evalcontext ec_cheq_store[2];
-    evalcontext ec_cube_store[2];
 #if defined(USE_BOARD3D)
     BoardData *bd = NULL;
     if (fX && pwBoard)
         bd = BOARD(pwBoard)->board_data;
 #endif
-    ec_cheq_store[0] = ap[0].esChequer.ec;
-    ec_cheq_store[1] = ap[1].esChequer.ec;
-    ec_cube_store[0] = ap[0].esCube.ec;
-    ec_cube_store[1] = ap[1].esCube.ec;
 
     if (ms.gs != GAME_PLAYING) {
         outputl(_("No game in progress (type `new game' to start one)."));
