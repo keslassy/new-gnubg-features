@@ -346,10 +346,12 @@ OutputRolloutContext(const char *szIndent, const rolloutcontext * prc)
     if (szIndent && *szIndent)
         strcat(sz, szIndent);
 
-    sprintf(strchr(sz, 0), "%u games", prc->nGamesDone);
+    sprintf(strchr(sz, 0), _("%u games"), prc->nGamesDone);
 
-    if (prc->fInitial)
-        strcat(sz, ", rollout as initial position");
+    if (prc->fInitial) {
+        strcat(sz, ", ");
+        strcat(sz, _("rollout as initial position"));
+    }
 
     strcat(sz, ", ");
     if (prc->fRotate)
