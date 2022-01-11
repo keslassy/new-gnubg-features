@@ -5082,6 +5082,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     GtkWidget *pwPage;
     GtkWidget *pwh, *pwv, *pwHBox;
     GtkWidget *pwTable, *pwFrame;
+    GtkWidget *pwLabel;
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwPage = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -5100,14 +5101,23 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 #endif
     gtk_box_pack_start(GTK_BOX(pwPage), pwh, FALSE, FALSE, 0);
 
-    gtk_box_pack_start(GTK_BOX(pwh), gtk_label_new(_("Seed:")), FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(pwh), pwLabel = gtk_label_new(_("Seed:")), FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwh), gtk_spin_button_new(prpw->padjSeed, 1, 0), FALSE, FALSE, 4);
 
+    gtk_widget_set_tooltip_text(pwLabel,
+                                _("The seed is a number used to initialise the dice rolls generator. Reusing the same seed allows to reproduce the rollout results. 0 is a special value that leaves GNU backgammon use a random value."));
+
     gtk_box_pack_end(GTK_BOX(pwh), gtk_spin_button_new(prpw->padjTrials, 36, 0), FALSE, FALSE, 4);
-    gtk_box_pack_end(GTK_BOX(pwh), gtk_label_new(_("Trials:")), FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(pwh), pwLabel = gtk_label_new(_("Trials:")), FALSE, FALSE, 4);
+
+    gtk_widget_set_tooltip_text(pwLabel,
+                                _("The number of games to play out; the standard deviation of the results decreases like the square root of the trials number. It is recommendend to use a multiple of 36 or 1296."));
 
     pwFrame = gtk_frame_new(_("Truncation"));
     gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
+
+    gtk_widget_set_tooltip_text(pwFrame,
+                                _("Truncated rollouts are rollouts played to a certain number of moves as opposed to the end of the game or a double/pass cube action. " "They are faster and their results have a lower variance than full rollouts, but their accuracy depends on that of the static evaluation at the trucation point."));
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
@@ -5136,6 +5146,9 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 
     pwFrame = gtk_frame_new(_("Evaluation for later plies"));
     gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
+
+    gtk_widget_set_tooltip_text(pwFrame,
+                                _("It can be useful to use a different (higher) level of evaluation for the first few plies if one thinks that the current position is complex but will quickly evolve into simpler ones that will be adequately handled by a lower level."));
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
@@ -5279,6 +5292,9 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     pwFrame = gtk_frame_new(_("Bearoff Truncation"));
     gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
 
+    gtk_widget_set_tooltip_text(pwFrame,
+        _("Truncating the rollouts when reaching the bearoff databases slighly improves the speed and decrease their variance. " "The first option is totally accurate and should be selected for practical use; the second one can be slightly inaccurate but is useful on average and its use is recommended."));
+
 #if GTK_CHECK_VERSION(3,0,0)
     prpw->pwTruncBearoffOpts = pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 8);
 #else
@@ -5309,6 +5325,8 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 
     g_signal_connect(G_OBJECT(prpw->pwCubeful), "toggled", G_CALLBACK(CubefulToggled), prw);
 
+    gtk_widget_set_tooltip_text(prpw->pwCubeful,
+                                _("A cubeful rollout means that it is using the cube in the rollout. " "It is recommended to enable this option when analyzing cubeful play."));
 
     prpw->pwVarRedn = gtk_check_button_new_with_label(_("Use variance reduction"));
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwVarRedn, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
@@ -5323,10 +5341,14 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     prpw->pwRotate = gtk_check_button_new_with_label(_("Use quasi-random dice"));
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwRotate, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwRotate), prw->rcRollout.fRotate);
+    gtk_widget_set_tooltip_text(prpw->pwRotate,
+                                _("This option ensures that every possible roll appears once in each set of 36 trials. This is only moderately useful if variance reduction is used but important if it isn't. It is recommended to enable this option."));
 
     prpw->pwInitial = gtk_check_button_new_with_label(_("Rollout as initial position"));
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwInitial, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwInitial), prw->rcRollout.fInitial);
+    gtk_widget_set_tooltip_text(prpw->pwInitial,
+                                _("This option ensures that the first ply roll is not a doublet."));
 
     return pwPage;
 }
@@ -5482,7 +5504,7 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[3]->pwSettingWidgets), 1, 2, 1, 2,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
         rw.prpwTrunc->pmf = NULL;
-        rw.analysisDetails[4] = RolloutPage(rw.prpwTrunc, _("Truncation Point"), FALSE, NULL);
+        rw.analysisDetails[4] = RolloutPage(rw.prpwTrunc, _("Eval. at Truncation Point"), FALSE, NULL);
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[4]->pwSettingWidgets), 0, 1, 2, 3,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
 
@@ -7615,6 +7637,7 @@ GTKShowCalibration(void)
     gtk_container_add(GTK_CONTAINER(pwhbox), gtk_label_new(_("static evaluations/second")));
 
     gtk_container_add(GTK_CONTAINER(pwvbox), pwbutton = gtk_button_new_with_label(_("Calibrate")));
+    gtk_widget_set_tooltip_text(pwbutton, _("Estimate speed, in 0-ply evaluations/second"));
     apw[0] = pwenable;
     apw[1] = pwspin;
     g_signal_connect(G_OBJECT(pwbutton), "clicked", G_CALLBACK(CalibrationGo), apw);
