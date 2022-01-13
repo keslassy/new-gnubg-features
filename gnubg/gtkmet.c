@@ -24,6 +24,7 @@
 #include "matchequity.h"
 #include "gtkmet.h"
 #include "gtkwindows.h"
+#include "gtklocdefs.h"
 
 typedef struct {
     GtkWidget *pwTable;
