@@ -5111,7 +5111,7 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_box_pack_end(GTK_BOX(pwh), pwLabel = gtk_label_new(_("Trials:")), FALSE, FALSE, 4);
 
     gtk_widget_set_tooltip_text(pwLabel,
-                                _("The number of games to play out; the standard deviation of the results decreases like the square root of the trials number. It is recommendend to use a multiple of 36 or 1296."));
+                                _("The number of games to play out; the standard deviation of the results decreases like the square root of the trials number. It is recommended to use a multiple of 36 or 1296."));
 
     pwFrame = gtk_frame_new(_("Truncation"));
     gtk_box_pack_start(GTK_BOX(pwPage), pwFrame, FALSE, FALSE, 0);
