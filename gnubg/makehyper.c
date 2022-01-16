@@ -583,17 +583,17 @@ main(int argc, char **argv)
 
     GOptionEntry ao[] = {
         {"chequers", 'c', 0, G_OPTION_ARG_INT, &nC,
-         "The number of chequers(0<C<4). Default is 3.", "C"},
+         N_("The number of chequers (0<C<4). Default is 3"), "C"},
         {"restart", 'r', 0, G_OPTION_ARG_FILENAME, &szRestart,
-         "Restart calculation of database from \"filename\"", "filename"},
+         N_("Restart calculation of database from \"filename\"."), "filename"},
         {"threshold", 't', 0, G_OPTION_ARG_STRING, &szEpsilon,
-         "The convergence threshold (T). Default is 1e-5", "T"},
+         N_("The convergence threshold (T). Default is 1e-5"), "T"},
         {"no-checkpoint", 'n', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE, &fCheckPoint,
-         "Do not write a checkpoint file after each iteration.", NULL},
+         N_("Do not write a checkpoint file after each iteration"), NULL},
         {"version", 'v', 0, G_OPTION_ARG_NONE, &show_version,
-         "Print version info and exit", NULL},
+         N_("Print version info and exit"), NULL},
         {"outfile", 'f', 0, G_OPTION_ARG_STRING, &szOutput,
-         "Output filename. Default is hyper<C>.bd.", "filename"},
+         N_("Output filename. Default is hyper<C>.bd"), "filename"},
         {NULL, 0, 0, (GOptionArg) 0, NULL, NULL, NULL}
     };
 

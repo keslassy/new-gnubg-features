@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 1997-2003 Gary Wong <gary@cs.arizona.edu>
  * Copyright (C) 2002-2020 the AUTHORS
  *
@@ -1290,27 +1290,27 @@ main(int argc, char **argv)
 
     GOptionEntry ao[] = {
         {"two-sided", 't', 0, G_OPTION_ARG_STRING, &szTwoSided,
-         "Number of points (P) and number of chequers (C) for two-sided database", "PxC"},
+         N_("Number of points (P) and number of chequers (C) for two-sided database"), "PxC"},
         {"one-sided", 'o', 0, G_OPTION_ARG_INT, &nOS,
-         "Number of points (P) for one-sided database", "P"},
+         N_("Number of points (P) for one-sided database"), "P"},
         {"xhash-size", 's', 0, G_OPTION_ARG_INT, &nHashSize,
-         "Use cache of size N bytes", "N"},
+         N_("Use cache of size N bytes"), "N"},
         {"old-bearoff", 'O', 0, G_OPTION_ARG_STRING, &szOldBearoff,
-         "Reuse already generated bearoff database \"filename\"", "filename"},
+         N_("Reuse already generated bearoff database \"filename\""), "filename"},
         {"no-header", 'H', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE, &fHeader,
-         "Do not write header", NULL},
+         N_("Do not write header"), NULL},
         {"no-cubeful", 'C', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE, &fCubeful,
-         "Do not calculate cubeful equities for two-sided databases", NULL},
+         N_("Do not calculate cubeful equities for two-sided databases"), NULL},
         {"no-compress", 'c', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE, &fCompress,
-         "Do not use compression scheme for one-sided databases", NULL},
+         N_("Do not use compression scheme for one-sided databases"), NULL},
         {"no-gammon", 'g', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE, &fGammon,
-         "Do not include gammon distribution for one-sided databases", NULL},
+         N_("Do not include gammon distribution for one-sided databases"), NULL},
         {"normal-dist", 'n', 0, G_OPTION_ARG_NONE, &fND,
-         "Approximate one-sided bearoff database with normal distributions", NULL},
+         N_("Approximate one-sided bearoff database with normal distributions"), NULL},
         {"version", 'v', 0, G_OPTION_ARG_NONE, &show_version,
-         "Prints version and exits", NULL},
+         N_("Prints version and exits"), NULL},
         {"outfile", 'f', 0, G_OPTION_ARG_STRING, &szOutput,
-         "Required output filename", "filename"},
+         N_("Required output filename"), "filename"},
         {NULL, 0, 0, (GOptionArg) 0, NULL, NULL, NULL}
     };
 
@@ -1406,7 +1406,7 @@ main(int argc, char **argv)
 
         BearoffClose(pbc);
 
-        fprintf(stderr, "Number of re-reads while generating: %ld\n", cLookup);
+        fprintf(stderr, _("Number of re-reads while generating: %ld\n"), cLookup);
     }
 
     /*
@@ -1456,7 +1456,7 @@ main(int argc, char **argv)
 
         BearoffClose(pbc);
 
-        fprintf(stderr, "Number of re-reads while generating: %ld\n", cLookup);
+        fprintf(stderr, _("Number of re-reads while generating: %ld\n"), cLookup);
 
     }
 
