@@ -58,7 +58,7 @@ configureCB(GtkWidget * widget, void *data)
     width = allocation.width;
     height = allocation.height;
     maxX = (float) gd->numGames * RES_WIDTH + RES_WIDTH + TOTAL_GAP;
-    modelWidth = maxX * (1 + NUM_WIDTH_PER);
+    modelWidth = maxX * (NUM_WIDTH_PER + 1 + NUM_WIDTH_PER);
 
     maxY = gd->maxY * 1.05f + 1;
     modelHeight = maxY * (1 + NUM_HEIGHT_PER);
