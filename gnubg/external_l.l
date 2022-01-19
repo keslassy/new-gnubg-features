@@ -20,9 +20,7 @@
 
 #include "common.h"
 #include "external.h"
-#include <stdio.h>
 
-#define EXTERNAL_Y_H
 #include "external_y.h"
 
 extern int ext_parse(yyscan_t scanner);
