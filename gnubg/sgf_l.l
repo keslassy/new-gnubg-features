@@ -22,13 +22,10 @@
 #include "common.h"
 #include <ctype.h>
 #include "list.h"
-#include <string.h>
 
 #include "sgf.h"
 #include "sgf_y.h"
 #include <glib/gi18n.h>
-
-extern int _SGFWarning( char * );
 
 static int error( char *s ) {
 
