@@ -28,12 +28,11 @@
 
 /* Structure for information about match equity table */
 
-typedef struct _metinfo {
+typedef struct {
     gchar *szName;              /* Name of match equity table */
-    gchar *szFileName;          /* File name of met */
-    gchar *szDescription;       /* Description of met */
-    int nLength;                /* native length of met, -1 : pure calculated table */
-
+    gchar *szFileName;          /* File name of MET */
+    gchar *szDescription;       /* Description of MET */
+    int nLength;                /* Native length of MET or -1 if pure calculated table */
 } metinfo;
 
 /* macros for getting match equities */
@@ -90,7 +89,7 @@ extern void
  * DPP = double/Pass with CubePrime values, etc.
  */
 
-typedef enum met_indices {
+typedef enum {
     /* player 0 wins, first cube value */
     DP = 0, NDW = 0, DTW = 1, NDWG = 1, NDWB, DTWG, DTWB,
     /* player 0 loses, first cube value */
@@ -103,7 +102,7 @@ typedef enum met_indices {
     DPP1, DTWP1, NDWBP1, DTWGP1, DTWBP1,
     /* player 0 loses, 3rd cube value */
     NDLP1, DTLP1, NDLBP1, DTLGP1, DTLBP1
-} e_met_indices;
+} met_indices;
 
 extern void
 getMEMultiple(const int nScore0, const int nScore1, const int nMatchTo,
