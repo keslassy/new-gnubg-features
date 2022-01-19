@@ -37,7 +37,7 @@
 #define RANDOMORG_CERTPATH ".\\etc\\ssl\\"
 #define RANDOMORG_CABUNDLE "ca-bundle.crt"
 
-typedef struct _RandomData {
+typedef struct {
     size_t nNumRolls;
     int nCurrent;
     unsigned int anBuf[BUFLENGTH];
