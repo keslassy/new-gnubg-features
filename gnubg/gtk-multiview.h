@@ -32,20 +32,17 @@
 #define GTK_MULTIVIEW_GET_CLASS(obj)  		(G_TYPE_INSTANCE_GET_CLASS((obj), GTK_TYPE_MULTIVIEW, GtkMultiviewClass))
 
 
-typedef struct _GtkMultiview GtkMultiview;
-typedef struct _GtkMultiviewClass GtkMultiviewClass;
-
-struct _GtkMultiview {
+typedef struct {
     GtkContainer parent;
 
     /*< private > */
     GtkWidget *current;
     GList *children;
-};
+} GtkMultiview;
 
-struct _GtkMultiviewClass {
+typedef struct {
     GtkContainerClass parent_class;
-};
+} GtkMultiviewClass;
 
 GType gtk_multiview_get_type(void);
 GtkWidget *gtk_multiview_new(void);

@@ -39,22 +39,18 @@
 #include "backgammon.h"
 
 
-typedef struct _parameter {
-
+typedef struct {
     char *szName;
     float value;
-
 } parameter;
 
 
-typedef struct _metparameters {
-
+typedef struct {
     char *szName;
     listOLD lParameters;
-
 } metparameters;
 
-typedef struct _metdata {
+typedef struct {
 
     /* Data saved */
 
@@ -1024,7 +1020,7 @@ typedef enum {
     MP_PLAYER_BOTH = 2
 } metplayer;
 
-typedef struct _MatchEquityParser {
+typedef struct {
     parserstate state;
     tabletype type;
     metplayer player;

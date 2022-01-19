@@ -51,27 +51,25 @@ typedef enum {
     N_IMPORT_TYPES
 } ImportType;
 
-typedef struct _ExportFormat ExportFormat;
-struct _ExportFormat {
+typedef struct {
     ExportType type;
     const char *extension;
     const char *description;
     const char *clname;
     int exports[3];
-};
+} ExportFormat;
 
-typedef struct _ImportFormat ImportFormat;
-struct _ImportFormat {
+typedef struct {
     ImportType type;
     const char *extension;
     const char *description;
     const char *clname;
-};
+} ImportFormat;
 
 extern ExportFormat export_format[];
 extern ImportFormat import_format[];
 
-typedef struct _FilePreviewData {
+typedef struct {
     ImportType type;
 } FilePreviewData;
 
