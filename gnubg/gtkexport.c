@@ -64,7 +64,7 @@ static char *aszCubeDisplay[] = {
 
 #define NUM_CUBES (sizeof(aszCubeDisplay)/sizeof(aszCubeDisplay[0]))
 
-typedef struct _exportwidget {
+typedef struct {
 
     /* export settings */
 

@@ -23,7 +23,7 @@
 
 #include "backgammon.h"
 
-typedef struct hintdata {
+typedef struct {
     GtkWidget *pwMoves;         /* the movelist */
     GtkWidget *pwRollout, *pwRolloutSettings;   /* rollout buttons */
     GtkWidget *pwEval, *pwEvalSettings; /* evaluation buttons */
