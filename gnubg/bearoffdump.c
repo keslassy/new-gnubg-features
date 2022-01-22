@@ -48,9 +48,9 @@ main(int argc, char **argv)
 
     GOptionEntry ao[] = {
         {"index", 'n', 0, G_OPTION_ARG_INT, &id,
-         "index", NULL},
+         N_("index"), NULL},
         {"posid", 'p', 0, G_OPTION_ARG_STRING, &szPosID,
-         "Position ID", NULL},
+         N_("Position ID"), NULL},
         {NULL, 0, 0, (GOptionArg) 0, NULL, NULL, NULL}
     };
     GError *error = NULL;
@@ -66,35 +66,35 @@ main(int argc, char **argv)
     }
 
     if ((szPosID && id) || (!szPosID && !id)) {
-        g_printerr("Either Position ID or index is required. Not Both.\n" "For more help try `bearoffdump --help'\n");
+        g_printerr(_("Either Position ID or index is required. Not Both.\n" "For more help try `bearoffdump --help'\n"));
         exit(EXIT_FAILURE);
     }
 
     if (argc != 2) {
-        g_printerr("A bearoff database file should be given as an argument\n"
-                   "For more help try `bearoffdump --help'\n");
+        g_printerr(_("A bearoff database file should be given as an argument\n"
+                   "For more help try `bearoffdump --help'\n"));
         exit(EXIT_FAILURE);
     }
     filename = argv[1];
 
-    printf("Bearoff database: %s\n", filename);
+    printf(_("Bearoff database: %s\n"), filename);
     if (!id) {
-        printf("Position ID     : %s\n", szPosID);
+        printf(_("Position ID     : %s\n"), szPosID);
     } else {
-        printf("Position number : %u\n", id);
+        printf(_("Position number : %u\n"), id);
     }
 
     /* This is needed since we call ReadBearoffFile() from bearoff.c */
     MT_InitThreads();
 
     if (!(pbc = BearoffInit(filename, BO_NONE, NULL))) {
-        printf("Failed to initialise bearoff database %s\n", filename);
+        printf(_("Failed to initialise bearoff database %s\n"), filename);
         exit(-1);
     }
 
     /* information about bearoff database */
 
-    printf("\n" "Information about database:\n\n");
+    printf(_("\n" "Information about database:\n\n"));
 
     *sz = 0;
     BearoffStatus(pbc, sz);
@@ -105,13 +105,13 @@ main(int argc, char **argv)
     memset(anBoard, 0, sizeof anBoard);
 
     if (!id) {
-        printf("\n" "Dump of position ID: %s\n\n", szPosID);
+        printf(_("\n" "Dump of position ID: %s\n\n"), szPosID);
 
         PositionFromID(anBoard, szPosID);
     } else {
         unsigned int n, nUs, nThem;
 
-        printf("\n" "Dump of position#: %u\n\n", id);
+        printf(_("\n" "Dump of position#: %u\n\n"), id);
 
         n = Combination(pbc->nPoints + pbc->nChequers, pbc->nPoints);
         nUs = id / n;
