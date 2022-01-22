@@ -34,7 +34,7 @@ void OglModelAlloc(ModelManager* modelHolder, int modelNumber)
 {
 	modelHolder->totalNumVertices += modelHolder->models[modelNumber].dataLength;
 
-	modelHolder->models[modelNumber].data = malloc(sizeof(float) * modelHolder->models[modelNumber].dataLength);
+	modelHolder->models[modelNumber].data = g_malloc(sizeof(float) * modelHolder->models[modelNumber].dataLength);
 	modelHolder->models[modelNumber].dataLength = 0;
 }
 
@@ -87,7 +87,7 @@ void OglModelDraw(const ModelManager* modelManager, int modelNumber, const Mater
 void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber)
 {
 	memcpy(&modelHolder->vertexData[modelHolder->models[modelNumber].dataStart], modelHolder->models[modelNumber].data, modelHolder->models[modelNumber].dataLength * sizeof(float));
-	free(modelHolder->models[modelNumber].data);
+	g_free(modelHolder->models[modelNumber].data);
 	modelHolder->models[modelNumber].data = NULL;
 }
 
@@ -97,9 +97,8 @@ void ModelManagerCreate(ModelManager* modelHolder)
 	if (modelHolder->totalNumVertices > modelHolder->allocNumVertices)
 	{
 		modelHolder->allocNumVertices = modelHolder->totalNumVertices;
-		free(modelHolder->vertexData);
-		modelHolder->vertexData = malloc(sizeof(float) * modelHolder->allocNumVertices);
-		g_assert(modelHolder->vertexData != NULL);
+		g_free(modelHolder->vertexData);
+		modelHolder->vertexData = g_malloc(sizeof(float) * modelHolder->allocNumVertices);
 	}
 	/* Copy data into one big buffer */
 	int vertexPos = 0;

@@ -40,7 +40,7 @@ typedef struct {
 void
 initOccluder(Occluder * pOcc)
 {
-    pOcc->handle = (OccModel *) malloc(sizeof(OccModel));
+    pOcc->handle = (OccModel *) g_malloc(sizeof(OccModel));
     pOcc->handle->planes = g_array_new(FALSE, FALSE, sizeof(plane));
     pOcc->handle->edges = g_array_new(FALSE, FALSE, sizeof(winged_edge));
     pOcc->handle->points = g_array_new(FALSE, FALSE, sizeof(position));
@@ -60,7 +60,7 @@ freeOccluder(Occluder * pOcc)
         g_array_free(pOcc->handle->planes, TRUE);
         g_array_free(pOcc->handle->edges, TRUE);
         g_array_free(pOcc->handle->points, TRUE);
-        free(pOcc->handle);
+        g_free(pOcc->handle);
         pOcc->handle = NULL;
         glDeleteLists(pOcc->shadow_list, 1);
     }
@@ -471,8 +471,8 @@ void
 addCylinder(Occluder * pOcc, float x, float y, float z, float r, float d, unsigned int numSteps)
 {
     float step = (2 * F_PI) / (float) numSteps;
-    float *xPts = (float *) malloc(sizeof(float) * numSteps);
-    float *yPts = (float *) malloc(sizeof(float) * numSteps);
+    float *xPts = (float *) g_malloc(sizeof(float) * numSteps);
+    float *yPts = (float *) g_malloc(sizeof(float) * numSteps);
     unsigned int i;
     g_assert(xPts && yPts);
 
@@ -496,8 +496,8 @@ addCylinder(Occluder * pOcc, float x, float y, float z, float r, float d, unsign
         addLine(pOcc, x + xPts[i], y + yPts[i], z, x + xPts[i], y + yPts[i], z + d, x + xPts[prev], y + yPts[prev], z);
         addLine(pOcc, x + xPts[i], y + yPts[i], z + d, x + xPts[i], y + yPts[i], z, x + xPts[next], y + yPts[next], z);
     }
-    free(xPts);
-    free(yPts);
+    g_free(yPts);
+    g_free(xPts);
 }
 
 void
@@ -514,8 +514,8 @@ addHalfTube(Occluder * pOcc, float r, float h, unsigned int numSteps)
 
     step = F_PI / (float) numSteps;
 
-    xPts = (float *) malloc(sizeof(float) * (numSteps + 1));
-    yPts = (float *) malloc(sizeof(float) * (numSteps + 1));
+    xPts = (float *) g_malloc(sizeof(float) * (numSteps + 1));
+    yPts = (float *) g_malloc(sizeof(float) * (numSteps + 1));
     g_assert(xPts && yPts);
 
     for (i = 0; i <= numSteps; i++) {
@@ -540,8 +540,8 @@ addHalfTube(Occluder * pOcc, float r, float h, unsigned int numSteps)
     addLine(pOcc, xPts[i], 0.f, yPts[i], xPts[i], h, yPts[i], xPts[i - 1], 0.f, yPts[i - 1]);
     addLine(pOcc, xPts[i], h, yPts[i], xPts[i], 0.f, yPts[i], xPts[i], 0.f, yPts[i] - .1f);
 
-    free(xPts);
-    free(yPts);
+    g_free(yPts);
+    g_free(xPts);
 }
 
 static float
@@ -581,8 +581,8 @@ addDice(Occluder * pOcc, float size)
 {                               /* Hard-coded numSteps to keep model simple + doesn't work correctly when > 8... */
     unsigned int numSteps = 8;
     float step = (2.0f * F_PI) / (float) numSteps;
-    float *xPts = (float *) malloc(sizeof(float) * numSteps);
-    float *yPts = (float *) malloc(sizeof(float) * numSteps);
+    float *xPts = (float *) g_malloc(sizeof(float) * numSteps);
+    float *yPts = (float *) g_malloc(sizeof(float) * numSteps);
     unsigned int i, c, f;
     g_assert(xPts && yPts);
 
@@ -622,6 +622,6 @@ addDice(Occluder * pOcc, float size)
         }
     }
 
-    free(xPts);
-    free(yPts);
+    g_free(yPts);
+    g_free(xPts);
 }

@@ -618,8 +618,8 @@ GTKShowTheory(const int fActivePage)
 
     gtk_window_set_default_size(GTK_WINDOW(pwDialog), 660, 300);
 
-    ptw = malloc(sizeof(theorywidget));
-    g_object_set_data_full(G_OBJECT(pwDialog), "theorywidget", ptw, free);
+    ptw = g_malloc(sizeof(theorywidget));
+    g_object_set_data_full(G_OBJECT(pwDialog), "theorywidget", ptw, g_free);
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwOuterHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
