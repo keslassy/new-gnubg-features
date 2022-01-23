@@ -3174,8 +3174,7 @@ CommandSetMatchComment(char *sz)
 static int
 DaysInMonth(int nYear, int nMonth)
 {
-
-    static int an[12] = { 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    static const int an[12] = { 31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
     if (nMonth < 1 || nMonth > 12)
         return -1;
@@ -3190,7 +3189,6 @@ DaysInMonth(int nYear, int nMonth)
 extern void
 CommandSetMatchDate(char *sz)
 {
-
     int nYear, nMonth, nDay;
 
     if (!sz || !*sz) {
@@ -3198,6 +3196,8 @@ CommandSetMatchDate(char *sz)
         outputl(_("Match date cleared."));
         return;
     }
+
+    /* 1753 is the year Britain and its colonies adopted the Gregorian calendar */
 
     if (sscanf(sz, "%4d-%2d-%2d", &nYear, &nMonth, &nDay) < 3 ||
         nYear < 1753 || nMonth < 1 || nMonth > 12 || nDay < 1 || nDay > DaysInMonth(nYear, nMonth)) {
@@ -3215,14 +3215,12 @@ CommandSetMatchDate(char *sz)
 extern void
 CommandSetMatchEvent(char *sz)
 {
-
     SetMatchInfo(&mi.pchEvent, sz, _("Match event"));
 }
 
 extern void
 CommandSetMatchLength(char *sz)
 {
-
     int n;
 
     if ((n = ParseNumber(&sz)) < 0 || n > MAXSCORE) {
@@ -3234,7 +3232,6 @@ CommandSetMatchLength(char *sz)
 
     outputf(ngettext("New matches default to %u point.\n", "New matches default to %u points.\n", nDefaultLength),
             nDefaultLength);
-
 }
 
 extern void
@@ -4355,15 +4352,15 @@ CommandSetSGFFolder(char *sz)
 static int
 SetXGID(char *sz)
 {
-    int nMatchTo = -1;
-    int nRules = -1;
+    int nMatchTo;
+    int nRules;
     int fCrawford = 0;
     int anScore[2];
-    int fMove = -1;
+    int fMove;
     int fTurn;
     unsigned int anDice[2] = { 0, 0 };
     int fCubeOwner = -1;
-    int nCube = -1;
+    int nCube;
     int fDoubled = 0;
     int fJacobyRule = 0;
     matchstate msxg;
