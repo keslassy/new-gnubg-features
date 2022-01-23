@@ -158,7 +158,10 @@ ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz)
 #else
         if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &f, sizeof f))
 #endif                          /* WIN32 */
-            return -1;
+            {
+                close(sock);
+                return -1;
+            }
 
         psin = g_malloc(*pcb = sizeof(struct sockaddr_in));
         memset(psin, 0, sizeof(*psin));
