@@ -2828,9 +2828,11 @@ SetMatchDate(matchinfo * pmi)
     time_t t = time(NULL);
     struct tm *ptm = localtime(&t);
 
-    pmi->nYear = ptm->tm_year + 1900;
-    pmi->nMonth = ptm->tm_mon + 1;
-    pmi->nDay = ptm->tm_mday;
+    if (ptm) {
+        pmi->nYear = ptm->tm_year + 1900;
+        pmi->nMonth = ptm->tm_mon + 1;
+        pmi->nDay = ptm->tm_mday;
+    }
 }
 
 extern void
