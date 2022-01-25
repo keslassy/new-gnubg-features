@@ -1620,7 +1620,7 @@ WriteEscapedString(FILE * pf, char *pch, int fEscapeColons)
             break;
         }
 
-    *pc++ = 0;
+    *pc = 0;
 
     fputs(sz, pf);
     g_free(sz);
