@@ -105,7 +105,7 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, co
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
                                    pci, pec, defaultFilters) < 0) {
-                free(ml.amMoves);
+                g_free(ml.amMoves);
                 return ERR_VAL;
             }
 
@@ -126,7 +126,7 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, co
 
             } else {
                 aar[i][j] = ml.amMoves[0].rScore;
-                free(ml.amMoves);
+                g_free(ml.amMoves);
             }
 
             rMean += aar[i][j];
@@ -143,7 +143,7 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, co
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
                                    &ciOpp, pec, defaultFilters) < 0) {
-                free(ml.amMoves);
+                g_free(ml.amMoves);
                 return ERR_VAL;
             }
 
@@ -164,7 +164,7 @@ LuckFirst(const TanBoard anBoard, const int n0, const int n1, cubeinfo * pci, co
 
             } else {
                 aar[i][j] = -ml.amMoves[0].rScore;
-                free(ml.amMoves);
+                g_free(ml.amMoves);
             }
 
             rMean += aar[i][j];
@@ -198,7 +198,7 @@ LuckNormal(const TanBoard anBoard, const int n0, const int n1, const cubeinfo * 
             /* Find the best move for each roll at ply 0 only. */
             if (FindnSaveBestMoves(&ml, i + 1, j + 1, (ConstTanBoard) anBoardTemp, NULL, 0.0f,
                                    pci, pec, defaultFilters) < 0) {
-                free(ml.amMoves);
+                g_free(ml.amMoves);
                 return ERR_VAL;
             }
 
@@ -219,7 +219,7 @@ LuckNormal(const TanBoard anBoard, const int n0, const int n1, const cubeinfo * 
 
             } else {
                 aar[i][j] = ml.amMoves[0].rScore;
-                free(ml.amMoves);
+                g_free(ml.amMoves);
             }
 
             rMean += (i == j) ? aar[i][j] : aar[i][j] * 2.0f;
@@ -678,7 +678,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             if (cmp_evalsetup(pesChequer, &pmr->esChequer) > 0) {
 
                 if (pmr->ml.cMoves) {
-                    free(pmr->ml.amMoves);
+                    g_free(pmr->ml.amMoves);
                     pmr->ml.amMoves = NULL;
                 }
 
@@ -691,13 +691,13 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                                            pmr->anDice[1],
                                            (ConstTanBoard) pms->anBoard, &key,
                                            arSkillLevel[SKILL_DOUBTFUL], &ci, &pesChequer->ec, aamf) < 0) {
-                        free(ml.amMoves);
+                        g_free(ml.amMoves);
                         return -1;
                     }
                     MT_Exclusive();
                     CopyMoveList(&pmr->ml, &ml);
                     if (ml.cMoves)
-                        free(ml.amMoves);
+                        g_free(ml.amMoves);
                 }
 
             }
@@ -1715,7 +1715,7 @@ AnalyseClearMove(moverecord * pmr)
         pmr->rLuck = ERR_VAL;
         pmr->lt = LUCK_NONE;
         if (pmr->ml.amMoves) {
-            free(pmr->ml.amMoves);
+            g_free(pmr->ml.amMoves);
             pmr->ml.amMoves = NULL;
         }
         pmr->ml.cMoves = 0;

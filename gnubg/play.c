@@ -441,7 +441,7 @@ FreeMoveRecord(moverecord * pmr)
     switch (pmr->mt) {
     case MOVE_NORMAL:
         if (pmr->ml.cMoves && pmr->ml.amMoves) {
-            free(pmr->ml.amMoves);
+            g_free(pmr->ml.amMoves);
             pmr->ml.amMoves = NULL;
         }
         break;
@@ -543,7 +543,7 @@ copy_from_pmr_cur(moverecord * pmr, gboolean get_move, gboolean get_cube)
         return;
     if (get_move && pmr_cur->ml.cMoves > 0) {
         if (pmr->ml.cMoves > 0)
-            free(pmr->ml.amMoves);
+            g_free(pmr->ml.amMoves);
         CopyMoveList(&pmr->ml, &pmr_cur->ml);
         pmr->n.iMove = locateMove(msBoard(), pmr->n.anMove, &pmr->ml);
     }

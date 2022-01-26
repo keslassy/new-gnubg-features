@@ -970,7 +970,7 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
     pml->cMaxMoves = pml->cMaxPips = pml->iMoveBest = 0;
     pml->rBestScore = 0;
 
-    pm = pml->amMoves = calloc(pml->cMoves, sizeof(move));
+    pm = pml->amMoves = g_malloc0(pml->cMoves * sizeof(move));
 
     pesChequer->et = EVAL_NONE;
 

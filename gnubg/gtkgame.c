@@ -5773,7 +5773,7 @@ DestroyHint(gpointer p, GObject * UNUSED(obj))
 
     if (pml) {
         if (pml->amMoves)
-            free(pml->amMoves);
+            g_free(pml->amMoves);
 
         free(pml);
     }
