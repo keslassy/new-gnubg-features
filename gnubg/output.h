@@ -20,7 +20,9 @@
 
 #ifndef OUTPUT_H
 #define OUTPUT_H
+
 #include <stdarg.h>
+#include <glib.h>
 #include "common.h"
 
 /* Initialize output module */
@@ -74,5 +76,7 @@ extern void outputon(void);
 extern int cOutputDisabled;
 extern int cOutputPostponed;
 extern int foutput_on;
+
+extern void print_utf8_to_locale(const gchar *sz);
 
 #endif

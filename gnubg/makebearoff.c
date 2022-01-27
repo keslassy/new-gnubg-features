@@ -74,10 +74,10 @@ static void
 XhashStatus(xhash * ph)
 {
 
-    fprintf(stderr, _("Xhash status:\n"));
-    fprintf(stderr, _("Size:    %d elements\n"), ph->nHashSize);
-    fprintf(stderr, _("Queries: %lu (hits: %lu)\n"), ph->nQueries, ph->nHits);
-    fprintf(stderr, _("Entries: %lu (overwrites: %lu)\n"), ph->nEntries, ph->nOverwrites);
+    g_printerr(_("Xhash status:\n"));
+    g_printerr(_("Size:    %d elements\n"), ph->nHashSize);
+    g_printerr(_("Queries: %lu (hits: %lu)\n"), ph->nQueries, ph->nHits);
+    g_printerr(_("Entries: %lu (overwrites: %lu)\n"), ph->nEntries, ph->nOverwrites);
 
 }
 
@@ -191,7 +191,7 @@ OSLookup(const unsigned int iPos,
             if (errno)
                 perror("output file");
             else
-                fprintf(stderr, "error reading output file\n");
+                g_printerr(_("error reading output file\n"));
             exit(-1);
         }
 
@@ -229,7 +229,7 @@ OSLookup(const unsigned int iPos,
             if (errno)
                 perror("reading temp file");
             else
-                fprintf(stderr, "error reading temp file");
+                g_printerr(_("error reading temp file"));
             exit(-1);
         }
 
@@ -259,14 +259,14 @@ OSLookup(const unsigned int iPos,
         /* look up position by seeking */
 
         if (fseek(pfOutput, 40 + iPos * (fGammon ? 128 : 64), SEEK_SET) < 0) {
-            fprintf(stderr, "error seeking in pfOutput\n");
+            g_printerr(_("error seeking in pfOutput\n"));
             exit(-1);
         }
 
         /* read distribution */
 
         if (fread(ac, 1, fGammon ? 128U : 64U, pfOutput) < (fGammon ? 128U : 64U)) {
-            fprintf(stderr, "error readung from pfOutput\n");
+            g_printerr(_("error reading from pfOutput\n"));
             exit(-1);
         }
 
@@ -283,7 +283,7 @@ OSLookup(const unsigned int iPos,
         /* position cursor at end of file */
 
         if (fseek(pfOutput, 0L, SEEK_END) < 0) {
-            fprintf(stderr, "error seeking to end!\n");
+            g_printerr(_("error seeking to end!\n"));
             exit(-1);
         }
 
@@ -602,7 +602,7 @@ generate_os(const int nOS, const int fHeader,
     /* initialise xhash */
 
     if (XhashCreate(&h, nHashSize / (fGammon ? 128 : 64))) {
-        fprintf(stderr, _("Error creating xhash with %d elements\n"), nHashSize / (fGammon ? 128 : 64));
+        g_printerr(_("Error creating xhash with %d elements\n"), nHashSize / (fGammon ? 128 : 64));
         exit(2);
     }
 
@@ -639,7 +639,7 @@ generate_os(const int nOS, const int fHeader,
             aus[32] = 0xFFFF;
         }
         if (!(i % 100) && fTTY)
-            fprintf(stderr, "1:%d/%d        \r", i, n);
+            g_printerr("1:%d/%d        \r", i, n);
 
         WriteOS(aus, fCompress, fCompress ? pfTmp : output);
         if (fGammon)
@@ -662,7 +662,7 @@ generate_os(const int nOS, const int fHeader,
 
         while (!feof(pfTmp) && (u = fread(ac, 1, sizeof(ac), pfTmp))) {
             if (fwrite(ac, 1, u, output) != u) {
-                fprintf(stderr, "failed writing to '%s'\n", tmpfile);
+                g_printerr(_("failed writing to '%s'\n"), tmpfile);
                 exit(3);
             }
         }
@@ -843,7 +843,7 @@ generate_nd(const int nPoints, const int nHashSize, const int fHeader, bearoffco
 
 
     if (XhashCreate(&h, (int) (nHashSize / (4 * sizeof(float))))) {
-        fprintf(stderr, "Error creating cache\n");
+        g_printerr(_("Error creating cache\n"));
         return;
     }
 
@@ -869,7 +869,7 @@ generate_nd(const int nPoints, const int nHashSize, const int fHeader, bearoffco
 
         XhashAdd(&h, i, ar, 16);
         if (!(i % 100) && fTTY)
-            fprintf(stderr, "1:%d/%d        \r", i, n);
+            g_printerr("1:%d/%d        \r", i, n);
 
     }
     putc('\n', stderr);
@@ -914,9 +914,9 @@ CalcPosition(const int i, const int j, const int n)
 
 #if 0
     if (n == 6) {
-        fprintf(stderr, "%2d ", k);
+        g_printerr("%2d ", k);
         if (j == n - 1)
-            fprintf(stderr, "\n");
+            g_printerr("\n");
     }
 #endif
 
@@ -947,7 +947,7 @@ TSLookup(const int nUs, const int nThem,
         if (errno)
             perror("temp file");
         else
-            fprintf(stderr, "error reading temp file\n");
+            g_printerr(_("error reading temp file\n"));
         exit(-1);
     }
 
@@ -1167,7 +1167,7 @@ generate_ts(const int nTSP, const int nTSC,
     /* initialise xhash */
 
     if (XhashCreate(&h, nHashSize / (fCubeful ? 8 : 2))) {
-        fprintf(stderr, _("Error creating xhash with %d elements\n"), nHashSize / (fCubeful ? 8 : 2));
+        g_printerr(_("Error creating xhash with %d elements\n"), nHashSize / (fCubeful ? 8 : 2));
         exit(2);
     }
 
@@ -1202,7 +1202,7 @@ generate_ts(const int nTSP, const int nTSC,
 
         }
         if (fTTY)
-            fprintf(stderr, "%d/%d     \r", iPos, n * n);
+            g_printerr("%d/%d     \r", iPos, n * n);
     }
 
     /* positions below diagonal */
@@ -1219,7 +1219,7 @@ generate_ts(const int nTSP, const int nTSC,
 
         }
         if (fTTY)
-            fprintf(stderr, "%d/%d     \r", iPos, n * n);
+            g_printerr("%d/%d     \r", iPos, n * n);
     }
 
     putc('\n', stderr);
@@ -1243,7 +1243,7 @@ generate_ts(const int nTSP, const int nTSC,
 
             fseek(pfTmp, count * k, SEEK_SET);
             if (fread(ac, 1, count, pfTmp) != count || fwrite(ac, 1, count, output) != count) {
-                fprintf(stderr, "failed to read from or write to database file\n");
+                g_printerr(_("failed to read from or write to database file\n"));
                 exit(3);
             }
         }
@@ -1256,8 +1256,6 @@ generate_ts(const int nTSP, const int nTSC,
     g_free(tmpfile);
 
 }
-
-
 
 
 static void
@@ -1325,6 +1323,8 @@ main(int argc, char **argv)
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
 
+    g_set_printerr_handler(print_utf8_to_locale);
+
     context = g_option_context_new(NULL);
     g_option_context_add_main_entries(context, ao, PACKAGE);
     g_option_context_parse(context, &argc, &argv, &error);
@@ -1344,7 +1344,7 @@ main(int argc, char **argv)
     }
 
     if (!szOutput) {
-        g_printerr("Required argument -f missing\n");
+        g_printerr(_("Required argument -f missing\n"));
         exit(EXIT_FAILURE);
     }
 
@@ -1358,35 +1358,35 @@ main(int argc, char **argv)
     if (nOS) {
 
         if (nOS > 13) {
-            fprintf(stderr, _("Size of one-sided bearoff database should be at most 13 points\n"));
+            g_printerr(_("Size of one-sided bearoff database should be at most 13 points\n"));
             exit(2);
         }
-        fprintf(stderr, "%-37s\n", _("One-sided database"));
-        fprintf(stderr, "%-37s: %12d\n", _("Number of points"), nOS);
-        fprintf(stderr, "%-37s: %12d\n", _("Number of chequers"), 15);
-        fprintf(stderr, "%-37s: %12u\n", _("Number of positions"), Combination(nOS + 15, nOS));
-        fprintf(stderr, "%-37s: %12s\n", _("Approximate by normal distribution"), fND ? _("yes") : _("no"));
-        fprintf(stderr, "%-37s: %12s\n", _("Include gammon distributions"), fGammon ? _("yes") : _("no"));
-        fprintf(stderr, "%-37s: %12s\n", _("Use compression scheme"), fCompress ? _("yes") : _("no"));
-        fprintf(stderr, "%-37s: %12s\n", _("Write header"), fHeader ? _("yes") : _("no"));
-        fprintf(stderr, "%-37s: %12d\n", _("Size of cache"), nHashSize);
-        fprintf(stderr, "%-37s: %12s %s\n", _("Reuse old bearoff database"), szOldBearoff ? _("yes") : _("no"),
+        g_printerr("%-37s\n", _("One-sided database"));
+        g_printerr("%-37s: %12d\n", _("Number of points"), nOS);
+        g_printerr("%-37s: %12d\n", _("Number of chequers"), 15);
+        g_printerr("%-37s: %12u\n", _("Number of positions"), Combination(nOS + 15, nOS));
+        g_printerr("%-37s: %12s\n", _("Approximate by normal distribution"), fND ? _("yes") : _("no"));
+        g_printerr("%-37s: %12s\n", _("Include gammon distributions"), fGammon ? _("yes") : _("no"));
+        g_printerr("%-37s: %12s\n", _("Use compression scheme"), fCompress ? _("yes") : _("no"));
+        g_printerr("%-37s: %12s\n", _("Write header"), fHeader ? _("yes") : _("no"));
+        g_printerr("%-37s: %12d\n", _("Size of cache"), nHashSize);
+        g_printerr("%-37s: %12s %s\n", _("Reuse old bearoff database"), szOldBearoff ? _("yes") : _("no"),
                 szOldBearoff ? szOldBearoff : "");
 
         if (fND) {
             r = Combination(nOS + 15, nOS) * 16.0;
-            fprintf(stderr, "%-37s: %.0f (%.1f MB)\n", _("Size of database"), r, r / 1048576.0);
+            g_printerr("%-37s: %.0f (%.1f MB)\n", _("Size of database"), r, r / 1048576.0);
         } else {
             r = (float) Combination(nOS + 15, nOS) * (fGammon ? 128.0f : 64.0f);
-            fprintf(stderr, "%-37s: %.0f (%.1f MB)\n", _("Size of database (uncompressed)"), r, r / 1048576.0);
+            g_printerr("%-37s: %.0f (%.1f MB)\n", _("Size of database (uncompressed)"), r, r / 1048576.0);
             if (fCompress) {
                 r = (float) Combination(nOS + 15, nOS) * (fGammon ? 32.0f : 16.0f);
-                fprintf(stderr, "%-37s: %.0f (%.1f MB)\n", _("Estimated size of compressed db"), r, r / 1048576.0);
+                g_printerr("%-37s: %.0f (%.1f MB)\n", _("Estimated size of compressed db"), r, r / 1048576.0);
             }
         }
 
         if (szOldBearoff && !(pbc = BearoffInit(szOldBearoff, BO_NONE, NULL))) {
-            fprintf(stderr, _("Error initialising old bearoff database!\n"));
+            g_printerr(_("Error initialising old bearoff database!\n"));
             exit(2);
         }
 
@@ -1394,7 +1394,7 @@ main(int argc, char **argv)
          * database */
 
         if (pbc && (pbc->bt != BEAROFF_ONESIDED || pbc->fND != fND || pbc->fGammon < fGammon)) {
-            fprintf(stderr, _("The old database is not of the same kind as the" " requested database\n"));
+            g_printerr(_("The old database is not of the same kind as the" " requested database\n"));
             exit(2);
         }
 
@@ -1406,7 +1406,7 @@ main(int argc, char **argv)
 
         BearoffClose(pbc);
 
-        fprintf(stderr, _("Number of re-reads while generating: %ld\n"), cLookup);
+        g_printerr(_("Number of re-reads while generating: %ld\n"), cLookup);
     }
 
     /*
@@ -1418,27 +1418,27 @@ main(int argc, char **argv)
         int n = Combination(nTSP + nTSC, nTSC);
 
         if (nTSC > 11) {
-            fprintf(stderr, _("Size of two-sided bearoff database must be at most 11 chequers\n"));
+            g_printerr(_("Size of two-sided bearoff database must be at most 11 chequers\n"));
             exit(2);
         }
 
         r = n;
         r = r * r * (fCubeful ? 8.0 : 2.0);
-        fprintf(stderr, "%-37s\n", _("Two-sided database:\n"));
-        fprintf(stderr, "%-37s: %12d\n", _("Number of points"), nTSP);
-        fprintf(stderr, "%-37s: %12d\n", _("Number of chequers"), nTSC);
-        fprintf(stderr, "%-37s: %12s\n", _("Calculate equities"),
+        g_printerr("%-37s\n", _("Two-sided database:\n"));
+        g_printerr("%-37s: %12d\n", _("Number of points"), nTSP);
+        g_printerr("%-37s: %12d\n", _("Number of chequers"), nTSC);
+        g_printerr("%-37s: %12s\n", _("Calculate equities"),
                 fCubeful ? _("cubeless and cubeful") : _("cubeless only"));
-        fprintf(stderr, "%-37s: %12s\n", _("Write header"), fHeader ? _("yes") : _("no"));
-        fprintf(stderr, "%-37s: %12d\n", _("Number of one-sided positions"), n);
-        fprintf(stderr, "%-37s: %12d\n", _("Total number of positions"), n * n);
-        fprintf(stderr, "%-37s: %.0f bytes (%.1f MB)\n", _("Size of resulting file"), r, r / 1048576.0);
-        fprintf(stderr, "%-37s: %12d\n", _("Size of xhash"), nHashSize);
-        fprintf(stderr, "%-37s: %12s %s\n", _("Reuse old bearoff database"), szOldBearoff ? _("yes") : _("no"),
+        g_printerr("%-37s: %12s\n", _("Write header"), fHeader ? _("yes") : _("no"));
+        g_printerr("%-37s: %12d\n", _("Number of one-sided positions"), n);
+        g_printerr("%-37s: %12d\n", _("Total number of positions"), n * n);
+        g_printerr("%-37s: %.0f %s (%.1f MB)\n", _("Size of resulting file"), r, _("bytes"), r / 1048576.0);
+        g_printerr("%-37s: %12d\n", _("Size of xhash"), nHashSize);
+        g_printerr("%-37s: %12s %s\n", _("Reuse old bearoff database"), szOldBearoff ? _("yes") : _("no"),
                 szOldBearoff ? szOldBearoff : "");
         /* initialise old bearoff database */
         if (szOldBearoff && !(pbc = BearoffInit(szOldBearoff, BO_NONE, NULL))) {
-            fprintf(stderr, _("Error initialising old bearoff database!\n"));
+            g_printerr(_("Error initialising old bearoff database!\n"));
             exit(2);
         }
 
@@ -1446,7 +1446,7 @@ main(int argc, char **argv)
          * database */
 
         if (pbc && (pbc->bt != BEAROFF_TWOSIDED || pbc->fCubeful != fCubeful)) {
-            fprintf(stderr, _("The old database is not of the same kind as the" " requested database\n"));
+            g_printerr(_("The old database is not of the same kind as the" " requested database\n"));
             exit(2);
         }
 
@@ -1456,7 +1456,7 @@ main(int argc, char **argv)
 
         BearoffClose(pbc);
 
-        fprintf(stderr, _("Number of re-reads while generating: %ld\n"), cLookup);
+        g_printerr(_("Number of re-reads while generating: %ld\n"), cLookup);
 
     }
 

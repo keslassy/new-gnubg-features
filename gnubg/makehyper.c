@@ -185,12 +185,12 @@ StartGuessHyper(hyperequity ahe[], const int nC, bearoffcontext * UNUSED(pbc))
         }
     }
 
-    printf("%-25s: %10d\n", _("Number of game-over positions"), ai[0]);
-    printf("%-25s: %10d\n", _("Number of non-contact positions"), ai[2]);
-    printf("%-25s: %10d\n", _("Number of contact positions"), ai[1]);
-    printf("%-25s: %10d\n", _("Total number of legal positions"), ai[0] + ai[2] + ai[1]);
-    printf("%-25s: %10d\n", _("Number of illegal positions"), ai[3]);
-    printf("%-25s: %10d\n", _("Total number of positions in file"), nPos * nPos);
+    g_print("%-25s: %10d\n", _("Number of game-over positions"), ai[0]);
+    g_print("%-25s: %10d\n", _("Number of non-contact positions"), ai[2]);
+    g_print("%-25s: %10d\n", _("Number of contact positions"), ai[1]);
+    g_print("%-25s: %10d\n", _("Total number of legal positions"), ai[0] + ai[2] + ai[1]);
+    g_print("%-25s: %10d\n", _("Number of illegal positions"), ai[3]);
+    g_print("%-25s: %10d\n", _("Total number of positions in file"), nPos * nPos);
 
 }
 
@@ -475,7 +475,7 @@ CalcNewEquity(hyperequity ahe[], const int nC, float arNorm[])
 
     for (i = 0; i < nPos; ++i) {
 
-        printf("\r%d/%d              ", i + 1, nPos);
+        g_print("\r%d/%d              ", i + 1, nPos);
         fflush(stdout);
 
         for (j = 0; j < nPos; ++j) {
@@ -486,7 +486,7 @@ CalcNewEquity(hyperequity ahe[], const int nC, float arNorm[])
 
     }
 
-    printf("\n");
+    g_print("\n");
 
 }
 
@@ -552,12 +552,11 @@ WriteHyperFile(const char *szFilename, const hyperequity ahe[], const int nC)
 
 }
 
+
 static void
 version(void)
 {
-
-    printf("$id\n");
-
+    g_print("makehyper $Revision$\n");
 }
 
 
@@ -608,6 +607,8 @@ main(int argc, char **argv)
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
 
+    g_set_print_handler(print_utf8_to_locale);
+
     context = g_option_context_new(NULL);
     g_option_context_add_main_entries(context, ao, PACKAGE);
     g_option_context_parse(context, &argc, &argv, &error);
@@ -627,7 +628,7 @@ main(int argc, char **argv)
     if (szEpsilon)
         rEpsilon = (float) g_strtod(szEpsilon, NULL);
     if (rEpsilon > 1.0f || rEpsilon < 0.0f) {
-        g_printerr(_("Valid threadholds are 0.0 - 1.0\n"));
+        g_printerr(_("Valid thresholds are 0.0 - 1.0\n"));
         exit(1);
     }
 
@@ -643,21 +644,21 @@ main(int argc, char **argv)
 
     time(&t2);
 
-    printf(_("Number of chequers: %d\n"), nC);
+    g_print(_("Number of chequers: %d\n"), nC);
 
     nPos = Combination(25 + nC, nC);
 
-    printf("%-40s: %d\n", _("Total number of one sided positions"), nPos);
-    printf("%-40s: %d\n", _("Total number of two sided positions"), nPos * nPos);
-    printf("%-40s: %s %d\n", _("Estimated size of file"), _("bytes"), nPos * nPos * 28 + 40);
-    printf("%-40s: %s\n", _("Output file"), szOutput);
-    printf("%-40s: %e\n", _("Convergence threshold"), rEpsilon);
+    g_print("%-40s: %d\n", _("Total number of one sided positions"), nPos);
+    g_print("%-40s: %d\n", _("Total number of two sided positions"), nPos * nPos);
+    g_print("%-40s: %d %s\n", _("Estimated size of file"), nPos * nPos * 28 + 40,  _("bytes"));
+    g_print("%-40s: %s\n", _("Output file"), szOutput);
+    g_print("%-40s: %e\n", _("Convergence threshold"), rEpsilon);
 
     /* Iteration 0 */
 
     time(&t0);
 
-    printf(_("*** Obtain start guess ***\n"));
+    g_print(_("*** Obtain start guess ***\n"));
 
     SetCubeInfo(&ci, 1, -1, 0, 0, NULL, FALSE, FALSE, FALSE, VARIATION_HYPERGAMMON_1 + nC - 1);
     SetCubeInfo(&ciJacoby, 1, -1, 0, 0, NULL, FALSE, TRUE, FALSE, VARIATION_HYPERGAMMON_1 + nC - 1);
@@ -665,16 +666,16 @@ main(int argc, char **argv)
     aheEquity = (hyperequity *) g_malloc(nPos * nPos * sizeof(hyperequity));
 
     if (!szRestart) {
-        printf(_("0-vector start guess\n"));
+        g_print(_("0-vector start guess\n"));
         StartGuessHyper(aheEquity, nC, pbc);
     } else {
-        printf(_("Start from file\n"));
+        g_print(_("Start from file\n"));
         StartFromDatabase(aheEquity, nC, szRestart);
     }
 
     time(&t1);
 
-    printf(_("Time for start guess: %d seconds\n"), (int) (t1 - t0));
+    g_print(_("Time for start guess: %d seconds\n"), (int) (t1 - t0));
 
     it = 1;
 
@@ -682,13 +683,13 @@ main(int argc, char **argv)
 
         time(&t0);
 
-        printf(_("*** Iteration %03d *** \n"), it);
+        g_print(_("*** Iteration %03d *** \n"), it);
 
         CalcNewEquity(aheEquity, nC, arNorm);
 
         rNorm = NormOO(arNorm, 10);
 
-        printf(_("norm of delta: %f\n"), rNorm);
+        g_print(_("norm of delta: %f\n"), rNorm);
 
         if (fCheckPoint) {
 
@@ -701,7 +702,7 @@ main(int argc, char **argv)
         }
 
         time(&t1);
-        printf(_("Time for iteration %03d: %d seconds\n"), it, (int) (t1 - t0));
+        g_print(_("Time for iteration %03d: %d seconds\n"), it, (int) (t1 - t0));
 
         ++it;
 
@@ -713,14 +714,14 @@ main(int argc, char **argv)
 
     time(&t1);
 
-    printf(_("Time for writing final file: %d seconds\n"), (int) (t1 - t0));
+    g_print(_("Time for writing final file: %d seconds\n"), (int) (t1 - t0));
 
     g_free(aheEquity);
     g_free(szOutput);
 
     time(&t3);
 
-    printf(_("Total time: %d seconds\n"), (int) (t3 - t2));
+    g_print(_("Total time: %d seconds\n"), (int) (t3 - t2));
 
     return 0;
 

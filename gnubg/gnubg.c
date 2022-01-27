@@ -4449,7 +4449,7 @@ matchfile_from_argv(char *sz)
 static void
 init_defaults(void)
 {
-    /* init some html export options */
+    /* init some HTML export options */
 
     exsExport.szHTMLPictureURL = g_strdup("html-images/");
     exsExport.szHTMLExtension = g_strdup("png");
@@ -4561,8 +4561,9 @@ main(int argc, char *argv[])
 
     output_initialize();
 
-    /* set language */
     init_defaults();
+
+    /* set language */
 #if defined(USE_GTK)
     gtk_disable_setlocale();
 #endif
@@ -4570,6 +4571,9 @@ main(int argc, char *argv[])
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
     bind_textdomain_codeset(PACKAGE, GNUBG_CHARSET);
+
+    g_set_print_handler(print_utf8_to_locale);
+    g_set_printerr_handler(print_utf8_to_locale);
 
     /* parse command-line options */
     context = g_option_context_new("[file.sgf]");
@@ -4605,6 +4609,8 @@ main(int argc, char *argv[])
 #endif
 
     /* print version and exit if -v option given */
+    /* FIXME? rc files not read yet, lang is still the default */
+
     VersionMessage();
     if (show_version)
         exit(EXIT_SUCCESS);

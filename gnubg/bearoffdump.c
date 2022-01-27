@@ -24,6 +24,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <locale.h>
+
 #include "positionid.h"
 #include "bearoff.h"
 #include "multithread.h"
@@ -56,6 +58,13 @@ main(int argc, char **argv)
     GError *error = NULL;
     GOptionContext *context;
 
+    setlocale(LC_ALL, "");
+    bindtextdomain(PACKAGE, LOCALEDIR);
+    textdomain(PACKAGE);
+
+    g_set_print_handler(print_utf8_to_locale);
+    g_set_printerr_handler(print_utf8_to_locale);
+
     context = g_option_context_new("file");
     g_option_context_add_main_entries(context, ao, PACKAGE);
     g_option_context_parse(context, &argc, &argv, &error);
@@ -77,24 +86,24 @@ main(int argc, char **argv)
     }
     filename = argv[1];
 
-    printf(_("Bearoff database: %s\n"), filename);
+    g_print(_("Bearoff database: %s\n"), filename);
     if (!id) {
-        printf(_("Position ID     : %s\n"), szPosID);
+        g_print(_("Position ID     : %s\n"), szPosID);
     } else {
-        printf(_("Position number : %u\n"), id);
+        g_print(_("Position number : %u\n"), id);
     }
 
     /* This is needed since we call ReadBearoffFile() from bearoff.c */
     MT_InitThreads();
 
     if (!(pbc = BearoffInit(filename, BO_NONE, NULL))) {
-        printf(_("Failed to initialise bearoff database %s\n"), filename);
+        g_print(_("Failed to initialise bearoff database %s\n"), filename);
         exit(-1);
     }
 
     /* information about bearoff database */
 
-    printf(_("\n" "Information about database:\n\n"));
+    g_print(_("\n" "Information about database:\n\n"));
 
     *sz = 0;
     BearoffStatus(pbc, sz);
@@ -105,13 +114,13 @@ main(int argc, char **argv)
     memset(anBoard, 0, sizeof anBoard);
 
     if (!id) {
-        printf(_("\n" "Dump of position ID: %s\n\n"), szPosID);
+        g_print(_("\n" "Dump of position ID: %s\n\n"), szPosID);
 
         PositionFromID(anBoard, szPosID);
     } else {
         unsigned int n, nUs, nThem;
 
-        printf(_("\n" "Dump of position#: %u\n\n"), id);
+        g_print(_("\n" "Dump of position#: %u\n\n"), id);
 
         n = Combination(pbc->nPoints + pbc->nChequers, pbc->nPoints);
         nUs = id / n;
