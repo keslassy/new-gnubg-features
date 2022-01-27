@@ -97,7 +97,7 @@ ShowMoveFilters(movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 
     for (i = 0; i < MAX_FILTER_PLIES; ++i) {
 
-        outputf("      Move filter for %d ply:\n", i + 1);
+        outputf(_("      Move filter for %d ply:\n"), i + 1);
 
         for (j = 0; j <= i; ++j) {
             outputf("        ");
@@ -531,7 +531,7 @@ CommandShowCache(char *UNUSED(sz))
 
     EvalCacheStats(c, cLookup, cHit);
 
-    outputf("%10u regular eval entries used %10u lookups %10u hits", c[0], cLookup[0], cHit[0]);
+    outputf(_("%10u regular eval entries used %10u lookups %10u hits"), c[0], cLookup[0], cHit[0]);
 
     if (cLookup[0])
         outputf(" (%4.1f%%).", (float) cHit[0] * 100.0f / (float) cLookup[0]);
@@ -540,7 +540,7 @@ CommandShowCache(char *UNUSED(sz))
 
     outputc('\n');
 
-    outputf("%10u pruning eval entries used %10u lookups %10u hits", c[1], cLookup[1], cHit[1]);
+    outputf(_("%10u pruning eval entries used %10u lookups %10u hits"), c[1], cLookup[1], cHit[1]);
 
     if (cLookup[1])
         outputf(" (%4.1f%%).", (float) cHit[1] * 100.0f / (float) cLookup[1]);
@@ -2328,7 +2328,8 @@ CommandShowMatchResult(char *UNUSED(sz))
     if (n && !ms.nMatchTo) {
 		float fn = (float)n;
         outputf("%10s %+9.3f %+9.3f\n", _("Average"), arSum[0] / fn, arSum[1] / fn);
-        outputf("%10s %9.3f %9.3f\n", "95%CI",
+        /* xgettext: no-c-format */
+        outputf("%10s %9.3f %9.3f\n", _("95%CI"),
                 1.95996f *
                 sqrtf(arSumSquared[0] / fn -
                      arSum[0] * arSum[0] / (fn * fn)) / sqrtf(fn),
