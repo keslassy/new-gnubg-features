@@ -657,13 +657,13 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
         g_free(gnubg_bearoff);
 
         if (!pbc2)
-            fprintf(stderr,
-                    "\n***WARNING***\n\n"
+            g_printerr(
+                  _("\n***WARNING***\n\n"
                     "GNU Backgammon will not use the two-sided bearoff\n"
                     "database since the gnubg_ts0.bd could not be found.\n"
                     "You should obtain this file or generate it yourself\n"
                     "with the command: makebearoff -t 6x6 -f gnubg_ts0.bd\n"
-                    "You can also generate other bearoff databases; see\n" "README for more details\n\n");
+                    "You can also generate other bearoff databases; see\n" "README for more details\n\n"));
 
         gnubg_bearoff_os = BuildFilename("gnubg_os.bd");
         /* init one-sided db */
@@ -781,7 +781,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
     };
 
     /* One way to hit */
-    typedef struct _Inter {
+    typedef struct {
         /* if true, all intermediate points (if any) are required;
          * if false, one of two intermediate points are required.
          * Set to true for a direct hit, but that can be checked with
@@ -1376,7 +1376,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
                 {
                     int d = pa - np;
 
-                    static int ac[23] = { 11, 11, 11, 11, 11, 11, 11,
+                    static const int ac[23] = { 11, 11, 11, 11, 11, 11, 11,
                         6, 5, 4, 3, 2,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                     };
@@ -1774,7 +1774,7 @@ SanityCheck(const TanBoard anBoard, float arOutput[])
 extern positionclass
 ClassifyPosition(const TanBoard anBoard, const bgvariation bgv)
 {
-    int nOppBack = -1, nBack = -1;
+    int nOppBack, nBack;
 
     for (nOppBack = 24; nOppBack >= 0; --nOppBack) {
         if (anBoard[0][nOppBack]) {
@@ -4117,7 +4117,7 @@ FormatEval(char *sz, evalsetup * pes)
         sprintf(sz, "%s", _("Rollout"));
         break;
     default:
-        sprintf(sz, "Unknown (%d)", (int) pes->et);
+        sprintf(sz, "_Unknown (%d)", (int) pes->et);
         break;
     }
 
@@ -5353,8 +5353,8 @@ FindBestMoveInEval(NNState * nnStates, int const nDice0, int const nDice1, const
 
             baseInputs((ConstTanBoard) anBoardOut, arInput);
             {
-                neuralnet *nets[] = { &nnpRace, &nnpCrashed, &nnpContact };
-                neuralnet *n = nets[pc - CLASS_RACE];
+                const neuralnet *nets[] = { &nnpRace, &nnpCrashed, &nnpContact };
+                const neuralnet *n = nets[pc - CLASS_RACE];
 #if defined(USE_SIMD_INSTRUCTIONS)
                 (void) nnStates;        /* silence compiler warning */
                 NeuralNetEvaluateSSE(n, arInput, arOutput, NULL);
