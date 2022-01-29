@@ -318,11 +318,11 @@ ParseJF(FILE * fp, int *pnMatchTo, int *pfJacoby, int *pfTurn, char aszPlayer[2]
         anOld[i] -= 20;
         /* 20 has been added to each number when storing */
     }
+
     /* Player 1's checkers are represented with negative numbers, player 2's with positive. The arrays are
      * representing the 26 different points on the board, starting with anNew[0] which is the upper bar and ending
      * with anNew[25] which is the bottom bar. The remaining numbers are in the opposite direction of the numbers
      * you see if you choose 'Numbers' from the 'View' menu, so anNew[1] is marked number 24 on the screen. */
-
 
     if (nOnRoll == 1 || nOnRoll == 3)
         idx = 0;
@@ -1090,20 +1090,20 @@ ImportMatVariation(FILE * fp, char *szFilename, bgvariation bgVariation, int war
                 } else if (g_str_has_prefix(pch, "[EventDate ")) {
                     sscanf(pch + 12, "%4u.%2u.%2u", &mi.nYear, &mi.nMonth, &mi.nDay);
                 } else if (g_str_has_prefix(pch, "[EventTime ")) {
-                    ;           /* discard ; we don't have this in matchinfo */
+                                /* discard ; we don't have this in matchinfo */
                 } else if (g_str_has_prefix(pch, "[Unrated ")) {
-                    ;           /* discard */
+                                /* discard */
                 } else if (g_str_has_prefix(pch, "[Player ")) {
-                    ;           /* discard. We don't have player names
+                                /* discard. We don't have player names
                                  * in matchinfo and rely on games
                                  * headers. Elos (even if not left at
                                  * default 1600) are useless if their
                                  * source is unknown. Maybe keep them
                                  * for known Site values ? */
                 } else if (g_str_has_prefix(pch, "[Match ID ")) {
-                    ;           /* discard */
+                                /* discard */
                 } else if (g_str_has_prefix(pch, "[CubeLimit ")) {
-                    ;           /* discard ; maybe keep as comment if != 1024 ? */
+                                /* discard ; maybe keep as comment if != 1024 ? */
                 } else if (g_str_has_prefix(pch, "[Variation \"Backgammon")) {
                     bgVariation = VARIATION_STANDARD;
                 } else if (g_str_has_prefix(pch, "[Variation \"NackGammon")) {
@@ -1115,11 +1115,11 @@ ImportMatVariation(FILE * fp, char *szFilename, bgvariation bgVariation, int war
                 } else if (g_str_has_prefix(pch, "[Variation \"HyperGammon (3)")) {
                     bgVariation = VARIATION_HYPERGAMMON_3;
                 } else if (g_str_has_prefix(pch, "[Crawford ")) {
-                    ;           /* discard for now */
+                                /* discard for now */
                 } else if (g_str_has_prefix(pch, "[Jacoby ")) {
-                    ;           /* discard for now */
+                                /* discard for now */
                 } else if (g_str_has_prefix(pch, "[Beaver ")) {
-                    ;           /* discard for now */
+                                /* discard for now */
                 } else if (g_str_has_prefix(pch, "[Game ")) {
 
                     /* Discard useless BGNJ comment. Its format is :
@@ -2601,7 +2601,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
     moverecord *pmgi, *pmr;
     int j;
 
-    typedef enum _tmgrecordtype {
+    typedef enum {
         TMG_ROLL = 1,
         TMG_AUTO_DOUBLE = 2,
         TMG_MOVE = 4,
@@ -2616,6 +2616,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
         TMG_TABLE_STAKE = 19,
         TMG_OUT_OF_TIME_1 = 22
     } tmgrecordtype;
+
     tmgrecordtype trt;
 
     InitBoard(ms.anBoard, ms.bgv);
@@ -3078,7 +3079,7 @@ ImportSnowieTxt(FILE * pf)
             break;
     }
 
-    *pc++ = 0;
+    *pc = 0;
 
     /* parse string */
 
