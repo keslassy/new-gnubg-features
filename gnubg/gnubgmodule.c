@@ -247,7 +247,7 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
     apv[i++] = &pci->bgv;
     apv[i++] = &pci->fCubeOwner;
     apv[i++] = pci->anScore;
-    apv[i++] = pci->arGammonPrice;
+    apv[i] = pci->arGammonPrice;
 
     while (PyDict_Next(p, &iPos, &pyKey, &pyValue)) {
         char *pchKey;
@@ -331,7 +331,7 @@ PyToMoveFilter(PyObject * p, movefilter * pmf, int *ply, int *level)
     apv[i++] = level;
     apv[i++] = &pmf->Accept;
     apv[i++] = &pmf->Extra;
-    apv[i++] = &pmf->Threshold;
+    apv[i] = &pmf->Threshold;
 
     if (!PyDict_Check(p))
         return -1;
@@ -545,7 +545,7 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
     apv[i++] = &ppi->fResigned;
     apv[i++] = &ppi->fDoubled;
     apv[i++] = &ppi->gs;
-    apv[i++] = &ppi->anDice;
+    apv[i] = &ppi->anDice;
 
     while (PyDict_Next(p, &iPos, &pyKey, &pyValue)) {
         char *pchKey;
@@ -2929,7 +2929,7 @@ PythonMatch(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
                 PyTuple_SET_ITEM(rules, n++, PyUnicode_FromString("Crawford"));
             }
             if (g->fJacoby) {
-                PyTuple_SET_ITEM(rules, n++, PyUnicode_FromString("Jacoby"));
+                PyTuple_SET_ITEM(rules, n, PyUnicode_FromString("Jacoby"));
             }
 
             DictSetItemSteal(matchInfoDict, "rules", rules);
