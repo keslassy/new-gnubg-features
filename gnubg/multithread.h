@@ -45,13 +45,13 @@ void multi_debug(const char *str, ...);
 #define multi_debug(x)
 #endif
 
-typedef struct _Task {
+typedef struct Task {
     AsyncFun fun;
     void *data;
-    struct _Task *pLinkedTask;
+    struct Task *pLinkedTask;
 } Task;
 
-typedef struct _AnalyseMoveTask {
+typedef struct {
     Task task;
     moverecord *pmr;
     listOLD *plGame;
@@ -59,20 +59,20 @@ typedef struct _AnalyseMoveTask {
     matchstate ms;
 } AnalyseMoveTask;
 
-typedef struct _ThreadLocalData {
+typedef struct {
     int id;
     move *aMoves;
     NNState *pnnState;
 } ThreadLocalData;
 
-typedef struct _ManualEvent {
+typedef struct {
 #if GLIB_CHECK_VERSION (2,32,0)
     GCond cond;
 #else
     GCond *cond;
 #endif
     int signalled;
-} *ManualEvent;
+} * ManualEvent;	/* a ManualEvent is a pointer to this struct */
 
 typedef GPrivate *TLSItem;
 
@@ -82,7 +82,7 @@ typedef GMutex Mutex;
 typedef GMutex *Mutex;
 #endif
 
-typedef struct _ThreadData {
+typedef struct {
     GList *tasks;
     int doneTasks;
     int result;
