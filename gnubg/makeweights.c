@@ -27,13 +27,14 @@
 #include <locale.h>
 
 #include "eval.h"               /* for WEIGHTS_VERSION */
+#include "output.h"
 
 static void
 usage(char *prog)
 {
-    fprintf(stderr, _("Usage: %s [[-f] outputfile [inputfile]]\n"
-            "  outputfile: Output to file instead of stdout\n" "  inputfile: Input from file instead of stdin\n"), prog);
-
+    g_printerr(_("Usage: %s [[-f] outputfile [inputfile]]\n"
+            "  outputfile: Output to file instead of stdout\n"
+            "  inputfile: Input from file instead of stdin\n"), prog);
     exit(1);
 }
 
@@ -46,6 +47,13 @@ main(int argc, /*lint -e{818} */ char *argv[])
     int c;
     FILE *input = stdin, *output = stdout;
 
+    if (!setlocale(LC_ALL, "C") || !bindtextdomain(PACKAGE, LOCALEDIR) || !textdomain(PACKAGE)) {
+        perror("setting locale failed");
+        exit(1);
+    }
+
+    g_set_printerr_handler(print_utf8_to_locale);
+
     if (argc > 1) {
         int arg = 1;
         if (!StrCaseCmp(argv[1], "-f"))
@@ -54,42 +62,37 @@ main(int argc, /*lint -e{818} */ char *argv[])
         if (argc > arg + 2)
             usage(argv[0]);
         if ((output = g_fopen(argv[arg], "wb")) == 0) {
-            perror("Can't open output file");
+	    g_printerr(_("Can't open output file"));
             exit(1);
         }
         if (argc == arg + 2) {
             if ((input = g_fopen(argv[arg + 1], "r")) == 0) {
-                perror("Can't open input file");
+	        g_printerr(_("Can't open input file"));
                 exit(1);
             }
         }
     }
 
-    if (!setlocale(LC_ALL, "C") || !bindtextdomain(PACKAGE, LOCALEDIR) || !textdomain(PACKAGE)) {
-        perror("seting locale failed");
-        exit(1);
-    }
-
     /* generate weights */
 
     if (fscanf(input, "GNU Backgammon %15s\n", szFileVersion) != 1) {
-        fprintf(stderr, _("%s: invalid weights file\n"), argv[0]);
+        g_printerr(_("%s: invalid weights file\n"), argv[0]);
         fclose(input);
         fclose(output);
         return EXIT_FAILURE;
     }
 
     if (StrCaseCmp(szFileVersion, WEIGHTS_VERSION)) {
-        fprintf(stderr, _("%s: incorrect weights version\n"
-                          "(version %s is required, "
-                          "but these weights are %s)\n"), argv[0], WEIGHTS_VERSION, szFileVersion);
+        g_printerr(_("%s: incorrect weights version\n"
+                     "(version %s is required, "
+                     "but these weights are %s)\n"), argv[0], WEIGHTS_VERSION, szFileVersion);
         fclose(input);
         fclose(output);
         return EXIT_FAILURE;
     }
 
     if (fwrite(ar, sizeof(ar[0]), 2, output) != 2) {
-        fprintf(stderr, _("Failed to write neural net!"));
+        g_printerr(_("Failed to write neural net!"));
         fclose(input);
         fclose(output);
         return EXIT_FAILURE;
@@ -97,13 +100,13 @@ main(int argc, /*lint -e{818} */ char *argv[])
 
     for (c = 0; !feof(input); c++) {
         if (NeuralNetLoad(&nn, input) == -1) {
-            fprintf(stderr, _("Failed to load neural net!"));
+            g_printerr(_("Failed to load neural net!"));
             fclose(input);
             fclose(output);
             return EXIT_FAILURE;
         }
         if (NeuralNetSaveBinary(&nn, output) == -1) {
-            fprintf(stderr, _("Failed to save neural net!"));
+            g_printerr(_("Failed to save neural net!"));
             fclose(input);
             fclose(output);
             return EXIT_FAILURE;
@@ -111,7 +114,7 @@ main(int argc, /*lint -e{818} */ char *argv[])
         NeuralNetDestroy(&nn);
     }
 
-    fprintf(stderr, _("%d nets converted\n"), c);
+    g_printerr(_("%d nets converted\n"), c);
 
     fclose(input);
     fclose(output);
