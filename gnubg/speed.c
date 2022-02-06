@@ -173,7 +173,8 @@ CommandCalibrate(char *sz)
         rEvalsPerSec = (float) iIter * (float) (EVALS_PER_ITERATION * 1000 / timeTaken);
         outputf("\r");
         outputf(_("Calibration result: "));
-        outputf(_("%.0f static evaluations/second.\n"), rEvalsPerSec);
+        outputf(_("%.0f static evaluations/second"), rEvalsPerSec);
+        outputf(".\n");
     } else {
         outputf("\r");
         outputl(_("Calibration incomplete."));
