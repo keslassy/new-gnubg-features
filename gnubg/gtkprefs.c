@@ -852,7 +852,7 @@ ChequerPrefs(BoardData * bd, int f)
 
         gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Flat")), FALSE, FALSE, 4);
         gtk_box_pack_start(GTK_BOX(pwBox), pwScale, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Round")), FALSE, FALSE, 4);
+        gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Rounded")), FALSE, FALSE, 4);
 
         gtk_box_pack_start(GTK_BOX(pw), pwBox, FALSE, FALSE, 4);
     }
