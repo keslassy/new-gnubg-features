@@ -232,7 +232,7 @@ custom_cell_renderer_invalidate_size(void)
 }
 
 /* The layout of the control has many size variable (declard below - starting _s_)
- * The diagram here trys to help specify what each size means.  (note the _s_ has been left out)
+ * The diagram here tries to help specify what each size means.  (note the _s_ has been left out)
  * B
  * A a b c c d E
  * C
@@ -299,7 +299,7 @@ custom_cell_renderer_movelist_get_size(GtkCellRenderer * cell,
         g_object_unref(layout);
         _s_a = logical_rect.width;
 
-        sprintf(buf, "%s 3-ply", _("Cubeless"));
+        sprintf(buf, "%s %s", _("Cubeless"), _("3-ply"));
         layout = gtk_widget_create_pango_layout(widget, buf);
         pango_layout_get_pixel_extents(layout, NULL, &logical_rect);
         g_object_unref(layout);
