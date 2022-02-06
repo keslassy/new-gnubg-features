@@ -4422,7 +4422,7 @@ init_winsock()
     WSADATA wsaData;
     wVersionRequested = MAKEWORD(1, 1);
     if (WSAStartup(wVersionRequested, &wsaData) != 0) {
-        outputerr("Windows sockets initialisation");
+        outputerr(_("Windows sockets initialisation error"));
     }
 }
 #endif

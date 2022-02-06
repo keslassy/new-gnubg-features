@@ -423,7 +423,7 @@ IsBGRFile(FileHelper * fh)
     if (fhReadStringNC(fh, "bgf version")) {
         fhSkipWS(fh);
         if (!fhReadString(fh, "1.2"))
-            printf("Unexpected version of bgroom file!\n");
+            g_print(_("Unexpected version of BGRoom file!\n"));
 
         return TRUE;
     }
