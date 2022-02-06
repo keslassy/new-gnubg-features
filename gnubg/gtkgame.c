@@ -5940,7 +5940,7 @@ static void
 SetMouseCursor(GdkCursorType cursorType)
 {
     if (!GDK_IS_WINDOW(gtk_widget_get_window(pwMain))) {
-        g_print("no window\n");
+        g_assert_not_reached();
         return;
     }
     if (cursorType) {
