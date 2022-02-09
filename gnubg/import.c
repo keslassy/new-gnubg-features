@@ -1400,50 +1400,6 @@ ParseOldmove(char *sz, int fInvert)
     }
 }
 
-#if 0
-
-static int
-IncreasingScore(const int anScore[2], const int n0, const int n1)
-{
-
-    /* check for decreasing score */
-
-    if (n0 == anScore[0]) {
-
-        /* n0 is unchanged, n1 must be increasing */
-
-        if (n1 <= anScore[1])
-            /* score is not increasing */
-            return 0;
-
-    } else if (n1 == anScore[0]) {
-
-        if (n0 <= anScore[1])
-            /* score is not increasing */
-            return 0;
-
-    } else if (n0 == anScore[1]) {
-
-        if (n1 <= anScore[0])
-            /* score is not increasing */
-            return 0;
-
-    } else if (n1 == anScore[1]) {
-
-        if (n0 <= anScore[0])
-            /* score is not increasing */
-            return 0;
-
-    } else {
-        /* most likely a new game */
-        return 0;
-    }
-
-    return 1;
-
-}
-
-#endif
 
 static int
 NewPlayers(const char *szOld0, const char *szOld1, const char *szNew0, const char *szNew1)
@@ -1525,13 +1481,6 @@ ImportOldmovesGame(FILE * pf, int iGame, int nLength, int n0, int n1)
         if (ms.nMatchTo != nLength)
             /* match length have changed */
             return 1;
-
-#if 0
-        if (!IncreasingScore(ms.anScore, n0, n1)) {
-            printf("not increasing score %d %d %d %d\n", ms.anScore[0], ms.anScore[1], n0, n1);
-            return 1;
-        }
-#endif
 
     }
 
