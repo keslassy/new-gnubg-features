@@ -3575,7 +3575,7 @@ CommandImportParty(char *sz)
 
     tmpfile = g_strdup_printf("%s.mat", sz);
     if (g_file_test(tmpfile, G_FILE_TEST_EXISTS)) {
-        outputerrf(_("%s already exists. Cannot import %s\n)", tmpfile, sz);
+        outputerrf(_("%s already exists. Cannot import %s\n"), tmpfile, sz);
         g_free(tmpfile);
         fclose(gamf);
         return;
