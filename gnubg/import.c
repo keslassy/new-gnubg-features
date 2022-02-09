@@ -354,7 +354,7 @@ ParseJF(FILE * fp, int *pnMatchTo, int *pfJacoby, int *pfTurn, char aszPlayer[2]
     return 0;
 
   read_failed:
-    outputerr(_("Failed reading Jellyfish file"));
+    outputerr(_("Error reading Jellyfish file"));
     fclose(fp);
     return -2;
 }
@@ -1766,7 +1766,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                     if (*pch == ' ' && pch[1] == '-') {
                         /*
                          * Closeout. The SGG file doesn't contain any dice
-                         * number but gnubg needs a roll. Set it to 6-6 then
+                         * number but GNUbg needs a roll. Set it to 6-6 then
                          * fall through to normal processing.
                          */
                         pch[0] = pch[1] = '6';
@@ -2256,7 +2256,7 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
 
         /* beavers & raccons */
 
-        /* ignored as they are not used internally in gnubg */
+        /* ignored as they are not used internally in GNUbg */
         break;
 
     case 14:
@@ -2293,7 +2293,8 @@ ParseSGGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
         else if (!StrCaseCmp(szTemp, "Backgammon"))
             *pbgv = VARIATION_STANDARD;
         else {
-            outputf("Unknown variant in SGG file\n" "Please send the SGG file to bug-gnubg@gnubg.org!\n");
+            outputl(_("Unknown variant in SGG file"));
+            outputl(_("Please send the SGG file to bug-gnubg@gnu.org"));
             outputx();
             g_assert_not_reached();
         }
@@ -2501,7 +2502,8 @@ ParseTMGOptions(const char *sz, matchinfo * pmi, int *pfCrawfordRule,
             *pbgv = VARIATION_NACKGAMMON;
             break;
         default:
-            outputf("Unknown variation in TMG file\n" "Please send the TMG file to bug-gnubg@gnubg.org!\n");
+            outputl(_("Unknown variation in TMG file"));
+            outputl(_("Please send the TMG file to bug-gnubg@gnu.org"));
             outputx();
             g_assert_not_reached();
             return -1;
@@ -2755,7 +2757,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
 
             default:
 
-                outputf("Please send the TMG file to bug-gnubg@gnubg.org!\n");
+                outputl(_("Please send the TMG file to bug-gnubg@gnu.org"));
                 outputx();
                 g_assert_not_reached();
 
@@ -3034,7 +3036,7 @@ ImportSnowieTxt(FILE * pf)
     if (ParseSnowieTxt(sz,
                        &nMatchTo, &fJacobyRule, &fUnused1, &fUnused2,
                        &fTurn, aszPlayer, &fCrawfordGame, anScore, &nCube, &fCubeOwner, anBoard, anDice) < 0) {
-        outputl("This file is not a valid Snowie .txt file!");
+        outputl(_("This file is not a valid Snowie .txt file!"));
         return -1;
     }
 
@@ -3573,7 +3575,7 @@ CommandImportParty(char *sz)
 
     tmpfile = g_strdup_printf("%s.mat", sz);
     if (g_file_test(tmpfile, G_FILE_TEST_EXISTS)) {
-        outputerrf("%s is in the way. Cannot import %s\n", tmpfile, sz);
+        outputerrf(_("%s already exists. Cannot import %s\n)", tmpfile, sz);
         g_free(tmpfile);
         fclose(gamf);
         return;
@@ -3599,7 +3601,7 @@ CommandImportParty(char *sz)
         } else
             outputerr(tmpfile);
     } else
-        outputerrf("Failed to convert gam to mat\n");
+        outputerrf(_("Failed to convert BGRoom gam file to mat\n"));
     g_unlink(tmpfile);
     g_free(tmpfile);
 }
@@ -3676,7 +3678,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
     }
 
     if (ferror(bgrFP)) {
-        outputerr("Error opening file");
+        outputerr(_("Error opening BGRoom file"));
         g_free(player2);
         g_free(player1);
         return FALSE;
@@ -3695,7 +3697,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
         do {
             if (fgets(buffer, sizeof(buffer), bgrFP) == NULL) {
                 if (ferror(bgrFP))
-                    outputerr("Error reading file");
+                    outputerr(_("Error reading BGRoom file"));
                 g_free(player2);
                 g_free(player1);
                 return FALSE;
@@ -3708,13 +3710,13 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
         gameCount++;
         ptr = NextTokenGeneral(&value, " ");
         if (atoi(ptr) != gameCount) {
-            outputerrf("Error parsing file. Wrong game count: expected %d, got %s", gameCount, ptr);
+            outputerrf(_("Error parsing BGRoom file. Wrong game count: expected %d, got %s"), gameCount, ptr);
             g_assert_not_reached();
         }
 
         ptr = NextTokenGeneral(&value, " ");    /* Skip '-' */
         if (strcmp(ptr, "-")) {
-            outputerrf("Error parsing file. Expected '-', got '%s'", ptr);
+            outputerrf(_("Error parsing BGRoom file. Expected '-', got '%s'"), ptr);
             g_assert_not_reached();
         }
         strcpy(player1, NextTokenGeneral(&value, " "));
@@ -3722,7 +3724,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
         fSwap = *(ptr + 1) == '0';
         ptr = NextTokenGeneral(&value, " ");    /* Skip 'vs.' */
         if (strcmp(ptr, "vs.")) {
-            outputerrf("Error parsing file. Expected 'vs.', got '%s'", ptr);
+            outputerrf(_("Error parsing BGRoom file. Expected 'vs.', got '%s'"), ptr);
             g_assert_not_reached();
         }
         strcpy(player2, NextTokenGeneral(&value, " "));
@@ -3735,7 +3737,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
 
         if (fgets(buffer, sizeof(buffer), bgrFP) == NULL) {
             if (ferror(bgrFP))
-                outputerr("Error reading file");
+                outputerr(_("Error reading BGRoom file"));
             g_free(player2);
             g_free(player1);
             return FALSE;
@@ -3744,7 +3746,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
         value = buffer;
         ptr = NextTokenGeneral(&value, " ");
         if (strcmp(ptr, "Single")) {
-            outputerrf("Error parsing file. Expected 'Single', got '%s'", ptr);
+            outputerrf(_("Error parsing BGRoom file. Expected 'Single', got '%s'"), ptr);
             g_assert_not_reached();
         }
 
@@ -3760,7 +3762,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
             char outBuf[100];
             if (fgets(buffer, sizeof(buffer), bgrFP) == NULL) {
                 if (ferror(bgrFP))
-                    outputerr("Error reading file");
+                    outputerr(_("Error reading BGRoom file"));
                 g_free(player2);
                 g_free(player1);
                 return FALSE;
@@ -3795,7 +3797,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
             value = buffer;
             ptr = NextTokenGeneral(&value, ".");
             if (atoi(ptr) != moveCount) {
-                outputerrf("Error parsing file. Wrong move count: expected %d, got %s", moveCount, ptr);
+                outputerrf(_("Error parsing BGroom file. Wrong move count: expected %d, got %s"), moveCount, ptr);
                 g_assert_not_reached();
             }
             ptr = NextTokenGeneral(&value, ":");
@@ -3804,7 +3806,7 @@ ConvertBGRoomFileToMat(FILE * bgrFP, FILE * matFP)
             else if (!strcmp(ptr, "0"))
                 side = 1;
             else {
-                printf("Unrecognised data in file: %s", ptr);
+                outputf(_("Unrecognised data in file: %s"), ptr);
                 continue;
             }
 
@@ -3876,7 +3878,7 @@ CommandImportBGRoom(char *sz)
         } else
             outputerr(matfile);
     } else
-        outputerrf("Failed to convert gam to mat\n");
+        outputerrf(_("Failed to convert BGRoom gam file to mat\n"));
 
     g_unlink(matfile);
     g_free(matfile);
