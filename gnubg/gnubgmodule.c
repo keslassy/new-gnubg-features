@@ -375,7 +375,7 @@ PyToMoveFilter(PyObject * p, movefilter * pmf, int *ply, int *level)
             /* simple float */
             if (!PyFloat_Check(pyValue)) {
                 /* unknown dict value */
-                PyErr_SetString(PyExc_ValueError, _("invalid value in movefilter"
+                PyErr_SetString(PyExc_ValueError, _("invalid value in movefilter "
                                                     "(see gnubg.getevalhintfilter() for an example)"));
                 return -1;
             }
@@ -404,7 +404,7 @@ PyToMoveFilters(PyObject * p, TmoveFilter aamf)
     int entry, i, j;
 
     if (!PySequence_Check(p)) {
-        PyErr_SetString(PyExc_ValueError, _("invalid movefilter list"
+        PyErr_SetString(PyExc_ValueError, _("invalid movefilter list "
                                             "(see gnubg.getevalhintfilter() for an example)"));
         return -1;
     }
@@ -420,12 +420,12 @@ PyToMoveFilters(PyObject * p, TmoveFilter aamf)
         PyObject *pObj = PySequence_Fast_GET_ITEM(p, entry);
         iPly = iLevel = 0;
         if (PyToMoveFilter(pObj, &newFilter, &iPly, &iLevel) < 0) {
-            PyErr_SetString(PyExc_ValueError, _("invalid movefilter in list"
+            PyErr_SetString(PyExc_ValueError, _("invalid movefilter in list "
                                                 "(see gnubg.getevalhintfilter() for an example)"));
             return -1;
         }
         if ((iPly < 1 || iPly > MAX_FILTER_PLIES) || (iLevel < 0 || iLevel >= iPly)) {
-            PyErr_SetString(PyExc_ValueError, _("invalid movefilter list"
+            PyErr_SetString(PyExc_ValueError, _("invalid movefilter list "
                                                 "(see gnubg.getevalhintfilter() for an example)"));
             return -1;
         }
@@ -658,7 +658,7 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
             if (!PyInt_Check(pyValue)) {
                 /* not an integer */
                 PyErr_SetString(PyExc_ValueError,
-                                _("invalid value evalcontext " "(see gnubg.evalcontext() for an example)"));
+                                _("invalid value in evalcontext " "(see gnubg.evalcontext() for an example)"));
                 return -1;
             }
 
@@ -3510,7 +3510,7 @@ LoadPythonFile(const char *sz, int fQuiet)
     if (!g_file_test(path, G_FILE_TEST_IS_REGULAR)) {
         g_free(path);
         if (!fQuiet)
-            outputerrf("Python file (%s) not found\n", sz);
+            outputerrf(_("Python file (%s) not found\n"), sz);
 
         return FALSE;
     }
