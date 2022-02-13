@@ -45,7 +45,7 @@ main(int argc, /*lint -e{818} */ char *argv[])
     char szFileVersion[16];
     static float ar[2] = { WEIGHTS_MAGIC_BINARY, WEIGHTS_VERSION_BINARY };
     int c;
-    FILE *input = stdin, *output = stdout;
+    FILE *in = stdin, *out = stdout;
 
     if (!setlocale(LC_ALL, "C") || !bindtextdomain(PACKAGE, LOCALEDIR) || !textdomain(PACKAGE)) {
         perror("setting locale failed");
@@ -61,12 +61,12 @@ main(int argc, /*lint -e{818} */ char *argv[])
 
         if (argc > arg + 2)
             usage(argv[0]);
-        if ((output = g_fopen(argv[arg], "wb")) == 0) {
+        if ((out = g_fopen(argv[arg], "wb")) == 0) {
 	    g_printerr(_("Can't open output file"));
             exit(1);
         }
         if (argc == arg + 2) {
-            if ((input = g_fopen(argv[arg + 1], "r")) == 0) {
+            if ((in = g_fopen(argv[arg + 1], "r")) == 0) {
 	        g_printerr(_("Can't open input file"));
                 exit(1);
             }
@@ -75,10 +75,10 @@ main(int argc, /*lint -e{818} */ char *argv[])
 
     /* generate weights */
 
-    if (fscanf(input, "GNU Backgammon %15s\n", szFileVersion) != 1) {
+    if (fscanf(in, "GNU Backgammon %15s\n", szFileVersion) != 1) {
         g_printerr(_("%s: invalid weights file\n"), argv[0]);
-        fclose(input);
-        fclose(output);
+        fclose(in);
+        fclose(out);
         return EXIT_FAILURE;
     }
 
@@ -86,29 +86,29 @@ main(int argc, /*lint -e{818} */ char *argv[])
         g_printerr(_("%s: incorrect weights version\n"
                      "(version %s is required, "
                      "but these weights are %s)\n"), argv[0], WEIGHTS_VERSION, szFileVersion);
-        fclose(input);
-        fclose(output);
+        fclose(in);
+        fclose(out);
         return EXIT_FAILURE;
     }
 
-    if (fwrite(ar, sizeof(ar[0]), 2, output) != 2) {
+    if (fwrite(ar, sizeof(ar[0]), 2, out) != 2) {
         g_printerr(_("Failed to write neural net!"));
-        fclose(input);
-        fclose(output);
+        fclose(in);
+        fclose(out);
         return EXIT_FAILURE;
     }
 
-    for (c = 0; !feof(input); c++) {
-        if (NeuralNetLoad(&nn, input) == -1) {
+    for (c = 0; !feof(in); c++) {
+        if (NeuralNetLoad(&nn, in) == -1) {
             g_printerr(_("Failed to load neural net!"));
-            fclose(input);
-            fclose(output);
+            fclose(in);
+            fclose(out);
             return EXIT_FAILURE;
         }
-        if (NeuralNetSaveBinary(&nn, output) == -1) {
+        if (NeuralNetSaveBinary(&nn, out) == -1) {
             g_printerr(_("Failed to save neural net!"));
-            fclose(input);
-            fclose(output);
+            fclose(in);
+            fclose(out);
             return EXIT_FAILURE;
         }
         NeuralNetDestroy(&nn);
@@ -116,8 +116,8 @@ main(int argc, /*lint -e{818} */ char *argv[])
 
     g_printerr(_("%d nets converted\n"), c);
 
-    fclose(input);
-    fclose(output);
+    fclose(in);
+    fclose(out);
 
     return EXIT_SUCCESS;
 
