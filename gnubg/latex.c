@@ -385,21 +385,24 @@ ExportGameLaTeX(FILE * pf, listOLD * plGame)
             dt = DT_NORMAL;
             fputs("\\clearpage\n", pf);
             fputs("\\noindent{\\Large ", pf);
-            if (pmr->g.nMatch)
-                fprintf(pf, _("%d point%s match (game %d)"),
-                        pmr->g.nMatch, (pmr->g.nMatch > 1 ? "s" : ""), pmr->g.i + 1);
-            else
+            if (pmr->g.nMatch) {
+                fprintf(pf, ngettext("%d point match", "%d points match", pmr->g.nMatch), pmr->g.nMatch);
+                fprintf(pf, _(" (game %d)"), pmr->g.i + 1);
+             } else
                 fprintf(pf, _("Money session (game %d)"), pmr->g.i + 1);
 
             fputs("}\n\n\\vspace{\\baselineskip}\n\n", pf);
 
             fprintf(pf, "\\noindent\n\\makebox[0.5\\textwidth][s]" "{\\large %s ", PlayerSymbol(0));
             LaTeXEscape(pf, ap[0].szName);
-            fprintf(pf, " (%d points)\\hfill}", pmr->g.anScore[0]);
-
+            fprintf(pf, " (");
+            fprintf(pf, ngettext("%d point", "%d points", pmr->g.anScore[0]), pmr->g.anScore[0]);
+            fprintf(pf, ")\\hfill}");
             fprintf(pf, "\\makebox[0.5\\textwidth][s]" "{\\large %s ", PlayerSymbol(1));
             LaTeXEscape(pf, ap[1].szName);
-            fprintf(pf, " (%d points)\\hfill}\n\n", pmr->g.anScore[1]);
+            fprintf(pf, " (");
+            fprintf(pf, ngettext("%d point", "%d points", pmr->g.anScore[1]), pmr->g.anScore[1]);
+            fprintf(pf, ")\\hfill}\n\n");
 
             break;
 
