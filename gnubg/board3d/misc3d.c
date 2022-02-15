@@ -242,9 +242,8 @@ static void
 CreateDotTexture(unsigned int *pDotTexture)
 {
     unsigned int i, j;
-    unsigned char *data = malloc(sizeof(*data) * DOT_SIZE * DOT_SIZE * 3);
+    unsigned char *data = g_malloc(sizeof(*data) * DOT_SIZE * DOT_SIZE * 3);
     unsigned char *pData = data;
-    g_assert(pData);
 
     for (i = 0; i < DOT_SIZE; i++) {
         for (j = 0; j < DOT_SIZE; j++) {
@@ -264,7 +263,7 @@ CreateDotTexture(unsigned int *pDotTexture)
         }
     }
     CreateTexture(pDotTexture, DOT_SIZE, DOT_SIZE, data);
-    free(data);
+    g_free(data);
 }
 #endif
 
@@ -438,7 +437,7 @@ FindTexture(TextureInfo ** textureInfo, const char *file)
             strcpy(text.name, file);
             text.type = TT_NONE;        /* Don't show in lists */
 
-            *textureInfo = (TextureInfo *) malloc(sizeof(TextureInfo));
+            *textureInfo = (TextureInfo *) g_malloc(sizeof(TextureInfo));
             **textureInfo = text;
 
             textures = g_list_append(textures, *textureInfo);
@@ -545,8 +544,7 @@ LoadTextureInfo(void)
             text.type = (TextureType) val;
 
         if (!err) {             /* Add texture type */
-            TextureInfo *pNewText = (TextureInfo *) malloc(sizeof(TextureInfo));
-            g_assert(pNewText);
+            TextureInfo *pNewText = (TextureInfo *) g_malloc(sizeof(TextureInfo));
             *pNewText = text;
             textures = g_list_append(textures, pNewText);
         }
@@ -650,7 +648,7 @@ SetTexture(BoardData3d * bd3d, Material * pMat, const char *filename)
 
     if (LoadTexture(&bd3d->textureList[bd3d->numTextures], filename)) {
         /* Remember name */
-        bd3d->textureName[bd3d->numTextures] = strdup(nameStart);
+        bd3d->textureName[bd3d->numTextures] = g_strdup(nameStart);
 
         pMat->pTexture = &bd3d->textureList[bd3d->numTextures];
         bd3d->numTextures++;
@@ -897,12 +895,11 @@ float ***
 Alloc3d(unsigned int x, unsigned int y, unsigned int z)
 {                               /* Allocate 3d array */
     unsigned int i, j;
-    float ***array = (float ***) malloc(sizeof(float **) * x);
-    g_assert(array);
+    float ***array = (float ***) g_malloc(sizeof(float **) * x);
     for (i = 0; i < x; i++) {
-        array[i] = (float **) malloc(sizeof(float *) * y);
+        array[i] = (float **) g_malloc(sizeof(float *) * y);
         for (j = 0; j < y; j++)
-            array[i][j] = (float *) malloc(sizeof(float) * z);
+            array[i][j] = (float *) g_malloc(sizeof(float) * z);
     }
     return array;
 }
@@ -913,10 +910,10 @@ Free3d(float ***array, unsigned int x, unsigned int y)
     unsigned int i, j;
     for (i = 0; i < x; i++) {
         for (j = 0; j < y; j++)
-            free(array[i][j]);
-        free(array[i]);
+            g_free(array[i][j]);
+        g_free(array[i]);
     }
-    free(array);
+    g_free(array);
 }
 
 void
@@ -1296,7 +1293,7 @@ SetupSimpleMat(Material * pMat, float r, float g, float b)
  * i++;
  * 
  * DeleteTexture(&bd->textureList[i]);
- * free(bd->textureName[i]);
+ * g_free(bd->textureName[i]);
  * 
  * while (i != bd->numTextures - 1)
  * {
@@ -1321,7 +1318,7 @@ ClearTextures(BoardData3d * bd3d)
 
     for (i = 0; i < bd3d->numTextures; i++) {
         DeleteTexture(&bd3d->textureList[i]);
-        free(bd3d->textureName[i]);
+        g_free(bd3d->textureName[i]);
     }
     bd3d->numTextures = 0;
 }
@@ -1329,7 +1326,7 @@ ClearTextures(BoardData3d * bd3d)
 static void
 free_texture(gpointer data, gpointer UNUSED(userdata))
 {
-    free(data);
+    g_free(data);
 }
 
 void
@@ -1374,22 +1371,19 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
 void
 GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, unsigned int nSizeY)
 {
-	RenderToBufferData renderToBufferData;
-	renderToBufferData.bd = BOARD(pwBoard)->board_data;
-	renderToBufferData.width = nSize * nSizeX;
-	renderToBufferData.height = nSize * nSizeY;
+    RenderToBufferData renderToBufferData;
+    renderToBufferData.bd = BOARD(pwBoard)->board_data;
+    renderToBufferData.width = nSize * nSizeX;
+    renderToBufferData.height = nSize * nSizeY;
 
     /* Allocate buffer for image, height + 1 as extra line needed to invert image (opengl renders 'upside down') */
-    if ((renderToBufferData.puch = (unsigned char *) malloc(renderToBufferData.width * (renderToBufferData.height + 1) * 3)) == NULL) {
-        outputerr("malloc");
-        return;
-    }
+    renderToBufferData.puch = (unsigned char *) g_malloc(renderToBufferData.width * (renderToBufferData.height + 1) * 3);
 
-	GLWidgetRender(renderToBufferData.bd->bd3d->drawing_area3d, RenderToBuffer3d, NULL, &renderToBufferData);
+    GLWidgetRender(renderToBufferData.bd->bd3d->drawing_area3d, RenderToBuffer3d, NULL, &renderToBufferData);
 
-	GdkPixbuf* pixbuf;
-	GError* error = NULL;
-	unsigned int line;
+    GdkPixbuf* pixbuf;
+    GError* error = NULL;
+    unsigned int line;
 
     /* invert image (y axis) */
     for (line = 0; line < renderToBufferData.height / 2; line++) {
@@ -1409,7 +1403,7 @@ GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, uns
         g_error_free(error);
     }
     g_object_unref(pixbuf);
-    free(renderToBufferData.puch);
+    g_free(renderToBufferData.puch);
 }
 
 #endif
