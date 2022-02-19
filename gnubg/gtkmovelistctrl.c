@@ -152,11 +152,11 @@ custom_cell_renderer_movelist_class_init(CustomCellRendererMovelistClass * klass
     /* Install our very own properties */
     g_object_class_install_property(object_class, 1,
                                     g_param_spec_pointer("movelist",
-                                                         ("Move List"), ("The move list entry"), G_PARAM_WRITABLE));
+                                                         (_("Move List")), (_("The move list entry")), G_PARAM_WRITABLE));
 
     g_object_class_install_property(object_class, 2,
                                     g_param_spec_int("rank",
-                                                     ("Rank"), ("The moves rank"), -1, 1000000, 0, G_PARAM_WRITABLE));
+                                                     (_("Rank")), (_("The moves rank")), -1, 1000000, 0, G_PARAM_WRITABLE));
 }
 
 

@@ -3180,7 +3180,7 @@ GetFlagWidget(char *language, char *langCode, const char *flagfilename)
         GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(file, &pix_error);
 
         if (pix_error)
-            outputerrf("Failed to open flag: %s\n", file);
+            outputerrf(_("Failed to open flag image: %s\n"), file);
         else {
             GtkWidget *image = gtk_image_new_from_pixbuf(pixbuf);
             gtk_box_pack_start(GTK_BOX(vbox), image, FALSE, FALSE, 0);
@@ -3872,14 +3872,14 @@ CreateMainWindow(void)
 
     gtk_ui_manager_add_ui_from_string(puim, GNUBG_MAIN_UI, -1, &error);
     if (error) {
-        g_warning("Cannot load UI: %s", error->message);
+        g_warning(_("Cannot load UI: %s"), error->message);
         g_error_free(error);
         error = NULL;
     }
 #if defined(USE_BOARD3D)
     gtk_ui_manager_add_ui_from_string(puim, UIADDITIONS3D, -1, &error);
     if (error) {
-        g_warning("Cannot load UI: %s", error->message);
+        g_warning(_("Cannot load UI: %s"), error->message);
         g_error_free(error);
         error = NULL;
     }
@@ -6608,7 +6608,7 @@ GTKBearoffProgress(int i)
         gtk_widget_show_all(pwDialog);
     }
 
-    gsz = g_strdup_printf("Generating bearoff database (%.0f %%)", i / 542.64);
+    gsz = g_strdup_printf(_("Generating bearoff database (%.0f %%)"), i / 542.64);
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(pw), gsz);
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pw), i / 54264.0);
     g_free(gsz);
