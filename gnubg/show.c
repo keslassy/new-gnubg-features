@@ -524,6 +524,7 @@ CommandShowAliases(char *UNUSED(sz))
     outputf(_("Aliases for player 1 when importing MAT files is set to \"%s\".\n "), player1aliases);
 }
 
+#if CACHE_STATS
 extern void
 CommandShowCache(char *UNUSED(sz))
 {
@@ -549,6 +550,7 @@ CommandShowCache(char *UNUSED(sz))
 
     outputc('\n');
 }
+#endif
 
 extern void
 CommandShowCalibration(char *UNUSED(sz))

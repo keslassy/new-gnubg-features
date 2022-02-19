@@ -1288,8 +1288,10 @@ static command acSetVariation[] = {
       N_("Display details of this build of GNUbg"), NULL, NULL },
     { "browser", CommandShowBrowser, 
       N_("Display the currently used web browser"), NULL, NULL },
+#if CACHE_STATS
     { "cache", CommandShowCache, N_("Display statistics on the evaluation "
       "cache"), NULL, NULL },
+#endif
     { "calibration", CommandShowCalibration,
       N_("Show the previously recorded evaluation speed"), NULL, NULL },
     { "cheat", CommandShowCheat,

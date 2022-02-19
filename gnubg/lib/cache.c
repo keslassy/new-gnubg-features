@@ -271,10 +271,10 @@ CacheResize(evalCache * pc, unsigned int cNew)
     return (int) pc->size;
 }
 
+#if CACHE_STATS
 void
 CacheStats(const evalCache * pc, unsigned int *pcLookup, unsigned int *pcHit, unsigned int *pcUsed)
 {
-#if CACHE_STATS
     if (pcLookup)
         *pcLookup = pc->cLookup;
 
@@ -283,16 +283,5 @@ CacheStats(const evalCache * pc, unsigned int *pcLookup, unsigned int *pcHit, un
 
     if (pcUsed)
         *pcUsed = pc->nAdds;
-#else
-    (void) pc;                  /* suppress unused parameter compiler warning */
-
-    if (pcLookup)
-        *pcLookup = 0;
-
-    if (pcHit)
-        *pcHit = 0;
-
-    if (pcUsed)
-        *pcUsed = 0;
-#endif
 }
+#endif

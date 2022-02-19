@@ -90,7 +90,10 @@ CacheAddNoLocking(evalCache * pc, const cacheNodeDetail * e, const uint32_t l)
 
 void CacheFlush(const evalCache * pc);
 void CacheDestroy(const evalCache * pc);
+
+#if CACHE_STATS
 void CacheStats(const evalCache * pc, unsigned int *pcLookup, unsigned int *pcHit, unsigned int *pcUsed);
+#endif
 
 #if defined(HAVE_FUNC_ATTRIBUTE_PURE)
 uint32_t GetHashKey(uint32_t hashMask, const cacheNodeDetail * e) __attribute((pure));

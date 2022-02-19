@@ -3232,6 +3232,7 @@ EvalCacheResize(unsigned int cNew)
     return cCache;
 }
 
+#if CACHE_STATS
 extern int
 EvalCacheStats(unsigned int *pcUsed, unsigned int *pcLookup, unsigned int *pcHit)
 {
@@ -3239,6 +3240,7 @@ EvalCacheStats(unsigned int *pcUsed, unsigned int *pcLookup, unsigned int *pcHit
     CacheStats(&cpEval, pcLookup + 1, pcHit + 1, pcUsed + 1);
     return 0;
 }
+#endif
 
 extern int
 SetCubeInfoMoney(cubeinfo * pci, const int nCube, const int fCubeOwner,
