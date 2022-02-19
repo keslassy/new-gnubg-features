@@ -1161,7 +1161,7 @@ SetNameFromType(char **pName, tabletype type)
         *pName = g_strdup("zadeh");
         break;
     default:
-        g_error("Invalid met table type");
+        g_error(_("Invalid MET table type"));
     }
 }
 
