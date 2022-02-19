@@ -317,7 +317,7 @@ InitGL(const BoardData * bd)
         BoardData3d *bd3d = bd->bd3d;
         /* Setup some 3d things */
         if (!CreateFonts(bd3d))
-            g_print("Error creating fonts\n");
+            g_printerr(_("Error creating fonts\n"));
 
         shadowInit(bd3d, bd->rd);
 #if !GTK_CHECK_VERSION(3,0,0)
@@ -414,7 +414,7 @@ FindNamedTexture(TextureInfo ** textureInfo, char *name)
     *textureInfo = 0;
     /* Only warn user if textures.txt file has been loaded */
     if (g_list_length(textures) > 0)
-        g_print("Texture %s not in texture info file\n", name);
+        g_printerr(_("Texture %s not in texture info file\n"), name);
 }
 
 void
@@ -450,7 +450,7 @@ FindTexture(TextureInfo ** textureInfo, const char *file)
     *textureInfo = 0;
     /* Only warn user if in 3d */
     if (display_is_3d(GetMainAppearance()))
-        g_print("Texture %s not in texture info file\n", file);
+        g_printerr(_("Texture %s not in texture info file\n"), file);
 }
 
 void
@@ -467,12 +467,12 @@ LoadTextureInfo(void)
     g_free(szFile);
 
     if (!fp) {
-        g_print("Error: Texture file (%s) not found\n", TEXTURE_FILE);
+        g_printerr(_("Error: Texture file (%s) not found\n"), TEXTURE_FILE);
         return;
     }
 
     if (!fgets(buf, BUF_SIZE, fp) || atoi(buf) != TEXTURE_FILE_VERSION) {
-        g_print("Error: Texture file (%s) out of date\n", TEXTURE_FILE);
+        g_printerr(_("Error: Texture file (%s) out of date\n"), TEXTURE_FILE);
         fclose(fp);
         return;
     }
@@ -494,7 +494,7 @@ LoadTextureInfo(void)
             buf[len] = '\0';
         }
         if (len > FILENAME_SIZE) {
-            g_print("Texture filename %s too big, maximum length %d.  Entry ignored.\n", buf, FILENAME_SIZE);
+            g_printerr(_("Texture filename %s too long, maximum length %d.  Entry ignored.\n"), buf, FILENAME_SIZE);
             err = 1;
             strcpy(text.file, "");
         } else
@@ -502,7 +502,7 @@ LoadTextureInfo(void)
 
         /* name */
         if (!fgets(buf, BUF_SIZE, fp)) {
-            g_print("Error in texture file info.\n");
+            g_printerr(_("Error in texture file info.\n"));
             fclose(fp);
             return;
         }
@@ -512,14 +512,14 @@ LoadTextureInfo(void)
             buf[len] = '\0';
         }
         if (len > NAME_SIZE) {
-            g_print("Texture name %s too big, maximum length %d.  Entry ignored.\n", buf, NAME_SIZE);
+            g_printerr(_("Texture name %s too long, maximum length %d.  Entry ignored.\n"), buf, NAME_SIZE);
             err = 1;
         } else
             strcpy(text.name, buf);
 
         /* type */
         if (!fgets(buf, BUF_SIZE, fp)) {
-            g_print("Error in texture file info.\n");
+            g_printerr(_("Error in texture file info.\n"));
             fclose(fp);
             return;
         }
@@ -538,7 +538,7 @@ LoadTextureInfo(void)
             val *= 2;
         }
         if (found == -1) {
-            g_print("Unknown texture type %s.  Entry ignored.\n", buf);
+            g_printerr(_("Unknown texture type %s.  Entry ignored.\n"), buf);
             err = 1;
         } else
             text.type = (TextureType) val;
@@ -580,7 +580,7 @@ LoadTexture(Texture * texture, const char *filename)
     }
 
     if (pix_error) {
-        g_print("Failed to open texture: %s, %s\n", filename, pix_error->message);
+        g_printerr(_("Failed to open texture: %s, %s\n"), filename, pix_error->message);
         return 0;               /* failed to load file */
     }
 
@@ -593,18 +593,18 @@ LoadTexture(Texture * texture, const char *filename)
     texture->height = gdk_pixbuf_get_height(pixbuf);
 
     if (!bits) {
-        g_print("Failed to load texture: %s\n", filename);
+        g_printerr(_("Failed to load texture: %s\n"), filename);
         return 0;               /* failed to load file */
     }
 
     if (texture->width != texture->height) {
-        g_print("Failed to load texture %s. width (%d) different to height (%d)\n",
+        g_printerr(_("Failed to load texture %s. width (%d) different to height (%d)\n)"),
                 filename, texture->width, texture->height);
         return 0;               /* failed to load file */
     }
     /* Check size is a power of 2 */
     if (texture->width <= 0 || (texture->width & (texture->width -1))) {
-        g_print("Failed to load texture %s, size (%d) isn't a power of 2\n", filename, texture->width);
+        g_printerr(_("Failed to load texture %s, size (%d) isn't a power of 2\n"), filename, texture->width);
         return 0;               /* failed to load file */
     }
 
@@ -642,7 +642,7 @@ SetTexture(BoardData3d * bd3d, Material * pMat, const char *filename)
 
     /* Not found - Load new texture */
     if (bd3d->numTextures == MAX_TEXTURES - 1) {
-        g_print("Error: Too many textures loaded...\n");
+        g_printerr(_("Error: Too many textures loaded...\n"));
         return;
     }
 
