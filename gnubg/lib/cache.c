@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1997-2000 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2002-2018 the AUTHORS
+ * Copyright (C) 2002-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ cache_unlock(evalCache * pc, uint32_t k)
     __sync_lock_release(&(pc->entries[k].lock));
 }
 
-#else
+#else	/* not x86 or older gcc: no suitable intrinsics */
 
 static inline void
 WaitForLock(volatile int *lock)
@@ -156,11 +156,17 @@ CacheLookupWithLocking(evalCache * restrict pc, const cacheNodeDetail * restrict
     uint32_t const l = GetHashKey(pc->hashMask, e);
 
 #if CACHE_STATS
+#if defined(USE_MULTITHREAD)
+    MT_SafeInc(&pc->cLookup);
+#else
     ++pc->cLookup;
 #endif
+#endif
+
 #if defined(USE_MULTITHREAD)
     cache_lock(pc, l);
 #endif
+
     if (!EqualKeys(pc->entries[l].nd_primary.key, e->key) || pc->entries[l].nd_primary.nEvalContext != e->nEvalContext) {       /* Not in primary slot */
         if (!EqualKeys(pc->entries[l].nd_secondary.key, e->key) || pc->entries[l].nd_secondary.nEvalContext != e->nEvalContext) {       /* Cache miss */
 #if defined(USE_MULTITHREAD)
@@ -184,7 +190,11 @@ CacheLookupWithLocking(evalCache * restrict pc, const cacheNodeDetail * restrict
 #endif
 
 #if CACHE_STATS
+#if defined(USE_MULTITHREAD)
+    MT_SafeInc(&pc->cHit);
+#else
     ++pc->cHit;
+#endif
 #endif
 
     return CACHEHIT;
@@ -236,9 +246,15 @@ CacheAddWithLocking(evalCache * restrict pc, const cacheNodeDetail * restrict e,
 #endif
 
 #if CACHE_STATS
+#if defined(USE_MULTITHREAD)
+    MT_SafeInc(&pc->nAdds);
+#else
     ++pc->nAdds;
 #endif
+#endif
 }
+
+/* CacheAddNoLocking() is inlined and in cache.h */
 
 void
 CacheDestroy(const evalCache * pc)
