@@ -145,6 +145,7 @@ positionid.c
 positionid.h
 progress.c
 progress.h
+randomorg.c
 relational.c
 relational.h
 render.c
