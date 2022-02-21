@@ -72,7 +72,7 @@ static void
 WriteImageStride(unsigned char *img, int stride, int cx, int cy)
 {
     if (WritePNG(szFile, img, (unsigned int) stride, (unsigned int) cx, (unsigned int) cy) == -1)
-        outputf("Error creating file %s\n", szFile);
+        outputf(_("Error creating image file %s\n"), szFile);
     imagesWritten++;
     ProgressValueAdd(1);
 }
@@ -565,7 +565,7 @@ WriteImages(void)
     }
 
     if (imagesWritten != NUM_IMAGES)
-        g_print("Wrong number of images generated - %d written, expected %d\n", imagesWritten, NUM_IMAGES);
+        g_print(_("Wrong number of images generated - %d written, expected %d\n"), imagesWritten, NUM_IMAGES);
 }
 
 static void
