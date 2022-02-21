@@ -1887,10 +1887,12 @@ HTMLPrintCubeAnalysisTable(FILE * pf,
                 GetStyle(CLASS_CUBE_EQUITY, hecss),
                 OutputEquity(aarOutput[0][OUTPUT_EQUITY], pci, TRUE),
                 GetStyle(CLASS_CUBE_CUBELESS_TEXT, hecss),
-                _("Money"), GetStyle(CLASS_CUBE_EQUITY, hecss), OutputMoneyEquity(aarOutput[0], TRUE));
+                _("Money"), GetStyle(CLASS_CUBE_EQUITY, hecss),
+		OutputMoneyEquity(aarOutput[0], TRUE));
     else
-        fprintf(pf, " cubeless equity</td><td>%s</td><td>&nbsp;</td>\n", OutputMoneyEquity(aarOutput[0], TRUE));
-
+        fprintf(pf, " %s</td><td>%s</td><td>&nbsp;</td>\n",
+		_("cubeless equity"),
+		OutputMoneyEquity(aarOutput[0], TRUE));
 
     fprintf(pf, "</tr>\n");
 
