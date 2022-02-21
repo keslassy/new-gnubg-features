@@ -566,7 +566,7 @@ CheckDatabase(const char *database)
                           gtk_entry_get_text(GTK_ENTRY(hostname))) >= 0);
 
     if (!dbok)
-        gtk_label_set_text(GTK_LABEL(helptext), "Failed to connect to database!");
+        gtk_label_set_text(GTK_LABEL(helptext), _("Failed to connect to database!"));
     else {
         int version = RunQueryValue(pdb, "next_id FROM control WHERE tablename = 'version'");
         int matchcount = RunQueryValue(pdb, "count(*) FROM session");

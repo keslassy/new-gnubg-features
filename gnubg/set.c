@@ -762,7 +762,7 @@ CommandSetConfirmDefault(char *sz)
 {
 
     if (!sz || !*sz) {
-        outputf("Needs an argument!\n");
+        outputf(_("Needs an argument!\n"));
         return;
     }
     if (strcmp(sz, "yes") == 0)
