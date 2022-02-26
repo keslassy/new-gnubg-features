@@ -191,7 +191,7 @@ OSLookup(const unsigned int iPos,
             if (errno)
                 perror("output file");
             else
-                g_printerr(_("error reading output file\n"));
+                g_printerr(_("Error reading output file\n"));
             exit(-1);
         }
 
@@ -219,7 +219,7 @@ OSLookup(const unsigned int iPos,
         nBytes = 2 * (nz + nzg);
 
         if (fseek(pfTmp, iOffset, SEEK_SET) < 0) {
-            perror("fseek'ing temp file");
+            perror("fseek'ing temporary file");
             exit(-1);
         }
 
@@ -227,9 +227,9 @@ OSLookup(const unsigned int iPos,
 
         if (fread(ac, 1, nBytes, pfTmp) < nBytes) {
             if (errno)
-                perror("reading temp file");
+                perror("reading temporary file");
             else
-                g_printerr(_("error reading temp file"));
+                g_printerr(_("Error reading temporary file"));
             exit(-1);
         }
 
@@ -250,7 +250,7 @@ OSLookup(const unsigned int iPos,
         /* re-position at EOF */
 
         if (fseek(pfTmp, 0L, SEEK_END) < 0) {
-            perror("fseek'ing to EOF on temp file");
+            perror("fseek'ing to EOF on temporary file");
             exit(-1);
         }
 
@@ -259,14 +259,14 @@ OSLookup(const unsigned int iPos,
         /* look up position by seeking */
 
         if (fseek(pfOutput, 40 + iPos * (fGammon ? 128 : 64), SEEK_SET) < 0) {
-            g_printerr(_("error seeking in pfOutput\n"));
+            g_printerr(_("Error seeking in pfOutput\n"));
             exit(-1);
         }
 
         /* read distribution */
 
         if (fread(ac, 1, fGammon ? 128U : 64U, pfOutput) < (fGammon ? 128U : 64U)) {
-            g_printerr(_("error reading from pfOutput\n"));
+            g_printerr(_("Error reading from pfOutput\n"));
             exit(-1);
         }
 
@@ -283,7 +283,7 @@ OSLookup(const unsigned int iPos,
         /* position cursor at end of file */
 
         if (fseek(pfOutput, 0L, SEEK_END) < 0) {
-            g_printerr(_("error seeking to end!\n"));
+            g_printerr(_("Error seeking to end!\n"));
             exit(-1);
         }
 
@@ -618,8 +618,10 @@ generate_os(const int nOS, const int fHeader,
 
     if (fCompress) {
         pfTmp = GetTemporaryFile(NULL, &tmpfile);
-        if (pfTmp == NULL)
+        if (pfTmp == NULL) {
+            g_printerr(_("Error creating temporary file\n"));
             exit(2);
+        }
     }
 
 
@@ -662,7 +664,7 @@ generate_os(const int nOS, const int fHeader,
 
         while (!feof(pfTmp) && (u = fread(ac, 1, sizeof(ac), pfTmp))) {
             if (fwrite(ac, 1, u, output) != u) {
-                g_printerr(_("failed writing to '%s'\n"), tmpfile);
+                g_printerr(_("Error writing to '%s'\n"), tmpfile);
                 exit(3);
             }
         }
@@ -939,22 +941,22 @@ TSLookup(const int nUs, const int nThem,
     /* seek to position */
 
     if (fseek(pfTmp, iPos * (fCubeful ? 8 : 2), SEEK_SET) < 0) {
-        perror("temp file");
+        perror("temporary file");
         exit(-1);
     }
 
     if (fread(ac, 1, 8, pfTmp) < 8) {
         if (errno)
-            perror("temp file");
+            perror("temporary file");
         else
-            g_printerr(_("error reading temp file\n"));
+            g_printerr(_("Error reading temporary file\n"));
         exit(-1);
     }
 
     /* re-position at EOF */
 
     if (fseek(pfTmp, 0L, SEEK_END) < 0) {
-        perror("temp file");
+        perror("temporary file");
         exit(-1);
     }
 
@@ -1161,8 +1163,10 @@ generate_ts(const int nTSP, const int nTSC,
     int fTTY = isatty(STDERR_FILENO);
 
     pfTmp = GetTemporaryFile(NULL, &tmpfile);
-    if (pfTmp == NULL)
+    if (pfTmp == NULL) {
+        g_printerr(_("Error creating temporary file\n"));
         exit(2);
+    }
 
     /* initialise xhash */
 

@@ -3248,6 +3248,11 @@ CommandExportPositionGOL2Clipboard(char *UNUSED(sz))
 
     pf = GetTemporaryFile(NULL, &tmpFile);
 
+    if (pf == NULL) {
+        outputerr(_("Error creating temporary file"));
+        return;
+    }
+
     /* generate file */
 
     ExportPositionGammOnLine(pf);
@@ -3255,14 +3260,14 @@ CommandExportPositionGOL2Clipboard(char *UNUSED(sz))
     /* find size of file */
 
     if (fseek(pf, 0L, SEEK_END)) {
-        outputerr("temporary file");
+        outputerr(_("Error reading temporary file"));
         return;
     }
 
     l = ftell(pf);
 
     if (fseek(pf, 0L, SEEK_SET)) {
-        outputerr("temporary file");
+        outputerr(_("Error reading temporary file"));
         return;
     }
 
@@ -3271,7 +3276,7 @@ CommandExportPositionGOL2Clipboard(char *UNUSED(sz))
     szClipboard = (char *) malloc(l + 1);
 
     if (fread(szClipboard, 1, l, pf) != (unsigned long) l) {
-        outputerr("temporary file");
+        outputerr(_("Error reading temporary file"));
     } else {
         szClipboard[l] = 0;
         TextToClipboard(szClipboard);

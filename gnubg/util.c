@@ -51,18 +51,18 @@ PrintSystemError(const char *message)
                       FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                       NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                       (LPTSTR) & lpMsgBuf, 0, NULL) != 0) {
-        g_print("** Windows error while %s **\n", message);
-        g_print(": %s", (LPCTSTR) lpMsgBuf);
+        g_printerr("Windows error while %s!\n", message);
+        g_printerr(": %s", (LPCTSTR) lpMsgBuf);
 
         if (LocalFree(lpMsgBuf) != NULL)
-            g_print("LocalFree() failed\n");
+            g_printerr("LocalFree() failed\n");
     }
 }
 #else
 extern void
 PrintSystemError(const char *message)
 {
-    printf("Unknown system error while %s!\n", message);
+    g_printerr("Unknown system error while %s!\n", message);
 }
 #endif
 
@@ -142,17 +142,13 @@ GetTemporaryFile(const char *nameTemplate, char **retName)
     FILE *pf;
     int tmpd = g_file_open_tmp(nameTemplate, retName, NULL);
 
-    if (tmpd < 0) {
-        PrintError("creating temporary file");
+    if (tmpd < 0)
         return NULL;
-    }
 
     pf = fdopen(tmpd, "wb+");
 
-    if (pf == NULL) {
+    if (pf == NULL)
         g_free(retName);
-        PrintError("opening temporary file");
-        return NULL;
-    } else
-        return pf;
+
+    return pf;
 }
