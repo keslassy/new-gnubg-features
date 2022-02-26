@@ -60,9 +60,8 @@ OSRQuasiRandomDice(const unsigned int iTurn, const unsigned int iGame, const uns
 static void
 getBearoffProbs(const unsigned int n, unsigned short int aaProb[32])
 {
-    g_assert(pbc1);
     if (BearoffDist(pbc1, n, NULL, NULL, NULL, aaProb, NULL))
-        puts("BearoffDist failed?");
+        g_assert_not_reached();
 }
 
 
