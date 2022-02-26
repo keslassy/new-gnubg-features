@@ -1165,7 +1165,7 @@ RestoreNode(listOLD * pl)
 
                 if (pmr->anDice[0] < 1 || pmr->anDice[0] > 6 || pmr->anDice[1] < 1 || pmr->anDice[1] > 6) {
                     /* illegal roll -- ignore */
-                    free(pmr);
+                    g_free(pmr);
                     pmr = NULL;
                 }
             }
@@ -1218,7 +1218,7 @@ RestoreNode(listOLD * pl)
                 pmr->scp.fCubeOwner = 0;
                 break;
             default:
-                free(pmr);
+                g_free(pmr);
                 pmr = NULL;
             }
 
@@ -2519,11 +2519,11 @@ CommandSavePosition(char *sz)
     while (l.plNext->p)
         ListDelete(l.plNext);
 
-    free(pmgi);
-    free(pmsb);
-    free(pmsd);
-    free(pmscv);
-    free(pmscp);
+    g_free(pmgi);
+    g_free(pmsb);
+    g_free(pmsd);
+    g_free(pmscv);
+    g_free(pmscp);
 
     setDefaultFileName(sz);
 }

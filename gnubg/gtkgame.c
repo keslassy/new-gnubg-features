@@ -5775,7 +5775,7 @@ DestroyHint(gpointer p, GObject * UNUSED(obj))
         if (pml->amMoves)
             g_free(pml->amMoves);
 
-        free(pml);
+        g_free(pml);
     }
 
     SetPanelWidget(WINDOW_HINT, NULL);

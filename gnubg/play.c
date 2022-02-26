@@ -131,16 +131,7 @@ GetDice(unsigned int anDice[2], int fTurn, rng * prng, rngcontext * rngctx, TanB
 extern moverecord *
 NewMoveRecord(void)
 {
-
-    moverecord *pmr = malloc(sizeof *pmr);
-
-    if (!pmr) {
-        outputerr("Memory allocation failure in NewMoveRecord()");
-        g_assert_not_reached();
-        exit(EXIT_FAILURE);
-    }
-
-    memset(pmr, 0, sizeof *pmr);
+    moverecord *pmr = g_new0(moverecord, 1);
 
     pmr->mt = (movetype) - 1;
     pmr->sz = NULL;
@@ -166,9 +157,7 @@ NewMoveRecord(void)
     /* moveresign */
     pmr->r.esResign.et = EVAL_NONE;
 
-
     return pmr;
-
 }
 
 static int
@@ -253,7 +242,6 @@ ApplyMoveRecord(matchstate * pms, const listOLD * plGame, const moverecord * pmr
 
     if (!pmr) {
         g_assert_not_reached();
-        outputerr("Applying null move record!");
         return;
     }
 
@@ -450,11 +438,11 @@ FreeMoveRecord(moverecord * pmr)
         break;
     }
 
-    free(pmr->sz);
+    g_free(pmr->sz);
 
-    free(pmr->MoneyCubeDecPtr);
+    g_free(pmr->MoneyCubeDecPtr);
 
-    free(pmr);
+    g_free(pmr);
 }
 
 static void
@@ -1418,7 +1406,7 @@ ComputerTurn(void)
             fd.pec = &ap[ms.fTurn].esChequer.ec;
             fd.aamf = ap[ms.fTurn].aamf;
             if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt) {
-                free(pmr);
+                g_free(pmr);
                 return -1;
             }
 
@@ -2183,8 +2171,7 @@ CommandAnnotateAddComment(char *sz)
         return;
     }
 
-    if (pmr->sz)
-        free(pmr->sz);
+    g_free(pmr->sz);
 
     pmr->sz = g_strdup(sz);
 
@@ -2208,8 +2195,7 @@ CommandAnnotateClearComment(char *UNUSED(sz))
         return;
     }
 
-    if (pmr->sz)
-        free(pmr->sz);
+    g_free(pmr->sz);
 
     pmr->sz = NULL;
 
@@ -2404,7 +2390,7 @@ CommandDouble(char *UNUSED(sz))
     pmr->mt = MOVE_DOUBLE;
     pmr->fPlayer = ms.fTurn;
     if (fTutor && fTutorCube && !GiveAdvice(tutor_double(TRUE))) {
-        free(pmr);
+        g_free(pmr);
         return;
     }
 
@@ -2465,12 +2451,12 @@ CommandDrop(char *UNUSED(sz))
     pmr->mt = MOVE_DROP;
     pmr->fPlayer = ms.fTurn;
     if (!LinkToDouble(pmr)) {
-        free(pmr);
+        g_free(pmr);
         return;
     }
 
     if (fTutor && fTutorCube && !GiveAdvice(tutor_take(FALSE))) {
-        free(pmr);              /* garbage collect */
+        g_free(pmr);            /* garbage collect */
         return;
     }
 
@@ -2708,14 +2694,14 @@ CommandMove(char *sz)
 
         if (!pmr_cur) {
             g_assert_not_reached();
-            free(pmr);
+            g_free(pmr);
             return;
         }
         /* update or set the move */
         memcpy(pmr_cur->n.anMove, an, sizeof an);
         hint_move("", FALSE, NULL);
         if (!GiveAdvice(pmr_cur->n.stMove)) {
-            free(pmr);
+            g_free(pmr);
             return;
         }
     }
@@ -3965,14 +3951,14 @@ CommandTake(char *UNUSED(sz))
     pmr->mt = MOVE_TAKE;
     pmr->fPlayer = ms.fTurn;
     if (!LinkToDouble(pmr)) {
-        free(pmr);
+        g_free(pmr);
         return;
     }
 
     pmr->stCube = SKILL_NONE;
 
     if (fTutor && fTutorCube && !GiveAdvice(tutor_take(TRUE))) {
-        free(pmr);              /* garbage collect */
+        g_free(pmr);            /* garbage collect */
         return;
     }
 

@@ -633,7 +633,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
             pmr->mt = MOVE_TAKE;
             if (!(prev = LinkToDouble(pmr))) {
                 outputl(_("Take record found but doesn't follow a double"));
-                free(pmr);
+                g_free(pmr);
                 return;
             }
             pmr->fPlayer = !prev->fPlayer;
@@ -779,7 +779,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
 
                 /* legal moves; just record roll */
 
-                free(pmr);      /* free movenormal from above */
+                g_free(pmr);    /* free movenormal from above */
 
                 pmr = NewMoveRecord();
                 pmr->mt = MOVE_SETDICE;
@@ -810,7 +810,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
         pmr->fPlayer = iPlayer;
         if (!LinkToDouble(pmr)) {
             outputl(_("Take record found but doesn't follow a double"));
-            free(pmr);
+            g_free(pmr);
             return;
         }
         AddMoveRecord(pmr);
@@ -822,7 +822,7 @@ ParseMatMove(char *sz, int iPlayer, int *warned)
         pmr->fPlayer = iPlayer;
         if (!LinkToDouble(pmr)) {
             outputl(_("Drop record found but doesn't follow a double"));
-            free(pmr);
+            g_free(pmr);
             return;
         }
         AddMoveRecord(pmr);
@@ -1327,7 +1327,7 @@ ParseOldmove(char *sz, int fInvert)
 
             if (!IsValidMove(msBoard(), pmr->n.anMove)) {
                 outputf(_("WARNING! Illegal or invalid move: '%s'\n"), sz);
-                free(pmr);
+                g_free(pmr);
             } else {
 
                 /* Now we're ready */
@@ -1336,7 +1336,7 @@ ParseOldmove(char *sz, int fInvert)
 
             }
         } else
-            free(pmr);
+            g_free(pmr);
         return;
     } else if (!StrNCaseCmp(sz + 3, "doubles", 7)) {
         pmr = NewMoveRecord();
@@ -1357,7 +1357,7 @@ ParseOldmove(char *sz, int fInvert)
         pmr->fPlayer = iPlayer;
         if (!LinkToDouble(pmr)) {
             outputl(_("Take record found but doesn't follow a double"));
-            free(pmr);
+            g_free(pmr);
             return;
         }
         pmr->stCube = SKILL_NONE;
@@ -1370,7 +1370,7 @@ ParseOldmove(char *sz, int fInvert)
         pmr->fPlayer = iPlayer;
         if (!LinkToDouble(pmr)) {
             outputl(_("Drop record found but doesn't follow a double"));
-            free(pmr);
+            g_free(pmr);
             return;
         }
         pmr->stCube = SKILL_NONE;
@@ -1724,7 +1724,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                         pmr->fPlayer = fPlayer;
                         if (!LinkToDouble(pmr)) {
                             outputl(_("Beaver record found but doesn't follow a double"));
-                            free(pmr);
+                            g_free(pmr);
                             return;
                         }
 
@@ -1754,7 +1754,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
 
                         AddMoveRecord(pmr);
                     } else
-                        free(pmr);
+                        g_free(pmr);
 
                     anRoll[0] = 0;
                     szComment = NULL;
@@ -1797,7 +1797,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                                 pmr->fPlayer = fPlayer;
                                 if (!LinkToDouble(pmr)) {
                                     outputl(_("Take record found but doesn't follow a double"));
-                                    free(pmr);
+                                    g_free(pmr);
                                     return;
                                 }
 
@@ -1845,7 +1845,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                                 pmr->fPlayer = fPlayer;
                                 if (!LinkToDouble(pmr)) {
                                     outputl(_("Take record found but doesn't follow a double"));
-                                    free(pmr);
+                                    g_free(pmr);
                                     return;
                                 }
 
@@ -1899,7 +1899,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                             pmr->fPlayer = fPlayer;
                             if (!LinkToDouble(pmr)) {
                                 outputl(_("Beaver record found but doesn't follow a double"));
-                                free(pmr);
+                                g_free(pmr);
                                 return;
                             }
 
@@ -1919,7 +1919,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                             pmr->fPlayer = fPlayer;
                             if (!LinkToDouble(pmr)) {
                                 outputl(_("Raccoon record found but doesn't follow a double"));
-                                free(pmr);
+                                g_free(pmr);
                                 return;
                             }
 
@@ -1937,7 +1937,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                             pmr->fPlayer = fPlayer;
                             if (!LinkToDouble(pmr)) {
                                 outputl(_("Take record found but doesn't follow a double"));
-                                free(pmr);
+                                g_free(pmr);
                                 return;
                             }
 
@@ -1952,7 +1952,7 @@ ImportSGGGame(FILE * pf, int i, int nLength, int n0, int n1,
                             pmr->fPlayer = fPlayer;
                             if (!LinkToDouble(pmr)) {
                                 outputl(_("Drop record found but doesn't follow a double"));
-                                free(pmr);
+                                g_free(pmr);
                                 return;
                             }
 
@@ -2680,7 +2680,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
 
                     AddMoveRecord(pmr);
                 } else
-                    free(pmr);
+                    g_free(pmr);
 
                 break;
 
@@ -2703,7 +2703,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
                 if (!LinkToDouble(pmr)) {
 
                     outputl(_("Take record found but doesn't follow a double"));
-                    free(pmr);
+                    g_free(pmr);
                     return;
                 }
 
@@ -2719,7 +2719,7 @@ ImportTMGGame(FILE * pf, int i, int nLength, int n0, int n1,
                 if (!LinkToDouble(pmr)) {
 
                     outputl(_("Drop record found but doesn't follow a double"));
-                    free(pmr);
+                    g_free(pmr);
                     return;
                 }
 
