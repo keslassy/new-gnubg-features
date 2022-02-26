@@ -1371,7 +1371,7 @@ static void
 met_parser_error(GMarkupParseContext * UNUSED(context), GError * UNUSED(error), gpointer user_data)
 {
     MatchEquityParser *parser = (MatchEquityParser *) user_data;
-    g_warning("An error occurred while parsing file: %s\n", parser->filename);
+    g_warning(_("An error occurred while parsing file: %s\n"), parser->filename);
 }
 
 /*

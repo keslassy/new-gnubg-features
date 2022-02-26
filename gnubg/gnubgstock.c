@@ -56,7 +56,7 @@ icon_set_from_resource_path(GtkIconSet * set,
     pixbuf = gdk_pixbuf_new_from_resource(resource_path, &pixbuf_error);
 
     if (pixbuf == NULL) {
-        g_print("Failed to create pixbuf from %s, %s\n", resource_path, pixbuf_error->message);
+        g_print(_("Failed to create pixbuf from %s, %s\n"), resource_path, pixbuf_error->message);
         g_assert_not_reached();
         return;
     }
