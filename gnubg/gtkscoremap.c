@@ -184,25 +184,28 @@ static const char * CUBE_DECISION_TEXT[4] = {"ND","D/T","D/P","TGTD"};
 #define RED 0
 #define GREEN 1
 #define BLUE 2
-// we also code the 4 cube colors for ND, DT, DP, TGTD as red, green, blue and gold, respectively;
+
+// we code the 4 cube colors for ND, DT, DP, TGTD as red, green, blue and gold, respectively;
 // and use them in the 4 cube scoremap coloring options
-static const float cubeColors[4][3] = {{1.0f,0.0f,0.0f}, {0.0f,1.0f,0.0f}, {0.0f,0.5f,1.0f}, {1.0f,0.75f,0.0f}};
-// // we used to code the 3 cube colors for ND/TGTD, DT, DP, respectively; and use them in the 3 cube scoremap coloring options:
-// static const float cubeColors[3][3] = {{1.0f,0.0f,0.0f}, {0.0f,1.0f,0.0f}, {0.0f,0.5f,1.0f}};
+static const float cubeColors[4][3] = {{1.0f,0.0f,0.0f}, {0.0f,0.95f,0.45f}, {0.0f,0.5f,1.0f}, {1.0f,0.75f,0.0f}};
 
 #define TOP_K 4 // in move scoremap, number of most frequent best-move decisions we want to keep, corresponding to number
                 //      of distinct (non-grey/white) scoremap colors
 // careful: need to code below at least the TOP_K corresponding RGB colors, as used in FindMoveColour()
 // converging on the same colors and same intensity as for the cube scoremap for now
-static const float topKMoveColors[4][3] = {{1.0f,0.0f,0.0f}, {0.0f,1.0f,0.0f}, {0.0f,0.5f,1.0f}, {1.0f,0.75f,0.0f}};
-// static const float topKMoveColors[3][3] = {{0.0f,0.5f,1.0f}, {1.0f,0.5f,0.5f}, {0.5f,1.0f,0.0f}};
+static const float topKMoveColors[4][3] = {{1.0f,0.0f,0.0f}, {0.0f,0.95f,0.45f}, {0.0f,0.5f,1.0f}, {1.0f,0.75f,0.0f}};
+
 static const float white[3] = {1.0, 1.0, 1.0};
+
 // if a move is not in TOP_K, we color it in grey:
 static const float grey[3] = {0.5, 0.5, 0.5};
+
 //draw in black the border of current-score quadrant
 static const float black[3] = {0.0, 0.0, 0.0};
+
 // Used like a colour, to indicate not to colour at all
 static const float NOBORDER[3]={-1.0,-1.0,-1.0};
+
 // **** end color definitions ****
 
 // score type definitions, for displaying special quadrants
@@ -539,7 +542,7 @@ TODO: when changing ply etc., don't change colours.
     // char aux[100];
     //1. copy scoremap decisions into an array structure called that contains decisions and their frequencies
     //      (using a new struct called weightedDecision)
-    weightedDecision scoreMapDecisions[psm->tableSize*psm->tableSize+1];// = (weightedDecision *) g_malloc(sizeof(...));;
+    weightedDecision scoreMapDecisions[psm->tableSize*psm->tableSize+1];  // = (weightedDecision *) g_malloc(sizeof(...));
     psm->topKDecisionsLength=0;
     // for all moves, add them to the list of frequent moves, i.e. either create a new frequent move or update the count of
     // the corresponding frequent move (this is implemented in AddFrequentMoveList())
@@ -713,13 +716,13 @@ ColorInterpolate(float rgbResult[3], float x, const float rgbvals0[3], const flo
 }
 
 static void
-FindColour1(GtkWidget * pw, float r, colourbasedonoptions toggledColor, int useBorder)//ccc
+FindColour1(GtkWidget * pw, float r, colourbasedonoptions toggledColor, int useBorder)
 /* Changes the colour according to the value r for the two binary gauges.
 In addition, writes in rgbvals the desired border color for the quadrant.
 */
 {
     r = CalcIntensity(r); // returns r in [-1,1]
-    int bestDecisionColor=-1;
+    int bestDecisionColor;
 
     // GtkStyle *ps = gtk_style_copy(gtk_widget_get_style(pw)); //used?   <-----------------------------
     float rgbvals[3];
@@ -791,7 +794,7 @@ As a result, the function writes in rgbvals the desired border color for the qua
     // V5.0: following feedback by Ian Shaw, switching to a different (4th) color for TGTD
 
     float r, dp = 1.0f;
-    int bestDecisionColor= -1;
+    int bestDecisionColor;
     float rgbvals[3] = {0.9f, 0.9f, 0.9f}; //arbitrary initialization to grey
 
     //float alpha=0.05;
@@ -1010,7 +1013,7 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             /* "" in buf is fine */
             break;
     }
-    // g_print("%d",fOutputDigits); //test, DELETE
+
     if (psm->cubeScoreMap) {
         float nd=pq->ndEquity;
         float dt=pq->dtEquity;
@@ -2504,7 +2507,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
 
     /* Display Eval frame */
     if (psm->cubeScoreMap) {
-        const char * displayEvalStrings[4] = {N_("None"), N_("ND"), N_("DT"), N_("Relative")};
+        const char * displayEvalStrings[4] = {N_("None"), N_("ND"), N_("D/T"), N_("Relative")};
         BuildLabelFrame(psm, pwv, _("Display evaluation"), displayEvalStrings, 4, displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
     } else {
         const char * displayEvalStrings[4] = {N_("None"), N_("Absolute"), N_("Relative to second best")};
