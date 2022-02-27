@@ -253,7 +253,11 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
         char *pchKey;
         int iKey;
 
+#if (PY_MAJOR_VERSION >= 3)
+        if (!(pchKey = PyBytes_AsString(PyUnicode_AsUTF8String(pyKey))))
+#else
         if (!(pchKey = PyBytes_AsString(pyKey)))
+#endif
             return -1;
 
         iKey = -1;
@@ -340,7 +344,11 @@ PyToMoveFilter(PyObject * p, movefilter * pmf, int *ply, int *level)
         char *pchKey;
         int iKey;
 
+#if (PY_MAJOR_VERSION >= 3)
+        if (!(pchKey = PyBytes_AsString(PyUnicode_AsUTF8String(pyKey))))
+#else
         if (!(pchKey = PyBytes_AsString(pyKey)))
+#endif
             return -1;
 
         iKey = -1;
@@ -551,7 +559,11 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
         char *pchKey;
         int iKey;
 
+#if (PY_MAJOR_VERSION >= 3)
+        if (!(pchKey = PyBytes_AsString(PyUnicode_AsUTF8String(pyKey))))
+#else
         if (!(pchKey = PyBytes_AsString(pyKey)))
+#endif
             return -1;
 
         iKey = -1;
@@ -633,7 +645,11 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
         char *pchKey;
         int iKey;
 
+#if (PY_MAJOR_VERSION >= 3)
+        if (!(pchKey = PyBytes_AsString(PyUnicode_AsUTF8String(pyKey))))
+#else
         if (!(pchKey = PyBytes_AsString(pyKey)))
+#endif
             return -1;
 
         iKey = -1;
