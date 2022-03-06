@@ -461,8 +461,8 @@ gtk_colour_picker_new3d(Material * pMat, int opacity, TextureType textureType)
 {
     GtkWidget *previewWidget, *button = gtk_button_new();
 
-    if (curDetail == MAX_DETAILS) {
-        outputerrf("Error: Too many 3D colour previews\n");
+    if (curDetail >= MAX_DETAILS) {
+        outputerrf(_("Error: Too many 3D colour previews\n"));
         return 0;
     }
     details[curDetail].mat = *pMat;

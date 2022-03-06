@@ -1368,6 +1368,8 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
 
 #if defined(HAVE_LIBPNG)
 
+/* Used by ../export.c to export positions to PNG format */
+
 void
 GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, unsigned int nSizeY)
 {
@@ -1399,7 +1401,7 @@ GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, uns
 
     gdk_pixbuf_save(pixbuf, szName, "png", &error, NULL);
     if (error) {
-        outputerrf("png failed: %s\n", error->message);
+        outputerrf(_("PNG file creation failed: %s\n"), error->message);
         g_error_free(error);
     }
     g_object_unref(pixbuf);

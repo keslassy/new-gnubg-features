@@ -78,10 +78,10 @@ realizeCB(void *UNUSED(data))
     glClearColor(.2f, .2f, .4f, 1.f);
 
     if (!CreateNumberFont(&numberFont, FONT_VERA, FONT_PITCH, FONT_SIZE, FONT_HEIGHT_RATIO))
-        g_print("Error creating font\n");
+        g_print(_("Error creating font\n"));
 
     if (!CreateFontText(&totalText, _("Totals"), FONT_VERA, FONT_PITCH, FONT_SIZE, FONT_HEIGHT_RATIO))
-        g_print("Error creating font\n");
+        g_print(_("Error creating font\n"));
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

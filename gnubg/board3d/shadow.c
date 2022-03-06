@@ -40,17 +40,17 @@ shadowInit(BoardData3d * bd3d, renderdata * prd)
         return;
 
 #if !GTK_CHECK_VERSION(3,0,0)
-	int stencilBits;
+    int stencilBits;
 	
-	/* Darkness as percentage of ambient light */
+    /* Darkness as percentage of ambient light */
     prd->dimness = (float)(prd->lightLevels[1] * (100 - prd->shadowDarkness)) / (100.0f * 100.0f);
 
-	initOccluders(bd3d);
+    initOccluders(bd3d);
 
     /* Check the stencil buffer is present */
     glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
     if (!stencilBits) {
-        g_print("No stencil buffer - no shadows\n");
+        g_warning(_("No stencil buffer, no shadows\n"));
         return;
     }
     midStencilVal = (int) (1u << (stencilBits - 1));

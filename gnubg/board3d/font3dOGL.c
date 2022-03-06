@@ -35,7 +35,7 @@ CheckOpenglError(void)
 {
 	GLenum glErr = glGetError();
 	if (glErr != GL_NO_ERROR)
-		g_print("OpenGL Error: %s\n", gluErrorString(glErr));
+		g_print(_("OpenGL error: %s\n"), gluErrorString(glErr));
 }
 
 int MAArenderGlyph(const FT_Outline* pOutline, int AA);
