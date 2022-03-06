@@ -269,7 +269,7 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
         if (iKey < 0) {
             /* unknown dict value */
             PyErr_SetString(PyExc_ValueError,
-                            _("invalid dict value in cubeinfo " "(see gnubg.cubeinfo() for an example)"));
+                            _("invalid key in cubeinfo " "(see gnubg.cubeinfo() for an example)"));
             return -1;
         }
 
@@ -286,7 +286,7 @@ PyToCubeInfo(PyObject * p, cubeinfo * pci)
             if (!PyInt_Check(pyValue)) {
                 /* unknown dict value */
                 PyErr_SetString(PyExc_ValueError,
-                                _("invalid value cubeinfo " "(see gnubg.setcubeinfo() for an example)"));
+                                _("invalid value in cubeinfo " "(see gnubg.cubeinfo() for an example)"));
                 return -1;
             }
 
@@ -360,7 +360,7 @@ PyToMoveFilter(PyObject * p, movefilter * pmf, int *ply, int *level)
         if (iKey < 0) {
             /* unknown dict value */
             PyErr_SetString(PyExc_ValueError,
-                            _("invalid dict value in movefilter " "(see gnubg.getevalhintfilter() for an example)"));
+                            _("invalid key in movefilter " "(see gnubg.getevalhintfilter() for an example)"));
             return -1;
         }
 
@@ -575,7 +575,7 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
         if (iKey < 0) {
             /* unknown dict value */
             PyErr_SetString(PyExc_ValueError,
-                            _("invalid dict value in posinfo " "(see gnubg.posinfo() for an example)"));
+                            _("invalid key in posinfo " "(see gnubg.posinfo() for an example)"));
             return -1;
         }
 
@@ -586,7 +586,7 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
             /* simple integer */
             if (!PyInt_Check(pyValue)) {
                 /* unknown dict value */
-                PyErr_SetString(PyExc_ValueError, _("invalid value posinfo " "(see gnubg.posinfo() for an example)"));
+                PyErr_SetString(PyExc_ValueError, _("invalid value in posinfo " "(see gnubg.posinfo() for an example)"));
                 return -1;
             }
             *((int *) apv[iKey]) = (int) PyInt_AsLong(pyValue);
@@ -596,7 +596,7 @@ PyToPosInfo(PyObject * p, posinfo * ppi)
             /* simple unsigned integer (gamestate) */
             if (!PyInt_Check(pyValue)) {
                 /* unknown dict value */
-                PyErr_SetString(PyExc_ValueError, _("invalid value posinfo " "(see gnubg.posinfo() for an example)"));
+                PyErr_SetString(PyExc_ValueError, _("invalid value in posinfo " "(see gnubg.posinfo() for an example)"));
                 return -1;
             }
             *((gamestate *) apv[iKey]) = (gamestate) PyInt_AsLong(pyValue);
@@ -661,7 +661,7 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
         if (iKey < 0) {
             /* unknown dict value */
             PyErr_SetString(PyExc_ValueError,
-                            _("invalid dict value in evalcontext " "(see gnubg.evalcontext() for an example)"));
+                            _("invalid key in evalcontext " "(see gnubg.evalcontext() for an example)"));
             return -1;
         }
 
