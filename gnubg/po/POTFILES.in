@@ -6,6 +6,7 @@ bearoffdump.c
 bearoffgammon.c
 bearoffgammon.h
 bearoff.h
+board3d/GLwidget.c
 board3d/drawboard3d.c
 board3d/font3d.c
 board3d/font3dOGL.c
