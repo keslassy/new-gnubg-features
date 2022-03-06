@@ -66,26 +66,26 @@ static DBProvider providers[NUM_PROVIDERS] = {
 #if defined(USE_SQLITE)
     {SQLiteConnect, SQLiteDisconnect, SQLiteSelect, SQLiteUpdateCommand, SQLiteCommit, SQLiteGetDatabaseList,
      SQLiteDeleteDatabase,
-     "SQLite", "SQLite", "Direct SQLite3 connection", FALSE, TRUE, "gnubg", "", "", ""},
+     "SQLite", "SQLite", N_("Direct SQLite3 connection"), FALSE, TRUE, "gnubg", "", "", ""},
 #endif
 #if defined(USE_PYTHON)
 #if !defined(USE_SQLITE)
     {PySQLiteConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, SQLiteGetDatabaseList, SQLiteDeleteDatabase,
-     "SQLite (Python)", "PythonSQLite", "SQLite3 connection included in latest Python version", FALSE, TRUE, "gnubg",
+     "SQLite (Python)", "PythonSQLite", N_("SQLite3 connection via Python"), FALSE, TRUE, "gnubg",
      "", "", ""},
 #endif
     {PyMySQLConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, PyMySQLGetDatabaseList, PyMySQLDeleteDatabase,
-     "MySQL (Python)", "PythonMySQL", "MySQL connection via MySQLdb Python module", TRUE, TRUE, "gnubg", "", "",
+     "MySQL (Python)", "PythonMySQL", N_("MySQL/MariaDB connection via MySQLdb Python module"), TRUE, TRUE, "gnubg", "", "",
      "localhost:3306"},
     {PyPostgreConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, PyPostgreGetDatabaseList,
      PyPostgreDeleteDatabase,
-     "PostgreSQL (Python)", "PythonPostgre", "PostgreSQL connection via PyGreSQL Python module", TRUE, TRUE, "gnubg", "",
+     "PostgreSQL (Python)", "PythonPostgre", N_("PostgreSQL connection via PyGreSQL Python module"), TRUE, TRUE, "gnubg", "",
      "", "localhost:5432"},
 #endif
 };
 
 #else
-DBProvider providers[1] = { {0, 0, 0, 0, 0, 0, 0, "No Providers", "No Providers", "No Providers", 0, 0, 0, 0, 0, 0} };
+DBProvider providers[1] = { {0, 0, 0, 0, 0, 0, 0, "No Providers", "No Providers", N_("No database providers"), 0, 0, 0, 0, 0, 0} };
 #endif
 
 #if defined(USE_PYTHON) || defined(USE_SQLITE)
