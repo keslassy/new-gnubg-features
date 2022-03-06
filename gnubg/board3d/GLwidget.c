@@ -189,7 +189,7 @@ static char* LoadFile(const char* filename)
 	FILE* fp = fopen(filename, "rb");
 	if (!fp)
 	{
-		printf("Failed to open %s!\n", filename);
+		printf(_("Failed to open %s!\n"), filename);
 		return NULL;
 	}
 
@@ -242,7 +242,7 @@ static guint CreateShader(int shader_type, const char* shader_name)
 
 		char* buffer = g_malloc(log_len + 1);
 		glGetShaderInfoLog(shader, log_len, NULL, buffer);
-		printf("Compilation failure in %s shader: %s", shader_type == GL_VERTEX_SHADER ? "vertex" : "fragment", buffer);
+		printf(_("Compilation failure in %s shader: %s"), shader_type == GL_VERTEX_SHADER ? "vertex" : "fragment", buffer);
 		g_free(buffer);
 		return 0;
 	}
@@ -273,7 +273,7 @@ init_shaders(const char* shader_name)
 		char* buffer = g_malloc(log_len + 1);
 		glGetProgramInfoLog(program, log_len, NULL, buffer);
 
-		printf("Linking failure in program: %s", buffer);
+		printf(_("Linking failure in program: %s"), buffer);
 
 		g_free(buffer);
 		return FALSE;
@@ -398,7 +398,7 @@ GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB
 	GtkWidget* pw = gtk_gl_area_new();
 
 	if (pw == NULL) {
-		g_print("Can't create opengl drawing widget\n");
+		g_print(_("Can't create OpenGL drawing widget\n"));
 		return NULL;
 	}
 
@@ -445,10 +445,10 @@ getGlConfig(void)
 		glconfig = gdk_gl_config_new_by_mode(GDK_GL_MODE_RGB | GDK_GL_MODE_DEPTH | GDK_GL_MODE_DOUBLE | GDK_GL_MODE_STENCIL);
 	if (!glconfig) {
 		glconfig = gdk_gl_config_new_by_mode(GDK_GL_MODE_RGB | GDK_GL_MODE_DEPTH | GDK_GL_MODE_DOUBLE);
-		g_warning("Stencil buffer not available, no shadows\n");
+		g_warning(_("Stencil buffer not available, no shadows\n"));
 	}
 	if (!glconfig) {
-		g_warning("*** No appropriate OpenGL-capable visual found.\n");
+		g_warning(_("No appropriate OpenGL-capable visual found\n"));
 	}
 	return glconfig;
 }
@@ -510,14 +510,14 @@ GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB exposeCB, 
 	GtkWidget* pw = gtk_drawing_area_new();
 
 	if (pw == NULL) {
-		g_print("Can't create opengl drawing widget\n");
+		g_print(_("Can't create OpenGL drawing widget\n"));
 		return NULL;
 	}
 
 	/* Set OpenGL-capability to the widget - no list sharing */
 	if (!gtk_widget_set_gl_capability(pw, getGlConfig(), NULL, TRUE, GDK_GL_RGBA_TYPE))
 	{
-		g_print("Can't create opengl capable widget\n");
+		g_print(_("Can't create OpenGL capable widget\n"));
 		return NULL;
 	}
 
