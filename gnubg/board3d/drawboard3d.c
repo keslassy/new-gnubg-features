@@ -1110,7 +1110,7 @@ preRenderPiece(const renderdata* prd, int display, PieceTextureType ptt)
 		preDrawPiece1(prd, display, ptt);
 		break;
 	default:
-		g_print("Error: Unhandled piece type\n");
+		g_assert_not_reached();
 	}
 }
 
