@@ -1080,20 +1080,20 @@ readMET(metdata * met, const char *filename)
     parser->j = 0;
 
     if (!(context = g_markup_parse_context_new(&markup_parser, (GMarkupParseFlags) 0, parser, met_parser_destroy))) {
-        g_warning("Can't create XML parser\n");
+        g_warning(_("Can't create XML parser\n"));
         g_free(parser);
         return -1;
     }
 
     /* Read the file */
     if (!g_file_get_contents(filename, &contents, &size, &error)) {
-        g_warning("Error reading XML file: %s\n", error->message);
+        g_warning(_("Error reading XML file: %s\n"), error->message);
         goto err;
     }
 
     /* Parse the content */
     if (!g_markup_parse_context_parse(context, contents, size, &error)) {
-        g_warning("Error parsing XML file: %s\n", error->message);
+        g_warning(_("Error parsing XML file: %s\n"), error->message);
         goto err;
     }
 
