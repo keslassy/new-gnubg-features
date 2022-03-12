@@ -4680,7 +4680,7 @@ NewWidget(newwidget * pnw)
         gchar stock[50];
         int *pi;
 
-        sz = g_strdup_printf(_("Start a new %d point match"), i);
+        sz = g_strdup_printf(ngettext("Start a new %d point match", "Start a new %d points match", i), i);
         sprintf(stock, "gnubg-stock-new%d", i);
         pwToolButton = gtk_tool_button_new_from_stock(stock);
         gtk_widget_set_tooltip_text(GTK_WIDGET(pwToolButton), sz);
@@ -6025,7 +6025,7 @@ GTKShowScoreSheet(void)
 
     sprintf(title, "%s - ", _("Score Sheet"));
     if (ms.nMatchTo > 0)
-        sprintf(title + strlen(title), _("%d point match"), ms.nMatchTo);
+        sprintf(title + strlen(title), ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
     else
         strcat(title, _("Money Session"));
 

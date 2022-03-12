@@ -1438,13 +1438,15 @@ ShowBoard(void)
             if (ms.fCubeOwner < 0) {
                 apch[3] = szCube;
 
+                /* Using ngettext() below looks awkward, but it matters in case of multiple plurals, as in many eastern european languages */
+
                 if (ms.nMatchTo)
                     if (ms.nMatchTo == 1)
-                        sprintf(szCube, _("1 point match"));
+                        sprintf(szCube, ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
                     else if (ms.fCrawford)
-                        sprintf(szCube, _("%d point match (Crawford game)"), ms.nMatchTo);
+                        sprintf(szCube, ngettext("%d point match (Crawford game)", "%d points match (Crawford game)", ms.nMatchTo), ms.nMatchTo);
                     else
-                        sprintf(szCube, _("%d point match (Cube: %d)"), ms.nMatchTo, ms.nCube);
+                        sprintf(szCube, ngettext("%d point match (Cube: %d)", "%d points match (Cube: %d)", ms.nMatchTo), ms.nMatchTo, ms.nCube);
                 else
                     sprintf(szCube, "(%s: %d)", _("Cube"), ms.nCube);
             } else {
@@ -1459,7 +1461,7 @@ ShowBoard(void)
                 apch[ms.fCubeOwner ? 6 : 0] = szCube;
 
                 if (ms.nMatchTo)
-                    sprintf(apch[3] = szMatch, _("%d point match"), ms.nMatchTo);
+                    sprintf(apch[3] = szMatch, ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
             }
         }
         if (ms.fResigned > 0)
@@ -2738,13 +2740,15 @@ CommandCopy(char *UNUSED(sz))
         if (ms.fCubeOwner < 0) {
             aps[3] = szCube;
 
+            /* Using ngettext() below looks awkward, but it matters in case of multiple plurals, as in many eastern european languages */
+
             if (ms.nMatchTo)
                 if (ms.nMatchTo == 1)
-                    sprintf(szCube, _("1 point match"));
+                    sprintf(szCube, ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
                 else if (ms.fCrawford)
-                    sprintf(szCube, _("%d point match (Crawford game)"), ms.nMatchTo);
+                    sprintf(szCube, ngettext("%d point match (Crawford game)", "%d points match (Crawford game)", ms.nMatchTo), ms.nMatchTo);
                 else
-                    sprintf(szCube, _("%d point match (Cube: %d)"), ms.nMatchTo, ms.nCube);
+                    sprintf(szCube, ngettext("%d point match (Cube: %d)", "%d points match (Cube: %d)", ms.nMatchTo), ms.nMatchTo, ms.nCube);
             else
                 sprintf(szCube, "(%s: %d)", _("Cube"), ms.nCube);
         } else {

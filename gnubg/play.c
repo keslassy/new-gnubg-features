@@ -2872,7 +2872,7 @@ CommandNewMatch(char *sz)
     UpdateSetting(&ms.fJacoby);
     UpdateSetting(&ms.gs);
 
-    outputf(_("A new %u point match has been started.\n"), n);
+    outputf(ngettext("A new %d point match has been started.\n", "A new %d points match has been started.\n", n), n);
 
 #if defined (USE_GTK)
     if (fX)

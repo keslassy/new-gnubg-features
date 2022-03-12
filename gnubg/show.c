@@ -904,9 +904,9 @@ CommandShowScore(char *UNUSED(sz))
             ms.cGames, ap[0].szName, ms.anScore[0], ap[1].szName, ms.anScore[1]);
 
     if (ms.nMatchTo > 0) {
-        outputf(ms.nMatchTo == 1 ?
-                _(" (match to %d point%s).\n") :
-                _(" (match to %d points%s).\n"),
+        outputf(ngettext(" (match to %d point%s)",
+                         " (match to %d points%s)",
+                         ms.nMatchTo),
                 ms.nMatchTo, ms.fCrawford ? _(", Crawford game") : (ms.fPostCrawford ? _(", post-Crawford play") : ""));
     } else {
         if (ms.fJacoby)
