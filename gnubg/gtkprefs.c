@@ -2500,10 +2500,7 @@ DesignAdd(GtkWidget * pw, gpointer data)
     GList *plBDs = data;
     renderdata rdNew;
 
-    if ((pbde = (boarddesign *) g_malloc(sizeof(boarddesign))) == 0) {
-        outputerr("allocate boarddesign");
-        return;
-    }
+    pbde = (boarddesign *) g_malloc(sizeof(boarddesign));
 
     /* name and author of board */
 
@@ -2558,10 +2555,7 @@ ExportDesign(GtkWidget * UNUSED(pw), gpointer UNUSED(data))
      * Copy current design 
      */
 
-    if ((pbde = (boarddesign *) g_malloc(sizeof(boarddesign))) == 0) {
-        outputerr("allocate boarddesign");
-        return;
-    }
+    pbde = (boarddesign *) g_malloc(sizeof(boarddesign));
 
     if (pbdeSelected) {         /* Exporting current design so just get settings */
         pbde->szTitle = g_strdup(pbdeSelected->szTitle);
