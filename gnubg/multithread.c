@@ -54,7 +54,7 @@ MT_CloseThreads(void)
     MT_SafeSet(&td.closingThreads, TRUE);
     mt_add_tasks(td.numThreads, CloseThread, NULL, NULL);
     if (MT_WaitForTasks(NULL, 0, FALSE) != (int) td.numThreads)
-        g_print("Error closing threads!\n");
+        g_print(_("Error closing threads!\n"));
     for (i = 0; i < td.numThreads; i++)
         g_thread_join(thread[i]);
 }
@@ -151,7 +151,7 @@ MT_WorkerThreadFunction(void *tld)
 static gboolean
 WaitingForThreads(gpointer UNUSED(unused))
 {                               /* Unlikely to be called */
-    multi_debug("Waiting for threads to be created!");
+    multi_debug("waiting for threads to be created!");
     return FALSE;
 }
 
@@ -160,7 +160,9 @@ MT_CreateThreads(void)
 {
     unsigned int i;
 #if defined(DEBUG_MULTITHREADED)
-    gchar *buf = g_strdup_printf("create %u threads", td.numThreads);
+    gchar *buf;
+
+    buf = g_strdup_printf("creating %u thread%s", td.numThreads, (td.numThreads > 1 ? "s" : ""));
     multi_debug(buf);
     g_free(buf);
 #endif
@@ -174,15 +176,19 @@ MT_CreateThreads(void)
 #else
         if (!(thread[i] = g_thread_create(MT_WorkerThreadFunction, pTLD, TRUE, NULL)))
 #endif
-            printf("Failed to create thread\n");
+            printf(_("Failed to create thread\n"));
+#if defined(DEBUG_MULTITHREADED)
         else {
-            multi_debug("1 thread created");
+            buf = g_strdup_printf("thread %u created", i);
+            multi_debug(buf);
+            g_free(buf);
         }
+#endif
     }
     td.addedTasks = td.numThreads;
     /* Wait for all the threads to be created (timeout after 1 second) */
     if (MT_WaitForTasks(WaitingForThreads, 1000, FALSE) != (int) td.numThreads)
-        g_print("Error creating threads!\n");
+        g_print(_("Error creating threads!\n"));
 }
 
 void
@@ -254,7 +260,7 @@ mt_add_tasks(unsigned int num_tasks, AsyncFun pFun, void *taskData, gpointer lin
     unsigned int i;
     {
 #if defined(DEBUG_MULTITHREADED)
-        multi_debug("add %u tasks asks lock (queueLock)", num_tasks);
+        multi_debug("add %u task%s asks lock (queueLock)", num_tasks, (num_tasks > 1 ? "s" : ""));
         Mutex_Lock(&td.queueLock);
         multi_debug("add tasks gets lock (queueLock)");
 #else
@@ -303,7 +309,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
 
     if (autosave)
         as_source = g_timeout_add(nAutoSaveTime * 60000, save_autosave, NULL);
-    multi_debug("Waiting for all tasks");
+    multi_debug("waiting for all tasks");
     while (!WaitForAllTasks(polltime)) {
         waits++;
         if (pCallback && waits >= callbackLoops) {
@@ -316,7 +322,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         g_source_remove(as_source);
         save_autosave(NULL);
     }
-    multi_debug("Done waiting for all tasks");
+    multi_debug("done waiting for all tasks");
 
     MT_SafeSet(&td.doneTasks, 0);
     td.addedTasks = 0;
@@ -435,7 +441,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     GTKSuspendInput();
 #endif
 
-    multi_debug("Waiting for all tasks");
+    multi_debug("waiting for all tasks");
 
     pCallback(NULL);
     cb_source = g_timeout_add(1000, pCallback, NULL);

@@ -356,7 +356,7 @@ multi_debug(const char *str, ...)
 #endif
         strcpy(tn, "MT");
     else
-        sprintf(tn, "T%d", id + 1);
+        sprintf(tn, "T%d", id);
 
 #if GLIB_CHECK_VERSION (2,28,0)
     printf("%" G_GINT64_FORMAT " %s: %s\n", g_get_monotonic_time(), tn, buf);
