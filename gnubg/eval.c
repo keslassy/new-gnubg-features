@@ -620,12 +620,12 @@ EvalInitialise(char *szWeights, char *szWeightsBinary, int fNoBearoff, void (*pf
 #endif
         cCache = 0x1 << CACHE_SIZE_DEFAULT;
         if (CacheCreate(&cEval, cCache)) {
-            PrintError("CacheCreate");
+            PrintError(_("Evaluation cache allocation failed"));
             return;
         }
 
         if (CacheCreate(&cpEval, 0x1 << 16)) {
-            PrintError("CacheCreate");
+            PrintError(_("Evaluation cache allocation failed"));
             return;
         }
 
@@ -4119,7 +4119,8 @@ FormatEval(char *sz, evalsetup * pes)
         sprintf(sz, "%s", _("Rollout"));
         break;
     default:
-        sprintf(sz, "_Unknown (%d)", (int) pes->et);
+        sprintf(sz, _("Unknown eval type (%d)"), (int) pes->et);
+        g_assert_not_reached();
         break;
     }
 
