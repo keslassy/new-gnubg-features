@@ -106,7 +106,7 @@ AverageRolls(const float arProb[32], float *ar)
     for (i = 1; i < 32; i++) {
         float p = (float) i * arProb[i];
         sx += p;
-        sx2 += (float) i *p;
+        sx2 += (float) i * p;
     }
 
     ar[0] = sx;
@@ -266,9 +266,9 @@ ReadBearoffFile(const bearoffcontext * pbc, unsigned int offset, unsigned char *
 
     if ((fseek(pbc->pf, (long) offset, SEEK_SET) < 0) || (fread(buf, 1, nBytes, pbc->pf) < nBytes)) {
         if (errno)
-            perror("OS bearoff database");
+            perror(_("bearoff database"));
         else
-            fprintf(stderr, "error reading OS bearoff database");
+            fprintf(stderr, _("Error reading bearoff database"));
 
         memset(buf, 0, nBytes);
         return;
@@ -483,7 +483,8 @@ BearoffEval(const bearoffcontext * pbc, const TanBoard anBoard, float arOutput[]
         return BearoffEvalHypergammon(pbc, anBoard, arOutput);
     case BEAROFF_INVALID:
     default:
-        g_warning("Invalid type in BearoffEval");
+        g_warning(_("Invalid bearoff database type"));
+        g_assert_not_reached();
         return 0;
     }
 }
@@ -713,7 +714,7 @@ BearoffDump(const bearoffcontext * pbc, const TanBoard anBoard, char *sz)
         return BearoffDumpHyper(pbc, anBoard, sz);
     case BEAROFF_INVALID:
     default:
-        g_warning("Invalid type in BearoffDump");
+        g_warning(_("Invalid bearoff database type"));
         return -1;
     }
 }
@@ -1096,12 +1097,12 @@ GetDistCompressed(unsigned short int aus[64], const bearoffcontext * pbc, const 
     /* Sanity checks */
 
     if ((iOffset > 64 * nPos && 64 * nPos > 0) || nz > 32 || ioff > 32 || nzg > 32 || ioffg > 32) {
+        fprintf(stderr, _("The bearoff file '%s' is likely to be corrupted.\n"), pbc->szFilename);
+#if !defined(G_DISABLE_ASSERT)
         fprintf(stderr,
-                "The bearoff file '%s' is likely to be corrupted.\n"
-                "Please check that the MD5 sum is the same as documented "
-                "in the GNU Backgammon manual.\n"
                 "Offset %lu, dist size %u (offset %u), "
-                "gammon dist size %u (offset %u)\n", pbc->szFilename, (unsigned long) iOffset, nz, ioff, nzg, ioffg);
+                "gammon dist size %u (offset %u)\n", (unsigned long) iOffset, nz, ioff, nzg, ioffg);
+#endif
         g_assert_not_reached();
     }
 
@@ -1175,7 +1176,7 @@ ReadBearoffOneSidedExact(const bearoffcontext * pbc, const unsigned int nPosID,
         pus = GetDistUncompressed(aus, pbc, nPosID);
 
     if (!pus) {
-        printf("argh!\n");
+        printf(_("Error decoding one-sided bearoff database entry; position %u\n"), nPosID);
         return -1;
     }
 
