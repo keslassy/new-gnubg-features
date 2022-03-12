@@ -1442,8 +1442,9 @@ ImportOldmovesGame(FILE * pf, int iGame, int nLength, int n0, int n1)
      */
 
     /* Process player score line, avoid fscanf(%nn) as buffer may overrun */
+
     if (fgets(buf, sizeof(buf), pf) == NULL) {
-        outputerr("oldmoves");
+        outputerr(_("Error reading oldmoves file"));
         return 0;
     }
     pch = strstr(buf, "is X");
@@ -3376,7 +3377,7 @@ ConvertPartyGammonFileToMat(FILE * partyFP, FILE * matFP)
         return TRUE;
     }
     if (ferror(partyFP))
-        outputerr("tomat");
+        outputerr(_("File error while processing PartyGammon match"));
     g_free(pg.gameStr);
     fclose(partyFP);
     return FALSE;
