@@ -2881,7 +2881,7 @@ PythonMatch(PyObject * UNUSED(self), PyObject * args, PyObject * keywds)
     }
 
     if (g->i != 0) {
-        PyErr_SetString(PyExc_StandardError, "First game missing from match");
+        PyErr_SetString(PyExc_StandardError, _("First game missing from match"));
         return NULL;
     }
 
