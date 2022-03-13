@@ -98,7 +98,7 @@ extern int
 CreateGLWidget(BoardData * bd, int useMouseEvents)
 {
     GtkWidget *p3dWidget;
-    bd->bd3d = (BoardData3d *) malloc(sizeof(BoardData3d));
+    bd->bd3d = (BoardData3d *) g_malloc(sizeof(BoardData3d));
     InitBoard3d(bd, bd->bd3d);
     /* Drawing area for OpenGL */
 	p3dWidget = bd->bd3d->drawing_area3d = GLWidgetCreate(realize_3dCB, configure_3dCB, expose_3dCB, bd);
