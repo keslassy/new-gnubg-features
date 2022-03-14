@@ -235,7 +235,7 @@ TidyMemory(const Vectoriser* pVect, const Mesh* pMesh)
 void TESS_CALLBACK
 tcbError(GLenum error)
 {                               /* This is very unlikely to happen... */
-	g_print(_("Tesselation error! (%d)\n"), error);
+	g_print(_("Tessellation error! (%d)\n"), error);
 }
 
 void TESS_CALLBACK
