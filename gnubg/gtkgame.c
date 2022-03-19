@@ -3066,15 +3066,15 @@ static char *aaszLang[][3] = {
     {N_("English (US)"), "en_US.UTF-8", "flags/usa.png"},
     {N_("Finnish"), "fi_FI.UTF-8", "flags/finland.png"},
     {N_("French"), "fr_FR.UTF-8", "flags/france.png"},
-    {N_("German"), "de_DE.ISO-8859-1", "flags/germany.png"},
+    {N_("German"), "de_DE.UTF-8", "flags/germany.png"},
     {N_("Greek"), "el_GR.UTF-8", "flags/greece.png"},
-    {N_("Icelandic"), "is_IS.ISO-8859-1", "flags/iceland.png"},
-    {N_("Italian"), "it_ITi.ISO-8859-15", "flags/italy.png"},
-    {N_("Japanese"), "ja_JP.eucJP", "flags/japan.png"},
+    {N_("Icelandic"), "is_IS.UTF-8", "flags/iceland.png"},
+    {N_("Italian"), "it_IT.UTF-8", "flags/italy.png"},
+    {N_("Japanese"), "ja_JP.UTF-8", "flags/japan.png"},
     {N_("Romanian"), "ro_RO.UTF-8", "flags/romania.png"},
-    {N_("Russian"), "ru_RU.KOI8-R", "flags/russia.png"},
+    {N_("Russian"), "ru_RU.UTF-8", "flags/russia.png"},
     {N_("Spanish"), "es_ES.UTF-8", "flags/spain.png"},
-    {N_("Turkish"), "tr_TR.ISO-8859-9", "flags/turkey.png"},
+    {N_("Turkish"), "tr_TR.UTF-8", "flags/turkey.png"},
     {NULL, NULL, NULL}
 };
 

@@ -1,3 +1,12 @@
+2022-03-19  Philippe Michel  <philippe.michel7@free.fr>
+
+	* de.po, is.po, it.po, tr.po, ru.po, ja.po, ../gtkgame.c: use
+	UTF-8 in all po files.
+
+2021-09-20  Philippe Michel  <philippe.michel7@free.fr>
+
+        * fi.po: add Finnish translation by Matti Kamppinen.
+
 2016-03-02  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gnubg.pot, *.po: merge and update.
