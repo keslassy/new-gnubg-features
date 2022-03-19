@@ -75,7 +75,7 @@ main(int argc, char **argv)
     }
 
     if ((szPosID && id) || (!szPosID && !id)) {
-        g_printerr(_("Either Position ID or index is required. Not Both.\n" "For more help try `bearoffdump --help'\n"));
+        g_printerr(_("Either Position ID or index is required.\n" "For more help try `bearoffdump --help'\n"));
         exit(EXIT_FAILURE);
     }
 
