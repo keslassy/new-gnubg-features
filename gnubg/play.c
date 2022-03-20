@@ -458,7 +458,7 @@ FreeGame(listOLD * pl)
 }
 
 static int
-PopGame(listOLD * plDelete, int fInclusive)
+PopGame(const listOLD * plDelete, int fInclusive)
 {
 
     listOLD *pl;
@@ -491,7 +491,7 @@ PopGame(listOLD * plDelete, int fInclusive)
 }
 
 static int
-PopMoveRecord(listOLD * plDelete)
+PopMoveRecord(const listOLD * plDelete)
 {
 
     listOLD *pl;
@@ -2940,7 +2940,7 @@ UpdateGame(int fShowBoard)
 
 #if defined (USE_GTK)
 static int
-GameIndex(listOLD * plGame)
+GameIndex(const listOLD * plGame)
 {
 
     listOLD *pl;
@@ -4159,7 +4159,7 @@ FixMatchState(matchstate * pms, const moverecord * pmr)
 }
 
 extern void
-pmr_cubedata_set(moverecord * pmr, evalsetup * pes, float output[2][NUM_ROLLOUT_OUTPUTS],
+pmr_cubedata_set(moverecord * pmr, const evalsetup * pes, float output[2][NUM_ROLLOUT_OUTPUTS],
                  float stddev[2][NUM_ROLLOUT_OUTPUTS])
 {
     pmr->CubeDecPtr->esDouble = *pes;
@@ -4169,7 +4169,7 @@ pmr_cubedata_set(moverecord * pmr, evalsetup * pes, float output[2][NUM_ROLLOUT_
 }
 
 extern void
-pmr_movelist_set(moverecord * pmr, evalsetup * pes, movelist * pml)
+pmr_movelist_set(moverecord * pmr, const evalsetup * pes, const movelist * pml)
 {
     float skill_score;
     pmr->esChequer = *pes;
@@ -4224,7 +4224,7 @@ get_current_moverecord(int *pfHistory)
 }
 
 extern gboolean
-game_is_last(listOLD * plGame)
+game_is_last(const listOLD * plGame)
 {
     listOLD *pl;
     for (pl = lMatch.plNext; pl->p != plGame && pl != &lMatch; pl = pl->plNext) {

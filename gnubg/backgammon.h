@@ -1000,12 +1000,12 @@ extern void find_skills(moverecord * pmr, const matchstate * pms, int did_double
 extern int getGameNumber(const listOLD * plGame);
 extern int getMoveNumber(const listOLD * plGame, const void *p);
 extern int CheckGameExists(void);
-extern void pmr_cubedata_set(moverecord * pmr, evalsetup * pes, float output[2][NUM_ROLLOUT_OUTPUTS],
+extern void pmr_cubedata_set(moverecord * pmr, const evalsetup * pes, float output[2][NUM_ROLLOUT_OUTPUTS],
                              float stddev[2][NUM_ROLLOUT_OUTPUTS]);
-extern void pmr_movelist_set(moverecord * pmr, evalsetup * pes, movelist * pml);
+extern void pmr_movelist_set(moverecord * pmr, const evalsetup * pes, const movelist * pml);
 extern listOLD *game_add_pmr_hint(listOLD * plGame);
 extern void game_remove_pmr_hint(listOLD * pl_hint);
-extern gboolean game_is_last(listOLD * plGame);
+extern gboolean game_is_last(const listOLD * plGame);
 extern void pmr_hint_destroy(void);
 extern void StopAutomaticPlay(void);
 extern gboolean save_autosave(gpointer unused);
