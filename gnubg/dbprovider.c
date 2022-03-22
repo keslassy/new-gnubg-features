@@ -603,7 +603,7 @@ SQLiteSelect(const char *str)
     RowSet *rs = NULL;
 
     sqlite3_stmt *pStmt;
-#if SQLITE3_VERSION_NUMBER >= 3003011
+#if SQLITE_VERSION_NUMBER >= 3003011
     ret = sqlite3_prepare_v2(connection, buf, -1, &pStmt, NULL);
 #else
     ret = sqlite3_prepare(connection, buf, -1, &pStmt, NULL);
