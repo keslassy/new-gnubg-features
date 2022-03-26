@@ -1077,13 +1077,16 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             sprintf(ssz,"<tt>1. %s%s%1.*f",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len1, ' ');   //define spacing for 2nd best move
-            sprintf(ssz,"\n2. %s%s%1.*f  %1.*f</tt>\n (only 2 moves)",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore);
+            sprintf(ssz,"\n2. %s%s%1.*f  %1.*f</tt>",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore);
             strcat(buf,ssz);
         } else if (pq->ml.cMoves==1) { //single move
-            sprintf(ssz,"<tt>%s  %1.*f</tt>\n (unique move)",szMove0,DIGITS,pq->ml.amMoves[0].rScore);
+            sprintf(ssz,"<tt>1. %s  %1.*f</tt>",szMove0,DIGITS,pq->ml.amMoves[0].rScore);
             strcat(buf,ssz);
         } else {
-            sprintf(ssz,"no moves!");
+            /* This cannot happen. If there is no legal move there is no
+               move analysis and no Score Map button to bring us here. */
+            g_assert_not_reached();
+            sprintf(ssz,"no legal moves");
             strcat(buf,ssz);
         }
     }
