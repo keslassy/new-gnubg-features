@@ -80,7 +80,7 @@ allabout.pdf: allabout.xml $(gnubg_image_DATA)
 
 gnubg.html: gnubgdb.xml
 	$(XSLTPROC) \
-		--stringparam chunker.output.encoding ISO8859-1 \
+		--stringparam chunker.output.encoding UTF-8 \
 		--stringparam  use.id.as.filename 1 \
 		--stringparam  root.filename  '' \
 		--stringparam  html.longdesc 0 \
@@ -91,7 +91,7 @@ gnubg.html: gnubgdb.xml
 
 allabout.html: allabout.xml
 	$(XSLTPROC) \
-		--stringparam chunker.output.encoding ISO8859-1 \
+		--stringparam chunker.output.encoding UTF-8 \
 		--stringparam  use.id.as.filename 1 \
 		--stringparam  root.filename  '' \
 		--nonet http://docbook.sourceforge.net/release/xsl/current/xhtml/onechunk.xsl \
@@ -99,7 +99,7 @@ allabout.html: allabout.xml
 		cp $(srcdir)/gnubg/allabout.html .
 
 gnubg.texi: gnubgdb.xml
-	$(DOCBOOK2TEXI) --encoding=ISO-8859-1 --string-param prefer-textobjects=1 $< || \
+	$(DOCBOOK2TEXI) --encoding=UTF-8 --string-param prefer-textobjects=1 $< || \
 	cp $(srcdir)/gnubg/gnubg.texi .
 
 gnubg.info: gnubg.texi

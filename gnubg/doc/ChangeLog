@@ -1,3 +1,7 @@
+2022-03-26  Philippe Michel  <philippe.michel7@free.fr>
+
+	* gnubgdb.xml, Makefile.am: Use UTF-8 encoding
+
 2010-09-16  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* allabout.xml, images/m23e0471c.png: Updates remaining to do from

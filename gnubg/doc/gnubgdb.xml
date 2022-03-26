@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "http://www.docbook.org/xml/4.4/docbookx.dtd">
 <article id="gnubg" lang="en">
   <articleinfo>
@@ -3090,7 +3090,7 @@ To roll the dice the CL version type 'roll'.
           you add into the field in the evaluations setting is the limit amount
           of noise that will be added to the evaluation.</para>
         <para>If noise is added to the evaluations <application>GNU
-          Backgammon</application> will take a Box Müller transform of a point
+          Backgammon</application> will take a Box MÃ¼ller transform of a point
           in the unit circle and add to each possible outcome probability. This
           means that the addition is random, but distributed so that it's more
           likely to have an noise addition close to zero than a noise addition
@@ -4530,7 +4530,7 @@ Equity
               </row>
               <row>
                 <entry>.result</entry>
-                <entry>Style for the text indicating the outcome of the game or match, e.g., <emphasis>Jørn Thyssen wins 16 points</emphasis>.</entry>
+                <entry>Style for the text indicating the outcome of the game or match, e.g., <emphasis>JÃ¸rn Thyssen wins 16 points</emphasis>.</entry>
               </row>
               <row>
                 <entry>.tiny</entry>
