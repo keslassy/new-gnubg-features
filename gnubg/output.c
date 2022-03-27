@@ -235,12 +235,12 @@ print_utf8_to_locale(const gchar *sz)
     GError *error = NULL;
     gchar *szl = g_locale_from_utf8(sz, -1, NULL, NULL, &error);
 
-#if 0
     if (error) {
+#if 0
         g_printerr("g_locale_from_utf8 failed: %s\n", error->message);
+#endif
         g_error_free(error);
     }
-#endif
 
     if (szl != NULL)
         printf("%s", szl);
