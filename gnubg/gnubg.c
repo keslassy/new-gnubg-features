@@ -2763,7 +2763,7 @@ CommandCopy(char *UNUSED(sz))
             aps[ms.fCubeOwner ? 6 : 0] = szCube;
 
             if (ms.nMatchTo)
-                sprintf(aps[3] = szMatch, _("%d point match"), ms.nMatchTo);
+                sprintf(aps[3] = szMatch, ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
         }
     }
 
