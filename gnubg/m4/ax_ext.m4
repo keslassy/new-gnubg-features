@@ -79,6 +79,30 @@ AC_DEFUN([AX_EXT],
           fi
     ;;
 
+    aarch64*)
+      AC_CACHE_CHECK([whether NEON is supported], [ax_cv_have_neon_ext],
+          [
+          AC_LANG_PUSH([C])
+          AC_TRY_RUN([
+            int main(){
+	    #if defined(__ARM_NEON)
+              return 0;
+	    #else
+	      return 1;
+            #endif
+            }],
+            ax_cv_have_neon_ext=yes,
+            ax_cv_have_neon_ext=no,
+            ax_cv_have_neon_ext=no)
+          AC_LANG_POP([C])
+	  ])
+
+          if test "$ax_cv_have_neon_ext" = yes; then
+            AC_DEFINE(HAVE_NEON,,[Support NEON instructions])
+            AX_CHECK_COMPILE_FLAG(-march=armv8-a+simd, SIMD_FLAGS="$SIMD_FLAGS -march=armv8-a+simd", [])
+          fi
+    ;;
+
     powerpc*)
       AC_CACHE_CHECK([whether altivec is supported for old distros], [ax_cv_have_altivec_old_ext],
           [

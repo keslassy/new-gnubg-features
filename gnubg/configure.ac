@@ -523,7 +523,10 @@ if test "x$simdcpu" != "xno"; then
 			elif test "x$simdcpu" = "xsse2"; then
 				SIMD_CFLAGS="-msse -msse2"
 			elif test "x$simdcpu" = "xneon"; then
-				SIMD_CFLAGS="-mfpu=neon"
+				case $host_cpu in
+				arm*)     SIMD_CFLAGS="-mfpu=neon" ;;
+				aarch64*) SIMD_CFLAGS="-march=armv8-a+simd" ;;
+				esac
 			else
 				SIMD_CFLAGS="-msse"
 			fi
