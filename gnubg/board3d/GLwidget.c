@@ -403,7 +403,6 @@ GtkWidget* GLWidgetCreate(RealizeCB realizeCB, ConfigureCB configureCB, ExposeCB
 	}
 
 	GLWidgetData* glwData = g_malloc(sizeof(GLWidgetData));
-	if (!glwData) return NULL;
 
 	glwData->cbData = data;
 	glwData->realizeCB = realizeCB;
