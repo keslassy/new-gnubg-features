@@ -4149,7 +4149,7 @@ InitGTK(int *argc, char ***argv)
     gnubg_stock_init();
 
 #if defined(USE_BOARD3D)
-	widget3dValid = InitGTK3d(argc, argv);
+    widget3dValid = InitGTK3d(argc, argv);
 #endif
 
     /*add two xpm based icons */
@@ -7332,10 +7332,12 @@ GTKDumpStatcontext(int game)
     AddGameData(gd, i, &scMatch);
 
     pw = StatGraph(gd);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pw, gtk_label_new(_("Graph")));
-    gtk_widget_set_tooltip_text(pw, _("This graph shows the total error rates per game for each player."
-                                      " The games are along the bottom and the error rates up the side."
-                                      " Chequer error in green, cube error in blue."));
+    if (pw != NULL) {
+        gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pw, gtk_label_new(_("Graph")));
+        gtk_widget_set_tooltip_text(pw, _("This graph shows the total error rates per game for each player."
+                                          " The games are along the bottom and the error rates up the side."
+                                          " Chequer error in green, cube error in blue."));
+    }
 #endif
 
     pwUsePanels = gtk_check_button_new_with_label(_("Split statistics into panels"));
