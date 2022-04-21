@@ -727,7 +727,6 @@ static void MAApoints(const renderdata* prd)
 		tuv = 0;
 
 	LegacyStartAA(1.0f);
-	LegacyEndAA();
 
 	drawPointLegacy(prd, tuv, 0, 0, 1);
 	drawPointLegacy(prd, tuv, 0, 1, 1);
