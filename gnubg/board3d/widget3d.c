@@ -51,7 +51,7 @@ configure_3dCB(GtkWidget * widget, void* data)
 static void
 realize_3dCB(void* data)
 {
-	BoardData* bd = (BoardData*)data;
+    BoardData* bd = (BoardData*)data;
     InitGL(bd);
     GetTextures(bd->bd3d, bd->rd);
     preDraw3d(bd, bd->bd3d, bd->rd);
@@ -79,19 +79,28 @@ UpdateShadows(BoardData3d * bd3d)
 static gboolean
 expose_3dCB(GtkWidget* UNUSED(widget), GdkEventExpose* UNUSED(exposeEvent), void* data)
 {
-	const BoardData* bd = (const BoardData*)data;
+    const BoardData* bd = (const BoardData*)data;
+
+    /*
+     * Calling RecalcViewingVolume() here is a work around to avoid
+     * artifacts in 3D display after the stats histogram has been shown.
+     * Doing this at each expose is probably not the best fix.
+     */
+
+    RecalcViewingVolume(bd);
+
     if (bd->bd3d->shadowsOutofDate) {   /* Update shadow positions */
         bd->bd3d->shadowsOutofDate = FALSE;
         updateOccPos(bd);
     }
 #ifdef TEST_HARNESS
-	// Test harness for 3d board development
-	TestHarnessDraw(bd);
+    // Test harness for 3d board development
+    TestHarnessDraw(bd);
 #else
-	// Normal drawing
-	Draw3d(bd);
+    // Normal drawing
+    Draw3d(bd);
 #endif
-	return TRUE;
+    return TRUE;
 }
 
 extern int
