@@ -50,6 +50,10 @@ RandomOrgCallBack(void *pvRawData, size_t nSize, size_t nNumMemb, void *pvUserDa
     output("Random rolls received:");
 #endif
     for (i = 0; i < nNewDataLen; i++) {
+        if (iNumRead >= BUFLENGTH) {
+            /* Prevent buffer overflow if random.org sent more than we asked */
+            break;
+        }
         if ((szRawData[i] >= '0') && (szRawData[i] <= '5')) {
             /* Get a number */
             pvRandomData->anBuf[iNumRead] = 1 + (unsigned int) (szRawData[i] - '0');
