@@ -624,9 +624,9 @@ dnl For instance, some match analysis on a Core i5 CPU (gcc 4.4.7, -mavx) :
 dnl -O2             1:23
 dnl -O3             1:14
 dnl -O3 -ffast-math 1:11
-AM_CFLAGS="-O3 $AM_CFLAGS"
+AM_CFLAGS="$AM_CFLAGS -O3"
 if test x"$GCC" = "xyes"; then
-    AM_CFLAGS="-ffast-math $AM_CFLAGS"
+    AM_CFLAGS="$AM_CFLAGS -ffast-math"
 fi
 
 AC_SUBST(AM_CFLAGS)
