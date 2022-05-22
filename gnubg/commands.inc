@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-20O9 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2008-2021 the AUTHORS
+ * Copyright (C) 2008-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1270,7 +1270,9 @@ static command acSetVariation[] = {
     { "web", CommandShowManualWeb, N_("Show reference manual in a web browser"), 
       NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }
-}, acShow[] = {
+};
+
+command  acShow[] = {
     { "aliases", CommandShowAliases, N_("Show aliases for player 1 when importing MAT files"), NULL, NULL }, 
     { "analysis", CommandShowAnalysis, N_("Show parameters used for analysing "
       "moves"), NULL, NULL },
@@ -1420,7 +1422,9 @@ static command acSetVariation[] = {
     { "warranty", CommandShowWarranty, 
       N_("Various kinds of warranty you do not have"), NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }    
-}, acSwap[] = {
+};
+
+static command acSwap[] = {
     { "players", CommandSwapPlayers, N_("Swap players"), NULL, NULL },
     { NULL, NULL, NULL, NULL, NULL }
 };

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2002 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2015-2017 the AUTHORS
+ * Copyright (C) 2015-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,6 +76,13 @@ extern void outputon(void);
 extern int cOutputDisabled;
 extern int cOutputPostponed;
 extern int foutput_on;
+
+#if defined(USE_PYTHON)
+/* output-family functions allocate with g_strdup_printf(), caller g_free()s */
+extern char* szMemOutput;
+
+extern int foutput_to_mem;
+#endif
 
 extern void print_utf8_to_locale(const gchar *sz);
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2004 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2003-2020 the AUTHORS
+ * Copyright (C) 2003-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -980,6 +980,38 @@ PythonCommand(PyObject * UNUSED(self), PyObject * args)
 
     PythonUpdateUI(NULL, Py_None);
     return Py_None;
+}
+
+static PyObject *
+PythonShow(PyObject * UNUSED(self), PyObject * args)
+{
+    PyObject *p;
+
+    char *pch;
+    char *sz;
+
+    if (!PyArg_ParseTuple(args, "s:argument", &pch))
+        return NULL;
+
+    sz = g_strdup(pch);
+
+    foutput_to_mem = TRUE;
+
+    HandleCommand(sz, acShow);
+
+    foutput_to_mem = FALSE;
+
+    g_free(sz);
+
+    while (szMemOutput[strlen(szMemOutput)-1] == '\n')
+        szMemOutput[strlen(szMemOutput)-1] = 0;
+
+    p = PyUnicode_FromString(szMemOutput);
+
+    g_free(szMemOutput);
+    szMemOutput = NULL;
+
+    return p;
 }
 
 static PyObject *
@@ -3130,6 +3162,9 @@ static PyMethodDef gnubgMethods[] = {
     {"command", PythonCommand, METH_VARARGS,
      "Execute a command\n" "    arguments: string containing command\n" "    returns: nothing"}
     ,
+    {"show", PythonShow, METH_VARARGS,
+     "Execute the 'show arguments' command\n" "    arguments: string containing arguments\n" "    returns: result, with final newline(s) stripped, as string"}
+    ,
     {"cfevaluate", PythonEvaluateCubeful, METH_VARARGS,
      "Cubeful evaluation\n"
      "    arguments: [board] [cube-info] [eval-context]\n"
@@ -3490,7 +3525,6 @@ PythonRun(const char *sz)
                                          Py_eval_input, PythonGnubgModule(), py_dict)))
             if (PyInt_Check(py_ret) && PyInt_AsLong(py_ret))
                 success = TRUE;
-
         if (py_ret) {
             Py_DECREF(py_ret);
         }

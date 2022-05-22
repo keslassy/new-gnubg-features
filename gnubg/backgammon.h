@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 1999-2021 the AUTHORS
+ * Copyright (C) 1999-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -414,6 +414,7 @@ extern command acSetRolloutLatePlayer[];
 extern command acSetRolloutLimit[];
 extern command acSetRolloutPlayer[];
 extern command acSetTruncation[];
+extern command acShow[];
 extern command acTop[];
 
 extern int fInteractive;
