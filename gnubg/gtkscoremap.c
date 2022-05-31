@@ -293,12 +293,12 @@ typedef struct {
 // Note: we do not define eval-ply as remembering a high value may unexpectedly cause increased complexity
 //  when displaying a new scoremap; rather we focus on simple on presentation settings (and the Jacoby option for the money quadrant)
 static labelbasedonoptions labelBasedOn = LABEL_AWAY;
-static int moneyJacoby=0;
+static int moneyJacoby = TRUE;
 static colourbasedonoptions colourBasedOn = ALL;
 static displayevaloptions displayEval = NO_EVAL;
 static layoutoptions layout = VERTICAL;
-static int cubeMatchSize=7;
-static int moveMatchSize=3;
+static int cubeMatchSize = 7;
+static int moveMatchSize = 3;
 
 
 // *******************************************************************
@@ -2673,7 +2673,7 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
     psm->ec.fUsePrune=TRUE; // FALSE;
     psm->ec.fDeterministic=TRUE;
     psm->ec.rNoise=0.0;
-    // moneyJacoby=MONEY_JACOBY;
+
     if (pms->nCube==1) //need to define here to set the default cube radio button
         psm->signednCube=1;
     else {
