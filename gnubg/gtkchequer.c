@@ -369,9 +369,8 @@ MoveListRolloutPresets(GtkWidget * pw, hintdata * phd)
 typedef int (*cfunc) (const void *, const void *);
 
 static int
-CompareInts(int *p0, int *p1)
+CompareInts(const int *p0, const int *p1)
 {
-
     return *p0 - *p1;
 }
 
