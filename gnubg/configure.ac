@@ -84,13 +84,6 @@ dnl Deprecated, but replacement depends on AC_USE_SYSTEM_EXTENSIONS that
 dnl depends on autoconf 2.60. For now we require only 2.59 (as in RHEL5)
 AC_GNU_SOURCE
 
-# the following needs to come before the expansion of AC_PROG_CC
-cflags_were_set=false
-if test "${CFLAGS+set}" = set; then
-  AM_CFLAGS=$CFLAGS
-  CFLAGS=
-  cflags_were_set=:
-fi
 AC_PROG_CC
 AM_PROG_CC_C_O
 dnl Deprecated but RHEL6/gcc 4.4 needs it
@@ -115,12 +108,6 @@ return 0;
     AC_MSG_ERROR([Could not find a C99 compatible compiler])
   fi
 fi
-fi
-
-# the following needs to come after the expansion of AC_PROG_CC
-if $cflags_were_set; then :; else
-  AM_CFLAGS=$CFLAGS
-  CFLAGS=
 fi
 
 AM_CONDITIONAL(CROSS_COMPILING, test "x$cross_compiling" = "xyes")
@@ -624,9 +611,15 @@ dnl For instance, some match analysis on a Core i5 CPU (gcc 4.4.7, -mavx) :
 dnl -O2             1:23
 dnl -O3             1:14
 dnl -O3 -ffast-math 1:11
-AM_CFLAGS="$AM_CFLAGS -O3"
+AM_CFLAGS="$AM_CFLAGS -g -O3"
 if test x"$GCC" = "xyes"; then
     AM_CFLAGS="$AM_CFLAGS -ffast-math"
+fi
+
+# Don't let automake's default override the above settings
+# If you really want -O2 -g, use ./configure CFLAGS="-O2 -fno-fast-math"
+if test x"$CFLAGS" = "x-g -O2"; then
+    CFLAGS=""
 fi
 
 AC_SUBST(AM_CFLAGS)
