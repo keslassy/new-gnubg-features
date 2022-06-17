@@ -490,16 +490,12 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
             return -1;
         }
 
-        FormatMove(pq->decisionString, (ConstTanBoard) psm->pms->anBoard, pq->ml.amMoves[0].anMove);
-// g_print("%s\n",szMove);
+        g_assert(pq->ml.cMoves > 0);
+        if (pq->ml.cMoves > 0)
+            FormatMove(pq->decisionString, (ConstTanBoard) psm->pms->anBoard, pq->ml.amMoves[0].anMove);
 
-        // gchar *sz = g_strdup_printf("%s [%s]",
-        //                                     GetEquityString(ptmw->atm[m].aarEquity[i][j],
-        //                                                     &ci, ptmw->fInvert),
-        //                                     FormatMove(szMove, (ConstTanBoard) ptmw->atm[m].pms->anBoard,
-        //                                                ptmw->atm[m].aaanMove[i][j]));
+        // g_print("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
 
-// g_print("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
         return 0;
     }
 }
