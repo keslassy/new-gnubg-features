@@ -676,6 +676,8 @@ HintSelect(GtkTreeSelection * selection, hintdata * phd)
 extern int
 CheckHintButtons(hintdata * phd)
 {
+    BoardData *bd;
+
     GList *plSelList = MoveListGetSelectionList(phd);
     int c = g_list_length(plSelList);
     MoveListFreeSelectionList(plSelList);
@@ -688,6 +690,9 @@ CheckHintButtons(hintdata * phd)
     gtk_widget_set_sensitive(phd->pwRolloutPresets, c && phd->fButtonsValid);
     gtk_widget_set_sensitive(phd->pwEval, c && phd->fButtonsValid);
     gtk_widget_set_sensitive(phd->pwEvalPly, c && phd->fButtonsValid);
+
+    bd = BOARD(pwBoard)->board_data;
+    gtk_widget_set_sensitive(phd->pwScoreMap, (bd->diceShown == DICE_ON_BOARD));
 
     return c;
 }
