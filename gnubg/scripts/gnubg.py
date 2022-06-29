@@ -65,7 +65,6 @@ def gnubg_find_msvcrt():
 supports_readline = True
 
 try:
-    from ctypes.util import find_msvcrt
     import ctypes.util
     ctypes.util.find_msvcrt = gnubg_find_msvcrt
     import platform
@@ -206,6 +205,8 @@ def gnubg_InteractivePyShell_tui(argv=[''], banner=None):
 
 def gnubg_InteractivePyShell_gui(argv=['', '-n']):
     import sys
+    import traceback
+
     sys.argv = argv
 
     try:

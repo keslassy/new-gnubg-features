@@ -21,9 +21,6 @@
 # contains MS-Windows specific code and will therefore only work on MS-Windows
 # together with GNU Backgammon and Python.
 
-import win32ui
-import win32con
-
 # file extensions, names and gnubg import commands
 
 extensions = ['mat', 'pos', 'sgg', 'tmg', 'txt']

@@ -88,7 +88,6 @@ def playMatchSeries(statsFile=None,  # log file
 
 
 def formatMatchInfo(matchInfo):
-    tempS = ''
     outString = ''
     score = [0, 0]
     matchLength = matchInfo['match-info']['match-length']
