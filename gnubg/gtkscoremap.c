@@ -290,9 +290,9 @@ typedef struct {
 
 // ******************* DEFAULT STATIC OPTIONS ***********************
 
-// We now define the options to retain betweenn scoremap instances, corresponding to the respective radio buttons
-// Note: we do not define eval-ply as remembering a high value may unexpectedly cause increased complexity
-//  when displaying a new scoremap; rather we focus on simple on presentation settings (and the Jacoby option for the money quadrant)
+// We now define the options to retain between scoremap instances,
+// corresponding to the respective radio buttons
+
 static labelbasedonoptions labelBasedOn = LABEL_AWAY;
 static int moneyJacoby = TRUE;
 static colourbasedonoptions colourBasedOn = ALL;
@@ -300,6 +300,7 @@ static displayevaloptions displayEval = NO_EVAL;
 static layoutoptions layout = VERTICAL;
 static int cubeMatchSize = 7;
 static int moveMatchSize = 5;
+static int evalPlies = 0;
 
 // *******************************************************************
 
@@ -2148,6 +2149,8 @@ ScoreMapPlyToggled(GtkWidget * pw, scoremap * psm)
 
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
 
+        evalPlies = *pi;
+
         /* recalculate equities */
 
         psm->ec.nPlies = *pi;
@@ -2419,19 +2422,14 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
         gtk_box_pack_start(GTK_BOX(psm->pwOptionsBox), pwv, TRUE, FALSE, 40);
     }
 
- /* eval ply */
+     /* eval ply */
 
     const char * plyStrings[5] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply")};
-/*    for (i = 0; i < 5; ++i) {
-        plyStrings[i]= g_strdup_printf(_("%d-ply"), i);
-    } */
 
-    BuildLabelFrame(psm, pwv, _("Evaluation"), plyStrings, 5, 0, ScoreMapPlyToggled, TRUE, vAlignExpand);
-/*    for (i = 0; i < 5; ++i) {
-        free(plyStrings[i]);
-    }    */
+    BuildLabelFrame(psm, pwv, _("Evaluation"), plyStrings, 5, evalPlies, ScoreMapPlyToggled, TRUE, vAlignExpand);
 
     /* Match length */
+
     pwFrame=gtk_frame_new(_("Match length"));
     gtk_box_pack_start(GTK_BOX(pwv), pwFrame, vAlignExpand, FALSE, 0);
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2510,7 +2508,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
         BuildLabelFrame(psm, pwv, _("Display evaluation"), displayEvalStrings, 4, displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
     } else {
         const char * displayEvalStrings[4] = {N_("None"), N_("Absolute"), N_("Relative to second best")};
-        BuildLabelFrame(psm, pwv, _("Display evaluation"), displayEvalStrings, 3, displayEval, DisplayEvalToggled, TRUE, vAlignExpand); 
+        BuildLabelFrame(psm, pwv, _("Display evaluation"), displayEvalStrings, 3, displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
     }
 
     /* colour by frame */
@@ -2664,11 +2662,11 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
     //colourBasedOn=ALL;     //default gauge; see also the option to set the starting gauge at the bottom
     // psm->describeUsing=DEFAULT_DESCRIPTION; //default description mode: NUMBERS, ENGLISH, BOTH -> moved to static variable
     psm->pms = pms;
-    psm->ec.fCubeful=TRUE;
-    psm->ec.nPlies=0;
-    psm->ec.fUsePrune=TRUE; // FALSE;
-    psm->ec.fDeterministic=TRUE;
-    psm->ec.rNoise=0.0;
+    psm->ec.fCubeful = TRUE;
+    psm->ec.nPlies = evalPlies;
+    psm->ec.fUsePrune = TRUE; // FALSE;
+    psm->ec.fDeterministic = TRUE;
+    psm->ec.rNoise = 0.0f;
 
     if (pms->nCube==1) //need to define here to set the default cube radio button
         psm->signednCube=1;
