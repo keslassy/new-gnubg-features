@@ -289,6 +289,7 @@ typedef struct {
 } scoremap;
 
 // ******************* DEFAULT STATIC OPTIONS ***********************
+
 // We now define the options to retain betweenn scoremap instances, corresponding to the respective radio buttons
 // Note: we do not define eval-ply as remembering a high value may unexpectedly cause increased complexity
 //  when displaying a new scoremap; rather we focus on simple on presentation settings (and the Jacoby option for the money quadrant)
@@ -298,8 +299,7 @@ static colourbasedonoptions colourBasedOn = ALL;
 static displayevaloptions displayEval = NO_EVAL;
 static layoutoptions layout = VERTICAL;
 static int cubeMatchSize = 7;
-static int moveMatchSize = 3;
-
+static int moveMatchSize = 5;
 
 // *******************************************************************
 
@@ -571,7 +571,7 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
    In the move scoremap, it also computes the most frequent best moves across the scoremap
 */
 {
-    ProgressStartValue(_("Finding correct actions"), MAX(psm->tableSize*psm->tableSize+1-oldSize*oldSize,1));
+    ProgressStartValue(_("Finding correct actions"), MAX(psm->tableSize*psm->tableSize+1-oldSize*oldSize, 1));
             // - Should actually be 1 less if oldSize>0 (because money)
             // - If we only recompute the money equity, the formula correctly yields 1 for oldSize = psm->tableSize
 //g_print("Finding %d-ply cube equities:\n",pec->nPlies);
