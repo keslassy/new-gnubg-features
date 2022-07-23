@@ -236,7 +236,7 @@ typedef struct {
     matchstate *pms;
     const evalsetup *pesChequer;
     evalsetup *pesCube;
-     movefilter(*aamf)[MAX_FILTER_PLIES];
+    movefilter(*aamf)[MAX_FILTER_PLIES];
 } moveData;
 
 typedef struct {
@@ -247,7 +247,7 @@ typedef struct {
     const cubeinfo *pci;
     const evalcontext *pec;
     int anDice[2];
-     movefilter(*aamf)[MAX_FILTER_PLIES];
+    movefilter(*aamf)[MAX_FILTER_PLIES];
 } findData;
 
 typedef struct {
@@ -284,7 +284,7 @@ int RunAsyncProcess(AsyncFun fun, void *data, const char *msg);
  *
  */
 
-/*  List of moverecords representing the current game. One of the elements in
+/* List of moverecords representing the current game. One of the elements in
  * lMatch.
  * Typically the last game in the match).
  */
@@ -465,11 +465,7 @@ extern int ParsePosition(TanBoard an, char **ppch, char *pchDesc);
 extern int SetToggle(const char *szName, int *pf, char *sz, const char *szOn, const char *szOff);
 extern moverecord *get_current_moverecord(int *pfHistory);
 extern moverecord *LinkToDouble(moverecord * pmr);
-#if defined(HAVE_FUNC_ATTRIBUTE_RETURNS_NONNULL)
-extern moverecord *NewMoveRecord(void) __attribute__((returns_nonnull));
-#else
 extern moverecord *NewMoveRecord(void);
-#endif
 extern void HandleInterrupt(int idSignal);
 extern void AddGame(moverecord * pmr);
 extern void AddMoveRecord(moverecord * pmr);
