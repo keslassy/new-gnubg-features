@@ -1553,7 +1553,7 @@ LightingPage(BoardData * bd)
         padjLightPosZ = GTK_ADJUSTMENT(gtk_adjustment_new(bd->rd->lightPos[2], .5, 5, .1, 1, 0));
         g_signal_connect(G_OBJECT(padjLightPosZ), "value-changed", G_CALLBACK(option_changed), NULL);
 #if GTK_CHECK_VERSION(3,0,0)
-        pwLightPosZ = gtk_vscale_new(padjLightPosZ);
+        pwLightPosZ = gtk_scale_new(GTK_ORIENTATION_VERTICAL, padjLightPosZ);
 #else
         pwLightPosZ = gtk_vscale_new(padjLightPosZ);
 #endif

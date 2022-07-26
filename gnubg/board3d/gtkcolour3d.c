@@ -297,7 +297,11 @@ AddWidgets(GtkWidget * window)
     gtk_table_attach_defaults(GTK_TABLE(table), label, 2, 3, 1, 2);
     padjShine = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 128.0, 1.0, 10.0, 0.0));
     g_signal_connect(G_OBJECT(padjShine), "value-changed", G_CALLBACK(UpdateColourPreview), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    scale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjShine);
+#else
     scale = gtk_hscale_new(padjShine);
+#endif
     gtk_scale_set_digits(GTK_SCALE(scale), 0);
     gtk_table_attach_defaults(GTK_TABLE(table), scale, 3, 4, 1, 2);
 
@@ -305,7 +309,11 @@ AddWidgets(GtkWidget * window)
     gtk_table_attach_defaults(GTK_TABLE(table), pOpacitylabel, 0, 1, 2, 3);
     padjOpacity = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 1.0, 100.0, 1.0, 10.0, 0.0));
     g_signal_connect(G_OBJECT(padjOpacity), "value-changed", G_CALLBACK(UpdateColourPreview), NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    psOpacity = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, padjOpacity);
+#else
     psOpacity = gtk_hscale_new(padjOpacity);
+#endif
     gtk_scale_set_digits(GTK_SCALE(psOpacity), 0);
     gtk_table_attach_defaults(GTK_TABLE(table), psOpacity, 1, 2, 2, 3);
 
