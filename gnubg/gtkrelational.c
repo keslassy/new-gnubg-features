@@ -94,7 +94,7 @@ create_model(void)
 
     int moves[4];
     unsigned int i, j;
-    gfloat stats[14];
+    gfloat stats[9];
 
     /* create list store */
     playerStore = gtk_list_store_new(NUM_COLUMNS,
