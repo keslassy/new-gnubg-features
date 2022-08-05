@@ -1406,13 +1406,13 @@ getPiecePos(unsigned int point, unsigned int pos, float v[3])
     if (point == 0 || point == 25) {    /* bars */
         v[0] = TOTAL_WIDTH / 2.0f;
         v[1] = TOTAL_HEIGHT / 2.0f;
-        v[2] = BASE_DEPTH + EDGE_DEPTH + (int) ((pos - 1) / 3) * PIECE_DEPTH;
+        v[2] = BASE_DEPTH + EDGE_DEPTH + (float)((pos - 1) / 3) * PIECE_DEPTH;
         pos = ((pos - 1) % 3) + 1;
 
         if (point == 25) {
-            v[1] += DOUBLECUBE_SIZE / 2.0f + (PIECE_HOLE + PIECE_GAP_HEIGHT) * (pos + .5f);
+            v[1] += DOUBLECUBE_SIZE / 2.0f + (PIECE_HOLE + PIECE_GAP_HEIGHT) * ((float)pos + .5f);
         } else {
-            v[1] -= DOUBLECUBE_SIZE / 2.0f + (PIECE_HOLE + PIECE_GAP_HEIGHT) * (pos + .5f);
+            v[1] -= DOUBLECUBE_SIZE / 2.0f + (PIECE_HOLE + PIECE_GAP_HEIGHT) * ((float)pos + .5f);
         }
         v[1] -= PIECE_HOLE / 2.0f;
     } else if (point >= 26) {   /* homes */
@@ -1423,11 +1423,11 @@ getPiecePos(unsigned int point, unsigned int pos, float v[3])
             v[0] = TOTAL_WIDTH - TRAY_WIDTH / 2.0f;
 
         if (point == 26)
-            v[1] = EDGE_HEIGHT + (PIECE_DEPTH * 1.2f * (pos - 1));      /* 1.3 gives a gap between pieces */
+            v[1] = EDGE_HEIGHT + (PIECE_DEPTH * 1.2f * (float)(pos - 1));      /* 1.3 gives a gap between pieces */
         else
-            v[1] = TOTAL_HEIGHT - EDGE_HEIGHT - PIECE_DEPTH - (PIECE_DEPTH * 1.2f * (pos - 1));
+            v[1] = TOTAL_HEIGHT - EDGE_HEIGHT - PIECE_DEPTH - (PIECE_DEPTH * 1.2f * (float)(pos - 1));
     } else {
-        v[2] = BASE_DEPTH + (int) ((pos - 1) / 5) * PIECE_DEPTH;
+        v[2] = BASE_DEPTH + (float)((pos - 1) / 5) * PIECE_DEPTH;
 
         if (point < 13) {
             if (fClockwise)
@@ -1437,11 +1437,11 @@ getPiecePos(unsigned int point, unsigned int pos, float v[3])
                 pos -= 10;
 
             if (pos > 5)
-                v[1] = EDGE_HEIGHT + (PIECE_HOLE / 2.0f) + (PIECE_HOLE + PIECE_GAP_HEIGHT) * (pos - 5 - 1);
+                v[1] = EDGE_HEIGHT + (PIECE_HOLE / 2.0f) + (PIECE_HOLE + PIECE_GAP_HEIGHT) * (float)(pos - 5 - 1);
             else
-                v[1] = EDGE_HEIGHT + (PIECE_HOLE + PIECE_GAP_HEIGHT) * (pos - 1);
+                v[1] = EDGE_HEIGHT + (PIECE_HOLE + PIECE_GAP_HEIGHT) * (float)(pos - 1);
 
-            v[0] = TRAY_WIDTH + PIECE_HOLE * (12 - point);
+            v[0] = TRAY_WIDTH + PIECE_HOLE * (float)(12 - point);
             if (point < 7)
                 v[0] += BAR_WIDTH;
         } else {
@@ -1454,11 +1454,11 @@ getPiecePos(unsigned int point, unsigned int pos, float v[3])
             if (pos > 5)
                 v[1] =
                     TOTAL_HEIGHT - EDGE_HEIGHT - (PIECE_HOLE / 2.0f) - PIECE_HOLE - (PIECE_HOLE +
-                                                                                     PIECE_GAP_HEIGHT) * (pos - 5 - 1);
+                                                                                     PIECE_GAP_HEIGHT) * (float)(pos - 5 - 1);
             else
-                v[1] = TOTAL_HEIGHT - EDGE_HEIGHT - PIECE_HOLE - (PIECE_HOLE + PIECE_GAP_HEIGHT) * (pos - 1);
+                v[1] = TOTAL_HEIGHT - EDGE_HEIGHT - PIECE_HOLE - (PIECE_HOLE + PIECE_GAP_HEIGHT) * (float)(pos - 1);
 
-            v[0] = TRAY_WIDTH + PIECE_HOLE * (point - 13);
+            v[0] = TRAY_WIDTH + PIECE_HOLE * (float)(point - 13);
             if (point > 18)
                 v[0] += BAR_WIDTH;
         }
@@ -1500,11 +1500,11 @@ drawPoint(const renderdata* prd, float tuv, unsigned int i, int p, int outline)
 	float x, y;
 
 	if (p) {
-		x = TRAY_WIDTH - EDGE_WIDTH + PIECE_HOLE * i;
+		x = TRAY_WIDTH - EDGE_WIDTH + (PIECE_HOLE * (float)i);
 		y = -LIFT_OFF;
 	}
 	else {
-		x = TRAY_WIDTH - EDGE_WIDTH + BOARD_WIDTH - (PIECE_HOLE * i);
+		x = TRAY_WIDTH - EDGE_WIDTH + BOARD_WIDTH - (PIECE_HOLE * (float)i);
 		y = TOTAL_HEIGHT - EDGE_HEIGHT * 2 + LIFT_OFF;
 		w = -w;
 		h = -h;
@@ -2488,8 +2488,8 @@ setupPath(const BoardData * bd, Path * p, float *pRotate, unsigned int fromPoint
             fromPoint = fromPoint - 13;
             toPoint = toPoint - 13;
         }
-        obj1 = TRAY_WIDTH + PIECE_HOLE * fromPoint;
-        obj2 = TRAY_WIDTH + PIECE_HOLE * toPoint;
+        obj1 = TRAY_WIDTH + PIECE_HOLE * (float)fromPoint;
+        obj2 = TRAY_WIDTH + PIECE_HOLE * (float)toPoint;
         if ((fromBoard == 1) || (fromBoard == 4)) {
             obj1 += BAR_WIDTH;
             obj2 += BAR_WIDTH;
@@ -2503,20 +2503,20 @@ setupPath(const BoardData * bd, Path * p, float *pRotate, unsigned int fromPoint
                 if (fromPoint == 0) {
                     obj2 = TRAY_WIDTH + BOARD_WIDTH + BAR_WIDTH;
                     if (toPoint > 20)
-                        obj2 += PIECE_HOLE * (toPoint - 20);
+                        obj2 += PIECE_HOLE * (float)(toPoint - 20);
                 } else {
                     obj2 = TRAY_WIDTH + BOARD_WIDTH + BAR_WIDTH;
                     if (toPoint < 5)
-                        obj2 += PIECE_HOLE * (5 - toPoint);
+                        obj2 += PIECE_HOLE * (float)(5 - toPoint);
                 }
             } else {
                 obj1 = TRAY_WIDTH + BOARD_WIDTH;
                 if (fromPoint == 0) {
-                    obj2 = TRAY_WIDTH + PIECE_HOLE * (25 - toPoint);
+                    obj2 = TRAY_WIDTH + PIECE_HOLE * (float)(25 - toPoint);
                     if (toPoint > 19)
                         obj2 += PIECE_HOLE;
                 } else {
-                    obj2 = TRAY_WIDTH + PIECE_HOLE * toPoint;
+                    obj2 = TRAY_WIDTH + PIECE_HOLE * (float)toPoint;
                     if (toPoint < 6)
                         obj2 += PIECE_HOLE;
                 }
@@ -2525,14 +2525,14 @@ setupPath(const BoardData * bd, Path * p, float *pRotate, unsigned int fromPoint
         } else {                /* Move home */
             if (!fClockwise) {
                 if (toPoint == 26)
-                    obj1 = TRAY_WIDTH + BOARD_WIDTH + BAR_WIDTH + PIECE_HOLE * (7 - fromPoint);
+                    obj1 = TRAY_WIDTH + BOARD_WIDTH + BAR_WIDTH + PIECE_HOLE * (float)(7 - fromPoint);
                 else            /* (toPoint == 27) */
-                    obj1 = TRAY_WIDTH + BOARD_WIDTH + BAR_WIDTH + PIECE_HOLE * (fromPoint - 18);
+                    obj1 = TRAY_WIDTH + BOARD_WIDTH + BAR_WIDTH + PIECE_HOLE * (float)(fromPoint - 18);
             } else {
                 if (toPoint == 26)
-                    obj1 = TRAY_WIDTH + PIECE_HOLE * (fromPoint - 1);
+                    obj1 = TRAY_WIDTH + PIECE_HOLE * (float)(fromPoint - 1);
                 else            /* (toPoint == 27) */
-                    obj1 = TRAY_WIDTH + PIECE_HOLE * (24 - fromPoint);
+                    obj1 = TRAY_WIDTH + PIECE_HOLE * (float)(24 - fromPoint);
             }
 
             if (!fClockwise)
