@@ -4221,7 +4221,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 
         /* Set the default arrow cursor in the stop window so obvious it can be clicked */
         gdk_window_set_cursor(gtk_widget_get_window(pwStop),
-                              gdk_cursor_new_for_display(gtk_widget_get_display(pwStop), GDK_ARROW));
+                              gdk_cursor_new_for_display(gtk_widget_get_display(pwStop), GDK_LEFT_PTR));
 
         /* Make sure toolbar looks correct */
         {
