@@ -1664,7 +1664,11 @@ ShowBoardPopup(GdkEventButton * event)
         gtk_widget_show(menu_item);
         g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(GTKShowScoreSheet), NULL);
     }
+#if GTK_CHECK_VERSION(3,22,0)
+    gtk_menu_popup_at_pointer(GTK_MENU(boardMenu), (GdkEvent *)event);
+#else
     gtk_menu_popup(GTK_MENU(boardMenu), NULL, NULL, NULL, NULL, event->button, event->time);
+#endif
 }
 
 extern gboolean
