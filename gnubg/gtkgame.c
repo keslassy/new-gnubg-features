@@ -4220,7 +4220,8 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
         GTKSet(&fShowIDs);
 
         /* Set the default arrow cursor in the stop window so obvious it can be clicked */
-        gdk_window_set_cursor(gtk_widget_get_window(pwStop), gdk_cursor_new(GDK_ARROW));
+        gdk_window_set_cursor(gtk_widget_get_window(pwStop),
+                              gdk_cursor_new_for_display(gtk_widget_get_display(pwStop), GDK_ARROW));
 
         /* Make sure toolbar looks correct */
         {
@@ -5949,9 +5950,14 @@ SetMouseCursor(GdkCursorType cursorType)
     }
     if (cursorType) {
         GdkCursor *cursor;
-        cursor = gdk_cursor_new(cursorType);
+
+        cursor = gdk_cursor_new_for_display(gtk_widget_get_display(pwMain), cursorType);
         gdk_window_set_cursor(gtk_widget_get_window(pwMain), cursor);
+#if GTK_CHECK_VERSION(3,0,0)
+        g_object_unref(cursor);
+#else
         gdk_cursor_unref(cursor);
+#endif
     } else
         gdk_window_set_cursor(gtk_widget_get_window(pwMain), NULL);
 }
