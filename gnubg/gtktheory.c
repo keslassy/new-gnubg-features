@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2002-2019 the AUTHORS
+ * Copyright (C) 2002-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -601,9 +601,14 @@ GTKShowTheory(const int fActivePage)
     GtkWidget *pwDialog, *pwNotebook;
 
     GtkWidget *pwOuterHBox, *pwVBox, *pwHBox;
-    GtkWidget *pwFrame, *pwTable;
+    GtkWidget *pwFrame;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
+    GtkWidget *pwTable;
+#endif
 
-    GtkWidget *pw, *pwx, *pwz;
+    GtkWidget *pw, *pwx, *pwz, *pwsb;
 
     PangoFontDescription *font_desc;
 
@@ -632,6 +637,7 @@ GTKShowTheory(const int fActivePage)
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_valign(pwVBox, GTK_ALIGN_START);
 #else
     pwVBox = gtk_vbox_new(FALSE, 0);
 #endif
@@ -669,35 +675,67 @@ GTKShowTheory(const int fActivePage)
 #endif
     gtk_container_add(GTK_CONTAINER(ptw->apwFrame[0]), pw);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_container_add(GTK_CONTAINER(pw), pwGrid);
+#else
     pwTable = gtk_table_new(2, 3, FALSE);
     gtk_container_add(GTK_CONTAINER(pw), pwTable);
+#endif
 
     for (i = 0; i < 2; i++) {
 
-        gtk_table_attach(GTK_TABLE(pwTable),
-                         pwx = gtk_label_new(ap[i].szName),
-                         0, 1, 0 + i, 1 + i, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
+        pwx = gtk_label_new(ap[i].szName);
+
 #if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pwx, 0, i, 1, 1);
         gtk_widget_set_halign(pwx, GTK_ALIGN_START);
         gtk_widget_set_valign(pwx, GTK_ALIGN_CENTER);
+        gtk_widget_set_hexpand(pwx, TRUE);
+        gtk_widget_set_vexpand(pwx, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pwx, 4);
+        gtk_widget_set_margin_end(pwx, 4);
 #else
+        gtk_widget_set_margin_left(pwx, 4);
+        gtk_widget_set_margin_right(pwx, 4);
+#endif
+#else                 
+        gtk_table_attach(GTK_TABLE(pwTable), pwx,
+                         0, 1, 0 + i, 1 + i, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
         gtk_misc_set_alignment(GTK_MISC(pwx), 0, 0.5);
 #endif
 
         ptw->apwScoreAway[i] = GTK_ADJUSTMENT(gtk_adjustment_new(1, 1, 64, 1, 5, 0));
+        pwsb = gtk_spin_button_new(ptw->apwScoreAway[i], 1, 0);
+        pwx = gtk_label_new(_("-away"));
 
-        gtk_table_attach(GTK_TABLE(pwTable),
-                         gtk_spin_button_new(ptw->apwScoreAway[i],
-                                             1, 0),
-                         1, 2, 0 + i, 1 + i, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
-
-        gtk_table_attach(GTK_TABLE(pwTable),
-                         pwx = gtk_label_new(_("-away")),
-                         2, 3, 0 + i, 1 + i, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
 #if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pwsb, 1, i, 1, 1);
+        gtk_grid_attach(GTK_GRID(pwGrid), pwx, 2, i, 1, 1);
         gtk_widget_set_halign(pwx, GTK_ALIGN_START);
         gtk_widget_set_valign(pwx, GTK_ALIGN_CENTER);
+        gtk_widget_set_hexpand(pwsb, TRUE);
+        gtk_widget_set_vexpand(pwsb, TRUE);
+        gtk_widget_set_hexpand(pwx, TRUE);
+        gtk_widget_set_vexpand(pwx, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pwsb, 4);
+        gtk_widget_set_margin_end(pwsb, 4);
+        gtk_widget_set_margin_start(pwx, 4);
+        gtk_widget_set_margin_end(pwx, 4);
 #else
+        gtk_widget_set_margin_left(pwsb, 4);
+        gtk_widget_set_margin_right(pwsb, 4);
+        gtk_widget_set_margin_left(pwx, 4);
+        gtk_widget_set_margin_right(pwx, 4);
+#endif
+
+#else
+        gtk_table_attach(GTK_TABLE(pwTable), pwsb,
+                         1, 2, 0 + i, 1 + i, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
+        gtk_table_attach(GTK_TABLE(pwTable), pwx,
+                         2, 3, 0 + i, 1 + i, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
         gtk_misc_set_alignment(GTK_MISC(pwx), 0, 0.5);
 #endif
 
@@ -814,44 +852,82 @@ GTKShowTheory(const int fActivePage)
     gtk_container_add(GTK_CONTAINER(pwFrame), pwx);
 
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_box_pack_start(GTK_BOX(pwx), pwGrid, FALSE, FALSE, 4);
+#else
     pwTable = gtk_table_new(3, 3, TRUE);
     gtk_box_pack_start(GTK_BOX(pwx), pwTable, FALSE, FALSE, 4);
+#endif
 
     for (i = 0; i < 2; i++) {
 
         /* player name */
 
-        gtk_table_attach(GTK_TABLE(pwTable),
-                         pw = gtk_label_new(ap[i].szName),
-                         0, 1, 1 + i, 2 + i, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
+        pw = gtk_label_new(ap[i].szName);
+
 #if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, 1 + i, 1, 1);
         gtk_widget_set_halign(pw, GTK_ALIGN_START);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
 #else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+#else
+        gtk_table_attach(GTK_TABLE(pwTable), pw,
+                         0, 1, 1 + i, 2 + i, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
 #endif
 
         /* column title */
 
-        gtk_table_attach(GTK_TABLE(pwTable),
-                         pw = gtk_label_new(i ? _("bg rate(%)") :
-                                            _("gammon rate(%)")),
-                         1 + i, 2 + i, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
+        pw = gtk_label_new(i ? _("bg rate(%)") : _("gammon rate(%)"));
+
 #if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 1 + i, 0, 1, 1);
         gtk_widget_set_halign(pw, GTK_ALIGN_START);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
 #else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+#else
+        gtk_table_attach(GTK_TABLE(pwTable), pw,
+                         1 + i, 2 + i, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
 #endif
 
         for (j = 0; j < 2; j++) {
 
             ptw->aapwRates[i][j] = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 100.0, 0.01, 1.0, 0));
+            pwsb = gtk_spin_button_new(ptw->aapwRates[i][j], 0.01, 2);
 
-            gtk_table_attach(GTK_TABLE(pwTable),
-                             gtk_spin_button_new(ptw->aapwRates[i][j],
-                                                 0.01, 2),
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_grid_attach(GTK_GRID(pwGrid), pwsb, j + 1, i + 1, 1, 1);
+            gtk_widget_set_hexpand(pwsb, TRUE);
+            gtk_widget_set_vexpand(pwsb, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+            gtk_widget_set_margin_start(pwsb, 4);
+            gtk_widget_set_margin_end(pwsb, 4);
+#else
+            gtk_widget_set_margin_left(pwsb, 4);
+            gtk_widget_set_margin_right(pwsb, 4);
+#endif
+#else
+            gtk_table_attach(GTK_TABLE(pwTable), pwsb,
                              j + 1, j + 2, i + 1, i + 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
+#endif
 
             g_signal_connect(G_OBJECT(ptw->aapwRates[i][j]), "value-changed", G_CALLBACK(TheoryUpdated), ptw);
 

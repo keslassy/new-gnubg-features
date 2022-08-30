@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2002-2021 the AUTHORS
+ * Copyright (C) 2002-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -499,6 +499,13 @@ CreateMoveListTools(hintdata * phd)
 
     /* toolbox on the left with buttons for eval, rollout and more */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwTools = gtk_grid_new();
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwEval, 0, 0, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwEvalSettings, 1, 0, 1, 1);
+#else
     pwTools = gtk_table_new(2, 7, FALSE);
 
     gtk_table_attach(GTK_TABLE(pwTools), pwEval, 0, 1, 0, 1,
@@ -506,14 +513,18 @@ CreateMoveListTools(hintdata * phd)
 
     gtk_table_attach(GTK_TABLE(pwTools), pwEvalSettings, 1, 2, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     phd->pwEvalPly = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+
+    gtk_grid_attach(GTK_GRID(pwTools), phd->pwEvalPly, 2, 0, 1, 1);
 #else
     phd->pwEvalPly = gtk_hbox_new(FALSE, 0);
-#endif
+
     gtk_table_attach(GTK_TABLE(pwTools), phd->pwEvalPly, 2, 3, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
     for (i = 0; i < 5; ++i) {
 
@@ -535,6 +546,18 @@ CreateMoveListTools(hintdata * phd)
 
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwShow, 3, 0, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwMWC, 4, 0, 1, 1);
+
+    if (!phd->fDetails)
+        gtk_grid_attach(GTK_GRID(pwTools), pwDetails, 5, 0, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwRollout, 0, 1, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwRolloutSettings, 1, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwShow, 3, 4, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
@@ -550,14 +573,16 @@ CreateMoveListTools(hintdata * phd)
 
     gtk_table_attach(GTK_TABLE(pwTools), pwRolloutSettings, 1, 2, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     phd->pwRolloutPresets = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_grid_attach(GTK_GRID(pwTools), phd->pwRolloutPresets, 2, 1, 1, 1);
 #else
     phd->pwRolloutPresets = gtk_hbox_new(FALSE, 0);
-#endif
     gtk_table_attach(GTK_TABLE(pwTools), phd->pwRolloutPresets, 2, 3, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
     for (i = 0; i < 5; ++i) {
         gchar *sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
@@ -578,9 +603,19 @@ CreateMoveListTools(hintdata * phd)
 
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwMove, 3, 1, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwCopy, 4, 1, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwCmark, 5, 1, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwTempMap, 6, 0, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwScoreMap, 6, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwMove, 3, 4, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
-
 
     gtk_table_attach(GTK_TABLE(pwTools), pwCopy, 4, 5, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
@@ -593,6 +628,7 @@ CreateMoveListTools(hintdata * phd)
 
     gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 6, 7, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0); 
+#endif
 
     gtk_widget_set_sensitive(pwMWC, ms.nMatchTo);
     gtk_widget_set_sensitive(pwMove, FALSE);

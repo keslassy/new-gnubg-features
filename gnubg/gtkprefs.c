@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2002-2019 the AUTHORS
+ * Copyright (C) 2002-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,8 +58,14 @@ static GtkAdjustment *apadj[2], *paAzimuth, *paElevation,
     *apadjCoefficient[2], *apadjExponent[2], *apadjBoard[4], *padjRound;
 static GtkAdjustment *apadjDiceExponent[2], *apadjDiceCoefficient[2];
 static GtkWidget *apwColour[2], *apwBoard[4],
-    *pwWood, *pwWoodType, *pwHinges, *pwLightTable, *pwMoveIndicator,
+    *pwWood, *pwWoodType, *pwHinges, *pwMoveIndicator,
     *pwWoodF, *pwNotebook, *pwLabels, *pwDynamicLabels;
+#if GTK_CHECK_VERSION(3,0,0)
+static GtkWidget *pwLightGrid;
+#else
+static GtkWidget *pwLightTable;
+#endif
+
 static GList *plBoardDesigns = NULL;
 #if defined(USE_BOARD3D)
 static GtkWidget *pwBoardType, *pwShowShadows, *pwAnimateRoll, *pwAnimateFlag,
@@ -1401,11 +1407,45 @@ Add2dLightOptions(GtkWidget * pwx, renderdata * prd)
     float rAzimuth, rElevation;
     GtkWidget *pScale;
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pw;
+
+    pwLightGrid = gtk_grid_new();
+    gtk_box_pack_start(GTK_BOX(pwx), pwLightGrid, FALSE, FALSE, 4);
+
+    gtk_grid_attach(GTK_GRID(pwLightGrid), pw = gtk_label_new(_("Light azimuth")), 0, 0, 1, 1);
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
+    gtk_widget_set_margin_top(pw, 2);
+    gtk_widget_set_margin_bottom(pw, 2);
+
+    gtk_grid_attach(GTK_GRID(pwLightGrid), pw = gtk_label_new(_("Light elevation")), 0, 1, 1, 1);
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
+    gtk_widget_set_margin_top(pw, 2);
+    gtk_widget_set_margin_bottom(pw, 2);
+
+#else
     pwLightTable = gtk_table_new(2, 2, FALSE);
     gtk_box_pack_start(GTK_BOX(pwx), pwLightTable, FALSE, FALSE, 4);
 
     gtk_table_attach(GTK_TABLE(pwLightTable), gtk_label_new(_("Light azimuth")), 0, 1, 0, 1, 0, 0, 4, 2);
     gtk_table_attach(GTK_TABLE(pwLightTable), gtk_label_new(_("Light elevation")), 0, 1, 1, 2, 0, 0, 4, 2);
+#endif
 
     rElevation = asinf(prd->arLight[2]) * 180.0f / F_PI;
     {
@@ -1430,12 +1470,35 @@ Add2dLightOptions(GtkWidget * pwx, renderdata * prd)
     pScale = gtk_hscale_new(paAzimuth);
 #endif
     gtk_widget_set_size_request(pScale, 150, -1);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwLightGrid), pScale, 1, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pScale, 4);
+    gtk_widget_set_margin_end(pScale, 4);
+#else
+    gtk_widget_set_margin_left(pScale, 4);
+    gtk_widget_set_margin_right(pScale, 4);
+#endif
+    gtk_widget_set_margin_top(pScale, 2);
+    gtk_widget_set_margin_bottom(pScale, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwLightTable), pScale, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 4, 2);
+#endif
     g_signal_connect(G_OBJECT(paAzimuth), "value-changed", G_CALLBACK(LightChanged2d), NULL);
 
     paElevation = GTK_ADJUSTMENT(gtk_adjustment_new(rElevation, 0.0, 90.0, 1.0, 10.0, 0.0));
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_table_attach(GTK_TABLE(pwLightTable), gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, paElevation), 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 4, 2);
+    gtk_grid_attach(GTK_GRID(pwLightGrid), pw = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, paElevation), 1, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
+    gtk_widget_set_margin_top(pw, 2);
+    gtk_widget_set_margin_bottom(pw, 2);
 #else
     gtk_table_attach(GTK_TABLE(pwLightTable), gtk_hscale_new(paElevation), 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 4, 2);
 #endif

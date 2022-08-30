@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2000-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2002-2020 the AUTHORS
+ * Copyright (C) 2002-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -834,7 +834,7 @@ board_start_drag(GtkWidget * UNUSED(widget), BoardData * bd, int
  * \param dice the dice
  * \param real_board the board being dragged from
  * \param old_board the board before the move
- * \param the output list of moves
+ * \param pml the output list of moves
  */
 static void
 generate_drag_moves(guint * dice, TanBoard real_board, TanBoard old_board, movelist * pml)
@@ -4034,7 +4034,12 @@ DestroySetCube(GObject * UNUSED(po), GtkWidget * pw)
 extern GtkWidget *
 board_cube_widget(Board * board)
 {
-    GtkWidget *pw = gtk_table_new(3, N_CUBES_IN_WIDGET, TRUE), *pwCube;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pw;
+#else
+    GtkWidget *pw;
+#endif
+    GtkWidget *pwCube;
     BoardData *bd = board->board_data;
     int x, y;
     int setSize = bd->rd->nSize;
@@ -4042,6 +4047,15 @@ board_cube_widget(Board * board)
     int cubeStride = setSize * CUBE_WIDTH * 4;
     int cubeFaceStride = setSize * CUBE_LABEL_WIDTH * 3;
     renderdata rd;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pw = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(pw), TRUE);
+    gtk_grid_set_row_homogeneous(GTK_GRID(pw), TRUE);
+#else
+    pw = gtk_table_new(3, N_CUBES_IN_WIDGET, TRUE);
+#endif
+   
     CopyAppearance(&rd);
     rd.nSize = setSize;
 #if defined(USE_BOARD3D)
@@ -4050,6 +4064,7 @@ board_cube_widget(Board * board)
             rd.arCubeColour[x] = bd->rd->CubeMat.ambientColour[x];
     }
 #endif
+
     TTachCube = malloc(cubeStride * setSize * CUBE_HEIGHT);
     TTachCubeFaces = malloc(cubeFaceStride * setSize * CUBE_LABEL_HEIGHT * 13);
 
@@ -4064,16 +4079,22 @@ board_cube_widget(Board * board)
             gtk_widget_add_events(pwCube, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK);
 #if GTK_CHECK_VERSION(3,0,0)
             g_signal_connect(G_OBJECT(pwCube), "draw", G_CALLBACK(cube_widget_draw), bd);
+            gtk_grid_attach(GTK_GRID(pw), pwCube, x, y, 1, 1);
 #else
             g_signal_connect(G_OBJECT(pwCube), "expose_event", G_CALLBACK(cube_widget_expose), bd);
+            gtk_table_attach_defaults(GTK_TABLE(pw), pwCube, x, x + 1, y, y + 1);
 #endif
             g_signal_connect(G_OBJECT(pwCube), "button_press_event", G_CALLBACK(cube_widget_press), bd);
-            gtk_table_attach_defaults(GTK_TABLE(pw), pwCube, x, x + 1, y, y + 1);
         }
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_set_row_spacing(GTK_GRID(pw), 4 * setSize);
+    gtk_grid_set_column_spacing(GTK_GRID(pw), 4 * setSize);
+#else
     gtk_table_set_row_spacings(GTK_TABLE(pw), 4 * setSize);
     gtk_table_set_col_spacings(GTK_TABLE(pw), 2 * setSize);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), setSize);
 
     return pw;
@@ -4166,8 +4187,8 @@ Copy3dDiceColour(renderdata * prd)
 extern GtkWidget *
 board_dice_widget(Board * board, manualDiceType mdt)
 {
-    GtkWidget *main_table = gtk_table_new(2, 2, FALSE);
-    GtkWidget *pw = gtk_table_new(6, 6, TRUE);
+    GtkWidget *main_table;
+    GtkWidget *pw;
     GtkWidget *pwDice;
     GtkWidget *label;
     char *str;
@@ -4178,6 +4199,17 @@ board_dice_widget(Board * board, manualDiceType mdt)
     int pipStride = setSize * 3;
     renderdata rd;
     SetDiceData *sdd = (SetDiceData *) g_malloc(sizeof(SetDiceData));
+
+#if GTK_CHECK_VERSION(3,0,0)
+    main_table = gtk_grid_new();
+    pw = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(pw), TRUE);
+    gtk_grid_set_row_homogeneous(GTK_GRID(pw), TRUE);
+#else
+    main_table = gtk_table_new(2, 2, FALSE);
+    pw = gtk_table_new(6, 6, TRUE);
+#endif
+
     sdd->bd = bd;
     sdd->mdt = mdt;
 
@@ -4193,7 +4225,11 @@ board_dice_widget(Board * board, manualDiceType mdt)
         label = gtk_label_new(str);
         g_free(str);
     }
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(main_table), label, 1, 0, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(main_table), label, 1, 2, 0, 1);
+#endif
 
     if (mdt != MT_STANDARD) {
         if (mdt == MT_FIRSTMOVE) {
@@ -4206,10 +4242,18 @@ board_dice_widget(Board * board, manualDiceType mdt)
             g_free(str);
         }
         gtk_label_set_angle(GTK_LABEL(label), 90);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(main_table), label, 0, 1, 1, 1);
+#else
         gtk_table_attach_defaults(GTK_TABLE(main_table), label, 0, 1, 1, 2);
+#endif
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(main_table), pw, 1, 1, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(main_table), pw, 1, 2, 1, 2);
+#endif
 
     CopyAppearance(&rd);
     rd.nSize = setSize;
@@ -4247,16 +4291,22 @@ board_dice_widget(Board * board, manualDiceType mdt)
             gtk_widget_add_events(pwDice, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK);
 #if GTK_CHECK_VERSION(3,0,0)
             g_signal_connect(G_OBJECT(pwDice), "draw", G_CALLBACK(setdice_widget_draw), sdd);
+            gtk_grid_attach(GTK_GRID(pw), pwDice, x, y, 1, 1);
 #else
             g_signal_connect(G_OBJECT(pwDice), "expose_event", G_CALLBACK(setdice_widget_expose), sdd);
+            gtk_table_attach_defaults(GTK_TABLE(pw), pwDice, x, x + 1, y, y + 1);
 #endif
             g_signal_connect(G_OBJECT(pwDice), "button_press_event", G_CALLBACK(dice_widget_press), bd);
-            gtk_table_attach_defaults(GTK_TABLE(pw), pwDice, x, x + 1, y, y + 1);
         }
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_set_row_spacing(GTK_GRID(pw), 2 * setSize);
+    gtk_grid_set_column_spacing(GTK_GRID(pw), 1 * setSize);
+#else
     gtk_table_set_row_spacings(GTK_TABLE(pw), 2 * setSize);
     gtk_table_set_col_spacings(GTK_TABLE(pw), 1 * setSize);
+#endif
     gtk_container_set_border_width(GTK_CONTAINER(pw), setSize);
 
     g_signal_connect(G_OBJECT(main_table), "destroy", G_CALLBACK(DestroySetDice), sdd);

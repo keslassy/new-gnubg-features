@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2020 Aaron Tikuisis <Aaron.Tikuisis@uottawa.ca>
  * Copyright (C) 2020 Isaac Keslassy <isaac@ee.technion.ac.il>
+ * Copyright (C) 2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,12 +98,8 @@ and come back, it works again. It may be a movelist construction issue.
 #include "backgammon.h"
 #include "eval.h"
 #include "gtkscoremap.h"
-#include "gtkgame.h"
 #include "drawboard.h"
 #include "format.h"
-#include "render.h"
-#include "renderprefs.h"
-#include "gtkboard.h"
 #include "gtkwindows.h"
 
 // these sizes help define the requested minimum quadrant size; but then GTK can set a higher value
@@ -267,8 +264,12 @@ typedef struct {
     gtkquadrant moneygQuadrant;
     GtkWidget *apwRowLabel[MAX_TABLE_SIZE]; // Row and column score labels
     GtkWidget *apwColLabel[MAX_TABLE_SIZE];
-    GtkWidget *pwTable;             // table pointer
-    GtkWidget *pwTableContainer;    // container for table
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
+    GtkWidget *pwTable;
+#endif
+    GtkWidget *pwTableContainer;     // container for the above
     GtkWidget *pwCubeBox;
     GtkWidget *pwCubeFrame;
     GtkWidget *pwHContainer;    // container for options in horizontal layout
@@ -1803,7 +1804,13 @@ InitQuadrant(gtkquadrant * pq, GtkWidget * ptable, scoremap * psm, const int qua
     pq->pContainerWidget = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pq->pContainerWidget), FALSE);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(ptable), pq->pContainerWidget, money ? 1 : i + 2, money ? 1 : j + 2, 1, 1);
+    gtk_widget_set_hexpand(pq->pContainerWidget, TRUE);
+#else
     gtk_table_attach_defaults(GTK_TABLE(ptable), pq->pContainerWidget, money ? 1 : i + 2, money ? 2 : i + 3, money ? 1 : j + 2, money ? 2 : j + 3);
+#endif
+
     // gtk_container_set_border_width(GTK_CONTAINER(pq->pContainerWidget),2);
 
         // GdkColor red = {0, 0xffff, 0x0000, 0x0000};
@@ -1928,23 +1935,32 @@ InitQuadrant(gtkquadrant * pq, GtkWidget * ptable, scoremap * psm, const int qua
 
 static void
 BuildTableContainer(scoremap * psm)
-/* Creates the gtk table.
-A pointer to the table is put into psm->pwTable, and it is placed in the container psm->pwTableContainer (to be displayed).
+/* Creates the GTK table (or grid starting wth GTK3).
+   A pointer to the table is put into psm->pwTable / psm->pwGrid, and it is placed in psm->pwTableContainer (to be displayed).
 */
 {
-    int tableSize=psm->tableSize;
-    // int sizeQuadrant=MIN(MAX_SIZE_QUADRANT, MAX_TABLE_SCREENSIZE/tableSize);
-    int quadrantHeight=MIN(MAX_SIZE_QUADRANT, MAX_TABLE_HEIGHT/tableSize);
-    int quadrantWidth=MIN(MAX_SIZE_QUADRANT, MAX_TABLE_WIDTH/tableSize);
-//g_print ("MAX_SIZE_QUADRANT %d, MAX_TABLE_HEIGHT/tableSize %d, MAX_TABLE_WIDTH/tableSize %d-> quadrantHeight %d, quadrantWidth %d\n", MAX_SIZE_QUADRANT,MAX_TABLE_HEIGHT/tableSize,MAX_TABLE_WIDTH/tableSize,quadrantHeight,quadrantWidth);
+    int tableSize = psm->tableSize;
+
+    int quadrantHeight = MIN(MAX_SIZE_QUADRANT, MAX_TABLE_HEIGHT/tableSize);
+    int quadrantWidth = MIN(MAX_SIZE_QUADRANT, MAX_TABLE_WIDTH/tableSize);
+
     int i,j;
     GtkWidget * pw;
 
-    //    gtk_container_remove(GTK_CONTAINER(psm->pwTableContainer), psm->pwTable);
-    psm->pwTable = gtk_table_new(tableSize+2, tableSize+2, ((psm->cubeScoreMap) ? FALSE : TRUE)); //last parameter: homogeneous
+#if GTK_CHECK_VERSION(3,0,0)
+    psm->pwGrid = gtk_grid_new();
+
+    gtk_grid_set_column_homogeneous(GTK_GRID(psm->pwGrid), ((psm->cubeScoreMap) ? FALSE : TRUE));
+    gtk_grid_set_row_homogeneous(GTK_GRID(psm->pwGrid), ((psm->cubeScoreMap) ? FALSE : TRUE));
+
+    gtk_grid_set_row_spacing(GTK_GRID(psm->pwGrid), TABLE_SPACING);
+    gtk_grid_set_column_spacing(GTK_GRID(psm->pwGrid), TABLE_SPACING);
+#else
+    psm->pwTable = gtk_table_new(tableSize+2, tableSize+2, ((psm->cubeScoreMap) ? FALSE : TRUE));
 
     gtk_table_set_row_spacings (GTK_TABLE(psm->pwTable), TABLE_SPACING);
     gtk_table_set_col_spacings (GTK_TABLE(psm->pwTable), TABLE_SPACING);
+#endif
 
     //    gtk_container_add(GTK_CONTAINER(psm->pwvcnt), psm->pwTable);
 
@@ -1956,7 +1972,11 @@ A pointer to the table is put into psm->pwTable, and it is placed in the contain
 
     for (i = 0; i < tableSize; ++i) {
         for (j = 0; j < tableSize; ++j) {
-            InitQuadrant(& psm->aagQuadrant[i][j], psm->pwTable, psm, quadrantWidth, quadrantHeight, i, j, FALSE);
+#if GTK_CHECK_VERSION(3,0,0)
+            InitQuadrant(&psm->aagQuadrant[i][j], psm->pwGrid, psm, quadrantWidth, quadrantHeight, i, j, FALSE);
+#else
+            InitQuadrant(&psm->aagQuadrant[i][j], psm->pwTable, psm, quadrantWidth, quadrantHeight, i, j, FALSE);
+#endif
             strcpy(psm->aaQuadrantData[i][j].decisionString,"");
             strcpy(psm->aaQuadrantData[i][j].equityText,"");
             strcpy(psm->aaQuadrantData[i][j].unallowedExplanation,"");
@@ -1966,15 +1986,29 @@ A pointer to the table is put into psm->pwTable, and it is placed in the contain
         pw = gtk_label_new("");
         psm->apwRowLabel[i]=pw; // remember it to update later
 
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(psm->pwGrid), pw, 1, i + 2, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#else
         gtk_table_attach(GTK_TABLE(psm->pwTable), pw, 1, 2, i + 2, i + 3, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0); //at the end: xpadding, ypadding; was 3,0
+#endif
 
         pw = gtk_label_new("");
         psm->apwColLabel[i]=pw;
 
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(psm->pwGrid), pw, i + 2, 1, 1, 1);
+#else
         gtk_table_attach_defaults(GTK_TABLE(psm->pwTable), pw, i + 2, i + 3, 1, 2);
+#endif
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    InitQuadrant( & psm->moneygQuadrant, psm->pwGrid, psm, quadrantWidth, quadrantHeight, 0, 0, TRUE);
+#else
     InitQuadrant( & psm->moneygQuadrant, psm->pwTable, psm, quadrantWidth, quadrantHeight, 0, 0, TRUE);
+#endif
     strcpy(psm->moneyQuadrantData.decisionString,"");
     strcpy(psm->moneyQuadrantData.equityText,"");
     strcpy(psm->moneyQuadrantData.unallowedExplanation,"");
@@ -1995,7 +2029,12 @@ A pointer to the table is put into psm->pwTable, and it is placed in the contain
 //        psm->apwPlayerTop=pw; // remember it to update later
 
     gtk_label_set_justify(GTK_LABEL(pw), GTK_JUSTIFY_CENTER);
-    gtk_table_attach_defaults(GTK_TABLE(psm->pwTable), pw, 2, tableSize+2, 0, 1);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(psm->pwGrid), pw, 2, 0, tableSize, 1);
+#else
+    gtk_table_attach_defaults(GTK_TABLE(psm->pwTable), pw, 2, tableSize + 2, 0, 1);
+#endif
 
     if (!psm->cubeScoreMap || !psm->pms->fMove)
         sz=g_strdup_printf("%s", ap[1].szName);
@@ -2004,11 +2043,24 @@ A pointer to the table is put into psm->pwTable, and it is placed in the contain
     pw = gtk_label_new(sz);
     gtk_label_set_angle(GTK_LABEL(pw), 90);
     gtk_label_set_justify(GTK_LABEL(pw), GTK_JUSTIFY_CENTER);
-    gtk_table_attach(GTK_TABLE(psm->pwTable), pw, 0, 1, 2, tableSize+2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 3, 0);
 
-
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(psm->pwGrid), pw, 0, 2, 1, tableSize);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 3);
+    gtk_widget_set_margin_end(pw, 3);
+#else
+    gtk_widget_set_margin_left(pw, 3);
+    gtk_widget_set_margin_right(pw, 3);
+#endif
+    gtk_box_pack_start(GTK_BOX(psm->pwTableContainer), psm->pwGrid, TRUE, TRUE, 0);
+#else
+    gtk_table_attach(GTK_TABLE(psm->pwTable), pw, 0, 1, 2, tableSize + 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 3, 0);
     gtk_box_pack_start(GTK_BOX(psm->pwTableContainer), psm->pwTable, TRUE, TRUE, 0);
-    // gtk_box_pack_start(GTK_BOX(psm->pwTableContainer), psm->pwTable, FALSE, FALSE, 0);
+#endif
+
     gtk_widget_show_all(psm->pwTableContainer);
 
     g_free(sz);
@@ -2037,7 +2089,11 @@ BuildCubeFrame(scoremap * psm)
 */
     GtkWidget *pwx = NULL; 
     GtkWidget *pwLabel;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
     GtkWidget *pwTable;
+#endif
 
     /* Cube value */
     // pwFrame=gtk_frame_new(_("Cube value"));
@@ -2086,59 +2142,57 @@ BuildCubeFrame(scoremap * psm)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), (1==psm->signednCube));
         g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(CubeValToggled), psm);
 
-        for (i=0,m=2; m<= MAX_CUBE_VAL; i++,m=2*m); // Find i=log2(MAX_CUBE_VAL) (rounded down)
-        pwTable = gtk_table_new(2, 1+i, FALSE);
+        for (i = 0, m = 2; m <= MAX_CUBE_VAL; i++, m = 2 * m); // Find i=log2(MAX_CUBE_VAL) (rounded down)
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwGrid = gtk_grid_new();
+        gtk_box_pack_start(GTK_BOX(psm->pwCubeBox), pwGrid, FALSE, FALSE, 0);
+#else
+        pwTable = gtk_table_new(2, 1 + i, FALSE);
         gtk_box_pack_start(GTK_BOX(psm->pwCubeBox), pwTable, FALSE, FALSE, 0);
-        for (i=0; i<2; i++) {
+#endif
+
+        for (i = 0; i < 2; i++) {
             sprintf(sz, _("%s doubled to: "), ((psm->pms->fMove) ? (ap[i].szName) : (ap[1-i].szName)));
             pwLabel = gtk_label_new(_(sz));
 #if GTK_CHECK_VERSION(3,0,0)
-                gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
-                gtk_widget_set_valign(pwLabel, GTK_ALIGN_START); //GTK_ALIGN_LEFT);
+            gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
+            gtk_widget_set_valign(pwLabel, GTK_ALIGN_START);
+            gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, i, 1, 1);
 #else
-                gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0);
+            gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0);
+            gtk_table_attach_defaults(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i + 1);
 #endif
-            gtk_table_attach_defaults(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i+1);
         }
 
-        for (m=2; m<= MAX_CUBE_VAL; m=2*m,i++) {
-            /* Iterate through allowed cube values. (Only powers of two)
-            */
-            for (j=0; j<2; j++) {
-                if (m==psm->pms->nCube && (m==1 || (j==0 && psm->pms->fMove==psm->pms->fCubeOwner) ||
-                            (j==1 && psm->pms->fMove!=psm->pms->fCubeOwner) )) {
+        for (m = 2; m <= MAX_CUBE_VAL; m = 2*m, i++) {
+            /* Iterate through allowed cube values. (Only powers of two) */
+            for (j = 0; j < 2; j++) {
+                if (m == psm->pms->nCube && (m == 1 || (j == 0 && psm->pms->fMove == psm->pms->fCubeOwner) ||
+                            (j == 1 && psm->pms->fMove != psm->pms->fCubeOwner))) {
                     sprintf(sz,"%d (%s) ", m, _("current"));
                 } else {
                     sprintf(sz,"%d", m);
                 }
 
                 pw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx),sz);
-                gtk_table_attach_defaults(GTK_TABLE(pwTable), pw, i, i+1, j, j+1);
+#if GTK_CHECK_VERSION(3,0,0)
+                gtk_grid_attach(GTK_GRID(pwGrid), pw, i, j, 1, 1);
+#else
+                gtk_table_attach_defaults(GTK_TABLE(pwTable), pw, i, i + 1, j, j + 1);
+#endif
                 pi = (int *)g_malloc(sizeof(int));
-                *pi= (j==0) ? m : -m; // Signed cube value
+                *pi = (j == 0) ? m : -m; // Signed cube value
                 g_object_set_data_full(G_OBJECT(pw), "user_data", pi, g_free);
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), (*pi==psm->signednCube));
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), (*pi == psm->signednCube));
                 g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(CubeValToggled), psm);
             }
             i++;
         }
     }
     gtk_container_add(GTK_CONTAINER(psm->pwCubeFrame), psm->pwCubeBox);
-    // gtk_box_pack_start(GTK_BOX(psm->pwTableContainer), psm->pwTable, TRUE, TRUE, 0);
-        // gtk_container_remove(GTK_CONTAINER(psm->pwCubeFrame), psm->pwCubeBox);
-        //    gtk_box_pack_start(GTK_BOX(pwv), psm->pwCubeFrame, FALSE, FALSE, 0);
     gtk_widget_show_all(psm->pwCubeFrame);
 }
-
-// void
-// UpdateTableSize(scoremap * psm)
-// /* Changes the table size when the window is already open.
-// */
-// {
-//     gtk_container_remove(GTK_CONTAINER(psm->pwv), psm->pwTable);
-//     BuildTableContainer(psm);
-// }
 
 static void
 ScoreMapPlyToggled(GtkWidget * pw, scoremap * psm)
@@ -2266,7 +2320,11 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
         if (abs(psm->signednCube) >= 2*newMatchSize) { //i.e. we set a big cube then decrease too much the match size
             psm->signednCube=1;
         }
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_container_remove(GTK_CONTAINER(psm->pwTableContainer), psm->pwGrid);
+#else
         gtk_container_remove(GTK_CONTAINER(psm->pwTableContainer), psm->pwTable);
+#endif
         gtk_container_remove(GTK_CONTAINER(psm->pwCubeFrame), psm->pwCubeBox);
         BuildTableContainer(psm);
         // psm->signednCube=signednCube;
@@ -2568,7 +2626,11 @@ int cube==1 means we want a scoremap for the cube eval, ==0 for the move eval
     int screenWidth, screenHeight;
 
 //  GtkWidget *pwDialog;
-    GtkWidget *pwGaugeTable = NULL;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGaugeGrid;
+#else
+    GtkWidget *pwGaugeTable; /* = NULL; ? */
+#endif
 //  GtkWidget *pwFrame;
 //  GtkWidget *pwv;
     GtkWidget *pw;
@@ -2595,7 +2657,7 @@ int cube==1 means we want a scoremap for the cube eval, ==0 for the move eval
 | | psm->pwTableContainer | | -pwFrame (multiple times)- | |
 | |                       | | | --pwv2 (mult. times)-- | | |
 | |                       | | | | pw (options)       | | | |
-| | pwGaugeTable          | | | ---------------------- | | |
+| | pwGaugeTable/Grid     | | | ---------------------- | | |
 | |                       | | -------------------------- | |
 | ------------------------- ------------------------------ |
 ------------------------------------------------------------
@@ -2605,7 +2667,7 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 --- pwv ---------------
 | psm->pwv             |
 | (contains the table) |
-| pwGaugeTable         |
+| pwGaugeTable/Grid    |
 | - pwh (mult. times)- |
 | | pw (options)     | |
 | -------------------- |
@@ -2701,29 +2763,39 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 
     /* gauge */
     if (psm->cubeScoreMap) {
+#if GTK_CHECK_VERSION(3,0,0)
+        pwGaugeGrid = gtk_grid_new();
+#else
         pwGaugeTable = gtk_table_new(2, GAUGE_SIZE, FALSE);
-                    //"gtk_table_new has been deprecated since version 3.4 and should not be used in newly-written code. Use gtk_grid_new()."
-                    // [or gtk_box for a single line or column]
-                    // .... but I got "undefined reference to `gtk_grid_new'", "undefined reference to `gtk_grid_attach'" when compiling
+#endif
 
         for (i = 0; i < GAUGE_SIZE; i++) {
             pw = gtk_drawing_area_new();
             gtk_widget_set_size_request(pw, 8, 20); // [*widget, width, height]
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_grid_attach(GTK_GRID(pwGaugeGrid), pw, i, 1, 1, 1);
+            gtk_widget_set_hexpand(pw, TRUE);
+#else
             gtk_table_attach_defaults(GTK_TABLE(pwGaugeTable), pw, i, i + 1, 1, 2);
+#endif
             g_object_set_data(G_OBJECT(pw), "user_data", NULL);
 
-    #if GTK_CHECK_VERSION(3,0,0)
+#if GTK_CHECK_VERSION(3,0,0)
             gtk_style_context_add_class(gtk_widget_get_style_context(pw), "gnubg-score-map-quadrant");
             g_signal_connect(G_OBJECT(pw), "draw", G_CALLBACK(DrawQuadrant), NULL);
-    #else
+#else
             g_signal_connect(G_OBJECT(pw), "expose_event", G_CALLBACK(ExposeQuadrant), NULL);
-    #endif //zzz
+#endif
             DrawGauge(pw,i,ALL);
             psm->apwFullGauge[i]=pw;
         }
         for (i = 0; i < 4; ++i) {
             psm->apwGauge[i] = gtk_label_new("");
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_grid_attach(GTK_GRID(pwGaugeGrid), psm->apwGauge[i], GAUGE_SIXTH_SIZE * 2 * i, 0, 1, 1);
+#else
             gtk_table_attach_defaults(GTK_TABLE(pwGaugeTable), psm->apwGauge[i], GAUGE_SIXTH_SIZE * 2 * i, GAUGE_SIXTH_SIZE * 2 * i + 1, 0, 1);
+#endif
         }
     }
 // *************************************************************************************************
@@ -2769,7 +2841,11 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 
     /* gauge */
     if (psm->cubeScoreMap) {
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_box_pack_start(GTK_BOX(psm->pwVContainer), pwGaugeGrid, FALSE, FALSE, 2);
+#else
         gtk_box_pack_start(GTK_BOX(psm->pwVContainer), pwGaugeTable, FALSE, FALSE, 2);
+#endif
 
         /* horizontal separator */
 

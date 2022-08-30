@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2002-2017 the AUTHORS
+ * Copyright (C) 2002-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,11 @@
 #include "gtklocdefs.h"
 
 typedef struct {
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
     GtkWidget *pwTable;
+#endif
     GtkWidget *pwName;
     GtkWidget *pwFileName;
     GtkWidget *pwDescription;
@@ -99,7 +103,13 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
     unsigned int i, j;
     char sz[16];
     GtkWidget *pwScrolledWindow = gtk_scrolled_window_new(NULL, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(pwGrid), TRUE);
+    gtk_grid_set_row_homogeneous(GTK_GRID(pwGrid), TRUE);
+#else
     GtkWidget *pwTable = gtk_table_new(nRows + 1, nCols + 1, TRUE);
+#endif
     GtkWidget *pw, *pwBox;
     mettable *pmt;
 
@@ -111,7 +121,11 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
 #endif
 
     pmt = (mettable *) g_malloc(sizeof(mettable));
+#if GTK_CHECK_VERSION(3,0,0)
+    pmt->pwGrid = pwGrid;
+#else
     pmt->pwTable = pwTable;
+#endif
 
     gtk_box_pack_start(GTK_BOX(pwBox), pmt->pwName = gtk_label_new((char *) miCurrent.szName), FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(pwBox), pmt->pwFileName = gtk_label_new((char *) miCurrent.szFileName), FALSE, FALSE, 4);
@@ -120,8 +134,8 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
 
     gtk_box_pack_start(GTK_BOX(pwBox), pwScrolledWindow, TRUE, TRUE, 0);
 
-#if GTK_CHECK_VERSION(3, 8, 0)
-    gtk_container_add(GTK_CONTAINER(pwScrolledWindow), pwTable);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_container_add(GTK_CONTAINER(pwScrolledWindow), pwGrid);
 #else
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(pwScrolledWindow), pwTable);
 #endif
@@ -130,7 +144,11 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
 
     for (i = 0; i < nCols; i++) {
         sprintf(sz, _("%u-away"), i + 1);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), i + 1, 0, 1, 1);
+#else
         gtk_table_attach_defaults(GTK_TABLE(pwTable), pw = gtk_label_new(sz), i + 1, i + 2, 0, 1);
+#endif
         if (i == nAway1) {
             gtk_widget_set_name(GTK_WIDGET(pw), "gnubg-met-matching-score");
         }
@@ -140,7 +158,11 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
 
     for (i = 0; i < nRows; i++) {
         sprintf(sz, _("%u-away"), i + 1);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), 0, i + 1, 1, 1);
+#else
         gtk_table_attach_defaults(GTK_TABLE(pwTable), pw = gtk_label_new(sz), 0, 1, i + 1, i + 2);
+#endif
         if (i == nAway0) {
             gtk_widget_set_name(GTK_WIDGET(pw), "gnubg-met-matching-score");
         }
@@ -155,7 +177,11 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
 
             pmt->aapwLabel[i][j] = gtk_label_new(NULL);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_grid_attach(GTK_GRID(pmt->pwGrid), pmt->aapwLabel[i][j], j + 1, i + 1, 1, 1);
+#else
             gtk_table_attach_defaults(GTK_TABLE(pmt->pwTable), pmt->aapwLabel[i][j], j + 1, j + 2, i + 1, i + 2);
+#endif
 
             if (i == nAway0 && j == nAway1) {
                 gtk_widget_set_name(GTK_WIDGET(pmt->aapwLabel[i][j]), "gnubg-met-the-score");
@@ -164,14 +190,17 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
             }
         }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_set_column_spacing(GTK_GRID(pwGrid), 4);
+#else
     gtk_table_set_col_spacings(GTK_TABLE(pwTable), 4);
+#endif
 
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolledWindow), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
     g_object_set_data_full(G_OBJECT(pwBox), "mettable", pmt, g_free);
 
     return pwBox;
-
 }
 
 static void

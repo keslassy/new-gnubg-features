@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2000-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2001-2021 the AUTHORS
+ * Copyright (C) 2001-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -883,7 +883,11 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
 {
 
     cubeinfo ci;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid = gtk_grid_new();
+#else
     GtkWidget *pwTable = gtk_table_new(3, 2, FALSE);
+#endif
     GtkWidget *pwLabel;
 
     float rAfter, rBefore;
@@ -902,28 +906,64 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, 0, 1, 1);
+    gtk_widget_set_hexpand(pwLabel, TRUE);
+    gtk_widget_set_vexpand(pwLabel, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwLabel, 8);
+    gtk_widget_set_margin_end(pwLabel, 8);
+#else
+    gtk_widget_set_margin_left(pwLabel, 8);
+    gtk_widget_set_margin_right(pwLabel, 8);
+#endif
+    gtk_widget_set_margin_top(pwLabel, 2);
+    gtk_widget_set_margin_bottom(pwLabel, 2);
 #else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
-#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, 0, 1, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
+#endif
 
     pwLabel = gtk_label_new(_("Equity after resignation: "));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, 1, 1, 1);
+    gtk_widget_set_hexpand(pwLabel, TRUE);
+    gtk_widget_set_vexpand(pwLabel, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwLabel, 8);
+    gtk_widget_set_margin_end(pwLabel, 8);
+#else
+    gtk_widget_set_margin_left(pwLabel, 8);
+    gtk_widget_set_margin_right(pwLabel, 8);
+#endif
+    gtk_widget_set_margin_top(pwLabel, 2);
+    gtk_widget_set_margin_bottom(pwLabel, 2);
 #else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
-#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, 1, 2, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
+#endif
 
     pwLabel = gtk_label_new(_("Difference: "));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, 2, 1, 1);
+    gtk_widget_set_hexpand(pwLabel, TRUE);
+    gtk_widget_set_vexpand(pwLabel, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwLabel, 8);
+    gtk_widget_set_margin_end(pwLabel, 8);
+#else
+    gtk_widget_set_margin_left(pwLabel, 8);
+    gtk_widget_set_margin_right(pwLabel, 8);
+#endif
+    gtk_widget_set_margin_top(pwLabel, 2);
+    gtk_widget_set_margin_bottom(pwLabel, 2);
 #else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
-#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, 2, 3, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
+#endif
 
     /* Second column: equities/mwc */
 
@@ -938,10 +978,22 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_END);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 1, 0, 1, 1);
+    gtk_widget_set_hexpand(pwLabel, TRUE);
+    gtk_widget_set_vexpand(pwLabel, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwLabel, 8);
+    gtk_widget_set_margin_end(pwLabel, 8);
+#else
+    gtk_widget_set_margin_left(pwLabel, 8);
+    gtk_widget_set_margin_right(pwLabel, 8);
+#endif
+    gtk_widget_set_margin_top(pwLabel, 2);
+    gtk_widget_set_margin_bottom(pwLabel, 2);
 #else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 1, 0.5);
-#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 1, 2, 0, 1, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
+#endif
 
 
     if (fOutputMWC && ms.nMatchTo)
@@ -953,10 +1005,22 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_END);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 1, 1, 1, 1);
+    gtk_widget_set_hexpand(pwLabel, TRUE);
+    gtk_widget_set_vexpand(pwLabel, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwLabel, 8);
+    gtk_widget_set_margin_end(pwLabel, 8);
+#else
+    gtk_widget_set_margin_left(pwLabel, 8);
+    gtk_widget_set_margin_right(pwLabel, 8);
+#endif
+    gtk_widget_set_margin_top(pwLabel, 2);
+    gtk_widget_set_margin_bottom(pwLabel, 2);
 #else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 1, 0.5);
-#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 1, 2, 1, 2, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
+#endif
 
 
     if (fOutputMWC && ms.nMatchTo)
@@ -968,13 +1032,28 @@ ResignAnalysis(float arResign[NUM_ROLLOUT_OUTPUTS], int nResigned, evalsetup * p
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pwLabel, GTK_ALIGN_END);
     gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 1, 2, 1, 1);
+    gtk_widget_set_hexpand(pwLabel, TRUE);
+    gtk_widget_set_vexpand(pwLabel, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwLabel, 8);
+    gtk_widget_set_margin_end(pwLabel, 8);
+#else
+    gtk_widget_set_margin_left(pwLabel, 8);
+    gtk_widget_set_margin_right(pwLabel, 8);
+#endif
+    gtk_widget_set_margin_top(pwLabel, 2);
+    gtk_widget_set_margin_bottom(pwLabel, 2);
 #else
     gtk_misc_set_alignment(GTK_MISC(pwLabel), 1, 0.5);
-#endif
     gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 1, 2, 2, 3, GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 8, 2);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    return pwGrid;
+#else
     return pwTable;
-
+#endif
 }
 
 
@@ -1072,11 +1151,11 @@ SetAnnotation(moverecord * pmr)
 
 #if GTK_CHECK_VERSION(3,0,0)
             pwAnalysis = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+            pwBox = gtk_grid_new();
 #else
             pwAnalysis = gtk_vbox_new(FALSE, 0);
-#endif
-
             pwBox = gtk_table_new(2, 3, FALSE);
+#endif
             gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 4);
 
             ms.fMove = ms.fTurn = pmr->fPlayer;
@@ -1089,10 +1168,16 @@ SetAnnotation(moverecord * pmr)
 
             GetMatchStateCubeInfo(&ci, &ms);
             if (GetDPEq(NULL, NULL, &ci)) {
+#if GTK_CHECK_VERSION(3,0,0)
+                gtk_grid_attach(GTK_GRID(pwBox),
+                                          gtk_label_new(pmr->stCube == SKILL_NONE ? "" : _("Didn't double")), 0, 0, 1, 1);
+                gtk_grid_attach(GTK_GRID(pwBox), skill_label(pmr->stCube), 0, 1, 1, 1);
+#else
                 gtk_table_attach_defaults(GTK_TABLE(pwBox),
                                           gtk_label_new(pmr->stCube == SKILL_NONE ? "" : _("Didn't double")), 0, 1, 0,
                                           1);
                 gtk_table_attach_defaults(GTK_TABLE(pwBox), skill_label(pmr->stCube), 0, 1, 1, 2);
+#endif
             }
 
             /* luck */
@@ -1105,18 +1190,27 @@ SetAnnotation(moverecord * pmr)
                 else
                     sprintf(pch, " (%+0.3f)", pmr->rLuck);
             }
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_grid_attach(GTK_GRID(pwBox), gtk_label_new(sz), 1, 0, 1, 1);
+            gtk_grid_attach(GTK_GRID(pwBox), luck_label(pmr->lt), 1, 1, 1, 1);
+#else
             gtk_table_attach_defaults(GTK_TABLE(pwBox), gtk_label_new(sz), 1, 2, 0, 1);
             gtk_table_attach_defaults(GTK_TABLE(pwBox), luck_label(pmr->lt), 1, 2, 1, 2);
-
+#endif
             /* chequer play skill */
 
             strcpy(sz, _("Moved "));
             FormatMove(sz + strlen(_("Moved ")), msBoard(), pmr->n.anMove);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_grid_attach(GTK_GRID(pwBox), gtk_label_new(sz), 2, 0, 1, 1);
+
+            gtk_grid_attach(GTK_GRID(pwBox), skill_label(pmr->n.stMove), 2, 1, 1, 1);
+#else
             gtk_table_attach_defaults(GTK_TABLE(pwBox), gtk_label_new(sz), 2, 3, 0, 1);
 
             gtk_table_attach_defaults(GTK_TABLE(pwBox), skill_label(pmr->n.stMove), 2, 3, 1, 2);
-
+#endif
 
             /* cube */
 
@@ -2662,7 +2756,12 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     };
     int i;
     AnalysisDetails *pAnalDetailSettings1, *pAnalDetailSettings2;
-    GtkWidget *pwDialog, *pwPage, *pwFrame, *pwLabel, *pwSpin, *pwTable;
+    GtkWidget *pwDialog, *pwPage, *pwFrame, *pwLabel, *pwSpin;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
+    GtkWidget *pwTable;
+#endif
     GtkWidget *hboxTop, *hboxBottom, *vbox1, *vbox2, *hbox;
     analysiswidget aw;
 
@@ -2738,19 +2837,25 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_box_pack_start(GTK_BOX(hboxBottom), pwFrame, TRUE, TRUE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwGrid);
+#else
     pwTable = gtk_table_new(5, 2, FALSE);
     gtk_container_add(GTK_CONTAINER(pwFrame), pwTable);
+#endif
 
     for (i = 0; i < 3; i++) {
         pwLabel = gtk_label_new(gettext(aszSkillLabel[i]));
-        gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i + 1,
-                         (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
         gtk_label_set_justify(GTK_LABEL(pwLabel), GTK_JUSTIFY_RIGHT);
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
         gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, i, 1, 1);
 #else
         gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+        gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i + 1,
+                         (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
     }
 
@@ -2758,8 +2863,13 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         aw.apadjSkill[i] = GTK_ADJUSTMENT(gtk_adjustment_new(1, 0, 1, 0.01, 0.05, 0));
 
         pwSpin = gtk_spin_button_new(GTK_ADJUSTMENT(aw.apadjSkill[i]), 1, 3);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pwSpin, 1, i, 1, 1);
+        gtk_widget_set_hexpand(pwSpin, TRUE);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pwSpin, 1, 2, i, i + 1,
                          (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
         gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(pwSpin), TRUE);
     }
 
@@ -2767,19 +2877,25 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_box_pack_start(GTK_BOX(hboxBottom), pwFrame, TRUE, TRUE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwGrid);
+#else
     pwTable = gtk_table_new(4, 2, FALSE);
     gtk_container_add(GTK_CONTAINER(pwFrame), pwTable);
+#endif
 
     for (i = 0; i < 4; i++) {
         pwLabel = gtk_label_new(gettext(aszLuckLabel[i]));
-        gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i + 1,
-                         (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
         gtk_label_set_justify(GTK_LABEL(pwLabel), GTK_JUSTIFY_RIGHT);
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
         gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, i, 1, 1);
 #else
         gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0.5);
+        gtk_table_attach(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i + 1,
+                         (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
     }
 
@@ -2787,9 +2903,13 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         aw.apadjLuck[i] = GTK_ADJUSTMENT(gtk_adjustment_new(1, 0, 1, 0.01, 0.05, 0));
 
         pwSpin = gtk_spin_button_new(GTK_ADJUSTMENT(aw.apadjLuck[i]), 1, 2);
-
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pwSpin, 1, i, 1, 1);
+        gtk_widget_set_hexpand(pwSpin, TRUE);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pwSpin, 1, 2, i, i + 1,
                          (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
         gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(pwSpin), TRUE);
     }
 
@@ -3262,14 +3382,24 @@ AddLangWidgets(GtkWidget * cont)
     numLangs--;                 /* Don't count system default */
 
 #define NUM_COLS 4              /* Display in 4 columns */
+#if GTK_CHECK_VERSION(3,0,0)
+    pwLangTable = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(pwLangTable), TRUE);
+    gtk_grid_set_row_homogeneous(GTK_GRID(pwLangTable), TRUE);
+#else
     pwLangTable = gtk_table_new(numLangs / NUM_COLS + 1, NUM_COLS, TRUE);
+#endif
 
     for (i = 0; i < numLangs; i++) {
         GtkWidget *pwFlag = GetFlagWidget(aaszLang[i + 1][0], aaszLang[i + 1][1], aaszLang[i + 1][2]);
         int row = i / NUM_COLS;
         int col = i - row * NUM_COLS;
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwLangTable), pwFlag, col, row, 1, 1);
+#else
         gtk_table_attach(GTK_TABLE(pwLangTable), pwFlag, col, col + 1, row, row + 1, (GtkAttachOptions) 0,
                          (GtkAttachOptions) 0, 0, 0);
+#endif
         if (!StrCaseCmp(szLang, aaszLang[i + 1][1]))
             selLang = pwFlag;
     }
@@ -5086,7 +5216,12 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
 {
     GtkWidget *pwPage;
     GtkWidget *pwh, *pwv, *pwHBox;
-    GtkWidget *pwTable, *pwFrame;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
+    GtkWidget *pwTable;
+#endif
+    GtkWidget *pwFrame;
     GtkWidget *pwLabel;
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -5319,12 +5454,31 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
     gtk_box_pack_start(GTK_BOX(pwv), prpw->pwTruncBearoffOS, FALSE, FALSE, 0);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwTruncBearoffOS), prw->rcRollout.fTruncBearoffOS);
 
-
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(pwGrid), TRUE);
+    gtk_grid_set_row_homogeneous(GTK_GRID(pwGrid), TRUE);
+    gtk_container_add(GTK_CONTAINER(pwPage), pwGrid);
+#else
     pwTable = gtk_table_new(2, 2, TRUE);
     gtk_container_add(GTK_CONTAINER(pwPage), pwTable);
+#endif
 
     prpw->pwCubeful = gtk_check_button_new_with_label(_("Cubeful rollout"));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), prpw->pwCubeful, 0, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(prpw->pwCubeful, 2);
+    gtk_widget_set_margin_end(prpw->pwCubeful, 2);
+#else
+    gtk_widget_set_margin_left(prpw->pwCubeful, 2);
+    gtk_widget_set_margin_right(prpw->pwCubeful, 2);
+#endif
+    gtk_widget_set_margin_top(prpw->pwCubeful, 2);
+    gtk_widget_set_margin_bottom(prpw->pwCubeful, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwCubeful, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
+#endif
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwCubeful), prw->rcRollout.fCubeful);
 
@@ -5334,7 +5488,21 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
                                 _("A cubeful rollout means that it is using the cube in the rollout. " "It is recommended to enable this option when analyzing cubeful play."));
 
     prpw->pwVarRedn = gtk_check_button_new_with_label(_("Use variance reduction"));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), prpw->pwVarRedn, 1, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(prpw->pwVarRedn, 2);
+    gtk_widget_set_margin_end(prpw->pwVarRedn, 2);
+#else
+    gtk_widget_set_margin_left(prpw->pwVarRedn, 2);
+    gtk_widget_set_margin_right(prpw->pwVarRedn, 2);
+#endif
+    gtk_widget_set_margin_top(prpw->pwVarRedn, 2);
+    gtk_widget_set_margin_bottom(prpw->pwVarRedn, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwVarRedn, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
+#endif
+
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwVarRedn), prw->rcRollout.fVarRedn);
     gtk_widget_set_tooltip_text(prpw->pwVarRedn,
                                 _("Variance Reduction is a procedure used to considerably increase "
@@ -5344,13 +5512,39 @@ RolloutPageGeneral(rolloutpagegeneral * prpw, rolloutwidget * prw)
                                   "and is almost free for higher plies. " "It is recommended to enable this option."));
 
     prpw->pwRotate = gtk_check_button_new_with_label(_("Use quasi-random dice"));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), prpw->pwRotate, 0, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(prpw->pwRotate, 2);
+    gtk_widget_set_margin_end(prpw->pwRotate, 2);
+#else
+    gtk_widget_set_margin_left(prpw->pwRotate, 2);
+    gtk_widget_set_margin_right(prpw->pwRotate, 2);
+#endif
+    gtk_widget_set_margin_top(prpw->pwRotate, 2);
+    gtk_widget_set_margin_bottom(prpw->pwRotate, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwRotate, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
+#endif
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwRotate), prw->rcRollout.fRotate);
     gtk_widget_set_tooltip_text(prpw->pwRotate,
                                 _("This option ensures that every possible roll appears once in each set of 36 trials. This is only moderately useful if variance reduction is used but important if it isn't. It is recommended to enable this option."));
 
     prpw->pwInitial = gtk_check_button_new_with_label(_("Rollout as initial position"));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), prpw->pwInitial, 1, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(prpw->pwInitial, 2);
+    gtk_widget_set_margin_end(prpw->pwInitial, 2);
+#else
+    gtk_widget_set_margin_left(prpw->pwInitial, 2);
+    gtk_widget_set_margin_right(prpw->pwInitial, 2);
+#endif
+    gtk_widget_set_margin_top(prpw->pwInitial, 2);
+    gtk_widget_set_margin_bottom(prpw->pwInitial, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), prpw->pwInitial, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
+#endif
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(prpw->pwInitial), prw->rcRollout.fInitial);
     gtk_widget_set_tooltip_text(prpw->pwInitial,
                                 _("This option ensures that the first ply roll is not a doublet."));
@@ -5431,7 +5625,13 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
     const float epsilon = 1.0e-6f;
 
     while (saveAs || loadRS) {
-        GtkWidget *pwDialog, *pwTable, *pwVBox;
+        GtkWidget *pwDialog, *pwVBox;
+#if GTK_CHECK_VERSION(3,0,0)
+        GtkWidget *pwGrid;
+        GtkWidget *pw;
+#else
+        GtkWidget *pwTable;
+#endif
         GtkWidget *saveAsButton, *loadRSButton;
 
         memcpy(&rw.rcRollout, &rcRollout, sizeof(rcRollout));
@@ -5494,24 +5694,99 @@ SetRollouts(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwIgnore))
 #endif
         gtk_notebook_append_page(GTK_NOTEBOOK(rw.RolloutNotebook), pwVBox, gtk_label_new(_("Play Settings")));
 
+#if GTK_CHECK_VERSION(3,0,0)
+        pwGrid = gtk_grid_new();
+        gtk_box_pack_start(GTK_BOX(pwVBox), pwGrid, FALSE, FALSE, 0);
+#else
         pwTable = gtk_table_new(3, 2, FALSE);
         gtk_box_pack_start(GTK_BOX(pwVBox), pwTable, FALSE, FALSE, 0);
+#endif
+
         rw.analysisDetails[0] = RolloutPage(rw.prpwPages[0], _("First Play (0) "), TRUE, &rw.frame[0]);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_widget_get_parent(rw.analysisDetails[0]->pwSettingWidgets), 0, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
+#else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[0]->pwSettingWidgets), 0, 1, 0, 1,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
+#endif
+
         rw.analysisDetails[1] = RolloutPage(rw.prpwPages[1], _("First Play (1) "), TRUE, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_widget_get_parent(rw.analysisDetails[1]->pwSettingWidgets), 1, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
+#else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[1]->pwSettingWidgets), 1, 2, 0, 1,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
+#endif
+
         rw.analysisDetails[2] = RolloutPage(rw.prpwPages[2], _("Later Play (0) "), TRUE, &rw.frame[1]);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_widget_get_parent(rw.analysisDetails[2]->pwSettingWidgets), 0, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
+#else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[2]->pwSettingWidgets), 0, 1, 1, 2,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
+#endif
+
         rw.analysisDetails[3] = RolloutPage(rw.prpwPages[3], _("Later Play (1) "), TRUE, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_widget_get_parent(rw.analysisDetails[3]->pwSettingWidgets), 1, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
+#else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[3]->pwSettingWidgets), 1, 2, 1, 2,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
+#endif
+
         rw.prpwTrunc->pmf = NULL;
         rw.analysisDetails[4] = RolloutPage(rw.prpwTrunc, _("Eval. at Truncation Point"), FALSE, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_widget_get_parent(rw.analysisDetails[4]->pwSettingWidgets), 0, 2, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
+#else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), gtk_widget_get_parent(rw.analysisDetails[4]->pwSettingWidgets), 0, 1, 2, 3,
                          (GtkAttachOptions) 0, (GtkAttachOptions) 0, 4, 4);
+#endif
 
         RPGeneral.pwPlayersAreSame = gtk_check_button_new_with_label(_("Use same settings for both players"));
         gtk_box_pack_start(GTK_BOX(pwVBox), RPGeneral.pwPlayersAreSame, FALSE, FALSE, 0);
@@ -5840,19 +6115,39 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     GtkWidget *pwDialog = GTKCreateDialog(_("GNU Backgammon - Hint"), DT_INFO,
                                           NULL, DIALOG_FLAG_MODAL, NULL, NULL);
     GtkWidget *pw;
-    GtkWidget *pwTable = gtk_table_new(2, 3, FALSE);
-
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
+    GtkWidget *pwTable;
+#endif
     char *pch, sz[16];
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+#else
+    pwTable = gtk_table_new(2, 3, FALSE);
+#endif
 
     /* equity before resignation */
 
-    gtk_table_attach(GTK_TABLE(pwTable), pw =
-                     gtk_label_new(fMWC ? _("MWC before resignation") : _("Equity before resignation")), 0, 1, 0, 1,
-                     GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
 #if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid),  pw =
+                     gtk_label_new(fMWC ? _("MWC before resignation") : _("Equity before resignation")), 0, 0, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
 #else
+    gtk_table_attach(GTK_TABLE(pwTable), pw =
+                     gtk_label_new(fMWC ? _("MWC before resignation") : _("Equity before resignation")), 0, 1, 0, 1,
+                     GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
     gtk_misc_set_alignment(GTK_MISC(pw), 0.0, 0.5);
 #endif
 
@@ -5861,24 +6156,45 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     else
         sprintf(sz, "%+6.3f", -rEqBefore);
 
-    gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz),
-                     1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
 #if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), 1, 0, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
     gtk_widget_set_halign(pw, GTK_ALIGN_END);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
 #else
+    gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz),
+                     1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
     gtk_misc_set_alignment(GTK_MISC(pw), 1.0, 0.5);
 #endif
 
     /* equity after resignation */
 
-    gtk_table_attach(GTK_TABLE(pwTable), pw =
-                     gtk_label_new(fMWC ? _("MWC after resignation") : _("Equity after resignation")), 0, 1, 1, 2,
-                     GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
 #if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid),  pw =
+                     gtk_label_new(fMWC ? _("MWC after resignation") : _("Equity after resignation")), 0, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
 #else
+    gtk_table_attach(GTK_TABLE(pwTable), pw =
+                     gtk_label_new(fMWC ? _("MWC after resignation") : _("Equity after resignation")), 0, 1, 1, 2,
+                     GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
     gtk_misc_set_alignment(GTK_MISC(pw), 0.0, 0.5);
 #endif
 
@@ -5887,12 +6203,22 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     else
         sprintf(sz, "%+6.3f", -rEqAfter);
 
-    gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz),
-                     1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
 #if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), 1, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
     gtk_widget_set_halign(pw, GTK_ALIGN_END);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
 #else
+    gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz),
+                     1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 4, 0);
     gtk_misc_set_alignment(GTK_MISC(pw), 1.0, 0.5);
 #endif
 
@@ -5901,12 +6227,24 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     else
         pch = _("You should reject the resignation!");
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(pch), 0, 2, 2, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+    gtk_widget_set_margin_top(pw, 8);
+    gtk_widget_set_margin_bottom(pw, 8);
+
+    gtk_container_set_border_width(GTK_CONTAINER(pwGrid), 8);
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwGrid);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(pch),
                      0, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 8);
 
     gtk_container_set_border_width(GTK_CONTAINER(pwTable), 8);
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwTable);
+#endif
 
     GTKRunDialog(pwDialog);
 }
@@ -7490,22 +7828,30 @@ AddToTable(GtkWidget * pwTable, char *str, int x, int y)
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_END);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwTable), pw, x, y, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
 #else
     gtk_misc_set_alignment(GTK_MISC(pw), 1.0, 0.5);
-#endif
     gtk_table_attach(GTK_TABLE(pwTable), pw, x, x + 1, y, y + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+#endif
 }
 
 extern void
 GTKMatchInfo(void)
 {
     int fOK = FALSE;
-    GtkWidget *pwDialog, *pwTable, *pwScrolled, *pwComment;
+    GtkWidget *pwDialog, *pwScrolled, *pwComment;
+    GtkWidget *pwTable;
     char sz[128];
 
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Match information"),
                                DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(MatchInfoOK), &fOK);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwTable = gtk_grid_new();
+#else
     pwTable = gtk_table_new(3, 7, FALSE);
+#endif
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwTable);
 
     sprintf(sz, _("%s's rating:"), ap[0].szName);
@@ -7521,17 +7867,29 @@ GTKMatchInfo(void)
     AddToTable(pwTable, _("Annotator:"), 0, 6);
 
     sprintf(sz, "%-78s", _("Comments:"));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), gtk_label_new(sz), 2, 0, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), gtk_label_new(sz), 2, 3, 0, 1);
+#endif
 
     apwRating[0] = gtk_entry_new();
     if (mi.pchRating[0])
         gtk_entry_set_text(GTK_ENTRY(apwRating[0]), mi.pchRating[0]);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), apwRating[0], 1, 0, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), apwRating[0], 1, 2, 0, 1);
+#endif
 
     apwRating[1] = gtk_entry_new();
     if (mi.pchRating[1])
         gtk_entry_set_text(GTK_ENTRY(apwRating[1]), mi.pchRating[1]);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), apwRating[1], 1, 1, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), apwRating[1], 1, 2, 1, 2);
+#endif
 
     pwDate = gtk_calendar_new();
     if (mi.nYear) {
@@ -7539,27 +7897,47 @@ GTKMatchInfo(void)
         gtk_calendar_select_day(GTK_CALENDAR(pwDate), mi.nDay);
     } else
         gtk_calendar_select_day(GTK_CALENDAR(pwDate), 0);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), pwDate, 1, 2, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), pwDate, 1, 2, 2, 3);
+#endif
 
     pwEvent = gtk_entry_new();
     if (mi.pchEvent)
         gtk_entry_set_text(GTK_ENTRY(pwEvent), mi.pchEvent);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), pwEvent, 1, 3, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), pwEvent, 1, 2, 3, 4);
+#endif
 
     pwRound = gtk_entry_new();
     if (mi.pchRound)
         gtk_entry_set_text(GTK_ENTRY(pwRound), mi.pchRound);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), pwRound, 1, 4, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), pwRound, 1, 2, 4, 5);
+#endif
 
     pwPlace = gtk_entry_new();
     if (mi.pchPlace)
         gtk_entry_set_text(GTK_ENTRY(pwPlace), mi.pchPlace);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), pwPlace, 1, 5, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), pwPlace, 1, 2, 5, 6);
+#endif
 
     pwAnnotator = gtk_entry_new();
     if (mi.pchAnnotator)
         gtk_entry_set_text(GTK_ENTRY(pwAnnotator), mi.pchAnnotator);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), pwAnnotator, 1, 6, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), pwAnnotator, 1, 2, 6, 7);
+#endif
 
     pwComment = gtk_text_view_new();
     txtComment = gtk_text_view_get_buffer(GTK_TEXT_VIEW(pwComment));
@@ -7572,7 +7950,11 @@ GTKMatchInfo(void)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(pwScrolled), pwComment);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTable), pwScrolled, 2, 1, 1, 6);
+#else
     gtk_table_attach_defaults(GTK_TABLE(pwTable), pwScrolled, 2, 3, 1, 7);
+#endif
 
     GTKRunDialog(pwDialog);
 }

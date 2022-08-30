@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2002-2018 the AUTHORS
+ * Copyright (C) 2002-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -462,8 +462,13 @@ GTKShowExport(exportsetup * pexs)
 
     GtkWidget *pwVBox;
     GtkWidget *pwFrame;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+    GtkWidget *pwGridX;
+#else
     GtkWidget *pwTable;
     GtkWidget *pwTableX;
+#endif
     GtkWidget *pwHBox;
     GtkWidget *pwHScale;
     GtkWidget *genHtml;
@@ -488,15 +493,33 @@ GTKShowExport(exportsetup * pexs)
 
     /* first tab */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+
+    gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwGrid, gtk_label_new(_("Content")));
+#else
     pwTable = gtk_table_new(2, 2, FALSE);
 
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwTable, gtk_label_new(_("Content")));
+#endif
 
     /* include stuff */
 
     pwFrame = gtk_frame_new(_("Include"));
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pwFrame, 0, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwFrame, 8);
+    gtk_widget_set_margin_end(pwFrame, 8);
+#else
+    gtk_widget_set_margin_left(pwFrame, 8);
+    gtk_widget_set_margin_right(pwFrame, 8);
+#endif
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 8, 0);
+#endif
 
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -517,18 +540,42 @@ GTKShowExport(exportsetup * pexs)
     pwFrame = gtk_frame_new(_("Board"));
 
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pwFrame, 1, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwFrame, 2);
+    gtk_widget_set_margin_end(pwFrame, 2);
+#else
+    gtk_widget_set_margin_left(pwFrame, 2);
+    gtk_widget_set_margin_right(pwFrame, 2);
+#endif
+    gtk_widget_set_margin_top(pwFrame, 2);
+    gtk_widget_set_margin_bottom(pwFrame, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
+#endif
 
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGridX = gtk_grid_new();
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwGridX);
 
+    gtk_grid_attach(GTK_GRID(pwGridX), pw = gtk_label_new(_("Board")), 0, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
+    gtk_widget_set_halign(pw, GTK_ALIGN_START);
+    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+#else
     pwTableX = gtk_table_new(2, 3, FALSE);
     gtk_container_add(GTK_CONTAINER(pwFrame), pwTableX);
 
     gtk_table_attach(GTK_TABLE(pwTableX), pw = gtk_label_new(_("Board")), 0, 1, 0, 1, GTK_FILL, GTK_FILL, 4, 0);
-#if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_set_halign(pw, GTK_ALIGN_START);
-    gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
-#else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
 #endif
 
@@ -544,16 +591,43 @@ GTKShowExport(exportsetup * pexs)
 
     gtk_box_pack_start(GTK_BOX(pw), gtk_label_new(_("move(s) between board shown")), TRUE, TRUE, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTableX), pw, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 4, 0);
-
-
-    gtk_table_attach(GTK_TABLE(pwTableX), pw = gtk_label_new(_("Players")), 0, 1, 1, 2, GTK_FILL, GTK_FILL, 4, 0);
 #if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGridX), pw, 1, 0, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwGridX), pw = gtk_label_new(_("Players")), 0, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+
+    gtk_grid_attach(GTK_GRID(pwGridX), pw = pew->apwSide[0] = gtk_check_button_new_with_label(ap[0].szName), 1, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
 #else
-    gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
 #endif
+
+    gtk_grid_attach(GTK_GRID(pwGridX), pw = pew->apwSide[1] = gtk_check_button_new_with_label(ap[1].szName), 1, 2, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
+
+#else
+    gtk_table_attach(GTK_TABLE(pwTableX), pw, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 4, 0);
+
+    gtk_table_attach(GTK_TABLE(pwTableX), pw = gtk_label_new(_("Players")), 0, 1, 1, 2, GTK_FILL, GTK_FILL, 4, 0);
+    gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
 
     gtk_table_attach(GTK_TABLE(pwTableX),
                      pew->apwSide[0] =
@@ -562,13 +636,28 @@ GTKShowExport(exportsetup * pexs)
     gtk_table_attach(GTK_TABLE(pwTableX),
                      pew->apwSide[1] =
                      gtk_check_button_new_with_label(ap[1].szName), 1, 2, 2, 3, GTK_FILL, GTK_FILL, 4, 0);
+#endif
 
     /* moves */
 
     pwFrame = gtk_frame_new(_("Output move analysis"));
 
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pwFrame, 0, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwFrame, 2);
+    gtk_widget_set_margin_end(pwFrame, 2);
+#else
+    gtk_widget_set_margin_left(pwFrame, 2);
+    gtk_widget_set_margin_right(pwFrame, 2);
+#endif
+    gtk_widget_set_margin_top(pwFrame, 2);
+    gtk_widget_set_margin_bottom(pwFrame, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -617,7 +706,20 @@ GTKShowExport(exportsetup * pexs)
     pwFrame = gtk_frame_new(_("Output cube decision analysis"));
 
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pwFrame, 1, 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwFrame, 2);
+    gtk_widget_set_margin_end(pwFrame, 2);
+#else
+    gtk_widget_set_margin_left(pwFrame, 2);
+    gtk_widget_set_margin_right(pwFrame, 2);
+#endif
+    gtk_widget_set_margin_top(pwFrame, 2);
+    gtk_widget_set_margin_bottom(pwFrame, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 1, 2, 1, 2, GTK_FILL, GTK_FILL, 2, 2);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -651,16 +753,34 @@ GTKShowExport(exportsetup * pexs)
 
     /* second tab */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwGrid, gtk_label_new(_("Style")));
+#else
     pwTable = gtk_table_new(1, 2, FALSE);
-
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwTable, gtk_label_new(_("Style")));
+#endif
 
     /* HTML */
 
     pwFrame = gtk_frame_new(_("HTML export options"));
 
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pwFrame, 0, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwFrame, 2);
+    gtk_widget_set_margin_end(pwFrame, 2);
+#else
+    gtk_widget_set_margin_left(pwFrame, 2);
+    gtk_widget_set_margin_right(pwFrame, 2);
+#endif
+    gtk_widget_set_margin_top(pwFrame, 2);
+    gtk_widget_set_margin_bottom(pwFrame, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -722,7 +842,21 @@ GTKShowExport(exportsetup * pexs)
     pwFrame = gtk_frame_new(_("Export sizes"));
 
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pwFrame, 1, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pwFrame, 2);
+    gtk_widget_set_margin_end(pwFrame, 2);
+#else
+    gtk_widget_set_margin_left(pwFrame, 2);
+    gtk_widget_set_margin_right(pwFrame, 2);
+#endif
+    gtk_widget_set_margin_top(pwFrame, 2);
+    gtk_widget_set_margin_bottom(pwFrame, 2);
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pwFrame, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 2, 2);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -732,7 +866,7 @@ GTKShowExport(exportsetup * pexs)
     gtk_container_add(GTK_CONTAINER(pwFrame), pwVBox);
     gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 4);
 
-    /* Png size */
+    /* PNG size */
 #if GTK_CHECK_VERSION(3,0,0)
     pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2003-2021 the AUTHORS
+ * Copyright (C) 2003-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -578,12 +578,17 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
     int i, j;
 
     GtkWidget *pwDialog;
-    GtkWidget *pwTable = NULL;
     GtkWidget *pwv;
     GtkWidget *pw;
     GtkWidget *pwh;
     GtkWidget *pwx = NULL;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwOuterGrid;
+    GtkWidget *pwGrid = NULL;
+#else
     GtkWidget *pwOuterTable;
+    GtkWidget *pwTable = NULL;
+#endif
 
     int k, l, km, lm, m;
 
@@ -630,8 +635,15 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
     for (km = 1; km * lm < n; ++km);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwOuterGrid = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(pwOuterGrid), TRUE);
+    gtk_grid_set_row_homogeneous(GTK_GRID(pwOuterGrid), TRUE);
+    gtk_box_pack_start(GTK_BOX(pwv), pwOuterGrid, TRUE, TRUE, 0);
+#else
     pwOuterTable = gtk_table_new(km, lm, TRUE);
     gtk_box_pack_start(GTK_BOX(pwv), pwOuterTable, TRUE, TRUE, 0);
+#endif
 
     for (k = m = 0; k < km; ++k)
         for (l = 0; l < lm && m < n; ++l, ++m) {
@@ -642,9 +654,19 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
             pw = gtk_frame_new(ptm->szTitle);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_grid_attach(GTK_GRID(pwOuterGrid), pw, l, k, 1, 1);
+
+            pwGrid = gtk_grid_new();
+            gtk_grid_set_column_homogeneous(GTK_GRID(pwGrid), TRUE);
+            gtk_grid_set_row_homogeneous(GTK_GRID(pwGrid), TRUE);
+            gtk_container_add(GTK_CONTAINER(pw), pwGrid);
+#else
             gtk_table_attach_defaults(GTK_TABLE(pwOuterTable), pw, l, l + 1, k, k + 1);
 
-            gtk_container_add(GTK_CONTAINER(pw), pwTable = gtk_table_new(7, 7, TRUE));
+            pwTable = gtk_table_new(7, 7, TRUE);
+            gtk_container_add(GTK_CONTAINER(pw), pwTable);
+#endif
 
             /* drawing areas */
 
@@ -659,7 +681,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
                     gtk_widget_set_size_request(ptm->aapwDA[i][j], SIZE_QUADRANT, SIZE_QUADRANT);
 
+#if GTK_CHECK_VERSION(3,0,0)
+                    gtk_grid_attach(GTK_GRID(pwGrid), ptm->aapwe[i][j], i + 1, j + 1, 1, 1);
+#else
                     gtk_table_attach_defaults(GTK_TABLE(pwTable), ptm->aapwe[i][j], i + 1, i + 2, j + 1, j + 2);
+#endif
 
                     pi = (int *) g_malloc(sizeof(int));
                     *pi = i * 6 + j + m * 100;
@@ -678,7 +704,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
                 pw = gtk_drawing_area_new();
                 gtk_widget_set_size_request(pw, SIZE_QUADRANT, SIZE_QUADRANT);
 
+#if GTK_CHECK_VERSION(3,0,0)
+                gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, i + 1, 1, 1);
+#else
                 gtk_table_attach_defaults(GTK_TABLE(pwTable), pw, 0, 1, i + 1, i + 2);
+#endif
 
                 pi = (int *) g_malloc(sizeof(int));
                 *pi = i;
@@ -695,7 +725,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
                 pw = gtk_drawing_area_new();
                 gtk_widget_set_size_request(pw, SIZE_QUADRANT, SIZE_QUADRANT);
 
+#if GTK_CHECK_VERSION(3,0,0)
+                gtk_grid_attach(GTK_GRID(pwGrid), pw, i + 1, 0, 1, 1);
+#else
                 gtk_table_attach_defaults(GTK_TABLE(pwTable), pw, i + 1, i + 2, 0, 1);
+#endif
 
                 pi = (int *) g_malloc(sizeof(int));
                 *pi = i;
@@ -720,7 +754,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
             gtk_widget_set_size_request(ptm->pwAverage, SIZE_QUADRANT, SIZE_QUADRANT);
 
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_grid_attach(GTK_GRID(pwGrid), ptm->pweAverage, 0, 0, 1, 1);
+#else
             gtk_table_attach_defaults(GTK_TABLE(pwTable), ptm->pweAverage, 0, 1, 0, 1);
+#endif
 
             pi = (int *) g_malloc(sizeof(int));
             *pi = -m - 1;
@@ -746,15 +784,25 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
     /* gauge */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_box_pack_start(GTK_BOX(pwv), pwGrid, FALSE, FALSE, 0);
+#else
     pwTable = gtk_table_new(2, 16, FALSE);
     gtk_box_pack_start(GTK_BOX(pwv), pwTable, FALSE, FALSE, 0);
+#endif
 
     for (i = 0; i < 16; ++i) {
 
         pw = gtk_drawing_area_new();
         gtk_widget_set_size_request(pw, 15, 20);
 
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, i, 1, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+#else
         gtk_table_attach_defaults(GTK_TABLE(pwTable), pw, i, i + 1, 1, 2);
+#endif
 
         g_object_set_data(G_OBJECT(pw), "user_data", NULL);
 
@@ -772,7 +820,11 @@ GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const in
 
     for (i = 0; i < 2; ++i) {
         ptmw->apwGauge[i] = gtk_label_new("");
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), ptmw->apwGauge[i], 15 * i, 0, 1, 1);
+#else
         gtk_table_attach_defaults(GTK_TABLE(pwTable), ptmw->apwGauge[i], 15 * i, 15 * i + 1, 0, 1);
+#endif
     }
 
     /* separator */

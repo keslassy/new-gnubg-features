@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006-2008 Christian Anthon <anthon@kiku.dk>
- * Copyright (C) 2006-2018 the AUTHORS
+ * Copyright (C) 2006-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -708,7 +708,12 @@ extern GtkWidget *
 RelationalOptions(void)
 {
     int i;
-    GtkWidget *hb1, *hb2, *vb1, *vb2, *table, *lbl, *align, *help, *pwScrolled;
+    GtkWidget *hb1, *hb2, *vb1, *vb2, *lbl, *align, *help, *pwScrolled;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *grid;
+#else
+    GtkWidget *table;
+#endif
 
     dbStore = gtk_list_store_new(1, G_TYPE_STRING);
     dbList = gtk_tree_view_new_with_model(GTK_TREE_MODEL(dbStore));
@@ -743,56 +748,79 @@ RelationalOptions(void)
 #endif
     gtk_widget_set_tooltip_text(hb1, _("Database type can be SQLite (bundled with GNU Backgammon), MySQL/MariaDB or PostgreSQL. " "The first one needs only a database name. For the other two you need an external database server and to configure how to access it"));
     gtk_box_pack_start(GTK_BOX(hb1), gtk_label_new(_("DB Type")), FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hb1), dbtype, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hb1), dbtype, TRUE, FALSE, 0);
 
     gtk_box_pack_start(GTK_BOX(vb1), hb1, FALSE, FALSE, 0);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    grid = gtk_grid_new();
+#else
     table = gtk_table_new(4, 2, FALSE);
+#endif
+
     lbl = gtk_label_new(_("Username"));
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_set_halign(lbl, GTK_ALIGN_END);
+    gtk_widget_set_halign(lbl, GTK_ALIGN_START);
     gtk_widget_set_valign(lbl, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(grid), lbl, 0, 0, 1, 1);
 #else
-    gtk_misc_set_alignment(GTK_MISC(lbl), 1, 0.5);
-#endif
+    gtk_misc_set_alignment(GTK_MISC(lbl), 0, 0.5);
     gtk_table_attach(GTK_TABLE(table), lbl, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+#endif
+
     user = gtk_entry_new();
     gtk_entry_set_width_chars(GTK_ENTRY(user), 20);
     g_signal_connect(user, "changed", G_CALLBACK(CredentialsChanged), dbList);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), user, 1, 0, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(table), user, 1, 2, 0, 1, 0, 0, 0, 0);
+#endif
 
     lbl = gtk_label_new(_("Password"));
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_set_halign(lbl, GTK_ALIGN_END);
+    gtk_widget_set_halign(lbl, GTK_ALIGN_START);
     gtk_widget_set_valign(lbl, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(grid), lbl, 0, 1, 1, 1);
 #else
-    gtk_misc_set_alignment(GTK_MISC(lbl), 1, 0.5);
-#endif
+    gtk_misc_set_alignment(GTK_MISC(lbl), 0, 0.5);
     gtk_table_attach(GTK_TABLE(table), lbl, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+#endif
+
     password = gtk_entry_new();
     gtk_entry_set_width_chars(GTK_ENTRY(password), 20);
     gtk_entry_set_visibility(GTK_ENTRY(password), FALSE);
     g_signal_connect(password, "changed", G_CALLBACK(CredentialsChanged), dbList);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), password, 1, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(table), password, 1, 2, 1, 2, 0, 0, 0, 0);
+#endif
 
     lbl = gtk_label_new(_("DB server"));
     gtk_widget_set_tooltip_text(lbl, _("Entered as: hostname:port"));
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_set_halign(lbl, GTK_ALIGN_END);
+    gtk_widget_set_halign(lbl, GTK_ALIGN_START);
     gtk_widget_set_valign(lbl, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(grid), lbl, 0, 2, 1, 1);
 #else
-    gtk_misc_set_alignment(GTK_MISC(lbl), 1, 0.5);
-#endif
+    gtk_misc_set_alignment(GTK_MISC(lbl), 0, 0.5);
     gtk_table_attach(GTK_TABLE(table), lbl, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+#endif
+
     hostname = gtk_entry_new();
     gtk_entry_set_max_length(GTK_ENTRY(hostname), 64);
     gtk_entry_set_width_chars(GTK_ENTRY(hostname), 20);
     gtk_entry_set_visibility(GTK_ENTRY(hostname), TRUE);
     g_signal_connect(hostname, "changed", G_CALLBACK(CredentialsChanged), dbList);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), hostname, 1, 2, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(table), hostname, 1, 2, 2, 3, 0, 0, 0, 0);
+#endif
 
     login = gtk_button_new_with_label(_("Login"));
     g_signal_connect(login, "clicked", G_CALLBACK(LoginClicked), dbList);
@@ -800,9 +828,17 @@ RelationalOptions(void)
 
     align = gtk_alignment_new(1, 0, 0, 0);
     gtk_container_add(GTK_CONTAINER(align), login);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), align, 1, 3, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(table), align, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(vb1), grid, FALSE, FALSE, 4);
+#else
     gtk_box_pack_start(GTK_BOX(vb1), table, FALSE, FALSE, 4);
+#endif
 
     gameStats = gtk_check_button_new_with_label(_("Store game stats"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(gameStats), storeGameStats);

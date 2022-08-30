@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2003-2017 the AUTHORS
+ * Copyright (C) 2003-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,9 +116,11 @@ ThorpPage(TanBoard anBoard, const int UNUSED(fMove))
 static GtkWidget *
 EffectivePipCount(const float arPips[2], const float arWastage[2], const int fInvert, epcwidget * pepcw)
 {
-
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid = gtk_grid_new();
+#else
     GtkWidget *pwTable = gtk_table_new(3, 4, FALSE);
-
+#endif
     GtkWidget *pwvbox;
     GtkWidget *pw;
     GtkWidget *pwFrame;
@@ -137,31 +139,103 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
 
     /* table */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwvbox), pwGrid, FALSE, FALSE, 4);
+
+    gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(_("EPC")), 1, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
+    gtk_widget_set_margin_top(pw, 4);
+    gtk_widget_set_margin_bottom(pw, 4);
+
+    gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(_("Wastage")), 2, 0, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 4);
+    gtk_widget_set_margin_end(pw, 4);
+#else
+    gtk_widget_set_margin_left(pw, 4);
+    gtk_widget_set_margin_right(pw, 4);
+#endif
+    gtk_widget_set_margin_top(pw, 4);
+    gtk_widget_set_margin_bottom(pw, 4);
+
+#else
     gtk_box_pack_start(GTK_BOX(pwvbox), pwTable, FALSE, FALSE, 4);
 
     gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("EPC")), 1, 2, 0, 1, 0, 0, 4, 4);
     gtk_table_attach(GTK_TABLE(pwTable), gtk_label_new(_("Wastage")), 2, 3, 0, 1, 0, 0, 4, 4);
+#endif
 
     for (i = 0; i < 2; ++i) {
 
         gchar *sz = g_strdup_printf(_("Player %s"), ap[i].szName);
-        gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz), 0, 1, i + 1, i + 2, 0, 0, 4, 4);
+
 #if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), 0, i + 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
+#else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+
         gtk_widget_set_halign(pw, GTK_ALIGN_START);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
 #else
+        gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz), 0, 1, i + 1, i + 2, 0, 0, 4, 4);
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
 #endif
+
         g_free(sz);
 
         sz = g_strdup_printf("%7.3f", arPips[fInvert ? !i : i]);
+
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), 1, i + 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
+#else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz), 1, 2, i + 1, i + 2, 0, 0, 4, 4);
+#endif
+
         g_free(sz);
         if (pepcw)
             pepcw->apwEPC[i] = pw;
 
         sz = g_strdup_printf("%7.3f", arWastage[fInvert ? !i : i]);
+
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), 2, i + 1, 1, 1);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 4);
+        gtk_widget_set_margin_end(pw, 4);
+#else
+        gtk_widget_set_margin_left(pw, 4);
+        gtk_widget_set_margin_right(pw, 4);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pw = gtk_label_new(sz), 2, 3, i + 1, i + 2, 0, 0, 4, 4);
+#endif
+
         g_free(sz);
         if (pepcw)
             pepcw->apwWastage[i] = pw;
@@ -186,7 +260,6 @@ EffectivePipCount(const float arPips[2], const float arWastage[2], const int fIn
 #endif
 
     return pwFrame;
-
 }
 
 static void

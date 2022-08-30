@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
  * Copyright (C) 2021 Aaron Tikuisis and Isaac Keslassy (MoneyEval)
- * Copyright (C) 2002-2021 the AUTHORS
+ * Copyright (C) 2002-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,37 +93,158 @@ static GtkWidget *
 OutputPercentsTable(const float ar[])
 {
 /* Creates the table showing win% etc. */
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
     GtkWidget *pwTable;
+#endif
     GtkWidget *pw;
     int i;
     static gchar *headings[] = { N_("Win"), N_("W(g)"), N_("W(bg)"),
         "-", N_("Lose"), N_("L(g)"), N_("L(bg)")
     };
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+#else
     pwTable = gtk_table_new(2, 7, FALSE);
+#endif
 
     for (i = 0; i < 7; i++) {
         pw = gtk_label_new(gettext(headings[i]));
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, i, 0, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 2);
+        gtk_widget_set_margin_end(pw, 2);
+#else
+        gtk_widget_set_margin_left(pw, 2);
+        gtk_widget_set_margin_right(pw, 2);
+#endif
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pw, i, i + 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
+#endif
     }
 
     pw = gtk_label_new(OutputPercent(ar[OUTPUT_WIN]));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 2);
+    gtk_widget_set_margin_end(pw, 2);
+#else
+    gtk_widget_set_margin_left(pw, 2);
+    gtk_widget_set_margin_right(pw, 2);
+#endif
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 1, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
+#endif
+
     pw = gtk_label_new(OutputPercent(ar[OUTPUT_WINGAMMON]));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 1, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 2);
+    gtk_widget_set_margin_end(pw, 2);
+#else
+    gtk_widget_set_margin_left(pw, 2);
+    gtk_widget_set_margin_right(pw, 2);
+#endif
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pw, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
+#endif
+
     pw = gtk_label_new(OutputPercent(ar[OUTPUT_WINBACKGAMMON]));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 2, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 2);
+    gtk_widget_set_margin_end(pw, 2);
+#else
+    gtk_widget_set_margin_left(pw, 2);
+    gtk_widget_set_margin_right(pw, 2);
+#endif
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pw, 2, 3, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
+#endif
 
     pw = gtk_label_new(" - ");
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 3, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 2);
+    gtk_widget_set_margin_end(pw, 2);
+#else
+    gtk_widget_set_margin_left(pw, 2);
+    gtk_widget_set_margin_right(pw, 2);
+#endif
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pw, 3, 4, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
+#endif
 
     pw = gtk_label_new(OutputPercent(1.0f - ar[OUTPUT_WIN]));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 4, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 2);
+    gtk_widget_set_margin_end(pw, 2);
+#else
+    gtk_widget_set_margin_left(pw, 2);
+    gtk_widget_set_margin_right(pw, 2);
+#endif
+#else
     gtk_table_attach(GTK_TABLE(pwTable), pw, 4, 5, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
-    pw = gtk_label_new(OutputPercent(ar[OUTPUT_LOSEGAMMON]));
-    gtk_table_attach(GTK_TABLE(pwTable), pw, 5, 6, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
-    pw = gtk_label_new(OutputPercent(ar[OUTPUT_LOSEBACKGAMMON]));
-    gtk_table_attach(GTK_TABLE(pwTable), pw, 6, 7, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
+#endif
 
+    pw = gtk_label_new(OutputPercent(ar[OUTPUT_LOSEGAMMON]));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 5, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 2);
+    gtk_widget_set_margin_end(pw, 2);
+#else
+    gtk_widget_set_margin_left(pw, 2);
+    gtk_widget_set_margin_right(pw, 2);
+#endif
+#else
+    gtk_table_attach(GTK_TABLE(pwTable), pw, 5, 6, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
+#endif
+
+    pw = gtk_label_new(OutputPercent(ar[OUTPUT_LOSEBACKGAMMON]));
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 6, 1, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 2);
+    gtk_widget_set_margin_end(pw, 2);
+#else
+    gtk_widget_set_margin_left(pw, 2);
+    gtk_widget_set_margin_right(pw, 2);
+#endif
+#else
+    gtk_table_attach(GTK_TABLE(pwTable), pw, 6, 7, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 2, 0);
+#endif
+
+#if GTK_CHECK_VERSION(3,0,0)
+    return pwGrid;
+#else
     return pwTable;
+#endif
 }
 
 static void
@@ -143,7 +264,11 @@ TakeAnalysis(cubehintdata * pchd)
 {
     cubeinfo ci;
     GtkWidget *pw;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
     GtkWidget *pwTable;
+#endif
     GtkWidget *pwFrame;
     int iRow;
     int i;
@@ -177,8 +302,13 @@ TakeAnalysis(cubehintdata * pchd)
     g_free(sz);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 8);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwGrid);
+#else
     pwTable = gtk_table_new(6, 4, FALSE);
     gtk_container_add(GTK_CONTAINER(pwFrame), pwTable);
+#endif
 
     /* if EVAL_EVAL include cubeless equity and winning percentages */
 
@@ -219,12 +349,22 @@ TakeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 4, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 8);
+    gtk_widget_set_margin_end(pw, 8);
 #else
+    gtk_widget_set_margin_left(pw, 8);
+    gtk_widget_set_margin_right(pw, 8);
+#endif
+#else
+    gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
 #endif
     g_free(sz);
 
-    gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
     iRow++;
 
     /* winning percentages */
@@ -233,17 +373,46 @@ TakeAnalysis(cubehintdata * pchd)
 
     case EVAL_EVAL:
         pw = OutputPercentsTable(cdec->aarOutput[0]);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 4, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
+#endif
         iRow++;
 
         break;
 
     case EVAL_ROLLOUT:
-
         pw = OutputPercentsTable(cdec->aarOutput[1]);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 4, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
+#endif
         iRow++;
 
         break;
@@ -260,12 +429,24 @@ TakeAnalysis(cubehintdata * pchd)
     /* sub-header */
 
     pw = gtk_label_new(_("Cubeful equities:"));
-    gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 4, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 8);
+    gtk_widget_set_margin_end(pw, 8);
+#else
+    gtk_widget_set_margin_left(pw, 8);
+    gtk_widget_set_margin_right(pw, 8);
+#endif
+    gtk_widget_set_margin_top(pw, 4);
+    gtk_widget_set_margin_bottom(pw, 4);
 #else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+    gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
 #endif
     iRow++;
 
@@ -288,13 +469,22 @@ TakeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pw, GTK_ALIGN_START);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
-#endif
-        g_free(sz);
-
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          0, 1, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
+#endif
+        g_free(sz);
 
         /* label */
 
@@ -302,12 +492,21 @@ TakeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pw, GTK_ALIGN_START);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 1, iRow, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
-#endif
-
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          1, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
+#endif
 
         /* equity */
 
@@ -320,13 +519,22 @@ TakeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pw, GTK_ALIGN_END);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 2, iRow, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
         gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
-#endif
-        g_free(sz);
-
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          2, 3, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
+#endif
+        g_free(sz);
 
         /* difference */
 
@@ -342,13 +550,22 @@ TakeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
             gtk_widget_set_halign(pw, GTK_ALIGN_END);
             gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+            gtk_grid_attach(GTK_GRID(pwGrid), pw, 3, iRow, 1, 1);
+            gtk_widget_set_hexpand(pw, TRUE);
+            gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+            gtk_widget_set_margin_start(pw, 8);
+            gtk_widget_set_margin_end(pw, 8);
+#else
+            gtk_widget_set_margin_left(pw, 8);
+            gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
             gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
-#endif
-            g_free(sz);
-
             gtk_table_attach(GTK_TABLE(pwTable), pw,
                              3, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
+#endif
+            g_free(sz);
 
         }
 
@@ -362,11 +579,22 @@ TakeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 2, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 8);
+    gtk_widget_set_margin_end(pw, 8);
+#else
+    gtk_widget_set_margin_left(pw, 8);
+    gtk_widget_set_margin_right(pw, 8);
+#endif
+    gtk_widget_set_margin_top(pw, 8);
+    gtk_widget_set_margin_bottom(pw, 8);
 #else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
-#endif
-
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
+#endif
 
     switch (cd) {
 
@@ -408,11 +636,22 @@ TakeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 2, iRow, 2, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 8);
+    gtk_widget_set_margin_end(pw, 8);
+#else
+    gtk_widget_set_margin_left(pw, 8);
+    gtk_widget_set_margin_right(pw, 8);
+#endif
+    gtk_widget_set_margin_top(pw, 8);
+    gtk_widget_set_margin_bottom(pw, 8);
 #else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
-#endif
-
     gtk_table_attach(GTK_TABLE(pwTable), pw, 2, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
+#endif
 
     iRow++;
 
@@ -420,7 +659,23 @@ TakeAnalysis(cubehintdata * pchd)
     if (pchd->ms.nMatchTo && pchd->evalAtMoney) {
 
         GtkWidget *pwJ = gtk_check_button_new_with_label ("Jacoby"); 
+
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pwJ, 0, iRow, 2, 1);
+        gtk_widget_set_hexpand(pwJ, TRUE);
+        gtk_widget_set_vexpand(pwJ, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pwJ, 8);
+        gtk_widget_set_margin_end(pwJ, 8);
+#else
+        gtk_widget_set_margin_left(pwJ, 8);
+        gtk_widget_set_margin_right(pwJ, 8);
+#endif
+        gtk_widget_set_margin_top(pwJ, 8);
+        gtk_widget_set_margin_bottom(pwJ, 8);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pwJ, 0, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
+#endif
         g_signal_connect(G_OBJECT (pwJ), "toggled", G_CALLBACK(JacobyToggled), pchd); 
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwJ), moneyEvalJacoby);
         gtk_widget_set_tooltip_text(pwJ, _("Toggle Jacoby rule for money play"));
@@ -448,7 +703,11 @@ CubeAnalysis(cubehintdata * pchd)
 {
     cubeinfo ci;
     GtkWidget *pw;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwGrid;
+#else
     GtkWidget *pwTable;
+#endif
     GtkWidget *pwFrame;
     int iRow;
     int i;
@@ -518,8 +777,13 @@ CubeAnalysis(cubehintdata * pchd)
 #endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pw);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pwGrid = gtk_grid_new();
+    gtk_box_pack_start(GTK_BOX(pw), pwGrid, FALSE, FALSE, 0);
+#else
     pwTable = gtk_table_new(8, 4, FALSE);
     gtk_box_pack_start(GTK_BOX(pw), pwTable, FALSE, FALSE, 0);
+#endif
 
     iRow = 0;
 
@@ -566,12 +830,21 @@ CubeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 4, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 8);
+    gtk_widget_set_margin_end(pw, 8);
+#else
+    gtk_widget_set_margin_left(pw, 8);
+    gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+    gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
 #endif
     g_free(sz);
-
-    gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
 
     iRow++;
 
@@ -581,19 +854,47 @@ CubeAnalysis(cubehintdata * pchd)
     if (pes->et == EVAL_EVAL) {
 
         pw = OutputPercentsTable(cdec->aarOutput[0]);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 4, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
+        gtk_widget_set_margin_top(pw, 4);
+        gtk_widget_set_margin_bottom(pw, 4);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
+#endif
 
         iRow++;
     }
 
     pw = gtk_label_new(_("Cubeful equities:"));
-    gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 4, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 8);
+    gtk_widget_set_margin_end(pw, 8);
+#else
+    gtk_widget_set_margin_left(pw, 8);
+    gtk_widget_set_margin_right(pw, 8);
+#endif
+    gtk_widget_set_margin_top(pw, 4);
+    gtk_widget_set_margin_bottom(pw, 4);
 #else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
+    gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 4, iRow, iRow + 1, GTK_EXPAND |
+GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
 #endif
     iRow++;
 
@@ -608,13 +909,22 @@ CubeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pw, GTK_ALIGN_START);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
-#endif
-        g_free(sz);
-
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          0, 1, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
+#endif
+        g_free(sz);
 
         /* label */
 
@@ -622,12 +932,21 @@ CubeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pw, GTK_ALIGN_START);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 1, iRow, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
         gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
-#endif
-
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          1, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
+#endif
 
         /* equity */
 
@@ -637,12 +956,21 @@ CubeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pw, GTK_ALIGN_END);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 2, iRow, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
         gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
-#endif
-
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          2, 3, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
+#endif
 
         /* difference */
 
@@ -653,13 +981,21 @@ CubeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
             gtk_widget_set_halign(pw, GTK_ALIGN_END);
             gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+            gtk_grid_attach(GTK_GRID(pwGrid), pw, 3, iRow, 1, 1);
+            gtk_widget_set_hexpand(pw, TRUE);
+            gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+            gtk_widget_set_margin_start(pw, 8);
+            gtk_widget_set_margin_end(pw, 8);
+#else
+            gtk_widget_set_margin_left(pw, 8);
+            gtk_widget_set_margin_right(pw, 8);
+#endif
 #else
             gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
-#endif
-
             gtk_table_attach(GTK_TABLE(pwTable), pw,
                              3, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 0);
-
+#endif
         }
 
         iRow++;
@@ -676,13 +1012,23 @@ CubeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
             gtk_widget_set_halign(pw, GTK_ALIGN_CENTER);
             gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+            gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 4, 1);
+            gtk_widget_set_hexpand(pw, TRUE);
+            gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+            gtk_widget_set_margin_start(pw, 8);
+            gtk_widget_set_margin_end(pw, 8);
+#else
+            gtk_widget_set_margin_left(pw, 8);
+            gtk_widget_set_margin_right(pw, 8);
+#endif
+            gtk_widget_set_margin_top(pw, 4);
+            gtk_widget_set_margin_bottom(pw, 4);
 #else
             gtk_misc_set_alignment(GTK_MISC(pw), 0.5, 0.5);
-#endif
-
             gtk_table_attach(GTK_TABLE(pwTable), pw,
                              0, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
-
+#endif
             iRow++;
 
         }
@@ -695,21 +1041,43 @@ CubeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 0, iRow, 2, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 8);
+    gtk_widget_set_margin_end(pw, 8);
+#else
+    gtk_widget_set_margin_left(pw, 8);
+    gtk_widget_set_margin_right(pw, 8);
+#endif
+    gtk_widget_set_margin_top(pw, 8);
+    gtk_widget_set_margin_bottom(pw, 8);
 #else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
-#endif
-
     gtk_table_attach(GTK_TABLE(pwTable), pw, 0, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
+#endif
 
     pw = gtk_label_new(GetCubeRecommendation(cd));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(pw, GTK_ALIGN_START);
     gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+    gtk_grid_attach(GTK_GRID(pwGrid), pw, 2, iRow, 1, 1);
+    gtk_widget_set_hexpand(pw, TRUE);
+    gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+    gtk_widget_set_margin_start(pw, 8);
+    gtk_widget_set_margin_end(pw, 8);
+#else
+    gtk_widget_set_margin_left(pw, 8);
+    gtk_widget_set_margin_right(pw, 8);
+#endif
+    gtk_widget_set_margin_top(pw, 8);
+    gtk_widget_set_margin_bottom(pw, 8);
 #else
     gtk_misc_set_alignment(GTK_MISC(pw), 0, 0.5);
-#endif
-
     gtk_table_attach(GTK_TABLE(pwTable), pw, 2, 3, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
+#endif
 
     /* percent */
 
@@ -721,13 +1089,23 @@ CubeAnalysis(cubehintdata * pchd)
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_widget_set_halign(pw, GTK_ALIGN_END);
         gtk_widget_set_valign(pw, GTK_ALIGN_CENTER);
+        gtk_grid_attach(GTK_GRID(pwGrid), pw, 3, iRow, 1, 1);
+        gtk_widget_set_hexpand(pw, TRUE);
+        gtk_widget_set_vexpand(pw, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pw, 8);
+        gtk_widget_set_margin_end(pw, 8);
+#else
+        gtk_widget_set_margin_left(pw, 8);
+        gtk_widget_set_margin_right(pw, 8);
+#endif
+        gtk_widget_set_margin_top(pw, 8);
+        gtk_widget_set_margin_bottom(pw, 8);
 #else
         gtk_misc_set_alignment(GTK_MISC(pw), 1, 0.5);
-#endif
-
         gtk_table_attach(GTK_TABLE(pwTable), pw,
                          3, 4, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
-
+#endif
     }
     iRow++;
 
@@ -735,7 +1113,23 @@ CubeAnalysis(cubehintdata * pchd)
     if (pchd->evalAtMoney) {
 
         GtkWidget *pwJ = gtk_check_button_new_with_label ("Jacoby"); 
+
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_grid_attach(GTK_GRID(pwGrid), pwJ, 0, iRow, 2, 1);
+        gtk_widget_set_hexpand(pwJ, TRUE);
+        gtk_widget_set_vexpand(pwJ, TRUE);
+#if GTK_CHECK_VERSION(3,12,0)
+        gtk_widget_set_margin_start(pwJ, 8);
+        gtk_widget_set_margin_end(pwJ, 8);
+#else
+        gtk_widget_set_margin_left(pwJ, 8);
+        gtk_widget_set_margin_right(pwJ, 8);
+#endif
+        gtk_widget_set_margin_top(pwJ, 8);
+        gtk_widget_set_margin_bottom(pwJ, 8);
+#else
         gtk_table_attach(GTK_TABLE(pwTable), pwJ, 0, 2, iRow, iRow + 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 8);
+#endif
         g_signal_connect(G_OBJECT (pwJ), "toggled", G_CALLBACK(JacobyToggled), pchd); 
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwJ), moneyEvalJacoby);
         gtk_widget_set_tooltip_text(pwJ, _("Toggle Jacoby rule for money play"));
@@ -759,8 +1153,6 @@ It is called after something in pchd has changed, e.g., eval at different ply.
     if(!pchd->evalAtMoney) 
         find_skills(pchd->pmr, &pchd->ms, pchd->did_double, pchd->did_take);//gnubg.c / backgammon.h: 
     // Don't find skills for hypothetical money decision, because this is not relevant.
-
-
 
     switch (pchd->pmr->mt) {
     case MOVE_NORMAL:
@@ -792,7 +1184,7 @@ It is called after something in pchd has changed, e.g., eval at different ply.
 
     }
    
-    g_assert(pchd->pw!=NULL);
+    g_assert(pchd->pw != NULL);
 
     /* Remove old analysis */
     if (pchd->pwFrame != NULL) // This is null when first called from CreateCubeAnalysis()
@@ -1166,6 +1558,13 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     /* toolbox on the left with buttons for eval, rollout and more */
 
+#if GTK_CHECK_VERSION(3,0,0)
+    pchd->pwTools = pwTools = gtk_grid_new();
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwEval, 0, 0, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwEvalSettings, 1, 0, 1, 1);
+#else
     pchd->pwTools = pwTools = gtk_table_new(2, 6, FALSE);
 
     gtk_table_attach(GTK_TABLE(pwTools), pwEval, 0, 1, 0, 1,
@@ -1173,13 +1572,15 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     gtk_table_attach(GTK_TABLE(pwTools), pwEvalSettings, 1, 2, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_grid_attach(GTK_GRID(pwTools), pw, 2, 0, 1, 1);
 #else
     pw = gtk_hbox_new(FALSE, 0);
-#endif
     gtk_table_attach(GTK_TABLE(pwTools), pw, 2, 3, 0, 1, (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
     for (i = 0; i < 5; ++i) {
 
@@ -1209,24 +1610,47 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     pwRolloutPresets = gtk_hbox_new(FALSE, 0);
 #endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwMWC, 3, 0, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwMWC, 3, 4, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwTempMap, 4, 0, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 4, 5, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwCmark, 4, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwCmark, 4, 5, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
-
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwRollout, 0, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwRollout, 0, 1, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwRolloutSettings, 1, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwRolloutSettings, 1, 2, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwRolloutPresets, 2, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwRolloutPresets, 2, 3, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
     for (i = 0; i < 5; ++i) {
         GtkWidget *ro_preset;
@@ -1248,13 +1672,26 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     }
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwCopy, 3, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwCopy, 3, 4, 1, 2,
                      (GtkAttachOptions)(GTK_FILL), (GtkAttachOptions)(0), 0, 0);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwMoneyEval, 5, 0, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwMoneyEval, 5, 6, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(pwTools), pwScoreMap, 5, 1, 1, 1);
+#else
     gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 5, 6, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+#endif
 
 // Note: evalAtMoney should always be false here.
     gtk_widget_set_sensitive(pwMWC, pchd->ms.nMatchTo && !pchd->evalAtMoney); //MWC not available in money play, i.e.
@@ -1363,6 +1800,7 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
 
 #if GTK_CHECK_VERSION(3,0,0)
     pchd->pw = pw = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+    gtk_widget_set_halign(pchd->pw, GTK_ALIGN_START);
 #else
     pchd->pw = pw = gtk_hbox_new(FALSE, 2);
 #endif

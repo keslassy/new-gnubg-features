@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2004 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2003-2019 the AUTHORS
+ * Copyright (C) 2003-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1106,7 +1106,7 @@ append_dice_options(optionswidget * pow)
 #endif
                 gtk_box_pack_start(GTK_BOX(pwvbox3), pwhbox, FALSE, FALSE, 0);
 
-                /* Rng types */
+                /* RNG types */
                 pow->pwRngComboBox = gtk_combo_box_text_new();
                 gtk_box_pack_start(GTK_BOX(pwhbox), pow->pwRngComboBox, FALSE, FALSE, 26);
                 /* NB. Doesn't look like gtk currently supports tooltips for individual combobox entries */
@@ -1246,7 +1246,11 @@ append_other_options(optionswidget * pow)
     GtkWidget *pwvbox;
     GtkWidget *pwev;
     GtkWidget *pwhbox;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *grid;
+#else
     GtkWidget *table;
+#endif
     GtkWidget *label;
     GtkWidget *pw;
     GtkWidget *pwScale;
@@ -1309,48 +1313,77 @@ append_other_options(optionswidget * pow)
                                 _("This option controls whether moves in the "
                                   "game list window are shown in different " "colours depending on their analysis"));
 
+#if GTK_CHECK_VERSION(3,0,0)
+    grid = gtk_grid_new();
+#else
     table = gtk_table_new(2, 3, FALSE);
+#endif
 
     label = gtk_label_new(_("Default SGF folder:"));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(label, GTK_ALIGN_START);
     gtk_widget_set_valign(label, GTK_ALIGN_CENTER);
+    gtk_widget_set_hexpand(label, TRUE);
+    gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 1, 1);
 #else
     gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-#endif
     gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 0, 1);
+#endif
     pow->pwDefaultSGFFolder = gtk_file_chooser_button_new(NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
     if (default_sgf_folder)
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(pow->pwDefaultSGFFolder), default_sgf_folder);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_hexpand(pow->pwDefaultSGFFolder,TRUE);
+    gtk_grid_attach(GTK_GRID(grid), pow->pwDefaultSGFFolder, 1, 0, 1, 1);
+#else
     gtk_table_attach_defaults(GTK_TABLE(table), pow->pwDefaultSGFFolder, 1, 2, 0, 1);
+#endif
 
     label = gtk_label_new(_("Default Import folder:"));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(label, GTK_ALIGN_START);
     gtk_widget_set_valign(label, GTK_ALIGN_CENTER);
+    gtk_widget_set_hexpand(label, TRUE);
+    gtk_grid_attach(GTK_GRID(grid), label, 0, 1, 1, 1);
 #else
     gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-#endif
     gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 1, 2);
+#endif
     pow->pwDefaultImportFolder = gtk_file_chooser_button_new(NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
     if (default_import_folder)
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(pow->pwDefaultImportFolder), default_import_folder);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), pow->pwDefaultImportFolder, 1, 1, 1, 1);
+    gtk_widget_set_hexpand(pow->pwDefaultImportFolder,TRUE);
+#else
     gtk_table_attach_defaults(GTK_TABLE(table), pow->pwDefaultImportFolder, 1, 2, 1, 2);
+#endif
 
     label = gtk_label_new(_("Default Export folder:"));
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_widget_set_halign(label, GTK_ALIGN_START);
     gtk_widget_set_valign(label, GTK_ALIGN_CENTER);
+    gtk_widget_set_hexpand(label, TRUE);
+    gtk_grid_attach(GTK_GRID(grid), label, 0, 2, 1, 1);
 #else
     gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-#endif
     gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 2, 3);
+#endif
     pow->pwDefaultExportFolder = gtk_file_chooser_button_new(NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
     if (default_export_folder)
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(pow->pwDefaultExportFolder), default_export_folder);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), pow->pwDefaultExportFolder, 1, 2, 1, 1);
+    gtk_widget_set_hexpand(pow->pwDefaultExportFolder,TRUE);
+#else
     gtk_table_attach_defaults(GTK_TABLE(table), pow->pwDefaultExportFolder, 1, 2, 2, 3);
+#endif
 
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwvbox), grid, FALSE, FALSE, 3);
+#else
     gtk_box_pack_start(GTK_BOX(pwvbox), table, FALSE, FALSE, 3);
+#endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);

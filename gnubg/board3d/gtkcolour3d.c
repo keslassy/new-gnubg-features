@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2019 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2006-2011 the AUTHORS
+ * Copyright (C) 2006-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -271,30 +271,61 @@ texture_set_active(void)
 static void
 AddWidgets(GtkWidget * window)
 {
-    GtkWidget *table, *label, *scale;
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *grid;
+#else
+    GtkWidget *table;
+#endif
+    GtkWidget *label, *scale;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    grid = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
+    gtk_grid_set_row_homogeneous(GTK_GRID(grid), TRUE);
+    gtk_container_add(GTK_CONTAINER(window), grid);
+#else
     table = gtk_table_new(5, 4, TRUE);
     gtk_container_add(GTK_CONTAINER(window), table);
+#endif
 
     label = gtk_label_new(_("Ambient colour:"));
-    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 0, 1);
     pcpAmbient = gtk_color_button_new();
     g_signal_connect(G_OBJECT(pcpAmbient), "color-set", UpdateColourPreview, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    /* coordinates are: left, top, width, height */
+    gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), pcpAmbient, 1, 0, 1, 1);
+#else
+    /* coordinates are: left, right, top, bottom */
+    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 0, 1);
     gtk_table_attach_defaults(GTK_TABLE(table), pcpAmbient, 1, 2, 0, 1);
+#endif
 
     label = gtk_label_new(_("Diffuse colour:"));
-    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 1, 2);
     pcpDiffuse = gtk_color_button_new();
     g_signal_connect(G_OBJECT(pcpDiffuse), "color-set", UpdateColourPreview, NULL);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), label, 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), pcpDiffuse, 1, 1, 1, 1);
+#else
+    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 1, 2);
     gtk_table_attach_defaults(GTK_TABLE(table), pcpDiffuse, 1, 2, 1, 2);
+#endif
 
     label = gtk_label_new(_("Specular colour:"));
-    gtk_table_attach_defaults(GTK_TABLE(table), label, 2, 3, 0, 1);
     pcpSpecular = gtk_color_button_new();
     g_signal_connect(G_OBJECT(pcpSpecular), "color-set", UpdateColourPreview, NULL);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), label, 2, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), pcpSpecular, 3, 0, 1, 1);
+#else
+    gtk_table_attach_defaults(GTK_TABLE(table), label, 2, 3, 0, 1);
     gtk_table_attach_defaults(GTK_TABLE(table), pcpSpecular, 3, 4, 0, 1);
+#endif
 
     label = gtk_label_new(_("Shine:"));
-    gtk_table_attach_defaults(GTK_TABLE(table), label, 2, 3, 1, 2);
     padjShine = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 128.0, 1.0, 10.0, 0.0));
     g_signal_connect(G_OBJECT(padjShine), "value-changed", G_CALLBACK(UpdateColourPreview), NULL);
 #if GTK_CHECK_VERSION(3,0,0)
@@ -303,10 +334,16 @@ AddWidgets(GtkWidget * window)
     scale = gtk_hscale_new(padjShine);
 #endif
     gtk_scale_set_digits(GTK_SCALE(scale), 0);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), label, 2, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), scale, 3, 1, 1, 1);
+#else
+    gtk_table_attach_defaults(GTK_TABLE(table), label, 2, 3, 1, 2);
     gtk_table_attach_defaults(GTK_TABLE(table), scale, 3, 4, 1, 2);
+#endif
 
     pOpacitylabel = gtk_label_new(_("Opacity:"));
-    gtk_table_attach_defaults(GTK_TABLE(table), pOpacitylabel, 0, 1, 2, 3);
     padjOpacity = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 1.0, 100.0, 1.0, 10.0, 0.0));
     g_signal_connect(G_OBJECT(padjOpacity), "value-changed", G_CALLBACK(UpdateColourPreview), NULL);
 #if GTK_CHECK_VERSION(3,0,0)
@@ -315,21 +352,41 @@ AddWidgets(GtkWidget * window)
     psOpacity = gtk_hscale_new(padjOpacity);
 #endif
     gtk_scale_set_digits(GTK_SCALE(psOpacity), 0);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), pOpacitylabel, 0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), psOpacity, 1, 2, 1, 1);
+#else
+    gtk_table_attach_defaults(GTK_TABLE(table), pOpacitylabel, 0, 1, 2, 3);
     gtk_table_attach_defaults(GTK_TABLE(table), psOpacity, 1, 2, 2, 3);
+#endif
 
     pTexturelabel = gtk_label_new(_("Texture:"));
-    gtk_table_attach_defaults(GTK_TABLE(table), pTexturelabel, 2, 3, 2, 3);
     textureComboBox = GTK_WIDGET(gtk_combo_box_text_new());
     texture_set_active();
     gtk_widget_set_sensitive(textureComboBox, FALSE);
     g_signal_connect(textureComboBox, "changed", G_CALLBACK(TextureChange), NULL);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), pTexturelabel, 2, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), textureComboBox, 2, 3, 2, 1);
+#else
+    gtk_table_attach_defaults(GTK_TABLE(table), pTexturelabel, 2, 3, 2, 3);
     gtk_table_attach_defaults(GTK_TABLE(table), textureComboBox, 2, 4, 3, 4);
+#endif
 
     label = gtk_label_new(_("Preview:"));
-    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 3, 4);
 
     pwPreview = CreateGLPreviewWidget(&col3d);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_grid_attach(GTK_GRID(grid), label, 0, 3, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), pwPreview, 0, 4, 2, 1);
+#else
+    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 3, 4);
     gtk_table_attach_defaults(GTK_TABLE(table), pwPreview, 0, 2, 4, 5);
+#endif
+
 }
 
 static void
