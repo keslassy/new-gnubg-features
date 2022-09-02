@@ -24,7 +24,6 @@
  */
 
 #include "config.h"
-#include "gtklocdefs.h"
 
 #include <gtk/gtk.h>
 
@@ -405,8 +404,12 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
         if (tmp)
             *tmp = 0;
         pango_layout_set_text(layout, pch, -1);
-        gtk_locdef_paint_layout(gtk_widget_get_style(pw), gtk_widget_get_window(pw), cr,
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_render_layout(gtk_widget_get_style_context(pw), cr, 2.0, (double)y, layout);
+#else
+        gtk_paint_layout(gtk_widget_get_style(pw), gtk_widget_get_window(pw),
                                 GTK_STATE_NORMAL, TRUE, NULL, pw, NULL, 2, (int) y, layout);
+#endif
         if (tmp) {
             pch = tmp + 1;
             y += (float)(allocation.height - 4) / 5.0f;

@@ -506,9 +506,14 @@ GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
             g_free(sz);
 
             pango_layout_get_pixel_size(layout, &width, &height);
-            gtk_locdef_paint_layout(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr,
-                                    GTK_STATE_NORMAL, TRUE, NULL, pwGraph, "label",
-                                    x + cx * i / 20 - width / 2 /* FIXME */ , y - height - 1, layout);
+#if GTK_CHECK_VERSION(3,0,0)
+            gtk_render_layout(gtk_widget_get_style_context(pwGraph), cr,
+                                (double)(x + cx * i / 20 - width / 2) /* FIXME */, (double)(y - height - 1), layout);
+#else
+            gtk_paint_layout(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph),
+                                GTK_STATE_NORMAL, TRUE, NULL, pwGraph, "label",
+                                x + cx * i / 20 - width / 2 /* FIXME */ , y - height - 1, layout);
+#endif
         }
     }
     g_object_unref(layout);

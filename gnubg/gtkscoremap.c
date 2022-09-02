@@ -86,7 +86,6 @@ and come back, it works again. It may be a movelist construction issue.
 */
 
 #include "config.h"
-#include "gtklocdefs.h"
 
 #include <gtk/gtk.h>
 
@@ -1747,7 +1746,11 @@ The function updates the decision text in each square.
     x=(allocation.width - width/PANGO_SCALE)/2;
     y=(allocation.height - height/PANGO_SCALE)/2;
 
-    gtk_locdef_paint_layout(gtk_widget_get_style(pw), gtk_widget_get_window(pw), cr, GTK_STATE_NORMAL, TRUE, NULL, pw, NULL, (int) x, (int) y, layout);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_render_layout(gtk_widget_get_style_context(pw), cr, (double)x, (double)y, layout);
+#else
+    gtk_paint_layout(gtk_widget_get_style(pw), gtk_widget_get_window(pw), GTK_STATE_NORMAL, TRUE, NULL, pw, NULL, (int) x, (int) y, layout);
+#endif
 
     g_object_unref(layout);
 
