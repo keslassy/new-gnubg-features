@@ -1152,9 +1152,11 @@ SetAnnotation(moverecord * pmr)
 #if GTK_CHECK_VERSION(3,0,0)
             pwAnalysis = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
             pwBox = gtk_grid_new();
+            gtk_grid_set_column_homogeneous(GTK_GRID(pwBox), TRUE);
+            gtk_grid_set_row_homogeneous(GTK_GRID(pwBox), TRUE);
 #else
             pwAnalysis = gtk_vbox_new(FALSE, 0);
-            pwBox = gtk_table_new(2, 3, FALSE);
+            pwBox = gtk_table_new(2, 3, TRUE);
 #endif
             gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 4);
 
@@ -1172,6 +1174,9 @@ SetAnnotation(moverecord * pmr)
                 gtk_grid_attach(GTK_GRID(pwBox),
                                           gtk_label_new(pmr->stCube == SKILL_NONE ? "" : _("Didn't double")), 0, 0, 1, 1);
                 gtk_grid_attach(GTK_GRID(pwBox), skill_label(pmr->stCube), 0, 1, 1, 1);
+            } else {
+                /* Neeeded for proper layout of grid but not for table */
+                gtk_grid_attach(GTK_GRID(pwBox), gtk_label_new(""), 0, 0, 1, 1);
 #else
                 gtk_table_attach_defaults(GTK_TABLE(pwBox),
                                           gtk_label_new(pmr->stCube == SKILL_NONE ? "" : _("Didn't double")), 0, 1, 0,
