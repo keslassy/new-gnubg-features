@@ -1330,7 +1330,7 @@ SetAnnotation(moverecord * pmr)
             gtk_widget_set_valign(pwBox, GTK_ALIGN_CENTER);
 #else
             pwBox = gtk_hbox_new(FALSE, 0);
-            gtk_misc_set_alignment(GTK_MISC(pWBox), 0.5f, 0.5f);
+            gtk_misc_set_alignment(GTK_MISC(pwBox), 0.5f, 0.5f);
 #endif
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Resign")), FALSE, FALSE, 2);
 
@@ -1344,7 +1344,7 @@ SetAnnotation(moverecord * pmr)
             gtk_widget_set_valign(pwBox, GTK_ALIGN_CENTER);
 #else
             pwBox = gtk_hbox_new(FALSE, 0);
-            gtk_misc_set_alignment(GTK_MISC(pWBox), 0.5f, 0.5f);
+            gtk_misc_set_alignment(GTK_MISC(pwBox), 0.5f, 0.5f);
 #endif
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Accept")), FALSE, FALSE, 2);
 
