@@ -708,7 +708,7 @@ extern GtkWidget *
 RelationalOptions(void)
 {
     int i;
-    GtkWidget *hb1, *hb2, *vb1, *vb2, *lbl, *align, *help, *pwScrolled;
+    GtkWidget *hb1, *hb2, *vb1, *vb2, *lbl, *help, *pwScrolled;
 #if GTK_CHECK_VERSION(3,0,0)
     GtkWidget *grid;
 #else
@@ -826,12 +826,13 @@ RelationalOptions(void)
     g_signal_connect(login, "clicked", G_CALLBACK(LoginClicked), dbList);
     gtk_widget_set_tooltip_text(login, _("Check connection to database server"));
 
-    align = gtk_alignment_new(1, 0, 0, 0);
-    gtk_container_add(GTK_CONTAINER(align), login);
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_grid_attach(GTK_GRID(grid), align, 1, 3, 1, 1);
+    gtk_widget_set_halign(login, GTK_ALIGN_END);
+    gtk_widget_set_valign(login, GTK_ALIGN_START);
+    gtk_grid_attach(GTK_GRID(grid), login, 1, 3, 1, 1);
 #else
-    gtk_table_attach(GTK_TABLE(table), align, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+    gtk_misc_set_alignment(GTK_MISC(login), 1.0f, 0.0f);
+    gtk_table_attach(GTK_TABLE(table), login, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)

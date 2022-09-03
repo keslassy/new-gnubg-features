@@ -346,17 +346,18 @@ OSRPage(TanBoard UNUSED(anBoard), racewidget * prw)
 
     GtkWidget *pwvbox;
     GtkWidget *pw;
-    GtkWidget *pwp = gtk_alignment_new(0, 0, 0, 0);
     float ar0[2] = { 0, 0 };
     char *pch;
 
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
 #if GTK_CHECK_VERSION(3,0,0)
     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
 #else
     pwvbox = gtk_vbox_new(FALSE, 4);
+    gtk_misc_set_alignment(GTK_MISC(pwvbox), 0, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
 
     prw->padjTrials = GTK_ADJUSTMENT(gtk_adjustment_new(5760, 1, 1296 * 1296, 36, 36, 0));
 #if GTK_CHECK_VERSION(3,0,0)
@@ -405,7 +406,7 @@ OSRPage(TanBoard UNUSED(anBoard), racewidget * prw)
 
     gtk_box_pack_start(GTK_BOX(pwvbox), EffectivePipCount(ar0, ar0, !prw->fMove, &prw->epcwOSR), FALSE, FALSE, 4);
 
-    return pwp;
+    return pwvbox;
 
 }
 
