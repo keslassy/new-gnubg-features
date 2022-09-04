@@ -1135,6 +1135,9 @@ SetAnnotation(moverecord * pmr)
 
     if (pmr) {
         GtkWidget *pwBox;
+#if !GTK_CHECK_VERSION(3,0,0)
+        GtkWidget *pwAlign;
+#endif
         char sz[64], *pch;
         int fMoveOld, fTurnOld;
 
@@ -1328,13 +1331,15 @@ SetAnnotation(moverecord * pmr)
             pwBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
             gtk_widget_set_halign(pwBox, GTK_ALIGN_CENTER);
             gtk_widget_set_valign(pwBox, GTK_ALIGN_CENTER);
+            gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Resign")), FALSE, FALSE, 2);
+            gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 0);
 #else
             pwBox = gtk_hbox_new(FALSE, 0);
-            gtk_misc_set_alignment(GTK_MISC(pwBox), 0.5f, 0.5f);
-#endif
+            pwAlign = gtk_alignment_new(0.5f, 0.5f, 0.0f, 0.0f);
+            gtk_container_add(GTK_CONTAINER(pwAlign), pwBox);
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Resign")), FALSE, FALSE, 2);
-
-            gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 0);
+            gtk_box_pack_start(GTK_BOX(pwAnalysis), pwAlign, FALSE, FALSE, 0);
+#endif
 
             /* skill for accept */
 
@@ -1342,13 +1347,15 @@ SetAnnotation(moverecord * pmr)
             pwBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
             gtk_widget_set_halign(pwBox, GTK_ALIGN_CENTER);
             gtk_widget_set_valign(pwBox, GTK_ALIGN_CENTER);
+            gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Accept")), FALSE, FALSE, 2);
+            gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 0);
 #else
             pwBox = gtk_hbox_new(FALSE, 0);
-            gtk_misc_set_alignment(GTK_MISC(pwBox), 0.5f, 0.5f);
-#endif
+            pwAlign = gtk_alignment_new(0.5f, 0.5f, 0.0f, 0.0f);
+            gtk_container_add(GTK_CONTAINER(pwAlign), pwBox);
             gtk_box_pack_start(GTK_BOX(pwBox), gtk_label_new(_("Accept")), FALSE, FALSE, 2);
-
-            gtk_box_pack_start(GTK_BOX(pwAnalysis), pwBox, FALSE, FALSE, 0);
+           gtk_box_pack_start(GTK_BOX(pwAnalysis), pwAlign, FALSE, FALSE, 0);
+#endif
 
             break;
 

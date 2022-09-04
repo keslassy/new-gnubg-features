@@ -713,6 +713,7 @@ RelationalOptions(void)
     GtkWidget *grid;
 #else
     GtkWidget *table;
+    GtkWidget *align;
 #endif
 
     dbStore = gtk_list_store_new(1, G_TYPE_STRING);
@@ -831,8 +832,9 @@ RelationalOptions(void)
     gtk_widget_set_valign(login, GTK_ALIGN_START);
     gtk_grid_attach(GTK_GRID(grid), login, 1, 3, 1, 1);
 #else
-    gtk_misc_set_alignment(GTK_MISC(login), 1.0f, 0.0f);
-    gtk_table_attach(GTK_TABLE(table), login, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+    align = gtk_alignment_new(1, 0, 0, 0); 	 
+    gtk_container_add(GTK_CONTAINER(align), login);
+    gtk_table_attach(GTK_TABLE(table), align, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
