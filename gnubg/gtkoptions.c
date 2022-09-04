@@ -317,7 +317,6 @@ CacheSizeString(GtkScale * UNUSED(scale), gdouble value)
 static void
 append_game_options(optionswidget * pow)
 {
-    GtkWidget *pwp;
     GtkWidget *pwvbox;
     GtkWidget *pwf;
     GtkWidget *pwb;
@@ -331,15 +330,17 @@ append_game_options(optionswidget * pow)
     };
 
     /* Game options */
-    pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Game")));
+
 #if GTK_CHECK_VERSION(3,0,0)
     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
 #else
     pwvbox = gtk_vbox_new(FALSE, 0);
+    gtk_misc_set_alignment(GTK_MISC(pwvbox), 0, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvbox, gtk_label_new(_("Game")));
 
     pow->pwAutoGame = gtk_check_button_new_with_label(_("Start new games immediately"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwAutoGame, FALSE, FALSE, 0);
@@ -420,21 +421,22 @@ append_game_options(optionswidget * pow)
 static void
 append_cube_options(optionswidget * pow)
 {
-    GtkWidget *pwp;
     GtkWidget *pwvbox;
     GtkWidget *pwev;
     GtkWidget *pwhbox;
 
     /* Cube options */
-    pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Cube")));
+
 #if GTK_CHECK_VERSION(3,0,0)
     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
 #else
     pwvbox = gtk_vbox_new(FALSE, 0);
+    gtk_misc_set_alignment(GTK_MISC(pwvbox), 0, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvbox, gtk_label_new(_("Cube")));
 
     pow->pwCubeUsecube = gtk_check_button_new_with_label(_("Use doubling cube"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwCubeUsecube, FALSE, FALSE, 0);
@@ -512,7 +514,6 @@ append_cube_options(optionswidget * pow)
 static void
 append_tutor_options(optionswidget * pow)
 {
-    GtkWidget *pwp;
     GtkWidget *pwvbox;
     GtkWidget *pwf;
     GtkWidget *pwev;
@@ -520,16 +521,18 @@ append_tutor_options(optionswidget * pow)
     char **ppch;
 
     /* Tutor options */
-    pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Tutor")));
+
     pwf = gtk_frame_new(NULL);
-    gtk_container_add(GTK_CONTAINER(pwp), pwf);
 #if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwf, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwf, GTK_ALIGN_START);
     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
+    gtk_misc_set_alignment(GTK_MISC(pwf), 0, 0);
     pwvbox = gtk_vbox_new(FALSE, 0);
 #endif
+    gtk_container_set_border_width(GTK_CONTAINER(pwf), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwf, gtk_label_new(_("Tutor")));
     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
     gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
 
@@ -579,7 +582,6 @@ append_tutor_options(optionswidget * pow)
 static void
 append_display_options(optionswidget * pow)
 {
-    GtkWidget *pwp;
     GtkWidget *pwvbox;
     GtkWidget *pwev;
     GtkWidget *pwhbox;
@@ -593,15 +595,17 @@ append_display_options(optionswidget * pow)
     BoardData *bd = BOARD(pwBoard)->board_data;
 
     /* Display options */
-    pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Display")));
+
 #if GTK_CHECK_VERSION(3,0,0)
     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
 #else
     pwvbox = gtk_vbox_new(FALSE, 0);
+    gtk_misc_set_alignment(GTK_MISC(pwvbox), 0, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvbox, gtk_label_new(_("Display")));
 
     pow->pwGameClockwise = gtk_check_button_new_with_label(_("Clockwise movement"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwGameClockwise, FALSE, FALSE, 0);
@@ -825,7 +829,6 @@ append_display_options(optionswidget * pow)
 static void
 append_match_options(optionswidget * pow)
 {
-    GtkWidget *pwp;
     GtkWidget *pwvbox;
     GtkWidget *pwev;
     GtkWidget *pwhbox;
@@ -836,16 +839,17 @@ append_match_options(optionswidget * pow)
     GtkWidget *pwLabelFile;
 
     /* Match options */
-    pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Match")));
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
 #else
     pwvbox = gtk_vbox_new(FALSE, 0);
+    gtk_misc_set_alignment(GTK_MISC(pwvbox), 0, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvbox, gtk_label_new(_("Match")));
 
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
@@ -1045,7 +1049,7 @@ append_sound_options(optionswidget * pow)
 static void
 append_dice_options(optionswidget * pow)
 {
-    GtkWidget *pwp, *pwvbox, *pwhbox, *pwvbox2, *pwvbox3, *pw, *frame;
+    GtkWidget *pwvbox, *pwhbox, *pwvbox2, *pwvbox3, *pw, *frame;
     unsigned int i;
     unsigned long nRandom;
 #if defined(HAVE_LIBGMP)
@@ -1057,15 +1061,16 @@ append_dice_options(optionswidget * pow)
 
     free(InitRNG(&nRandom, NULL, FALSE, rngCurrent));
 
-    pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Dice")));
 #if GTK_CHECK_VERSION(3,0,0)
     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
 #else
     pwvbox = gtk_vbox_new(FALSE, 0);
+    gtk_misc_set_alignment(GTK_MISC(pwvbox), 0, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvbox, gtk_label_new(_("Dice")));
 
     frame = gtk_frame_new(_("Dice generation"));
     gtk_box_pack_start(GTK_BOX(pwvbox), frame, TRUE, TRUE, 0);
@@ -1242,7 +1247,6 @@ append_dice_options(optionswidget * pow)
 static void
 append_other_options(optionswidget * pow)
 {
-    GtkWidget *pwp;
     GtkWidget *pwvbox;
     GtkWidget *pwev;
     GtkWidget *pwhbox;
@@ -1256,15 +1260,17 @@ append_other_options(optionswidget * pow)
     GtkWidget *pwScale;
 
     /* Other options */
-    pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Other")));
+
 #if GTK_CHECK_VERSION(3,0,0)
     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
 #else
     pwvbox = gtk_vbox_new(FALSE, 0);
+    gtk_misc_set_alignment(GTK_MISC(pwvbox), 0, 0);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvbox, gtk_label_new(_("Other")));
 
     pow->pwConfStart = gtk_check_button_new_with_label(_("Confirm when aborting game"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwConfStart, FALSE, FALSE, 0);
@@ -1503,11 +1509,10 @@ OptionsPages(optionswidget * pow)
     append_dice_options(pow);
 
     /* Database options */
-    pwp = gtk_alignment_new(0, 0, 0, 0);
+    pwp = RelationalOptions();
     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
     relPage = gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Database")));
     relPageActivated = FALSE;
-    gtk_container_add(GTK_CONTAINER(pwp), RelationalOptions());
 
     append_other_options(pow);
 
