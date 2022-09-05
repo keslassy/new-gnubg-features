@@ -40,6 +40,10 @@ typedef struct {
 
 #if GTK_CHECK_VERSION(3,0,0)
 
+#if !GTK_CHECK_VERSION(3,16,0)
+#error GTK 3 OpenGL related functions used here are not available until version 3.16
+#endif
+
 typedef struct {
 	guint shader;
 	guint projection_location, modelView_location, textureMat_location;
@@ -181,7 +185,7 @@ void SelectPickProgram(void)
 	SelectProgram(&basicShader);
 }
 
-static char* LoadFile(const char* filename)
+static const char* LoadFile(const char* filename)
 {
 	long lSize;
 	char* buffer;
@@ -218,7 +222,7 @@ static char* LoadFile(const char* filename)
 static guint CreateShader(int shader_type, const char* shader_name)
 {
 	int status;
-	char* source;
+	const char* source;
 	char* pathname = BuildFilename(shader_name);
 	char* filename;
 
@@ -247,7 +251,7 @@ static guint CreateShader(int shader_type, const char* shader_name)
 		return 0;
 	}
 
-	free(source);
+	free((void *)source);
 	return shader;
 }
 
