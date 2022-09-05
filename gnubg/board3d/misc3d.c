@@ -334,7 +334,7 @@ InitGL(const BoardData * bd)
 
 const Material* currentMat = NULL;
 
-const Material* GetCurrentMaterial()
+const Material* GetCurrentMaterial(void)
 {
     return currentMat;
 }

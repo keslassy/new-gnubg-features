@@ -91,7 +91,7 @@ static void GetViewPos(float* viewPos)
 	glm_mat4_mulv3(mvInv, origin, 1, viewPos);
 }
 
-void SetViewPos()
+void SetViewPos(void)
 {
 	float viewPos[3];
 	GetViewPos(viewPos);
@@ -176,7 +176,7 @@ static void SelectProgram(ShaderDetails* pShader)
 	glUseProgram(currentShader->shader);
 }
 
-void SelectPickProgram()
+void SelectPickProgram(void)
 {
 	SelectProgram(&basicShader);
 }

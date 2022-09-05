@@ -1576,7 +1576,7 @@ drawPoint(const renderdata* prd, float tuv, unsigned int i, int p, int outline)
 }
 
 void
-drawMoveIndicator()
+drawMoveIndicator(void)
 {
 	glBegin(GL_QUADS);
 	glNormal3f(0.f, 0.f, 1.f);
@@ -3420,7 +3420,7 @@ drawDie(const ModelManager* modelHolder, const BoardData* bd, const BoardData3d*
 	glPopMatrix();
 }
 
-extern void MoveToFlagMiddle()
+extern void MoveToFlagMiddle(void)
 {
 	float v[3];
 	/* Move to middle of flag */
