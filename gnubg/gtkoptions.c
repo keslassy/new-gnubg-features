@@ -962,6 +962,7 @@ append_sound_options(optionswidget * pow)
 #else
     pwvboxMain = gtk_vbox_new(FALSE, 0);
 #endif
+    gtk_container_set_border_width(GTK_CONTAINER(pwvboxMain), 4);
     gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvboxMain, gtk_label_new(_("Sound")));
 #if GTK_CHECK_VERSION(3,0,0)
     pwhboxTop = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
