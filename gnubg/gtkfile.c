@@ -60,14 +60,34 @@ GnuBGFileDialog(const gchar * prompt, const gchar * folder, const gchar * name, 
     case GTK_FILE_CHOOSER_ACTION_OPEN:
         fc = gtk_file_chooser_dialog_new(prompt, NULL,
                                          GTK_FILE_CHOOSER_ACTION_OPEN,
+#if GTK_CHECK_VERSION(3,0,0)
+                                         "_Open",
+#else
                                          GTK_STOCK_OPEN,
-                                         GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+#endif
+                                         GTK_RESPONSE_ACCEPT,
+#if GTK_CHECK_VERSION(3,0,0)
+                                         "_Cancel",
+#else
+                                         GTK_STOCK_CANCEL,
+#endif
+                                         GTK_RESPONSE_CANCEL, NULL);
         break;
     case GTK_FILE_CHOOSER_ACTION_SAVE:
         fc = gtk_file_chooser_dialog_new(prompt, NULL,
                                          GTK_FILE_CHOOSER_ACTION_SAVE,
+#if GTK_CHECK_VERSION(3,0,0)
+                                         "_Save",
+#else
                                          GTK_STOCK_SAVE,
-                                         GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+#endif
+                                         GTK_RESPONSE_ACCEPT,
+#if GTK_CHECK_VERSION(3,0,0)
+                                         "_Cancel",
+#else
+                                         GTK_STOCK_CANCEL,
+#endif
+                                         GTK_RESPONSE_CANCEL, NULL);
         break;
     default:
         return NULL;
