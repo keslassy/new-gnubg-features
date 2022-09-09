@@ -19,8 +19,6 @@
 
 # $Id$
 
-set -x
-
 # If we use libtool-2, libtoolize below will recreate them, but if we use
 # libtool-1 we don't want them, which could happen if we use a shared
 # source directory or work from a "make dist" made on a libtool-2 system.
@@ -45,5 +43,11 @@ $LIBTOOLIZE --force --copy
 aclocal -I m4
 
 autoheader
+
+# automake will replace them by its local version.
+#
+rm -f compile config.guess config.sub install-sh missing ylwrap
+
 automake --add-missing --copy -Wno-portability
+
 autoconf
