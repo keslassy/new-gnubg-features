@@ -2142,21 +2142,34 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
     {
         if (bd->DragTargetHelp) {       /* Display 2d drag target help */
             gint i, ptx, pty, ptcx, ptcy;
-            GdkColor *TargetHelpColor;
             cairo_t *cr;
 
-            TargetHelpColor = (GdkColor *) g_malloc(sizeof(GdkColor));
+#if GTK_CHECK_VERSION(3,0,0)
+            GdkRGBA TargetHelpRGBA;
+
+            TargetHelpRGBA.red = 0.0;
+            TargetHelpRGBA.green = 1.0;
+            TargetHelpRGBA.blue = 0.0;
+            TargetHelpRGBA.alpha = 1.0;
+#else
+            GdkColor TargetHelpColor;
+
             /* values of RGB components within GdkColor are
              * taken from 0 to 65535, not 0 to 255. */
-            TargetHelpColor->red = 0 * (65535 / 255);
-            TargetHelpColor->green = 255 * (65535 / 255);
-            TargetHelpColor->blue = 0 * (65535 / 255);
-            TargetHelpColor->pixel = (guint32) (TargetHelpColor->red * 65536 +
-                                                TargetHelpColor->green * 256 + TargetHelpColor->blue);
+            TargetHelpColor.red = 0 * (65535 / 255);
+            TargetHelpColor.green = 255 * (65535 / 255);
+            TargetHelpColor.blue = 0 * (65535 / 255);
+            TargetHelpColor.pixel = (guint32) (TargetHelpColor.red * 65536 +
+                                                TargetHelpColor.green * 256 + TargetHelpColor.blue);
             /* get the closest color available in the colormap if no 24-bit */
-            gdk_colormap_alloc_color(gtk_widget_get_colormap(board), TargetHelpColor, TRUE, TRUE);
+            gdk_colormap_alloc_color(gtk_widget_get_colormap(board), &TargetHelpColor, TRUE, TRUE);
+#endif
             cr = gdk_cairo_create(gtk_widget_get_window(board));
-            gdk_cairo_set_source_color(cr, TargetHelpColor);
+#if GTK_CHECK_VERSION(3,0,0)
+            gdk_cairo_set_source_rgba(cr, &TargetHelpRGBA);
+#else
+            gdk_cairo_set_source_color(cr, &TargetHelpColor);
+#endif
 
             /* draw help rectangles around target points */
             for (i = 0; i <= 3; ++i) {
@@ -2170,7 +2183,6 @@ board_motion_notify(GtkWidget * board, GdkEventMotion * event, BoardData * bd)
             }
 
             cairo_destroy(cr);
-            g_free(TargetHelpColor);
         }
     }
 
