@@ -45,7 +45,7 @@ void LegacyStartAA(float width)
 	glEnable(GL_BLEND);
 }
 
-void LegacyEndAA()
+void LegacyEndAA(void)
 {
 	glDisable(GL_LINE_SMOOTH);
 	glDisable(GL_BLEND);
