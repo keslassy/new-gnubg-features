@@ -472,7 +472,7 @@ GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
     PangoLayout *layout;
 
 #if ! GTK_CHECK_VERSION(3,0,0)
-    /* The gtk_locdef_* below don't use cr with GTK2. Avoid compiler warning in this case. */
+    /* The gtk_paint_* below don't use cr with GTK2. Avoid compiler warning in this case. */
     (void)cr;
 #endif
 
@@ -493,9 +493,14 @@ GraphDraw(GtkWidget * pwGraph, cairo_t * cr, theorywidget * ptw)
     iPlayer = pwGraph == ptw->apwGraph[1];
 
     for (i = 0; i <= 20; i++) {
-        gtk_locdef_paint_vline(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), cr, GTK_STATE_NORMAL,
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_render_line(gtk_widget_get_style_context(pwGraph), cr,
+                               (double)(x + cx * i / 20), (double)(y - 1),
+                               (double)(x + cx * i / 20), (double)((i & 3) ? y - 3 : y - 5));
+#else
+        gtk_paint_vline(gtk_widget_get_style(pwGraph), gtk_widget_get_window(pwGraph), GTK_STATE_NORMAL,
                                NULL, pwGraph, "tick", y - 1, (i & 3) ? y - 3 : y - 5, x + cx * i / 20);
-
+#endif
         if (!(i & 3)) {
             int width;
             int height;
