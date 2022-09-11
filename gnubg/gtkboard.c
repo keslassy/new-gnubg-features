@@ -3706,7 +3706,7 @@ board_init(Board * board)
     /* picture of chequer */
 
     bd->key0 = chequer_key_new(0, board);
-    gtk_box_pack_start(GTK_BOX(pw), bd->key0, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), bd->key0, FALSE, FALSE, 4);
 
     /* name of player */
 
@@ -3736,7 +3736,7 @@ board_init(Board * board)
 
     /* score label */
 
-    gtk_box_pack_start(GTK_BOX(pw), gtk_label_new(_("Score:")), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), gtk_label_new(_("Score:")), FALSE, FALSE, 4);
 
     /* score */
 
@@ -3761,12 +3761,16 @@ board_init(Board * board)
 
     /* pip count label */
 
-    gtk_box_pack_start(GTK_BOX(pw), bd->pipcountlabel0 = gtk_label_new(NULL), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), bd->pipcountlabel0 = gtk_label_new(NULL), FALSE, FALSE, 4);
 
     /* pip count */
 
-    gtk_box_pack_start(GTK_BOX(pw), bd->pipcount0 = gtk_label_new(NULL), FALSE, FALSE, 0);
-
+    /* FIXME: this box looks different than that of the score above,
+              probably because it contains only labels while the other
+              has a an adjustment.
+    */
+    gtk_box_pack_start(GTK_BOX(pw), bd->pipcount0 = gtk_label_new(NULL), FALSE, FALSE, 8);
+    
 
     /* 
      * player 1
@@ -3794,7 +3798,7 @@ board_init(Board * board)
     /* picture of chequer */
 
     bd->key1 = chequer_key_new(1, board);
-    gtk_box_pack_start(GTK_BOX(pw), bd->key1, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), bd->key1, FALSE, FALSE, 4);
 
     /* name of player */
 
@@ -3824,7 +3828,7 @@ board_init(Board * board)
 
     /* score label */
 
-    gtk_box_pack_start(GTK_BOX(pw), gtk_label_new(_("Score:")), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), gtk_label_new(_("Score:")), FALSE, FALSE, 4);
 
     /* score */
 
@@ -3849,12 +3853,11 @@ board_init(Board * board)
 
     /* pip count label */
 
-    gtk_box_pack_start(GTK_BOX(pw), bd->pipcountlabel1 = gtk_label_new(NULL), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pw), bd->pipcountlabel1 = gtk_label_new(NULL), FALSE, FALSE, 4);
 
     /* pip count */
 
-    gtk_box_pack_start(GTK_BOX(pw), bd->pipcount1 = gtk_label_new(NULL), FALSE, FALSE, 0);
-
+    gtk_box_pack_start(GTK_BOX(pw), bd->pipcount1 = gtk_label_new(NULL), FALSE, FALSE, 8);
 
 
     /* 
