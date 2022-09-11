@@ -3250,6 +3250,9 @@ FlagClicked(GtkWidget * pw, GdkEventButton * event, void *UNUSED(dummy))
 {
     /* Manually highlight clicked flag */
     GtkWidget *frame, *eb;
+#if GTK_CHECK_VERSION(3,0,0)
+    GdkRGBA color;
+#endif
 
     if (event && event->type == GDK_2BUTTON_PRESS && curSel == pw)
         SetLangOk();
@@ -3261,7 +3264,11 @@ FlagClicked(GtkWidget * pw, GdkEventButton * event, void *UNUSED(dummy))
         frame = gtk_bin_get_child(GTK_BIN(curSel));
         eb = gtk_bin_get_child(GTK_BIN(frame));
         gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_NONE);
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_override_background_color(eb, GTK_STATE_FLAG_NORMAL, NULL);
+#else
         gtk_widget_modify_bg(eb, GTK_STATE_NORMAL, NULL);
+#endif
     }
 
     curSel = pw;
@@ -3269,7 +3276,12 @@ FlagClicked(GtkWidget * pw, GdkEventButton * event, void *UNUSED(dummy))
     eb = gtk_bin_get_child(GTK_BIN(frame));
 
     gtk_frame_set_shadow_type(GTK_FRAME(gtk_bin_get_child(GTK_BIN(pw))), GTK_SHADOW_ETCHED_OUT);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_style_context_get_background_color(gtk_widget_get_style_context(eb), GTK_STATE_FLAG_SELECTED, &color);
+    gtk_widget_override_background_color(eb, GTK_STATE_FLAG_NORMAL, &color);
+#else
     gtk_widget_modify_bg(eb, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_SELECTED]);
+#endif
 
     if (SetupLanguage((char *) g_object_get_data(G_OBJECT(curSel), "lang")))
         /* Immediately translate this dialog */
@@ -3287,16 +3299,29 @@ GetFlagWidget(char *language, char *langCode, const char *flagfilename)
 {                               /* Create a flag */
     GtkWidget *eb, *eb2, *vbox, *lab1;
     GtkWidget *frame;
+#if GTK_CHECK_VERSION(3,0,0)
+    GdkRGBA color;
+#endif
     GError *pix_error = NULL;
 
     eb = gtk_event_box_new();
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_style_context_get_background_color(gtk_widget_get_style_context(eb), GTK_STATE_FLAG_NORMAL, &color);
+    gtk_widget_override_background_color(eb, GTK_STATE_FLAG_INSENSITIVE, &color);
+#else
     gtk_widget_modify_bg(eb, GTK_STATE_INSENSITIVE, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_NORMAL]);
+#endif
     frame = gtk_frame_new(NULL);
     gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_NONE);
     gtk_container_add(GTK_CONTAINER(eb), frame);
 
     eb2 = gtk_event_box_new();
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_style_context_get_background_color(gtk_widget_get_style_context(eb2), GTK_STATE_FLAG_NORMAL, &color);
+    gtk_widget_override_background_color(eb2, GTK_STATE_FLAG_INSENSITIVE, &color);
+#else
     gtk_widget_modify_bg(eb2, GTK_STATE_INSENSITIVE, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_NORMAL]);
+#endif
     gtk_container_add(GTK_CONTAINER(frame), eb2);
 
 #if GTK_CHECK_VERSION(3,0,0)
