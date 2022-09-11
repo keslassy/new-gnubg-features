@@ -3269,7 +3269,7 @@ board_realize(GtkWidget * board)
 static void
 board_show_child(GtkWidget * pwChild, BoardData * pbd)
 {
-    if (pwChild != pbd->dice_area && !GTK_IS_HBUTTON_BOX(pwChild))
+    if (pwChild != pbd->dice_area)
         gtk_widget_show_all(pwChild);
 
 }
