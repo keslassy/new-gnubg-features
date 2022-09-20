@@ -2765,8 +2765,38 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 
     BuildTableContainer(psm);
 
+// *************************************************************************************************
+
+#if GTK_CHECK_VERSION(3,0,0)
+    psm->pwHContainer = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
+    psm->pwHContainer = gtk_hbox_new(FALSE, 2); //gtk_hbox_new (gboolean homogeneous, gint spacing);
+#endif
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), psm->pwHContainer);
+
+     /* left vbox: holds table and gauge */
+#if GTK_CHECK_VERSION(3,0,0)
+    psm->pwVContainer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+#else
+    psm->pwVContainer = gtk_vbox_new(FALSE, 2); //gtk_vbox_new (gboolean homogeneous, gint spacing);
+#endif
+
+    gtk_box_pack_start(GTK_BOX(psm->pwHContainer), psm->pwVContainer, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(psm->pwVContainer), psm->pwTableContainer, TRUE, TRUE, 0);   //gtk_box_pack_start (GtkBox *box, GtkWidget *child,
+                                        // gboolean expand,  gboolean fill, guint padding);
+
+    /* horizontal separator */
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(psm->pwVContainer), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 2);
+#else
+    gtk_box_pack_start(GTK_BOX(psm->pwVContainer), gtk_hseparator_new(), FALSE, FALSE, 2);
+#endif
+
+
     /* gauge */
     if (psm->cubeScoreMap) {
+
 #if GTK_CHECK_VERSION(3,0,0)
         pwGaugeGrid = gtk_grid_new();
 #else
@@ -2801,50 +2831,7 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
             gtk_table_attach_defaults(GTK_TABLE(pwGaugeTable), psm->apwGauge[i], GAUGE_SIXTH_SIZE * 2 * i, GAUGE_SIXTH_SIZE * 2 * i + 1, 0, 1);
 #endif
         }
-    }
-// *************************************************************************************************
 
-#if GTK_CHECK_VERSION(3,0,0)
-    psm->pwHContainer = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
-#else
-    psm->pwHContainer = gtk_hbox_new(FALSE, 2); //gtk_hbox_new (gboolean homogeneous, gint spacing);
-#endif
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), psm->pwHContainer);
-
-     /* left vbox: holds table and gauge */
-#if GTK_CHECK_VERSION(3,0,0)
-    psm->pwVContainer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
-#else
-    psm->pwVContainer = gtk_vbox_new(FALSE, 2); //gtk_vbox_new (gboolean homogeneous, gint spacing);
-#endif
-
-    gtk_box_pack_start(GTK_BOX(psm->pwHContainer), psm->pwVContainer, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(psm->pwVContainer), psm->pwTableContainer, TRUE, TRUE, 0);   //gtk_box_pack_start (GtkBox *box, GtkWidget *child,
-                                        // gboolean expand,  gboolean fill, guint padding);
-
-
-//   // Vertical box to hold everything.
-// #if GTK_CHECK_VERSION(3,0,0)
-//     pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
-// #else
-//     pwv = gtk_vbox_new(FALSE, 2); //gtk_vbox_new (gboolean homogeneous, gint spacing);
-// #endif
-//     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwv);
-
-//     gtk_box_pack_start(GTK_BOX(pwv), psm->pwTableContainer, TRUE, TRUE, 0);   //gtk_box_pack_start (GtkBox *box, GtkWidget *child,
-//                                         // gboolean expand,  gboolean fill, guint padding);
-
-    /* horizontal separator */
-
-#if GTK_CHECK_VERSION(3,0,0)
-    gtk_box_pack_start(GTK_BOX(psm->pwVContainer), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 2);
-#else
-    gtk_box_pack_start(GTK_BOX(psm->pwVContainer), gtk_hseparator_new(), FALSE, FALSE, 2);
-#endif
-
-
-    /* gauge */
-    if (psm->cubeScoreMap) {
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_box_pack_start(GTK_BOX(psm->pwVContainer), pwGaugeGrid, FALSE, FALSE, 2);
 #else
