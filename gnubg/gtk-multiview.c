@@ -107,7 +107,7 @@ gtk_multiview_size_request(GtkWidget * widget, GtkRequisition * requisition)
 
         if (gtk_widget_get_visible(child)) {
 #if GTK_CHECK_VERSION(3,0,0)
-            gtk_widget_get_preferred_size(child, NULL, &child_requisition);
+            gtk_widget_get_preferred_size(child, &child_requisition, NULL);
 #else
             gtk_widget_size_request(child, &child_requisition);
 #endif

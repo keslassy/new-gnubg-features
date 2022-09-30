@@ -6063,7 +6063,7 @@ GTKTextWindow(const char *szOutput, const char *title, const dialogtype type, Gt
     gtk_container_add(GTK_CONTAINER(sw), pwText);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_get_preferred_size(GTK_WIDGET(pwText), NULL, &req);
+    gtk_widget_get_preferred_size(GTK_WIDGET(pwText), &req, NULL);
 #else
     gtk_widget_size_request(GTK_WIDGET(pwText), &req);
 #endif
@@ -7752,7 +7752,7 @@ GTKDumpStatcontext(int game)
     else {
         GtkRequisition req;
 #if GTK_CHECK_VERSION(3,0,0)
-        gtk_widget_get_preferred_size(GTK_WIDGET(pwStatDialog), NULL, &req);
+        gtk_widget_get_preferred_size(GTK_WIDGET(pwStatDialog), &req, NULL);
 #else
         gtk_widget_size_request(GTK_WIDGET(pwStatDialog), &req);
 #endif

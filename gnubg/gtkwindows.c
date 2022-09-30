@@ -304,7 +304,7 @@ GTKMessage(const char *sz, dialogtype dt)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(sw), pwText);
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_get_preferred_size(GTK_WIDGET(pwText), NULL, &req);
+    gtk_widget_get_preferred_size(GTK_WIDGET(pwText), &req, NULL);
 #else
     gtk_widget_size_request(GTK_WIDGET(pwText), &req);
 #endif
