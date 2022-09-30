@@ -3120,7 +3120,11 @@ board_size_allocate(GtkWidget * board, GtkAllocation * allocation)
     /* position ID, match ID: just below toolbar */
 
     if (bd->rd->fShowGameInfo) {
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_widget_get_preferred_size(bd->table, &requisition, NULL);
+#else
         gtk_widget_get_child_requisition(bd->table, &requisition);
+#endif
         allocation->height -= requisition.height;
         child_allocation.x = allocation->x;
         child_allocation.y = allocation->y + allocation->height;
