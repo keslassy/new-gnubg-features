@@ -4301,6 +4301,7 @@ InitGTK(int *argc, char ***argv)
     GtkIconFactory *picf;
     GdkAtom cb;
 
+#if ! GTK_CHECK_VERSION(3,0,0)
     sz = BuildFilename("gnubg.gtkrc");
     gtk_rc_add_default_file(sz);
     g_free(sz);
@@ -4308,6 +4309,7 @@ InitGTK(int *argc, char ***argv)
     sz = g_build_filename(szHomeDirectory, "gnubg.gtkrc", NULL);
     gtk_rc_add_default_file(sz);
     g_free(sz);
+#endif
 
     sz = g_build_filename(szHomeDirectory, "gnubgmenurc", NULL);
     gtk_accel_map_load(sz);
