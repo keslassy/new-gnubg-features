@@ -490,10 +490,10 @@ RenderPreferencesParam(renderdata * prd, const char *szParam, char *szValue)
         prd->roundedPoints = toupper(*szValue) == 'Y';
     else if (!StrNCaseCmp(szParam, "piecetype", c)) {
         prd->pieceType = (PieceType) atoi(szValue);
-        /* Possible compiler warning here if enums are unsigned:
-         * comparison of unsigned expression < 0 is always false
+        /* Use <= to avoid compiler warning if enums are unsigned:
+         * unsigned expression < 0 is always false
          */
-        if (prd->pieceType < PT_ROUNDED) {
+        if (prd->pieceType <= PT_ROUNDED) {
             prd->pieceType = PT_ROUNDED;
             fValueError = TRUE;
         }
