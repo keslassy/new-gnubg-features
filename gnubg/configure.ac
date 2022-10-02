@@ -477,7 +477,7 @@ if test "x$simdcpu" = "xundef" || test "x$simdcpu" = "xyes"; then
         simdcpu="sse2"
     elif test "x$ax_cv_have_sse_ext" = "xyes"; then
         simdcpu="sse"
-# not yet
+# This seems slightly useful on 64bit Raspberry Pi but not on Apple M1
 #    elif test "x$ax_cv_have_neon_ext" = "xyes"; then
 #        simdcpu="neon"
     else
