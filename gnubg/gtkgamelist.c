@@ -86,6 +86,12 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     if (!path)
         return;
 
+    /* This didn't seem to happen with GTK2 but has been noticed with GTK3 */
+    if (!column) {
+        gtk_tree_path_free(path);
+        return;
+    }
+
     pPlayer = g_object_get_data(G_OBJECT(column), "player");
     if (!pPlayer) {
         gtk_tree_path_free(path);
@@ -569,7 +575,7 @@ GTKSetMoveRecord(moverecord * pmr)
 }
 
 extern void
-GTKPopMoveRecord(moverecord * pmr)
+GTKPopMoveRecord(moverecord * const pmr)
 {
     GtkTreeIter iter;
     gboolean iterValid, recordFound = FALSE;
