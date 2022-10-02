@@ -173,7 +173,7 @@ static Float64 fileDuration = 0.0;
 			return ret; \
 		} \
 	}
-void CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat, AudioFileID audioFile);
+Float64 CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat, AudioFileID audioFile);
 void CoreAudio_MakeSimpleGraph(AUGraph * theGraph, AudioUnit * fileAU,
                                AudioStreamBasicDescription * fileFormat, AudioFileID audioFile);
 
@@ -247,7 +247,7 @@ CoreAudio_PlayFile(char *const fileName)
     }
 }
 
-void
+Float64
 CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat, AudioFileID audioFile)
 {
     UInt64 nPackets;
@@ -289,7 +289,7 @@ CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat
                                            kAudioUnitScope_Global, 0, &startTime, sizeof(startTime)),
                       "AudioUnitSetproperty StartTime", 0.0);
 
-    return;
+    return fileDuration;
 }
 
 void
