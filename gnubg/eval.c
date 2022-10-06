@@ -1416,7 +1416,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
                 /* g_assert( tot >= 4 ); */
 
                 afInput[I_BACKG] = (float) (tot - 3) / 4.0f;
-            } else if (nAc == 1) {
+            } else {	/* nAc == 1 */
                 afInput[I_BACKG1] = (float) tot / 8.0f;
             }
         }
