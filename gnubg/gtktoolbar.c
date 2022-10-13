@@ -279,7 +279,7 @@ ToolbarUpdate(GtkWidget * pwToolbar,
 
     c = C_NONE;
 
-    if (diceShown == DICE_BELOW_BOARD)
+    if (diceShown <= DICE_BELOW_BOARD)
         c = C_ROLLDOUBLE;
 
     if (pms->fDoubled)
