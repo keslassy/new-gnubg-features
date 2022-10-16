@@ -50,6 +50,8 @@ endif
 
 AM_CPPFLAGS += -DAC_DOCDIR='"$(docdir)"' -DAC_DATADIR='"$(datadir)"' -DAC_PKGDATADIR='"$(datadir)/gnubg"'
 
+AM_CPPFLAGS += -DBUILD_DATE=@BUILD_DATE@
+
 OTHER_LIBS =
 if WIN32
 OTHER_LIBS += win32/win32res.o

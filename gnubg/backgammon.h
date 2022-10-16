@@ -33,11 +33,8 @@
 
 #define MAX_CUBE ( 1 << 12 )
 #define MAX_NAME_LEN 32
-#ifndef BUILD_DATE
-#define BUILD_DATE_STR " " __DATE__
-#else
+
 #define BUILD_DATE_STR STRINGIZE(BUILD_DATE)
-#endif
 
 #define VERSION_STRING "GNU Backgammon " VERSION " " BUILD_DATE_STR
 #define GNUBG_CHARSET "UTF-8"

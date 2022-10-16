@@ -1,3 +1,10 @@
+2022-10-16  Philippe Michel  <philippe.michel7@free.fr>
+
+	* Makefile.am, configure.ac, backgammon.h, m4/Makefile.am,
+	m4/ax_build_date_epoch.m4(+): Use SOURCE_DATE_EPOCH as defined in
+	https://reproducible-builds.org/specs/source-date-epoch/ to set
+	timestamps at build.
+
 2021-10-05  Philippe Michel  <philippe.michel7@free.fr>
 
 	* Makefile.am, backgammon.h, commands.inc, gtkchequer.c,

@@ -1,3 +1,7 @@
+2022-10-16  Philippe Michel  <philippe.michel7@free.fr>
+
+	* ax_build_date_epoch.m4, Makefile.am: New file 
+
 2017-11-02  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* ax_gcc_func_attribute.m4, Makefile.am: New file

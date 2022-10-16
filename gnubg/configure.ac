@@ -627,6 +627,9 @@ dnl *************
 dnl Misc. settings
 dnl *************
 
+AX_BUILD_DATE_EPOCH(BUILD_DATE, [%Y%m%d])
+AC_SUBST([BUILD_DATE])
+
 dnl internationalization macros
 dnl
 AC_SUBST(GETTEXT_PACKAGE, gnubg)
