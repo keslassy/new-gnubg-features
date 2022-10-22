@@ -21,7 +21,9 @@
 #ifndef GTKSCOREMAP_H
 #define GTKSCOREMAP_H
 
+#include "gnubg-types.h"        /* for matchstate */
+
 extern void
- GTKShowScoreMap(const matchstate ams[], int cube); //, gchar * aszTitle[], const int fInvert);
+ GTKShowScoreMap(const matchstate ams[], int cube);
 
 #endif                          /* GTKSCOREMAP_H */
