@@ -1,5 +1,5 @@
 # Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
-# Copyright (C) 2006-2019 the AUTHORS
+# Copyright (C) 2006-2022 the AUTHORS
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,8 +29,6 @@ import sys
 import os
 
 sys.path.insert(1, './scripts')
-if sys.platform == 'win32':
-    os.environ['TCL_LIBRARY']='PythonLib/lib/tcl8'
 
 if sys.version_info >= (3, 0):
     import builtins as bi
