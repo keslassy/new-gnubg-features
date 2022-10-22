@@ -501,7 +501,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
 
     TanBoard anBoard;
     unsigned int anPips[2];
-    int acOff[2];
+    int acOff[2] = { 15, 15 };
     int i, j;
     char sz[1024];
 
@@ -512,7 +512,6 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
     PipCount((ConstTanBoard) anBoard, anPips);
 
     for (i = 0; i < 2; i++) {
-        acOff[i] = 15;
         for (j = 0; j < 25; j++)
             acOff[i] -= anBoard[i][j];
     }
@@ -1025,7 +1024,7 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
 
     TanBoard anBoard;
     unsigned int anPips[2];
-    int acOff[2];
+    int acOff[2] = { 15, 15 };
 
     memcpy(anBoard, pms->anBoard, sizeof(anBoard));
 
@@ -1033,7 +1032,6 @@ printHTMLBoardGNU(FILE * pf, matchstate * pms, int fTurn,
         SwapSides(anBoard);
 
     for (i = 0; i < 2; i++) {
-        acOff[i] = 15;
         for (j = 0; j < 25; j++)
             acOff[i] -= anBoard[i][j];
     }
