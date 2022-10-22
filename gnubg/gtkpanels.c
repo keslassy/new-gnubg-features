@@ -864,7 +864,7 @@ CreateHeadWindow(gnubgwindow panel, const char *sz, GtkWidget * pwWidge)
     pwHbox = gtk_hbox_new(FALSE, 0);
 #endif
 
-    gtk_button_set_image(GTK_BUTTON(pwX), gtk_image_new_from_stock(GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU));
+    gtk_button_set_image(GTK_BUTTON(pwX), gtk_image_new_from_icon_name("window-close", GTK_ICON_SIZE_MENU));
     g_signal_connect(G_OBJECT(pwX), "clicked", G_CALLBACK(woPanel[panel].hideFun), NULL);
 
     gtk_box_pack_start(GTK_BOX(pwVbox), pwHbox, FALSE, FALSE, 0);

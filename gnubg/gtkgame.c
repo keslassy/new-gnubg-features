@@ -4204,7 +4204,7 @@ CreateMainWindow(void)
     pwStopButton = gtk_event_box_new();
     gtk_container_add(GTK_CONTAINER(pwStop), pwStopButton);
     gtk_container_add(GTK_CONTAINER(pwStopButton),
-                      gtk_image_new_from_stock(GTK_STOCK_STOP, GTK_ICON_SIZE_SMALL_TOOLBAR));
+                      gtk_image_new_from_icon_name("process-stop", GTK_ICON_SIZE_SMALL_TOOLBAR));
     gtk_box_pack_start(GTK_BOX(pwHbox), pwStop, FALSE, FALSE, 2);
     g_signal_connect(G_OBJECT(pwStop), "button-press-event", G_CALLBACK(StopNotButton), NULL);
     g_signal_connect(G_OBJECT(pwStopButton), "button-press-event", G_CALLBACK(Stop), NULL);

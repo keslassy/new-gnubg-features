@@ -63,12 +63,12 @@ static Warning warnings[WARN_NUM_WARNINGS] = {
      "rollout", TRUE, FALSE}
 };
 
-static char *aszStockItem[NUM_DIALOG_TYPES] = {
-    GTK_STOCK_DIALOG_INFO,
-    GTK_STOCK_DIALOG_QUESTION,
-    GTK_STOCK_DIALOG_WARNING,
-    GTK_STOCK_DIALOG_WARNING,
-    GTK_STOCK_DIALOG_ERROR,
+static char *aszNamedIcon[NUM_DIALOG_TYPES] = {
+    "dialog-information",
+    "dialog-question",
+    "dialog-warning",
+    "dialog-warning",
+    "dialog-error",
     NULL
 };
 
@@ -175,7 +175,7 @@ GTKCreateDialog(const char *szTitle, const dialogtype dt,
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(pwDialog))), pwHbox, TRUE, TRUE, 0);
 
     if (dt != DT_CUSTOM) {
-        GtkWidget *pwPixmap = gtk_image_new_from_stock(aszStockItem[dt], GTK_ICON_SIZE_DIALOG);
+        GtkWidget *pwPixmap = gtk_image_new_from_icon_name(aszNamedIcon[dt], GTK_ICON_SIZE_DIALOG);
 #if GTK_CHECK_VERSION(3,0,0)
         g_object_set(pwPixmap, "margin", 8, NULL);
 #else
