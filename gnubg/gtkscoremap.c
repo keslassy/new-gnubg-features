@@ -819,19 +819,21 @@ As a result, the function writes in rgbvals the desired border color for the qua
         // rgbvals[RED]=(1.0f-r)/2.0f;  //<---- here the /2.0 to avoid a purple-ish color
         // rgbvals[GREEN]=1.0f-r;
         // rgbvals[BLUE]=1.0f;
-    } else // should cover all cases; (else black by default).
-    {
+    } else { 
+        // at this point all cases should be covered but some old compilers don't see it
+	// and complain that bestDecisionColor may later be used uninitialized
         g_assert_not_reached();
+	bestDecisionColor = -1;
     }
 
     //colors the quadrant in the desired (light) color
     if (!useBorder)
-       ApplyColour(pw,rgbvals, NOBORDER);
-    else if (bestDecisionColor>=0)
-       ApplyColour(pw,rgbvals, cubeColors[bestDecisionColor]);
+       ApplyColour(pw, rgbvals, NOBORDER);
+    else if (bestDecisionColor >= 0)
+       ApplyColour(pw, rgbvals, cubeColors[bestDecisionColor]);
     else {
        g_assert_not_reached();
-       ApplyColour(pw,rgbvals, NOBORDER);
+       ApplyColour(pw, rgbvals, NOBORDER);
     }
 }
 
@@ -2615,13 +2617,13 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
 
 } //end BuildOptions
 
-extern
-void
-GTKShowScoreMap(const matchstate * pms, int cube) //gchar * UNUSED(aszTitle[]), const int UNUSED(fInvert))
-/* Opens the score map window.
-Create the GUI; calculate equities and update colours; run the dialog window.
-int cube==1 means we want a scoremap for the cube eval, ==0 for the move eval
-*/
+extern void
+GTKShowScoreMap(const matchstate * pms, int cube)
+/*
+ * Opens the score map window.
+ * Create the GUI; calculate equities and update colours; run the dialog window.
+ * cube == 1 means we want a scoremap for the cube eval, == 0 for the move eval.
+ */
 {
     scoremap *psm;
 //  int *pi;
