@@ -98,6 +98,8 @@ allabout.html: allabout.xml
 		$< || \
 		cp $(srcdir)/gnubg/allabout.html .
 
+# encoding=UTF-8 needs texinfo 4.9 (partial support, western european languages
+# that should be good enough for GNUbg documentation) or 4.13 (full support)
 gnubg.texi: gnubgdb.xml
 	$(DOCBOOK2TEXI) --encoding=UTF-8 --string-param prefer-textobjects=1 $< || \
 	cp $(srcdir)/gnubg/gnubg.texi .
