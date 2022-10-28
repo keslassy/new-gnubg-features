@@ -62,6 +62,10 @@ sse_malloc(size_t size)
     /* mimic g_malloc() error message */
     g_error("%s: failed to allocate %"G_GSIZE_FORMAT" bytes", G_STRLOC, size);
 
+    /* avoid warning: "control reaches end of non-void function" for
+       compilers that don't understand that g_error() never returns. */
+    return NULL;
+
 #elif defined(HAVE__ALIGNED_MALLOC)
     return (float *) _aligned_malloc(size, ALIGN_SIZE);
 #else
