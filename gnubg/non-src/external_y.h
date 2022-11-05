@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.7.5.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -88,6 +88,42 @@ extern int yydebug;
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
+/* Token kinds.  */
+#define YYEMPTY -2
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
+#define EOL 258
+#define EXIT 259
+#define DISABLED 260
+#define INTERFACEVERSION 261
+#define DEBUG 262
+#define SET 263
+#define NEW 264
+#define OLD 265
+#define OUTPUT 266
+#define E_INTERFACE 267
+#define HELP 268
+#define PROMPT 269
+#define E_STRING 270
+#define E_CHARACTER 271
+#define E_INTEGER 272
+#define E_FLOAT 273
+#define E_BOOLEAN 274
+#define FIBSBOARD 275
+#define FIBSBOARDEND 276
+#define EVALUATION 277
+#define CRAWFORDRULE 278
+#define JACOBYRULE 279
+#define RESIGNATION 280
+#define BEAVERS 281
+#define CUBE 282
+#define CUBEFUL 283
+#define CUBELESS 284
+#define DETERMINISTIC 285
+#define NOISE 286
+#define PLIES 287
+#define PRUNE 288
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -104,7 +140,7 @@ union YYSTYPE
     GList *list;
     commandinfo *cmd;
 
-#line 108 "external_y.h"
+#line 144 "external_y.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -114,6 +150,8 @@ typedef union YYSTYPE YYSTYPE;
 
 
 
+
 int yyparse (scancontext *scanner);
+
 
 #endif /* !YY_YY_EXTERNAL_Y_H_INCLUDED  */

@@ -1239,13 +1239,10 @@ char *yytext;
 #include "common.h"
 #include <ctype.h>
 #include "list.h"
-#include <string.h>
 
 #include "sgf.h"
 #include "sgf_y.h"
 #include <glib/gi18n.h>
-
-extern int _SGFWarning( char * );
 
 static int error( char *s ) {
 
@@ -1261,10 +1258,10 @@ static int error( char *s ) {
 }
 
 #define YY_FATAL_ERROR(m) error(m)
-#line 1265 "sgf_l.c"
+#line 1262 "sgf_l.c"
 #define YY_NO_INPUT 1
 
-#line 1268 "sgf_l.c"
+#line 1265 "sgf_l.c"
 
 #define INITIAL 0
 #define value 1
@@ -1480,9 +1477,9 @@ YY_DECL
 		}
 
 	{
-#line 66 "sgf_l.l"
+#line 63 "sgf_l.l"
 
-#line 1486 "sgf_l.c"
+#line 1483 "sgf_l.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1522,17 +1519,17 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 67 "sgf_l.l"
+#line 64 "sgf_l.l"
 /* ignore */
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 68 "sgf_l.l"
+#line 65 "sgf_l.l"
 return *yytext;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 69 "sgf_l.l"
+#line 66 "sgf_l.l"
 {
 			    char *pch;
 
@@ -1555,57 +1552,57 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 88 "sgf_l.l"
+#line 85 "sgf_l.l"
 /* ignore -- this rule avoids making flex back up */
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 89 "sgf_l.l"
+#line 86 "sgf_l.l"
 BEGIN(value); return '[';
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 90 "sgf_l.l"
+#line 87 "sgf_l.l"
 { error( _("illegal character in SGF file" )); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 92 "sgf_l.l"
+#line 89 "sgf_l.l"
 /* ignore -- we want value strings null-terminated */
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 93 "sgf_l.l"
+#line 90 "sgf_l.l"
 { sgflval.pch = strdup( "]" ); return VALUETEXT; }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 94 "sgf_l.l"
+#line 91 "sgf_l.l"
 /* ignore */
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 95 "sgf_l.l"
+#line 92 "sgf_l.l"
 BEGIN(INITIAL); return ']';
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 96 "sgf_l.l"
+#line 93 "sgf_l.l"
 { sgflval.pch = strdup( yytext ); return VALUETEXT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 97 "sgf_l.l"
+#line 94 "sgf_l.l"
 { sgflval.pch = strdup( yytext ); return VALUETEXT; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 99 "sgf_l.l"
+#line 96 "sgf_l.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1609 "sgf_l.c"
+#line 1606 "sgf_l.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(value):
 				yyterminate();
@@ -2467,6 +2464,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 99 "sgf_l.l"
+#line 96 "sgf_l.l"
 
 

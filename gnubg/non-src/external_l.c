@@ -946,9 +946,7 @@ static const flex_int16_t yy_chk[878] =
 
 #include "common.h"
 #include "external.h"
-#include <stdio.h>
 
-#define EXTERNAL_Y_H
 #include "external_y.h"
 
 extern int ext_parse(yyscan_t scanner);
@@ -962,10 +960,10 @@ void escapes(const char *cp, char *tp);
         } \
         yylval->str = g_string_new(yytext)
 
-#line 966 "external_l.c"
+#line 964 "external_l.c"
 #define YY_NO_INPUT 1
  
-#line 969 "external_l.c"
+#line 967 "external_l.c"
 
 #define INITIAL 0
 #define SBOARDP1 1
@@ -1241,10 +1239,10 @@ YY_DECL
 		}
 
 	{
-#line 62 "external_l.l"
+#line 60 "external_l.l"
 
 
-#line 1248 "external_l.c"
+#line 1246 "external_l.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1303,7 +1301,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 64 "external_l.l"
+#line 62 "external_l.l"
 {   BEGIN(SBOARDP1);
                             return FIBSBOARD;
                         }
@@ -1311,73 +1309,73 @@ YY_RULE_SETUP
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 68 "external_l.l"
+#line 66 "external_l.l"
 {   return PROMPT; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 69 "external_l.l"
+#line 67 "external_l.l"
 {   return NEW; }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 70 "external_l.l"
+#line 68 "external_l.l"
 {   return OLD; }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 71 "external_l.l"
+#line 69 "external_l.l"
 {   return E_INTERFACE; }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 72 "external_l.l"
+#line 70 "external_l.l"
 {   return HELP; }
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 73 "external_l.l"
+#line 71 "external_l.l"
 {   return SET; }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 74 "external_l.l"
+#line 72 "external_l.l"
 {   return DEBUG; }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 75 "external_l.l"
+#line 73 "external_l.l"
 {   return INTERFACEVERSION; }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 76 "external_l.l"
+#line 74 "external_l.l"
 {   return EXIT; }
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 77 "external_l.l"
+#line 75 "external_l.l"
 {   return EVALUATION; }
 	YY_BREAK
 case 12:
 /* rule 12 can match eol */
 YY_RULE_SETUP
-#line 78 "external_l.l"
+#line 76 "external_l.l"
 {   return FIBSBOARD; }
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 80 "external_l.l"
+#line 78 "external_l.l"
 {   yylval->bool = 1; 
                             return (E_BOOLEAN);
                         }
@@ -1385,14 +1383,14 @@ YY_RULE_SETUP
 case 14:
 /* rule 14 can match eol */
 YY_RULE_SETUP
-#line 83 "external_l.l"
+#line 81 "external_l.l"
 {   yylval->bool = 0; 
                             return (E_BOOLEAN);
                         }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 88 "external_l.l"
+#line 86 "external_l.l"
 {
                             PROCESS_YYTEXT_STRING;
                             return E_STRING;
@@ -1400,7 +1398,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 93 "external_l.l"
+#line 91 "external_l.l"
 {
                             yylval->floatnum = (float) atof(yytext);
                             return E_FLOAT;
@@ -1408,87 +1406,87 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 98 "external_l.l"
+#line 96 "external_l.l"
 {   yylval->intnum = atoi(yytext); 
                             return E_INTEGER; 
                         }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 102 "external_l.l"
+#line 100 "external_l.l"
 return (yytext[0]);
 	YY_BREAK
 
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-#line 105 "external_l.l"
+#line 103 "external_l.l"
 {   return RESIGNATION; }
 	YY_BREAK
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 106 "external_l.l"
+#line 104 "external_l.l"
 {   return BEAVERS; }
 	YY_BREAK
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 107 "external_l.l"
+#line 105 "external_l.l"
 {   return CRAWFORDRULE; }
 	YY_BREAK
 case 22:
 /* rule 22 can match eol */
 YY_RULE_SETUP
-#line 108 "external_l.l"
+#line 106 "external_l.l"
 {   return CUBE; }
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 109 "external_l.l"
+#line 107 "external_l.l"
 {   return CUBEFUL; }
 	YY_BREAK
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
-#line 110 "external_l.l"
+#line 108 "external_l.l"
 {   return CUBELESS; }
 	YY_BREAK
 case 25:
 /* rule 25 can match eol */
 YY_RULE_SETUP
-#line 111 "external_l.l"
+#line 109 "external_l.l"
 {   return DETERMINISTIC; }
 	YY_BREAK
 case 26:
 /* rule 26 can match eol */
 YY_RULE_SETUP
-#line 112 "external_l.l"
+#line 110 "external_l.l"
 {   return JACOBYRULE; }
 	YY_BREAK
 case 27:
 /* rule 27 can match eol */
 YY_RULE_SETUP
-#line 113 "external_l.l"
+#line 111 "external_l.l"
 {   return NOISE; }
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 114 "external_l.l"
+#line 112 "external_l.l"
 {   return PLIES; }
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 115 "external_l.l"
+#line 113 "external_l.l"
 {   return PRUNE; }
 	YY_BREAK
 
 case 30:
 YY_RULE_SETUP
-#line 118 "external_l.l"
+#line 116 "external_l.l"
 {
                             return (yytext[0]);
                         }
@@ -1496,7 +1494,7 @@ YY_RULE_SETUP
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 122 "external_l.l"
+#line 120 "external_l.l"
 {
                             BEGIN(OPTIONS);
                             return FIBSBOARDEND;
@@ -1504,7 +1502,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 127 "external_l.l"
+#line 125 "external_l.l"
 {
                             PROCESS_YYTEXT_STRING;
                             BEGIN(SBOARDP2);
@@ -1513,7 +1511,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 132 "external_l.l"
+#line 130 "external_l.l"
 {
                             PROCESS_YYTEXT_STRING;
                             BEGIN(VALLIST);
@@ -1523,7 +1521,7 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 138 "external_l.l"
+#line 136 "external_l.l"
 ; /* ignore whitespace */
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -1531,14 +1529,14 @@ case YY_STATE_EOF(SBOARDP1):
 case YY_STATE_EOF(SBOARDP2):
 case YY_STATE_EOF(OPTIONS):
 case YY_STATE_EOF(VALLIST):
-#line 140 "external_l.l"
+#line 138 "external_l.l"
 {   BEGIN(INITIAL); 
                             return (EOL); 
                         }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 144 "external_l.l"
+#line 142 "external_l.l"
 {   BEGIN(INITIAL);
                             yylval->character = yytext[0]; 
                             return (E_CHARACTER);
@@ -1546,10 +1544,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 149 "external_l.l"
+#line 147 "external_l.l"
 ECHO;
 	YY_BREAK
-#line 1553 "external_l.c"
+#line 1551 "external_l.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2690,7 +2688,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 149 "external_l.l"
+#line 147 "external_l.l"
 
 
 void escapes(const char *cp, char *tp)

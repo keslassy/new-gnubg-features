@@ -20,7 +20,7 @@
 #include "credits.h"
 
 const char aszCOPYRIGHT[] = N_("Copyright (C) 1999-2004 Gary Wong.\n"
-                               "Copyright (C) 2004-2021 the AUTHORS; for details type `show version'.");
+                               "Copyright (C) 2004-2022 the AUTHORS; for details type `show version'.");
 
 credEntry ceAuthors[] = {
   {"Joseph Heled", 0},
