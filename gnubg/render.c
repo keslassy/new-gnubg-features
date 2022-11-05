@@ -2630,29 +2630,29 @@ RenderImages(renderdata * prd, renderimages * pri)
     int i;
     int nSize = prd->nSize;
 
-    pri->ach = malloc(nSize * nSize * BOARD_WIDTH * BOARD_HEIGHT * 3);
-    pri->achChequer[0] = malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * 4);
-    pri->achChequer[1] = malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * 4);
-    pri->achChequerLabels = malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * 3 * 12);
-    pri->achDice[0] = malloc(nSize * nSize * DIE_WIDTH * DIE_HEIGHT * 4);
-    pri->achDice[1] = malloc(nSize * nSize * DIE_WIDTH * DIE_HEIGHT * 4);
-    pri->achPip[0] = malloc(nSize * nSize * 3);
-    pri->achPip[1] = malloc(nSize * nSize * 3);
-    pri->achCube = malloc(nSize * nSize * CUBE_WIDTH * CUBE_HEIGHT * 4);
-    pri->achCubeFaces = malloc(nSize * nSize * CUBE_WIDTH * CUBE_HEIGHT * 3 * 12);
-    pri->asRefract[0] = malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * sizeof(unsigned short));
-    pri->asRefract[1] = malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * sizeof(unsigned short));
-    pri->achResign = malloc(nSize * nSize * RESIGN_WIDTH * RESIGN_HEIGHT * 4);
-    pri->achResignFaces = malloc(nSize * nSize * RESIGN_WIDTH * RESIGN_HEIGHT * 3 * 3);
+    pri->ach = g_malloc(nSize * nSize * BOARD_WIDTH * BOARD_HEIGHT * 3);
+    pri->achChequer[0] = g_malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * 4);
+    pri->achChequer[1] = g_malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * 4);
+    pri->achChequerLabels = g_malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * 3 * 12);
+    pri->achDice[0] = g_malloc(nSize * nSize * DIE_WIDTH * DIE_HEIGHT * 4);
+    pri->achDice[1] = g_malloc(nSize * nSize * DIE_WIDTH * DIE_HEIGHT * 4);
+    pri->achPip[0] = g_malloc(nSize * nSize * 3);
+    pri->achPip[1] = g_malloc(nSize * nSize * 3);
+    pri->achCube = g_malloc(nSize * nSize * CUBE_WIDTH * CUBE_HEIGHT * 4);
+    pri->achCubeFaces = g_malloc(nSize * nSize * CUBE_WIDTH * CUBE_HEIGHT * 3 * 12);
+    pri->asRefract[0] = g_malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * sizeof(unsigned short));
+    pri->asRefract[1] = g_malloc(nSize * nSize * CHEQUER_WIDTH * CHEQUER_HEIGHT * sizeof(unsigned short));
+    pri->achResign = g_malloc(nSize * nSize * RESIGN_WIDTH * RESIGN_HEIGHT * 4);
+    pri->achResignFaces = g_malloc(nSize * nSize * RESIGN_WIDTH * RESIGN_HEIGHT * 3 * 3);
 #if defined(USE_GTK)
-    pri->auchArrow[0] = malloc(prd->nSize * prd->nSize * ARROW_WIDTH * ARROW_HEIGHT * 4);
-    pri->auchArrow[1] = malloc(prd->nSize * prd->nSize * ARROW_WIDTH * ARROW_HEIGHT * 4);
+    pri->auchArrow[0] = g_malloc(prd->nSize * prd->nSize * ARROW_WIDTH * ARROW_HEIGHT * 4);
+    pri->auchArrow[1] = g_malloc(prd->nSize * prd->nSize * ARROW_WIDTH * ARROW_HEIGHT * 4);
 #else
     pri->auchArrow[0] = NULL;
     pri->auchArrow[1] = NULL;
 #endif
     for (i = 0; i < 2; ++i)
-        pri->achLabels[i] = malloc(nSize * nSize * BOARD_WIDTH * BORDER_HEIGHT * 4);
+        pri->achLabels[i] = g_malloc(nSize * nSize * BOARD_WIDTH * BORDER_HEIGHT * 4);
 
     RenderBoard(prd, pri->ach, BOARD_WIDTH * nSize * 3);
     RenderChequers(prd, pri->achChequer[0], pri->achChequer[1],
@@ -2680,26 +2680,26 @@ FreeImages(renderimages * pri)
 
     int i;
 
-    free(pri->ach);
-    free(pri->achChequer[0]);
-    free(pri->achChequer[1]);
-    free(pri->achChequerLabels);
-    free(pri->achDice[0]);
-    free(pri->achDice[1]);
-    free(pri->achPip[0]);
-    free(pri->achPip[1]);
-    free(pri->achCube);
-    free(pri->achCubeFaces);
-    free(pri->asRefract[0]);
-    free(pri->asRefract[1]);
-    free(pri->achResign);
-    free(pri->achResignFaces);
+    g_free(pri->ach);
+    g_free(pri->achChequer[0]);
+    g_free(pri->achChequer[1]);
+    g_free(pri->achChequerLabels);
+    g_free(pri->achDice[0]);
+    g_free(pri->achDice[1]);
+    g_free(pri->achPip[0]);
+    g_free(pri->achPip[1]);
+    g_free(pri->achCube);
+    g_free(pri->achCubeFaces);
+    g_free(pri->asRefract[0]);
+    g_free(pri->asRefract[1]);
+    g_free(pri->achResign);
+    g_free(pri->achResignFaces);
 #if defined(USE_GTK)
-    free(pri->auchArrow[0]);
-    free(pri->auchArrow[1]);
+    g_free(pri->auchArrow[0]);
+    g_free(pri->auchArrow[1]);
 #endif
     for (i = 0; i < 2; ++i)
-        free(pri->achLabels[i]);
+        g_free(pri->achLabels[i]);
 }
 
 extern void
