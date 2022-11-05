@@ -21,8 +21,6 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#include <stdlib.h>
-
 #include "config.h"
 
 #ifdef HAVE_STDINT_H

@@ -20,12 +20,8 @@
 
 #include "config.h"
 
-#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef WIN32
-#include <stdio.h>
-#endif
 
 #include "cache.h"
 #include "positionid.h"
@@ -103,7 +99,7 @@ CacheCreate(evalCache * pc, unsigned int s)
     pc->hashMask = (pc->size >> 1) - 1;
 
     pc->entries = (cacheNode *) malloc((pc->size / 2) * sizeof(*pc->entries));
-    if (pc->entries == 0)
+    if (pc->entries == NULL)
         return -1;
 
     CacheFlush(pc);
