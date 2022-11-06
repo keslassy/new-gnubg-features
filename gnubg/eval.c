@@ -25,8 +25,9 @@
 #include <locale.h>
 #include <string.h>
 #include <errno.h>
+#include <stdlib.h>
 #include "isaac.h"
-#include <md5.h>
+#include "md5.h"
 #include "bearoffgammon.h"
 #include "positionid.h"
 #include "matchid.h"
