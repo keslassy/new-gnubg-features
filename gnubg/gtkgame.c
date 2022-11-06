@@ -6589,7 +6589,7 @@ GTKShowBuildInfo(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwBox);
 
-    gtk_box_pack_start(GTK_BOX(pwBox), SelectableLabel(pwDialog, "Version " VERSION_STRING), FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(pwBox), SelectableLabel(pwDialog, VERSION_STRING), FALSE, FALSE, 4);
 
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_box_pack_start(GTK_BOX(pwBox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 4);

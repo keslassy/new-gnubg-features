@@ -767,7 +767,7 @@ append_display_options(optionswidget * pow)
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwGrayEdit, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(pow->pwGrayEdit, _("Gray board in edit mode to make it clearer"));
 
-    pow->pwDragTargetHelp = gtk_check_button_new_with_label(_("Show target help when dragging a chequer"));
+    pow->pwDragTargetHelp = gtk_check_button_new_with_label(_("Show target help while dragging a chequer"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwDragTargetHelp), fGUIDragTargetHelp);
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwDragTargetHelp, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(pow->pwDragTargetHelp,
