@@ -3,7 +3,7 @@ dnl     autoconf
 dnl in the directory containing this script.
 
 dnl Copyright (C) 1999-2002 Gary Wong <gtw@gnu.org>
-dnl Copyright (C) 2002-2021 the AUTHORS
+dnl Copyright (C) 2002-2022 the AUTHORS
 
 dnl This program is free software: you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ dnl $Id$
 dnl
 
 AC_REVISION($Revision$)
-AC_INIT([GNU Backgammon],m4_esyscmd(echo 1.06.002$VERSION_EXT | tr -d '\n'),[bug-gnubg@gnu.org],[gnubg])
+AC_INIT([GNU Backgammon],m4_esyscmd(echo 1.07.001$VERSION_EXT | tr -d '\n'),[bug-gnubg@gnu.org],[gnubg])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR(gnubg.c)
