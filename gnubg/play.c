@@ -1788,7 +1788,10 @@ NextTurn(int fPlayNext)
 #if defined (USE_GTK)
         if (!fX || fDisplay)
 #endif
-            CommandShowScore(NULL);
+            { 
+                CommandShowScore(NULL);
+                outputf("\n");
+            }
 
         if (ms.nMatchTo && ms.anScore[pmgi->fWinner] >= ms.nMatchTo) {
             playSound(ap[pmgi->fWinner].pt == PLAYER_HUMAN ? SOUND_HUMAN_WIN_MATCH : SOUND_BOT_WIN_MATCH);
