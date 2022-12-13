@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: 2022-03-14 21:41+0100\n"
 "Last-Translator: Philippe Michel <philippe.michel7@sfr.fr>\n"
 "Language-Team: <fr@li.org>\n"
@@ -3022,8 +3022,8 @@ msgid ""
 "Bob Jenkins' Indirection, Shift, Accumulate, Add and Count cryptographic "
 "generator"
 msgstr ""
-"Le générateur cryptographique \"Indirection, Shift, Accumulate, Add and Count"
-"\" de Bob Jenkins"
+"Le générateur cryptographique \"Indirection, Shift, Accumulate, Add and "
+"Count\" de Bob Jenkins"
 
 #: dice.c:68
 msgid "A generator based on the Message Digest 5 algorithm"
@@ -5597,8 +5597,8 @@ msgid "Failed to make directory"
 msgstr "Echec de la création du répertoire"
 
 #: gtkfile.c:530
-msgid "Previous"
-msgstr "Précédent"
+msgid "Pre-existing"
+msgstr "Préexistant"
 
 #: gtkfile.c:542
 msgid "Failed import"
@@ -6950,8 +6950,8 @@ msgstr "Coller le ID GNUbg"
 
 #: gtkgame.c:4199
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
 
 #: gtkgame.c:4372
@@ -7408,8 +7408,8 @@ msgid "Statistics for all games"
 msgstr "Stastistiques pour toutes les parties"
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
-msgstr "Stastistiques de la partie "
+msgid "Statistics for game %d"
+msgstr "Stastistiques de la partie %d"
 
 #: gtkgame.c:7516
 #, c-format
@@ -7850,10 +7850,10 @@ msgid ""
 "allows you to specify how many consecutive redoubles are permitted.  Beavers "
 "are only ever used in money games, not matches."
 msgstr ""
-"Lorsqu'on lui propose un double, un joueur peut répondre par un \"beaver"
-"\" (accepte et redouble immédiat, en conservant le videau). Cette option "
-"permet de préciser combien de tels redoubles consécutifs sont autorisés. Les "
-"beavers ne sont jamais autorisés en match."
+"Lorsqu'on lui propose un double, un joueur peut répondre par un "
+"\"beaver\" (accepte et redouble immédiat, en conservant le videau). Cette "
+"option permet de préciser combien de tels redoubles consécutifs sont "
+"autorisés. Les beavers ne sont jamais autorisés en match."
 
 #: gtkoptions.c:510
 msgid "Maximum automatic doubles:"

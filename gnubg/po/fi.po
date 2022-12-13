@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon 1.06\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: 2022-03-14 10:14+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5705,7 +5705,7 @@ msgid "Failed to make directory"
 msgstr "Hakemiston luominen ei onnistunut"
 
 #: gtkfile.c:530
-msgid "Previous"
+msgid "Pre-existing"
 msgstr "Edellinen"
 
 #: gtkfile.c:542
@@ -7060,8 +7060,8 @@ msgstr "Liitä GNUbg ID"
 
 #: gtkgame.c:4199
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
 "ID on ainutlaatuinen ja vain kyseiselle peliasemalle. Ctrl+C kopioi nykyisen "
 "ID tunnuksen ja Ctrl+V tuo sen leikepöydältä."
@@ -7567,8 +7567,8 @@ msgid "Statistics for all games"
 msgstr "Kaikkien pelien tilastot"
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
-msgstr "Pelitilastot "
+msgid "Statistics for game %d"
+msgstr "Pelitilastot %d"
 
 #: gtkgame.c:7516
 #, c-format

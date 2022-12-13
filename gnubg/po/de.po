@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: 2006-04-25 16:26+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -236,15 +236,15 @@ msgstr "Einseitige Bearoff-Datenbank"
 #, fuzzy, c-format
 msgid "In memory 2-sided exact %u-chequer Hypergammon database evaluator"
 msgstr ""
-" * Im Hauptspeicher \"2 sided exact %d-chequer Hypergammon database evaluator"
-"\"\n"
+" * Im Hauptspeicher \"2 sided exact %d-chequer Hypergammon database "
+"evaluator\"\n"
 
 #: bearoff.c:502
 #, fuzzy, c-format
 msgid "On disk 2-sided exact %u-chequer Hypergammon database evaluator"
 msgstr ""
-" * Auf Festplatte \"2 sided exact %d-chequer Hypergammon database evaluator"
-"\"\n"
+" * Auf Festplatte \"2 sided exact %d-chequer Hypergammon database "
+"evaluator\"\n"
 
 #: bearoff.c:506
 #, fuzzy, c-format
@@ -1757,8 +1757,8 @@ msgstr ""
 #: commands.inc:744
 msgid "Truncate *cubeless* rollouts when reaching one-sided bearoff database"
 msgstr ""
-"Beende Rollout *ohne Doppler* bei Erreichen der \"one-sided bearoff database"
-"\""
+"Beende Rollout *ohne Doppler* bei Erreichen der \"one-sided bearoff "
+"database\""
 
 #: commands.inc:759
 msgid "Enable/Disable different evaluations for later plies of rollouts"
@@ -5986,8 +5986,8 @@ msgstr "Fehler beim Verbinden der Spieler"
 
 #: gtkfile.c:530
 #, fuzzy
-msgid "Previous"
-msgstr "[Vorherige Partie]"
+msgid "Pre-existing"
+msgstr "Vordefinierte Einstellungen"
 
 #: gtkfile.c:542
 #, fuzzy
@@ -7527,8 +7527,8 @@ msgstr "Position-ID:"
 
 #: gtkgame.c:4199
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
 
 #: gtkgame.c:4372
@@ -8007,8 +8007,8 @@ msgid "Statistics for all games"
 msgstr "Statistik über alle Partien"
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
-msgstr "Statistik für Partie "
+msgid "Statistics for game %d"
+msgstr "Statistik für Partie %d"
 
 #: gtkgame.c:7516
 #, c-format
@@ -8453,10 +8453,10 @@ msgid ""
 "allows you to specify how many consecutive redoubles are permitted.  Beavers "
 "are only ever used in money games, not matches."
 msgstr ""
-"Wenn einem Spieler der Doppler angeboten wird, darf er \"beavern"
-"\" (redoppeln, ohne daß der Doppler auf der anderen Seite des Bretts "
-"landet). Diese Option bestimmt, wieviele dieser \"Redoppel\" maximal erlaubt "
-"sind. \"Beavers\" sind nur in Moneygames erlaubt, nie in Matches."
+"Wenn einem Spieler der Doppler angeboten wird, darf er "
+"\"beavern\" (redoppeln, ohne daß der Doppler auf der anderen Seite des "
+"Bretts landet). Diese Option bestimmt, wieviele dieser \"Redoppel\" maximal "
+"erlaubt sind. \"Beavers\" sind nur in Moneygames erlaubt, nie in Matches."
 
 #: gtkoptions.c:510
 msgid "Maximum automatic doubles:"
@@ -11265,8 +11265,8 @@ msgstr "Partie Nr. %d"
 msgid ""
 "Output generated %s by <a href=\"https://www.gnu.org/software/gnubg/\">%s</a>"
 msgstr ""
-"Ausgabe generiert %s durch <a href=\"http://www.gnu.org/software/gnubg/\">"
-"%s</a>"
+"Ausgabe generiert %s durch <a href=\"http://www.gnu.org/software/gnubg/"
+"\">%s</a>"
 
 #: html.c:1613 html.c:1666
 #, c-format
@@ -15319,8 +15319,8 @@ msgid ""
 "Will not truncate *cubeless* rollouts when reaching one-sided bearoff "
 "database."
 msgstr ""
-"Benutze keine verkürzten Rollouts ohne Doppler, wenn die \"one-sided bearoff"
-"\" Datenbank erreicht ist."
+"Benutze keine verkürzten Rollouts ohne Doppler, wenn die \"one-sided "
+"bearoff\" Datenbank erreicht ist."
 
 #: show.c:246
 msgid "Lookahead variance reduction is enabled."
@@ -16810,3 +16810,7 @@ msgid "You must specify a file to export to (see `help export position text')."
 msgstr ""
 "Sie müssen eine Datei benennen, in welche exportiert werden soll(siehe auch "
 "`help database export')."
+
+#, fuzzy
+#~ msgid "Previous"
+#~ msgstr "[Vorherige Partie]"

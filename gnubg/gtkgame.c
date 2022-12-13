@@ -7479,8 +7479,7 @@ StatsSelectGame(GtkWidget * box, int UNUSED(i))
         gtk_window_set_title(GTK_WINDOW(pwStatDialog), _("Statistics for all games"));
     } else {
         char sz[100];
-        strcpy(sz, _("Statistics for game "));
-        sprintf(sz + strlen(sz), "%d", curStatGame);
+        sprintf(sz, _("Statistics for game %d"), curStatGame);
         gtk_window_set_title(GTK_WINDOW(pwStatDialog), sz);
     }
     SetStats(GetStatContext(curStatGame));

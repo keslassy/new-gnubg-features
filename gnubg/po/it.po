@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: 2009-02-07 00:16+0100\n"
 "Last-Translator: Renzo Campagna <renzo.camp@tin.it>\n"
 "Language-Team: Italiano <renzo.camp@tin.it>\n"
@@ -5839,7 +5839,7 @@ msgid "Failed to make directory"
 msgstr "Fallito nel creare la cartella"
 
 #: gtkfile.c:530
-msgid "Previous"
+msgid "Pre-existing"
 msgstr "Precedente"
 
 #: gtkfile.c:542
@@ -7342,8 +7342,8 @@ msgstr "GNUBg ID:"
 
 #: gtkgame.c:4199
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
 
 #: gtkgame.c:4372
@@ -7816,8 +7816,8 @@ msgid "Statistics for all games"
 msgstr "Statistiche di tutti i games"
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
-msgstr "Statistiche del game "
+msgid "Statistics for game %d"
+msgstr "Statistiche del game %d"
 
 #: gtkgame.c:7516
 #, c-format
@@ -8282,10 +8282,10 @@ msgid ""
 "only ever used in money games, not matches."
 msgstr ""
 "Se il lancio di apertura è un doppio, i giocatori possono decidere di "
-"aumenare il cubo del raddoppio e rilanciare i dadi (un \"raddoppio automatico"
-"\"). Questa opzione ti permette di controllare quanti raddoppi automatici "
-"consentire. I raddoppi automatici sono usati solamente nei money games, non "
-"nei matches."
+"aumenare il cubo del raddoppio e rilanciare i dadi (un \"raddoppio "
+"automatico\"). Questa opzione ti permette di controllare quanti raddoppi "
+"automatici consentire. I raddoppi automatici sono usati solamente nei money "
+"games, non nei matches."
 
 #: gtkoptions.c:547 gtkoptions.c:553
 msgid "Tutor"

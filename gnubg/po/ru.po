@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: 2004-04-14 21:35+CDT\n"
 "Last-Translator: Dmitri I GOULIAEV <dig@telkel.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -5869,8 +5869,8 @@ msgstr ""
 
 #: gtkfile.c:530
 #, fuzzy
-msgid "Previous"
-msgstr "Предпросмотр:"
+msgid "Pre-existing"
+msgstr "Предустановки"
 
 #: gtkfile.c:542
 #, fuzzy
@@ -7382,8 +7382,8 @@ msgstr "Идентификатор позиции:\t"
 
 #: gtkgame.c:4199
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
 
 #: gtkgame.c:4372
@@ -7850,8 +7850,8 @@ msgid "Statistics for all games"
 msgstr "Статистика по всем играм"
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
-msgstr "Статистика по игре "
+msgid "Statistics for game %d"
+msgstr "Статистика по игре %d"
 
 #: gtkgame.c:7516
 #, c-format
@@ -16082,3 +16082,7 @@ msgstr ""
 #: text.c:905
 msgid "You must specify a file to export to (see `help export position text')."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Previous"
+#~ msgstr "Предпросмотр:"

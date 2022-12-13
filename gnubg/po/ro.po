@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: 2011-02-05 18:26+0200\n"
 "Last-Translator: Mihai <mihaiv@gmail.com>\n"
 "Language-Team:  <>\n"
@@ -5936,7 +5936,7 @@ msgid "Failed to make directory"
 msgstr "Eşuat în crea dosar"
 
 #: gtkfile.c:530
-msgid "Previous"
+msgid "Pre-existing"
 msgstr "Precedent"
 
 #: gtkfile.c:542
@@ -7440,8 +7440,8 @@ msgstr "ID poziţie:"
 
 #: gtkgame.c:4199
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
 
 #: gtkgame.c:4372
@@ -7913,8 +7913,8 @@ msgid "Statistics for all games"
 msgstr "Statistici pentru toate jocurile"
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
-msgstr "Statistici pentru joc "
+msgid "Statistics for game %d"
+msgstr "Statistici pentru joc %d"
 
 #: gtkgame.c:7516
 #, c-format

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5547,7 +5547,7 @@ msgid "Failed to make directory"
 msgstr ""
 
 #: gtkfile.c:530
-msgid "Previous"
+msgid "Pre-existing"
 msgstr ""
 
 #: gtkfile.c:542
@@ -6877,8 +6877,8 @@ msgstr ""
 
 #: gtkgame.c:4199
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
 
 #: gtkgame.c:4372
@@ -7333,7 +7333,7 @@ msgid "Statistics for all games"
 msgstr ""
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
+msgid "Statistics for game %d"
 msgstr ""
 
 #: gtkgame.c:7516

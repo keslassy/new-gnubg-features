@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: 2010-01-02 16:50+0100\n"
 "Last-Translator: Christian Anthon <christian.anthon@gmail.com>\n"
 "Language-Team: American English <kde-i18n-doc@lists.kde.org>\n"
@@ -6023,7 +6023,7 @@ msgid "Failed to make directory"
 msgstr "Kunne ikke skab folder"
 
 #: gtkfile.c:530
-msgid "Previous"
+msgid "Pre-existing"
 msgstr "Forrige"
 
 #: gtkfile.c:542
@@ -7486,8 +7486,8 @@ msgstr "GNUBg ID: "
 #: gtkgame.c:4199
 #, fuzzy
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
 "Positionens unikke ID. Ctrl+C kopierer det aktuelle ID og Ctrl+V indsætter "
 "et ID fra clipboard"
@@ -7960,8 +7960,8 @@ msgid "Statistics for all games"
 msgstr "Statistik for alle partier"
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
-msgstr "Statistik for parti"
+msgid "Statistics for game %d"
+msgstr "Statistik for parti %d"
 
 #: gtkgame.c:7516
 #, c-format

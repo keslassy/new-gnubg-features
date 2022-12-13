@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg-0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-08 08:47+0100\n"
+"POT-Creation-Date: 2022-12-12 08:13+0100\n"
 "PO-Revision-Date: 2013-01-13 22:20+0100\n"
 "Last-Translator: Petr Kadlec <mormegil@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -5983,7 +5983,7 @@ msgid "Failed to make directory"
 msgstr "Nepodařilo se vytvořit adresář"
 
 #: gtkfile.c:530
-msgid "Previous"
+msgid "Pre-existing"
 msgstr "Předchozí"
 
 #: gtkfile.c:542
@@ -7362,11 +7362,11 @@ msgstr "ID GNUbg"
 #: gtkgame.c:4199
 #, fuzzy
 msgid ""
-"This is a unique id for this position. Ctrl+C copies the current ID and Ctrl"
-"+V pastes an ID from the clipboard."
+"This is a unique id for this position. Ctrl+C copies the current ID and "
+"Ctrl+V pastes an ID from the clipboard."
 msgstr ""
-"Toto je unikátní ID této pozice. Pomocí Ctrl+C zkopírujete aktuální ID a Ctrl"
-"+V vloží ID ze schránky"
+"Toto je unikátní ID této pozice. Pomocí Ctrl+C zkopírujete aktuální ID a "
+"Ctrl+V vloží ID ze schránky"
 
 #: gtkgame.c:4372
 msgid "Rendering"
@@ -7837,8 +7837,8 @@ msgid "Statistics for all games"
 msgstr "Statistika všech her"
 
 #: gtkgame.c:7482
-msgid "Statistics for game "
-msgstr "Statistika pro hru "
+msgid "Statistics for game %d"
+msgstr "Statistika pro hru %d"
 
 #: gtkgame.c:7516
 #, c-format

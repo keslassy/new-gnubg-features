@@ -658,7 +658,7 @@ TakeAnalysis(cubehintdata * pchd)
     /* Jacoby rule */ 
     if (pchd->ms.nMatchTo && pchd->evalAtMoney) {
 
-        GtkWidget *pwJ = gtk_check_button_new_with_label ("Jacoby"); 
+        GtkWidget *pwJ = gtk_check_button_new_with_label(_("Jacoby"));
 
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_grid_attach(GTK_GRID(pwGrid), pwJ, 0, iRow, 2, 1);
@@ -1112,7 +1112,7 @@ GTK_FILL, GTK_EXPAND | GTK_FILL, 8, 4);
     /* Jacoby option - only appears when using money eval */
     if (pchd->evalAtMoney) {
 
-        GtkWidget *pwJ = gtk_check_button_new_with_label ("Jacoby"); 
+        GtkWidget *pwJ = gtk_check_button_new_with_label(_("Jacoby"));
 
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_grid_attach(GTK_GRID(pwGrid), pwJ, 0, iRow, 2, 1);

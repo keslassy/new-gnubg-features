@@ -51,7 +51,7 @@ MoveListCreate(hintdata * phd)
 {
     static const char *aszTitleDetails[] = {
         N_("Rank"),
-        N_("Type"),
+        N_("moveType|Type"),
         N_("Win"),
         N_("W g"),
         N_("W bg"),
@@ -89,7 +89,7 @@ MoveListCreate(hintdata * phd)
 
         gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_RANK]), renderer,
                                                     "text", ML_COL_RANK, "foreground", ML_COL_FGCOL + offset, NULL);
-        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _(aszTitleDetails[ML_COL_TYPE]), renderer,
+        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, Q_(aszTitleDetails[ML_COL_TYPE]), renderer,
                                                     "text", ML_COL_TYPE, "foreground", ML_COL_FGCOL + offset, NULL);
 
         if (phd->fDetails) {
