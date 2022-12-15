@@ -51,7 +51,7 @@ MoveListCreate(hintdata * phd)
 {
     static const char *aszTitleDetails[] = {
         N_("Rank"),
-        N_("moveType|Type"),
+        N_("analysisType|Type"),
         N_("Win"),
         N_("W g"),
         N_("W bg"),

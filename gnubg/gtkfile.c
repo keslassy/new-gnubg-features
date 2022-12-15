@@ -673,7 +673,7 @@ batch_create_view(GSList * filenames)
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view),
                                                 -1, _("Result"), renderer, "text", COL_RESULT, NULL);
 
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, Q_("analyseType|Type"), renderer, "text", COL_DESC, NULL);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, Q_("fileType|Type"), renderer, "text", COL_DESC, NULL);
 
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(view), -1, _("File"), renderer, "text", COL_FILE, NULL);
     model = batch_create_model(filenames);
