@@ -80,35 +80,12 @@ dnl
 dnl Compiler setup
 dnl
 
-dnl Deprecated, but replacement depends on AC_USE_SYSTEM_EXTENSIONS that
-dnl depends on autoconf 2.60. For now we require only 2.59 (as in RHEL5)
-AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 
 AC_PROG_CC
 AM_PROG_CC_C_O
 dnl Deprecated but RHEL6/gcc 4.4 needs it
 AC_PROG_CC_STDC
-
-# Additional test below is mostly borrowed from varnish.
-# Check $build_vendor since this fails with the Sun compiler on OpenIndiana
-if test "x$build_vendor" = "xredhat"; then
-if test "x$ac_cv_prog_cc_stdc" = "xno" -o "x$ac_cv_prog_cc_stdc" = "x"; then
-# We might be on RHEL5 with its broken autoconf.
-# Check if CC is gcc and if it bails when given -std=gnu99.
-# If not, use that.  Yuck.
-  if test "x$ac_cv_c_compiler_gnu" = "xyes"; then
-     CC="$CC -std=gnu99"
-     AC_RUN_IFELSE(
-	[AC_LANG_PROGRAM([],[[
-return 0;
-    ]])],
-    [],
-    [AC_MSG_ERROR([Could not find a C99 compatible compiler])])
-  else
-    AC_MSG_ERROR([Could not find a C99 compatible compiler])
-  fi
-fi
-fi
 
 AM_CONDITIONAL(CROSS_COMPILING, test "x$cross_compiling" = "xyes")
 

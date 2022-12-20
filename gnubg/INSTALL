@@ -8,7 +8,7 @@ obtained the distribution from the CVS repository, run ``./autogen.sh'' first.
 
 You are likely to want or need the following tools
 
-autoconf		version >= 2.59
+autoconf		version >= 2.60
 automake
 libtool
 GNU make
