@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2020 Aaron Tikuisis <Aaron.Tikuisis@uottawa.ca>
- * Copyright (C) 2020 Isaac Keslassy <isaac@ee.technion.ac.il>
+ * Copyright (C) 2022 Isaac Keslassy <isaac@technion.ac.il>
  * Copyright (C) 2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,16 +19,6 @@
  * $Id$
  */
 
-/* TBD
-
-- if horizontal, single column
-
-- D/T looks too purple
-- arrange bottom-right frame
-- save options with other gnubg settings so that they persist between different instances of gnubg.?
-- if screen size is not enough, option b/w vertical2 and horizontal
-- email bug-gnubg with bugs (Aaron, cf email)
-*/
 
 /***************************************************      Explanations:       *************************************
       The main function is GTKShowScoreMap.
@@ -69,13 +59,24 @@
          (no need for new equity values); and so on for the different radio buttons.
 */
 
-/* TBD
+/* 12/2022: Isaac Keslassy: a few minor changes including:
+- default smaller quadrant size to fit a smaller screen
+- default horizontal layout
+- new cube equity display options: absolute, or relative ND-D, or relative D/P-D/T
+- default analysis: 2-ply
+- new explanations at the bottom
+- to decide the table size, i.e. the maximum match size to analyze: independently for cube and move scoremaps:
+        1) if we just started our first scoremap since we opened gnubg: 
+            a) if we have a small match (e.g. money match or a match in 2) --> use a default of 3
+            b) if we have a large match (e.g. 21) --> use a default of 9
+            b) else use the current match size
+        2) else, use the decision in the last used similar scoremap (within the same instance of gnubg)
+Thanks to Pierre Zakia and Philippe Michel for their helpful comments!
+*/
 
-format: 3 digits
+/* TBD - known issue:
 
-Known issues:
-
-1.  the scoremap button of the 1st move of any game in an analyzed match doesn't work at first. The error message is:
+The scoremap button of the 1st move of any game in an analyzed match doesn't work at first. The error message is:
 "No game in progress (type `new game' to start one)."
 However, if we click on another move (even w/o doing anything else) then come back, the scoremap of the 1st move then works.
 Yet, if we change the game and come back: again, it doesn't work.
@@ -104,7 +105,7 @@ and come back, it works again. It may be a movelist construction issue.
 
 // these sizes help define the requested minimum quadrant size; but then GTK can set a higher value
 // e.g. we may ask for height/width of 60, but final height will be 60 & final width 202
-#define MAX_SIZE_QUADRANT 80
+#define MAX_SIZE_QUADRANT 40 //(was 80)
 #define DEFAULT_WINDOW_WIDTH 400        //in hint: 400; in rollout: 560; in tempmap: 400; in theory: 660
 #define DEFAULT_WINDOW_HEIGHT 500       //in hint: 300; in rollout: 400; in tempmap: 500; in theory: 300
 // #define MAX_TABLE_SCREENSIZE 400
@@ -141,14 +142,15 @@ typedef enum { LABEL_AWAY, LABEL_SCORE } labelbasedonoptions;
 typedef enum { NUMBERS, ENGLISH, BOTH } describeoptions;
 
 /* Used in the "Display Eval" radio buttons - we assume the same order as the labels */
-typedef enum { NO_EVAL, CUBE_ND_EVAL, CUBE_DT_EVAL, CUBE_RELATIVE_EVAL } displayevaloptions;
+typedef enum { NO_EVAL, CUBE_ABSOLUTE_EVAL, CUBE_RELATIVE_EVAL_ND_D, CUBE_RELATIVE_EVAL_DT_DP
+} displayevaloptions;
 // Since we lay them out differently for chequer play; we cheat with macros.
-#define CHEQUER_ABSOLUTE_EVAL CUBE_ND_EVAL
-#define CHEQUER_RELATIVE_EVAL CUBE_DT_EVAL
+#define CHEQUER_ABSOLUTE_EVAL CUBE_ABSOLUTE_EVAL
+#define CHEQUER_RELATIVE_EVAL CUBE_RELATIVE_EVAL_ND_D
 
 
-/* Used in the "Display Eval" radio buttons - we assume the same order as the labels */
-typedef enum { VERTICAL, HORIZONTAL } layoutoptions;
+/* Layout options: either horizontal or vertical. */
+typedef enum { HORIZONTAL, VERTICAL } layoutoptions;
 
 // used in DecisionVal
 typedef enum {ND, DT, DP, TG} decisionval;
@@ -272,10 +274,11 @@ typedef struct {
     GtkWidget *pwTableContainer;     // container for the above
     GtkWidget *pwCubeBox;
     GtkWidget *pwCubeFrame;
+    GtkWidget* pwMegaVContainer;    // container for everything in scoremap layout
     GtkWidget *pwHContainer;    // container for options in horizontal layout
     GtkWidget *pwVContainer;    // container for options in vertical layout
     GtkWidget *pwLastContainer; // points to last used container (either vertical or horizontal)
-    GtkWidget *pwOptionsBox;          // options in horizontal/vertical layout //xxx
+    GtkWidget *pwOptionsBox;          // options in horizontal/vertical layout 
     // GtkWidget *pwVBox;          // options in vertical layout
 
     // 2. specific to cube scoremap:
@@ -291,17 +294,17 @@ typedef struct {
 
 // ******************* DEFAULT STATIC OPTIONS ***********************
 
-// We now define the options to retain between scoremap instances,
+// We now define the default options for new scoremap instances,
 // corresponding to the respective radio buttons
 
 static labelbasedonoptions labelBasedOn = LABEL_AWAY;
 static int moneyJacoby = TRUE;
 static colourbasedonoptions colourBasedOn = ALL;
 static displayevaloptions displayEval = NO_EVAL;
-static layoutoptions layout = VERTICAL;
-static int cubeMatchSize = 7;
-static int moveMatchSize = 5;
-static int evalPlies = 0;
+static layoutoptions layout = HORIZONTAL; //(was VERTICAL)
+static int cubeMatchSize = 0; // to remember we haven't updated it//xxx
+static int moveMatchSize = 0; //
+static int evalPlies = 2; // (was 0)
 
 // *******************************************************************
 
@@ -1112,40 +1115,16 @@ ColourQuadrant(gtkquadrant * pgq, quadrantdata * pq, const scoremap * psm) {
     } else {
         // First compute and fill the color, as well as update the equity text
         if (psm->cubeScoreMap) {
-            // if no eval to display, nothing to do for the eval text; if absolute eval, update now; if relative eval, it depends
-            // on the colourBasedOn scheme, update below
-            if (displayEval == CUBE_ND_EVAL) {
-                sprintf(pq->equityText,"\n%+.*f",DIGITS, nd);
-            } else if (displayEval == CUBE_DT_EVAL) {
-                sprintf(pq->equityText,"\n%+.*f",DIGITS, dt);
-            } else if (displayEval ==CUBE_RELATIVE_EVAL && colourBasedOn == ALL) {
-                float correctVal=0.0, op1=0.0, op2=0.0;
-                switch (pq->dec) {
-                     case ND:
-                     case TG:
-                         correctVal=nd;
-                         op1=dt;
-                         op2=dp;
-                         break;
-                     case DT:
-                         correctVal=dt;
-                         op1=nd;
-                         op2=dp;
-                         break;
-                     case DP:
-                         correctVal=dp;
-                         op1=dt;
-                         op2=nd;
-                         break;
-                 }
-                 r = (ABS(correctVal-op1) < ABS(correctVal-op2)) ? op1-correctVal : op2-correctVal;
-                 sprintf(pq->equityText,"\n%+.*f",DIGITS, r);
+            // if no eval to display, nothing to do for the eval text; if absolute or relative eval, update now
+            if (displayEval == CUBE_ABSOLUTE_EVAL) {
+                sprintf(pq->equityText,"\n%+.*f",DIGITS, MAX(nd, MIN(dt, dp)));
+            } else if (displayEval == CUBE_RELATIVE_EVAL_ND_D) {
+                  sprintf(pq->equityText,"\n%+.*f",DIGITS, MIN(dt, dp) - nd);
+            } else if (displayEval == CUBE_RELATIVE_EVAL_DT_DP) {
+                sprintf(pq->equityText, "\n%+.*f", DIGITS, dp - dt);
             }
             if (colourBasedOn != ALL) {
                 r = CalcRVal(colourBasedOn, nd, dt);
-                if (displayEval == CUBE_RELATIVE_EVAL) {
-                    sprintf(pq->equityText,"\n%+.*f",DIGITS, r);
-                }
                 FindColour1(pgq->pDrawingAreaWidget, r,colourBasedOn, TRUE);
             } else {
                 FindColour2(pgq->pDrawingAreaWidget,nd,dt,TRUE);
@@ -1949,7 +1928,6 @@ BuildTableContainer(scoremap * psm)
 
     int quadrantHeight = MIN(MAX_SIZE_QUADRANT, MAX_TABLE_HEIGHT/tableSize);
     int quadrantWidth = MIN(MAX_SIZE_QUADRANT, MAX_TABLE_WIDTH/tableSize);
-
     int i,j;
     GtkWidget * pw;
 
@@ -2420,8 +2398,55 @@ Allows garbage collection.
     g_free(psm);
 }
 
+//Module to add text, based on AddTitle from gtkgame.c
+static void
+AddText(GtkWidget* pwBox, char* Text)
+{
+    GtkRcStyle * ps = gtk_rc_style_new();
+    GtkWidget * pwText = gtk_label_new(Text);
+    GtkWidget * pwHBox;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, FALSE, FALSE, 4);
+
+    ps->font_desc = pango_font_description_new();
+    //pango_font_description_set_family_static(ps->font_desc, "serif");
+    pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
+    gtk_widget_modify_style(pwText, ps);
+    g_object_unref(ps);
+
+    gtk_box_pack_start(GTK_BOX(pwHBox), pwText, TRUE, FALSE, 0);
+}
+
+////Module to add text, based on AddTitle from gtkgame.c
+//static void
+//AddVText(GtkWidget* pwBox, char* Text)
+//{
+//    GtkRcStyle* ps = gtk_rc_style_new();
+//    GtkWidget* pwText = gtk_label_new(Text), * pwVBox;
+//
+//#if GTK_CHECK_VERSION(3,0,0)
+//    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+//#else
+//    pwVBox = gtk_vbox_new(FALSE, 0);
+//#endif
+//    gtk_box_pack_start(GTK_BOX(pwBox), pwVBox, FALSE, FALSE, 4);
+//
+//    ps->font_desc = pango_font_description_new();
+//    //pango_font_description_set_family_static(ps->font_desc, "serif");
+//    pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
+//    gtk_widget_modify_style(pwText, ps);
+//    g_object_unref(ps);
+//
+//    gtk_box_pack_start(GTK_BOX(pwVBox), pwText, TRUE, FALSE, 0);
+//}
+
 void
-BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
+BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { 
 /* Build the options part of the scoremap window, i.e. the part that goes after the scoremap table (and the gauge if it exists)
 */
 
@@ -2441,6 +2466,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
 //  GtkWidget *pwy = NULL;
 //  GtkWidget *pwv2;
     GtkWidget *pwh2;
+//  GtkWidget* pwtest;
 //  float nd, dt, dp = 1.0;
 //  GtkWidget *pwTable2 = NULL;
 //  GtkWidget *pwLabel;
@@ -2546,6 +2572,8 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
         g_signal_connect(G_OBJECT (pw), "toggled", G_CALLBACK(JacobyToggled), psm);
         gtk_widget_set_tooltip_text(pw, _("Toggle Jacoby option for money play"));
     }
+    //AddText(GTK_BOX(pwv), _("- 4Each grid square indicates the best move for a different score. \n - Different colors correspond to different best moves: \n      red for the most frequent move, blue for the 2nd most, etc. \n - A darker color intensity reflects a larger score difference with the 2nd best move."));
+
 
     // ***************************************** //
 
@@ -2561,18 +2589,18 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { //xxx
     }
 
     /* Layout frame */
-    const char * layoutStrings[2] = {N_("Vertical"), N_("Horizontal")};
+    const char * layoutStrings[2] = {N_("Horizontal"), N_("Vertical")};
 
     BuildLabelFrame(psm, pwv, _("Layout"), layoutStrings, 2, layout, LayoutToggled, TRUE, vAlignExpand);
 
 
     /* Display Eval frame */
     if (psm->cubeScoreMap) {
-        const char * displayEvalStrings[4] = {N_("None"), N_("ND"), N_("D/T"), N_("Relative")};
-        BuildLabelFrame(psm, pwv, _("Display evaluation"), displayEvalStrings, 4, displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
+        const char * displayEvalStrings[4] = {N_("None"), N_("Equity"), N_("D-ND"), N_("D/P-D/T")};
+        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), displayEvalStrings, 4, displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
     } else {
-        const char * displayEvalStrings[4] = {N_("None"), N_("Absolute"), N_("Relative to second best")};
-        BuildLabelFrame(psm, pwv, _("Display evaluation"), displayEvalStrings, 3, displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
+        const char * displayEvalStrings[4] = {N_("None"), N_("Equity"), N_("Vs. 2nd best")};
+        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), displayEvalStrings, 3, displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
     }
 
     /* colour by frame */
@@ -2640,7 +2668,6 @@ GTKShowScoreMap(const matchstate * pms, int cube)
 //  GtkWidget *pwFrame;
 //  GtkWidget *pwv;
     GtkWidget *pw;
-//  GtkWidget *pwh;
 //  GtkWidget *pwx = NULL;
 //  GtkWidget *pwy = NULL;
 //  GtkWidget *pwv2;
@@ -2657,7 +2684,7 @@ GTKShowScoreMap(const matchstate * pms, int cube)
     GtkWidget *pwDisplayEvalDefault = NULL;  //pointer to default displayEval radio button so we can toggle it at the initialization
 */
 
-/* Layout 1: options on right side (LAYOUT_HORIZONTAL==TRUE)
+/* Layout 1: options on right side (LAYOUT_HORIZONTAL==TRUE, i.e. layout==HORIZONTAL)
 -- pwh -----------------------------------------------------
 | --- pwv ----------------- ---pwv (reused)--------------- |
 | | psm->pwTableContainer | | -pwFrame (multiple times)- | |
@@ -2669,7 +2696,7 @@ GTKShowScoreMap(const matchstate * pms, int cube)
 ------------------------------------------------------------
 
 
-Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
+Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE, i.e. layout==VERTICAL)
 --- pwv ---------------
 | psm->pwv             |
 | (contains the table) |
@@ -2678,6 +2705,24 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 | | pw (options)     | |
 | -------------------- |
 ------------------------
+
+Implemented as: 
+
+-- psm->pwHContainer----------------------------------------------------|
+| --- psm->pwVContainer---------  -- (options w/ vertical) -------|     |
+| |                             | |                               |     |
+| | psm->pwTableContainer       | |                               |     |
+| |                             | |                               |     |
+| | pwGaugeTable/Grid           | |                               |     |
+| |                             | |                               |     |
+| | (options w/ horizontal)     | |                               |     |
+| ------------------------------  --------------------------------|     |
+------------------------------------------------------------------------|
+
+(using "psm->pwLastContainer = (layout == VERTICAL) ? (psm->pwVContainer) : (psm->pwHContainer);")
+
+
+
 */
 
     /* dialog */
@@ -2690,7 +2735,7 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 
     // Second, making it non-modal, i.e. we can access the window below and move the Score Map window
 
-    pwDialog = GTKCreateDialog(_("Score Map - Eval at Different Scores"),
+    pwDialog = GTKCreateDialog(_("Score Map: Best Decision at Different Scores"),
                             DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
     // pwDialog = GTKCreateDialog(_("Score Map - Eval at Different Scores"),
     //                            DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
@@ -2720,7 +2765,6 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
     gdk_screen_get_monitor_geometry(screen, monitor, &screen_geometry);
     screenWidth=MAX(screen_geometry.width,100); // in case we get 0...
     screenHeight=MAX(screen_geometry.height,100);
-    // g_print ("\n screen: width %d: height %d",screen_geometry.width, screen_geometry.height);
 #endif
     MAX_TABLE_WIDTH = MIN(MAX_TABLE_WIDTH, (int)(0.3f * (float)screenWidth));
     MAX_TABLE_HEIGHT = MIN(MAX_TABLE_HEIGHT, (int)(0.6f * (float)screenHeight));
@@ -2742,15 +2786,43 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
         psm->signednCube =  (pms->fCubeOwner==pms->fMove) ? (pms->nCube) : (-pms->nCube);
     }
 
-    // Find closest appropriate table size among the options
-    // In the next expression, the ";" at the end means that it gets directly to finding the right index, and doesn't execute
-    //      anything in the loop
-    // Since we restrict to the pre-defined options, there is no reason to define MIN/MAX TABLE SIZE
 
-    if (psm->cubeScoreMap && cubeMatchSize==0)
-        cubeMatchSize=pms->nMatchTo;
-    else if (!psm->cubeScoreMap && moveMatchSize==0)
-        moveMatchSize=pms->nMatchTo;
+    /* need to decide the table size, i.e. the maximum match size to analyze
+        1) if we just started a first scoremap: 
+            a) if we have a small match (e.g. money match, i.e. matchLength=0) --> use a default of 5
+            b) else use the current match size as the maximum
+        2) else, use the decision in the last used similar scoremap (within the same instance of gnubg)
+      */
+    if (psm->cubeScoreMap) {  //we are in a cube scoremap //xxx
+        if (cubeMatchSize == 0) { //i.e. we just started a first cube scoremap, haven't recorded a default value
+            if (pms->nMatchTo < 3) //i.e. we are in a money match or a short match
+                cubeMatchSize = 3; //default value
+            else if (pms->nMatchTo > 9) //i.e. we are in a long match and don't want a big table by default
+                cubeMatchSize = 9; //default value if big match
+            else //regular match: try to use the current match size
+                cubeMatchSize = pms->nMatchTo; //true value
+        }
+    }
+    else {  //we are now looking at the move scoremap, same logic as for cube above
+        if (moveMatchSize == 0) {
+            if (pms->nMatchTo < 3) 
+                moveMatchSize = 3; 
+            else if (pms->nMatchTo > 9) 
+                moveMatchSize = 9; 
+            else
+                moveMatchSize = pms->nMatchTo; //true value
+        }
+    }
+
+
+    // // Find closest appropriate table size among the options
+   // // In the next expression, the ";" at the end means that it gets directly to finding the right index, and doesn't execute
+   // //      anything in the loop
+   // // Since we restrict to the pre-defined options, there is no reason to define MIN/MAX TABLE SIZE
+    //if (psm->cubeScoreMap)// && cubeMatchSize==0)
+    //    cubeMatchSize=pms->nMatchTo;
+    //else if (!psm->cubeScoreMap)// && moveMatchSize==0)
+    //    moveMatchSize=pms->nMatchTo;
 
     // if psm->cubeScoreMap, we show away score from 2-away to (psm->matchSize)-away
     // if not, we show away score at 1-away twice (w/ and post crawford), then 2-away through (psm->matchSize)-away
@@ -2758,7 +2830,7 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 #if GTK_CHECK_VERSION(3,0,0)
     psm->pwTableContainer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
-    psm->pwTableContainer = gtk_vbox_new(FALSE, 0); // paremeters: homogeneous, spacing
+    psm->pwTableContainer = gtk_vbox_new(FALSE, 0); // parameters: homogeneous, spacing
 #endif
     for (i=0; i<TOP_K; i++) {
         // psm->topKDecisions[i]=g_malloc(FORMATEDMOVESIZE * sizeof(char));
@@ -2768,13 +2840,23 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
     BuildTableContainer(psm);
 
 // *************************************************************************************************
+#if GTK_CHECK_VERSION(3,0,0)
+    psm->pwMegaVContainer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+#else
+    psm->pwMegaVContainer = gtk_vbox_new(FALSE, 2); //gtk_vbox_new (gboolean homogeneous, gint spacing);
+#endif
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), psm->pwMegaVContainer);
 
 #if GTK_CHECK_VERSION(3,0,0)
     psm->pwHContainer = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 #else
     psm->pwHContainer = gtk_hbox_new(FALSE, 2); //gtk_hbox_new (gboolean homogeneous, gint spacing);
 #endif
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), psm->pwHContainer);
+    gtk_box_pack_start(GTK_BOX(psm->pwMegaVContainer), psm->pwHContainer, TRUE, TRUE, 0);
+    
+
+    //gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), psm->pwHContainer);
+
 
      /* left vbox: holds table and gauge */
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2796,7 +2878,7 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 #endif
 
 
-    /* gauge */
+    /* If cube decision, show gauge */
     if (psm->cubeScoreMap) {
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2859,7 +2941,16 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 
     /* options box, with either vertical or horizontal layout */
     psm->pwLastContainer = (layout == VERTICAL) ? (psm->pwVContainer) : (psm->pwHContainer);
-    BuildOptions(psm); //xxx
+    BuildOptions(psm); 
+
+    // Add explanation text, either for cube ScoreMap or move ScoreMap
+    if (!psm->cubeScoreMap) {
+        AddText(psm->pwMegaVContainer, _("- At each score, the corresponding grid square indicates the best move. \n- Different colors correspond to different best moves (red for the most frequent one, blue for the 2nd most, etc.) \n- The color intensity reflects the equity difference with the 2nd best move."));
+    }
+    else {
+        AddText(psm->pwMegaVContainer, _("- At each score, the corresponding grid square indicates the best cube decision. \n- Different colors correspond to different decisions, as indicated by the gauge. \n- The color intensity reflects the equity difference with the 2nd best decision."));//yyy
+    }
+ 
 
 // **************************************************************************************************
     /* calculate values and set colours/text in the table */
@@ -2886,51 +2977,3 @@ Layout 2: options on bottom (LAYOUT_HORIZONTAL==FALSE)
 
     GTKRunDialog(pwDialog);
 }
-
-
-/*
-
-====== DONE: ===== postponed to the very end of the file
-
-white/black font based on background
-"current" in double frame
-cube scoremap all in grey?
-no doubling in Crawford
-isaac doubled -> bottom not left
-typedef enum isAllowed
-take negative equity into account for len in hover text
-allowed cube beyond matchSize in options!? cf up to 2 matchsize-1? (eg cube 4 w/ size=3 is allowed b/c previous was 2<size )
-recompute max allowed cube for big tables and redraw buttons?
-put in grey the squares that are impossible with cube
-cube: 2 for player 1 vs 2 for player 2, maybe encode +/-nCube
-checkbox for Jacoby?
-bury cubeScoreMap
-add spacing for 2-line quadrants
-add equity to hover
-add isspecial to hover
-show GG, GS etc
-money text bug
-// fixed-sze cols/rows & variable font size on col/row labels?
-***check why cube tab doesn't work
-Aaron email crawford
-fill hover with constant-length(text) to align; or build inside table? (<tr><td>...)
-bug 54 in last game: 2 colors???
-add hover on label with the full "Crawford" name?
-=== older? from merge:
-- Player names on axes (we'll want the name rotated for the vertical axis..) - done
-- Change dice to away-scores - done
-- Change gauge: white, somewhere in the middle, should be labelled by "0.000". The ends should be labelled both by the value and the correct decision they represent (e.g., "Take")
-- Remove "Show best move" and "Show equities" check boxes - done
-- Add radio buttons for "Colour based on ..." - done (but not yet operational)
-- Change how colouring is applied
-- multi-color scheme; 1) redraw gauge for ND/D, T/P 2) maybe make gauge to stop at SKILL_VERYBAD? 3) make DP more blue specifically?
-- Display n-away vs score
-- Make non-modal
-- Emphasize current score even more
-- Add options to change
-    * the table size
-    * and cube value
-=======
-
-
-*/
