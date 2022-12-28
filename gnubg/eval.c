@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1998-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2000-2019 the AUTHORS
+ * Copyright (C) 2000-2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -5653,7 +5653,7 @@ ScoreMovesPruned(movelist * pml, const cubeinfo * pci, const evalcontext * pec, 
     return r;
 }
 
-static movefilter NullFilter = { 0, 0, 0.0 };
+static movefilter NullFilter = { -1, 0, 0.0 };
 
 static int
 FindBestMovePlied(int anMove[8], int nDice0, int nDice1,
