@@ -2054,32 +2054,24 @@ To roll the dice the CL version type 'roll'.
                   <entry>Luck rating</entry>
                 </row>
                 <row>
-                  <entry>&gt; 0.10</entry>
-                  <entry>Cheater :-)</entry>
+                  <entry>&gt; 0.06</entry>
+                  <entry>Go to Las Vegas</entry>
                 </row>
                 <row>
-                  <entry>0.06 - 0.10</entry>
-                  <entry>Go to Las Vegas immediately</entry>
-                </row>
-                <row>
-                  <entry>0.02 - 0.06</entry>
+                  <entry>0.03 - 0.06</entry>
                   <entry>Good dice, man!</entry>
                 </row>
                 <row>
-                  <entry>-0.02 - 0.02</entry>
-                  <entry>none</entry>
+                  <entry>-0.03 - 0.03</entry>
+                  <entry>None</entry>
                 </row>
                 <row>
-                  <entry>-0.06 - -0.02</entry>
-                  <entry>Better luck next time</entry>
+                  <entry>-0.06 - -0.03</entry>
+                  <entry>Bad dice, man!</entry>
                 </row>
                 <row>
-                  <entry>-0.06 - -0.10</entry>
+                  <entry>&lt; -0.06</entry>
                   <entry>Go to bed</entry>
-                </row>
-                <row>
-                  <entry>&lt; -0.10</entry>
-                  <entry>Haaa-haaa</entry>
                 </row>
               </tbody>
             </tgroup>
