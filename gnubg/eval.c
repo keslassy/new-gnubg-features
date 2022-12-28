@@ -4474,17 +4474,15 @@ extern void
 getMoneyPoints(float aaarPoints[2][7][2], const int fJacoby, const int fBeavers, float aarRates[2][2])
 {
 
-    float arCLV[2];             /* average cubeless value of games won */
-    int i;
+    const float arCLV[2] =           /* average cubeless value of games won */
+                          { 1.0f + aarRates[0][0] + 2.0f * aarRates[0][1],
+                            1.0f + aarRates[1][0] + 2.0f * aarRates[1][1] };
 
     /* calculate average cubeless value of games won */
 
-    for (i = 0; i < 2; i++)
-        arCLV[i] = 1.0f + aarRates[i][0] + 2.0f * aarRates[i][1];
-
     /* calculate points */
 
-    for (i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++) {
 
         /* Determine rW and rL from Rick's formulae */
 
@@ -4671,10 +4669,7 @@ getMatchPoints(float aaarPoints[2][4][2],
     SSE_ALIGN(float arOutput[NUM_OUTPUTS]);
     float arDP1[2], arDP2[2], arCP1[2], arCP2[2], arTG[2];
 
-    int i, anNormScore[2];
-
-    for (i = 0; i < 2; i++)
-        anNormScore[i] = pci->nMatchTo - pci->anScore[i];
+    const int anNormScore[2] = { pci->nMatchTo - pci->anScore[0], pci->nMatchTo - pci->anScore[1] };
 
     /* get cash points */
 
@@ -4686,7 +4681,7 @@ getMatchPoints(float aaarPoints[2][4][2],
 
     GetPoints(arOutput, pci, arCP2);
 
-    for (i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++) {
 
         float rDTW, rDTL, rNDW, rNDL, rDP, rRisk, rGain;
 
@@ -4818,7 +4813,7 @@ getMatchPoints(float aaarPoints[2][4][2],
 
     /* save points */
 
-    for (i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++) {
 
         /* take point */
 
