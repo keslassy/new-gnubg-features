@@ -74,7 +74,7 @@
          (no need for new equity values); and so on for the different radio buttons.
 */
 
-/* 12/2022: Isaac Keslassy: a few changes including:
+/* 01/2023: Isaac Keslassy: a few changes including:
 - new help button to obtain explanations
 - new "scoreless" option of Money without Jacoby
 - new cube equity display options: absolute, or relative ND-D, or relative D/P-D/T
