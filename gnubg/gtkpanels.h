@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkpanels.h,v 1.9 2021/12/12 21:44:38 plm Exp $
  */
 
 /* position of windows: main window, game list, and annotation */

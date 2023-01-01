@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: dbprovider.c,v 1.61 2022/03/22 16:55:46 plm Exp $
  */
 
 #include "config.h"

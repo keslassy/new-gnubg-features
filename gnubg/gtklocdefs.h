@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtklocdefs.h,v 1.24 2023/01/01 17:48:19 plm Exp $
  */
 
 #ifndef GTKLOCDEFS_H
@@ -95,48 +95,7 @@ extern gint gdk_visual_get_depth(GdkVisual * visual);
 #define gtk_widget_has_focus(p)  GTK_WIDGET_HAS_FOCUS((p))
 #endif
 
-#if ! GTK_CHECK_VERSION(2,18,0)
-#define gtk_widget_set_has_window(widget,has_window) \
-	{ \
-		if ((has_window)) \
-			GTK_WIDGET_UNSET_FLAGS((widget), GTK_NO_WINDOW); \
-		else \
-			GTK_WIDGET_SET_FLAGS((widget), GTK_NO_WINDOW); \
-	};
-
-#define gtk_widget_set_can_focus(widget,can_focus) \
-	{ \
-		if ((can_focus)) \
-			GTK_WIDGET_SET_FLAGS((widget), GTK_CAN_FOCUS); \
-		else \
-			GTK_WIDGET_UNSET_FLAGS((widget), GTK_CAN_FOCUS ); \
-	};
-
-
-extern void gtk_widget_get_allocation(GtkWidget * widget, GtkAllocation * allocation);
-extern void gtk_widget_set_allocation(GtkWidget * widget, const GtkAllocation * allocation);
-extern void gtk_cell_renderer_get_alignment(GtkCellRenderer * cell, gfloat * xalign, gfloat * yalign);
-extern void gtk_cell_renderer_set_padding(GtkCellRenderer * cell, gint xpad, gint ypad);
-#endif
-
-#if ! GTK_CHECK_VERSION(2,14,0)
-
-extern GtkWidget *gtk_dialog_get_action_area(GtkDialog * dialog);
-extern GtkWidget *gtk_dialog_get_content_area(GtkDialog * dialog);
-extern GdkWindow *gtk_widget_get_window(GtkWidget * widget);
-extern gdouble gtk_adjustment_get_upper(GtkAdjustment * adjustment);
-extern void gtk_adjustment_set_upper(GtkAdjustment * adjustment, gdouble upper);
-guchar *gtk_selection_data_get_data(GtkSelectionData * data);
-
-#endif
-
-#if ! GTK_CHECK_VERSION(2,12,0)
-extern GtkTooltips *ptt;
-#define gtk_widget_set_tooltip_text(pw,text) gtk_tooltips_set_tip(ptt, (pw), (text), NULL)
-#endif
-
 extern GtkWidget *get_statusbar_label(GtkStatusbar * statusbar);
-extern void toolbar_set_orientation(GtkToolbar * toolbar, GtkOrientation orientation);
 
 #ifndef USE_GRESOURCE
 #define gnubg_stock_register_resource()

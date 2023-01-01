@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkgame.h,v 1.163 2019/11/13 21:41:03 Superfly_Jon Exp $
  */
 
 #ifndef GTKGAME_H

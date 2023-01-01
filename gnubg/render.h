@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: render.h,v 1.45 2021/11/08 22:40:39 plm Exp $
  */
 
 #ifndef RENDER_H

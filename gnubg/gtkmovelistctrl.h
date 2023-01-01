@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkmovelistctrl.h,v 1.9 2021/10/12 22:21:23 plm Exp $
  */
 
 #ifndef GTKMOVELISTCTRL_H

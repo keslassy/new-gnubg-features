@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkfile.h,v 1.11 2019/10/27 21:18:01 plm Exp $
  */
 
 #ifndef GTKFILE_H

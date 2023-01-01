@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: bearoff.h,v 1.37 2022/01/30 18:04:24 plm Exp $
  */
 
 #ifndef BEAROFF_H

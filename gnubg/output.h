@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: output.h,v 1.7 2022/05/22 21:35:51 plm Exp $
  */
 
 #ifndef OUTPUT_H

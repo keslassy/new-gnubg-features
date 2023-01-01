@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: eval.c,v 1.493 2022/12/28 20:04:30 plm Exp $
  */
 
 #include "config.h"

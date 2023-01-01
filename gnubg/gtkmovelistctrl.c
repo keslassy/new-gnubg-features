@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkmovelistctrl.c,v 1.33 2022/02/19 21:51:09 plm Exp $
  */
 
 #include "config.h"

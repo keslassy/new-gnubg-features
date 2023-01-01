@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: renderprefs.h,v 1.13 2019/11/03 15:25:19 plm Exp $
  */
 
 #ifndef RENDERPREFS_H

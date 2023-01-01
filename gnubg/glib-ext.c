@@ -14,79 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: glib-ext.c,v 1.17 2022/12/30 11:59:35 plm Exp $
  */
 
 /* Map/GList extensions and utility functions for GLIB */
 
-#include <config.h>
-#include <errno.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "glib-ext.h"
-
-
-#if ! GLIB_CHECK_VERSION(2,14,0)
-
-/* This code has been backported from the latest GLib
- *
- * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
- *
- * gthread.c: MT safety related functions
- * Copyright 1998 Sebastian Wilhelmi; University of Karlsruhe
- *                Owen Taylor
- */
-
-
-static GMutex *g_once_mutex = NULL;
-static GCond *g_once_cond = NULL;
-static GSList *g_once_init_list = NULL;
-
-gboolean
-g_once_init_enter_impl(volatile gsize * value_location)
-{
-    gboolean need_init = FALSE;
-    /* mutex and cond creation works without g_threads_got_initialized */
-
-    g_mutex_lock(g_once_mutex);
-    if (g_atomic_pointer_get((void **) value_location) == NULL) {
-        if (!g_slist_find(g_once_init_list, (void *) value_location)) {
-            need_init = TRUE;
-            g_once_init_list = g_slist_prepend(g_once_init_list, (void *) value_location);
-        } else
-            do
-                g_cond_wait(g_once_cond, g_once_mutex);
-            while (g_slist_find(g_once_init_list, (void *) value_location));
-    }
-    g_mutex_unlock(g_once_mutex);
-    return need_init;
-}
-
-void
-g_once_init_leave(volatile gsize * value_location, gsize initialization_value)
-{
-    g_return_if_fail(g_atomic_pointer_get((void **) value_location) == NULL);
-    g_return_if_fail(initialization_value != 0);
-    g_return_if_fail(g_once_init_list != NULL);
-
-    g_atomic_pointer_set((void **) value_location, (void *) initialization_value);
-    g_mutex_lock(g_once_mutex);
-    g_once_init_list = g_slist_remove(g_once_init_list, (void *) value_location);
-    g_cond_broadcast(g_once_cond);
-    g_mutex_unlock(g_once_mutex);
-}
-
-gboolean
-g_once_init_enter(volatile gsize * value_location)
-{
-    if G_LIKELY
-        (g_atomic_pointer_get((void *volatile *) value_location) != NULL)
-            return FALSE;
-    else
-        return g_once_init_enter_impl(value_location);
-}
-#endif
 
 void
 glib_ext_init(void)
@@ -95,13 +29,6 @@ glib_ext_init(void)
     if (!g_thread_supported())
         g_thread_init(NULL);
     g_assert(g_thread_supported());
-#endif
-
-#if ! GLIB_CHECK_VERSION(2,14,0)
-    if (!g_once_mutex)
-        g_once_mutex = g_mutex_new();
-    if (!g_once_cond)
-        g_once_cond = g_cond_new();
 #endif
     return;
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkcube.c,v 1.105 2022/12/13 22:03:31 plm Exp $
  */
 
 #include "config.h"

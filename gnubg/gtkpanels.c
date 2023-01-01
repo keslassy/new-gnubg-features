@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkpanels.c,v 1.95 2022/10/22 18:34:13 plm Exp $
  */
 
 #include "config.h"

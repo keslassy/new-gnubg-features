@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: bearoff.c,v 1.110 2022/12/30 20:55:28 plm Exp $
  */
 
 #include "config.h"
@@ -726,11 +726,7 @@ BearoffClose(bearoffcontext * pbc)
         fclose(pbc->pf);
 
     if (pbc->map) {
-#if GLIB_CHECK_VERSION(2,22,0)
         g_mapped_file_unref(pbc->map);
-#else
-        g_mapped_file_free(pbc->map);
-#endif
         pbc->p = NULL;
     }
 

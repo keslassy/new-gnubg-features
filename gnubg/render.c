@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: render.c,v 1.114 2022/11/05 21:19:06 plm Exp $
  */
 
 #include "config.h"

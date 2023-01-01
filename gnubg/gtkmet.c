@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkmet.c,v 1.36 2022/08/30 18:38:35 plm Exp $
  */
 
 #include "config.h"

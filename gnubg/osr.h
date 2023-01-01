@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: osr.h,v 1.10 2021/01/23 19:47:13 plm Exp $
  */
 
 #ifndef OSR_H

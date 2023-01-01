@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: relational.c,v 1.84 2021/03/10 20:44:47 plm Exp $
  */
 
 #include "config.h"

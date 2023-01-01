@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: boarddim.h,v 1.16 2019/12/29 15:43:17 plm Exp $
  */
 
 #ifndef BOARDDIM_H

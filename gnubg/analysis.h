@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: analysis.h,v 1.52 2021/11/21 21:20:47 plm Exp $
  */
 
 #ifndef ANALYSIS_H

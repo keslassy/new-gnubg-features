@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkboard.c,v 1.384 2022/10/13 20:05:19 plm Exp $
  */
 
 /*! \file gtkboard.c

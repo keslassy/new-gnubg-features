@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtk-multiview.c,v 1.21 2022/09/30 19:42:23 plm Exp $
  */
 
 #include "config.h"

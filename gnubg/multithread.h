@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: multithread.h,v 1.63 2022/01/30 18:05:22 plm Exp $
  */
 
 #ifndef MULTITHREAD_H

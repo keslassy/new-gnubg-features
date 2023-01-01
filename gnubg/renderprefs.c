@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: renderprefs.c,v 1.65 2022/10/16 15:08:57 plm Exp $
  */
 
 #include "config.h"

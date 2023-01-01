@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtksplash.h,v 1.8 2021/06/27 20:59:24 plm Exp $
  */
 
 #ifndef GTKSPLASH_H

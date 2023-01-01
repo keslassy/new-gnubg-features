@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: relational.h,v 1.17 2019/12/24 09:02:43 plm Exp $
  */
 
 #ifndef RELATIONAL_H

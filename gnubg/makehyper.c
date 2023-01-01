@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: makehyper.c,v 1.58 2022/01/27 22:14:47 plm Exp $
  */
 
 #include "config.h"
@@ -556,7 +556,7 @@ WriteHyperFile(const char *szFilename, const hyperequity ahe[], const int nC)
 static void
 version(void)
 {
-    g_print("makehyper $Revision$\n");
+    g_print("makehyper $Revision: 1.58 $\n");
 }
 
 

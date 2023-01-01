@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtktheory.h,v 1.5 2019/12/24 08:37:56 plm Exp $
  */
 
 #ifndef GTKTHEORY_H

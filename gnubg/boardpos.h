@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: boardpos.h,v 1.11 2019/12/29 15:50:51 plm Exp $
  */
 
 #ifndef BOARDPOS_H

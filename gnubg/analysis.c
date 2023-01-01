@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: analysis.c,v 1.261 2022/12/28 20:23:56 plm Exp $
  */
 
 #include "config.h"

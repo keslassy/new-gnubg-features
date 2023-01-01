@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: sound.h,v 1.27 2021/10/30 14:16:23 plm Exp $
  */
 
 #ifndef SOUND_H

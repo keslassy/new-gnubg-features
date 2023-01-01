@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtktempmap.h,v 1.8 2021/06/30 20:28:19 plm Exp $
  */
 
 #ifndef GTKTEMPMAP_H

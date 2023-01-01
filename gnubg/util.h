@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: util.h,v 1.16 2019/10/13 14:03:51 plm Exp $
  */
 
 #ifndef UTIL_H

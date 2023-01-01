@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: import.c,v 1.233 2022/03/12 20:38:22 plm Exp $
  */
 
 #include "config.h"

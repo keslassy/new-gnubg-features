@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gnubgstock.h,v 1.7 2019/11/05 21:44:29 plm Exp $
  */
 
 void gnubg_stock_init(void);

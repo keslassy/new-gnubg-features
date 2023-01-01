@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkrolls.h,v 1.5 2021/06/27 20:55:28 plm Exp $
  */
 
 #ifndef GTKROLLS_H

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkrace.h,v 1.7 2019/12/24 08:35:57 plm Exp $
  */
 
 #ifndef GTKRACE_H

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: sgf.h,v 1.12 2021/10/30 14:13:24 plm Exp $
  */
 
 #ifndef SGF_H

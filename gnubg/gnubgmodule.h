@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gnubgmodule.h,v 1.32 2019/11/05 21:17:14 plm Exp $
  */
 
 #ifndef GNUBGMODULE_H

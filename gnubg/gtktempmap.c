@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtktempmap.c,v 1.65 2022/09/02 13:43:30 plm Exp $
  */
 
 /*

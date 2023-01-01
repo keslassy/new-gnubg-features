@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkexport.h,v 1.5 2020/01/25 21:41:14 plm Exp $
  */
 
 #ifndef GTKEXPORT_H

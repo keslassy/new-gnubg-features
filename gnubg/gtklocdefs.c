@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtklocdefs.c,v 1.17 2023/01/01 17:48:19 plm Exp $
  */
 
 
@@ -34,78 +34,6 @@ gdk_visual_get_depth(GdkVisual * visual)
 }
 #endif
 
-#if ! GTK_CHECK_VERSION(2,18,0)
-void
-gtk_widget_get_allocation(GtkWidget * widget, GtkAllocation * allocation)
-{
-    *allocation = widget->allocation;
-}
-
-void
-gtk_widget_set_allocation(GtkWidget * widget, const GtkAllocation * allocation)
-{
-    widget->allocation = *allocation;
-}
-
-void
-gtk_cell_renderer_get_alignment(GtkCellRenderer * cell, gfloat * xalign, gfloat * yalign)
-{
-    *xalign = cell->xalign;
-    *yalign = cell->yalign;
-}
-
-void
-gtk_cell_renderer_set_padding(GtkCellRenderer * cell, gint xpad, gint ypad)
-{
-    cell->xpad = xpad;
-    cell->ypad = ypad;
-}
-#endif
-
-#if ! GTK_CHECK_VERSION(2,14,0)
-
-GtkWidget *
-gtk_dialog_get_action_area(GtkDialog * dialog)
-{
-    return (dialog->action_area);
-}
-
-GtkWidget *
-gtk_dialog_get_content_area(GtkDialog * dialog)
-{
-    return (dialog->vbox);
-}
-
-GdkWindow *
-gtk_widget_get_window(GtkWidget * widget)
-{
-    return (widget->window);
-}
-
-gdouble
-gtk_adjustment_get_upper(GtkAdjustment * adjustment)
-{
-    return adjustment->upper;
-}
-
-void
-gtk_adjustment_set_upper(GtkAdjustment * adjustment, gdouble upper)
-{
-    adjustment->upper = upper;
-}
-
-guchar *
-gtk_selection_data_get_data(GtkSelectionData * data)
-{
-    return data->data;
-}
-
-#endif
-
-#if ! GTK_CHECK_VERSION(2,12,0)
-GtkTooltips *ptt;
-#endif
-
 extern GtkWidget *
 get_statusbar_label(GtkStatusbar * statusbar)
 {
@@ -115,17 +43,6 @@ get_statusbar_label(GtkStatusbar * statusbar)
                    (GTK_CONTAINER(gtk_statusbar_get_message_area(GTK_STATUSBAR(statusbar))))->data);
 #else
     return GTK_WIDGET(statusbar->label);
-#endif
-}
-
-
-extern void
-toolbar_set_orientation(GtkToolbar * toolbar, GtkOrientation orientation)
-{
-#if GTK_CHECK_VERSION(2,16,0)
-    gtk_orientable_set_orientation(GTK_ORIENTABLE(toolbar), orientation);
-#else
-    gtk_toolbar_set_orientation(toolbar, orientation);
 #endif
 }
 

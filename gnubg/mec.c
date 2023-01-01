@@ -28,7 +28,7 @@
  *
  *     gcc -DMEC_STANDALONE mec.c -o mec
  *
- * $Id$
+ * $Id: mec.c,v 1.12 2020/12/12 20:26:15 plm Exp $
  */
 
 #include "config.h"

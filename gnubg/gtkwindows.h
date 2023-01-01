@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkwindows.h,v 1.27 2022/01/19 22:47:57 plm Exp $
  */
 
 #ifndef GTKWINDOWS_H

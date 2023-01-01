@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtktoolbar.c,v 1.82 2023/01/01 17:37:16 plm Exp $
  */
 
 #include "config.h"
@@ -435,7 +435,7 @@ ToolbarNew(void)
     g_object_set_data_full(G_OBJECT(vbox_toolbar), "toolbarwidget", ptw, g_free);
     pwtb = gtk_toolbar_new();
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(pwtb), GTK_ICON_SIZE_LARGE_TOOLBAR);
-    gtk_toolbar_set_orientation(GTK_TOOLBAR(pwtb), GTK_ORIENTATION_HORIZONTAL);
+    gtk_orientable_set_orientation(GTK_ORIENTABLE(pwtb), GTK_ORIENTATION_HORIZONTAL);
     gtk_toolbar_set_style(GTK_TOOLBAR(pwtb), GTK_TOOLBAR_BOTH);
     gtk_box_pack_start(GTK_BOX(vbox_toolbar), pwtb, FALSE, FALSE, 0);
 

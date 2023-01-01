@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkmovefilter.h,v 1.8 2021/06/20 18:03:29 plm Exp $
  */
 
 #ifndef GTKMOVEFILTER_H

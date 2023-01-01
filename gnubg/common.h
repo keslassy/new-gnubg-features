@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: common.h,v 1.35 2019/12/02 10:56:00 plm Exp $
  */
 
 /*! \file common.h

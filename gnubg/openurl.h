@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: openurl.h,v 1.8 2021/01/21 20:39:13 plm Exp $
  */
 
 #ifndef OPENURL_H

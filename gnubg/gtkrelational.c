@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkrelational.c,v 1.60 2022/09/04 22:09:31 plm Exp $
  */
 
 #include "config.h"

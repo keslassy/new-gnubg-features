@@ -34,7 +34,7 @@
  * combinations of (up to c) chequers among 6 points.
  *
  *
- * $Id$
+ * $Id: positionid.c,v 1.57 2021/12/18 22:06:37 plm Exp $
  */
 
 #include "config.h"

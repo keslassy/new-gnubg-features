@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: dbprovider.h,v 1.21 2022/01/19 22:42:28 plm Exp $
  */
 
 #ifndef DBPROVIDER_H

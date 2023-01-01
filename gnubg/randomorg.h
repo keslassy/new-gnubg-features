@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: randomorg.h,v 1.5 2022/01/19 22:56:15 plm Exp $
  */
 
 #ifndef RANDOMORG_H

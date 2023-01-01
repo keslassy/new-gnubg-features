@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: dice.c,v 1.106 2021/07/04 22:38:44 plm Exp $
  */
 
 #include "config.h"

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkprefs.h,v 1.19 2021/11/21 20:18:12 plm Exp $
  */
 
 #ifndef GTKPREFS_H

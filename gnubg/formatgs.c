@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: formatgs.c,v 1.40 2021/11/12 20:10:07 plm Exp $
  */
 
 #include "config.h"

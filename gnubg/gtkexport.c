@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkexport.c,v 1.61 2022/09/06 21:02:05 plm Exp $
  */
 
 #include "config.h"

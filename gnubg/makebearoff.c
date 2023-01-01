@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: makebearoff.c,v 1.111 2022/07/26 21:16:44 plm Exp $
  */
 
 #include "config.h"
@@ -1265,7 +1265,7 @@ generate_ts(const int nTSP, const int nTSC,
 static void
 version(void)
 {
-    printf("makebearoff $Revision$\n");
+    printf("makebearoff $Revision: 1.111 $\n");
 }
 
 

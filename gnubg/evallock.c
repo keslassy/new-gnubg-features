@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: evallock.c,v 1.4 2020/01/01 14:08:24 plm Exp $
  */
 
 #include "config.h"

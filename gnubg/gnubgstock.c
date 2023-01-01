@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gnubgstock.c,v 1.13 2022/02/26 20:33:59 plm Exp $
  */
 
 #include "config.h"

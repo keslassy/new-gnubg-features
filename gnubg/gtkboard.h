@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkboard.h,v 1.111 2021/10/24 15:10:41 plm Exp $
  */
 
 #ifndef GTKBOARD_H

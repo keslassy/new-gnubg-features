@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: progress.c,v 1.86 2022/01/09 14:09:14 plm Exp $
  */
 
 #include "config.h"

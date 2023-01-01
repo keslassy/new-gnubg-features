@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: speed.c,v 1.38 2022/02/06 16:24:35 plm Exp $
  */
 
 #include "config.h"

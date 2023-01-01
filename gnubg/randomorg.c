@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: randomorg.c,v 1.9 2022/04/24 16:19:09 plm Exp $
  */
 
 #include "config.h"

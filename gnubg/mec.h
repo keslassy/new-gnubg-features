@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: mec.h,v 1.5 2020/12/12 20:26:16 plm Exp $
  */
 
 

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: external.h,v 1.26 2021/06/30 21:37:08 plm Exp $
  */
 
 #ifndef EXTERNAL_H

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: latex.c,v 1.61 2022/02/13 22:30:16 plm Exp $
  */
 
 #include "config.h"

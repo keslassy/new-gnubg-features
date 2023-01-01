@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: makeweights.c,v 1.32 2022/02/13 22:32:04 plm Exp $
  */
 
 #include "config.h"

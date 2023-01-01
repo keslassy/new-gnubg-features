@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkmovefilter.c,v 1.37 2021/11/03 21:50:05 plm Exp $
  */
 
 #include "config.h"

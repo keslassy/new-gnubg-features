@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkcube.h,v 1.13 2021/09/26 19:13:42 plm Exp $
  */
 
 #ifndef GTKCUBE_H

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: text.c,v 1.128 2022/03/12 20:14:14 plm Exp $
  */
 
 #include "config.h"
@@ -219,7 +219,7 @@ TextEpilogue(FILE * pf, const matchstate * UNUSED(pms))
 
     time_t t;
 
-    const char szVersion[] = "$Revision$";
+    const char szVersion[] = "$Revision: 1.128 $";
     int iMajor, iMinor;
 
     iMajor = atoi(strchr(szVersion, ' '));

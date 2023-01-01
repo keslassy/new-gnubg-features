@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: dice.h,v 1.38 2021/07/04 22:17:54 plm Exp $
  */
 
 #ifndef DICE_H

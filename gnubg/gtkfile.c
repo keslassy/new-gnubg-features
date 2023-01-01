@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkfile.c,v 1.78 2022/12/15 22:23:00 plm Exp $
  */
 
 #include "config.h"

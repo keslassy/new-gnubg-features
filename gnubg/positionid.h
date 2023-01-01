@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: positionid.h,v 1.39 2021/01/26 20:02:37 plm Exp $
  */
 
 #ifndef POSITIONID_H

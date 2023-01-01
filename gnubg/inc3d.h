@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: inc3d.h,v 1.8 2021/09/27 21:37:08 plm Exp $
  */
 
 #ifndef INC3D3D_H

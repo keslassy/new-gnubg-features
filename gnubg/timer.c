@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: timer.c,v 1.22 2019/12/08 20:30:35 plm Exp $
  */
 
 #include "config.h"

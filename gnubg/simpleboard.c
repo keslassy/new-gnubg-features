@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: simpleboard.c,v 1.31 2021/02/13 22:25:39 plm Exp $
  */
 
 /*! \file simpleboard.c

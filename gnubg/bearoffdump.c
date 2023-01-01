@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: bearoffdump.c,v 1.30 2022/03/19 21:23:51 plm Exp $
  */
 
 #include "config.h"

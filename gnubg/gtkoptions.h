@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkoptions.h,v 1.8 2019/11/01 22:07:26 plm Exp $
  */
 
 #ifndef GTKOPTIONS_H

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtktheory.c,v 1.79 2022/09/11 12:38:03 plm Exp $
  */
 
 #include "config.h"

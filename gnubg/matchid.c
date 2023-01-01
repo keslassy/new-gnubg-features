@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: matchid.c,v 1.31 2021/12/18 23:30:42 plm Exp $
  */
 
 #include "config.h"

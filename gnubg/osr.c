@@ -18,7 +18,7 @@
  *
  * Inspired from osr.cc from fibs2html <fibs2html.sourceforge.net>
  *
- * $Id$
+ * $Id: osr.c,v 1.45 2022/10/22 18:27:59 plm Exp $
  */
 
 /*lint -e514 */

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: pylocdefs.h,v 1.10 2022/12/30 21:18:16 plm Exp $
  */
 
 #ifndef PYLOCDEFS_H
@@ -40,24 +40,6 @@
 #define MOD_DEF(ob, name, doc, methods) \
             ob = Py_InitModule3(name, methods, doc)
 #endif
-
-#if PY_VERSION_HEX < 0x02050000
-typedef int Py_ssize_t;
-#endif
-
-#if PY_VERSION_HEX < 0x02060000
-#define PyBytes_FromStringAndSize PyString_FromStringAndSize
-#define PyBytes_FromString PyString_FromString
-#define PyBytes_AsString PyString_AsString
-#define PyBytes_Size PyString_Size
-#define PyBytes_Check PyString_Check
-#define PyUnicode_FromString PyString_FromString
-#endif
-
-#if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
-#define PY_SSIZE_T_MAX INT_MAX
-#define PY_SSIZE_T_MIN INT_MIN
-#endif                          /* PY_VERSION_CHK */
 
 #if PY_MAJOR_VERSION >= 3
 #define PyInt_Check PyLong_Check

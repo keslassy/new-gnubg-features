@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: progress.h,v 1.14 2021/04/03 19:45:14 plm Exp $
  */
 
 #ifndef PROGRESS_H

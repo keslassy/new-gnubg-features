@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: simpleboard.h,v 1.11 2021/10/30 14:15:23 plm Exp $
  */
 
 #if HAVE_PANGOCAIRO

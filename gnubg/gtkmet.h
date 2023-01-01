@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkmet.h,v 1.8 2020/01/25 21:44:06 plm Exp $
  */
 
 #ifndef GTKMET_H

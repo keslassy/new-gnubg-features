@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 
- * $Id$
+ * $Id: multithread.c,v 1.104 2022/03/12 21:05:53 plm Exp $
  */
 
 #include "config.h"

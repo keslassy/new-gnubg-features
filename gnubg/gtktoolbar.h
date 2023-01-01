@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtktoolbar.h,v 1.16 2021/06/30 21:11:44 plm Exp $
  */
 
 #ifndef GTKTOOLBAR_H

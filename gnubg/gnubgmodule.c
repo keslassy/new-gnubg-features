@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gnubgmodule.c,v 1.210 2022/05/22 21:35:50 plm Exp $
  */
 
 #include "config.h"

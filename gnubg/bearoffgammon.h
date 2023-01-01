@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: bearoffgammon.h,v 1.13 2019/11/16 22:45:16 plm Exp $
  */
 
 #if !defined( BEAROFFGAMMON_H )

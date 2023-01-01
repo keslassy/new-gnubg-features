@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkprefs.c,v 1.234 2022/08/30 18:38:35 plm Exp $
  */
 
 #include "config.h"
@@ -2222,7 +2222,7 @@ WriteDesignHeader(const char *szFile, FILE * pf)
     time(&t);
     fputs(ctime(&t), pf);
     fputs("\n"
-          "    $Id$\n"
+          "    $Id: gtkprefs.c,v 1.234 2022/08/30 18:38:35 plm Exp $\n"
           "\n" " -->\n" "\n" "\n" "<board-designs>\n" "\n", pf);
 
 }

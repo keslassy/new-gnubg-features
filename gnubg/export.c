@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: export.c,v 1.98 2022/01/02 22:57:51 plm Exp $
  */
 
 #include "config.h"

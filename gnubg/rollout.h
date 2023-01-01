@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: rollout.h,v 1.46 2021/06/09 20:48:49 plm Exp $
  */
 
 #ifndef ROLLOUT_H

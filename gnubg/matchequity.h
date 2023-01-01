@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: matchequity.h,v 1.32 2022/01/19 22:50:41 plm Exp $
  */
 
 #ifndef MATCHEQUITY_H

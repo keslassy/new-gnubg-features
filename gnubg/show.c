@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: show.c,v 1.306 2022/03/12 20:14:14 plm Exp $
  */
 
 #include "config.h"
