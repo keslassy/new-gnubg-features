@@ -1352,7 +1352,7 @@ append_dice_options(optionswidget * pow)
             }
 
             if (!(i == RNG_BBS && !blumblum)) {
-                gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pow->pwRngComboBox), aszRNG[i]);
+                gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pow->pwRngComboBox), gettext(aszRNG[i]));
                 if (i == rngCurrent)
                     rngSelected = rngsAdded;
                 rngsAdded++;
