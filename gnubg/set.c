@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: set.c,v 1.426 2022/03/12 20:28:42 plm Exp $
  */
 
 #include "config.h"
@@ -67,6 +67,7 @@
 #include "gtkprefs.h"
 #include "gtkchequer.h"
 #include "gtkwindows.h"
+#include "gtkscoremap.h"
 #endif                          /* USE_GTK */
 
 #include "matchequity.h"
@@ -1642,14 +1643,11 @@ CommandSetDefaultNames(char *sz)
 extern void
 CommandSetAliases(char *sz)
 {
-    size_t buflen = sizeof(player1aliases);
+    if (strlen(sz) >= sizeof(player1aliases))
+        outputf("%s %lu %s.\n", _("Aliases list limited to"), (long unsigned int) (sizeof(player1aliases) - 1),
+                _("characters, truncating"));
 
-    if (strlen(sz) >= buflen)
-        outputf(ngettext("Aliases list limited to %zu character, truncating\n",
-				"Aliases list limited to %zu characters, truncating\n",
-			       	buflen - 1), buflen - 1);
-
-    g_strlcpy(player1aliases, sz, buflen);
+    g_strlcpy(player1aliases, sz, sizeof(player1aliases));
 
     outputf(_("Aliases for player 1 when importing MAT files set to \"%s\".\n "), player1aliases);
 }
@@ -2848,6 +2846,21 @@ CommandSetBeavers(char *sz)
         outputl(_("1 beaver allowed in money sessions."));
     else
         outputl(_("No beavers allowed in money sessions."));
+}
+
+extern void
+CommandSetScoreMapPly(char* sz)
+{
+
+    int n = ParseNumber(&sz);
+
+    if (n < 0 || n>=NUM_PLY) {
+        outputl(_("Wrong ply number."));
+
+        return;
+    }
+
+    scoreMapPlyDefault = (scoreMapPly) n;
 }
 
 extern void

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2020 Aaron Tikuisis <Aaron.Tikuisis@uottawa.ca>
- * Copyright (C) 2020 Isaac Keslassy <isaac@ee.technion.ac.il>
+ * Copyright (C) 2020 Isaac Keslassy <keslassy@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkscoremap.h,v 1.3 2022/10/22 10:47:46 plm Exp $
  */
 
 #ifndef GTKSCOREMAP_H
@@ -23,7 +23,20 @@
 
 #include "gnubg-types.h"        /* for matchstate */
 
-extern void
- GTKShowScoreMap(const matchstate ams[], int cube);
+typedef enum {
+    ZERO_PLY, ONE_PLY, TWO_PLY, THREE_PLY, FOUR_PLY,
+    NUM_PLY
+} scoreMapPly;
+
+extern scoreMapPly scoreMapPlyDefault;
+//extern int scoreMapPlyDefault;
+extern const char* aszScoreMapPly[NUM_PLY];
+extern const char* aszScoreMapPlyCommands[NUM_PLY];
+
+
+extern void GTKShowScoreMap(const matchstate ams[], int cube);
+extern void GTKShowMoveScoreMapInfo(GtkWidget* pw, GtkWidget* pwParent);
+extern void GTKShowCubeScoreMapInfo(GtkWidget* pw, GtkWidget* pwParent);
+
 
 #endif                          /* GTKSCOREMAP_H */

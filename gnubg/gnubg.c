@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gnubg.c,v 1.1026 2022/03/27 16:43:01 plm Exp $
  */
 
 #include "config.h"
@@ -99,6 +99,7 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #include "gtksplash.h"
 #include "gtkchequer.h"
 #include "gtkwindows.h"
+#include "gtkscoremap.h"
 #endif
 
 #if defined(USE_BOARD3D)
@@ -3279,6 +3280,8 @@ SaveMiscSettings(FILE * pf)
     fprintf(pf, "set browser \"%s\"\n", get_web_browser());
     fprintf(pf, "set priority nice %d\n", nThreadPriority);
     fprintf(pf, "set ratingoffset %s\n", g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rRatingOffset));
+
+    fprintf(pf, "set scoreMapPly %s\n", aszScoreMapPlyCommands[scoreMapPlyDefault]);
 }
 
 extern void

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gtkoptions.c,v 1.139 2022/11/06 15:39:36 plm Exp $
  */
 
 #include "config.h"
@@ -47,6 +47,7 @@
 #include "multithread.h"
 #include "gtkoptions.h"
 #include "gtkrelational.h"
+#include "gtkscoremap.h"
 
 typedef struct {
     GtkWidget *pwNoteBook;
@@ -84,6 +85,8 @@ typedef struct {
     GtkWidget *pwSeed;
     GtkWidget *pwRecordGames;
     GtkWidget *pwDisplay;
+    GtkWidget *pwScoreMap; //hhh
+    GtkWidget* apwScoreMapPly[5];
     GtkAdjustment *padjCache;
     GtkAdjustment *padjDelay;
     GtkAdjustment *padjSeed;
@@ -401,7 +404,7 @@ append_game_options(optionswidget * pow)
 #endif
     gtk_container_add(GTK_CONTAINER(pwf), pwb);
 
-    for (i = 0; i < NUM_VARIATIONS; ++i) {
+    for (i = 0; i < NUM_VARIATIONS; ++i) { //hhh
 
         pow->apwVariations[i] =
             i ?
@@ -853,6 +856,160 @@ append_display_options(optionswidget * pow)
                                   "in MWCs being output as 50.33%."));
 }
 
+
+static void
+BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwv, const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
+    int labelStringsLen, int toggleDefault, //void (*functionWhenToggled)(GtkWidget*, scoremap*),
+    int sensitive, int vAlignExpand) { //hhh
+    /* Sub-function to build a new frame with a new set of labels, with a whole bunch of needed parameters
+
+    - pwFrame ----------
+    | -- pwh2 -------- |
+    | | pw (options) | |
+    | ---------------- |
+    --------------------
+    */
+    int* pi;
+    int i;
+    GtkWidget* pwFrame;
+    GtkWidget* pwh2;
+    GtkWidget* pw;
+    GtkWidget* pwx = NULL;
+    //    GtkWidget * pwDefault = NULL;
+
+    pwFrame = gtk_frame_new(_(frameTitle));
+    gtk_box_pack_start(GTK_BOX(pwv), pwFrame, vAlignExpand, FALSE, 0);
+    gtk_widget_set_tooltip_text(pwFrame, _(frameToolTip)); //ggg1
+    gtk_widget_set_sensitive(pwFrame, sensitive);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+#else
+    pwh2 = gtk_hbox_new(FALSE, 8);
+#endif
+    gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
+
+    for (i = 0; i < labelStringsLen; i++) {
+        if (i == 0)
+            pow->apwScoreMapPly[0] = gtk_radio_button_new_with_label(NULL, _(labelStrings[0])); // First radio button
+        else
+            pow->apwScoreMapPly[i] = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pow->apwScoreMapPly[0]), _(labelStrings[i])); // Associate this to the other radio buttons
+        gtk_box_pack_start(GTK_BOX(pwh2), pow->apwScoreMapPly[i], FALSE, FALSE, 0);
+        gtk_widget_set_tooltip_text(pow->apwScoreMapPly[i], _(frameToolTip));
+        pi = (int*)g_malloc(sizeof(int));
+        *pi = (int)i; // here use "=(int)labelEnum[i];" and put it in the input of the function if needed, while
+        //  defining sth like " int labelEnum[] = { NUMBERS, ENGLISH, BOTH };" before calling the function
+        g_object_set_data_full(G_OBJECT(pow->apwScoreMapPly[i]), "user_data", pi, g_free);
+        if (toggleDefault == i) // again use "if (DefaultLabel==labelEnum[i])" if needed
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), 1); //we set this to toggle it on in case it's the default option
+        //g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK((*functionWhenToggled)), psm);
+    }
+    //for (i = 0; i < NUM_VARIATIONS; ++i) { //hhh
+
+    //    pow->apwVariations[i] =
+    //        i ?
+    //        gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON
+    //        (pow->apwVariations[0]),
+    //            gettext(aszVariations[i])) :
+    //        gtk_radio_button_new_with_label(NULL, gettext(aszVariations[i]));
+
+    //    gtk_box_pack_start(GTK_BOX(pwb), pow->apwVariations[i], FALSE, FALSE, 0);
+
+    //    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation)i);
+
+    //    gtk_widget_set_tooltip_text(pow->apwVariations[i], gettext(aszVariationsTooltips[i]));
+
+    //}
+}
+
+
+
+static void
+append_scoremap_options(optionswidget* pow) //hhh
+{
+    GtkWidget* pwvbox;
+    GtkWidget* pwev;
+    GtkWidget* pwhbox;
+    GtkWidget* pw;
+    GtkWidget* pwScoreMapBox;
+    GtkWidget* pwFrame;
+    GtkWidget* pwBox;
+    GtkWidget* pwSpeed;
+    GtkWidget* pwScale;
+#if !GTK_CHECK_VERSION(3,0,0)
+    GtkWidget* pwp;
+#endif
+
+    BoardData* bd = BOARD(pwBoard)->board_data;
+
+    int vAlignExpand = FALSE; // set to true to expand vertically the group of frames rather than packing them to the top
+    int evalPlies = 3;
+
+    /* Display options */
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvbox, gtk_label_new(_("ScoreMap")));
+#else
+    pwvbox = gtk_vbox_new(FALSE, 0);
+    pwp = gtk_alignment_new(0, 0, 0, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("ScoreMap")));
+    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+#endif
+
+
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwScoreMapBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwScoreMapBox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
+
+    const char* plyStrings[5] = { N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
+    BuildRadioButtonFrame(pow, pwScoreMapBox, _("Evaluation"), _("Select the ply at which to evaluate the equity at each score"), plyStrings, 5, evalPlies, TRUE, vAlignExpand);
+
+
+
+//    pwFrame = gtk_frame_new(_("Animation"));
+//    gtk_box_pack_start(GTK_BOX(pwAnimBox), pwFrame, FALSE, FALSE, 4);
+//
+//#if GTK_CHECK_VERSION(3,0,0)
+//    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+//#else
+//    pwBox = gtk_vbox_new(FALSE, 0);
+//#endif
+//    gtk_container_add(GTK_CONTAINER(pwFrame), pwBox);
+//
+//    pow->pwAnimateNone = gtk_radio_button_new_with_label(NULL, _("None"));
+//    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAnimateNone), animGUI == ANIMATE_NONE);
+//    gtk_box_pack_start(GTK_BOX(pwBox), pow->pwAnimateNone, FALSE, FALSE, 0);
+//    gtk_widget_set_tooltip_text(pow->pwAnimateNone,
+//        _("Do not display any kind of animation for " "automatically moved chequers."));
+//
+//    pow->pwAnimateBlink =
+//        gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pow->pwAnimateNone), _("Blink moving chequers"));
+//    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAnimateBlink), animGUI == ANIMATE_BLINK);
+//    gtk_box_pack_start(GTK_BOX(pwBox), pow->pwAnimateBlink, FALSE, FALSE, 0);
+//    gtk_widget_set_tooltip_text(pow->pwAnimateBlink,
+//        _("When automatically moving chequers, flash "
+//            "them between the original and final points."));
+//
+//    pow->pwAnimateSlide =
+//        gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pow->pwAnimateNone), _("Slide moving chequers"));
+//    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAnimateSlide), animGUI == ANIMATE_SLIDE);
+//    gtk_box_pack_start(GTK_BOX(pwBox), pow->pwAnimateSlide, FALSE, FALSE, 0);
+//    gtk_widget_set_tooltip_text(pow->pwAnimateSlide,
+//        _("Show automatically moved chequers moving across " "the board between the points."));
+
+  
+
+}
+
 static void
 append_match_options(optionswidget * pow)
 {
@@ -1195,7 +1352,7 @@ append_dice_options(optionswidget * pow)
             }
 
             if (!(i == RNG_BBS && !blumblum)) {
-                gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pow->pwRngComboBox), gettext(aszRNG[i]));
+                gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pow->pwRngComboBox), aszRNG[i]);
                 if (i == rngCurrent)
                     rngSelected = rngsAdded;
                 rngsAdded++;
@@ -1548,6 +1705,7 @@ OptionsPages(optionswidget * pow)
     append_cube_options(pow);
     append_tutor_options(pow);
     append_display_options(pow);
+    append_scoremap_options(pow); 
     append_match_options(pow);
     append_sound_options(pow);
     append_dice_options(pow);
@@ -1658,7 +1816,18 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
             sprintf(sz, "set variation %s", aszVariationCommands[i]);
             UserCommand(sz);
             break;
-        }
+        } 
+    
+    /* Score Map */ //hhh
+
+    for (i = 0; i < NUM_PLY; ++i) //hhh1
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
+            sprintf(sz, "set scoremapply %s", aszScoreMapPlyCommands[i]);
+            UserCommand(sz);
+            break;
+        } 
+
+
 
     CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s");
     CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s");
@@ -1816,6 +1985,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         UserCommand(sz);
     }
 
+
     /* dice manipulation */
 
     n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->pwCheat));
@@ -1904,7 +2074,12 @@ OptionsSet(optionswidget * pow)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwGameClockwise), fClockwise);
 
     for (i = 0; i < NUM_VARIATIONS; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation) i);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation) i); 
+
+    /*Score Map*/ //hhh
+    for (i = 0; i < NUM_PLY; ++i)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); //hhh
+
 
     if (rngCurrent >= NUM_RNGS - 3)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwDice[rngCurrent]), TRUE);

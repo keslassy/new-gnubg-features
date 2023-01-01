@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: backgammon.h,v 1.470 2022/10/16 19:05:38 plm Exp $
  */
 
 #ifndef BACKGAMMON_H
@@ -873,6 +873,7 @@ extern void CommandSetRolloutTruncationEqualPlayer0(char *);
 extern void CommandSetRolloutTruncationPlies(char *);
 extern void CommandSetRolloutVarRedn(char *);
 extern void CommandSetScore(char *);
+extern void CommandSetScoreMapPly(char*);
 extern void CommandSetSeed(char *);
 extern void CommandSetSGFFolder(char *);
 extern void CommandSetSoundEnable(char *);

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: commands.inc,v 1.60 2022/05/22 21:35:50 plm Exp $
  */
 
 /* All the commands are in this file */
@@ -1229,6 +1229,9 @@ static command acSetVariation[] = {
       NULL, acSetRollout }, 
     { "score", CommandSetScore, N_("Set the match or session score "),
       szSCORE, NULL },
+    { "scoremapply", CommandSetScoreMapPly, 
+      N_("Set the default evaluation ply in the ScoreMap window"), 
+      szVALUE, NULL },
     { "seed", CommandSetSeed, 
       N_("Set the dice generator seed"), szOPTSEED, NULL },
     { "sound", NULL, 
