@@ -1402,7 +1402,7 @@ command  acShow[] = {
       N_("Show temperature map (graphic overview of dice distribution)"), 
       NULL, NULL },
     { "scoremap", CommandShowScoreMap, 
-      N_("Show score map (graphic overview of cube at different scores)"), 
+      N_("Show ScoreMap (graphic overview of cube decisions at different scores)"), 
       NULL, NULL },      
 #if defined(USE_MULTITHREAD)
     { "threads", CommandShowThreads, N_("Show number of calculation threads"),

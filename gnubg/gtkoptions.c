@@ -18,6 +18,9 @@
  * $Id: gtkoptions.c,v 1.139 2022/11/06 15:39:36 plm Exp $
  */
 
+/* TBD: Uncomment append_scoremap_options(pow); to insert a scoremap options tab
+*/
+
 #include "config.h"
 #include "gtklocdefs.h"
 
@@ -1705,7 +1708,7 @@ OptionsPages(optionswidget * pow)
     append_cube_options(pow);
     append_tutor_options(pow);
     append_display_options(pow);
-    append_scoremap_options(pow); 
+   // append_scoremap_options(pow); 
     append_match_options(pow);
     append_sound_options(pow);
     append_dice_options(pow);

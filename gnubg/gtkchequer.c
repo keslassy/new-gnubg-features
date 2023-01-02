@@ -469,7 +469,7 @@ CreateMoveListTools(hintdata * phd)
     GtkWidget *pwCopy = gtk_button_new_with_label(_("Copy"));
     GtkWidget *pwTempMap = gtk_button_new_with_label(_("TM"));
     GtkWidget *pwCmark = gtk_button_new_with_label(_("Cmark"));
-    GtkWidget *pwScoreMap = gtk_button_new_with_label(_("Score Map"));     
+    GtkWidget *pwScoreMap = gtk_button_new_with_label(_("ScoreMap"));     
     int i;
 
     pwDetails = phd->fDetails ? NULL : gtk_toggle_button_new_with_label(_("Details"));
