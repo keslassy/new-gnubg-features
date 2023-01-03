@@ -48,3 +48,14 @@
 /gnubg/Makefile.in
 /gnubg/ltmain.sh
 /gnubg/install-sh
+/gnubg/config.*
+/gnubg/*.o
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.so.*
+*.dll
