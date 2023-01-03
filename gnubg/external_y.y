@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: external_y.y,v 1.36 2020/02/20 21:19:52 plm Exp $
  */
 
 #ifndef EXTERNAL_Y_H

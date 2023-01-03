@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# $Id$
+# $Id: gnubg.gtkrc,v 1.27 2017/12/03 20:58:17 plm Exp $
 #
 # style <name> [= <name>]
 # {

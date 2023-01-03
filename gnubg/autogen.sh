@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-# $Id$
+# $Id: autogen.sh,v 1.13 2022/09/09 21:11:50 plm Exp $
 
 # If we use libtool-2, libtoolize below will recreate them, but if we use
 # libtool-1 we don't want them, which could happen if we use a shared

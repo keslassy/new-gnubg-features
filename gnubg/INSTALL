@@ -24,7 +24,7 @@ build GNUbg but not necessarily with the SIMD extensions.
 
 The only mandatory development library is
 
-GLib			version >= 2.12.5 (>= 2.18.4 on Windows)
+GLib			version >= 2.22
 
 but you probably want to make use of most of the following ones as well
 
@@ -35,7 +35,7 @@ cairo (graphics)
 canberra (sound)
 gtkglext (3d boards)
 readline (command line editing)
-python (extension)	version >= 2.3
+python (extension)	version >= 2.6
 sqlite3 (database)
 gmp (additional random numbers generator)
 curl (Internet random numbers generator)

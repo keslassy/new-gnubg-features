@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: sgf_y.y,v 1.17 2021/08/29 21:07:13 plm Exp $
  */
 
 %{

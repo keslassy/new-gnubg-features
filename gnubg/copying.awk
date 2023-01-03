@@ -12,7 +12,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: copying.awk,v 1.8 2019/12/29 16:32:08 plm Exp $
 # 
 
 # Stolen from the copying.awk script included in gdb.

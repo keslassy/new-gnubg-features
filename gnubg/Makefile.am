@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-## $Id$
+## $Id: Makefile.am,v 1.275 2022/10/16 19:05:38 plm Exp $
 
 ACLOCAL_AMFLAGS = -I m4
 

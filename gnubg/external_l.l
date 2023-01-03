@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: external_l.l,v 1.32 2022/01/19 22:21:43 plm Exp $
  */
 
 #include "common.h"

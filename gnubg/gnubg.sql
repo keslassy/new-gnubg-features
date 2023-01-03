@@ -15,7 +15,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <https://www.gnu.org/licenses/>.
 --
--- $Id$
+-- $Id: gnubg.sql,v 1.15 2020/10/07 19:25:38 plm Exp $
 --
 
 -- Table: control

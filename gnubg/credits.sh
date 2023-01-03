@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: credits.sh,v 1.166 2022/01/13 21:19:15 plm Exp $
 # 
 
 authors=/tmp/auth.$$

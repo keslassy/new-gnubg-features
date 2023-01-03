@@ -15,11 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkoptions.c,v 1.139 2022/11/06 15:39:36 plm Exp $
+ * $Id: gtkoptions.c,v 1.140 2022/12/13 22:03:31 plm Exp $
  */
-
-/* TBD: Uncomment append_scoremap_options(pow); to insert a scoremap options tab
-*/
 
 #include "config.h"
 #include "gtklocdefs.h"
@@ -88,7 +85,7 @@ typedef struct {
     GtkWidget *pwSeed;
     GtkWidget *pwRecordGames;
     GtkWidget *pwDisplay;
-    GtkWidget *pwScoreMap; //hhh
+    GtkWidget *pwScoreMap;
     GtkWidget* apwScoreMapPly[5];
     GtkAdjustment *padjCache;
     GtkAdjustment *padjDelay;
@@ -407,7 +404,7 @@ append_game_options(optionswidget * pow)
 #endif
     gtk_container_add(GTK_CONTAINER(pwf), pwb);
 
-    for (i = 0; i < NUM_VARIATIONS; ++i) { //hhh
+    for (i = 0; i < NUM_VARIATIONS; ++i) {
 
         pow->apwVariations[i] =
             i ?
@@ -1821,9 +1818,9 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
             break;
         } 
     
-    /* Score Map */ //hhh
+    /* Score Map */
 
-    for (i = 0; i < NUM_PLY; ++i) //hhh1
+    for (i = 0; i < NUM_PLY; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
             sprintf(sz, "set scoremapply %s", aszScoreMapPlyCommands[i]);
             UserCommand(sz);
@@ -2079,7 +2076,7 @@ OptionsSet(optionswidget * pow)
     for (i = 0; i < NUM_VARIATIONS; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation) i); 
 
-    /*Score Map*/ //hhh
+    /*Score Map*/ 
     for (i = 0; i < NUM_PLY; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); //hhh
 
