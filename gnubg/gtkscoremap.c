@@ -1,4 +1,4 @@
-/* Still under development.... TBD: (test new branch)
+/* Still under development.... TBD:
 * 
 * 
 * Bug when hitting stop
@@ -3123,8 +3123,8 @@ if needed (this was initially planned for some explanation text, which was then 
 
     if (pms->nMatchTo == 0 && pms->fJacoby == TRUE) {   //the current real game is Money Play
                                                         // and the current real game is Jacoby
-            psm->labelTopleft = MONEY_JACOBY;
-            psm->moneyJacoby = TRUE;
+        psm->labelTopleft = MONEY_JACOBY;
+        psm->moneyJacoby = TRUE;
     }
     else {
         psm->labelTopleft = MONEY_NO_JACOBY;
