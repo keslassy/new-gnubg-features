@@ -946,7 +946,7 @@ append_scoremap_options(optionswidget* pow) //hhh
     BoardData* bd = BOARD(pwBoard)->board_data;
 
     int vAlignExpand = FALSE; // set to true to expand vertically the group of frames rather than packing them to the top
-    int evalPlies = 3;
+    //int evalPlies = 3;
 
     /* Display options */
 
@@ -974,7 +974,7 @@ append_scoremap_options(optionswidget* pow) //hhh
     gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
 
     const char* plyStrings[5] = { N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
-    BuildRadioButtonFrame(pow, pwScoreMapBox, _("Evaluation"), _("Select the ply at which to evaluate the equity at each score"), plyStrings, 5, evalPlies, TRUE, vAlignExpand);
+    BuildRadioButtonFrame(pow, pwScoreMapBox, _("Evaluation"), _("Select the ply at which to evaluate the equity at each score"), plyStrings, 5, scoreMapPlyDefault, TRUE, vAlignExpand);
 
 
 
@@ -1708,7 +1708,7 @@ OptionsPages(optionswidget * pow)
     append_cube_options(pow);
     append_tutor_options(pow);
     append_display_options(pow);
-   // append_scoremap_options(pow); 
+    append_scoremap_options(pow); 
     append_match_options(pow);
     append_sound_options(pow);
     append_dice_options(pow);
