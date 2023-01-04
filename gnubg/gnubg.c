@@ -3137,6 +3137,7 @@ SaveGUISettings(FILE * pf)
         fputs("set toolbar off\n", pf);
 
     fprintf(pf, "set scoremapply %s\n", aszScoreMapPlyCommands[scoreMapPlyDefault]);
+    fprintf(pf, "set scoremapmatchlength %s\n", aszScoreMapMatchLengthCommands[scoreMapMatchLengthDefIdx]);
 
 #if defined(USE_BOARD3D)
     if (fSync != -1)

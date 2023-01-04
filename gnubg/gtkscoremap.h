@@ -40,9 +40,9 @@ typedef enum {
 } scoreMapMatchLength;
 
 extern scoreMapMatchLength scoreMapMatchLengthDefIdx;
-extern const int FIXED_MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH];
+extern const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH];
 extern const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH];
-extern const char* aszScoreMapatchLengthCommands[NUM_MATCH_LENGTH];
+extern const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH];
  
 
 extern void GTKShowScoreMap(const matchstate ams[], int cube);

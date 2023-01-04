@@ -4,7 +4,7 @@
 * Bug when hitting stop
 
 * "/_Analyse/ScoreMap (cube decision)" -> move decision too?
-* scoremap options
+* scoremap options -> gtkgame.c
 *  
 *  maybe display ply also in hover of cbe ScoreMap?
 */
@@ -127,12 +127,12 @@ const char* aszScoreMapPlyCommands[NUM_PLY] = { N_("0"), N_("1"), N_("2"), N_("3
 
 scoreMapMatchLength scoreMapMatchLengthDefIdx = LENGTH_THREE;
 /*the following list needs to correspond to the fixed lengths in the (typedef enum) scoreMapMatchLength */
-const int FIXED_MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //list of allowed match sizes
-//const int NUM_FIXED_MATCH_LENGTH_OPTIONS = ((int)(sizeof(FIXED_MATCH_LENGTH_OPTIONS)/sizeof(int)));
+const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //list of allowed match sizes
+//const int NUM_MATCH_LENGTH_OPTIONS = ((int)(sizeof(MATCH_LENGTH_OPTIONS)/sizeof(int)));
 //const int matchLengthIndexDefault = 0;
 //const char* lengthStrings[NUM_MATCH_LENGTH-1] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21") };
 const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Variable (depending on real match length)") };
-const char* aszScoreMapatchLengthCommands[NUM_MATCH_LENGTH] = {  N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
+const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH] = {  N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
  
 
 /*         DEFINITIONS        */
@@ -151,7 +151,7 @@ static int MAX_TABLE_HEIGHT = (int)(0.7 * DEFAULT_WINDOW_HEIGHT);
 #define MIN_FONT_SIZE 7
 
 
-#define MAX_TABLE_SIZE 22 // CAREFUL: should be max(FIXED_MATCH_LENGTH_OPTIONS)+1  (max-1 for cube scoremap, max+1 for move)
+#define MAX_TABLE_SIZE 22 // CAREFUL: should be max(MATCH_LENGTH_OPTIONS)+1  (max-1 for cube scoremap, max+1 for move)
 // #define MIN_TABLE_SIZE 6
 #define LARGE_TABLE_SIZE 14 //beyond, make row/col score labels smaller
 
@@ -2468,14 +2468,14 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
 */
 {
    /*   int index = gtk_combo_box_get_active(GTK_COMBO_BOX(pw));
-    int newmatchLength=FIXED_MATCH_LENGTH_OPTIONS[index];
+    int newmatchLength=MATCH_LENGTH_OPTIONS[index];
     if (MATCH_SIZE(psm)!=newmatchLength) {*/
    int* pi = (int*)g_object_get_data(G_OBJECT(pw), "user_data");
 
-   //int newmatchLength = FIXED_MATCH_LENGTH_OPTIONS[*pi]; //iii1
+   //int newmatchLength = MATCH_LENGTH_OPTIONS[*pi]; //iii1
    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
        psm->matchLengthIndex = (*pi);
-       psm->matchLength = FIXED_MATCH_LENGTH_OPTIONS[psm->matchLengthIndex]; //iii1
+       psm->matchLength = MATCH_LENGTH_OPTIONS[psm->matchLengthIndex]; //iii1
        //g_print("\n matchLengthToggled: size:%d", psm->matchLength);
        /* recalculate equities */
             //if (psm->cubeScoreMap)
@@ -2788,18 +2788,18 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
 //    gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
 //    gtk_widget_set_tooltip_text(pw, _("Select the match length (which determines the table size)")); //ggg3
 //
-//    for (i=0; i<NUM_FIXED_MATCH_LENGTH_OPTIONS; i++) {
+//    for (i=0; i<NUM_MATCH_LENGTH_OPTIONS; i++) {
 //        char sz[20];
-//        sprintf(sz,"%d",FIXED_MATCH_LENGTH_OPTIONS[i]);
+//        sprintf(sz,"%d",MATCH_LENGTH_OPTIONS[i]);
 //        gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pw), _(sz));
 //    }
 //    // Find index that matches the match size
-//    for (matchLengthIndex=0; matchLengthIndex<NUM_FIXED_MATCH_LENGTH_OPTIONS-1 && (FIXED_MATCH_LENGTH_OPTIONS[matchLengthIndex] < MATCH_SIZE(psm)); ++matchLengthIndex);
+//    for (matchLengthIndex=0; matchLengthIndex<NUM_MATCH_LENGTH_OPTIONS-1 && (MATCH_LENGTH_OPTIONS[matchLengthIndex] < MATCH_SIZE(psm)); ++matchLengthIndex);
 //    // In case the match size doesn't exist in the options, change it to the closest value.
 //    if (psm->cubeScoreMap)
-//        psm->cubematchLength=FIXED_MATCH_LENGTH_OPTIONS[matchLengthIndex];
+//        psm->cubematchLength=MATCH_LENGTH_OPTIONS[matchLengthIndex];
 //    else
-//        psm->movematchLength=FIXED_MATCH_LENGTH_OPTIONS[matchLengthIndex];
+//        psm->movematchLength=MATCH_LENGTH_OPTIONS[matchLengthIndex];
 //    gtk_combo_box_set_active(GTK_COMBO_BOX(pw), matchLengthIndex);
 //    g_signal_connect(G_OBJECT(pw), "changed", G_CALLBACK(MatchLengthToggled), psm);
 
@@ -3186,24 +3186,41 @@ if needed (this was initially planned for some explanation text, which was then 
     //    }
     //}
 
-    // ******* NEW DEFINITION ***
-        /* need to decide the table size, i.e. the maximum match size to analyze
+    // ******* DEFINITION OF MATCH LENGTH ***
+        /* 
+        Goal: choose the match length to simulate, which impacts the table size
+        (A) The user picks a default match length index (fixed or variable) through scoreMapMatchLengthDefIdx
+        in the Settings > Options
+        (B) When we launch the ScoreMap, we look at this default, and set: "psm->matchLengthIndex = (int) scoreMapMatchLengthDefIdx;"
+        (C) If the choice is "variable length", we choose the match length (=maximum match size to analyze)
+        based on the length of the current real match:
         1) small match of size <= 3 -> use 3
         2) big match of size >=7 -> use 7
         3) medium-sized match or money play -> use 5
+        (D) Now the user can also change the match length for this ScoreMap only, which will not affect the default
+        match length. Since we only offer fixed lengths, if the user chose a variable default, we need to display
+        the correct fixed length.
       */
-    psm->matchLengthIndex = scoreMapMatchLengthDefIdx;
-    if (psm->matchLengthIndex <NUM_MATCH_LENGTH) //user wants a fixed default match length
-        psm->matchLength = FIXED_MATCH_LENGTH_OPTIONS[psm->matchLengthIndex];//iii1
+    psm->matchLengthIndex = (int) scoreMapMatchLengthDefIdx;
+    g_print("\n match length index:%d",psm->matchLengthIndex);
+
+    if (psm->matchLengthIndex <NUM_MATCH_LENGTH-1) //user wants a fixed default match length
+        psm->matchLength = MATCH_LENGTH_OPTIONS[psm->matchLengthIndex];//iii1
     else { //user wants a variable default match size
         // if (psm->matchLength != pms->nMatchTo) { //not needed, just to speed up the check
         if (pms->nMatchTo <= 3 && pms->nMatchTo > 0) //i.e. we are in a money match or a short match
-            psm->matchLength = 3; //default value for small match
+            //psm->matchLength = 3; //default value for small match
+            psm->matchLengthIndex = 0;
         else if (pms->nMatchTo >= 7) //i.e. we are in a long match and don't want a huge table
-            psm->matchLength = 7; //default value if big match
+            //psm->matchLength = 7; //default value if big match
+            psm->matchLengthIndex = 2;
         else //middle-sized match or money play
-            psm->matchLength = 5; //default value for regular match
+            //psm->matchLength = 5; //default value for regular match
+            psm->matchLengthIndex = 1;
+        psm->matchLength = MATCH_LENGTH_OPTIONS[psm->matchLengthIndex];
     }
+    g_print("\n match length index:%d, match length:%d",psm->matchLengthIndex,psm->matchLength);
+
     //if (psm->cubeScoreMap) {  //we are in a cube scoremap //xxx
     //    if (psm->cubematchLength != pms->nMatchTo) { //not needed, just to speed up the check
     //        if (pms->nMatchTo <= 3 && pms->nMatchTo>0) //i.e. we are in a money match or a short match

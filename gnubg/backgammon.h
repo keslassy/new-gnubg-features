@@ -874,6 +874,7 @@ extern void CommandSetRolloutTruncationPlies(char *);
 extern void CommandSetRolloutVarRedn(char *);
 extern void CommandSetScore(char *);
 extern void CommandSetScoreMapPly(char*);
+extern void CommandSetScoreMapMatchLength(char*);
 extern void CommandSetSeed(char *);
 extern void CommandSetSGFFolder(char *);
 extern void CommandSetSoundEnable(char *);

@@ -2867,6 +2867,32 @@ CommandSetScoreMapPly(char* sz)
 }
 
 extern void
+CommandSetScoreMapMatchLength(char* sz)
+{
+
+    int n = ParseNumber(&sz);
+            // g_print("\n n is: %d",n);
+    // if (n < -1 || n>=MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH-1]) {
+    //     outputl(_("Wrong match length."));
+    //     return;
+    // }
+
+    for (int i=0; i<NUM_MATCH_LENGTH; i++){
+        // g_print("\n test within loop: n: %d vs MATCH_LENGTH_OPTIONS[i]: %d (i:%d)",n,MATCH_LENGTH_OPTIONS[i],i);
+
+        if(MATCH_LENGTH_OPTIONS[i]==n) {
+           scoreMapMatchLengthDefIdx = (scoreMapMatchLength) i;
+            // g_print("\n within loop: n:%d, i:%d",n,i);
+           return; 
+        }
+    }
+    // g_print("\n again: n:%d, i:%d",n,scoreMapMatchLengthDefIdx);
+    outputl(_("Wrong match length, not within the vector."));
+
+    
+}
+
+extern void
 CommandSetOutputDigits(char *sz)
 {
 

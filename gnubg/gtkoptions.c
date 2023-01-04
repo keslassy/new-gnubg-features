@@ -975,7 +975,7 @@ append_scoremap_options(optionswidget* pow) //hhh
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapPly,_("Default evaluation strength"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault, TRUE, vAlignExpand);
 
-    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapMatchLength,_("Default match length"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefault, TRUE, vAlignExpand);
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapMatchLength,_("Default match length"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx, TRUE, vAlignExpand);
 
 
 //    pwFrame = gtk_frame_new(_("Animation"));
@@ -1833,7 +1833,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
 
     for (i = 0; i < NUM_MATCH_LENGTH; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i])) && scoreMapMatchLengthDefIdx != (scoreMapMatchLength) i) {
-            sprintf(sz, "set scoremapmatchlength %s", aszScoreMapatchLengthCommands[i]);
+            sprintf(sz, "set scoremapmatchlength %s", aszScoreMapMatchLengthCommands[i]);
             UserCommand(sz);
             break;
         } 
