@@ -6,7 +6,7 @@
 * "/_Analyse/ScoreMap (cube decision)" -> move decision too?
 * scoremap options
 *  
-*  
+*  maybe display ply also in hover of cbe ScoreMap?
 */
 
 /*
@@ -117,6 +117,25 @@ and come back, it works again. It may be a movelist construction issue.
 #include "drawboard.h"
 #include "format.h"
 #include "gtkwindows.h"
+//#include "gtkoptions.h"  
+
+/*         GLOBAL *EXTERN) VARIABLES           */
+scoreMapPly scoreMapPlyDefault = ZERO_PLY; //default -> TWO_PLY at the end 
+const char* aszScoreMapPly[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
+const char* aszScoreMapPlyCommands[NUM_PLY] = { N_("0"), N_("1"), N_("2"), N_("3"), N_("4") };
+//const char * plyStrings[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply")};
+
+scoreMapMatchLength scoreMapMatchLengthDefault = LENGTH_THREE;
+/*the following list needs to correspond to the fixed lengths in the (typedef enum) scoreMapMatchLength */
+const int FIXED_MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //list of allowed match sizes
+//const int NUM_FIXED_MATCH_LENGTH_OPTIONS = ((int)(sizeof(FIXED_MATCH_LENGTH_OPTIONS)/sizeof(int)));
+//const int matchLengthIndexDefault = 0;
+//const char* lengthStrings[NUM_MATCH_LENGTH-1] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21") };
+const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Variable (depending on real match length)") };
+const char* aszScoreMapatchLengthCommands[NUM_MATCH_LENGTH] = {  N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
+ 
+
+/*         DEFINITIONS        */
 
 // these sizes help define the requested minimum quadrant size; but then GTK can set a higher value
 // e.g. we may ask for height/width of 60, but final height will be 60 & final width 202
@@ -131,10 +150,8 @@ static int MAX_TABLE_HEIGHT = (int)(0.7 * DEFAULT_WINDOW_HEIGHT);
 #define MAX_FONT_SIZE 12
 #define MIN_FONT_SIZE 7
 
-static const int MATCH_SIZE_OPTIONS[] = {3,5,7,9,11,15,21};   //list of allowed match sizes; needs to correspond
-                        // to lengthStrings[7] down in the code
-#define NUM_MATCH_SIZE_OPTIONS ((int)(sizeof(MATCH_SIZE_OPTIONS)/sizeof(int)))
-#define MAX_TABLE_SIZE 22 // CAREFUL: should be max(MATCH_SIZE_OPTIONS)+1  (max-1 for cube scoremap, max+1 for move)
+
+#define MAX_TABLE_SIZE 22 // CAREFUL: should be max(FIXED_MATCH_LENGTH_OPTIONS)+1  (max-1 for cube scoremap, max+1 for move)
 // #define MIN_TABLE_SIZE 6
 #define LARGE_TABLE_SIZE 14 //beyond, make row/col score labels smaller
 
@@ -153,10 +170,7 @@ static const int MATCH_SIZE_OPTIONS[] = {3,5,7,9,11,15,21};   //list of allowed 
     typedef enum {ZERO_PLY, ONE_PLY, TWO_PLY, THREE_PLY, FOUR_PLY, NUM_PLY} scoreMapPly;
 */
 
-scoreMapPly scoreMapPlyDefault = ZERO_PLY; //default -> TWO_PLY at the end 
-//int scoreMapPlyDefault = 2;
-const char* aszScoreMapPly[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
-const char* aszScoreMapPlyCommands[NUM_PLY] = { N_("0"), N_("1"), N_("2"), N_("3"), N_("4") };
+
 
 
 /* Used in the "Colour by" radio buttons - we assume the same order as the labels */
@@ -299,10 +313,10 @@ typedef struct { //hhh
     layoutoptions layout;
     labeltopleftoptions labelTopleft;
     int moneyJacoby; // goes w/ previous line
-    int matchSizeIndex; // index of simulated match size
-    int matchSize;      //simulated match size
-    //int cubeMatchSize; // default, but hopefully not used, we reset based on match size 
-    //int moveMatchSize; //
+    int matchLengthIndex; // index of simulated match size
+    int matchLength;      //simulated match size
+    //int cubematchLength; // default, but hopefully not used, we reset based on match size 
+    //int movematchLength; //
     int signednCube;    //simulated cube value (in move ScoreMap: with sign that indicates what player owns the cube)
     //int cubeValue;
 
@@ -349,8 +363,8 @@ typedef struct { //hhh
 //static layoutoptions layout = VERTICAL;
 //static labeltopleftoptions labelTopleft = MONEY_NO_JACOBY;
 //static int moneyJacoby = FALSE; // TRUE; // goes w/ previous line
-//static int cubeMatchSize = 5; // default, but hopefully not used, we reset based on match size 
-//static int moveMatchSize = 5; //
+//static int cubematchLength = 5; // default, but hopefully not used, we reset based on match size 
+//static int movematchLength = 5; //
 // 
 //static int evalPlies = 2;
 //evalPlies = scoreMapPlyDefault; // (was 0 then 2) -> scoreMapPlyDefault is defined in the Settings menu
@@ -362,7 +376,7 @@ static GtkWidget *pwDialog = NULL;
 //define desired number of output digits, i.e. precision, throughout the file (in equity text, hover text, etc)
 #define DIGITS MAX(MIN(fOutputDigits, MAX_OUTPUT_DIGITS),0)
 
-#define MATCH_SIZE(psm) (psm->matchSize) //(psm->cubeScoreMap ? psm->cubeMatchSize : psm->moveMatchSize)
+#define MATCH_SIZE(psm) (psm->matchLength) //(psm->cubeScoreMap ? psm->cubematchLength : psm->movematchLength)
 
 //coding reminder: (1) static = valid in this file only; (2) we need to define a function before calling it, so if a function A calls a function B and A is written before B, we define B at the start
 static void 
@@ -1138,7 +1152,7 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             len = MAX(len0,MAX(len1,len2)) +2 ; //we leave an additional spacing of 2 characters, where 2 is arbitrary,
                                                 //  b/w the longest move string and its equity
             sprintf(space,"%*c", len-len0, ' ');   //define spacing for best move
-            sprintf(ssz,"<tt>1. %s%s%1.*f         (%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
+            sprintf(ssz,"<tt>1. %s%s%1.*f          (%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len1, ' ');   //define spacing for 2nd best move
             sprintf(ssz,"\n2. %s%s%1.*f  %1.*f (%u-ply)",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
@@ -1151,7 +1165,7 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             len1 = (int)strlen(szMove1)+(pq->ml.amMoves[1].rScore<-0.0005);
             len = MAX(len0,len1)+2;
             sprintf(space,"%*c", len-len0, ' ');   //define spacing for best move
-            sprintf(ssz,"<tt>1. %s%s%1.*f         (%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
+            sprintf(ssz,"<tt>1. %s%s%1.*f          (%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len1, ' ');   //define spacing for 2nd best move
             sprintf(ssz,"\n2. %s%s%1.*f  %1.*f  (%u-ply)</tt>",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
@@ -2454,23 +2468,23 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
 */
 {
    /*   int index = gtk_combo_box_get_active(GTK_COMBO_BOX(pw));
-    int newMatchSize=MATCH_SIZE_OPTIONS[index];
-    if (MATCH_SIZE(psm)!=newMatchSize) {*/
+    int newmatchLength=FIXED_MATCH_LENGTH_OPTIONS[index];
+    if (MATCH_SIZE(psm)!=newmatchLength) {*/
    int* pi = (int*)g_object_get_data(G_OBJECT(pw), "user_data");
 
-   //int newMatchSize = MATCH_SIZE_OPTIONS[*pi]; //iii1
+   //int newmatchLength = FIXED_MATCH_LENGTH_OPTIONS[*pi]; //iii1
    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-       psm->matchSizeIndex = (*pi);
-       psm->matchSize = MATCH_SIZE_OPTIONS[psm->matchSizeIndex]; //iii1
-       //g_print("\n MatchSizeToggled: size:%d", psm->matchSize);
+       psm->matchLengthIndex = (*pi);
+       psm->matchLength = FIXED_MATCH_LENGTH_OPTIONS[psm->matchLengthIndex]; //iii1
+       //g_print("\n matchLengthToggled: size:%d", psm->matchLength);
        /* recalculate equities */
             //if (psm->cubeScoreMap)
-            //    psm->cubeMatchSize= psm->matchSize;
+            //    psm->cubematchLength= psm->matchLength;
             //else
-            //    psm->moveMatchSize= psm->matchSize;
+            //    psm->movematchLength= psm->matchLength;
         int oldTableSize=psm->tableSize;
-        psm->tableSize = (psm->cubeScoreMap)? psm->matchSize-1 : psm->matchSize+1; //psm->cubeMatchSize-1 : psm->moveMatchSize+1;
-        //if (abs(psm->signednCube) >= 2* (psm->matchSize)) { //i.e. we set a big cube then decrease too much the match size
+        psm->tableSize = (psm->cubeScoreMap)? psm->matchLength-1 : psm->matchLength+1; //psm->cubematchLength-1 : psm->movematchLength+1;
+        //if (abs(psm->signednCube) >= 2* (psm->matchLength)) { //i.e. we set a big cube then decrease too much the match size
         //    psm->signednCube=1;
         //}
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2686,7 +2700,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
 //  int *pi;
     int i;
 //  int j, m;
-    int matchSizeIndex;
+    int matchLengthIndex;
 //  int screenWidth, screenHeight;
 
 //  GtkWidget *pwDialog;
@@ -2750,13 +2764,12 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
 
      /* eval ply */
 
-    const char * plyStrings[5] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply")};
     //frameToolTip = "Select the ply at which to evaluate the equity at each score";
-    BuildLabelFrame(psm, pwv, _("Evaluation"), _("Select the ply at which to evaluate the equity at each score"), plyStrings, 5, psm->ec.nPlies, ScoreMapPlyToggled, TRUE, vAlignExpand);//hhh
+    BuildLabelFrame(psm, pwv, _("Evaluation"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, psm->ec.nPlies, ScoreMapPlyToggled, TRUE, vAlignExpand);//hhh
 
     /* Match length */ //iii
-    const char* lengthStrings[7] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21") };
-    BuildLabelFrame(psm, pwv, _("Match length"), _("Select the match length (which determines the grid size)"), lengthStrings, 7, psm->matchSizeIndex, MatchLengthToggled, TRUE, vAlignExpand);//hhh
+    // const char* lengthStrings[NUM_MATCH_LENGTH-1] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21") };
+    BuildLabelFrame(psm, pwv, _("Match length"), _("Select the match length (which determines the grid size)"), aszScoreMapMatchLength, NUM_MATCH_LENGTH-1, psm->matchLengthIndex, MatchLengthToggled, TRUE, vAlignExpand);//hhh
 
 
 
@@ -2775,19 +2788,19 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
 //    gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
 //    gtk_widget_set_tooltip_text(pw, _("Select the match length (which determines the table size)")); //ggg3
 //
-//    for (i=0; i<NUM_MATCH_SIZE_OPTIONS; i++) {
+//    for (i=0; i<NUM_FIXED_MATCH_LENGTH_OPTIONS; i++) {
 //        char sz[20];
-//        sprintf(sz,"%d",MATCH_SIZE_OPTIONS[i]);
+//        sprintf(sz,"%d",FIXED_MATCH_LENGTH_OPTIONS[i]);
 //        gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pw), _(sz));
 //    }
 //    // Find index that matches the match size
-//    for (matchSizeIndex=0; matchSizeIndex<NUM_MATCH_SIZE_OPTIONS-1 && (MATCH_SIZE_OPTIONS[matchSizeIndex] < MATCH_SIZE(psm)); ++matchSizeIndex);
+//    for (matchLengthIndex=0; matchLengthIndex<NUM_FIXED_MATCH_LENGTH_OPTIONS-1 && (FIXED_MATCH_LENGTH_OPTIONS[matchLengthIndex] < MATCH_SIZE(psm)); ++matchLengthIndex);
 //    // In case the match size doesn't exist in the options, change it to the closest value.
 //    if (psm->cubeScoreMap)
-//        psm->cubeMatchSize=MATCH_SIZE_OPTIONS[matchSizeIndex];
+//        psm->cubematchLength=FIXED_MATCH_LENGTH_OPTIONS[matchLengthIndex];
 //    else
-//        psm->moveMatchSize=MATCH_SIZE_OPTIONS[matchSizeIndex];
-//    gtk_combo_box_set_active(GTK_COMBO_BOX(pw), matchSizeIndex);
+//        psm->movematchLength=FIXED_MATCH_LENGTH_OPTIONS[matchLengthIndex];
+//    gtk_combo_box_set_active(GTK_COMBO_BOX(pw), matchLengthIndex);
 //    g_signal_connect(G_OBJECT(pw), "changed", G_CALLBACK(MatchLengthToggled), psm);
 
     /*cube*/
@@ -3092,6 +3105,10 @@ if needed (this was initially planned for some explanation text, which was then 
     MAX_TABLE_WIDTH = MIN(MAX_TABLE_WIDTH, (int)(0.3f * (float)screenWidth));
     MAX_TABLE_HEIGHT = MIN(MAX_TABLE_HEIGHT, (int)(0.6f * (float)screenHeight));
 
+
+
+    /* ******************* we define the psm default values ******************** */
+
     psm = (scoremap *) g_malloc(sizeof(scoremap));
     psm->cubeScoreMap = cube;   // throughout this file: determines whether we want a cube scoremap or a move scoremap
     //colourBasedOn=ALL;     //default gauge; see also the option to set the starting gauge at the bottom
@@ -3110,10 +3127,8 @@ if needed (this was initially planned for some explanation text, which was then 
     psm->layout = VERTICAL;
     //psm->labelTopleft = MONEY_NO_JACOBY;
     //psm->moneyJacoby = FALSE; // TRUE; // goes w/ previous line
-    psm->matchSizeIndex = 1;
-    psm->matchSize = MATCH_SIZE_OPTIONS[psm->matchSizeIndex];//iii1
-    //psm->cubeMatchSize = 5; // default, but hopefully not used, we reset based on match size 
-    //psm->moveMatchSize = 5; // same
+    //psm->cubematchLength = 5; // default, but hopefully not used, we reset based on match size 
+    //psm->movematchLength = 5; // same
     if (pms->nCube==1) //need to define here to set the default cube radio button
         psm->signednCube=1;
     else {
@@ -3151,23 +3166,23 @@ if needed (this was initially planned for some explanation text, which was then 
     //    2) else, use the decision in the last used similar scoremap (within the same instance of gnubg)
     //  */
     //if (psm->cubeScoreMap) {  //we are in a cube scoremap 
-    //    if (cubeMatchSize == 0) { //i.e. we just started a first cube scoremap, haven't recorded a default value
+    //    if (cubematchLength == 0) { //i.e. we just started a first cube scoremap, haven't recorded a default value
     //        if (pms->nMatchTo < 3) //i.e. we are in a money match or a short match
-    //            cubeMatchSize = 3; //default value
+    //            cubematchLength = 3; //default value
     //        else if (pms->nMatchTo > 9) //i.e. we are in a long match and don't want a big table by default
-    //            cubeMatchSize = 9; //default value if big match
+    //            cubematchLength = 9; //default value if big match
     //        else //regular match: try to use the current match size
-    //            cubeMatchSize = pms->nMatchTo; //true value
+    //            cubematchLength = pms->nMatchTo; //true value
     //    }
     //}
     //else {  //we are now looking at the move scoremap, same logic as for cube above
-    //    if (moveMatchSize == 0) {
+    //    if (movematchLength == 0) {
     //        if (pms->nMatchTo < 3) 
-    //            moveMatchSize = 3; 
+    //            movematchLength = 3; 
     //        else if (pms->nMatchTo > 9) 
-    //            moveMatchSize = 9; 
+    //            movematchLength = 9; 
     //        else
-    //            moveMatchSize = pms->nMatchTo; //true value
+    //            movematchLength = pms->nMatchTo; //true value
     //    }
     //}
 
@@ -3177,33 +3192,36 @@ if needed (this was initially planned for some explanation text, which was then 
         2) big match of size >=7 -> use 7
         3) medium-sized match or money play -> use 5
       */
-
-        if (psm->matchSize != pms->nMatchTo) { //not needed, just to speed up the check
-            if (pms->nMatchTo <= 3 && pms->nMatchTo > 0) //i.e. we are in a money match or a short match
-                psm->matchSize = 3; //default value for small match
-            else if (pms->nMatchTo >= 7) //i.e. we are in a long match and don't want a huge table
-                psm->matchSize = 7; //default value if big match
-            else //middle-sized match or money play
-                psm->matchSize = 5; //default value for regular match
-        }
+    psm->matchLengthIndex = scoreMapMatchLengthDefault;
+    if (psm->matchLengthIndex <NUM_MATCH_LENGTH) //user wants a fixed default match length
+        psm->matchLength = FIXED_MATCH_LENGTH_OPTIONS[psm->matchLengthIndex];//iii1
+    else { //user wants a variable default match size
+        // if (psm->matchLength != pms->nMatchTo) { //not needed, just to speed up the check
+        if (pms->nMatchTo <= 3 && pms->nMatchTo > 0) //i.e. we are in a money match or a short match
+            psm->matchLength = 3; //default value for small match
+        else if (pms->nMatchTo >= 7) //i.e. we are in a long match and don't want a huge table
+            psm->matchLength = 7; //default value if big match
+        else //middle-sized match or money play
+            psm->matchLength = 5; //default value for regular match
+    }
     //if (psm->cubeScoreMap) {  //we are in a cube scoremap //xxx
-    //    if (psm->cubeMatchSize != pms->nMatchTo) { //not needed, just to speed up the check
+    //    if (psm->cubematchLength != pms->nMatchTo) { //not needed, just to speed up the check
     //        if (pms->nMatchTo <= 3 && pms->nMatchTo>0) //i.e. we are in a money match or a short match
-    //            psm->cubeMatchSize = 3; //default value for small match
+    //            psm->cubematchLength = 3; //default value for small match
     //        else if (pms->nMatchTo >= 7) //i.e. we are in a long match and don't want a huge table
-    //            psm->cubeMatchSize = 7; //default value if big match
+    //            psm->cubematchLength = 7; //default value if big match
     //        else //middle-sized match or money play
-    //            psm->cubeMatchSize = 5; //default value for regular match
+    //            psm->cubematchLength = 5; //default value for regular match
     //    }
     //}
     //else {  //we are now looking at the move scoremap, same logic as for cube above
-    //    if (psm->moveMatchSize != pms->nMatchTo) { //not needed, just to speed up the check
+    //    if (psm->movematchLength != pms->nMatchTo) { //not needed, just to speed up the check
     //        if (pms->nMatchTo <= 3 && pms->nMatchTo > 0) //i.e. we are in a money match or a short match
-    //            psm->moveMatchSize = 3; //default value for small match
+    //            psm->movematchLength = 3; //default value for small match
     //        else if (pms->nMatchTo >= 7) //i.e. we are in a long match and don't want a huge table
-    //            psm->moveMatchSize = 7; //default value if big match
+    //            psm->movematchLength = 7; //default value if big match
     //        else //middle-sized match or money play
-    //            psm->moveMatchSize = 5; //default value for regular match
+    //            psm->movematchLength = 5; //default value for regular match
     //    }
     //}
 
@@ -3213,14 +3231,14 @@ if needed (this was initially planned for some explanation text, which was then 
    // // In the next expression, the ";" at the end means that it gets directly to finding the right index, and doesn't execute
    // //      anything in the loop
    // // Since we restrict to the pre-defined options, there is no reason to define MIN/MAX TABLE SIZE
-    //if (psm->cubeScoreMap)// && cubeMatchSize==0)
-    //    cubeMatchSize=pms->nMatchTo;
-    //else if (!psm->cubeScoreMap)// && psm->moveMatchSize==0)
-    //    psm->moveMatchSize=pms->nMatchTo;
+    //if (psm->cubeScoreMap)// && cubematchLength==0)
+    //    cubematchLength=pms->nMatchTo;
+    //else if (!psm->cubeScoreMap)// && psm->movematchLength==0)
+    //    psm->movematchLength=pms->nMatchTo;
 
-    // if psm->cubeScoreMap, we show away score from 2-away to (psm->matchSize)-away
-    // if not, we show away score at 1-away twice (w/ and post crawford), then 2-away through (psm->matchSize)-away
-    psm->tableSize = (psm->cubeScoreMap) ? psm->matchSize - 1 : psm->matchSize + 1;//psm->cubeMatchSize-1 : psm->moveMatchSize+1;
+    // if psm->cubeScoreMap, we show away score from 2-away to (psm->matchLength)-away
+    // if not, we show away score at 1-away twice (w/ and post crawford), then 2-away through (psm->matchLength)-away
+    psm->tableSize = (psm->cubeScoreMap) ? psm->matchLength - 1 : psm->matchLength + 1;//psm->cubematchLength-1 : psm->movematchLength+1;
 #if GTK_CHECK_VERSION(3,0,0)
     psm->pwTableContainer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else

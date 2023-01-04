@@ -22,6 +22,7 @@
 #define GTKSCOREMAP_H
 
 #include "gnubg-types.h"        /* for matchstate */
+//#include "gtkoptions.h"    
 
 typedef enum {
     ZERO_PLY, ONE_PLY, TWO_PLY, THREE_PLY, FOUR_PLY,
@@ -29,10 +30,20 @@ typedef enum {
 } scoreMapPly;
 
 extern scoreMapPly scoreMapPlyDefault;
-//extern int scoreMapPlyDefault;
 extern const char* aszScoreMapPly[NUM_PLY];
 extern const char* aszScoreMapPlyCommands[NUM_PLY];
 
+typedef enum {
+    LENGTH_THREE, LENGTH_FIVE, LENGTH_SEVEN, LENGTH_NINE, LENGTH_ELEVEN, LENGTH_FIFTEEN, LENGTH_TWENTY_ONE,
+    VAR_LENGTH,
+    NUM_MATCH_LENGTH
+} scoreMapMatchLength;
+
+extern scoreMapMatchLength scoreMapMatchLengthDefault;
+extern const int FIXED_MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH];
+extern const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH];
+extern const char* aszScoreMapatchLengthCommands[NUM_MATCH_LENGTH];
+ 
 
 extern void GTKShowScoreMap(const matchstate ams[], int cube);
 extern void GTKShowMoveScoreMapInfo(GtkWidget* pw, GtkWidget* pwParent);

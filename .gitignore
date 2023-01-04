@@ -59,3 +59,7 @@
 *.so
 *.so.*
 *.dll
+gnubg/gnubg
+gnubg/Makefile
+gnubg/Makefile
+gnubg/gnubg

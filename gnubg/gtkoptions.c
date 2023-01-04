@@ -49,6 +49,7 @@
 #include "gtkrelational.h"
 #include "gtkscoremap.h"
 
+
 typedef struct {
     GtkWidget *pwNoteBook;
     GtkWidget *pwAutoBearoff;
@@ -86,7 +87,8 @@ typedef struct {
     GtkWidget *pwRecordGames;
     GtkWidget *pwDisplay;
     GtkWidget *pwScoreMap;
-    GtkWidget* apwScoreMapPly[5];
+    GtkWidget* apwScoreMapPly[NUM_PLY];
+    GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
     GtkAdjustment *padjCache;
     GtkAdjustment *padjDelay;
     GtkAdjustment *padjSeed;
@@ -858,7 +860,7 @@ append_display_options(optionswidget * pow)
 
 
 static void
-BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwv, const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
+BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
     int labelStringsLen, int toggleDefault, //void (*functionWhenToggled)(GtkWidget*, scoremap*),
     int sensitive, int vAlignExpand) { //hhh
     /* Sub-function to build a new frame with a new set of labels, with a whole bunch of needed parameters
@@ -871,14 +873,24 @@ BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwv, const char* frameTitle
     */
     int* pi;
     int i;
+    GtkWidget* pwScoreMapBox;
     GtkWidget* pwFrame;
     GtkWidget* pwh2;
     GtkWidget* pw;
     GtkWidget* pwx = NULL;
     //    GtkWidget * pwDefault = NULL;
 
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwScoreMapBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwScoreMapBox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
+
+
     pwFrame = gtk_frame_new(_(frameTitle));
-    gtk_box_pack_start(GTK_BOX(pwv), pwFrame, vAlignExpand, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwScoreMapBox), pwFrame, vAlignExpand, FALSE, 0);
     gtk_widget_set_tooltip_text(pwFrame, _(frameToolTip)); //ggg1
     gtk_widget_set_sensitive(pwFrame, sensitive);
 
@@ -891,17 +903,17 @@ BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwv, const char* frameTitle
 
     for (i = 0; i < labelStringsLen; i++) {
         if (i == 0)
-            pow->apwScoreMapPly[0] = gtk_radio_button_new_with_label(NULL, _(labelStrings[0])); // First radio button
+            apwScoreMapFrame[0] = gtk_radio_button_new_with_label(NULL, _(labelStrings[0])); // First radio button
         else
-            pow->apwScoreMapPly[i] = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pow->apwScoreMapPly[0]), _(labelStrings[i])); // Associate this to the other radio buttons
-        gtk_box_pack_start(GTK_BOX(pwh2), pow->apwScoreMapPly[i], FALSE, FALSE, 0);
-        gtk_widget_set_tooltip_text(pow->apwScoreMapPly[i], _(frameToolTip));
+            apwScoreMapFrame[i] = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(apwScoreMapFrame[0]), _(labelStrings[i])); // Associate this to the other radio buttons
+        gtk_box_pack_start(GTK_BOX(pwh2), apwScoreMapFrame[i], FALSE, FALSE, 0);
+        gtk_widget_set_tooltip_text(apwScoreMapFrame[i], _(frameToolTip));    
         pi = (int*)g_malloc(sizeof(int));
         *pi = (int)i; // here use "=(int)labelEnum[i];" and put it in the input of the function if needed, while
         //  defining sth like " int labelEnum[] = { NUMBERS, ENGLISH, BOTH };" before calling the function
-        g_object_set_data_full(G_OBJECT(pow->apwScoreMapPly[i]), "user_data", pi, g_free);
+        g_object_set_data_full(G_OBJECT(apwScoreMapFrame[i]), "user_data", pi, g_free);
         if (toggleDefault == i) // again use "if (DefaultLabel==labelEnum[i])" if needed
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), 1); //we set this to toggle it on in case it's the default option
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwScoreMapFrame[i]), 1); //we set this to toggle it on in case it's the default option
         //g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK((*functionWhenToggled)), psm);
     }
     //for (i = 0; i < NUM_VARIATIONS; ++i) { //hhh
@@ -931,7 +943,6 @@ append_scoremap_options(optionswidget* pow) //hhh
     GtkWidget* pwev;
     GtkWidget* pwhbox;
     GtkWidget* pw;
-    GtkWidget* pwScoreMapBox;
     GtkWidget* pwFrame;
     GtkWidget* pwBox;
     GtkWidget* pwSpeed;
@@ -962,17 +973,9 @@ append_scoremap_options(optionswidget* pow) //hhh
 #endif
 
 
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapPly,_("Default evaluation strength"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault, TRUE, vAlignExpand);
 
-#if GTK_CHECK_VERSION(3,0,0)
-    pwScoreMapBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-#else
-    pwScoreMapBox = gtk_hbox_new(FALSE, 0);
-#endif
-    gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
-
-    const char* plyStrings[5] = { N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
-    BuildRadioButtonFrame(pow, pwScoreMapBox, _("Evaluation"), _("Select the ply at which to evaluate the equity at each score"), plyStrings, 5, scoreMapPlyDefault, TRUE, vAlignExpand);
-
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapMatchLength,_("Default match length"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefault, TRUE, vAlignExpand);
 
 
 //    pwFrame = gtk_frame_new(_("Animation"));

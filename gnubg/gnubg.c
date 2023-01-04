@@ -99,6 +99,8 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #include "gtksplash.h"
 #include "gtkchequer.h"
 #include "gtkwindows.h"
+//#include "gtkoptions.h" 
+#include "gtkscoremap.h" 
 #endif
 
 #if defined(USE_BOARD3D)
@@ -3133,6 +3135,8 @@ SaveGUISettings(FILE * pf)
     fprintf(pf, "set toolbar %d\n", nToolbarStyle);
     if (!fToolbarShowing)
         fputs("set toolbar off\n", pf);
+
+    fprintf(pf, "set scoremapply %s\n", aszScoreMapPlyCommands[scoreMapPlyDefault]);
 
 #if defined(USE_BOARD3D)
     if (fSync != -1)
