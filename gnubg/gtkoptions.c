@@ -1831,6 +1831,13 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         } 
 
 
+    for (i = 0; i < NUM_MATCH_LENGTH; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i])) && scoreMapMatchLengthDefIdx != (scoreMapMatchLength) i) {
+            sprintf(sz, "set scoremapmatchlength %s", aszScoreMapatchLengthCommands[i]);
+            UserCommand(sz);
+            break;
+        } 
+
 
     CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s");
     CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s");
@@ -2082,6 +2089,9 @@ OptionsSet(optionswidget * pow)
     /*Score Map*/ 
     for (i = 0; i < NUM_PLY; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); //hhh
+
+    for (i = 0; i < NUM_MATCH_LENGTH; ++i)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); //hhh
 
 
     if (rngCurrent >= NUM_RNGS - 3)

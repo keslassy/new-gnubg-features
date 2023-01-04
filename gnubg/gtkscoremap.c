@@ -1,4 +1,4 @@
-/* Still under development.... TBD: (test)
+/* Still under development.... TBD: 
 * 
 * 
 * Bug when hitting stop
@@ -125,7 +125,7 @@ const char* aszScoreMapPly[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_
 const char* aszScoreMapPlyCommands[NUM_PLY] = { N_("0"), N_("1"), N_("2"), N_("3"), N_("4") };
 //const char * plyStrings[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply")};
 
-scoreMapMatchLength scoreMapMatchLengthDefault = LENGTH_THREE;
+scoreMapMatchLength scoreMapMatchLengthDefIdx = LENGTH_THREE;
 /*the following list needs to correspond to the fixed lengths in the (typedef enum) scoreMapMatchLength */
 const int FIXED_MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //list of allowed match sizes
 //const int NUM_FIXED_MATCH_LENGTH_OPTIONS = ((int)(sizeof(FIXED_MATCH_LENGTH_OPTIONS)/sizeof(int)));
@@ -3192,7 +3192,7 @@ if needed (this was initially planned for some explanation text, which was then 
         2) big match of size >=7 -> use 7
         3) medium-sized match or money play -> use 5
       */
-    psm->matchLengthIndex = scoreMapMatchLengthDefault;
+    psm->matchLengthIndex = scoreMapMatchLengthDefIdx;
     if (psm->matchLengthIndex <NUM_MATCH_LENGTH) //user wants a fixed default match length
         psm->matchLength = FIXED_MATCH_LENGTH_OPTIONS[psm->matchLengthIndex];//iii1
     else { //user wants a variable default match size

@@ -39,7 +39,7 @@ typedef enum {
     NUM_MATCH_LENGTH
 } scoreMapMatchLength;
 
-extern scoreMapMatchLength scoreMapMatchLengthDefault;
+extern scoreMapMatchLength scoreMapMatchLengthDefIdx;
 extern const int FIXED_MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH];
 extern const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH];
 extern const char* aszScoreMapatchLengthCommands[NUM_MATCH_LENGTH];
