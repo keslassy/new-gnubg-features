@@ -869,7 +869,7 @@ append_display_options(optionswidget * pow)
 static void
 BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
     int labelStringsLen, int toggleDefault, //void (*functionWhenToggled)(GtkWidget*, scoremap*),
-    int sensitive, int vAlignExpand) { //hhh
+    int sensitive, int vAlignExpand) { 
     /* Sub-function to build a new frame with a new set of labels, with a whole bunch of needed parameters
 
     - pwFrame ----------
@@ -898,7 +898,7 @@ BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScore
 
     pwFrame = gtk_frame_new(_(frameTitle));
     gtk_box_pack_start(GTK_BOX(pwScoreMapBox), pwFrame, vAlignExpand, FALSE, 0);
-    gtk_widget_set_tooltip_text(pwFrame, _(frameToolTip)); //ggg1
+    gtk_widget_set_tooltip_text(pwFrame, _(frameToolTip)); 
     gtk_widget_set_sensitive(pwFrame, sensitive);
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -923,7 +923,7 @@ BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScore
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwScoreMapFrame[i]), 1); //we set this to toggle it on in case it's the default option
         //g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK((*functionWhenToggled)), psm);
     }
-    //for (i = 0; i < NUM_VARIATIONS; ++i) { //hhh
+    //for (i = 0; i < NUM_VARIATIONS; ++i) { 
 
     //    pow->apwVariations[i] =
     //        i ?
@@ -944,7 +944,7 @@ BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScore
 
 
 static void
-append_scoremap_options(optionswidget* pow) //hhh
+append_scoremap_options(optionswidget* pow) 
 {
     GtkWidget* pwvbox;
     GtkWidget* pwev;
@@ -988,7 +988,7 @@ append_scoremap_options(optionswidget* pow) //hhh
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapLabel,_("Default label (by which to orient the ScoreMap axes)"), _("Select how to orient the ScoreMap axes by default."), aszScoreMapAway, NUM_LABELS, scoreMapLabelDef, TRUE, vAlignExpand);
 
-    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapJacoby,_("Default sm3"), _("Select the default sm3 for which to draw the ScoreMap."), aszScoreMapJacoby, NUM_TOPLEFT, scoreMapJacobyDef, TRUE, vAlignExpand);
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapJacoby,_("Default option for money play analysis in top-left square"), _("Select the default Jacoby option in the top-left square of the ScoreMap."), aszScoreMapJacoby, NUM_TOPLEFT, scoreMapJacobyDef, TRUE, vAlignExpand);
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwsm4,_("Default sm4"), _("Select the default sm4 for which to draw the ScoreMap."), aszsm4, NUM_sm4, sm4Def, TRUE, vAlignExpand);
 
@@ -1836,28 +1836,29 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwGameClockwise, fClockwise, "set clockwise %s");
 
     for (i = 0; i < NUM_VARIATIONS; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i])) && bgvDefault != (bgvariation) i) {
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i])) && bgvDefault != (bgvariation) i) {
             sprintf(sz, "set variation %s", aszVariationCommands[i]);
             UserCommand(sz);
             break;
-        } 
+        }} 
     
     /* Score Map */
 
     for (i = 0; i < NUM_PLY; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
             sprintf(sz, "set scoremapply %s", aszScoreMapPlyCommands[i]);
             UserCommand(sz);
             break;
-        } 
+        } }
 
 
-    for (i = 0; i < NUM_MATCH_LENGTH; ++i)
+    for (i = 0; i < NUM_MATCH_LENGTH; ++i){
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i])) && scoreMapMatchLengthDefIdx != (scoreMapMatchLength) i) {
             sprintf(sz, "set scoremapmatchlength %s", aszScoreMapMatchLengthCommands[i]);
             UserCommand(sz);
             break;
         } 
+    }
 
     for (i = 0; i < NUM_sm1; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i])) && sm1Def != (sm1type) i) {
@@ -1873,35 +1874,35 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
             break;
         } 
     for (i = 0; i < NUM_TOPLEFT; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i])) && scoreMapJacobyDef != (scoreMapJacoby) i) {
+       { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i])) && scoreMapJacobyDef != (scoreMapJacoby) i) {
             sprintf(sz, "set ScoreMapJacoby %s", aszScoreMapJacobyCommands[i]);
             UserCommand(sz);
             break;
-        } 
+        }} 
     for (i = 0; i < NUM_sm4; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm4[i])) && sm4Def != (sm4type) i) {
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm4[i])) && sm4Def != (sm4type) i) {
             sprintf(sz, "set sm4 %s", aszsm4Commands[i]);
             UserCommand(sz);
             break;
-        } 
+        } }
     for (i = 0; i < NUM_sm5; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm5[i])) && sm5Def != (sm5type) i) {
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm5[i])) && sm5Def != (sm5type) i) {
             sprintf(sz, "set sm5 %s", aszsm5Commands[i]);
             UserCommand(sz);
             break;
-        } 
+        }} 
     for (i = 0; i < NUM_sm6; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm6[i])) && sm6Def != (sm6type) i) {
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm6[i])) && sm6Def != (sm6type) i) {
             sprintf(sz, "set sm6 %s", aszsm6Commands[i]);
             UserCommand(sz);
             break;
-        } 
+        }} 
     for (i = 0; i < NUM_sm7; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm7[i])) && sm7Def != (sm7type) i) {
+       { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm7[i])) && sm7Def != (sm7type) i) {
             sprintf(sz, "set sm7 %s", aszsm7Commands[i]);
             UserCommand(sz);
             break;
-        } 
+        }} 
     CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s");
     CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s");
     CHECKUPDATE(pow->pwOutputMWCpst, fOutputMatchPC, "set output matchpc %s");
@@ -2151,10 +2152,10 @@ OptionsSet(optionswidget * pow)
 
     /*Score Map*/ 
     for (i = 0; i < NUM_PLY; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); //hhh
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); 
 
     for (i = 0; i < NUM_MATCH_LENGTH; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); //hhh
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); 
 
 
     if (rngCurrent >= NUM_RNGS - 3)
