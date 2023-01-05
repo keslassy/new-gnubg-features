@@ -2911,7 +2911,7 @@ CommandSetScoreMapLabel(char* sz)
 {
  
     for (int i=0; i<NUM_LABELS; i++){
-        if (strcmp(sz, aszScoreMapAwayCommands[i]) == 0) {
+        if (strcmp(sz, aszScoreMapLabelCommands[i]) == 0) {
            scoreMapLabelDef = (scoreMapLabel) i;
            return; 
         }
@@ -2923,7 +2923,7 @@ extern void
 CommandSetScoreMapJacoby(char* sz)
 {
  
-    for (int i=0; i<NUM_TOPLEFT; i++){
+    for (int i=0; i<NUM_JACOBY; i++){
         if (strcmp(sz, aszScoreMapJacobyCommands[i]) == 0) {
            scoreMapJacobyDef = (scoreMapJacoby) i;
            return; 
@@ -2933,12 +2933,12 @@ CommandSetScoreMapJacoby(char* sz)
 }
 
 extern void
-CommandSetsm4(char* sz)
+CommandSetScoreMapCubeEquityDisplay(char* sz)
 {
  
-    for (int i=0; i<NUM_sm4; i++){
-        if (strcmp(sz, aszsm4Commands[i]) == 0) {
-           sm4Def = (sm4type) i;
+    for (int i=0; i<NUM_CUBEDISP; i++){
+        if (strcmp(sz, aszScoreMapCubeEquityDisplayCommands[i]) == 0) {
+           scoreMapCubeEquityDisplayDef = (scoreMapCubeEquityDisplay) i;
            return; 
         }
     }
@@ -2946,12 +2946,12 @@ CommandSetsm4(char* sz)
 }
 
 extern void
-CommandSetsm5(char* sz)
+CommandSetScoreMapMoveEquityDisplay(char* sz)
 {
  
-    for (int i=0; i<NUM_sm5; i++){
-        if (strcmp(sz, aszsm5Commands[i]) == 0) {
-           sm5Def = (sm5type) i;
+    for (int i=0; i<NUM_MOVEDISP; i++){
+        if (strcmp(sz, aszScoreMapMoveEquityDisplayCommands[i]) == 0) {
+           scoreMapMoveEquityDisplayDef = (scoreMapMoveEquityDisplay) i;
            return; 
         }
     }

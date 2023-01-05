@@ -58,28 +58,29 @@ extern const char* aszsm1Commands[NUM_sm1];
 /* Used in the "Label by" radio buttons - we assume the same order as the labels */
 typedef enum { LABEL_AWAY, LABEL_SCORE, NUM_LABELS} scoreMapLabel;
 extern scoreMapLabel scoreMapLabelDef;
-extern const char* aszScoreMapAway[NUM_LABELS];
-extern const char* aszScoreMapAwayCommands[NUM_LABELS]; 
+extern const char* aszScoreMapLabel[NUM_LABELS];
+extern const char* aszScoreMapLabelCommands[NUM_LABELS]; 
 
 /* Used in the "Top-left" radio buttons - we assume the same order as the labels */
 /* Additional options elsewhere:
 - apwScoreMapJacoby (gtkoptions.c); 
-- "set ScoreMapJacoby" (gtkoptions.c); 
+- "set scoremapjacoby" (gtkoptions.c); 
 - CommandSetScoreMapJacoby (backcgammon.h)*/
-typedef enum {MONEY_NO_JACOBY, MONEY_JACOBY, NUM_TOPLEFT} scoreMapJacoby;
+typedef enum {MONEY_NO_JACOBY, MONEY_JACOBY, NUM_JACOBY} scoreMapJacoby;
 extern scoreMapJacoby scoreMapJacobyDef;
-extern const char* aszScoreMapJacoby[NUM_TOPLEFT];
-extern const char* aszScoreMapJacobyCommands[NUM_TOPLEFT]; 
+extern const char* aszScoreMapJacoby[NUM_JACOBY];
+extern const char* aszScoreMapJacobyCommands[NUM_JACOBY]; 
 
-typedef enum {sm4A, sm4B, sm4C, NUM_sm4} sm4type;
-extern sm4type sm4Def;
-extern const char* aszsm4[NUM_sm4];
-extern const char* aszsm4Commands[NUM_sm4]; 
-
-typedef enum {sm5A, sm5B, sm5C, NUM_sm5} sm5type;
-extern sm5type sm5Def;
-extern const char* aszsm5[NUM_sm5];
-extern const char* aszsm5Commands[NUM_sm5]; 
+/* Used in the "Display Eval" radio buttons - we assume the same order as the labels */
+typedef enum {CUBE_NO_EVAL, CUBE_ABSOLUTE_EVAL, CUBE_RELATIVE_EVAL_ND_D, CUBE_RELATIVE_EVAL_DT_DP, NUM_CUBEDISP} scoreMapCubeEquityDisplay;
+extern scoreMapCubeEquityDisplay scoreMapCubeEquityDisplayDef;
+extern const char* aszScoreMapCubeEquityDisplay[NUM_CUBEDISP];
+extern const char* aszScoreMapCubeEquityDisplayCommands[NUM_CUBEDISP]; 
+// Same for move evaluation
+typedef enum {MOVE_NO_EVAL, MOVE_ABSOLUTE_EVAL, MOVE_RELATIVE_EVAL,  NUM_MOVEDISP} scoreMapMoveEquityDisplay;
+extern scoreMapMoveEquityDisplay scoreMapMoveEquityDisplayDef;
+extern const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP];
+extern const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP]; 
 
 typedef enum {sm6A, sm6B, sm6C, NUM_sm6} sm6type;
 extern sm6type sm6Def;

@@ -131,7 +131,7 @@ const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //lis
 //const int NUM_MATCH_LENGTH_OPTIONS = ((int)(sizeof(MATCH_LENGTH_OPTIONS)/sizeof(int)));
 //const int matchLengthIndexDefault = 0;
 //const char* lengthStrings[NUM_MATCH_LENGTH-1] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21") };
-const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH]            = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Based on real match length") };
+const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH]            = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Based on current match length") };
 const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH]    = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
 
 sm1type sm1Def = sm1A;
@@ -139,20 +139,20 @@ const char* aszsm1[NUM_sm1] = { N_("0"), N_("1"), N_("2")};
 const char* aszsm1Commands[NUM_sm1] = { N_("A"), N_("B"), N_("C")}; 
 
 scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
-const char* aszScoreMapAway[NUM_LABELS] = {N_("Away score"), N_("True score")};
-const char* aszScoreMapAwayCommands[NUM_LABELS] = { N_("away"), N_("score")}; 
+const char* aszScoreMapLabel[NUM_LABELS] = {N_("Away score"), N_("True score")};
+const char* aszScoreMapLabelCommands[NUM_LABELS] = { N_("away"), N_("score")}; 
 
 scoreMapJacoby scoreMapJacobyDef = MONEY_NO_JACOBY;
-const char* aszScoreMapJacoby[NUM_TOPLEFT] = { N_("Scoreless (Money w/o Jacoby)"), N_("Money w/ Jacoby")};
-const char* aszScoreMapJacobyCommands[NUM_TOPLEFT] = { N_("nojacoby"), N_("jacoby")}; 
+const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Scoreless (Money w/o Jacoby)"), N_("Money w/ Jacoby")};
+const char* aszScoreMapJacobyCommands[NUM_JACOBY] = { N_("nojacoby"), N_("jacoby")}; 
 
-sm4type sm4Def = sm4A;
-const char* aszsm4[NUM_sm4] = { N_("0"), N_("1"), N_("2")};
-const char* aszsm4Commands[NUM_sm4] = { N_("A"), N_("B"), N_("C")}; 
+scoreMapCubeEquityDisplay scoreMapCubeEquityDisplayDef = CUBE_NO_EVAL;
+const char* aszScoreMapCubeEquityDisplay[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("D-ND"), N_("D/P-D/T")};
+const char* aszScoreMapCubeEquityDisplayCommands[NUM_CUBEDISP] = { N_("no"), N_("equity"), N_("dnd"), N_("dpdt")}; 
 
-sm5type sm5Def = sm5A;
-const char* aszsm5[NUM_sm5] = { N_("0"), N_("1"), N_("2")};
-const char* aszsm5Commands[NUM_sm5] = { N_("A"), N_("B"), N_("C")}; 
+scoreMapMoveEquityDisplay scoreMapMoveEquityDisplayDef = MOVE_NO_EVAL;
+const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("Vs. 2nd best")};
+const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP] = { N_("no"), N_("absolute"), N_("relative")}; 
 
 sm6type sm6Def = sm6A;
 const char* aszsm6[NUM_sm6] = { N_("0"), N_("1"), N_("2")};
@@ -215,14 +215,6 @@ typedef enum { ALL, DND, PT} colourbasedonoptions;
 
 /* Used in the "Describe moves using" radio buttons - we assume the same order as the labels */
 typedef enum { NUMBERS, ENGLISH, BOTH } describeoptions;
-
-/* Used in the "Display Eval" radio buttons - we assume the same order as the labels */
-typedef enum { NO_EVAL, CUBE_ABSOLUTE_EVAL, CUBE_RELATIVE_EVAL_ND_D, CUBE_RELATIVE_EVAL_DT_DP
-} displayevaloptions;
-// Since we lay them out differently for chequer play; we cheat with macros.
-#define CHEQUER_ABSOLUTE_EVAL CUBE_ABSOLUTE_EVAL
-#define CHEQUER_RELATIVE_EVAL CUBE_RELATIVE_EVAL_ND_D
-
 
 /* Layout options: either horizontal or vertical. */
 typedef enum { VERTICAL, HORIZONTAL} layoutoptions;
@@ -340,7 +332,8 @@ typedef struct {
     /* current selected options*/
     scoreMapLabel labelBasedOn; 
     colourbasedonoptions colourBasedOn;
-    displayevaloptions displayEval;
+    scoreMapCubeEquityDisplay displayCubeEval;
+    scoreMapMoveEquityDisplay displayMoveEval;
     layoutoptions layout;
     scoreMapJacoby labelTopleft;
     int moneyJacoby; // goes w/ previous line
@@ -1235,11 +1228,11 @@ ColourQuadrant(gtkquadrant * pgq, quadrantdata * pq, const scoremap * psm) {
         // First compute and fill the color, as well as update the equity text
         if (psm->cubeScoreMap) {
             // if no eval to display, nothing to do for the eval text; if absolute or relative eval, update now
-            if (psm->displayEval == CUBE_ABSOLUTE_EVAL) {
+            if (psm->displayCubeEval == CUBE_ABSOLUTE_EVAL) {
                 sprintf(pq->equityText,"\n%+.*f",DIGITS, MAX(nd, MIN(dt, dp)));
-            } else if (psm->displayEval == CUBE_RELATIVE_EVAL_ND_D) {
-                  sprintf(pq->equityText,"\n%+.*f",DIGITS, MIN(dt, dp) - nd);
-            } else if (psm->displayEval == CUBE_RELATIVE_EVAL_DT_DP) {
+            } else if (psm->displayCubeEval == CUBE_RELATIVE_EVAL_ND_D) {
+                sprintf(pq->equityText,"\n%+.*f",DIGITS, MIN(dt, dp) - nd);
+            } else if (psm->displayCubeEval == CUBE_RELATIVE_EVAL_DT_DP) {
                 sprintf(pq->equityText, "\n%+.*f", DIGITS, dp - dt);
             }
             if (psm->colourBasedOn != ALL) {
@@ -1253,13 +1246,13 @@ ColourQuadrant(gtkquadrant * pgq, quadrantdata * pq, const scoremap * psm) {
             // we also set the equity text
             if (pq->ml.cMoves==0) { //no moves
                 r=0.0f;
-//                if (psm->displayEval != NO_EVAL)
+//                if (psm->displayMoveEval != MOVE_NO_EVAL)
                     sprintf(pq->equityText,"\n -- ");
             }   else {//at least 1 move
                 r = (pq->ml.cMoves>1) ? (pq->ml.amMoves[0].rScore - pq->ml.amMoves[1].rScore) : (1.0f);
-                if (psm->displayEval == CHEQUER_ABSOLUTE_EVAL)
+                if (psm->displayMoveEval == MOVE_ABSOLUTE_EVAL)
                     sprintf(pq->equityText,"\n%+.*f",DIGITS, (pq->ml.amMoves[0].rScore));
-                else if (psm->displayEval == CHEQUER_RELATIVE_EVAL) {
+                else if (psm->displayMoveEval == MOVE_RELATIVE_EVAL) {
                     if (pq->ml.cMoves==1)
                         sprintf(pq->equityText,"\n -- ");
                     else
@@ -1841,7 +1834,7 @@ The function updates the decision text in each square.
 
         CutTextTo(aux, pq->decisionString, 12);
 
-        if ((!psm->displayEval) == NO_EVAL) {
+        if ((psm->cubeScoreMap && psm->displayCubeEval != CUBE_NO_EVAL) || (!psm->cubeScoreMap && psm->displayMoveEval != MOVE_NO_EVAL))  {
             strcat(aux, pq->equityText);
         }
 
@@ -2456,8 +2449,11 @@ DisplayEvalToggled(GtkWidget * pw, scoremap * psm)
 {
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-        psm->displayEval=(displayevaloptions)(*pi);
-        // if (CalcScoreMapEquities(psm,0,FALSE))
+        if (psm->cubeScoreMap)
+                psm->displayCubeEval=(scoreMapCubeEquityDisplay)(*pi);
+        else
+                psm->displayMoveEval=(scoreMapMoveEquityDisplay)(*pi);
+         // if (CalcScoreMapEquities(psm,0,FALSE))
         //     return;
         UpdateScoreMapVisual(psm); // also updates gauge and gauge labels
     }
@@ -2910,18 +2906,16 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
         /* topleft toggle frame (  unless in cube scoremap, where it's inserted earlier to equalize )*/
         // const char* aszScoreMapJacoby[2] = { N_("Scoreless (Money w/o J)"), N_("Money w/ J") }; //was: { N_("64-away"), N_("Money (J)"), N_("Money (No J)") };
         //frameToolTip = "Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby";
-        BuildLabelFrame(psm, pwv, _("Top-Left Square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacoby, 2, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Top-Left Square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacoby, NUM_JACOBY, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
     }
 
     /* Display Eval frame */
     if (psm->cubeScoreMap) {
-        const char * displayEvalStrings[4] = {N_("None"), N_("Equity"), N_("D-ND"), N_("D/P-D/T")};
         //frameToolTip = "Select whether to display the equity, and how to display it: absolute equity, relative equity difference between Double and No-Double, or relative equity difference between Double/Pass and Double/Take";
-        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), _("Select whether to display the equity, and how to display it: absolute equity, relative equity difference between Double and No-Double, or relative equity difference between Double/Pass and Double/Take"), displayEvalStrings, 4, psm->displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), _("Select whether to display the equity, and how to display it: absolute equity, relative equity difference between Double and No-Double, or relative equity difference between Double/Pass and Double/Take"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, psm->displayCubeEval, DisplayEvalToggled, TRUE, vAlignExpand);
     } else {
-        const char * displayEvalStrings[4] = {N_("None"), N_("Equity"), N_("Vs. 2nd best")};
         //frameToolTip =  "Select whether to display the equity, and how to display it: absolute equity, or relative equity difference between best move and second best move";
-        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), _("Select whether to display the equity, and how to display it: absolute equity, or relative equity difference between best move and second best move"), displayEvalStrings, 3, psm->displayEval, DisplayEvalToggled, TRUE, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), _("Select whether to display the equity, and how to display it: absolute equity, or relative equity difference between best move and second best move"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, psm->displayMoveEval, DisplayEvalToggled, TRUE, vAlignExpand);
     }
 
     /* colour by frame */
@@ -2940,7 +2934,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     // This button offers the choice between the display of true scores and away scores.
 
     //frameToolTip = "Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5";
-    BuildLabelFrame(psm, pwv, _("Label by"), _("Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5"), aszScoreMapAway, 2, psm->labelBasedOn, LabelByToggled, TRUE, vAlignExpand);
+    BuildLabelFrame(psm, pwv, _("Label by"), _("Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5"), aszScoreMapLabel, 2, psm->labelBasedOn, LabelByToggled, TRUE, vAlignExpand);
      
     /* Layout frame */
     const char* layoutStrings[2] = { N_("Bottom"), N_("Right") };
@@ -3151,7 +3145,8 @@ if needed (this was initially planned for some explanation text, which was then 
 
     psm->labelBasedOn = scoreMapLabelDef; 
     psm->colourBasedOn = ALL;   
-    psm->displayEval = NO_EVAL;
+    psm->displayCubeEval = scoreMapCubeEquityDisplayDef;
+    psm->displayMoveEval = scoreMapMoveEquityDisplayDef;
     psm->layout = VERTICAL;
     //psm->labelTopleft = MONEY_NO_JACOBY;
     //psm->moneyJacoby = FALSE; // TRUE; // goes w/ previous line
