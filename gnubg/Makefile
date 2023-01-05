@@ -474,7 +474,7 @@ AUTOCONF = ${SHELL} /home/isaac/g/gnubg-cvs2svn/gnubg/missing autoconf
 AUTOHEADER = ${SHELL} /home/isaac/g/gnubg-cvs2svn/gnubg/missing autoheader
 AUTOMAKE = ${SHELL} /home/isaac/g/gnubg-cvs2svn/gnubg/missing automake-1.16
 AWK = mawk
-BUILD_DATE = 20230104
+BUILD_DATE = 20230105
 CAIRO_CFLAGS = -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
 CAIRO_LIBS = -lcairo
 CANBERRA_CFLAGS = -D_REENTRANT -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
@@ -679,7 +679,7 @@ AM_CPPFLAGS = -I$(srcdir)/lib -I$(builddir)/pixmaps \
 	-I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  $(am__append_1) \
 	$(am__append_2) $(am__append_3) -DAC_DOCDIR='"$(docdir)"' \
 	-DAC_DATADIR='"$(datadir)"' \
-	-DAC_PKGDATADIR='"$(datadir)/gnubg"' -DBUILD_DATE=20230104
+	-DAC_PKGDATADIR='"$(datadir)/gnubg"' -DBUILD_DATE=20230105
 OTHER_LIBS = $(am__append_4)
 BUILT_SOURCES = sgf_y.c sgf_l.c copying.c credits.c external_l.c external_y.c
 
