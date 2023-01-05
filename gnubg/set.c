@@ -2888,8 +2888,100 @@ CommandSetScoreMapMatchLength(char* sz)
     }
     // g_print("\n again: n:%d, i:%d",n,scoreMapMatchLengthDefIdx);
     outputl(_("Wrong match length, not within the vector."));
+}
 
-    
+extern void
+CommandSetsm1(char* sz)
+{
+ 
+    for (int i=0; i<NUM_sm1; i++){
+        // g_print("\n test within loop: i: %d",i);
+
+        if (strcmp(sz, aszsm1Commands[i]) == 0) {
+           sm1Def = (sm1type) i;
+            // g_print("\n selected option: i:%d",i);
+           return; 
+        }
+    }
+    outputl(_("Wrong option."));
+}
+
+extern void
+CommandSetScoreMapLabel(char* sz)
+{
+ 
+    for (int i=0; i<NUM_LABELS; i++){
+        if (strcmp(sz, aszScoreMapAwayCommands[i]) == 0) {
+           scoreMapLabelDef = (scoreMapLabel) i;
+           return; 
+        }
+    }
+    outputl(_("Wrong option."));
+}
+
+extern void
+CommandSetsm3(char* sz)
+{
+ 
+    for (int i=0; i<NUM_sm3; i++){
+        if (strcmp(sz, aszsm3Commands[i]) == 0) {
+           sm3Def = (sm3type) i;
+           return; 
+        }
+    }
+    outputl(_("Wrong option."));
+}
+
+extern void
+CommandSetsm4(char* sz)
+{
+ 
+    for (int i=0; i<NUM_sm4; i++){
+        if (strcmp(sz, aszsm4Commands[i]) == 0) {
+           sm4Def = (sm4type) i;
+           return; 
+        }
+    }
+    outputl(_("Wrong option."));
+}
+
+extern void
+CommandSetsm5(char* sz)
+{
+ 
+    for (int i=0; i<NUM_sm5; i++){
+        if (strcmp(sz, aszsm5Commands[i]) == 0) {
+           sm5Def = (sm5type) i;
+           return; 
+        }
+    }
+    outputl(_("Wrong option."));
+}
+
+extern void
+CommandSetsm6(char* sz)
+{
+ 
+    for (int i=0; i<NUM_sm6; i++){
+        if (strcmp(sz, aszsm6Commands[i]) == 0) {
+           sm6Def = (sm6type) i;
+           return; 
+        }
+    }
+    outputl(_("Wrong option."));
+}
+
+extern void
+CommandSetsm7(char* sz)
+{
+ 
+    for (int i=0; i<NUM_sm7; i++){
+        if (strcmp(sz, aszsm7Commands[i]) == 0) {
+           sm7Def = (sm7type) i;
+           return; 
+        }
+    }
+    outputl(_("Wrong option."));
 }
 
 extern void

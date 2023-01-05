@@ -131,9 +131,43 @@ const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //lis
 //const int NUM_MATCH_LENGTH_OPTIONS = ((int)(sizeof(MATCH_LENGTH_OPTIONS)/sizeof(int)));
 //const int matchLengthIndexDefault = 0;
 //const char* lengthStrings[NUM_MATCH_LENGTH-1] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21") };
-const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Variable (depending on real match length)") };
-const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH] = {  N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
- 
+const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH]            = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Based on real match length") };
+const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH]    = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
+
+sm1type sm1Def = sm1A;
+const char* aszsm1[NUM_sm1] = { N_("0"), N_("1"), N_("2")};
+const char* aszsm1Commands[NUM_sm1] = { N_("A"), N_("B"), N_("C")}; 
+
+scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
+const char* aszScoreMapAway[NUM_LABELS] = { N_("0"), N_("1")};
+const char* aszScoreMapAwayCommands[NUM_LABELS] = { N_("away"), N_("score")}; 
+
+sm3type sm3Def = sm3A;
+const char* aszsm3[NUM_sm3] = { N_("0"), N_("1"), N_("2")};
+const char* aszsm3Commands[NUM_sm3] = { N_("A"), N_("B"), N_("C")}; 
+
+sm4type sm4Def = sm4A;
+const char* aszsm4[NUM_sm4] = { N_("0"), N_("1"), N_("2")};
+const char* aszsm4Commands[NUM_sm4] = { N_("A"), N_("B"), N_("C")}; 
+
+sm5type sm5Def = sm5A;
+const char* aszsm5[NUM_sm5] = { N_("0"), N_("1"), N_("2")};
+const char* aszsm5Commands[NUM_sm5] = { N_("A"), N_("B"), N_("C")}; 
+
+sm6type sm6Def = sm6A;
+const char* aszsm6[NUM_sm6] = { N_("0"), N_("1"), N_("2")};
+const char* aszsm6Commands[NUM_sm6] = { N_("A"), N_("B"), N_("C")}; 
+
+sm7type sm7Def = sm7A;
+const char* aszsm7[NUM_sm7] = { N_("0"), N_("1"), N_("2")};
+const char* aszsm7Commands[NUM_sm7] = { N_("A"), N_("B"), N_("C")}; 
+
+
+
+// scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
+// const char* aszScoreMapLabel[NUM_LABELS] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Variable (depending on real match length)") };
+// const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH] = {  N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
+
 
 /*         DEFINITIONS        */
 
@@ -177,7 +211,7 @@ static int MAX_TABLE_HEIGHT = (int)(0.7 * DEFAULT_WINDOW_HEIGHT);
 typedef enum { ALL, DND, PT} colourbasedonoptions;
 
 /* Used in the "Label by" radio buttons - we assume the same order as the labels */
-typedef enum { LABEL_AWAY, LABEL_SCORE } labelbasedonoptions;
+//typedef enum { LABEL_AWAY, LABEL_SCORE } scoreMapLabel;
 
 /* Used in the "Top-left" radio buttons - we assume the same order as the labels */
 typedef enum { MONEY_NO_JACOBY, MONEY_JACOBY} labeltopleftoptions;
@@ -307,7 +341,7 @@ typedef struct { //hhh
     int truenMatchTo;   //match length of the real game (before scoremap was launched)
     
     /* current selected options*/
-    labelbasedonoptions labelBasedOn; //hhh
+    scoreMapLabel labelBasedOn; //hhh
     colourbasedonoptions colourBasedOn;
     displayevaloptions displayEval;
     layoutoptions layout;
@@ -357,7 +391,7 @@ typedef struct { //hhh
 // We now define the default options for new scoremap instances,
 // corresponding to the respective radio buttons
 
-//static labelbasedonoptions labelBasedOn = LABEL_AWAY; 
+//static scoreMapLabel labelBasedOn = LABEL_AWAY; 
 //static colourbasedonoptions colourBasedOn = ALL;
 //static displayevaloptions displayEval = NO_EVAL;
 //static layoutoptions layout = VERTICAL;
@@ -2378,7 +2412,7 @@ LabelByToggled(GtkWidget * pw, scoremap * psm)
 {
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");// "label"
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-        psm->labelBasedOn=(labelbasedonoptions)(*pi);
+        psm->labelBasedOn=(scoreMapLabel)(*pi);
         UpdateScoreMapVisual(psm);
     }
 }
@@ -3202,7 +3236,7 @@ if needed (this was initially planned for some explanation text, which was then 
         the correct fixed length.
       */
     psm->matchLengthIndex = (int) scoreMapMatchLengthDefIdx;
-    g_print("\n match length index:%d",psm->matchLengthIndex);
+    //g_print("\n match length index:%d",psm->matchLengthIndex);
 
     if (psm->matchLengthIndex <NUM_MATCH_LENGTH-1) //user wants a fixed default match length
         psm->matchLength = MATCH_LENGTH_OPTIONS[psm->matchLengthIndex];//iii1
@@ -3219,7 +3253,7 @@ if needed (this was initially planned for some explanation text, which was then 
             psm->matchLengthIndex = 1;
         psm->matchLength = MATCH_LENGTH_OPTIONS[psm->matchLengthIndex];
     }
-    g_print("\n match length index:%d, match length:%d",psm->matchLengthIndex,psm->matchLength);
+    //g_print("\n match length index:%d, match length:%d",psm->matchLengthIndex,psm->matchLength);
 
     //if (psm->cubeScoreMap) {  //we are in a cube scoremap //xxx
     //    if (psm->cubematchLength != pms->nMatchTo) { //not needed, just to speed up the check

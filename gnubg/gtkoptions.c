@@ -89,6 +89,13 @@ typedef struct {
     GtkWidget *pwScoreMap;
     GtkWidget* apwScoreMapPly[NUM_PLY];
     GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
+    GtkWidget* apwsm1[NUM_sm1];
+    GtkWidget* apwScoreMapLabel[NUM_LABELS];
+    GtkWidget* apwsm3[NUM_sm3];
+    GtkWidget* apwsm4[NUM_sm4];
+    GtkWidget* apwsm5[NUM_sm5];
+    GtkWidget* apwsm6[NUM_sm6];
+    GtkWidget* apwsm7[NUM_sm7];
     GtkAdjustment *padjCache;
     GtkAdjustment *padjDelay;
     GtkAdjustment *padjSeed;
@@ -975,7 +982,21 @@ append_scoremap_options(optionswidget* pow) //hhh
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapPly,_("Default evaluation strength"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault, TRUE, vAlignExpand);
 
-    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapMatchLength,_("Default match length"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx, TRUE, vAlignExpand);
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapMatchLength,_("Default simulated match length"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx, TRUE, vAlignExpand);
+
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm1,_("Default sm1"), _("Select the default sm1 for which to draw the ScoreMap."), aszsm1, NUM_sm1, sm1Def, TRUE, vAlignExpand);
+
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm1,_("Default label (by which to orient the ScoreMap axes)"), _("Select how to orient the ScoreMap axes by default."), aszScoreMapAway, NUM_LABELS, scoreMapLabelDef, TRUE, vAlignExpand);
+
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm3,_("Default sm3"), _("Select the default sm3 for which to draw the ScoreMap."), aszsm3, NUM_sm3, sm3Def, TRUE, vAlignExpand);
+
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm4,_("Default sm4"), _("Select the default sm4 for which to draw the ScoreMap."), aszsm4, NUM_sm4, sm4Def, TRUE, vAlignExpand);
+
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm5,_("Default sm5"), _("Select the default sm5 for which to draw the ScoreMap."), aszsm5, NUM_sm5, sm5Def, TRUE, vAlignExpand);
+
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm6,_("Default sm6"), _("Select the default sm6 for which to draw the ScoreMap."), aszsm6, NUM_sm6, sm6Def, TRUE, vAlignExpand);
+
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm7,_("Default sm7"), _("Select the default sm7 for which to draw the ScoreMap."), aszsm7, NUM_sm7, sm7Def, TRUE, vAlignExpand);
 
 
 //    pwFrame = gtk_frame_new(_("Animation"));
@@ -1838,7 +1859,49 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
             break;
         } 
 
+    for (i = 0; i < NUM_sm1; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i])) && sm1Def != (sm1type) i) {
+            sprintf(sz, "set sm1 %s", aszsm1Commands[i]);
+            UserCommand(sz);
+            break;
+        } 
 
+    for (i = 0; i < NUM_LABELS; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
+            sprintf(sz, "set ScoreMapLabel %s", aszScoreMapAwayCommands[i]);
+            UserCommand(sz);
+            break;
+        } 
+    for (i = 0; i < NUM_sm3; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm3[i])) && sm3Def != (sm3type) i) {
+            sprintf(sz, "set sm3 %s", aszsm3Commands[i]);
+            UserCommand(sz);
+            break;
+        } 
+    for (i = 0; i < NUM_sm4; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm4[i])) && sm4Def != (sm4type) i) {
+            sprintf(sz, "set sm4 %s", aszsm4Commands[i]);
+            UserCommand(sz);
+            break;
+        } 
+    for (i = 0; i < NUM_sm5; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm5[i])) && sm5Def != (sm5type) i) {
+            sprintf(sz, "set sm5 %s", aszsm5Commands[i]);
+            UserCommand(sz);
+            break;
+        } 
+    for (i = 0; i < NUM_sm6; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm6[i])) && sm6Def != (sm6type) i) {
+            sprintf(sz, "set sm6 %s", aszsm6Commands[i]);
+            UserCommand(sz);
+            break;
+        } 
+    for (i = 0; i < NUM_sm7; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm7[i])) && sm7Def != (sm7type) i) {
+            sprintf(sz, "set sm7 %s", aszsm7Commands[i]);
+            UserCommand(sz);
+            break;
+        } 
     CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s");
     CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s");
     CHECKUPDATE(pow->pwOutputMWCpst, fOutputMatchPC, "set output matchpc %s");
