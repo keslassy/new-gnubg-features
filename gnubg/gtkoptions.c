@@ -153,6 +153,8 @@ static gnubgsound selSound;
 static int SoundSkipUpdate;
 static int relPage, relPageActivated;
 
+static int disregardsm1=1; //available implemented option if needed in the future
+
 static void
 SeedChanged(GtkWidget * UNUSED(pw), int *pf)
 {
@@ -982,7 +984,8 @@ append_scoremap_options(optionswidget* pow)
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapPly,_("Default evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault, TRUE, vAlignExpand);
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapMatchLength,_("Default simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx, TRUE, vAlignExpand);
-    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm1,_("Default sm1"), _("Select the default sm1 for which to draw the ScoreMap:"), aszsm1, NUM_sm1, sm1Def, TRUE, vAlignExpand);
+    if (!disregardsm1)
+        BuildRadioButtonFrame(pow, pwvbox, pow->apwsm1,_("Default sm1"), _("Select the default sm1 for which to draw the ScoreMap:"), aszsm1, NUM_sm1, sm1Def, TRUE, vAlignExpand);
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapJacoby,_("Default option for money play analysis in top-left square:"), _("Select the default Jacoby option in the top-left square of the ScoreMap."), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef, TRUE, vAlignExpand);
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapCubeEquityDisplay,_("Default cube equity display option:"), _("Select the default equity text to display in the squares of the cube ScoreMap."), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef, TRUE, vAlignExpand);
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapMoveEquityDisplay,_("Default move equity display option:"), _("Select the default equity text to display in the squares of the move ScoreMap."), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef, TRUE, vAlignExpand);
@@ -1851,12 +1854,14 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         } 
     }
 
-    for (i = 0; i < NUM_sm1; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i])) && sm1Def != (sm1type) i) {
-            sprintf(sz, "set sm1 %s", aszsm1Commands[i]);
-            UserCommand(sz);
-            break;
-        } 
+    if(!disregardsm1) {
+        for (i = 0; i < NUM_sm1; ++i)
+            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i])) && sm1Def != (sm1type) i) {
+                sprintf(sz, "set sm1 %s", aszsm1Commands[i]);
+                UserCommand(sz);
+                break;
+            } 
+    }
 
     for (i = 0; i < NUM_LABEL; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
@@ -2149,8 +2154,10 @@ OptionsSet(optionswidget * pow)
     for (i = 0; i < NUM_MATCH_LENGTH; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); 
 
-    for (i = 0; i < NUM_sm1; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i]), sm1Def == (sm1type) i); 
+    if(!disregardsm1) {
+        for (i = 0; i < NUM_sm1; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i]), sm1Def == (sm1type) i); 
+    }
 
     for (i = 0; i < NUM_LABEL; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i]), scoreMapLabelDef == (scoreMapLabel) i); 

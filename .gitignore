@@ -45,3 +45,4 @@ compile
 *.lo
 *.la
 .dirstamp
+gnubg/gnubg
