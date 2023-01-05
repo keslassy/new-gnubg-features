@@ -56,10 +56,10 @@ extern const char* aszsm1[NUM_sm1];
 extern const char* aszsm1Commands[NUM_sm1]; 
 
 /* Used in the "Label by" radio buttons - we assume the same order as the labels */
-typedef enum { LABEL_AWAY, LABEL_SCORE, NUM_LABELS} scoreMapLabel;
+typedef enum { LABEL_AWAY, LABEL_SCORE, NUM_LABEL} scoreMapLabel;
 extern scoreMapLabel scoreMapLabelDef;
-extern const char* aszScoreMapLabel[NUM_LABELS];
-extern const char* aszScoreMapLabelCommands[NUM_LABELS]; 
+extern const char* aszScoreMapLabel[NUM_LABEL];
+extern const char* aszScoreMapLabelCommands[NUM_LABEL]; 
 
 /* Used in the "Top-left" radio buttons - we assume the same order as the labels */
 /* Additional options elsewhere:
@@ -82,15 +82,27 @@ extern scoreMapMoveEquityDisplay scoreMapMoveEquityDisplayDef;
 extern const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP];
 extern const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP]; 
 
-typedef enum {sm6A, sm6B, sm6C, NUM_sm6} sm6type;
-extern sm6type sm6Def;
-extern const char* aszsm6[NUM_sm6];
-extern const char* aszsm6Commands[NUM_sm6]; 
+/* Used in the "Colour by" radio buttons - we assume the same order as the labels */
+/* Additional options elsewhere:
+- apwScoreMapColour (gtkoptions.c); 
+- CommandSetScoreMapColour (backcgammon.h)
+- "set scoremapcolour" (gtkoptions.c); 
+*/
+typedef enum {ALL, DND, PT, NUM_COLOUR} scoreMapColour;
+extern scoreMapColour scoreMapColourDef;
+extern const char* aszScoreMapColour[NUM_COLOUR];
+extern const char* aszScoreMapColourCommands[NUM_COLOUR]; 
 
-typedef enum {sm7A, sm7B, sm7C, NUM_sm7} sm7type;
-extern sm7type sm7Def;
-extern const char* aszsm7[NUM_sm7];
-extern const char* aszsm7Commands[NUM_sm7]; 
+/* Layout options: either horizontal or vertical. */
+/* Additional options elsewhere:
+- apwScoreMapLayout (gtkoptions.c); 
+- CommandSetScoreMapLayout (backcgammon.h)
+- "set scoremaplayout" (gtkoptions.c); 
+*/
+typedef enum {VERTICAL, HORIZONTAL, NUM_LAYOUT} scoreMapLayout;
+extern scoreMapLayout scoreMapLayoutDef;
+extern const char* aszScoreMapLayout[NUM_LAYOUT];
+extern const char* aszScoreMapLayoutCommands[NUM_LAYOUT]; 
 
 
 

@@ -139,8 +139,8 @@ const char* aszsm1[NUM_sm1] = { N_("0"), N_("1"), N_("2")};
 const char* aszsm1Commands[NUM_sm1] = { N_("A"), N_("B"), N_("C")}; 
 
 scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
-const char* aszScoreMapLabel[NUM_LABELS] = {N_("Away score"), N_("True score")};
-const char* aszScoreMapLabelCommands[NUM_LABELS] = { N_("away"), N_("score")}; 
+const char* aszScoreMapLabel[NUM_LABEL] = {N_("Away score"), N_("True score")};
+const char* aszScoreMapLabelCommands[NUM_LABEL] = { N_("away"), N_("score")}; 
 
 scoreMapJacoby scoreMapJacobyDef = MONEY_NO_JACOBY;
 const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Scoreless (Money w/o Jacoby)"), N_("Money w/ Jacoby")};
@@ -154,18 +154,18 @@ scoreMapMoveEquityDisplay scoreMapMoveEquityDisplayDef = MOVE_NO_EVAL;
 const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("Vs. 2nd best")};
 const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP] = { N_("no"), N_("absolute"), N_("relative")}; 
 
-sm6type sm6Def = sm6A;
-const char* aszsm6[NUM_sm6] = { N_("0"), N_("1"), N_("2")};
-const char* aszsm6Commands[NUM_sm6] = { N_("A"), N_("B"), N_("C")}; 
+scoreMapColour scoreMapColourDef = ALL;
+const char* aszScoreMapColour[NUM_COLOUR] = {N_("All"), N_("ND vs D"), N_("D/T vs D/P")};
+const char* aszScoreMapColourCommands[NUM_COLOUR] = { N_("all"), N_("ndd"), N_("dtdp")}; 
 
-sm7type sm7Def = sm7A;
-const char* aszsm7[NUM_sm7] = { N_("0"), N_("1"), N_("2")};
-const char* aszsm7Commands[NUM_sm7] = { N_("A"), N_("B"), N_("C")}; 
+scoreMapLayout scoreMapLayoutDef = VERTICAL;
+const char* aszScoreMapLayout[NUM_LAYOUT] = { N_("Bottom"), N_("Right") };
+const char* aszScoreMapLayoutCommands[NUM_LAYOUT] = { N_("bottom"), N_("right")}; 
 
 
 
 // scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
-// const char* aszScoreMapLabel[NUM_LABELS] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Variable (depending on real match length)") };
+// const char* aszScoreMapLabel[NUM_LABEL] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Variable (depending on real match length)") };
 // const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH] = {  N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
 
 
@@ -204,20 +204,8 @@ static int MAX_TABLE_HEIGHT = (int)(0.7 * DEFAULT_WINDOW_HEIGHT);
     typedef enum {ZERO_PLY, ONE_PLY, TWO_PLY, THREE_PLY, FOUR_PLY, NUM_PLY} scoreMapPly;
 */
 
-
-
-
-/* Used in the "Colour by" radio buttons - we assume the same order as the labels */
-typedef enum { ALL, DND, PT} colourbasedonoptions;
-
-/* Used in the "Label by" radio buttons - we assume the same order as the labels */
-//typedef enum { LABEL_AWAY, LABEL_SCORE } scoreMapLabel;
-
-/* Used in the "Describe moves using" radio buttons - we assume the same order as the labels */
-typedef enum { NUMBERS, ENGLISH, BOTH } describeoptions;
-
-/* Layout options: either horizontal or vertical. */
-typedef enum { VERTICAL, HORIZONTAL} layoutoptions;
+// /* Used in the "Describe moves using" radio buttons - we assume the same order as the labels */
+// typedef enum { NUMBERS, ENGLISH, BOTH } describeoptions;
 
 // used in DecisionVal
 typedef enum {ND, DT, DP, TG} decisionval;
@@ -331,10 +319,10 @@ typedef struct {
     
     /* current selected options*/
     scoreMapLabel labelBasedOn; 
-    colourbasedonoptions colourBasedOn;
+    scoreMapColour colourBasedOn;
     scoreMapCubeEquityDisplay displayCubeEval;
     scoreMapMoveEquityDisplay displayMoveEval;
-    layoutoptions layout;
+    scoreMapLayout layout;
     scoreMapJacoby labelTopleft;
     int moneyJacoby; // goes w/ previous line
     int matchLengthIndex; // index of simulated match size
@@ -382,9 +370,9 @@ typedef struct {
 // corresponding to the respective radio buttons
 
 //static scoreMapLabel labelBasedOn = LABEL_AWAY; 
-//static colourbasedonoptions colourBasedOn = ALL;
+//static scoreMapColour colourBasedOn = ALL;
 //static displayevaloptions displayEval = NO_EVAL;
-//static layoutoptions layout = VERTICAL;
+//static scoreMapLayout layout = VERTICAL;
 //static scoreMapJacoby labelTopleft = MONEY_NO_JACOBY;
 //static int moneyJacoby = FALSE; // TRUE; // goes w/ previous line
 //static int cubematchLength = 5; // default, but hopefully not used, we reset based on match size 
@@ -819,7 +807,7 @@ ColorInterpolate(float rgbResult[3], float x, const float rgbvals0[3], const flo
 }
 
 static void
-FindColour1(GtkWidget * pw, float r, colourbasedonoptions toggledColor, int useBorder)
+FindColour1(GtkWidget * pw, float r, scoreMapColour toggledColor, int useBorder)
 /* Changes the colour according to the value r for the two binary gauges.
 In addition, writes in rgbvals the desired border color for the quadrant.
 */
@@ -1029,7 +1017,7 @@ Interpolate(float x, float x0, float y0, float x1, float y1, float x2, float y2,
 }
 
 static void
-DrawGauge(GtkWidget * pw, int i, colourbasedonoptions toggledColor) {
+DrawGauge(GtkWidget * pw, int i, scoreMapColour toggledColor) {
 
     float maxDiff=GAUGE_BLUNDER; //e.g. SKILL_VERYBAD;
 
@@ -2390,7 +2378,7 @@ ColourByToggled(GtkWidget * pw, scoremap * psm)
 {
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-        psm->colourBasedOn=(colourbasedonoptions)(*pi);
+        psm->colourBasedOn=(scoreMapColour)(*pi);
         UpdateScoreMapVisual(psm); // also updates gauge and gauge labels
     }
 }
@@ -2434,7 +2422,7 @@ LayoutToggled(GtkWidget * pw, scoremap * psm)
 {
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-        psm->layout=(layoutoptions)(*pi);
+        psm->layout=(scoreMapLayout)(*pi);
         gtk_container_remove(GTK_CONTAINER(psm->pwLastContainer), psm->pwOptionsBox);
         psm->pwLastContainer = (psm->layout == VERTICAL) ? (psm->pwVContainer) : (psm->pwHContainer);
         BuildOptions(psm);
@@ -2864,9 +2852,9 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
 
 
         ///* Layout frame */
-        //const char* layoutStrings[2] = { N_("Bottom"), N_("Right") };
+        //const char* aszScoreMapLayout[2] = { N_("Bottom"), N_("Right") };
 
-        //BuildLabelFrame(psm, pwv, _("Options position"), layoutStrings, 2, layout, LayoutToggled, TRUE, vAlignExpand);
+        //BuildLabelFrame(psm, pwv, _("Options position"), aszScoreMapLayout, 2, layout, LayoutToggled, TRUE, vAlignExpand);
 
 //        //pwFrame=gtk_frame_new(_("Jacoby"));
 //        pwFrame = gtk_frame_new(_("Misc"));
@@ -2925,9 +2913,8 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
 
         /* Colour by */
 
-        const char * colorStrings[3] = {N_("All"), N_("ND vs D"), N_("D/T vs D/P")};
         //frameToolTip = "Select whether to colour the table squares using all options, or emphasize the Double vs. No-Double decision, or emphasize the Double/Take vs. Double/Pass decision";
-        BuildLabelFrame(psm, pwv, _("Colour by"), _("Select whether to colour the table squares using all options, or emphasize the Double vs. No-Double decision, or emphasize the Double/Take vs. Double/Pass decision"), colorStrings, 3, psm->colourBasedOn, ColourByToggled, psm->cubeScoreMap, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Colour by"), _("Select whether to colour the table squares using all options, or emphasize the Double vs. No-Double decision, or emphasize the Double/Take vs. Double/Pass decision"), aszScoreMapColour, NUM_COLOUR, psm->colourBasedOn, ColourByToggled, psm->cubeScoreMap, vAlignExpand);
    }  
 
     /* Label by toggle */
@@ -2937,9 +2924,9 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     BuildLabelFrame(psm, pwv, _("Label by"), _("Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5"), aszScoreMapLabel, 2, psm->labelBasedOn, LabelByToggled, TRUE, vAlignExpand);
      
     /* Layout frame */
-    const char* layoutStrings[2] = { N_("Bottom"), N_("Right") };
+
     //frameToolTip = "Select whether the options pane should be at the bottom or on the right side of the table";
-    BuildLabelFrame(psm, pwv, _("Location of option pane"), _("Select whether the options pane should be at the bottom or on the right side of the table"), layoutStrings, 2, psm->layout, LayoutToggled, TRUE, vAlignExpand);
+    BuildLabelFrame(psm, pwv, _("Location of option pane"), _("Select whether the options pane should be at the bottom or on the right side of the table"), aszScoreMapLayout, NUM_LAYOUT, psm->layout, LayoutToggled, TRUE, vAlignExpand);
 
 
    /* Now pack misc (= Jacoby + info) frame in move scoremap OR {cube scoremap + horizontal layout} */ 
@@ -3144,10 +3131,10 @@ if needed (this was initially planned for some explanation text, which was then 
     psm->truenMatchTo = pms->nMatchTo;
 
     psm->labelBasedOn = scoreMapLabelDef; 
-    psm->colourBasedOn = ALL;   
+    psm->colourBasedOn = scoreMapColourDef;   
     psm->displayCubeEval = scoreMapCubeEquityDisplayDef;
     psm->displayMoveEval = scoreMapMoveEquityDisplayDef;
-    psm->layout = VERTICAL;
+    psm->layout = scoreMapLayoutDef;
     //psm->labelTopleft = MONEY_NO_JACOBY;
     //psm->moneyJacoby = FALSE; // TRUE; // goes w/ previous line
     //psm->cubematchLength = 5; // default, but hopefully not used, we reset based on match size 

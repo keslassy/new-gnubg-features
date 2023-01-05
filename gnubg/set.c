@@ -2910,7 +2910,7 @@ extern void
 CommandSetScoreMapLabel(char* sz)
 {
  
-    for (int i=0; i<NUM_LABELS; i++){
+    for (int i=0; i<NUM_LABEL; i++){
         if (strcmp(sz, aszScoreMapLabelCommands[i]) == 0) {
            scoreMapLabelDef = (scoreMapLabel) i;
            return; 
@@ -2959,12 +2959,12 @@ CommandSetScoreMapMoveEquityDisplay(char* sz)
 }
 
 extern void
-CommandSetsm6(char* sz)
+CommandSetScoreMapColour(char* sz)
 {
  
-    for (int i=0; i<NUM_sm6; i++){
-        if (strcmp(sz, aszsm6Commands[i]) == 0) {
-           sm6Def = (sm6type) i;
+    for (int i=0; i<NUM_COLOUR; i++){
+        if (strcmp(sz, aszScoreMapColourCommands[i]) == 0) {
+           scoreMapColourDef = (scoreMapColour) i;
            return; 
         }
     }
@@ -2972,12 +2972,12 @@ CommandSetsm6(char* sz)
 }
 
 extern void
-CommandSetsm7(char* sz)
+CommandSetScoreMapLayout(char* sz)
 {
  
-    for (int i=0; i<NUM_sm7; i++){
-        if (strcmp(sz, aszsm7Commands[i]) == 0) {
-           sm7Def = (sm7type) i;
+    for (int i=0; i<NUM_LAYOUT; i++){
+        if (strcmp(sz, aszScoreMapLayoutCommands[i]) == 0) {
+           scoreMapLayoutDef = (scoreMapLayout) i;
            return; 
         }
     }
