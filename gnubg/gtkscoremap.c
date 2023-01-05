@@ -4,7 +4,7 @@
 * Bug when hitting stop
 
 * "/_Analyse/ScoreMap (cube decision)" -> move decision too?
-* scoremap options -> gtkgame.c
+*        -> gtkgame.c
 *  
 *  maybe display ply also in hover of cbe ScoreMap?
 */
@@ -70,7 +70,11 @@
          (no need for new equity values); and so on for the different radio buttons.
 */
 
-/* 01/2023: Isaac Keslassy: a few changes including:
+/* 
+01/2022: Isaac Keslassy:
+- new Settings>Options>ScoreMap panel where all default options can be configured
+
+12/2022: Isaac Keslassy: a few changes including:
 - new help button to obtain explanations
 - new "scoreless" option of Money without Jacoby
 - new cube equity display options: absolute, or relative ND-D, or relative D/P-D/T

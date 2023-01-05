@@ -152,8 +152,7 @@ static GtkWidget *pwSoundCommand;
 static gnubgsound selSound;
 static int SoundSkipUpdate;
 static int relPage, relPageActivated;
-
-static int disregardsm1=1; //available implemented option if needed in the future
+static int disregardsm1=1; //available implemented hidden radio option called sm1; if needed in the future, just activate
 
 static void
 SeedChanged(GtkWidget * UNUSED(pw), int *pf)
