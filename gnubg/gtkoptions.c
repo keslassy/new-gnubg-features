@@ -986,7 +986,7 @@ append_scoremap_options(optionswidget* pow) //hhh
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwsm1,_("Default sm1"), _("Select the default sm1 for which to draw the ScoreMap."), aszsm1, NUM_sm1, sm1Def, TRUE, vAlignExpand);
 
-    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm1,_("Default label (by which to orient the ScoreMap axes)"), _("Select how to orient the ScoreMap axes by default."), aszScoreMapAway, NUM_LABELS, scoreMapLabelDef, TRUE, vAlignExpand);
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapLabel,_("Default label (by which to orient the ScoreMap axes)"), _("Select how to orient the ScoreMap axes by default."), aszScoreMapAway, NUM_LABELS, scoreMapLabelDef, TRUE, vAlignExpand);
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapJacoby,_("Default sm3"), _("Select the default sm3 for which to draw the ScoreMap."), aszScoreMapJacoby, NUM_TOPLEFT, scoreMapJacobyDef, TRUE, vAlignExpand);
 

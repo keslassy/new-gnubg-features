@@ -139,7 +139,7 @@ const char* aszsm1[NUM_sm1] = { N_("0"), N_("1"), N_("2")};
 const char* aszsm1Commands[NUM_sm1] = { N_("A"), N_("B"), N_("C")}; 
 
 scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
-const char* aszScoreMapAway[NUM_LABELS] = { N_("0"), N_("1")};
+const char* aszScoreMapAway[NUM_LABELS] = {N_("Away score"), N_("True score")};
 const char* aszScoreMapAwayCommands[NUM_LABELS] = { N_("away"), N_("score")}; 
 
 scoreMapJacoby scoreMapJacobyDef = MONEY_NO_JACOBY;
@@ -2941,9 +2941,8 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     /* Label by toggle */
     // This button offers the choice between the display of true scores and away scores.
 
-    const char * labelByStrings[2] = {N_("Away score"), N_("True score")};
     //frameToolTip = "Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5";
-    BuildLabelFrame(psm, pwv, _("Label by"), _("Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5"), labelByStrings, 2, psm->labelBasedOn, LabelByToggled, TRUE, vAlignExpand);
+    BuildLabelFrame(psm, pwv, _("Label by"), _("Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5"), aszScoreMapAway, 2, psm->labelBasedOn, LabelByToggled, TRUE, vAlignExpand);
      
     /* Layout frame */
     const char* layoutStrings[2] = { N_("Bottom"), N_("Right") };
@@ -3152,7 +3151,7 @@ if needed (this was initially planned for some explanation text, which was then 
     psm->ec.rNoise = 0.0f;
     psm->truenMatchTo = pms->nMatchTo;
 
-    psm->labelBasedOn = LABEL_AWAY; //iii
+    psm->labelBasedOn = scoreMapLabelDef; //iii
     psm->colourBasedOn = ALL;
     psm->displayEval = NO_EVAL;
     psm->layout = VERTICAL;

@@ -66,7 +66,7 @@ extern const char* aszScoreMapAwayCommands[NUM_LABELS];
 - apwScoreMapJacoby (gtkoptions.c); 
 - "set ScoreMapJacoby" (gtkoptions.c); 
 - CommandSetScoreMapJacoby (backcgammon.h)*/
-typedef enum { MONEY_NO_JACOBY, MONEY_JACOBY, NUM_TOPLEFT} scoreMapJacoby;
+typedef enum {MONEY_NO_JACOBY, MONEY_JACOBY, NUM_TOPLEFT} scoreMapJacoby;
 extern scoreMapJacoby scoreMapJacobyDef;
 extern const char* aszScoreMapJacoby[NUM_TOPLEFT];
 extern const char* aszScoreMapJacobyCommands[NUM_TOPLEFT]; 
