@@ -91,7 +91,7 @@ typedef struct {
     GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
     GtkWidget* apwsm1[NUM_sm1];
     GtkWidget* apwScoreMapLabel[NUM_LABELS];
-    GtkWidget* apwsm3[NUM_sm3];
+    GtkWidget* apwScoreMapJacoby[NUM_TOPLEFT];
     GtkWidget* apwsm4[NUM_sm4];
     GtkWidget* apwsm5[NUM_sm5];
     GtkWidget* apwsm6[NUM_sm6];
@@ -988,7 +988,7 @@ append_scoremap_options(optionswidget* pow) //hhh
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwsm1,_("Default label (by which to orient the ScoreMap axes)"), _("Select how to orient the ScoreMap axes by default."), aszScoreMapAway, NUM_LABELS, scoreMapLabelDef, TRUE, vAlignExpand);
 
-    BuildRadioButtonFrame(pow, pwvbox, pow->apwsm3,_("Default sm3"), _("Select the default sm3 for which to draw the ScoreMap."), aszsm3, NUM_sm3, sm3Def, TRUE, vAlignExpand);
+    BuildRadioButtonFrame(pow, pwvbox, pow->apwScoreMapJacoby,_("Default sm3"), _("Select the default sm3 for which to draw the ScoreMap."), aszScoreMapJacoby, NUM_TOPLEFT, scoreMapJacobyDef, TRUE, vAlignExpand);
 
     BuildRadioButtonFrame(pow, pwvbox, pow->apwsm4,_("Default sm4"), _("Select the default sm4 for which to draw the ScoreMap."), aszsm4, NUM_sm4, sm4Def, TRUE, vAlignExpand);
 
@@ -1872,9 +1872,9 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
             UserCommand(sz);
             break;
         } 
-    for (i = 0; i < NUM_sm3; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm3[i])) && sm3Def != (sm3type) i) {
-            sprintf(sz, "set sm3 %s", aszsm3Commands[i]);
+    for (i = 0; i < NUM_TOPLEFT; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i])) && scoreMapJacobyDef != (scoreMapJacoby) i) {
+            sprintf(sz, "set ScoreMapJacoby %s", aszScoreMapJacobyCommands[i]);
             UserCommand(sz);
             break;
         } 

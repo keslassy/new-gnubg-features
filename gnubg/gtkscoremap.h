@@ -61,10 +61,15 @@ extern scoreMapLabel scoreMapLabelDef;
 extern const char* aszScoreMapAway[NUM_LABELS];
 extern const char* aszScoreMapAwayCommands[NUM_LABELS]; 
 
-typedef enum {sm3A, sm3B, sm3C, NUM_sm3} sm3type;
-extern sm3type sm3Def;
-extern const char* aszsm3[NUM_sm3];
-extern const char* aszsm3Commands[NUM_sm3]; 
+/* Used in the "Top-left" radio buttons - we assume the same order as the labels */
+/* Additional options elsewhere:
+- apwScoreMapJacoby (gtkoptions.c); 
+- "set ScoreMapJacoby" (gtkoptions.c); 
+- CommandSetScoreMapJacoby (backcgammon.h)*/
+typedef enum { MONEY_NO_JACOBY, MONEY_JACOBY, NUM_TOPLEFT} scoreMapJacoby;
+extern scoreMapJacoby scoreMapJacobyDef;
+extern const char* aszScoreMapJacoby[NUM_TOPLEFT];
+extern const char* aszScoreMapJacobyCommands[NUM_TOPLEFT]; 
 
 typedef enum {sm4A, sm4B, sm4C, NUM_sm4} sm4type;
 extern sm4type sm4Def;

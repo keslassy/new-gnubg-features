@@ -1241,7 +1241,7 @@ static command acSetVariation[] = {
     { "ScoreMapLabel", CommandSetScoreMapLabel, 
       N_("Set the default sm option in the ScoreMap window"), 
       szVALUE, NULL },      
-    { "sm3", CommandSetsm3, 
+    { "sm3", CommandSetScoreMapJacoby, 
       N_("Set the default sm option in the ScoreMap window"), 
       szVALUE, NULL },               
       { "sm4", CommandSetsm4, 

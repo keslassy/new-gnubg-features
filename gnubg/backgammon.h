@@ -877,7 +877,7 @@ extern void CommandSetScoreMapPly(char*);
 extern void CommandSetScoreMapMatchLength(char*);
 extern void CommandSetsm1(char*);
 extern void CommandSetScoreMapLabel(char*);
-extern void CommandSetsm3(char*);
+extern void CommandSetScoreMapJacoby(char*);
 extern void CommandSetsm4(char*);
 extern void CommandSetsm5(char*);
 extern void CommandSetsm6(char*);

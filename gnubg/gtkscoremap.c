@@ -142,9 +142,9 @@ scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
 const char* aszScoreMapAway[NUM_LABELS] = { N_("0"), N_("1")};
 const char* aszScoreMapAwayCommands[NUM_LABELS] = { N_("away"), N_("score")}; 
 
-sm3type sm3Def = sm3A;
-const char* aszsm3[NUM_sm3] = { N_("0"), N_("1"), N_("2")};
-const char* aszsm3Commands[NUM_sm3] = { N_("A"), N_("B"), N_("C")}; 
+scoreMapJacoby scoreMapJacobyDef = MONEY_NO_JACOBY;
+const char* aszScoreMapJacoby[NUM_TOPLEFT] = { N_("0"), N_("1")};
+const char* aszScoreMapJacobyCommands[NUM_TOPLEFT] = { N_("nojacoby"), N_("jacoby")}; 
 
 sm4type sm4Def = sm4A;
 const char* aszsm4[NUM_sm4] = { N_("0"), N_("1"), N_("2")};
@@ -212,9 +212,6 @@ typedef enum { ALL, DND, PT} colourbasedonoptions;
 
 /* Used in the "Label by" radio buttons - we assume the same order as the labels */
 //typedef enum { LABEL_AWAY, LABEL_SCORE } scoreMapLabel;
-
-/* Used in the "Top-left" radio buttons - we assume the same order as the labels */
-typedef enum { MONEY_NO_JACOBY, MONEY_JACOBY} labeltopleftoptions;
 
 /* Used in the "Describe moves using" radio buttons - we assume the same order as the labels */
 typedef enum { NUMBERS, ENGLISH, BOTH } describeoptions;
@@ -345,7 +342,7 @@ typedef struct { //hhh
     colourbasedonoptions colourBasedOn;
     displayevaloptions displayEval;
     layoutoptions layout;
-    labeltopleftoptions labelTopleft;
+    scoreMapJacoby labelTopleft;
     int moneyJacoby; // goes w/ previous line
     int matchLengthIndex; // index of simulated match size
     int matchLength;      //simulated match size
@@ -395,7 +392,7 @@ typedef struct { //hhh
 //static colourbasedonoptions colourBasedOn = ALL;
 //static displayevaloptions displayEval = NO_EVAL;
 //static layoutoptions layout = VERTICAL;
-//static labeltopleftoptions labelTopleft = MONEY_NO_JACOBY;
+//static scoreMapJacoby labelTopleft = MONEY_NO_JACOBY;
 //static int moneyJacoby = FALSE; // TRUE; // goes w/ previous line
 //static int cubematchLength = 5; // default, but hopefully not used, we reset based on match size 
 //static int movematchLength = 5; //
@@ -2424,7 +2421,7 @@ TopleftToggled(GtkWidget* pw, scoremap* psm) //aaa
 {
     int* pi = (int*)g_object_get_data(G_OBJECT(pw), "user_data");// "topleft option"
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-        psm->labelTopleft = (labeltopleftoptions)(*pi);  //in the set: { MONEY_NO_JACOBY, MONEY_JACOBY} 
+        psm->labelTopleft = (scoreMapJacoby)(*pi);  //in the set: { MONEY_NO_JACOBY, MONEY_JACOBY} 
         if (psm->labelTopleft== MONEY_JACOBY)
             psm->moneyJacoby = TRUE;
         else

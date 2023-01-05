@@ -2920,12 +2920,12 @@ CommandSetScoreMapLabel(char* sz)
 }
 
 extern void
-CommandSetsm3(char* sz)
+CommandSetScoreMapJacoby(char* sz)
 {
  
-    for (int i=0; i<NUM_sm3; i++){
-        if (strcmp(sz, aszsm3Commands[i]) == 0) {
-           sm3Def = (sm3type) i;
+    for (int i=0; i<NUM_TOPLEFT; i++){
+        if (strcmp(sz, aszScoreMapJacobyCommands[i]) == 0) {
+           scoreMapJacobyDef = (scoreMapJacoby) i;
            return; 
         }
     }
