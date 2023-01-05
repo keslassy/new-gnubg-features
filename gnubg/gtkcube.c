@@ -1511,7 +1511,7 @@ CubeAnalysisScoreMap(GtkWidget * UNUSED(pw), cubehintdata * UNUSED(pchd))
 /* Called by GTK when the score map button is clicked.
 */
 
-    UserCommand("show scoremap"); //cf keyword -> gtkgame.c: CMD_SHOW_SCORE_MAP
+    UserCommand("show scoremap"); //cf keyword -> gtkgame.c: CMD_SHOW_SCORE_MAP_CUBE
 
 }
 

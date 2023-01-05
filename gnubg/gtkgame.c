@@ -174,7 +174,7 @@ typedef enum {
     CMD_SHOW_STATISTICS_MATCH,
     CMD_SHOW_TEMPERATURE_MAP,
     CMD_SHOW_TEMPERATURE_MAP_CUBE,
-    CMD_SHOW_SCORE_MAP,    
+    CMD_SHOW_SCORE_MAP_CUBE,    
     CMD_SHOW_SCORE_MAP_MOVE,    
     CMD_SHOW_VERSION,
     CMD_SHOW_WARRANTY,
@@ -381,7 +381,7 @@ CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_ROLLS, "show rolls");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_STATISTICS_MATCH, "show statistics match");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_TEMPERATURE_MAP, "show temperaturemap");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_TEMPERATURE_MAP_CUBE, "show temperaturemap =cube");
-CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_SCORE_MAP, "show scoremap");
+CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_SCORE_MAP_CUBE, "show scoremap");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_SCORE_MAP_MOVE, "show scoremap =move");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_VERSION, "show version");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_WARRANTY, "show warranty");
@@ -3600,8 +3600,10 @@ static GtkActionEntry actionEntries[] = {
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_TEMPERATURE_MAP)},
     {"TemperatureMapCubeAction", NULL, N_("Temperature Map (cube decision)"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_TEMPERATURE_MAP_CUBE)},
-    {"ScoreMapAction", NULL, N_("ScoreMap"), NULL, NULL,
-     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_SCORE_MAP)},
+    {"ScoreMapCubeAction", NULL, N_("ScoreMap (cube decision)"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_SCORE_MAP_CUBE)},
+    {"ScoreMapMoveAction", NULL, N_("ScoreMap (move decision)"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_SCORE_MAP_MOVE},
     {"RaceTheoryAction", NULL, N_("_Race Theory"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_KLEINMAN)},
     {"MarketWindowAction", NULL, N_("_Market window"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MARKETWINDOW)},
     {"MatchEquityTableAction", NULL, N_("M_atch equity table"), NULL, NULL,
@@ -3842,8 +3844,10 @@ static GtkItemFactoryEntry aife[] = {
      CMD_SHOW_TEMPERATURE_MAP, NULL, NULL},
     {N_("/_Analyse/Temperature Map (cube decision)"), NULL, Command,
      CMD_SHOW_TEMPERATURE_MAP_CUBE, NULL, NULL},
+    {N_("/_Analyse/ScoreMap (move decision)"), NULL, Command,
+     CMD_SHOW_SCORE_MAP_MOVE, NULL, NULL},
     {N_("/_Analyse/ScoreMap (cube decision)"), NULL, Command,
-     CMD_SHOW_SCORE_MAP, NULL, NULL},
+     CMD_SHOW_SCORE_MAP_CUBE, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/_Race Theory"),
      NULL, Command, CMD_SHOW_KLEINMAN, NULL, NULL},

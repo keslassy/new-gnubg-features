@@ -200,7 +200,7 @@ static void
 MoveListScoreMapClicked(GtkWidget * UNUSED(pw), hintdata * UNUSED(phd))
 {
 
-    char *sz = g_strdup("show scoremap =move"); //cf keyword -> gtkgame.c: CMD_SHOW_SCORE_MAP
+    char *sz = g_strdup("show scoremap =move"); //cf keyword -> gtkgame.c: CMD_SHOW_SCORE_MAP_MOVE
     UserCommand(sz);
     g_free(sz);  
 

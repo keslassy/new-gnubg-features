@@ -2,9 +2,6 @@
 * 
 * 
 * Bug when hitting stop
-
-* "/_Analyse/ScoreMap (cube decision)" -> move decision too?
-*        -> gtkgame.c
 *  
 *  maybe display ply also in hover of cbe ScoreMap?
 */
@@ -73,6 +70,7 @@
 /* 
 01/2022: Isaac Keslassy:
 - new Settings>Options>ScoreMap panel where all default options can be configured
+- added Analyse>Scoremap(move decision) to the existing cube entry
 
 12/2022: Isaac Keslassy: a few changes including:
 - new help button to obtain explanations
