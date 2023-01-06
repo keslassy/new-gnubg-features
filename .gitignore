@@ -46,3 +46,8 @@ compile
 .dirstamp
 gnubg/gnubg
 gnubg/gnubg
+gnubg/Makefile
+gnubg/Makefile
+.gitignore
+gnubg/libtool
+gnubg/Makefile
