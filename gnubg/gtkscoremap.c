@@ -71,7 +71,8 @@
 01/2022: Isaac Keslassy:
 - new Settings>Options>ScoreMap panel where all default options can be configured
 - added Analyse > "Scoremap (move decision)" to the existing cube-ScoreMap entry
-- added ply display in hover of cube ScoreMap
+- added ply display in hover of cube ScoreMap and aligned displays
+- checked that it works in both Windows 10 and Ubuntu 22
 
 12/2022: Isaac Keslassy: a few changes including:
 - new help button to obtain explanations
