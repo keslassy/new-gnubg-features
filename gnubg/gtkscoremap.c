@@ -123,12 +123,12 @@ and come back, it works again. It may be a movelist construction issue.
 //#include "gtkoptions.h"  
 
 /*         GLOBAL *EXTERN) VARIABLES           */
-scoreMapPly scoreMapPlyDefault = ZERO_PLY; //default -> TWO_PLY at the end 
+scoreMapPly scoreMapPlyDefault = TWO_PLY; //default -> TWO_PLY at the end 
 const char* aszScoreMapPly[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
 const char* aszScoreMapPlyCommands[NUM_PLY] = { N_("0"), N_("1"), N_("2"), N_("3"), N_("4") };
 //const char * plyStrings[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply")};
 
-scoreMapMatchLength scoreMapMatchLengthDefIdx = LENGTH_THREE;
+scoreMapMatchLength scoreMapMatchLengthDefIdx = VAR_LENGTH;
 /*the following list needs to correspond to the fixed lengths in the (typedef enum) scoreMapMatchLength */
 const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //list of allowed match sizes
 //const int NUM_MATCH_LENGTH_OPTIONS = ((int)(sizeof(MATCH_LENGTH_OPTIONS)/sizeof(int)));
@@ -1060,6 +1060,7 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
 */
 
     char ssz[200];
+    char space2[50];
 
     strcpy(buf, "");
 
@@ -1121,17 +1122,18 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
         float nd=pq->ndEquity;
         float dt=pq->dtEquity;
         float dp=1.0f;
+        sprintf(space2, "%*c", DIGITS + 7, ' ');   //define spacing before putting ply of 1st line
         if (pq->dec == ND) { //ND is best //format: "+" forces +/-; .*f displays f with precision DIGITS
-            sprintf(ssz,"<tt>1. ND \t%+.*f           (%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. D/T\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies);//pq->ml.amMoves[0].esMove.ec.nPlies 
+            sprintf(ssz,"<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. D/T\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies);//pq->ml.amMoves[0].esMove.ec.nPlies 
             //sprintf(ssz, "<tt>1. ND \t%+.*f\n2. D/P\t%+.*f\t%+.*f\n3. D/T\t%+.*f\t%+.*f</tt> (%u-ply)", DIGITS, nd, DIGITS, dp, DIGITS, dp - nd, DIGITS, dt, DIGITS, dt - nd, psm->ec.nPlies); 
         } else if (pq->dec == DT) {//DT is best
-            sprintf(ssz,"<tt>1. D/T\t%+.*f           (%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dt,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-dt,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dt,psm->ec.nPlies);
+            sprintf(ssz,"<tt>1. D/T\t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dt,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-dt,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dt,psm->ec.nPlies);
             // sprintf(ssz,"<tt>1. D/T\t%+.*f\n2. D/P\t%+.*f\t%+.*f\n3. ND \t%+.*f\t%+.*f</tt>",DIGITS,dt,DIGITS,dp,DIGITS,dp-dt,DIGITS,nd,DIGITS,nd-dt);
         } else if (pq->dec == DP) { //DP is best
-            sprintf(ssz,"<tt>1. D/P\t%+.*f           (%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dp,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-dp,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dp,psm->ec.nPlies);
+            sprintf(ssz,"<tt>1. D/P\t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dp, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-dp,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dp,psm->ec.nPlies);
             // sprintf(ssz,"<tt>1. D/P\t%+.*f\n2. D/T\t%+.*f\t%+.*f\n3. ND \t%+.*f\t%+.*f</tt>",DIGITS,dp,DIGITS,dt,DIGITS,dt-dp,DIGITS,nd,DIGITS,nd-dp);
         } else { //TGTD is best
-            sprintf(ssz,"<tt>1. ND \t%+.*f           (%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. D/P\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies);
+            sprintf(ssz,"<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. D/P\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies);
             // sprintf(ssz,"<tt>1. ND \t%+.*f\n2. D/T\t%+.*f\t%+.*f\n3. D/P\t%+.*f\t%+.*f</tt>",DIGITS,nd,DIGITS,dt,DIGITS,dt-nd,DIGITS,dp,DIGITS,dp-nd);
         }
         strcat(buf,ssz);
@@ -1169,8 +1171,10 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             len2 = (int)strlen(szMove2) + (pq->ml.amMoves[2].rScore<-0.0005);
             len = MAX(len0,MAX(len1,len2)) +2 ; //we leave an additional spacing of 2 characters, where 2 is arbitrary,
                                                 //  b/w the longest move string and its equity
-            sprintf(space,"%*c", len-len0, ' ');   //define spacing for best move
-            sprintf(ssz,"<tt>1. %s%s%1.*f          (%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
+            sprintf(space, "%*c", len - len0, ' ');   //define spacing for best move
+            sprintf(space2, "%*c", DIGITS + 6, ' ');   //define spacing before putting ply of 1st line
+            sprintf(ssz, "<tt>1. %s%s%1.*f%s(%u-ply)", szMove0, space, DIGITS, pq->ml.amMoves[0].rScore, space2, pq->ml.amMoves[0].esMove.ec.nPlies);
+            //sprintf(ssz, "<tt>1. %s%s%1.*f          (%u-ply)", szMove0, space, DIGITS, pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
             // sprintf(ssz,"<tt>1. %s%s%1.*f\t \t(%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len1, ' ');   //define spacing for 2nd best move
