@@ -123,6 +123,9 @@ and come back, it works again. It may be a movelist construction issue.
 #include "gtkwindows.h"
 //#include "gtkoptions.h"  
 
+static int myDebug = 1;
+
+
 /*         GLOBAL *EXTERN) VARIABLES           */
 scoreMapPly scoreMapPlyDefault = TWO_PLY; //default -> TWO_PLY at the end 
 const char* aszScoreMapPly[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
@@ -578,8 +581,8 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
         g_assert(pq->ml.cMoves > 0);
         if (pq->ml.cMoves > 0)
             FormatMove(pq->decisionString, (ConstTanBoard) psm->pms->anBoard, pq->ml.amMoves[0].anMove);
-
-         //g_print("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
+        if (myDebug)
+            g_print("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
 
         return 0;
     }
@@ -657,18 +660,19 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
 */
 {
     ProgressStartValue(_("Finding correct decisions"), MAX(psm->tableSize*psm->tableSize+1-oldSize*oldSize, 1));
-            // - Should actually be 1 less if oldSize>0 (because of money play)
-            // - If we only recompute the money equity, the formula correctly yields 1 for oldSize = psm->tableSize
+            // Example: If we only recompute the money equity, the formula correctly yields 1 for oldSize = psm->tableSize
 //g_print("Finding %d-ply cube equities:\n",pec->nPlies);
     for (int i=0; i<psm->tableSize; i++) {
-        // i,j correspond to the locations in the table. E.g., in cube ScoreMap, the away-scores
+        // i,j correspond to the locations in the table. 
+        // - In cube ScoreMap, the away-scores
         //      are 2+i, 2+j (because the (0,0)-entry of the table corresponds to 2-away 2-away).
+        // - In move scoremap: i=0->1-away post Crawford; i=1->1-away pre-C; i=2+->i-away
         for (int j=0; j<psm->tableSize; j++) {
             if (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED) {
                 //Only running the line below when (i >= oldSize || j >= oldSize) yields a bug with grey squares on resize
                 CalcQuadrantEquities(&psm->aaQuadrantData[i][j], psm, (i >= oldSize || j >= oldSize));
-                // g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n",i,j,psm->aaQuadrantData[i][j].ml.
-                //         cMoves,psm->aaQuadrantData[i][j].ml.rBestScore,psm->aaQuadrantData[i][j].decisionString);
+                if (myDebug)
+                    g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n",i,j,psm->aaQuadrantData[i][j].ml.cMoves,psm->aaQuadrantData[i][j].ml.rBestScore,psm->aaQuadrantData[i][j].decisionString);
                 if (i >= oldSize || j >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
                     ProgressValueAdd(1);
             }
@@ -689,7 +693,7 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
     }
     //if(oldSize == 0 || oldSize == psm->tableSize)  //causes bug: it colors the cell in dark grey, and doesn't show a move
                         //maybe the moneyQuadrantData becomes empty?
-        CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
+    CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
     ProgressValueAdd(1);//not sure if it should be included above, but probably minor
 
     ProgressEnd();
