@@ -2,8 +2,8 @@
 * 
 * 
 * Bug when hitting stop
-*  
-*  
+* bug DMP???
+* 
 */
 
 /*
@@ -123,7 +123,7 @@ and come back, it works again. It may be a movelist construction issue.
 #include "gtkwindows.h"
 //#include "gtkoptions.h"  
 
-static int myDebug = 1;
+static int myDebug = 0;
 
 
 /*         GLOBAL *EXTERN) VARIABLES           */
@@ -432,8 +432,10 @@ REASON 3. more tricky: we don't allow an absurd cubing situation, eg someone lea
             psm->aaQuadrantData[i][j].isAllowedScore = NO_CRAWFORD_DOUBLING;
             strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("Doubling is not allowed in a Crawford game"));
             return 0;
-        } else {
-            psm->aaQuadrantData[i][j].isAllowedScore = UNREASONABLE_CUBE;
+        } else { // <--- I don't get this! in all cases the cube is unreasonable???
+            //if(myDebug)
+            //    g_print("signednCube:%d, iAway:%d, jAway:%d\n", psm->signednCube, iAway, jAway);
+            //psm->aaQuadrantData[i][j].isAllowedScore = UNREASONABLE_CUBE;
             // REASON 3
             //if I have doubled and got signednCube=-4, ie my opponent owns a 4-cube => the previous cube was +2
             //      => it cannot be that I am 1-away or 2-away from victory (or I wouldn't have had any reason to double);
@@ -446,6 +448,7 @@ REASON 3. more tricky: we don't allow an absurd cubing situation, eg someone lea
 
             if (p0Cube && (abs(psm->signednCube) >= 2*iAway || abs(psm->signednCube) >= 4*jAway))   {
                 // g_print("\n signednCube:%d, iAway:%d, jAway:%d",signednCube,iAway,jAway);
+                psm->aaQuadrantData[i][j].isAllowedScore = UNREASONABLE_CUBE;
                 if (abs(psm->signednCube) >= 2*iAway) {
                     sprintf(psm->aaQuadrantData[i][j].unallowedExplanation,
                                 _("It is unreasonable that %s will double to %d while being %d-away"),
@@ -666,7 +669,7 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
         // i,j correspond to the locations in the table. 
         // - In cube ScoreMap, the away-scores
         //      are 2+i, 2+j (because the (0,0)-entry of the table corresponds to 2-away 2-away).
-        // - In move scoremap: i=0->1-away post Crawford; i=1->1-away pre-C; i=2+->i-away
+        // - In move scoremap: i=0->1-away post Crawford; i=1->1-away Crawford; i=2+->i-away
         for (int j=0; j<psm->tableSize; j++) {
             if (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED) {
                 //Only running the line below when (i >= oldSize || j >= oldSize) yields a bug with grey squares on resize
@@ -1183,11 +1186,11 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             // sprintf(ssz,"<tt>1. %s%s%1.*f\t \t(%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len1, ' ');   //define spacing for 2nd best move
-            sprintf(ssz,"\n2. %s%s%1.*f  %1.*f (%u-ply)",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
+            sprintf(ssz,"\n2. %s%s%1.*f  %+.*f (%u-ply)",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
             // sprintf(ssz,"\n2. %s%s%1.*f\t%1.*f\t(%u-ply)",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len2, ' ');   //define spacing for 3rd best move
-            sprintf(ssz,"\n3. %s%s%1.*f  %1.*f (%u-ply)</tt>",szMove2,space,DIGITS,pq->ml.amMoves[2].rScore,DIGITS,pq->ml.amMoves[2].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[2].esMove.ec.nPlies);
+            sprintf(ssz,"\n3. %s%s%1.*f  %+.*f (%u-ply)</tt>",szMove2,space,DIGITS,pq->ml.amMoves[2].rScore,DIGITS,pq->ml.amMoves[2].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[2].esMove.ec.nPlies);
             // sprintf(ssz,"\n3. %s%s%1.*f\t%1.*f\t(%u-ply)</tt>",szMove2,space,DIGITS,pq->ml.amMoves[2].rScore,DIGITS,pq->ml.amMoves[2].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[2].esMove.ec.nPlies);
             strcat(buf,ssz);
         }  else if (pq->ml.cMoves==2) { // there are only 2 moves
@@ -1195,10 +1198,12 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             len1 = (int)strlen(szMove1)+(pq->ml.amMoves[1].rScore<-0.0005);
             len = MAX(len0,len1)+2;
             sprintf(space,"%*c", len-len0, ' ');   //define spacing for best move
-            sprintf(ssz,"<tt>1. %s%s%1.*f          (%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
+            sprintf(space2, "%*c", DIGITS + 6, ' ');   //define spacing before putting ply of 1st line
+            sprintf(ssz, "<tt>1. %s%s%1.*f%s(%u-ply)", szMove0, space, DIGITS, pq->ml.amMoves[0].rScore, space2, pq->ml.amMoves[0].esMove.ec.nPlies);
+            //sprintf(ssz,"<tt>1. %s%s%1.*f          (%u-ply)",szMove0,space,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len1, ' ');   //define spacing for 2nd best move
-            sprintf(ssz,"\n2. %s%s%1.*f  %1.*f  (%u-ply)</tt>",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
+            sprintf(ssz,"\n2. %s%s%1.*f  %+.*f  (%u-ply)</tt>",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
             strcat(buf,ssz);
         } else if (pq->ml.cMoves==1) { //single move
             sprintf(ssz,"<tt>1. %s  %1.*f         (%u-ply)</tt>",szMove0,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
