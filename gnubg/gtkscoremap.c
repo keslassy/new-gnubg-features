@@ -679,11 +679,9 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
             if (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED) {
                 //Only running the line below when (i >= oldSize || j >= oldSize) yields a bug with grey squares on resize
                 CalcQuadrantEquities(&psm->aaQuadrantData[i][j], psm, (i >= oldSize || j >= oldSize));
-                if (i==0 && j==0 && myDebug && fabs(psm->aaQuadrantData[i][j].ml.rBestScore) > 0.3) {
-                    g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", i, j, psm->aaQuadrantData[i][j].ml.cMoves, psm->aaQuadrantData[i][j].ml.rBestScore, psm->aaQuadrantData[i][j].decisionString);
-                    CalcQuadrantEquities(&psm->aaQuadrantData[i][j], psm, (i >= oldSize || j >= oldSize));
-                    g_print("part 2: i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", i, j, psm->aaQuadrantData[i][j].ml.cMoves, psm->aaQuadrantData[i][j].ml.rBestScore, psm->aaQuadrantData[i][j].decisionString);
-                }
+                // if (i==0 && j==0 && myDebug && fabs(psm->aaQuadrantData[i][j].ml.rBestScore) > 0.3) {
+                //     g_print("i=%d,j=%d (score: %d vs %d), FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", i, j,psm->pms->anScore[0],psm->pms->anScore[1], psm->aaQuadrantData[i][j].ml.cMoves, psm->aaQuadrantData[i][j].ml.rBestScore, psm->aaQuadrantData[i][j].decisionString);
+                // }
                 if (i >= oldSize || j >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
                     ProgressValueAdd(1);
             }
@@ -707,8 +705,6 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
     CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
     if (myDebug && fabs(psm->moneyQuadrantData.ml.rBestScore) > 0.3) {
         g_print("money: FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", psm->moneyQuadrantData.ml.cMoves, psm->moneyQuadrantData.ml.rBestScore, psm->moneyQuadrantData.decisionString);
-        CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
-        g_print("money2: FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", psm->moneyQuadrantData.ml.cMoves, psm->moneyQuadrantData.ml.rBestScore, psm->moneyQuadrantData.decisionString);
     }
 
     ProgressValueAdd(1);//not sure if it should be included above, but probably minor

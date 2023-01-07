@@ -2505,13 +2505,13 @@ mwc2eq(const float rMwc, const cubeinfo * pci)
 
     rMwcWin = getME(pci->anScore[0], pci->anScore[1], pci->nMatchTo,
                     pci->fMove, pci->nCube, pci->fMove, pci->fCrawford, aafMET, aafMETPostCrawford);
-    if (rMwcWin>1)
-        g_print("rMwcWin: pci->anScore[0]:%d, pci->anScore[1]:%d, pci->nMatchTo:%d, pci->fMove:%d, pci->nCube:%d, pci->fMove:%d, pci->fCrawford:%d, \n aafMET:%f, aafMETPostCrawford:%f --> result=rMwcWin: %f\n", pci->anScore[0], pci->anScore[1], pci->nMatchTo, pci->fMove, pci->nCube, pci->fMove, pci->fCrawford, aafMET, aafMETPostCrawford, rMwcWin);
+    if (fabs(rMwcWin)>0.9)
+       // g_print("rMwcWin: pci->anScore[0]:%d, pci->anScore[1]:%d, pci->nMatchTo:%d, pci->fMove:%d, pci->nCube:%d, pci->fMove:%d, pci->fCrawford:%d, \n aafMET:%f, aafMETPostCrawford:%f --> result=rMwcWin: %f\n", pci->anScore[0], pci->anScore[1], pci->nMatchTo, pci->fMove, pci->nCube, pci->fMove, pci->fCrawford, aafMET[0][0], aafMETPostCrawford[0][0], rMwcWin);
 
     rMwcLose = getME(pci->anScore[0], pci->anScore[1], pci->nMatchTo,
                      pci->fMove, pci->nCube, !pci->fMove, pci->fCrawford, aafMET, aafMETPostCrawford);
-    if (rMwcLose > 1)
-        g_print("rMwcLose: pci->anScore[0]:%d, pci->anScore[1]:%d, pci->nMatchTo:%d, pci->fMove:%d, pci->nCube:%d, pci->fMove:%d, pci->fCrawford:%d, \n aafMET:%f, aafMETPostCrawford:%f --> result=rMwcLose: %f\n", pci->anScore[0], pci->anScore[1], pci->nMatchTo, pci->fMove, pci->nCube, pci->fMove, pci->fCrawford, aafMET, aafMETPostCrawford, rMwcLose);
+    if (fabs(rMwcLose) > 0.9)
+       // g_print("rMwcLose: pci->anScore[0]:%d, pci->anScore[1]:%d, pci->nMatchTo:%d, pci->fMove:%d, pci->nCube:%d, pci->fMove:%d, pci->fCrawford:%d, \n aafMET:%f, aafMETPostCrawford:%f --> result=rMwcLose: %f\n", pci->anScore[0], pci->anScore[1], pci->nMatchTo, pci->fMove, pci->nCube, pci->fMove, pci->fCrawford, aafMET[0][0], aafMETPostCrawford[0][0], rMwcLose);
 
     /* 
      * make linear inter- or extrapolation:
@@ -5580,6 +5580,8 @@ ScoreMove(NNState * nnStates, move * pm, const cubeinfo * pci, const evalcontext
      * rScore2 is the secondary score (cubeless) */
     pm->rScore = (pec->fCubeful) ? arEval[OUTPUT_CUBEFUL_EQUITY] : arEval[OUTPUT_EQUITY];
     pm->rScore2 = arEval[OUTPUT_EQUITY];
+    // if(fabs(pm->rScore)>1.0)
+    //     g_print("ScoreMove(): rScore:%f, rScore2:%f, nMatchTo:%d, cubeful:%d, nplies:%d \n",pm->rScore,pm->rScore,ci.nMatchTo,pec->fCubeful,nPlies);
 
     return 0;
 }
@@ -5962,7 +5964,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
                          const cubeinfo aciCubePos[], int cci,
                          cubeinfo * const pciMove, const evalcontext * pec, unsigned int nPlies, int fTop)
 {
-
+//g_print("EvaluatePositionCubeful4");
 
     /* calculate cubeful equity */
 
@@ -6073,8 +6075,10 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
         /* get cubeful equities */
 
         GetECF3(arCubeful, cci, arCf, aci);
+       // g_print("arCubeful[0]: %f, cci: %d, arCf[0]:%f, arCf[1]:%f",arCubeful[0], cci, arCf[0],arCf[1]);
 
-    } else {
+    } else { 
+        //g_print("EvaluatePositionCubeful4 - option 2");
         /* at leaf node; use static evaluation */
 
         float rCubeX;
@@ -6257,7 +6261,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
         /* find optimal of "no double" and "double" */
 
         GetECF3(arCubeful, cci, arCf, aci);
-
+// g_print("\n option 2: arCubeful[0]: %f, cci: %d, arCf[0]:%f, arCf[1]:%f     ",arCubeful[0], cci, arCf[0],arCf[1]);
     }
 
     return 0;

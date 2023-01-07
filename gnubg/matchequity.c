@@ -1630,18 +1630,18 @@ getME(const int nScore0, const int nScore1, const int nMatchTo,
         if (!n0){
             /* player 0 is leading match */
             /* FIXME: use pc-MET for player 0 */ 
-            g_print("aafMETPostCrawford[1][n1]:%f\n", aafMETPostCrawford[1][n1]);
+            //g_print("aafMETPostCrawford[1][n1]:%f\n", aafMETPostCrawford[1][n1]);
             return (fPlayer) ? aafMETPostCrawford[1][n1] : 1.0f - aafMETPostCrawford[1][n1];
         }
         else{
             /* player 1 is leading the match */
-            g_print("aafMETPostCrawford[0][n0]:%f\n", aafMETPostCrawford[1][n0]);
+            //g_print("aafMETPostCrawford[0][n0]:%f\n", aafMETPostCrawford[1][n0]);
             return (fPlayer) ? 1.0f - aafMETPostCrawford[0][n0] : aafMETPostCrawford[0][n0];
         }
     }
     else {
         /* non-post-Crawford games */
-        g_print("fPlayer:%d, aafMET[n0][n1]:%f, aafMET[n0][n1]:%f, result %f\n", fPlayer, 1.0f - aafMET[n0][n1], aafMET[n0][n1],(fPlayer) ? 1.0f - aafMET[n0][n1] : aafMET[n0][n1]);
+        //g_print("fPlayer:%d, aafMET[n0][n1]:%f, aafMET[n0][n1]:%f, result %f\n", fPlayer, 1.0f - aafMET[n0][n1], aafMET[n0][n1],(fPlayer) ? 1.0f - aafMET[n0][n1] : aafMET[n0][n1]);
         return (fPlayer) ? 1.0f - aafMET[n0][n1] : aafMET[n0][n1];
     }
 }
