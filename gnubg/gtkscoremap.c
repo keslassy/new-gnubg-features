@@ -123,11 +123,12 @@ and come back, it works again. It may be a movelist construction issue.
 #include "gtkwindows.h"
 //#include "gtkoptions.h"  
 
-static int myDebug = 0;
+static int myDebug = 1;
 
 
-/*         GLOBAL *EXTERN) VARIABLES           */
-scoreMapPly scoreMapPlyDefault = TWO_PLY; //default -> TWO_PLY at the end 
+/*         GLOBAL (EXTERN) VARIABLES, E.G. TO DEFINE DEFAULT OPTIONS IN SETTINGS>OPTIONS          */
+
+scoreMapPly scoreMapPlyDefault = TWO_PLY;  
 const char* aszScoreMapPly[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
 const char* aszScoreMapPlyCommands[NUM_PLY] = { N_("0"), N_("1"), N_("2"), N_("3"), N_("4") };
 //const char * plyStrings[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply")};
@@ -141,6 +142,7 @@ const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //lis
 const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH]            = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Based on current match length") };
 const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH]    = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
 
+// placeholder option if needed in the future
 sm1type sm1Def = sm1A;
 const char* aszsm1[NUM_sm1] = { N_("0"), N_("1"), N_("2")};
 const char* aszsm1Commands[NUM_sm1] = { N_("A"), N_("B"), N_("C")}; 
@@ -433,7 +435,6 @@ REASON 3. more tricky: we don't allow an absurd cubing situation, eg someone lea
             strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("Doubling is not allowed in a Crawford game"));
             return 0;
         } else { // <--- I don't get this! in all cases the cube is unreasonable???
-            //if(myDebug)
             //    g_print("signednCube:%d, iAway:%d, jAway:%d\n", psm->signednCube, iAway, jAway);
             //psm->aaQuadrantData[i][j].isAllowedScore = UNREASONABLE_CUBE;
             // REASON 3
@@ -580,12 +581,16 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
             ProgressEnd();
             return -1;
         }
+        //if (myDebug && pq->ml.rBestScore > 0.6) {
+        //    g_print("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n", pq->ml.cMoves, pq->ml.cMaxMoves, pq->ml.rBestScore, pq->decisionString);
+        //    FindnSaveBestMoves(&(pq->ml), psm->pms->anDice[0], psm->pms->anDice[1], (ConstTanBoard)psm->pms->anBoard, NULL, //or pkey
+        //        arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis);
+        //    g_print("Part 2: FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n", pq->ml.cMoves, pq->ml.cMaxMoves, pq->ml.rBestScore, pq->decisionString);
+        //}
 
         g_assert(pq->ml.cMoves > 0);
         if (pq->ml.cMoves > 0)
             FormatMove(pq->decisionString, (ConstTanBoard) psm->pms->anBoard, pq->ml.amMoves[0].anMove);
-        if (myDebug)
-            g_print("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
 
         return 0;
     }
@@ -674,8 +679,11 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
             if (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED) {
                 //Only running the line below when (i >= oldSize || j >= oldSize) yields a bug with grey squares on resize
                 CalcQuadrantEquities(&psm->aaQuadrantData[i][j], psm, (i >= oldSize || j >= oldSize));
-                if (myDebug)
-                    g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n",i,j,psm->aaQuadrantData[i][j].ml.cMoves,psm->aaQuadrantData[i][j].ml.rBestScore,psm->aaQuadrantData[i][j].decisionString);
+                if (i==0 && j==0 && myDebug && fabs(psm->aaQuadrantData[i][j].ml.rBestScore) > 0.3) {
+                    g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", i, j, psm->aaQuadrantData[i][j].ml.cMoves, psm->aaQuadrantData[i][j].ml.rBestScore, psm->aaQuadrantData[i][j].decisionString);
+                    CalcQuadrantEquities(&psm->aaQuadrantData[i][j], psm, (i >= oldSize || j >= oldSize));
+                    g_print("part 2: i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", i, j, psm->aaQuadrantData[i][j].ml.cMoves, psm->aaQuadrantData[i][j].ml.rBestScore, psm->aaQuadrantData[i][j].decisionString);
+                }
                 if (i >= oldSize || j >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
                     ProgressValueAdd(1);
             }
@@ -697,6 +705,12 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
     //if(oldSize == 0 || oldSize == psm->tableSize)  //causes bug: it colors the cell in dark grey, and doesn't show a move
                         //maybe the moneyQuadrantData becomes empty?
     CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
+    if (myDebug && fabs(psm->moneyQuadrantData.ml.rBestScore) > 0.3) {
+        g_print("money: FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", psm->moneyQuadrantData.ml.cMoves, psm->moneyQuadrantData.ml.rBestScore, psm->moneyQuadrantData.decisionString);
+        CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
+        g_print("money2: FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", psm->moneyQuadrantData.ml.cMoves, psm->moneyQuadrantData.ml.rBestScore, psm->moneyQuadrantData.decisionString);
+    }
+
     ProgressValueAdd(1);//not sure if it should be included above, but probably minor
 
     ProgressEnd();

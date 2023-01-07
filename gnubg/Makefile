@@ -473,7 +473,7 @@ AUTOCONF = ${SHELL} '/home/g/gnubg/missing' autoconf
 AUTOHEADER = ${SHELL} '/home/g/gnubg/missing' autoheader
 AUTOMAKE = ${SHELL} '/home/g/gnubg/missing' automake-1.16
 AWK = gawk
-BUILD_DATE = 20230106
+BUILD_DATE = 20230107
 CAIRO_CFLAGS = -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/pixman-1 
 CAIRO_LIBS = -lcairo 
 CANBERRA_CFLAGS = 
@@ -581,7 +581,7 @@ POFILES =  cs.po da.po de.po en_GB.po en_US.po el.po es.po fi.po fr.po is.po it.
 POSUB = po
 PO_IN_DATADIR_FALSE = 
 PO_IN_DATADIR_TRUE = 
-PYTHON = /mingw32/bin/Python
+PYTHON = /mingw32/bin/python
 PYTHON_CPPFLAGS = -IC:/msys64/mingw32/include/python3.10
 PYTHON_EXEC_PREFIX = ${exec_prefix}
 PYTHON_EXTRA_LDFLAGS = -Wl,--stack,2000000
@@ -681,7 +681,7 @@ AM_CPPFLAGS = -I$(srcdir)/lib -I$(builddir)/pixmaps \
 	-IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include   $(am__append_1) \
 	$(am__append_2) $(am__append_3) -DAC_DOCDIR='"$(docdir)"' \
 	-DAC_DATADIR='"$(datadir)"' \
-	-DAC_PKGDATADIR='"$(datadir)/gnubg"' -DBUILD_DATE=20230106
+	-DAC_PKGDATADIR='"$(datadir)/gnubg"' -DBUILD_DATE=20230107
 OTHER_LIBS = $(am__append_4)
 BUILT_SOURCES = sgf_y.c sgf_l.c copying.c credits.c external_l.c external_y.c
 

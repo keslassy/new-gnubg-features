@@ -2505,9 +2505,13 @@ mwc2eq(const float rMwc, const cubeinfo * pci)
 
     rMwcWin = getME(pci->anScore[0], pci->anScore[1], pci->nMatchTo,
                     pci->fMove, pci->nCube, pci->fMove, pci->fCrawford, aafMET, aafMETPostCrawford);
+    if (rMwcWin>1)
+        g_print("rMwcWin: pci->anScore[0]:%d, pci->anScore[1]:%d, pci->nMatchTo:%d, pci->fMove:%d, pci->nCube:%d, pci->fMove:%d, pci->fCrawford:%d, \n aafMET:%f, aafMETPostCrawford:%f --> result=rMwcWin: %f\n", pci->anScore[0], pci->anScore[1], pci->nMatchTo, pci->fMove, pci->nCube, pci->fMove, pci->fCrawford, aafMET, aafMETPostCrawford, rMwcWin);
 
     rMwcLose = getME(pci->anScore[0], pci->anScore[1], pci->nMatchTo,
                      pci->fMove, pci->nCube, !pci->fMove, pci->fCrawford, aafMET, aafMETPostCrawford);
+    if (rMwcLose > 1)
+        g_print("rMwcLose: pci->anScore[0]:%d, pci->anScore[1]:%d, pci->nMatchTo:%d, pci->fMove:%d, pci->nCube:%d, pci->fMove:%d, pci->fCrawford:%d, \n aafMET:%f, aafMETPostCrawford:%f --> result=rMwcLose: %f\n", pci->anScore[0], pci->anScore[1], pci->nMatchTo, pci->fMove, pci->nCube, pci->fMove, pci->fCrawford, aafMET, aafMETPostCrawford, rMwcLose);
 
     /* 
      * make linear inter- or extrapolation:
