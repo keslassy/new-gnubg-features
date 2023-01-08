@@ -3,7 +3,8 @@
 * 
 * Bug when hitting stop
 * bug DMP???
-* 
+* bug: in cube scoremap, if we click on using 4 ply then stop, 
+* it still thinks everything is in 4 ply
 */
 
 /*
@@ -556,7 +557,7 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
                         //GeneralCubeDecisionE is from eval.c
                         // extern int GeneralCubeDecisionE(float aarOutput[2][NUM_ROLLOUT_OUTPUTS], const TanBoard anBoard,
                         // cubeinfo * const pci, const evalcontext * pec, const evalsetup * UNUSED(pes))
-                    ProgressEnd();
+                    //ProgressEnd();
                     return -1;
                 }
 
@@ -577,7 +578,7 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
         if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
                                         arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
             strcpy(pq->decisionString,"");
-            ProgressEnd();
+            //ProgressEnd();
             return -1;
         }
 
@@ -1285,15 +1286,15 @@ ColourQuadrant(gtkquadrant * pgq, quadrantdata * pq, const scoremap * psm) {
         }
 
         // Next set the hover text
-        SetHoverText (buf,pq,psm);
+        //SetHoverText (buf,pq,psm);
 /*
  * This is not supported in early versions of GTK2 (8+ years old).
  * Don't bother with an alterative, we will raise the minimum requirement soon.
  * Not a concern with distributions in practical use today.
  */
-#if GTK_CHECK_VERSION(2,12,0)
-        gtk_widget_set_tooltip_markup(pgq->pContainerWidget, buf);
-#endif
+// #if GTK_CHECK_VERSION(2,12,0)
+//         gtk_widget_set_tooltip_markup(pgq->pContainerWidget, buf);
+// #endif
 
     }
     gtk_widget_queue_draw(pgq->pDrawingAreaWidget); // here we are calling DrawQuadrant() in a hidden way through the "draw" call,

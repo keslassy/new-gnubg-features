@@ -103,14 +103,14 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = i686-w64-mingw32
-host_triplet = i686-w64-mingw32
+build_triplet = x86_64-pc-linux-gnu
+host_triplet = x86_64-pc-linux-gnu
 bin_PROGRAMS = gnubg$(EXEEXT) makebearoff$(EXEEXT) makehyper$(EXEEXT) \
 	bearoffdump$(EXEEXT) makeweights$(EXEEXT)
 am__append_1 = 
-am__append_2 = -IC:/msys64/mingw32/include/python3.10 
-am__append_3 = -IC:/msys64/mingw32/include/gtkglext-1.0 -IC:/msys64/mingw32/lib/gtkglext-1.0/include -IC:/msys64/mingw32/include/gtk-2.0 -IC:/msys64/mingw32/lib/gtk-2.0/include -IC:/msys64/mingw32/include/pango-1.0 -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/fribidi -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/pixman-1 -IC:/msys64/mingw32/include/gdk-pixbuf-2.0 -mms-bitfields -DLIBDEFLATE_DLL -IC:/msys64/mingw32/include/atk-1.0 -DLIBDEFLATE_DLL  
-am__append_4 = win32/win32res.o
+am__append_2 = -I/usr/include/python3.10 
+#am__append_3 =  
+#am__append_4 = win32/win32res.o
 am__append_5 = gtkboard.c gtkboard.h gtkgame.c gtkgame.h gtkfile.c gtkfile.h \
 		 gtkprefs.c gtkprefs.h gtk-multiview.c gtk-multiview.h gtktheory.c \
 		 gtktheory.h gtkexport.c gtkexport.h gtkcube.c gtkcube.h \
@@ -124,9 +124,9 @@ am__append_5 = gtkboard.c gtkboard.h gtkgame.c gtkgame.h gtkfile.c gtkfile.h \
 		 gtkscoremap.h gtkscoremap.c
 
 am__append_6 = pixmaps/libresources.la
-am__append_7 = -lsqlite3 
-am__append_8 = -LC:/msys64/mingw32/lib -lpython3.10
-am__append_9 = -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS) $(EPOXY_LIBS)
+am__append_7 = -lsqlite3
+am__append_8 = -L/usr/lib/x86_64-linux-gnu -lpython3.10
+#am__append_9 = -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS) $(EPOXY_LIBS)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_append_flag.m4 \
@@ -231,9 +231,9 @@ am_gnubg_OBJECTS = analysis.$(OBJEXT) bearoff.$(OBJEXT) \
 	$(am__objects_2)
 gnubg_OBJECTS = $(am_gnubg_OBJECTS)
 am__DEPENDENCIES_1 =
-am__DEPENDENCIES_2 = board3d/libboard3d.la \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+#am__DEPENDENCIES_2 = board3d/libboard3d.la \
+#	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+#	$(am__DEPENDENCIES_1)
 gnubg_DEPENDENCIES = lib/libevent.la $(am__append_6)  \
 	$(OTHER_LIBS) $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2)
@@ -463,39 +463,39 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} '/home/g/gnubg/missing' aclocal-1.16
+ACLOCAL = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_CFLAGS =  -DG_DISABLE_ASSERT -g -O3 -ffast-math
 AM_DEFAULT_VERBOSITY = 1
 AM_YFLAGS = -d
 AR = ar
-AUTOCONF = ${SHELL} '/home/g/gnubg/missing' autoconf
-AUTOHEADER = ${SHELL} '/home/g/gnubg/missing' autoheader
-AUTOMAKE = ${SHELL} '/home/g/gnubg/missing' automake-1.16
-AWK = gawk
-BUILD_DATE = 20230106
-CAIRO_CFLAGS = -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/pixman-1 
-CAIRO_LIBS = -lcairo 
-CANBERRA_CFLAGS = 
-CANBERRA_LIBS = 
+AUTOCONF = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' autoconf
+AUTOHEADER = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' autoheader
+AUTOMAKE = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' automake-1.16
+AWK = mawk
+BUILD_DATE = 20230108
+CAIRO_CFLAGS = -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
+CAIRO_LIBS = -lcairo
+CANBERRA_CFLAGS = -D_REENTRANT -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/x86_64-linux-gnu -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
+CANBERRA_LIBS = -lcanberra-gtk -lX11 -lcanberra -lgdk-x11-2.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lfontconfig -lfreetype
 CATALOGS =  cs.gmo da.gmo de.gmo en_GB.gmo en_US.gmo el.gmo es.gmo fi.gmo fr.gmo is.gmo it.gmo ja.gmo ro.gmo ru.gmo tr.gmo
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2 -mms-bitfields
+CFLAGS = 
 CPPFLAGS = 
-CPUEXT_FLAGS =  -mrdrnd -mbmi -mbmi2 -madx -mmpx -mabm
+CPUEXT_FLAGS =  -mrdrnd -mabm
 CSCOPE = cscope
 CTAGS = ctags
-CYGPATH_W = cygpath -w
+CYGPATH_W = echo
 DATADIRNAME = share
-DBLATEX = false
-DEFAULT_WWW_PROG = 
+DBLATEX = dblatex
+DEFAULT_WWW_PROG = sensible-browser
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
-DLLTOOL = dlltool
-DOCBOOK2MAN = false
-DOCBOOK2TEXI = false
+DLLTOOL = false
+DOCBOOK2MAN = docbook2x-man
+DOCBOOK2TEXI = docbook2x-texi
 DSYMUTIL = 
 DUMPBIN = 
 ECHO_C = 
@@ -505,60 +505,59 @@ EGREP = /usr/bin/grep -E
 EPOXY_CFLAGS = 
 EPOXY_LIBS = 
 ETAGS = etags
-EXEEXT = .exe
+EXEEXT = 
 FGREP = /usr/bin/grep -F
-FILECMD = file
-FREETYPE2_CFLAGS = -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include 
-FREETYPE2_LIBS = -lfreetype 
-GDK_PIXBUF_CSOURCE = /mingw32/bin/gdk-pixbuf-csource
+FREETYPE2_CFLAGS = -I/usr/include/freetype2 -I/usr/include/libpng16
+FREETYPE2_LIBS = -lfreetype
+GDK_PIXBUF_CSOURCE = /usr/bin/gdk-pixbuf-csource
 GETTEXT_PACKAGE = gnubg
-GLIB_CFLAGS = -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include 
-GLIB_COMPILE_RESOURCES = /mingw32/bin/glib-compile-resources
-GLIB_LIBS = -lglib-2.0 -lintl 
+GLIB_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GLIB_COMPILE_RESOURCES = /usr/bin/glib-compile-resources
+GLIB_LIBS = -lglib-2.0
 GLU_CFLAGS = 
-GLU_LIBS = 
+GLU_LIBS = -lGLU
 GMOFILES =  cs.gmo da.gmo de.gmo en_GB.gmo en_US.gmo el.gmo es.gmo fi.gmo fr.gmo is.gmo it.gmo ja.gmo ro.gmo ru.gmo tr.gmo
 GMP_LIB = -lgmp
-GMSGFMT = /mingw32/bin/msgfmt
-GOBJECT_CFLAGS = -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include 
-GOBJECT_LIBS = -lgobject-2.0 -lglib-2.0 -lintl 
+GMSGFMT = /usr/bin/msgfmt
+GOBJECT_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GOBJECT_LIBS = -lgobject-2.0 -lglib-2.0
 GREP = /usr/bin/grep
-GTHREAD_CFLAGS = -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include 
-GTHREAD_LIBS = -lgthread-2.0 -lglib-2.0 -lintl 
-GTKGLEXT_CFLAGS = -IC:/msys64/mingw32/include/gtkglext-1.0 -IC:/msys64/mingw32/lib/gtkglext-1.0/include -IC:/msys64/mingw32/include/gtk-2.0 -IC:/msys64/mingw32/lib/gtk-2.0/include -IC:/msys64/mingw32/include/pango-1.0 -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/fribidi -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/pixman-1 -IC:/msys64/mingw32/include/gdk-pixbuf-2.0 -mms-bitfields -DLIBDEFLATE_DLL -IC:/msys64/mingw32/include/atk-1.0 -DLIBDEFLATE_DLL 
-GTKGLEXT_LIBS = -lgtkglext-win32-1.0 -lgdkglext-win32-1.0 -lglu32 -lopengl32 -luser32 -lkernel32 -lgmodule-2.0 -lgtk-win32-2.0 -lgdk-win32-2.0 -limm32 -lshell32 -lole32 -Wl,-luuid -lpangowin32-1.0 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -lgdi32 -lmsimg32 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lintl 
-GTK_CFLAGS = -IC:/msys64/mingw32/include/gtk-2.0 -mms-bitfields -IC:/msys64/mingw32/lib/gtk-2.0/include -IC:/msys64/mingw32/include/pango-1.0 -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/fribidi -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/pixman-1 -IC:/msys64/mingw32/include/gdk-pixbuf-2.0 -IC:/msys64/mingw32/include/atk-1.0 -DLIBDEFLATE_DLL 
-GTK_LIBS = -lgtk-win32-2.0 -lgdk-win32-2.0 -limm32 -lshell32 -lole32 -Wl,-luuid -lpangowin32-1.0 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -lgdi32 -lmsimg32 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lintl 
+GTHREAD_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GTHREAD_LIBS = -lgthread-2.0 -pthread -lglib-2.0
+GTKGLEXT_CFLAGS = 
+GTKGLEXT_LIBS = 
+GTK_CFLAGS = -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/x86_64-linux-gnu -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
+GTK_LIBS = -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lfontconfig -lfreetype
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 INSTOBJEXT = .mo
-INTLLIBS = -lintl 
-LD = C:/msys64/mingw32/i686-w64-mingw32/bin/ld.exe
-LDFLAGS =  -Wl,--large-address-aware -lws2_32 -lwinmm
+INTLLIBS = 
+LD = /usr/bin/ld -m elf_x86_64
+LDFLAGS = 
 LEX = flex
-LEXLIB = 
+LEXLIB = -ll 
 LEX_OUTPUT_ROOT = lex.yy
-LIBCURL = 
+LIBCURL = -lcurl
 LIBCURL_CPPFLAGS = 
 LIBOBJS = 
-LIBPNG_CFLAGS = -IC:/msys64/mingw32/include/libpng16 
-LIBPNG_LIBS = -lpng16 
+LIBPNG_CFLAGS = -I/usr/include/libpng16
+LIBPNG_LIBS = -lpng16 -lz
 LIBS = -lm 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
-LN_S = cp -pR
+LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} '/home/g/gnubg/missing' makeinfo
+MAKEINFO = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /usr/bin/mkdir -p
 MKINSTALLDIRS = .//mkinstalldirs
-MSGFMT = /mingw32/bin/msgfmt
+MSGFMT = /usr/bin/msgfmt
 MSGFMT_OPTS = -c
-NM = /mingw32/bin/nm -B
+NM = /usr/bin/nm -B
 NMEDIT = 
 OBJDUMP = objdump
 OBJEXT = o
@@ -571,49 +570,49 @@ PACKAGE_STRING = GNU Backgammon 1.07.001
 PACKAGE_TARNAME = gnubg
 PACKAGE_URL = https://www.gnu.org/software/gnubg/
 PACKAGE_VERSION = 1.07.001
-PANGOCAIRO_CFLAGS = -IC:/msys64/mingw32/include/pango-1.0 -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/fribidi -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/pixman-1 
-PANGOCAIRO_LIBS = -lpangocairo-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lintl -lharfbuzz -lcairo 
+PANGOCAIRO_CFLAGS = -pthread -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
+PANGOCAIRO_LIBS = -lpangocairo-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lcairo
 PATH_SEPARATOR = :
-PKG_CONFIG = /mingw32/bin/pkg-config
+PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
-PKG_CONFIG_PATH = /mingw32/lib/pkgconfig:/mingw32/share/pkgconfig
+PKG_CONFIG_PATH = 
 POFILES =  cs.po da.po de.po en_GB.po en_US.po el.po es.po fi.po fr.po is.po it.po ja.po ro.po ru.po tr.po
 POSUB = po
 PO_IN_DATADIR_FALSE = 
 PO_IN_DATADIR_TRUE = 
-PYTHON = /mingw32/bin/Python
-PYTHON_CPPFLAGS = -IC:/msys64/mingw32/include/python3.10
+PYTHON = /usr/bin/python
+PYTHON_CPPFLAGS = -I/usr/include/python3.10
 PYTHON_EXEC_PREFIX = ${exec_prefix}
-PYTHON_EXTRA_LDFLAGS = -Wl,--stack,2000000
-PYTHON_EXTRA_LIBS = -lm -lversion -lshlwapi -lm
-PYTHON_LIBS = -LC:/msys64/mingw32/lib -lpython3.10
-PYTHON_PLATFORM = win32
+PYTHON_EXTRA_LDFLAGS = -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions
+PYTHON_EXTRA_LIBS = -lcrypt -ldl  -lm -lm
+PYTHON_LIBS = -L/usr/lib/x86_64-linux-gnu -lpython3.10
+PYTHON_PLATFORM = linux
 PYTHON_PLATFORM_SITE_PKG = 
 PYTHON_PREFIX = ${prefix}
-PYTHON_SITE_PKG = C:/msys64/mingw32/lib/python3.10/site-packages
+PYTHON_SITE_PKG = /usr/local/lib/python3.10/dist-packages
 PYTHON_VERSION = 3.10
 RANLIB = ranlib
 READLINE_LIBS = -lreadline -lncurses
 SED = /usr/bin/sed
 SET_MAKE = 
-SHELL = /bin/sh
+SHELL = /bin/bash
 SIMD_CFLAGS = -mavx
-SIMD_FLAGS =  -mmmx -msse -msse2 -msse3 -mssse3 -msse4.1 -msse4.2 -maes -mavx -mfma -mavx2
+SIMD_FLAGS =  -mmmx -msse -msse2 -msse3 -mssse3 -msse4.1 -msse4.2 -maes -mavx -mavx2
 SQLITE_CFLAGS = 
-SQLITE_LIBS = -lsqlite3 
+SQLITE_LIBS = -lsqlite3
 STRIP = strip
 USE_NLS = yes
 VERSION = 1.07.001
-WINDRES = windres
-XGETTEXT = /mingw32/bin/xgettext
+WINDRES = 
+XGETTEXT = /usr/bin/xgettext
 XSLTPROC = xsltproc
 YACC = bison -y
 YFLAGS = 
 _libcurl_config = 
-abs_builddir = /home/g/gnubg
-abs_srcdir = /home/g/gnubg
-abs_top_builddir = /home/g/gnubg
-abs_top_srcdir = /home/g/gnubg
+abs_builddir = /home/isaac/g/gnubg-cvs2svn/gnubg
+abs_srcdir = /home/isaac/g/gnubg-cvs2svn/gnubg
+abs_top_builddir = /home/isaac/g/gnubg-cvs2svn/gnubg
+abs_top_srcdir = /home/isaac/g/gnubg-cvs2svn/gnubg
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -623,26 +622,26 @@ am__quote =
 am__tar = $${TAR-tar} chof - "$$tardir"
 am__untar = $${TAR-tar} xf -
 bindir = ${exec_prefix}/bin
-build = i686-w64-mingw32
-build_alias = i686-w64-mingw32
-build_cpu = i686
-build_os = mingw32
-build_vendor = w64
+build = x86_64-pc-linux-gnu
+build_alias = 
+build_cpu = x86_64
+build_os = linux-gnu
+build_vendor = pc
 builddir = .
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-host = i686-w64-mingw32
+host = x86_64-pc-linux-gnu
 host_alias = 
-host_cpu = i686
-host_os = mingw32
-host_vendor = w64
+host_cpu = x86_64
+host_os = linux-gnu
+host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/g/gnubg/install-sh
+install_sh = ${SHELL} /home/isaac/g/gnubg-cvs2svn/gnubg/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -653,7 +652,7 @@ oldincludedir = /usr/include
 pdfdir = ${docdir}
 pkgpyexecdir = ${pyexecdir}/gnubg
 pkgpythondir = ${pythondir}/gnubg
-prefix = /mingw32
+prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
 pyexecdir = ${PYTHON_EXEC_PREFIX}/lib/python3.10/site-packages
@@ -669,19 +668,19 @@ top_builddir = .
 top_srcdir = .
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = win32 lib doc met po m4 sounds board3d textures scripts flags fonts non-src pixmaps .
-#localeloc = -DLOCALEDIR=\"$(localedir)\"
+localeloc = -DLOCALEDIR=\"$(localedir)\"
 
 #
 #
-localeloc = -DLOCALEDIR=\"locale\" 
+#localeloc = -DLOCALEDIR=\"locale\" 
 AM_CPPFLAGS = -I$(srcdir)/lib -I$(builddir)/pixmaps \
-	-I$(srcdir)/pixmaps $(localeloc) -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include  \
-	-IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include  -IC:/msys64/mingw32/include/libpng16  -IC:/msys64/mingw32/include/gtk-2.0 -mms-bitfields -IC:/msys64/mingw32/lib/gtk-2.0/include -IC:/msys64/mingw32/include/pango-1.0 -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/fribidi -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/pixman-1 -IC:/msys64/mingw32/include/gdk-pixbuf-2.0 -IC:/msys64/mingw32/include/atk-1.0 -DLIBDEFLATE_DLL  -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/pixman-1  \
-	-IC:/msys64/mingw32/include/pango-1.0 -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include -IC:/msys64/mingw32/include/harfbuzz -IC:/msys64/mingw32/include/freetype2 -IC:/msys64/mingw32/include/libpng16 -IC:/msys64/mingw32/include/fribidi -IC:/msys64/mingw32/include/cairo -IC:/msys64/mingw32/include/lzo -IC:/msys64/mingw32/include/pixman-1  -IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include   \
-	-IC:/msys64/mingw32/include/glib-2.0 -IC:/msys64/mingw32/lib/glib-2.0/include   $(am__append_1) \
+	-I$(srcdir)/pixmaps $(localeloc) -I/usr/include/freetype2 -I/usr/include/libpng16 \
+	-I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/libpng16 -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/x86_64-linux-gnu -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 \
+	-pthread -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -D_REENTRANT -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/x86_64-linux-gnu -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 \
+	-I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  $(am__append_1) \
 	$(am__append_2) $(am__append_3) -DAC_DOCDIR='"$(docdir)"' \
 	-DAC_DATADIR='"$(datadir)"' \
-	-DAC_PKGDATADIR='"$(datadir)/gnubg"' -DBUILD_DATE=20230106
+	-DAC_PKGDATADIR='"$(datadir)/gnubg"' -DBUILD_DATE=20230108
 OTHER_LIBS = $(am__append_4)
 BUILT_SOURCES = sgf_y.c sgf_l.c copying.c credits.c external_l.c external_y.c
 
@@ -708,12 +707,12 @@ gnubg_SOURCES = analysis.c analysis.h backgammon.h bearoff.c \
 #
 #
 gnubg_LDADD = -L$(srcdir)/lib lib/libevent.la $(am__append_6) \
-	-lgtk-win32-2.0 -lgdk-win32-2.0 -limm32 -lshell32 -lole32 -Wl,-luuid -lpangowin32-1.0 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -lgdi32 -lmsimg32 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lintl  -lpng16  -lcairo  -lpangocairo-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lintl -lharfbuzz -lcairo  \
-	-lgthread-2.0 -lglib-2.0 -lintl  -lgobject-2.0 -lglib-2.0 -lintl  -lreadline -lncurses -lgmp \
-	 -lfreetype  -lglib-2.0 -lintl   \
-	 $(OTHER_LIBS) $(am__append_7) $(am__append_8) \
+	-lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lfontconfig -lfreetype -lpng16 -lz -lcairo -lpangocairo-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lcairo \
+	-lgthread-2.0 -pthread -lglib-2.0 -lgobject-2.0 -lglib-2.0 -lreadline -lncurses -lgmp \
+	 -lfreetype -lglib-2.0 -lcanberra-gtk -lX11 -lcanberra -lgdk-x11-2.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lfontconfig -lfreetype \
+	-lcurl $(OTHER_LIBS) $(am__append_7) $(am__append_8) \
 	$(am__append_9)
-gnubg_LDFLAGS = -mwindows
+#gnubg_LDFLAGS = -mwindows
 
 #
 #
@@ -724,13 +723,13 @@ UTILSOURCES = eval.h eval.c positionid.h positionid.c \
 	mec.h mec.c util.c util.h glib-ext.c glib-ext.h
 
 makebearoff_SOURCES = makebearoff.c $(UTILSOURCES)
-makebearoff_LDADD = -Llib lib/libevent.la -lglib-2.0 -lintl  -lgthread-2.0 -lglib-2.0 -lintl  -lgobject-2.0 -lglib-2.0 -lintl 
+makebearoff_LDADD = -Llib lib/libevent.la -lglib-2.0 -lgthread-2.0 -pthread -lglib-2.0 -lgobject-2.0 -lglib-2.0
 makehyper_SOURCES = makehyper.c $(UTILSOURCES)
-makehyper_LDADD = -Llib lib/libevent.la -lglib-2.0 -lintl  -lgthread-2.0 -lglib-2.0 -lintl  -lgobject-2.0 -lglib-2.0 -lintl 
+makehyper_LDADD = -Llib lib/libevent.la -lglib-2.0 -lgthread-2.0 -pthread -lglib-2.0 -lgobject-2.0 -lglib-2.0
 bearoffdump_SOURCES = bearoffdump.c drawboard.c $(UTILSOURCES)
-bearoffdump_LDADD = -Llib lib/libevent.la -lglib-2.0 -lintl  -lgthread-2.0 -lglib-2.0 -lintl  -lgobject-2.0 -lglib-2.0 -lintl 
+bearoffdump_LDADD = -Llib lib/libevent.la -lglib-2.0 -lgthread-2.0 -pthread -lglib-2.0 -lgobject-2.0 -lglib-2.0
 makeweights_SOURCES = makeweights.c glib-ext.c
-makeweights_LDADD = -Llib lib/libevent.la -lglib-2.0 -lintl  -lgthread-2.0 -lglib-2.0 -lintl  -lgobject-2.0 -lglib-2.0 -lintl 
+makeweights_LDADD = -Llib lib/libevent.la -lglib-2.0 -lgthread-2.0 -pthread -lglib-2.0 -lgobject-2.0 -lglib-2.0
 
 #
 #
@@ -1650,13 +1649,13 @@ AUTHORS: credits.sh
 
 #
 #
-copying.c: copying.awk
-	$(AWK) -f $(srcdir)/copying.awk < $(srcdir)/COPYING > $@
-
-copying.$(OBJEXT): copying.c
-	$(COMPILE) -c $< -o $@
-#copying.c: COPYING copying.awk
+#copying.c: copying.awk
 #	$(AWK) -f $(srcdir)/copying.awk < $(srcdir)/COPYING > $@
+
+#copying.$(OBJEXT): copying.c
+#	$(COMPILE) -c $< -o $@
+copying.c: COPYING copying.awk
+	$(AWK) -f $(srcdir)/copying.awk < $(srcdir)/COPYING > $@
 
 #
 #
