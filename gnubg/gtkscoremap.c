@@ -2,7 +2,6 @@
 * 
 * 
 * bug DMP???
-* - remove  Label by et Location of option pane
 * - w/o ou w/ Jacoby, D, ND,...
 * - single frame in settings>options?
 * new tab in Settings/Analysis
@@ -157,20 +156,20 @@ const char* aszScoreMapLabel[NUM_LABEL] = {N_("Away score"), N_("True score")};
 const char* aszScoreMapLabelCommands[NUM_LABEL] = { N_("away"), N_("score")}; 
 
 scoreMapJacoby scoreMapJacobyDef = MONEY_NO_JACOBY;
-const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Scoreless (Money w/o Jacoby)"), N_("Money w/ Jacoby")};
+const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Scoreless (Money without Jacoby)"), N_("Money with Jacoby")};
 const char* aszScoreMapJacobyCommands[NUM_JACOBY] = { N_("nojacoby"), N_("jacoby")}; 
 
 scoreMapCubeEquityDisplay scoreMapCubeEquityDisplayDef = CUBE_NO_EVAL;
-const char* aszScoreMapCubeEquityDisplay[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("D-ND"), N_("D/P-D/T")};
+const char* aszScoreMapCubeEquityDisplay[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("Double vs. No-Double"), N_("Double/Pass vs. Double/Take")};
 const char* aszScoreMapCubeEquityDisplayCommands[NUM_CUBEDISP] = { N_("no"), N_("equity"), N_("dnd"), N_("dpdt")}; 
 
 scoreMapMoveEquityDisplay scoreMapMoveEquityDisplayDef = MOVE_NO_EVAL;
-const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("Vs. 2nd best")};
+const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("Vs. second best")};
 const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP] = { N_("no"), N_("absolute"), N_("relative")}; 
 
 scoreMapColour scoreMapColourDef = ALL;
-const char* aszScoreMapColour[NUM_COLOUR] = {N_("All"), N_("ND vs D"), N_("D/T vs D/P")};
-const char* aszScoreMapColourCommands[NUM_COLOUR] = { N_("all"), N_("ndd"), N_("dtdp")}; 
+const char* aszScoreMapColour[NUM_COLOUR] = {N_("All"), N_("Double vs. No-Double"), N_("Double/Pass vs. Double/Take")};
+const char* aszScoreMapColourCommands[NUM_COLOUR] = { N_("all"), N_("dnd"), N_("dpdt")}; 
 
 scoreMapLayout scoreMapLayoutDef = VERTICAL;
 const char* aszScoreMapLayout[NUM_LAYOUT] = { N_("Bottom"), N_("Right") };
