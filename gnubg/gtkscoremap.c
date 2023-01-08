@@ -1,7 +1,6 @@
 /* Still under development.... TBD: 
 * 
 * 
-* Bug when hitting stop
 * bug DMP???
 * bug: in cube scoremap, if we click on using 4 ply then stop, 
 * it still thinks everything is in 4 ply
@@ -62,10 +61,11 @@
             5. Careful! Finally, at the end, ColourQuadrant() asks to redraw, which implicitly calls DrawQuadrant().
                     This function updates the decision text in each square.
                     It also adds the equity text if the corresponding option is set.
-
-     Changing the eval ply launches the ScoreMapPlyToggled function that also calls the functions in steps 2-5 above.
-     Changing the colour-by (ND/D or T/P) launches the ColourByToggled function that only calls UpdateScoreMapVisual
-         (no need for new equity values); and so on for the different radio buttons.
+    Radio buttons:
+     - Changing the eval ply launches the ScoreMapPlyToggled function that also calls the functions in steps 2-5 above.
+     - Changing the colour-by (ND/D or T/P) launches the ColourByToggled function that only calls UpdateScoreMapVisual
+         (no need for new equity values); 
+     - and so on for the different radio buttons.
 */
 
 /* 
@@ -73,6 +73,8 @@
 - new Settings>Options>ScoreMap panel where all default options can be configured
 - added Analyse > "Scoremap (move decision)" to the existing cube-ScoreMap entry
 - added ply display in hover of cube ScoreMap and aligned displays
+- addressed the issues when stopping computation in the middle and changed the order 
+    in which the ScoreMap displays
 - checked that it works in both Windows 10 and Ubuntu 22
 
 12/2022: Isaac Keslassy: a few changes including:
@@ -558,6 +560,11 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
                         // extern int GeneralCubeDecisionE(float aarOutput[2][NUM_ROLLOUT_OUTPUTS], const TanBoard anBoard,
                         // cubeinfo * const pci, const evalcontext * pec, const evalsetup * UNUSED(pes))
                     //ProgressEnd();
+                    /*If we are within this condition, it means there was a problem, e.g. 
+                    the user stopped the computation in the middle*/
+                    pq->ndEquity=-1000;
+                    pq->dtEquity=-1000;
+                    strcpy(pq->decisionString,"");
                     return -1;
                 }
 
@@ -666,39 +673,56 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
     ProgressStartValue(_("Finding correct decisions"), MAX(psm->tableSize*psm->tableSize+1-oldSize*oldSize, 1));
             // Example: If we only recompute the money equity, the formula correctly yields 1 for oldSize = psm->tableSize
 //g_print("Finding %d-ply cube equities:\n",pec->nPlies);
-    for (int i=0; i<psm->tableSize; i++) {
-        // i,j correspond to the locations in the table. 
-        // - In cube ScoreMap, the away-scores
-        //      are 2+i, 2+j (because the (0,0)-entry of the table corresponds to 2-away 2-away).
-        // - In move scoremap: i=0->1-away post Crawford; i=1->1-away Crawford; i=2+->i-away
-        for (int j=0; j<psm->tableSize; j++) {
-            if (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED) {
-                //Only running the line below when (i >= oldSize || j >= oldSize) yields a bug with grey squares on resize
-                CalcQuadrantEquities(&psm->aaQuadrantData[i][j], psm, (i >= oldSize || j >= oldSize));
-                if (myDebug)
-                    g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n",i,j,psm->aaQuadrantData[i][j].ml.cMoves,psm->aaQuadrantData[i][j].ml.rBestScore,psm->aaQuadrantData[i][j].decisionString);
-                if (i >= oldSize || j >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
-                    ProgressValueAdd(1);
-            }
-            else {
-                strcpy(psm->aaQuadrantData[i][j].decisionString, "");
-            }
-                //if (i >= oldSize || j >= oldSize) { // Only count the ones where equities are recomputed (other ones occur near-instantly)
-                //    if (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED) { 
-                //        CalcQuadrantEquities(&psm->aaQuadrantData[i][j], psm, (i >= oldSize || j >= oldSize));
-                //        //g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n", i, j, psm->aaQuadrantData[i][j].ml.cMoves, psm->aaQuadrantData[i][j].ml.rBestScore, psm->aaQuadrantData[i][j].decisionString);
-                //    }
-                //    else {
-                //        strcpy(psm->aaQuadrantData[i][j].decisionString, "");
-                //    }
-                //    ProgressValueAdd(1);
-                //}
-        }
-    }
+
+    /* We start by computing the money-play value, since if the user stops the process
+    in the middle, it's often the most useful*/
     //if(oldSize == 0 || oldSize == psm->tableSize)  //causes bug: it colors the cell in dark grey, and doesn't show a move
                         //maybe the moneyQuadrantData becomes empty?
     CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
     ProgressValueAdd(1);//not sure if it should be included above, but probably minor
+
+    /*
+    Next, we fill the table. i,j correspond to the locations in the table. 
+        - In cube ScoreMap, the away-scores are 2+i, 2+j (because the (0,0)-entry of 
+            the table corresponds to 2-away 2-away).
+        - In move scoremap: i=0->1-away post Crawford; i=1->1-away Crawford; 
+            i=2+->i-away
+
+    In a first version, we incremented i from 1 to tableSize, then j similarly, 
+    i.e. row by row in (i,j) (or col by col as seen by the user with "away" labels).
+    
+    But if the user interrupts the process in the middle, maybe it's better to progress 
+    using growing squares or by computing the diagonal first. Here we implement the 
+    growing squares. (Thanks to Philippe Michel for the feedback!)
+    */
+    for (int aux=0; aux<psm->tableSize; aux++) {
+        for (int aux2=aux; aux2>=0; aux2--) {
+            // for (int j=0; j<aux; j++) {
+            if (psm->aaQuadrantData[aux2][aux].isAllowedScore == ALLOWED) {
+                //Only running the line below when (i >= oldSize || j >= oldSize) 
+                // [now aux>=oldSize] yields a bug with grey squares on resize
+                CalcQuadrantEquities(&psm->aaQuadrantData[aux2][aux], psm, (aux >= oldSize));
+                // if (myDebug)
+                //     g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n",i,j,psm->aaQuadrantData[i][j].ml.cMoves,psm->aaQuadrantData[i][j].ml.rBestScore,psm->aaQuadrantData[i][j].decisionString);
+                if (aux >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
+                    ProgressValueAdd(1);
+            }
+            else {
+                strcpy(psm->aaQuadrantData[aux2][aux].decisionString, "");
+            }
+            if (aux2<aux) {   //same as above but now doing the other side of the square without the 
+                            //(aux,aux) vertex
+                if (psm->aaQuadrantData[aux][aux2].isAllowedScore == ALLOWED) {
+                    CalcQuadrantEquities(&psm->aaQuadrantData[aux][aux2], psm, (aux >= oldSize));
+                    if (aux >= oldSize)
+                        ProgressValueAdd(1);
+                }
+                else {
+                    strcpy(psm->aaQuadrantData[aux][aux2].decisionString, "");
+                }
+            }
+        }
+    }
 
     ProgressEnd();
 
@@ -1131,19 +1155,23 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
         float nd=pq->ndEquity;
         float dt=pq->dtEquity;
         float dp=1.0f;
-        sprintf(space2, "%*c", DIGITS + 7, ' ');   //define spacing before putting ply of 1st line
-        if (pq->dec == ND) { //ND is best //format: "+" forces +/-; .*f displays f with precision DIGITS
-            sprintf(ssz,"<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. D/T\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies);//pq->ml.amMoves[0].esMove.ec.nPlies 
-            //sprintf(ssz, "<tt>1. ND \t%+.*f\n2. D/P\t%+.*f\t%+.*f\n3. D/T\t%+.*f\t%+.*f</tt> (%u-ply)", DIGITS, nd, DIGITS, dp, DIGITS, dp - nd, DIGITS, dt, DIGITS, dt - nd, psm->ec.nPlies); 
-        } else if (pq->dec == DT) {//DT is best
-            sprintf(ssz,"<tt>1. D/T\t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dt,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-dt,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dt,psm->ec.nPlies);
-            // sprintf(ssz,"<tt>1. D/T\t%+.*f\n2. D/P\t%+.*f\t%+.*f\n3. ND \t%+.*f\t%+.*f</tt>",DIGITS,dt,DIGITS,dp,DIGITS,dp-dt,DIGITS,nd,DIGITS,nd-dt);
-        } else if (pq->dec == DP) { //DP is best
-            sprintf(ssz,"<tt>1. D/P\t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dp, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-dp,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dp,psm->ec.nPlies);
-            // sprintf(ssz,"<tt>1. D/P\t%+.*f\n2. D/T\t%+.*f\t%+.*f\n3. ND \t%+.*f\t%+.*f</tt>",DIGITS,dp,DIGITS,dt,DIGITS,dt-dp,DIGITS,nd,DIGITS,nd-dp);
-        } else { //TGTD is best
-            sprintf(ssz,"<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. D/P\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies);
-            // sprintf(ssz,"<tt>1. ND \t%+.*f\n2. D/T\t%+.*f\t%+.*f\n3. D/P\t%+.*f\t%+.*f</tt>",DIGITS,nd,DIGITS,dt,DIGITS,dt-nd,DIGITS,dp,DIGITS,dp-nd);
+        if (nd<-900.0) //reflects issue, typically user stops computation in the middle
+            sprintf(ssz,"computation stopped by user?");
+        else {
+            sprintf(space2, "%*c", DIGITS + 7, ' ');   //define spacing before putting ply of 1st line
+            if (pq->dec == ND) { //ND is best //format: "+" forces +/-; .*f displays f with precision DIGITS
+                sprintf(ssz,"<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. D/T\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies);//pq->ml.amMoves[0].esMove.ec.nPlies 
+                //sprintf(ssz, "<tt>1. ND \t%+.*f\n2. D/P\t%+.*f\t%+.*f\n3. D/T\t%+.*f\t%+.*f</tt> (%u-ply)", DIGITS, nd, DIGITS, dp, DIGITS, dp - nd, DIGITS, dt, DIGITS, dt - nd, psm->ec.nPlies); 
+            } else if (pq->dec == DT) {//DT is best
+                sprintf(ssz,"<tt>1. D/T\t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dt,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-dt,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dt,psm->ec.nPlies);
+                // sprintf(ssz,"<tt>1. D/T\t%+.*f\n2. D/P\t%+.*f\t%+.*f\n3. ND \t%+.*f\t%+.*f</tt>",DIGITS,dt,DIGITS,dp,DIGITS,dp-dt,DIGITS,nd,DIGITS,nd-dt);
+            } else if (pq->dec == DP) { //DP is best
+                sprintf(ssz,"<tt>1. D/P\t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dp, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-dp,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dp,psm->ec.nPlies);
+                // sprintf(ssz,"<tt>1. D/P\t%+.*f\n2. D/T\t%+.*f\t%+.*f\n3. ND \t%+.*f\t%+.*f</tt>",DIGITS,dp,DIGITS,dt,DIGITS,dt-dp,DIGITS,nd,DIGITS,nd-dp);
+            } else { //TGTD is best
+                sprintf(ssz,"<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. D/P\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies);
+                // sprintf(ssz,"<tt>1. ND \t%+.*f\n2. D/T\t%+.*f\t%+.*f\n3. D/P\t%+.*f\t%+.*f</tt>",DIGITS,nd,DIGITS,dt,DIGITS,dt-nd,DIGITS,dp,DIGITS,dp-nd);
+            }                
         }
         strcat(buf,ssz);
     } else { // move scoremap
@@ -1211,9 +1239,12 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             strcat(buf,ssz);
         } else {
             /* This cannot happen. If there is no legal move there is no
-               move analysis and no Score Map button to bring us here. */
-            g_assert_not_reached();
-            sprintf(ssz,"no legal moves");
+               move analysis and no Score Map button to bring us here. 
+               ... Actually this may happen if the user stops the computation.
+               The new hover text reflects it.*/
+            //g_assert_not_reached();
+            // sprintf(ssz,"no legal moves");
+            sprintf(ssz,"no legal moves, computation stopped by user?");
             strcat(buf,ssz);
         }
     }
@@ -1240,7 +1271,10 @@ ColourQuadrant(gtkquadrant * pgq, quadrantdata * pq, const scoremap * psm) {
         // First compute and fill the color, as well as update the equity text
         if (psm->cubeScoreMap) {
             // if no eval to display, nothing to do for the eval text; if absolute or relative eval, update now
-            if (psm->displayCubeEval == CUBE_ABSOLUTE_EVAL) {
+            // also, if the user stopped the computation in the middle and the eval is worthless, don't display it
+            if (nd<-900 && psm->displayCubeEval != CUBE_NO_EVAL) {
+                sprintf(pq->equityText,"\n -- ");
+            } else if (psm->displayCubeEval == CUBE_ABSOLUTE_EVAL) {
                 sprintf(pq->equityText,"\n%+.*f",DIGITS, MAX(nd, MIN(dt, dp)));
             } else if (psm->displayCubeEval == CUBE_RELATIVE_EVAL_ND_D) {
                 sprintf(pq->equityText,"\n%+.*f",DIGITS, MIN(dt, dp) - nd);
@@ -1286,15 +1320,15 @@ ColourQuadrant(gtkquadrant * pgq, quadrantdata * pq, const scoremap * psm) {
         }
 
         // Next set the hover text
-        //SetHoverText (buf,pq,psm);
+        SetHoverText (buf,pq,psm);
 /*
  * This is not supported in early versions of GTK2 (8+ years old).
  * Don't bother with an alterative, we will raise the minimum requirement soon.
  * Not a concern with distributions in practical use today.
  */
-// #if GTK_CHECK_VERSION(2,12,0)
-//         gtk_widget_set_tooltip_markup(pgq->pContainerWidget, buf);
-// #endif
+#if GTK_CHECK_VERSION(2,12,0)
+        gtk_widget_set_tooltip_markup(pgq->pContainerWidget, buf);
+#endif
 
     }
     gtk_widget_queue_draw(pgq->pDrawingAreaWidget); // here we are calling DrawQuadrant() in a hidden way through the "draw" call,
