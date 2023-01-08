@@ -2,8 +2,10 @@
 * 
 * 
 * bug DMP???
-* bug: in cube scoremap, if we click on using 4 ply then stop, 
-* it still thinks everything is in 4 ply
+* - remove  Label by et Location of option pane
+* - w/o ou w/ Jacoby, D, ND,...
+* - single frame in settings>options?
+* new tab in Settings/Analysis
 */
 
 /*
@@ -73,8 +75,10 @@
 - new Settings>Options>ScoreMap panel where all default options can be configured
 - added Analyse > "Scoremap (move decision)" to the existing cube-ScoreMap entry
 - added ply display in hover of cube ScoreMap and aligned displays
-- addressed the issues when stopping computation in the middle and changed the order 
-    in which the ScoreMap displays
+- addressed the issues that occur when stopping computation in the middle, and 
+    changed the order in which the ScoreMap displays
+- removed label-by and layout radio buttons; they will only be configured in the 
+    default settings panel
 - checked that it works in both Windows 10 and Ubuntu 22
 
 12/2022: Isaac Keslassy: a few changes including:
@@ -2901,39 +2905,39 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     //gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
 
 
-    if (psm->cubeScoreMap) {// && layout == VERTICAL) { 
+//     if (psm->cubeScoreMap) {// && layout == VERTICAL) { 
 
-     /* topleft toggle frame */
+//      /* topleft toggle frame */
 
-    //frameToolTip = "Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation at money play with Jacoby";
-    BuildLabelFrame(psm, pwv, _("Top-Left Square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation at money play with Jacoby"), aszScoreMapJacoby, 2, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
+//     //frameToolTip = "Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation at money play with Jacoby";
+//     BuildLabelFrame(psm, pwv, _("Top-left square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation at money play with Jacoby"), aszScoreMapJacoby, 2, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
 
 
-        ///* Layout frame */
-        //const char* aszScoreMapLayout[2] = { N_("Bottom"), N_("Right") };
+//         ///* Layout frame */
+//         //const char* aszScoreMapLayout[2] = { N_("Bottom"), N_("Right") };
 
-        //BuildLabelFrame(psm, pwv, _("Options position"), aszScoreMapLayout, 2, layout, LayoutToggled, TRUE, vAlignExpand);
+//         //BuildLabelFrame(psm, pwv, _("Options position"), aszScoreMapLayout, 2, layout, LayoutToggled, TRUE, vAlignExpand);
 
-//        //pwFrame=gtk_frame_new(_("Jacoby"));
-//        pwFrame = gtk_frame_new(_("Misc"));
-//        gtk_box_pack_start(GTK_BOX(pwv), pwFrame, vAlignExpand, FALSE, 0);
-//
-//#if GTK_CHECK_VERSION(3,0,0)
-//       pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-//#else
-//      pwh2 = gtk_hbox_new(FALSE, 8);
-//#endif
-//        gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-//
-//        pw = gtk_check_button_new_with_label (_("Jacoby"));
-//        gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-//        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), moneyJacoby);
-//        g_signal_connect(G_OBJECT (pw), "toggled", G_CALLBACK(JacobyToggled), psm);
-//        gtk_widget_set_tooltip_text(pw, _("Toggle Jacoby option for money play"));
-//
-//        gtk_box_pack_start(GTK_BOX(pwh2), pwButton = gtk_button_new_with_label(_("Info")), FALSE, FALSE, 8);
-//        g_signal_connect(G_OBJECT(pwButton), "clicked", G_CALLBACK(GTKShowCubeScoreMapInfo), pwDialog); 
-    }
+// //        //pwFrame=gtk_frame_new(_("Jacoby"));
+// //        pwFrame = gtk_frame_new(_("Misc"));
+// //        gtk_box_pack_start(GTK_BOX(pwv), pwFrame, vAlignExpand, FALSE, 0);
+// //
+// //#if GTK_CHECK_VERSION(3,0,0)
+// //       pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
+// //#else
+// //      pwh2 = gtk_hbox_new(FALSE, 8);
+// //#endif
+// //        gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
+// //
+// //        pw = gtk_check_button_new_with_label (_("Jacoby"));
+// //        gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
+// //        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), moneyJacoby);
+// //        g_signal_connect(G_OBJECT (pw), "toggled", G_CALLBACK(JacobyToggled), psm);
+// //        gtk_widget_set_tooltip_text(pw, _("Toggle Jacoby option for money play"));
+// //
+// //        gtk_box_pack_start(GTK_BOX(pwh2), pwButton = gtk_button_new_with_label(_("Info")), FALSE, FALSE, 8);
+// //        g_signal_connect(G_OBJECT(pwButton), "clicked", G_CALLBACK(GTKShowCubeScoreMapInfo), pwDialog); 
+//     }
   
     // ***************************************** //
 
@@ -2948,12 +2952,15 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     gtk_box_pack_start(GTK_BOX(psm->pwOptionsBox), pwv, TRUE, FALSE, 0);
     }
 
-    if (!(psm->cubeScoreMap)) { // && layout == VERTICAL)) {
-        /* topleft toggle frame (  unless in cube scoremap, where it's inserted earlier to equalize )*/
-        // const char* aszScoreMapJacoby[2] = { N_("Scoreless (Money w/o J)"), N_("Money w/ J") }; //was: { N_("64-away"), N_("Money (J)"), N_("Money (No J)") };
-        //frameToolTip = "Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby";
-        BuildLabelFrame(psm, pwv, _("Top-Left Square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacoby, NUM_JACOBY, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
-    }
+    // if (!(psm->cubeScoreMap)) { // && layout == VERTICAL)) {
+    //     /* topleft toggle frame (  unless in cube scoremap, where it's inserted earlier to equalize )*/
+    //     // const char* aszScoreMapJacoby[2] = { N_("Scoreless (Money w/o J)"), N_("Money w/ J") }; //was: { N_("64-away"), N_("Money (J)"), N_("Money (No J)") };
+    //     //frameToolTip = "Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby";
+    //     BuildLabelFrame(psm, pwv, _("Top-left square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacoby, NUM_JACOBY, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
+    // }
+
+    /* topleft toggle frame */
+        BuildLabelFrame(psm, pwv, _("Top-left square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacoby, NUM_JACOBY, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
 
     /* Display Eval frame */
     if (psm->cubeScoreMap) {
@@ -2975,16 +2982,16 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
         BuildLabelFrame(psm, pwv, _("Colour by"), _("Select whether to colour the table squares using all options, or emphasize the Double vs. No-Double decision, or emphasize the Double/Take vs. Double/Pass decision"), aszScoreMapColour, NUM_COLOUR, psm->colourBasedOn, ColourByToggled, psm->cubeScoreMap, vAlignExpand);
    }  
 
-    /* Label by toggle */
-    // This button offers the choice between the display of true scores and away scores.
+    // /* Label by toggle */
+    // // This button offers the choice between the display of true scores and away scores.
 
-    //frameToolTip = "Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5";
-    BuildLabelFrame(psm, pwv, _("Label by"), _("Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5"), aszScoreMapLabel, 2, psm->labelBasedOn, LabelByToggled, TRUE, vAlignExpand);
+    // //frameToolTip = "Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5";
+    // BuildLabelFrame(psm, pwv, _("Label by"), _("Select whether to orient the table axes by the away score, i.e. the difference between the current score and the match length, or the true score. For example, a player with a true score of 2 out of 7 has an away score of 5"), aszScoreMapLabel, 2, psm->labelBasedOn, LabelByToggled, TRUE, vAlignExpand);
      
-    /* Layout frame */
+    // /* Layout frame */
 
-    //frameToolTip = "Select whether the options pane should be at the bottom or on the right side of the table";
-    BuildLabelFrame(psm, pwv, _("Location of option pane"), _("Select whether the options pane should be at the bottom or on the right side of the table"), aszScoreMapLayout, NUM_LAYOUT, psm->layout, LayoutToggled, TRUE, vAlignExpand);
+    // //frameToolTip = "Select whether the options pane should be at the bottom or on the right side of the table";
+    // BuildLabelFrame(psm, pwv, _("Location of option pane"), _("Select whether the options pane should be at the bottom or on the right side of the table"), aszScoreMapLayout, NUM_LAYOUT, psm->layout, LayoutToggled, TRUE, vAlignExpand);
 
 
    /* Now pack misc (= Jacoby + info) frame in move scoremap OR {cube scoremap + horizontal layout} */ 
