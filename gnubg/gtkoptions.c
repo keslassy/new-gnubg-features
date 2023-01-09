@@ -866,6 +866,29 @@ append_display_options(optionswidget * pow)
                                   "in MWCs being output as 50.33%."));
 }
 
+//Module to add text, based on AddTitle from gtkgame.c
+static void
+AddText(GtkWidget* pwBox, char* Text)
+{
+    GtkRcStyle * ps = gtk_rc_style_new();
+    GtkWidget * pwText = gtk_label_new(Text);
+    GtkWidget * pwHBox;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwHBox = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, FALSE, FALSE, 4);
+
+    ps->font_desc = pango_font_description_new();
+    //pango_font_description_set_family_static(ps->font_desc, "serif");
+    //pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
+    gtk_widget_modify_style(pwText, ps);
+    g_object_unref(ps);
+
+    gtk_box_pack_start(GTK_BOX(pwHBox), pwText, FALSE, FALSE, 0);
+}
 
 static void
 BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
@@ -883,31 +906,39 @@ BuildRadioButtonFrame(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScore
     int i;
     GtkWidget* pwScoreMapBox;
     GtkWidget* pwFrame;
+    GtkWidget* pwv;
     GtkWidget* pwh2;
     GtkWidget* pw;
     GtkWidget* pwx = NULL;
     //    GtkWidget * pwDefault = NULL;
 
-
 #if GTK_CHECK_VERSION(3,0,0)
-    pwScoreMapBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+        pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
 #else
-    pwScoreMapBox = gtk_hbox_new(FALSE, 0);
+        pwv = gtk_vbox_new(FALSE, 0);
 #endif
-    gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
+// #if GTK_CHECK_VERSION(3,0,0)
+//     pwScoreMapBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+// #else
+//     pwScoreMapBox = gtk_hbox_new(FALSE, 0);
+// #endif
+//     gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
+    AddText(pwvbox, _(frameTitle));
 
-
-    pwFrame = gtk_frame_new(_(frameTitle));
-    gtk_box_pack_start(GTK_BOX(pwScoreMapBox), pwFrame, vAlignExpand, FALSE, 0);
-    gtk_widget_set_tooltip_text(pwFrame, _(frameToolTip)); 
-    gtk_widget_set_sensitive(pwFrame, sensitive);
+//     pwFrame = gtk_frame_new(_(frameTitle));
+//     gtk_box_pack_start(GTK_BOX(pwScoreMapBox), pwFrame, vAlignExpand, FALSE, 0);
+//     gtk_widget_set_tooltip_text(pwFrame, _(frameToolTip)); 
+//     gtk_widget_set_sensitive(pwFrame, sensitive);
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 #else
     pwh2 = gtk_hbox_new(FALSE, 8);
 #endif
-    gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
+//     gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
+
+    gtk_box_pack_start(GTK_BOX(pwvbox), pwh2, FALSE, FALSE, 0);
+
 
     for (i = 0; i < labelStringsLen; i++) {
         if (i == 0)
