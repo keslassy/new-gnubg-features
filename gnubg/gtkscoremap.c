@@ -330,8 +330,9 @@ typedef struct {
     const matchstate *pms; // The *true* match state
     evalcontext ec; // The eval context (takes into account the selected ply)
     int tableSize; // This actually represents the max away score minus 1 (since we never show score=1)
-
     int truenMatchTo;   //match length of the real game (before scoremap was launched)
+    int tempScaleUp; //temporary indicator for when the table size is increased
+    int oldTableSize; //keeping the old size in the above case
     
     /* current selected options*/
     scoreMapLabel labelBasedOn; 
@@ -1882,56 +1883,61 @@ The function updates the decision text in each square.
     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
 
     // build the text that will be displayed in the quadrant
-    // g_print("... %s:%s",pq->decisionString,pq->equityText);
+    //g_print("... %s:%s",pq->decisionString,pq->equityText);
     // we start by cutting long decision strings into two rows; this is only relevant to the move scoremap
 
-    if (pq->isAllowedScore==ALLOWED) { // non-greyed quadrant
+    if (! (psm->tempScaleUp && (i>=psm->oldTableSize || j>=psm->oldTableSize))) { //we don't want text when we scale up the table size as it messes up pango positioning
+        if (pq->isAllowedScore==ALLOWED) { // non-greyed quadrant
 
-        CutTextTo(aux, pq->decisionString, 12);
+            CutTextTo(aux, pq->decisionString, 12);
 
-        if ((psm->cubeScoreMap && psm->displayCubeEval != CUBE_NO_EVAL) || (!psm->cubeScoreMap && psm->displayMoveEval != MOVE_NO_EVAL))  {
-            strcat(aux, pq->equityText);
-        }
-
-        if (pq->isTrueScore) { //emphasize the true-score square
-            strcpy(buf, "<b><span size=\"x-small\">");
-            if (pq->ci.nMatchTo == 0) { //money like the current real game, but maybe with a different Jacoby option
-                //if (pq->ci.fJacoby == moneyJacoby) //money play has same Jacoby settings as now
-                //    strcat(buf, _("Current: "));
-
-                if (psm->moneyJacoby)  // we analyze with Jacoby
-                    strcat(buf, _("Money")); 
-                else
-                    strcat(buf, _("Unlimited"));
+            if ((psm->cubeScoreMap && psm->displayCubeEval != CUBE_NO_EVAL) || (!psm->cubeScoreMap && psm->displayMoveEval != MOVE_NO_EVAL))  {
+                strcat(aux, pq->equityText);
             }
-            else if (pq->isTrueScore == TRUE_SCORE)
-                strcat(buf, _("Current score")); // or "(Same score)"
-            else if (pq->isTrueScore == LIKE_TRUE_SCORE)
-                strcat(buf, _("Similar score")); // "like current score" or "like game score" are a bit long
-            strcat(buf, "</span>\n");
-            strcat(buf, aux);	//pq->decisionString);
-            strcat(buf, "</b>");
-            // pango_layout_set_markup(layout, buf, -1);
-        } else if (pq->isSpecialScore != REGULAR) { //the square is special: MONEY, DMP etc. => write in text             
-            if (pq->isSpecialScore == MONEY_J) 
-                strcpy(buf, _("Money"));
-            else if (pq->isSpecialScore == SCORELESS)
-                strcpy(buf, _("Unlimited"));
-            else if (pq->isSpecialScore == DMP)
-                strcpy(buf, _("DMP"));
-            else if (pq->isSpecialScore == GG)
-                strcpy(buf, _("GG"));
-            else if (pq->isSpecialScore == GS)
-                strcpy(buf, _("GS"));
-            strcat(buf, "\n");
-            strcat(buf, aux);	//pq->decisionString);
-        } else { //regular (not MONEY, DMP, GG, GS), not true score
-            strcpy(buf, aux);	//pq->decisionString);
-        }
+
+            if (pq->isTrueScore) { //emphasize the true-score square
+                strcpy(buf, "<b><span size=\"x-small\">");
+                if (pq->ci.nMatchTo == 0) { //money like the current real game, but maybe with a different Jacoby option
+                    //if (pq->ci.fJacoby == moneyJacoby) //money play has same Jacoby settings as now
+                    //    strcat(buf, _("Current: "));
+
+                    if (psm->moneyJacoby)  // we analyze with Jacoby
+                        strcat(buf, _("Money")); 
+                    else
+                        strcat(buf, _("Unlimited"));
+                }
+                else if (pq->isTrueScore == TRUE_SCORE)
+                    strcat(buf, _("Current score")); // or "(Same score)"
+                else if (pq->isTrueScore == LIKE_TRUE_SCORE)
+                    strcat(buf, _("Similar score")); // "like current score" or "like game score" are a bit long
+                strcat(buf, "</span>\n");
+                strcat(buf, aux);	//pq->decisionString);
+                strcat(buf, "</b>");
+                // pango_layout_set_markup(layout, buf, -1);
+            } else if (pq->isSpecialScore != REGULAR) { //the square is special: MONEY, DMP etc. => write in text             
+                if (pq->isSpecialScore == MONEY_J) 
+                    strcpy(buf, _("Money"));
+                else if (pq->isSpecialScore == SCORELESS)
+                    strcpy(buf, _("Unlimited"));
+                else if (pq->isSpecialScore == DMP)
+                    strcpy(buf, _("DMP"));
+                else if (pq->isSpecialScore == GG)
+                    strcpy(buf, _("GG"));
+                else if (pq->isSpecialScore == GS)
+                    strcpy(buf, _("GS"));
+                strcat(buf, "\n");
+                strcat(buf, aux);	//pq->decisionString);
+            } else { //regular (not MONEY, DMP, GG, GS), not true score
+                strcpy(buf, aux);	//pq->decisionString);
+            }
+        } else
+            strcpy(buf, "");
     } else
-        strcpy(buf, "");
+        strcpy(buf, "...");
+    //tmpstr1 = g_markup_escape_text (buf, strlen(buf));
+
     pango_layout_set_markup(layout, buf, -1);
-    // g_print("\n ... buf: %s",buf);
+    //g_print("\n ... buf: %s",buf);
 
     pango_layout_get_size(layout, &width, &height); /* Find the size of the text */
     /* Note these sizes are PANGO_SCALE * number of pixels, whereas allocation.width/height are in pixels. */
@@ -1944,6 +1950,7 @@ The function updates the decision text in each square.
 
         float rescaleFactor=fminf(((float)allocation.width-4.0f)*(float)PANGO_SCALE/((float)width),((float)allocation.height-4.0f)*(float)PANGO_SCALE/((float)height));
         pango_font_description_set_size(description, (gint)(fontsize*rescaleFactor*PANGO_SCALE));
+        //g_print("font size: %d, rescale factor: %f\n",(int)(fontsize*rescaleFactor*PANGO_SCALE),rescaleFactor);
         pango_layout_set_font_description(layout,description);
 
         /* Measure size again, so that centering works right. */
@@ -2179,7 +2186,19 @@ BuildTableContainer(scoremap * psm, int oldSize)
         // gtk_box_pack_start(GTK_BOX(psm->pwv), psm->pwTable, FALSE, FALSE, 0);
         // gtk_widget_show_all(psm->pwv);
 
-    /* drawing areas */
+    /* drawing areas: starting with money square, then moving to (i,j) */
+
+    
+#if GTK_CHECK_VERSION(3,0,0)
+    InitQuadrant( & psm->moneygQuadrant, psm->pwGrid, psm, quadrantWidth, quadrantHeight, 0, 0, TRUE);
+#else
+    InitQuadrant( & psm->moneygQuadrant, psm->pwTable, psm, quadrantWidth, quadrantHeight, 0, 0, TRUE);
+#endif
+    if(oldSize==0) {
+        strcpy(psm->moneyQuadrantData.decisionString,"");
+        strcpy(psm->moneyQuadrantData.equityText,"");
+        strcpy(psm->moneyQuadrantData.unallowedExplanation,"");
+    }
 
     for (i = 0; i < tableSize; ++i) {
         for (j = 0; j < tableSize; ++j) {
@@ -2217,16 +2236,7 @@ BuildTableContainer(scoremap * psm, int oldSize)
 #endif
     }
 
-#if GTK_CHECK_VERSION(3,0,0)
-    InitQuadrant( & psm->moneygQuadrant, psm->pwGrid, psm, quadrantWidth, quadrantHeight, 0, 0, TRUE);
-#else
-    InitQuadrant( & psm->moneygQuadrant, psm->pwTable, psm, quadrantWidth, quadrantHeight, 0, 0, TRUE);
-#endif
-    if(oldSize==0) {
-        strcpy(psm->moneyQuadrantData.decisionString,"");
-        strcpy(psm->moneyQuadrantData.equityText,"");
-        strcpy(psm->moneyQuadrantData.unallowedExplanation,"");
-    }
+
     //g_signal_connect(G_OBJECT(psm->pwTable), "draw", G_CALLBACK(DrawQuadrant), psm);
 
         // gtk_box_pack_start(GTK_BOX(psm->pwv), psm->pwTable, FALSE, FALSE, 0);
@@ -2584,9 +2594,11 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
         // psm->signednCube=signednCube;
         BuildCubeFrame(psm);
         if (psm->tableSize > oldTableSize) {
+            psm->tempScaleUp=1; //indicator used in drawQuadrant to avoid putting the text that messes up pango
             UpdateScoreMapVisual(psm,oldTableSize);
             UpdateCubeInfoArray(psm, psm->signednCube, FALSE); //UpdateCubeInfoArray(scoremap* psm, int signednCube, int updateMoneyOnly)
             CalcScoreMapEquities(psm, oldTableSize);
+            psm->tempScaleUp=0;
         }
         UpdateScoreMapVisual(psm,psm->tableSize);
     }
@@ -3209,6 +3221,8 @@ if needed (this was initially planned for some explanation text, which was then 
     psm->ec.fDeterministic = TRUE;
     psm->ec.rNoise = 0.0f;
     psm->truenMatchTo = pms->nMatchTo;
+    psm->tempScaleUp=0;
+    psm->oldTableSize=0;
 
     psm->labelBasedOn = scoreMapLabelDef; 
     psm->colourBasedOn = scoreMapColourDef;   
