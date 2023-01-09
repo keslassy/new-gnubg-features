@@ -49,6 +49,8 @@
 #include "gtkrelational.h"
 #include "gtkscoremap.h"
 
+static int includeScoreMap = 0; // put 1 to include the ScoreMap settings pane here rather than in analysis
+
 
 typedef struct {
     GtkWidget *pwNoteBook;
@@ -1775,7 +1777,8 @@ OptionsPages(optionswidget * pow)
     append_cube_options(pow);
     append_tutor_options(pow);
     append_display_options(pow);
-    append_scoremap_options(pow); 
+    if (includeScoreMap)
+        append_scoremap_options(pow); 
     append_match_options(pow);
     append_sound_options(pow);
     append_dice_options(pow);
@@ -1889,68 +1892,70 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         }} 
     
     /* Score Map */
+    if(includeScoreMap) {
 
-    for (i = 0; i < NUM_PLY; ++i)
-        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
-            sprintf(sz, "set scoremapply %s", aszScoreMapPlyCommands[i]);
-            UserCommand(sz);
-            break;
-        } }
+        for (i = 0; i < NUM_PLY; ++i)
+            {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
+                sprintf(sz, "set scoremapply %s", aszScoreMapPlyCommands[i]);
+                UserCommand(sz);
+                break;
+            } }
 
 
-    for (i = 0; i < NUM_MATCH_LENGTH; ++i){
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i])) && scoreMapMatchLengthDefIdx != (scoreMapMatchLength) i) {
-            sprintf(sz, "set scoremapmatchlength %s", aszScoreMapMatchLengthCommands[i]);
-            UserCommand(sz);
-            break;
-        } 
-    }
-
-    if(!disregardsm1) {
-        for (i = 0; i < NUM_sm1; ++i)
-            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i])) && sm1Def != (sm1type) i) {
-                sprintf(sz, "set sm1 %s", aszsm1Commands[i]);
+        for (i = 0; i < NUM_MATCH_LENGTH; ++i){
+            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i])) && scoreMapMatchLengthDefIdx != (scoreMapMatchLength) i) {
+                sprintf(sz, "set scoremapmatchlength %s", aszScoreMapMatchLengthCommands[i]);
                 UserCommand(sz);
                 break;
             } 
-    }
+        }
 
-    for (i = 0; i < NUM_LABEL; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
-            sprintf(sz, "set scoremaplabel %s", aszScoreMapLabelCommands[i]);
-            UserCommand(sz);
-            break;
-        } 
-    for (i = 0; i < NUM_JACOBY; ++i)
-       { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i])) && scoreMapJacobyDef != (scoreMapJacoby) i) {
-            sprintf(sz, "set scoremapjacoby %s", aszScoreMapJacobyCommands[i]);
-            UserCommand(sz);
-            break;
-        }} 
-    for (i = 0; i < NUM_CUBEDISP; ++i)
-        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapCubeEquityDisplay[i])) && scoreMapCubeEquityDisplayDef != (scoreMapCubeEquityDisplay) i) {
-            sprintf(sz, "set scoremapcubeequitydisplay %s", aszScoreMapCubeEquityDisplayCommands[i]);
-            UserCommand(sz);
-            break;
-        } }
-    for (i = 0; i < NUM_MOVEDISP; ++i)
-        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMoveEquityDisplay[i])) && scoreMapMoveEquityDisplayDef != (scoreMapMoveEquityDisplay) i) {
-            sprintf(sz, "set scoremapmoveequitydisplay %s", aszScoreMapMoveEquityDisplayCommands[i]);
-            UserCommand(sz);
-            break;
-        }} 
-    for (i = 0; i < NUM_COLOUR; ++i)
-        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapColour[i])) && scoreMapColourDef != (scoreMapColour) i) {
-            sprintf(sz, "set scoremapcolour %s", aszScoreMapColourCommands[i]);
-            UserCommand(sz);
-            break;
-        }} 
-    for (i = 0; i < NUM_LAYOUT; ++i)
-       { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLayout[i])) && scoreMapLayoutDef != (scoreMapLayout) i) {
-            sprintf(sz, "set scoremaplayout %s", aszScoreMapLayoutCommands[i]);
-            UserCommand(sz);
-            break;
-        }} 
+        if(!disregardsm1) {
+            for (i = 0; i < NUM_sm1; ++i)
+                if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i])) && sm1Def != (sm1type) i) {
+                    sprintf(sz, "set sm1 %s", aszsm1Commands[i]);
+                    UserCommand(sz);
+                    break;
+                } 
+        }
+
+        for (i = 0; i < NUM_LABEL; ++i)
+            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
+                sprintf(sz, "set scoremaplabel %s", aszScoreMapLabelCommands[i]);
+                UserCommand(sz);
+                break;
+            } 
+        for (i = 0; i < NUM_JACOBY; ++i)
+        { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i])) && scoreMapJacobyDef != (scoreMapJacoby) i) {
+                sprintf(sz, "set scoremapjacoby %s", aszScoreMapJacobyCommands[i]);
+                UserCommand(sz);
+                break;
+            }} 
+        for (i = 0; i < NUM_CUBEDISP; ++i)
+            {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapCubeEquityDisplay[i])) && scoreMapCubeEquityDisplayDef != (scoreMapCubeEquityDisplay) i) {
+                sprintf(sz, "set scoremapcubeequitydisplay %s", aszScoreMapCubeEquityDisplayCommands[i]);
+                UserCommand(sz);
+                break;
+            } }
+        for (i = 0; i < NUM_MOVEDISP; ++i)
+            {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMoveEquityDisplay[i])) && scoreMapMoveEquityDisplayDef != (scoreMapMoveEquityDisplay) i) {
+                sprintf(sz, "set scoremapmoveequitydisplay %s", aszScoreMapMoveEquityDisplayCommands[i]);
+                UserCommand(sz);
+                break;
+            }} 
+        for (i = 0; i < NUM_COLOUR; ++i)
+            {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapColour[i])) && scoreMapColourDef != (scoreMapColour) i) {
+                sprintf(sz, "set scoremapcolour %s", aszScoreMapColourCommands[i]);
+                UserCommand(sz);
+                break;
+            }} 
+        for (i = 0; i < NUM_LAYOUT; ++i)
+        { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLayout[i])) && scoreMapLayoutDef != (scoreMapLayout) i) {
+                sprintf(sz, "set scoremaplayout %s", aszScoreMapLayoutCommands[i]);
+                UserCommand(sz);
+                break;
+            }} 
+    }
 
     CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s");
     CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s");
@@ -2200,37 +2205,39 @@ OptionsSet(optionswidget * pow)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation) i); 
 
     /*Score Map*/ 
-    //g_print("\n got to toggle early");    
-    for (i = 0; i < NUM_PLY; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); 
+    //g_print("\n got to toggle early"); 
+    if(includeScoreMap) {
+        for (i = 0; i < NUM_PLY; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); 
 
-    for (i = 0; i < NUM_MATCH_LENGTH; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); 
+        for (i = 0; i < NUM_MATCH_LENGTH; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); 
 
-    if(!disregardsm1) {
-        for (i = 0; i < NUM_sm1; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i]), sm1Def == (sm1type) i); 
+        if(!disregardsm1) {
+            for (i = 0; i < NUM_sm1; ++i)
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i]), sm1Def == (sm1type) i); 
+        }
+
+        for (i = 0; i < NUM_LABEL; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i]), scoreMapLabelDef == (scoreMapLabel) i); 
+
+        for (i = 0; i < NUM_JACOBY; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i]), scoreMapJacobyDef == (scoreMapJacoby) i); 
+
+        for (i = 0; i < NUM_CUBEDISP; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapCubeEquityDisplay[i]), scoreMapCubeEquityDisplayDef == (scoreMapCubeEquityDisplay) i); 
+
+        for (i = 0; i < NUM_MOVEDISP; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMoveEquityDisplay[i]), scoreMapMoveEquityDisplayDef == (scoreMapMoveEquityDisplay) i); 
+            //  g_print("\n got to toggle pre6");
+        for (i = 0; i < NUM_COLOUR; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapColour[i]), scoreMapColourDef == (scoreMapColour) i); 
+
+        for (i = 0; i < NUM_LAYOUT; ++i)
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLayout[i]), scoreMapLayoutDef == (scoreMapLayout) i); 
+            // g_print("\n got to toggle post7");
     }
-
-    for (i = 0; i < NUM_LABEL; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i]), scoreMapLabelDef == (scoreMapLabel) i); 
-
-    for (i = 0; i < NUM_JACOBY; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i]), scoreMapJacobyDef == (scoreMapJacoby) i); 
-
-    for (i = 0; i < NUM_CUBEDISP; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapCubeEquityDisplay[i]), scoreMapCubeEquityDisplayDef == (scoreMapCubeEquityDisplay) i); 
-
-    for (i = 0; i < NUM_MOVEDISP; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMoveEquityDisplay[i]), scoreMapMoveEquityDisplayDef == (scoreMapMoveEquityDisplay) i); 
-        //  g_print("\n got to toggle pre6");
-    for (i = 0; i < NUM_COLOUR; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapColour[i]), scoreMapColourDef == (scoreMapColour) i); 
-
-    for (i = 0; i < NUM_LAYOUT; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLayout[i]), scoreMapLayoutDef == (scoreMapLayout) i); 
-        // g_print("\n got to toggle post7");
-
+    
     if (rngCurrent >= NUM_RNGS - 3)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwDice[rngCurrent]), TRUE);
 
