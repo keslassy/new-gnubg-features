@@ -81,7 +81,7 @@
 
 12/2022: Isaac Keslassy: a few changes including:
 - new help button to obtain explanations
-- new "scoreless" option of Money without Jacoby
+- new "scoreless" (unlimited) option of Money without Jacoby
 - new cube equity display options: absolute, or relative ND-D, or relative D/P-D/T
 - new tooltip hover text to explain each option
 - added effective ply mention in hover text (because gnubg sometimes returns a 2-ply eval in a 3-ply mode if 
@@ -155,8 +155,8 @@ const char* aszScoreMapLabel[NUM_LABEL] = {N_("By away score"), N_("By true scor
 const char* aszScoreMapLabelCommands[NUM_LABEL] = { N_("away"), N_("score")}; 
 
 scoreMapJacoby scoreMapJacobyDef = MONEY_NO_JACOBY;
-const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Scoreless (money without Jacoby)"), N_("Money with Jacoby")};
-const char* aszScoreMapJacobyShort[2] = { N_("Scoreless (Money w/o J)"), N_("Money w/ J") };
+const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Unlimited game"), N_("Money game with Jacoby")};
+const char* aszScoreMapJacobyShort[2] = { N_("Unlimited (money w/o J)"), N_("Money w/ J") };
 const char* aszScoreMapJacobyCommands[NUM_JACOBY] = { N_("nojacoby"), N_("jacoby")}; 
 
 scoreMapCubeEquityDisplay scoreMapCubeEquityDisplayDef = CUBE_NO_EVAL;
@@ -1123,7 +1123,7 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
     }
     switch (pq->isSpecialScore) {  //the square is special: MONEY_J, DMP etc. => write in hover text 
         case SCORELESS:
-            strcpy(buf, "<b>Scoreless (Money, no Jacoby):</b>\n\n");
+            strcpy(buf, "<b>Unlimited (money, no Jacoby):</b>\n\n");
             break;
         case MONEY_J:
             strcpy(buf, "<b>Money (with Jacoby):</b>\n\n");
@@ -1899,7 +1899,7 @@ The function updates the decision text in each square.
                 if (psm->moneyJacoby)  // we analyze with Jacoby
                     strcat(buf, _("Money")); 
                 else
-                    strcat(buf, _("Scoreless"));
+                    strcat(buf, _("Unlimited"));
             }
             else if (pq->isTrueScore == TRUE_SCORE)
                 strcat(buf, _("Current score")); // or "(Same score)"
@@ -1913,7 +1913,7 @@ The function updates the decision text in each square.
             if (pq->isSpecialScore == MONEY_J) 
                 strcpy(buf, _("Money"));
             else if (pq->isSpecialScore == SCORELESS)
-                strcpy(buf, _("Scoreless"));
+                strcpy(buf, _("Unlimited"));
             else if (pq->isSpecialScore == DMP)
                 strcpy(buf, _("DMP"));
             else if (pq->isSpecialScore == GG)
@@ -2966,7 +2966,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     // }
 
     /* topleft toggle frame */
-        BuildLabelFrame(psm, pwv, _("Top-left square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacobyShort, NUM_JACOBY, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Top-left square"), _("Select whether the top-left square should provide an \"unlimited\" evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacobyShort, NUM_JACOBY, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
 
     /* Display Eval frame */
     if (psm->cubeScoreMap) {
