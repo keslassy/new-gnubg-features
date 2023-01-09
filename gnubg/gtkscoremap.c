@@ -1,6 +1,6 @@
 /* Still under development.... TBD: 
 * 
-* big text
+* 
 * bug DMP???
 */
 
@@ -73,6 +73,8 @@
     -> later moved to Settings>Analysis>ScoreMap
 - added Analyse > "Scoremap (move decision)" to the existing cube-ScoreMap entry
 - added ply display in hover of cube ScoreMap and aligned displays
+- added a smooth table scaling where we see the previous computations while
+    increasing the table size 
 - addressed the issues that occur when stopping computation in the middle, and 
     changed the order in which the ScoreMap displays
 - removed label-by and layout radio buttons; they will only be configured in the 
