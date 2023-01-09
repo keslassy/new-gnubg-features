@@ -1343,7 +1343,7 @@ ColourQuadrant(gtkquadrant * pgq, quadrantdata * pq, const scoremap * psm) {
 
 
 static void
-UpdateScoreMapVisual(scoremap * psm)
+UpdateScoreMapVisual(scoremap * psm, int oldSize)
 /* Update all the visual components of the score map (called at the outset, or after one of the options changes):
 Specifically: (1) The color of each square (2) The hover text of each square (3) the row/col score labels (4) the gauge.
 */
@@ -1351,6 +1351,8 @@ Specifically: (1) The color of each square (2) The hover text of each square (3)
     int i, j, i2, j2;
 //  char szMove[100];
 
+    //start by the top-left money square 
+    ColourQuadrant(& psm->moneygQuadrant, & psm->moneyQuadrantData, psm);
 
     // start by updating the score labels for each row/col and the color and hover text
     // i2, j2 = indices in the visual table (i.e., in aagQuadrant)
@@ -1364,7 +1366,8 @@ Specifically: (1) The color of each square (2) The hover text of each square (3)
         /* Colour and apply hover text to all the quadrants */
         for (j2 = 0; j2 < psm->tableSize; ++j2) {
             j = (psm->labelBasedOn == LABEL_AWAY) ? j2 : psm->tableSize-1-j2;
-            ColourQuadrant(& psm->aagQuadrant[i2][j2], & psm->aaQuadrantData[i][j], psm);
+            if(i<=oldSize && j<=oldSize)
+                ColourQuadrant(& psm->aagQuadrant[i2][j2], & psm->aaQuadrantData[i][j], psm);
         } // end of: for j2
 
         /* update score labels */
@@ -1518,7 +1521,7 @@ Specifically: (1) The color of each square (2) The hover text of each square (3)
 
     // g_object_unref(layout);
     } // end of: for i2
-    ColourQuadrant(& psm->moneygQuadrant, & psm->moneyQuadrantData, psm);
+
 
     if  (psm->cubeScoreMap){
         /* update gauge */
@@ -2142,9 +2145,10 @@ InitQuadrant(gtkquadrant * pq, GtkWidget * ptable, scoremap * psm, const int qua
 }
 
 static void
-BuildTableContainer(scoremap * psm)
+BuildTableContainer(scoremap * psm, int oldSize)
 /* Creates the GTK table (or grid starting wth GTK3).
    A pointer to the table is put into psm->pwTable / psm->pwGrid, and it is placed in psm->pwTableContainer (to be displayed).
+   Only does entries in the table >= oldSize. (Avoid computing old values when resizing the table.)
 */
 {
     int tableSize = psm->tableSize;
@@ -2184,9 +2188,11 @@ BuildTableContainer(scoremap * psm)
 #else
             InitQuadrant(&psm->aagQuadrant[i][j], psm->pwTable, psm, quadrantWidth, quadrantHeight, i, j, FALSE);
 #endif
-            strcpy(psm->aaQuadrantData[i][j].decisionString,"");
-            strcpy(psm->aaQuadrantData[i][j].equityText,"");
-            strcpy(psm->aaQuadrantData[i][j].unallowedExplanation,"");
+            if  (i>=oldSize && j>=oldSize) {
+                strcpy(psm->aaQuadrantData[i][j].decisionString,"");
+                strcpy(psm->aaQuadrantData[i][j].equityText,"");
+                strcpy(psm->aaQuadrantData[i][j].unallowedExplanation,"");
+            }
         }
 
         /* score labels */
@@ -2216,9 +2222,11 @@ BuildTableContainer(scoremap * psm)
 #else
     InitQuadrant( & psm->moneygQuadrant, psm->pwTable, psm, quadrantWidth, quadrantHeight, 0, 0, TRUE);
 #endif
-    strcpy(psm->moneyQuadrantData.decisionString,"");
-    strcpy(psm->moneyQuadrantData.equityText,"");
-    strcpy(psm->moneyQuadrantData.unallowedExplanation,"");
+    if(oldSize==0) {
+        strcpy(psm->moneyQuadrantData.decisionString,"");
+        strcpy(psm->moneyQuadrantData.equityText,"");
+        strcpy(psm->moneyQuadrantData.unallowedExplanation,"");
+    }
     //g_signal_connect(G_OBJECT(psm->pwTable), "draw", G_CALLBACK(DrawQuadrant), psm);
 
         // gtk_box_pack_start(GTK_BOX(psm->pwv), psm->pwTable, FALSE, FALSE, 0);
@@ -2430,7 +2438,7 @@ ScoreMapPlyToggled(GtkWidget * pw, scoremap * psm)
         //if (CalcScoreMapEquities(psm,0))
         //    return;
         CalcScoreMapEquities(psm, 0);
-        UpdateScoreMapVisual(psm);
+        UpdateScoreMapVisual(psm,psm->tableSize);
     }
 
 }
@@ -2443,7 +2451,7 @@ ColourByToggled(GtkWidget * pw, scoremap * psm)
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
         psm->colourBasedOn=(scoreMapColour)(*pi);
-        UpdateScoreMapVisual(psm); // also updates gauge and gauge labels
+        UpdateScoreMapVisual(psm,psm->tableSize); // also updates gauge and gauge labels
     }
 }
 
@@ -2455,7 +2463,7 @@ LabelByToggled(GtkWidget * pw, scoremap * psm)
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");// "label"
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
         psm->labelBasedOn=(scoreMapLabel)(*pi);
-        UpdateScoreMapVisual(psm);
+        UpdateScoreMapVisual(psm,psm->tableSize);
     }
 }
 
@@ -2475,7 +2483,7 @@ TopleftToggled(GtkWidget* pw, scoremap* psm)
         CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE); // Recalculate money equity.
         //if (CalcScoreMapEquities(psm, psm->tableSize)) // Recalculate money equity.
         //    return;
-        UpdateScoreMapVisual(psm); // Update square colours.
+        UpdateScoreMapVisual(psm,psm->tableSize); // Update square colours.
     }
 }
 
@@ -2490,7 +2498,7 @@ LayoutToggled(GtkWidget * pw, scoremap * psm)
         gtk_container_remove(GTK_CONTAINER(psm->pwLastContainer), psm->pwOptionsBox);
         psm->pwLastContainer = (psm->layout == VERTICAL) ? (psm->pwVContainer) : (psm->pwHContainer);
         BuildOptions(psm);
-        UpdateScoreMapVisual(psm);
+        UpdateScoreMapVisual(psm,psm->tableSize);
     }
 }
 
@@ -2507,7 +2515,7 @@ DisplayEvalToggled(GtkWidget * pw, scoremap * psm)
                 psm->displayMoveEval=(scoreMapMoveEquityDisplay)(*pi);
          // if (CalcScoreMapEquities(psm,0,FALSE))
         //     return;
-        UpdateScoreMapVisual(psm); // also updates gauge and gauge labels
+        UpdateScoreMapVisual(psm,psm->tableSize); // also updates gauge and gauge labels
     }
 }
 
@@ -2522,7 +2530,7 @@ JacobyToggled(GtkWidget * pw, scoremap * psm)
         UpdateCubeInfoArray(psm, psm->signednCube, TRUE);  //Apply the Jacoby option and update the money quadrant only
         if (CalcScoreMapEquities(psm,psm->tableSize)) // Recalculate money equity.
             return;
-        UpdateScoreMapVisual(psm); // Update square colours.
+        UpdateScoreMapVisual(psm,psm->tableSize); // Update square colours.
     }
 }
 
@@ -2537,7 +2545,7 @@ CubeValToggled(GtkWidget * pw, scoremap * psm)
         UpdateCubeInfoArray(psm, *pi, FALSE);  // Change all the cubeinfos to use the selected signednCube value
         if (CalcScoreMapEquities(psm,0)) // Recalculate all equities
             return;
-        UpdateScoreMapVisual(psm); // Update square colours. (Also updates gauge and gauge labels)
+        UpdateScoreMapVisual(psm,psm->tableSize); // Update square colours. (Also updates gauge and gauge labels)
     }
 }
 
@@ -2549,12 +2557,12 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
    /*   int index = gtk_combo_box_get_active(GTK_COMBO_BOX(pw));
     int newmatchLength=MATCH_LENGTH_OPTIONS[index];
     if (MATCH_SIZE(psm)!=newmatchLength) {*/
-   int* pi = (int*)g_object_get_data(G_OBJECT(pw), "user_data");
+    int* pi = (int*)g_object_get_data(G_OBJECT(pw), "user_data");
 
-   //int newmatchLength = MATCH_LENGTH_OPTIONS[*pi]; 
-   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-       psm->matchLengthIndex = (*pi);
-       psm->matchLength = MATCH_LENGTH_OPTIONS[psm->matchLengthIndex]; 
+    //int newmatchLength = MATCH_LENGTH_OPTIONS[*pi]; 
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
+        psm->matchLengthIndex = (*pi);
+        psm->matchLength = MATCH_LENGTH_OPTIONS[psm->matchLengthIndex]; 
        //g_print("\n matchLengthToggled: size:%d", psm->matchLength);
        /* recalculate equities */
             //if (psm->cubeScoreMap)
@@ -2572,15 +2580,16 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
         gtk_container_remove(GTK_CONTAINER(psm->pwTableContainer), psm->pwTable);
 #endif
         gtk_container_remove(GTK_CONTAINER(psm->pwCubeFrame), psm->pwCubeBox);
-        BuildTableContainer(psm);
+        BuildTableContainer(psm,oldTableSize);
         // psm->signednCube=signednCube;
         BuildCubeFrame(psm);
-        UpdateCubeInfoArray(psm, psm->signednCube, FALSE); //UpdateCubeInfoArray(scoremap* psm, int signednCube, int updateMoneyOnly)
-        CalcScoreMapEquities(psm, oldTableSize);
-        UpdateScoreMapVisual(psm);
+        if (psm->tableSize > oldTableSize) {
+            UpdateScoreMapVisual(psm,oldTableSize);
+            UpdateCubeInfoArray(psm, psm->signednCube, FALSE); //UpdateCubeInfoArray(scoremap* psm, int signednCube, int updateMoneyOnly)
+            CalcScoreMapEquities(psm, oldTableSize);
+        }
+        UpdateScoreMapVisual(psm,psm->tableSize);
     }
-    //}
-
 }
 
 
@@ -3346,7 +3355,7 @@ if needed (this was initially planned for some explanation text, which was then 
         psm->topKClassifiedDecisions[i]=g_malloc((FORMATEDMOVESIZE+5)*sizeof(char));
     }
 
-    BuildTableContainer(psm);
+    BuildTableContainer(psm,0); //0==oldSize
 
 // *************************************************************************************************
 #if GTK_CHECK_VERSION(3,0,0)
@@ -3474,7 +3483,7 @@ if needed (this was initially planned for some explanation text, which was then 
 
     UpdateCubeInfoArray(psm, psm->signednCube, FALSE); // fills psm->aaQuadrantData[i][j].ci for each i,j
     CalcScoreMapEquities(psm,0);    //Find equities at each score, and use these to set the text for the corresponding box.
-    UpdateScoreMapVisual(psm);      //Update: (1) The color of each square (2) The hover text of each square
+    UpdateScoreMapVisual(psm,psm->tableSize);      //Update: (1) The color of each square (2) The hover text of each square
                                     //      (3) the row/col score labels (4) the gauge.
 
 /*    if (pwDescribeDefault)
