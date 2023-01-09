@@ -866,7 +866,7 @@ append_display_options(optionswidget * pow)
                                   "in MWCs being output as 50.33%."));
 }
 
-//Module to add text, based on AddTitle from gtkgame.c
+//Module to add text
 static void
 AddText(GtkWidget* pwBox, char* Text)
 {
@@ -993,7 +993,7 @@ append_scoremap_options(optionswidget* pow)
     GtkWidget* pwp;
 #endif
 
-    BoardData* bd = BOARD(pwBoard)->board_data;
+    //BoardData* bd = BOARD(pwBoard)->board_data;
 
     int vAlignExpand = FALSE; // set to true to expand vertically the group of frames rather than packing them to the top
     //int evalPlies = 3;
@@ -1951,6 +1951,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
             UserCommand(sz);
             break;
         }} 
+
     CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s");
     CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s");
     CHECKUPDATE(pow->pwOutputMWCpst, fOutputMatchPC, "set output matchpc %s");
