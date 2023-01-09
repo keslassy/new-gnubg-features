@@ -3185,7 +3185,7 @@ append_analysis_options(analysiswidget * paw)
 
     memcpy(&paw->esEvalChequer, &esEvalChequer, sizeof(paw->esEvalChequer));
     memcpy(&paw->esEvalCube, &esEvalCube, sizeof(paw->esEvalCube));
-    memcpy(&paw->aaEvalmf, aamfEval, sizeof(aamfEval));
+    memcpy(&paw->aaEvalmf, aamfEval, sizeof(paw->aaEvalmf));
 
 /*    memcpy(&aw.esCube, &esAnalysisCube, sizeof(aw.esCube));
     memcpy(&aw.esChequer, &esAnalysisChequer, sizeof(aw.esChequer));
@@ -3412,8 +3412,8 @@ g_print("near-end options1\n");
     //g_print("debug 02\n");
     HintSameToggled(NULL, paw);
 g_print("near-near-end options1\n");
-    g_free(pAnalDetailSettings2);
-    g_free(pAnalDetailSettings1);
+    // g_free(pAnalDetailSettings2);
+    // g_free(pAnalDetailSettings1);
     g_print("end options1\n");
 }
 
