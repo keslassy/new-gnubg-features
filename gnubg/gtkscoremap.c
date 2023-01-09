@@ -159,15 +159,15 @@ const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Scoreless (money without Jacob
 const char* aszScoreMapJacobyCommands[NUM_JACOBY] = { N_("nojacoby"), N_("jacoby")}; 
 
 scoreMapCubeEquityDisplay scoreMapCubeEquityDisplayDef = CUBE_NO_EVAL;
-const char* aszScoreMapCubeEquityDisplay[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("Double vs No-Double"), N_("Double/Pass vs Double/Take")};
+const char* aszScoreMapCubeEquityDisplay[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("Double vs No Double"), N_("Double/Pass vs Double/Take")};
 const char* aszScoreMapCubeEquityDisplayCommands[NUM_CUBEDISP] = { N_("no"), N_("equity"), N_("dnd"), N_("dpdt")}; 
 
 scoreMapMoveEquityDisplay scoreMapMoveEquityDisplayDef = MOVE_NO_EVAL;
-const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("Vs second best")};
+const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("Relative to second best")};
 const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP] = { N_("no"), N_("absolute"), N_("relative")}; 
 
 scoreMapColour scoreMapColourDef = ALL;
-const char* aszScoreMapColour[NUM_COLOUR] = {N_("All"), N_("Double vs No-Double"), N_("Double/Pass vs Double/Take")};
+const char* aszScoreMapColour[NUM_COLOUR] = {N_("All"), N_("Double vs No Double"), N_("Double/Pass vs Double/Take")};
 const char* aszScoreMapColourCommands[NUM_COLOUR] = { N_("all"), N_("dnd"), N_("dpdt")}; 
 
 scoreMapLayout scoreMapLayoutDef = VERTICAL;
