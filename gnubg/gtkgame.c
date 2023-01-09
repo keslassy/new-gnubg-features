@@ -2677,27 +2677,92 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
 {
 
     char sz[128];
-    int n;
+    int n, i;
 
     gtk_widget_hide(gtk_widget_get_toplevel(pw));
 
     CHECKUPDATE(paw->pwMoves, fAnalyseMove, "set analysis moves %s")
-        CHECKUPDATE(paw->pwCube, fAnalyseCube, "set analysis cube %s")
-        CHECKUPDATE(paw->pwLuck, fAnalyseDice, "set analysis luck %s")
-        CHECKUPDATE(paw->apwAnalysePlayers[0], afAnalysePlayers[0], "set analysis player 0 analyse %s")
-        CHECKUPDATE(paw->apwAnalysePlayers[1], afAnalysePlayers[1], "set analysis player 1 analyse %s")
+    CHECKUPDATE(paw->pwCube, fAnalyseCube, "set analysis cube %s")
+    CHECKUPDATE(paw->pwLuck, fAnalyseDice, "set analysis luck %s")
+    CHECKUPDATE(paw->apwAnalysePlayers[0], afAnalysePlayers[0], "set analysis player 0 analyse %s")
+    CHECKUPDATE(paw->apwAnalysePlayers[1], afAnalysePlayers[1], "set analysis player 1 analyse %s")
 
-        ADJUSTSKILLUPDATE(0, SKILL_DOUBTFUL, "set analysis threshold doubtful %s")
-        ADJUSTSKILLUPDATE(1, SKILL_BAD, "set analysis threshold bad %s")
-        ADJUSTSKILLUPDATE(2, SKILL_VERYBAD, "set analysis threshold verybad %s")
+    ADJUSTSKILLUPDATE(0, SKILL_DOUBTFUL, "set analysis threshold doubtful %s")
+    ADJUSTSKILLUPDATE(1, SKILL_BAD, "set analysis threshold bad %s")
+    ADJUSTSKILLUPDATE(2, SKILL_VERYBAD, "set analysis threshold verybad %s")
 
-        ADJUSTLUCKUPDATE(0, LUCK_VERYGOOD, "set analysis threshold verylucky %s")
-        ADJUSTLUCKUPDATE(1, LUCK_GOOD, "set analysis threshold lucky %s")
-        ADJUSTLUCKUPDATE(2, LUCK_BAD, "set analysis threshold unlucky %s")
-        ADJUSTLUCKUPDATE(3, LUCK_VERYBAD, "set analysis threshold veryunlucky %s")
+    ADJUSTLUCKUPDATE(0, LUCK_VERYGOOD, "set analysis threshold verylucky %s")
+    ADJUSTLUCKUPDATE(1, LUCK_GOOD, "set analysis threshold lucky %s")
+    ADJUSTLUCKUPDATE(2, LUCK_BAD, "set analysis threshold unlucky %s")
+    ADJUSTLUCKUPDATE(3, LUCK_VERYBAD, "set analysis threshold veryunlucky %s")
 
-        /* Group output in one batch */
-        outputpostpone();
+    /* Score Map */
+
+    for (i = 0; i < NUM_PLY; ++i)
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
+            sprintf(sz, "set scoremapply %s", aszScoreMapPlyCommands[i]);
+            UserCommand(sz);
+            break;
+        } }
+
+
+    for (i = 0; i < NUM_MATCH_LENGTH; ++i){
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapMatchLength[i])) && scoreMapMatchLengthDefIdx != (scoreMapMatchLength) i) {
+            sprintf(sz, "set scoremapmatchlength %s", aszScoreMapMatchLengthCommands[i]);
+            UserCommand(sz);
+            break;
+        } 
+    }
+
+    if(!disregardsm1) {
+        for (i = 0; i < NUM_sm1; ++i)
+            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwsm1[i])) && sm1Def != (sm1type) i) {
+                sprintf(sz, "set sm1 %s", aszsm1Commands[i]);
+                UserCommand(sz);
+                break;
+            } 
+    }
+
+    for (i = 0; i < NUM_LABEL; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
+            sprintf(sz, "set scoremaplabel %s", aszScoreMapLabelCommands[i]);
+            UserCommand(sz);
+            break;
+        } 
+    for (i = 0; i < NUM_JACOBY; ++i)
+       { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapJacoby[i])) && scoreMapJacobyDef != (scoreMapJacoby) i) {
+            sprintf(sz, "set scoremapjacoby %s", aszScoreMapJacobyCommands[i]);
+            UserCommand(sz);
+            break;
+        }} 
+    for (i = 0; i < NUM_CUBEDISP; ++i)
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapCubeEquityDisplay[i])) && scoreMapCubeEquityDisplayDef != (scoreMapCubeEquityDisplay) i) {
+            sprintf(sz, "set scoremapcubeequitydisplay %s", aszScoreMapCubeEquityDisplayCommands[i]);
+            UserCommand(sz);
+            break;
+        } }
+    for (i = 0; i < NUM_MOVEDISP; ++i)
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapMoveEquityDisplay[i])) && scoreMapMoveEquityDisplayDef != (scoreMapMoveEquityDisplay) i) {
+            sprintf(sz, "set scoremapmoveequitydisplay %s", aszScoreMapMoveEquityDisplayCommands[i]);
+            UserCommand(sz);
+            break;
+        }} 
+    for (i = 0; i < NUM_COLOUR; ++i)
+        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapColour[i])) && scoreMapColourDef != (scoreMapColour) i) {
+            sprintf(sz, "set scoremapcolour %s", aszScoreMapColourCommands[i]);
+            UserCommand(sz);
+            break;
+        }} 
+    for (i = 0; i < NUM_LAYOUT; ++i)
+       { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLayout[i])) && scoreMapLayoutDef != (scoreMapLayout) i) {
+            sprintf(sz, "set scoremaplayout %s", aszScoreMapLayoutCommands[i]);
+            UserCommand(sz);
+            break;
+        }} 
+
+
+    /* Group output in one batch */
+    outputpostpone();
 
     SetEvalCommands("set analysis chequerplay eval", &paw->esChequer.ec, &esAnalysisChequer.ec);
     SetMovefilterCommands("set analysis movefilter", paw->aamf, aamfAnalysis);
