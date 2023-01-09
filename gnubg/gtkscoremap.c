@@ -1884,13 +1884,17 @@ The function updates the decision text in each square.
     pango_layout_set_font_description(layout, description);
     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
 
-    // build the text that will be displayed in the quadrant
     //g_print("... %s:%s",pq->decisionString,pq->equityText);
-    // we start by cutting long decision strings into two rows; this is only relevant to the move scoremap
+    /* build the text that will be displayed in the quadrant
 
-    if (! (psm->tempScaleUp && (i>=psm->oldTableSize || j>=psm->oldTableSize))) { //we don't want text when we scale up the table size as it messes up pango positioning
+    we don't want to display text if (1) we are in the middle of scaling up the table size (psm->tempScaleUp == 1) 
+    and (2) we display a square for which we haven't computed the decision yet, i.e. beyond psm->oldTableSize; 
+    also within this function, i,j are not well defined for the money square, so we make sure to allow text
+    for the money square by using the identifying (*pi < 0) from above
+    */
+    if ((! (psm->tempScaleUp && (i>=psm->oldTableSize || j>=psm->oldTableSize))) || (*pi < 0)) {
         if (pq->isAllowedScore==ALLOWED) { // non-greyed quadrant
-
+            // we start by cutting long decision strings into two rows; this is only relevant to the move scoremap
             CutTextTo(aux, pq->decisionString, 12);
 
             if ((psm->cubeScoreMap && psm->displayCubeEval != CUBE_NO_EVAL) || (!psm->cubeScoreMap && psm->displayMoveEval != MOVE_NO_EVAL))  {
