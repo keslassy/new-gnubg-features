@@ -2,8 +2,6 @@
 * 
 * 
 * bug DMP???
-* - single frame in settings>options?
-* new tab in Settings/Analysis
 */
 
 /*
@@ -71,6 +69,8 @@
 /* 
 01/2022: Isaac Keslassy:
 - new Settings>Options>ScoreMap panel where all default options can be configured
+    -> set as a frame
+    -> later moved to Settings>Analysis>ScoreMap
 - added Analyse > "Scoremap (move decision)" to the existing cube-ScoreMap entry
 - added ply display in hover of cube ScoreMap and aligned displays
 - addressed the issues that occur when stopping computation in the middle, and 
