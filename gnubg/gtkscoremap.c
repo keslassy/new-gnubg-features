@@ -2595,10 +2595,12 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
         BuildCubeFrame(psm);
         if (psm->tableSize > oldTableSize) {
             psm->tempScaleUp=1; //indicator used in drawQuadrant to avoid putting the text that messes up pango
+            psm->oldTableSize=oldTableSize;
             UpdateScoreMapVisual(psm,oldTableSize);
             UpdateCubeInfoArray(psm, psm->signednCube, FALSE); //UpdateCubeInfoArray(scoremap* psm, int signednCube, int updateMoneyOnly)
             CalcScoreMapEquities(psm, oldTableSize);
             psm->tempScaleUp=0;
+            psm->oldTableSize=0;
         }
         UpdateScoreMapVisual(psm,psm->tableSize);
     }
