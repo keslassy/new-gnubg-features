@@ -1,6 +1,6 @@
 /* Still under development.... TBD: 
 * 
-* 
+* big text
 * bug DMP???
 */
 
@@ -156,18 +156,22 @@ const char* aszScoreMapLabelCommands[NUM_LABEL] = { N_("away"), N_("score")};
 
 scoreMapJacoby scoreMapJacobyDef = MONEY_NO_JACOBY;
 const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Scoreless (money without Jacoby)"), N_("Money with Jacoby")};
+const char* aszScoreMapJacobyShort[2] = { N_("Scoreless (Money w/o J)"), N_("Money w/ J") };
 const char* aszScoreMapJacobyCommands[NUM_JACOBY] = { N_("nojacoby"), N_("jacoby")}; 
 
 scoreMapCubeEquityDisplay scoreMapCubeEquityDisplayDef = CUBE_NO_EVAL;
 const char* aszScoreMapCubeEquityDisplay[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("Double vs No Double"), N_("Double/Pass vs Double/Take")};
+const char* aszScoreMapCubeEquityDisplayShort[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("D-ND"), N_("D/P-D/T")};
 const char* aszScoreMapCubeEquityDisplayCommands[NUM_CUBEDISP] = { N_("no"), N_("equity"), N_("dnd"), N_("dpdt")}; 
 
 scoreMapMoveEquityDisplay scoreMapMoveEquityDisplayDef = MOVE_NO_EVAL;
 const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("Relative to second best")};
+const char* aszScoreMapMoveEquityDisplayShort[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("vs 2nd best")};
 const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP] = { N_("no"), N_("absolute"), N_("relative")}; 
 
 scoreMapColour scoreMapColourDef = ALL;
 const char* aszScoreMapColour[NUM_COLOUR] = {N_("All"), N_("Double vs No Double"), N_("Double/Pass vs Double/Take")};
+const char* aszScoreMapColourShort[NUM_COLOUR] = {N_("All"), N_("D vs ND"), N_("D/P vs D/T")};
 const char* aszScoreMapColourCommands[NUM_COLOUR] = { N_("all"), N_("dnd"), N_("dpdt")}; 
 
 scoreMapLayout scoreMapLayoutDef = VERTICAL;
@@ -2736,7 +2740,9 @@ GTKShowMoveScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
         \n\n- At each score, the corresponding grid square indicates the best move\
         \n\n- Different colors correspond to different best moves (red for the most frequent one, blue for the 2nd most, etc.)\
         \n\n- A darker color intensity reflects a larger equity difference with the 2nd best move\
-        \n\n- As usual, if at 2-ply no move equity is close to that of the best move, the 3-ply or 4-ply analysis can stop at 2-ply."));
+        \n\n- As usual, if at 2-ply no move equity is close to that of the best move, the 3-ply or 4-ply analysis can stop at 2-ply\
+        \n\n- Feel free to hover with the mouse on the different elements for more details\
+        \n\n- Default ScoreMap settings can be selected in the Settings > Analysis menu"));
 
     GTKRunDialog(pwDialog);
 }
@@ -2762,7 +2768,9 @@ GTKShowCubeScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
         \n\n     To Double, J = Jacoby\
         \n\n- At each score, the corresponding grid square indicates the best cube decision\
         \n\n- Different colors correspond to different cube decisions, as indicated by the gauge\
-        \n\n- A darker color intensity reflects a larger equity difference with the 2nd best decision"));
+        \n\n- A darker color intensity reflects a larger equity difference with the 2nd best decision\
+        \n\n- Feel free to hover with the mouse on the different elements for more details\
+        \n\n- Default ScoreMap settings can be selected in the Settings > Analysis menu"));
 
     GTKRunDialog(pwDialog);
 }
@@ -2958,15 +2966,15 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     // }
 
     /* topleft toggle frame */
-        BuildLabelFrame(psm, pwv, _("Top-left square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacoby, NUM_JACOBY, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Top-left square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation of money play with Jacoby"), aszScoreMapJacobyShort, NUM_JACOBY, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
 
     /* Display Eval frame */
     if (psm->cubeScoreMap) {
         //frameToolTip = "Select whether to display the equity, and how to display it: absolute equity, relative equity difference between Double and No-Double, or relative equity difference between Double/Pass and Double/Take";
-        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), _("Select whether to display the equity, and how to display it: absolute equity, relative equity difference between Double and No-Double, or relative equity difference between Double/Pass and Double/Take"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, psm->displayCubeEval, DisplayEvalToggled, TRUE, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), _("Select whether to display the equity, and how to display it: absolute equity, relative equity difference between Double and No-Double, or relative equity difference between Double/Pass and Double/Take"), aszScoreMapCubeEquityDisplayShort, NUM_CUBEDISP, psm->displayCubeEval, DisplayEvalToggled, TRUE, vAlignExpand);
     } else {
         //frameToolTip =  "Select whether to display the equity, and how to display it: absolute equity, or relative equity difference between best move and second best move";
-        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), _("Select whether to display the equity, and how to display it: absolute equity, or relative equity difference between best move and second best move"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, psm->displayMoveEval, DisplayEvalToggled, TRUE, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Display equity (hover over grid for details)"), _("Select whether to display the equity, and how to display it: absolute equity, or relative equity difference between best move and second best move"), aszScoreMapMoveEquityDisplayShort, NUM_MOVEDISP, psm->displayMoveEval, DisplayEvalToggled, TRUE, vAlignExpand);
     }
 
     /* colour by frame */
@@ -2977,7 +2985,7 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
         /* Colour by */
 
         //frameToolTip = "Select whether to colour the table squares using all options, or emphasize the Double vs. No-Double decision, or emphasize the Double/Take vs. Double/Pass decision";
-        BuildLabelFrame(psm, pwv, _("Colour by"), _("Select whether to colour the table squares using all options, or emphasize the Double vs. No-Double decision, or emphasize the Double/Take vs. Double/Pass decision"), aszScoreMapColour, NUM_COLOUR, psm->colourBasedOn, ColourByToggled, psm->cubeScoreMap, vAlignExpand);
+        BuildLabelFrame(psm, pwv, _("Colour by"), _("Select whether to colour the table squares using all options, or emphasize the Double vs. No-Double decision, or emphasize the Double/Take vs. Double/Pass decision"), aszScoreMapColourShort, NUM_COLOUR, psm->colourBasedOn, ColourByToggled, psm->cubeScoreMap, vAlignExpand);
    }  
 
     // /* Label by toggle */
