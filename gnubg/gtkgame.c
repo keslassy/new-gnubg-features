@@ -2813,13 +2813,13 @@ AnalysisSet(analysiswidget * paw)
     gtk_adjustment_set_value(GTK_ADJUSTMENT(paw->apadjLuck[2]), arLuckLevel[LUCK_BAD]);
     gtk_adjustment_set_value(GTK_ADJUSTMENT(paw->apadjLuck[3]), arLuckLevel[LUCK_VERYBAD]);
 
-g_print("got to middle of analysis set\n");
+
     /*Score Map*/ 
-    //g_print("\n got to toggle early");    
+
     for (i = 0; i < NUM_PLY; ++i){
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapPly[i]), i==0); /*scoreMapPlyDefault == (scoreMapPly)i); */
     }
-g_print("got to middle of analysis set - b\n");
+
     for (i = 0; i < NUM_MATCH_LENGTH; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); 
 
@@ -2827,7 +2827,7 @@ g_print("got to middle of analysis set - b\n");
         for (i = 0; i < NUM_sm1; ++i)
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwsm1[i]), sm1Def == (sm1type) i); 
     }
-g_print("got to middle of analysis set - c\n");
+    
     for (i = 0; i < NUM_LABEL; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLabel[i]), scoreMapLabelDef == (scoreMapLabel) i); 
 
@@ -2836,92 +2836,26 @@ g_print("got to middle of analysis set - c\n");
 
     for (i = 0; i < NUM_CUBEDISP; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapCubeEquityDisplay[i]), scoreMapCubeEquityDisplayDef == (scoreMapCubeEquityDisplay) i); 
-g_print("got to middle of analysis set - d\n");
+
     for (i = 0; i < NUM_MOVEDISP; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapMoveEquityDisplay[i]), scoreMapMoveEquityDisplayDef == (scoreMapMoveEquityDisplay) i); 
-        //  g_print("\n got to toggle pre6");
+
     for (i = 0; i < NUM_COLOUR; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapColour[i]), scoreMapColourDef == (scoreMapColour) i); 
 
     for (i = 0; i < NUM_LAYOUT; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLayout[i]), scoreMapLayoutDef == (scoreMapLayout) i); 
-        // g_print("\n got to toggle post7");
-
-g_print("got to end of analysis set\n");
-    // /* Score Map */
-
-    // for (i = 0; i < NUM_PLY; ++i)
-    //     {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
-    //         sprintf(sz, "set scoremapply %s", aszScoreMapPlyCommands[i]);
-    //         UserCommand(sz);
-    //         break;
-    //     } }
-
-
-    // for (i = 0; i < NUM_MATCH_LENGTH; ++i){
-    //     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapMatchLength[i])) && scoreMapMatchLengthDefIdx != (scoreMapMatchLength) i) {
-    //         sprintf(sz, "set scoremapmatchlength %s", aszScoreMapMatchLengthCommands[i]);
-    //         UserCommand(sz);
-    //         break;
-    //     } 
-    // }
-
-    // if(!disregardsm1) {
-    //     for (i = 0; i < NUM_sm1; ++i)
-    //         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwsm1[i])) && sm1Def != (sm1type) i) {
-    //             sprintf(sz, "set sm1 %s", aszsm1Commands[i]);
-    //             UserCommand(sz);
-    //             break;
-    //         } 
-    // }
-
-    // for (i = 0; i < NUM_LABEL; ++i)
-    //     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
-    //         sprintf(sz, "set scoremaplabel %s", aszScoreMapLabelCommands[i]);
-    //         UserCommand(sz);
-    //         break;
-    //     } 
-    // for (i = 0; i < NUM_JACOBY; ++i)
-    //    { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapJacoby[i])) && scoreMapJacobyDef != (scoreMapJacoby) i) {
-    //         sprintf(sz, "set scoremapjacoby %s", aszScoreMapJacobyCommands[i]);
-    //         UserCommand(sz);
-    //         break;
-    //     }} 
-    // for (i = 0; i < NUM_CUBEDISP; ++i)
-    //     {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapCubeEquityDisplay[i])) && scoreMapCubeEquityDisplayDef != (scoreMapCubeEquityDisplay) i) {
-    //         sprintf(sz, "set scoremapcubeequitydisplay %s", aszScoreMapCubeEquityDisplayCommands[i]);
-    //         UserCommand(sz);
-    //         break;
-    //     } }
-    // for (i = 0; i < NUM_MOVEDISP; ++i)
-    //     {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapMoveEquityDisplay[i])) && scoreMapMoveEquityDisplayDef != (scoreMapMoveEquityDisplay) i) {
-    //         sprintf(sz, "set scoremapmoveequitydisplay %s", aszScoreMapMoveEquityDisplayCommands[i]);
-    //         UserCommand(sz);
-    //         break;
-    //     }} 
-    // for (i = 0; i < NUM_COLOUR; ++i)
-    //     {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapColour[i])) && scoreMapColourDef != (scoreMapColour) i) {
-    //         sprintf(sz, "set scoremapcolour %s", aszScoreMapColourCommands[i]);
-    //         UserCommand(sz);
-    //         break;
-    //     }} 
-    // for (i = 0; i < NUM_LAYOUT; ++i)
-    //    { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLayout[i])) && scoreMapLayoutDef != (scoreMapLayout) i) {
-    //         sprintf(sz, "set scoremaplayout %s", aszScoreMapLayoutCommands[i]);
-    //         UserCommand(sz);
-    //         break;
-    //     }} 
 
 }
 
 static void
 HintSameToggled(GtkWidget * UNUSED(notused), analysiswidget * paw)
 {
-    g_print("started hintsametoggled\n");
+
     int active = !(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwHintSame)));
-        g_print("mid hintsametoggled\n");
+
     gtk_widget_set_sensitive(paw->pwCubeSummary, active);
-        g_print("ended hintsametoggled\n");
+
 }
 
 static AnalysisDetails *
@@ -3405,16 +3339,14 @@ append_analysis_options(analysiswidget * paw)
 
     //gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwPage);
     //AnalysisSet(paw);
-g_print("near-end options1\n");
+
     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwHintSame));
-    g_print("debug 01\n");
-    //g_print("value %d\n",);gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwHintSame);
-    //g_print("debug 02\n");
+
     HintSameToggled(NULL, paw);
-g_print("near-near-end options1\n");
+
     // g_free(pAnalDetailSettings2);
     // g_free(pAnalDetailSettings1);
-    g_print("end options1\n");
+
 }
 
 static GtkWidget *
@@ -3424,18 +3356,15 @@ AnalysisPages(analysiswidget * paw)
 
     paw->pwNoteBook = gtk_notebook_new();
     gtk_container_set_border_width(GTK_CONTAINER(paw->pwNoteBook), 8);
-g_print("got to options1\n");
+
     append_analysis_options(paw);
-    g_print("got to options2\n");
     append_scoremap_options(paw); 
-g_print("got to options end\n");
 
-g_print("got to analysis set\n");
     AnalysisSet(paw);
-g_print("got to end of analysis set\n");
 
 
-g_print("got to end of options 1\n");
+
+
 
     return paw->pwNoteBook;
 }
@@ -3481,13 +3410,13 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Analysis Settings"),
                                DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(AnalysisOK), &aw);
-    g_print("got to dialog\n");
+
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwAnalysisSettings = AnalysisPages(&aw));
-    g_print("got to container\n");
+
     g_signal_connect(G_OBJECT(pwAnalysisSettings), "switch-page", G_CALLBACK(AnalysisPageChange), NULL);
-        g_print("got to signal\n");
+
     AnalysisSet(&aw);
-        g_print("got to set\n");
+
         
     GTKRunDialog(pwDialog);                               
 

@@ -49,7 +49,7 @@
 #include "gtkrelational.h"
 #include "gtkscoremap.h"
 
-static int includeScoreMap = 0; // put 1 to include the ScoreMap settings pane here rather than in analysis
+static int includeScoreMap = 0; // put 1 to include the ScoreMap settings pane here (rather than in Settings>Analysis)
 
 
 typedef struct {
@@ -2205,7 +2205,7 @@ OptionsSet(optionswidget * pow)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation) i); 
 
     /*Score Map*/ 
-    //g_print("\n got to toggle early"); 
+
     if(includeScoreMap) {
         for (i = 0; i < NUM_PLY; ++i)
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); 
@@ -2229,15 +2229,15 @@ OptionsSet(optionswidget * pow)
 
         for (i = 0; i < NUM_MOVEDISP; ++i)
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMoveEquityDisplay[i]), scoreMapMoveEquityDisplayDef == (scoreMapMoveEquityDisplay) i); 
-            //  g_print("\n got to toggle pre6");
+
         for (i = 0; i < NUM_COLOUR; ++i)
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapColour[i]), scoreMapColourDef == (scoreMapColour) i); 
 
         for (i = 0; i < NUM_LAYOUT; ++i)
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLayout[i]), scoreMapLayoutDef == (scoreMapLayout) i); 
-            // g_print("\n got to toggle post7");
+
     }
-    
+
     if (rngCurrent >= NUM_RNGS - 3)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwDice[rngCurrent]), TRUE);
 
