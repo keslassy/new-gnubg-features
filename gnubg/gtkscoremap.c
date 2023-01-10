@@ -1,6 +1,6 @@
 /* Still under development.... TBD: 
 * 
-* pb: w/ the new change, random shutdowns... better test for the strings? have an "ok" field?
+*
 * bug DMP???
 */
 
@@ -72,9 +72,9 @@
     -> set as a frame
     -> later moved to Settings>Analysis>ScoreMap
 - added Analyse > "Scoremap (move decision)" to the existing cube-ScoreMap entry
-- added ply display in hover of cube ScoreMap and aligned displays
-- added a smooth table scaling where we see the previous computations while
-    increasing the table size 
+- added ply display in hover of cube ScoreMap, and aligned displays
+- (added then canceled a smooth table scaling where we see the previous computations while
+    increasing the table size) 
 - addressed the issues that occur when stopping computation in the middle, and 
     changed the order in which the ScoreMap displays
 - removed label-by and layout radio buttons; they will only be configured in the 
@@ -618,8 +618,8 @@ CompareDecisionFrequencies (const void *a, const void *b)
 static void
 AddFrequentMoveList(weightedDecision *list, int *pcurSize, const char * moveStr, const int anMove[8]) {
 /*
-Sub-function that adds a new move to the list of frequent moves, i.e. either create a new frequent move
-if the new move is not in the list, or increment the count for the corresponding frequent move.
+Sub-function that adds a new move to the list of frequent moves, i.e. either creates a new frequent move
+if the new move is not in the list, or increments the count for the corresponding frequent move.
 */
     if (strcmp(moveStr,"")==0) return; // Don't save empty strings
     int i;
@@ -638,9 +638,7 @@ if the new move is not in the list, or increment the count for the corresponding
 static void
 FindMostFrequentMoves(scoremap *psm) {
 /* Find the top-k most frequent moves (in a move scoremap only!), and assign them colors.
-If the move classification option is set, also assign them English descriptions.
 
-TODO: when changing ply etc., don't change colours.
 */
     int i,j;
     // char aux[100];
