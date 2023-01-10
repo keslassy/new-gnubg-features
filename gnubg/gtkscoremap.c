@@ -688,7 +688,8 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
     //if(oldSize == 0 || oldSize == psm->tableSize)  //causes bug: it colors the cell in dark grey, and doesn't show a move
                         //maybe the moneyQuadrantData becomes empty?
     CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
-    ProgressValueAdd(1);//not sure if it should be included above, but probably minor
+    /*problem: ProgressValueAdd causes a redraw => a draw in the pango markup text because it's not ready yet!*/
+    //ProgressValueAdd(1);//not sure if it should be included above, but probably minor
 
     /*
     Next, we fill the table. i,j correspond to the locations in the table. 
@@ -734,7 +735,7 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
     }
 
     ProgressEnd();
-
+    
     if (!psm->cubeScoreMap)
         FindMostFrequentMoves(psm);
 
@@ -1894,6 +1895,7 @@ The function updates the decision text in each square.
     also within this function, i,j are not well defined for the money square, so we make sure to allow text
     for the money square by using the identifying (*pi < 0) from above
     */
+    // if (! (psm->tempScaleUp)) {
     if ((! (psm->tempScaleUp && (i>=psm->oldTableSize || j>=psm->oldTableSize))) || (*pi < 0)) {
         if (pq->isAllowedScore==ALLOWED) { // non-greyed quadrant
             // we start by cutting long decision strings into two rows; this is only relevant to the move scoremap
@@ -1938,10 +1940,14 @@ The function updates the decision text in each square.
             } else { //regular (not MONEY, DMP, GG, GS), not true score
                 strcpy(buf, aux);	//pq->decisionString);
             }
-        } else
-            strcpy(buf, "..");
-    } else
-        strcpy(buf, "...");
+        } else {
+            strcpy(buf, "");//e.g. grey squares that do not make sense
+        }
+        // pango_layout_set_markup(layout, buf, -1);
+    } else {
+        strcpy(buf, "");
+        // pango_layout_set_text(layout, buf, -1);
+    }
     //strcat(buf,NULL);
     //tmp = g_markup_escape_text(buf, -1); // to avoid non-NULL terminated messages -> didn't work, displays the "html"
     //if (buf != (const char *) NULL) // this one also didn't work, everything goes to the "else" 
@@ -1949,7 +1955,7 @@ The function updates the decision text in each square.
     // else
     //     pango_layout_set_text(layout, tmp, -1);   
     //g_free(tmp);
-    g_message("buf: %s\n",buf);
+    // g_message("buf: %d->%s\n",*pi , buf);
 
     pango_layout_get_size(layout, &width, &height); /* Find the size of the text */
     /* Note these sizes are PANGO_SCALE * number of pixels, whereas allocation.width/height are in pixels. */
@@ -2219,7 +2225,7 @@ BuildTableContainer(scoremap * psm, int oldSize)
 #else
             InitQuadrant(&psm->aagQuadrant[i][j], psm->pwTable, psm, quadrantWidth, quadrantHeight, i, j, FALSE);
 #endif
-            if  (i>=oldSize && j>=oldSize) {
+            if  (i>=oldSize || j>=oldSize) {
                 strcpy(psm->aaQuadrantData[i][j].decisionString,"");
                 strcpy(psm->aaQuadrantData[i][j].equityText,"");
                 strcpy(psm->aaQuadrantData[i][j].unallowedExplanation,"");
