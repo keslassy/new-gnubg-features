@@ -688,8 +688,8 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
     //if(oldSize == 0 || oldSize == psm->tableSize)  //causes bug: it colors the cell in dark grey, and doesn't show a move
                         //maybe the moneyQuadrantData becomes empty?
     CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
-    /*problem: ProgressValueAdd causes a redraw => a draw in the pango markup text because it's not ready yet!*/
-    //ProgressValueAdd(1);//not sure if it should be included above, but probably minor
+    /*careful: upon table scaling, ProgressValueAdd causes a redraw => a potential problem  in the pango markup text because it may not be ready yet!*/
+    ProgressValueAdd(1);//not sure if it should be included above, but probably minor
 
     /*
     Next, we fill the table. i,j correspond to the locations in the table. 
@@ -2611,15 +2611,15 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
         BuildTableContainer(psm,oldTableSize);
         // psm->signednCube=signednCube;
         BuildCubeFrame(psm);
-        if (psm->tableSize > oldTableSize) {
-            psm->tempScaleUp=1; //indicator used in drawQuadrant to avoid putting the text that messes up pango
-            psm->oldTableSize=oldTableSize;
-            UpdateScoreMapVisual(psm,oldTableSize);
+        // if (psm->tableSize > oldTableSize) {
+        //     psm->tempScaleUp=1; //indicator used in drawQuadrant to avoid putting the text that may mess up pango
+        //     psm->oldTableSize=oldTableSize;
+        //     UpdateScoreMapVisual(psm,oldTableSize);
             UpdateCubeInfoArray(psm, psm->signednCube, FALSE); //UpdateCubeInfoArray(scoremap* psm, int signednCube, int updateMoneyOnly)
             CalcScoreMapEquities(psm, oldTableSize);
-            psm->tempScaleUp=0;
-            psm->oldTableSize=0;
-        }
+        //     psm->tempScaleUp=0;
+        //     psm->oldTableSize=0;
+        // }
         UpdateScoreMapVisual(psm,psm->tableSize);
     }
 }
