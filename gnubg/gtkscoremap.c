@@ -1939,7 +1939,7 @@ The function updates the decision text in each square.
                 strcpy(buf, aux);	//pq->decisionString);
             }
         } else
-            strcpy(buf, "");
+            strcpy(buf, "..");
     } else
         strcpy(buf, "...");
     //strcat(buf,NULL);
@@ -1949,7 +1949,7 @@ The function updates the decision text in each square.
     // else
     //     pango_layout_set_text(layout, tmp, -1);   
     //g_free(tmp);
-    //g_message("buf: %s, tmp:%s\n",buf,tmp);
+    g_message("buf: %s, tmp:%s\n",buf,tmp);
 
     pango_layout_get_size(layout, &width, &height); /* Find the size of the text */
     /* Note these sizes are PANGO_SCALE * number of pixels, whereas allocation.width/height are in pixels. */
