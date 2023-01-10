@@ -1821,7 +1821,7 @@ The function updates the decision text in each square.
     gtk_widget_get_allocation(pw, &allocation);
     char buf[200];
     char aux[100];
-    gchar * tmp;
+    //gchar * tmp;
     float fontsize;
 
     int width, height;
@@ -1943,12 +1943,12 @@ The function updates the decision text in each square.
     } else
         strcpy(buf, "...");
     //strcat(buf,NULL);
-    tmp = g_markup_escape_text(buf, -1); // to avoid non-NULL terminated messages
-    if (tmp != (const char *) NULL)
-        pango_layout_set_markup(layout, tmp, -1);
-    else
-        pango_layout_set_text(layout, tmp, -1);   
-    g_free(tmp);
+    //tmp = g_markup_escape_text(buf, -1); // to avoid non-NULL terminated messages -> didn't work, displays the "html"
+    //if (buf != (const char *) NULL) // this one also didn't work, everything goes to the "else" 
+        pango_layout_set_markup(layout, buf, -1);
+    // else
+    //     pango_layout_set_text(layout, tmp, -1);   
+    //g_free(tmp);
     //g_message("buf: %s, tmp:%s\n",buf,tmp);
 
     pango_layout_get_size(layout, &width, &height); /* Find the size of the text */
