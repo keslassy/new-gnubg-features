@@ -1,6 +1,6 @@
 /* Still under development.... TBD: 
 * 
-* 
+* pb: w/ the new change, random shutdowns... better test for the strings? have an "ok" field?
 * bug DMP???
 */
 
@@ -1821,6 +1821,7 @@ The function updates the decision text in each square.
     gtk_widget_get_allocation(pw, &allocation);
     char buf[200];
     char aux[100];
+    gchar * tmp;
     float fontsize;
 
     int width, height;
@@ -1883,6 +1884,7 @@ The function updates the decision text in each square.
     layout = gtk_widget_create_pango_layout(pw, NULL);
     pango_layout_set_font_description(layout, description);
     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
+    pango_font_description_free (description);
 
     //g_print("... %s:%s",pq->decisionString,pq->equityText);
     /* build the text that will be displayed in the quadrant
@@ -1898,7 +1900,7 @@ The function updates the decision text in each square.
             CutTextTo(aux, pq->decisionString, 12);
 
             if ((psm->cubeScoreMap && psm->displayCubeEval != CUBE_NO_EVAL) || (!psm->cubeScoreMap && psm->displayMoveEval != MOVE_NO_EVAL))  {
-                strcat(aux, pq->equityText);
+                strcat(aux, pq->equityText); //was strcat
             }
 
             if (pq->isTrueScore) { //emphasize the true-score square
@@ -1940,10 +1942,14 @@ The function updates the decision text in each square.
             strcpy(buf, "");
     } else
         strcpy(buf, "...");
-    //tmpstr1 = g_markup_escape_text (buf, strlen(buf));
-
-    pango_layout_set_markup(layout, buf, -1);
-    //g_print("\n ... buf: %s",buf);
+    //strcat(buf,NULL);
+    tmp = g_markup_escape_text(buf, -1); // to avoid non-NULL terminated messages
+    if (tmp != (const char *) NULL)
+        pango_layout_set_markup(layout, tmp, -1);
+    else
+        pango_layout_set_text(layout, tmp, -1);   
+    g_free(tmp);
+    //g_message("buf: %s, tmp:%s\n",buf,tmp);
 
     pango_layout_get_size(layout, &width, &height); /* Find the size of the text */
     /* Note these sizes are PANGO_SCALE * number of pixels, whereas allocation.width/height are in pixels. */
