@@ -683,7 +683,7 @@ CalcScoreMapEquities(scoremap * psm, int oldSize)
 //g_print("Finding %d-ply cube equities:\n",pec->nPlies);
 
     /* We start by computing the money-play value, since if the user stops the process
-    in the middle, it's often the most useful*/
+    in the middle, it's often the most useful to display and therefore to compute first*/
     //if(oldSize == 0 || oldSize == psm->tableSize)  //causes bug: it colors the cell in dark grey, and doesn't show a move
                         //maybe the moneyQuadrantData becomes empty?
     CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
@@ -1165,7 +1165,7 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
         float dt=pq->dtEquity;
         float dp=1.0f;
         if (nd<-900.0) //reflects issue, typically user stops computation in the middle
-            sprintf(ssz,"computation stopped by user?");
+            sprintf(ssz,"Score not analysed\nComputation stopped by user");
         else {
             sprintf(space2, "%*c", DIGITS + 7, ' ');   //define spacing before putting ply of 1st line
             if (pq->dec == ND) { //ND is best //format: "+" forces +/-; .*f displays f with precision DIGITS
@@ -1253,7 +1253,7 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
                The new hover text reflects it.*/
             //g_assert_not_reached();
             // sprintf(ssz,"no legal moves");
-            sprintf(ssz,"no legal moves, computation stopped by user?");
+            sprintf(ssz,"Score not analysed\nComputation stopped by user");
             strcat(buf,ssz);
         }
     }
