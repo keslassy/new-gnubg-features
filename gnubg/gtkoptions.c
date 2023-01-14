@@ -898,47 +898,23 @@ BuildRadioButtons(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScoreMapF
     int vAlignExpand) { 
     /* Sub-function to build a new box with a new set of labels, with a whole bunch of needed parameters
 
-    - pwFrame ----------
+    - pwvbox ----------
+    | --title----------|
     | -- pwh2 -------- |
-    | | pw (options) | |
+    | |text | options| |
     | ---------------- |
     --------------------
     */
     int* pi;
     int i;
-    GtkWidget* pwScoreMapBox;
-    GtkWidget* pwFrame;
-    GtkWidget* pwv;
     GtkWidget* pwh2;
-    GtkWidget* pw;
-    GtkWidget* pwx = NULL;
-    //    GtkWidget * pwDefault = NULL;
 
-#if GTK_CHECK_VERSION(3,0,0)
-        pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-#else
-        pwv = gtk_vbox_new(FALSE, 0);
-#endif
-// #if GTK_CHECK_VERSION(3,0,0)
-//     pwScoreMapBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-// #else
-//     pwScoreMapBox = gtk_hbox_new(FALSE, 0);
-// #endif
-//     gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
     AddText(pwvbox, _(frameTitle));
-
-//     pwFrame = gtk_frame_new(_(frameTitle));
-//     gtk_box_pack_start(GTK_BOX(pwScoreMapBox), pwFrame, vAlignExpand, FALSE, 0);
-//     gtk_widget_set_tooltip_text(pwFrame, _(frameToolTip)); 
-//     gtk_widget_set_sensitive(pwFrame, sensitive);
-
 #if GTK_CHECK_VERSION(3,0,0)
     pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 #else
     pwh2 = gtk_hbox_new(FALSE, 8);
 #endif
-//     gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-
     gtk_box_pack_start(GTK_BOX(pwvbox), pwh2, FALSE, FALSE, 0);
 
     AddText(pwh2, ("   "));
@@ -958,22 +934,7 @@ BuildRadioButtons(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScoreMapF
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwScoreMapFrame[i]), 1); //we set this to toggle it on in case it's the default option
         //g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK((*functionWhenToggled)), psm);
     }
-    //for (i = 0; i < NUM_VARIATIONS; ++i) { 
 
-    //    pow->apwVariations[i] =
-    //        i ?
-    //        gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON
-    //        (pow->apwVariations[0]),
-    //            gettext(aszVariations[i])) :
-    //        gtk_radio_button_new_with_label(NULL, gettext(aszVariations[i]));
-
-    //    gtk_box_pack_start(GTK_BOX(pwb), pow->apwVariations[i], FALSE, FALSE, 0);
-
-    //    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation)i);
-
-    //    gtk_widget_set_tooltip_text(pow->apwVariations[i], gettext(aszVariationsTooltips[i]));
-
-    //}
 }
 
 

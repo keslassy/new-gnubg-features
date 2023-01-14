@@ -1,6 +1,6 @@
 /* Still under development.... TBD: 
 * 
-*
+* with equity display -> can crash :(
 * bug DMP???
 */
 
