@@ -32,9 +32,10 @@
                     [which calls InitQuadrant() for each score (i.e. in each scoremap square=quadrant) to initialize
                     the drawing tools].
                     It also initializes variables.
-            2. It calls UpdateCubeInfoArray(), which initializes the match state in each quadrant, by filling
+            2. NEW: It calls CalcEquities(), which: 
+                - initializes the match state in each quadrant, by filling
                     psm->aaQuadrantData[i][j].ci for each i,j
-            3. It calls CalcScoreMapEquities(), which for each score calls CalcQuadrantEquities() to find
+                - for each score i,j, also calls CalcQuadrantEquities() to find
                     the equity of each decision and therefore the best decision as well,
                     and uses it to set the text for the corresponding quadrant (the best decision is stored in
                     psm->aaQuadrantData[i][j].decisionString). This text is displayed in step 5 below.
@@ -556,7 +557,6 @@ FindMostFrequentMoves(scoremap *psm) {
     psm->topKDecisionsLength=MIN(TOP_K,psm->topKDecisionsLength); //Cut off to TOP_K if there are more.
     for (i=0; i<psm->topKDecisionsLength; i++)
         strcpy(psm->topKDecisions[i],scoreMapDecisions[i].moveStr);
-
 }
 
 
@@ -1506,6 +1506,193 @@ Does not consider whether the cube value is the same as the true cube value.
         return NOT_TRUE_SCORE;
 }
 
+static int
+CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
+
+/* Iterates through scores:
+    1) Creates the cubeinfo array, based on the given cube value -- i.e., updates psm->aaQuadrantData[i][j].ci
+        - We use updateMoneyOnly when a user toggles/untoggles the Jacoby option and we want to recompute the top-left (money)
+            quadrant only, not the whole scoremap
+        - Also, in the move scoremap, both players can double, so non-1 cube values could be negative to indicate
+            the player who doubles (e.g. 2,-2,4,-4 etc.)
+    2) Find equities at each score, and use these to set the text for the corresponding box.
+        - Does not update the gui.
+        - Only does entries in the table >= oldSize. (scomputing old values when resizing the table.)
+        - In the move scoremap, it also computes the most frequent best moves across the scoremap
+*/
+{
+    if(!calcOnly) {
+        matchstate ams = (*psm->pms); // Make a copy of the "master" matchstate  [note: backgammon.h defines an extern ms => using a different name]
+        ams.nMatchTo = MATCH_SIZE(psm); // Set the match length
+        ams.nCube = abs(psm->signednCube); // Set the cube value
+        //unsigned int tempBeavers = nBeavers; //store the true nBeavers value 
+        //g_print("beavers1: %d\n", nBeavers);
+        if (psm->signednCube == 1) // Cube value 1: centre the cube
+            ams.fCubeOwner = -1;
+        else // Cube value > 1: Uncentre the cube. Ensure that the player on roll owns the cube (and thus can double)
+            ams.fCubeOwner = (psm->signednCube > 0) ? (ams.fMove) : (1 - ams.fMove);
+
+        if (!updateMoneyOnly) //update the whole scoremap in such a case
+            for (int i = 0; i < psm->tableSize; i++) {
+                for (int j = 0; j < psm->tableSize; j++) {
+                    if (isAllowed(i, j, psm)) {
+                        //"isAllowed()" helps set the unallowed quadrants in move scoremap. Three reasons to forbid
+                        //  a quadrant:
+                        // 1. we don't allow i=0 i.e. 1-away Crawford with j=1 i.e. 1-away post-Crawford,
+                        //          and more generally incompatible scores in i and j
+                        // 2 we don't allow doubling in a Crawford game
+                        // 3 we don't allow an absurd cubing situation, eg someone leading in Crawford
+                        //          with a >1 cube, or someone at matchLength-2 who would double to 4
+
+                    /* cubeinfo */
+                    /* NOTE: it is important to change the score and cube value in the match, and not in the
+                    cubeinfo, because the gammon values in cubeinfo need to be set correctly.
+                    This is taken care of in GetMatchStateCubeInfo().
+                    */
+                        if (psm->cubeScoreMap) {
+                            // Alter the match score: we want i,j to be away scores - 2 (note match length is tableSize+1)
+                            // Examples:    i=0 <-> score=matchLength-2 <-> 2-away
+                            //              i=tableSize-1=matchLength-2 <-> score=m-1-(m-2)-1=0  <->matchLength-away
+                            ams.anScore[0] = psm->tableSize - i - 1;
+                            ams.anScore[1] = psm->tableSize - j - 1;
+                        }
+                        else { //move ScoreMap
+                            // Here we found that there may be a bug with the confusion b/w fCrawford and fPostCrawford
+                            // Using fCrawford while we should use the other...
+                            // We set ams.fCrawford=1 for the Crawford games and 0 for the post-Crawford games
+                            ams.fCrawford = (i == 1 || j == 1); //Crawford by default, unless i==0 or j==0
+                            ams.fPostCrawford = (i == 0 || j == 0); //Crawford by default, unless i==0 or j==0
+                            if (i == 0) { //1-away post Crawford
+                                ams.anScore[0] = MATCH_SIZE(psm) - 1;
+                            }
+                            else  //i-away Crawford
+                                ams.anScore[0] = MATCH_SIZE(psm) - i;
+                            if (j == 0) { //1-away post Crawford
+                                ams.anScore[1] = MATCH_SIZE(psm) - 1;
+                            }
+                            else  //j-away
+                                ams.anScore[1] = MATCH_SIZE(psm) - j;
+                        }
+                        // // Create cube info using this data
+                        //     psm->aaQuadrantData[i][j] = (scoremap *) g_malloc(sizeof(scoremap));
+                        GetMatchStateCubeInfo(&(psm->aaQuadrantData[i][j].ci), &ams);
+
+                        //we also want to update the "special" quadrants, i.e. those w/ the same score as currently,
+                        // or DMP etc.
+                        // note that if the cube changes, e.g. 1-away 1-away is not DMP => this depends on the cube value
+                        psm->aaQuadrantData[i][j].isTrueScore = UpdateIsTrueScore(psm, i, j, FALSE);
+                        psm->aaQuadrantData[i][j].isSpecialScore = UpdateIsSpecialScore(psm, i, j, FALSE);
+                    }
+                    else {
+                        // we decide to arbitrarily mark all unallowed squares as not special in any way
+                        psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
+                        psm->aaQuadrantData[i][j].isSpecialScore = REGULAR; //if the cube makes the position unallowed
+                        // (eg I cannot double to 4 when 1-away...) we don't want to mark any squares as special
+                    }
+                }
+            }
+        //in the set: { UNLIMITED, MONEY_JACOBY, MONEY_NO_JACOBY} 
+        //top-left quadrant: set whether it's money play or an unlimited match
+        //  pci->fBeavers = fBeavers;  cBeavers
+
+        if (psm->labelTopleft == MONEY_JACOBY) {
+            ams.nMatchTo = 0;
+            ams.fJacoby = 1;
+            //g_print("beaversJ: %d\n", nBeavers);
+        }
+        else if (psm->labelTopleft == MONEY_NO_JACOBY) {
+            ams.nMatchTo = 0;
+            ams.fJacoby = 0; //disabling the impact of Jacoby
+            // One abandonned option was to remove beavers. Touchings nBeavers (the max allowed) creates problems. 
+            // The 2nd option of equating the beavers count to its max worked.
+            // Since beavers don't impact the eval, it was abandonned
+            //nBeavers=0; //temporarily changing nBeavers 
+            // ams.cBeavers = nBeavers; //disabling the impact of beavers
+            //g_print("beaversNO_J: %d\n", nBeavers);
+        }
+        //else {
+        //    ams.nMatchTo = 32; // MAXSCORE=64 //TBD aaa
+        //    ams.anScore[0] = 0;
+        //    ams.anScore[1] = 0;
+        //}
+
+        GetMatchStateCubeInfo(&(psm->moneyQuadrantData.ci), & ams); 
+        psm->moneyQuadrantData.isTrueScore=UpdateIsTrueScore(psm, -1, -1, TRUE);
+        psm->moneyQuadrantData.isSpecialScore=UpdateIsSpecialScore(psm, -1, -1, TRUE);
+        psm->moneyQuadrantData.isAllowedScore=ALLOWED;
+        //if (labelTopleft == MONEY_NO_JACOBY) 
+        //    nBeavers = tempBeavers; // resetting true value of nBeavers
+    }
+    /* **************************** */
+
+    if (!updateMoneyOnly) { //update the whole scoremap in such a case
+        ProgressStartValue(_("Finding correct decisions"), MAX(psm->tableSize*psm->tableSize+1-oldSize*oldSize, 1));
+                // Example: If we only recompute the money equity, the formula correctly yields 1 for oldSize = psm->tableSize
+        //g_print("Finding %d-ply cube equities:\n",pec->nPlies);
+
+        /* We start by computing the money-play value, since if the user stops the process
+        in the middle, it's often the most useful to display and therefore to compute first*/
+        //if(oldSize == 0 || oldSize == psm->tableSize)  //causes bug: it colors the cell in dark grey, and doesn't show a move
+                            //maybe the moneyQuadrantData becomes empty?
+        CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
+        /*careful: upon table scaling, ProgressValueAdd causes a redraw => a potential problem  in the pango markup text because it may not be ready yet!*/
+        ProgressValueAdd(1);//not sure if it should be included above, but probably minor
+
+        /*
+        Next, we fill the table. i,j correspond to the locations in the table. 
+            - In cube ScoreMap, the away-scores are 2+i, 2+j (because the (0,0)-entry of 
+                the table corresponds to 2-away 2-away).
+            - In move scoremap: i=0->1-away post Crawford; i=1->1-away Crawford; 
+                i=2+->i-away
+
+        In a first version, we incremented i from 1 to tableSize, then j similarly, 
+        i.e. row by row in (i,j) (or col by col as seen by the user with "away" labels).
+        
+        But if the user interrupts the process in the middle, maybe it's better to progress 
+        using growing squares or by computing the diagonal first. Here we implement the 
+        growing squares. (Thanks to Philippe Michel for the feedback!)
+        */
+        for (int aux=0; aux<psm->tableSize; aux++) {
+            for (int aux2=aux; aux2>=0; aux2--) {
+                // for (int j=0; j<aux; j++) {
+                if (psm->aaQuadrantData[aux2][aux].isAllowedScore == ALLOWED) {
+                    //Only running the line below when (i >= oldSize || j >= oldSize) 
+                    // [now aux>=oldSize] yields a bug with grey squares on resize
+                    CalcQuadrantEquities(&psm->aaQuadrantData[aux2][aux], psm, (aux >= oldSize));
+                    // if (myDebug)
+                    //     g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n",i,j,psm->aaQuadrantData[i][j].ml.cMoves,psm->aaQuadrantData[i][j].ml.rBestScore,psm->aaQuadrantData[i][j].decisionString);
+                    if (aux >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
+                        ProgressValueAdd(1);
+                }
+                else {
+                    strcpy(psm->aaQuadrantData[aux2][aux].decisionString, "");
+                }
+                if (aux2<aux) {   //same as above but now doing the other side of the square without the 
+                                //(aux,aux) vertex
+                    if (psm->aaQuadrantData[aux][aux2].isAllowedScore == ALLOWED) {
+                        CalcQuadrantEquities(&psm->aaQuadrantData[aux][aux2], psm, (aux >= oldSize));
+                        if (aux >= oldSize)
+                            ProgressValueAdd(1);
+                    }
+                    else {
+                        strcpy(psm->aaQuadrantData[aux][aux2].decisionString, "");
+                    }
+                }
+            }
+        }
+
+        ProgressEnd();
+        
+
+    } else { //we only recompute the top-left money square, and don't bother with the progress bar
+        CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE); // Recalculate money equity.
+    }
+
+    if (!psm->cubeScoreMap)
+        FindMostFrequentMoves(psm);
+    
+    return 0;
+}
 
 static void
 UpdateCubeInfoArray(scoremap* psm, int updateMoneyOnly)
@@ -2306,7 +2493,8 @@ ScoreMapPlyToggled(GtkWidget * pw, scoremap * psm)
 
         //if (CalcScoreMapEquities(psm,0))
         //    return;
-        CalcScoreMapEquities(psm, 0);
+        //CalcScoreMapEquities(psm, 0);
+        CalcEquities(psm,0,FALSE, TRUE);
         UpdateScoreMapVisual(psm);
     }
 
@@ -2348,8 +2536,9 @@ TopleftToggled(GtkWidget* pw, scoremap* psm)
             psm->moneyJacoby = TRUE;
         else
             psm->moneyJacoby = FALSE;
-        UpdateCubeInfoArray(psm, TRUE);  //Apply the Jacoby option and update the money quadrant only
-        CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE); // Recalculate money equity.
+        // UpdateCubeInfoArray(psm, TRUE);  //Apply the Jacoby option and update the money quadrant only
+        // CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE); // Recalculate money equity.
+        CalcEquities(psm,psm->tableSize,TRUE,FALSE);
         //if (CalcScoreMapEquities(psm, psm->tableSize)) // Recalculate money equity.
         //    return;
         UpdateScoreMapVisual(psm); // Update square colours.
@@ -2412,8 +2601,11 @@ CubeValToggled(GtkWidget * pw, scoremap * psm)
     //g_print("\n CubeValToggled: cube:%d", *pi);
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
         psm->signednCube = (*pi);
-        UpdateCubeInfoArray(psm, FALSE);  // Change all the cubeinfos to use the selected signednCube value
-        if (CalcScoreMapEquities(psm,0)) // Recalculate all equities
+        // UpdateCubeInfoArray(psm, FALSE);  // Change all the cubeinfos to use the selected signednCube value
+        // if (CalcScoreMapEquities(psm,0)) // Recalculate all equities
+        //     return;
+        /* Change all the cubeinfos to use the selected signednCube value & recalculate all equities*/
+        if(CalcEquities(psm,0,FALSE,FALSE)) //if it's OK, it returns 0
             return;
         UpdateScoreMapVisual(psm); // Update square colours. (Also updates gauge and gauge labels)
     }
@@ -2454,8 +2646,9 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
         //     psm->oldTableSize=oldTableSize;
         //     UpdateScoreMapVisual(psm,oldTableSize);
         if (psm->tableSize > oldTableSize) {
-            UpdateCubeInfoArray(psm, FALSE); //UpdateCubeInfoArray(scoremap* psm, int updateMoneyOnly)
-            CalcScoreMapEquities(psm, oldTableSize);
+            // UpdateCubeInfoArray(psm, FALSE); //UpdateCubeInfoArray(scoremap* psm, int updateMoneyOnly)
+            // CalcScoreMapEquities(psm, oldTableSize);
+            CalcEquities(psm,oldTableSize,FALSE,FALSE);
         }
         //     psm->tempScaleUp=0;
         //     psm->oldTableSize=0;
@@ -3266,8 +3459,11 @@ if needed (this was initially planned for some explanation text, which was then 
 // **************************************************************************************************
     /* calculate values and set colours/text in the table */
 
-    UpdateCubeInfoArray(psm, FALSE); // fills psm->aaQuadrantData[i][j].ci for each i,j
-    CalcScoreMapEquities(psm,0);    //Find equities at each score, and use these to set the text for the corresponding box.
+    // UpdateCubeInfoArray(psm, FALSE); // fills psm->aaQuadrantData[i][j].ci for each i,j
+    // CalcScoreMapEquities(psm,0);    //Find equities at each score, and use these to set the text for the corresponding box.
+
+    /* For each i,j, fill sm->aaQuadrantData[i][j].ci, find equities, and set the text*/
+    CalcEquities(psm,0,FALSE,FALSE);
     UpdateScoreMapVisual(psm);     //Update: (1) The color of each square (2) The hover text of each square
                                     //      (3) the row/col score labels (4) the gauge.
 
