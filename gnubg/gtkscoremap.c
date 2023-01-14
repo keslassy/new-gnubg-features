@@ -1525,12 +1525,24 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
         matchstate ams = (*psm->pms); // Make a copy of the "master" matchstate  [note: backgammon.h defines an extern ms => using a different name]
         ams.nMatchTo = MATCH_SIZE(psm); // Set the match length
         ams.nCube = abs(psm->signednCube); // Set the cube value
-        //unsigned int tempBeavers = nBeavers; //store the true nBeavers value 
-        //g_print("beavers1: %d\n", nBeavers);
         if (psm->signednCube == 1) // Cube value 1: centre the cube
             ams.fCubeOwner = -1;
         else // Cube value > 1: Uncentre the cube. Ensure that the player on roll owns the cube (and thus can double)
             ams.fCubeOwner = (psm->signednCube > 0) ? (ams.fMove) : (1 - ams.fMove);
+
+        /*top-left quadrant: set whether it's money play or an unlimited match */
+        if (psm->labelTopleft == MONEY_JACOBY) {
+            ams.nMatchTo = 0;
+            ams.fJacoby = 1;
+        }
+        else if (psm->labelTopleft == MONEY_NO_JACOBY) {
+            ams.nMatchTo = 0;
+            ams.fJacoby = 0; //disabling the impact of Jacoby
+        }
+        GetMatchStateCubeInfo(&(psm->moneyQuadrantData.ci), & ams); 
+        psm->moneyQuadrantData.isTrueScore=UpdateIsTrueScore(psm, -1, -1, TRUE);
+        psm->moneyQuadrantData.isSpecialScore=UpdateIsSpecialScore(psm, -1, -1, TRUE);
+        psm->moneyQuadrantData.isAllowedScore=ALLOWED;
 
         if (!updateMoneyOnly) //update the whole scoremap in such a case
             for (int i = 0; i < psm->tableSize; i++) {
@@ -1591,37 +1603,6 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                     }
                 }
             }
-        //in the set: { UNLIMITED, MONEY_JACOBY, MONEY_NO_JACOBY} 
-        //top-left quadrant: set whether it's money play or an unlimited match
-        //  pci->fBeavers = fBeavers;  cBeavers
-
-        if (psm->labelTopleft == MONEY_JACOBY) {
-            ams.nMatchTo = 0;
-            ams.fJacoby = 1;
-            //g_print("beaversJ: %d\n", nBeavers);
-        }
-        else if (psm->labelTopleft == MONEY_NO_JACOBY) {
-            ams.nMatchTo = 0;
-            ams.fJacoby = 0; //disabling the impact of Jacoby
-            // One abandonned option was to remove beavers. Touchings nBeavers (the max allowed) creates problems. 
-            // The 2nd option of equating the beavers count to its max worked.
-            // Since beavers don't impact the eval, it was abandonned
-            //nBeavers=0; //temporarily changing nBeavers 
-            // ams.cBeavers = nBeavers; //disabling the impact of beavers
-            //g_print("beaversNO_J: %d\n", nBeavers);
-        }
-        //else {
-        //    ams.nMatchTo = 32; // MAXSCORE=64 //TBD aaa
-        //    ams.anScore[0] = 0;
-        //    ams.anScore[1] = 0;
-        //}
-
-        GetMatchStateCubeInfo(&(psm->moneyQuadrantData.ci), & ams); 
-        psm->moneyQuadrantData.isTrueScore=UpdateIsTrueScore(psm, -1, -1, TRUE);
-        psm->moneyQuadrantData.isSpecialScore=UpdateIsSpecialScore(psm, -1, -1, TRUE);
-        psm->moneyQuadrantData.isAllowedScore=ALLOWED;
-        //if (labelTopleft == MONEY_NO_JACOBY) 
-        //    nBeavers = tempBeavers; // resetting true value of nBeavers
     }
     /* **************************** */
 
