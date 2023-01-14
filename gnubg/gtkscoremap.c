@@ -1,6 +1,6 @@
-/* Still under development.... TBD: 
+/* TBD: 
 * 
-* with equity display -> can crash :(
+* merge UpdateCubeInfoArray & next function?
 * bug DMP???
 */
 
@@ -2388,20 +2388,20 @@ DisplayEvalToggled(GtkWidget * pw, scoremap * psm)
     }
 }
 
-static void
-JacobyToggled(GtkWidget * pw, scoremap * psm)
-/* This is called by gtk when the user clicks on the Jacoby checkbox.
-*/
-{
-    // int *pi = (int *) g_object_get_data(G_OBJECT(pw), "label");
-    if (psm->moneyJacoby != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw)) ) {
-        psm->moneyJacoby = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
-        UpdateCubeInfoArray(psm, TRUE);  //Apply the Jacoby option and update the money quadrant only
-        if (CalcScoreMapEquities(psm,psm->tableSize)) // Recalculate money equity.
-            return;
-        UpdateScoreMapVisual(psm); // Update square colours.
-    }
-}
+// static void
+// JacobyToggled(GtkWidget * pw, scoremap * psm)
+// /* This is called by gtk when the user clicks on the Jacoby checkbox.
+// */
+// {
+//     // int *pi = (int *) g_object_get_data(G_OBJECT(pw), "label");
+//     if (psm->moneyJacoby != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw)) ) {
+//         psm->moneyJacoby = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
+//         UpdateCubeInfoArray(psm, TRUE);  //Apply the Jacoby option and update the money quadrant only
+//         if (CalcScoreMapEquities(psm,psm->tableSize)) // Recalculate money equity.
+//             return;
+//         UpdateScoreMapVisual(psm); // Update square colours.
+//     }
+// }
 
 static void
 CubeValToggled(GtkWidget * pw, scoremap * psm)
