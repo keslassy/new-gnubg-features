@@ -1450,10 +1450,19 @@ InitQuadrantCubeInfo(scoremap * psm, int i, int j)
         //              i=tableSize-1=matchLength-2 <-> score=m-1-(m-2)-1=0  <->matchLength-away
         psm->msTemp.anScore[0] = psm->tableSize - i - 1;
         psm->msTemp.anScore[1] = psm->tableSize - j - 1;
+        
+        /* Create cube info using this data */
+        //     psm->aaQuadrantData[i][j] = (scoremap *) g_malloc(sizeof(scoremap));
+        GetMatchStateCubeInfo(&(psm->aaQuadrantData[i][j].ci), & psm->msTemp);
+
+        //initialize square properties
+        psm->aaQuadrantData[i][j].isTrueScore = UpdateIsTrueScore(psm, i, j, FALSE);
+        psm->aaQuadrantData[i][j].isSpecialScore = UpdateIsSpecialScore(psm, i, j, FALSE);
+        psm->aaQuadrantData[i][j].isAllowedScore = ALLOWED;
     }
     else { //move ScoreMap
         if (isAllowed(i, j, psm)) {
-            //"isAllowed()" helps set the unallowed quadrants in *move* scoremap. Three reasons to forbid
+            //"isAllowed()" helps set the unallowed quadrants in a *move* scoremap. Three reasons to forbid
             //  a quadrant:
             // 1. we don't allow i=0 i.e. 1-away Crawford with j=1 i.e. 1-away post-Crawford,
             //          and more generally incompatible scores in i and j
@@ -1495,6 +1504,67 @@ InitQuadrantCubeInfo(scoremap * psm, int i, int j)
         }   
     }
 }
+
+// void 
+// InitQuadrantCubeInfo(scoremap * psm, int i, int j) 
+// {
+
+//     if (isAllowed(i, j, psm)) {
+//         //"isAllowed()" helps set the unallowed quadrants in *move* scoremap. Three reasons to forbid
+//         //  a quadrant:
+//         // 1. we don't allow i=0 i.e. 1-away Crawford with j=1 i.e. 1-away post-Crawford,
+//         //          and more generally incompatible scores in i and j
+//         // 2 we don't allow doubling in a Crawford game
+//         // 3 we don't allow an absurd cubing situation, eg someone leading in Crawford
+//         //          with a >1 cube, or someone at matchLength-2 who would double to 4
+
+//     /* cubeinfo */
+//     /* NOTE: it is important to change the score and cube value in the match, and not in the
+//     cubeinfo, because the gammon values in cubeinfo need to be set correctly.
+//     This is taken care of in GetMatchStateCubeInfo().
+//     */
+//         if (psm->cubeScoreMap) {
+//             // Alter the match score: we want i,j to be away scores - 2 (note match length is tableSize+1)
+//             // Examples:    i=0 <-> score=matchLength-2 <-> 2-away
+//             //              i=tableSize-1=matchLength-2 <-> score=m-1-(m-2)-1=0  <->matchLength-away
+//             psm->msTemp.anScore[0] = psm->tableSize - i - 1;
+//             psm->msTemp.anScore[1] = psm->tableSize - j - 1;
+//         }
+//         else { //move ScoreMap
+//             // Here we found that there may be a bug with the confusion b/w fCrawford and fPostCrawford
+//             // Using fCrawford while we should use the other...
+//             // We set ams.fCrawford=1 for the Crawford games and 0 for the post-Crawford games
+//             psm->msTemp.fCrawford = (i == 1 || j == 1); //Crawford by default, unless i==0 or j==0
+//             psm->msTemp.fPostCrawford = (i == 0 || j == 0); //Crawford by default, unless i==0 or j==0
+//             if (i == 0) { //1-away post Crawford
+//                 psm->msTemp.anScore[0] = MATCH_SIZE(psm) - 1;
+//             }
+//             else  //i-away Crawford
+//                 psm->msTemp.anScore[0] = MATCH_SIZE(psm) - i;
+//             if (j == 0) { //1-away post Crawford
+//                 psm->msTemp.anScore[1] = MATCH_SIZE(psm) - 1;
+//             }
+//             else  //j-away
+//                 psm->msTemp.anScore[1] = MATCH_SIZE(psm) - j;
+//         }
+//         // // Create cube info using this data
+//         //     psm->aaQuadrantData[i][j] = (scoremap *) g_malloc(sizeof(scoremap));
+//         GetMatchStateCubeInfo(&(psm->aaQuadrantData[i][j].ci), & psm->msTemp);
+
+//         //we also want to update the "special" quadrants, i.e. those w/ the same score as currently,
+//         // or DMP etc.
+//         // note that if the cube changes, e.g. 1-away 1-away is not DMP => this depends on the cube value
+//         psm->aaQuadrantData[i][j].isTrueScore = UpdateIsTrueScore(psm, i, j, FALSE);
+//         psm->aaQuadrantData[i][j].isSpecialScore = UpdateIsSpecialScore(psm, i, j, FALSE);
+//     }
+//     else {
+//         // we decide to arbitrarily mark all unallowed squares as not special in any way
+//         psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
+//         psm->aaQuadrantData[i][j].isSpecialScore = REGULAR; //if the cube makes the position unallowed
+//         // (eg I cannot double to 4 when 1-away...) we don't want to mark any squares as special
+        
+//     }   
+// }
 
 
 static int
@@ -1602,7 +1672,7 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                 */
                 if(!calcOnly) 
                     InitQuadrantCubeInfo(psm, aux2, aux);
-                if (psm->aaQuadrantData[aux2][aux].isAllowedScore == ALLOWED) {
+                if (psm->aaQuadrantData[aux2][aux].isAllowedScore == ALLOWED || psm->cubeScoreMap) {
                     //Only running the line below when (i >= oldSize || j >= oldSize) 
                     // [now aux>=oldSize] yields a bug with grey squares on resize
                     // if(aux>=oldSize) {
@@ -1620,7 +1690,7 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                                     //(aux,aux) vertex on the diagonal
                     if(!calcOnly) 
                         InitQuadrantCubeInfo(psm, aux, aux2);
-                    if (psm->aaQuadrantData[aux][aux2].isAllowedScore == ALLOWED) {
+                    if (psm->aaQuadrantData[aux][aux2].isAllowedScore == ALLOWED || psm->cubeScoreMap) {
                         // if(aux>=oldSize) {
                             CalcQuadrantEquities(&psm->aaQuadrantData[aux][aux2], psm, (aux >= oldSize));
                         // if (aux >= oldSize)
