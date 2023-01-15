@@ -1,6 +1,6 @@
 /* TBD: 
 *
-*
+*   provides colors/hover for unallowed double?
 *
 *
 * bug DMP???
@@ -1520,7 +1520,7 @@ InitQuadrantCubeInfo(scoremap * psm, int i, int j)
 {
 
     if (isAllowed(i, j, psm)) {
-        //"isAllowed()" helps set the unallowed quadrants in move scoremap. Three reasons to forbid
+        //"isAllowed()" helps set the unallowed quadrants in *move* scoremap. Three reasons to forbid
         //  a quadrant:
         // 1. we don't allow i=0 i.e. 1-away Crawford with j=1 i.e. 1-away post-Crawford,
         //          and more generally incompatible scores in i and j
@@ -1586,10 +1586,11 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
             quadrant only, not the whole scoremap
         - Also, in the move scoremap, both players can double, so non-1 cube values could be negative to indicate
             the player who doubles (e.g. 2,-2,4,-4 etc.)
-    2) Find equities at each score, and use these to set the text for the corresponding box.
+    2) Finds equities at each score, and use these to set the text for the corresponding box.
         - Does not update the gui.
         - Only does entries in the table >= oldSize. (scomputing old values when resizing the table.)
         - In the move scoremap, it also computes the most frequent best moves across the scoremap
+    When calcOnly is set: only do the 2nd step (e.g. if we only changed the ply, no need to recompute the cubeinfo array)
 */
 {
     // int i,j,
@@ -1668,7 +1669,7 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
             //     psm->pmsTemp->fCubeOwner = (psm->signednCube > 0) ? (psm->pmsTemp->fMove) : (1 - psm->pmsTemp->fMove);
 
         }
-        for (aux=0; aux<psm->tableSize; aux++) {
+        for (aux=oldSize; aux<psm->tableSize; aux++) {
             for (aux2=aux; aux2>=0; aux2--) {
                 // i=aux2;
                 // j=aux;
@@ -1677,13 +1678,13 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                 if (psm->aaQuadrantData[aux2][aux].isAllowedScore == ALLOWED) {
                     //Only running the line below when (i >= oldSize || j >= oldSize) 
                     // [now aux>=oldSize] yields a bug with grey squares on resize
-                    if(aux>=oldSize) {
+                    // if(aux>=oldSize) {
                         CalcQuadrantEquities(&psm->aaQuadrantData[aux2][aux], psm, (aux >= oldSize));
                     // if (myDebug)
                     //     g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n",i,j,psm->aaQuadrantData[i][j].ml.cMoves,psm->aaQuadrantData[i][j].ml.rBestScore,psm->aaQuadrantData[i][j].decisionString);
                     // if (aux >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
                         ProgressValueAdd(1);
-                    }
+                    // }
                 }
                 else {
                     strcpy(psm->aaQuadrantData[aux2][aux].decisionString, "");
@@ -1693,11 +1694,11 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                     if(!calcOnly) 
                         InitQuadrantCubeInfo(psm, aux, aux2);
                     if (psm->aaQuadrantData[aux][aux2].isAllowedScore == ALLOWED) {
-                        if(aux>=oldSize) {
+                        // if(aux>=oldSize) {
                             CalcQuadrantEquities(&psm->aaQuadrantData[aux][aux2], psm, (aux >= oldSize));
                         // if (aux >= oldSize)
                             ProgressValueAdd(1);
-                        }
+                        // }
                     }
                     else {
                         strcpy(psm->aaQuadrantData[aux][aux2].decisionString, "");
