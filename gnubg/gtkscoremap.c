@@ -1,7 +1,8 @@
 /* TBD: 
-* 
-* merge UpdateCubeInfoArray & next function?
-* pms is a pointer, what if we change state?
+*
+*
+*
+*
 * bug DMP???
 */
 
@@ -33,7 +34,7 @@
                     [which calls InitQuadrant() for each score (i.e. in each scoremap square=quadrant) to initialize
                     the drawing tools].
                     It also initializes variables.
-            2. NEW: It calls CalcEquities(), which: 
+            2. New: It calls CalcEquities(), which: 
                 - initializes the match state in each quadrant, by filling
                     psm->aaQuadrantData[i][j].ci for each i,j
                 - for each score i,j, also calls CalcQuadrantEquities() to find
@@ -75,11 +76,16 @@
     -> later moved to Settings>Analysis>ScoreMap
 - added Analyse > "Scoremap (move decision)" to the existing cube-ScoreMap entry
 - added ply display in hover of cube ScoreMap, and aligned displays
-- (added then canceled a smooth table scaling where we see the previous computations while
-    increasing the table size; the additional time to redisplay the previous computations is
-    not worth it) 
 - addressed the issues that occur when stopping computation in the middle, and 
-    changed the order in which the ScoreMap displays
+    changed the order in which the ScoreMap displays, by using expanding squares
+- also changed the order in which operations are launched: instead of computing the 
+    cube info at all scores in one batch at first, which means a longer time before the 
+    progress-bar evaluations even start, thus troubling the user, now compute the info 
+    for each score just before evaluating it
+- also only recomputing the cube info only on needed squares upon table scaling
+- (added then canceled a smooth table scaling where we see the previous computation results
+    and colors while increasing the table size; the additional time to redisplay the previous 
+    computations is not worth it) 
 - removed label-by and layout radio buttons; they will only be configured in the 
     default settings panel
 - checked that it works in both Windows 10 and Ubuntu 22
@@ -1671,23 +1677,27 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                 if (psm->aaQuadrantData[aux2][aux].isAllowedScore == ALLOWED) {
                     //Only running the line below when (i >= oldSize || j >= oldSize) 
                     // [now aux>=oldSize] yields a bug with grey squares on resize
-                    CalcQuadrantEquities(&psm->aaQuadrantData[aux2][aux], psm, (aux >= oldSize));
+                    if(aux>=oldSize) {
+                        CalcQuadrantEquities(&psm->aaQuadrantData[aux2][aux], psm, (aux >= oldSize));
                     // if (myDebug)
                     //     g_print("i=%d,j=%d,FindnSaveBestMoves returned %d, %1.3f; decision: %s\n",i,j,psm->aaQuadrantData[i][j].ml.cMoves,psm->aaQuadrantData[i][j].ml.rBestScore,psm->aaQuadrantData[i][j].decisionString);
-                    if (aux >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
+                    // if (aux >= oldSize) // Only count the ones where equities are recomputed (other ones occur near-instantly)
                         ProgressValueAdd(1);
+                    }
                 }
                 else {
                     strcpy(psm->aaQuadrantData[aux2][aux].decisionString, "");
                 }
-                if (aux2<aux) {   //same as above but now doing the other side of the square without the 
-                                //(aux,aux) vertex
+                if (aux2<aux) {     //same as above but now doing the other side of the square, without the 
+                                    //(aux,aux) vertex on the diagonal
                     if(!calcOnly) 
                         InitQuadrantCubeInfo(psm, aux, aux2);
                     if (psm->aaQuadrantData[aux][aux2].isAllowedScore == ALLOWED) {
-                        CalcQuadrantEquities(&psm->aaQuadrantData[aux][aux2], psm, (aux >= oldSize));
-                        if (aux >= oldSize)
+                        if(aux>=oldSize) {
+                            CalcQuadrantEquities(&psm->aaQuadrantData[aux][aux2], psm, (aux >= oldSize));
+                        // if (aux >= oldSize)
                             ProgressValueAdd(1);
+                        }
                     }
                     else {
                         strcpy(psm->aaQuadrantData[aux][aux2].decisionString, "");
