@@ -372,7 +372,11 @@ REASON 3. more tricky: we don't allow an absurd cubing situation, eg someone lea
         //there are 3 squares we don't allow: (0,1), (1,0) and (1,1)
         if ( (i==0 && j==1) || (i==1 && j==0) || (i==1 && j==1) ) {
             psm->aaQuadrantData[i][j].isAllowedScore = MISMATCHED_SCORES;
-            strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("This score is not allowed because one player is in Crawford while the other is in post-Crawford"));
+            if (i==1 && j==1)
+//                strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("11This score is not allowed because one player is in Crawford while the other is in post-Crawford"));          
+                strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("This score is not allowed because both players cannot simultaneously reach one-away Crawford scores"));
+            else
+                strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("This score is not allowed because one player is in Crawford while the other is in post-Crawford"));
             return 0;
         } else if (abs(psm->signednCube)>1 && (i==1 || j==1)) {
             // REASON 2: no doubling in Crawford
