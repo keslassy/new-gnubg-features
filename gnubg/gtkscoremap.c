@@ -82,7 +82,8 @@
     cube info at all scores in one batch at first, which means a longer time before the 
     progress-bar evaluations even start, thus troubling the user, now compute the info 
     for each score just before evaluating it
-- also only recomputing the cube info only on needed squares upon table scaling
+- also recomputing the cube info only on needed squares upon table scaling
+- also not recomputing the money-play equity unless needed
 - (added then canceled a smooth table scaling where we see the previous computation results
     and colors while increasing the table size; the additional time to redisplay the previous 
     computations is not worth it) 
@@ -1610,35 +1611,38 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
         /*top-left quadrant: we always recompute the money-play value; now set whether it's money play or an unlimited match 
         in mps->pmsTemp we only change nMatchTo and fJacoby; below for non-money-play we change back nMatchTo, but don't 
         touch fJacoby, as we assume that it has no impact there*/
-        if (psm->labelTopleft == MONEY_JACOBY) {
-            psm->msTemp.nMatchTo = 0;
-            psm->msTemp.fJacoby = 1;
+        if (oldSize==0 || updateMoneyOnly) { //if the money square equity wasn't already computed, or we ask for recomputation
+            if (psm->labelTopleft == MONEY_JACOBY) {
+                psm->msTemp.nMatchTo = 0;
+                psm->msTemp.fJacoby = 1;
+            }
+            else if (psm->labelTopleft == MONEY_NO_JACOBY) {
+                psm->msTemp.nMatchTo = 0;
+                psm->msTemp.fJacoby = 0; //disabling the impact of Jacoby
+            }
+            GetMatchStateCubeInfo(&(psm->moneyQuadrantData.ci), & psm->msTemp); 
+            psm->moneyQuadrantData.isTrueScore=UpdateIsTrueScore(psm, -1, -1, TRUE);
+            psm->moneyQuadrantData.isSpecialScore=UpdateIsSpecialScore(psm, -1, -1, TRUE);
+            psm->moneyQuadrantData.isAllowedScore=ALLOWED;
         }
-        else if (psm->labelTopleft == MONEY_NO_JACOBY) {
-            psm->msTemp.nMatchTo = 0;
-            psm->msTemp.fJacoby = 0; //disabling the impact of Jacoby
-        }
-        GetMatchStateCubeInfo(&(psm->moneyQuadrantData.ci), & psm->msTemp); 
-        psm->moneyQuadrantData.isTrueScore=UpdateIsTrueScore(psm, -1, -1, TRUE);
-        psm->moneyQuadrantData.isSpecialScore=UpdateIsSpecialScore(psm, -1, -1, TRUE);
-        psm->moneyQuadrantData.isAllowedScore=ALLOWED;
     }
     if (updateMoneyOnly) {
         //we only recompute the top-left money square, and don't bother with the progress bar
         CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE); // Recalculate money equity.
     } else {
-        //recompute fully (beyond oldSize)
-        ProgressStartValue(_("Finding correct decisions"), MAX(psm->tableSize*psm->tableSize+1-oldSize*oldSize, 1));
-                // Example: If we only recompute the money equity, the formula correctly yields 1 for oldSize = psm->tableSize
+        //recompute fully (beyond oldSize); we only recompute the money equity when oldSize==0
+        ProgressStartValue(_("Finding correct decisions"), (oldSize==0)? psm->tableSize*psm->tableSize + 1 : MAX(psm->tableSize*psm->tableSize-oldSize*oldSize, 1) );
         //g_print("Finding %d-ply cube equities:\n",pec->nPlies);
 
         /* We start by computing the money-play value, since if the user stops the process
         in the middle, it's often the most useful to display and therefore to compute first*/
         //if(oldSize == 0 || oldSize == psm->tableSize)  //causes bug: it colors the cell in dark grey, and doesn't show a move
                             //maybe the moneyQuadrantData becomes empty?
-        CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
-        /*careful: upon table scaling, ProgressValueAdd causes a redraw => a potential problem  in the pango markup text because it may not be ready yet!*/
-        ProgressValueAdd(1);//not sure if it should be included above, but probably minor
+        if (oldSize==0) {  //if the money square equity wasn't already computed [we are in the !updateMoneyOnly case]
+            CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
+            /*careful: upon table scaling, ProgressValueAdd causes a redraw => a potential problem  in the pango markup text because it may not be ready yet!*/
+            ProgressValueAdd(1);//not sure if it should be included above, but probably minor
+        }
 
         /*
         Next, we fill the table. i,j correspond to the locations in the table. 
