@@ -3032,7 +3032,7 @@ append_analysis_options(analysiswidget * paw)
         N_("Unlucky:"), N_("Very unlucky:")
     };
     int i;
-    AnalysisDetails *pAnalDetailSettings1, *pAnalDetailSettings2;
+    AnalysisDetails *pAnalDetailSettings2;
     GtkWidget *pwDialog, *pwPage, *pwFrame, *pwLabel, *pwSpin;
 #if GTK_CHECK_VERSION(3,0,0)
     GtkWidget *pwGrid;
@@ -3223,7 +3223,7 @@ append_analysis_options(analysiswidget * paw)
     gtk_box_pack_start(GTK_BOX(hboxTop), vbox1, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), pwFrame, FALSE, FALSE, 0);
 
-    pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
+    CreateEvalSettings(pwFrame, _("Analysis settings"),
                                               &paw->esChequer.ec, (movefilter *) &paw->aamf, &paw->esCube.ec, NULL, FALSE);
 //    pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
 //                                              &aw.esChequer.ec, (movefilter *) & aw.aamf, &aw.esCube.ec, NULL, FALSE);
@@ -3274,8 +3274,8 @@ append_analysis_options(analysiswidget * paw)
 
     HintSameToggled(NULL, paw);
 
-    // g_free(pAnalDetailSettings2);
-    // g_free(pAnalDetailSettings1);
+    //  g_free(pAnalDetailSettings2); //<- not sure where to put it
+    //  g_free(pAnalDetailSettings1);
 
 }
 

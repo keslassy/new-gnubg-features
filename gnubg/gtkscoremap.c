@@ -2270,7 +2270,7 @@ BuildCubeFrame(scoremap * psm)
 /*
     Max cube value. Overestimate, actual value is 2^(floor(ln2(MAX_CUBE_VAL))).
     E.g.,   match size 3 -> MAX_CUBE_VAL=5 (so actual max value 4),
-            match size 4 -> MAX_CUBE_VAL=7 (so 6), 
+            match size 4 -> MAX_CUBE_VAL=7 (so 4), 
             match size 5 -> MAX_CUBE_VAL=9 (so 8)
 */
     const int MAX_CUBE_VAL=2*MATCH_SIZE(psm)-1;
@@ -2342,32 +2342,46 @@ BuildCubeFrame(scoremap * psm)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), (1==psm->signednCube));
         g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(CubeValToggled), psm);
 
-        //for (i = 0, m = 2; m <= MAX_CUBE_VAL; i++, m = 2 * m); // Find i=log2(MAX_CUBE_VAL) (rounded down)
+        /* 
+        - i represents the column in pwTable, which shows the cube options
+        - Intuitively, we want to find i=log2(MAX_CUBE_VAL) (rounded down)
+        - The formula is a bit more complex because of table scaling down, see down below 
+        for explanations
+        */
+        for (i = 0, m = 2; (m <= MAX_CUBE_VAL || m <= ABS(psm->signednCube)); i++, m = 2 * m);  
 
 #if GTK_CHECK_VERSION(3,0,0)
         pwGrid = gtk_grid_new();
         gtk_box_pack_start(GTK_BOX(psm->pwCubeBox), pwGrid, FALSE, FALSE, 0);
 #else
-        pwTable = gtk_table_new(2, 1 + i, FALSE);
+        pwTable = gtk_table_new(2, 1 + i, FALSE); //GtkWidget* gtk_table_new (guint rows, guint columns, gboolean homogeneous)
         gtk_box_pack_start(GTK_BOX(psm->pwCubeBox), pwTable, FALSE, FALSE, 0);
 #endif
         gtk_widget_set_tooltip_text(pwTable, _("Select the cube value and who doubled (before the current decision)"));
-        for (i = 0; i < 2; i++) {
-            sprintf(sz, _("%s doubled to: "), ((psm->pms->fMove) ? (ap[i].szName) : (ap[1-i].szName)));
+        /* j is the row we select*/
+        for (j = 0; j < 2; j++) {
+            sprintf(sz, _("%s doubled to: "), ((psm->pms->fMove) ? (ap[j].szName) : (ap[1-j].szName)));
             pwLabel = gtk_label_new(_(sz));
 #if GTK_CHECK_VERSION(3,0,0)
-            gtk_widget_set_halign(pwLabel, GTK_ALIGN_START);
-            gtk_widget_set_valign(pwLabel, GTK_ALIGN_START);
-            gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, i, 1, 1);
+            gtk_widget_set_halign(pwLabel, GTK_ALIGN_END); //GTK_ALIGN_START);
+            gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER); //GTK_ALIGN_START);
+            gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, j, 1, 1);//void gtk_grid_attach (GtkGrid* grid,GtkWidget* child,gint left,gint top,gint width,gint height
+)
 #else
-            gtk_misc_set_alignment(GTK_MISC(pwLabel), 0, 0);
-            gtk_table_attach_defaults(GTK_TABLE(pwTable), pwLabel, 0, 1, i, i + 1);
+            gtk_misc_set_alignment(GTK_MISC(pwLabel), 1, 0.5);//void gtk_misc_set_alignment (GtkMisc* misc,gfloat xalign [from 0 (left) to 1 (right)],gfloat yalign [from 0 (top) to 1 (bottom)])
+            gtk_table_attach_defaults(GTK_TABLE(pwTable), pwLabel, 0, 1, j, j + 1); //void gtk_table_attach_defaults (GtkTable* table,GtkWidget* widget,guint left_attach,guint right_attach,guint top_attach,guint bottom_attach)
 #endif
         }
 
-        for (m = 2; (m <= MAX_CUBE_VAL || m <= ABS(psm->signednCube)); m = 2*m, i++) {
-            /* Iterate through allowed cube values. (Only powers of two) As above, also allow unallowed cubes
-            if we scaled down the match length but then make the radio button unavailable.*/
+            /* Iterate through allowed cube values. (Only powers of two) 
+            As above, also allow unallowed cubes if we scaled down the match length, but then make the 
+            radio button unavailable. Specifically, if the match length is 3, we'll allow a cube of 4,
+            but wouldn't normally allow a cube of 8 (>MAX_CUBE_VAL). However, if the previously 
+            simulated match size was 5, then maybe we chose a cube of 8  (ABS(psm->signednCube)), since
+            it was allowed. Now we'll show it, but disable it.
+            */
+
+        for (i = 1, m = 2; (m <= MAX_CUBE_VAL || m <= ABS(psm->signednCube)); m = 2*m, i++) { 
             for (j = 0; j < 2; j++) {
                 if (m == psm->pms->nCube && (m == 1 || (j == 0 && psm->pms->fMove == psm->pms->fCubeOwner) ||
                             (j == 1 && psm->pms->fMove != psm->pms->fCubeOwner))) {
@@ -2375,7 +2389,6 @@ BuildCubeFrame(scoremap * psm)
                 } else {
                     sprintf(sz,"%d", m);
                 }
-
                 pw = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pwx),sz);
 #if GTK_CHECK_VERSION(3,0,0)
                 gtk_grid_attach(GTK_GRID(pwGrid), pw, i, j, 1, 1);
@@ -2390,7 +2403,6 @@ BuildCubeFrame(scoremap * psm)
                     gtk_toggle_button_set_inconsistent(GTK_TOGGLE_BUTTON(pw), TRUE);
                 g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK(CubeValToggled), psm);
             }
-            i++;
         }
     }
     gtk_container_add(GTK_CONTAINER(psm->pwCubeFrame), psm->pwCubeBox);
