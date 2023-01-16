@@ -238,7 +238,7 @@ gnubg_DEPENDENCIES = lib/libevent.la $(am__append_6)  \
 	$(OTHER_LIBS) $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2)
 gnubg_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(ASAN_FLAGS) \
 	$(gnubg_LDFLAGS) $(LDFLAGS) -o $@
 am_makebearoff_OBJECTS = makebearoff.$(OBJEXT) $(am__objects_1)
 makebearoff_OBJECTS = $(am_makebearoff_OBJECTS)
@@ -306,18 +306,18 @@ am__depfiles_remade = ./$(DEPDIR)/analysis.Po ./$(DEPDIR)/bearoff.Po \
 	./$(DEPDIR)/util.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) $(ASAN_FLAGS)
 LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
 	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CFLAGS) $(CFLAGS)
+	$(AM_CFLAGS) $(CFLAGS) $(ASAN_FLAGS)
 AM_V_CC = $(am__v_CC_$(V))
 am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
 am__v_CC_0 = @echo "  CC      " $@;
 am__v_CC_1 = 
 CCLD = $(CC)
 LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(ASAN_FLAGS)\
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
@@ -469,6 +469,8 @@ AM_CFLAGS =  -DG_DISABLE_ASSERT -g -O3 -ffast-math
 AM_DEFAULT_VERBOSITY = 1
 AM_YFLAGS = -d
 AR = ar
+#added this:
+ASAN_FLAGS = -fsanitize=address
 AUTOCONF = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' autoconf
 AUTOHEADER = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' autoheader
 AUTOMAKE = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' automake-1.16
@@ -482,7 +484,7 @@ CATALOGS =  cs.gmo da.gmo de.gmo en_GB.gmo en_US.gmo el.gmo es.gmo fi.gmo fr.gmo
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
-#here changed, was CFLAGS = ; -Wall -Wextra -Wno-deprecated-declarations
+#here changed, was CFLAGS = 
 CFLAGS=-Wall -Wextra -Wno-deprecated-declarations
 CPPFLAGS = 
 CPUEXT_FLAGS =  -mrdrnd -mabm
