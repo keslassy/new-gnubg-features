@@ -1353,16 +1353,17 @@ Specifically: (1) The color of each square (2) The hover text of each square (3)
 
 
 static specialscore
-UpdateIsSpecialScore(const scoremap * psm, int i, int j, int money)
+UpdateIsSpecialScore(const scoremap * psm, int i, int j)
 /*
-- In move ScoreMap, determines whether a quadrant corresponds to a special score like SCORELESS, MONEY_J, DMP, GG, GS; or is just REGULAR.
+- In move ScoreMap, determines whether a quadrant corresponds to a special score like SCORELESS, MONEY_J, DMP, 
+GG, GS; or is just REGULAR.
 Note: we only apply a strict definition for cube==1. We could widen the definition if it's too strict: e.g.,
 if we are 3-away 4-away and cube=4, then it's practically DMP; etc.
  - In cube ScoreMap, only determines MONEY.
-i,j indicate indices in aaQuadrantData.
+i,j indicate indices in aaQuadrantData. We use i=j=-1 for the money square.
 */
 {
-    if (money) {//both in cube and move scoremaps 
+    if (i<0 || j<0) {//both in cube and move scoremaps 
         if (psm->moneyJacoby)
             return MONEY_J;
         else
@@ -1383,60 +1384,60 @@ i,j indicate indices in aaQuadrantData.
 
 
 static scorelike
-UpdateIsTrueScore(const scoremap * psm, int i, int j, int money)
+UpdateIsTrueScore(const scoremap * psm, int i, int j)
 /* Determines whether a quadrant corresponds to the true score.
-Does not consider whether the cube value is the same as the true cube value.
+- Does not consider whether the cube value is the same as the true cube value.
+- For the money square, we use i=j=-1
 */
 {
     int scoreLike = 0;
     // we now want to check whether the i-away and j-away values of a quadrant correspond to the real away values of the game.
     // We distinguish the two cases: cube scoremap and move scoremap, since they display away scores in different quadrants
 
-    // in cube scoremap, i,j indicate indices in aaQuadrantData, i.e., they are away-scores-2.
-    if (psm->cubeScoreMap)
-        scoreLike = ((i+2 == psm->pms->nMatchTo-psm->pms->anScore[0]) && (j+2 == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0;
-    //in move scoremap, we first check that a quadrant is allowed. If so, we distinguish the cases: 2-away and more,
-    // or Crawford, or post-Crawford. It is possible to compress the formulas, but in this way we see all cases
-    else if (!psm->cubeScoreMap && (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED)) {
-        if (psm->pms->nMatchTo - psm->pms->anScore[0] > 1 && psm->pms->nMatchTo - psm->pms->anScore[1] > 1) //no Crawford issue
-            scoreLike=((i == psm->pms->nMatchTo-psm->pms->anScore[0]) && (j == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0;
-        else if (psm->pms->nMatchTo-psm->pms->anScore[0] == 1 && psm->pms->fPostCrawford == 0)
-            scoreLike=((i == 1) && (j == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0; //i=1 Crawford
-        else if (psm->pms->nMatchTo-psm->pms->anScore[1] == 1 && psm->pms->fPostCrawford == 0)
-            scoreLike=((j == 1) && (i == psm->pms->nMatchTo-psm->pms->anScore[0])) ? 1 : 0; // j=1 Crawford
-        else if (psm->pms->nMatchTo-psm->pms->anScore[0] == 1 && psm->pms->fPostCrawford == 1)
-            scoreLike=((i == 0) && (j == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0; // i=0 post-C
-        else if (psm->pms->nMatchTo-psm->pms->anScore[1] == 1 && psm->pms->fPostCrawford == 1)
-            scoreLike=((j == 0) && (i == psm->pms->nMatchTo-psm->pms->anScore[0])) ? 1 : 0; // j=0 post-C
-    } else //square is not allowed
-        scoreLike = 0;
-
-    //in addition, we want to take the cube value into account when deciding whether a quadrant is indeed "score-like"
-    // we will require the cube situation (as shown at the bottom in the cube radio buttons) to be the same as in the true game
-    if (scoreLike) {//we want to see if we need to cancel b/c the cube is not the same
-        //if we are in a cube scoremap, we only check that the cube value is the same
-        //if we are in a move scoremap, we also need to check that it's the same player who holds the cube
-        //      In such a case, we use the formula ams.fCubeOwner= (signednCube>0) ? (ams.fMove) : (1-ams.fMove);
-        // (an alternative approach would be to record the signednCube when we start the scoremap, and check that
-        //      we still get the same, i.e. psm->initialSignednCube == psm->signednCube)
-        if ((psm->cubeScoreMap && abs(psm->signednCube) == psm->pms->nCube) ||
-            (!(psm->cubeScoreMap) && (abs(psm->signednCube) == psm->pms->nCube) && ((psm->pms->nCube == 1) ||
-                                                (psm->signednCube > 0 && psm->pms->fCubeOwner==psm->pms->fMove) ||
-                                                (psm->signednCube < 0 && psm->pms->fCubeOwner!=psm->pms->fMove)))) {
-            //then it's OK, same cube value, keep scoreLike
-        } else { //not the same cube value
-            scoreLike = 0;
-        }
-    }
-    //            p0Cube = ((signednCube>1 && psm->pms->fMove == 1) || (signednCube<-1 && psm->pms->fMove != 1));
-            // p1Cube = (signednCube<-1 && psm->pms->fMove == 1) || (signednCube>1 && psm->pms->fMove != 1);
-
-    if (money)
+    if (i<0 || j<0) //money
         return (psm->pms->nMatchTo==0) ? TRUE_SCORE : NOT_TRUE_SCORE;
-    else if (scoreLike)
-        return (psm->pms->nMatchTo == MATCH_SIZE(psm) || psm->labelBasedOn==LABEL_AWAY) ? TRUE_SCORE : LIKE_TRUE_SCORE;
-    else
-        return NOT_TRUE_SCORE;
+    else {
+        // in cube scoremap, i,j indicate indices in aaQuadrantData, i.e., they are away-scores-2.
+        if (psm->cubeScoreMap)
+            scoreLike = ((i+2 == psm->pms->nMatchTo-psm->pms->anScore[0]) && (j+2 == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0;
+        //in move scoremap, we first check that a quadrant is allowed. If so, we distinguish the cases: 2-away and more,
+        // or Crawford, or post-Crawford. It is possible to compress the formulas, but in this way we see all cases
+        else if (!psm->cubeScoreMap && (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED)) {
+            if (psm->pms->nMatchTo - psm->pms->anScore[0] > 1 && psm->pms->nMatchTo - psm->pms->anScore[1] > 1) //no Crawford issue
+                scoreLike=((i == psm->pms->nMatchTo-psm->pms->anScore[0]) && (j == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0;
+            else if (psm->pms->nMatchTo-psm->pms->anScore[0] == 1 && psm->pms->fPostCrawford == 0)
+                scoreLike=((i == 1) && (j == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0; //i=1 Crawford
+            else if (psm->pms->nMatchTo-psm->pms->anScore[1] == 1 && psm->pms->fPostCrawford == 0)
+                scoreLike=((j == 1) && (i == psm->pms->nMatchTo-psm->pms->anScore[0])) ? 1 : 0; // j=1 Crawford
+            else if (psm->pms->nMatchTo-psm->pms->anScore[0] == 1 && psm->pms->fPostCrawford == 1)
+                scoreLike=((i == 0) && (j == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0; // i=0 post-C
+            else if (psm->pms->nMatchTo-psm->pms->anScore[1] == 1 && psm->pms->fPostCrawford == 1)
+                scoreLike=((j == 0) && (i == psm->pms->nMatchTo-psm->pms->anScore[0])) ? 1 : 0; // j=0 post-C
+        } else //square is not allowed
+            scoreLike = 0;
+    
+        //in addition, we want to take the cube value into account when deciding whether a quadrant is indeed "score-like"
+        // we will require the cube situation (as shown at the bottom in the cube radio buttons) to be the same as in the true game
+        if (scoreLike) {//we want to see if we need to cancel b/c the cube is not the same
+            //if we are in a cube scoremap, we only check that the cube value is the same
+            //if we are in a move scoremap, we also need to check that it's the same player who holds the cube
+            //      In such a case, we use the formula ams.fCubeOwner= (signednCube>0) ? (ams.fMove) : (1-ams.fMove);
+            // (an alternative approach would be to record the signednCube when we start the scoremap, and check that
+            //      we still get the same, i.e. psm->initialSignednCube == psm->signednCube)
+            if ((psm->cubeScoreMap && abs(psm->signednCube) == psm->pms->nCube) ||
+                (!(psm->cubeScoreMap) && (abs(psm->signednCube) == psm->pms->nCube) && ((psm->pms->nCube == 1) ||
+                                                    (psm->signednCube > 0 && psm->pms->fCubeOwner==psm->pms->fMove) ||
+                                                    (psm->signednCube < 0 && psm->pms->fCubeOwner!=psm->pms->fMove)))) {
+                //then it's OK, same cube value, keep scoreLike
+            } else { //not the same cube value
+                scoreLike = 0;
+            }
+        }
+        if (scoreLike)
+            return (psm->pms->nMatchTo == MATCH_SIZE(psm) || psm->labelBasedOn==LABEL_AWAY) ? TRUE_SCORE : LIKE_TRUE_SCORE;
+        else
+            return NOT_TRUE_SCORE;    
+    }
 }
 
 
@@ -1460,8 +1461,8 @@ InitQuadrantCubeInfo(scoremap * psm, int i, int j)
         GetMatchStateCubeInfo(&(psm->aaQuadrantData[i][j].ci), & psm->msTemp);
 
         //initialize square properties
-        psm->aaQuadrantData[i][j].isTrueScore = UpdateIsTrueScore(psm, i, j, FALSE);
-        psm->aaQuadrantData[i][j].isSpecialScore = UpdateIsSpecialScore(psm, i, j, FALSE);
+        psm->aaQuadrantData[i][j].isTrueScore = UpdateIsTrueScore(psm, i, j);
+        psm->aaQuadrantData[i][j].isSpecialScore = UpdateIsSpecialScore(psm, i, j);
         psm->aaQuadrantData[i][j].isAllowedScore = ALLOWED;
     }
     else { //move ScoreMap
@@ -1497,8 +1498,8 @@ InitQuadrantCubeInfo(scoremap * psm, int i, int j)
             //we also want to update the "special" quadrants, i.e. those w/ the same score as currently,
             // or DMP etc.
             // note that if the cube changes, e.g. 1-away 1-away is not DMP => this depends on the cube value
-            psm->aaQuadrantData[i][j].isTrueScore = UpdateIsTrueScore(psm, i, j, FALSE);
-            psm->aaQuadrantData[i][j].isSpecialScore = UpdateIsSpecialScore(psm, i, j, FALSE);
+            psm->aaQuadrantData[i][j].isTrueScore = UpdateIsTrueScore(psm, i, j);
+            psm->aaQuadrantData[i][j].isSpecialScore = UpdateIsSpecialScore(psm, i, j);
         } else {
             // we decide to arbitrarily mark all unallowed squares as not special in any way
             psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
@@ -1614,8 +1615,8 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                 psm->msTemp.fJacoby = 0; //disabling the impact of Jacoby
             }
             GetMatchStateCubeInfo(&(psm->moneyQuadrantData.ci), & psm->msTemp); 
-            psm->moneyQuadrantData.isTrueScore=UpdateIsTrueScore(psm, -1, -1, TRUE);
-            psm->moneyQuadrantData.isSpecialScore=UpdateIsSpecialScore(psm, -1, -1, TRUE);
+            psm->moneyQuadrantData.isTrueScore=UpdateIsTrueScore(psm, -1, -1);
+            psm->moneyQuadrantData.isSpecialScore=UpdateIsSpecialScore(psm, -1, -1);
             psm->moneyQuadrantData.isAllowedScore=ALLOWED;
         }
     }
