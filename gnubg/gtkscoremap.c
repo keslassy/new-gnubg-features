@@ -294,8 +294,8 @@ typedef struct {
     evalcontext ec; // The eval context (takes into account the selected ply)
     int tableSize; // This actually represents the max away score minus 1 (since we never show score=1)
     int truenMatchTo;   //match length of the real game (before scoremap was launched)
-    int tempScaleUp; //temporary indicator for when the table size is increased
-    int oldTableSize; //keeping the old size in the above case
+    // int tempScaleUp; //temporary indicator for when the table size is increased
+    // int oldTableSize; //keeping the old size in the above case
     
     /* current selected options*/
     scoreMapLabel labelBasedOn; 
@@ -1840,68 +1840,69 @@ The function updates the decision text in each square.
     //g_print("... %s:%s",pq->decisionString,pq->equityText);
     /* build the text that will be displayed in the quadrant
 
-    we don't want to display text if (1) we are in the middle of scaling up the table size (psm->tempScaleUp == 1) 
+    Version 1: we don't want to display text if (1) we are in the middle of scaling up the table size (psm->tempScaleUp == 1) 
     and (2) we display a square for which we haven't computed the decision yet, i.e. beyond psm->oldTableSize; 
     also within this function, i,j are not well defined for the money square, so we make sure to allow text
     for the money square by using the identifying (*pi < 0) from above
+
+    Version 2: we disregard scaling up the table and remove this condition.
     */
-    // if (! (psm->tempScaleUp)) {
-    if ((! (psm->tempScaleUp && (i>=psm->oldTableSize || j>=psm->oldTableSize))) || (*pi < 0)) {
-        if (pq->isAllowedScore==ALLOWED) { // non-greyed quadrant
-            // we start by cutting long decision strings into two rows; this is only relevant to the move scoremap
-            CutTextTo(aux, pq->decisionString, 12);
+            // if ((! (psm->tempScaleUp && (i>=psm->oldTableSize || j>=psm->oldTableSize))) || (*pi < 0)) {
+    if (pq->isAllowedScore==ALLOWED) { // non-greyed quadrant
+        // we start by cutting long decision strings into two rows; this is only relevant to the move scoremap
+        CutTextTo(aux, pq->decisionString, 12);
 
-            if ((psm->cubeScoreMap && psm->displayCubeEval != CUBE_NO_EVAL) || (!psm->cubeScoreMap && psm->displayMoveEval != MOVE_NO_EVAL))  {
-                strcat(aux, pq->equityText); //was strcat
-            }
-
-            if (pq->isTrueScore) { //emphasize the true-score square
-                strcpy(buf, "<b><span size=\"x-small\">");
-                if (pq->ci.nMatchTo == 0) { //money like the current real game, but maybe with a different Jacoby option
-                    //if (pq->ci.fJacoby == moneyJacoby) //money play has same Jacoby settings as now
-                    //    strcat(buf, _("Current: "));
-
-                    if (psm->moneyJacoby)  // we analyze with Jacoby
-                        strcat(buf, _("Money")); 
-                    else
-                        strcat(buf, _("Unlimited"));
-                }
-                else if (pq->isTrueScore == TRUE_SCORE)
-                    strcat(buf, _("Current score")); // or "(Same score)"
-                else if (pq->isTrueScore == LIKE_TRUE_SCORE)
-                    strcat(buf, _("Similar score")); // "like current score" or "like game score" are a bit long
-                strcat(buf, "</span>\n");
-                strcat(buf, aux);	//pq->decisionString);
-                strcat(buf, "</b>");
-                // pango_layout_set_markup(layout, buf, -1);
-            } else if (pq->isSpecialScore != REGULAR) { //the square is special: MONEY, DMP etc. => write in text             
-                if (pq->isSpecialScore == MONEY_J) 
-                    strcpy(buf, _("Money"));
-                else if (pq->isSpecialScore == SCORELESS)
-                    strcpy(buf, _("Unlimited"));
-                else if (pq->isSpecialScore == DMP)
-                    strcpy(buf, _("DMP"));
-                else if (pq->isSpecialScore == GG)
-                    strcpy(buf, _("GG"));
-                else if (pq->isSpecialScore == GS)
-                    strcpy(buf, _("GS"));
-                strcat(buf, "\n");
-                strcat(buf, aux);	//pq->decisionString);
-            } else { //regular (not MONEY, DMP, GG, GS), not true score
-                strcpy(buf, aux);	//pq->decisionString);
-            }
-        } else {
-            strcpy(buf, "");//e.g. grey squares that do not make sense
+        if ((psm->cubeScoreMap && psm->displayCubeEval != CUBE_NO_EVAL) || (!psm->cubeScoreMap && psm->displayMoveEval != MOVE_NO_EVAL))  {
+            strcat(aux, pq->equityText); //was strcat
         }
-        // pango_layout_set_markup(layout, buf, -1);
+
+        if (pq->isTrueScore) { //emphasize the true-score square
+            strcpy(buf, "<b><span size=\"x-small\">");
+            if (pq->ci.nMatchTo == 0) { //money like the current real game, but maybe with a different Jacoby option
+                //if (pq->ci.fJacoby == moneyJacoby) //money play has same Jacoby settings as now
+                //    strcat(buf, _("Current: "));
+
+                if (psm->moneyJacoby)  // we analyze with Jacoby
+                    strcat(buf, _("Money")); 
+                else
+                    strcat(buf, _("Unlimited"));
+            }
+            else if (pq->isTrueScore == TRUE_SCORE)
+                strcat(buf, _("Current score")); // or "(Same score)"
+            else if (pq->isTrueScore == LIKE_TRUE_SCORE)
+                strcat(buf, _("Similar score")); // "like current score" or "like game score" are a bit long
+            strcat(buf, "</span>\n");
+            strcat(buf, aux);	//pq->decisionString);
+            strcat(buf, "</b>");
+            // pango_layout_set_markup(layout, buf, -1);
+        } else if (pq->isSpecialScore != REGULAR) { //the square is special: MONEY, DMP etc. => write in text             
+            if (pq->isSpecialScore == MONEY_J) 
+                strcpy(buf, _("Money"));
+            else if (pq->isSpecialScore == SCORELESS)
+                strcpy(buf, _("Unlimited"));
+            else if (pq->isSpecialScore == DMP)
+                strcpy(buf, _("DMP"));
+            else if (pq->isSpecialScore == GG)
+                strcpy(buf, _("GG"));
+            else if (pq->isSpecialScore == GS)
+                strcpy(buf, _("GS"));
+            strcat(buf, "\n");
+            strcat(buf, aux);	//pq->decisionString);
+        } else { //regular (not MONEY, DMP, GG, GS), not true score
+            strcpy(buf, aux);	//pq->decisionString);
+        }
     } else {
-        strcpy(buf, "");
-        // pango_layout_set_text(layout, buf, -1);
+        strcpy(buf, "");//e.g. grey squares that do not make sense
     }
+    // pango_layout_set_markup(layout, buf, -1);
+    // } else {
+    //     strcpy(buf, "");
+    //     // pango_layout_set_text(layout, buf, -1);
+    // }
     //strcat(buf,NULL);
     //tmp = g_markup_escape_text(buf, -1); // to avoid non-NULL terminated messages -> didn't work, displays the "html"
     //if (buf != (const char *) NULL) // this one also didn't work, everything goes to the "else" 
-        pango_layout_set_markup(layout, buf, -1);
+    pango_layout_set_markup(layout, buf, -1);
     // else
     //     pango_layout_set_text(layout, tmp, -1);   
     //g_free(tmp);
@@ -3003,8 +3004,8 @@ if needed (this was initially planned for some explanation text, which was then 
     psm->ec.fDeterministic = TRUE;
     psm->ec.rNoise = 0.0f;
     psm->truenMatchTo = pms->nMatchTo;
-    psm->tempScaleUp=0;
-    psm->oldTableSize=0;
+    // psm->tempScaleUp=0;
+    // psm->oldTableSize=0;
 
     psm->labelBasedOn = scoreMapLabelDef; 
     psm->colourBasedOn = scoreMapColourDef;   
