@@ -132,7 +132,7 @@ and come back, it works again. It may be a movelist construction issue.
 #include "gtkwindows.h"
 //#include "gtkoptions.h"  
 
-static int myDebug = 0;
+//static int myDebug = 0;
 
 
 /*         GLOBAL *EXTERN) VARIABLES           */
@@ -1767,7 +1767,7 @@ The function updates the decision text in each square.
     const quadrantdata * pq;
     PangoLayout *layout;
     PangoFontDescription *description;
-    int i,j, x,y;
+    int i=0,j=0, x,y;
     GtkAllocation allocation;
     gtk_widget_get_allocation(pw, &allocation);
     char buf[200];
@@ -2438,17 +2438,18 @@ ColourByToggled(GtkWidget * pw, scoremap * psm)
     }
 }
 
-static void
-LabelByToggled(GtkWidget * pw, scoremap * psm)
-/* This is called by gtk when the user clicks on one of the "label by" radio buttons.
-*/
-{
-    int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");// "label"
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-        psm->labelBasedOn=(scoreMapLabel)(*pi);
-        UpdateScoreMapVisual(psm);
-    }
-}
+/* We decided to not use the LabelBy radio buttons, as they are defined in the Analysis>Settings menu */
+// static void
+// LabelByToggled(GtkWidget * pw, scoremap * psm)
+// /* This is called by gtk when the user clicks on one of the "label by" radio buttons.
+// */
+// {
+//     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");// "label"
+//     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
+//         psm->labelBasedOn=(scoreMapLabel)(*pi);
+//         UpdateScoreMapVisual(psm);
+//     }
+// }
 
 static void
 TopleftToggled(GtkWidget* pw, scoremap* psm) 
@@ -2467,20 +2468,21 @@ TopleftToggled(GtkWidget* pw, scoremap* psm)
     }
 }
 
-static void
-LayoutToggled(GtkWidget * pw, scoremap * psm) 
-/* This is called by gtk when the user clicks on one of the "layout" radio buttons.
-*/
-{
-    int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
-        psm->layout=(scoreMapLayout)(*pi);
-        gtk_container_remove(GTK_CONTAINER(psm->pwLastContainer), psm->pwOptionsBox);
-        psm->pwLastContainer = (psm->layout == VERTICAL) ? (psm->pwVContainer) : (psm->pwHContainer);
-        BuildOptions(psm);
-        UpdateScoreMapVisual(psm);
-    }
-}
+/* We decided to not use the layout radio buttons, as they are defined in the Analysis>Settings menu */
+// static void
+// LayoutToggled(GtkWidget * pw, scoremap * psm) 
+// /* This is called by gtk when the user clicks on one of the "layout" radio buttons.
+// */
+// {
+//     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
+//     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
+//         psm->layout=(scoreMapLayout)(*pi);
+//         gtk_container_remove(GTK_CONTAINER(psm->pwLastContainer), psm->pwOptionsBox);
+//         psm->pwLastContainer = (psm->layout == VERTICAL) ? (psm->pwVContainer) : (psm->pwHContainer);
+//         BuildOptions(psm);
+//         UpdateScoreMapVisual(psm);
+//     }
+// }
 
 static void
 DisplayEvalToggled(GtkWidget * pw, scoremap * psm)
@@ -2688,8 +2690,8 @@ AddText(GtkWidget* pwBox, char* Text)
 extern void
 GTKShowMoveScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent) 
 {
-    GtkWidget* pwDialog, * pwBox, * pwPrompt;
-    const char* pch;
+    GtkWidget* pwDialog, * pwBox;
+    // const char* pch;
 
     pwDialog = GTKCreateDialog(_("Move ScoreMap Info"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2725,8 +2727,8 @@ GTKShowMoveScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
 extern void
 GTKShowCubeScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent) 
 {
-    GtkWidget* pwDialog, * pwBox, * pwPrompt;
-    const char* pch;
+    GtkWidget* pwDialog, * pwBox;
+    // const char* pch;
 
     pwDialog = GTKCreateDialog(_("Cube ScoreMap Info"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2750,37 +2752,11 @@ GTKShowCubeScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
 }
 
 void
-BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) { 
+BuildOptions(scoremap * psm) { 
 /* Build the options part of the scoremap window, i.e. the part that goes after the scoremap table (and the gauge if it exists)
 */
 
-//  int *pi;
-    int i;
-//  int j, m;
-    int matchLengthIndex;
-//  int screenWidth, screenHeight;
-
-//  GtkWidget *pwDialog;
-//  GtkWidget *pwGaugeTable = NULL;
-    GtkWidget *pwFrame;
     GtkWidget *pwv;
-    GtkWidget *pw;
-//  GtkWidget *pwh;
-//  GtkWidget *pwx = NULL;
-//  GtkWidget *pwy = NULL;
-//  GtkWidget *pwv2;
-    GtkWidget *pwh2;
-    GtkWidget* pwh3;
-    GtkWidget* pwButton;
-//  GtkWidget* pwtest;
-//  float nd, dt, dp = 1.0;
-//  GtkWidget *pwTable2 = NULL;
-//  GtkWidget *pwLabel;
-//  char sz[100];
-//  GtkWidget *pwhtop;
-//  GtkWidget *pwhbottom;
-    //char* frameToolTip;
-
     int vAlignExpand=FALSE; // set to true to expand vertically the group of frames rather than packing them to the top
 
     // Holder for both columns in vertical layout, for single column in horizontal layout
@@ -2828,38 +2804,6 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     // const char* lengthStrings[NUM_MATCH_LENGTH-1] = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21") };
     BuildLabelFrame(psm, pwv, _("Match length"), _("Select the match length (which determines the grid size)"), aszScoreMapMatchLength, NUM_MATCH_LENGTH-1, psm->matchLengthIndex, MatchLengthToggled, TRUE, vAlignExpand);
 
-
-
-//    pwFrame=gtk_frame_new(_("Match length"));
-//    gtk_box_pack_start(GTK_BOX(pwv), pwFrame, vAlignExpand, FALSE, 0);
-//    gtk_widget_set_tooltip_text(pwFrame, _("Select the match length (which determines the grid size)")); 
-//
-//#if GTK_CHECK_VERSION(3,0,0)
-//    pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-//#else
-//    pwh2 = gtk_hbox_new(FALSE, 8);
-//#endif
-//    gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-//
-//    pw= gtk_combo_box_text_new();
-//    gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-//    gtk_widget_set_tooltip_text(pw, _("Select the match length (which determines the table size)")); 
-//
-//    for (i=0; i<NUM_MATCH_LENGTH_OPTIONS; i++) {
-//        char sz[20];
-//        sprintf(sz,"%d",MATCH_LENGTH_OPTIONS[i]);
-//        gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pw), _(sz));
-//    }
-//    // Find index that matches the match size
-//    for (matchLengthIndex=0; matchLengthIndex<NUM_MATCH_LENGTH_OPTIONS-1 && (MATCH_LENGTH_OPTIONS[matchLengthIndex] < MATCH_SIZE(psm)); ++matchLengthIndex);
-//    // In case the match size doesn't exist in the options, change it to the closest value.
-//    if (psm->cubeScoreMap)
-//        psm->cubematchLength=MATCH_LENGTH_OPTIONS[matchLengthIndex];
-//    else
-//        psm->movematchLength=MATCH_LENGTH_OPTIONS[matchLengthIndex];
-//    gtk_combo_box_set_active(GTK_COMBO_BOX(pw), matchLengthIndex);
-//    g_signal_connect(G_OBJECT(pw), "changed", G_CALLBACK(MatchLengthToggled), psm);
-
     /*cube*/
 
     psm->pwCubeFrame=gtk_frame_new(_("Cube value"));
@@ -2867,57 +2811,6 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
 
     BuildCubeFrame(psm);
 
-
-
-    /* We can insert here a frame to equalize column lengths in cube scoremap + VERTICAL layout
-            (in move scoremap + VERTICAL it is in the 2nd column to equalize column lengths) */
-
-
-    /* Now pack misc = Jacoby + info frame */ 
-
-//#if GTK_CHECK_VERSION(3,0,0)
-//    pwh3 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-//#else
-//    pwh3 = gtk_hbox_new(FALSE, 8);
-//#endif
-//    gtk_box_pack_start(GTK_BOX(pwv), pwh3, TRUE, FALSE, 40);
-
-    //gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-
-
-//     if (psm->cubeScoreMap) {// && layout == VERTICAL) { 
-
-//      /* topleft toggle frame */
-
-//     //frameToolTip = "Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation at money play with Jacoby";
-//     BuildLabelFrame(psm, pwv, _("Top-left square"), _("Select whether the top-left square should provide a scoreless evaluation (money play without Jacoby) or an evaluation at money play with Jacoby"), aszScoreMapJacoby, 2, psm->labelTopleft, TopleftToggled, TRUE, vAlignExpand);
-
-
-//         ///* Layout frame */
-//         //const char* aszScoreMapLayout[2] = { N_("Bottom"), N_("Right") };
-
-//         //BuildLabelFrame(psm, pwv, _("Options position"), aszScoreMapLayout, 2, layout, LayoutToggled, TRUE, vAlignExpand);
-
-// //        //pwFrame=gtk_frame_new(_("Jacoby"));
-// //        pwFrame = gtk_frame_new(_("Misc"));
-// //        gtk_box_pack_start(GTK_BOX(pwv), pwFrame, vAlignExpand, FALSE, 0);
-// //
-// //#if GTK_CHECK_VERSION(3,0,0)
-// //       pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-// //#else
-// //      pwh2 = gtk_hbox_new(FALSE, 8);
-// //#endif
-// //        gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-// //
-// //        pw = gtk_check_button_new_with_label (_("Jacoby"));
-// //        gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-// //        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), moneyJacoby);
-// //        g_signal_connect(G_OBJECT (pw), "toggled", G_CALLBACK(JacobyToggled), psm);
-// //        gtk_widget_set_tooltip_text(pw, _("Toggle Jacoby option for money play"));
-// //
-// //        gtk_box_pack_start(GTK_BOX(pwh2), pwButton = gtk_button_new_with_label(_("Info")), FALSE, FALSE, 8);
-// //        g_signal_connect(G_OBJECT(pwButton), "clicked", G_CALLBACK(GTKShowCubeScoreMapInfo), pwDialog); 
-//     }
   
     // ***************************************** //
 
@@ -2974,55 +2867,6 @@ BuildOptions(scoremap * psm) {//,  GtkWidget *pwvBig) {
     // BuildLabelFrame(psm, pwv, _("Location of option pane"), _("Select whether the options pane should be at the bottom or on the right side of the table"), aszScoreMapLayout, NUM_LAYOUT, psm->layout, LayoutToggled, TRUE, vAlignExpand);
 
 
-   /* Now pack misc (= Jacoby + info) frame in move scoremap OR {cube scoremap + horizontal layout} */ 
-
-/*
-//#if GTK_CHECK_VERSION(3,0,0)
-//    pwh3 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-//#else
-//    pwh3 = gtk_hbox_new(FALSE, 8);
-//#endif
-//    gtk_box_pack_start(GTK_BOX(pwv), pwh3, TRUE, FALSE, 40);
-
-    //gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-
-    // Now misc frame with Jacoby+help
-
-        //pwFrame = gtk_frame_new(_("Jacoby"));
-        pwFrame = gtk_frame_new(_("Help"));
-        gtk_box_pack_start(GTK_BOX(pwv), pwFrame, vAlignExpand, FALSE, 0);
-#if GTK_CHECK_VERSION(3,0,0)
-        pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-#else
-        pwh2 = gtk_hbox_new(FALSE, 0); //pwh2 = gtk_hbox_new(TRUE, 0);
-#endif
-        gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-
-        //// First, Jacoby
-        //pw = gtk_check_button_new_with_label (_("Jacoby"));
-        //gtk_box_pack_start(GTK_BOX(pwh2), pw, FALSE, FALSE, 0);
-        //gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pw), moneyJacoby);
-        //g_signal_connect(G_OBJECT (pw), "toggled", G_CALLBACK(JacobyToggled), psm);
-        //gtk_widget_set_tooltip_text(pw, _("Toggle Jacoby option for money play"));
-
-        //Second, info
-        //pwFrame = gtk_frame_new(_("Help"));
-        //gtk_box_pack_start(GTK_BOX(pwh3), pwFrame, vAlignExpand, FALSE, 0);
-//#if GTK_CHECK_VERSION(3,0,0)
-//        pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-//#else
-//        pwh2 = gtk_hbox_new(FALSE, 8);
-//#endif
-//        gtk_container_add(GTK_CONTAINER(pwFrame), pwh2);
-
-        gtk_box_pack_start(GTK_BOX(pwh2), pwButton = gtk_button_new_with_label(_("Explanations")), FALSE, FALSE, 8);
-        if (psm->cubeScoreMap)
-            g_signal_connect(G_OBJECT(pwButton), "clicked", G_CALLBACK(GTKShowCubeScoreMapInfo), pwDialog); 
-        else
-            g_signal_connect(G_OBJECT(pwButton), "clicked", G_CALLBACK(GTKShowMoveScoreMapInfo), pwDialog); 
-
-   */
-
     gtk_widget_show_all(psm->pwLastContainer);
 
 } //end BuildOptions
@@ -3037,37 +2881,18 @@ GTKShowScoreMap(const matchstate * pms, int cube)
  */
 {
     scoremap *psm;
-//  int *pi;
     int i;
-//  int j, m;
     int screenWidth, screenHeight;
 
-//  GtkWidget *pwDialog;
 #if GTK_CHECK_VERSION(3,0,0)
     GtkWidget *pwGaugeGrid;
 #else
     GtkWidget *pwGaugeTable; /* = NULL; ? */
 #endif
-//  GtkWidget *pwFrame;
-//  GtkWidget *pwv;
+
     GtkWidget *pw;
-    GtkWidget *pwtest;
     GtkWidget *pwButton;
-//  GtkWidget *pwx = NULL;
-//  GtkWidget *pwy = NULL;
-//  GtkWidget *pwv2;
-//  GtkWidget *pwh2;
-//  float nd, dt, dp = 1.0;
-//  GtkWidget *pwTable2 = NULL;
-//  GtkWidget *pwLabel;
-//  char sz[100];
-//  GtkWidget *pwhtop;
-//  GtkWidget *pwhbottom;
-/*  GtkWidget *pwDescribeDefault = NULL;  //pointer to default describeUsing radio button so we can toggle it at the initialization
-    GtkWidget *pwLabelDefault = NULL;  //pointer to default labelBasedOn radio button so we can toggle it at the initialization
-    GtkWidget *pwColourDefault = NULL;  //pointer to default colourBasedOn radio button so we can toggle it at the initialization
-    GtkWidget *pwDisplayEvalDefault = NULL;  //pointer to default displayEval radio button so we can toggle it at the initialization
-*/
+
 
 /* Layout 1: options on right side (LAYOUT_HORIZONTAL==TRUE, i.e. layout==HORIZONTAL)
 -- pwh -----------------------------------------------------

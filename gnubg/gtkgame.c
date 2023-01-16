@@ -2901,8 +2901,8 @@ AddText(GtkWidget* pwBox, char* Text)
 
 
 static void
-BuildRadioButtons(analysiswidget* paw, GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
-    int labelStringsLen, int toggleDefault,  int vAlignExpand) { 
+BuildRadioButtons(GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
+    int labelStringsLen, int toggleDefault) { 
     /* Sub-function to build a new box with a new set of labels, with a whole bunch of needed parameters
 
     - pwvbox ----------
@@ -2957,15 +2957,9 @@ static void
 append_scoremap_options(analysiswidget* paw) 
 {
     GtkWidget* pwvbox;
-    GtkWidget* pwev;
-    GtkWidget* pwhbox;
-    GtkWidget* pw;
     GtkWidget* pwFrame;
     GtkWidget* pwv;
 
-    GtkWidget* pwBox;
-    GtkWidget* pwSpeed;
-    GtkWidget* pwScale;
 #if !GTK_CHECK_VERSION(3,0,0)
     GtkWidget* pwp;
 #endif
@@ -3011,16 +3005,16 @@ append_scoremap_options(analysiswidget* paw)
 #endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwv);
 
-    BuildRadioButtons(paw, pwv, paw->apwScoreMapPly,_("Evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault, vAlignExpand);
-    BuildRadioButtons(paw, pwv, paw->apwScoreMapMatchLength,_("Simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx, vAlignExpand);
+    BuildRadioButtons(pwv, paw->apwScoreMapPly,_("Evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault);
+    BuildRadioButtons(pwv, paw->apwScoreMapMatchLength,_("Simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx);
     if (!disregardsm1)
-        BuildRadioButtons(paw, pwv, paw->apwsm1,_("sm1"), _("Select the default sm1 for which to draw the ScoreMap:"), aszsm1, NUM_sm1, sm1Def, vAlignExpand);
-    BuildRadioButtons(paw, pwv, paw->apwScoreMapJacoby,_("Money-play analysis:"), _("Select the default Jacoby option in the money play analysis of the top-left ScoreMap square"), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef, vAlignExpand);
-    BuildRadioButtons(paw, pwv, paw->apwScoreMapCubeEquityDisplay,_("Cube equity display:"), _("Select the default equity text to display in the squares of the cube ScoreMap"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef, vAlignExpand);
-    BuildRadioButtons(paw, pwv, paw->apwScoreMapMoveEquityDisplay,_("Move equity display:"), _("Select the default equity text to display in the squares of the move ScoreMap"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef, vAlignExpand);
-    BuildRadioButtons(paw, pwv, paw->apwScoreMapColour,_("In cube ScoreMaps, colour by:"), _("Select what equity to use when deciding to colour the cube ScoreMap"), aszScoreMapColour, NUM_COLOUR, scoreMapColourDef, vAlignExpand);
-    BuildRadioButtons(paw, pwv, paw->apwScoreMapLabel,_("Axis orientation:"), _("Select how to orient the ScoreMap axes by default"), aszScoreMapLabel, NUM_LABEL, scoreMapLabelDef, vAlignExpand);
-    BuildRadioButtons(paw, pwv, paw->apwScoreMapLayout,_("Option pane location:"), _("Decide where to place the options with respect to the ScoreMap table"), aszScoreMapLayout, NUM_LAYOUT, scoreMapLayoutDef, vAlignExpand);
+        BuildRadioButtons(pwv, paw->apwsm1,_("sm1"), _("Select the default sm1 for which to draw the ScoreMap:"), aszsm1, NUM_sm1, sm1Def);
+    BuildRadioButtons(pwv, paw->apwScoreMapJacoby,_("Money-play analysis:"), _("Select the default Jacoby option in the money play analysis of the top-left ScoreMap square"), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef);
+    BuildRadioButtons(pwv, paw->apwScoreMapCubeEquityDisplay,_("Cube equity display:"), _("Select the default equity text to display in the squares of the cube ScoreMap"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef);
+    BuildRadioButtons(pwv, paw->apwScoreMapMoveEquityDisplay,_("Move equity display:"), _("Select the default equity text to display in the squares of the move ScoreMap"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef);
+    BuildRadioButtons(pwv, paw->apwScoreMapColour,_("In cube ScoreMaps, colour by:"), _("Select what equity to use when deciding to colour the cube ScoreMap"), aszScoreMapColour, NUM_COLOUR, scoreMapColourDef);
+    BuildRadioButtons(pwv, paw->apwScoreMapLabel,_("Axis orientation:"), _("Select how to orient the ScoreMap axes by default"), aszScoreMapLabel, NUM_LABEL, scoreMapLabelDef);
+    BuildRadioButtons(pwv, paw->apwScoreMapLayout,_("Option pane location:"), _("Decide where to place the options with respect to the ScoreMap table"), aszScoreMapLayout, NUM_LAYOUT, scoreMapLayoutDef);
 
 }
 
@@ -3033,7 +3027,7 @@ append_analysis_options(analysiswidget * paw)
     };
     int i;
     AnalysisDetails *pAnalDetailSettings2;
-    GtkWidget *pwDialog, *pwPage, *pwFrame, *pwLabel, *pwSpin;
+    GtkWidget *pwPage, *pwFrame, *pwLabel, *pwSpin;
 #if GTK_CHECK_VERSION(3,0,0)
     GtkWidget *pwGrid;
 #else
@@ -3282,8 +3276,6 @@ append_analysis_options(analysiswidget * paw)
 static GtkWidget *
 AnalysisPages(analysiswidget * paw)
 {
-    GtkWidget *pwp;
-
     paw->pwNoteBook = gtk_notebook_new();
     gtk_container_set_border_width(GTK_CONTAINER(paw->pwNoteBook), 8);
 
@@ -3292,15 +3284,11 @@ AnalysisPages(analysiswidget * paw)
 
     AnalysisSet(paw);
 
-
-
-
-
     return paw->pwNoteBook;
 }
 
 static void
-AnalysisPageChange(GtkNotebook * UNUSED(notebook), gpointer * UNUSED(page), gint tabNumber, gpointer UNUSED(data))
+AnalysisPageChange(GtkNotebook * UNUSED(notebook), gpointer * UNUSED(page), gint UNUSED(tabNumber), gpointer UNUSED(data))
 {
     // if (tabNumber == relPage && !relPageActivated) {
     //     RelationalOptionsShown();

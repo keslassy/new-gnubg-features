@@ -893,9 +893,8 @@ AddText(GtkWidget* pwBox, char* Text)
 }
 
 static void
-BuildRadioButtons(optionswidget* pow, GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
-    int labelStringsLen, int toggleDefault, //void (*functionWhenToggled)(GtkWidget*, scoremap*), int sensitive, 
-    int vAlignExpand) { 
+BuildRadioButtons(GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
+    int labelStringsLen, int toggleDefault) {//void (*functionWhenToggled)(GtkWidget*, scoremap*), int sensitive, int vAlignExpand) { 
     /* Sub-function to build a new box with a new set of labels, with a whole bunch of needed parameters
 
     - pwvbox ----------
@@ -943,15 +942,9 @@ static void
 append_scoremap_options(optionswidget* pow) 
 {
     GtkWidget* pwvbox;
-    GtkWidget* pwev;
-    GtkWidget* pwhbox;
-    GtkWidget* pw;
     GtkWidget* pwFrame;
     GtkWidget* pwv;
 
-    GtkWidget* pwBox;
-    GtkWidget* pwSpeed;
-    GtkWidget* pwScale;
 #if !GTK_CHECK_VERSION(3,0,0)
     GtkWidget* pwp;
 #endif
@@ -997,16 +990,16 @@ append_scoremap_options(optionswidget* pow)
 #endif
     gtk_container_add(GTK_CONTAINER(pwFrame), pwv);
 
-    BuildRadioButtons(pow, pwv, pow->apwScoreMapPly,_("Evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault, vAlignExpand);
-    BuildRadioButtons(pow, pwv, pow->apwScoreMapMatchLength,_("Simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx, vAlignExpand);
+    BuildRadioButtons(pwv, pow->apwScoreMapPly,_("Evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault);
+    BuildRadioButtons(pwv, pow->apwScoreMapMatchLength,_("Simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx);
     if (!disregardsm1)
-        BuildRadioButtons(pow, pwv, pow->apwsm1,_("sm1"), _("Select the default sm1 for which to draw the ScoreMap:"), aszsm1, NUM_sm1, sm1Def, vAlignExpand);
-    BuildRadioButtons(pow, pwv, pow->apwScoreMapJacoby,_("Money-play analysis:"), _("Select the default Jacoby option in the money play analysis of the top-left ScoreMap square"), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef, vAlignExpand);
-    BuildRadioButtons(pow, pwv, pow->apwScoreMapCubeEquityDisplay,_("Cube equity display:"), _("Select the default equity text to display in the squares of the cube ScoreMap"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef, vAlignExpand);
-    BuildRadioButtons(pow, pwv, pow->apwScoreMapMoveEquityDisplay,_("Move equity display:"), _("Select the default equity text to display in the squares of the move ScoreMap"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef, vAlignExpand);
-    BuildRadioButtons(pow, pwv, pow->apwScoreMapColour,_("In cube ScoreMaps, colour by:"), _("Select what equity to use when deciding to colour the cube ScoreMap"), aszScoreMapColour, NUM_COLOUR, scoreMapColourDef, vAlignExpand);
-    BuildRadioButtons(pow, pwv, pow->apwScoreMapLabel,_("Axis orientation:"), _("Select how to orient the ScoreMap axes by default"), aszScoreMapLabel, NUM_LABEL, scoreMapLabelDef, vAlignExpand);
-    BuildRadioButtons(pow, pwv, pow->apwScoreMapLayout,_("Option pane location:"), _("Decide where to place the options with respect to the ScoreMap table"), aszScoreMapLayout, NUM_LAYOUT, scoreMapLayoutDef, vAlignExpand);
+        BuildRadioButtons(pwv, pow->apwsm1,_("sm1"), _("Select the default sm1 for which to draw the ScoreMap:"), aszsm1, NUM_sm1, sm1Def);
+    BuildRadioButtons(pwv, pow->apwScoreMapJacoby,_("Money-play analysis:"), _("Select the default Jacoby option in the money play analysis of the top-left ScoreMap square"), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef);
+    BuildRadioButtons(pwv, pow->apwScoreMapCubeEquityDisplay,_("Cube equity display:"), _("Select the default equity text to display in the squares of the cube ScoreMap"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef);
+    BuildRadioButtons(pwv, pow->apwScoreMapMoveEquityDisplay,_("Move equity display:"), _("Select the default equity text to display in the squares of the move ScoreMap"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef);
+    BuildRadioButtons(pwv, pow->apwScoreMapColour,_("In cube ScoreMaps, colour by:"), _("Select what equity to use when deciding to colour the cube ScoreMap"), aszScoreMapColour, NUM_COLOUR, scoreMapColourDef);
+    BuildRadioButtons(pwv, pow->apwScoreMapLabel,_("Axis orientation:"), _("Select how to orient the ScoreMap axes by default"), aszScoreMapLabel, NUM_LABEL, scoreMapLabelDef);
+    BuildRadioButtons(pwv, pow->apwScoreMapLayout,_("Option pane location:"), _("Decide where to place the options with respect to the ScoreMap table"), aszScoreMapLayout, NUM_LAYOUT, scoreMapLayoutDef);
 
 //    pwFrame = gtk_frame_new(_("Animation"));
 //    gtk_box_pack_start(GTK_BOX(pwAnimBox), pwFrame, FALSE, FALSE, 4);

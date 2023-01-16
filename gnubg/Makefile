@@ -482,7 +482,8 @@ CATALOGS =  cs.gmo da.gmo de.gmo en_GB.gmo en_US.gmo el.gmo es.gmo fi.gmo fr.gmo
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = 
+#here changed, was CFLAGS = ; -Wall -Wextra -Wno-deprecated-declarations
+CFLAGS=-Wall -Wextra -Wno-deprecated-declarations
 CPPFLAGS = 
 CPUEXT_FLAGS =  -mrdrnd -mabm
 CSCOPE = cscope
