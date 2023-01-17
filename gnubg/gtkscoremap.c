@@ -1,3 +1,8 @@
+/* TBD:
+* - if we show the true score in the axes and not the away score: when we scale up a table, a "current" score in a 5-point match becomes a "similar" score
+in a 7-pt match; but we don't currently check that, as DMP, GG, GS etc don't change => check this case only
+*/
+
 /*
  * Copyright (C) 2020 Aaron Tikuisis <Aaron.Tikuisis@uottawa.ca>
  * Copyright (C) 2020 Isaac Keslassy <keslassy@gmail.com>
@@ -81,6 +86,7 @@
     computations is not worth it) 
 - removed label-by and layout radio buttons; they will only be configured in the 
     default settings panel
+- solved several bugs
 - checked that it works in both Windows 10 and Ubuntu 22
 
 12/2022: Isaac Keslassy: a few changes including:
@@ -1433,8 +1439,10 @@ UpdateIsTrueScore(const scoremap * psm, int i, int j)
                 scoreLike = 0;
             }
         }
-        if (scoreLike)
+        if (scoreLike) {
+            g_message("nMatchTo:%d, match size:%d", psm->pms->nMatchTo,MATCH_SIZE(psm));
             return (psm->pms->nMatchTo == MATCH_SIZE(psm) || psm->labelBasedOn==LABEL_AWAY) ? TRUE_SCORE : LIKE_TRUE_SCORE;
+        }
         else
             return NOT_TRUE_SCORE;    
     }
@@ -1708,6 +1716,14 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                 }
             }
         }
+        /* if we show the true score in the axes and not the away score: when we scale up a table, a "current" score in a 5-point match becomes a "similar" score
+                in a 7-pt match; but we don't currently check that, as DMP, GG, GS etc don't change => check this case only */
+        for (int i = 0; i < psm->tableSize; i++) {
+            for (int j = 0; j < psm->tableSize; j++) {
+                psm->aaQuadrantData[i][j].isTrueScore = UpdateIsTrueScore(psm, i, j);
+            }
+        }
+        
         ProgressEnd();
 
     }
@@ -1906,7 +1922,7 @@ The function updates the decision text in each square.
     // else
     //     pango_layout_set_text(layout, tmp, -1);   
     //g_free(tmp);
-    // g_message("buf: %d->%s\n",*pi , buf);
+    //g_message("buf: %d->%s\n",*pi , buf);
 
     pango_layout_get_size(layout, &width, &height); /* Find the size of the text */
     /* Note these sizes are PANGO_SCALE * number of pixels, whereas allocation.width/height are in pixels. */
