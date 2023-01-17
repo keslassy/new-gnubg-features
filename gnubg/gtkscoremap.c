@@ -67,7 +67,7 @@ in a 7-pt match; but we don't currently check that, as DMP, GG, GS etc don't cha
 */
 
 /* 
-01/2022: Isaac Keslassy:
+01/2023: Isaac Keslassy:
 - new Settings>Options>ScoreMap panel where all default options can be configured
     -> set as a frame
     -> later moved to Settings>Analysis>ScoreMap
