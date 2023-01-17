@@ -86,6 +86,7 @@ in a 7-pt match; but we don't currently check that, as DMP, GG, GS etc don't cha
     computations is not worth it) 
 - removed label-by and layout radio buttons; they will only be configured in the 
     default settings panel
+- corrected "similar score" inaccuracy when scaling the table up
 - solved several bugs
 - checked that it works in both Windows 10 and Ubuntu 22
 
@@ -1440,7 +1441,7 @@ UpdateIsTrueScore(const scoremap * psm, int i, int j)
             }
         }
         if (scoreLike) {
-            g_message("nMatchTo:%d, match size:%d", psm->pms->nMatchTo,MATCH_SIZE(psm));
+            // g_message("nMatchTo:%d, match size:%d", psm->pms->nMatchTo,MATCH_SIZE(psm));
             return (psm->pms->nMatchTo == MATCH_SIZE(psm) || psm->labelBasedOn==LABEL_AWAY) ? TRUE_SCORE : LIKE_TRUE_SCORE;
         }
         else
