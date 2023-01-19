@@ -3064,12 +3064,20 @@ if needed (this was initially planned for some explanation text, which was then 
     // if psm->cubeScoreMap, we show away score from 2-away to (psm->matchLength)-away
     // if not, we show away score at 1-away twice (w/ and post crawford), then 2-away through (psm->matchLength)-away
     psm->tableSize = (psm->cubeScoreMap) ? psm->matchLength - 1 : psm->matchLength + 1;//psm->cubematchLength-1 : psm->movematchLength+1;
+    
+    /* We initialize isAllowedScore to make sure there is no redrawing without a defined value.
+    Since we're already here, we also initialize the other properties. */
     for (int i=0;i<psm->tableSize; i++) {
         for (int j=0;j<psm->tableSize; j++) {
             psm->aaQuadrantData[i][j].isAllowedScore=YET_UNDEFINED; 
+            psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
+            psm->aaQuadrantData[i][j].isSpecialScore = REGULAR; 
         }
     }
     psm->moneyQuadrantData.isAllowedScore=YET_UNDEFINED; 
+    psm->moneyQuadrantData.isTrueScore = NOT_TRUE_SCORE;
+    psm->moneyQuadrantData.isSpecialScore = REGULAR; 
+
 #if GTK_CHECK_VERSION(3,0,0)
     psm->pwTableContainer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
