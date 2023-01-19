@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: Makefile.am,v 1.8 2019/09/15 17:54:57 plm Exp $
 # 
 
 metfiles = catalog.xml catalog.dtd met.dtd met.xsl README \

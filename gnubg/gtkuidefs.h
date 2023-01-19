@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkuidefs.h,v 1.6 2021/10/05 20:58:46 plm Exp $
+ * $Id: gtkuidefs.h,v 1.7 2023/01/18 21:49:36 plm Exp $
  */
 
 #define GNUBG_MAIN_UI \

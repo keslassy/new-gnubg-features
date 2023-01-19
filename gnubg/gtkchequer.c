@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkchequer.c,v 1.134 2022/08/30 18:38:35 plm Exp $
+ * $Id: gtkchequer.c,v 1.135 2023/01/18 21:49:36 plm Exp $
  */
 
 #include "config.h"

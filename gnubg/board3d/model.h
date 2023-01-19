@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: model.h,v 1.12 2021/10/30 13:52:28 plm Exp $
  */
 
 #ifndef MODEL_H

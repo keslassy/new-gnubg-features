@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: DrawOGL.c,v 1.25 2022/09/10 10:38:38 plm Exp $
  */
 
 #include "config.h"

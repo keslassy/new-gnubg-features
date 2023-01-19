@@ -25,4 +25,3 @@ extern void GTKSetOptions(void);
 extern void GTKSound(void);
 
 #endif                          /* GTKOPTIONS_H */
-

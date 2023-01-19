@@ -1,6 +1,6 @@
-#line 2 "sgf_l.c"
+#line 1 "sgf_l.c"
 
-#line 4 "sgf_l.c"
+#line 3 "sgf_l.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -290,7 +290,8 @@
 
 /* C99 systems have <inttypes.h>. Non-C99 systems may or may not. */
 
-#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__FreeBSD__) || \
+    (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
 
 /* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
  * if you want the limit (max/min) macros for int types. 
@@ -519,6 +520,7 @@ static YY_BUFFER_STATE * yy_buffer_stack = NULL; /**< Stack as an array. */
 #define YY_CURRENT_BUFFER ( (yy_buffer_stack) \
                           ? (yy_buffer_stack)[(yy_buffer_stack_top)] \
                           : NULL)
+#define yy_current_buffer YY_CURRENT_BUFFER
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
  */
@@ -1258,10 +1260,10 @@ static int error( char *s ) {
 }
 
 #define YY_FATAL_ERROR(m) error(m)
-#line 1262 "sgf_l.c"
+#line 1263 "sgf_l.c"
 #define YY_NO_INPUT 1
 
-#line 1265 "sgf_l.c"
+#line 1266 "sgf_l.c"
 
 #define INITIAL 0
 #define value 1
@@ -1479,7 +1481,7 @@ YY_DECL
 	{
 #line 63 "sgf_l.l"
 
-#line 1483 "sgf_l.c"
+#line 1484 "sgf_l.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1602,7 +1604,7 @@ YY_RULE_SETUP
 #line 96 "sgf_l.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1606 "sgf_l.c"
+#line 1607 "sgf_l.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(value):
 				yyterminate();
@@ -1968,7 +1970,11 @@ static int yy_get_next_buffer (void)
 				case EOB_ACT_END_OF_FILE:
 					{
 					if ( yywrap(  ) )
+#ifdef YY_FLEX_LEX_COMPAT
 						return 0;
+#else
+						return EOF;
+#endif
 
 					if ( ! (yy_did_buffer_switch_on_eof) )
 						YY_NEW_FILE;

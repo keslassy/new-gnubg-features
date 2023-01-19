@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 1999-2019 the AUTHORS
+ * Copyright (C) 1999-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: set.c,v 1.427 2022/12/18 13:55:18 plm Exp $
+ * $Id: set.c,v 1.428 2023/01/18 21:49:36 plm Exp $
  */
 
 #include "config.h"
@@ -2851,6 +2851,7 @@ CommandSetBeavers(char *sz)
         outputl(_("No beavers allowed in money sessions."));
 }
 
+#if defined(USE_GTK)
 extern void
 CommandSetScoreMapPly(char* sz)
 {
@@ -2983,6 +2984,7 @@ CommandSetScoreMapLayout(char* sz)
     }
     outputl(_("Wrong option."));
 }
+#endif
 
 extern void
 CommandSetOutputDigits(char *sz)

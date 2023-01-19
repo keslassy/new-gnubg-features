@@ -15,7 +15,7 @@
  * Minor modifications for use with GNU Backgammon.
  * Copyright (C) 1999-2006 the AUTHORS
  *
- * $Id$
+ * $Id: isaac.h,v 1.6 2021/08/17 20:15:22 plm Exp $
  */
 
 #include "isaacs.h"

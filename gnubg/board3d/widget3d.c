@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: widget3d.c,v 1.65 2022/04/22 21:07:49 plm Exp $
  */
 
 #include "config.h"

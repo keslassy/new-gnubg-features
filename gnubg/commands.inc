@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-20O9 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2008-2022 the AUTHORS
+ * Copyright (C) 2008-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: commands.inc,v 1.60 2022/05/22 21:35:50 plm Exp $
+ * $Id: commands.inc,v 1.61 2023/01/18 21:49:36 plm Exp $
  */
 
 /* All the commands are in this file */
@@ -1229,6 +1229,7 @@ static command acSetVariation[] = {
       NULL, acSetRollout }, 
     { "score", CommandSetScore, N_("Set the match or session score "),
       szSCORE, NULL },
+#if defined(USE_GTK)
     { "scoremapply", CommandSetScoreMapPly, 
       N_("Set the default evaluation ply in the ScoreMap window"), 
       szVALUE, NULL },
@@ -1237,25 +1238,26 @@ static command acSetVariation[] = {
       szVALUE, NULL },
     { "sm1", CommandSetsm1, 
       N_("Set the default sm1 in the ScoreMap window"), 
-      szVALUE, NULL },      
+      szVALUE, NULL },
     { "scoremaplabel", CommandSetScoreMapLabel, 
       N_("Set the default axis label option in the ScoreMap window"), 
-      szVALUE, NULL },      
+      szVALUE, NULL },
     { "scoremapjacoby", CommandSetScoreMapJacoby, 
       N_("Set the default top-left square Jacoby option in the ScoreMap window"), 
-      szVALUE, NULL },               
+      szVALUE, NULL },
       { "scoremapcubeequitydisplay", CommandSetScoreMapCubeEquityDisplay, 
       N_("Set the default scoremapcubeequitydisplay option in the ScoreMap window"), 
-      szVALUE, NULL },         
+      szVALUE, NULL },
       { "scoremapmoveequitydisplay", CommandSetScoreMapMoveEquityDisplay, 
       N_("Set the default scoremapmoveequitydisplay option in the ScoreMap window"), 
-      szVALUE, NULL },         
+      szVALUE, NULL },
       { "scoremapcolour", CommandSetScoreMapColour, 
       N_("Set the default scoremapcolour option in the ScoreMap window"), 
-      szVALUE, NULL },         
+      szVALUE, NULL },
       { "scoremaplayout", CommandSetScoreMapLayout, 
       N_("Set the default scoremaplayout option in the ScoreMap window"), 
-      szVALUE, NULL },         
+      szVALUE, NULL },
+#endif
     { "seed", CommandSetSeed, 
       N_("Set the dice generator seed"), szOPTSEED, NULL },
     { "sound", NULL, 

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: font3d.c,v 1.48 2022/03/14 21:52:48 plm Exp $
  */
 
 /* Draw 3d numbers using vera font and freetype library */

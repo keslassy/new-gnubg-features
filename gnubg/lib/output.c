@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: output.c,v 1.2 2021/08/17 21:18:54 plm Exp $
  */
 
 /* The output functions from ../output.c, compiled without GTK */

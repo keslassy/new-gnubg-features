@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: query_player.sh,v 1.8 2019/10/28 21:18:50 plm Exp $
 #
 
 # query_player.sh - a small shell script for getting some player's data

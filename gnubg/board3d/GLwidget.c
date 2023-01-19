@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: GLwidget.c,v 1.21 2022/09/05 20:00:33 plm Exp $
  */
 
 #include "config.h"

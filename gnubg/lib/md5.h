@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: md5.h,v 1.9 2021/07/04 21:53:19 plm Exp $
  */
 
 #ifndef MD5_H

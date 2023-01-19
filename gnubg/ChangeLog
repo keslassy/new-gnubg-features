@@ -1,3 +1,10 @@
+2023-01-17  Isaac Keslassy <keslassy@gmail.com>
+
+	* gtkscoremap.c, gtkscoremap.h, backgammon.h, commands.inc,
+	gnubg.c, gtkchequer.c, gtkcube.c, gtkgame.c, gtkuidefs.h, set.c:
+	Improvements to the score map feature ; notably its default
+	configuration is now configurable via Settings/Analysis/ScoreMap.
+
 2022-11-14  Philippe Michel  <philippe.michel7@free.fr>
 
 	Version 1.07.001 released.

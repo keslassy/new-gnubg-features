@@ -18,7 +18,7 @@
      You should have received a copy of the GNU General Public License
      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-     $Id$
+     $Id: met.xsl,v 1.7 2020/12/12 20:31:05 plm Exp $
 
  -->     
 

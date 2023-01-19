@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: font3dOGL.c,v 1.14 2022/03/06 22:45:43 plm Exp $
  */
 
 #include "config.h"

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: Makefile.am,v 1.8 2019/12/08 21:44:10 plm Exp $
 # 
 
 nonsrc = copying.c credits.c credits.h AUTHORS external_l.c external_y.c \

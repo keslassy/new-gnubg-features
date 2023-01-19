@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: gnubg.py,v 1.21 2022/10/22 19:53:40 plm Exp $
 #
 
 # This file is read by GNU Backgammon during startup.

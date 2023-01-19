@@ -8,7 +8,7 @@
  * Minor modifications for use with GNU Backgammon.
  * Copyright (C) 1999-2013 the AUTHORS
  *
- * $Id$
+ * $Id: isaacs.h,v 1.6 2021/08/17 20:15:22 plm Exp $
  */
 
 #ifndef ISAACS_H

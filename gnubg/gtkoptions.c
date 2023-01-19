@@ -47,10 +47,6 @@
 #include "multithread.h"
 #include "gtkoptions.h"
 #include "gtkrelational.h"
-#include "gtkscoremap.h"
-
-static int includeScoreMap = 0; // put 1 to include the ScoreMap settings pane here (rather than in Settings>Analysis)
-
 
 typedef struct {
     GtkWidget *pwNoteBook;
@@ -88,16 +84,6 @@ typedef struct {
     GtkWidget *pwSeed;
     GtkWidget *pwRecordGames;
     GtkWidget *pwDisplay;
-    GtkWidget *pwScoreMap;
-    GtkWidget* apwScoreMapPly[NUM_PLY];
-    GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
-    GtkWidget* apwsm1[NUM_sm1];
-    GtkWidget* apwScoreMapLabel[NUM_LABEL];
-    GtkWidget* apwScoreMapJacoby[NUM_JACOBY];
-    GtkWidget* apwScoreMapCubeEquityDisplay[NUM_CUBEDISP];
-    GtkWidget* apwScoreMapMoveEquityDisplay[NUM_MOVEDISP];
-    GtkWidget* apwScoreMapColour[NUM_COLOUR];
-    GtkWidget* apwScoreMapLayout[NUM_LAYOUT];
     GtkAdjustment *padjCache;
     GtkAdjustment *padjDelay;
     GtkAdjustment *padjSeed;
@@ -154,7 +140,6 @@ static GtkWidget *pwSoundCommand;
 static gnubgsound selSound;
 static int SoundSkipUpdate;
 static int relPage, relPageActivated;
-static int disregardsm1=1; //available implemented hidden radio option called sm1; if needed in the future, just activate
 
 static void
 SeedChanged(GtkWidget * UNUSED(pw), int *pf)
@@ -868,174 +853,6 @@ append_display_options(optionswidget * pow)
                                   "in MWCs being output as 50.33%."));
 }
 
-//Module to add text
-static void
-AddText(GtkWidget* pwBox, char* Text)
-{
-    GtkRcStyle * ps = gtk_rc_style_new();
-    GtkWidget * pwText = gtk_label_new(Text);
-    GtkWidget * pwHBox;
-
-#if GTK_CHECK_VERSION(3,0,0)
-    pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-#else
-    pwHBox = gtk_hbox_new(FALSE, 0);
-#endif
-    gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, FALSE, FALSE, 4);
-
-    ps->font_desc = pango_font_description_new();
-    //pango_font_description_set_family_static(ps->font_desc, "serif");
-    //pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
-    gtk_widget_modify_style(pwText, ps);
-    g_object_unref(ps);
-
-    gtk_box_pack_start(GTK_BOX(pwHBox), pwText, FALSE, FALSE, 0);
-}
-
-static void
-BuildRadioButtons(GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* frameTitle, const char* frameToolTip, const char* labelStrings[],
-    int labelStringsLen, int toggleDefault) {//void (*functionWhenToggled)(GtkWidget*, scoremap*), int sensitive, int vAlignExpand) { 
-    /* Sub-function to build a new box with a new set of labels, with a whole bunch of needed parameters
-
-    - pwvbox ----------
-    | --title----------|
-    | -- pwh2 -------- |
-    | |text | options| |
-    | ---------------- |
-    --------------------
-    */
-    int* pi;
-    int i;
-    GtkWidget* pwh2;
-
-    AddText(pwvbox, _(frameTitle));
-#if GTK_CHECK_VERSION(3,0,0)
-    pwh2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
-#else
-    pwh2 = gtk_hbox_new(FALSE, 8);
-#endif
-    gtk_box_pack_start(GTK_BOX(pwvbox), pwh2, FALSE, FALSE, 0);
-
-    AddText(pwh2, ("   "));
-
-    for (i = 0; i < labelStringsLen; i++) {
-        if (i == 0)
-            apwScoreMapFrame[0] = gtk_radio_button_new_with_label(NULL, _(labelStrings[0])); // First radio button
-        else
-            apwScoreMapFrame[i] = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(apwScoreMapFrame[0]), _(labelStrings[i])); // Associate this to the other radio buttons
-        gtk_box_pack_start(GTK_BOX(pwh2), apwScoreMapFrame[i], FALSE, FALSE, 0);
-        gtk_widget_set_tooltip_text(apwScoreMapFrame[i], _(frameToolTip));    
-        pi = (int*)g_malloc(sizeof(int));
-        *pi = (int)i; // here use "=(int)labelEnum[i];" and put it in the input of the function if needed, while
-        //  defining sth like " int labelEnum[] = { NUMBERS, ENGLISH, BOTH };" before calling the function
-        g_object_set_data_full(G_OBJECT(apwScoreMapFrame[i]), "user_data", pi, g_free);
-        if (toggleDefault == i) // again use "if (DefaultLabel==labelEnum[i])" if needed
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwScoreMapFrame[i]), 1); //we set this to toggle it on in case it's the default option
-        //g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK((*functionWhenToggled)), psm);
-    }
-
-}
-
-
-
-static void
-append_scoremap_options(optionswidget* pow) 
-{
-    GtkWidget* pwvbox;
-    GtkWidget* pwFrame;
-    GtkWidget* pwv;
-
-#if !GTK_CHECK_VERSION(3,0,0)
-    GtkWidget* pwp;
-#endif
-
-    //BoardData* bd = BOARD(pwBoard)->board_data;
-
-    int vAlignExpand = FALSE; // set to true to expand vertically the group of frames rather than packing them to the top
-    //int evalPlies = 3;
-
-    /* Display options */
-
-#if GTK_CHECK_VERSION(3,0,0)
-    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
-    gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
-    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwvbox, gtk_label_new(_("ScoreMap")));
-#else
-    pwvbox = gtk_vbox_new(FALSE, 0);
-    pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("ScoreMap")));
-    gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
-#endif
-
-    // #if GTK_CHECK_VERSION(3,0,0)
-//     pwScoreMapBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-// #else
-//     pwScoreMapBox = gtk_hbox_new(FALSE, 0);
-// #endif
-//     gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
-    // AddText(pwvbox, _(frameTitle));
-
-    pwFrame = gtk_frame_new(_("Default ScoreMap settings"));
-    gtk_box_pack_start(GTK_BOX(pwvbox), pwFrame, vAlignExpand, FALSE, 0);
-    gtk_widget_set_tooltip_text(pwFrame, _("Select the settings with which to initialize each new ScoreMap window")); 
-    gtk_widget_set_sensitive(pwFrame, TRUE);
-
-#if GTK_CHECK_VERSION(3,0,0)
-        pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-#else
-        pwv = gtk_vbox_new(FALSE, 0);
-#endif
-    gtk_container_add(GTK_CONTAINER(pwFrame), pwv);
-
-    BuildRadioButtons(pwv, pow->apwScoreMapPly,_("Evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault);
-    BuildRadioButtons(pwv, pow->apwScoreMapMatchLength,_("Simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx);
-    if (!disregardsm1)
-        BuildRadioButtons(pwv, pow->apwsm1,_("sm1"), _("Select the default sm1 for which to draw the ScoreMap:"), aszsm1, NUM_sm1, sm1Def);
-    BuildRadioButtons(pwv, pow->apwScoreMapJacoby,_("Money-play analysis:"), _("Select the default Jacoby option in the money play analysis of the top-left ScoreMap square"), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef);
-    BuildRadioButtons(pwv, pow->apwScoreMapCubeEquityDisplay,_("Cube equity display:"), _("Select the default equity text to display in the squares of the cube ScoreMap"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef);
-    BuildRadioButtons(pwv, pow->apwScoreMapMoveEquityDisplay,_("Move equity display:"), _("Select the default equity text to display in the squares of the move ScoreMap"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef);
-    BuildRadioButtons(pwv, pow->apwScoreMapColour,_("In cube ScoreMaps, colour by:"), _("Select what equity to use when deciding to colour the cube ScoreMap"), aszScoreMapColour, NUM_COLOUR, scoreMapColourDef);
-    BuildRadioButtons(pwv, pow->apwScoreMapLabel,_("Axis orientation:"), _("Select how to orient the ScoreMap axes by default"), aszScoreMapLabel, NUM_LABEL, scoreMapLabelDef);
-    BuildRadioButtons(pwv, pow->apwScoreMapLayout,_("Option pane location:"), _("Decide where to place the options with respect to the ScoreMap table"), aszScoreMapLayout, NUM_LAYOUT, scoreMapLayoutDef);
-
-//    pwFrame = gtk_frame_new(_("Animation"));
-//    gtk_box_pack_start(GTK_BOX(pwAnimBox), pwFrame, FALSE, FALSE, 4);
-//
-//#if GTK_CHECK_VERSION(3,0,0)
-//    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-//#else
-//    pwBox = gtk_vbox_new(FALSE, 0);
-//#endif
-//    gtk_container_add(GTK_CONTAINER(pwFrame), pwBox);
-//
-//    pow->pwAnimateNone = gtk_radio_button_new_with_label(NULL, _("None"));
-//    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAnimateNone), animGUI == ANIMATE_NONE);
-//    gtk_box_pack_start(GTK_BOX(pwBox), pow->pwAnimateNone, FALSE, FALSE, 0);
-//    gtk_widget_set_tooltip_text(pow->pwAnimateNone,
-//        _("Do not display any kind of animation for " "automatically moved chequers."));
-//
-//    pow->pwAnimateBlink =
-//        gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pow->pwAnimateNone), _("Blink moving chequers"));
-//    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAnimateBlink), animGUI == ANIMATE_BLINK);
-//    gtk_box_pack_start(GTK_BOX(pwBox), pow->pwAnimateBlink, FALSE, FALSE, 0);
-//    gtk_widget_set_tooltip_text(pow->pwAnimateBlink,
-//        _("When automatically moving chequers, flash "
-//            "them between the original and final points."));
-//
-//    pow->pwAnimateSlide =
-//        gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(pow->pwAnimateNone), _("Slide moving chequers"));
-//    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAnimateSlide), animGUI == ANIMATE_SLIDE);
-//    gtk_box_pack_start(GTK_BOX(pwBox), pow->pwAnimateSlide, FALSE, FALSE, 0);
-//    gtk_widget_set_tooltip_text(pow->pwAnimateSlide,
-//        _("Show automatically moved chequers moving across " "the board between the points."));
-
-  
-
-}
-
 static void
 append_match_options(optionswidget * pow)
 {
@@ -1731,8 +1548,6 @@ OptionsPages(optionswidget * pow)
     append_cube_options(pow);
     append_tutor_options(pow);
     append_display_options(pow);
-    if (includeScoreMap)
-        append_scoremap_options(pow); 
     append_match_options(pow);
     append_sound_options(pow);
     append_dice_options(pow);
@@ -1839,77 +1654,11 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwGameClockwise, fClockwise, "set clockwise %s");
 
     for (i = 0; i < NUM_VARIATIONS; ++i)
-        {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i])) && bgvDefault != (bgvariation) i) {
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i])) && bgvDefault != (bgvariation) i) {
             sprintf(sz, "set variation %s", aszVariationCommands[i]);
             UserCommand(sz);
             break;
-        }} 
-    
-    /* Score Map */
-    if(includeScoreMap) {
-
-        for (i = 0; i < NUM_PLY; ++i)
-            {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
-                sprintf(sz, "set scoremapply %s", aszScoreMapPlyCommands[i]);
-                UserCommand(sz);
-                break;
-            } }
-
-
-        for (i = 0; i < NUM_MATCH_LENGTH; ++i){
-            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i])) && scoreMapMatchLengthDefIdx != (scoreMapMatchLength) i) {
-                sprintf(sz, "set scoremapmatchlength %s", aszScoreMapMatchLengthCommands[i]);
-                UserCommand(sz);
-                break;
-            } 
         }
-
-        if(!disregardsm1) {
-            for (i = 0; i < NUM_sm1; ++i)
-                if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i])) && sm1Def != (sm1type) i) {
-                    sprintf(sz, "set sm1 %s", aszsm1Commands[i]);
-                    UserCommand(sz);
-                    break;
-                } 
-        }
-
-        for (i = 0; i < NUM_LABEL; ++i)
-            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
-                sprintf(sz, "set scoremaplabel %s", aszScoreMapLabelCommands[i]);
-                UserCommand(sz);
-                break;
-            } 
-        for (i = 0; i < NUM_JACOBY; ++i)
-        { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i])) && scoreMapJacobyDef != (scoreMapJacoby) i) {
-                sprintf(sz, "set scoremapjacoby %s", aszScoreMapJacobyCommands[i]);
-                UserCommand(sz);
-                break;
-            }} 
-        for (i = 0; i < NUM_CUBEDISP; ++i)
-            {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapCubeEquityDisplay[i])) && scoreMapCubeEquityDisplayDef != (scoreMapCubeEquityDisplay) i) {
-                sprintf(sz, "set scoremapcubeequitydisplay %s", aszScoreMapCubeEquityDisplayCommands[i]);
-                UserCommand(sz);
-                break;
-            } }
-        for (i = 0; i < NUM_MOVEDISP; ++i)
-            {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMoveEquityDisplay[i])) && scoreMapMoveEquityDisplayDef != (scoreMapMoveEquityDisplay) i) {
-                sprintf(sz, "set scoremapmoveequitydisplay %s", aszScoreMapMoveEquityDisplayCommands[i]);
-                UserCommand(sz);
-                break;
-            }} 
-        for (i = 0; i < NUM_COLOUR; ++i)
-            {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapColour[i])) && scoreMapColourDef != (scoreMapColour) i) {
-                sprintf(sz, "set scoremapcolour %s", aszScoreMapColourCommands[i]);
-                UserCommand(sz);
-                break;
-            }} 
-        for (i = 0; i < NUM_LAYOUT; ++i)
-        { if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLayout[i])) && scoreMapLayoutDef != (scoreMapLayout) i) {
-                sprintf(sz, "set scoremaplayout %s", aszScoreMapLayoutCommands[i]);
-                UserCommand(sz);
-                break;
-            }} 
-    }
 
     CHECKUPDATE(pow->pwOutputMWC, fOutputMWC, "set output mwc %s");
     CHECKUPDATE(pow->pwOutputGWC, fOutputWinPC, "set output winpc %s");
@@ -2067,7 +1816,6 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         UserCommand(sz);
     }
 
-
     /* dice manipulation */
 
     n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->pwCheat));
@@ -2156,41 +1904,7 @@ OptionsSet(optionswidget * pow)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwGameClockwise), fClockwise);
 
     for (i = 0; i < NUM_VARIATIONS; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation) i); 
-
-    /*Score Map*/ 
-
-    if(includeScoreMap) {
-        for (i = 0; i < NUM_PLY; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i); 
-
-        for (i = 0; i < NUM_MATCH_LENGTH; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); 
-
-        if(!disregardsm1) {
-            for (i = 0; i < NUM_sm1; ++i)
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwsm1[i]), sm1Def == (sm1type) i); 
-        }
-
-        for (i = 0; i < NUM_LABEL; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLabel[i]), scoreMapLabelDef == (scoreMapLabel) i); 
-
-        for (i = 0; i < NUM_JACOBY; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapJacoby[i]), scoreMapJacobyDef == (scoreMapJacoby) i); 
-
-        for (i = 0; i < NUM_CUBEDISP; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapCubeEquityDisplay[i]), scoreMapCubeEquityDisplayDef == (scoreMapCubeEquityDisplay) i); 
-
-        for (i = 0; i < NUM_MOVEDISP; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapMoveEquityDisplay[i]), scoreMapMoveEquityDisplayDef == (scoreMapMoveEquityDisplay) i); 
-
-        for (i = 0; i < NUM_COLOUR; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapColour[i]), scoreMapColourDef == (scoreMapColour) i); 
-
-        for (i = 0; i < NUM_LAYOUT; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwScoreMapLayout[i]), scoreMapLayoutDef == (scoreMapLayout) i); 
-
-    }
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation) i);
 
     if (rngCurrent >= NUM_RNGS - 3)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwDice[rngCurrent]), TRUE);

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: matchseries.py,v 1.7 2022/06/29 21:09:18 plm Exp $
 #
 
 

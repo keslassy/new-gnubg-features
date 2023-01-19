@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: cache.h,v 1.29 2022/11/05 21:39:29 plm Exp $
  */
 
 #ifndef CACHE_H

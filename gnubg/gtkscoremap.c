@@ -1,9 +1,6 @@
-/* TBD:
-*/
-
 /*
  * Copyright (C) 2020 Aaron Tikuisis <Aaron.Tikuisis@uottawa.ca>
- * Copyright (C) 2020 Isaac Keslassy <keslassy@gmail.com>
+ * Copyright (C) 2020-2023 Isaac Keslassy <keslassy@gmail.com>
  * Copyright (C) 2022 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkscoremap.c,v 1.21 2022/10/28 05:44:07 plm Exp $
+ * $Id: gtkscoremap.c,v 1.26 2023/01/18 21:49:36 plm Exp $
  */
 
 
@@ -137,51 +134,53 @@ and come back, it works again. It may be a movelist construction issue.
 #include "gtkwindows.h"
 //#include "gtkoptions.h"  
 
-//static int myDebug = 0;
-
 
 /*         GLOBAL *EXTERN) VARIABLES           */
 scoreMapPly scoreMapPlyDefault = TWO_PLY; //default -> TWO_PLY at the end 
 const char* aszScoreMapPly[NUM_PLY] = {N_("0-ply"), N_("1-ply"), N_("2-ply"), N_("3-ply"), N_("4-ply") };
-const char* aszScoreMapPlyCommands[NUM_PLY] = { N_("0"), N_("1"), N_("2"), N_("3"), N_("4") };
+const char* aszScoreMapPlyCommands[NUM_PLY] = { "0", "1", "2", "3", "4" };
 
 scoreMapMatchLength scoreMapMatchLengthDefIdx = VAR_LENGTH;
 /*the following list needs to correspond to the fixed lengths in the (typedef enum) scoreMapMatchLength */
 const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //list of allowed match sizes
 const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH]            = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Based on current match length") };
-const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH]    = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("-1") };
+const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH]    = { "3", "5", "7", "9", "11", "15", "21", "-1" };
 
 sm1type sm1Def = sm1A;
 const char* aszsm1[NUM_sm1] = { N_("0"), N_("1"), N_("2")};
-const char* aszsm1Commands[NUM_sm1] = { N_("A"), N_("B"), N_("C")}; 
+const char* aszsm1Commands[NUM_sm1] = { "A", "B", "C"}; 
 
 scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
 const char* aszScoreMapLabel[NUM_LABEL] = {N_("By away score"), N_("By true score")};
-const char* aszScoreMapLabelCommands[NUM_LABEL] = { N_("away"), N_("score")}; 
+const char* aszScoreMapLabelCommands[NUM_LABEL] = { "away", "score"}; 
 
+/*
+ * In the next for blocks, the asz*Short[] arrays are used in this file only
+ * while the longer ones are used in gtkgame.c as well for the settings pane.
+ */
 scoreMapJacoby scoreMapJacobyDef = MONEY_NO_JACOBY;
 const char* aszScoreMapJacoby[NUM_JACOBY] = { N_("Unlimited game"), N_("Money game with Jacoby")};
-const char* aszScoreMapJacobyShort[2] = { N_("Unlimited (money w/o J)"), N_("Money w/ J") };
-const char* aszScoreMapJacobyCommands[NUM_JACOBY] = { N_("nojacoby"), N_("jacoby")}; 
+static const char* aszScoreMapJacobyShort[2] = { N_("Unlimited (money w/o J)"), N_("Money w/ J") };
+const char* aszScoreMapJacobyCommands[NUM_JACOBY] = { "nojacoby", "jacoby"}; 
 
 scoreMapCubeEquityDisplay scoreMapCubeEquityDisplayDef = CUBE_NO_EVAL;
 const char* aszScoreMapCubeEquityDisplay[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("Double vs No Double"), N_("Double/Pass vs Double/Take")};
-const char* aszScoreMapCubeEquityDisplayShort[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("D-ND"), N_("D/P-D/T")};
-const char* aszScoreMapCubeEquityDisplayCommands[NUM_CUBEDISP] = { N_("no"), N_("equity"), N_("dnd"), N_("dpdt")}; 
+static const char* aszScoreMapCubeEquityDisplayShort[NUM_CUBEDISP] = {N_("None"), N_("Equity"), N_("D-ND"), N_("D/P-D/T")};
+const char* aszScoreMapCubeEquityDisplayCommands[NUM_CUBEDISP] = { "no", "equity", "dnd", "dpdt"}; 
 
 scoreMapMoveEquityDisplay scoreMapMoveEquityDisplayDef = MOVE_NO_EVAL;
 const char* aszScoreMapMoveEquityDisplay[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("Relative to second best")};
-const char* aszScoreMapMoveEquityDisplayShort[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("vs 2nd best")};
-const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP] = { N_("no"), N_("absolute"), N_("relative")}; 
+static const char* aszScoreMapMoveEquityDisplayShort[NUM_MOVEDISP] = {N_("None"), N_("Equity"), N_("vs 2nd best")};
+const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP] = { "no", "absolute", "relative"}; 
 
 scoreMapColour scoreMapColourDef = ALL;
 const char* aszScoreMapColour[NUM_COLOUR] = {N_("All"), N_("Double vs No Double"), N_("Double/Pass vs Double/Take")};
-const char* aszScoreMapColourShort[NUM_COLOUR] = {N_("All"), N_("D vs ND"), N_("D/P vs D/T")};
-const char* aszScoreMapColourCommands[NUM_COLOUR] = { N_("all"), N_("dnd"), N_("dpdt")}; 
+static const char* aszScoreMapColourShort[NUM_COLOUR] = {N_("All"), N_("D vs ND"), N_("D/P vs D/T")};
+const char* aszScoreMapColourCommands[NUM_COLOUR] = { "all", "dnd", "dpdt"}; 
 
 scoreMapLayout scoreMapLayoutDef = VERTICAL;
 const char* aszScoreMapLayout[NUM_LAYOUT] = { N_("Bottom"), N_("Right") };
-const char* aszScoreMapLayoutCommands[NUM_LAYOUT] = { N_("bottom"), N_("right")}; 
+const char* aszScoreMapLayoutCommands[NUM_LAYOUT] = { "bottom", "right"}; 
 
 
 
@@ -962,17 +961,17 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
         float dt=pq->dtEquity;
         float dp=1.0f;
         if (nd<-900.0) //reflects issue, typically user stops computation in the middle
-            sprintf(ssz,"Score not analysed\nComputation stopped by user");
+            sprintf(ssz,_("Score not analysed\nComputation stopped by user"));
         else {
             sprintf(space2, "%*c", DIGITS + 7, ' ');   //define spacing before putting ply of 1st line
             if (pq->dec == ND) { //ND is best //format: "+" forces +/-; .*f displays f with precision DIGITS
-                sprintf(ssz,"<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. D/T\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies);//pq->ml.amMoves[0].esMove.ec.nPlies 
+                sprintf(ssz, _("<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. D/T\t%+.*f  %+.*f  (%u-ply)</tt>"), DIGITS,nd,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies);//pq->ml.amMoves[0].esMove.ec.nPlies 
             } else if (pq->dec == DT) {//DT is best
-                sprintf(ssz,"<tt>1. D/T\t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dt,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-dt,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dt,psm->ec.nPlies);
+                sprintf(ssz, _("<tt>1. D/T\t%+.*f%s(%u-ply)\n2. D/P\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>"), DIGITS,dt,space2,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-dt,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dt,psm->ec.nPlies);
             } else if (pq->dec == DP) { //DP is best
-                sprintf(ssz,"<tt>1. D/P\t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,dp, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-dp,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dp,psm->ec.nPlies);
+                sprintf(ssz, _("<tt>1. D/P\t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. ND \t%+.*f  %+.*f  (%u-ply)</tt>"), DIGITS,dp, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-dp,psm->ec.nPlies,DIGITS,nd,DIGITS,nd-dp,psm->ec.nPlies);
             } else { //TGTD is best
-                sprintf(ssz,"<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. D/P\t%+.*f  %+.*f  (%u-ply)</tt>",DIGITS,nd, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies);
+                sprintf(ssz, _("<tt>1. ND \t%+.*f%s(%u-ply)\n2. D/T\t%+.*f  %+.*f  (%u-ply)\n3. D/P\t%+.*f  %+.*f  (%u-ply)</tt>"), DIGITS,nd, space2,psm->ec.nPlies,DIGITS,dt,DIGITS,dt-nd,psm->ec.nPlies,DIGITS,dp,DIGITS,dp-nd,psm->ec.nPlies);
             }                
         }
         strcat(buf,ssz);
@@ -1011,13 +1010,13 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
                                                 //  b/w the longest move string and its equity
             sprintf(space, "%*c", len - len0, ' ');   //define spacing for best move
             sprintf(space2, "%*c", DIGITS + 6, ' ');   //define spacing before putting ply of 1st line
-            sprintf(ssz, "<tt>1. %s%s%1.*f%s(%u-ply)", szMove0, space, DIGITS, pq->ml.amMoves[0].rScore, space2, pq->ml.amMoves[0].esMove.ec.nPlies);
+            sprintf(ssz, _("<tt>1. %s%s%1.*f%s(%u-ply)"), szMove0, space, DIGITS, pq->ml.amMoves[0].rScore, space2, pq->ml.amMoves[0].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len1, ' ');   //define spacing for 2nd best move
-            sprintf(ssz,"\n2. %s%s%1.*f  %+.*f (%u-ply)",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
+            sprintf(ssz, _("\n2. %s%s%1.*f  %+.*f (%u-ply)"), szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len2, ' ');   //define spacing for 3rd best move
-            sprintf(ssz,"\n3. %s%s%1.*f  %+.*f (%u-ply)</tt>",szMove2,space,DIGITS,pq->ml.amMoves[2].rScore,DIGITS,pq->ml.amMoves[2].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[2].esMove.ec.nPlies);
+            sprintf(ssz, _("\n3. %s%s%1.*f  %+.*f (%u-ply)</tt>"), szMove2,space,DIGITS,pq->ml.amMoves[2].rScore,DIGITS,pq->ml.amMoves[2].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[2].esMove.ec.nPlies);
             strcat(buf,ssz);
         }  else if (pq->ml.cMoves==2) { // there are only 2 moves
             len0 = (int)strlen(szMove0)+(pq->ml.amMoves[0].rScore<-0.0005);
@@ -1025,13 +1024,13 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
             len = MAX(len0,len1)+2;
             sprintf(space,"%*c", len-len0, ' ');   //define spacing for best move
             sprintf(space2, "%*c", DIGITS + 6, ' ');   //define spacing before putting ply of 1st line
-            sprintf(ssz, "<tt>1. %s%s%1.*f%s(%u-ply)", szMove0, space, DIGITS, pq->ml.amMoves[0].rScore, space2, pq->ml.amMoves[0].esMove.ec.nPlies);
+            sprintf(ssz, _("<tt>1. %s%s%1.*f%s(%u-ply)"), szMove0, space, DIGITS, pq->ml.amMoves[0].rScore, space2, pq->ml.amMoves[0].esMove.ec.nPlies);
             strcat(buf,ssz);
             sprintf(space,"%*c", len-len1, ' ');   //define spacing for 2nd best move
-            sprintf(ssz,"\n2. %s%s%1.*f  %+.*f  (%u-ply)</tt>",szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
+            sprintf(ssz, _("\n2. %s%s%1.*f  %+.*f  (%u-ply)</tt>"), szMove1,space,DIGITS,pq->ml.amMoves[1].rScore,DIGITS,pq->ml.amMoves[1].rScore-pq->ml.amMoves[0].rScore, pq->ml.amMoves[1].esMove.ec.nPlies);
             strcat(buf,ssz);
         } else if (pq->ml.cMoves==1) { //single move
-            sprintf(ssz,"<tt>1. %s  %1.*f         (%u-ply)</tt>",szMove0,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
+            sprintf(ssz, _("<tt>1. %s  %1.*f         (%u-ply)</tt>"), szMove0,DIGITS,pq->ml.amMoves[0].rScore, pq->ml.amMoves[0].esMove.ec.nPlies);
             strcat(buf,ssz);
         } else {
             /* This cannot happen. If there is no legal move there is no
@@ -1040,7 +1039,7 @@ Note: we add one more space for "ND" b/c it has one less character than D/T, D/P
                The new hover text reflects it.*/
             //g_assert_not_reached();
             // sprintf(ssz,"no legal moves");
-            sprintf(ssz,"Score not analysed\nComputation stopped by user");
+            sprintf(ssz,_("Score not analysed\nComputation stopped by user"));
             strcat(buf,ssz);
         }
     }
@@ -1113,15 +1112,8 @@ ColourQuadrant(gtkquadrant * pgq, quadrantdata * pq, const scoremap * psm) {
 
         // Next set the hover text
         SetHoverText (buf,pq,psm);
-/*
- * This is not supported in early versions of GTK2 (8+ years old).
- * Don't bother with an alterative, we will raise the minimum requirement soon.
- * Not a concern with distributions in practical use today.
- */
-#if GTK_CHECK_VERSION(2,12,0)
-        gtk_widget_set_tooltip_markup(pgq->pContainerWidget, buf);
-#endif
 
+        gtk_widget_set_tooltip_markup(pgq->pContainerWidget, buf);
     }
     gtk_widget_queue_draw(pgq->pDrawingAreaWidget); // here we are calling DrawQuadrant() in a hidden way through the "draw" call,
                                                     //      as initially defined in InitQuadrant()
@@ -1270,10 +1262,8 @@ Specifically: (1) The color of each square (2) The hover text of each square (3)
             gtk_label_set_text(GTK_LABEL(psm->apwRowLabel[i2]), longsz);
             gtk_label_set_text(GTK_LABEL(psm->apwColLabel[i2]), longsz);
         }
-#if GTK_CHECK_VERSION(2,12,0)
         gtk_widget_set_tooltip_markup(psm->apwRowLabel[i2], hoversz);
         gtk_widget_set_tooltip_markup(psm->apwColLabel[i2], hoversz); 
-#endif
 
         // } else {
         //     // Pango.AttrList attrs = new Pango.AttrList ();
@@ -1319,36 +1309,30 @@ Specifically: (1) The color of each square (2) The hover text of each square (3)
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[1]), "");
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[2]), "");
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), _("P"));
-#if GTK_CHECK_VERSION(2,12,0)
                 gtk_widget_set_tooltip_markup(psm->apwGauge[0], _("Take"));
                 gtk_widget_set_tooltip_markup(psm->apwGauge[1], "");
                 gtk_widget_set_tooltip_markup(psm->apwGauge[2], "");
                 gtk_widget_set_tooltip_markup(psm->apwGauge[3], _("Pass"));
-#endif
                 break;
             case DND:
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[0]), _("ND"));
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[1]), "");
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[2]), "");
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), _("D"));
-#if GTK_CHECK_VERSION(2,12,0)
                 gtk_widget_set_tooltip_markup(psm->apwGauge[0], _("No double"));
                 gtk_widget_set_tooltip_markup(psm->apwGauge[1], "");
                 gtk_widget_set_tooltip_markup(psm->apwGauge[2], "");
                 gtk_widget_set_tooltip_markup(psm->apwGauge[3], _("Double"));
-#endif
                 break;
             case ALL:
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[0]), _("ND"));
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[1]), _("D/T"));
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[2]), _("D/P"));
                 gtk_label_set_text(GTK_LABEL(psm->apwGauge[3]), _("TG"));
-#if GTK_CHECK_VERSION(2,12,0)
                 gtk_widget_set_tooltip_markup(psm->apwGauge[0], _("No double/take"));
                 gtk_widget_set_tooltip_markup(psm->apwGauge[1], _("Double/take"));
                 gtk_widget_set_tooltip_markup(psm->apwGauge[2], _("Double/pass"));
                 gtk_widget_set_tooltip_markup(psm->apwGauge[3], _("Too good to double"));
-#endif
                 break;
             default:
                 g_assert_not_reached();
@@ -1448,7 +1432,7 @@ UpdateIsTrueScore(const scoremap * psm, int i, int j)
 }
 
 
-void 
+static void 
 InitQuadrantCubeInfo(scoremap * psm, int i, int j) 
 {
     /* cubeinfo */
@@ -2370,11 +2354,12 @@ BuildCubeFrame(scoremap * psm)
 #if GTK_CHECK_VERSION(3,0,0)
         pwGrid = gtk_grid_new();
         gtk_box_pack_start(GTK_BOX(psm->pwCubeBox), pwGrid, FALSE, FALSE, 0);
+        gtk_widget_set_tooltip_text(pwGrid, _("Select the cube value and who doubled (before the current decision)"));
 #else
         pwTable = gtk_table_new(2, 1 + i, FALSE); //GtkWidget* gtk_table_new (guint rows, guint columns, gboolean homogeneous)
         gtk_box_pack_start(GTK_BOX(psm->pwCubeBox), pwTable, FALSE, FALSE, 0);
-#endif
         gtk_widget_set_tooltip_text(pwTable, _("Select the cube value and who doubled (before the current decision)"));
+#endif
         /* j is the row we select*/
         for (j = 0; j < 2; j++) {
             sprintf(sz, _("%s doubled to: "), ((psm->pms->fMove) ? (ap[j].szName) : (ap[1-j].szName)));
@@ -2382,8 +2367,7 @@ BuildCubeFrame(scoremap * psm)
 #if GTK_CHECK_VERSION(3,0,0)
             gtk_widget_set_halign(pwLabel, GTK_ALIGN_END); //GTK_ALIGN_START);
             gtk_widget_set_valign(pwLabel, GTK_ALIGN_CENTER); //GTK_ALIGN_START);
-            gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, j, 1, 1);//void gtk_grid_attach (GtkGrid* grid,GtkWidget* child,gint left,gint top,gint width,gint height
-)
+            gtk_grid_attach(GTK_GRID(pwGrid), pwLabel, 0, j, 1, 1);//void gtk_grid_attach (GtkGrid* grid,GtkWidget* child,gint left,gint top,gint width,gint height)
 #else
             gtk_misc_set_alignment(GTK_MISC(pwLabel), 1, 0.5);//void gtk_misc_set_alignment (GtkMisc* misc,gfloat xalign [from 0 (left) to 1 (right)],gfloat yalign [from 0 (top) to 1 (bottom)])
             gtk_table_attach_defaults(GTK_TABLE(pwTable), pwLabel, 0, 1, j, j + 1); //void gtk_table_attach_defaults (GtkTable* table,GtkWidget* widget,guint left_attach,guint right_attach,guint top_attach,guint bottom_attach)
@@ -2706,10 +2690,10 @@ AddText(GtkWidget* pwBox, char* Text)
 extern void
 GTKShowMoveScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent) 
 {
-    GtkWidget* pwDialog, * pwBox;
+    GtkWidget* pwInfoDialog, * pwBox;
     // const char* pch;
 
-    pwDialog = GTKCreateDialog(_("Move ScoreMap Info"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+    pwInfoDialog = GTKCreateDialog(_("Move ScoreMap Info"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
 #if GTK_CHECK_VERSION(3,0,0)
     pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
@@ -2717,7 +2701,7 @@ GTKShowMoveScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
 #endif
     gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwBox);
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwInfoDialog, DA_MAIN)), pwBox);
 
     // gtk_box_pack_start(GTK_BOX(pwBox), SelectableLabel(pwDialog, VERSION_STRING), FALSE, FALSE, 4);
 
@@ -2736,17 +2720,17 @@ GTKShowMoveScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
         \n\n- Feel free to hover with the mouse on the different elements for more details\
         \n\n- Default ScoreMap settings can be selected in the Settings > Analysis menu"));
 
-    GTKRunDialog(pwDialog);
+    GTKRunDialog(pwInfoDialog);
 }
 
 // display info on cube scoremap
 extern void
 GTKShowCubeScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent) 
 {
-    GtkWidget* pwDialog, * pwBox;
+    GtkWidget* pwInfoDialog, * pwBox;
     // const char* pch;
 
-    pwDialog = GTKCreateDialog(_("Cube ScoreMap Info"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+    pwInfoDialog = GTKCreateDialog(_("Cube ScoreMap Info"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
 #if GTK_CHECK_VERSION(3,0,0)
     pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
@@ -2754,7 +2738,7 @@ GTKShowCubeScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
 #endif
     gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwBox);
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwInfoDialog, DA_MAIN)), pwBox);
 
     AddText(pwBox, _("- D = Double, ND = No Double, D/T = Double/Take, D/P = Double/Pass, TG = Too Good\
         \n\n     To Double, J = Jacoby\
@@ -2764,7 +2748,7 @@ GTKShowCubeScoreMapInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
         \n\n- Feel free to hover with the mouse on the different elements for more details\
         \n\n- Default ScoreMap settings can be selected in the Settings > Analysis menu"));
 
-    GTKRunDialog(pwDialog);
+    GTKRunDialog(pwInfoDialog);
 }
 
 void
@@ -2897,7 +2881,6 @@ GTKShowScoreMap(const matchstate * pms, int cube)
  */
 {
     scoremap *psm;
-    int i;
     int screenWidth, screenHeight;
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -3081,26 +3064,18 @@ if needed (this was initially planned for some explanation text, which was then 
     // if psm->cubeScoreMap, we show away score from 2-away to (psm->matchLength)-away
     // if not, we show away score at 1-away twice (w/ and post crawford), then 2-away through (psm->matchLength)-away
     psm->tableSize = (psm->cubeScoreMap) ? psm->matchLength - 1 : psm->matchLength + 1;//psm->cubematchLength-1 : psm->movematchLength+1;
-    
-    /* We initialize isAllowedScore to make sure there is no redrawing without a defined value.
-    Since we're already here, we also initialize the other properties. */
     for (int i=0;i<psm->tableSize; i++) {
         for (int j=0;j<psm->tableSize; j++) {
             psm->aaQuadrantData[i][j].isAllowedScore=YET_UNDEFINED; 
-            psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
-            psm->aaQuadrantData[i][j].isSpecialScore = REGULAR; 
         }
     }
     psm->moneyQuadrantData.isAllowedScore=YET_UNDEFINED; 
-    psm->moneyQuadrantData.isTrueScore = NOT_TRUE_SCORE;
-    psm->moneyQuadrantData.isSpecialScore = REGULAR; 
-
 #if GTK_CHECK_VERSION(3,0,0)
     psm->pwTableContainer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
     psm->pwTableContainer = gtk_vbox_new(FALSE, 0); // parameters: homogeneous, spacing
 #endif
-    for (i=0; i<TOP_K; i++) {
+    for (int i=0; i<TOP_K; i++) {
         // psm->topKDecisions[i]=g_malloc(FORMATEDMOVESIZE * sizeof(char));
         psm->topKClassifiedDecisions[i]=g_malloc((FORMATEDMOVESIZE+5)*sizeof(char));
     }
@@ -3150,7 +3125,7 @@ if needed (this was initially planned for some explanation text, which was then 
         pwGaugeTable = gtk_table_new(2, GAUGE_SIZE, FALSE);
 #endif
 
-        for (i = 0; i < GAUGE_SIZE; i++) {
+        for (int i = 0; i < GAUGE_SIZE; i++) {
             pw = gtk_drawing_area_new();
             gtk_widget_set_size_request(pw, 8, 20); // [*widget, width, height]
 #if GTK_CHECK_VERSION(3,0,0)
@@ -3170,7 +3145,7 @@ if needed (this was initially planned for some explanation text, which was then 
             DrawGauge(pw,i,ALL);
             psm->apwFullGauge[i]=pw;
         }
-        for (i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             psm->apwGauge[i] = gtk_label_new("");
 #if GTK_CHECK_VERSION(3,0,0)
             gtk_grid_attach(GTK_GRID(pwGaugeGrid), psm->apwGauge[i], GAUGE_SIXTH_SIZE * 2 * i, 0, 1, 1);

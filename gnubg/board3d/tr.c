@@ -1,4 +1,4 @@
-/* $Id$ */
+/* $Id: tr.c,v 1.17 2021/10/30 13:48:05 plm Exp $ */
 
 /*
  * $originalLog: tr.c,v $

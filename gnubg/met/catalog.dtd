@@ -2,7 +2,7 @@
     Local copy of
     http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd
 
-    $Id$
+    $Id: catalog.dtd,v 1.2 2020/12/12 20:28:09 plm Exp $
 -->
 
 <!ENTITY % pubIdChars "CDATA">

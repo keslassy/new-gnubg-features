@@ -941,7 +941,7 @@ static const flex_int16_t yy_chk[878] =
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: external_l.c,v 1.27 2022/11/05 23:02:14 plm Exp $
  */
 
 #include "common.h"

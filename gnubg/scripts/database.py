@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: database.py,v 1.35 2019/10/28 21:18:50 plm Exp $
 #
 
 connection = 0

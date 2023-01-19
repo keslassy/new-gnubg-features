@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: Makefile.am,v 1.42 2021/02/28 09:27:27 Superfly_Jon Exp $
 # 
 
 ##

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: PickOGL.c,v 1.16 2021/10/30 13:56:08 plm Exp $
  */
 
 #include "config.h"

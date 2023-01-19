@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2020 Aaron Tikuisis <Aaron.Tikuisis@uottawa.ca>
- * Copyright (C) 2020 Isaac Keslassy <keslassy@gmail.com>
+ * Copyright (C) 2020-2023 Isaac Keslassy <keslassy@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkscoremap.h,v 1.3 2022/10/22 10:47:46 plm Exp $
+ * $Id: gtkscoremap.h,v 1.4 2023/01/18 21:49:36 plm Exp $
  */
 
 #ifndef GTKSCOREMAP_H
 #define GTKSCOREMAP_H
 
 #include "gnubg-types.h"        /* for matchstate */
-//#include "gtkoptions.h"    
 
 typedef enum {
     ZERO_PLY, ONE_PLY, TWO_PLY, THREE_PLY, FOUR_PLY,
@@ -46,9 +45,9 @@ extern const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH];
 
 /* Defining structures for sm1, a placeholder option if we want to add one in the future to the scoremap
 Other defined structures throughout the files: 
-- apwsm1 (gtkoptions.c); 
-- "set sm1" (gtkoptions.c); 
-- CommandSetsm1 (backcgammon.h)
+- apwsm1 (gtkgame.c); 
+- "set sm1" (gtkgame.c); 
+- CommandSetsm1 (backgammon.h)
 */
 typedef enum {sm1A, sm1B, sm1C, NUM_sm1} sm1type;
 extern sm1type sm1Def;
@@ -63,9 +62,9 @@ extern const char* aszScoreMapLabelCommands[NUM_LABEL];
 
 /* Used in the "Top-left" radio buttons - we assume the same order as the labels */
 /* Additional options elsewhere:
-- apwScoreMapJacoby (gtkoptions.c); 
-- "set scoremapjacoby" (gtkoptions.c); 
-- CommandSetScoreMapJacoby (backcgammon.h)*/
+- apwScoreMapJacoby (gtkgame.c); 
+- "set scoremapjacoby" (gtkgame.c); 
+- CommandSetScoreMapJacoby (backgammon.h)*/
 typedef enum {MONEY_NO_JACOBY, MONEY_JACOBY, NUM_JACOBY} scoreMapJacoby;
 extern scoreMapJacoby scoreMapJacobyDef;
 extern const char* aszScoreMapJacoby[NUM_JACOBY];
@@ -84,9 +83,9 @@ extern const char* aszScoreMapMoveEquityDisplayCommands[NUM_MOVEDISP];
 
 /* Used in the "Colour by" radio buttons - we assume the same order as the labels */
 /* Additional options elsewhere:
-- apwScoreMapColour (gtkoptions.c); 
-- CommandSetScoreMapColour (backcgammon.h)
-- "set scoremapcolour" (gtkoptions.c); 
+- apwScoreMapColour (gtkgame.c); 
+- CommandSetScoreMapColour (backgammon.h)
+- "set scoremapcolour" (gtkgame.c); 
 */
 typedef enum {ALL, DND, PT, NUM_COLOUR} scoreMapColour;
 extern scoreMapColour scoreMapColourDef;
@@ -95,23 +94,17 @@ extern const char* aszScoreMapColourCommands[NUM_COLOUR];
 
 /* Layout options: either horizontal or vertical. */
 /* Additional options elsewhere:
-- apwScoreMapLayout (gtkoptions.c); 
-- CommandSetScoreMapLayout (backcgammon.h)
-- "set scoremaplayout" (gtkoptions.c); 
+- apwScoreMapLayout (gtkgame.c); 
+- CommandSetScoreMapLayout (backgammon.h)
+- "set scoremaplayout" (gtkgame.c); 
 */
 typedef enum {VERTICAL, HORIZONTAL, NUM_LAYOUT} scoreMapLayout;
 extern scoreMapLayout scoreMapLayoutDef;
 extern const char* aszScoreMapLayout[NUM_LAYOUT];
 extern const char* aszScoreMapLayoutCommands[NUM_LAYOUT]; 
 
-
-
-
-
-
 extern void GTKShowScoreMap(const matchstate ams[], int cube);
 extern void GTKShowMoveScoreMapInfo(GtkWidget* pw, GtkWidget* pwParent);
 extern void GTKShowCubeScoreMapInfo(GtkWidget* pw, GtkWidget* pwParent);
-
 
 #endif                          /* GTKSCOREMAP_H */

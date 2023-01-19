@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: neuralnet.c,v 1.95 2020/06/05 20:07:51 plm Exp $
  */
 
 #include "config.h"

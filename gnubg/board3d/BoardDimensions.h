@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: BoardDimensions.h,v 1.2 2019/12/24 09:49:10 plm Exp $
  */
 
 /* All the board element sizes - based on base_unit size */

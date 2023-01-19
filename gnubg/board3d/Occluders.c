@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: Occluders.c,v 1.7 2021/10/26 22:28:00 plm Exp $
  */
 
 #include "config.h"

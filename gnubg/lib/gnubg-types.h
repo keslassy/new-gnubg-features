@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: gnubg-types.h,v 1.10 2021/06/09 21:32:26 plm Exp $
  */
 
 #ifndef GNUBG_TYPES_H

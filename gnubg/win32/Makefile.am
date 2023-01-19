@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: Makefile.am,v 1.4 2019/09/15 17:54:57 plm Exp $
 #
 
 ACLOCAL_AMFLAGS = -I m4

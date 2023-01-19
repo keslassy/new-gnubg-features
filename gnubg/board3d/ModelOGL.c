@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: ModelOGL.c,v 1.10 2022/01/22 21:39:27 plm Exp $
  */
 
 #include "config.h"

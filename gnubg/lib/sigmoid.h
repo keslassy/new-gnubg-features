@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: sigmoid.h,v 1.8 2021/08/17 21:24:44 plm Exp $
  */
 
 #ifndef SIGMOID_H

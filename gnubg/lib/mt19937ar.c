@@ -47,7 +47,7 @@
  * (1) #UNDEF main(), and other unused functions.
  * (2) make mt and mti parameters
  *
- * $Id$
+ * $Id: mt19937ar.c,v 1.12 2021/08/17 21:04:22 plm Exp $
  */
 
 #include "mt19937ar.h"

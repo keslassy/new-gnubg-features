@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: Makefile.am,v 1.24 2022/10/16 19:05:38 plm Exp $
 #
 
 EXTRA_DIST = ax_python_devel.m4 codeset.m4 gettext.m4 glibc21.m4 iconv.m4 lcmessage.m4 progtest.m4 versioncompare.m4 libcurl.m4 \

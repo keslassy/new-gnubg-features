@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: neuralnet.h,v 1.37 2021/06/09 21:31:00 plm Exp $
  */
 
 #ifndef NEURALNET_H

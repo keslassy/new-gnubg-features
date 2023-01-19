@@ -13,7 +13,7 @@
  * Minor modifications for use with GNU Backgammon.
  * Copyright (C) 1999-2007 the AUTHORS
  *
- * $Id$
+ * $Id: isaac.c,v 1.9 2021/08/17 20:15:22 plm Exp $
  */
 
 /*lint --e{661,662}      Ignore warnings of out of bounds array access (as ok) */

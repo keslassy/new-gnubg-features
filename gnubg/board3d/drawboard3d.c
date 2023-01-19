@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: drawboard3d.c,v 1.133 2022/09/05 19:44:07 plm Exp $
  */
 
 #include "config.h"

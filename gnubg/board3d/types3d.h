@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: types3d.h,v 1.15 2021/09/27 21:37:08 plm Exp $
  */
 
 #ifndef TYPES3D_H

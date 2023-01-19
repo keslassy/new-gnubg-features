@@ -23,7 +23,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: md5.c,v 1.16 2021/07/04 21:53:49 plm Exp $
  */
 
 #include "config.h"

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: fun3d.h,v 1.67 2021/11/09 21:40:26 plm Exp $
  */
 
 #ifndef FUN3D_H

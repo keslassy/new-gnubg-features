@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: Makefile.am,v 1.6 2019/09/15 17:54:57 plm Exp $
 # 
 
 scriptfiles= gnubg.py batch.py database.py batch_win.py \

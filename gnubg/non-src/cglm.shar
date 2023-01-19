@@ -179,7 +179,7 @@ X#define cglm_version_h
 X
 X#define CGLM_VERSION_MAJOR 0
 X#define CGLM_VERSION_MINOR 8
-X#define CGLM_VERSION_PATCH 7
+X#define CGLM_VERSION_PATCH 9
 X
 X#endif /* cglm_version_h */
 50b96efae597911eaecef81f66f605ed
@@ -205,6 +205,7 @@ X#endif
 X
 X#include <stdint.h>
 X#include <stddef.h>
+X#include <stdlib.h>
 X#include <math.h>
 X#include <float.h>
 X#include <stdbool.h>
@@ -231,7 +232,7 @@ X#include "simd/intrin.h"
 X
 X#ifndef CGLM_USE_DEFAULT_EPSILON
 X#  ifndef GLM_FLT_EPSILON
-X#    define GLM_FLT_EPSILON 1e-5
+X#    define GLM_FLT_EPSILON 1e-5f
 X#  endif
 X#else
 X#  define GLM_FLT_EPSILON FLT_EPSILON
@@ -1357,7 +1358,7 @@ X#  define CGLM_PRINT_PRECISION    5
 X#endif
 X
 X#ifndef CGLM_PRINT_MAX_TO_SHORT
-X#  define CGLM_PRINT_MAX_TO_SHORT 1e5
+X#  define CGLM_PRINT_MAX_TO_SHORT 1e5f
 X#endif
 X
 X#ifndef CGLM_PRINT_COLOR
@@ -1385,9 +1386,9 @@ X
 X  for (i = 0; i < m; i++) {
 X    for (j = 0; j < n; j++) {
 X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
-X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, matrix[i][j]);
+X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, (double)matrix[i][j]);
 X      else
-X        cwi = sprintf(buff, "% g", matrix[i][j]);
+X        cwi = sprintf(buff, "% g", (double)matrix[i][j]);
 X      cw[i] = GLM_MAX(cw[i], cwi);
 X    }
 X  }
@@ -1397,9 +1398,9 @@ X    fprintf(ostream, "  |");
 X
 X    for (j = 0; j < n; j++)
 X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
-X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, matrix[j][i]);
+X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, (double)matrix[j][i]);
 X      else
-X        fprintf(ostream, " % *g", cw[j], matrix[j][i]);
+X        fprintf(ostream, " % *g", cw[j], (double)matrix[j][i]);
 X
 X    fprintf(ostream, "  |\n");
 X  }
@@ -1428,22 +1429,22 @@ X
 X  for (i = 0; i < m; i++) {
 X    for (j = 0; j < n; j++) {
 X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
-X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, matrix[i][j]);
+X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, (double)matrix[i][j]);
 X      else
-X        cwi = sprintf(buff, "% g", matrix[i][j]);
+X        cwi = sprintf(buff, "% g", (double)matrix[i][j]);
 X      cw[i] = GLM_MAX(cw[i], cwi);
 X    }
 X  }
 X
 X  for (i = 0; i < m; i++) {
 X    fprintf(ostream, "  |");
-X    
+X
 X    for (j = 0; j < n; j++)
 X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
-X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, matrix[j][i]);
+X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, (double)matrix[j][i]);
 X      else
-X        fprintf(ostream, " % *g", cw[j], matrix[j][i]);
-X    
+X        fprintf(ostream, " % *g", cw[j], (double)matrix[j][i]);
+X
 X    fprintf(ostream, "  |\n");
 X  }
 X
@@ -1470,22 +1471,22 @@ X
 X  for (i = 0; i < m; i++) {
 X    for (j = 0; j < n; j++) {
 X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
-X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, matrix[i][j]);
+X        cwi = sprintf(buff, "% .*f", CGLM_PRINT_PRECISION, (double)matrix[i][j]);
 X      else
-X        cwi = sprintf(buff, "% g", matrix[i][j]);
+X        cwi = sprintf(buff, "% g", (double)matrix[i][j]);
 X      cw[i] = GLM_MAX(cw[i], cwi);
 X    }
 X  }
 X
 X  for (i = 0; i < m; i++) {
 X    fprintf(ostream, "  |");
-X    
+X
 X    for (j = 0; j < n; j++)
 X      if (matrix[i][j] < CGLM_PRINT_MAX_TO_SHORT)
-X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, matrix[j][i]);
+X        fprintf(ostream, " % *.*f", cw[j], CGLM_PRINT_PRECISION, (double)matrix[j][i]);
 X      else
-X        fprintf(ostream, " % *g", cw[j], matrix[j][i]);
-X    
+X        fprintf(ostream, " % *g", cw[j], (double)matrix[j][i]);
+X
 X    fprintf(ostream, "  |\n");
 X  }
 X
@@ -1507,9 +1508,9 @@ X  fprintf(ostream, "Vector (float%d): " CGLM_PRINT_COLOR "\n  (", m);
 X
 X  for (i = 0; i < m; i++) {
 X    if (vec[i] < CGLM_PRINT_MAX_TO_SHORT)
-X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, vec[i]);
+X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, (double)vec[i]);
 X    else
-X      fprintf(ostream, " % g", vec[i]);
+X      fprintf(ostream, " % g", (double)vec[i]);
 X  }
 X
 X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
@@ -1529,9 +1530,9 @@ X  fprintf(ostream, "Vector (float%d): " CGLM_PRINT_COLOR "\n  (", m);
 X
 X  for (i = 0; i < m; i++) {
 X    if (vec[i] < CGLM_PRINT_MAX_TO_SHORT)
-X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, vec[i]);
+X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, (double)vec[i]);
 X    else
-X      fprintf(ostream, " % g", vec[i]);
+X      fprintf(ostream, " % g", (double)vec[i]);
 X  }
 X
 X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
@@ -1553,7 +1554,7 @@ X  for (i = 0; i < m; i++)
 X    fprintf(ostream, " % d", vec[i]);
 X
 X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
-X  
+X
 X#undef m
 X}
 X
@@ -1569,9 +1570,9 @@ X  fprintf(ostream, "Vector (float%d): " CGLM_PRINT_COLOR "\n  (", m);
 X
 X  for (i = 0; i < m; i++) {
 X    if (vec[i] < CGLM_PRINT_MAX_TO_SHORT)
-X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, vec[i]);
+X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, (double)vec[i]);
 X    else
-X      fprintf(ostream, " % g", vec[i]);
+X      fprintf(ostream, " % g", (double)vec[i]);
 X  }
 X
 X  fprintf(ostream, "  )" CGLM_PRINT_COLOR_RESET "\n\n");
@@ -1591,9 +1592,9 @@ X  fprintf(ostream, "Quaternion (float%d): " CGLM_PRINT_COLOR "\n  (", m);
 X
 X  for (i = 0; i < m; i++) {
 X    if (vec[i] < CGLM_PRINT_MAX_TO_SHORT)
-X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, vec[i]);
+X      fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, (double)vec[i]);
 X    else
-X      fprintf(ostream, " % g", vec[i]);
+X      fprintf(ostream, " % g", (double)vec[i]);
 X  }
 X
 X
@@ -1615,12 +1616,12 @@ X  fprintf(ostream, "AABB (%s): " CGLM_PRINT_COLOR "\n", tag ? tag: "float");
 X
 X  for (i = 0; i < 2; i++) {
 X    fprintf(ostream, "  (");
-X    
+X
 X    for (j = 0; j < m; j++) {
 X      if (bbox[i][j] < CGLM_PRINT_MAX_TO_SHORT)
-X        fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, bbox[i][j]);
+X        fprintf(ostream, " % .*f", CGLM_PRINT_PRECISION, (double)bbox[i][j]);
 X      else
-X        fprintf(ostream, " % g", bbox[i][j]);
+X        fprintf(ostream, " % g", (double)bbox[i][j]);
 X    }
 X
 X    fprintf(ostream, "  )\n");
@@ -4747,6 +4748,7 @@ X   CGLM_INLINE bool  glm_vec2_isnan(vec2 v);
 X   CGLM_INLINE bool  glm_vec2_isinf(vec2 v);
 X   CGLM_INLINE bool  glm_vec2_isvalid(vec2 v);
 X   CGLM_INLINE void  glm_vec2_sign(vec2 v, vec2 dest);
+X   CGLM_INLINE void  glm_vec2_abs(vec2 v, vec2 dest);
 X   CGLM_INLINE void  glm_vec2_sqrt(vec2 v, vec2 dest);
 X   CGLM_INLINE void  glm_vec2_complex_mul(vec2 a, vec2 b, vec2 dest)
 X   CGLM_INLINE void  glm_vec2_complex_div(vec2 a, vec2 b, vec2 dest)
@@ -4905,6 +4907,19 @@ X  dest[1] = glm_signf(v[1]);
 X}
 X
 X/*!
+X * @brief absolute value of v
+X *
+X * @param[in]	v	vector
+X * @param[out]	dest	destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_vec2_abs(vec2 v, vec2 dest) {
+X  dest[0] = fabsf(v[0]);
+X  dest[1] = fabsf(v[1]);
+X}
+X
+X/*!
 X * @brief square root of each vector item
 X *
 X * @param[in]  v    vector
@@ -4965,7 +4980,6 @@ X  dest[0] =  a[0];
 X  dest[1] = -a[1];
 X}
 X
-X
 X#endif /* cglm_vec2_ext_h */
 749867399e3219477a269f74f6512694
 echo x - cglm/ivec2.h
@@ -4978,7 +4992,13 @@ X * Full license can be found in the LICENSE file
 X */
 X
 X/*
-XFUNCTIONS:
+X Macros:
+X   GLM_IVEC2_ONE_INIT
+X   GLM_IVEC2_ZERO_INIT
+X   GLM_IVEC2_ONE
+X   GLM_IVEC2_ZERO
+X
+X Functions:
 X  CGLM_INLINE void glm_ivec2(int * __restrict v, ivec2 dest)
 X  CGLM_INLINE void glm_ivec2_copy(ivec2 a, ivec2 dest)
 X  CGLM_INLINE void glm_ivec2_zero(ivec2 v)
@@ -4994,12 +5014,19 @@ X  CGLM_INLINE float glm_ivec2_distance(ivec2 a, ivec2 b)
 X  CGLM_INLINE void glm_ivec2_maxv(ivec2 a, ivec2 b, ivec2 dest)
 X  CGLM_INLINE void glm_ivec2_minv(ivec2 a, ivec2 b, ivec2 dest)
 X  CGLM_INLINE void glm_ivec2_clamp(ivec2 v, int minVal, int maxVal)
+X  CGLM_INLINE void glm_ivec2_abs(ivec2 v, ivec2 dest)
 X */
 X
 X#ifndef cglm_ivec2_h
 X#define cglm_ivec2_h
 X
 X#include "common.h"
+X
+X#define GLM_IVEC2_ONE_INIT   {1, 1}
+X#define GLM_IVEC2_ZERO_INIT  {0, 0}
+X
+X#define GLM_IVEC2_ONE  ((ivec2)GLM_IVEC2_ONE_INIT)
+X#define GLM_IVEC2_ZERO ((ivec2)GLM_IVEC2_ZERO_INIT)
 X
 X/*!
 X * @brief init ivec2 using vec3 or vec4
@@ -5209,6 +5236,19 @@ X  if (v[1] < minVal)
 X    v[1] = minVal;
 X  else if(v[1] > maxVal)
 X    v[1] = maxVal;
+X}
+X
+X/*!
+X * @brief absolute value of v
+X *
+X * @param[in]	v	vector
+X * @param[out]	dest	destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_ivec2_abs(ivec2 v, ivec2 dest) {
+X  dest[0] = abs(v[0]);
+X  dest[1] = abs(v[1]);
 X}
 X
 X#endif /* cglm_ivec2_h */
@@ -6583,7 +6623,13 @@ X * Full license can be found in the LICENSE file
 X */
 X
 X/*
-XFUNCTIONS:
+X Macros:
+X   GLM_IVEC3_ONE_INIT
+X   GLM_IVEC3_ZERO_INIT
+X   GLM_IVEC3_ONE
+X   GLM_IVEC3_ZERO
+X
+X Functions:
 X  CGLM_INLINE void glm_ivec3(ivec4 v4, ivec3 dest)
 X  CGLM_INLINE void glm_ivec3_copy(ivec3 a, ivec3 dest)
 X  CGLM_INLINE void glm_ivec3_zero(ivec3 v)
@@ -6599,12 +6645,19 @@ X  CGLM_INLINE float glm_ivec3_distance(ivec3 a, ivec3 b)
 X  CGLM_INLINE void glm_ivec3_maxv(ivec3 a, ivec3 b, ivec3 dest)
 X  CGLM_INLINE void glm_ivec3_minv(ivec3 a, ivec3 b, ivec3 dest)
 X  CGLM_INLINE void glm_ivec3_clamp(ivec3 v, int minVal, int maxVal)
+X  CGLM_INLINE void glm_ivec3_abs(ivec3 v, ivec3 dest)
 X */
 X
 X#ifndef cglm_ivec3_h
 X#define cglm_ivec3_h
 X
 X#include "common.h"
+X
+X#define GLM_IVEC3_ONE_INIT   {1, 1, 1}
+X#define GLM_IVEC3_ZERO_INIT  {0, 0, 0}
+X
+X#define GLM_IVEC3_ONE  ((ivec3)GLM_IVEC3_ONE_INIT)
+X#define GLM_IVEC3_ZERO ((ivec3)GLM_IVEC3_ZERO_INIT)
 X
 X/*!
 X * @brief init ivec3 using ivec4
@@ -6830,6 +6883,20 @@ X  if (v[2] < minVal)
 X    v[2] = minVal;
 X  else if(v[2] > maxVal)
 X    v[2] = maxVal;
+X}
+X
+X/*!
+X * @brief absolute value of v
+X *
+X * @param[in]	v	vector
+X * @param[out]	dest	destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_ivec3_abs(ivec3 v, ivec3 dest) {
+X  dest[0] = abs(v[0]);
+X  dest[1] = abs(v[1]);
+X  dest[2] = abs(v[2]);
 X}
 X
 X#endif /* cglm_ivec3_h */
@@ -8229,7 +8296,13 @@ X * Full license can be found in the LICENSE file
 X */
 X
 X/*
-XFUNCTIONS:
+X Macros:
+X   GLM_IVEC4_ONE_INIT
+X   GLM_IVEC4_ZERO_INIT
+X   GLM_IVEC4_ONE
+X   GLM_IVEC4_ZERO
+X
+X Functions:
 X  CGLM_INLINE void glm_ivec4(ivec3 v3, int last, ivec4 dest)
 X  CGLM_INLINE void glm_ivec4_copy(ivec4 a, ivec4 dest)
 X  CGLM_INLINE void glm_ivec4_zero(ivec4 v)
@@ -8245,12 +8318,19 @@ X  CGLM_INLINE float glm_ivec4_distance(ivec4 a, ivec4 b)
 X  CGLM_INLINE void glm_ivec4_maxv(ivec4 a, ivec4 b, ivec4 dest)
 X  CGLM_INLINE void glm_ivec4_minv(ivec4 a, ivec4 b, ivec4 dest)
 X  CGLM_INLINE void glm_ivec4_clamp(ivec4 v, int minVal, int maxVal)
+X  CGLM_INLINE void glm_ivec4_abs(ivec4 v, ivec4 dest)
 X */
 X
 X#ifndef cglm_ivec4_h
 X#define cglm_ivec4_h
 X
 X#include "common.h"
+X
+X#define GLM_IVEC4_ONE_INIT   {1, 1, 1, 1}
+X#define GLM_IVEC4_ZERO_INIT  {0, 0, 0, 0}
+X
+X#define GLM_IVEC4_ONE  ((ivec4)GLM_IVEC4_ONE_INIT)
+X#define GLM_IVEC4_ZERO ((ivec4)GLM_IVEC4_ZERO_INIT)
 X
 X/*!
 X * @brief init ivec4 using ivec3
@@ -8493,6 +8573,21 @@ X  if (v[3] < minVal)
 X    v[3] = minVal;
 X  else if(v[3] > maxVal)
 X    v[3] = maxVal;
+X}
+X
+X/*!
+X * @brief absolute value of v
+X *
+X * @param[in]	v	vector
+X * @param[out]	dest	destination
+X */
+XCGLM_INLINE
+Xvoid
+Xglm_ivec4_abs(ivec4 v, ivec4 dest) {
+X  dest[0] = abs(v[0]);
+X  dest[1] = abs(v[1]);
+X  dest[2] = abs(v[2]);
+X  dest[3] = abs(v[3]);
 X}
 X
 X#endif /* cglm_ivec4_h */
@@ -12485,6 +12580,10 @@ Xglmc_vec2_clamp(vec2 v, float minval, float maxval);
 X
 XCGLM_EXPORT
 Xvoid
+Xglmc_vec2_abs(vec2 v, vec2 dest);
+X
+XCGLM_EXPORT
+Xvoid
 Xglmc_vec2_lerp(vec2 from, vec2 to, float t, vec2 dest);
 X
 XCGLM_EXPORT
@@ -13189,6 +13288,10 @@ XCGLM_EXPORT
 Xvoid
 Xglmc_ivec2_clamp(ivec2 v, int minVal, int maxVal);
 X
+XCGLM_EXPORT
+Xvoid
+Xglmc_ivec2_abs(ivec2 v, ivec2 dest);
+X
 X#ifdef __cplusplus
 X}
 X#endif
@@ -13271,6 +13374,10 @@ XCGLM_EXPORT
 Xvoid
 Xglmc_ivec3_clamp(ivec3 v, int minVal, int maxVal);
 X
+XCGLM_EXPORT
+Xvoid
+Xglmc_ivec3_abs(ivec3 v, ivec3 dest);
+X
 X#ifdef __cplusplus
 X}
 X#endif
@@ -13352,6 +13459,10 @@ X
 XCGLM_EXPORT
 Xvoid
 Xglmc_ivec4_clamp(ivec4 v, int minVal, int maxVal);
+X
+XCGLM_EXPORT
+Xvoid
+Xglmc_ivec4_abs(ivec4 v, ivec4 dest);
 X
 X#ifdef __cplusplus
 X}

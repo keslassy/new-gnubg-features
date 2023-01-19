@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: ShimOGL.h,v 1.11 2021/10/24 14:50:53 plm Exp $
  */
 
 #ifndef SHIMOGL_H

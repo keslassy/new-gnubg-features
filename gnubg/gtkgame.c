@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2000-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2001-2022 the AUTHORS
+ * Copyright (C) 2001-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkgame.c,v 1.991 2023/01/01 17:37:15 plm Exp $
+ * $Id: gtkgame.c,v 1.992 2023/01/18 21:49:36 plm Exp $
  */
 
 #include "config.h"
@@ -2817,7 +2817,7 @@ AnalysisSet(analysiswidget * paw)
     /*Score Map*/ 
 
     for (i = 0; i < NUM_PLY; ++i){
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapPly[i]), i==0); /*scoreMapPlyDefault == (scoreMapPly)i); */
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i);
     }
 
     for (i = 0; i < NUM_MATCH_LENGTH; ++i)
@@ -3268,8 +3268,8 @@ append_analysis_options(analysiswidget * paw)
 
     HintSameToggled(NULL, paw);
 
-    //  g_free(pAnalDetailSettings2); //<- not sure where to put it
-    //  g_free(pAnalDetailSettings1);
+    // g_free(pAnalDetailSettings2); //<- not sure where to put it
+    // g_free(pAnalDetailSettings1);
 
 }
 
@@ -3933,7 +3933,7 @@ static GtkActionEntry actionEntries[] = {
     {"ScoreMapCubeAction", NULL, N_("ScoreMap (cube decision)"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_SCORE_MAP_CUBE)},
     {"ScoreMapMoveAction", NULL, N_("ScoreMap (move decision)"), NULL, NULL,
-     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_SCORE_MAP_MOVE},
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_SCORE_MAP_MOVE)},
     {"RaceTheoryAction", NULL, N_("_Race Theory"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_KLEINMAN)},
     {"MarketWindowAction", NULL, N_("_Market window"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MARKETWINDOW)},
     {"MatchEquityTableAction", NULL, N_("M_atch equity table"), NULL, NULL,
@@ -4333,6 +4333,10 @@ CreateMainWindow(void)
 {
     GtkWidget *pwVbox, *pwHbox, *pwHbox2, *pwHandle, *pwPanelHbox, *pwStopButton, *idMenu, *menu_item, *pwFrame;
     GtkTargetEntry fileDrop = { "text/uri-list", GTK_TARGET_OTHER_APP, 1 };
+#if defined(USE_GTKUIMANAGER)
+    GError *error = NULL;
+    GtkActionGroup *action_group;
+#endif
 
     pwMain = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_maximize(GTK_WINDOW(pwMain));
@@ -4353,9 +4357,6 @@ CreateMainWindow(void)
     gtk_container_add(GTK_CONTAINER(pwMain), pwVbox);
 
 #if defined(USE_GTKUIMANAGER)
-    GError *error = NULL;
-    GtkActionGroup *action_group;
-
     puim = gtk_ui_manager_new();
 
     action_group = gtk_action_group_new("Actions");

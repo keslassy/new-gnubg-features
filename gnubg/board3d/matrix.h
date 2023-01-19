@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: matrix.h,v 1.14 2019/12/29 14:55:26 plm Exp $
  */
 
 typedef const float (*ConstMatrix)[4];

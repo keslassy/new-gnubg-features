@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: legacyGLinc.h,v 1.3 2020/02/29 20:21:44 Superfly_Jon Exp $
  */
 
 //#define TEST_LEGACY_OGL

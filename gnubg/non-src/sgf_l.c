@@ -1233,7 +1233,7 @@ char *yytext;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id$
+ * $Id: sgf_l.c,v 1.15 2022/11/05 23:02:14 plm Exp $
  */
 #line 22 "sgf_l.l"
 #include "common.h"

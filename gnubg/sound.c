@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: sound.c,v 1.104 2022/10/02 12:48:07 plm Exp $
+ * $Id: sound.c,v 1.105 2023/01/12 20:49:08 plm Exp $
  */
 
 #include "config.h"
@@ -191,7 +191,7 @@ CoreAudio_PlayFile_Thread(void *auGraph)
 {
     /* Start playing the sound file, and wait for it to complete */
     AUGraphStart(theGraph);
-    usleep((int) (1000.0 * 1000.0 * fileDuration));
+    g_usleep((int) (1000.0 * 1000.0 * fileDuration));
 
     CoreAudio_ShutDown();
 

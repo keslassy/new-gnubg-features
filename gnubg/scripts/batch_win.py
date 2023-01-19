@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: batch_win.py,v 1.6 2022/06/29 21:09:18 plm Exp $
 #
 
 # This file is inspired of the batch.py file of Jon Kinsey. The code

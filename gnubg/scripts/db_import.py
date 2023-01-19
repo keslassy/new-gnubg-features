@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id$
+# $Id: db_import.py,v 1.8 2022/06/29 21:09:18 plm Exp $
 #
 
 """
