@@ -458,6 +458,17 @@ mmwc2eq(const float rMwc, const cubeinfo *pci) {
         return mwc2eq(rMwc,pci);
 }
 
+
+static int
+DebugCalcQuadrantEquities(quadrantdata * pq, const scoremap * psm) {
+        if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
+                                        arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
+            strcpy(pq->decisionString,"");
+            return -1;
+        }
+        return 0;
+}
+
 static int
 CalcQuadrantEquities(quadrantdata * pq, const scoremap * psm, int recomputeFully) {
 /* In Cube ScoreMap: Calculates the DT and ND equities for the given quadrant. Updates data in pq accordingly.
@@ -495,16 +506,17 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
         }
         return 0;
     } else {  //move scoremap
-        if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
-                                        arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
-            strcpy(pq->decisionString,"");
-            return -1;
-        }
-        g_assert(pq->ml.cMoves > 0);
+        // if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
+        //                                 arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
+        //     strcpy(pq->decisionString,"");
+        //     return -1;
+        // }
+        DebugCalcQuadrantEquities(pq, psm);
+        //g_assert(pq->ml.cMoves > 0);
         if (pq->ml.cMoves > 0)
             FormatMove(pq->decisionString, (ConstTanBoard) psm->pms->anBoard, pq->ml.amMoves[0].anMove);
-        // if (myDebug)
-        //     g_print("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
+        else     
+            g_message("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
         return 0;
     }
 }
