@@ -3225,6 +3225,12 @@ extern int
 InternalCommandNext(int mark, int cmark, int n)
 {
     int done = 0;
+    char tmp[FORMATEDMOVESIZE];
+    TanBoard anBoard;
+    int keyPlayer;
+    int init=1;
+
+    g_message("mark=%d, cmark=%d, n=%d\n",mark,cmark,n);
 
     if (mark || cmark) {
         listOLD *pgame;
@@ -3236,16 +3242,36 @@ InternalCommandNext(int mark, int cmark, int n)
             /* current game not found */
             return 0;
 
-        /* we need to increment the count if we're pointing to a marked move */
-        if (p->p && (mark && MoveIsMarked((moverecord *) p->p)))
+        /* we need to increment the count if we're pointing to a marked move 
+        ... b/c if we initially point at a marked move, then when we start by it in the 
+        while below we immediately decrement, so we essentially want to increment+decrement
+        to skip it in practice and look for the next one 
+        */
+        if (p->p && (mark && MoveIsMarked((moverecord *) p->p))){
             ++n;
-        if (p->p && (cmark && MoveIsCMarked((moverecord *) p->p)))
+            g_message("incremented to n=%d\n",n);
+        }
+        if (p->p && (cmark && MoveIsCMarked((moverecord *) p->p))){
             ++n;
+            g_message("cmarked incremented to n=%d\n",n);
+        }
 
         while (p->p) {
             pmr = (moverecord *) p->p;
-            if (mark && MoveIsMarked(pmr) && (--n <= 0))
+            /* if we just call the function and get into this while loop for the first time,
+            then we set init=1 and determine the player that we want to focus on.
+            In the next moves, we check if it's the same player.
+            */
+            if(init){
+                keyPlayer=pmr->fPlayer;
+                init=0;
+            }
+            InitBoard(anBoard, ms.bgv);
+            g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
+            if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
+                g_message("got to break, n=%d\n",n);
                 break;
+            }
             if (cmark && MoveIsCMarked(pmr) && (--n <= 0))
                 break;
             p = p->plNext;
@@ -3268,6 +3294,7 @@ InternalCommandNext(int mark, int cmark, int n)
             ChangeGame(pgame->p);
 
         plLastMove = p->plPrev;
+            //g_message("got to break, n=%d\n",plLastMove->p->);
         CalculateBoard();
         ShowMark(pmr);
     } else {
