@@ -1787,6 +1787,7 @@ The function updates the decision text in each square.
     float fontsize;
 
     int width, height;
+    float rescaleFactor=1.0f;
 
 #if GTK_CHECK_VERSION(3,0,0)
         width = gtk_widget_get_allocated_width(pw);
@@ -1846,7 +1847,7 @@ The function updates the decision text in each square.
     layout = gtk_widget_create_pango_layout(pw, NULL);
     pango_layout_set_font_description(layout, description);
     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
-    pango_font_description_free (description);
+    //pango_font_description_free (description);
 
     //g_print("... %s:%s",pq->decisionString,pq->equityText);
     /* build the text that will be displayed in the quadrant
@@ -1927,10 +1928,14 @@ The function updates the decision text in each square.
         /* question: why not do a while instead of the if?
             answer: The code immediately after sets the font size so that it does exactly fit.
                     No need to keep looping to check again.*/
-
-        float rescaleFactor=fminf(((float)allocation.width-4.0f)*(float)PANGO_SCALE/((float)width),((float)allocation.height-4.0f)*(float)PANGO_SCALE/((float)height));
+        if (width>0 && height>0)
+            rescaleFactor=fminf(((float)allocation.width-4.0f)*(float)PANGO_SCALE/((float)width),((float)allocation.height-4.0f)*(float)PANGO_SCALE/((float)height));
+        else {
+            g_message("error zero width/height\n");
+            rescaleFactor=0.5f;
+            }
         pango_font_description_set_size(description, (gint)(fontsize*rescaleFactor*PANGO_SCALE));
-        //g_print("font size: %d, rescale factor: %f\n",(int)(fontsize*rescaleFactor*PANGO_SCALE),rescaleFactor);
+        g_print("font size: %d, rescale factor: %f\n",(int)(fontsize*rescaleFactor*PANGO_SCALE),rescaleFactor);
         pango_layout_set_font_description(layout,description);
 
         /* Measure size again, so that centering works right. */
@@ -1946,7 +1951,7 @@ The function updates the decision text in each square.
 #else
     gtk_paint_layout(gtk_widget_get_style(pw), gtk_widget_get_window(pw), GTK_STATE_NORMAL, TRUE, NULL, pw, NULL, (int) x, (int) y, layout);
 #endif
-
+    pango_font_description_free (description);
     g_object_unref(layout);
 
     return TRUE;
