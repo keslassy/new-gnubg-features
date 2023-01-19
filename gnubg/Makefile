@@ -238,7 +238,7 @@ gnubg_DEPENDENCIES = lib/libevent.la $(am__append_6)  \
 	$(OTHER_LIBS) $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2)
 gnubg_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(ASAN_FLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(gnubg_LDFLAGS) $(LDFLAGS) -o $@
 am_makebearoff_OBJECTS = makebearoff.$(OBJEXT) $(am__objects_1)
 makebearoff_OBJECTS = $(am_makebearoff_OBJECTS)
@@ -306,18 +306,18 @@ am__depfiles_remade = ./$(DEPDIR)/analysis.Po ./$(DEPDIR)/bearoff.Po \
 	./$(DEPDIR)/util.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) $(ASAN_FLAGS)
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
 	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CFLAGS) $(CFLAGS) $(ASAN_FLAGS)
+	$(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_$(V))
 am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))
 am__v_CC_0 = @echo "  CC      " $@;
 am__v_CC_1 = 
 CCLD = $(CC)
 LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(ASAN_FLAGS)\
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
@@ -469,13 +469,11 @@ AM_CFLAGS =  -DG_DISABLE_ASSERT -g -O3 -ffast-math
 AM_DEFAULT_VERBOSITY = 1
 AM_YFLAGS = -d
 AR = ar
-#added this:
-ASAN_FLAGS = -fsanitize=address
 AUTOCONF = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' autoconf
 AUTOHEADER = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' autoheader
 AUTOMAKE = ${SHELL} '/home/isaac/g/gnubg-cvs2svn/gnubg/missing' automake-1.16
 AWK = mawk
-BUILD_DATE = 20230109
+BUILD_DATE = 20230118
 CAIRO_CFLAGS = -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
 CAIRO_LIBS = -lcairo
 CANBERRA_CFLAGS = -D_REENTRANT -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/x86_64-linux-gnu -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
@@ -484,8 +482,7 @@ CATALOGS =  cs.gmo da.gmo de.gmo en_GB.gmo en_US.gmo el.gmo es.gmo fi.gmo fr.gmo
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
-#here changed, was CFLAGS = 
-CFLAGS=-Wall -Wextra -Wno-deprecated-declarations
+CFLAGS = 
 CPPFLAGS = 
 CPUEXT_FLAGS =  -mrdrnd -mabm
 CSCOPE = cscope
@@ -683,7 +680,7 @@ AM_CPPFLAGS = -I$(srcdir)/lib -I$(builddir)/pixmaps \
 	-I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  $(am__append_1) \
 	$(am__append_2) $(am__append_3) -DAC_DOCDIR='"$(docdir)"' \
 	-DAC_DATADIR='"$(datadir)"' \
-	-DAC_PKGDATADIR='"$(datadir)/gnubg"' -DBUILD_DATE=20230109
+	-DAC_PKGDATADIR='"$(datadir)/gnubg"' -DBUILD_DATE=20230118
 OTHER_LIBS = $(am__append_4)
 BUILT_SOURCES = sgf_y.c sgf_l.c copying.c credits.c external_l.c external_y.c
 

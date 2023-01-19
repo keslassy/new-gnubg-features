@@ -1,6 +1,6 @@
-#line 1 "external_l.c"
+#line 2 "external_l.c"
 
-#line 3 "external_l.c"
+#line 4 "external_l.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -960,10 +960,10 @@ void escapes(const char *cp, char *tp);
         } \
         yylval->str = g_string_new(yytext)
 
-#line 963 "external_l.c"
+#line 964 "external_l.c"
 #define YY_NO_INPUT 1
  
-#line 966 "external_l.c"
+#line 967 "external_l.c"
 
 #define INITIAL 0
 #define SBOARDP1 1
@@ -1242,7 +1242,7 @@ YY_DECL
 #line 60 "external_l.l"
 
 
-#line 1245 "external_l.c"
+#line 1246 "external_l.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1547,7 +1547,7 @@ YY_RULE_SETUP
 #line 147 "external_l.l"
 ECHO;
 	YY_BREAK
-#line 1550 "external_l.c"
+#line 1551 "external_l.c"
 
 	case YY_END_OF_BUFFER:
 		{
