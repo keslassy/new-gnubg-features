@@ -18,6 +18,19 @@
  * $Id: play.c,v 1.478 2022/12/13 22:14:50 plm Exp $
  */
 
+/*
+01/2023: Isaac Keslassy: introduced "fMarkedSamePlayer":
+- MOTIVATION: When reviewing her mistakes in a game, a user may not be interested
+     in the mistakes of her opponent. Unfortunately, the current red arrow that
+     enables users to skip moves and jump directly to the mistakes, also forces
+     them to check the mistakes of both players. 
+- IDEA: Very simply, (1) a checkbox in Settings>Options>Other enables a user to focus 
+    only on the marked moves of a given player. 
+    (2) To do so, select a move of the desired player then click on next/previous 
+    marked move as previously. If the checkbox was enabled, then it will skip
+    the opponent's mistakes.
+*/
+
 #include "config.h"
 
 #include <glib.h>
@@ -3225,12 +3238,12 @@ extern int
 InternalCommandNext(int mark, int cmark, int n)
 {
     int done = 0;
-    char tmp[FORMATEDMOVESIZE];
-    TanBoard anBoard;
+    // char tmp[FORMATEDMOVESIZE];
+    // TanBoard anBoard;
     int keyPlayer=-1;
     int init=1;
 
-    g_message("start: fMarkedSamePlayer=%d, mark=%d, cmark=%d, n=%d\n",fMarkedSamePlayer,mark,cmark,n);
+    // g_message("start: fMarkedSamePlayer=%d, mark=%d, cmark=%d, n=%d\n",fMarkedSamePlayer,mark,cmark,n);
 
     if (mark || cmark) {
         listOLD *pgame;
@@ -3249,34 +3262,36 @@ InternalCommandNext(int mark, int cmark, int n)
         */
         if (p->p && (mark && MoveIsMarked((moverecord *) p->p))){
             ++n;
-            g_message("incremented to n=%d\n",n);
+            // g_message("incremented to n=%d\n",n);
         }
         if (p->p && (cmark && MoveIsCMarked((moverecord *) p->p))){
             ++n;
-            g_message("cmarked incremented to n=%d\n",n);
+            // g_message("cmarked incremented to n=%d\n",n);
         }
 
         while (p->p) {
             pmr = (moverecord *) p->p;
-            /* if we just call the function and get into this while loop for the first time,
+            /* 
+            When the checkbox option fMarkedSamePlayer is set:
+            If we just call the function and get into this while loop for the first time,
             then we set init=1 and determine the player that we want to focus on.
-            In the next moves, we check if it's the same player.
+            In the next marked moves, we check if it's the same player.
             */
             if(fMarkedSamePlayer && init){
                 keyPlayer=pmr->fPlayer;
                 init=0;
             }
-            InitBoard(anBoard, ms.bgv);
-            g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
+            // InitBoard(anBoard, ms.bgv);
+            // g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
             
             if(fMarkedSamePlayer){
                 if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
-                    g_message("got to break, n=%d\n",n);
+                    // g_message("got to break, n=%d\n",n);
                     break;
                 }
             } else {
                 if (mark && MoveIsMarked(pmr)  && (--n <= 0)){
-                    g_message("got to break, n=%d\n",n);
+                    // g_message("got to break, n=%d\n",n);
                     break;
                 }
             }
