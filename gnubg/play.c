@@ -3633,6 +3633,11 @@ CommandPrevious(char *sz)
     int cmark = FALSE;
     listOLD *p;
     moverecord *pmr = NULL;
+    int keyPlayer=-1;
+    int init=1;
+    /*for debugging: */
+    // char tmp[FORMATEDMOVESIZE];
+    // TanBoard anBoard;
 
     if (!plGame) {
         outputl(_("No game in progress (type `new game' to start one)."));
@@ -3688,8 +3693,35 @@ CommandPrevious(char *sz)
 
         while ((p->p) != 0) {
             pmr = (moverecord *) p->p;
-            if (mark && MoveIsMarked(pmr) && (--n <= 0))
-                break;
+
+            /* See explanations on fMarkedSamePlayer (focusing on same player when 
+            jumping between marked moves) in function InternalCommandNext(); here 
+            the commands are copied verbatim.
+            Note that here we look at the moves backwards, so we don't know the player 
+            name of the current move, only that of the previous move. In general, it's
+            the other player: if player 0 played previously, it's likely that I am 
+            now focusing on player 1. 
+            However, if we are at the start of a game, the same player who 
+            starts the game may also have ended the previous game. So in a small 
+            minority of cases, we may switch to the wrong player. 
+            */
+            // InitBoard(anBoard, ms.bgv);
+            // g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
+            
+            if(fMarkedSamePlayer && init){
+                keyPlayer=1-pmr->fPlayer;
+                init=0;
+            }
+            if(fMarkedSamePlayer){
+                if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
+                    break;
+                }
+            } else {
+                if (mark && MoveIsMarked(pmr)  && (--n <= 0)){
+                    break;
+                }
+            }
+
             if (cmark && MoveIsCMarked(pmr) && (--n <= 0))
                 break;
 
