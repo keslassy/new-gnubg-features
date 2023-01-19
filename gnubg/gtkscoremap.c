@@ -82,7 +82,7 @@
 - removed label-by and layout radio buttons; they will only be configured in the 
     default settings panel
 - corrected "similar score" inaccuracy when scaling the table up
-- solved several bugs
+- solved several bugs, including wrongly freeing memory allocations
 - checked that it works in both Windows 10 and Ubuntu 22
 
 12/2022: Isaac Keslassy: a few changes including:
@@ -1935,7 +1935,7 @@ The function updates the decision text in each square.
             rescaleFactor=0.5f;
             }
         pango_font_description_set_size(description, (gint)(fontsize*rescaleFactor*PANGO_SCALE));
-        g_print("font size: %d, rescale factor: %f\n",(int)(fontsize*rescaleFactor*PANGO_SCALE),rescaleFactor);
+        //g_print("font size: %d, rescale factor: %f\n",(int)(fontsize*rescaleFactor*PANGO_SCALE),rescaleFactor);
         pango_layout_set_font_description(layout,description);
 
         /* Measure size again, so that centering works right. */
