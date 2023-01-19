@@ -3227,10 +3227,10 @@ InternalCommandNext(int mark, int cmark, int n)
     int done = 0;
     char tmp[FORMATEDMOVESIZE];
     TanBoard anBoard;
-    int keyPlayer;
+    int keyPlayer=-1;
     int init=1;
 
-    g_message("mark=%d, cmark=%d, n=%d\n",mark,cmark,n);
+    g_message("start: fMarkedSamePlayer=%d, mark=%d, cmark=%d, n=%d\n",fMarkedSamePlayer,mark,cmark,n);
 
     if (mark || cmark) {
         listOLD *pgame;
@@ -3262,15 +3262,23 @@ InternalCommandNext(int mark, int cmark, int n)
             then we set init=1 and determine the player that we want to focus on.
             In the next moves, we check if it's the same player.
             */
-            if(init){
+            if(fMarkedSamePlayer && init){
                 keyPlayer=pmr->fPlayer;
                 init=0;
             }
             InitBoard(anBoard, ms.bgv);
             g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
-            if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
-                g_message("got to break, n=%d\n",n);
-                break;
+            
+            if(fMarkedSamePlayer){
+                if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
+                    g_message("got to break, n=%d\n",n);
+                    break;
+                }
+            } else {
+                if (mark && MoveIsMarked(pmr)  && (--n <= 0)){
+                    g_message("got to break, n=%d\n",n);
+                    break;
+                }
             }
             if (cmark && MoveIsCMarked(pmr) && (--n <= 0))
                 break;

@@ -1264,6 +1264,8 @@ static command acSetVariation[] = {
       N_("Control audio parameters"), NULL, acSetSound },
     { "styledgamelist", CommandSetStyledGameList, N_("Display colours for marked moves in game window"),
       szONOFF, &cOnOff },
+    { "markedsameplayer", CommandSetMarkedSamePlayer, N_("Focus on same player when moving between marked moves"),
+      szONOFF, &cOnOff },      
 #if defined(USE_GTK)
     { "theorywindow", CommandSetTheoryWindow, N_("Display game theory in window"),
       szONOFF, &cOnOff },

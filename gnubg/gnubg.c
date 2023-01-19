@@ -196,6 +196,7 @@ int fPlayersAreSame = TRUE;
 int fRecord = TRUE;
 int fShowProgress;
 int fStyledGamelist = TRUE;
+int fMarkedSamePlayer = FALSE;
 int fTruncEqualPlayer0 = TRUE;
 int fTutorChequer = TRUE;
 int fTutorCube = TRUE;
@@ -3129,6 +3130,7 @@ SaveGUISettings(FILE * pf)
     fprintf(pf, "set gui windowpositions %s\n", fGUISetWindowPos ? "on" : "off");
 
     fprintf(pf, "set styledgamelist %s\n", fStyledGamelist ? "on" : "off");
+    fprintf(pf, "set markedsameplayer %s\n", fMarkedSamePlayer ? "on" : "off");   
     fprintf(pf, "set delay %u\n", nDelay);
 
     fprintf(pf, "set toolbar %d\n", nToolbarStyle);
