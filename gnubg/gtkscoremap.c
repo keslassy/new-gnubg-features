@@ -116,6 +116,11 @@ It looks like this is not a scoremap issue. For instance, the "show" button has 
 and come back, it works again. It may be a movelist construction issue.
 */
 
+/* TBD: gtk_rc_style_new is deprecated in GTK3.0:
+"warning: 'gtk_rc_style_new' is deprecated: Use 'GtkStyleContext' instead"
+same for gtk_widget_modify_style 
+*/
+
 #include "config.h"
 #include "gtklocdefs.h"
 
@@ -2660,6 +2665,10 @@ Allows garbage collection.
 static void
 AddText(GtkWidget* pwBox, char* Text)
 {
+    /* TBD: gtk_rc_style_new is deprecated in GTK3.0:
+    "warning: 'gtk_rc_style_new' is deprecated: Use 'GtkStyleContext' instead"
+    same for gtk_widget_modify_style below
+    */
     GtkRcStyle * ps = gtk_rc_style_new();
     GtkWidget * pwText = gtk_label_new(Text);
     GtkWidget * pwHBox;
