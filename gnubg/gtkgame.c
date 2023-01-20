@@ -604,24 +604,26 @@ static int disregardsm1=1; //available implemented hidden radio option called sm
 extern void
 GTKSuspendInput(void)
 {
+            g_message("GTKSuspendInput\n");
+
     if (!fX)
         return;
 
-    if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
-        /* Grab events so that the board window knows this is a re-entrant */
-        /*  call, and won't allow commands like roll, move or double. */
-        grabbedWidget = pwGrab;
-        if (pwGrab == pwStop) {
-            gtk_widget_grab_focus(pwStop);
-            gtk_widget_set_sensitive(pwStop, TRUE);
-        }
-        gtk_grab_add(pwGrab);
-        grabIdSignal = g_signal_connect_after(G_OBJECT(pwGrab), "key-press-event", G_CALLBACK(gtk_true), NULL);
-    }
+    // if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
+    //     /* Grab events so that the board window knows this is a re-entrant */
+    //     /*  call, and won't allow commands like roll, move or double. */
+    //     grabbedWidget = pwGrab;
+    //     if (pwGrab == pwStop) {
+    //         gtk_widget_grab_focus(pwStop);
+             gtk_widget_set_sensitive(pwStop, TRUE);
+    //     }
+    //     gtk_grab_add(pwGrab);
+    //     grabIdSignal = g_signal_connect_after(G_OBJECT(pwGrab), "key-press-event", G_CALLBACK(gtk_true), NULL);
+    // }
 
-    /* Don't check stdin here; readline isn't ready yet. */
-    GTKDisallowStdin();
-    suspendCount++;
+    // /* Don't check stdin here; readline isn't ready yet. */
+    // GTKDisallowStdin();
+    // suspendCount++;
 }
 
 extern void
@@ -6667,22 +6669,24 @@ extern void
 GTKProgressStart(const char *sz)
 {
     GTKSuspendInput();
+        g_message("GTKProgressStart\n");
 
     if (sz)
         gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idProgress, sz);
 
-    SetMouseCursor(GDK_WATCH);
+    //SetMouseCursor(GDK_WATCH);
 }
 
 extern void
 GTKProgressStartValue(char *sz, int UNUSED(iMax))
 {
     GTKSuspendInput();
+    g_message("GTKProgressStartValue\n");
 
     if (sz)
         gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idProgress, sz);
 
-    SetMouseCursor(GDK_WATCH);
+    //SetMouseCursor(GDK_WATCH);
 }
 
 extern void
