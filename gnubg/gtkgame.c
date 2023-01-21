@@ -607,7 +607,7 @@ static int disregardsm1=1; //available implemented hidden radio option called sm
 extern void
 GTKSuspendInput(void)
 {
-            g_message("GTKSuspendInput\n");
+            // g_message("GTKSuspendInput\n");
 
     if (!fX)
         return;

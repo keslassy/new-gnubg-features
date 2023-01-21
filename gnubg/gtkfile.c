@@ -865,7 +865,40 @@ void recentByModification(const char* path, char* recent){
     }
 }
 
+extern void
+GTKAnalyzeCurrent(void)
+{
+    /*analyze match*/
+    UserCommand("analyse match");
+    /*add match to db*/
+    CommandRelationalAddMatch(NULL);
+    /*show stats panel*/
+    UserCommand("show statistics match");
+    return;
+}
 
+extern void
+GTKAnalyzeFile(void)
+{
+    gchar *folder = NULL;
+    char recent[MAX_LEN];
+
+    folder = default_import_folder ? default_import_folder : ".";
+    g_message("folder=%s\n", folder);
+
+    /* find most recent file in the folder and write its name (in char recent[])*/
+    recentByModification(folder, recent);
+    g_message("recent=%s\n", recent);
+    /*open this file*/
+    CommandImportAuto(recent);
+    /*analyze match*/
+    UserCommand("analyse match");
+    /*add match to db*/
+    CommandRelationalAddMatch(NULL);
+    /*show stats panel*/
+    UserCommand("show statistics match");
+    return;
+}
 
 extern void
 GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
@@ -878,55 +911,35 @@ GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     fInterrupt = FALSE;
 
     folder = last_folder ? last_folder : default_import_folder;
-    // if(0){
-    if(backgroundAnalysis) {
-        // maybe rather use default_import_folder?
-        //folder = default_import_folder ? default_import_folder : last_folder;
-        g_message("folder=%s\n", folder);
 
-        /* find most recent file in the folder and write its name (in char recent[])*/
-        char recent[MAX_LEN];
-        recentByModification(folder, recent);
-        g_message("recent=%s\n", recent);
-        /*open this file*/
-        CommandImportAuto(recent);
-        /*analyze match*/
-        UserCommand("analyse match");
-        /*add match to db*/
-        CommandRelationalAddMatch(NULL);
-        /*show stats panel*/
-        UserCommand("show statistics match");
-        return;
-    } else {
-        fc = GnuBGFileDialog(_("Select files to analyse"), folder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
-        gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fc), TRUE);
-        add_import_filters(GTK_FILE_CHOOSER(fc));
+    fc = GnuBGFileDialog(_("Select files to analyse"), folder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
+    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fc), TRUE);
+    add_import_filters(GTK_FILE_CHOOSER(fc));
 
-        add_to_db = gtk_check_button_new_with_label(_("Add to database"));
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(add_to_db), TRUE);
+    add_to_db = gtk_check_button_new_with_label(_("Add to database"));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(add_to_db), TRUE);
 
-        gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER(fc), add_to_db);
+    gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER(fc), add_to_db);
 
-        if (gtk_dialog_run(GTK_DIALOG(fc)) == GTK_RESPONSE_ACCEPT) {
-            filenames = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(fc));
-        }
-        if (filenames) {
-            gboolean add_to_db_set;
-            int fConfirmNew_s;
-
-            g_free(last_folder);
-            last_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(fc));
-            add_to_db_set = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(add_to_db));
-            gtk_widget_destroy(fc);
-
-            if (!get_input_discard())
-                return;
-
-            fConfirmNew_s = fConfirmNew;
-            fConfirmNew = 0;
-            batch_create_dialog_and_run(filenames, add_to_db_set);
-            fConfirmNew = fConfirmNew_s;
-        } else
-            gtk_widget_destroy(fc);
+    if (gtk_dialog_run(GTK_DIALOG(fc)) == GTK_RESPONSE_ACCEPT) {
+        filenames = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(fc));
     }
+    if (filenames) {
+        gboolean add_to_db_set;
+        int fConfirmNew_s;
+
+        g_free(last_folder);
+        last_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(fc));
+        add_to_db_set = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(add_to_db));
+        gtk_widget_destroy(fc);
+
+        if (!get_input_discard())
+            return;
+
+        fConfirmNew_s = fConfirmNew;
+        fConfirmNew = 0;
+        batch_create_dialog_and_run(filenames, add_to_db_set);
+        fConfirmNew = fConfirmNew_s;
+    } else
+        gtk_widget_destroy(fc);
 }
