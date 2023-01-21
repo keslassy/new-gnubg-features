@@ -870,8 +870,10 @@ GTKAnalyzeCurrent(void)
 {
     /*analyze match*/
     UserCommand("analyse match");
-    /*add match to db*/
-    CommandRelationalAddMatch(NULL);
+    if(fAutoDB) {
+        /*add match to db*/
+        CommandRelationalAddMatch(NULL);
+    }
     /*show stats panel*/
     UserCommand("show statistics match");
     return;

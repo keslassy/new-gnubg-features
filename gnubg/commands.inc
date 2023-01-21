@@ -496,6 +496,8 @@ static command acSetAutomatic[] = {
       "chequers as possible"), szONOFF, &cOnOff },
     { "crawford", CommandSetAutoCrawford, N_("Enable the Crawford game "
       "based on match score"), szONOFF, &cOnOff },
+    { "db", CommandSetAutoDB, N_("Select whether to add to database after analysis"),
+      szONOFF, &cOnOff },      
     { "doubles", CommandSetAutoDoubles, N_("Control automatic doubles "
       "during (money) session play"), szLIMIT, NULL },
     { "game", CommandSetAutoGame, N_("Select whether to start new games "

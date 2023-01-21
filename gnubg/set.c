@@ -543,6 +543,14 @@ CommandSetAutoDoubles(char *sz)
 }
 
 extern void
+CommandSetAutoDB(char *sz)
+{
+
+    SetToggle("automatic db", &fAutoDB, sz,
+              _("Will automatically add analysis to database."), _("Will not automatically add analysis to database."));
+}
+
+extern void
 CommandSetAutoGame(char *sz)
 {
 

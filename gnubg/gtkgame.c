@@ -262,6 +262,10 @@ ExecActionCommand_internal(guint UNUSED(iWidgetType), guint iCommand, gchar * sz
 
     case CMD_ANALYSE_MATCH:
         UserCommand("analyse match");
+        if(fAutoDB) {
+            /*add match to db*/
+            CommandRelationalAddMatch(NULL);
+        }
         UserCommand("show statistics match");
         return;
 
@@ -509,6 +513,10 @@ Command(gpointer UNUSED(p), guint iCommand, GtkWidget * widget)
 
     case CMD_ANALYSE_MATCH:
         UserCommand(aszCommands[CMD_ANALYSE_MATCH]);
+        if(fAutoDB) {
+            /*add match to db*/
+            CommandRelationalAddMatch(NULL);
+        }
         UserCommand(aszCommands[CMD_SHOW_STATISTICS_MATCH]);
         return;
 
@@ -533,6 +541,7 @@ typedef struct {
     GtkAdjustment *apadjSkill[3], *apadjLuck[4];
     GtkWidget *pwMoves, *pwCube, *pwLuck, *pwHintSame, *pwCubeSummary;
     GtkWidget *apwAnalysePlayers[2];
+    GtkWidget *pwAutoDB;
     GtkWidget *pwScoreMap;
     GtkWidget* apwScoreMapPly[NUM_PLY];
     GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
@@ -2701,6 +2710,8 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
     CHECKUPDATE(paw->pwLuck, fAnalyseDice, "set analysis luck %s")
     CHECKUPDATE(paw->apwAnalysePlayers[0], afAnalysePlayers[0], "set analysis player 0 analyse %s")
     CHECKUPDATE(paw->apwAnalysePlayers[1], afAnalysePlayers[1], "set analysis player 1 analyse %s")
+    CHECKUPDATE(paw->pwAutoDB, fAutoDB, "set automatic db %s")
+
 
     ADJUSTSKILLUPDATE(0, SKILL_DOUBTFUL, "set analysis threshold doubtful %s")
     ADJUSTSKILLUPDATE(1, SKILL_BAD, "set analysis threshold bad %s")
@@ -2816,6 +2827,7 @@ AnalysisSet(analysiswidget * paw)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwMoves), fAnalyseMove);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwCube), fAnalyseCube);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwLuck), fAnalyseDice);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoDB), fAutoDB);
 
     for (i = 0; i < 2; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwAnalysePlayers[i]), afAnalysePlayers[i]);
@@ -2968,6 +2980,7 @@ BuildRadioButtons(GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* 
 
 
 
+
 static void
 append_scoremap_options(analysiswidget* paw) 
 {
@@ -3033,6 +3046,7 @@ append_scoremap_options(analysiswidget* paw)
 
 }
 
+
 static void
 append_analysis_options(analysiswidget * paw)
 {
@@ -3049,7 +3063,7 @@ append_analysis_options(analysiswidget * paw)
     GtkWidget *pwTable;
     GtkWidget* pwp;
 #endif
-    GtkWidget *hboxTop, *hboxBottom, *vbox1, *vbox2, *hbox, *pwvbox;
+    GtkWidget *hboxTop, *hboxMid, *hboxBottom, *vbox1, *vbox2, *hbox, *pwvbox;
 
     memcpy(&paw->esCube, &esAnalysisCube, sizeof(paw->esCube));
     memcpy(&paw->esChequer, &esAnalysisChequer, sizeof(paw->esChequer));
@@ -3105,6 +3119,12 @@ append_analysis_options(analysiswidget * paw)
 #endif
     gtk_box_pack_start(GTK_BOX(vbox1), hboxTop, TRUE, TRUE, 0);
 #if GTK_CHECK_VERSION(3,0,0)
+    hboxMid = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    hboxMid = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(vbox1), hboxMid, TRUE, TRUE, 0);
+#if GTK_CHECK_VERSION(3,0,0)
     hboxBottom = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
     hboxBottom = gtk_hbox_new(FALSE, 0);
@@ -3142,7 +3162,7 @@ append_analysis_options(analysiswidget * paw)
     }
 
     pwFrame = gtk_frame_new(_("Skill thresholds"));
-    gtk_box_pack_start(GTK_BOX(hboxBottom), pwFrame, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hboxMid), pwFrame, TRUE, TRUE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -3182,7 +3202,7 @@ append_analysis_options(analysiswidget * paw)
     }
 
     pwFrame = gtk_frame_new(_("Luck thresholds"));
-    gtk_box_pack_start(GTK_BOX(hboxBottom), pwFrame, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hboxMid), pwFrame, TRUE, TRUE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -3233,7 +3253,7 @@ append_analysis_options(analysiswidget * paw)
     gtk_box_pack_start(GTK_BOX(vbox1), pwFrame, FALSE, FALSE, 0);
 
     CreateEvalSettings(pwFrame, _("Analysis settings"),
-                                              &paw->esChequer.ec, (movefilter *) &paw->aamf, &paw->esCube.ec, NULL, FALSE);
+            &paw->esChequer.ec, (movefilter *) &paw->aamf, &paw->esCube.ec, NULL, FALSE);
 //    pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
 //                                              &aw.esChequer.ec, (movefilter *) & aw.aamf, &aw.esCube.ec, NULL, FALSE);
 
@@ -3282,6 +3302,15 @@ append_analysis_options(analysiswidget * paw)
     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwHintSame));
 
     HintSameToggled(NULL, paw);
+
+    paw->pwAutoDB= gtk_check_button_new_with_label(_("Automatically add analysis to database"));
+    gtk_box_pack_start(GTK_BOX(hboxBottom), paw->pwAutoDB, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(paw->pwAutoDB,
+                                _("Whenever the analysis of a game or match is complete, automatically "
+                                  "add it to the database. The database needs to have been defined in "
+                                  "Settings -> Options -> Database"));
+
+
 
     // g_free(pAnalDetailSettings2); //<- not sure where to put it
     // g_free(pAnalDetailSettings1);
