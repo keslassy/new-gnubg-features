@@ -746,8 +746,15 @@ batch_create_dialog_and_run(GSList * filenames, gboolean add_to_db)
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
     g_object_set_data(G_OBJECT(model), "cancelled", GINT_TO_POINTER(0));
 
-    dialog = GTKCreateDialog(_("Batch analyse files"), DT_INFO, NULL,
+    if(!backgroundAnalysis) {
+        dialog = GTKCreateDialog(_("Batch analyse files"), DT_INFO, NULL,
                              DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS | DIALOG_FLAG_NOTIDY, NULL, NULL);
+    } else {
+        // dialog = GTKCreateDialog(_("Batch analyse files"), 
+        //                      DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS | DIALOG_FLAG_NOTIDY, NULL, NULL);
+        dialog = GTKCreateDialog(_("Batch analyse files"), 
+                             DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
+    }
 
     gtk_window_set_default_size(GTK_WINDOW(dialog), -1, 400);
 
