@@ -853,6 +853,7 @@ void recentByModification(const char* path, char* recent){
                         strncpy(recent, buffer, MAX_LEN);
                         // strncpy(recent, entry->d_name, MAX_LEN);
                         recenttime = statbuf.st_mtime;
+                        // g_message("looking at file....: %s, time: %lld\n", recent, (long long) recenttime);
                         g_free(fdp);
                     }
                 }
@@ -876,17 +877,26 @@ GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     GtkWidget *add_to_db;
     fInterrupt = FALSE;
 
-    // maybe rather use default_import_folder?
     folder = last_folder ? last_folder : default_import_folder;
-
+    // if(0){
     if(backgroundAnalysis) {
+        // maybe rather use default_import_folder?
+        //folder = default_import_folder ? default_import_folder : last_folder;
         g_message("folder=%s\n", folder);
 
-        /* find most recent file in the folder and write it "recent"*/
+        /* find most recent file in the folder and write its name (in char recent[])*/
         char recent[MAX_LEN];
         recentByModification(folder, recent);
         g_message("recent=%s\n", recent);
+        /*open this file*/
         CommandImportAuto(recent);
+        /*analyze match*/
+        UserCommand("analyse match");
+        /*add match to db*/
+        CommandRelationalAddMatch(NULL);
+        /*show stats panel*/
+        UserCommand("show statistics match");
+        return;
     } else {
         fc = GnuBGFileDialog(_("Select files to analyse"), folder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
         gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fc), TRUE);
