@@ -195,6 +195,9 @@ typedef enum {
 /* TRUE if gnubg is automatically setting the state of a menu item. */
 static int fAutoCommand;
 
+/* TRUE if analyses should be in the background*/
+int backgroundAnalysis = TRUE; 
+
 #if defined(USE_GTKUIMANAGER)
 static void
 ExecToggleActionCommand_internal(guint UNUSED(iWidgetType), guint UNUSED(iCommand), gchar * szCommand,
@@ -609,21 +612,31 @@ GTKSuspendInput(void)
     if (!fX)
         return;
 
-    // if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
-    //     /* Grab events so that the board window knows this is a re-entrant */
-    //     /*  call, and won't allow commands like roll, move or double. */
-    //     grabbedWidget = pwGrab;
-    //     if (pwGrab == pwStop) {
-    //         gtk_widget_grab_focus(pwStop);
-             gtk_widget_set_sensitive(pwStop, TRUE);
-    //     }
-    //     gtk_grab_add(pwGrab);
-    //     grabIdSignal = g_signal_connect_after(G_OBJECT(pwGrab), "key-press-event", G_CALLBACK(gtk_true), NULL);
-    // }
+    /* when the backgroundAnalysis global variable is set, we allow the user to 
+    continue browsing as well as stop the computation
+    */
+    if (!backgroundAnalysis) {
+        if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
+            /* Grab events so that the board window knows this is a re-entrant */
+            /*  call, and won't allow commands like roll, move or double. */
+            grabbedWidget = pwGrab;
+            if (pwGrab == pwStop) {
+                gtk_widget_grab_focus(pwStop);
+                gtk_widget_set_sensitive(pwStop, TRUE);
+            }
+            gtk_grab_add(pwGrab);
+            grabIdSignal = g_signal_connect_after(G_OBJECT(pwGrab), "key-press-event", G_CALLBACK(gtk_true), NULL);
+        }
 
-    // /* Don't check stdin here; readline isn't ready yet. */
-    // GTKDisallowStdin();
-    // suspendCount++;
+        /* Don't check stdin here; readline isn't ready yet. */
+        GTKDisallowStdin();
+        suspendCount++;
+    } else {
+        if (pwGrab == pwStop) {
+            gtk_widget_grab_focus(pwStop);
+            gtk_widget_set_sensitive(pwStop, TRUE);
+        }
+    }
 }
 
 extern void
