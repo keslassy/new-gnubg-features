@@ -253,6 +253,8 @@ typedef struct {
     const evalcontext *pec;
 } scoreData;
 
+
+
 /* Defining structures for AnalyzeFileSetting.
 Other defined structures throughout the files: 
 - apwAnalyzeFileSetting (gtkgame.c); 
@@ -351,6 +353,7 @@ extern float rRatingOffset;
 extern int fAnalyseCube;
 extern int fAnalyseDice;
 extern int fAnalyseMove;
+extern int fAnalysisRunning; /* when analyzing a match in background */
 extern int fAutoBearoff;
 extern int fAutoCrawford;
 extern int fAutoDB;

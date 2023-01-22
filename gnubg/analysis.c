@@ -1161,11 +1161,15 @@ CommandAnalyseGame(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesGame(plGame);
 
+    fAnalysisRunning = TRUE;
+
     ProgressStartValue(_("Analysing game; move:"), nMoves);
 
     AnalyzeGame(plGame, TRUE);
 
     ProgressEnd();
+
+    fAnalysisRunning = FALSE;
 
 #if defined(USE_GTK)
     if (fX)
@@ -1195,6 +1199,8 @@ CommandAnalyseMatch(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesMatch(&lMatch);
 
+    fAnalysisRunning = TRUE;
+
     ProgressStartValue(_("Analysing match; move:"), nMoves);
 
     IniStatcontext(&scMatch);
@@ -1216,6 +1222,8 @@ CommandAnalyseMatch(char *UNUSED(sz))
     MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
 
     ProgressEnd();
+
+    fAnalysisRunning = FALSE;
 
 #if defined(USE_GTK)
     if (fX)

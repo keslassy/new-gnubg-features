@@ -3132,7 +3132,7 @@ append_analysis_options(analysiswidget * paw)
 #else
     hboxBottom = gtk_hbox_new(FALSE, 0);
 #endif
-    gtk_box_pack_start(GTK_BOX(vbox1), hboxBottom, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(pwvbox), hboxBottom, TRUE, TRUE, 0);
 
     pwFrame = gtk_frame_new(_("Analysis"));
     gtk_box_pack_start(GTK_BOX(hboxTop), pwFrame, TRUE, TRUE, 0);
