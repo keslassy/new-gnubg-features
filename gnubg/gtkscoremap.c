@@ -151,10 +151,6 @@ const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH]= {3,5,7,9,11,15,21,-1};   //lis
 const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH]            = { N_("3"), N_("5"), N_("7"), N_("9"), N_("11"), N_("15"), N_("21"), N_("Based on current match length") };
 const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH]    = { "3", "5", "7", "9", "11", "15", "21", "-1" };
 
-AnalyzeFileSettingtype AnalyzeFileSettingDef = AnalyzeFileBatch;
-const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("0"), N_("1"), N_("2")};
-const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "A", "B", "C"}; 
-
 scoreMapLabel scoreMapLabelDef = LABEL_AWAY;
 const char* aszScoreMapLabel[NUM_LABEL] = {N_("By away score"), N_("By true score")};
 const char* aszScoreMapLabelCommands[NUM_LABEL] = { "away", "score"}; 

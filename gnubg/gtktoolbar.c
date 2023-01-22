@@ -546,11 +546,15 @@ ToolbarNew(void)
 
     /* Analyze current match button */
     ptw->pwAnalyzeCurrent =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, NULL, _("Analyze current match (set default behavior in Settings -> Analysis -> Analysis Buttons)"), G_CALLBACK(GTKAnalyzeCurrent), NULL);
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, NULL, 
+        _("Analyze current match (set default behavior in Settings -> Analysis)"), 
+        G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
     /* Analyze file button */
     ptw->pwAnalyzeFile =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, NULL, _("Analyze match from file (set default behavior in Settings -> Analysis -> Analysis Buttons)"), G_CALLBACK(GTKAnalyzeFile), NULL);
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, NULL, 
+        _("Analyze match from file (set default behavior in Settings -> Analysis)"), 
+        G_CALLBACK(GTKAnalyzeFile), NULL);
 
     ti = gtk_separator_tool_item_new();
     gtk_tool_item_set_expand(GTK_TOOL_ITEM(ti), TRUE);

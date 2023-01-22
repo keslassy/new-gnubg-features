@@ -68,6 +68,7 @@
 #include "gtkchequer.h"
 #include "gtkwindows.h"
 #include "gtkscoremap.h"
+#include "gtkfile.h"
 #endif                          /* USE_GTK */
 
 #include "matchequity.h"
@@ -2923,7 +2924,7 @@ CommandSetAnalyzeFileSetting(char* sz)
         // g_print("\n test within loop: i: %d",i);
 
         if (strcmp(sz, aszAnalyzeFileSettingCommands[i]) == 0) {
-           AnalyzeFileSettingDef = (AnalyzeFileSettingtype) i;
+           AnalyzeFileSettingDef = (analyzeFileSetting) i;
             // g_print("\n selected option: i:%d",i);
            return; 
         }

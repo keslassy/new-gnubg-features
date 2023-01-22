@@ -44,10 +44,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <time.h>
-#include <string.h>
 #include <sys/types.h>
 
 #define MAX_LEN 1024
+
+analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
+const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch Analysis"), N_("Single-File Analysis"), N_("Smart Analysis")};
+const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
+
 
 static void
 FilterAdd(const char *fn, const char *pt, GtkFileChooser * fc)
@@ -880,7 +884,7 @@ GTKAnalyzeCurrent(void)
 }
 
 extern void
-GTKAnalyzeFile(void)
+SmartAnalyze(void)
 {
     gchar *folder = NULL;
     char recent[MAX_LEN];
@@ -901,6 +905,13 @@ GTKAnalyzeFile(void)
     }
     /*show stats panel*/
     UserCommand("show statistics match");
+    return;
+}
+
+extern void
+GTKAnalyzeFile(void)
+{
+    SmartAnalyze();
     return;
 }
 

@@ -43,17 +43,6 @@ extern const int MATCH_LENGTH_OPTIONS[NUM_MATCH_LENGTH];
 extern const char* aszScoreMapMatchLength[NUM_MATCH_LENGTH];
 extern const char* aszScoreMapMatchLengthCommands[NUM_MATCH_LENGTH];
 
-/* Defining structures for AnalyzeFileSetting, a placeholder option if we want to add one in the future to the scoremap
-Other defined structures throughout the files: 
-- apwAnalyzeFileSetting (gtkgame.c); 
-- "set AnalyzeFileSetting" (gtkgame.c); 
-- CommandSetAnalyzeFileSetting (backgammon.h)
-*/
-typedef enum {AnalyzeFileBatch, AnalyzeFileSettingB, AnalyzeFileSmart, NUM_AnalyzeFileSettings} AnalyzeFileSettingtype;
-extern AnalyzeFileSettingtype AnalyzeFileSettingDef;
-extern const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings];
-extern const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings]; 
-
 /* Used in the "Label by" radio buttons - we assume the same order as the labels */
 typedef enum { LABEL_AWAY, LABEL_SCORE, NUM_LABEL} scoreMapLabel;
 extern scoreMapLabel scoreMapLabelDef;

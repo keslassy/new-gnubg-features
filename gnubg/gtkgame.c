@@ -77,6 +77,7 @@
 #include "rollout.h"
 #include "util.h"
 #include "gtkscoremap.h"
+#include "gtkfile.h"
 #if defined(USE_BOARD3D)
 #include "inc3d.h"
 #endif
@@ -607,8 +608,6 @@ static GtkWidget *pwPanelGameBox;
 static GtkWidget *pwEventBox;
 static int panelSize = 325;
 static GtkWidget *pwStop;
-
-static int disregardAnalyzeFileSetting=1; //available implemented hidden radio option called AnalyzeFileSetting; if needed in the future, just activate
 
 
 extern void
@@ -2738,14 +2737,12 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
         } 
     }
 
-    if(!disregardAnalyzeFileSetting) {
-        for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
-            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i])) && AnalyzeFileSettingDef != (AnalyzeFileSettingtype) i) {
-                sprintf(sz, "set AnalyzeFileSetting %s", aszAnalyzeFileSettingCommands[i]);
-                UserCommand(sz);
-                break;
-            } 
-    }
+    for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i])) && AnalyzeFileSettingDef != (analyzeFileSetting) i) {
+            sprintf(sz, "set AnalyzeFileSetting %s", aszAnalyzeFileSettingCommands[i]);
+            UserCommand(sz);
+            break;
+        } 
 
     for (i = 0; i < NUM_LABEL; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
@@ -2850,10 +2847,8 @@ AnalysisSet(analysiswidget * paw)
     for (i = 0; i < NUM_MATCH_LENGTH; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); 
 
-    if(!disregardAnalyzeFileSetting) {
-        for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i]), AnalyzeFileSettingDef == (AnalyzeFileSettingtype) i); 
-    }
+    for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i]), AnalyzeFileSettingDef == (analyzeFileSetting) i); 
     
     for (i = 0; i < NUM_LABEL; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLabel[i]), scoreMapLabelDef == (scoreMapLabel) i); 
@@ -3035,8 +3030,6 @@ append_scoremap_options(analysiswidget* paw)
 
     BuildRadioButtons(pwv, paw->apwScoreMapPly,_("Evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault);
     BuildRadioButtons(pwv, paw->apwScoreMapMatchLength,_("Simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx);
-    if (!disregardAnalyzeFileSetting)
-        BuildRadioButtons(pwv, paw->apwAnalyzeFileSetting,_("AnalyzeFileSetting"), _("Select the default AnalyzeFileSetting for which to draw the ScoreMap:"), aszAnalyzeFileSetting, NUM_AnalyzeFileSettings, AnalyzeFileSettingDef);
     BuildRadioButtons(pwv, paw->apwScoreMapJacoby,_("Money-play analysis:"), _("Select the default Jacoby option in the money play analysis of the top-left ScoreMap square"), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef);
     BuildRadioButtons(pwv, paw->apwScoreMapCubeEquityDisplay,_("Cube equity display:"), _("Select the default equity text to display in the squares of the cube ScoreMap"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef);
     BuildRadioButtons(pwv, paw->apwScoreMapMoveEquityDisplay,_("Move equity display:"), _("Select the default equity text to display in the squares of the move ScoreMap"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef);
@@ -3327,6 +3320,15 @@ append_analysis_options(analysiswidget * paw)
                                 "analysis is still running in the background. Some features may be "
                                 "disabled until the nalysis is over."));
 
+    BuildRadioButtons(vbox3, paw->apwAnalyzeFileSetting,
+        _("Select the default file analysis settings (hover for details):"), 
+        _("- Batch analysis can analyze several files, but does not allow browsing the results at the same time\n "
+        "- Single-file analysis can only analyze one file, but can work in the background. \n"
+        "- Smart analysis will open the latest file in the most recently opened folder and/or the default import "
+        "folder, then run the single-file analysis."), 
+        aszAnalyzeFileSetting, NUM_AnalyzeFileSettings, AnalyzeFileSettingDef);
+
+
     g_free(pAnalDetailSettings1); 
     g_free(pAnalDetailSettings2); 
 
@@ -3358,7 +3360,7 @@ AnalysisPageChange(GtkNotebook * UNUSED(notebook), gpointer * UNUSED(page), gint
 // extern void
 // DestroySetAnalysis(GObject * po, GtkWidget * pw)
 // {
-//     g_free(pAnalDetailSettings2); //<- not sure where to put it
+//     g_free(pAnalDetailSettings2); 
 //     // g_free(pAnalDetailSettings1);
 //     gtk_widget_destroy(pw);
 // }
