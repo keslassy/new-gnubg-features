@@ -463,8 +463,11 @@ command acSetEvaluation[] = {
 };
 
 static command acSetAnalysis[] = {
+    { "background", CommandSetAnalysisBackground, 
+      N_("Select whether to run analysis in the background"), 
+      szONOFF, &cOnOff },
     { "chequerplay", CommandSetAnalysisChequerplay, N_("Specify parameters "
-      "for the analysis of chequerplay"), NULL, acSetEvalParam },
+      "for the analysis of chequerplay"), NULL, acSetEvalParam },      
     { "cube", CommandSetAnalysisCube, N_("Select whether cube action will be "
       "analysed"), szONOFF, &cOnOff },
     { "cubedecision", CommandSetAnalysisCubedecision, N_("Specify parameters "

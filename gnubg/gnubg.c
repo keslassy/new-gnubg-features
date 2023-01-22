@@ -164,6 +164,8 @@ msBoard(void)
 matchinfo mi;
 
 float rRatingOffset = 2050;
+/* TRUE if analyses should run in the background; false by default, can be changed in menu*/
+int fBackgroundAnalysis = FALSE; 
 int fAnalyseCube = TRUE;
 int fAnalyseDice = TRUE;
 int fAnalyseMove = TRUE;
@@ -3037,6 +3039,7 @@ SaveAnalysisSettings(FILE * pf)
     fprintf(pf, "set analysis player 0 analyse %s\n", afAnalysePlayers[0] ? "yes" : "no");
     fprintf(pf, "set analysis player 1 analyse %s\n", afAnalysePlayers[1] ? "yes" : "no");
     fprintf(pf, "set automatic db %s\n", fAutoDB ? "on" : "off");
+    fprintf(pf, "set analysis background %s\n", fBackgroundAnalysis ? "on" : "off");
 }
 
 static void

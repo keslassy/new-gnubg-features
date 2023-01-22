@@ -195,9 +195,6 @@ typedef enum {
 /* TRUE if gnubg is automatically setting the state of a menu item. */
 static int fAutoCommand;
 
-/* TRUE if analyses should be in the background*/
-int backgroundAnalysis = TRUE; 
-
 #if defined(USE_GTKUIMANAGER)
 static void
 ExecToggleActionCommand_internal(guint UNUSED(iWidgetType), guint UNUSED(iCommand), gchar * szCommand,
@@ -542,6 +539,7 @@ typedef struct {
     GtkWidget *pwMoves, *pwCube, *pwLuck, *pwHintSame, *pwCubeSummary;
     GtkWidget *apwAnalysePlayers[2];
     GtkWidget *pwAutoDB;
+    GtkWidget *pwBackgroundAnalysis;
     GtkWidget *pwScoreMap;
     GtkWidget* apwScoreMapPly[NUM_PLY];
     GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
@@ -621,10 +619,10 @@ GTKSuspendInput(void)
     if (!fX)
         return;
 
-    /* when the backgroundAnalysis global variable is set, we allow the user to 
+    /* when the fBackgroundAnalysis global variable is set, we allow the user to 
     continue browsing as well as stop the computation
     */
-    if (!backgroundAnalysis) {
+    if (!fBackgroundAnalysis) {
         if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
             /* Grab events so that the board window knows this is a re-entrant */
             /*  call, and won't allow commands like roll, move or double. */
@@ -2711,7 +2709,7 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
     CHECKUPDATE(paw->apwAnalysePlayers[0], afAnalysePlayers[0], "set analysis player 0 analyse %s")
     CHECKUPDATE(paw->apwAnalysePlayers[1], afAnalysePlayers[1], "set analysis player 1 analyse %s")
     CHECKUPDATE(paw->pwAutoDB, fAutoDB, "set automatic db %s")
-
+    CHECKUPDATE(paw->pwBackgroundAnalysis, fBackgroundAnalysis, "set analysis background %s")
 
     ADJUSTSKILLUPDATE(0, SKILL_DOUBTFUL, "set analysis threshold doubtful %s")
     ADJUSTSKILLUPDATE(1, SKILL_BAD, "set analysis threshold bad %s")
@@ -2828,6 +2826,8 @@ AnalysisSet(analysiswidget * paw)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwCube), fAnalyseCube);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwLuck), fAnalyseDice);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoDB), fAutoDB);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwBackgroundAnalysis), fBackgroundAnalysis);
+
 
     for (i = 0; i < 2; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwAnalysePlayers[i]), afAnalysePlayers[i]);
@@ -3063,7 +3063,7 @@ append_analysis_options(analysiswidget * paw)
     GtkWidget *pwTable;
     GtkWidget* pwp;
 #endif
-    GtkWidget *hboxTop, *hboxMid, *hboxBottom, *vbox1, *vbox2, *hbox, *pwvbox;
+    GtkWidget *hboxTop, *hboxMid, *hboxBottom, *vbox1, *vbox2, *vbox3, *hbox, *pwvbox;
 
     memcpy(&paw->esCube, &esAnalysisCube, sizeof(paw->esCube));
     memcpy(&paw->esChequer, &esAnalysisChequer, sizeof(paw->esChequer));
@@ -3303,14 +3303,28 @@ append_analysis_options(analysiswidget * paw)
 
     HintSameToggled(NULL, paw);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    vbox3 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+#else
+    vbox3 = gtk_vbox_new(FALSE, 0); //gtk_vbox_new (gboolean homogeneous, gint spacing);
+#endif
+
+    gtk_box_pack_start(GTK_BOX(hboxBottom), vbox3, TRUE, TRUE, 0);
+
     paw->pwAutoDB= gtk_check_button_new_with_label(_("Automatically add analysis to database"));
-    gtk_box_pack_start(GTK_BOX(hboxBottom), paw->pwAutoDB, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox3), paw->pwAutoDB, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(paw->pwAutoDB,
                                 _("Whenever the analysis of a game or match is complete, automatically "
                                   "add it to the database. The database needs to have been defined in "
                                   "Settings -> Options -> Database"));
 
 
+    paw->pwBackgroundAnalysis= gtk_check_button_new_with_label(_("Allow background analysis (NEW! Careful, experimental!) "));
+    gtk_box_pack_start(GTK_BOX(vbox3), paw->pwBackgroundAnalysis, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(paw->pwBackgroundAnalysis,
+                                _("Allow browsing a match and its early analysis results while "
+                                "analysis is still running in the background. Some features may be "
+                                "disabled until the nalysis is over."));
 
     // g_free(pAnalDetailSettings2); //<- not sure where to put it
     // g_free(pAnalDetailSettings1);

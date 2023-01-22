@@ -638,6 +638,7 @@ extern void CommandSaveGame(char *);
 extern void CommandSaveMatch(char *);
 extern void CommandSavePosition(char *);
 extern void CommandSaveSettings(char *);
+extern void CommandSetAnalysisBackground(char *);
 extern void CommandSetAnalysisChequerplay(char *);
 extern void CommandSetAnalysisCube(char *);
 extern void CommandSetAnalysisCubedecision(char *);

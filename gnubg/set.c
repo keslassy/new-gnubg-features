@@ -326,6 +326,13 @@ SetMoveFilter(char *sz, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 }
 
 
+extern void
+CommandSetAnalysisBackground(char *sz)
+{
+
+    SetToggle("analysis background", &fBackgroundAnalysis, sz,
+              _("Will run analysis in the background."), _("Will not run analysis in the background."));
+}
 
 
 extern void
