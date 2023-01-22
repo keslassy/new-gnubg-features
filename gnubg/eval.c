@@ -5848,14 +5848,15 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
 
                     qsort(pml->amMoves, cOldMoves + 1, sizeof(move), (cfunc) CompareMoves);
 
-                    /* added due to memory leaks, check if it doesn't break sth...*/
-                    g_free(&m);
+                    // /* added due to memory leaks in ScoreMap, check if it doesn't break sth...*/
+                    // g_free(&m);
 
                 }
                 break;
             }
     }
-
+    // /* added due to memory leaks in ScoreMap, check if it doesn't break sth...*/
+    // g_free(pm);
     return 0;
 
 }

@@ -517,6 +517,7 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
                                         arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
             strcpy(pq->decisionString,"");
             pq->ml.cMoves=0; //also used for DestroyDialog
+            pq->ml.amMoves = NULL;
             //g_free(pq->ml.amMoves);
             return -1;
         }
@@ -1603,9 +1604,16 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
     When calcOnly is set: only do the 2nd step (e.g. if we only changed the ply, no need to recompute the cubeinfo array)
 */
 {
-    // int i,j,
-    // int aux,aux2;
-    //matchstate * pams;
+    /* first free the allocation in money quadrant if it's recomputed (in move scoremap, because 
+    findnSaveBestMoves does a malloc) 
+    */    
+        
+    if (!psm->cubeScoreMap && (oldSize==0 || updateMoneyOnly) && psm->moneyQuadrantData.ml.cMoves < IMPOSSIBLE_CMOVES) {
+        //g_message("money freed: cMoves=%d",psm->moneyQuadrantData.ml.cMoves);
+        g_free(psm->moneyQuadrantData.ml.amMoves);
+        psm->moneyQuadrantData.ml.cMoves = IMPOSSIBLE_CMOVES;
+    }
+
     if(!calcOnly) {
         // matchstate ams = (*psm->pms); // Make a copy of the "master" matchstate  
         //         //[note: backgammon.h defines an extern ms => using a different name]
@@ -1638,6 +1646,7 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
     if (updateMoneyOnly) {
         //we only recompute the top-left money square, and don't bother with the progress bar
         CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE); // Recalculate money equity.
+        // g_message("new money cMoves=%d",psm->moneyQuadrantData.ml.cMoves);
     } else {
         //recompute fully (beyond oldSize); we only recompute the money equity when oldSize==0
         ProgressStartValue(_("Finding correct decisions"), (oldSize==0)? psm->tableSize*psm->tableSize + 1 : MAX(psm->tableSize*psm->tableSize-oldSize*oldSize, 1) );
@@ -1649,6 +1658,7 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                             //maybe the moneyQuadrantData becomes empty?
         if (oldSize==0) {  //if the money square equity wasn't already computed [we are in the !updateMoneyOnly case]
             CalcQuadrantEquities(&(psm->moneyQuadrantData), psm, TRUE);
+                    // g_message("new money cMoves=%d",psm->moneyQuadrantData.ml.cMoves);
             /*careful: upon table scaling, ProgressValueAdd causes a redraw => a potential problem  in the pango markup text because it may not be ready yet!*/
             ProgressValueAdd(1);//not sure if it should be included above, but probably minor
         }
@@ -1684,13 +1694,18 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
         }
         for (int aux=oldSize; aux<psm->tableSize; aux++) {
             for (int aux2=aux; aux2>=0; aux2--) {
-                // i=aux2;
-                // j=aux;
+                /* first we free the malloc with the equity that may have been provided previously
+                */
+                if(!psm->cubeScoreMap && psm->aaQuadrantData[aux2][aux].ml.cMoves < IMPOSSIBLE_CMOVES) {
+                    // g_message("DELETED+FREED: aux2=%d, aux=%d, tableSize=%d, moves=%d......",aux2,aux,psm->tableSize,psm->aaQuadrantData[aux2][aux].ml.cMoves);
+                    g_free(psm->aaQuadrantData[aux2][aux].ml.amMoves);
+                    psm->aaQuadrantData[aux2][aux].ml.cMoves = IMPOSSIBLE_CMOVES;
+                }
                 /*Note: in move scoremaps, we check a square validity in InitQuadrantCubeInfo() -> isAllowed();
                     [and maybe do so again implicitly in  CalcQuadrantEquities()->FindnSaveBestMoves()]
                 However in cube scoremaps, we only do it later in CalcQuadrantEquities()->GetDPEq()
-                */
-                if(!calcOnly) 
+                */               
+                if(!calcOnly) // skip with ScoreMapPlyToggled
                     InitQuadrantCubeInfo(psm, aux2, aux);
                 if (psm->aaQuadrantData[aux2][aux].isAllowedScore == ALLOWED || psm->cubeScoreMap) {
                     //Only running the line below when (i >= oldSize || j >= oldSize) 
@@ -1709,6 +1724,11 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                 }
                 if (aux2<aux) {     //same as above but now doing the other side of the square, without the 
                                     //(aux,aux) vertex on the diagonal
+                    if(!psm->cubeScoreMap && psm->aaQuadrantData[aux][aux2].ml.cMoves < IMPOSSIBLE_CMOVES) {
+                        // g_message("DELETED+FREED: aux=%d, aux2=%d, tableSize=%d, moves=%d......",aux,aux2,psm->tableSize,psm->aaQuadrantData[aux][aux2].ml.cMoves);
+                        g_free(psm->aaQuadrantData[aux][aux2].ml.amMoves);
+                        psm->aaQuadrantData[aux][aux2].ml.cMoves = IMPOSSIBLE_CMOVES;
+                    }
                     if(!calcOnly) 
                         InitQuadrantCubeInfo(psm, aux, aux2);
                     if (psm->aaQuadrantData[aux][aux2].isAllowedScore == ALLOWED || psm->cubeScoreMap) {
@@ -2588,13 +2608,14 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
                         psm->aaQuadrantData[i][j].isAllowedScore=YET_UNDEFINED; 
                         psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
                         psm->aaQuadrantData[i][j].isSpecialScore = REGULAR; 
-                        psm->aaQuadrantData[i][j].ml.cMoves = IMPOSSIBLE_CMOVES;
+                        // psm->aaQuadrantData[i][j].ml.cMoves = IMPOSSIBLE_CMOVES; // what if they were previously allocated!?!? => free now in CalcEquities
+                        // psm->aaQuadrantData[i][j].ml.amMoves = NULL;
                     }
                 }
             }
             /* next compute their equities */
             CalcEquities(psm,oldTableSize,FALSE,FALSE);
-        }
+        } 
         //     psm->tempScaleUp=0;
         //     psm->oldTableSize=0;
         // }
@@ -2680,23 +2701,30 @@ Allows garbage collection.
     // }
 
     if(!psm->cubeScoreMap){
-        for (int i=0;i<psm->tableSize; i++) {
-            for (int j=0;j<psm->tableSize; j++) {
+        // for (int i=0;i<psm->tableSize; i++) {
+        //     for (int j=0;j<psm->tableSize; j++) {    
+        for (int i=0;i<MAX_TABLE_SIZE; i++) {
+            for (int j=0;j<MAX_TABLE_SIZE; j++) {
+
                 /* g_free for quadrant data:
-                - if cMoves is IMPOSSIBLE_CMOVES, it means we haven't touched it since initialization
-                - (if it's 0, it means there was an issue in the computation; previously we already g_free'd it, now we do it here)
+                - if cMoves is ==IMPOSSIBLE_CMOVES, it means we haven't touched it since initialization
+                - (if it's ==0, it means there was an issue in the computation; previously we already g_free'd it, now we do it here)
                 We now g_free everything in between
                 */
 
                 if(psm->aaQuadrantData[i][j].ml.cMoves < IMPOSSIBLE_CMOVES){ //} && psm->aaQuadrantData[i][j].ml.cMoves > 0){
-                    g_message("FREED: i=%d, j=%d, tableSize=%d, moves=%d......",i,j,psm->tableSize,psm->aaQuadrantData[i][j].ml.cMoves);
+                    // g_message("FREED: i=%d, j=%d, tableSize=%d, moves=%d......",i,j,psm->tableSize,psm->aaQuadrantData[i][j].ml.cMoves);
                     g_free(psm->aaQuadrantData[i][j].ml.amMoves);
-                } else {
-                    g_message("NOT FREED: i=%d, j=%d, tableSize=%d, moves=%d......",i,j,psm->tableSize,psm->aaQuadrantData[i][j].ml.cMoves);                    
-                }
+                } 
+                // else {
+                //     g_message("NOT FREED: i=%d, j=%d, tableSize=%d, moves=%d......",i,j,psm->tableSize,psm->aaQuadrantData[i][j].ml.cMoves);                    
+                // }
             }
         }
-        g_free(psm->moneyQuadrantData.ml.amMoves); 
+        if(psm->moneyQuadrantData.ml.cMoves < IMPOSSIBLE_CMOVES) {
+                    // g_message("FINAL FREED money cMoves=%d",psm->moneyQuadrantData.ml.cMoves);
+            g_free(psm->moneyQuadrantData.ml.amMoves); 
+        }
     } 
     g_free(psm);
 }
@@ -3140,12 +3168,20 @@ if needed (this was initially planned for some explanation text, which was then 
             psm->aaQuadrantData[i][j].isAllowedScore=YET_UNDEFINED; 
             psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
             psm->aaQuadrantData[i][j].isSpecialScore = REGULAR; 
+            // psm->aaQuadrantData[i][j].ml.cMoves = IMPOSSIBLE_CMOVES;
+        }
+    }
+    for (int i=0;i<MAX_TABLE_SIZE; i++) {
+        for (int j=0;j<MAX_TABLE_SIZE; j++) {
             psm->aaQuadrantData[i][j].ml.cMoves = IMPOSSIBLE_CMOVES;
         }
     }
     psm->moneyQuadrantData.isAllowedScore=YET_UNDEFINED; 
     psm->moneyQuadrantData.isTrueScore = NOT_TRUE_SCORE;
     psm->moneyQuadrantData.isSpecialScore = REGULAR; 
+    psm->moneyQuadrantData.ml.cMoves = IMPOSSIBLE_CMOVES;
+
+
 
 #if GTK_CHECK_VERSION(3,0,0)
     psm->pwTableContainer = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
