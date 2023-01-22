@@ -1161,7 +1161,8 @@ CommandAnalyseGame(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesGame(plGame);
 
-    fAnalysisRunning = TRUE;
+    if(fBackgroundAnalysis)
+        fAnalysisRunning = TRUE;
 
     ProgressStartValue(_("Analysing game; move:"), nMoves);
 
@@ -1169,7 +1170,8 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     ProgressEnd();
 
-    fAnalysisRunning = FALSE;
+    if(fBackgroundAnalysis)
+        fAnalysisRunning = FALSE;
 
 #if defined(USE_GTK)
     if (fX)
@@ -1199,7 +1201,8 @@ CommandAnalyseMatch(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesMatch(&lMatch);
 
-    fAnalysisRunning = TRUE;
+    if(fBackgroundAnalysis)
+        fAnalysisRunning = TRUE;
 
     ProgressStartValue(_("Analysing match; move:"), nMoves);
 
@@ -1223,7 +1226,8 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     ProgressEnd();
 
-    fAnalysisRunning = FALSE;
+    if(fBackgroundAnalysis)
+        fAnalysisRunning = FALSE;
 
 #if defined(USE_GTK)
     if (fX)
@@ -1589,7 +1593,14 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.pesChequer = &esAnalysisChequer;
         md.pesCube = &esAnalysisCube;
         md.aamf = aamfAnalysis;
+
+        if(fBackgroundAnalysis)
+            fAnalysisRunning = TRUE;
+
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
+
+        if(fBackgroundAnalysis)
+            fAnalysisRunning = FALSE;
 
 #if defined(USE_GTK)
         if (fX)
