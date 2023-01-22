@@ -253,6 +253,22 @@ typedef struct {
     const evalcontext *pec;
 } scoreData;
 
+/* Defining structures for AnalyzeFileSetting.
+Other defined structures throughout the files: 
+- apwAnalyzeFileSetting (gtkgame.c); 
+- "set analysis filesetting" (gtkgame.c); 
+- CommandSetAnalysisFileSetting (backgammon.h)
+*/
+typedef enum {
+    AnalyzeFileBatch, 
+    AnalyzeFileRegular, 
+    AnalyzeFileSmart, 
+    NUM_AnalyzeFileSettings
+    } analyzeFileSetting;
+extern analyzeFileSetting AnalyzeFileSettingDef;
+extern const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings];
+extern const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings]; 
+
 typedef void (*AsyncFun) (void *);
 
 void asyncDumpDecision(decisionData * pdd);
@@ -642,6 +658,7 @@ extern void CommandSetAnalysisBackground(char *);
 extern void CommandSetAnalysisChequerplay(char *);
 extern void CommandSetAnalysisCube(char *);
 extern void CommandSetAnalysisCubedecision(char *);
+extern void CommandSetAnalysisFileSetting(char*);
 extern void CommandSetAnalysisLimit(char *);
 extern void CommandSetAnalysisLuckAnalysis(char *);
 extern void CommandSetAnalysisLuck(char *);
@@ -879,7 +896,6 @@ extern void CommandSetRolloutVarRedn(char *);
 extern void CommandSetScore(char *);
 extern void CommandSetScoreMapPly(char*);
 extern void CommandSetScoreMapMatchLength(char*);
-extern void CommandSetAnalyzeFileSetting(char*);
 extern void CommandSetScoreMapLabel(char*);
 extern void CommandSetScoreMapJacoby(char*);
 extern void CommandSetScoreMapCubeEquityDisplay(char*);

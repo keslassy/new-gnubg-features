@@ -48,11 +48,6 @@
 
 #define MAX_LEN 1024
 
-analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
-const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
-const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
-
-
 static void
 FilterAdd(const char *fn, const char *pt, GtkFileChooser * fc)
 {
@@ -887,7 +882,7 @@ extern void
 AnalyseSingleFile(void)
 {
     gchar *folder = NULL;
-    GSList *filename = NULL;
+    gchar *filename = NULL;
     GtkWidget *fc;
     static gchar *last_folder = NULL;
 
@@ -911,6 +906,7 @@ AnalyseSingleFile(void)
 
         /*open this file*/
         CommandImportAuto(filename);
+        g_free(filename);
         /*analyze match*/
         UserCommand("analyse match");
         if(fAutoDB) {
@@ -954,9 +950,10 @@ SmartAnalyze(void)
 extern void
 GTKAnalyzeFile(void)
 {
+    g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
     if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
         GTKBatchAnalyse(NULL, 0, NULL);
-    } else if (AnalyzeFileSettingDef ==  AnalyzeFileRegular) {
+    } else if (AnalyzeFileSettingDef == AnalyzeFileRegular) {
         AnalyseSingleFile();
     } else { //   AnalyzeFileSmart, 
         SmartAnalyze();

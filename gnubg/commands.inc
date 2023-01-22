@@ -473,6 +473,9 @@ static command acSetAnalysis[] = {
     { "cubedecision", CommandSetAnalysisCubedecision, N_("Specify parameters "
       "for the analysis of cube decisions"), NULL,
       acSetEvalParam },
+    { "filesetting", CommandSetAnalysisFileSetting, 
+      N_("Set the default analyze-file setting"), 
+      szVALUE, NULL },      
     { "luck", CommandSetAnalysisLuck, N_("Select whether dice rolls will be "
       "analysed"), szONOFF, &cOnOff },
     { "luckanalysis", CommandSetAnalysisLuckAnalysis,
@@ -1240,9 +1243,6 @@ static command acSetVariation[] = {
       szVALUE, NULL },
     { "scoremapmatchlength", CommandSetScoreMapMatchLength, 
       N_("Set the default match length in the ScoreMap window"), 
-      szVALUE, NULL },
-    { "AnalyzeFileSetting", CommandSetAnalyzeFileSetting, 
-      N_("Set the default analyze-file setting in the scoremap window"), 
       szVALUE, NULL },
     { "scoremaplabel", CommandSetScoreMapLabel, 
       N_("Set the default axis label option in the ScoreMap window"), 

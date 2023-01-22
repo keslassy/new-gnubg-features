@@ -541,10 +541,11 @@ typedef struct {
     GtkWidget *apwAnalysePlayers[2];
     GtkWidget *pwAutoDB;
     GtkWidget *pwBackgroundAnalysis;
+    GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
+
     GtkWidget *pwScoreMap;
     GtkWidget* apwScoreMapPly[NUM_PLY];
     GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
-    GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
     GtkWidget* apwScoreMapLabel[NUM_LABEL];
     GtkWidget* apwScoreMapJacoby[NUM_JACOBY];
     GtkWidget* apwScoreMapCubeEquityDisplay[NUM_CUBEDISP];
@@ -2719,6 +2720,14 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
     ADJUSTLUCKUPDATE(2, LUCK_BAD, "set analysis threshold unlucky %s")
     ADJUSTLUCKUPDATE(3, LUCK_VERYBAD, "set analysis threshold veryunlucky %s")
 
+    for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i])) && AnalyzeFileSettingDef != (analyzeFileSetting) i) {
+                // g_message("new def: %d->%d\n", AnalyzeFileSettingDef,i);
+            sprintf(sz, "set analysis filesetting %s", aszAnalyzeFileSettingCommands[i]);
+            UserCommand(sz);
+            break;
+        } 
+
     /* Score Map */
 
     for (i = 0; i < NUM_PLY; ++i)
@@ -2737,12 +2746,6 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
         } 
     }
 
-    for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
-        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i])) && AnalyzeFileSettingDef != (analyzeFileSetting) i) {
-            sprintf(sz, "set AnalyzeFileSetting %s", aszAnalyzeFileSettingCommands[i]);
-            UserCommand(sz);
-            break;
-        } 
 
     for (i = 0; i < NUM_LABEL; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
@@ -2837,6 +2840,9 @@ AnalysisSet(analysiswidget * paw)
     gtk_adjustment_set_value(GTK_ADJUSTMENT(paw->apadjLuck[2]), arLuckLevel[LUCK_BAD]);
     gtk_adjustment_set_value(GTK_ADJUSTMENT(paw->apadjLuck[3]), arLuckLevel[LUCK_VERYBAD]);
 
+    // g_message("initial def: %d\n", AnalyzeFileSettingDef);
+    for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i]), AnalyzeFileSettingDef == (analyzeFileSetting) i); 
 
     /*Score Map*/ 
 
@@ -2846,9 +2852,6 @@ AnalysisSet(analysiswidget * paw)
 
     for (i = 0; i < NUM_MATCH_LENGTH; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapMatchLength[i]), scoreMapMatchLengthDefIdx == (scoreMapMatchLength)i); 
-
-    for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i]), AnalyzeFileSettingDef == (analyzeFileSetting) i); 
     
     for (i = 0; i < NUM_LABEL; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLabel[i]), scoreMapLabelDef == (scoreMapLabel) i); 
@@ -3327,7 +3330,7 @@ append_analysis_options(analysiswidget * paw)
         "- Smart analysis will open the latest file in the most recently opened folder and/or the default import "
         "folder, then run the single-file analysis."), 
         aszAnalyzeFileSetting, NUM_AnalyzeFileSettings, AnalyzeFileSettingDef);
-
+    // BuildRadioButtons(vbox3, paw->apwAnalyzeFileSetting,  _("Select:"),   _("- Baanalysis."), aszAnalyzeFileSetting, NUM_AnalyzeFileSettings, AnalyzeFileSettingDef);
 
     g_free(pAnalDetailSettings1); 
     g_free(pAnalDetailSettings2); 

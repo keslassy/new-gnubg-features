@@ -30,19 +30,5 @@ extern void GTKAnalyzeCurrent(void);
 extern void GTKAnalyzeFile(void);
 extern void GTKBatchAnalyse(gpointer p, guint n, GtkWidget * pw);
 
-/* Defining structures for AnalyzeFileSetting.
-Other defined structures throughout the files: 
-- apwAnalyzeFileSetting (gtkgame.c); 
-- "set AnalyzeFileSetting" (gtkgame.c); 
-- CommandSetAnalyzeFileSetting (backgammon.h)
-*/
-typedef enum {
-    AnalyzeFileBatch, 
-    AnalyzeFileRegular, 
-    AnalyzeFileSmart, 
-    NUM_AnalyzeFileSettings
-    } analyzeFileSetting;
-extern analyzeFileSetting AnalyzeFileSettingDef;
-extern const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings];
-extern const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings]; 
+
 #endif

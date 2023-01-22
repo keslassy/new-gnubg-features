@@ -215,6 +215,11 @@ unsigned int cAutoDoubles = 0;
 unsigned int nBeavers = 3;
 unsigned int nDefaultLength = 7;
 
+analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
+const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
+const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
+
+
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
 int fResetSync = FALSE;         /* May need to wait for main window */
@@ -3040,6 +3045,7 @@ SaveAnalysisSettings(FILE * pf)
     fprintf(pf, "set analysis player 1 analyse %s\n", afAnalysePlayers[1] ? "yes" : "no");
     fprintf(pf, "set automatic db %s\n", fAutoDB ? "on" : "off");
     fprintf(pf, "set analysis background %s\n", fBackgroundAnalysis ? "on" : "off");
+    fprintf(pf, "set analysis filesetting %s\n", aszAnalyzeFileSettingCommands[AnalyzeFileSettingDef]);
 }
 
 static void
