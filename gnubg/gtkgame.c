@@ -526,6 +526,18 @@ Command(gpointer UNUSED(p), guint iCommand, GtkWidget * widget)
 #endif
 
 typedef struct {
+    const char *title;
+    evalcontext *esChequer;
+    movefilter *mfChequer;
+    evalcontext *esCube;
+    movefilter *mfCube;
+    GtkWidget *pwCube, *pwChequer, *pwOptionMenu, *pwSettingWidgets;
+    int cubeDisabled;
+    int fWeakLevels;
+} AnalysisDetails;
+
+
+typedef struct {
 
     evalsetup esChequer;
     evalsetup esCube;
@@ -552,6 +564,10 @@ typedef struct {
     GtkWidget* apwScoreMapMoveEquityDisplay[NUM_MOVEDISP];
     GtkWidget* apwScoreMapColour[NUM_COLOUR];
     GtkWidget* apwScoreMapLayout[NUM_LAYOUT];
+
+    /* defining these just to be able to g_free them */
+    AnalysisDetails *pAnalDetailSettings1;
+    AnalysisDetails *pAnalDetailSettings2;
 
 } analysiswidget;
 
@@ -620,7 +636,8 @@ GTKSuspendInput(void)
         return;
 
     /* when the fBackgroundAnalysis global variable is set, we allow the user to 
-    continue browsing as well as stop the computation
+    (1) continue browsing and (2) stop the computation; else we grab the focus and 
+    kill any user input
     */
     if (!fBackgroundAnalysis) {
         if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
@@ -2491,16 +2508,6 @@ SetEvalCommands(const char *szPrefix, evalcontext * pec, evalcontext * pecOrig)
     outputresume();
 }
 
-typedef struct {
-    const char *title;
-    evalcontext *esChequer;
-    movefilter *mfChequer;
-    evalcontext *esCube;
-    movefilter *mfCube;
-    GtkWidget *pwCube, *pwChequer, *pwOptionMenu, *pwSettingWidgets;
-    int cubeDisabled;
-    int fWeakLevels;
-} AnalysisDetails;
 
 static void
 DetailedAnalysisOK(GtkWidget * pw, AnalysisDetails * pDetails)
@@ -3051,7 +3058,7 @@ append_analysis_options(analysiswidget * paw)
         N_("Unlucky:"), N_("Very unlucky:")
     };
     int i;
-    AnalysisDetails *pAnalDetailSettings1,*pAnalDetailSettings2;
+    // AnalysisDetails *pAnalDetailSettings1,*pAnalDetailSettings2;
     GtkWidget *pwPage, *pwFrame, *pwLabel, *pwSpin;
 #if GTK_CHECK_VERSION(3,0,0)
     GtkWidget *pwGrid;
@@ -3249,7 +3256,7 @@ append_analysis_options(analysiswidget * paw)
     gtk_box_pack_start(GTK_BOX(vbox1), pwFrame, FALSE, FALSE, 0);
 
     /*giving a name to be able to g_free it later*/
-    pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
+    paw->pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
             &paw->esChequer.ec, (movefilter *) &paw->aamf, &paw->esCube.ec, NULL, FALSE);
 //    pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
 //                                              &aw.esChequer.ec, (movefilter *) & aw.aamf, &aw.esCube.ec, NULL, FALSE);
@@ -3288,10 +3295,10 @@ append_analysis_options(analysiswidget * paw)
     gtk_box_pack_start(GTK_BOX(hbox), paw->pwHintSame, FALSE, FALSE, 8);
     gtk_box_pack_start(GTK_BOX(vbox1), hbox, FALSE, FALSE, 0);
 
-    pAnalDetailSettings2 = CreateEvalSettings(vbox1, _("Hint/Tutor settings"),
+    paw->pAnalDetailSettings2 = CreateEvalSettings(vbox1, _("Hint/Tutor settings"),
                                               &paw->esEvalChequer.ec, (movefilter *) &paw->aaEvalmf, &paw->esEvalCube.ec,
                                               NULL, FALSE);
-    paw->pwCubeSummary = pAnalDetailSettings2->pwSettingWidgets;
+    paw->pwCubeSummary = paw->pAnalDetailSettings2->pwSettingWidgets;
 
     //gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwPage);
     //AnalysisSet(paw);
@@ -3332,14 +3339,15 @@ append_analysis_options(analysiswidget * paw)
         aszAnalyzeFileSetting, NUM_AnalyzeFileSettings, AnalyzeFileSettingDef);
     // BuildRadioButtons(vbox3, paw->apwAnalyzeFileSetting,  _("Select:"),   _("- Baanalysis."), aszAnalyzeFileSetting, NUM_AnalyzeFileSettings, AnalyzeFileSettingDef);
 
-    g_free(pAnalDetailSettings1); 
-    g_free(pAnalDetailSettings2); 
+    // g_free(pAnalDetailSettings1); 
+    // g_free(pAnalDetailSettings2); 
 
 }
 
 static GtkWidget *
 AnalysisPages(analysiswidget * paw)
 {
+
     paw->pwNoteBook = gtk_notebook_new();
     gtk_container_set_border_width(GTK_CONTAINER(paw->pwNoteBook), 8);
 
@@ -3373,6 +3381,8 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
      GtkWidget *pwDialog, *pwAnalysisSettings;
      analysiswidget aw;
+    // AnalysisDetails *pAnalDetailSettings1 = NULL;
+    // AnalysisDetails *pAnalDetailSettings2 = NULL;
 
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Analysis Settings"),
                                DT_QUESTION, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(AnalysisOK), &aw);
@@ -3385,7 +3395,8 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
         
     GTKRunDialog(pwDialog);                               
-
+    g_free(aw.pAnalDetailSettings1); 
+    g_free(aw.pAnalDetailSettings2); 
 }
 
 typedef struct {
@@ -6739,7 +6750,7 @@ extern void
 GTKProgressStart(const char *sz)
 {
     GTKSuspendInput();
-        g_message("GTKProgressStart\n");
+        // g_message("GTKProgressStart\n");
 
     if (sz)
         gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idProgress, sz);

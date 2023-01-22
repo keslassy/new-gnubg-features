@@ -879,7 +879,7 @@ GTKAnalyzeCurrent(void)
 }
 
 extern void
-AnalyseSingleFile(void)
+AnalyzeSingleFile(void)
 {
     gchar *folder = NULL;
     gchar *filename = NULL;
@@ -888,6 +888,7 @@ AnalyseSingleFile(void)
 
     folder = last_folder ? last_folder : default_import_folder;
 
+    /* now select a file; could also use GTKFileSelect() */
     fc = GnuBGFileDialog(_("Select file to analyse"), folder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fc), FALSE);
     add_import_filters(GTK_FILE_CHOOSER(fc));
@@ -950,11 +951,11 @@ SmartAnalyze(void)
 extern void
 GTKAnalyzeFile(void)
 {
-    g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
+    // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
     if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
         GTKBatchAnalyse(NULL, 0, NULL);
     } else if (AnalyzeFileSettingDef == AnalyzeFileRegular) {
-        AnalyseSingleFile();
+        AnalyzeSingleFile();
     } else { //   AnalyzeFileSmart, 
         SmartAnalyze();
     }

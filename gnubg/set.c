@@ -2925,7 +2925,7 @@ CommandSetAnalysisFileSetting(char* sz)
 
         if (strcmp(sz, aszAnalyzeFileSettingCommands[i]) == 0) {
            AnalyzeFileSettingDef = (analyzeFileSetting) i;
-            g_message("\n selected option analyze file setting: i:%d->text=%s",i,aszAnalyzeFileSettingCommands[i]);
+            // g_message("\n selected option analyze file setting: i:%d->text=%s",i,aszAnalyzeFileSettingCommands[i]);
            return; 
         }
     }
