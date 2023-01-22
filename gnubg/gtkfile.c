@@ -49,7 +49,7 @@
 #define MAX_LEN 1024
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
-const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch Analysis"), N_("Single-File Analysis"), N_("Smart Analysis")};
+const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
 const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
 
 
@@ -884,17 +884,60 @@ GTKAnalyzeCurrent(void)
 }
 
 extern void
+AnalyseSingleFile(void)
+{
+    gchar *folder = NULL;
+    GSList *filename = NULL;
+    GtkWidget *fc;
+    static gchar *last_folder = NULL;
+
+    folder = last_folder ? last_folder : default_import_folder;
+
+    fc = GnuBGFileDialog(_("Select file to analyse"), folder, NULL, GTK_FILE_CHOOSER_ACTION_OPEN);
+    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fc), FALSE);
+    add_import_filters(GTK_FILE_CHOOSER(fc));
+
+    if (gtk_dialog_run(GTK_DIALOG(fc)) == GTK_RESPONSE_ACCEPT) {
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc));
+    }
+    if (filename) {
+        last_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(fc));
+        gtk_widget_destroy(fc);
+
+        // char buffer[MAX_LEN];
+        // sprintf(buffer, "%s/%s", last_folder, filename);
+        // // if (!get_input_discard())
+        // //     return;
+
+        /*open this file*/
+        CommandImportAuto(filename);
+        /*analyze match*/
+        UserCommand("analyse match");
+        if(fAutoDB) {
+            /*add match to db*/
+            CommandRelationalAddMatch(NULL);
+        }
+        /*show stats panel*/
+        UserCommand("show statistics match");
+        return;
+
+    } else
+        gtk_widget_destroy(fc);
+}
+
+
+extern void
 SmartAnalyze(void)
 {
     gchar *folder = NULL;
     char recent[MAX_LEN];
 
     folder = default_import_folder ? default_import_folder : ".";
-    g_message("folder=%s\n", folder);
+    // g_message("folder=%s\n", folder);
 
     /* find most recent file in the folder and write its name (in char recent[])*/
     recentByModification(folder, recent);
-    g_message("recent=%s\n", recent);
+    // g_message("recent=%s\n", recent);
     /*open this file*/
     CommandImportAuto(recent);
     /*analyze match*/
@@ -911,7 +954,13 @@ SmartAnalyze(void)
 extern void
 GTKAnalyzeFile(void)
 {
-    SmartAnalyze();
+    if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
+        GTKBatchAnalyse(NULL, 0, NULL);
+    } else if (AnalyzeFileSettingDef ==  AnalyzeFileRegular) {
+        AnalyseSingleFile();
+    } else { //   AnalyzeFileSmart, 
+        SmartAnalyze();
+    }
     return;
 }
 
