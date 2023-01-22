@@ -77,7 +77,6 @@
 #include "rollout.h"
 #include "util.h"
 #include "gtkscoremap.h"
-#include "gtkfile.h"
 #if defined(USE_BOARD3D)
 #include "inc3d.h"
 #endif
@@ -4901,6 +4900,10 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
             g_free(python_script);
             python_script = NULL;
         }
+
+        /* initialize by saying there is no analysis running now in the background*/
+        if(fBackgroundAnalysis)
+             fAnalysisRunning = FALSE;
 
         gtk_main();
 

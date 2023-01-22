@@ -1164,7 +1164,12 @@ CommandAnalyseGame(char *UNUSED(sz))
     if(fBackgroundAnalysis)
         fAnalysisRunning = TRUE;
 
-    ProgressStartValue(_("Analysing game; move:"), nMoves);
+    /* see comments in CommandAnalyseMatch()*/
+    if(fBackgroundAnalysis)
+        ProgressStartValue(_("Analysing game in the background... "
+        "you can check the early analysis results."), nMoves);
+    else
+        ProgressStartValue(_("Analysing game"), nMoves);
 
     AnalyzeGame(plGame, TRUE);
 
@@ -1204,7 +1209,15 @@ CommandAnalyseMatch(char *UNUSED(sz))
     if(fBackgroundAnalysis)
         fAnalysisRunning = TRUE;
 
-    ProgressStartValue(_("Analysing match; move:"), nMoves);
+    if(fBackgroundAnalysis)
+        ProgressStartValue(_("Analysing match in the background... "
+        "you can check the early analysis results."), nMoves);
+    else
+        /* this was supposed to show nMoves, but it's not used at the end;
+        on the right side we see "n/nTotal"; so we update the text
+        */
+        // ProgressStartValue(_("Analysing match; move:"), nMoves);
+        ProgressStartValue(_("Analysing match"), nMoves);
 
     IniStatcontext(&scMatch);
 
@@ -1594,13 +1607,13 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.pesCube = &esAnalysisCube;
         md.aamf = aamfAnalysis;
 
-        if(fBackgroundAnalysis)
-            fAnalysisRunning = TRUE;
+        // if(fBackgroundAnalysis)
+        //     fAnalysisRunning = TRUE;
 
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
 
-        if(fBackgroundAnalysis)
-            fAnalysisRunning = FALSE;
+        // if(fBackgroundAnalysis)
+        //     fAnalysisRunning = FALSE;
 
 #if defined(USE_GTK)
         if (fX)
