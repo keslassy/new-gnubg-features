@@ -2341,7 +2341,7 @@ msgid "Set the default match length in the ScoreMap window"
 msgstr ""
 
 #: commands.inc:1240
-msgid "Set the default sm1 in the ScoreMap window"
+msgid "Set the default AnalyzeFileSetting in the ScoreMap window"
 msgstr ""
 
 #: commands.inc:1243
@@ -5878,11 +5878,11 @@ msgid ""
 msgstr ""
 
 #: gtkgame.c:3011
-msgid "sm1"
+msgid "AnalyzeFileSetting"
 msgstr ""
 
 #: gtkgame.c:3011
-msgid "Select the default sm1 for which to draw the ScoreMap:"
+msgid "Select the default AnalyzeFileSetting for which to draw the ScoreMap:"
 msgstr ""
 
 #: gtkgame.c:3012

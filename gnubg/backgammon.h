@@ -878,7 +878,7 @@ extern void CommandSetRolloutVarRedn(char *);
 extern void CommandSetScore(char *);
 extern void CommandSetScoreMapPly(char*);
 extern void CommandSetScoreMapMatchLength(char*);
-extern void CommandSetsm1(char*);
+extern void CommandSetAnalyzeFileSetting(char*);
 extern void CommandSetScoreMapLabel(char*);
 extern void CommandSetScoreMapJacoby(char*);
 extern void CommandSetScoreMapCubeEquityDisplay(char*);

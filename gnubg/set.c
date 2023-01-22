@@ -2909,14 +2909,14 @@ CommandSetScoreMapMatchLength(char* sz)
 }
 
 extern void
-CommandSetsm1(char* sz)
+CommandSetAnalyzeFileSetting(char* sz)
 {
  
-    for (int i=0; i<NUM_sm1; i++){
+    for (int i=0; i<NUM_AnalyzeFileSettings; i++){
         // g_print("\n test within loop: i: %d",i);
 
-        if (strcmp(sz, aszsm1Commands[i]) == 0) {
-           sm1Def = (sm1type) i;
+        if (strcmp(sz, aszAnalyzeFileSettingCommands[i]) == 0) {
+           AnalyzeFileSettingDef = (AnalyzeFileSettingtype) i;
             // g_print("\n selected option: i:%d",i);
            return; 
         }
