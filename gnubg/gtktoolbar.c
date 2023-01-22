@@ -59,6 +59,8 @@ typedef struct {
     GtkWidget *pwNextCMarked;   /* button for "Next CMarked" */
     GtkWidget *pwNextMarked;    /* button for "Next CMarked" */
     GtkWidget *pwReset;         /* button for "Reset" */
+    GtkWidget *pwAnalyzeCurrent;         /* button for "Analyze Current" */
+    GtkWidget *pwAnalyzeFile;         /* button for "Analyze File" */
     GtkWidget *pwEdit;          /* button for "Edit" */
     GtkWidget *pwButtonClockwise;       /* button for clockwise */
 
@@ -126,6 +128,26 @@ ToolbarSetPlaying(GtkWidget * pwToolbar, const int f)
 
     gtk_widget_set_sensitive(ptw->pwReset, f);
 
+}
+
+extern void
+ToolbarSetAnalyzeCurrent(GtkWidget * pwToolbar, const int f)
+{
+
+    toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
+                                           "toolbarwidget");
+
+    gtk_widget_set_sensitive(ptw->pwAnalyzeCurrent, f);
+}
+
+extern void
+ToolbarSetAnalyzeFile(GtkWidget * pwToolbar, const int f)
+{
+
+    toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
+                                           "toolbarwidget");
+
+    gtk_widget_set_sensitive(ptw->pwAnalyzeFile, f);
 }
 
 
@@ -383,6 +405,10 @@ ToolbarNew(void)
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
     ptw->pwReset = gtk_ui_manager_get_widget(puim, "/MainToolBar/Undo");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwReset), TRUE);
+    ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeCurrent");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
+    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeFile");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeFile), TRUE);
     ptw->pwHint = gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwHint), TRUE);
     ptw->pwEdit = gtk_ui_manager_get_widget(puim, "/MainToolBar/EditPosition");
@@ -515,6 +541,16 @@ ToolbarNew(void)
     g_signal_connect(G_OBJECT(ptw->pwButtonClockwise), "toggled", G_CALLBACK(ToolbarToggleClockwise), ptw);
 
     ToolbarAddWidget(GTK_TOOLBAR(pwtb), ptw->pwButtonClockwise, _("Reverse direction of play"));
+
+    ToolbarAddSeparator(GTK_TOOLBAR(pwtb));
+
+    /* Analyze current match button */
+    ptw->pwAnalyzeCurrent =
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, NULL, _("Analyze current match (set default behavior in Settings -> Analysis -> Analysis Buttons)"), G_CALLBACK(GTKAnalyzeCurrent), NULL);
+
+    /* Analyze file button */
+    ptw->pwAnalyzeFile =
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, NULL, _("Analyze match from file (set default behavior in Settings -> Analysis -> Analysis Buttons)"), G_CALLBACK(GTKAnalyzeFile), NULL);
 
     ti = gtk_separator_tool_item_new();
     gtk_tool_item_set_expand(GTK_TOOL_ITEM(ti), TRUE);

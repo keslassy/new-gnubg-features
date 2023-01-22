@@ -496,6 +496,8 @@ static command acSetAutomatic[] = {
       "chequers as possible"), szONOFF, &cOnOff },
     { "crawford", CommandSetAutoCrawford, N_("Enable the Crawford game "
       "based on match score"), szONOFF, &cOnOff },
+    { "db", CommandSetAutoDB, N_("Select whether to add to database after analysis"),
+      szONOFF, &cOnOff },      
     { "doubles", CommandSetAutoDoubles, N_("Control automatic doubles "
       "during (money) session play"), szLIMIT, NULL },
     { "game", CommandSetAutoGame, N_("Select whether to start new games "
@@ -1264,6 +1266,8 @@ static command acSetVariation[] = {
       N_("Control audio parameters"), NULL, acSetSound },
     { "styledgamelist", CommandSetStyledGameList, N_("Display colours for marked moves in game window"),
       szONOFF, &cOnOff },
+    { "markedsameplayer", CommandSetMarkedSamePlayer, N_("Focus on same player when moving between marked moves"),
+      szONOFF, &cOnOff },      
 #if defined(USE_GTK)
     { "theorywindow", CommandSetTheoryWindow, N_("Display game theory in window"),
       szONOFF, &cOnOff },

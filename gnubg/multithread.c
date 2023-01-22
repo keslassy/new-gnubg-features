@@ -304,7 +304,9 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     /* Set total tasks to wait for */
     td.totalTasks = td.addedTasks;
 #if defined(USE_GTK)
+        // g_message("MT_WaitForTasks\n");
     GTKSuspendInput();
+        // GTKResumeInput();
 #endif
 
     if (autosave)

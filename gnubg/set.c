@@ -467,6 +467,15 @@ CommandSetStyledGameList(char *sz)
 }
 
 extern void
+CommandSetMarkedSamePlayer(char *sz)
+{
+
+    SetToggle("markedsameplayer", &fMarkedSamePlayer, sz,
+              _("Focus on same player when moving between marked moves."), _("Do not focus on same player when moving between marked moves."));
+
+}
+
+extern void
 CommandSetFullScreen(char *sz)
 {
     int newValue = fFullScreen;
@@ -531,6 +540,14 @@ CommandSetAutoDoubles(char *sz)
             outputl(_("Note that automatic doubles will have no effect "
                       "until you " "enable cube use\n(see `help set cube use')."));
     }
+}
+
+extern void
+CommandSetAutoDB(char *sz)
+{
+
+    SetToggle("automatic db", &fAutoDB, sz,
+              _("Will automatically add analysis to database."), _("Will not automatically add analysis to database."));
 }
 
 extern void

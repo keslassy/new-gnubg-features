@@ -111,6 +111,7 @@ typedef struct {
     GtkWidget *apwCheatRoll[2];
     GtkWidget *pwGotoFirstGame;
     GtkWidget *pwGameListStyles;
+    GtkWidget *pwMarkedSamePlayer;
     GtkWidget *pwDefaultSGFFolder;
     GtkWidget *pwDefaultImportFolder;
     GtkWidget *pwDefaultExportFolder;
@@ -1363,6 +1364,17 @@ append_other_options(optionswidget * pow)
                                 _("This option controls whether moves in the "
                                   "game list window are shown in different " "colours depending on their analysis"));
 
+    /* focus on same player when moving to next marked move */
+
+    pow->pwMarkedSamePlayer = gtk_check_button_new_with_label(_("Focus on same player when moving between marked (wrong) moves"));
+    gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwMarkedSamePlayer, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(pow->pwMarkedSamePlayer,
+                                _("This option enables jumps between moves in the "
+                                  "game list window (using the red arrows) to stay within the same player," 
+                                  "thus allowing a player to focus on his own mistakes only"));
+
+
+
 #if GTK_CHECK_VERSION(3,0,0)
     grid = gtk_grid_new();
 #else
@@ -1835,6 +1847,8 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
 
     CHECKUPDATE(pow->pwGotoFirstGame, fGotoFirstGame, "set gotofirstgame %s");
     CHECKUPDATE(pow->pwGameListStyles, fStyledGamelist, "set styledgamelist %s");
+    CHECKUPDATE(pow->pwMarkedSamePlayer, fMarkedSamePlayer, "set markedsameplayer %s");
+    
 
     newfolder = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(pow->pwDefaultSGFFolder));
     if (newfolder && (!default_sgf_folder || strcmp(newfolder, default_sgf_folder))) {
@@ -1927,6 +1941,7 @@ OptionsSet(optionswidget * pow)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwConfOverwrite), fConfirmSave);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwGotoFirstGame), fGotoFirstGame);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwGameListStyles), fStyledGamelist);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwMarkedSamePlayer), fMarkedSamePlayer);  
 }
 
 static void

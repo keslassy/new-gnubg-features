@@ -1551,7 +1551,7 @@ Sat Feb 12 22:19:18 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 2011-02-08  Philippe Michel  <philippe.michel7@sfr.fr>
 
-	* eval.c, lib/neuralnetsse.c, lib/neuralnet.h : Øystein Johansen's
+	* eval.c, lib/neuralnetsse.c, lib/neuralnet.h : ï¿½ystein Johansen's
 	patch to handle a different number of hidden nodes with SSE.
 
 Tue Feb  8 20:23:42 CET 2011 Christian Anthon <anthon@kiku.dk>
@@ -2122,7 +2122,7 @@ Mon Jun 22 05:47:27 CEST 2009 Michael Petch <mpetch@gnubg.org>
 
 Sun Jun 21 23:21:36 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
-	* configure.in, lib/neuralnetsse.c, lib/sigmoid.h: check Øysteins
+	* configure.in, lib/neuralnetsse.c, lib/sigmoid.h: check ï¿½ysteins
 	sigmoid sse2 patch in.
 
 Sun Jun 14 22:00:00 2003  Jon Kinsey <Jon_Kinsey@hotmail.com>
@@ -2138,7 +2138,7 @@ Sat Jun 13 02:04:28 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
 Wed Jun 12 23:00:00 2003  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
-	* matchequity.c: Replace libxml code that reads met (code from Øystein)
+	* matchequity.c: Replace libxml code that reads met (code from ï¿½ystein)
 
 Fri May  8 14:29:05 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
@@ -2374,11 +2374,11 @@ Sat Mar 21 22:44:02 CET 2009 Christian Anthon <anthon@kiku.dk>
 	simpleboard.c, text.c, lib/gnubg-types.h: another bunch of hint
 	related changes.
 
-Sat Mar 21 11:44:35 WEST 2009 Øystein Johansen <oystein@gnubg.org>
+Sat Mar 21 11:44:35 WEST 2009 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* gtkprefs.c: Parse XML-boards with g_markup_parse.
 
-Fri Mar 20 21:37:46 WEST 2009 Øystein Johansen <oystein@gnubg.org>
+Fri Mar 20 21:37:46 WEST 2009 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* boards.xml: Change encoding to UTF-8.
 
@@ -2453,7 +2453,7 @@ Mon Mar  2 10:35:14 CET 2009 Christian Anthon <anthon@kiku.dk>
 	* gtkmet.c: the meaning of const int a[][] and const int **a is not
 	defined in C. We need confusing casts to avoid warnings in gcc.
 
-Sun Mar  1 10:02:02 CET 2009 Øystein Johansen <oystein@gnubg.org>
+Sun Mar  1 10:02:02 CET 2009 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* makebearoff.c, bearoff.c: Repair building of onesided
 	bearoff databases w/o gammon distributions. Fixed
@@ -4242,7 +4242,7 @@ Tue Apr 17 09:08:36 CEST 2007 Christian Anthon <anthon@kiku.dk>
 
 	* doc/Makefile.am: DESTDIR support
 
-Thu Apr 12 20:43:03 2007 Øystein Johansen <oystein@gnubg.org>
+Thu Apr 12 20:43:03 2007 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* gtkfile.[ch], gtkgame.c: New feature: Batch analysis (still buggy)
 
@@ -4767,9 +4767,9 @@ Thu Jun 22 20:53:54 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
 Sun Jun 18 01:26:05 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
-	* Several files: cleanup after Øystein i18n changes
+	* Several files: cleanup after ï¿½ystein i18n changes
 
-Sat Jun 17 19:42:19 2006 Øystein Johansen <oystein@gnubg.org>
+Sat Jun 17 19:42:19 2006 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* Many files: Remove i18n functions like PushLocale and PopLocale,
 	use GLib's g_ascii_strtod and g_ascii_formatd instead.
@@ -4796,7 +4796,7 @@ Mon May 29 13:01:07 CEST 2006 Christian Anthon <anthon@kiku.dk>
 	* M gnubg.gtkrc : gtk2 cleanup, don't autogenerate from gnubg.gtkrc.in
 	anymore
 
-Fri May 26 20:35:05 2006 Øystein Johansen <oystein@gnubg.org>
+Fri May 26 20:35:05 2006 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* gnubg.c: Simple Win32 fixes (Windows doesn't use gdkx.h)
 
@@ -4817,18 +4817,18 @@ Sat May 21 15:56:45 2006 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 	* boards.xml : Added two new designs by Wilson Amaral Jorge.
 
-Mon May 8  21:32:34 2006 Øystein Johansen <oystein@gnubg.org>
+Mon May 8  21:32:34 2006 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* renderprefs.c: A revised 64 bit patch from Alex applied.
 
-Sun May 7  18:49:34 2006 Øystein Johansen <oystein@gnubg.org>
+Sun May 7  18:49:34 2006 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* renderprefs.c: Revert Alex' patch.
 
 Tue May  2 00:33:07 CEST 2006 Christian Anthon <anthon@kiku.dk>
 	* gtkgame.c: fix display of gtkeval window
 
-Mon May 1  22:06:34 2006 Øystein Johansen <oystein@gnubg.org>
+Mon May 1  22:06:34 2006 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* renderprefs.c: Apply Alex patch.
 	* texture.txt: Bump version
@@ -4889,7 +4889,7 @@ Tue Mar 28 23:24:14 CEST 2006 Christian Anthon <anthon@kiku.dk>
 	* format.c eval.c analysis.c: Clean up isCloseCube and lower limit to
 	    0.16
 
-Sat Mar 20 23:16:45 2006 Øystein Johansen <oystein@gnubg.org>
+Sat Mar 20 23:16:45 2006 ï¿½ystein Johansen <oystein@gnubg.org>
 
 	* analysis.c: Fix for problem with wrong double statistics.
 	(Thanks to Christian Anthon)
@@ -5411,7 +5411,7 @@ Sun Jul  4 14:22:59 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 
 	* analysis.c (CashPoint): fix bug leading to wrong
 	classification of wrong doubles.
-	(reported by Hans-Jürgen Schäfer)
+	(reported by Hans-Jï¿½rgen Schï¿½fer)
 	* eval.c (calculate_gammon_rates): new function.
 
 	* openurl.c, gtkgame.c, relational.c: pacify fussy compilers.
@@ -5707,7 +5707,7 @@ Tue Apr 20 17:56:25 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 Mon Apr 19 22:52:41 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 
 	* gnubg.c (EPC): fix "same dice sequence for several games in a
-	row"-bug, reported by several users (Erik Barfoed, Øystein, Murat
+	row"-bug, reported by several users (Erik Barfoed, ï¿½ystein, Murat
 	etc). Well, this is not really a fix, I've just changed the code
        	to avoid calling the OSR code, that resets the seed.
 	We really need to introduce several RNG contexts...
@@ -6474,7 +6474,7 @@ Mon Oct 13 18:12:37 2003  Joern Thyssen  <jth@gnubg.org>
 Mon Oct 13 12:40:45 2003 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 	* gtkgame.c, gtkboard.c: Add _() translations to a few strings.
-	(reported by Hlynur Sigurgíslason)
+	(reported by Hlynur Sigurgï¿½slason)
 
 Sun Oct 12 15:13:46 2003  Joern Thyssen  <jth@gnubg.org>
 
@@ -6798,7 +6798,7 @@ Mon Sep 08 20:18:46 2003 GMT  Holger Bochnig <hbgg@gmx.net>
 Mon Sep 08 18:45:56 2003 GMT  Holger Bochnig <hbgg@gmx.net>
 
 	classify cube decisions into 3 categories: around DP, CP and TG
-	(suggested by Jørn)
+	(suggested by Jï¿½rn)
 
 	* analysis.c: rename getMarketWindowDividersMWC to
 	getMarketWindowDividersEq

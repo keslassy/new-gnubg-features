@@ -38,6 +38,16 @@
 #include "file.h"
 #include "util.h"
 
+/*for picking the first file in folder...*/
+#include <stdio.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <time.h>
+#include <string.h>
+#include <sys/types.h>
+
+#define MAX_LEN 1024
 
 static void
 FilterAdd(const char *fn, const char *pt, GtkFileChooser * fc)
@@ -746,8 +756,15 @@ batch_create_dialog_and_run(GSList * filenames, gboolean add_to_db)
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
     g_object_set_data(G_OBJECT(model), "cancelled", GINT_TO_POINTER(0));
 
-    dialog = GTKCreateDialog(_("Batch analyse files"), DT_INFO, NULL,
+    // if(!backgroundAnalysis) {
+        dialog = GTKCreateDialog(_("Batch analyse files"), DT_INFO, NULL,
                              DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS | DIALOG_FLAG_NOTIDY, NULL, NULL);
+    // } else {
+    //     dialog = GTKCreateDialog(_("Batch analyse files"), 
+    //                          DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS | DIALOG_FLAG_NOTIDY, NULL, NULL);
+    //     // dialog = GTKCreateDialog(_("Batch analyse files"), 
+    //     //                      DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
+    // }
 
     gtk_window_set_default_size(GTK_WINDOW(dialog), -1, 400);
 
@@ -792,6 +809,101 @@ batch_create_dialog_and_run(GSList * filenames, gboolean add_to_db)
     gtk_window_set_modal(GTK_WINDOW(dialog), FALSE);
 }
 
+/* functions to find latest file in folder */
+
+// int isExceptionalDir(const char* name){
+//   if (name==NULL || name[0]=='\0') return 1;
+//   else if (name[0]=='.') {
+//     if (name[1]=='\0') return 1;
+//     else if (name[1]=='.' && name[2]=='\0') return 1;
+//   }
+//   return 0;
+// }
+
+void recentByModification(const char* path, char* recent){
+    char buffer[MAX_LEN];
+    FilePreviewData *fdp;
+    struct dirent* entry;
+    time_t recenttime = 0;
+    struct stat statbuf;
+    DIR* dir  = opendir(path);
+    if (dir) {
+        while (NULL != (entry = readdir(dir))) {
+            //if (!isExceptionalDir(entry->d_name)) {
+            /* we first check that it's a file*/
+            if (entry->d_type == DT_REG) {
+                /* we then check that it's more recent than what we've seen so far*/
+                sprintf(buffer, "%s/%s", path, entry->d_name);
+                stat(buffer, &statbuf);
+                if (statbuf.st_mtime > recenttime) {
+                    /* next we check that it's a correct file format*/
+                    fdp = ReadFilePreview(buffer);
+                    if (!fdp) {
+                        outputerrf(_("`%s' is not a backgammon file"), buffer);
+                        g_free(fdp);
+                        return;
+                    } else if (fdp->type == N_IMPORT_TYPES) {
+                        outputf(_("The format of '%s' is not recognized"), buffer);
+                        g_free(fdp);
+                        return;
+                    } else {
+                        /* finally it passed all the checks, we keep it for now in the 
+                        char * recent 
+                        */
+                        strncpy(recent, buffer, MAX_LEN);
+                        // strncpy(recent, entry->d_name, MAX_LEN);
+                        recenttime = statbuf.st_mtime;
+                        // g_message("looking at file....: %s, time: %lld\n", recent, (long long) recenttime);
+                        g_free(fdp);
+                    }
+                }
+            }
+        }
+        closedir(dir);
+    } else {
+        g_message("Unable to read directory");
+    }
+}
+
+extern void
+GTKAnalyzeCurrent(void)
+{
+    /*analyze match*/
+    UserCommand("analyse match");
+    if(fAutoDB) {
+        /*add match to db*/
+        CommandRelationalAddMatch(NULL);
+    }
+    /*show stats panel*/
+    UserCommand("show statistics match");
+    return;
+}
+
+extern void
+GTKAnalyzeFile(void)
+{
+    gchar *folder = NULL;
+    char recent[MAX_LEN];
+
+    folder = default_import_folder ? default_import_folder : ".";
+    g_message("folder=%s\n", folder);
+
+    /* find most recent file in the folder and write its name (in char recent[])*/
+    recentByModification(folder, recent);
+    g_message("recent=%s\n", recent);
+    /*open this file*/
+    CommandImportAuto(recent);
+    /*analyze match*/
+    UserCommand("analyse match");
+    if(fAutoDB) {
+        /*add match to db*/
+        CommandRelationalAddMatch(NULL);
+    }
+    /*show stats panel*/
+    UserCommand("show statistics match");
+    return;
+}
+
 extern void
 GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
@@ -834,5 +946,4 @@ GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         fConfirmNew = fConfirmNew_s;
     } else
         gtk_widget_destroy(fc);
-
 }
