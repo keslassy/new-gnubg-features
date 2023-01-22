@@ -3055,7 +3055,7 @@ append_analysis_options(analysiswidget * paw)
         N_("Unlucky:"), N_("Very unlucky:")
     };
     int i;
-    AnalysisDetails *pAnalDetailSettings2;
+    AnalysisDetails *pAnalDetailSettings1,*pAnalDetailSettings2;
     GtkWidget *pwPage, *pwFrame, *pwLabel, *pwSpin;
 #if GTK_CHECK_VERSION(3,0,0)
     GtkWidget *pwGrid;
@@ -3252,7 +3252,8 @@ append_analysis_options(analysiswidget * paw)
     gtk_box_pack_start(GTK_BOX(hboxTop), vbox1, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), pwFrame, FALSE, FALSE, 0);
 
-    CreateEvalSettings(pwFrame, _("Analysis settings"),
+    /*giving a name to be able to g_free it later*/
+    pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
             &paw->esChequer.ec, (movefilter *) &paw->aamf, &paw->esCube.ec, NULL, FALSE);
 //    pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
 //                                              &aw.esChequer.ec, (movefilter *) & aw.aamf, &aw.esCube.ec, NULL, FALSE);
@@ -3326,8 +3327,8 @@ append_analysis_options(analysiswidget * paw)
                                 "analysis is still running in the background. Some features may be "
                                 "disabled until the nalysis is over."));
 
-    // g_free(pAnalDetailSettings2); //<- not sure where to put it
-    // g_free(pAnalDetailSettings1);
+    g_free(pAnalDetailSettings1); 
+    g_free(pAnalDetailSettings2); 
 
 }
 
@@ -3354,6 +3355,14 @@ AnalysisPageChange(GtkNotebook * UNUSED(notebook), gpointer * UNUSED(page), gint
     // }
 }
 
+// extern void
+// DestroySetAnalysis(GObject * po, GtkWidget * pw)
+// {
+//     g_free(pAnalDetailSettings2); //<- not sure where to put it
+//     // g_free(pAnalDetailSettings1);
+//     gtk_widget_destroy(pw);
+// }
+
 extern void
 SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
@@ -3366,7 +3375,7 @@ SetAnalysis(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwAnalysisSettings = AnalysisPages(&aw));
 
     g_signal_connect(G_OBJECT(pwAnalysisSettings), "switch-page", G_CALLBACK(AnalysisPageChange), NULL);
-
+    // g_signal_connect(G_OBJECT(pwAnalysisSettings), "destroy", G_CALLBACK(DestroySetAnalysis), pwDialog);
     AnalysisSet(&aw);
 
         
