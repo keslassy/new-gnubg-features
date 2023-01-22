@@ -222,6 +222,8 @@ typedef enum {ND, DT, DP, TG} decisionval;
 //corresponding cube decision text in same order
 static const char * CUBE_DECISION_TEXT[4] = {"ND","D/T","D/P","TG"};
 
+#define IMPOSSIBLE_CMOVES (MAX_INCOMPLETE_MOVES+1)
+
 // **** color definitions ****
 
 // Used in colouring array (e.g., in ApplyColour())
@@ -344,7 +346,7 @@ typedef struct {
 
     // 3. specific to move scoremap:
     char topKDecisions[TOP_K][FORMATEDMOVESIZE];            //top-k most frequent best-move decisions
-    char * topKClassifiedDecisions[TOP_K];  //top-k most frequent best-move decisions with "English" description
+    // char * topKClassifiedDecisions[TOP_K];  //top-k most frequent best-move decisions with "English" description
     int topKDecisionsLength;                //b/w 0 and K
 } scoremap;
 
@@ -464,15 +466,15 @@ mmwc2eq(const float rMwc, const cubeinfo *pci) {
 }
 
 
-static int
-DebugCalcQuadrantEquities(quadrantdata * pq, const scoremap * psm) {
-        if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
-                                        arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
-            strcpy(pq->decisionString,"");
-            return -1;
-        }
-        return 0;
-}
+// static int
+// DebugCalcQuadrantEquities(quadrantdata * pq, const scoremap * psm) {
+//         if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
+//                                         arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
+//             strcpy(pq->decisionString,"");
+//             return -1;
+//         }
+//         return 0;
+// }
 
 static int
 CalcQuadrantEquities(quadrantdata * pq, const scoremap * psm, int recomputeFully) {
@@ -511,18 +513,23 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
         }
         return 0;
     } else {  //move scoremap
-        // if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
-        //                                 arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
-        //     strcpy(pq->decisionString,"");
-        //     return -1;
-        // }
-        DebugCalcQuadrantEquities(pq, psm);
+        if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
+                                        arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
+            strcpy(pq->decisionString,"");
+            pq->ml.cMoves=0; //also used for DestroyDialog
+            //g_free(pq->ml.amMoves);
+            return -1;
+        }
+        // DebugCalcQuadrantEquities(pq, psm);
         //g_assert(pq->ml.cMoves > 0);
-        if (pq->ml.cMoves > 0)
+        if (pq->ml.cMoves > 0) {
             FormatMove(pq->decisionString, (ConstTanBoard) psm->pms->anBoard, pq->ml.amMoves[0].anMove);
-        else     
-            g_message("FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
-        return 0;
+            //g_free(pq->ml.amMoves);        
+            return 0;
+        } else {    
+            g_message("Problem, no moves found. FindnSaveBestMoves returned %d, %d, %1.3f; decision: %s\n",pq->ml.cMoves,pq->ml.cMaxMoves, pq->ml.rBestScore,pq->decisionString);
+            return -1;
+        }
     }
 }
 
@@ -1597,7 +1604,7 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
 */
 {
     // int i,j,
-    int aux,aux2;
+    // int aux,aux2;
     //matchstate * pams;
     if(!calcOnly) {
         // matchstate ams = (*psm->pms); // Make a copy of the "master" matchstate  
@@ -1675,8 +1682,8 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
             //     psm->pmsTemp->fCubeOwner = (psm->signednCube > 0) ? (psm->pmsTemp->fMove) : (1 - psm->pmsTemp->fMove);
 
         }
-        for (aux=oldSize; aux<psm->tableSize; aux++) {
-            for (aux2=aux; aux2>=0; aux2--) {
+        for (int aux=oldSize; aux<psm->tableSize; aux++) {
+            for (int aux2=aux; aux2>=0; aux2--) {
                 // i=aux2;
                 // j=aux;
                 /*Note: in move scoremaps, we check a square validity in InitQuadrantCubeInfo() -> isAllowed();
@@ -1698,6 +1705,7 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                 }
                 else {
                     strcpy(psm->aaQuadrantData[aux2][aux].decisionString, "");
+                    // psm->aaQuadrantData[aux2][aux].ml.cMoves=0; //also used for DestroyDialog
                 }
                 if (aux2<aux) {     //same as above but now doing the other side of the square, without the 
                                     //(aux,aux) vertex on the diagonal
@@ -1712,6 +1720,7 @@ CalcEquities(scoremap * psm, int oldSize, int updateMoneyOnly, int calcOnly)
                     }
                     else {
                         strcpy(psm->aaQuadrantData[aux][aux2].decisionString, "");
+                        //psm->aaQuadrantData[aux][aux2].ml.cMoves=0; //also used for DestroyDialog                        
                     }
                 }
             }
@@ -2572,6 +2581,18 @@ MatchLengthToggled(GtkWidget * pw, scoremap * psm)
         //     psm->oldTableSize=oldTableSize;
         //     UpdateScoreMapVisual(psm,oldTableSize);
         if (psm->tableSize > oldTableSize) {
+            /* first initialize the new elements like we did for the new psm */
+            for (int i=0;i<psm->tableSize; i++) {
+                for (int j=0;j<psm->tableSize; j++) {
+                    if(i>=oldTableSize || j>=oldTableSize) {
+                        psm->aaQuadrantData[i][j].isAllowedScore=YET_UNDEFINED; 
+                        psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
+                        psm->aaQuadrantData[i][j].isSpecialScore = REGULAR; 
+                        psm->aaQuadrantData[i][j].ml.cMoves = IMPOSSIBLE_CMOVES;
+                    }
+                }
+            }
+            /* next compute their equities */
             CalcEquities(psm,oldTableSize,FALSE,FALSE);
         }
         //     psm->tempScaleUp=0;
@@ -2653,11 +2674,30 @@ Allows garbage collection.
     }
 
     /* garbage collect */
-    for (int i=0; i<TOP_K; i++) {
-        // g_free(psm->topKDecisions[i]);
-        g_free(psm->topKClassifiedDecisions[i]);
-    }
+    // for (int i=0; i<TOP_K; i++) {
+    //     // g_free(psm->topKDecisions[i]);
+    //     g_free(psm->topKClassifiedDecisions[i]);
+    // }
 
+    if(!psm->cubeScoreMap){
+        for (int i=0;i<psm->tableSize; i++) {
+            for (int j=0;j<psm->tableSize; j++) {
+                /* g_free for quadrant data:
+                - if cMoves is IMPOSSIBLE_CMOVES, it means we haven't touched it since initialization
+                - (if it's 0, it means there was an issue in the computation; previously we already g_free'd it, now we do it here)
+                We now g_free everything in between
+                */
+
+                if(psm->aaQuadrantData[i][j].ml.cMoves < IMPOSSIBLE_CMOVES){ //} && psm->aaQuadrantData[i][j].ml.cMoves > 0){
+                    g_message("FREED: i=%d, j=%d, tableSize=%d, moves=%d......",i,j,psm->tableSize,psm->aaQuadrantData[i][j].ml.cMoves);
+                    g_free(psm->aaQuadrantData[i][j].ml.amMoves);
+                } else {
+                    g_message("NOT FREED: i=%d, j=%d, tableSize=%d, moves=%d......",i,j,psm->tableSize,psm->aaQuadrantData[i][j].ml.cMoves);                    
+                }
+            }
+        }
+        g_free(psm->moneyQuadrantData.ml.amMoves); 
+    } 
     g_free(psm);
 }
 
@@ -3091,13 +3131,16 @@ if needed (this was initially planned for some explanation text, which was then 
     // if not, we show away score at 1-away twice (w/ and post crawford), then 2-away through (psm->matchLength)-away
     psm->tableSize = (psm->cubeScoreMap) ? psm->matchLength - 1 : psm->matchLength + 1;//psm->cubematchLength-1 : psm->movematchLength+1;
     
-    /* We initialize isAllowedScore to make sure there is no redrawing without a defined value.
-    Since we're already here, we also initialize the other properties. */
+    /* 1) We initialize isAllowedScore to make sure there is no redrawing without a defined value.
+    Since we're already here, we also initialize the other properties. 
+    2) We also initialize ml.cMoves to -1
+    */
     for (int i=0;i<psm->tableSize; i++) {
         for (int j=0;j<psm->tableSize; j++) {
             psm->aaQuadrantData[i][j].isAllowedScore=YET_UNDEFINED; 
             psm->aaQuadrantData[i][j].isTrueScore = NOT_TRUE_SCORE;
             psm->aaQuadrantData[i][j].isSpecialScore = REGULAR; 
+            psm->aaQuadrantData[i][j].ml.cMoves = IMPOSSIBLE_CMOVES;
         }
     }
     psm->moneyQuadrantData.isAllowedScore=YET_UNDEFINED; 
@@ -3109,10 +3152,10 @@ if needed (this was initially planned for some explanation text, which was then 
 #else
     psm->pwTableContainer = gtk_vbox_new(FALSE, 0); // parameters: homogeneous, spacing
 #endif
-    for (int i=0; i<TOP_K; i++) {
-        // psm->topKDecisions[i]=g_malloc(FORMATEDMOVESIZE * sizeof(char));
-        psm->topKClassifiedDecisions[i]=g_malloc((FORMATEDMOVESIZE+5)*sizeof(char));
-    }
+    // for (int i=0; i<TOP_K; i++) {
+    //     // psm->topKDecisions[i]=g_malloc(FORMATEDMOVESIZE * sizeof(char));
+    //     psm->topKClassifiedDecisions[i]=g_malloc((FORMATEDMOVESIZE+5)*sizeof(char));
+    // }
 
     BuildTableContainer(psm,0); //0==oldSize
 
@@ -3235,6 +3278,7 @@ if needed (this was initially planned for some explanation text, which was then 
     /* modality */
 
     gtk_window_set_default_size(GTK_WINDOW(pwDialog), DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+    /* The DestroyDialog function frees the needed memory! */
     g_object_weak_ref(G_OBJECT(pwDialog), DestroyDialog, psm);
 
     GTKRunDialog(pwDialog);

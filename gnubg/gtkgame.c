@@ -6723,7 +6723,7 @@ extern void
 GTKProgressStartValue(char *sz, int UNUSED(iMax))
 {
     GTKSuspendInput();
-    g_message("GTKProgressStartValue\n");
+    // g_message("GTKProgressStartValue\n");
 
     if (sz)
         gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idProgress, sz);
