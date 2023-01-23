@@ -1144,6 +1144,15 @@ skill_label(skilltype st)
     return label;
 }
 
+// static void
+// MoveSelected(GtkWidget * pw, int test)
+// {
+// // g_signal_connect(G_OBJECT(pwMoveAnalysis), "focus_tab", G_CALLBACK(MoveSelected), NULL);
+    
+//     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
+//     g_message("\n MoveSelected: cube:%d", *pi);
+// }
+
 extern void
 SetAnnotation(moverecord * pmr)
 {
@@ -1290,6 +1299,7 @@ SetAnnotation(moverecord * pmr)
 
                 gtk_notebook_append_page(GTK_NOTEBOOK(pw), pwMoveAnalysis, gtk_label_new(_("Chequer play")));
 
+                // g_signal_connect(G_OBJECT(pwMoveAnalysis), "focus_tab", G_CALLBACK(MoveSelected), NULL);
 
             } else if (pwMoveAnalysis) {
                 if (IsPanelDocked(WINDOW_ANALYSIS))
