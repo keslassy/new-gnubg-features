@@ -2763,6 +2763,7 @@ StartNewGame(void)
 extern void
 CommandNewGame(char *UNUSED(sz))
 {
+    
     if (ms.nMatchTo && (ms.anScore[0] >= ms.nMatchTo || ms.anScore[1] >= ms.nMatchTo)) {
         outputl(_("The match is already over."));
         return;
@@ -2841,6 +2842,14 @@ extern void
 CommandNewMatch(char *sz)
 {
     unsigned int n;
+
+    if (fBackgroundAnalysis && fAnalysisRunning) {
+            g_message("Raise flag fStopAnalysis=TRUE 1");
+            fStopAnalysis=TRUE;
+            g_timeout_add(nDelay, DelayTimeout, NULL);
+    }
+
+
 
     if (!sz || !*sz)
         n = nDefaultLength;
@@ -3244,6 +3253,12 @@ InternalCommandNext(int mark, int cmark, int n)
     int init=1;
 
     // g_message("start: fMarkedSamePlayer=%d, mark=%d, cmark=%d, n=%d\n",fMarkedSamePlayer,mark,cmark,n);
+
+    if (fBackgroundAnalysis && fAnalysisRunning) {
+            g_message("NextMarked (InternalCommandNext): Raise flag fStopAnalysis=TRUE 2");
+            fStopAnalysis=TRUE;
+            g_timeout_add(nDelay, DelayTimeout, NULL);
+    }
 
     if (mark || cmark) {
         listOLD *pgame;

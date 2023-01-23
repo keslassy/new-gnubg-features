@@ -950,9 +950,12 @@ AnalyzeGame(listOLD * plGame, int wait)
 
     /* Analyse first move record (gameinfo) */
     g_assert(pmr->mt == MOVE_GAMEINFO);
-    if (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
+    if ( (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
                     &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, NULL) < 0)
+                || (fBackgroundAnalysis && fStopAnalysis) ) {
+        g_message("Stop 1 due to fStopAnalysis");            
         return -1;              /* Interrupted */
+    }
 
     numMoves--;                 /* Done one - the gameinfo */
 
@@ -961,7 +964,8 @@ AnalyzeGame(listOLD * plGame, int wait)
         pl = pl->plNext;
         pmr = pl->p;
 
-        if (pmr == NULL) {
+        if (pmr == NULL || (fBackgroundAnalysis && fStopAnalysis)) {
+                    g_message("Stop 2 due to fStopAnalysis");
             /* corrupt moves list */
             g_assert_not_reached();
             break;
@@ -1008,9 +1012,14 @@ AnalyzeGame(listOLD * plGame, int wait)
     if (wait) {
         int result;
 
-        multi_debug("wait for all task: analysis");
-        result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
-
+        if (fBackgroundAnalysis && fStopAnalysis) {
+                    g_message("Stop 3 due to fStopAnalysis");
+            result=-1;
+        }
+        else {
+            multi_debug("wait for all task: analysis");
+            result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+        }
         if (result == -1)
             IniStatcontext(psc);
 
@@ -1161,22 +1170,32 @@ CommandAnalyseGame(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesGame(plGame);
 
-    if(fBackgroundAnalysis)
+    /* see explanations in CommandAnalyseMatch()*/
+    if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
-
-    /* see comments in CommandAnalyseMatch()*/
-    if(fBackgroundAnalysis)
+        g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         ProgressStartValue(_("Analysing game in the background... "
-        "you can check the early analysis results."), nMoves);
-    else
+        "feel free to browse and check the early analysis results."), nMoves);
+        ShowBoard();
+    } else
         ProgressStartValue(_("Analysing game"), nMoves);
 
-    AnalyzeGame(plGame, TRUE);
+    if(! (fBackgroundAnalysis && fStopAnalysis))
+        AnalyzeGame(plGame, TRUE);
+    else
+        g_message("Stop 4 due to fStopAnalysis");
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis)
+    if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
+        g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        /* if we raised the flag to stop running the analysis, we can now lower it*/
+        if (fStopAnalysis) {
+            g_message("fStopAnalysis was TRUE, we stopped it");
+            fStopAnalysis = FALSE;
+        }
+    }
 
 #if defined(USE_GTK)
     if (fX)
@@ -1206,24 +1225,30 @@ CommandAnalyseMatch(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesMatch(&lMatch);
 
-    if(fBackgroundAnalysis)
+    /* if we analyze in the background, we turn on a global flag to disable all sorts of 
+    buttons during the analysis*/
+    if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
-
-    if(fBackgroundAnalysis)
+        g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         ProgressStartValue(_("Analysing match in the background... "
         "you can check the early analysis results."), nMoves);
-    else
+        ShowBoard();
+    } else {
         /* this was supposed to show nMoves, but it's not used at the end;
         on the right side we see "n/nTotal"; so we update the text
         */
         // ProgressStartValue(_("Analysing match; move:"), nMoves);
         ProgressStartValue(_("Analysing match"), nMoves);
+    }
 
     IniStatcontext(&scMatch);
+ 
+
 
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
 
-        if (AnalyzeGame(pl->p, FALSE) < 0) {
+        if (AnalyzeGame(pl->p, FALSE) < 0 || (fBackgroundAnalysis && fStopAnalysis) ) {
+                    g_message("Stop 5 due to fStopAnalysis");
             /* analysis incomplete; erase partial summary */
 
             IniStatcontext(&scMatch);
@@ -1239,8 +1264,16 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis)
+    if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
+        g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        /* if we raised the flag to stop running the analysis, we can now lower it*/
+        if (fStopAnalysis) {
+            g_message("fStopAnalysis was TRUE, we stopped it");
+            fStopAnalysis = FALSE;
+        }
+    }
+
 
 #if defined(USE_GTK)
     if (fX)

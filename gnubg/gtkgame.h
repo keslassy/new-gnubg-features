@@ -59,7 +59,6 @@ extern unsigned int nDelay;
 extern GtkWidget *hpaned;
 extern GtkWidget *pom;
 extern moverecord *pmrCurAnn;
-extern int fBackgroundAnalysis; /* define whether to analyze in the background*/
 
 extern char *ReturnHits(TanBoard anBoard);
 extern gboolean ShowGameWindow(void);

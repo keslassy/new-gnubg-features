@@ -353,7 +353,6 @@ extern float rRatingOffset;
 extern int fAnalyseCube;
 extern int fAnalyseDice;
 extern int fAnalyseMove;
-extern int fAnalysisRunning; /* when analyzing a match in background */
 extern int fAutoBearoff;
 extern int fAutoCrawford;
 extern int fAutoDB;
@@ -391,6 +390,10 @@ extern int log_rollouts;
 extern int nThreadPriority;
 extern int nToolbarStyle;
 extern int nTutorSkillCurrent;
+
+extern int fBackgroundAnalysis; /* define whether to analyze in the background*/
+extern int fAnalysisRunning; /* when analyzing a match in background */
+extern int fStopAnalysis; /* something forces us to put a handbrake on the background analysis*/
 #if defined(USE_BOARD3D)
 extern int fSync;
 extern int fResetSync;

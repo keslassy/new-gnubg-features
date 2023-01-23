@@ -316,13 +316,16 @@ ToolbarUpdate(GtkWidget * pwToolbar,
     if (fEdit || !fPlaying)
         c = C_NONE;
 
-    gtk_widget_set_sensitive(ptw->pwTake, c == C_TAKEDROP || c == C_AGREEDECLINE);
-    gtk_widget_set_sensitive(ptw->pwDrop, c == C_TAKEDROP || c == C_AGREEDECLINE);
-    gtk_widget_set_sensitive(ptw->pwDouble, (c == C_TAKEDROP && !pms->nMatchTo) || c == C_ROLLDOUBLE);
+    /* We want to disable some buttons particularly when we are in the middle of running an analysis
+    in the background => we use !fAnalysisRunning */
 
-    gtk_widget_set_sensitive(ptw->pwSave, plGame != NULL);
-    gtk_widget_set_sensitive(ptw->pwResign, fPlaying && !fEdit);
-    gtk_widget_set_sensitive(ptw->pwHint, fPlaying && !fEdit);
+    gtk_widget_set_sensitive(ptw->pwTake, (c == C_TAKEDROP || c == C_AGREEDECLINE) && !fAnalysisRunning );
+    gtk_widget_set_sensitive(ptw->pwDrop, (c == C_TAKEDROP || c == C_AGREEDECLINE) && !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwDouble, ((c == C_TAKEDROP && !pms->nMatchTo) || c == C_ROLLDOUBLE) && !fAnalysisRunning);
+
+    gtk_widget_set_sensitive(ptw->pwSave, plGame != NULL && !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwResign, fPlaying && !fEdit && !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwHint, fPlaying && !fEdit && !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwPrevMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwPrevCMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwPrev, fPlaying && !fEdit);
@@ -331,8 +334,14 @@ ToolbarUpdate(GtkWidget * pwToolbar,
     gtk_widget_set_sensitive(ptw->pwNext, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwNextCMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwNextMarked, fPlaying && !fEdit);
-    gtk_widget_set_sensitive(ptw->pwEndGame, fPlaying && !fEdit);
-    gtk_widget_set_sensitive(ptw->pwEdit, TRUE);
+    gtk_widget_set_sensitive(ptw->pwEndGame, fPlaying && !fEdit && !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwEdit,  !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwNew,  !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwOpen,  !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwReset,  !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwAnalyzeCurrent,  !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwAnalyzeFile,  !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwEdit,  !fAnalysisRunning);
 
     return c;
 }
