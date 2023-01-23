@@ -7611,7 +7611,7 @@ GTKSet(void *p)
 #else
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Save..."), plGame != NULL);
 
-        enable_sub_menu(gtk_item_factory_get_widget(pif, "/Game"), ms.gs == GAME_PLAYING);
+        enable_sub_menu(gtk_item_factory_get_widget(pif, "/Game"), ms.gs == GAME_PLAYING);       
 
         if (ms.fTurn >= 0)
             enable_menu(gtk_item_factory_get_widget(pif, "/Game/Roll"),
@@ -7625,6 +7625,7 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_GAME), !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Match information..."), !ListEmpty(&lMatch));
 
+            if (!fAnalysisRunning)
         enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse"), ms.gs == GAME_PLAYING);
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Batch analyse..."), TRUE);
@@ -7668,6 +7669,28 @@ GTKSet(void *p)
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Show Records"), TRUE);
 #endif
+        
+        /*disabling everything when we analyze a game in the background*/
+
+
+    // const char* aszMenus[8] = ...;
+
+        if(fBackgroundAnalysis){
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Edit"), !fAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Game"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Settings"), !fAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Go"), !fAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Help"), !fAnalysisRunning);
+        } 
+        
+        
+        
+        
+        
+        
         fAutoCommand = FALSE;
     } else if (p == &ms.fCrawford) {
         bd->crawford_game = ms.fCrawford;

@@ -630,7 +630,7 @@ CreateMoveListTools(hintdata * phd)
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0); 
 #endif
 
-            g_message("fAnalysisRunning=%d",fAnalysisRunning);
+            // g_message("GTK chequer: fAnalysisRunning=%d",fAnalysisRunning);
     /* some buttons are always disabled anyway */
         gtk_widget_set_sensitive(pwMove, FALSE);
     gtk_widget_set_sensitive(pwCopy, FALSE);

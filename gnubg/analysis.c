@@ -959,7 +959,6 @@ AnalyzeGame(listOLD * plGame, int wait)
 
     numMoves--;                 /* Done one - the gameinfo */
 
-
     for (i = 0; i < numMoves; i++) {
         pl = pl->plNext;
         pmr = pl->p;
@@ -1006,7 +1005,19 @@ AnalyzeGame(listOLD * plGame, int wait)
             msAnalyse.fMove = pmr->fPlayer;
         }
         ApplyMoveRecord(&msAnalyse, plGame, pmr);
+//         if(fAnalysisRunning) {
+//             g_message("i=%d",i);
+//             ShowBoard();
+//             /* redraw if analysis running in background*/
+// #if defined(USE_GTK)
+//             if (fX && fAnalysisRunning) {
+//                 SetAnnotation(pmrCurAnn);
+//                 ChangeGame(NULL);
+//             }
+// #endif
+//         }
     }
+
     g_assert(pl->plNext == plGame);
 
     if (wait) {
@@ -1176,7 +1187,8 @@ CommandAnalyseGame(char *UNUSED(sz))
         g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         ProgressStartValue(_("Analysing game in the background... "
         "feel free to browse and check the early analysis results."), nMoves);
-        ShowBoard();
+        ShowBoard(); /* hide unallowd toolbar items*/
+        GTKRegenerateGames(); /* hide unallowed menu items*/
     } else
         ProgressStartValue(_("Analysing game"), nMoves);
 
@@ -1230,9 +1242,10 @@ CommandAnalyseMatch(char *UNUSED(sz))
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
         g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ProgressStartValue(_("Analysing match in the background... "
-        "you can check the early analysis results."), nMoves);
-        ShowBoard();
+        ProgressStartValue(_("Analysing game in the background... "
+        "feel free to browse and check the early analysis results."), nMoves);
+        ShowBoard(); /* hide unallowd toolbar items*/
+        GTKRegenerateGames(); /* hide unallowed menu items*/
     } else {
         /* this was supposed to show nMoves, but it's not used at the end;
         on the right side we see "n/nTotal"; so we update the text
@@ -1243,8 +1256,6 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     IniStatcontext(&scMatch);
  
-
-
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
 
         if (AnalyzeGame(pl->p, FALSE) < 0 || (fBackgroundAnalysis && fStopAnalysis) ) {
@@ -1272,6 +1283,8 @@ CommandAnalyseMatch(char *UNUSED(sz))
             g_message("fStopAnalysis was TRUE, we stopped it");
             fStopAnalysis = FALSE;
         }
+        ShowBoard(); /* show toolbar items*/
+        GTKRegenerateGames(); /* show menu items*/
     }
 
 
