@@ -308,8 +308,12 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     int polltime = callbackLoops ? UI_UPDATETIME : callbackTime;
     guint as_source = 0;
 
-    // char tmp[200];
+    char tmp[200];
     // TanBoard anBoard;
+    moverecord * pmr1;
+    moverecord * pmr2;
+    int start1 = 1;
+    int start2 = 1;
 
     /* Set total tasks to wait for */
     td.totalTasks = td.addedTasks;
@@ -329,23 +333,69 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
             pCallback(NULL);
         }
         ProcessEvents();
-        /* When analysis runs in the background:
+        /* 
+        VERSION 1: When analysis runs in the background:
         Every so often, we make sure it displays the result of the analysis, 
         else the analysis result of the first move is not shown automatically.
+        Likewise it automatically shows the colors of the marked (wrong) moves,
+        which looks really nice.
         - This could probably be improved, no need to check so often,
         it may slow down gnubg
         - It is less frequent than in the loop of the above function: 
-            WaitForAllTasks()
+            WaitForAllTasks(); so maybe it's not too bad
+
+        VERSION 2: 
+        (1) at the start, we record pmr1 of our move. (We call start1 
+        this single step.)
+        (2) As long as the user doesn't move, i.e. we stay at pmr2==pmr1, then 
+        we keep running ChangeGame(). (We call this start2.)
+        (3) If the user moves, i.e. gets to some pmr2 !=pmr1, then we stop:
+        the user may be looking at some cube decision, and ChangeGame() will get
+        to the move decision instead, bothering the user.
+        In this last step, we don't update colors anymore. We could modulate 
+        in the future based on what the user is doing.
         */
-        if(fAnalysisRunning)   
-            ChangeGame(NULL);   
-                // if (pmrCurAnn != NULL) {
-            // g_message("in the loop: pmrCurAnn exists");
-                        // FormatMove(sz + strlen(_("Moved ")), msBoard(), pmr->n.anMove);
-                        // FormatMove(tmp, msBoard(), pmrCurAnn->n.anMove);
-                        // FormatMove(tmp, msBoard(), pmrCurAnn->n.anMove);
-        // g_message("move=%s\n", tmp);
-        // g_message("move index i=%d; move=%s\n",pmrCurAnn->n.iMove, tmp);
+        if (fAnalysisRunning && start2) {
+            if(start1) { 
+                pmr1 = get_current_moverecord(NULL);
+                start1=0;
+                // FormatMove(tmp, msBoard(), pmr1->n.anMove);
+                // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp);
+                ChangeGame(NULL); 
+            } else {
+                pmr2 = get_current_moverecord(NULL);
+                // FormatMove(tmp, msBoard(), pmr2->n.anMove);
+                // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp);
+                if (pmr2 == pmr1) {
+                    ChangeGame(NULL); 
+                } else {
+                    start2=0;
+                }
+            }
+        }
+            // if (pwMoveAnalysis!=NULL)
+            // g_message("yeah!");
+            // if (pwCubeAnalysis!=NULL)
+            // g_message("oop cube!");
+            /* at the start pmr_cur->n.iMove is not valid and returns an
+            arbitrary large number (even thouh pmr_cur is not NULL), then 
+            the first time it's valid it looks like it returns smaller numbers...
+            also it seems that it's valid for analysed games 
+            */
+            // if(pmr_cur->n.iMove<100){
+                // ChangeGame(NULL); 
+                // waitToDisplay=0;
+            // }  
+
+
+
+        //         // if (pmrCurAnn != NULL) {
+        //     // g_message("in the loop: pmrCurAnn exists");
+        //                 // FormatMove(sz + strlen(_("Moved ")), msBoard(), pmr->n.anMove);
+        //                 
+        //                 // FormatMove(tmp, msBoard(), pmrCurAnn->n.anMove);
+        // // g_message("move=%s\n", tmp);
+        // 
         // }
         // SetAnnotation(pmrCurAnn);
 
