@@ -1185,9 +1185,8 @@ CommandAnalyseGame(char *UNUSED(sz))
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
         g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ProgressStartValue(_("Analysing game in the background... "
-        "feel free to browse and check the early analysis results."), nMoves);
-        ShowBoard(); /* hide unallowd toolbar items*/
+        ProgressStartValue(_("Background analysis. Browsing-only mode: "
+        "feel free to browse and check the early analysis results."), nMoves);        ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
     } else
         ProgressStartValue(_("Analysing game"), nMoves);
@@ -1202,6 +1201,8 @@ CommandAnalyseGame(char *UNUSED(sz))
     if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
         g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+                ShowBoard(); /* hide unallowd toolbar items*/
+        GTKRegenerateGames(); /* hide unallowed menu items*/
         /* if we raised the flag to stop running the analysis, we can now lower it*/
         if (fStopAnalysis) {
             g_message("fStopAnalysis was TRUE, we stopped it");
@@ -1227,6 +1228,8 @@ CommandAnalyseMatch(char *UNUSED(sz))
     moverecord *pmr;
     int nMoves;
     int fStore_crawford;
+    //    char tmp[200];
+    //    TanBoard anBoard;
 
     if (!CheckGameExists())
         return;
@@ -1241,9 +1244,9 @@ CommandAnalyseMatch(char *UNUSED(sz))
     buttons during the analysis*/
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
-        g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ProgressStartValue(_("Analysing game in the background... "
-        "feel free to browse and check the early analysis results."), nMoves);
+        // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        ProgressStartValue(_("Background analysis. Browsing-only mode: "
+        "feel free to browse and check the early analysis results."), nMoves); 
         ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
     } else {
@@ -1268,6 +1271,10 @@ CommandAnalyseMatch(char *UNUSED(sz))
         pmr = (moverecord *) ((listOLD *) pl->p)->plNext->p;
         g_assert(pmr->mt == MOVE_GAMEINFO);
         AddStatcontext(&pmr->g.sc, &scMatch);
+        //FormatMove(tmp, (ConstTanBoard)anBoard, pmr->n.anMove);
+        //g_message("CommandAnalyseMatch: move=%s\n", tmp);
+        // g_message("CommandAnalyseMatch: moves=%d%d%d%d\n", pmr->n.anMove[0],
+        //         pmr->n.anMove[1],pmr->n.anMove[2],pmr->n.anMove[3]);
     }
 
     multi_debug("wait for all task: analysis");
@@ -1277,12 +1284,13 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
-        g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         /* if we raised the flag to stop running the analysis, we can now lower it*/
         if (fStopAnalysis) {
             g_message("fStopAnalysis was TRUE, we stopped it");
             fStopAnalysis = FALSE;
         }
+                // CalculateBoard();
         ShowBoard(); /* show toolbar items*/
         GTKRegenerateGames(); /* show menu items*/
     }

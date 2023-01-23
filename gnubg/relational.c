@@ -454,7 +454,7 @@ CommandRelationalAddMatch(char *sz)
     if (existing_id != -1) {
         char *buf2;
 
-        if (!quiet && !GetInputYN(_("Match exists, overwrite?")))
+        if (!quiet && !GetInputYN(_("Match exists in database, overwrite?")))
             return;
 
         /* Remove any game stats and games */

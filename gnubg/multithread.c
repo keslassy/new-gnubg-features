@@ -34,6 +34,7 @@
 #include "multithread.h"
 #include "rollout.h"
 #include "util.h"
+#include "drawboard.h" /*for FormatMove()*/
 #include "lib/simd.h"
 
 #if defined(USE_MULTITHREAD)
@@ -284,6 +285,12 @@ WaitForAllTasks(int time)
     int j = 0;
 
     while (!MT_SafeCompare(&td.doneTasks, td.totalTasks)) {
+        
+        // if (pmrCurAnn != NULL) {
+        //     g_message("in the loop: pmrCurAnn exists");
+        // }
+        // SetAnnotation(pmrCurAnn);
+        // ChangeGame(NULL);
         if (j == 10)
             return FALSE;       /* Not done yet */
 
@@ -300,6 +307,9 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     int waits = 0;
     int polltime = callbackLoops ? UI_UPDATETIME : callbackTime;
     guint as_source = 0;
+
+    // char tmp[200];
+    // TanBoard anBoard;
 
     /* Set total tasks to wait for */
     td.totalTasks = td.addedTasks;
@@ -319,6 +329,26 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
             pCallback(NULL);
         }
         ProcessEvents();
+        /* When analysis runs in the background:
+        Every so often, we make sure it displays the result of the analysis, 
+        else the analysis result of the first move is not shown automatically.
+        - This could probably be improved, no need to check so often,
+        it may slow down gnubg
+        - It is less frequent than in the loop of the above function: 
+            WaitForAllTasks()
+        */
+        if(fAnalysisRunning)   
+            ChangeGame(NULL);   
+                // if (pmrCurAnn != NULL) {
+            // g_message("in the loop: pmrCurAnn exists");
+                        // FormatMove(sz + strlen(_("Moved ")), msBoard(), pmr->n.anMove);
+                        // FormatMove(tmp, msBoard(), pmrCurAnn->n.anMove);
+                        // FormatMove(tmp, msBoard(), pmrCurAnn->n.anMove);
+        // g_message("move=%s\n", tmp);
+        // g_message("move index i=%d; move=%s\n",pmrCurAnn->n.iMove, tmp);
+        // }
+        // SetAnnotation(pmrCurAnn);
+
     }
     if (autosave) {
         g_source_remove(as_source);
