@@ -358,31 +358,36 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         to the move decision instead, bothering the user.
         In this last step, we don't update colors anymore. We could modulate 
         in the future based on what the user is doing.
+
+        VERSION 3: disabled for layered analysis, since we can quickly see the 0-ply
+        eval
         */
         // if (pwMoveAnalysis!=NULL)       
         //        g_message("sensitive:%d", gtk_widget_is_sensitive(pwAnalysis));
-        i++;
-        if (i==3) {
-            i=0;
-            if (fAnalysisRunning && start2) {
-                if(start1) { 
-                    pmr1 = get_current_moverecord(NULL);
-                    start1=0;
-                    FormatMove(tmp1, msBoard(), pmr1->n.anMove);
-                    // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
-                    ChangeGame(NULL); 
-                } else {
-                    pmr2 = get_current_moverecord(NULL);
-                    FormatMove(tmp2, msBoard(), pmr2->n.anMove);
-                    // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
-                    // if (pwMoveAnalysis!=NULL)
-                    //     g_message("new results");
-                    if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
-                        // g_message("STOP");
-                        start2=0;
-                    } else {
-                        // g_message("change");
+        if (fAnalysisRunning &&!fLayeredAnalysis) {
+            i++;
+            if (i==3) {
+                i=0;
+                if (start2) {
+                    if(start1) { 
+                        pmr1 = get_current_moverecord(NULL);
+                        start1=0;
+                        FormatMove(tmp1, msBoard(), pmr1->n.anMove);
+                        // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
                         ChangeGame(NULL); 
+                    } else {
+                        pmr2 = get_current_moverecord(NULL);
+                        FormatMove(tmp2, msBoard(), pmr2->n.anMove);
+                        // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
+                        // if (pwMoveAnalysis!=NULL)
+                        //     g_message("new results");
+                        if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
+                            // g_message("STOP");
+                            start2=0;
+                        } else {
+                            // g_message("change");
+                            ChangeGame(NULL); 
+                        }
                     }
                 }
             }

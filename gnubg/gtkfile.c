@@ -871,41 +871,65 @@ extern void
 GTKAnalyzeCurrent(void)
 {
 
-    // fBackgroundAnalysis=0;
-    int tempCheckerPly=esAnalysisChequer.ec.nPlies;
-    int tempCubePly=esAnalysisCube.ec.nPlies;
-    esAnalysisChequer.ec.nPlies=0;
-    esAnalysisCube.ec.nPlies=0;
+    if (fBackgroundAnalysis && fLayeredAnalysis) {
 
-    // aamfAnalysis=MYMOVEFILTER;
+        /*** (1) run analysis layer at 0-ply ***/
+        int tempCheckerPly=esAnalysisChequer.ec.nPlies;
+        int tempCubePly=esAnalysisCube.ec.nPlies;
+        esAnalysisChequer.ec.nPlies=0;
+        esAnalysisCube.ec.nPlies=0;
+        // aamfAnalysis=MYMOVEFILTER;
+        // UserCommand("set analysis chequerplay eval plies 0");
 
-    // UserCommand("set analysis chequerplay eval plies 0");
+        /*analyze match*/
+        UserCommand("analyse match");
 
-    /*analyze match*/
-    UserCommand("analyse match");
+        if (tempCheckerPly==0 && tempCubePly==0)
+            goto remainder;
 
-    // aamfAnalysis=MOVEFILTER_LARGE;
+        /*** (2) run analysis layer at 2-ply ***/
+        esAnalysisChequer.ec.nPlies=MIN(2,tempCheckerPly);
+        esAnalysisCube.ec.nPlies=MIN(2,tempCubePly);
 
-    esAnalysisChequer.ec.nPlies=tempCheckerPly;
-    esAnalysisCube.ec.nPlies=tempCubePly;
-    UserCommand("analyse move");
-    
-    // fBackgroundAnalysis=1;
-    // MoveListRefreshSize();
-            //FixMatchState(&ms, pmr);
+        /* without this command, there is a memory problem with the first move*/
+        UserCommand("analyse move");
+        UserCommand("analyse match");
 
-    // UserCommand("set analysis chequerplay eval plies 2");
 
-    /*analyze match*/
-    UserCommand("analyse match");
-    // fBackgroundAnalysis=1;
-    if(fAutoDB) {
-        /*add match to db*/
-        CommandRelationalAddMatch(NULL);
+        if (tempCheckerPly<=2 && tempCubePly<=2) {
+            esAnalysisChequer.ec.nPlies=tempCheckerPly;
+            esAnalysisCube.ec.nPlies=tempCubePly;
+            goto remainder;
+        }
+
+        /*** (3) run analysis layer at full ply ***/
+
+        esAnalysisChequer.ec.nPlies=tempCheckerPly;
+        esAnalysisCube.ec.nPlies=tempCubePly;
+        /* without this command, there is a memory problem with the first move*/
+        UserCommand("analyse move");
+        UserCommand("analyse match");
+        
+        // fBackgroundAnalysis=1;
+        // MoveListRefreshSize();
+                //FixMatchState(&ms, pmr);
+
+        // UserCommand("set analysis chequerplay eval plies 2");
+
+        // fBackgroundAnalysis=1;
+    } else {
+        UserCommand("analyse match");
     }
-    /*show stats panel*/
-    UserCommand("show statistics match");
-    return;
+
+    remainder:
+
+        if(fAutoDB) {
+            /*add match to db*/
+            CommandRelationalAddMatch(NULL);
+        }
+        /*show stats panel*/
+        UserCommand("show statistics match");
+        return;
 }
 
 extern void

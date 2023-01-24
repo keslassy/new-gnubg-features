@@ -1205,7 +1205,7 @@ CommandAnalyseGame(char *UNUSED(sz))
     /* see explanations in CommandAnalyseMatch()*/
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
-        g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        // g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button): "
         "feel free to browse and check the early analysis results."), nMoves);        
         ShowBoard(); /* hide unallowd toolbar items*/
@@ -1222,9 +1222,9 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
-        g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-                ShowBoard(); /* hide unallowd toolbar items*/
-        GTKRegenerateGames(); /* hide unallowed menu items*/
+        // g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        ShowBoard(); /* show toolbar items*/
+        GTKRegenerateGames(); /* show menu items*/
         /* if we raised the flag to stop running the analysis, we can now lower it*/
         if (fStopAnalysis) {
             g_message("fStopAnalysis was TRUE, we stopped it");

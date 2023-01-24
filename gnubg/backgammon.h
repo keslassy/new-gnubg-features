@@ -391,9 +391,22 @@ extern int nThreadPriority;
 extern int nToolbarStyle;
 extern int nTutorSkillCurrent;
 
-extern int fBackgroundAnalysis; /* define whether to analyze in the background*/
-extern int fAnalysisRunning; /* when analyzing a match in background */
-extern int fStopAnalysis; /* something forces us to put a handbrake on the background analysis*/
+/* define whether to run analyses in the background*/
+extern int fBackgroundAnalysis;
+
+/* when analyzing a match in the background, we turn on the following global flag to disable 
+all sorts of buttons during the analysis (e.g. eval, rollout, etc.), since we are not 
+equipped for a second parallel analysis */
+extern int fAnalysisRunning;
+
+ /* if we analyze in the background and the user needs the analysis to stop, we turn on the following
+ global flag to stop the analysis -- UNUSED?*/
+extern int fStopAnalysis;
+
+/* define whether to analyze by layers: e.g. first analyze the whole match at 0-ply,
+then at 2-ply, finally at 3-ply (conditional on fBackgroundAnalysis being set)*/
+extern int fLayeredAnalysis; 
+
 #if defined(USE_BOARD3D)
 extern int fSync;
 extern int fResetSync;

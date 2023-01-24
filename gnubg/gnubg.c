@@ -213,15 +213,10 @@ unsigned int cAutoDoubles = 0;
 unsigned int nBeavers = 3;
 unsigned int nDefaultLength = 7;
 
-/* TRUE if analysis should run in the background; false by default, can be changed in menu*/
 int fBackgroundAnalysis = FALSE; 
-/* if we analyze in the background, we turn on the following global flag to disable all sorts of 
-buttons during the analysis (e.g. eval, rollout, etc.), since we are not equipped for a second
-parallel analysis */
 int fAnalysisRunning = FALSE;
-/* if we analyze in the background and the user needs the analysis to stop, we turn on the following
- global flag to stop the analysis*/
 int fStopAnalysis = FALSE;
+int fLayeredAnalysis = TRUE;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
