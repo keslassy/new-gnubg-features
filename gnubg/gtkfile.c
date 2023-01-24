@@ -826,7 +826,7 @@ void recentByModification(const char* path, char* recent){
             if (entry->d_type == DT_REG) {
 #else
             DIR* dir2 = opendir(entry);
-            if(dir==NULL) {
+            if(dir2==NULL) {
 #endif 
                 /* we then check that it's more recent than what we've seen so far*/
                 sprintf(buffer, "%s/%s", path, entry->d_name);
