@@ -48,8 +48,8 @@ typedef struct {
     GtkWidget *pwTake;          /* button for "Take" */
     GtkWidget *pwDrop;          /* button for "Drop" */
     GtkWidget *pwResign;        /* button for "Resign" */
-    GtkWidget *pwEndGame;       /* button for "play game" */
-    GtkWidget *pwHint;          /* button for "Hint" */
+    // GtkWidget *pwEndGame;       /* button for "play game" */
+    // GtkWidget *pwHint;          /* button for "Hint" */
     GtkWidget *pwPrevMarked;    /* button for "Previous Marked" */
     GtkWidget *pwPrevCMarked;   /* button for "Previous CMarked" */
     GtkWidget *pwPrev;          /* button for "Previous Roll" */
@@ -325,7 +325,7 @@ ToolbarUpdate(GtkWidget * pwToolbar,
 
     gtk_widget_set_sensitive(ptw->pwSave, plGame != NULL && !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwResign, fPlaying && !fEdit && !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwHint, fPlaying && !fEdit && !fAnalysisRunning);
+    // gtk_widget_set_sensitive(ptw->pwHint, fPlaying && !fEdit && !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwPrevMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwPrevCMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwPrev, fPlaying && !fEdit);
@@ -334,14 +334,13 @@ ToolbarUpdate(GtkWidget * pwToolbar,
     gtk_widget_set_sensitive(ptw->pwNext, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwNextCMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwNextMarked, fPlaying && !fEdit);
-    gtk_widget_set_sensitive(ptw->pwEndGame, fPlaying && !fEdit && !fAnalysisRunning);
+    // gtk_widget_set_sensitive(ptw->pwEndGame, fPlaying && !fEdit && !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwEdit,  !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwNew,  !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwOpen,  !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwReset,  !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwAnalyzeCurrent,  !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwAnalyzeCurrent, plGame != NULL &&  !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwAnalyzeFile,  !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwEdit,  !fAnalysisRunning);
 
     return c;
 }
@@ -361,6 +360,35 @@ ToolbarAddButton(GtkToolbar * pwToolbar, const char *stockID, const char *label,
 
     return GTK_WIDGET(but);
 }
+
+// static GtkWidget *
+// ToolbarAddButtonFromFile(GtkToolbar * pwToolbar, const char *filename, const char *label, const char *tooltip,
+//                  GCallback callback, void *data)
+// {
+//     GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+//     int width, height;
+//     gdk_pixbuf_get_file_info (filename, &width, &height);
+//     gtk_icon_theme_add_builtin_icon ("custom_icon", width, pixbuf);
+//     g_object_unref (G_OBJECT (pixbuf)); 
+
+// //    GtkToolButton *but = gtk_tool_button_new(
+
+
+
+//     GtkToolItem *but = gtk_toggle_tool_button_new();
+//     gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON(but), "custom_icon");
+
+
+//     // GtkToolItem *but = gtk_image_new_from_file(filename);
+//     // gtk_widget_set_tooltip_text(GTK_WIDGET(but), tooltip);
+//     // if (label)
+//     //     gtk_tool_button_set_label(GTK_TOOL_BUTTON(but), label);
+//     gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar), but, -1);
+
+//     g_signal_connect(G_OBJECT(but), "clicked", callback, data);
+
+//     return GTK_WIDGET(but);
+// }
 
 static GtkWidget *
 ToolbarAddWidget(GtkToolbar * pwToolbar, GtkWidget * pWidget, const char *tooltip)
@@ -410,22 +438,22 @@ ToolbarNew(void)
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwDouble), TRUE);
     ptw->pwResign = gtk_ui_manager_get_widget(puim, "/MainToolBar/Resign");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwResign), TRUE);
-    ptw->pwEndGame = gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
+    // ptw->pwEndGame = gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame");
+    // gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
     ptw->pwReset = gtk_ui_manager_get_widget(puim, "/MainToolBar/Undo");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwReset), TRUE);
-    ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeCurrent");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
-    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeFile");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeFile), TRUE);
-    ptw->pwHint = gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwHint), TRUE);
+    // ptw->pwHint = gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint");
+    // gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwHint), TRUE);
     ptw->pwEdit = gtk_ui_manager_get_widget(puim, "/MainToolBar/EditPosition");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEdit), TRUE);
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(ptw->pwEdit), NULL);
     ptw->pwButtonClockwise = gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwButtonClockwise), FALSE);
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(ptw->pwButtonClockwise), _("Direction"));
+    ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeCurrent");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
+    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeFile");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeFile), TRUE);
     ptw->pwPrevCMarked = gtk_ui_manager_get_widget(puim, "/MainToolBar/PreviousCMarkedMove");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwPrevCMarked), FALSE);
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(ptw->pwPrevCMarked), "");
@@ -472,6 +500,8 @@ ToolbarNew(void)
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(pwtb), GTK_ICON_SIZE_LARGE_TOOLBAR);
     gtk_orientable_set_orientation(GTK_ORIENTABLE(pwtb), GTK_ORIENTATION_HORIZONTAL);
     gtk_toolbar_set_style(GTK_TOOLBAR(pwtb), GTK_TOOLBAR_BOTH);
+        // gtk_toolbar_set_show_arrow(GTK_TOOLBAR(pwtb), FALSE);
+
     gtk_box_pack_start(GTK_BOX(vbox_toolbar), pwtb, FALSE, FALSE, 0);
 
     gtk_toolbar_set_tooltips(GTK_TOOLBAR(pwtb), TRUE);
@@ -515,11 +545,16 @@ ToolbarNew(void)
         ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_RESIGN, NULL, _("Resign the current game"),
                          G_CALLBACK(GTKResign), NULL);
 
-    /* End game button */
-    ptw->pwEndGame =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_END_GAME, NULL, _("Let the computer end the game"),
-                         G_CALLBACK(ButtonClicked), "end game");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
+    /* removed to make space for analysis buttons. 
+    (1) it's a very seldom used button, 
+    (2) it's on the menu as well, 
+    (3) it also has a shortcut 
+    */
+    // /* End game button */
+    // ptw->pwEndGame =
+    //     ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_END_GAME, NULL, _("Let the computer end the game"),
+    //                      G_CALLBACK(ButtonClicked), "end game");
+    // gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
 
     ToolbarAddSeparator(GTK_TOOLBAR(pwtb));
 
@@ -527,10 +562,15 @@ ToolbarNew(void)
     ptw->pwReset =
         ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_UNDO, NULL, _("Undo moves"), G_CALLBACK(GTKUndo), NULL);
 
-    /* Hint button */
-    ptw->pwHint =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_HINT, NULL, _("Show the best moves or cube action"),
-                         G_CALLBACK(ButtonClicked), "hint");
+    /* removed to make space for analysis buttons. 
+    (1) it's a less used button, 
+    (2) it's on the menu as well, 
+    (3) it also has a shortcut 
+    */
+    // /* Hint button */
+    // ptw->pwHint =
+    //     ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_HINT, NULL, _("Show the best moves or cube action"),
+    //                      G_CALLBACK(ButtonClicked), "hint");
 
     /* edit button */
     ptw->pwEdit = gtk_toggle_button_new();
@@ -554,14 +594,19 @@ ToolbarNew(void)
     ToolbarAddSeparator(GTK_TOOLBAR(pwtb));
 
     /* Analyze current match button */
+    // ptw->pwAnalyzeCurrent =
+    //     ToolbarAddButtonFromFile(GTK_TOOLBAR(pwtb), 
+    //     "./AnalyzeMatchIcon.png", NULL, 
+    //     _("Analyze current match (set default behavior in Settings -> Analysis)"), 
+    //     G_CALLBACK(GTKAnalyzeCurrent), NULL);
     ptw->pwAnalyzeCurrent =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, NULL, 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, "Analyze", 
         _("Analyze current match (set default behavior in Settings -> Analysis)"), 
         G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
     /* Analyze file button */
     ptw->pwAnalyzeFile =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, NULL, 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_FIND_AND_REPLACE, "Analyze File", 
         _("Analyze match from file (set default behavior in Settings -> Analysis)"), 
         G_CALLBACK(GTKAnalyzeFile), NULL);
 

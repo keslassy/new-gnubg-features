@@ -315,7 +315,8 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     moverecord * pmr2;
     int start1 = 1;
     int start2 = 1;
-    int myPage;
+    //int myPage;
+    int i=0;
 
     /* Set total tasks to wait for */
     td.totalTasks = td.addedTasks;
@@ -346,7 +347,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         - It is less frequent than in the loop of the above function: 
             WaitForAllTasks(); so maybe it's not too bad
 
-        VERSION 2: 
+        VERSION 2: periodically (every 3 times we go through the loop):
         (1) at the start, we record pmr1 of our move. (We call start1 
         this single step.)
         (2) As long as the user doesn't move, i.e. we stay at pmr2==pmr1, then 
@@ -360,25 +361,29 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         */
         // if (pwMoveAnalysis!=NULL)       
         //        g_message("sensitive:%d", gtk_widget_is_sensitive(pwAnalysis));
-        if (fAnalysisRunning && start2) {
-            if(start1) { 
-                pmr1 = get_current_moverecord(NULL);
-                start1=0;
-                FormatMove(tmp1, msBoard(), pmr1->n.anMove);
-                // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
-                ChangeGame(NULL); 
-            } else {
-                pmr2 = get_current_moverecord(NULL);
-                FormatMove(tmp2, msBoard(), pmr2->n.anMove);
-                // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
-                // if (pwMoveAnalysis!=NULL)
-                //     g_message("new results");
-                if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
-                    // g_message("STOP");
-                    start2=0;
-                } else {
-                    // g_message("change");
+        i++;
+        if (i==3) {
+            i=0;
+            if (fAnalysisRunning && start2) {
+                if(start1) { 
+                    pmr1 = get_current_moverecord(NULL);
+                    start1=0;
+                    FormatMove(tmp1, msBoard(), pmr1->n.anMove);
+                    // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
                     ChangeGame(NULL); 
+                } else {
+                    pmr2 = get_current_moverecord(NULL);
+                    FormatMove(tmp2, msBoard(), pmr2->n.anMove);
+                    // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
+                    // if (pwMoveAnalysis!=NULL)
+                    //     g_message("new results");
+                    if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
+                        // g_message("STOP");
+                        start2=0;
+                    } else {
+                        // g_message("change");
+                        ChangeGame(NULL); 
+                    }
                 }
             }
         }
