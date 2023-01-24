@@ -596,7 +596,7 @@ batch_do_all(gpointer batch_model, gboolean add_to_db, gboolean add_incdata_to_d
         gchar *filename;
         gint cancelled;
         gtk_tree_model_get(batch_model, &iter, COL_PATH, &filename, -1);
-
+        //outputerrf("filename=%s\n", filename);
         batch_analyse(filename, &result, add_to_db, add_incdata_to_db);
         gtk_list_store_set(batch_model, &iter, COL_RESULT, result, -1);
 
@@ -821,6 +821,8 @@ void recentByModification(const char* path, char* recent){
 
     if (dir) {
         while (NULL != (entry = readdir(dir))) {
+           // outputerrf(_("`%s' ... looking at file....: %s, time: %lld"), entry->d_name, recent, (long long)recenttime);
+
             /* we first check that it's a file*/
             if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0 || strncmp(entry->d_name, "/", 1) == 0 || strncmp(entry->d_name, "\\", 1) == 0)
                 continue;
@@ -839,11 +841,11 @@ void recentByModification(const char* path, char* recent){
                     /* next we check that it's a correct file format*/
                     fdp = ReadFilePreview(buffer);
                     if (!fdp) {
-                        outputerrf(_("`%s' is not a backgammon file (especially %s)... looking at file....: %s, time: %lld"), buffer,entry->d_name, recent, (long long) recenttime);
+                        //outputerrf(_("`%s' is not a backgammon file (especially %s)... looking at file....: %s, time: %lld"), buffer,entry->d_name, recent, (long long) recenttime);
                         g_free(fdp);
                         continue;
                     } else if (fdp->type == N_IMPORT_TYPES) {
-                        outputerrf(_("The format of '%s' is not recognized  (especially %s)"), buffer,entry->d_name);
+                        //outputerrf(_("The format of '%s' is not recognized  (especially %s)"), buffer,entry->d_name);
                         g_free(fdp);
                         continue;
                     } else {
@@ -861,7 +863,7 @@ void recentByModification(const char* path, char* recent){
         }
         closedir(dir);
     } else {
-        g_message("Unable to read directory");
+        outputerrf("Unable to read the directory");
     }
 }
 
@@ -907,8 +909,14 @@ AnalyzeSingleFile(void)
         // //     return;
 
         /*open this file*/
-        CommandImportAuto(filename);
+        gchar* cmd;
+        cmd = g_strdup_printf("import auto \"%s\"", filename);
+        UserCommand(cmd);
+        g_free(cmd);
+        ////outputerrf("filename=%s\n", filename);
+        //CommandImportAuto(filename);
         g_free(filename);
+
         /*analyze match*/
         UserCommand("analyse match");
         if(fAutoDB) {
@@ -935,9 +943,16 @@ SmartAnalyze(void)
 
     /* find most recent file in the folder and write its name (in char recent[])*/
     recentByModification(folder, recent);
-    // g_message("recent=%s\n", recent);
+
     /*open this file*/
-    CommandImportAuto(recent);
+    gchar* cmd;
+    cmd = g_strdup_printf("import auto \"%s\"", recent);
+    UserCommand(cmd);
+    g_free(cmd);
+
+    //outputerrf("recent=%s\n", recent);
+    //CommandImportAuto(recent);
+
     /*analyze match*/
     UserCommand("analyse match");
     if(fAutoDB) {

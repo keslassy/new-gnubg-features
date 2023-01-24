@@ -3612,8 +3612,10 @@ CommandImportAuto(char *sz)
 {
     FilePreviewData *fdp;
     gchar *cmd;
-
+    /* Careful! NextToken breaks the Windows file/directory names with spaces! */
+    //outputerrf("before=%s\n", sz);
     sz = NextToken(&sz);
+    //outputerrf("after=%s\n", sz);
 
     if (!sz || !*sz) {
         outputerrf(_("You must specify a file to import (see `help " "import auto')."));

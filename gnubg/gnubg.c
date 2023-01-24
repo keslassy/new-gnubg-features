@@ -668,6 +668,9 @@ GetBuildInfoString(void)
  You can have single quotes unescaped within double quoted strings and
  double quotes unescaped within single quoted strings.
  */
+
+ /* Careful! It breaks the Windows file/directory names with spaces! */
+
 extern char *
 NextTokenGeneral(char **ppch, const char *szTokens)
 {
@@ -685,7 +688,7 @@ NextTokenGeneral(char **ppch, const char *szTokens)
 #if !defined(G_DISABLE_ASSERT)
     pchEnd = strchr(*ppch, 0);
 #endif
-
+    //outputerrf("ppch=%s\n", (*ppch));
     /* skip leading whitespace */
     while (isspace(**ppch))
         (*ppch)++;
@@ -765,6 +768,8 @@ NextTokenGeneral(char **ppch, const char *szTokens)
 
     *pchSave = 0;
 
+    //outputerrf("pch=%s\n", pch);
+
 #if !defined(G_DISABLE_ASSERT)
     g_assert(pchSave <= pchEnd);
     g_assert(*ppch <= pchEnd);
@@ -775,7 +780,7 @@ NextTokenGeneral(char **ppch, const char *szTokens)
 
 }
 
-/* extrace a token from a string. Tokens are terminated by tab, newline, 
+/* extract a token from a string. Tokens are terminated by tab, newline, 
  * carriage return, vertical tab or form feed.
  * Input:
  * 
@@ -787,6 +792,9 @@ NextTokenGeneral(char **ppch, const char *szTokens)
  * Output:
  * null terminated token if found or NULL if no tokens present.
  */
+
+ /* Careful! NextToken breaks the Windows file/directory names with spaces! */
+
 extern char *
 NextToken(char **ppch)
 {
