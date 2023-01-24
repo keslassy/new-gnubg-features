@@ -18,8 +18,6 @@
  * $Id: gtkfile.c,v 1.78 2022/12/15 22:23:00 plm Exp $
  */
 
-#define _FILE_OFFSET_BITS  64
-
 #include "config.h"
 #include "backgammon.h"
 #include "gtklocdefs.h"
@@ -812,14 +810,6 @@ batch_create_dialog_and_run(GSList * filenames, gboolean add_to_db)
 
 /* functions to find latest file in folder */
 
-// int isExceptionalDir(const char* name){
-//   if (name==NULL || name[0]=='\0') return 1;
-//   else if (name[0]=='.') {
-//     if (name[1]=='\0') return 1;
-//     else if (name[1]=='.' && name[2]=='\0') return 1;
-//   }
-//   return 0;
-// }
 
 void recentByModification(const char* path, char* recent){
     char buffer[MAX_LEN];
@@ -828,11 +818,16 @@ void recentByModification(const char* path, char* recent){
     time_t recenttime = 0;
     struct stat statbuf;
     DIR* dir  = opendir(path);
+
     if (dir) {
         while (NULL != (entry = readdir(dir))) {
-            //if (!isExceptionalDir(entry->d_name)) {
             /* we first check that it's a file*/
+#ifdef _DIRENT_HAVE_D_TYPE
             if (entry->d_type == DT_REG) {
+#else
+            DIR* dir2 = opendir(entry);
+            if(dir==NULL) {
+#endif 
                 /* we then check that it's more recent than what we've seen so far*/
                 sprintf(buffer, "%s/%s", path, entry->d_name);
                 stat(buffer, &statbuf);
