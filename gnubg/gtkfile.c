@@ -18,6 +18,8 @@
  * $Id: gtkfile.c,v 1.78 2022/12/15 22:23:00 plm Exp $
  */
 
+#define _FILE_OFFSET_BITS  64
+
 #include "config.h"
 #include "backgammon.h"
 #include "gtklocdefs.h"
