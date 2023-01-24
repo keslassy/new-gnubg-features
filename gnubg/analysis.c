@@ -1206,8 +1206,9 @@ CommandAnalyseGame(char *UNUSED(sz))
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
         g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves);        ShowBoard(); /* hide unallowd toolbar items*/
+        ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button): "
+        "feel free to browse and check the early analysis results."), nMoves);        
+        ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
     } else
         ProgressStartValue(_("Analysing game"), nMoves);
@@ -1260,14 +1261,15 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesMatch(&lMatch);
+    
 
     /* if we analyze in the background, we turn on a global flag to disable all sorts of 
     buttons during the analysis*/
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
         // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves); 
+        ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button): "
+        "feel free to browse and check the early analysis results."), nMoves);        
         ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
     } else {
@@ -1279,7 +1281,13 @@ CommandAnalyseMatch(char *UNUSED(sz))
     }
 
     IniStatcontext(&scMatch);
- 
+
+    // int tempCheckerPly=esAnalysisChequer.ec.nPlies;
+    // int tempCubePly=esAnalysisCube.ec.nPlies;
+    // esAnalysisChequer.ec.nPlies=0;
+    // esAnalysisCube.ec.nPlies=0;
+
+    /*  1  */
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
 
         if (AnalyzeGame(pl->p, FALSE) < 0 || (fBackgroundAnalysis && fStopAnalysis) ) {
@@ -1300,6 +1308,34 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     multi_debug("wait for all task: analysis");
     MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+
+    // esAnalysisChequer.ec.nPlies=tempCheckerPly;
+    // esAnalysisCube.ec.nPlies=tempCubePly;
+
+
+
+    // /*  2  */
+    // for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
+
+    //     if (AnalyzeGame(pl->p, FALSE) < 0 || (fBackgroundAnalysis && fStopAnalysis) ) {
+    //                 g_message("Stop 5 due to fStopAnalysis");
+    //         /* analysis incomplete; erase partial summary */
+
+    //         IniStatcontext(&scMatch);
+    //         break;
+    //     }
+    //     pmr = (moverecord *) ((listOLD *) pl->p)->plNext->p;
+    //     g_assert(pmr->mt == MOVE_GAMEINFO);
+    //     AddStatcontext(&pmr->g.sc, &scMatch);
+    //     //FormatMove(tmp, (ConstTanBoard)anBoard, pmr->n.anMove);
+    //     //g_message("CommandAnalyseMatch: move=%s\n", tmp);
+    //     // g_message("CommandAnalyseMatch: moves=%d%d%d%d\n", pmr->n.anMove[0],
+    //     //         pmr->n.anMove[1],pmr->n.anMove[2],pmr->n.anMove[3]);
+    // }
+
+    // multi_debug("wait for all task: analysis");
+    // MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+
 
     ProgressEnd();
 

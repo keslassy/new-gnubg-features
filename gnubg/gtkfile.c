@@ -870,8 +870,35 @@ void recentByModification(const char* path, char* recent){
 extern void
 GTKAnalyzeCurrent(void)
 {
+
+    // fBackgroundAnalysis=0;
+    int tempCheckerPly=esAnalysisChequer.ec.nPlies;
+    int tempCubePly=esAnalysisCube.ec.nPlies;
+    esAnalysisChequer.ec.nPlies=0;
+    esAnalysisCube.ec.nPlies=0;
+
+    // aamfAnalysis=MYMOVEFILTER;
+
+    // UserCommand("set analysis chequerplay eval plies 0");
+
     /*analyze match*/
     UserCommand("analyse match");
+
+    // aamfAnalysis=MOVEFILTER_LARGE;
+
+    esAnalysisChequer.ec.nPlies=tempCheckerPly;
+    esAnalysisCube.ec.nPlies=tempCubePly;
+    UserCommand("analyse move");
+    
+    // fBackgroundAnalysis=1;
+    // MoveListRefreshSize();
+            //FixMatchState(&ms, pmr);
+
+    // UserCommand("set analysis chequerplay eval plies 2");
+
+    /*analyze match*/
+    UserCommand("analyse match");
+    // fBackgroundAnalysis=1;
     if(fAutoDB) {
         /*add match to db*/
         CommandRelationalAddMatch(NULL);

@@ -170,7 +170,7 @@ MoveListRefreshSize(void)
 }
 
 /*
- * Call UpdateMostList to update the movelist in the GTK hint window.
+ * Call MoveListUpdate to update the movelist in the GTK hint window.
  * For example, after new evaluations, rollouts or toggle of MWC/Equity.
  *
  */
@@ -208,7 +208,8 @@ MoveListUpdate(const hintdata * phd)
     g_assert(ms.fMove == 0 || ms.fMove == 1);
 
     GetMatchStateCubeInfo(&ci, &ms);
-    rBest = pml->amMoves[0].rScore;
+    g_message("%f",phd->pml->amMoves[0].rScore);
+    rBest = pml->amMoves[0].rScore; //<================================================================== MYBUG
 
     if (!showWLTree)
         gtk_tree_view_column_set_title(gtk_tree_view_get_column(GTK_TREE_VIEW(phd->pwMoves), col),
