@@ -37,6 +37,7 @@
 #include "gtkwindows.h"
 #include "file.h"
 #include "util.h"
+#include "multithread.h"
 
 /*for picking the first file in folder...*/
 #include <stdio.h>
@@ -938,11 +939,13 @@ LayeredAnalysis(void)
     // if (!fStopAnalysis) 
     //     /* without this command, there is a memory problem with the first move*/
     //     UserCommand("analyse move");
-    if (!fStopAnalysis)         
+
+    if (!fStopAnalysis) // && MT_SafeGet(&td.result) >= 0)         
         UserCommand("analyse match");
-    if (!fStopAnalysis) 
-        /* without this command, there is a memory problem with the first move*/
-        UserCommand("analyse move");
+
+    // if (!fStopAnalysis) // && MT_SafeGet(&td.result) >= 0) 
+    //     /* without this command, there is a memory problem with the first move*/
+    //     UserCommand("analyse move");
 
 
     TurnOnOffBA(FALSE);

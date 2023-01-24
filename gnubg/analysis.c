@@ -1315,8 +1315,13 @@ CommandAnalyseMatch(char *UNUSED(sz))
         //         pmr->n.anMove[1],pmr->n.anMove[2],pmr->n.anMove[3]);
     }
 
+    g_message("CommandAnalyseMatch: calling MT_WaitForTasks: UpdateProgressBar");
     multi_debug("wait for all task: analysis");
-    MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+    int tmpInt = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+    if (fBackgroundAnalysis && (tmpInt<0)) {
+        g_message("CommandAnalyseMatch: SAW THE -1!");
+        fStopAnalysis=1;
+    }
 
     // esAnalysisChequer.ec.nPlies=tempCheckerPly;
     // esAnalysisCube.ec.nPlies=tempCubePly;

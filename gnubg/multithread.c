@@ -188,6 +188,7 @@ MT_CreateThreads(void)
     }
     td.addedTasks = td.numThreads;
     /* Wait for all the threads to be created (timeout after 1 second) */
+    g_message("MT_CreateThreads: calling MT_WaitForTasks: WaitingForThreads");
     if (MT_WaitForTasks(WaitingForThreads, 1000, FALSE) != (int) td.numThreads)
         g_print(_("Error creating threads!\n"));
 }
@@ -436,6 +437,10 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
 #if defined(USE_GTK)
     GTKResumeInput();
 #endif
+    if(fBackgroundAnalysis && MT_SafeGet(&td.result) == -1){
+        fStopAnalysis=1;
+        //MT_CloseThreads();
+    }
     return MT_SafeGet(&td.result);
 }
 
