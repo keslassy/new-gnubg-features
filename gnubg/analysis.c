@@ -50,6 +50,7 @@ features, together with two new buttons in the main toolbar: "Analyze" and
 #include "eval.h"
 #if defined(USE_GTK)
 #include "gtkgame.h"
+#include "gtkfile.h"
 #endif
 #include "positionid.h"
 #include "analysis.h"
@@ -969,6 +970,7 @@ AnalyzeGame(listOLD * plGame, int wait)
     unsigned int numMoves = NumberMovesGame(plGame);
     AnalyseMoveTask *pt = NULL, *pParentTask = NULL;
 
+    g_message("in AnalyzeGame: START, going to AnalyzeMove for 1st move");
     /* Analyse first move record (gameinfo) */
     g_assert(pmr->mt == MOVE_GAMEINFO);
     if ( (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
@@ -1050,6 +1052,7 @@ AnalyzeGame(listOLD * plGame, int wait)
         }
         else {
             multi_debug("wait for all task: analysis");
+            g_message("around end of AnalyzeGame, calling MT_WaitForTasks: UpdateProgressBar");
             result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
         }
         if (result == -1)
@@ -1204,12 +1207,14 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     /* see explanations in CommandAnalyseMatch()*/
     if(fBackgroundAnalysis) {
-        fAnalysisRunning = TRUE;
+        // fAnalysisRunning = TRUE;
         // g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button): "
         "feel free to browse and check the early analysis results."), nMoves);        
-        ShowBoard(); /* hide unallowd toolbar items*/
-        GTKRegenerateGames(); /* hide unallowed menu items*/
+        // ShowBoard(); /* hide unallowd toolbar items*/
+        // GTKRegenerateGames(); /* hide unallowed menu items*/
+        if(fSandwich == ONE_GAME)
+            TurnOnOffBA(TRUE);
     } else
         ProgressStartValue(_("Analysing game"), nMoves);
 
@@ -1220,14 +1225,16 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis) {
-        fAnalysisRunning = FALSE;
+    if(fBackgroundAnalysis && fSandwich == ONE_GAME) {
+            TurnOnOffBA(TRUE);
+        // fAnalysisRunning = FALSE;
         // g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ShowBoard(); /* show toolbar items*/
-        GTKRegenerateGames(); /* show menu items*/
+        // ShowBoard(); /* show toolbar items*/
+        // GTKRegenerateGames(); /* show menu items*/
         /* if we raised the flag to stop running the analysis, we can now lower it*/
         if (fStopAnalysis) {
-            g_message("fStopAnalysis was TRUE, we stopped it");
+            g_message("CommandAnalyseGame: fStopAnalysis was TRUE, we stopped i");
+            // if(fSandwich == ONE_GAME)
             fStopAnalysis = FALSE;
         }
     }
@@ -1266,12 +1273,14 @@ CommandAnalyseMatch(char *UNUSED(sz))
     /* if we analyze in the background, we turn on a global flag to disable all sorts of 
     buttons during the analysis*/
     if(fBackgroundAnalysis) {
-        fAnalysisRunning = TRUE;
-        // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        // fAnalysisRunning = TRUE;
+        g_message("CommandAnalyseMatch START: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button): "
         "feel free to browse and check the early analysis results."), nMoves);        
-        ShowBoard(); /* hide unallowd toolbar items*/
-        GTKRegenerateGames(); /* hide unallowed menu items*/
+        // ShowBoard(); /* hide unallowd toolbar items*/
+        // GTKRegenerateGames(); /* hide unallowed menu items*/
+        if(fSandwich == ONE_GAME)
+            TurnOnOffBA(TRUE);
     } else {
         /* this was supposed to show nMoves, but it's not used at the end;
         on the right side we see "n/nTotal"; so we update the text
@@ -1339,19 +1348,19 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis) {
-        fAnalysisRunning = FALSE;
-        // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+    if(fBackgroundAnalysis && fSandwich == ONE_MATCH) {
+            TurnOnOffBA(TRUE);
+        // fAnalysisRunning = FALSE;
+        g_message("CommandAnalyseMatch STOP: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        // ShowBoard(); /* show toolbar items*/
+        // GTKRegenerateGames(); /* show menu items*/
         /* if we raised the flag to stop running the analysis, we can now lower it*/
         if (fStopAnalysis) {
-            g_message("fStopAnalysis was TRUE, we stopped it");
+            g_message("CommandAnalyseMatch: fStopAnalysis was TRUE, we stopped it");
+            // if(fSandwich == ONE_GAME)
             fStopAnalysis = FALSE;
         }
-                // CalculateBoard();
-        ShowBoard(); /* show toolbar items*/
-        GTKRegenerateGames(); /* show menu items*/
     }
-
 
 #if defined(USE_GTK)
     if (fX)
@@ -1718,13 +1727,15 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.pesCube = &esAnalysisCube;
         md.aamf = aamfAnalysis;
 
-        // if(fBackgroundAnalysis)
-        //     fAnalysisRunning = TRUE;
+        if(fBackgroundAnalysis && fSandwich == ONE_MOVE) {
+            TurnOnOffBA(TRUE);
+        }
 
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
 
-        // if(fBackgroundAnalysis)
-        //     fAnalysisRunning = FALSE;
+        if(fBackgroundAnalysis && fSandwich == ONE_MOVE) {
+            TurnOnOffBA(FALSE);
+        }
 
 #if defined(USE_GTK)
         if (fX)

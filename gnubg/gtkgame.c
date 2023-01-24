@@ -4911,9 +4911,9 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
             python_script = NULL;
         }
 
-        /* initialize by saying there is no analysis running now in the background*/
-        if(fBackgroundAnalysis)
-             fAnalysisRunning = FALSE;
+        // /* initialize by saying there is no analysis running now in the background*/
+        // if(fBackgroundAnalysis)
+        //      fAnalysisRunning = FALSE;
 
         gtk_main();
 

@@ -428,7 +428,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         save_autosave(NULL);
     }
     multi_debug("done waiting for all tasks");
-
+    g_message("done, calling MT_SafeSet, MT_SafeGet td.result=%d",MT_SafeGet(&td.result));
     MT_SafeSet(&td.doneTasks, 0);
     td.addedTasks = 0;
     td.totalTasks = -1;

@@ -867,69 +867,124 @@ void recentByModification(const char* path, char* recent){
     }
 }
 
+/* We always enter this function after an "if (fBackgroundAnalysis)" */
+extern void
+TurnOnOffBA(int b) {
+
+    if (!fBackgroundAnalysis) {
+        g_message("TurnOnOffBA: error");
+        return;
+    }
+
+    fAnalysisRunning = b;
+    ShowBoard(); /* show/hide unallowd toolbar items*/
+    GTKRegenerateGames(); /* show/hide unallowed menu items*/
+
+    g_message("Finishing TurnOnOffBA: fAnalysisRunning=%d, fSandwich=%d, fStopAnalysis=%d",
+        fAnalysisRunning,fSandwich,fStopAnalysis);
+}
+
+/* run the layered analysis with several layers of different plies*/
+extern void
+LayeredAnalysis(void)
+{
+    /*sanity check: */
+    if (!(fBackgroundAnalysis && fLayeredAnalysis)){
+        g_message("LayeredAnalysis: error");
+        return;
+    }
+
+    TurnOnOffBA(TRUE);
+
+    /*** (1) run analysis layer at 0-ply ***/
+    int tempCheckerPly=esAnalysisChequer.ec.nPlies;
+    int tempCubePly=esAnalysisCube.ec.nPlies;
+    esAnalysisChequer.ec.nPlies=0;
+    esAnalysisCube.ec.nPlies=0;
+    // aamfAnalysis=MYMOVEFILTER;
+    // UserCommand("set analysis chequerplay eval plies 0");
+
+
+    // if (!fStopAnalysis)
+    //     UserCommand("analyse move");
+    /*analyze match*/
+    if (!fStopAnalysis)    
+        UserCommand("analyse match");
+
+    if (tempCheckerPly==0 && tempCubePly==0) {
+        TurnOnOffBA(FALSE);
+        return;
+    }
+
+    // /*** (2) run analysis layer at 2-ply ***/
+    // esAnalysisChequer.ec.nPlies=MIN(2,tempCheckerPly);
+    // esAnalysisCube.ec.nPlies=MIN(2,tempCubePly);
+
+
+    // /* without this command, there is a memory problem with the first move*/
+    // UserCommand("analyse move");
+    // UserCommand("analyse match");
+
+
+    // if (tempCheckerPly<=2 && tempCubePly<=2) {
+    //     esAnalysisChequer.ec.nPlies=tempCheckerPly;
+    //     esAnalysisCube.ec.nPlies=tempCubePly;
+    //     return;
+    // }
+
+    /*** (3) run analysis layer at full ply ***/
+    esAnalysisChequer.ec.nPlies=tempCheckerPly;
+    esAnalysisCube.ec.nPlies=tempCubePly;
+    // if (!fStopAnalysis) 
+    //     /* without this command, there is a memory problem with the first move*/
+    //     UserCommand("analyse move");
+    if (!fStopAnalysis)         
+        UserCommand("analyse match");
+    if (!fStopAnalysis) 
+        /* without this command, there is a memory problem with the first move*/
+        UserCommand("analyse move");
+
+
+    TurnOnOffBA(FALSE);
+    return;
+    // fBackgroundAnalysis=1;
+    // MoveListRefreshSize();
+            //FixMatchState(&ms, pmr);
+
+    // UserCommand("set analysis chequerplay eval plies 2");
+
+    // fBackgroundAnalysis=1;
+}
+
+
 extern void
 GTKAnalyzeCurrent(void)
 {
 
     if (fBackgroundAnalysis && fLayeredAnalysis) {
-
-        /*** (1) run analysis layer at 0-ply ***/
-        int tempCheckerPly=esAnalysisChequer.ec.nPlies;
-        int tempCubePly=esAnalysisCube.ec.nPlies;
-        esAnalysisChequer.ec.nPlies=0;
-        esAnalysisCube.ec.nPlies=0;
-        // aamfAnalysis=MYMOVEFILTER;
-        // UserCommand("set analysis chequerplay eval plies 0");
-
-        /*analyze match*/
-        UserCommand("analyse match");
-
-        if (tempCheckerPly==0 && tempCubePly==0)
-            goto remainder;
-
-        /*** (2) run analysis layer at 2-ply ***/
-        esAnalysisChequer.ec.nPlies=MIN(2,tempCheckerPly);
-        esAnalysisCube.ec.nPlies=MIN(2,tempCubePly);
-
-        /* without this command, there is a memory problem with the first move*/
-        UserCommand("analyse move");
-        UserCommand("analyse match");
-
-
-        if (tempCheckerPly<=2 && tempCubePly<=2) {
-            esAnalysisChequer.ec.nPlies=tempCheckerPly;
-            esAnalysisCube.ec.nPlies=tempCubePly;
-            goto remainder;
-        }
-
-        /*** (3) run analysis layer at full ply ***/
-
-        esAnalysisChequer.ec.nPlies=tempCheckerPly;
-        esAnalysisCube.ec.nPlies=tempCubePly;
-        /* without this command, there is a memory problem with the first move*/
-        UserCommand("analyse move");
-        UserCommand("analyse match");
-        
-        // fBackgroundAnalysis=1;
-        // MoveListRefreshSize();
-                //FixMatchState(&ms, pmr);
-
-        // UserCommand("set analysis chequerplay eval plies 2");
-
-        // fBackgroundAnalysis=1;
+        fSandwich = LAYERED_MATCH;
+        fStopAnalysis = FALSE;
+        // fAnalysisRunning = FALSE;
+        LayeredAnalysis();
     } else {
+        fSandwich = ONE_MATCH;
+        fStopAnalysis = FALSE;
+        // fAnalysisRunning = FALSE;
         UserCommand("analyse match");
     }
+    fSandwich = UNDEFINED_SANDWICH;
+    fStopAnalysis = FALSE;
+    // fAnalysisRunning = FALSE;
 
-    remainder:
+    if(fAutoDB) {
+        /*add match to db*/
+        CommandRelationalAddMatch(NULL);
+    }
+    /*show stats panel*/
+    UserCommand("show statistics match");
 
-        if(fAutoDB) {
-            /*add match to db*/
-            CommandRelationalAddMatch(NULL);
-        }
-        /*show stats panel*/
-        UserCommand("show statistics match");
-        return;
+
+    return;
 }
 
 extern void

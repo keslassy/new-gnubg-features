@@ -217,6 +217,7 @@ int fBackgroundAnalysis = FALSE;
 int fAnalysisRunning = FALSE;
 int fStopAnalysis = FALSE;
 int fLayeredAnalysis = TRUE;
+analysissandwich fSandwich =  UNDEFINED_SANDWICH;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
@@ -5414,7 +5415,19 @@ RunAsyncProcess(AsyncFun fun, void *data, const char *msg)
     MT_AddTask(pt, TRUE);
 #endif
 
-    ProgressStart(msg);
+    /* if we analyze in the background, we turn on a global flag to disable all sorts of 
+    buttons during the analysis*/
+    if(fBackgroundAnalysis) {
+        // fAnalysisRunning = TRUE;
+        // ShowBoard(); /* hide unallowd toolbar items*/
+        // GTKRegenerateGames(); /* hide unallowed menu items*/
+        g_message("RunAsyncProcess: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        ProgressStart(_("Background analysis. Browsing-only mode (until you press the stop button): "
+        "feel free to browse and check the early analysis results."));        
+
+    } else {
+        ProgressStart(msg);
+    }
 
 #if defined(USE_MULTITHREAD)
     ret = MT_WaitForTasks(Progress, 100, FALSE);
@@ -5426,6 +5439,11 @@ RunAsyncProcess(AsyncFun fun, void *data, const char *msg)
 
     ProgressEnd();
 
+    if(fBackgroundAnalysis && fStopAnalysis && fSandwich == ONE_MOVE) {
+        /* if we raised the flag to stop running the analysis, we can now lower it*/
+        g_message("RunAsyncProcess: fStopAnalysis was TRUE, we stopped it");
+        fStopAnalysis = FALSE;
+    }
     return ret;
 }
 
