@@ -839,7 +839,7 @@ void recentByModification(const char* path, char* recent){
                     /* next we check that it's a correct file format*/
                     fdp = ReadFilePreview(buffer);
                     if (!fdp) {
-                        outputerrf(_("`%s' is not a backgammon file (especially %s)"), buffer,entry->d_name);
+                        outputerrf(_("`%s' is not a backgammon file (especially %s)... looking at file....: %s, time: %lld"), buffer,entry->d_name, recent, (long long) recenttime);
                         g_free(fdp);
                         continue;
                     } else if (fdp->type == N_IMPORT_TYPES) {
