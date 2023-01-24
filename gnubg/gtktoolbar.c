@@ -600,13 +600,13 @@ ToolbarNew(void)
     //     _("Analyze current match (set default behavior in Settings -> Analysis)"), 
     //     G_CALLBACK(GTKAnalyzeCurrent), NULL);
     ptw->pwAnalyzeCurrent =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, "Analyze", 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyze"), 
         _("Analyze current match (set default behavior in Settings -> Analysis)"), 
         G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
     /* Analyze file button */
     ptw->pwAnalyzeFile =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_FIND_AND_REPLACE, "Analyze File", 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_FIND_AND_REPLACE, _("Analyze File"), 
         _("Analyze match from file (set default behavior in Settings -> Analysis)"), 
         G_CALLBACK(GTKAnalyzeFile), NULL);
 

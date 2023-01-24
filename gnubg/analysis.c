@@ -18,6 +18,27 @@
  * $Id: analysis.c,v 1.261 2022/12/28 20:23:56 plm Exp $
  */
 
+/*
+01/2023: Isaac Keslassy: introduced the "background analysis" and "smart analysis" 
+features, together with two new buttons in the main toolbar: "Analyze" and 
+"Analyze File"
+- 1st button: "Analyze":
+    - This is to analyze the current match. 
+    - Define options for what it does (in Settings>Analysis):
+        - regular "analyze match" (blocking, like today) vs "background analysis": 
+            we can browse at the same time and check the analysis
+        - w/o automatic add-to-database (like today) vs 
+            w/ automatic add-to-db
+- 2nd button: "Analyze file": 
+    - This is for a file, e.g. a match that we just played online. 
+    - Define 3 options (in Settings>Analysis):
+        - regular "batch analysis": blocking, like today
+        - "single-file analysis": background analysis of 1 chosen file + add-to-db
+        - "smart analysis": pick the newest file in the preferred folder that gnubg 
+            recognizes, then background analysis + add-to-db
+*/
+
+
 #include "config.h"
 
 #include <glib.h>
