@@ -822,7 +822,7 @@ void recentByModification(const char* path, char* recent){
     if (dir) {
         while (NULL != (entry = readdir(dir))) {
             /* we first check that it's a file*/
-            if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0 || strncmp(entry->d_name, "/", 1) == 0 || strncmp(entry->d_name, "\\", 1) == 0)
                 continue;
                 /* check file type when DIRENT is defined; could use stat if not*/
 #ifdef _DIRENT_HAVE_D_TYPE
@@ -839,11 +839,11 @@ void recentByModification(const char* path, char* recent){
                     /* next we check that it's a correct file format*/
                     fdp = ReadFilePreview(buffer);
                     if (!fdp) {
-                        outputerrf(_("`%s' is not a backgammon file"), buffer);
+                        outputerrf(_("`%s' is not a backgammon file (especially %s)"), buffer,entry->d_name);
                         g_free(fdp);
                         continue;
                     } else if (fdp->type == N_IMPORT_TYPES) {
-                        outputf(_("The format of '%s' is not recognized"), buffer);
+                        outputerrf(_("The format of '%s' is not recognized  (especially %s)"), buffer,entry->d_name);
                         g_free(fdp);
                         continue;
                     } else {
