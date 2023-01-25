@@ -889,22 +889,28 @@ TurnOnOffBA(int b) {
 extern void
 LayeredAnalysis(void)
 {
+    int layer1=0;
+    int layer2=1;
+    
     /*sanity check: */
     if (!(fBackgroundAnalysis && fLayeredAnalysis)){
         g_message("LayeredAnalysis: error");
         return;
     }
 
+    if(layer2<=layer1)
+        g_message("Error: layer2 needs to be larger than layer1!");
+    
     TurnOnOffBA(TRUE);
 
-    /*** (1) run analysis layer at 0-ply ***/
+    /*** (1) run analysis layer at layer1, e.g. 0-ply ***/
     int tempCheckerPly=esAnalysisChequer.ec.nPlies;
     int tempCubePly=esAnalysisCube.ec.nPlies;
-    esAnalysisChequer.ec.nPlies=0;
-    esAnalysisCube.ec.nPlies=0;
+    esAnalysisChequer.ec.nPlies=layer1;
+    esAnalysisCube.ec.nPlies=layer1;
+    g_message("esAnalysis eval strength=%d,%d", esAnalysisChequer.ec.nPlies, esAnalysisCube.ec.nPlies);
     // aamfAnalysis=MYMOVEFILTER;
     // UserCommand("set analysis chequerplay eval plies 0");
-
 
     // if (!fStopAnalysis)
     //     UserCommand("analyse move");
@@ -912,30 +918,38 @@ LayeredAnalysis(void)
     if (!fStopAnalysis)    
         UserCommand("analyse match");
 
-    if (tempCheckerPly==0 && tempCubePly==0) {
+    if (tempCheckerPly==layer1 && tempCubePly==layer1) {
         TurnOnOffBA(FALSE);
         return;
     }
 
-    // /*** (2) run analysis layer at 2-ply ***/
-    // esAnalysisChequer.ec.nPlies=MIN(2,tempCheckerPly);
-    // esAnalysisCube.ec.nPlies=MIN(2,tempCubePly);
-
+    /*** (2) run analysis layer at layer2, e.g. 2-ply ***/
+    esAnalysisChequer.ec.nPlies=MIN(layer2,tempCheckerPly);
+    esAnalysisCube.ec.nPlies=MIN(layer2,tempCubePly);
+    g_message("esAnalysis eval strength=%d,%d", esAnalysisChequer.ec.nPlies, esAnalysisCube.ec.nPlies);
 
     // /* without this command, there is a memory problem with the first move*/
     // UserCommand("analyse move");
-    // UserCommand("analyse match");
+    UpdateGame(FALSE);
+    if (!fStopAnalysis) // && MT_SafeGet(&td.result) >= 0)         
+        UserCommand("analyse match");
+    UpdateGame(FALSE);
 
+    
 
-    // if (tempCheckerPly<=2 && tempCubePly<=2) {
-    //     esAnalysisChequer.ec.nPlies=tempCheckerPly;
-    //     esAnalysisCube.ec.nPlies=tempCubePly;
-    //     return;
-    // }
+    if (tempCheckerPly<=layer2 && tempCubePly<=layer2) {
+        TurnOnOffBA(FALSE);
+        esAnalysisChequer.ec.nPlies=tempCheckerPly;
+        esAnalysisCube.ec.nPlies=tempCubePly;
+        return;
+    }
 
     /*** (3) run analysis layer at full ply ***/
     esAnalysisChequer.ec.nPlies=tempCheckerPly;
     esAnalysisCube.ec.nPlies=tempCubePly;
+    g_message("esAnalysis eval strength=%d,%d", esAnalysisChequer.ec.nPlies, esAnalysisCube.ec.nPlies);
+
+
     // if (!fStopAnalysis) 
     //     /* without this command, there is a memory problem with the first move*/
     //     UserCommand("analyse move");
@@ -950,9 +964,9 @@ LayeredAnalysis(void)
     //     /* without this command, there is a memory problem with the first move*/
     //     UserCommand("analyse move");
 
-        UpdateGame(FALSE);
+    UpdateGame(FALSE);
     TurnOnOffBA(FALSE);
-        UpdateGame(FALSE);
+    UpdateGame(FALSE);
     // fBackgroundAnalysis=1;
     // MoveListRefreshSize();
             //FixMatchState(&ms, pmr);

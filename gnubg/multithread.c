@@ -365,7 +365,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         */
         // if (pwMoveAnalysis!=NULL)       
         //        g_message("sensitive:%d", gtk_widget_is_sensitive(pwAnalysis));
-        if (fAnalysisRunning){// &&!fLayeredAnalysis) {
+        if (fAnalysisRunning && !fLayeredAnalysis) {
             i++;
             if (i==3) {
                 i=0;
@@ -375,7 +375,8 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
                         start1=0;
                         FormatMove(tmp1, msBoard(), pmr1->n.anMove);
                         // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
-                        ChangeGame(NULL); 
+                        // ChangeGame(NULL); 
+                        UpdateGame(FALSE);
                     } else {
                         pmr2 = get_current_moverecord(NULL);
                         FormatMove(tmp2, msBoard(), pmr2->n.anMove);
@@ -387,7 +388,8 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
                             start2=0;
                         } else {
                             // g_message("change");
-                            ChangeGame(NULL); 
+                            // ChangeGame(NULL);
+                            UpdateGame(FALSE);
                         }
                     }
                 }
