@@ -1275,8 +1275,8 @@ CommandAnalyseMatch(char *UNUSED(sz))
     if(fBackgroundAnalysis) {
         // fAnalysisRunning = TRUE;
         g_message("CommandAnalyseMatch START: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button): "
-        "feel free to browse and check the early analysis results."), nMoves);        
+        ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button)."), 
+        nMoves);        
         // ShowBoard(); /* hide unallowd toolbar items*/
         // GTKRegenerateGames(); /* hide unallowed menu items*/
         if(fSandwich == ONE_GAME)

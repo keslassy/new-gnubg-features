@@ -878,8 +878,8 @@ TurnOnOffBA(int b) {
     }
 
     fAnalysisRunning = b;
-    ShowBoard(); /* show/hide unallowd toolbar items*/
-    GTKRegenerateGames(); /* show/hide unallowed menu items*/
+    // ShowBoard(); /* show/hide unallowd toolbar items*/
+    // GTKRegenerateGames(); /* show/hide unallowed menu items*/
 
     g_message("Finishing TurnOnOffBA: fAnalysisRunning=%d, fSandwich=%d, fStopAnalysis=%d",
         fAnalysisRunning,fSandwich,fStopAnalysis);
@@ -939,10 +939,12 @@ LayeredAnalysis(void)
     // if (!fStopAnalysis) 
     //     /* without this command, there is a memory problem with the first move*/
     //     UserCommand("analyse move");
-
+    // ChangeGame(NULL);
+    // GTKFreeze();
     if (!fStopAnalysis) // && MT_SafeGet(&td.result) >= 0)         
         UserCommand("analyse match");
-
+    // GTKThaw();
+    // ChangeGame(NULL);
     // if (!fStopAnalysis) // && MT_SafeGet(&td.result) >= 0) 
     //     /* without this command, there is a memory problem with the first move*/
     //     UserCommand("analyse move");

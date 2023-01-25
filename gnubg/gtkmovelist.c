@@ -169,6 +169,16 @@ MoveListRefreshSize(void)
     }
 }
 
+// extern void
+// PrintMove(char * message, moverecord *pmr)
+// {
+//           char tmp[200];
+//        TanBoard anBoard;
+
+//         FormatMove(tmp, (ConstTanBoard)anBoard, pmr->n.anMove);
+//         g_message("%s: move=%s\n", message, tmp);
+// }
+
 /*
  * Call MoveListUpdate to update the movelist in the GTK hint window.
  * For example, after new evaluations, rollouts or toggle of MWC/Equity.
@@ -208,7 +218,7 @@ MoveListUpdate(const hintdata * phd)
     g_assert(ms.fMove == 0 || ms.fMove == 1);
 
     GetMatchStateCubeInfo(&ci, &ms);
-    g_message("%f",phd->pml->amMoves[0].rScore);
+    g_message("MoveListUpdate: phd->pml->amMoves[0].rScore=%f",phd->pml->amMoves[0].rScore);
     rBest = pml->amMoves[0].rScore; //<================================================================== MYBUG
 
     if (!showWLTree)
