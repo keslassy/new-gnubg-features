@@ -365,7 +365,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         */
         // if (pwMoveAnalysis!=NULL)       
         //        g_message("sensitive:%d", gtk_widget_is_sensitive(pwAnalysis));
-        if (fAnalysisRunning &&!fLayeredAnalysis) {
+        if (fAnalysisRunning){// &&!fLayeredAnalysis) {
             i++;
             if (i==3) {
                 i=0;
