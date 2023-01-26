@@ -22,6 +22,7 @@
 #define MULTITHREAD_H
 
 #include "config.h"
+#include "gtkchequer.h" /* layered analysis*/
 
 #if defined(WIN32)
 #include <process.h>
@@ -57,6 +58,8 @@ typedef struct {
     listOLD *plGame;
     statcontext *psc;
     matchstate ms;
+    /*maybe delete! tests for layered analysis:*/
+    hintdata * phd;
 } AnalyseMoveTask;
 
 typedef struct {

@@ -31,6 +31,11 @@ typedef unsigned int uint32_t;
 
 #include "gnubg-types.h"
 
+// #include <glib.h> /*layered analysis*/
+// #include "gtkchequer.h" /* layered analysis*/
+// // /* #include "backgammon.h"  /*layered analysis*/
+
+
 /* Set to calculate simple cache stats */
 #define CACHE_STATS 0
 

@@ -983,9 +983,9 @@ AnalyzeGame(listOLD * plGame, int wait)
     numMoves--;                 /* Done one - the gameinfo */
 
     for (i = 0; i < numMoves; i++) {
+        // g_message("AnalyzeGame:move %d/%d",i,numMoves);
         pl = pl->plNext;
         pmr = pl->p;
-
         if (pmr == NULL || (fBackgroundAnalysis && fStopAnalysis)) {
                     g_message("Stop 2 due to fStopAnalysis");
             /* corrupt moves list */
@@ -1226,7 +1226,7 @@ CommandAnalyseGame(char *UNUSED(sz))
     ProgressEnd();
 
     if(fBackgroundAnalysis && fSandwich == ONE_GAME) {
-            TurnOnOffBA(TRUE);
+            TurnOnOffBA(FALSE);
         // fAnalysisRunning = FALSE;
         // g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         // ShowBoard(); /* show toolbar items*/
@@ -1279,7 +1279,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
         nMoves);        
         // ShowBoard(); /* hide unallowd toolbar items*/
         // GTKRegenerateGames(); /* hide unallowed menu items*/
-        if(fSandwich == ONE_GAME)
+        if(fSandwich == ONE_MATCH)
             TurnOnOffBA(TRUE);
     } else {
         /* this was supposed to show nMoves, but it's not used at the end;
@@ -1298,7 +1298,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     /*  1  */
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
-
+        
         if (AnalyzeGame(pl->p, FALSE) < 0 || (fBackgroundAnalysis && fStopAnalysis) ) {
                     g_message("Stop 5 due to fStopAnalysis");
             /* analysis incomplete; erase partial summary */
@@ -1354,7 +1354,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
     ProgressEnd();
 
     if(fBackgroundAnalysis && fSandwich == ONE_MATCH) {
-            TurnOnOffBA(TRUE);
+            TurnOnOffBA(FALSE);
         // fAnalysisRunning = FALSE;
         g_message("CommandAnalyseMatch STOP: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         // ShowBoard(); /* show toolbar items*/

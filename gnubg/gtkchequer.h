@@ -34,7 +34,7 @@ typedef struct {
     GtkWidget *pwShow;          /* button for showing moves */
     GtkWidget *pwTempMap;       /* button for showing temperature map */
     GtkWidget *pwCmark;         /* button for marking */
-    GtkWidget *pwScoreMap;      /* button for showing move score map */
+    GtkWidget *pwScoreMap;      /* button for showing scoremap */
     moverecord *pmr;
     movelist *pml;
     int fButtonsValid;

@@ -878,8 +878,8 @@ TurnOnOffBA(int b) {
     }
 
     fAnalysisRunning = b;
-    ShowBoard(); /* show/hide unallowd toolbar items*/
-    GTKRegenerateGames(); /* show/hide unallowed menu items*/
+    // ShowBoard(); /* show/hide unallowd toolbar items*/
+    // GTKRegenerateGames(); /* show/hide unallowed menu items*/
 
     g_message("Finishing TurnOnOffBA: fAnalysisRunning=%d, fSandwich=%d, fStopAnalysis=%d",
         fAnalysisRunning,fSandwich,fStopAnalysis);

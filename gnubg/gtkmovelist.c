@@ -26,6 +26,7 @@
 #include "format.h"
 #include "gtkmovelistctrl.h"
 #include "drawboard.h"
+#include "multithread.h"
 
 #define DETAIL_COLUMN_COUNT 11
 #define MIN_COLUMN_COUNT 5
@@ -152,7 +153,26 @@ MoveListCreate(hintdata * phd)
         gtk_list_store_append(store, &iter);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(store));
-    MoveListUpdate(phd);
+    //if(!fAnalysisRunning && !fLayeredAnalysis)
+
+        AnalyseMoveTask *pt = NULL;
+        pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
+        pt->task.fun = (AsyncFun) MoveListUpdateMT;
+        pt->task.data = pt;
+        pt->task.pLinkedTask = NULL;
+        pt->pmr = NULL;
+        pt->plGame = NULL;
+        pt->psc = NULL;
+        pt->phd=phd;
+        MT_AddTask((Task *) pt, TRUE);
+
+
+
+        //MoveListUpdate(phd);
+
+
+
+
 }
 
 float rBest;
@@ -169,6 +189,15 @@ MoveListRefreshSize(void)
     }
 }
 
+void GetRScore (Task * task) {
+
+    AnalyseMoveTask *amt;
+    amt = (AnalyseMoveTask *) task;
+    
+    g_message("INSIDE GetRScore: amt->pml->amMoves[0].rScore=%f",amt->pml->amMoves[0].rScore);
+    rBest= amt->pml->amMoves[0].rScore;
+    }
+
 // extern void
 // PrintMove(char * message, moverecord *pmr)
 // {
@@ -178,6 +207,15 @@ MoveListRefreshSize(void)
 //         FormatMove(tmp, (ConstTanBoard)anBoard, pmr->n.anMove);
 //         g_message("%s: move=%s\n", message, tmp);
 // }
+
+static void
+MoveListUpdateMT(Task * task)
+{
+    AnalyseMoveTask *amt;
+    amt = (AnalyseMoveTask *) task;
+    MoveListUpdate(amt->phd);
+}
+
 
 /*
  * Call MoveListUpdate to update the movelist in the GTK hint window.
@@ -218,8 +256,25 @@ MoveListUpdate(const hintdata * phd)
     g_assert(ms.fMove == 0 || ms.fMove == 1);
 
     GetMatchStateCubeInfo(&ci, &ms);
-    g_message("MoveListUpdate: phd->pml->amMoves[0].rScore=%f",phd->pml->amMoves[0].rScore);
+        // if(!fAnalysisRunning && !fLayeredAnalysis) {
+    // MT_Exclusive();
+    // g_message("MoveListUpdate: phd->pml->amMoves[0].rScore=%f",phd->pml->amMoves[0].rScore);
+        
     rBest = pml->amMoves[0].rScore; //<================================================================== MYBUG
+    
+        // AnalyseMoveTask *pt = NULL;
+        // pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
+        // pt->task.fun = (AsyncFun) GetRScore;
+        // pt->task.data = pt;
+        // pt->task.pLinkedTask = NULL;
+        // pt->pmr = NULL;
+        // pt->plGame = NULL;
+        // pt->psc = NULL;
+        // pt->pml=pml;
+        // MT_AddTask((Task *) pt, TRUE);
+
+    //   GetRScore(pml);
+    // MT_Release();
 
     if (!showWLTree)
         gtk_tree_view_column_set_title(gtk_tree_view_get_column(GTK_TREE_VIEW(phd->pwMoves), col),

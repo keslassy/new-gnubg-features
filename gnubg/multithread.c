@@ -317,7 +317,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     int start1 = 1;
     int start2 = 1;
     //int myPage;
-    int i=0;
+    // int i=0;
 
     /* Set total tasks to wait for */
     td.totalTasks = td.addedTasks;
@@ -366,17 +366,17 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         // if (pwMoveAnalysis!=NULL)       
         //        g_message("sensitive:%d", gtk_widget_is_sensitive(pwAnalysis));
         if (fAnalysisRunning && !fLayeredAnalysis) {
-            i++;
-            if (i==3) {
-                i=0;
+            // i++;
+            // if (i==3) {
+            //     i=0;
                 if (start2) {
                     if(start1) { 
                         pmr1 = get_current_moverecord(NULL);
                         start1=0;
                         FormatMove(tmp1, msBoard(), pmr1->n.anMove);
                         // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
-                        // ChangeGame(NULL); 
-                        UpdateGame(FALSE);
+                        ChangeGame(NULL); 
+                        // UpdateGame(FALSE);
                     } else {
                         pmr2 = get_current_moverecord(NULL);
                         FormatMove(tmp2, msBoard(), pmr2->n.anMove);
@@ -388,12 +388,12 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
                             start2=0;
                         } else {
                             // g_message("change");
-                            // ChangeGame(NULL);
-                            UpdateGame(FALSE);
+                            ChangeGame(NULL);
+                            // UpdateGame(FALSE);
                         }
                     }
                 }
-            }
+            // }
         }
         // myPage=gtk_notebook_get_current_page(GTK_NOTEBOOK(gtk_widget_get_parent(pwAnalysis)));
         // g_message("notebook page=%d",myPage);
