@@ -47,6 +47,10 @@ enum {
     ML_COL_DATA
 };
 
+static GtkListStore * globalStore;
+static GtkTreeIter * globalpIter;
+static int globalSkipoldcode;
+
 extern void
 MoveListCreate(hintdata * phd)
 {
@@ -155,24 +159,19 @@ MoveListCreate(hintdata * phd)
     gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(store));
     //if(!fAnalysisRunning && !fLayeredAnalysis)
 
-        AnalyseMoveTask *pt = NULL;
-        pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
-        pt->task.fun = (AsyncFun) MoveListUpdateMT;
-        pt->task.data = pt;
-        pt->task.pLinkedTask = NULL;
-        pt->pmr = NULL;
-        pt->plGame = NULL;
-        pt->psc = NULL;
-        pt->phd=phd;
-        MT_AddTask((Task *) pt, TRUE);
+        /////// This didn't work, cache.c doesn't know what a gtkwidget is...
+        // AnalyseMoveTask *pt = NULL;
+        // pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
+        // pt->task.fun = (AsyncFun) MoveListUpdateMT;
+        // pt->task.data = pt;
+        // pt->task.pLinkedTask = NULL;
+        // pt->pmr = NULL;
+        // pt->plGame = NULL;
+        // pt->psc = NULL;
+        // pt->phd=phd;
+        // MT_AddTask((Task *) pt, TRUE);
 
-
-
-        //MoveListUpdate(phd);
-
-
-
-
+    MoveListUpdate(phd);
 }
 
 float rBest;
@@ -189,14 +188,80 @@ MoveListRefreshSize(void)
     }
 }
 
-void GetRScore (Task * task) {
+void MoveListUpdateTaskMT (Task * task) {
 
     AnalyseMoveTask *amt;
     amt = (AnalyseMoveTask *) task;
+    int taskType = amt->taskType;
+    // char * sz;
+    // sz=amt->sz;
+    int skipoldcode=0;
+    globalSkipoldcode=0;
+    int j,colNum;
+        
+    g_message("INSIDE MoveListUpdateTaskMT, taskType=%d",amt->taskType);
+    // g_message("INSIDE GetRScore: amt->pml->amMoves[0].rScore=%f",amt->pml->amMoves[0].rScore);
     
-    g_message("INSIDE GetRScore: amt->pml->amMoves[0].rScore=%f",amt->pml->amMoves[0].rScore);
-    rBest= amt->pml->amMoves[0].rScore;
-    }
+    if (taskType==1)
+        rBest= amt->pml->amMoves[0].rScore;
+        
+    else if(taskType==2) {
+        if (amt->rankKnown) {
+            sprintf(amt->sz, "%s%s%u", amt->pml->amMoves[amt->i].cmark ? "+" : "", amt->highlight_sz, amt->i + 1); 
+            g_message("INSIDE MoveListUpdateTaskMT, taskType=%d: sz=%s",amt->taskType,amt->sz);
+        }
+        else
+            sprintf(amt->sz, "%s%s??", amt->pml->amMoves[amt->i].cmark ? "+" : "", amt->highlight_sz);
+
+        if (amt->showWLTree) {
+            gtk_list_store_set(globalStore, globalpIter, 1, amt->rankKnown ? (int) amt->i + 1 : -1, -1);
+            skipoldcode=1; 
+            globalSkipoldcode=1;//goto skipoldcode;
+        } else
+            gtk_list_store_set(globalStore, globalpIter, ML_COL_RANK, amt->sz, -1);    
+
+        FormatEval(amt->sz, &amt->pml->amMoves[amt->i].esMove);  
+
+        if(!skipoldcode) {
+            gtk_list_store_set(globalStore, globalpIter, ML_COL_TYPE, amt->sz, -1);  //<--
+
+            /* gwc */
+            if (amt->fDetails) {
+                colNum = ML_COL_WIN;
+                for (j = 0; j < 5; j++) {
+                    if (j == 3) {
+                        gtk_list_store_set(globalStore, globalpIter, colNum, OutputPercent(1.0f - amt->ar[OUTPUT_WIN]), -1);
+                        colNum++;
+                    }
+                    gtk_list_store_set(globalStore, globalpIter, colNum, OutputPercent(amt->ar[j]), -1);
+                    colNum++;
+                }
+            }
+
+            /* cubeless equity */
+            gtk_list_store_set(globalStore, globalpIter, ML_COL_EQUITY + amt->offset, OutputEquity(amt->pml->amMoves[amt->i].rScore, amt->pci, TRUE), -1);
+            if (amt->i != 0) {
+                gtk_list_store_set(globalStore, globalpIter, ML_COL_DIFF + amt->offset,
+                                OutputEquityDiff(amt->pml->amMoves[amt->i].rScore, rBest, amt->pci), -1);
+            }
+
+            gtk_list_store_set(globalStore, globalpIter, ML_COL_MOVE + amt->offset, FormatMove(amt->sz, msBoard(), amt->pml->amMoves[amt->i].anMove), -1);
+
+            // /* highlight row */
+            // if (phd->piHighlight && *phd->piHighlight == i) {
+            //     char buf[20];
+            //     sprintf(buf, "#%02x%02x%02x", psHighlight->fg[GTK_STATE_SELECTED].red / 256,
+            //             psHighlight->fg[GTK_STATE_SELECTED].green / 256, psHighlight->fg[GTK_STATE_SELECTED].blue / 256);
+            //     gtk_list_store_set(globalStore, globalpIter, ML_COL_FGCOL + amt->offset, buf, -1);
+            // } else
+            //     gtk_list_store_set(globalStore, globalpIter, ML_COL_FGCOL + amt->offset, NULL, -1);
+        }
+    //   //skipoldcode:             /* Messy as 3 copies of code at moment... */
+    //     gtk_tree_model_iter_next(GTK_TREE_MODEL(store), globalpIter);   
+    } else 
+        g_message("ERROR: taskType");
+
+}
 
 // extern void
 // PrintMove(char * message, moverecord *pmr)
@@ -208,13 +273,13 @@ void GetRScore (Task * task) {
 //         g_message("%s: move=%s\n", message, tmp);
 // }
 
-static void
-MoveListUpdateMT(Task * task)
-{
-    AnalyseMoveTask *amt;
-    amt = (AnalyseMoveTask *) task;
-    MoveListUpdate(amt->phd);
-}
+// static void
+// MoveListUpdateMT(Task * task)
+// {
+//     AnalyseMoveTask *amt;
+//     amt = (AnalyseMoveTask *) task;
+//     MoveListUpdate(amt->phd);
+// }
 
 
 /*
@@ -226,7 +291,9 @@ extern void
 MoveListUpdate(const hintdata * phd)
 {
     unsigned int i, j, colNum;
-    char sz[32];
+    //char sz[32];
+    char * sz; /*<--changing for layered analysis*/
+    sz = (char *)malloc(sizeof(char) * (33));
     cubeinfo ci;
     movelist *pml = phd->pml;
     int col = phd->fDetails ? 8 : 2;
@@ -260,18 +327,24 @@ MoveListUpdate(const hintdata * phd)
     // MT_Exclusive();
     // g_message("MoveListUpdate: phd->pml->amMoves[0].rScore=%f",phd->pml->amMoves[0].rScore);
         
-    rBest = pml->amMoves[0].rScore; //<================================================================== MYBUG
-    
-        // AnalyseMoveTask *pt = NULL;
-        // pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
-        // pt->task.fun = (AsyncFun) GetRScore;
-        // pt->task.data = pt;
-        // pt->task.pLinkedTask = NULL;
-        // pt->pmr = NULL;
-        // pt->plGame = NULL;
-        // pt->psc = NULL;
-        // pt->pml=pml;
-        // MT_AddTask((Task *) pt, TRUE);
+    // rBest = pml->amMoves[0].rScore; //<================================================================== MYBUG
+
+        /* creating a multi-thread version for the following, as it keeps causing crashes.
+        Based on AnalyzeGame(), which does the same.
+        Then doing the same for the lines with "<----", which are the ones causing trouble 
+        (everything is heuristic here)
+        */    
+        AnalyseMoveTask *pt = NULL;
+        pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
+        pt->task.fun = (AsyncFun) MoveListUpdateTaskMT;
+        pt->task.data = pt;
+        pt->task.pLinkedTask = NULL;
+        pt->pmr = NULL;
+        pt->plGame = NULL;
+        pt->psc = NULL;
+        pt->pml=pml;
+        pt->taskType=1;
+        MT_AddTask((Task *) pt, TRUE);
 
     //   GetRScore(pml);
     // MT_Release();
@@ -313,53 +386,94 @@ MoveListUpdate(const hintdata * phd)
 
         highlight_sz = (phd->piHighlight && *phd->piHighlight == i) ? "*" : "";
 
-        if (rankKnown)
-            sprintf(sz, "%s%s%u", pml->amMoves[i].cmark ? "+" : "", highlight_sz, i + 1);
-        else
-            sprintf(sz, "%s%s??", pml->amMoves[i].cmark ? "+" : "", highlight_sz);
+        /*layered*/
+        globalStore = store;
+        globalpIter=&iter;
+        globalSkipoldcode=0;
 
-        if (showWLTree) {
-            gtk_list_store_set(store, &iter, 1, rankKnown ? (int) i + 1 : -1, -1);
-            goto skipoldcode;
-        } else
-            gtk_list_store_set(store, &iter, ML_COL_RANK, sz, -1);
-        FormatEval(sz, &pml->amMoves[i].esMove);
-        gtk_list_store_set(store, &iter, ML_COL_TYPE, sz, -1);
+        AnalyseMoveTask *pt = NULL;
+        pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
+        pt->task.fun = (AsyncFun) MoveListUpdateTaskMT;
+        pt->task.data = pt;
+        pt->task.pLinkedTask = NULL;
+        pt->pmr = NULL;
+        pt->plGame = NULL;
+        pt->psc = NULL;
+        pt->pml=pml;
+        pt->taskType=2;
+        pt->highlight_sz=highlight_sz;
+        pt->sz=sz;
+        pt->i=i;
+        pt->rankKnown=rankKnown;
+        pt->showWLTree=showWLTree;
+        pt->fDetails=phd->fDetails;
+        pt->ar=ar;
+        pt->offset=offset;
+        pt->pci=&ci;
 
-        /* gwc */
-        if (phd->fDetails) {
-            colNum = ML_COL_WIN;
-            for (j = 0; j < 5; j++) {
-                if (j == 3) {
-                    gtk_list_store_set(store, &iter, colNum, OutputPercent(1.0f - ar[OUTPUT_WIN]), -1);
-                    colNum++;
-                }
-                gtk_list_store_set(store, &iter, colNum, OutputPercent(ar[j]), -1);
-                colNum++;
-            }
+        MT_AddTask((Task *) pt, TRUE);
+
+        // if (rankKnown)
+        //     sprintf(sz, "%s%s%u", pml->amMoves[i].cmark ? "+" : "", highlight_sz, i + 1); //<--
+        // else
+        //     sprintf(sz, "%s%s??", pml->amMoves[i].cmark ? "+" : "", highlight_sz);
+
+          //  g_message("OUTSIDE MoveListUpdateTaskMT,  sz=%s",sz);
+
+        // if (showWLTree) {
+        //     gtk_list_store_set(store, &iter, 1, rankKnown ? (int) i + 1 : -1, -1);
+        //     goto skipoldcode;
+        // } 
+        // else {
+        //     gtk_list_store_set(store, &iter, ML_COL_RANK, sz, -1);  //<--  
+        //         /* From documentation: gtk_list_store_set: The variable argument list should contain integer 
+        //         column numbers, each column number followed by the value to be set. The list is terminated by 
+        //         a -1.
+        //         For example, to set column 0 with type G_TYPE_STRING to “Foo”, you would write 
+        //         gtk_list_store_set (store, iter, 0, "Foo", -1).
+        //         */
+        // }
+        // FormatEval(sz, &pml->amMoves[i].esMove);    //<--
+        if(!globalSkipoldcode) {
+    //         gtk_list_store_set(store, &iter, ML_COL_TYPE, sz, -1);  //<--
+
+    //         /* gwc */
+    //         if (phd->fDetails) {
+    //             colNum = ML_COL_WIN;
+    //             for (j = 0; j < 5; j++) {
+    //                 if (j == 3) {
+    //                     gtk_list_store_set(store, &iter, colNum, OutputPercent(1.0f - ar[OUTPUT_WIN]), -1);
+    //                     colNum++;
+    //                 }
+    //                 gtk_list_store_set(store, &iter, colNum, OutputPercent(ar[j]), -1);
+    //                 colNum++;
+    //             }
+    //         }
+
+    //         /* cubeless equity */
+    //         gtk_list_store_set(store, &iter, ML_COL_EQUITY + offset, OutputEquity(pml->amMoves[i].rScore, &ci, TRUE), -1);
+    //         if (i != 0) {
+    //             gtk_list_store_set(store, &iter, ML_COL_DIFF + offset,
+    //                             OutputEquityDiff(pml->amMoves[i].rScore, rBest, &ci), -1);
+    //         }
+
+    //         gtk_list_store_set(store, &iter, ML_COL_MOVE + offset, FormatMove(sz, msBoard(), pml->amMoves[i].anMove), -1);
+
+            /* highlight row */
+            if (phd->piHighlight && *phd->piHighlight == i) {
+                char buf[20];
+                sprintf(buf, "#%02x%02x%02x", psHighlight->fg[GTK_STATE_SELECTED].red / 256,
+                        psHighlight->fg[GTK_STATE_SELECTED].green / 256, psHighlight->fg[GTK_STATE_SELECTED].blue / 256);
+                gtk_list_store_set(store, &iter, ML_COL_FGCOL + offset, buf, -1);
+            } else
+                gtk_list_store_set(store, &iter, ML_COL_FGCOL + offset, NULL, -1);
         }
-
-        /* cubeless equity */
-        gtk_list_store_set(store, &iter, ML_COL_EQUITY + offset, OutputEquity(pml->amMoves[i].rScore, &ci, TRUE), -1);
-        if (i != 0) {
-            gtk_list_store_set(store, &iter, ML_COL_DIFF + offset,
-                               OutputEquityDiff(pml->amMoves[i].rScore, rBest, &ci), -1);
-        }
-
-        gtk_list_store_set(store, &iter, ML_COL_MOVE + offset, FormatMove(sz, msBoard(), pml->amMoves[i].anMove), -1);
-
-        /* highlight row */
-        if (phd->piHighlight && *phd->piHighlight == i) {
-            char buf[20];
-            sprintf(buf, "#%02x%02x%02x", psHighlight->fg[GTK_STATE_SELECTED].red / 256,
-                    psHighlight->fg[GTK_STATE_SELECTED].green / 256, psHighlight->fg[GTK_STATE_SELECTED].blue / 256);
-            gtk_list_store_set(store, &iter, ML_COL_FGCOL + offset, buf, -1);
-        } else
-            gtk_list_store_set(store, &iter, ML_COL_FGCOL + offset, NULL, -1);
-      skipoldcode:             /* Messy as 3 copies of code at moment... */
+      //skipoldcode:             /* Messy as 3 copies of code at moment... */
         gtk_tree_model_iter_next(GTK_TREE_MODEL(store), &iter);
     }
 
+    /* layered: remove if unused*/
+    free(sz);
 }
 
 extern GList *
