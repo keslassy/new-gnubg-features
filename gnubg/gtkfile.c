@@ -890,7 +890,7 @@ extern void
 LayeredAnalysis(void)
 {
     int layer1=0;
-    int layer2=1;
+    int layer2=2;
     
     /*sanity check: */
     if (!(fBackgroundAnalysis && fLayeredAnalysis)){
@@ -950,30 +950,14 @@ LayeredAnalysis(void)
     g_message("esAnalysis eval strength=%d,%d", esAnalysisChequer.ec.nPlies, esAnalysisCube.ec.nPlies);
 
 
-    // if (!fStopAnalysis) 
-    //     /* without this command, there is a memory problem with the first move*/
-    //     UserCommand("analyse move");
-    // ChangeGame(NULL);
-    // GTKFreeze();
     UpdateGame(FALSE);
-    if (!fStopAnalysis) // && MT_SafeGet(&td.result) >= 0)         
+    if (!fStopAnalysis)          
         UserCommand("analyse match");
-    // GTKThaw();
-    // ChangeGame(NULL);
-    // if (!fStopAnalysis) // && MT_SafeGet(&td.result) >= 0) 
-    //     /* without this command, there is a memory problem with the first move*/
-    //     UserCommand("analyse move");
 
     UpdateGame(FALSE);
     TurnOnOffBA(FALSE);
     UpdateGame(FALSE);
-    // fBackgroundAnalysis=1;
-    // MoveListRefreshSize();
-            //FixMatchState(&ms, pmr);
 
-    // UserCommand("set analysis chequerplay eval plies 2");
-
-    // fBackgroundAnalysis=1;
 }
 
 
