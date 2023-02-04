@@ -25,17 +25,21 @@ features, together with two new buttons in the main toolbar: "Analyze" and
 - 1st button: "Analyze":
     - This is to analyze the current match. 
     - Define options for what it does (in Settings>Analysis):
-        - regular "analyze match" (blocking, like today) vs "background analysis": 
-            we can browse at the same time and check the analysis
-        - w/o automatic add-to-database (like today) vs 
-            w/ automatic add-to-db
+        - "background analysis" checkbox:
+            * unchecked => regular "analyze match" (blocking, like today), vs. 
+            * checked => we can browse at the same time and check the analysis
+        - "automatic add-to-database" checkbox:
+            * Unchecked = like today, vs 
+            * Checked = automatic add-to-db at end of analysis (and we remove the add-to-db
+                button from the statistics page)
 - 2nd button: "Analyze file": 
     - This is for a file, e.g. a match that we just played online. 
-    - Define 3 options (in Settings>Analysis):
-        - regular "batch analysis": blocking, like today
-        - "single-file analysis": background analysis of 1 chosen file + add-to-db
-        - "smart analysis": pick the newest file in the preferred folder that gnubg 
-            recognizes, then background analysis + add-to-db
+    - Can launch either one of 3 options (defined in Settings>Analysis):
+        1) Regular "batch analysis": blocking, like today (+add-to-db)
+        2) "Single-file analysis": analysis of 1 chosen file, can be in 
+            background and/or add-to-db based on defined settings
+        3) "Smart analysis": pick the newest file in the preferred folder that gnubg 
+            recognizes, then can be in background and/or add-to-db based on defined settings
 */
 
 
