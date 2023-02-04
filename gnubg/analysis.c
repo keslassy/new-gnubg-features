@@ -19,7 +19,7 @@
  */
 
 /*
-01/2023: Isaac Keslassy: introduced the "background analysis" and "smart analysis" 
+02/2023: Isaac Keslassy: introduced the "background analysis" and "smart analysis" 
 features, together with two new buttons in the main toolbar: "Analyze" and 
 "Analyze File"
 - 1st button: "Analyze":
@@ -40,6 +40,8 @@ features, together with two new buttons in the main toolbar: "Analyze" and
             background and/or add-to-db based on defined settings
         3) "Smart analysis": pick the newest file in the preferred folder that gnubg 
             recognizes, then can be in background and/or add-to-db based on defined settings
+When analyzing in the background, various menus are disabled so the user does not launch
+    another analysis in the middle.
 */
 
 
