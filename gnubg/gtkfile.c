@@ -37,7 +37,6 @@
 #include "gtkwindows.h"
 #include "file.h"
 #include "util.h"
-#include "multithread.h"
 
 /*for picking the first file in folder...*/
 #include <stdio.h>
@@ -868,126 +867,17 @@ void recentByModification(const char* path, char* recent){
     }
 }
 
-/* We always enter this function after an "if (fBackgroundAnalysis)" */
-extern void
-TurnOnOffBA(int b) {
-
-    if (!fBackgroundAnalysis) {
-        g_message("TurnOnOffBA: error");
-        return;
-    }
-
-    fAnalysisRunning = b;
-    // ShowBoard(); /* show/hide unallowd toolbar items*/
-    // GTKRegenerateGames(); /* show/hide unallowed menu items*/
-
-    g_message("Finishing TurnOnOffBA: fAnalysisRunning=%d, fSandwich=%d, fStopAnalysis=%d",
-        fAnalysisRunning,fSandwich,fStopAnalysis);
-}
-
-/* run the layered analysis with several layers of different plies*/
-extern void
-LayeredAnalysis(void)
-{
-    int layer1=0;
-    int layer2=2;
-    
-    /*sanity check: */
-    if (!(fBackgroundAnalysis && fLayeredAnalysis)){
-        g_message("LayeredAnalysis: error");
-        return;
-    }
-
-    if(layer2<=layer1)
-        g_message("Error: layer2 needs to be larger than layer1!");
-    
-    TurnOnOffBA(TRUE);
-
-    /*** (1) run analysis layer at layer1, e.g. 0-ply ***/
-    int tempCheckerPly=esAnalysisChequer.ec.nPlies;
-    int tempCubePly=esAnalysisCube.ec.nPlies;
-    esAnalysisChequer.ec.nPlies=layer1;
-    esAnalysisCube.ec.nPlies=layer1;
-    g_message("esAnalysis eval strength=%d,%d", esAnalysisChequer.ec.nPlies, esAnalysisCube.ec.nPlies);
-    // aamfAnalysis=MYMOVEFILTER;
-    // UserCommand("set analysis chequerplay eval plies 0");
-
-    // if (!fStopAnalysis)
-    //     UserCommand("analyse move");
-    /*analyze match*/
-    if (!fStopAnalysis)    
-        UserCommand("analyse match");
-
-    if (tempCheckerPly==layer1 && tempCubePly==layer1) {
-        TurnOnOffBA(FALSE);
-        return;
-    }
-
-    /*** (2) run analysis layer at layer2, e.g. 2-ply ***/
-    esAnalysisChequer.ec.nPlies=MIN(layer2,tempCheckerPly);
-    esAnalysisCube.ec.nPlies=MIN(layer2,tempCubePly);
-    g_message("esAnalysis eval strength=%d,%d", esAnalysisChequer.ec.nPlies, esAnalysisCube.ec.nPlies);
-
-    // /* without this command, there is a memory problem with the first move*/
-    // UserCommand("analyse move");
-    UpdateGame(FALSE);
-    if (!fStopAnalysis) // && MT_SafeGet(&td.result) >= 0)         
-        UserCommand("analyse match");
-    UpdateGame(FALSE);
-
-    
-
-    if (tempCheckerPly<=layer2 && tempCubePly<=layer2) {
-        TurnOnOffBA(FALSE);
-        esAnalysisChequer.ec.nPlies=tempCheckerPly;
-        esAnalysisCube.ec.nPlies=tempCubePly;
-        return;
-    }
-
-    /*** (3) run analysis layer at full ply ***/
-    esAnalysisChequer.ec.nPlies=tempCheckerPly;
-    esAnalysisCube.ec.nPlies=tempCubePly;
-    g_message("esAnalysis eval strength=%d,%d", esAnalysisChequer.ec.nPlies, esAnalysisCube.ec.nPlies);
-
-
-    UpdateGame(FALSE);
-    if (!fStopAnalysis)          
-        UserCommand("analyse match");
-
-    UpdateGame(FALSE);
-    TurnOnOffBA(FALSE);
-    UpdateGame(FALSE);
-
-}
-
-
 extern void
 GTKAnalyzeCurrent(void)
 {
-
-    if (fBackgroundAnalysis && fLayeredAnalysis) {
-        fSandwich = LAYERED_MATCH;
-        fStopAnalysis = FALSE;
-        // fAnalysisRunning = FALSE;
-        LayeredAnalysis();
-    } else {
-        fSandwich = ONE_MATCH;
-        fStopAnalysis = FALSE;
-        // fAnalysisRunning = FALSE;
-        UserCommand("analyse match");
-    }
-    fSandwich = UNDEFINED_SANDWICH;
-    fStopAnalysis = FALSE;
-    // fAnalysisRunning = FALSE;
-
+    /*analyze match*/
+    UserCommand("analyse match");
     if(fAutoDB) {
         /*add match to db*/
         CommandRelationalAddMatch(NULL);
     }
     /*show stats panel*/
     UserCommand("show statistics match");
-
-
     return;
 }
 

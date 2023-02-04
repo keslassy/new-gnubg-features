@@ -26,7 +26,6 @@
 #include "format.h"
 #include "gtkmovelistctrl.h"
 #include "drawboard.h"
-#include "multithread.h"
 
 #define DETAIL_COLUMN_COUNT 11
 #define MIN_COLUMN_COUNT 5
@@ -46,15 +45,6 @@ enum {
     ML_COL_FGCOL,
     ML_COL_DATA
 };
-
-/* for layered analysis:*/
-static GtkListStore * globalStore;
-static GtkTreeIter * globalpIter;
-// static int globalSkipoldcode;
-
-/* already defined as an extern*/
-GtkStyle *psHighlight = NULL;
-
 
 extern void
 MoveListCreate(hintdata * phd)
@@ -162,25 +152,12 @@ MoveListCreate(hintdata * phd)
         gtk_list_store_append(store, &iter);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(view), GTK_TREE_MODEL(store));
-    //if(!fAnalysisRunning && !fLayeredAnalysis)
-
-        /////// This didn't work, cache.c doesn't know what a gtkwidget is...
-        // AnalyseMoveTask *pt = NULL;
-        // pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
-        // pt->task.fun = (AsyncFun) MoveListUpdateMT;
-        // pt->task.data = pt;
-        // pt->task.pLinkedTask = NULL;
-        // pt->pmr = NULL;
-        // pt->plGame = NULL;
-        // pt->psc = NULL;
-        // pt->phd=phd;
-        // MT_AddTask((Task *) pt, TRUE);
-
     MoveListUpdate(phd);
 }
 
 float rBest;
 
+GtkStyle *psHighlight = NULL;
 
 extern void
 MoveListRefreshSize(void)
@@ -192,104 +169,8 @@ MoveListRefreshSize(void)
     }
 }
 
-void MoveListUpdateTaskMT (Task * task) {
-
-    AnalyseMoveTask *amt;
-    amt = (AnalyseMoveTask *) task;
-    //int taskType = amt->taskType;
-    // char * sz;
-    // sz=amt->sz;
-    int skipoldcode=0;
-    // globalSkipoldcode=0;
-    int j,colNum;
-    amt->sz=(char *)malloc(sizeof(char) * (33));
-        
-    // g_message("INSIDE MoveListUpdateTaskMT, taskType=%d, globalpIter=%d",amt->taskType,globalpIter->stamp);
-    // g_message("INSIDE GetRScore: amt->pml->amMoves[0].rScore=%f",amt->pml->amMoves[0].rScore);
-    
-    if (amt->taskType==1)
-        rBest= amt->pml->amMoves[0].rScore;
-        
-    else if(amt->taskType==2 || amt->taskType==3) {
-        if (amt->rankKnown) {
-            sprintf(amt->sz, "%s%s%u", amt->pml->amMoves[amt->i].cmark ? "+" : "", amt->highlight_sz, amt->i + 1); 
-            // g_message("INSIDE MoveListUpdateTaskMT, taskType=%d: sz=%s",amt->taskType,amt->sz);
-        }
-        else
-            sprintf(amt->sz, "%s%s??", amt->pml->amMoves[amt->i].cmark ? "+" : "", amt->highlight_sz);
-
-        if (amt->showWLTree) {
-            gtk_list_store_set(globalStore, globalpIter, 1, amt->rankKnown ? (int) amt->i + 1 : -1, -1);
-            skipoldcode=1; 
-            // globalSkipoldcode=1;//goto skipoldcode;
-        } else
-            gtk_list_store_set(globalStore, globalpIter, ML_COL_RANK, amt->sz, -1);    
-
-        FormatEval(amt->sz, &amt->pml->amMoves[amt->i].esMove);  
-
-        if(!skipoldcode) {
-            gtk_list_store_set(globalStore, globalpIter, ML_COL_TYPE, amt->sz, -1);  //<--
-
-            /* gwc */
-            if (amt->fDetails) {
-                colNum = ML_COL_WIN;
-                for (j = 0; j < 5; j++) {
-                    if (j == 3) {
-                        gtk_list_store_set(globalStore, globalpIter, colNum, OutputPercent(1.0f - amt->ar[OUTPUT_WIN]), -1);
-                        colNum++;
-                    }
-                    gtk_list_store_set(globalStore, globalpIter, colNum, OutputPercent(amt->ar[j]), -1);
-                    colNum++;
-                }
-            }
-
-            /* cubeless equity */
-            gtk_list_store_set(globalStore, globalpIter, ML_COL_EQUITY + amt->offset, OutputEquity(amt->pml->amMoves[amt->i].rScore, amt->pci, TRUE), -1);
-            if (amt->i != 0) {
-                gtk_list_store_set(globalStore, globalpIter, ML_COL_DIFF + amt->offset,
-                                OutputEquityDiff(amt->pml->amMoves[amt->i].rScore, rBest, amt->pci), -1);
-            }
-
-            gtk_list_store_set(globalStore, globalpIter, ML_COL_MOVE + amt->offset, FormatMove(amt->sz, msBoard(), amt->pml->amMoves[amt->i].anMove), -1);
-
-            // /* highlight row */
-            if (amt->taskType==2) {
-                char buf[20];
-                sprintf(buf, "#%02x%02x%02x", psHighlight->fg[GTK_STATE_SELECTED].red / 256,
-                        psHighlight->fg[GTK_STATE_SELECTED].green / 256, psHighlight->fg[GTK_STATE_SELECTED].blue / 256);
-                gtk_list_store_set(globalStore, globalpIter, ML_COL_FGCOL + amt->offset, buf, -1);
-            } else //if (amt->taskType == 3)
-                gtk_list_store_set(globalStore, globalpIter, ML_COL_FGCOL + amt->offset, NULL, -1);
-        }
-    //   //skipoldcode:             /* Messy as 3 copies of code at moment... */
-        gtk_tree_model_iter_next(GTK_TREE_MODEL(globalStore), globalpIter);   
-    } else 
-        g_message("ERROR: taskType");
-
-    free(amt->sz);
-}
-
-// extern void
-// PrintMove(char * message, moverecord *pmr)
-// {
-//           char tmp[200];
-//        TanBoard anBoard;
-
-//         FormatMove(tmp, (ConstTanBoard)anBoard, pmr->n.anMove);
-//         g_message("%s: move=%s\n", message, tmp);
-// }
-
-// static void
-// MoveListUpdateMT(Task * task)
-// {
-//     AnalyseMoveTask *amt;
-//     amt = (AnalyseMoveTask *) task;
-//     MoveListUpdate(amt->phd);
-// }
-
-
 /*
- * Call MoveListUpdate to update the movelist in the GTK hint window.
+ * Call UpdateMostList to update the movelist in the GTK hint window.
  * For example, after new evaluations, rollouts or toggle of MWC/Equity.
  *
  */
@@ -297,9 +178,7 @@ extern void
 MoveListUpdate(const hintdata * phd)
 {
     unsigned int i, j, colNum;
-    //char sz[32];
-    // char * sz; /*<--changing for layered analysis*/
-    // sz = (char *)malloc(sizeof(char) * (33));
+    char sz[32];
     cubeinfo ci;
     movelist *pml = phd->pml;
     int col = phd->fDetails ? 8 : 2;
@@ -329,31 +208,7 @@ MoveListUpdate(const hintdata * phd)
     g_assert(ms.fMove == 0 || ms.fMove == 1);
 
     GetMatchStateCubeInfo(&ci, &ms);
-        // if(!fAnalysisRunning && !fLayeredAnalysis) {
-    // MT_Exclusive();
-    // g_message("MoveListUpdate: phd->pml->amMoves[0].rScore=%f",phd->pml->amMoves[0].rScore);
-        
-    // rBest = pml->amMoves[0].rScore; //<================================================================== MYBUG
-
-        /* creating a multi-thread version for the following, as it keeps causing crashes.
-        Based on AnalyzeGame(), which does the same.
-        Then doing the same for the lines with "<----", which are the ones causing trouble 
-        (everything is heuristic here)
-        */    
-        AnalyseMoveTask *pt = NULL;
-        pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
-        pt->task.fun = (AsyncFun) MoveListUpdateTaskMT;
-        pt->task.data = pt;
-        pt->task.pLinkedTask = NULL;
-        pt->pmr = NULL;
-        pt->plGame = NULL;
-        pt->psc = NULL;
-        pt->pml=pml;
-        pt->taskType=1;
-        MT_AddTask((Task *) pt, TRUE);
-
-    //   GetRScore(pml);
-    // MT_Release();
+    rBest = pml->amMoves[0].rScore;
 
     if (!showWLTree)
         gtk_tree_view_column_set_title(gtk_tree_view_get_column(GTK_TREE_VIEW(phd->pwMoves), col),
@@ -392,100 +247,53 @@ MoveListUpdate(const hintdata * phd)
 
         highlight_sz = (phd->piHighlight && *phd->piHighlight == i) ? "*" : "";
 
-        /*layered*/
-        globalStore = store;
-        globalpIter=&iter;
-        // globalSkipoldcode=0;
+        if (rankKnown)
+            sprintf(sz, "%s%s%u", pml->amMoves[i].cmark ? "+" : "", highlight_sz, i + 1);
+        else
+            sprintf(sz, "%s%s??", pml->amMoves[i].cmark ? "+" : "", highlight_sz);
 
-        // g_message("outside: iter=%d",iter.stamp);
-
-        AnalyseMoveTask *pt = NULL;
-        pt = (AnalyseMoveTask *) malloc(sizeof(AnalyseMoveTask));
-        pt->task.fun = (AsyncFun) MoveListUpdateTaskMT;
-        pt->task.data = pt;
-        pt->task.pLinkedTask = NULL;
-        pt->pmr = NULL;
-        pt->plGame = NULL;
-        pt->psc = NULL;
-        pt->pml=pml;
-        if (phd->piHighlight && *phd->piHighlight == i) {
-            pt->taskType=2;
+        if (showWLTree) {
+            gtk_list_store_set(store, &iter, 1, rankKnown ? (int) i + 1 : -1, -1);
+            goto skipoldcode;
         } else
-            pt->taskType=3;
-        pt->highlight_sz=highlight_sz;
-        // pt->sz=(char *)malloc(sizeof(char) * (33));
-            // sz;
-        pt->i=i;
-        pt->rankKnown=rankKnown;
-        pt->showWLTree=showWLTree;
-        pt->fDetails=phd->fDetails;
-        pt->ar=ar;
-        pt->offset=offset;
-        pt->pci=&ci;
+            gtk_list_store_set(store, &iter, ML_COL_RANK, sz, -1);
+        FormatEval(sz, &pml->amMoves[i].esMove);
+        gtk_list_store_set(store, &iter, ML_COL_TYPE, sz, -1);
 
-        MT_AddTask((Task *) pt, TRUE);
+        /* gwc */
+        if (phd->fDetails) {
+            colNum = ML_COL_WIN;
+            for (j = 0; j < 5; j++) {
+                if (j == 3) {
+                    gtk_list_store_set(store, &iter, colNum, OutputPercent(1.0f - ar[OUTPUT_WIN]), -1);
+                    colNum++;
+                }
+                gtk_list_store_set(store, &iter, colNum, OutputPercent(ar[j]), -1);
+                colNum++;
+            }
+        }
 
-        // if (rankKnown)
-        //     sprintf(sz, "%s%s%u", pml->amMoves[i].cmark ? "+" : "", highlight_sz, i + 1); //<--
-        // else
-        //     sprintf(sz, "%s%s??", pml->amMoves[i].cmark ? "+" : "", highlight_sz);
+        /* cubeless equity */
+        gtk_list_store_set(store, &iter, ML_COL_EQUITY + offset, OutputEquity(pml->amMoves[i].rScore, &ci, TRUE), -1);
+        if (i != 0) {
+            gtk_list_store_set(store, &iter, ML_COL_DIFF + offset,
+                               OutputEquityDiff(pml->amMoves[i].rScore, rBest, &ci), -1);
+        }
 
-          //  g_message("OUTSIDE MoveListUpdateTaskMT,  sz=%s",sz);
+        gtk_list_store_set(store, &iter, ML_COL_MOVE + offset, FormatMove(sz, msBoard(), pml->amMoves[i].anMove), -1);
 
-        // if (showWLTree) {
-        //     gtk_list_store_set(store, &iter, 1, rankKnown ? (int) i + 1 : -1, -1);
-        //     goto skipoldcode;
-        // } 
-        // else {
-        //     gtk_list_store_set(store, &iter, ML_COL_RANK, sz, -1);  //<--  
-        //         /* From documentation: gtk_list_store_set: The variable argument list should contain integer 
-        //         column numbers, each column number followed by the value to be set. The list is terminated by 
-        //         a -1.
-        //         For example, to set column 0 with type G_TYPE_STRING to “Foo”, you would write 
-        //         gtk_list_store_set (store, iter, 0, "Foo", -1).
-        //         */
-        // }
-        // FormatEval(sz, &pml->amMoves[i].esMove);    //<--
-        // if(!globalSkipoldcode) {
-    //         gtk_list_store_set(store, &iter, ML_COL_TYPE, sz, -1);  //<--
-
-    //         /* gwc */
-    //         if (phd->fDetails) {
-    //             colNum = ML_COL_WIN;
-    //             for (j = 0; j < 5; j++) {
-    //                 if (j == 3) {
-    //                     gtk_list_store_set(store, &iter, colNum, OutputPercent(1.0f - ar[OUTPUT_WIN]), -1);
-    //                     colNum++;
-    //                 }
-    //                 gtk_list_store_set(store, &iter, colNum, OutputPercent(ar[j]), -1);
-    //                 colNum++;
-    //             }
-    //         }
-
-    //         /* cubeless equity */
-    //         gtk_list_store_set(store, &iter, ML_COL_EQUITY + offset, OutputEquity(pml->amMoves[i].rScore, &ci, TRUE), -1);
-    //         if (i != 0) {
-    //             gtk_list_store_set(store, &iter, ML_COL_DIFF + offset,
-    //                             OutputEquityDiff(pml->amMoves[i].rScore, rBest, &ci), -1);
-    //         }
-
-    //         gtk_list_store_set(store, &iter, ML_COL_MOVE + offset, FormatMove(sz, msBoard(), pml->amMoves[i].anMove), -1);
-
-            /* highlight row */
-            // if (phd->piHighlight && *phd->piHighlight == i) {
-            //     char buf[20];
-            //     sprintf(buf, "#%02x%02x%02x", psHighlight->fg[GTK_STATE_SELECTED].red / 256,
-            //             psHighlight->fg[GTK_STATE_SELECTED].green / 256, psHighlight->fg[GTK_STATE_SELECTED].blue / 256);
-            //     gtk_list_store_set(store, &iter, ML_COL_FGCOL + offset, buf, -1);
-            // } else
-            //     gtk_list_store_set(store, &iter, ML_COL_FGCOL + offset, NULL, -1);
-        // }
-      //skipoldcode:             /* Messy as 3 copies of code at moment... */
-        // gtk_tree_model_iter_next(GTK_TREE_MODEL(store), &iter);
+        /* highlight row */
+        if (phd->piHighlight && *phd->piHighlight == i) {
+            char buf[20];
+            sprintf(buf, "#%02x%02x%02x", psHighlight->fg[GTK_STATE_SELECTED].red / 256,
+                    psHighlight->fg[GTK_STATE_SELECTED].green / 256, psHighlight->fg[GTK_STATE_SELECTED].blue / 256);
+            gtk_list_store_set(store, &iter, ML_COL_FGCOL + offset, buf, -1);
+        } else
+            gtk_list_store_set(store, &iter, ML_COL_FGCOL + offset, NULL, -1);
+      skipoldcode:             /* Messy as 3 copies of code at moment... */
+        gtk_tree_model_iter_next(GTK_TREE_MODEL(store), &iter);
     }
 
-    /* layered: remove if unused*/
-    // free(sz);
 }
 
 extern GList *

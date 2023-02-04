@@ -22,7 +22,6 @@
 #define MULTITHREAD_H
 
 #include "config.h"
-// #include "gtkchequer.h" /* layered analysis*/
 
 #if defined(WIN32)
 #include <process.h>
@@ -52,32 +51,12 @@ typedef struct Task {
     struct Task *pLinkedTask;
 } Task;
 
-// typedef struct {
-//     movelist * pml;
-//     int taskType;
-// } MoveListUpdateSubTask;
-
 typedef struct {
     Task task;
     moverecord *pmr;
     listOLD *plGame;
     statcontext *psc;
     matchstate ms;
-    /*maybe delete! tests for layered analysis:*/
-    movelist * pml; /*hintdata * didn't work because hintdata contains GtkWidget *, and 
-                    cache.c complained that it doesn't know what this is -- and there is 
-                    no way to let it know... */
-    // MoveListUpdateSubTask * pst;                    
-    int taskType;
-    const char *highlight_sz;
-    char * sz;
-    unsigned int i;
-    int rankKnown;
-    int showWLTree;
-    int fDetails;
-    float * ar;
-    int offset;
-    cubeinfo * pci;
 } AnalyseMoveTask;
 
 typedef struct {

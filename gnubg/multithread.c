@@ -188,7 +188,6 @@ MT_CreateThreads(void)
     }
     td.addedTasks = td.numThreads;
     /* Wait for all the threads to be created (timeout after 1 second) */
-    g_message("MT_CreateThreads: calling MT_WaitForTasks: WaitingForThreads");
     if (MT_WaitForTasks(WaitingForThreads, 1000, FALSE) != (int) td.numThreads)
         g_print(_("Error creating threads!\n"));
 }
@@ -317,7 +316,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
     int start1 = 1;
     int start2 = 1;
     //int myPage;
-    // int i=0;
+    int i=0;
 
     /* Set total tasks to wait for */
     td.totalTasks = td.addedTasks;
@@ -359,41 +358,34 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         to the move decision instead, bothering the user.
         In this last step, we don't update colors anymore. We could modulate 
         in the future based on what the user is doing.
-
-        VERSION 3: disabled for layered analysis, since we can quickly see the 0-ply
-        eval
         */
         // if (pwMoveAnalysis!=NULL)       
         //        g_message("sensitive:%d", gtk_widget_is_sensitive(pwAnalysis));
-        if (fAnalysisRunning && !fLayeredAnalysis) {
-            // i++;
-            // if (i==3) {
-            //     i=0;
-                if (start2) {
-                    if(start1) { 
-                        pmr1 = get_current_moverecord(NULL);
-                        start1=0;
-                        FormatMove(tmp1, msBoard(), pmr1->n.anMove);
-                        // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
-                        ChangeGame(NULL); 
-                        // UpdateGame(FALSE);
+        i++;
+        if (i==3) {
+            i=0;
+            if (fAnalysisRunning && start2) {
+                if(start1) { 
+                    pmr1 = get_current_moverecord(NULL);
+                    start1=0;
+                    FormatMove(tmp1, msBoard(), pmr1->n.anMove);
+                    // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
+                    ChangeGame(NULL); 
+                } else {
+                    pmr2 = get_current_moverecord(NULL);
+                    FormatMove(tmp2, msBoard(), pmr2->n.anMove);
+                    // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
+                    // if (pwMoveAnalysis!=NULL)
+                    //     g_message("new results");
+                    if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
+                        // g_message("STOP");
+                        start2=0;
                     } else {
-                        pmr2 = get_current_moverecord(NULL);
-                        FormatMove(tmp2, msBoard(), pmr2->n.anMove);
-                        // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
-                        // if (pwMoveAnalysis!=NULL)
-                        //     g_message("new results");
-                        if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
-                            // g_message("STOP");
-                            start2=0;
-                        } else {
-                            // g_message("change");
-                            ChangeGame(NULL);
-                            // UpdateGame(FALSE);
-                        }
+                        // g_message("change");
+                        ChangeGame(NULL); 
                     }
                 }
-            // }
+            }
         }
         // myPage=gtk_notebook_get_current_page(GTK_NOTEBOOK(gtk_widget_get_parent(pwAnalysis)));
         // g_message("notebook page=%d",myPage);
@@ -431,7 +423,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         save_autosave(NULL);
     }
     multi_debug("done waiting for all tasks");
-    g_message("done, calling MT_SafeSet, MT_SafeGet td.result=%d",MT_SafeGet(&td.result));
+
     MT_SafeSet(&td.doneTasks, 0);
     td.addedTasks = 0;
     td.totalTasks = -1;
@@ -439,10 +431,6 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
 #if defined(USE_GTK)
     GTKResumeInput();
 #endif
-    if(fBackgroundAnalysis && MT_SafeGet(&td.result) == -1){
-        fStopAnalysis=1;
-        //MT_CloseThreads();
-    }
     return MT_SafeGet(&td.result);
 }
 

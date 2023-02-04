@@ -29,8 +29,6 @@
 #if defined(USE_MULTITHREAD)
 #include "multithread.h"
 
-
-
 #if defined(__GNUC__) && ( \
     (( __GNUC__ * 100 + __GNUC_MINOR__ >= 401 ) \
       && (defined (__i486) || defined (__x86_64))) \

@@ -346,7 +346,7 @@ const char *aszMoveFilterSettings[NUM_MOVEFILTER_SETTINGS] = {
     N_("Narrow"),
     N_("Normal"),
     N_("Large"),
-    N_("Huge") //,    N_("test")
+    N_("Huge")
 };
 
 movefilter aaamfMoveFilterSettings[NUM_MOVEFILTER_SETTINGS][MAX_FILTER_PLIES][MAX_FILTER_PLIES] = {
@@ -354,7 +354,7 @@ movefilter aaamfMoveFilterSettings[NUM_MOVEFILTER_SETTINGS][MAX_FILTER_PLIES][MA
     MOVEFILTER_NARROW,
     MOVEFILTER_NORMAL,
     MOVEFILTER_LARGE,
-    MOVEFILTER_HUGE //,    MYMOVEFILTER
+    MOVEFILTER_HUGE
 };
 
 
@@ -5443,6 +5443,7 @@ EvaluatePositionFull(NNState * nnStates, const TanBoard anBoard, float arOutput[
                 if (usePrune) {
                     FindBestMoveInEval(nnStates, n0, n1, anBoard, anBoardNew, pci, pec);
                 } else {
+
                     FindBestMovePlied(NULL, n0, n1, anBoardNew, pci, pec, 0, defaultFilters);
                 }
 

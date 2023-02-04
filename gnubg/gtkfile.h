@@ -26,10 +26,9 @@ extern void GTKSave(gpointer p, guint n, GtkWidget * pw);
 extern char *GTKFileSelect(const gchar * prompt, const gchar * extension, const gchar * folder,
                            const gchar * name, GtkFileChooserAction action);
 extern void SetDefaultFileName(char *path);
-
-extern void TurnOnOffBA(int b);
-extern void LayeredAnalysis(void);
 extern void GTKAnalyzeCurrent(void);
 extern void GTKAnalyzeFile(void);
 extern void GTKBatchAnalyse(gpointer p, guint n, GtkWidget * pw);
+
+
 #endif

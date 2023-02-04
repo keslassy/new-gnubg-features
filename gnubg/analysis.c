@@ -50,7 +50,6 @@ features, together with two new buttons in the main toolbar: "Analyze" and
 #include "eval.h"
 #if defined(USE_GTK)
 #include "gtkgame.h"
-#include "gtkfile.h"
 #endif
 #include "positionid.h"
 #include "analysis.h"
@@ -970,7 +969,6 @@ AnalyzeGame(listOLD * plGame, int wait)
     unsigned int numMoves = NumberMovesGame(plGame);
     AnalyseMoveTask *pt = NULL, *pParentTask = NULL;
 
-    g_message("in AnalyzeGame: START, going to AnalyzeMove for 1st move");
     /* Analyse first move record (gameinfo) */
     g_assert(pmr->mt == MOVE_GAMEINFO);
     if ( (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
@@ -983,9 +981,9 @@ AnalyzeGame(listOLD * plGame, int wait)
     numMoves--;                 /* Done one - the gameinfo */
 
     for (i = 0; i < numMoves; i++) {
-        // g_message("AnalyzeGame:move %d/%d",i,numMoves);
         pl = pl->plNext;
         pmr = pl->p;
+
         if (pmr == NULL || (fBackgroundAnalysis && fStopAnalysis)) {
                     g_message("Stop 2 due to fStopAnalysis");
             /* corrupt moves list */
@@ -1052,7 +1050,6 @@ AnalyzeGame(listOLD * plGame, int wait)
         }
         else {
             multi_debug("wait for all task: analysis");
-            g_message("around end of AnalyzeGame, calling MT_WaitForTasks: UpdateProgressBar");
             result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
         }
         if (result == -1)
@@ -1207,14 +1204,11 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     /* see explanations in CommandAnalyseMatch()*/
     if(fBackgroundAnalysis) {
-        // fAnalysisRunning = TRUE;
-        // g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button): "
-        "feel free to browse and check the early analysis results."), nMoves);        
-        // ShowBoard(); /* hide unallowd toolbar items*/
-        // GTKRegenerateGames(); /* hide unallowed menu items*/
-        if(fSandwich == ONE_GAME)
-            TurnOnOffBA(TRUE);
+        fAnalysisRunning = TRUE;
+        g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        ProgressStartValue(_("Background analysis. Browsing-only mode: "
+        "feel free to browse and check the early analysis results."), nMoves);        ShowBoard(); /* hide unallowd toolbar items*/
+        GTKRegenerateGames(); /* hide unallowed menu items*/
     } else
         ProgressStartValue(_("Analysing game"), nMoves);
 
@@ -1225,16 +1219,14 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis && fSandwich == ONE_GAME) {
-            TurnOnOffBA(FALSE);
-        // fAnalysisRunning = FALSE;
-        // g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        // ShowBoard(); /* show toolbar items*/
-        // GTKRegenerateGames(); /* show menu items*/
+    if(fBackgroundAnalysis) {
+        fAnalysisRunning = FALSE;
+        g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+                ShowBoard(); /* hide unallowd toolbar items*/
+        GTKRegenerateGames(); /* hide unallowed menu items*/
         /* if we raised the flag to stop running the analysis, we can now lower it*/
         if (fStopAnalysis) {
-            g_message("CommandAnalyseGame: fStopAnalysis was TRUE, we stopped i");
-            // if(fSandwich == ONE_GAME)
+            g_message("fStopAnalysis was TRUE, we stopped it");
             fStopAnalysis = FALSE;
         }
     }
@@ -1268,19 +1260,16 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesMatch(&lMatch);
-    
 
     /* if we analyze in the background, we turn on a global flag to disable all sorts of 
     buttons during the analysis*/
     if(fBackgroundAnalysis) {
-        // fAnalysisRunning = TRUE;
-        g_message("CommandAnalyseMatch START: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        ProgressStartValue(_("Background analysis. Browsing-only mode (until you press the stop button)."), 
-        nMoves);        
-        // ShowBoard(); /* hide unallowd toolbar items*/
-        // GTKRegenerateGames(); /* hide unallowed menu items*/
-        if(fSandwich == ONE_MATCH)
-            TurnOnOffBA(TRUE);
+        fAnalysisRunning = TRUE;
+        // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
+        ProgressStartValue(_("Background analysis. Browsing-only mode: "
+        "feel free to browse and check the early analysis results."), nMoves); 
+        ShowBoard(); /* hide unallowd toolbar items*/
+        GTKRegenerateGames(); /* hide unallowed menu items*/
     } else {
         /* this was supposed to show nMoves, but it's not used at the end;
         on the right side we see "n/nTotal"; so we update the text
@@ -1290,15 +1279,9 @@ CommandAnalyseMatch(char *UNUSED(sz))
     }
 
     IniStatcontext(&scMatch);
-
-    // int tempCheckerPly=esAnalysisChequer.ec.nPlies;
-    // int tempCubePly=esAnalysisCube.ec.nPlies;
-    // esAnalysisChequer.ec.nPlies=0;
-    // esAnalysisCube.ec.nPlies=0;
-
-    /*  1  */
+ 
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
-        
+
         if (AnalyzeGame(pl->p, FALSE) < 0 || (fBackgroundAnalysis && fStopAnalysis) ) {
                     g_message("Stop 5 due to fStopAnalysis");
             /* analysis incomplete; erase partial summary */
@@ -1315,57 +1298,24 @@ CommandAnalyseMatch(char *UNUSED(sz))
         //         pmr->n.anMove[1],pmr->n.anMove[2],pmr->n.anMove[3]);
     }
 
-    g_message("CommandAnalyseMatch: calling MT_WaitForTasks: UpdateProgressBar");
     multi_debug("wait for all task: analysis");
-    int tmpInt = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
-    if (fBackgroundAnalysis && (tmpInt<0)) {
-        g_message("CommandAnalyseMatch: SAW THE -1!");
-        fStopAnalysis=1;
-    }
-
-    // esAnalysisChequer.ec.nPlies=tempCheckerPly;
-    // esAnalysisCube.ec.nPlies=tempCubePly;
-
-
-
-    // /*  2  */
-    // for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
-
-    //     if (AnalyzeGame(pl->p, FALSE) < 0 || (fBackgroundAnalysis && fStopAnalysis) ) {
-    //                 g_message("Stop 5 due to fStopAnalysis");
-    //         /* analysis incomplete; erase partial summary */
-
-    //         IniStatcontext(&scMatch);
-    //         break;
-    //     }
-    //     pmr = (moverecord *) ((listOLD *) pl->p)->plNext->p;
-    //     g_assert(pmr->mt == MOVE_GAMEINFO);
-    //     AddStatcontext(&pmr->g.sc, &scMatch);
-    //     //FormatMove(tmp, (ConstTanBoard)anBoard, pmr->n.anMove);
-    //     //g_message("CommandAnalyseMatch: move=%s\n", tmp);
-    //     // g_message("CommandAnalyseMatch: moves=%d%d%d%d\n", pmr->n.anMove[0],
-    //     //         pmr->n.anMove[1],pmr->n.anMove[2],pmr->n.anMove[3]);
-    // }
-
-    // multi_debug("wait for all task: analysis");
-    // MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
-
+    MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis && fSandwich == ONE_MATCH) {
-            TurnOnOffBA(FALSE);
-        // fAnalysisRunning = FALSE;
-        g_message("CommandAnalyseMatch STOP: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        // ShowBoard(); /* show toolbar items*/
-        // GTKRegenerateGames(); /* show menu items*/
+    if(fBackgroundAnalysis) {
+        fAnalysisRunning = FALSE;
+        // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         /* if we raised the flag to stop running the analysis, we can now lower it*/
         if (fStopAnalysis) {
-            g_message("CommandAnalyseMatch: fStopAnalysis was TRUE, we stopped it");
-            // if(fSandwich == ONE_GAME)
+            g_message("fStopAnalysis was TRUE, we stopped it");
             fStopAnalysis = FALSE;
         }
+                // CalculateBoard();
+        ShowBoard(); /* show toolbar items*/
+        GTKRegenerateGames(); /* show menu items*/
     }
+
 
 #if defined(USE_GTK)
     if (fX)
@@ -1732,15 +1682,13 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.pesCube = &esAnalysisCube;
         md.aamf = aamfAnalysis;
 
-        if(fBackgroundAnalysis && fSandwich == ONE_MOVE) {
-            TurnOnOffBA(TRUE);
-        }
+        // if(fBackgroundAnalysis)
+        //     fAnalysisRunning = TRUE;
 
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
 
-        if(fBackgroundAnalysis && fSandwich == ONE_MOVE) {
-            TurnOnOffBA(FALSE);
-        }
+        // if(fBackgroundAnalysis)
+        //     fAnalysisRunning = FALSE;
 
 #if defined(USE_GTK)
         if (fX)
