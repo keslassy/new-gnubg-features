@@ -46,7 +46,6 @@ compile
 .dirstamp
 gnubg/gnubg
 gnubg/Makefile
-.gitignore
 gnubg/libtool
 /.vs/g2/FileContentIndex
 /.vs/g2/v17
