@@ -1622,6 +1622,24 @@ CommandSetPlayer(char *sz)
     return;
 }
 
+extern void
+CommandSetKeyNames(char *sz)
+{
+    char *token;
+
+    /* get the first token */
+    token = strtok(sz, "\t");
+//empty=0
+    /* walk through other tokens */
+    while( token != NULL ) {
+        g_message("token =  %s\n", token );    
+        token = strtok(NULL, "\t");
+        //assign in array and increment empty
+    }   
+}
+
+
+
 
 extern void
 CommandSetDefaultNames(char *sz)

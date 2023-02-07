@@ -3249,7 +3249,7 @@ InternalCommandNext(int mark, int cmark, int n)
     int done = 0;
     // char tmp[FORMATEDMOVESIZE];
     // TanBoard anBoard;
-    int keyPlayer=-1;
+    int keyName=-1;
     int init=1;
 
     // g_message("start: fMarkedSamePlayer=%d, mark=%d, cmark=%d, n=%d\n",fMarkedSamePlayer,mark,cmark,n);
@@ -3293,14 +3293,14 @@ InternalCommandNext(int mark, int cmark, int n)
             In the next marked moves, we check if it's the same player.
             */
             if(fMarkedSamePlayer && init){
-                keyPlayer=pmr->fPlayer;
+                keyName=pmr->fPlayer;
                 init=0;
             }
             // InitBoard(anBoard, ms.bgv);
-            // g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
+            // g_message("player=%d, keyName=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyName,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
             
             if(fMarkedSamePlayer){
-                if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
+                if (mark  && (pmr->fPlayer == keyName) && MoveIsMarked(pmr)  && (--n <= 0)){
                     // g_message("got to break, n=%d\n",n);
                     break;
                 }
@@ -3648,7 +3648,7 @@ CommandPrevious(char *sz)
     int cmark = FALSE;
     listOLD *p;
     moverecord *pmr = NULL;
-    int keyPlayer=-1;
+    int keyName=-1;
     int init=1;
     /*for debugging: */
     // char tmp[FORMATEDMOVESIZE];
@@ -3721,14 +3721,14 @@ CommandPrevious(char *sz)
             minority of cases, we may switch to the wrong player. 
             */
             // InitBoard(anBoard, ms.bgv);
-            // g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
+            // g_message("player=%d, keyName=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyName,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
             
             if(fMarkedSamePlayer && init){
-                keyPlayer=1-pmr->fPlayer;
+                keyName=1-pmr->fPlayer;
                 init=0;
             }
             if(fMarkedSamePlayer){
-                if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
+                if (mark  && (pmr->fPlayer == keyName) && MoveIsMarked(pmr)  && (--n <= 0)){
                     break;
                 }
             } else {

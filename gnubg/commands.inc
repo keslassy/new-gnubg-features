@@ -1193,6 +1193,8 @@ static command acSetVariation[] = {
     { "defaultnames", CommandSetDefaultNames, N_("Set default names for players"),
 	  szNAME, NULL },
     { "aliases", CommandSetAliases, N_("Set aliases for player 1 when importing MAT files"), szNAME, NULL },
+    { "keynames", CommandSetKeyNames, N_("Set key player names to highlight"),
+	  szNAME, NULL },
     { "lang", CommandSetLang, N_("Set your language preference"),
       szLANG, NULL },
     { "matchequitytable", CommandSetMET,

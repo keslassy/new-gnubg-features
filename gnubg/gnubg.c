@@ -228,8 +228,8 @@ const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysi
 const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
 
 /*initialization*/
-char keyPlayers[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
-int keyPlayersFirstEmpty=0;
+char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
+int keyNamesFirstEmpty=0;
 int fUseKeyPlayers=TRUE;
 int fWithinSmartOpen=FALSE;
 
@@ -3213,6 +3213,18 @@ SavePlayerSettings(FILE * pf)
     if (strlen(player1aliases) > 0)
         fprintf(pf, "set aliases %s\n", player1aliases);
 
+    fprintf(pf, "set keynames");
+    for(int i=0;i < keyNamesFirstEmpty; i++) {
+        fprintf(pf, "\t%s", keyNames[i]);
+    }
+    fprintf(pf, "\n");
+
+    // fprintf(pf, "set keynames");
+    // for(int i=0;i < keyNamesFirstEmpty; i++) {
+    //     fprintf(pf, " \"%s\"", keyNames[i]);
+    // }
+    // fprintf(pf, "\n");
+
     for (i = 0; i < 2; i++) {
         fprintf(pf, "set player %d name %s\n", i, ap[i].szName);
 
@@ -4952,27 +4964,27 @@ swapGame(listOLD * plGame)
 void
 DisplayKeyPlayers(void)
 {
-    for(int i=0;i < keyPlayersFirstEmpty; i++) {
-        g_message("in DisplayKeyPlayers: %s", keyPlayers[i]);
+    for(int i=0;i < keyNamesFirstEmpty; i++) {
+        g_message("in DisplayKeyPlayers: %s", keyNames[i]);
     }
 }
 
-/*  add a new key player to the keyPlayers array */
+/*  add a new key player to the keyNames array */
 void
 AddKeyPlayer(const char sz[])
 {
     g_message("in AddKeyPlayer: %s", sz);
-    /* check that the keyPlayers array is not full */
-    if (keyPlayersFirstEmpty<MAX_KEY_PLAYERS) {
+    /* check that the keyNames array is not full */
+    if (keyNamesFirstEmpty<MAX_KEY_PLAYERS) {
         /* check that the key player doesn't already exist */
-        for(int i=0;i < keyPlayersFirstEmpty; i++) {
-            if (!strcmp(sz, keyPlayers[i])) {
-                g_message("EXISTS! %s=%s", sz,keyPlayers[i]);
+        for(int i=0;i < keyNamesFirstEmpty; i++) {
+            if (!strcmp(sz, keyNames[i])) {
+                g_message("EXISTS! %s=%s", sz,keyNames[i]);
                 return;
             }
         }
-        strcpy(keyPlayers[keyPlayersFirstEmpty],sz); 
-        keyPlayersFirstEmpty++;
+        strcpy(keyNames[keyNamesFirstEmpty],sz); 
+        keyNamesFirstEmpty++;
     }
     DisplayKeyPlayers();
 }

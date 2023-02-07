@@ -1022,6 +1022,7 @@ extern void CommandShowWarranty(char *);
 extern void CommandSwapPlayers(char *);
 extern void CommandTake(char *);
 extern void CommandSetDefaultNames(char *sz);
+extern void CommandSetKeyNames(char *sz);
 extern void CommandSetAliases(char *sz);
 extern void hint_move(char *sz, gboolean show, procrecorddata * procdatarec);
 extern void hint_double(int show, int did_double);
@@ -1058,9 +1059,9 @@ extern int GetManualDice(unsigned int anDice[2]);
 
 extern void SmartOpen(void); /* function that makes sure that player 1 is a key player, if there is one */
 #define MAX_KEY_PLAYERS 32 /* number of defined key players*/
-extern char keyPlayers[MAX_KEY_PLAYERS][MAX_NAME_LEN]; /* array with all key players*/
-extern int keyPlayersFirstEmpty; /* the keyPlayers array should be filled until keyPlayer[keyPlayersFirstEmpty] excluded*/
-extern int fUseKeyPlayers; /* whether both to use and update the keyPlayers array*/
+extern char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]; /* array with all key players*/
+extern int keyNamesFirstEmpty; /* the keyNames array should be filled until keyName[keyNamesFirstEmpty] excluded*/
+extern int fUseKeyPlayers; /* whether both to use and update the keyNames array*/
 extern int fWithinSmartOpen; /* whether we are within the SmartOpen function: if it requests to permute users, no need to add the
                                     new player1 to the list of preferred users*/
 //extern void AddKeyPlayer(char * sz); /* functions that adds a key player to the array*/
