@@ -53,24 +53,6 @@ ParseSnowieTxt(char *sz,
                int anScore[2], int *pnCube, int *pfCubeOwner, TanBoard anBoard, int anDice[2]);
 
 
-/* The following function looks at a list of priority players,
-and makes sure to set the highest-priority player as player 1, 
-i.e. the player that moves towards the bottom of the screen.
-*/
-extern void 
-SmartOpen(void)
-{
-    g_message("O: %s", ap[0].szName);
-    g_message("X: %s", ap[1].szName);
-
-    if (!strcmp("isaac", ap[0].szName)) {
-        CommandSwapPlayers(NULL);
-    }
-    
-    g_message("O: %s", ap[0].szName);
-    g_message("X: %s", ap[1].szName);
-}
-
 static int
 IsValidMove(const TanBoard anBoard, const int anMove[8])
 {

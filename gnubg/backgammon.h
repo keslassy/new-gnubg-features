@@ -1061,6 +1061,8 @@ extern void SmartOpen(void); /* function that makes sure that player 1 is a key 
 extern char keyPlayers[MAX_KEY_PLAYERS][MAX_NAME_LEN]; /* array with all key players*/
 extern int keyPlayersFirstEmpty; /* the keyPlayers array should be filled until keyPlayer[keyPlayersFirstEmpty] excluded*/
 extern int fUseKeyPlayers; /* whether both to use and update the keyPlayers array*/
+extern int fWithinSmartOpen; /* whether we are within the SmartOpen function: if it requests to permute users, no need to add the
+                                    new player1 to the list of preferred users*/
 //extern void AddKeyPlayer(char * sz); /* functions that adds a key player to the array*/
 
 #endif	/* BACKGAMMON_H */

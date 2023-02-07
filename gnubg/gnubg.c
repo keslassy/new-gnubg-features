@@ -231,6 +231,7 @@ const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", 
 char keyPlayers[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
 int keyPlayersFirstEmpty=0;
 int fUseKeyPlayers=TRUE;
+int fWithinSmartOpen=FALSE;
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
@@ -4956,12 +4957,20 @@ DisplayKeyPlayers(void)
     }
 }
 
-/* if the keyPlayers array is not full, add a new key player*/
+/*  add a new key player to the keyPlayers array */
 void
-AddKeyPlayer(char sz[])
+AddKeyPlayer(const char sz[])
 {
     g_message("in AddKeyPlayer: %s", sz);
+    /* check that the keyPlayers array is not full */
     if (keyPlayersFirstEmpty<MAX_KEY_PLAYERS) {
+        /* check that the key player doesn't already exist */
+        for(int i=0;i < keyPlayersFirstEmpty; i++) {
+            if (!strcmp(sz, keyPlayers[i])) {
+                g_message("EXISTS! %s=%s", sz,keyPlayers[i]);
+                return;
+            }
+        }
         strcpy(keyPlayers[keyPlayersFirstEmpty],sz); 
         keyPlayersFirstEmpty++;
     }
@@ -4976,8 +4985,10 @@ CommandSwapPlayers(char *UNUSED(sz))
     int n;
 
     /* if fUseKeyPlayers enabled, then add the new player 1 to the key players*/
-    g_message("in CommandSwapPlayers: %s", ap[0].szName);
-    AddKeyPlayer(ap[0].szName);
+    if (fUseKeyPlayers && !fWithinSmartOpen) {
+        g_message("in CommandSwapPlayers: %s", ap[0].szName);
+        AddKeyPlayer(ap[0].szName);
+    }
 
     /* swap individual move records */
 
@@ -5028,6 +5039,25 @@ CommandSwapPlayers(char *UNUSED(sz))
     ShowBoard();
 }
 
+/* The following function looks at a list of priority players,
+and makes sure to set the highest-priority player as player 1, 
+i.e. the player that moves towards the bottom of the screen.
+*/
+extern void 
+SmartOpen(void)
+{
+    g_message("O: %s", ap[0].szName);
+    g_message("X: %s", ap[1].szName);
+
+    if (!strcmp("isaac", ap[0].szName)) {
+        fWithinSmartOpen=TRUE;
+        CommandSwapPlayers(NULL);
+        fWithinSmartOpen=FALSE;
+    }
+    
+    g_message("O: %s", ap[0].szName);
+    g_message("X: %s", ap[1].szName);
+}
 
 extern int
 confirmOverwrite(const char *sz, const int f)
