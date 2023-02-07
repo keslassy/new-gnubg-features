@@ -3427,6 +3427,7 @@ CommandImportMat(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
+        CommandSwapPlayers(NULL);
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
     } else
