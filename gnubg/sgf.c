@@ -1452,7 +1452,7 @@ CommandLoadGame(char *sz)
         }
 
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
 
 
@@ -1507,7 +1507,7 @@ CommandLoadPosition(char *sz)
         }
 
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
 
 #endif
@@ -1562,7 +1562,7 @@ CommandLoadMatch(char *sz)
 #endif
 
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
 
         for (pl = plGame->plNext; pl != plGame; pl = pl->plNext) {

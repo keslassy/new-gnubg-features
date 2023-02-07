@@ -1627,15 +1627,19 @@ CommandSetKeyNames(char *sz)
 {
     char *token;
 
+    keyNamesFirstEmpty=0;
     /* get the first token */
     token = strtok(sz, "\t");
-//empty=0
     /* walk through other tokens */
     while( token != NULL ) {
-        g_message("token =  %s\n", token );    
+        g_message("token =  %s, length=%zu\n", token, strlen(token) );    
+        /* note: could also use AddKeyName() below if we are not guaranteed that they are unique*/
+        strcpy(keyNames[keyNamesFirstEmpty],token); 
+        keyNamesFirstEmpty++;
+        //    DisplayKeyNames();  
         token = strtok(NULL, "\t");
-        //assign in array and increment empty
-    }   
+    } 
+    DisplayKeyNames();  
 }
 
 

@@ -3402,7 +3402,7 @@ CommandImportJF(char *sz)
             return;
         fclose(pf);
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
     } else
         outputerr(sz);
@@ -3431,7 +3431,7 @@ CommandImportMat(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
@@ -3458,7 +3458,7 @@ CommandImportOldmoves(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
@@ -3486,7 +3486,7 @@ CommandImportSGG(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
@@ -3513,7 +3513,7 @@ CommandImportTMG(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
@@ -3541,7 +3541,7 @@ CommandImportSnowieTxt(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
     } else
         outputerr(sz);
@@ -3566,7 +3566,7 @@ CommandImportEmpire(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
-        if (fUseKeyPlayers)
+        if (fUseKeyNames)
             SmartOpen();
     } else
         outputerr(sz);
@@ -3612,7 +3612,7 @@ CommandImportParty(char *sz)
             fclose(pf);
             if (!rc) {
                 setDefaultFileName(tmpfile);
-                if (fUseKeyPlayers)
+                if (fUseKeyNames)
                     SmartOpen();
                 if (fGotoFirstGame)
                     CommandFirstGame(NULL);
@@ -3893,7 +3893,7 @@ CommandImportBGRoom(char *sz)
             fclose(pf);
             if (!rc) {
                 setDefaultFileName(matfile);
-                if (fUseKeyPlayers)
+                if (fUseKeyNames)
                     SmartOpen();
                 if (fGotoFirstGame)
                     CommandFirstGame(NULL);

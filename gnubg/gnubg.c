@@ -228,9 +228,13 @@ const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysi
 const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
 
 /*initialization*/
+// char **keyNames = malloc(MAX_KEY_PLAYERS * sizeof *keyNames);
+// if (keyNames)
+//   for (int i = 0; i < MAX_KEY_PLAYERS; i++)
+//     keyNames[i] = malloc(MAX_NAME_LEN * sizeof *keyNames[i]);
 char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
 int keyNamesFirstEmpty=0;
-int fUseKeyPlayers=TRUE;
+int fUseKeyNames=TRUE;
 int fWithinSmartOpen=FALSE;
 
 #if defined(USE_BOARD3D)
@@ -4961,19 +4965,19 @@ swapGame(listOLD * plGame)
 
 }
 
-void
-DisplayKeyPlayers(void)
+extern void
+DisplayKeyNames(void)
 {
     for(int i=0;i < keyNamesFirstEmpty; i++) {
-        g_message("in DisplayKeyPlayers: %s", keyNames[i]);
+        g_message("in DisplayKeyNames: %d->%s", i,keyNames[i]);
     }
 }
 
 /*  add a new key player to the keyNames array */
 void
-AddKeyPlayer(const char sz[])
+AddKeyName(const char sz[])
 {
-    g_message("in AddKeyPlayer: %s", sz);
+    g_message("in AddKeyName: %s", sz);
     /* check that the keyNames array is not full */
     if (keyNamesFirstEmpty<MAX_KEY_PLAYERS) {
         /* check that the key player doesn't already exist */
@@ -4986,7 +4990,8 @@ AddKeyPlayer(const char sz[])
         strcpy(keyNames[keyNamesFirstEmpty],sz); 
         keyNamesFirstEmpty++;
     }
-    DisplayKeyPlayers();
+    DisplayKeyNames();
+    UserCommand("save settings");
 }
 
 extern void
@@ -4996,10 +5001,10 @@ CommandSwapPlayers(char *UNUSED(sz))
     char *pc;
     int n;
 
-    /* if fUseKeyPlayers enabled, then add the new player 1 to the key players*/
-    if (fUseKeyPlayers && !fWithinSmartOpen) {
+    /* if fUseKeyNames enabled, then add the new player 1 to the key players*/
+    if (fUseKeyNames && !fWithinSmartOpen) {
         g_message("in CommandSwapPlayers: %s", ap[0].szName);
-        AddKeyPlayer(ap[0].szName);
+        AddKeyName(ap[0].szName);
     }
 
     /* swap individual move records */
