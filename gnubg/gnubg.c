@@ -228,6 +228,9 @@ const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysi
 const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
 
 
+//char keyPlayers[MAX_KEY_PLAYERS][MAX_NAME_LEN]=NULL;
+int fUseKeyPlayers=TRUE;
+
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
 int fResetSync = FALSE;         /* May need to wait for main window */

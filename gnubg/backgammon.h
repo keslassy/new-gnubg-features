@@ -1056,6 +1056,10 @@ extern int quick_roll(void);
 extern int board_in_list(const movelist * pml, const TanBoard old_board, const TanBoard board, int *an);
 extern int GetManualDice(unsigned int anDice[2]);
 
-extern void SmartOpen(void);
+extern void SmartOpen(void); /* function that makes sure that player 1 is a key player, if there is one */
+#define MAX_KEY_PLAYERS 32 /* number of defined key players*/
+extern char keyPlayers[MAX_KEY_PLAYERS][MAX_NAME_LEN]; /* array with all key players*/
+extern int fUseKeyPlayers; /* whether both to use and update the keyPlayers array*/
+
 
 #endif	/* BACKGAMMON_H */

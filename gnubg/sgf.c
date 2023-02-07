@@ -1452,7 +1452,8 @@ CommandLoadGame(char *sz)
         }
 
         setDefaultFileName(sz);
-        SmartOpen();
+        if (fUseKeyPlayers)
+            SmartOpen();
 
 
 #endif
@@ -1506,7 +1507,8 @@ CommandLoadPosition(char *sz)
         }
 
         setDefaultFileName(sz);
-        SmartOpen();
+        if (fUseKeyPlayers)
+            SmartOpen();
 
 #endif
 
@@ -1560,7 +1562,8 @@ CommandLoadMatch(char *sz)
 #endif
 
         setDefaultFileName(sz);
-        SmartOpen();
+        if (fUseKeyPlayers)
+            SmartOpen();
 
         for (pl = plGame->plNext; pl != plGame; pl = pl->plNext) {
             moverecord *pmr = pl->p;
