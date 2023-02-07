@@ -932,7 +932,7 @@ AnalyzeSingleFile(void)
 }
 
 
-extern void
+void
 SmartAnalyze(void)
 {
     gchar *folder = NULL;

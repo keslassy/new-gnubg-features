@@ -53,6 +53,24 @@ ParseSnowieTxt(char *sz,
                int anScore[2], int *pnCube, int *pfCubeOwner, TanBoard anBoard, int anDice[2]);
 
 
+/* The following function looks at a list of priority players,
+and makes sure to set the highest-priority player as player 1, 
+i.e. the player that moves towards the bottom of the screen.
+*/
+extern void 
+SmartOpen(void)
+{
+    g_message("O: %s", ap[0].szName);
+    g_message("X: %s", ap[1].szName);
+
+    if (!strcmp("isaac", ap[0].szName)) {
+        CommandSwapPlayers(NULL);
+    }
+    
+    g_message("O: %s", ap[0].szName);
+    g_message("X: %s", ap[1].szName);
+}
+
 static int
 IsValidMove(const TanBoard anBoard, const int anMove[8])
 {
@@ -3402,11 +3420,14 @@ CommandImportJF(char *sz)
             return;
         fclose(pf);
         setDefaultFileName(sz);
+        SmartOpen();
     } else
         outputerr(sz);
 
     ShowBoard();
 }
+
+
 
 extern void
 CommandImportMat(char *sz)
@@ -3427,7 +3448,7 @@ CommandImportMat(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
-        CommandSwapPlayers(NULL);
+        SmartOpen();
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
     } else
@@ -3453,6 +3474,7 @@ CommandImportOldmoves(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
+        SmartOpen();
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
     } else
@@ -3479,6 +3501,7 @@ CommandImportSGG(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
+        SmartOpen();
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
     } else
@@ -3504,6 +3527,7 @@ CommandImportTMG(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
+        SmartOpen();
         if (fGotoFirstGame)
             CommandFirstGame(NULL);
     } else
@@ -3530,6 +3554,7 @@ CommandImportSnowieTxt(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
+        SmartOpen();
     } else
         outputerr(sz);
 }
@@ -3553,6 +3578,7 @@ CommandImportEmpire(char *sz)
             /* no file imported */
             return;
         setDefaultFileName(sz);
+        SmartOpen();
     } else
         outputerr(sz);
 }
@@ -3597,6 +3623,7 @@ CommandImportParty(char *sz)
             fclose(pf);
             if (!rc) {
                 setDefaultFileName(tmpfile);
+                SmartOpen();
                 if (fGotoFirstGame)
                     CommandFirstGame(NULL);
             }
@@ -3876,6 +3903,7 @@ CommandImportBGRoom(char *sz)
             fclose(pf);
             if (!rc) {
                 setDefaultFileName(matfile);
+                SmartOpen();
                 if (fGotoFirstGame)
                     CommandFirstGame(NULL);
             }

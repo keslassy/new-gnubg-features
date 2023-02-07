@@ -1056,4 +1056,6 @@ extern int quick_roll(void);
 extern int board_in_list(const movelist * pml, const TanBoard old_board, const TanBoard board, int *an);
 extern int GetManualDice(unsigned int anDice[2]);
 
+extern void SmartOpen(void);
+
 #endif	/* BACKGAMMON_H */
