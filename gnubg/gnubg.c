@@ -227,8 +227,9 @@ analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
 const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
 
-
-//char keyPlayers[MAX_KEY_PLAYERS][MAX_NAME_LEN]=NULL;
+/*initialization*/
+char keyPlayers[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
+int keyPlayersFirstEmpty=0;
 int fUseKeyPlayers=TRUE;
 
 #if defined(USE_BOARD3D)
@@ -4947,7 +4948,25 @@ swapGame(listOLD * plGame)
 
 }
 
+void
+DisplayKeyPlayers(void)
+{
+    for(int i=0;i < keyPlayersFirstEmpty; i++) {
+        g_message("in DisplayKeyPlayers: %s", keyPlayers[i]);
+    }
+}
 
+/* if the keyPlayers array is not full, add a new key player*/
+void
+AddKeyPlayer(char sz[])
+{
+    g_message("in AddKeyPlayer: %s", sz);
+    if (keyPlayersFirstEmpty<MAX_KEY_PLAYERS) {
+        strcpy(keyPlayers[keyPlayersFirstEmpty],sz); 
+        keyPlayersFirstEmpty++;
+    }
+    DisplayKeyPlayers();
+}
 
 extern void
 CommandSwapPlayers(char *UNUSED(sz))
@@ -4955,6 +4974,10 @@ CommandSwapPlayers(char *UNUSED(sz))
     listOLD *pl;
     char *pc;
     int n;
+
+    /* if fUseKeyPlayers enabled, then add the new player 1 to the key players*/
+    g_message("in CommandSwapPlayers: %s", ap[0].szName);
+    AddKeyPlayer(ap[0].szName);
 
     /* swap individual move records */
 
