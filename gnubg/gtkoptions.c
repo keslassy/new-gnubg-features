@@ -147,17 +147,19 @@ static GtkTreeIter selected_iter;
 static GtkListStore *nameStore;
 
 static void
-AddKeyNameClicked(GtkButton * UNUSED(button), gpointer UNUSED(treeview))
+AddKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     GtkTreeIter iter;
     char *keyName = GTKGetInput(_("Add key name"), _("Key Player Name:"), NULL);
     if(keyName) {
         g_message("message=%s",keyName);
         if (AddKeyName(keyName)) {
-            gtk_list_store_append(nameStore, &iter);
-            gtk_list_store_set(nameStore, &iter, 0, keyName, -1);
+            gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
+            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, keyName, -1);
+            // gtk_list_store_set(nameStore, &iter, 0, keyName, -1);
             // gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-            
+            gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
+            selected_iter=iter;
         }  else {
             outputerrf(_("there was a problem adding this key name"));
         }
@@ -357,7 +359,7 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
 
     /* create tree view */
     treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(nameStore));
-    g_object_unref(nameStore);
+    // g_object_unref(nameStore);
     renderer = gtk_cell_renderer_text_new();
     column = gtk_tree_view_column_new_with_attributes(_("Key Player Names"), renderer, "text", 0, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
