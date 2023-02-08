@@ -23,5 +23,6 @@
 
 extern void GTKSetOptions(void);
 extern void GTKSound(void);
+extern void GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * pwParent);
 
 #endif                          /* GTKOPTIONS_H */

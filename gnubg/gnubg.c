@@ -4983,19 +4983,54 @@ int NameIsKey (const char sz[]) {
     return 0;
 }
 
-/*  add a new key player to the keyNames array */
-void
+/*  delete a  key name from the keyNames array */
+extern void
+DeleteKeyName(const char sz[])
+{
+    g_message("in DeleteKeyName: %s, length=%zu", sz, strlen(sz));
+
+    for(int i=0;i < keyNamesFirstEmpty; i++) {
+        if (!strcmp(sz, keyNames[i])) {
+            g_message("EXISTS! %s=%s, i=%d, keyNamesFirstEmpty=%d", sz,keyNames[i],i,keyNamesFirstEmpty);
+            // if (keyNamesFirstEmpty<=i) {
+            //     outputerrf(_("Bug - found name in empty array"));
+            //     return;
+            // } else 
+            if (keyNamesFirstEmpty==(i+1)) {
+                keyNamesFirstEmpty--;
+                UserCommand("save settings");
+                return;
+            } else {
+                strcpy(keyNames[i],keyNames[keyNamesFirstEmpty-1]); 
+                keyNamesFirstEmpty--;
+                // DisplayKeyNames();
+                UserCommand("save settings");
+                return;
+            }
+        }
+    }
+}
+
+/*  add a new key name to the keyNames array */
+extern void
 AddKeyName(const char sz[])
 {
     g_message("in AddKeyName: %s, length=%zu", sz, strlen(sz));
-    /* check that the name doesn't contain "\t" */
+    /* check that the name doesn't contain "\t", "\n" */
     if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL) {
-        for(unsigned int j=0;j < strlen(sz); j++) {
-            g_message("%c", sz[j]);
-        }
+        // for(unsigned int j=0;j < strlen(sz); j++) {
+        //     g_message("%c", sz[j]);
+        // }
         outputerrf(_("Player name contains unallowed character"));
         return;
     }
+
+    /* check that the name is not too long*/
+    if(strlen(sz) > MAX_NAME_LEN) {
+        outputerrf(_("Player name is too long"));
+        return;
+    }
+
     /* check that the keyNames array is not full */
     if (keyNamesFirstEmpty<MAX_KEY_PLAYERS) {
         /* check that the key player doesn't already exist */

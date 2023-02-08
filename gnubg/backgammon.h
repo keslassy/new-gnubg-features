@@ -1065,7 +1065,8 @@ extern int keyNamesFirstEmpty; /* the keyNames array should be filled until keyN
 extern int fUseKeyNames; /* whether both to use and update the keyNames array*/
 extern int fWithinSmartOpen; /* whether we are within the SmartOpen function: if it requests to permute users, no need to add the
                                     new player1 to the list of preferred users*/
-//extern void AddKeyName(char * sz); /* functions that adds a key player to the array*/
+extern void AddKeyName(const char sz[]); /* functions that adds a key player to the array*/
+extern void DeleteKeyName(const char sz[]);
 extern void DisplayKeyNames(void);
 
 #endif	/* BACKGAMMON_H */
