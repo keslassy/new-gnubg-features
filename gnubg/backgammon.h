@@ -702,6 +702,7 @@ extern void CommandSetCheatEnable(char *);
 extern void CommandSetCheatPlayer(char *);
 extern void CommandSetCheatPlayerRoll(char *);
 extern void CommandSetClockwise(char *);
+extern void CommandSetUseKeyNames(char *);
 extern void CommandSetCommandWindow(char *);
 extern void CommandSetConfirmDefault(char *);
 extern void CommandSetConfirmNew(char *);
@@ -1058,7 +1059,7 @@ extern int board_in_list(const movelist * pml, const TanBoard old_board, const T
 extern int GetManualDice(unsigned int anDice[2]);
 
 extern void SmartOpen(void); /* function that makes sure that player 1 is a key player, if there is one */
-#define MAX_KEY_PLAYERS 64 /* number of defined key players*/
+#define MAX_KEY_PLAYERS 100 /* number of defined key players*/
 extern char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]; /* array with all key players*/
 extern int keyNamesFirstEmpty; /* the keyNames array should be filled until keyName[keyNamesFirstEmpty] excluded*/
 extern int fUseKeyNames; /* whether both to use and update the keyNames array*/

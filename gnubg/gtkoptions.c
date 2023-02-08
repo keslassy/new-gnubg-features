@@ -66,6 +66,7 @@ typedef struct {
     GtkWidget *pwCubeUsecube;
     GtkWidget *pwCubeJacoby;
     GtkWidget *pwCubeInvert;
+    GtkWidget *pwKeyName;
     GtkWidget *pwGameClockwise;
     GtkWidget *apwVariations[NUM_VARIATIONS];
     GtkWidget *pwOutputMWC;
@@ -642,6 +643,16 @@ append_display_options(optionswidget * pow)
                                   "advance clockwise (and player 0 moves "
                                   "anticlockwise).  Otherwise, player 1 moves "
                                   "anticlockwise and player 0 moves clockwise."));
+
+    pow->pwKeyName = gtk_check_button_new_with_label(_("Use SmartPlayer: key player automatically sits at bottom of board"));
+    gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwKeyName, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(pow->pwKeyName,
+                                _("(1) If you select a player to be player1 (the second player) "
+                                  "and sit at the bottom of the board, the player's name is "
+                                  "automatically added to the list of key player names. "
+                                  "(2) Then, when you open a new game, if such a key player is player0 "
+                                  "and player1 is unknown, they swap places."));
+
 
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
@@ -1664,6 +1675,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwCubeInvert, fInvertMET, "set invert met %s");
 
     CHECKUPDATE(pow->pwGameClockwise, fClockwise, "set clockwise %s");
+    CHECKUPDATE(pow->pwKeyName, fUseKeyNames, "set usekeynames %s");
 
     for (i = 0; i < NUM_VARIATIONS; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i])) && bgvDefault != (bgvariation) i) {
@@ -1916,6 +1928,7 @@ OptionsSet(optionswidget * pow)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwCubeInvert), fInvertMET);
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwGameClockwise), fClockwise);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwKeyName), fUseKeyNames ); 
 
     for (i = 0; i < NUM_VARIATIONS; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->apwVariations[i]), bgvDefault == (bgvariation) i);

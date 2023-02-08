@@ -2722,6 +2722,17 @@ CommandSetTurn(char *sz)
 }
 
 extern void
+CommandSetUseKeyNames(char *sz)
+{
+
+    SetToggle("usekeynames", &fUseKeyNames, sz,
+              _("Use key player names to set key player at bottom of board."),
+              _("Dont use key player names to set key player at bottom of board."));
+    g_message("fUseKeyNames=%d",fUseKeyNames);
+
+}
+
+extern void
 CommandSetJacoby(char *sz)
 {
 

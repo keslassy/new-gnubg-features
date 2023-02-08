@@ -1286,6 +1286,8 @@ static command acSetVariation[] = {
     { "turn", CommandSetTurn, N_("Set which player is on roll"), szPLAYER,
       &cPlayer },
     { "tutor", NULL, N_("Control tutor setup"), NULL, acSetTutor }, 
+    { "usekeynames", CommandSetUseKeyNames, N_("Set whether to use the list of key player names"),
+      szONOFF, &cOnOff },    
     { "variation", NULL, N_("Set which variation of backgammon is used"), 
       NULL, acSetVariation }, 
     { "vsync3d", CommandSetVsync3d, N_("Turn vertical sync on/off"), szONOFF, &cOnOff },
