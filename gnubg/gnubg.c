@@ -4984,7 +4984,7 @@ int NameIsKey (const char sz[]) {
 }
 
 /*  delete a  key name from the keyNames array */
-extern void
+extern int
 DeleteKeyName(const char sz[])
 {
     g_message("in DeleteKeyName: %s, length=%zu", sz, strlen(sz));
@@ -4999,20 +4999,22 @@ DeleteKeyName(const char sz[])
             if (keyNamesFirstEmpty==(i+1)) {
                 keyNamesFirstEmpty--;
                 UserCommand("save settings");
-                return;
+                return 1;
             } else {
                 strcpy(keyNames[i],keyNames[keyNamesFirstEmpty-1]); 
                 keyNamesFirstEmpty--;
                 // DisplayKeyNames();
                 UserCommand("save settings");
-                return;
+                return 1;
             }
         }
     }
+    return 0;
 }
 
-/*  add a new key name to the keyNames array */
-extern void
+/*  add a new key name to the keyNames array 
+return 1 if success, 0 if problem */
+extern int
 AddKeyName(const char sz[])
 {
     g_message("in AddKeyName: %s, length=%zu", sz, strlen(sz));
@@ -5022,13 +5024,13 @@ AddKeyName(const char sz[])
         //     g_message("%c", sz[j]);
         // }
         outputerrf(_("Player name contains unallowed character"));
-        return;
+        return 0;
     }
 
     /* check that the name is not too long*/
     if(strlen(sz) > MAX_NAME_LEN) {
         outputerrf(_("Player name is too long"));
-        return;
+        return 0;
     }
 
     /* check that the keyNames array is not full */
@@ -5037,7 +5039,7 @@ AddKeyName(const char sz[])
         for(int i=0;i < keyNamesFirstEmpty; i++) {
             if (!strcmp(sz, keyNames[i])) {
                 g_message("EXISTS! %s=%s", sz,keyNames[i]);
-                return;
+                return 0;
             }
         }
         strcpy(keyNames[keyNamesFirstEmpty],sz); 
@@ -5045,6 +5047,7 @@ AddKeyName(const char sz[])
     }
     DisplayKeyNames();
     UserCommand("save settings");
+    return 1;
 }
 
 extern void

@@ -147,9 +147,23 @@ static GtkTreeIter selected_iter;
 static GtkListStore *nameStore;
 
 static void
-AddKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
+AddKeyNameClicked(GtkButton * UNUSED(button), gpointer UNUSED(treeview))
 {
-    // char *dbName = GTKGetInput(_("Add Database"), _("Database Name:"), NULL);
+    GtkTreeIter iter;
+    char *keyName = GTKGetInput(_("Add key name"), _("Key Player Name:"), NULL);
+    if(keyName) {
+        g_message("message=%s",keyName);
+        if (AddKeyName(keyName)) {
+            gtk_list_store_append(nameStore, &iter);
+            gtk_list_store_set(nameStore, &iter, 0, keyName, -1);
+            // gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+            
+        }  else {
+            outputerrf(_("there was a problem adding this key name"));
+        }
+        g_free(keyName);
+    }
+
     // if (dbName) {
     //     DBProvider *pdb = GetSelectedDBType();
     //     int con = 0;
@@ -215,10 +229,13 @@ DeleteKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
     //         && pdb->DeleteDatabase(db, gtk_entry_get_text(GTK_ENTRY(user)), gtk_entry_get_text(GTK_ENTRY(password)),
     //                                gtk_entry_get_text(GTK_ENTRY(hostname)))) {
     //         gtk_list_store_remove(GTK_LIST_STORE(dbStore), &selected_iter);
-            gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-            DeleteKeyName(keyName);
-            g_message("done delete?");
-            DisplayKeyNames();
+            if (DeleteKeyName(keyName)) {
+                gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+                // g_message("done delete?");
+                DisplayKeyNames();
+            } else {
+                outputerrf(_("there was a problem deleting this key name"));
+            }
     //         optionsValid = FALSE;
     //         gtk_widget_set_sensitive(deldb, FALSE);
     //         gtk_label_set_text(GTK_LABEL(helptext), _("Database successfully removed"));
