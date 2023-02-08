@@ -4973,11 +4973,29 @@ DisplayKeyNames(void)
     }
 }
 
+int NameIsKey (const char sz[]) {
+    for(int i=0;i < keyNamesFirstEmpty; i++) {
+        if (!strcmp(sz, keyNames[i])) {
+            g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,keyNames[i],i);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 /*  add a new key player to the keyNames array */
 void
 AddKeyName(const char sz[])
 {
-    g_message("in AddKeyName: %s", sz);
+    g_message("in AddKeyName: %s, length=%zu", sz, strlen(sz));
+    /* check that the name doesn't contain "\t" */
+    if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL) {
+        for(unsigned int j=0;j < strlen(sz); j++) {
+            g_message("%c", sz[j]);
+        }
+        outputerrf(_("Player name contains unallowed character"));
+        return;
+    }
     /* check that the keyNames array is not full */
     if (keyNamesFirstEmpty<MAX_KEY_PLAYERS) {
         /* check that the key player doesn't already exist */
@@ -5066,12 +5084,16 @@ SmartOpen(void)
     g_message("O: %s", ap[0].szName);
     g_message("X: %s", ap[1].szName);
 
-    if (!strcmp("isaac", ap[0].szName)) {
+    // if (!strcmp("isaac", ap[0].szName)) {
+    if (NameIsKey(ap[0].szName) && !NameIsKey(ap[1].szName)) {
+        // g_message("permute!");
         fWithinSmartOpen=TRUE;
         CommandSwapPlayers(NULL);
         fWithinSmartOpen=FALSE;
-    }
-    
+    } 
+    // else
+    //     g_message("don't permute!");
+
     g_message("O: %s", ap[0].szName);
     g_message("X: %s", ap[1].szName);
 }
