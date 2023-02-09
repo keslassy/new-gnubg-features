@@ -593,21 +593,20 @@ ToolbarNew(void)
 
     ToolbarAddSeparator(GTK_TOOLBAR(pwtb));
 
-    /* Analyze current match button */
-    // ptw->pwAnalyzeCurrent =
-    //     ToolbarAddButtonFromFile(GTK_TOOLBAR(pwtb), 
-    //     "./AnalyzeMatchIcon.png", NULL, 
-    //     _("Analyze current match (set default behavior in Settings -> Analysis)"), 
-    //     G_CALLBACK(GTKAnalyzeCurrent), NULL);
+    /* Analyze current match button 
+    ... switching to the British "analyse" even though "analyze" is much more common in the world...
+    */
     ptw->pwAnalyzeCurrent =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyze"), 
-        _("Analyze current match (set default behavior in Settings -> Analysis)"), 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyse"), 
+        _("Analyse current match (set default behavior in Settings -> Analysis)"), 
         G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
-    /* Analyze file button */
+    /* Analyze file button 
+    ... switching to the British "analyse" even though "analyze" is much more common in the world...
+    */
     ptw->pwAnalyzeFile =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_FIND_AND_REPLACE, _("Analyze File"), 
-        _("Analyze match from file (set default behavior in Settings -> Analysis)"), 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_FIND_AND_REPLACE, _("Analyse File"), 
+        _("Analyse match from file (set default behavior in Settings -> Analysis)"), 
         G_CALLBACK(GTKAnalyzeFile), NULL);
 
     ti = gtk_separator_tool_item_new();
