@@ -152,7 +152,7 @@ AddKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
     GtkTreeIter iter;
     char *keyName = GTKGetInput(_("Add key name"), _("Key Player Name:"), NULL);
     if(keyName) {
-        g_message("message=%s",keyName);
+        // g_message("message=%s",keyName);
         if (AddKeyName(keyName)) {
             gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
             gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, keyName, -1);
@@ -173,12 +173,14 @@ GetSelectedName(GtkTreeView * treeview)
     GtkTreeSelection *sel = gtk_tree_view_get_selection(treeview);
     if (gtk_tree_selection_count_selected_rows(sel) != 1)
         return NULL;
-        /* Sets selected_iter to the currently selected node: */
+    
+    /* Sets selected_iter to the currently selected node: */
     gtk_tree_selection_get_selected(sel, &model, &selected_iter);
+    
     /* Gets the value of the char* cell (in column 0) in the row 
         referenced by selected_iter */
     gtk_tree_model_get(model, &selected_iter, 0, &keyName, -1);
-    g_message("GetSelectedName gives keyName=%s",keyName);
+    // g_message("GetSelectedName gives keyName=%s",keyName);
     return keyName;
 }
 

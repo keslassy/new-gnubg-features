@@ -2729,7 +2729,7 @@ CommandSetUseKeyNames(char *sz)
     SetToggle("usekeynames", &fUseKeyNames, sz,
               _("Use key player names to set key player at bottom of board."),
               _("Dont use key player names to set key player at bottom of board."));
-    g_message("fUseKeyNames=%d",fUseKeyNames);
+    // g_message("fUseKeyNames=%d",fUseKeyNames);
 
 }
 

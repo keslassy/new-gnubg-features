@@ -5064,7 +5064,7 @@ CommandSwapPlayers(char *UNUSED(sz))
     /* if fUseKeyNames enabled, then add the new player1 to the key players
     (now still player0)*/
     if (fUseKeyNames && !fWithinSmartOpen) {
-        g_message("in CommandSwapPlayers: %s", ap[0].szName);
+        // g_message("in CommandSwapPlayers: %s", ap[0].szName);
         AddKeyName(ap[0].szName);
     }
 
