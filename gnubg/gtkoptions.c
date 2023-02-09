@@ -156,8 +156,6 @@ AddKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
         if (AddKeyName(keyName)) {
             gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
             gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, keyName, -1);
-            // gtk_list_store_set(nameStore, &iter, 0, keyName, -1);
-            // gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
             gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
             selected_iter=iter;
         }  else {
@@ -165,41 +163,6 @@ AddKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
         }
         g_free(keyName);
     }
-
-    // if (dbName) {
-    //     DBProvider *pdb = GetSelectedDBType();
-    //     int con = 0;
-    //     gchar *sz;
-    //     GtkTreeIter iter;
-    //     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(dbList));
-
-    //     /* If the database name is already in the list, don't try to add a new one */
-    //     if (gtk_tree_model_get_iter_first(model, &iter))
-    //         do {
-    //             gtk_tree_model_get(model, &iter, 0, &sz, -1);
-    //             if (g_ascii_strcasecmp(dbName, sz) == 0) {
-    //                 gtk_label_set_text(GTK_LABEL(helptext), _("Failed to create, database exists!"));
-    //                 g_free(dbName);
-    //                 return;
-    //             }
-    //         } while (gtk_tree_model_iter_next(model, &iter));
-
-    //     if (pdb)
-    //         con =
-    //             pdb->Connect(dbName, gtk_entry_get_text(GTK_ENTRY(user)), gtk_entry_get_text(GTK_ENTRY(password)),
-    //                          gtk_entry_get_text(GTK_ENTRY(hostname)));
-
-    //     if (con > 0 || ((pdb) && CreateDatabase(pdb))) {
-    //         gtk_list_store_append(GTK_LIST_STORE(dbStore), &iter);
-    //         gtk_list_store_set(GTK_LIST_STORE(dbStore), &iter, 0, dbName, -1);
-    //         gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(dbList)), &iter);
-    //         pdb->Disconnect();
-    //         CheckDatabase(dbName);
-    //     } else
-    //         gtk_label_set_text(GTK_LABEL(helptext), _("Failed to create database!"));
-
-    //     g_free(dbName);
-    // }
 }
 
 static char *
@@ -222,28 +185,14 @@ GetSelectedName(GtkTreeView * treeview)
 static void
 DeleteKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
-    // char *db = GetSelectedDB(GTK_TREE_VIEW(dbList));
     char *keyName = GetSelectedName(GTK_TREE_VIEW(treeview));
-    // if (db && GetInputYN(_("Are you sure you want to delete all the matches in this database?"))) {
-    //     DBProvider *pdb = GetSelectedDBType();
     if(keyName){
-    //     if (pdb
-    //         && pdb->DeleteDatabase(db, gtk_entry_get_text(GTK_ENTRY(user)), gtk_entry_get_text(GTK_ENTRY(password)),
-    //                                gtk_entry_get_text(GTK_ENTRY(hostname)))) {
-    //         gtk_list_store_remove(GTK_LIST_STORE(dbStore), &selected_iter);
             if (DeleteKeyName(keyName)) {
                 gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-                // g_message("done delete?");
                 DisplayKeyNames();
             } else {
                 outputerrf(_("there was a problem deleting this key name"));
             }
-    //         optionsValid = FALSE;
-    //         gtk_widget_set_sensitive(deldb, FALSE);
-    //         gtk_label_set_text(GTK_LABEL(helptext), _("Database successfully removed"));
-    //         pdb->database = "gnubg";
-    //     } else
-    //         gtk_label_set_text(GTK_LABEL(helptext), _("Failed to delete database!"));
     }
 }
 
@@ -252,9 +201,7 @@ extern void
 GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
 {
     GtkWidget *pwDialog;
-    // GtkWidget *pwBox;
     GtkWidget *pwMainHBox;
-    // GtkWidget *pwHBox = 0;
     GtkWidget *pwVBox;
     GtkWidget *hb1;
     GtkWidget *pwScrolled;
@@ -265,13 +212,9 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
     GtkTreeViewColumn *column;
     // GtkListStore *store;
     GtkTreeIter iter;
-    // int i = 0;
-    // credits *credit = &creditList[0];
-
+ 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
-    // ListCreate(&names);
 
-    // pwDialog = GTKCreateDialog(_("Edit key player names"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
     pwDialog = GTKCreateDialog(_("Edit key player names"), DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -282,50 +225,6 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainHBox);
 
-// #if GTK_CHECK_VERSION(3,0,0)
-//     pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-// #else
-//     pwBox = gtk_vbox_new(FALSE, 0);
-// #endif
-//     gtk_box_pack_start(GTK_BOX(pwMainHBox), pwBox, FALSE, FALSE, 0);
-//     gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
-
-//     while (credit->Title) {
-//         credEntry *ce;
-
-//         /* Two columns, so new hbox every-other one */
-//         if (i % 2 == 0) {
-// #if GTK_CHECK_VERSION(3,0,0)
-//             pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-// #else
-//             pwHBox = gtk_hbox_new(FALSE, 0);
-// #endif
-//             gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, TRUE, FALSE, 0);
-//         }
-// #if GTK_CHECK_VERSION(3,0,0)
-//         pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-// #else
-//         pwVBox = gtk_vbox_new(FALSE, 0);
-// #endif
-//         gtk_box_pack_start(GTK_BOX(pwHBox), pwVBox, TRUE, FALSE, 0);
-
-//         AddTitle(pwVBox, _(credit->Title));
-
-//         ce = credit->Entry;
-//         while (ce->Name) {
-//             AddName(pwVBox, ce->Name, _(ce->Type));
-//             ce++;
-//         }
-//         if (i == 1)
-// #if GTK_CHECK_VERSION(3,0,0)
-//             gtk_box_pack_start(GTK_BOX(pwBox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 4);
-// #else
-//             gtk_box_pack_start(GTK_BOX(pwBox), gtk_hseparator_new(), FALSE, FALSE, 4);
-// #endif
-//         credit++;
-//         i++;
-//     }
-
 #if GTK_CHECK_VERSION(3,0,0)
     pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
@@ -333,29 +232,17 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
 #endif
     gtk_box_pack_start(GTK_BOX(pwMainHBox), pwVBox, FALSE, FALSE, 0);
 
-    //AddTitle(pwVBox, _("Special thanks"));
+    //AddTitle(pwVBox, _("?"));
 
     /* create list store */
     nameStore = gtk_list_store_new(1, G_TYPE_STRING);
 
-    // /* add data to the list store */
-    // for (i = 0; ceCredits[i].Name; i++) {
-    //     if (!FindName(&names, ceCredits[i].Name)) {
-    //         gtk_list_store_append(store, &iter);
-    //         gtk_list_store_set(store, &iter, 0, ceCredits[i].Name, -1);
-    //     }
-    // }
 
     for(int i=0;i < keyNamesFirstEmpty; i++) {
         gtk_list_store_append(nameStore, &iter);
         gtk_list_store_set(nameStore, &iter, 0, keyNames[i], -1);
         // g_message("in DisplayKeyNames: %d->%s", i,keyNames[i]);
     }
-
-    // gtk_list_store_append(store, &iter);
-    // gtk_list_store_set(store, &iter, 0, "toto", -1);
-    // gtk_list_store_append(store, &iter);
-    // gtk_list_store_set(store, &iter, 0, "tata", -1);
 
     /* create tree view */
     treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(nameStore));
@@ -364,8 +251,6 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
     column = gtk_tree_view_column_new_with_attributes(_("Key Player Names"), renderer, "text", 0, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
-    // while (names.plNext->p)
-    //     ListDelete(names.plNext);
     gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwScrolled, TRUE, TRUE, 0);
     gtk_widget_set_size_request(pwScrolled, 100, 200);//-1);
@@ -374,10 +259,8 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
 #else
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(pwScrolled), treeview);
 #endif
-    // gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-    // gtk_box_pack_start(GTK_BOX(vb1), pwScrolled, FALSE, FALSE, 0);
 #if GTK_CHECK_VERSION(3,0,0)
     hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 #else
@@ -390,7 +273,6 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
     delButton = gtk_button_new_with_label(_("Delete name"));
     g_signal_connect(delButton, "clicked", G_CALLBACK(DeleteKeyNameClicked), treeview);
     gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
-
 
     GTKRunDialog(pwDialog);
 }
@@ -899,8 +781,6 @@ append_display_options(optionswidget * pow)
                                   "anticlockwise).  Otherwise, player 1 moves "
                                   "anticlockwise and player 0 moves clockwise."));
 
-    /* ***************************************** */
-
 #if GTK_CHECK_VERSION(3,0,0)
     pwh = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
 #else
@@ -908,7 +788,6 @@ append_display_options(optionswidget * pow)
 #endif
 
     gtk_box_pack_start(GTK_BOX(pwvbox), pwh, FALSE, FALSE, 0);
-
 
     pow->pwKeyName = gtk_check_button_new_with_label(_("Use SmartOpen to sit at bottom of board in opened matches"));
     gtk_box_pack_start(GTK_BOX(pwh), pow->pwKeyName, FALSE, FALSE, 0);
@@ -922,8 +801,6 @@ append_display_options(optionswidget * pow)
     pwEdit = gtk_button_new_with_label(_("Edit"));
     g_signal_connect(G_OBJECT(pwEdit), "clicked",  G_CALLBACK(GTKCommandEditKeyNames), pow);//(void *) pAnalDetails);
     gtk_box_pack_start(GTK_BOX(pwh), pwEdit, FALSE, FALSE, 0);
-
-    /* ***************************************** */
 
     pwev = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);

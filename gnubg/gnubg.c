@@ -248,10 +248,6 @@ const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysi
 const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
 
 /*initialization*/
-// char **keyNames = malloc(MAX_KEY_PLAYERS * sizeof *keyNames);
-// if (keyNames)
-//   for (int i = 0; i < MAX_KEY_PLAYERS; i++)
-//     keyNames[i] = malloc(MAX_NAME_LEN * sizeof *keyNames[i]);
 char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
 int keyNamesFirstEmpty=0;
 int fUseKeyNames=TRUE;
@@ -3243,12 +3239,6 @@ SavePlayerSettings(FILE * pf)
     }
     fprintf(pf, "\n");
 
-    // fprintf(pf, "set keynames");
-    // for(int i=0;i < keyNamesFirstEmpty; i++) {
-    //     fprintf(pf, " \"%s\"", keyNames[i]);
-    // }
-    // fprintf(pf, "\n");
-
     for (i = 0; i < 2; i++) {
         fprintf(pf, "set player %d name %s\n", i, ap[i].szName);
 
@@ -5012,10 +5002,6 @@ DeleteKeyName(const char sz[])
     for(int i=0;i < keyNamesFirstEmpty; i++) {
         if (!strcmp(sz, keyNames[i])) {
             g_message("EXISTS! %s=%s, i=%d, keyNamesFirstEmpty=%d", sz,keyNames[i],i,keyNamesFirstEmpty);
-            // if (keyNamesFirstEmpty<=i) {
-            //     outputerrf(_("Bug - found name in empty array"));
-            //     return;
-            // } else 
             if (keyNamesFirstEmpty==(i+1)) {
                 keyNamesFirstEmpty--;
                 UserCommand("save settings");
@@ -5077,7 +5063,8 @@ CommandSwapPlayers(char *UNUSED(sz))
     char *pc;
     int n;
 
-    /* if fUseKeyNames enabled, then add the new player 1 to the key players*/
+    /* if fUseKeyNames enabled, then add the new player1 to the key players
+    (now still player0)*/
     if (fUseKeyNames && !fWithinSmartOpen) {
         g_message("in CommandSwapPlayers: %s", ap[0].szName);
         AddKeyName(ap[0].szName);
@@ -5133,27 +5120,23 @@ CommandSwapPlayers(char *UNUSED(sz))
 }
 
 /* The following function looks at a list of priority players,
-and makes sure to set the highest-priority player as player 1, 
+and makes sure to set the priority player as player 1, 
 i.e. the player that moves towards the bottom of the screen.
 */
 extern void 
 SmartOpen(void)
 {
-    g_message("O: %s", ap[0].szName);
-    g_message("X: %s", ap[1].szName);
+    // g_message("O: %s", ap[0].szName);
+    // g_message("X: %s", ap[1].szName);
 
-    // if (!strcmp("isaac", ap[0].szName)) {
     if (NameIsKey(ap[0].szName) && !NameIsKey(ap[1].szName)) {
-        // g_message("permute!");
         fWithinSmartOpen=TRUE;
         CommandSwapPlayers(NULL);
         fWithinSmartOpen=FALSE;
     } 
-    // else
-    //     g_message("don't permute!");
 
-    g_message("O: %s", ap[0].szName);
-    g_message("X: %s", ap[1].szName);
+    // g_message("O: %s", ap[0].szName);
+    // g_message("X: %s", ap[1].szName);
 }
 
 extern int
