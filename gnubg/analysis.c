@@ -977,21 +977,18 @@ AnalyzeGame(listOLD * plGame, int wait)
 
     /* Analyse first move record (gameinfo) */
     g_assert(pmr->mt == MOVE_GAMEINFO);
-    if ( (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
+    if (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
                     &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, NULL) < 0)
-                || (fBackgroundAnalysis && fStopAnalysis) ) {
-        g_message("Stop 1 due to fStopAnalysis");            
         return -1;              /* Interrupted */
-    }
 
     numMoves--;                 /* Done one - the gameinfo */
+
 
     for (i = 0; i < numMoves; i++) {
         pl = pl->plNext;
         pmr = pl->p;
 
-        if (pmr == NULL || (fBackgroundAnalysis && fStopAnalysis)) {
-                    g_message("Stop 2 due to fStopAnalysis");
+        if (pmr == NULL) {
             /* corrupt moves list */
             g_assert_not_reached();
             break;
@@ -1032,32 +1029,15 @@ AnalyzeGame(listOLD * plGame, int wait)
             msAnalyse.fMove = pmr->fPlayer;
         }
         ApplyMoveRecord(&msAnalyse, plGame, pmr);
-//         if(fAnalysisRunning) {
-//             g_message("i=%d",i);
-//             ShowBoard();
-//             /* redraw if analysis running in background*/
-// #if defined(USE_GTK)
-//             if (fX && fAnalysisRunning) {
-//                 SetAnnotation(pmrCurAnn);
-//                 ChangeGame(NULL);
-//             }
-// #endif
-//         }
     }
-
     g_assert(pl->plNext == plGame);
 
     if (wait) {
         int result;
 
-        if (fBackgroundAnalysis && fStopAnalysis) {
-                    g_message("Stop 3 due to fStopAnalysis");
-            result=-1;
-        }
-        else {
             multi_debug("wait for all task: analysis");
             result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
-        }
+
         if (result == -1)
             IniStatcontext(psc);
 
@@ -1211,30 +1191,20 @@ CommandAnalyseGame(char *UNUSED(sz))
     /* see explanations in CommandAnalyseMatch()*/
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
-        g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
         "feel free to browse and check the early analysis results."), nMoves);        ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
     } else
         ProgressStartValue(_("Analysing game"), nMoves);
 
-    if(! (fBackgroundAnalysis && fStopAnalysis))
         AnalyzeGame(plGame, TRUE);
-    else
-        g_message("Stop 4 due to fStopAnalysis");
 
     ProgressEnd();
 
     if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
-        g_message("CommandAnalyseGame: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-                ShowBoard(); /* hide unallowd toolbar items*/
+        ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
-        /* if we raised the flag to stop running the analysis, we can now lower it*/
-        if (fStopAnalysis) {
-            g_message("fStopAnalysis was TRUE, we stopped it");
-            fStopAnalysis = FALSE;
-        }
     }
 
 #if defined(USE_GTK)
@@ -1255,8 +1225,6 @@ CommandAnalyseMatch(char *UNUSED(sz))
     moverecord *pmr;
     int nMoves;
     int fStore_crawford;
-    //    char tmp[200];
-    //    TanBoard anBoard;
 
     if (!CheckGameExists())
         return;
@@ -1271,7 +1239,6 @@ CommandAnalyseMatch(char *UNUSED(sz))
     buttons during the analysis*/
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
-        // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
         "feel free to browse and check the early analysis results."), nMoves); 
         ShowBoard(); /* hide unallowd toolbar items*/
@@ -1288,8 +1255,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
  
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
 
-        if (AnalyzeGame(pl->p, FALSE) < 0 || (fBackgroundAnalysis && fStopAnalysis) ) {
-                    g_message("Stop 5 due to fStopAnalysis");
+        if (AnalyzeGame(pl->p, FALSE) < 0) {
             /* analysis incomplete; erase partial summary */
 
             IniStatcontext(&scMatch);
@@ -1298,10 +1264,6 @@ CommandAnalyseMatch(char *UNUSED(sz))
         pmr = (moverecord *) ((listOLD *) pl->p)->plNext->p;
         g_assert(pmr->mt == MOVE_GAMEINFO);
         AddStatcontext(&pmr->g.sc, &scMatch);
-        //FormatMove(tmp, (ConstTanBoard)anBoard, pmr->n.anMove);
-        //g_message("CommandAnalyseMatch: move=%s\n", tmp);
-        // g_message("CommandAnalyseMatch: moves=%d%d%d%d\n", pmr->n.anMove[0],
-        //         pmr->n.anMove[1],pmr->n.anMove[2],pmr->n.anMove[3]);
     }
 
     multi_debug("wait for all task: analysis");
@@ -1311,17 +1273,10 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
-        // g_message("CommandAnalyseMatch: fAnalysisRunning=%d, fStopAnalysis=%d",fAnalysisRunning,fStopAnalysis);
-        /* if we raised the flag to stop running the analysis, we can now lower it*/
-        if (fStopAnalysis) {
-            g_message("fStopAnalysis was TRUE, we stopped it");
-            fStopAnalysis = FALSE;
-        }
-                // CalculateBoard();
+         // CalculateBoard();
         ShowBoard(); /* show toolbar items*/
         GTKRegenerateGames(); /* show menu items*/
     }
-
 
 #if defined(USE_GTK)
     if (fX)
@@ -1687,14 +1642,7 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.pesChequer = &esAnalysisChequer;
         md.pesCube = &esAnalysisCube;
         md.aamf = aamfAnalysis;
-
-        // if(fBackgroundAnalysis)
-        //     fAnalysisRunning = TRUE;
-
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
-
-        // if(fBackgroundAnalysis)
-        //     fAnalysisRunning = FALSE;
 
 #if defined(USE_GTK)
         if (fX)

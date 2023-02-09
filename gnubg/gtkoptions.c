@@ -189,7 +189,7 @@ DeleteKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
     if(keyName){
             if (DeleteKeyName(keyName)) {
                 gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-                DisplayKeyNames();
+                // DisplayKeyNames();
             } else {
                 outputerrf(_("there was a problem deleting this key name"));
             }

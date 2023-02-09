@@ -1632,7 +1632,7 @@ CommandSetKeyNames(char *sz)
     token = strtok(sz, "\t");
     /* walk through other tokens */
     while( token != NULL ) {
-        g_message("token =  %s, length=%zu\n", token, strlen(token) );    
+        // g_message("token =  %s, length=%zu\n", token, strlen(token) );    
         /* note: could also use AddKeyName() below if we are not 
             guaranteed that they are unique*/
         strcpy(keyNames[keyNamesFirstEmpty],token); 
@@ -1640,7 +1640,7 @@ CommandSetKeyNames(char *sz)
         //    DisplayKeyNames();  
         token = strtok(NULL, "\t");
     } 
-    DisplayKeyNames();  
+    // DisplayKeyNames();  
 }
 
 

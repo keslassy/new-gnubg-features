@@ -2843,14 +2843,6 @@ CommandNewMatch(char *sz)
 {
     unsigned int n;
 
-    // if (fBackgroundAnalysis && fAnalysisRunning) {
-    //         g_message("Raise flag fStopAnalysis=TRUE 1");
-    //         fStopAnalysis=TRUE;
-    //         g_timeout_add(nDelay, DelayTimeout, NULL);
-    // }
-
-
-
     if (!sz || !*sz)
         n = nDefaultLength;
     else
@@ -3253,12 +3245,6 @@ InternalCommandNext(int mark, int cmark, int n)
     int init=1;
 
     // g_message("start: fMarkedSamePlayer=%d, mark=%d, cmark=%d, n=%d\n",fMarkedSamePlayer,mark,cmark,n);
-
-    // if (fBackgroundAnalysis && fAnalysisRunning) {
-    //         g_message("NextMarked (InternalCommandNext): Raise flag fStopAnalysis=TRUE 2");
-    //         fStopAnalysis=TRUE;
-    //         g_timeout_add(nDelay, DelayTimeout, NULL);
-    // }
 
     if (mark || cmark) {
         listOLD *pgame;

@@ -239,9 +239,7 @@ int fBackgroundAnalysis = FALSE;
 buttons during the analysis (e.g. eval, rollout, etc.), since we are not equipped for a second
 parallel analysis */
 int fAnalysisRunning = FALSE;
-/* if we analyze in the background and the user needs the analysis to stop, we turn on the following
- global flag to stop the analysis*/
-int fStopAnalysis = FALSE;
+
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
@@ -4986,7 +4984,7 @@ DisplayKeyNames(void)
 int NameIsKey (const char sz[]) {
     for(int i=0;i < keyNamesFirstEmpty; i++) {
         if (!strcmp(sz, keyNames[i])) {
-            g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,keyNames[i],i);
+            // g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,keyNames[i],i);
             return 1;
         }
     }
@@ -4997,11 +4995,11 @@ int NameIsKey (const char sz[]) {
 extern int
 DeleteKeyName(const char sz[])
 {
-    g_message("in DeleteKeyName: %s, length=%zu", sz, strlen(sz));
+    // g_message("in DeleteKeyName: %s, length=%zu", sz, strlen(sz));
 
     for(int i=0;i < keyNamesFirstEmpty; i++) {
         if (!strcmp(sz, keyNames[i])) {
-            g_message("EXISTS! %s=%s, i=%d, keyNamesFirstEmpty=%d", sz,keyNames[i],i,keyNamesFirstEmpty);
+            // g_message("EXISTS! %s=%s, i=%d, keyNamesFirstEmpty=%d", sz,keyNames[i],i,keyNamesFirstEmpty);
             if (keyNamesFirstEmpty==(i+1)) {
                 keyNamesFirstEmpty--;
                 UserCommand("save settings");
@@ -5023,7 +5021,7 @@ return 1 if success, 0 if problem */
 extern int
 AddKeyName(const char sz[])
 {
-    g_message("in AddKeyName: %s, length=%zu", sz, strlen(sz));
+    // g_message("in AddKeyName: %s, length=%zu", sz, strlen(sz));
     /* check that the name doesn't contain "\t", "\n" */
     if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL) {
         // for(unsigned int j=0;j < strlen(sz); j++) {
@@ -5044,14 +5042,14 @@ AddKeyName(const char sz[])
         /* check that the key player doesn't already exist */
         for(int i=0;i < keyNamesFirstEmpty; i++) {
             if (!strcmp(sz, keyNames[i])) {
-                g_message("EXISTS! %s=%s", sz,keyNames[i]);
+                // g_message("EXISTS! %s=%s", sz,keyNames[i]);
                 return 0;
             }
         }
         strcpy(keyNames[keyNamesFirstEmpty],sz); 
         keyNamesFirstEmpty++;
     }
-    DisplayKeyNames();
+    // DisplayKeyNames();
     UserCommand("save settings");
     return 1;
 }
