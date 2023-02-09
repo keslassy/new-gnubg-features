@@ -18,6 +18,26 @@
  * $Id: gnubg.c,v 1.1027 2023/01/18 21:49:36 plm Exp $
  */
 
+
+/*
+02/2023: Isaac Keslassy: introduced the "smart open" feature 
+that enables users to automatically to sit at the bottom of 
+the board (i.e. as player1) in opened matches.
+    
+It works as follows:
+1) In Settings > Options > Display, the user can enable this option
+2) The user can define "key player names" in two ways:
+    a) Manually: 
+    In Settings > Options > Display, edit the list and add/delete names.
+    b) Automatically:
+    Each time te user swaps the player order to highlight some player
+    and set this player at the bottom of the board, we add this 
+    player's name to the list.
+3) When opening a new file, SmartOpen() automatically checks if player0 
+    is a key player while player1 is not. In such a case, it swaps 
+    their places.
+*/
+
 #include "config.h"
 
 #include "gnubgmodule.h"
