@@ -7631,12 +7631,15 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_ROLL), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_NEXT_MARKED), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_MARKED), plGame != NULL);
+        /* (IK, Feb 23) added these next two lines, as it seemed to be a bug that they are not here: */
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_NEXT_CMARKED), plGame != NULL);
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_CMARKED), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_NEXT_GAME), !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_GAME), !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Match information..."), !ListEmpty(&lMatch));
 
-            if (!fAnalysisRunning)
-        enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse"), ms.gs == GAME_PLAYING);
+        if (!fAnalysisRunning)
+            enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse"), ms.gs == GAME_PLAYING);
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Batch analyse..."), TRUE);
 
@@ -7650,6 +7653,11 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_ANALYSE_CLEAR_GAME), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_ANALYSE_CLEAR_MATCH),
                                  !ListEmpty(&lMatch));
+        /*greying out the "Clear Analysis" sub-menu if all components are greyed out*/
+        // enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse/Clear analysis"), 0);
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Clear analysis"), 
+         !(plLastMove && plLastMove->plNext && plLastMove->plNext->p && plGame != NULL && !ListEmpty(&lMatch)));
+
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_STATISTICS_MATCH),
                                  !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MATCHEQUITYTABLE), TRUE);

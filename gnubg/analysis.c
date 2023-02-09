@@ -1197,7 +1197,7 @@ CommandAnalyseGame(char *UNUSED(sz))
     } else
         ProgressStartValue(_("Analysing game"), nMoves);
 
-        AnalyzeGame(plGame, TRUE);
+    AnalyzeGame(plGame, TRUE);
 
     ProgressEnd();
 
