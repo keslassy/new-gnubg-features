@@ -4009,7 +4009,7 @@ static GtkActionEntry actionEntries[] = {
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_GAME)},
     {"RolloutMatchAction", NULL, N_("CMarked from Match"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_MATCH)},
-
+    {"AnalyseFileAction", NULL, N_("Analyse File"), NULL, NULL, G_CALLBACK(GTKAnalyzeFile)},
     {"BatchAnalyseAction", NULL, N_("Batch analyse..."), NULL, NULL, G_CALLBACK(GTKBatchAnalyse)},
     {"MatchOrSessionStatsAction", NULL, N_("Match or session statistics"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_STATISTICS_MATCH)},
@@ -4248,8 +4248,8 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_Analyse/Rollout/CMarked from Game"), NULL, Command, CMD_ANALYSE_ROLLOUT_GAME, NULL, NULL},
     {N_("/_Analyse/Rollout/CMarked from Match"), NULL, Command, CMD_ANALYSE_ROLLOUT_MATCH, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_Analyse/Batch analyse..."), NULL, GTKBatchAnalyse, 0, NULL,
-     NULL},
+    {N_("/_Analyse/Analyse File"), NULL, GTKAnalyzeFile, 0, NULL, NULL},
+    {N_("/_Analyse/Batch analyse..."), NULL, GTKBatchAnalyse, 0, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/Match or session statistics"), NULL, Command,
      CMD_SHOW_STATISTICS_MATCH, NULL, NULL},
@@ -7550,6 +7550,7 @@ GTKSet(void *p)
 
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/FileMenu/MatchInfo"), !ListEmpty(&lMatch));
         enable_menu(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu"), ms.gs == GAME_PLAYING);
+        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/AnalyseFile"), TRUE);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/BatchAnalyse"), TRUE);
 
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
@@ -7631,7 +7632,9 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_ROLL), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_NEXT_MARKED), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_MARKED), plGame != NULL);
-        /* (IK, Feb 23) added these next two lines, as it seemed to be a bug that they are not here: */
+        /* (IK, Feb 23) added these next two lines, as it seemed to be a bug that they are not here, feel free
+        to revert if we can use cmark on null games
+        */
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_NEXT_CMARKED), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_CMARKED), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_NEXT_GAME), !ListEmpty(&lMatch));
@@ -7641,6 +7644,7 @@ GTKSet(void *p)
         if (!fAnalysisRunning)
             enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse"), ms.gs == GAME_PLAYING);
 
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Analyse File"), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Batch analyse..."), TRUE);
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_ANALYSE_MOVE),

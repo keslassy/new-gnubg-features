@@ -248,7 +248,7 @@ const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", 
 /*initialization*/
 char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
 int keyNamesFirstEmpty=0;
-int fUseKeyNames=TRUE;
+int fUseKeyNames=FALSE; /* for now assume that it's turned off by default, should set TRUE in the future*/
 int fWithinSmartOpen=FALSE;
 
 #if defined(USE_BOARD3D)
