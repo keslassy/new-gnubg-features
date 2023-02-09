@@ -7653,11 +7653,14 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_ANALYSE_CLEAR_GAME), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_ANALYSE_CLEAR_MATCH),
                                  !ListEmpty(&lMatch));
-        /*greying out the "Clear Analysis" sub-menu if all components are greyed out*/
-        //enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse/Clear analysis"), 
-        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Clear analysis"), 
-          (plLastMove && plLastMove->plNext && plLastMove->plNext->p) || (plGame != NULL) || !ListEmpty(&lMatch));
-         g_message("set?=%d", (plLastMove && plLastMove->plNext && plLastMove->plNext->p) || (plGame != NULL) || !ListEmpty(&lMatch));
+        // /* greying out the "Clear Analysis" sub-menu if all components are greyed out
+        // => gtk_widget_set_sensitive and enable_menu only hide the sub-items, 
+        // enable_sub_menu doesn't do anything...
+        // it's not clear that hiding sub-items is better...
+        // */
+        // //enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse/Clear analysis"), 
+        // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Clear analysis"), 
+        //   (plLastMove && plLastMove->plNext && plLastMove->plNext->p) || (plGame != NULL) || !ListEmpty(&lMatch));
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_STATISTICS_MATCH),
                                  !ListEmpty(&lMatch));
