@@ -50,3 +50,4 @@ gnubg/libtool
 /.vs/g2/FileContentIndex
 /.vs/g2/v17
 !configure.ac
+/.vs/slnx.sqlite
