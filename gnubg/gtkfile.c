@@ -964,112 +964,211 @@ SmartAnalyze(void)
     return;
 }
 /* *************************************************************** */
-static GtkPrintSettings* settings = NULL;
+// static GtkPrintSettings* settings = NULL;
 
 
 
-static void
-draw_page(GtkPrintOperation* operation,
-    GtkPrintContext* context,
-    gint               page_nr,
-    gpointer           user_data)
+// static void
+// draw_page(GtkPrintOperation* operation,
+//     GtkPrintContext* context,
+//     gint               page_nr,
+//     gpointer           user_data)
+// {
+//     cairo_t* cr;
+//     PangoLayout* layout;
+//     gdouble width, height, text_height;
+//     gint layout_height;
+//     PangoFontDescription* desc;
+
+//     cr = gtk_print_context_get_cairo_context(context);
+//     width = gtk_print_context_get_width(context);
+//     height = gtk_print_context_get_height(context);
+
+//     cairo_rectangle(cr, 0, 0, width, height);
+
+//     cairo_set_source_rgb(cr, 0.8, 0.8, 0.8);
+//     cairo_fill(cr);
+
+//     layout = gtk_print_context_create_pango_layout(context);
+
+//     desc = pango_font_description_from_string("sans 14");
+//     pango_layout_set_font_description(layout, desc);
+//     pango_font_description_free(desc);
+
+//     pango_layout_set_text(layout, "some text", -1);
+//     pango_layout_set_width(layout, width);
+//     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
+
+//     pango_layout_get_size(layout, NULL, &layout_height);
+//     text_height = (gdouble)layout_height / PANGO_SCALE;
+
+//     cairo_move_to(cr, width / 2, (height - text_height) / 2);
+//     pango_cairo_show_layout(cr, layout);
+
+//     g_object_unref(layout);
+// }
+
+
+// extern void
+// GTKAnalyzeFile(void)
+// {
+//     //// g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
+//     //if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
+//     //    GTKBatchAnalyse(NULL, 0, NULL);
+//     //} else if (AnalyzeFileSettingDef == AnalyzeFileRegular) {
+//     //    AnalyzeSingleFile();
+//     //} else { //   AnalyzeFileSmart, 
+//     //    SmartAnalyze();
+//     //}
+
+//     GtkPrintOperation* print;
+//     GtkPrintOperationResult res;
+//     GError* error;
+//     int error_dialog;
+
+//     print = gtk_print_operation_new();
+
+//     if (settings != NULL) {
+//         outputerrf("in settings");
+//         gtk_print_operation_set_print_settings(print, settings);
+//     }
+
+//     //if (page_setup != NULL) {
+//     //    outputerrf("in page setup");
+//     //    gtk_print_operation_set_default_page_setup(print, page_setup);
+//     //}
+//     /*g_signal_connect(print, "begin_print", G_CALLBACK(begin_print), NULL); */
+//     // g_signal_connect(print, "draw_page", G_CALLBACK(draw_page), NULL);
+
+//     res = gtk_print_operation_run(print,
+//         GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG,
+//         GTK_WINDOW(pwMain),
+//         &error);
+
+//     if (res == GTK_PRINT_OPERATION_RESULT_ERROR)
+//     {   
+//         outputerrf("error");
+//         error_dialog = gtk_message_dialog_new(GTK_WINDOW(pwMain),
+//             GTK_DIALOG_DESTROY_WITH_PARENT,
+//             GTK_MESSAGE_ERROR,
+//             GTK_BUTTONS_CLOSE,
+//             "Error printing file:\n%s",
+//             error->message);
+//         g_signal_connect(error_dialog, "response",
+//             G_CALLBACK(gtk_widget_destroy), NULL);
+//         gtk_widget_show(error_dialog);
+//         g_error_free(error);
+//     }
+//     else if (res == GTK_PRINT_OPERATION_RESULT_APPLY)
+//     {
+//         outputerrf("apply");
+//         if (settings != NULL)
+//             g_object_unref(settings);
+//         settings = g_object_ref(gtk_print_operation_get_print_settings(print));
+//     }
+
+//     // g_object_unref(print);
+//     return;
+// }
+
+/* ***************************************************************************** */
+#define WIDTH   640
+#define HEIGHT  480
+
+#define ZOOM_X  100.0
+#define ZOOM_Y  100.0
+
+
+gfloat f (gfloat x)
 {
-    cairo_t* cr;
-    PangoLayout* layout;
-    gdouble width, height, text_height;
-    gint layout_height;
-    PangoFontDescription* desc;
+    return 0.03 * pow (x, 3);
+}
 
-    cr = gtk_print_context_get_cairo_context(context);
-    width = gtk_print_context_get_width(context);
-    height = gtk_print_context_get_height(context);
+static gboolean
+on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+{
+    cairo_t *cr = gdk_cairo_create (widget->window);
+    GdkRectangle da;            /* GtkDrawingArea size */
+    gdouble dx = 5.0, dy = 5.0; /* Pixels between each point */
+    gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+    gint unused = 0;
 
-    cairo_rectangle(cr, 0, 0, width, height);
+    /* Define a clipping zone to improve performance */
+    cairo_rectangle (cr,
+            event->area.x,
+            event->area.y,
+            event->area.width,
+            event->area.height);
+    cairo_clip (cr);
 
-    cairo_set_source_rgb(cr, 0.8, 0.8, 0.8);
-    cairo_fill(cr);
+    /* Determine GtkDrawingArea dimensions */
+    gdk_window_get_geometry (widget->window,
+            &da.x,
+            &da.y,
+            &da.width,
+            &da.height,
+            &unused);
 
-    layout = gtk_print_context_create_pango_layout(context);
+    /* Draw on a black background */
+    cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+    cairo_paint (cr);
 
-    desc = pango_font_description_from_string("sans 14");
-    pango_layout_set_font_description(layout, desc);
-    pango_font_description_free(desc);
+    /* Change the transformation matrix */
+    cairo_translate (cr, da.width / 2, da.height / 2);
+    cairo_scale (cr, ZOOM_X, -ZOOM_Y);
 
-    pango_layout_set_text(layout, "some text", -1);
-    pango_layout_set_width(layout, width);
-    pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
+    /* Determine the data points to calculate (ie. those in the clipping zone */
+    cairo_device_to_user_distance (cr, &dx, &dy);
+    cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
+    cairo_set_line_width (cr, dx);
 
-    pango_layout_get_size(layout, NULL, &layout_height);
-    text_height = (gdouble)layout_height / PANGO_SCALE;
+    /* Draws x and y axis */
+    cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
+    cairo_move_to (cr, clip_x1, 0.0);
+    cairo_line_to (cr, clip_x2, 0.0);
+    cairo_move_to (cr, 0.0, clip_y1);
+    cairo_line_to (cr, 0.0, clip_y2);
+    cairo_stroke (cr);
 
-    cairo_move_to(cr, width / 2, (height - text_height) / 2);
-    pango_cairo_show_layout(cr, layout);
+    /* Link each data point */
+    for (i = clip_x1; i < clip_x2; i += dx)
+        cairo_line_to (cr, i, f (i));
 
-    g_object_unref(layout);
+    /* Draw the curve */
+    cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+    cairo_stroke (cr);
+
+    cairo_destroy (cr);
+    return FALSE;
 }
 
 
 extern void
 GTKAnalyzeFile(void)
 {
-    //// g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
-    //if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
-    //    GTKBatchAnalyse(NULL, 0, NULL);
-    //} else if (AnalyzeFileSettingDef == AnalyzeFileRegular) {
-    //    AnalyzeSingleFile();
-    //} else { //   AnalyzeFileSmart, 
-    //    SmartAnalyze();
-    //}
 
-    GtkPrintOperation* print;
-    GtkPrintOperationResult res;
-    GError* error;
-    int error_dialog;
+    GtkWidget *window;
+    GtkWidget *da;
 
-    print = gtk_print_operation_new();
+   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+      gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
+    gtk_window_set_title (GTK_WINDOW (window), "Graph drawing");
+    g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
 
-    if (settings != NULL) {
-        outputerrf("in settings");
-        gtk_print_operation_set_print_settings(print, settings);
-    }
+    da = gtk_drawing_area_new ();
+    gtk_container_add (GTK_CONTAINER (window), da);
 
-    //if (page_setup != NULL) {
-    //    outputerrf("in page setup");
-    //    gtk_print_operation_set_default_page_setup(print, page_setup);
-    //}
-    /*g_signal_connect(print, "begin_print", G_CALLBACK(begin_print), NULL); */
-    // g_signal_connect(print, "draw_page", G_CALLBACK(draw_page), NULL);
+    g_signal_connect (G_OBJECT (da),
+            "expose-event",
+            G_CALLBACK (on_expose_event),
+            NULL);
 
-    res = gtk_print_operation_run(print,
-        GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG,
-        GTK_WINDOW(pwMain),
-        &error);
-
-    if (res == GTK_PRINT_OPERATION_RESULT_ERROR)
-    {   
-        outputerrf("error");
-        error_dialog = gtk_message_dialog_new(GTK_WINDOW(pwMain),
-            GTK_DIALOG_DESTROY_WITH_PARENT,
-            GTK_MESSAGE_ERROR,
-            GTK_BUTTONS_CLOSE,
-            "Error printing file:\n%s",
-            error->message);
-        g_signal_connect(error_dialog, "response",
-            G_CALLBACK(gtk_widget_destroy), NULL);
-        gtk_widget_show(error_dialog);
-        g_error_free(error);
-    }
-    else if (res == GTK_PRINT_OPERATION_RESULT_APPLY)
-    {
-        outputerrf("apply");
-        if (settings != NULL)
-            g_object_unref(settings);
-        settings = g_object_ref(gtk_print_operation_get_print_settings(print));
-    }
-
-    // g_object_unref(print);
+    gtk_widget_show_all (window);
+    gtk_main ();
     return;
 }
+
+
 
 /* ***************************************************************************** */
 
