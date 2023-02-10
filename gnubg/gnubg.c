@@ -5061,9 +5061,14 @@ CommandSwapPlayers(char *UNUSED(sz))
     char *pc;
     int n;
 
-    /* if fUseKeyNames enabled, then add the new player1 to the key players
-    (now still player0)*/
-    if (fUseKeyNames && !fWithinSmartOpen) {
+    /* VERSION1: if fUseKeyNames enabled, then add the new player1 to the key players
+    (now still player0)
+    VERSION2: also add if fUseKeyNames is not enabled yet, so users don't think they 
+    need to add names manually. We only check that the permutation wasn't launched 
+    by the SmartOpen() function, which would mean the name is already in the list.
+    */
+    // if (fUseKeyNames && !fWithinSmartOpen) {
+    if (!fWithinSmartOpen) {
         // g_message("in CommandSwapPlayers: %s", ap[0].szName);
         AddKeyName(ap[0].szName);
     }
