@@ -1118,7 +1118,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 {
     cairo_t *cr = gdk_cairo_create (widget->window);
     GdkRectangle da;            /* GtkDrawingArea size */
-    gdouble dx = 5.0, dy = 5.0; /* Pixels between each point */
+    gdouble dx = 3.0, dy = 3.0; /* Pixels between each point */
     gdouble clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     gint unused = 0;
@@ -1146,50 +1146,75 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 
     // do_drawing(cr);
 
-    /* Change the transformation matrix */
-    cairo_translate (cr, 0, da.height / 2);
-    cairo_scale (cr, da.width, da.height / 2); //ZOOM_X, -ZOOM_Y);
-    // cairo_translate (cr, da.width / 2, da.height / 2);
-    // cairo_scale (cr, da.width / 2, da.height / 2); //ZOOM_X, -ZOOM_Y);
-
-    /* Determine the data points to calculate (ie. those in the clipping zone */
-    cairo_device_to_user_distance (cr, &dx, &dy);
-    cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
-    cairo_set_line_width (cr, dx);
-
-    /* Draws x and y axis */
-    cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
-    // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
-    cairo_move_to (cr, clip_x1, 0.0);
-    cairo_line_to (cr, clip_x2, 0.0);
-    cairo_move_to (cr, clip_x1, clip_y1);
-    cairo_line_to (cr, clip_x1, clip_y2);
-    //     cairo_move_to (cr, clip_x1, 0.0);
-    // cairo_line_to (cr, clip_x2, 0.0);
-    // cairo_move_to (cr, 0.0, clip_y1);
-    // cairo_line_to (cr, 0.0, clip_y2);
-    cairo_stroke (cr);
 
 
 // static  gdouble MWCArray [] = {0.0, 0.1, 0.2, 0.5, -0.1, -0.7, -1.0};
 // static    int n = (int) (sizeof(MWCArray)/sizeof(MWCArray[0]));
 
-    int n=100;
-    gdouble MWCArray [100];
+    int n=10;
+    gdouble MWCArray [100]={0.0};
+    MWCArray[1]=0.3;
+    MWCArray[2]=0.2;
+    MWCArray[3]=-0.2;
+    MWCArray[4]=-1.0;
 
-    /* Link each data point */
     if(n>1){
-        for (int i = 0; i < n; i ++)
-            cairo_line_to (cr, ((gdouble)i)/(n-1), -MWCArray[i]);
-    }
-    // for (i = clip_x1; i < clip_x2; i += dx)
-    //     cairo_line_to (cr, i, -myf (i));
 
-    /* Draw the curve */
-    cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
-    cairo_stroke (cr);
-    //   do_drawing(cr);
-    g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f",clip_x1,clip_x2,clip_y1,clip_y2,dx,dy);
+        /* Change the transformation matrix */
+        cairo_translate (cr, 0, da.height / 2);
+        gdouble scaleX = da.width/(n-1);
+        gdouble scaleY=da.height / 2;
+        cairo_scale (cr, scaleX, scaleY ); //ZOOM_X, -ZOOM_Y);
+        // dx=dx/scaleX;
+        // dy=dy/scaleY;
+        // cairo_translate (cr, da.width / 2, da.height / 2);
+        // cairo_scale (cr, da.width / 2, da.height / 2); //ZOOM_X, -ZOOM_Y);
+
+        /* Determine the data points to calculate (ie. those in the clipping zone */
+        cairo_device_to_user_distance (cr, &dx, &dy);
+        cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
+        cairo_set_line_width (cr, dy);
+
+        /* Draws x and y axis */
+        cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
+        // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
+        cairo_move_to (cr, clip_x1, 0.0);
+        cairo_line_to (cr, clip_x2, 0.0);
+        cairo_move_to (cr, clip_x1, clip_y1);
+        cairo_line_to (cr, clip_x1, clip_y2);
+
+        //     cairo_move_to (cr, clip_x1, 0.0);
+        // cairo_line_to (cr, clip_x2, 0.0);
+        // cairo_move_to (cr, 0.0, clip_y1);
+        // cairo_line_to (cr, 0.0, clip_y2);
+        cairo_stroke (cr);
+
+
+        /* Link each data point */
+
+        for (int i = 0; i < n; i ++) {
+            cairo_line_to (cr, ((gdouble)i), -MWCArray[i]);
+            g_message("i=%d,val=%f",i,MWCArray[i]);
+        }
+            /* Draw the curve */
+        cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+        cairo_stroke (cr);
+        cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
+        for (int i = 1; i < n; i ++) {
+            cairo_move_to (cr, (gdouble)i, -0.02);
+            cairo_line_to (cr, (gdouble)i, 0.02);
+            /* Draw the curve */
+            cairo_stroke (cr);
+        }
+    
+        // for (i = clip_x1; i < clip_x2; i += dx)
+        //     cairo_line_to (cr, i, -myf (i));
+
+
+        //   do_drawing(cr);
+            g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f",clip_x1,clip_x2,clip_y1,clip_y2,dx,dy);
+    } else 
+        outputerrf("not enough points for plot");
 
     cairo_destroy (cr);
     return FALSE;
