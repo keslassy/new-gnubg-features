@@ -1079,9 +1079,38 @@ SmartAnalyze(void)
 #define ZOOM_Y  100.0
 
 
-gfloat f (gfloat x)
+
+gfloat myf (gfloat x)
 {
-    return 0.03 * pow (x, 3);
+    return pow (x, 3);
+    // return 0.03 * pow (x, 3);
+}
+
+
+static void do_drawing(cairo_t *cr)
+{
+  cairo_set_source_rgb(cr, 0.1, 0.1, 0.1); 
+
+  cairo_select_font_face(cr, "Purisa",
+      CAIRO_FONT_SLANT_NORMAL,
+      CAIRO_FONT_WEIGHT_BOLD);
+
+  cairo_set_font_size(cr, 0.13);
+
+  cairo_move_to(cr, 0, 0);
+  cairo_show_text(cr, "Most relationships seem so transitory");  
+  cairo_move_to(cr, 20, 60);
+  cairo_show_text(cr, "They're all good but not the permanent one");
+
+  cairo_move_to(cr, 20, 120);
+  cairo_show_text(cr, "Who doesn't long for someone to hold");
+
+  cairo_move_to(cr, 20, 150);
+  cairo_show_text(cr, "Who knows how to love you without being told");
+  cairo_move_to(cr, 20, 180);
+  cairo_show_text(cr, "Somebody tell me why I'm on my own");
+  cairo_move_to(cr, 20, 210);
+  cairo_show_text(cr, "If there's a soulmate for everyone");    
 }
 
 static gboolean
@@ -1090,7 +1119,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
     cairo_t *cr = gdk_cairo_create (widget->window);
     GdkRectangle da;            /* GtkDrawingArea size */
     gdouble dx = 5.0, dy = 5.0; /* Pixels between each point */
-    gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+    gdouble clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+    // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     gint unused = 0;
 
     /* Define a clipping zone to improve performance */
@@ -1109,13 +1139,18 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
             &da.height,
             &unused);
 
-    /* Draw on a black background */
-    cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-    cairo_paint (cr);
+    // /* Draw on a black background */
+    // cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
+    // // cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+    // cairo_paint (cr);
+
+    // do_drawing(cr);
 
     /* Change the transformation matrix */
-    cairo_translate (cr, da.width / 2, da.height / 2);
-    cairo_scale (cr, ZOOM_X, -ZOOM_Y);
+    cairo_translate (cr, 0, da.height / 2);
+    cairo_scale (cr, da.width, da.height / 2); //ZOOM_X, -ZOOM_Y);
+    // cairo_translate (cr, da.width / 2, da.height / 2);
+    // cairo_scale (cr, da.width / 2, da.height / 2); //ZOOM_X, -ZOOM_Y);
 
     /* Determine the data points to calculate (ie. those in the clipping zone */
     cairo_device_to_user_distance (cr, &dx, &dy);
@@ -1123,34 +1158,50 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
     cairo_set_line_width (cr, dx);
 
     /* Draws x and y axis */
-    cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
+    cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
+    // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
     cairo_move_to (cr, clip_x1, 0.0);
     cairo_line_to (cr, clip_x2, 0.0);
-    cairo_move_to (cr, 0.0, clip_y1);
-    cairo_line_to (cr, 0.0, clip_y2);
+    cairo_move_to (cr, clip_x1, clip_y1);
+    cairo_line_to (cr, clip_x1, clip_y2);
+    //     cairo_move_to (cr, clip_x1, 0.0);
+    // cairo_line_to (cr, clip_x2, 0.0);
+    // cairo_move_to (cr, 0.0, clip_y1);
+    // cairo_line_to (cr, 0.0, clip_y2);
     cairo_stroke (cr);
 
+
+// static  gdouble MWCArray [] = {0.0, 0.1, 0.2, 0.5, -0.1, -0.7, -1.0};
+// static    int n = (int) (sizeof(MWCArray)/sizeof(MWCArray[0]));
+
+    int n=100;
+    gdouble MWCArray [100];
+
     /* Link each data point */
-    for (i = clip_x1; i < clip_x2; i += dx)
-        cairo_line_to (cr, i, f (i));
+    if(n>1){
+        for (int i = 0; i < n; i ++)
+            cairo_line_to (cr, ((gdouble)i)/(n-1), -MWCArray[i]);
+    }
+    // for (i = clip_x1; i < clip_x2; i += dx)
+    //     cairo_line_to (cr, i, -myf (i));
 
     /* Draw the curve */
     cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
     cairo_stroke (cr);
+    //   do_drawing(cr);
+    g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f",clip_x1,clip_x2,clip_y1,clip_y2,dx,dy);
 
     cairo_destroy (cr);
     return FALSE;
 }
 
-
-extern void
-GTKAnalyzeFile(void)
+void PlotGraph(void)
 {
 
     GtkWidget *window;
     GtkWidget *da;
 
-   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
       gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
     gtk_window_set_title (GTK_WINDOW (window), "Graph drawing");
     g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
@@ -1166,6 +1217,12 @@ GTKAnalyzeFile(void)
     gtk_widget_show_all (window);
     gtk_main ();
     return;
+}
+
+extern void
+GTKAnalyzeFile(void)
+{
+    PlotGraph();
 }
 
 
