@@ -246,7 +246,7 @@ const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysi
 const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
 
 /*initialization*/
-char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
+char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]={""};
 int keyNamesFirstEmpty=0;
 int fUseKeyNames=FALSE; /* for now assume that it's turned off by default, should set TRUE in the future*/
 int fWithinSmartOpen=FALSE;
@@ -5038,7 +5038,7 @@ AddKeyName(const char sz[])
     }
 
     /* check that the keyNames array is not full */
-    if (keyNamesFirstEmpty<MAX_KEY_PLAYERS) {
+    if (keyNamesFirstEmpty<MAX_KEY_NAMES) {
         /* check that the key player doesn't already exist */
         for(int i=0;i < keyNamesFirstEmpty; i++) {
             if (!strcmp(sz, keyNames[i])) {
