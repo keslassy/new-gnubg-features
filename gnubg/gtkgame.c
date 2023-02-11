@@ -8283,12 +8283,26 @@ double trueY (double y) { //}, gfloat h, gfloat margin) {
 //     return (da.height*(1-y)*(1-margin));
 }
 
+void drawArrow (double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
+    {
+        double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
+        double side=2.0;
+        double degrees=0.5;
+
+        x1 = end_x + side * cos(angle - degrees);
+        y1 = end_y + side * sin(angle - degrees);
+        x2 = end_x + side * cos(angle + degrees);
+        y2 = end_y + side * sin(angle + degrees);
+
+        g_message("%f %f %f %f",x1,y1,x2,y2);
+    }
+
 static gboolean
 on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
 {
     cairo_t *cr = gdk_cairo_create (widget->window);
     // GdkRectangle da;            /* GtkDrawingArea size */
-    double dx = 3.0, dy = 3.0; /* Pixels between each point */
+    double dx = 2.0, dy = 2.0; /* Pixels between each point */
     double fontSize =11.0;
     double clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
@@ -8312,6 +8326,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
     // double mwcTemp;
     int i=1;
     char strTemp[100];
+
+    drawArrow(0,0,1,1/3);
 
     /* Define a clipping zone to improve performance */
     cairo_rectangle (cr,
@@ -8382,7 +8398,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
         //cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
-        /* Draws x and y axis */
+        /* Draws x and y axes */
         cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
@@ -8394,15 +8410,46 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_line_to (cr, clip_x2, clip_y2*2/3);
         cairo_stroke (cr);
 
-        /* Link each data point */
-
+        /* Draw the main plot: link each data point */
         for (int i = 0; i < MWCLength; i ++) {
-            cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
-            // cairo_line_to (cr, (gdouble)i, -mwcMoves[i]);
-            // g_message("i=%d,val=%f",i,mwcMoves[i]);
+            if(mwcMoves[i]>=0 && mwcMoves[i]<=1) {
+                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
+                // cairo_line_to (cr, (gdouble)i, -mwcMoves[i]);
+                // g_message("i=%d,val=%f",i,mwcMoves[i]);
+            }
         }
             /* Draw the curve */
-        cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6);
+        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+        // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
+                            //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
+        cairo_stroke (cr);
+
+        /* Draw the best moves */
+
+        for (int i = 1; i < MWCLength; i ++) {
+            if(mwcMoves[i]>=0 && mwcMoves[i]<=1) {
+                if (mwcBestMoves[i] > mwcMoves[i]) {
+                    /*
+                    Version 1: plot from the last point (i-1) to the new best, i.e show
+                    the alternative scenario
+                    Version 2: plot from player's i to best i, i.e. vertical
+                    */
+                    // cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
+                    cairo_set_source_rgb (cr, 0.5, 0.0, 0.0);
+                    cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcMoves[i-1]));
+                    cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestMoves[i]));
+                    cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
+                    cairo_stroke (cr);
+                } else if (mwcBestMoves[i] < mwcMoves[i]) {
+                    // cairo_set_source_rgb (cr, 0.0, 0.5, 1.0);
+                    cairo_set_source_rgb (cr, 0.0, 0.5, 0.0);
+                    // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcMoves[i-1]));
+                    cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
+                    cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestMoves[i]));
+                    cairo_stroke (cr);
+                }
+            }
+        }
         cairo_stroke (cr);
 
         /* grid*/
@@ -8446,9 +8493,11 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             sprintf(strTemp, "%d", i);
             cairo_show_text(cr, strTemp);             
         }        
-        for (double y = 0.1; y < 1; y=y+0.1) {
-            cairo_move_to(cr, trueX(-0.05), trueY(y)+fontSize/2);
-            sprintf(strTemp, "%.1f", y);
+        for (int j = 0; j <=10; j++) {
+        // for (double y = 0.0; y <= 1.0; y=y+0.1) {
+            cairo_move_to(cr, trueX(-0.05), trueY(((double)j)/10)+fontSize/2);
+            sprintf(strTemp, "%d%%", 10*j);
+            // sprintf(strTemp, "%.1f", y);
             cairo_show_text(cr, strTemp);             
         }
 
