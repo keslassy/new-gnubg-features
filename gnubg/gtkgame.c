@@ -8121,125 +8121,16 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
     toggle_fGUIUseStatsPanel(pwUsePanels, 0);
 }
 
-
-/* *************************************************************** */
-// static GtkPrintSettings* settings = NULL;
-
-
-
-// static void
-// draw_page(GtkPrintOperation* operation,
-//     GtkPrintContext* context,
-//     gint               page_nr,
-//     gpointer           user_data)
-// {
-//     cairo_t* cr;
-//     PangoLayout* layout;
-//     gdouble width, height, text_height;
-//     gint layout_height;
-//     PangoFontDescription* desc;
-
-//     cr = gtk_print_context_get_cairo_context(context);
-//     width = gtk_print_context_get_width(context);
-//     height = gtk_print_context_get_height(context);
-
-//     cairo_rectangle(cr, 0, 0, width, height);
-
-//     cairo_set_source_rgb(cr, 0.8, 0.8, 0.8);
-//     cairo_fill(cr);
-
-//     layout = gtk_print_context_create_pango_layout(context);
-
-//     desc = pango_font_description_from_string("sans 14");
-//     pango_layout_set_font_description(layout, desc);
-//     pango_font_description_free(desc);
-
-//     pango_layout_set_text(layout, "some text", -1);
-//     pango_layout_set_width(layout, width);
-//     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
-
-//     pango_layout_get_size(layout, NULL, &layout_height);
-//     text_height = (gdouble)layout_height / PANGO_SCALE;
-
-//     cairo_move_to(cr, width / 2, (height - text_height) / 2);
-//     pango_cairo_show_layout(cr, layout);
-
-//     g_object_unref(layout);
-// }
-
-
-// extern void
-// GTKAnalyzeFile(void)
-// {
-//     //// g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
-//     //if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
-//     //    GTKBatchAnalyse(NULL, 0, NULL);
-//     //} else if (AnalyzeFileSettingDef == AnalyzeFileRegular) {
-//     //    AnalyzeSingleFile();
-//     //} else { //   AnalyzeFileSmart, 
-//     //    SmartAnalyze();
-//     //}
-
-//     GtkPrintOperation* print;
-//     GtkPrintOperationResult res;
-//     GError* error;
-//     int error_dialog;
-
-//     print = gtk_print_operation_new();
-
-//     if (settings != NULL) {
-//         outputerrf("in settings");
-//         gtk_print_operation_set_print_settings(print, settings);
-//     }
-
-//     //if (page_setup != NULL) {
-//     //    outputerrf("in page setup");
-//     //    gtk_print_operation_set_default_page_setup(print, page_setup);
-//     //}
-//     /*g_signal_connect(print, "begin_print", G_CALLBACK(begin_print), NULL); */
-//     // g_signal_connect(print, "draw_page", G_CALLBACK(draw_page), NULL);
-
-//     res = gtk_print_operation_run(print,
-//         GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG,
-//         GTK_WINDOW(pwMain),
-//         &error);
-
-//     if (res == GTK_PRINT_OPERATION_RESULT_ERROR)
-//     {   
-//         outputerrf("error");
-//         error_dialog = gtk_message_dialog_new(GTK_WINDOW(pwMain),
-//             GTK_DIALOG_DESTROY_WITH_PARENT,
-//             GTK_MESSAGE_ERROR,
-//             GTK_BUTTONS_CLOSE,
-//             "Error printing file:\n%s",
-//             error->message);
-//         g_signal_connect(error_dialog, "response",
-//             G_CALLBACK(gtk_widget_destroy), NULL);
-//         gtk_widget_show(error_dialog);
-//         g_error_free(error);
-//     }
-//     else if (res == GTK_PRINT_OPERATION_RESULT_APPLY)
-//     {
-//         outputerrf("apply");
-//         if (settings != NULL)
-//             g_object_unref(settings);
-//         settings = g_object_ref(gtk_print_operation_get_print_settings(print));
-//     }
-
-//     // g_object_unref(print);
-//     return;
-// }
-
 /* ***************************************************************************** 
-    code for drawing the plot of MWC through match
+    code for drawing the plot of MWC evolution through a given match
    ***************************************************************************** 
 */
 #define WIDTH   640
 #define HEIGHT  480
 
 static GdkRectangle da;            /* GtkDrawingArea size */
-static double margin1=0.12;
-static double margin2=0.06;
+static double margin1=0.05;
+static double margin2=0.05;
 static int alreadyComputed=0; /* when drawing it computes all arrays twice :( )*/
 
 // #define ZOOM_X  100.0
@@ -8283,18 +8174,26 @@ double trueY (double y) { //}, gfloat h, gfloat margin) {
 //     return (da.height*(1-y)*(1-margin));
 }
 
-void drawArrow (double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
+void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
     {
         double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
-        double side=2.0;
+        double side=5.0;
         double degrees=0.5;
 
-        x1 = end_x + side * cos(angle - degrees);
-        y1 = end_y + side * sin(angle - degrees);
-        x2 = end_x + side * cos(angle + degrees);
-        y2 = end_y + side * sin(angle + degrees);
+        double x1 = end_x + side * cos(angle - degrees);
+        double y1 = end_y + side * sin(angle - degrees);
+        double x2 = end_x + side * cos(angle + degrees);
+        double y2 = end_y + side * sin(angle + degrees);
 
-        g_message("%f %f %f %f",x1,y1,x2,y2);
+        cairo_move_to (cr, start_x, start_y);
+        cairo_line_to (cr, end_x,end_y);
+        cairo_line_to (cr, x1,y1);
+        cairo_line_to (cr, x2,y2);
+        cairo_line_to (cr, end_x,end_y);
+        
+        cairo_stroke (cr);
+
+        // g_message("arrow: %f %f %f %f",x1,y1,x2,y2);
     }
 
 static gboolean
@@ -8308,11 +8207,12 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     int unused = 0;
     // static because it recomputes it twice otherwise...
-    static double mwcMoves [MAX_MOVES]={0.0}; 
-    static double mwcBestMoves [MAX_MOVES]={0.0}; 
-    static double mwcCubes [MAX_MOVES]={0.0}; 
-    static double mwcBestCubes [MAX_MOVES]={0.0}; 
-    mwcMoves[0]=mwcBestMoves[0]=mwcCubes[0]=mwcBestCubes[0]=0.5;
+    static double mwcMoves [MAX_MOVES]={-5.0}; 
+    static double mwcBestMoves [MAX_MOVES]={-5.0}; 
+    static double mwcCubes [MAX_MOVES]={-5.0}; 
+    static double mwcBestCubes [MAX_MOVES]={-5.0}; 
+    static double mwcCumulMoveSkill[MAX_MOVES]={0.0};
+    mwcMoves[0]=mwcBestMoves[0]=mwcCubes[0]=mwcBestCubes[0]=mwcCumulMoveSkill[0]=0.5;
     static int NewGame [MAX_MOVES]={0.0}; 
     static int MWCLength=MAX_MOVES; 
     listOLD *plCurGame;
@@ -8326,10 +8226,9 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
     // double mwcTemp;
     int i=1;
     char strTemp[100];
+    const double epsilon = 0.001;
 
-    drawArrow(0,0,1,1/3);
-
-    /* Define a clipping zone to improve performance */
+       /* Define a clipping zone to improve performance */
     cairo_rectangle (cr,
             event->area.x,
             event->area.y,
@@ -8352,7 +8251,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
     if(!alreadyComputed) {
         for (plCurGame = lMatch.plNext; plCurGame != &lMatch; plCurGame = plCurGame->plNext) {
-                        g_message("new game, i=%d",i);
+                        // g_message("new game, i=%d",i);
             plStartingMove=plCurGame->p;
             NewGame[i]=1;
         // for (plM = plMatch->plNext; plM != plMatch; plM = plM->plNext) {
@@ -8373,7 +8272,11 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                     mwcBestMoves[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestMove): (1.0-((double) pmrT->mwc.mwcBestMove));
                     mwcCubes[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcCube): (1.0-((double) pmrT->mwc.mwcCube));
                     mwcBestCubes[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestCube): (1.0-((double) pmrT->mwc.mwcBestCube));
-                    g_message("i=%d: %f >= %f",i,mwcBestMoves[i],mwcMoves[i]);
+                    if(mwcMoves[i]>=0 && mwcMoves[i]<=1) 
+                        mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcMoves[i]-mwcBestMoves[i]);
+                    else
+                        mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1];
+                    g_message("i=%d: %f >= %f, %f",i,mwcBestMoves[i],mwcMoves[i],mwcCumulMoveSkill[i]);
                     i++;
                     if(i==MWCLength){
                         g_message("too big! Shouldn't happen...");
@@ -8383,10 +8286,12 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             }
         }
 
+
+
     myjump:
         free(pmsT);
         MWCLength=i;
-        g_message("n=%d",MWCLength);
+        // g_message("n=%d",MWCLength);
         alreadyComputed=1;
     }
 
@@ -8418,39 +8323,39 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 // g_message("i=%d,val=%f",i,mwcMoves[i]);
             }
         }
-            /* Draw the curve */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
         cairo_stroke (cr);
 
         /* Draw the best moves */
-
         for (int i = 1; i < MWCLength; i ++) {
             if(mwcMoves[i]>=0 && mwcMoves[i]<=1) {
-                if (mwcBestMoves[i] > mwcMoves[i]) {
+                if (mwcBestMoves[i] - mwcMoves[i]>epsilon) {
                     /*
                     Version 1: plot from the last point (i-1) to the new best, i.e show
                     the alternative scenario
                     Version 2: plot from player's i to best i, i.e. vertical
+                    Version 3: vertical arrow
                     */
                     // cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
                     cairo_set_source_rgb (cr, 0.5, 0.0, 0.0);
-                    cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcMoves[i-1]));
-                    cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestMoves[i]));
-                    cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
-                    cairo_stroke (cr);
-                } else if (mwcBestMoves[i] < mwcMoves[i]) {
+                    // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcMoves[i-1]));
+                    // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestMoves[i]));
+                    // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
+                    // cairo_stroke (cr);
+                } else if (mwcBestMoves[i] - mwcMoves[i] <-epsilon) {
                     // cairo_set_source_rgb (cr, 0.0, 0.5, 1.0);
                     cairo_set_source_rgb (cr, 0.0, 0.5, 0.0);
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcMoves[i-1]));
-                    cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
-                    cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestMoves[i]));
-                    cairo_stroke (cr);
+                    // cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
+                    // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestMoves[i]));
+                    // cairo_stroke (cr);
                 }
+                drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestMoves[i]),
+                        trueX(((double)i)/(MWCLength-1)),trueY(mwcMoves[i]) );
             }
         }
-        cairo_stroke (cr);
 
         /* grid*/
         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
@@ -8472,6 +8377,14 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_line_to (cr, trueX(1.0), trueY(y));
             cairo_stroke (cr);
         }    
+
+        /* Cumulative skill */
+        for (int i = 0; i < MWCLength; i ++) {
+            if(mwcMoves[i]>=0 && mwcMoves[i]<=1) {
+                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcCumulMoveSkill[i]));
+            }
+        }
+        cairo_stroke (cr);
 
         /* new games*/
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
@@ -8513,8 +8426,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             }
         }
 
-        g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
-                clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
+        // g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
+        //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
     } else 
         outputerrf("not enough points for plot");
 
