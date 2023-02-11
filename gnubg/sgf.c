@@ -1106,7 +1106,11 @@ RestoreNode(listOLD * pl)
     skilltype ast[2] = { SKILL_NONE, SKILL_NONE };
     lucktype lt = LUCK_NONE;
     float rLuck = ERR_VAL;
-    float mwc=-3.0;
+    /*initializing MWC elements with fake values*/
+    float mwcMove=-3.0; 
+    float mwcBestMove=-3.0; 
+    float mwcCube=-3.0; 
+    float mwcBestCube=-3.0; 
 
 
     for (pl = pl->plNext; (pp = pl->p); pl = pl->plNext) {
@@ -1274,8 +1278,19 @@ RestoreNode(listOLD * pl)
             /* good for white */
             lt = *((char *) pp->pl->plNext->p) == '2' ? LUCK_VERYBAD : LUCK_BAD;
         /* MWC */
-        else if (pp->ach[0] == 'M' && pp->ach[1] == 'W')
-            mwc = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
+        else if (pp->ach[0] == 'M' && pp->ach[1] == 'W') {
+            char *pch2 = pp->pl->plNext->p;
+            //++pch2;
+            mwcMove = (float) g_ascii_strtod(pch2, &pch2);
+            mwcBestMove = (float) g_ascii_strtod(pch2, &pch2);
+            mwcCube = (float) g_ascii_strtod(pch2, &pch2);
+            mwcBestCube = (float) g_ascii_strtod(pch2, &pch2);
+            // mwcMove = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
+            // mwcBestMove = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
+            // mwcCube = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
+            // mwcBestCube = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
+            g_message("reading file: %f %f %f %f",mwcMove,mwcBestMove,mwcCube,mwcBestCube);
+        }
     }
 
     if (fSetBoard && !pmr) {
@@ -1310,7 +1325,10 @@ RestoreNode(listOLD * pl)
             pmr->stCube = ast[1];
             pmr->lt = fPlayer ? lt : LUCK_VERYGOOD - lt;
             pmr->rLuck = rLuck;
-            pmr->mwc=mwc;
+            pmr->mwc.mwcMove=mwcMove;
+            pmr->mwc.mwcBestMove=mwcBestMove;
+            pmr->mwc.mwcCube=mwcCube;
+            pmr->mwc.mwcBestCube=mwcBestCube;
             break;
 
         case MOVE_DOUBLE:
@@ -1897,13 +1915,17 @@ WriteMoveAnalysis(FILE * pf, int fPlayer, movelist * pml, unsigned int iMove)
 }
 
 static void
-WriteMWC(FILE * pf, float mwc)
+WriteMWC(FILE * pf, xmwc mwc)
 {
-    gchar buffer[G_ASCII_DTOSTR_BUF_SIZE];
-    if (mwc>=0.0 && mwc<=1.0) {
-        g_ascii_formatd(buffer, sizeof(buffer), "%.5f", mwc);
-        fprintf(pf, "MW[%s]", buffer);
-    }
+    gchar buffer1[G_ASCII_DTOSTR_BUF_SIZE];
+    gchar buffer2[G_ASCII_DTOSTR_BUF_SIZE];
+    gchar buffer3[G_ASCII_DTOSTR_BUF_SIZE];
+    gchar buffer4[G_ASCII_DTOSTR_BUF_SIZE];
+    g_ascii_formatd(buffer1, sizeof(buffer1), "%.5f", mwc.mwcMove);
+    g_ascii_formatd(buffer2, sizeof(buffer2), "%.5f", mwc.mwcBestMove);
+    g_ascii_formatd(buffer3, sizeof(buffer3), "%.5f", mwc.mwcCube);
+    g_ascii_formatd(buffer4, sizeof(buffer4), "%.5f", mwc.mwcBestCube);
+    fprintf(pf, "MW[%s %s %s %s]", buffer1, buffer2, buffer3, buffer4);
 }
 
 static void

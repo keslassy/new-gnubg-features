@@ -162,6 +162,14 @@ typedef struct {
 } xmovesetcubepos;
 
 typedef struct {
+    double mwcMove;         /* mwc of player's move */
+    double mwcBestMove;     /* mwc of best play */
+    double mwcCube;         /* mwc of player's cube decision */
+    double mwcBestCube;     /* mwc of best cube decision */
+} xmwc;
+
+
+typedef struct {
     /*
      * Common variables
      */
@@ -200,7 +208,7 @@ typedef struct {
     xmovesetboard sb;           /* setting up board */
     xmovesetcubeval scv;        /* setting cube */
     xmovesetcubepos scp;        /* setting cube owner */
-    double mwc;     /* added for easy access; =-1.0 at initialization */
+    xmwc mwc;   /* added for easy access */
 } moverecord;
 
 

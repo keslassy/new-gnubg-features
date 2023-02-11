@@ -8293,10 +8293,14 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
     double clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     int unused = 0;
-    static double MWCArray [MAX_MOVES]={0.0}; //need to be same as n...
-    MWCArray[0]=0.5;
-    int NewGame [MAX_MOVES]={0.0}; //need to be same as n...
-    static int MWCArrayLength=MAX_MOVES; 
+    // static because it recomputes it twice otherwise...
+    static double mwcMoves [MAX_MOVES]={0.0}; 
+    static double mwcBestMoves [MAX_MOVES]={0.0}; 
+    static double mwcCubes [MAX_MOVES]={0.0}; 
+    static double mwcBestCubes [MAX_MOVES]={0.0}; 
+    mwcMoves[0]=mwcBestMoves[0]=mwcCubes[0]=mwcBestCubes[0]=0.5;
+    static int NewGame [MAX_MOVES]={0.0}; 
+    static int MWCLength=MAX_MOVES; 
     listOLD *plCurGame;
     listOLD *plCurMove;
     listOLD *plStartingMove;
@@ -8305,7 +8309,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
     pmsT=malloc(sizeof(matchstate));
     (*pmsT)=ms;
     // cubeinfo ci;
-    double mwcTemp;
+    // double mwcTemp;
     int i=1;
     char strTemp[100];
 
@@ -8344,31 +8348,18 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 // int numMoves = NumberMovesGame(plG);
                 // g_message("moves in game=%u",numMoves);
                 if (pmrT && pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
-                // if(pmrT) {
-                //                 // g_message("2");
-                //     FixMatchState(pmsT, pmrT);
-                //     // ApplyMoveRecord(pmsT, plCurGame, pmrT);
-                //                 // g_message("3");
-                //     if (pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
-                        // if (pmrT->fPlayer != pmsT->fMove) {
-                        //     SwapSides(pmsT->anBoard);
-                        //     pmsT->fMove = pmrT->fPlayer;
-                        // }
-                        //         // g_message("4");
-                        // GetMatchStateCubeInfo(&ci, pmsT);
-                        //         // g_message("5");
-                        // // player = pmrT->fPlayer? 1:-1;
-                        // //mwcTemp=player * pmrT->ml.amMoves[pmrT->n.iMove].rScore;
-                        //  mwcTemp= eq2mwc(pmrT->ml.amMoves[pmrT->n.iMove].rScore, &ci);
-                    mwcTemp=(double) pmrT->mwc;
+                    // mwcTemp=(double) pmrT->mwc.mwcMove;
                     // if (mwcTemp<0){
                     //     g_message("MWC error");
                     //     return FALSE;
                     // }
-                    MWCArray[i]=pmrT->fPlayer? (mwcTemp): (1.0-mwcTemp);
-                    g_message("i=%d: %f=>%f",i,mwcTemp,MWCArray[i]);
+                    mwcMoves[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcMove): (1.0-((double) pmrT->mwc.mwcMove));
+                    mwcBestMoves[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestMove): (1.0-((double) pmrT->mwc.mwcBestMove));
+                    mwcCubes[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcCube): (1.0-((double) pmrT->mwc.mwcCube));
+                    mwcBestCubes[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestCube): (1.0-((double) pmrT->mwc.mwcBestCube));
+                    g_message("i=%d: %f >= %f",i,mwcBestMoves[i],mwcMoves[i]);
                     i++;
-                    if(i==MWCArrayLength){
+                    if(i==MWCLength){
                         g_message("too big! Shouldn't happen...");
                         goto myjump;
                     }
@@ -8378,18 +8369,18 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
     myjump:
         free(pmsT);
-        MWCArrayLength=i;
-        g_message("n=%d",MWCArrayLength);
+        MWCLength=i;
+        g_message("n=%d",MWCLength);
         alreadyComputed=1;
     }
 
-    if(MWCArrayLength>1){
+    if(MWCLength>1){
 
         /* Determine the data points to calculate (ie. those in the clipping zone */
         cairo_device_to_user_distance (cr, &dx, &dy);
         cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
 
-        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+        //cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
         /* Draws x and y axis */
         cairo_set_line_width (cr, dy);
@@ -8405,37 +8396,28 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
         /* Link each data point */
 
-        for (int i = 0; i < MWCArrayLength; i ++) {
-            cairo_line_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(MWCArray[i]));
-            // cairo_line_to (cr, (gdouble)i, -MWCArray[i]);
-            // g_message("i=%d,val=%f",i,MWCArray[i]);
+        for (int i = 0; i < MWCLength; i ++) {
+            cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
+            // cairo_line_to (cr, (gdouble)i, -mwcMoves[i]);
+            // g_message("i=%d,val=%f",i,mwcMoves[i]);
         }
             /* Draw the curve */
         cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6);
         cairo_stroke (cr);
 
-        /* new games*/
-        cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
-        for (int i = 0; i < MWCArrayLength; i ++) {
-            if(NewGame[i]) {
-                cairo_move_to (cr, trueX( (((double)i)-0.5) / (MWCArrayLength-1) ), trueY(0.0));
-                cairo_line_to (cr, trueX( (((double)i)-0.5) / (MWCArrayLength-1) ), trueY(1.0));
-                cairo_stroke (cr);
-            }
-        }
-
-        /* grid [commented: axis markers]*/
+        /* grid*/
         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
         cairo_set_line_width (cr, dy/3);
         const double dashed2[] = {14.0, 6.0};
         int len2  = sizeof(dashed2) / sizeof(dashed2[0]);
         cairo_set_dash(cr, dashed2, len2, 1);
 
-        for (int i = 10; i < MWCArrayLength; i=i+10) {
+        for (int i = 10; i < MWCLength; i=i+10) {
+            // /* [commented: axis markers] */
             // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
             // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
-            cairo_move_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(0.0));
-            cairo_line_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(1.0));
+            cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(0.0));
+            cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(1.0));
             cairo_stroke (cr);
         }
         for (double y = 0.1; y < 1; y=y+0.1) {
@@ -8444,12 +8426,23 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_stroke (cr);
         }    
 
+        /* new games*/
+        cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
+        for (int i = 0; i < MWCLength; i ++) {
+            if(NewGame[i]) {
+                cairo_move_to (cr, trueX( (((double)i)-0.5) / (MWCLength-1) ), trueY(0.0));
+                cairo_line_to (cr, trueX( (((double)i)-0.5) / (MWCLength-1) ), trueY(1.0));
+                cairo_stroke (cr);
+            }
+        }
+
+        /* axis labels */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_set_font_size(cr, fontSize);
-        for (int i = 10; i < MWCArrayLength; i=i+10) {
-            cairo_move_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(0.0));
-            cairo_line_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(1.0));
-            cairo_move_to(cr, trueX(((double)i)/(MWCArrayLength-1))-2*dx, trueY(0.0)+1.5*fontSize);
+        for (int i = 10; i < MWCLength; i=i+10) {
+            cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(0.0));
+            cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(1.0));
+            cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.0)+1.5*fontSize);
             sprintf(strTemp, "%d", i);
             cairo_show_text(cr, strTemp);             
         }        
@@ -8458,11 +8451,14 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             sprintf(strTemp, "%.1f", y);
             cairo_show_text(cr, strTemp);             
         }
+
+        /* game-number text */
         int jTemp=0;
-        for (int i = 0; i < MWCArrayLength; i ++) {
+        for (int i = 0; i < MWCLength; i ++) {
             if(NewGame[i]) {
                 jTemp++;
-                cairo_move_to(cr, trueX((((double)i)+0.5) / (MWCArrayLength-1)), trueY(0.9)+fontSize/2);
+                cairo_move_to(cr, trueX((((double)i)+0.5) / (MWCLength-1)), 
+                        trueY(0.95)+fontSize/2);
                 sprintf(strTemp, "game %d", jTemp);
                 cairo_show_text(cr, strTemp);             
             }

@@ -734,11 +734,10 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
                     rChequerSkill = pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore;
                         /* keep mwc in data structure */
-                        pmr->mwc= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
-
+                        pmr->mwc.mwcMove= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
+                        pmr->mwc.mwcBestMove= eq2mwc(pmr->ml.amMoves[0].rScore, &ci);
                     break;
                 }
-
             pmr->n.stMove = Skill(rChequerSkill);
             pmr->esChequer = *pesChequer;
         }

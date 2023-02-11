@@ -161,7 +161,11 @@ NewMoveRecord(void)
     pmr->ml.cMoves = 0;
     pmr->ml.amMoves = NULL;
     pmr->MoneyCubeDecPtr = NULL;
-    pmr->mwc=-1.0; /*initialization*/
+    /*initializing MWC elements with fake values*/
+    pmr->mwc.mwcMove=-1.0; 
+    pmr->mwc.mwcBestMove=-1.0; 
+    pmr->mwc.mwcCube=-1.0; 
+    pmr->mwc.mwcBestCube=-1.0; 
 
     /* movenormal */
     pmr->n.stMove = SKILL_NONE;
