@@ -1075,43 +1075,52 @@ SmartAnalyze(void)
 #define WIDTH   640
 #define HEIGHT  480
 
-#define ZOOM_X  100.0
-#define ZOOM_Y  100.0
+// #define ZOOM_X  100.0
+// #define ZOOM_Y  100.0
 
+gfloat trueX (gfloat x, gfloat width, gfloat margin) {
+    // i*da.width/(n-1)*19/20+da.width/20
+    return (width*(x*(1-margin)+margin));
+}
 
-
-gfloat myf (gfloat x)
-{
-    return pow (x, 3);
-    // return 0.03 * pow (x, 3);
+gfloat trueY (gfloat y, gfloat width, gfloat margin) {
+    // i*da.width/(n-1)*19/20+da.width/20
+    return -(y*width*(1-margin)+width*margin);
 }
 
 
-static void do_drawing(cairo_t *cr)
-{
-  cairo_set_source_rgb(cr, 0.1, 0.1, 0.1); 
+// gfloat myf (gfloat x)
+// {
+//     return pow (x, 3);
+//     // return 0.03 * pow (x, 3);
+// }
 
-  cairo_select_font_face(cr, "Purisa",
-      CAIRO_FONT_SLANT_NORMAL,
-      CAIRO_FONT_WEIGHT_BOLD);
 
-  cairo_set_font_size(cr, 0.13);
+// static void do_drawing(cairo_t *cr)
+// {
+//   cairo_set_source_rgb(cr, 0.1, 0.1, 0.1); 
 
-  cairo_move_to(cr, 0, 0);
-  cairo_show_text(cr, "Most relationships seem so transitory");  
-  cairo_move_to(cr, 20, 60);
-  cairo_show_text(cr, "They're all good but not the permanent one");
+//   cairo_select_font_face(cr, "Purisa",
+//       CAIRO_FONT_SLANT_NORMAL,
+//       CAIRO_FONT_WEIGHT_BOLD);
 
-  cairo_move_to(cr, 20, 120);
-  cairo_show_text(cr, "Who doesn't long for someone to hold");
+//   cairo_set_font_size(cr, 0.13);
 
-  cairo_move_to(cr, 20, 150);
-  cairo_show_text(cr, "Who knows how to love you without being told");
-  cairo_move_to(cr, 20, 180);
-  cairo_show_text(cr, "Somebody tell me why I'm on my own");
-  cairo_move_to(cr, 20, 210);
-  cairo_show_text(cr, "If there's a soulmate for everyone");    
-}
+//   cairo_move_to(cr, 0, 0);
+//   cairo_show_text(cr, "Most relationships seem so transitory");  
+//   cairo_move_to(cr, 20, 60);
+//   cairo_show_text(cr, "They're all good but not the permanent one");
+
+//   cairo_move_to(cr, 20, 120);
+//   cairo_show_text(cr, "Who doesn't long for someone to hold");
+
+//   cairo_move_to(cr, 20, 150);
+//   cairo_show_text(cr, "Who knows how to love you without being told");
+//   cairo_move_to(cr, 20, 180);
+//   cairo_show_text(cr, "Somebody tell me why I'm on my own");
+//   cairo_move_to(cr, 20, 210);
+//   cairo_show_text(cr, "If there's a soulmate for everyone");    
+// }
 
 static gboolean
 on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
@@ -1151,37 +1160,121 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 // static  gdouble MWCArray [] = {0.0, 0.1, 0.2, 0.5, -0.1, -0.7, -1.0};
 // static    int n = (int) (sizeof(MWCArray)/sizeof(MWCArray[0]));
 
-    int n=10;
-    gdouble MWCArray [100]={0.0};
-    MWCArray[1]=0.3;
-    MWCArray[2]=0.2;
-    MWCArray[3]=-0.2;
-    MWCArray[4]=-1.0;
+    int n=500;
+    gdouble MWCArray [500]={0.0}; //need to be same as n...
+    listOLD *plCurGame;
+    listOLD *plCurMove;
+    listOLD *plStartingMove;
+    moverecord * pmrT=NULL;
+    matchstate * pmsT;
+    pmsT=malloc(sizeof(matchstate));
+    (*pmsT)=ms;
+    cubeinfo ci;
+    float mwcTemp;
+    int i=0;
+    // int player;
+
+    for (plCurGame = lMatch.plNext; plCurGame != &lMatch; plCurGame = plCurGame->plNext) {
+                    g_message("new game, i=%d",i);
+        plStartingMove=plCurGame->p;
+    // for (plM = plMatch->plNext; plM != plMatch; plM = plM->plNext) {
+        for (plCurMove = plStartingMove->plNext; plCurMove != plStartingMove; plCurMove = plCurMove->plNext) {
+        // for (pl = plGame->plNext; pl != plGame; pl = pl->plNext)
+            // g_message("new move, i=%d",i);
+            pmrT = plCurMove->p;
+            // g_message("1, pmr->mt=%d",pmrT->mt);
+            // int numMoves = NumberMovesGame(plG);
+            // g_message("moves in game=%u",numMoves);
+            if(pmrT) {
+                            // g_message("2");
+                FixMatchState(pmsT, pmrT);
+                // ApplyMoveRecord(pmsT, plCurGame, pmrT);
+                            // g_message("3");
+                if (pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
+                    if (pmrT->fPlayer != pmsT->fMove) {
+                        SwapSides(pmsT->anBoard);
+                        pmsT->fMove = pmrT->fPlayer;
+                    }
+                            // g_message("4");
+                    GetMatchStateCubeInfo(&ci, pmsT);
+                            // g_message("5");
+                    // player = pmrT->fPlayer? 1:-1;
+                    //mwcTemp=player * pmrT->ml.amMoves[pmrT->n.iMove].rScore;
+                     mwcTemp= eq2mwc(pmrT->ml.amMoves[pmrT->n.iMove].rScore, &ci);
+                    MWCArray[i]=pmrT->fPlayer? (double) (mwcTemp): (double) (1.0f-mwcTemp);
+                    g_message("i=%d: %f->%f=>%f",i,pmrT->ml.amMoves[pmrT->n.iMove].rScore,mwcTemp, MWCArray[i]);
+                    i++;
+                    if(i==n){
+                        g_message("too big!");
+                        goto myjump;
+                    }
+                }
+            }
+        }
+        //     for (i = 0; i < numMoves; i++) {
+        // pl = pl->plNext;
+        // pmr = pl->p;
+    }
+
+myjump:
+    free(pmsT);
+    n=i;
+    g_message("n=%d",n);
+
+
+    // MWCArray[1]=0.3;
+    // MWCArray[2]=0.2;
+    // MWCArray[3]=-0.2;
+    // MWCArray[4]=-1.0;
 
     if(n>1){
+        /*
+        i->i*da.width/(n-1)*19/20+da.width/20
+        [(x-d/20)*20/19]/d=(i/(n-1))
+        
+        */
 
-        /* Change the transformation matrix */
-        cairo_translate (cr, 0, da.height / 2);
-        gdouble scaleX = da.width/(n-1);
-        gdouble scaleY=da.height / 2;
-        cairo_scale (cr, scaleX, scaleY ); //ZOOM_X, -ZOOM_Y);
-        // dx=dx/scaleX;
-        // dy=dy/scaleY;
-        // cairo_translate (cr, da.width / 2, da.height / 2);
-        // cairo_scale (cr, da.width / 2, da.height / 2); //ZOOM_X, -ZOOM_Y);
+        // /* Change the transformation matrix */
+        //  cairo_translate (cr, da.width/20, da.height*19/20);
+        // // cairo_translate (cr, 0, 0);
+        // // cairo_translate (cr, 0, da.height / 2);
+        // gdouble scaleX = da.width/(n-1)*19/20;
+        // gdouble scaleY=da.height*19/20;
+        // cairo_scale (cr, scaleX, scaleY ); //ZOOM_X, -ZOOM_Y);
+        // // dx=dx/scaleX;
+        // // dy=dy/scaleY;
+        // // cairo_translate (cr, da.width / 2, da.height / 2);
+        // // cairo_scale (cr, da.width / 2, da.height / 2); //ZOOM_X, -ZOOM_Y);
 
         /* Determine the data points to calculate (ie. those in the clipping zone */
         cairo_device_to_user_distance (cr, &dx, &dy);
         cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
-        cairo_set_line_width (cr, dy);
+        cairo_set_line_width (cr, dy*3);
+
+
+
+
+        cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
+        cairo_move_to (cr, clip_x1, 0.0);
+        cairo_line_to (cr, clip_x2, 0.0);
+        cairo_move_to (cr, clip_x1+1/20*( clip_x2- clip_x1), clip_y1);
+        cairo_line_to (cr, clip_x1+1/20*( clip_x2- clip_x1), clip_y2);
+        // cairo_move_to (cr, trueX(clip_x1, da.width,1/20), 0.0);
+        // cairo_line_to (cr, trueX(clip_x2, da.width,1/20), 0.0);
+        // cairo_move_to (cr, trueX(clip_x1, da.width,1/20), trueY(clip_y1, da.height,1/20));
+        // cairo_line_to (cr, trueX(clip_x1, da.width,1/20), trueY(clip_y2, da.height,1/20));
+
 
         /* Draws x and y axis */
         cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
-        // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
+        // // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
         cairo_move_to (cr, clip_x1, 0.0);
         cairo_line_to (cr, clip_x2, 0.0);
         cairo_move_to (cr, clip_x1, clip_y1);
         cairo_line_to (cr, clip_x1, clip_y2);
+        cairo_stroke (cr);
+        
+
 
         //     cairo_move_to (cr, clip_x1, 0.0);
         // cairo_line_to (cr, clip_x2, 0.0);
@@ -1193,16 +1286,19 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
         /* Link each data point */
 
         for (int i = 0; i < n; i ++) {
-            cairo_line_to (cr, ((gdouble)i), -MWCArray[i]);
+            cairo_line_to (cr, trueX(((gdouble)i/(n-1)), da.width,1/20), trueY(MWCArray[i], da.height,1/20));
+            // cairo_line_to (cr, (gdouble)i, -MWCArray[i]);
             g_message("i=%d,val=%f",i,MWCArray[i]);
         }
             /* Draw the curve */
         cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
         cairo_stroke (cr);
+
         cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
+        /* axis markers*/
         for (int i = 1; i < n; i ++) {
-            cairo_move_to (cr, (gdouble)i, -0.02);
-            cairo_line_to (cr, (gdouble)i, 0.02);
+            cairo_move_to (cr, (gdouble)i, -0.03);
+            cairo_line_to (cr, (gdouble)i, 0.03);
             /* Draw the curve */
             cairo_stroke (cr);
         }

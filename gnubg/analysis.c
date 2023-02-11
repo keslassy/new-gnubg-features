@@ -626,7 +626,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
     int is_initial_position = 1;
 
     /* analyze this move */
-
+    
     FixMatchState(pms, pmr);
 
     /* check if it's the initial position: no cube analysis and special
