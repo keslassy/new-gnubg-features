@@ -8229,26 +8229,48 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
 #define HEIGHT  480
 
 static GdkRectangle da;            /* GtkDrawingArea size */
-static double margin=0.05;
+static double margin1=0.05;
+static double margin2=0.05;
 
 // #define ZOOM_X  100.0
 // #define ZOOM_Y  100.0
 
-gfloat trueX (double x) { 
-    // (i/(n-1))*da.width*19/20+da.width/20
-    /*
-    x=0->X=margin*d
-    x=1->X=d
-    */       
-    return (da.width*(x*(1-margin)+margin));
+/*shows translation x->X when x=0=>X=a and x=1=>X=b*/
+double translateX(double x,double a,double b) {
+    if (a==b){
+        outputerrf("translation error");
+        return 0.0;
+    } else
+        return a+x*(b-a);
 }
 
-gfloat trueY (double y) { //}, gfloat h, gfloat margin) {
-   /*
-   y=0->-h(1-margin) on screen->Y=+h(1-margin)
-   y=1->Y=0
-   */
-    return (da.height*(1-y)*(1-margin));
+double trueX (double x) { 
+    // (i/(n-1))*da.width*19/20+da.width/20
+    /*
+    x=0->X=margin1*d
+    x=1->X=(1-margin2)*d
+    */   
+    return translateX(x,margin1*da.width,(1-margin2)*da.width);
+    //  OLD   // (i/(n-1))*da.width*19/20+da.width/20
+    // /*
+    // x=0->X=margin*d
+    // x=1->X=d
+    // */       
+    // return (da.width*(x*(1-margin)+margin));
+}
+
+double trueY (double y) { //}, gfloat h, gfloat margin) {
+    /*
+    y=0->-h(1-margin1) on screen->Y=+h(1-margin1)
+    y=1->Y=-h*margin2
+    */
+    return translateX(y,(1-margin1)*da.height,-margin2*da.width);
+
+//    /*
+//    y=0->-h(1-margin) on screen->Y=+h(1-margin)
+//    y=1->Y=0
+//    */
+//     return (da.height*(1-y)*(1-margin));
 }
 
 
