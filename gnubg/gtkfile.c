@@ -1219,7 +1219,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 //     return FALSE;
                 // }
                 MWCArray[i]=pmrT->fPlayer? (double) (mwcTemp): (double) (1.0f-mwcTemp);
-                g_message("i=%d: %f=>%f",i,mwcTemp);
+                g_message("i=%d: %f=>%f",i,mwcTemp,MWCArray[i]);
                 i++;
                 if(i==n){
                     g_message("too big!");
