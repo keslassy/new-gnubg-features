@@ -1239,7 +1239,7 @@ RestoreNode(listOLD * pl)
             if (ach[0] >= '1' && ach[0] <= '6' && ach[1] >= '1' && ach[1] <= '6') {
                 pmr = NewMoveRecord();
 
-                pmr->mt = MOVE_SETDICE;
+                pmr->mt = MOVE_SETDICE; 
                 pmr->fPlayer = ms.fMove;
                 pmr->anDice[0] = ach[0] - '0';
                 pmr->anDice[1] = ach[1] - '0';
@@ -1289,7 +1289,7 @@ RestoreNode(listOLD * pl)
             // mwcBestMove = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
             // mwcCube = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
             // mwcBestCube = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
-            g_message("reading file: %f %f %f %f",mwcMove,mwcBestMove,mwcCube,mwcBestCube);
+            // g_message("reading file: %f %f %f %f",mwcMove,mwcBestMove,mwcCube,mwcBestCube);
         }
     }
 

@@ -8340,6 +8340,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                     */
                     // cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
                     cairo_set_source_rgb (cr, 0.5, 0.0, 0.0);
+                    drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestMoves[i]),
+                        trueX(((double)i)/(MWCLength-1)),trueY(mwcMoves[i]) );
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcMoves[i-1]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestMoves[i]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
@@ -8347,15 +8349,23 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 } else if (mwcBestMoves[i] - mwcMoves[i] <-epsilon) {
                     // cairo_set_source_rgb (cr, 0.0, 0.5, 1.0);
                     cairo_set_source_rgb (cr, 0.0, 0.5, 0.0);
+                    drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestMoves[i]),
+                        trueX(((double)i)/(MWCLength-1)),trueY(mwcMoves[i]) );
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcMoves[i-1]));
                     // cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestMoves[i]));
                     // cairo_stroke (cr);
                 }
-                drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestMoves[i]),
-                        trueX(((double)i)/(MWCLength-1)),trueY(mwcMoves[i]) );
             }
         }
+        /* Cumulative skill */
+        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        for (int i = 0; i < MWCLength; i ++) {
+            if(mwcMoves[i]>=0 && mwcMoves[i]<=1) {
+                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcCumulMoveSkill[i]));
+            }
+        }
+        cairo_stroke (cr);
 
         /* grid*/
         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
@@ -8377,14 +8387,6 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_line_to (cr, trueX(1.0), trueY(y));
             cairo_stroke (cr);
         }    
-
-        /* Cumulative skill */
-        for (int i = 0; i < MWCLength; i ++) {
-            if(mwcMoves[i]>=0 && mwcMoves[i]<=1) {
-                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcCumulMoveSkill[i]));
-            }
-        }
-        cairo_stroke (cr);
 
         /* new games*/
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
