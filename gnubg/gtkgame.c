@@ -8113,18 +8113,368 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
 }
 
 
-/* ***************************************************************************** */
-// #define WIDTH   640
-// #define HEIGHT  480
+/* *************************************************************** */
+// static GtkPrintSettings* settings = NULL;
+
+
+
+// static void
+// draw_page(GtkPrintOperation* operation,
+//     GtkPrintContext* context,
+//     gint               page_nr,
+//     gpointer           user_data)
+// {
+//     cairo_t* cr;
+//     PangoLayout* layout;
+//     gdouble width, height, text_height;
+//     gint layout_height;
+//     PangoFontDescription* desc;
+
+//     cr = gtk_print_context_get_cairo_context(context);
+//     width = gtk_print_context_get_width(context);
+//     height = gtk_print_context_get_height(context);
+
+//     cairo_rectangle(cr, 0, 0, width, height);
+
+//     cairo_set_source_rgb(cr, 0.8, 0.8, 0.8);
+//     cairo_fill(cr);
+
+//     layout = gtk_print_context_create_pango_layout(context);
+
+//     desc = pango_font_description_from_string("sans 14");
+//     pango_layout_set_font_description(layout, desc);
+//     pango_font_description_free(desc);
+
+//     pango_layout_set_text(layout, "some text", -1);
+//     pango_layout_set_width(layout, width);
+//     pango_layout_set_alignment(layout, PANGO_ALIGN_CENTER);
+
+//     pango_layout_get_size(layout, NULL, &layout_height);
+//     text_height = (gdouble)layout_height / PANGO_SCALE;
+
+//     cairo_move_to(cr, width / 2, (height - text_height) / 2);
+//     pango_cairo_show_layout(cr, layout);
+
+//     g_object_unref(layout);
+// }
+
+
+// extern void
+// GTKAnalyzeFile(void)
+// {
+//     //// g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
+//     //if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
+//     //    GTKBatchAnalyse(NULL, 0, NULL);
+//     //} else if (AnalyzeFileSettingDef == AnalyzeFileRegular) {
+//     //    AnalyzeSingleFile();
+//     //} else { //   AnalyzeFileSmart, 
+//     //    SmartAnalyze();
+//     //}
+
+//     GtkPrintOperation* print;
+//     GtkPrintOperationResult res;
+//     GError* error;
+//     int error_dialog;
+
+//     print = gtk_print_operation_new();
+
+//     if (settings != NULL) {
+//         outputerrf("in settings");
+//         gtk_print_operation_set_print_settings(print, settings);
+//     }
+
+//     //if (page_setup != NULL) {
+//     //    outputerrf("in page setup");
+//     //    gtk_print_operation_set_default_page_setup(print, page_setup);
+//     //}
+//     /*g_signal_connect(print, "begin_print", G_CALLBACK(begin_print), NULL); */
+//     // g_signal_connect(print, "draw_page", G_CALLBACK(draw_page), NULL);
+
+//     res = gtk_print_operation_run(print,
+//         GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG,
+//         GTK_WINDOW(pwMain),
+//         &error);
+
+//     if (res == GTK_PRINT_OPERATION_RESULT_ERROR)
+//     {   
+//         outputerrf("error");
+//         error_dialog = gtk_message_dialog_new(GTK_WINDOW(pwMain),
+//             GTK_DIALOG_DESTROY_WITH_PARENT,
+//             GTK_MESSAGE_ERROR,
+//             GTK_BUTTONS_CLOSE,
+//             "Error printing file:\n%s",
+//             error->message);
+//         g_signal_connect(error_dialog, "response",
+//             G_CALLBACK(gtk_widget_destroy), NULL);
+//         gtk_widget_show(error_dialog);
+//         g_error_free(error);
+//     }
+//     else if (res == GTK_PRINT_OPERATION_RESULT_APPLY)
+//     {
+//         outputerrf("apply");
+//         if (settings != NULL)
+//             g_object_unref(settings);
+//         settings = g_object_ref(gtk_print_operation_get_print_settings(print));
+//     }
+
+//     // g_object_unref(print);
+//     return;
+// }
+
+/* ***************************************************************************** 
+    code for drawing the plot of MWC through match
+   ***************************************************************************** 
+*/
+#define WIDTH   640
+#define HEIGHT  480
+
+static GdkRectangle da;            /* GtkDrawingArea size */
+static double margin=0.05;
 
 // #define ZOOM_X  100.0
 // #define ZOOM_Y  100.0
 
+gfloat trueX (double x) { 
+    // (i/(n-1))*da.width*19/20+da.width/20
+    /*
+    x=0->X=margin*d
+    x=1->X=d
+    */       
+    return (da.width*(x*(1-margin)+margin));
+}
+
+gfloat trueY (double y) { //}, gfloat h, gfloat margin) {
+   /*
+   y=0->-h(1-margin) on screen->Y=+h(1-margin)
+   y=1->Y=0
+   */
+    return (da.height*(1-y)*(1-margin));
+}
+
 
 // gfloat myf (gfloat x)
 // {
-//     return 0.03 * pow (x, 3);
+//     return pow (x, 3);
+//     // return 0.03 * pow (x, 3);
 // }
+
+
+// static void do_drawing(cairo_t *cr)
+// {
+//   cairo_set_source_rgb(cr, 0.1, 0.1, 0.1); 
+
+//   cairo_select_font_face(cr, "Purisa",
+//       CAIRO_FONT_SLANT_NORMAL,
+//       CAIRO_FONT_WEIGHT_BOLD);
+
+//   cairo_set_font_size(cr, 0.13);
+
+//   cairo_move_to(cr, 0, 0);
+//   cairo_show_text(cr, "Most relationships seem so transitory");  
+//   cairo_move_to(cr, 20, 60);
+//   cairo_show_text(cr, "They're all good but not the permanent one");
+
+//   cairo_move_to(cr, 20, 120);
+//   cairo_show_text(cr, "Who doesn't long for someone to hold");
+
+//   cairo_move_to(cr, 20, 150);
+//   cairo_show_text(cr, "Who knows how to love you without being told");
+//   cairo_move_to(cr, 20, 180);
+//   cairo_show_text(cr, "Somebody tell me why I'm on my own");
+//   cairo_move_to(cr, 20, 210);
+//   cairo_show_text(cr, "If there's a soulmate for everyone");    
+// }
+
+static gboolean
+on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
+{
+    cairo_t *cr = gdk_cairo_create (widget->window);
+    // GdkRectangle da;            /* GtkDrawingArea size */
+    gdouble dx = 3.0, dy = 3.0; /* Pixels between each point */
+    gdouble clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+    // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+    gint unused = 0;
+
+    /* Define a clipping zone to improve performance */
+    cairo_rectangle (cr,
+            event->area.x,
+            event->area.y,
+            event->area.width,
+            event->area.height);
+    cairo_clip (cr);
+
+    /* Determine GtkDrawingArea dimensions */
+    gdk_window_get_geometry (widget->window,
+            &da.x,
+            &da.y,
+            &da.width,
+            &da.height,
+            &unused);
+
+    // /* Draw on a black background */
+    // cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
+    // // cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+    // cairo_paint (cr);
+
+    // do_drawing(cr);
+
+
+
+// static  gdouble MWCArray [] = {0.0, 0.1, 0.2, 0.5, -0.1, -0.7, -1.0};
+// static    int n = (int) (sizeof(MWCArray)/sizeof(MWCArray[0]));
+
+    int n=500;
+    gdouble MWCArray [500]={0.0}; //need to be same as n...
+    listOLD *plCurGame;
+    listOLD *plCurMove;
+    listOLD *plStartingMove;
+    moverecord * pmrT=NULL;
+    matchstate * pmsT;
+    pmsT=malloc(sizeof(matchstate));
+    (*pmsT)=ms;
+    // cubeinfo ci;
+    float mwcTemp;
+    int i=0;
+    // double margin=0.05;
+    // int player;
+
+    for (plCurGame = lMatch.plNext; plCurGame != &lMatch; plCurGame = plCurGame->plNext) {
+                    g_message("new game, i=%d",i);
+        plStartingMove=plCurGame->p;
+    // for (plM = plMatch->plNext; plM != plMatch; plM = plM->plNext) {
+        for (plCurMove = plStartingMove->plNext; plCurMove != plStartingMove; plCurMove = plCurMove->plNext) {
+        // for (pl = plGame->plNext; pl != plGame; pl = pl->plNext)
+            // g_message("new move, i=%d",i);
+            pmrT = plCurMove->p;
+            // g_message("1, pmr->mt=%d",pmrT->mt);
+            // int numMoves = NumberMovesGame(plG);
+            // g_message("moves in game=%u",numMoves);
+            if (pmrT && pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
+            // if(pmrT) {
+            //                 // g_message("2");
+            //     FixMatchState(pmsT, pmrT);
+            //     // ApplyMoveRecord(pmsT, plCurGame, pmrT);
+            //                 // g_message("3");
+            //     if (pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
+                    // if (pmrT->fPlayer != pmsT->fMove) {
+                    //     SwapSides(pmsT->anBoard);
+                    //     pmsT->fMove = pmrT->fPlayer;
+                    // }
+                    //         // g_message("4");
+                    // GetMatchStateCubeInfo(&ci, pmsT);
+                    //         // g_message("5");
+                    // // player = pmrT->fPlayer? 1:-1;
+                    // //mwcTemp=player * pmrT->ml.amMoves[pmrT->n.iMove].rScore;
+                    //  mwcTemp= eq2mwc(pmrT->ml.amMoves[pmrT->n.iMove].rScore, &ci);
+                mwcTemp=pmrT->mwc;
+                // if (mwcTemp<0){
+                //     g_message("MWC error");
+                //     return FALSE;
+                // }
+                MWCArray[i]=pmrT->fPlayer? (double) (mwcTemp): (double) (1.0f-mwcTemp);
+                g_message("i=%d: %f=>%f",i,mwcTemp,MWCArray[i]);
+                i++;
+                if(i==n){
+                    g_message("too big!");
+                    goto myjump;
+                }
+            }
+        }
+        //     for (i = 0; i < numMoves; i++) {
+        // pl = pl->plNext;
+        // pmr = pl->p;
+    }
+
+myjump:
+    free(pmsT);
+    n=i;
+    g_message("n=%d",n);
+
+    // MWCArray[1]=0.3;
+    // MWCArray[2]=0.2;
+    // MWCArray[3]=-0.2;
+    // MWCArray[4]=-1.0;
+
+    if(n>1){
+
+        /* Determine the data points to calculate (ie. those in the clipping zone */
+        cairo_device_to_user_distance (cr, &dx, &dy);
+        cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
+        cairo_set_line_width (cr, dy);
+
+        /* Draws x and y axis */
+        // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
+        cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
+        cairo_move_to (cr, trueX(0.0), trueY(0.0));
+        cairo_line_to (cr, trueX(0.0), trueY(1.0));
+        cairo_move_to (cr, trueX(0.0), trueY(0.0));
+        cairo_line_to (cr, trueX(1.0), trueY(0.0));
+        // cairo_move_to (cr, clip_x1, clip_y1/3);
+        // cairo_line_to (cr, clip_x2, clip_y2*2/3);
+        cairo_stroke (cr);
+
+
+        // /* Draws x and y axis */
+        // cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
+        // // // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
+        // cairo_move_to (cr, clip_x1, 0.0);
+        // cairo_line_to (cr, clip_x2, 0.0);
+        // cairo_move_to (cr, clip_x1, clip_y1);
+        // cairo_line_to (cr, clip_x1, clip_y2);
+        // cairo_stroke (cr);
+        
+
+
+        //     cairo_move_to (cr, clip_x1, 0.0);
+        // cairo_line_to (cr, clip_x2, 0.0);
+        // cairo_move_to (cr, 0.0, clip_y1);
+        // cairo_line_to (cr, 0.0, clip_y2);
+        // cairo_stroke (cr);
+
+
+        /* Link each data point */
+
+        for (int i = 0; i < n; i ++) {
+            cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(MWCArray[i]));
+            // cairo_line_to (cr, (gdouble)i, -MWCArray[i]);
+            g_message("i=%d,val=%f",i,MWCArray[i]);
+        }
+            /* Draw the curve */
+        cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+        cairo_stroke (cr);
+
+        cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
+        cairo_set_line_width (cr, dy/3);
+        /* axis markers or grid*/
+        for (int i = 10; i < n; i=i+10) {
+            // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
+            // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
+            cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(0.0));
+            cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(1.0));
+            /* Draw the curve */
+            cairo_stroke (cr);
+        }
+        for (double y = 0.1; y < 1; y=y+0.1) {
+            // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
+            // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
+            cairo_move_to (cr, trueX(0.0), trueY(y));
+            cairo_line_to (cr, trueX(1.0), trueY(y));
+            /* Draw the curve */
+            cairo_stroke (cr);
+        }    
+        // for (i = clip_x1; i < clip_x2; i += dx)
+        //     cairo_line_to (cr, i, -myf (i));
+
+
+        //   do_drawing(cr);
+            g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
+                clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
+    } else 
+        outputerrf("not enough points for plot");
+
+    cairo_destroy (cr);
+    return TRUE;
+}
 
 // static gboolean
 // on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
@@ -8174,7 +8524,7 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
 
 //     /* Link each data point */
 //     for (i = clip_x1; i < clip_x2; i += dx)
-//         cairo_line_to (cr, i, myf (i));
+//         cairo_line_to (cr, i, f (i));
 
 //     /* Draw the curve */
 //     cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
@@ -8184,30 +8534,30 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
 //     return FALSE;
 // }
 
+void PlotGraph(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
+{
 
-// void PlotGraph(void)
-// {
+    GtkWidget *window;
+    GtkWidget *da;
 
-//     GtkWidget *window;
-//     GtkWidget *da;
+    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+      gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
+    gtk_window_set_title (GTK_WINDOW (window), "Graph drawing");
+    g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
 
-//     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-//       gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
-//     gtk_window_set_title (GTK_WINDOW (window), "Graph drawing");
-//     g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
+    da = gtk_drawing_area_new ();
+    gtk_container_add (GTK_CONTAINER (window), da);
 
-//     da = gtk_drawing_area_new ();
-//     gtk_container_add (GTK_CONTAINER (window), da);
+    g_signal_connect (G_OBJECT (da),
+            "expose-event",
+            G_CALLBACK (on_expose_event),
+            NULL);
 
-//     g_signal_connect (G_OBJECT (da),
-//             "expose-event",
-//             G_CALLBACK (on_expose_event),
-//             NULL);
+    gtk_widget_show_all (window);
+    gtk_main ();
+    return;
+}
 
-//     gtk_widget_show_all (window);
-//     gtk_main ();
-//     return;
-// }
 
 
 
@@ -8233,7 +8583,12 @@ GTKDumpStatcontext(int game)
                         addToDbButton = gtk_button_new_with_label(_("Add to DB")));
         g_signal_connect(addToDbButton, "clicked", G_CALLBACK(GtkRelationalAddMatch), pwStatDialog);
     }
-    
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
+                    addToDbButton = gtk_button_new_with_label(_("Plot MWC through match")));
+    g_signal_connect(addToDbButton, "clicked", G_CALLBACK(PlotGraph), NULL);
+
+
     pwNotebook = gtk_notebook_new();
     gtk_notebook_set_scrollable(GTK_NOTEBOOK(pwNotebook), TRUE);
     gtk_notebook_popup_disable(GTK_NOTEBOOK(pwNotebook));
