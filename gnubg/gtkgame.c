@@ -8229,8 +8229,9 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
 #define HEIGHT  480
 
 static GdkRectangle da;            /* GtkDrawingArea size */
-static double margin1=0.05;
-static double margin2=0.05;
+static double margin1=0.12;
+static double margin2=0.06;
+static int alreadyComputed=0; /* when drawing it computes all arrays twice :( )*/
 
 // #define ZOOM_X  100.0
 // #define ZOOM_Y  100.0
@@ -8262,9 +8263,9 @@ double trueX (double x) {
 double trueY (double y) { //}, gfloat h, gfloat margin) {
     /*
     y=0->-h(1-margin1) on screen->Y=+h(1-margin1)
-    y=1->Y=-h*margin2
+    y=1->-h*margin2 on screen->Y=+h*margin2
     */
-    return translateX(y,(1-margin1)*da.height,-margin2*da.width);
+    return translateX(y,(1-margin1)*da.height,margin2*da.height);
 
 //    /*
 //    y=0->-h(1-margin) on screen->Y=+h(1-margin)
@@ -8273,49 +8274,31 @@ double trueY (double y) { //}, gfloat h, gfloat margin) {
 //     return (da.height*(1-y)*(1-margin));
 }
 
-
-// gfloat myf (gfloat x)
-// {
-//     return pow (x, 3);
-//     // return 0.03 * pow (x, 3);
-// }
-
-
-// static void do_drawing(cairo_t *cr)
-// {
-//   cairo_set_source_rgb(cr, 0.1, 0.1, 0.1); 
-
-//   cairo_select_font_face(cr, "Purisa",
-//       CAIRO_FONT_SLANT_NORMAL,
-//       CAIRO_FONT_WEIGHT_BOLD);
-
-//   cairo_set_font_size(cr, 0.13);
-
-//   cairo_move_to(cr, 0, 0);
-//   cairo_show_text(cr, "Most relationships seem so transitory");  
-//   cairo_move_to(cr, 20, 60);
-//   cairo_show_text(cr, "They're all good but not the permanent one");
-
-//   cairo_move_to(cr, 20, 120);
-//   cairo_show_text(cr, "Who doesn't long for someone to hold");
-
-//   cairo_move_to(cr, 20, 150);
-//   cairo_show_text(cr, "Who knows how to love you without being told");
-//   cairo_move_to(cr, 20, 180);
-//   cairo_show_text(cr, "Somebody tell me why I'm on my own");
-//   cairo_move_to(cr, 20, 210);
-//   cairo_show_text(cr, "If there's a soulmate for everyone");    
-// }
-
 static gboolean
 on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
 {
     cairo_t *cr = gdk_cairo_create (widget->window);
     // GdkRectangle da;            /* GtkDrawingArea size */
-    gdouble dx = 3.0, dy = 3.0; /* Pixels between each point */
-    gdouble clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+    double dx = 3.0, dy = 3.0; /* Pixels between each point */
+    double fontSize =11.0;
+    double clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
-    gint unused = 0;
+    int unused = 0;
+    static double MWCArray [MAX_MOVES]={0.0}; //need to be same as n...
+    MWCArray[0]=0.5;
+    int NewGame [MAX_MOVES]={0.0}; //need to be same as n...
+    static int MWCArrayLength=MAX_MOVES; 
+    listOLD *plCurGame;
+    listOLD *plCurMove;
+    listOLD *plStartingMove;
+    moverecord * pmrT=NULL;
+    matchstate * pmsT;
+    pmsT=malloc(sizeof(matchstate));
+    (*pmsT)=ms;
+    // cubeinfo ci;
+    double mwcTemp;
+    int i=1;
+    char strTemp[100];
 
     /* Define a clipping zone to improve performance */
     cairo_rectangle (cr,
@@ -8338,95 +8321,69 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
     // // cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
     // cairo_paint (cr);
 
-    // do_drawing(cr);
-
-
-
-// static  gdouble MWCArray [] = {0.0, 0.1, 0.2, 0.5, -0.1, -0.7, -1.0};
-// static    int n = (int) (sizeof(MWCArray)/sizeof(MWCArray[0]));
-
-    int n=500;
-    gdouble MWCArray [500]={0.0}; //need to be same as n...
-    listOLD *plCurGame;
-    listOLD *plCurMove;
-    listOLD *plStartingMove;
-    moverecord * pmrT=NULL;
-    matchstate * pmsT;
-    pmsT=malloc(sizeof(matchstate));
-    (*pmsT)=ms;
-    // cubeinfo ci;
-    float mwcTemp;
-    int i=0;
-    // double margin=0.05;
-    // int player;
-
-    for (plCurGame = lMatch.plNext; plCurGame != &lMatch; plCurGame = plCurGame->plNext) {
-                    g_message("new game, i=%d",i);
-        plStartingMove=plCurGame->p;
-    // for (plM = plMatch->plNext; plM != plMatch; plM = plM->plNext) {
-        for (plCurMove = plStartingMove->plNext; plCurMove != plStartingMove; plCurMove = plCurMove->plNext) {
-        // for (pl = plGame->plNext; pl != plGame; pl = pl->plNext)
-            // g_message("new move, i=%d",i);
-            pmrT = plCurMove->p;
-            // g_message("1, pmr->mt=%d",pmrT->mt);
-            // int numMoves = NumberMovesGame(plG);
-            // g_message("moves in game=%u",numMoves);
-            if (pmrT && pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
-            // if(pmrT) {
-            //                 // g_message("2");
-            //     FixMatchState(pmsT, pmrT);
-            //     // ApplyMoveRecord(pmsT, plCurGame, pmrT);
-            //                 // g_message("3");
-            //     if (pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
-                    // if (pmrT->fPlayer != pmsT->fMove) {
-                    //     SwapSides(pmsT->anBoard);
-                    //     pmsT->fMove = pmrT->fPlayer;
+    if(!alreadyComputed) {
+        for (plCurGame = lMatch.plNext; plCurGame != &lMatch; plCurGame = plCurGame->plNext) {
+                        g_message("new game, i=%d",i);
+            plStartingMove=plCurGame->p;
+            NewGame[i]=1;
+        // for (plM = plMatch->plNext; plM != plMatch; plM = plM->plNext) {
+            for (plCurMove = plStartingMove->plNext; plCurMove != plStartingMove; plCurMove = plCurMove->plNext) {
+            // for (pl = plGame->plNext; pl != plGame; pl = pl->plNext)
+                // g_message("new move, i=%d",i);
+                pmrT = plCurMove->p;
+                // g_message("1, pmr->mt=%d",pmrT->mt);
+                // int numMoves = NumberMovesGame(plG);
+                // g_message("moves in game=%u",numMoves);
+                if (pmrT && pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
+                // if(pmrT) {
+                //                 // g_message("2");
+                //     FixMatchState(pmsT, pmrT);
+                //     // ApplyMoveRecord(pmsT, plCurGame, pmrT);
+                //                 // g_message("3");
+                //     if (pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
+                        // if (pmrT->fPlayer != pmsT->fMove) {
+                        //     SwapSides(pmsT->anBoard);
+                        //     pmsT->fMove = pmrT->fPlayer;
+                        // }
+                        //         // g_message("4");
+                        // GetMatchStateCubeInfo(&ci, pmsT);
+                        //         // g_message("5");
+                        // // player = pmrT->fPlayer? 1:-1;
+                        // //mwcTemp=player * pmrT->ml.amMoves[pmrT->n.iMove].rScore;
+                        //  mwcTemp= eq2mwc(pmrT->ml.amMoves[pmrT->n.iMove].rScore, &ci);
+                    mwcTemp=(double) pmrT->mwc;
+                    // if (mwcTemp<0){
+                    //     g_message("MWC error");
+                    //     return FALSE;
                     // }
-                    //         // g_message("4");
-                    // GetMatchStateCubeInfo(&ci, pmsT);
-                    //         // g_message("5");
-                    // // player = pmrT->fPlayer? 1:-1;
-                    // //mwcTemp=player * pmrT->ml.amMoves[pmrT->n.iMove].rScore;
-                    //  mwcTemp= eq2mwc(pmrT->ml.amMoves[pmrT->n.iMove].rScore, &ci);
-                mwcTemp=pmrT->mwc;
-                // if (mwcTemp<0){
-                //     g_message("MWC error");
-                //     return FALSE;
-                // }
-                MWCArray[i]=pmrT->fPlayer? (double) (mwcTemp): (double) (1.0f-mwcTemp);
-                g_message("i=%d: %f=>%f",i,mwcTemp,MWCArray[i]);
-                i++;
-                if(i==n){
-                    g_message("too big!");
-                    goto myjump;
+                    MWCArray[i]=pmrT->fPlayer? (mwcTemp): (1.0-mwcTemp);
+                    g_message("i=%d: %f=>%f",i,mwcTemp,MWCArray[i]);
+                    i++;
+                    if(i==MWCArrayLength){
+                        g_message("too big! Shouldn't happen...");
+                        goto myjump;
+                    }
                 }
             }
         }
-        //     for (i = 0; i < numMoves; i++) {
-        // pl = pl->plNext;
-        // pmr = pl->p;
+
+    myjump:
+        free(pmsT);
+        MWCArrayLength=i;
+        g_message("n=%d",MWCArrayLength);
+        alreadyComputed=1;
     }
 
-myjump:
-    free(pmsT);
-    n=i;
-    g_message("n=%d",n);
-
-    // MWCArray[1]=0.3;
-    // MWCArray[2]=0.2;
-    // MWCArray[3]=-0.2;
-    // MWCArray[4]=-1.0;
-
-    if(n>1){
+    if(MWCArrayLength>1){
 
         /* Determine the data points to calculate (ie. those in the clipping zone */
         cairo_device_to_user_distance (cr, &dx, &dy);
         cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
-        cairo_set_line_width (cr, dy);
 
         /* Draws x and y axis */
+        cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
-        cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
+        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to (cr, trueX(0.0), trueY(0.0));
         cairo_line_to (cr, trueX(0.0), trueY(1.0));
         cairo_move_to (cr, trueX(0.0), trueY(0.0));
@@ -8435,126 +8392,87 @@ myjump:
         // cairo_line_to (cr, clip_x2, clip_y2*2/3);
         cairo_stroke (cr);
 
-
-        // /* Draws x and y axis */
-        // cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
-        // // // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
-        // cairo_move_to (cr, clip_x1, 0.0);
-        // cairo_line_to (cr, clip_x2, 0.0);
-        // cairo_move_to (cr, clip_x1, clip_y1);
-        // cairo_line_to (cr, clip_x1, clip_y2);
-        // cairo_stroke (cr);
-        
-
-
-        //     cairo_move_to (cr, clip_x1, 0.0);
-        // cairo_line_to (cr, clip_x2, 0.0);
-        // cairo_move_to (cr, 0.0, clip_y1);
-        // cairo_line_to (cr, 0.0, clip_y2);
-        // cairo_stroke (cr);
-
-
         /* Link each data point */
 
-        for (int i = 0; i < n; i ++) {
-            cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(MWCArray[i]));
+        for (int i = 0; i < MWCArrayLength; i ++) {
+            cairo_line_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(MWCArray[i]));
             // cairo_line_to (cr, (gdouble)i, -MWCArray[i]);
-            g_message("i=%d,val=%f",i,MWCArray[i]);
+            // g_message("i=%d,val=%f",i,MWCArray[i]);
         }
             /* Draw the curve */
-        cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+        cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6);
         cairo_stroke (cr);
 
+        /* new games*/
+        cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
+        for (int i = 0; i < MWCArrayLength; i ++) {
+            if(NewGame[i]) {
+                cairo_move_to (cr, trueX( (((double)i)-0.5) / (MWCArrayLength-1) ), trueY(0.0));
+                cairo_line_to (cr, trueX( (((double)i)-0.5) / (MWCArrayLength-1) ), trueY(1.0));
+                cairo_stroke (cr);
+            }
+        }
+
+        /* grid [commented: axis markers]*/
         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
         cairo_set_line_width (cr, dy/3);
-        /* axis markers or grid*/
-        for (int i = 10; i < n; i=i+10) {
+        const double dashed2[] = {14.0, 6.0};
+        int len2  = sizeof(dashed2) / sizeof(dashed2[0]);
+        cairo_set_dash(cr, dashed2, len2, 1);
+
+        for (int i = 10; i < MWCArrayLength; i=i+10) {
             // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
             // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
-            cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(0.0));
-            cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(1.0));
-            /* Draw the curve */
+            cairo_move_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(0.0));
+            cairo_line_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(1.0));
             cairo_stroke (cr);
         }
         for (double y = 0.1; y < 1; y=y+0.1) {
-            // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
-            // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
             cairo_move_to (cr, trueX(0.0), trueY(y));
             cairo_line_to (cr, trueX(1.0), trueY(y));
-            /* Draw the curve */
             cairo_stroke (cr);
         }    
-        // for (i = clip_x1; i < clip_x2; i += dx)
-        //     cairo_line_to (cr, i, -myf (i));
 
+        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+        cairo_set_font_size(cr, fontSize);
+        for (int i = 10; i < MWCArrayLength; i=i+10) {
+            cairo_move_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(0.0));
+            cairo_line_to (cr, trueX(((double)i)/(MWCArrayLength-1)), trueY(1.0));
+            cairo_move_to(cr, trueX(((double)i)/(MWCArrayLength-1))-2*dx, trueY(0.0)+1.5*fontSize);
+            sprintf(strTemp, "%d", i);
+            cairo_show_text(cr, strTemp);             
+        }        
+        for (double y = 0.1; y < 1; y=y+0.1) {
+            cairo_move_to(cr, trueX(-0.05), trueY(y)+fontSize/2);
+            sprintf(strTemp, "%.1f", y);
+            cairo_show_text(cr, strTemp);             
+        }
+        int jTemp=0;
+        for (int i = 0; i < MWCArrayLength; i ++) {
+            if(NewGame[i]) {
+                j++;
+                cairo_move_to(cr, trueX((((double)i)+0.5) / (MWCArrayLength-1)), trueY(0.9)+fontSize/2);
+                sprintf(strTemp, "game %d", jTemp);
+                cairo_show_text(cr, strTemp);             
+            }
+        }
 
-        //   do_drawing(cr);
-            g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
+        g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
                 clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
     } else 
         outputerrf("not enough points for plot");
 
     cairo_destroy (cr);
-    return TRUE;
+    return FALSE;
 }
-
-// static gboolean
-// on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
-// {
-//     cairo_t *cr = gdk_cairo_create (widget->window);
-//     GdkRectangle da;            /* GtkDrawingArea size */
-//     gdouble dx = 5.0, dy = 5.0; /* Pixels between each point */
-//     gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
-//     gint unused = 0;
-
-//     /* Define a clipping zone to improve performance */
-//     cairo_rectangle (cr,
-//             event->area.x,
-//             event->area.y,
-//             event->area.width,
-//             event->area.height);
-//     cairo_clip (cr);
-
-//     /* Determine GtkDrawingArea dimensions */
-//     gdk_window_get_geometry (widget->window,
-//             &da.x,
-//             &da.y,
-//             &da.width,
-//             &da.height,
-//             &unused);
-
-//     /* Draw on a black background */
-//     cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-//     cairo_paint (cr);
-
-//     /* Change the transformation matrix */
-//     cairo_translate (cr, da.width / 2, da.height / 2);
-//     cairo_scale (cr, ZOOM_X, -ZOOM_Y);
-
-//     /* Determine the data points to calculate (ie. those in the clipping zone */
-//     cairo_device_to_user_distance (cr, &dx, &dy);
-//     cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
-//     cairo_set_line_width (cr, dx);
-
-//     /* Draws x and y axis */
-//     cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
-//     cairo_move_to (cr, clip_x1, 0.0);
-//     cairo_line_to (cr, clip_x2, 0.0);
-//     cairo_move_to (cr, 0.0, clip_y1);
-//     cairo_line_to (cr, 0.0, clip_y2);
-//     cairo_stroke (cr);
-
-//     /* Link each data point */
-//     for (i = clip_x1; i < clip_x2; i += dx)
-//         cairo_line_to (cr, i, f (i));
-
-//     /* Draw the curve */
-//     cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
-//     cairo_stroke (cr);
-
-//     cairo_destroy (cr);
-//     return FALSE;
-// }
+void CloseWindow(GObject * UNUSED(po), GtkWidget * pw)
+{
+    g_message("close!");
+    // gtk_widget_destroy(window);
+        // gtk_main_quit();
+        // gtk_widget_hide(window);
+    gtk_widget_destroy(pw);
+}
 
 void PlotGraph(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
@@ -8565,18 +8483,25 @@ void PlotGraph(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
       gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
     gtk_window_set_title (GTK_WINDOW (window), "Graph drawing");
-    g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
+    // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
+    // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
+    // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(CloseWindow), window);
+    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+
 
     da = gtk_drawing_area_new ();
     gtk_container_add (GTK_CONTAINER (window), da);
-
-    g_signal_connect (G_OBJECT (da),
-            "expose-event",
-            G_CALLBACK (on_expose_event),
-            NULL);
-
+g_message("1");
+    g_signal_connect (G_OBJECT (da), "expose-event", G_CALLBACK (on_expose_event), NULL);
+    // g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+ //   g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(CloseWindow), window);        
+g_message("2");
     gtk_widget_show_all (window);
-    gtk_main ();
+g_message("3");
+    // gtk_main ();
+g_message("4");
+    alreadyComputed=0;
     return;
 }
 
@@ -8598,7 +8523,8 @@ GTKDumpStatcontext(int game)
     listOLD *pl;
     GraphData *gd = CreateGraphData();
 #endif
-    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+    // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
 
     if (!fAutoDB) {
         gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
