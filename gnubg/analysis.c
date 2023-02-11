@@ -1568,6 +1568,14 @@ DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, con
 }
 
 extern void
+CommandShowMWC(char *UNUSED(sz))
+{
+
+    PlotMWC();
+
+}
+
+extern void
 CommandShowStatisticsMatch(char *UNUSED(sz))
 {
     char szOutput[STATCONTEXT_MAXSIZE];

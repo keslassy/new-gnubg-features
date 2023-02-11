@@ -992,6 +992,7 @@ extern void CommandShowMatchEquityTable(char *);
 extern void CommandShowMatchInfo(char *);
 extern void CommandShowMatchLength(char *);
 extern void CommandShowMatchResult(char *);
+extern void CommandShowMWC(char *);
 extern void CommandShowOneSidedRollout(char *);
 extern void CommandShowOutput(char *);
 extern void CommandShowPanels(char *);
@@ -1068,5 +1069,7 @@ extern int fWithinSmartOpen; /* whether we are within the SmartOpen function: if
 extern int AddKeyName(const char sz[]); /* function that adds a key player name to the array*/
 extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/
 extern void DisplayKeyNames(void); /* debugging function to display the current key player names in the array*/
+
+extern void PlotMWC(void); /* plot MWC throughout the match */
 
 #endif	/* BACKGAMMON_H */

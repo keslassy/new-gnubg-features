@@ -171,6 +171,7 @@ typedef enum {
     CMD_SHOW_KLEINMAN,
     CMD_SHOW_MANUAL_ABOUT,
     CMD_SHOW_MANUAL_WEB,
+    CMD_SHOW_MWC,
     CMD_SHOW_ROLLS,
     CMD_SHOW_STATISTICS_MATCH,
     CMD_SHOW_TEMPERATURE_MAP,
@@ -382,6 +383,7 @@ CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_MATCHEQUITYTABLE, "show matchequitytable");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_KLEINMAN, "show kleinman"); /* opens race theory window */
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_MANUAL_ABOUT, "show manual about");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_MANUAL_WEB, "show manual web");
+CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_MWC, "show mwc");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_ROLLS, "show rolls");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_STATISTICS_MATCH, "show statistics match");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_TEMPERATURE_MAP, "show temperaturemap");
@@ -462,6 +464,7 @@ static const char *aszCommands[NUM_CMDS] = {
     "show kleinman",            /* opens race theory window */
     "show manual about",
     "show manual web",
+    "show mwc",
     "show rolls",
     "show statistics match",
     "show temperaturemap",
@@ -4013,6 +4016,8 @@ static GtkActionEntry actionEntries[] = {
     {"BatchAnalyseAction", NULL, N_("Batch analyse..."), NULL, NULL, G_CALLBACK(GTKBatchAnalyse)},
     {"MatchOrSessionStatsAction", NULL, N_("Match or session statistics"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_STATISTICS_MATCH)},
+    {"PlotMWCAction", NULL, N_("Plot MWC"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MWC)},
     {"AddMatchOrSessionStatsToDBAction", GTK_STOCK_ADD, N_("Add match or session to database"), NULL, NULL,
      G_CALLBACK(GtkRelationalAddMatch)},
     {"ShowRecordsAction", NULL, N_("Show Records"), NULL, NULL, G_CALLBACK(GtkShowRelational)},
@@ -4253,6 +4258,8 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/Match or session statistics"), NULL, Command,
      CMD_SHOW_STATISTICS_MATCH, NULL, NULL},
+    {N_("/_Analyse/Plot MWC"), NULL, Command,
+     CMD_SHOW_MWC, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/Add match or session to database"), NULL,
      GtkRelationalAddMatch, 0,
@@ -7668,6 +7675,8 @@ GTKSet(void *p)
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_STATISTICS_MATCH),
                                  !ListEmpty(&lMatch));
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MWC),
+                                 !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MATCHEQUITYTABLE), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_CALIBRATION), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SWAP_PLAYERS), !ListEmpty(&lMatch));
@@ -8380,6 +8389,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_device_to_user_distance (cr, &dx, &dy);
         cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
 
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+
         /* Draws x and y axis */
         cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
@@ -8450,7 +8461,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         int jTemp=0;
         for (int i = 0; i < MWCArrayLength; i ++) {
             if(NewGame[i]) {
-                j++;
+                jTemp++;
                 cairo_move_to(cr, trueX((((double)i)+0.5) / (MWCArrayLength-1)), trueY(0.9)+fontSize/2);
                 sprintf(strTemp, "game %d", jTemp);
                 cairo_show_text(cr, strTemp);             
@@ -8474,14 +8485,14 @@ void CloseWindow(GObject * UNUSED(po), GtkWidget * pw)
     gtk_widget_destroy(pw);
 }
 
-void PlotGraph(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
+extern void PlotMWC(void)
 {
 
     GtkWidget *window;
     GtkWidget *da;
 
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-      gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
+    gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
     gtk_window_set_title (GTK_WINDOW (window), "Graph drawing");
     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -8492,19 +8503,21 @@ void PlotGraph(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     da = gtk_drawing_area_new ();
     gtk_container_add (GTK_CONTAINER (window), da);
-g_message("1");
+// g_message("1");
     g_signal_connect (G_OBJECT (da), "expose-event", G_CALLBACK (on_expose_event), NULL);
     // g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(gtk_main_quit), NULL);
  //   g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(CloseWindow), window);        
-g_message("2");
+// g_message("2");
     gtk_widget_show_all (window);
-g_message("3");
+// g_message("3");
     // gtk_main ();
-g_message("4");
+// g_message("4");
     alreadyComputed=0;
     return;
 }
-
+void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
+    PlotMWC();
+}
 
 
 
@@ -8523,6 +8536,7 @@ GTKDumpStatcontext(int game)
     listOLD *pl;
     GraphData *gd = CreateGraphData();
 #endif
+    /* made non-modal so we can close the MWC-plot window after opening it */
     // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
     pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
 
@@ -8534,7 +8548,7 @@ GTKDumpStatcontext(int game)
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
                     addToDbButton = gtk_button_new_with_label(_("Plot MWC through match")));
-    g_signal_connect(addToDbButton, "clicked", G_CALLBACK(PlotGraph), NULL);
+    g_signal_connect(addToDbButton, "clicked", G_CALLBACK(PlotMWCTrigger), NULL);
 
 
     pwNotebook = gtk_notebook_new();
@@ -8593,10 +8607,10 @@ GTKDumpStatcontext(int game)
                                           " Chequer error in green, cube error in blue."));
     }
 #endif
-    // //pwPlot = PlotGraph();
+    // //pwPlot = PlotMWC();
     // gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwPlot,
     //                          gtk_label_new(_("Match Winning Chances")));
-    // PlotGraph(pwPlot);
+    // PlotMWC(pwPlot);
 
     pwUsePanels = gtk_check_button_new_with_label(_("Split statistics into panels"));
     gtk_widget_set_tooltip_text(pwUsePanels, _("Show data in a single list or split into several panels"));

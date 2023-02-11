@@ -1402,6 +1402,8 @@ command  acShow[] = {
          "and the entire match"), NULL, NULL },
     { "met", CommandShowMatchEquityTable, 
       N_("Synonym for `show matchequitytable'"), szOPTVALUE, NULL },
+    { "mwc", CommandShowMWC,
+      N_("Show plot of MWC throughout match"), NULL, NULL },
     { "onesidedrollout", CommandShowOneSidedRollout, 
       N_("Show misc race theory"), NULL, NULL },
     { "output", CommandShowOutput, N_("Show how results will be formatted"),
