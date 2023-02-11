@@ -161,6 +161,7 @@ NewMoveRecord(void)
     pmr->ml.cMoves = 0;
     pmr->ml.amMoves = NULL;
     pmr->MoneyCubeDecPtr = NULL;
+    pmr->mwc=-1.0; /*initialization*/
 
     /* movenormal */
     pmr->n.stMove = SKILL_NONE;

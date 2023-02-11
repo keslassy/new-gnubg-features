@@ -1075,17 +1075,27 @@ SmartAnalyze(void)
 #define WIDTH   640
 #define HEIGHT  480
 
+static GdkRectangle da;            /* GtkDrawingArea size */
+static double margin=0.05;
+
 // #define ZOOM_X  100.0
 // #define ZOOM_Y  100.0
 
-gfloat trueX (gfloat x, gfloat width, gfloat margin) {
-    // i*da.width/(n-1)*19/20+da.width/20
-    return (width*(x*(1-margin)+margin));
+gfloat trueX (double x) { 
+    // (i/(n-1))*da.width*19/20+da.width/20
+    /*
+    x=0->X=margin*d
+    x=1->X=d
+    */       
+    return (da.width*(x*(1-margin)+margin));
 }
 
-gfloat trueY (gfloat y, gfloat width, gfloat margin) {
-    // i*da.width/(n-1)*19/20+da.width/20
-    return -(y*width*(1-margin)+width*margin);
+gfloat trueY (double y) { //}, gfloat h, gfloat margin) {
+   /*
+   y=0->-h(1-margin) on screen->Y=+h(1-margin)
+   y=1->Y=0
+   */
+    return (da.height*(1-y)*(1-margin));
 }
 
 
@@ -1123,10 +1133,10 @@ gfloat trueY (gfloat y, gfloat width, gfloat margin) {
 // }
 
 static gboolean
-on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
 {
     cairo_t *cr = gdk_cairo_create (widget->window);
-    GdkRectangle da;            /* GtkDrawingArea size */
+    // GdkRectangle da;            /* GtkDrawingArea size */
     gdouble dx = 3.0, dy = 3.0; /* Pixels between each point */
     gdouble clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
@@ -1169,9 +1179,10 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
     matchstate * pmsT;
     pmsT=malloc(sizeof(matchstate));
     (*pmsT)=ms;
-    cubeinfo ci;
+    // cubeinfo ci;
     float mwcTemp;
     int i=0;
+    // double margin=0.05;
     // int player;
 
     for (plCurGame = lMatch.plNext; plCurGame != &lMatch; plCurGame = plCurGame->plNext) {
@@ -1185,29 +1196,34 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
             // g_message("1, pmr->mt=%d",pmrT->mt);
             // int numMoves = NumberMovesGame(plG);
             // g_message("moves in game=%u",numMoves);
-            if(pmrT) {
-                            // g_message("2");
-                FixMatchState(pmsT, pmrT);
-                // ApplyMoveRecord(pmsT, plCurGame, pmrT);
-                            // g_message("3");
-                if (pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
-                    if (pmrT->fPlayer != pmsT->fMove) {
-                        SwapSides(pmsT->anBoard);
-                        pmsT->fMove = pmrT->fPlayer;
-                    }
-                            // g_message("4");
-                    GetMatchStateCubeInfo(&ci, pmsT);
-                            // g_message("5");
-                    // player = pmrT->fPlayer? 1:-1;
-                    //mwcTemp=player * pmrT->ml.amMoves[pmrT->n.iMove].rScore;
-                     mwcTemp= eq2mwc(pmrT->ml.amMoves[pmrT->n.iMove].rScore, &ci);
-                    MWCArray[i]=pmrT->fPlayer? (double) (mwcTemp): (double) (1.0f-mwcTemp);
-                    g_message("i=%d: %f->%f=>%f",i,pmrT->ml.amMoves[pmrT->n.iMove].rScore,mwcTemp, MWCArray[i]);
-                    i++;
-                    if(i==n){
-                        g_message("too big!");
-                        goto myjump;
-                    }
+            if (pmrT && pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
+            // if(pmrT) {
+            //                 // g_message("2");
+            //     FixMatchState(pmsT, pmrT);
+            //     // ApplyMoveRecord(pmsT, plCurGame, pmrT);
+            //                 // g_message("3");
+            //     if (pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
+                    // if (pmrT->fPlayer != pmsT->fMove) {
+                    //     SwapSides(pmsT->anBoard);
+                    //     pmsT->fMove = pmrT->fPlayer;
+                    // }
+                    //         // g_message("4");
+                    // GetMatchStateCubeInfo(&ci, pmsT);
+                    //         // g_message("5");
+                    // // player = pmrT->fPlayer? 1:-1;
+                    // //mwcTemp=player * pmrT->ml.amMoves[pmrT->n.iMove].rScore;
+                    //  mwcTemp= eq2mwc(pmrT->ml.amMoves[pmrT->n.iMove].rScore, &ci);
+                mwcTemp=pmrT->mwc;
+                // if (mwcTemp<0){
+                //     g_message("MWC error");
+                //     return FALSE;
+                // }
+                MWCArray[i]=pmrT->fPlayer? (double) (mwcTemp): (double) (1.0f-mwcTemp);
+                g_message("i=%d: %f=>%f",i,mwcTemp);
+                i++;
+                if(i==n){
+                    g_message("too big!");
+                    goto myjump;
                 }
             }
         }
@@ -1221,58 +1237,38 @@ myjump:
     n=i;
     g_message("n=%d",n);
 
-
     // MWCArray[1]=0.3;
     // MWCArray[2]=0.2;
     // MWCArray[3]=-0.2;
     // MWCArray[4]=-1.0;
 
     if(n>1){
-        /*
-        i->i*da.width/(n-1)*19/20+da.width/20
-        [(x-d/20)*20/19]/d=(i/(n-1))
-        
-        */
-
-        // /* Change the transformation matrix */
-        //  cairo_translate (cr, da.width/20, da.height*19/20);
-        // // cairo_translate (cr, 0, 0);
-        // // cairo_translate (cr, 0, da.height / 2);
-        // gdouble scaleX = da.width/(n-1)*19/20;
-        // gdouble scaleY=da.height*19/20;
-        // cairo_scale (cr, scaleX, scaleY ); //ZOOM_X, -ZOOM_Y);
-        // // dx=dx/scaleX;
-        // // dy=dy/scaleY;
-        // // cairo_translate (cr, da.width / 2, da.height / 2);
-        // // cairo_scale (cr, da.width / 2, da.height / 2); //ZOOM_X, -ZOOM_Y);
 
         /* Determine the data points to calculate (ie. those in the clipping zone */
         cairo_device_to_user_distance (cr, &dx, &dy);
         cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
-        cairo_set_line_width (cr, dy*3);
-
-
-
-
-        cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
-        cairo_move_to (cr, clip_x1, 0.0);
-        cairo_line_to (cr, clip_x2, 0.0);
-        cairo_move_to (cr, clip_x1+1/20*( clip_x2- clip_x1), clip_y1);
-        cairo_line_to (cr, clip_x1+1/20*( clip_x2- clip_x1), clip_y2);
-        // cairo_move_to (cr, trueX(clip_x1, da.width,1/20), 0.0);
-        // cairo_line_to (cr, trueX(clip_x2, da.width,1/20), 0.0);
-        // cairo_move_to (cr, trueX(clip_x1, da.width,1/20), trueY(clip_y1, da.height,1/20));
-        // cairo_line_to (cr, trueX(clip_x1, da.width,1/20), trueY(clip_y2, da.height,1/20));
-
+        cairo_set_line_width (cr, dy);
 
         /* Draws x and y axis */
+        // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
         cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
-        // // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
-        cairo_move_to (cr, clip_x1, 0.0);
-        cairo_line_to (cr, clip_x2, 0.0);
-        cairo_move_to (cr, clip_x1, clip_y1);
-        cairo_line_to (cr, clip_x1, clip_y2);
+        cairo_move_to (cr, trueX(0.0), trueY(0.0));
+        cairo_line_to (cr, trueX(0.0), trueY(1.0));
+        cairo_move_to (cr, trueX(0.0), trueY(0.0));
+        cairo_line_to (cr, trueX(1.0), trueY(0.0));
+        // cairo_move_to (cr, clip_x1, clip_y1/3);
+        // cairo_line_to (cr, clip_x2, clip_y2*2/3);
         cairo_stroke (cr);
+
+
+        // /* Draws x and y axis */
+        // cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
+        // // // cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
+        // cairo_move_to (cr, clip_x1, 0.0);
+        // cairo_line_to (cr, clip_x2, 0.0);
+        // cairo_move_to (cr, clip_x1, clip_y1);
+        // cairo_line_to (cr, clip_x1, clip_y2);
+        // cairo_stroke (cr);
         
 
 
@@ -1280,13 +1276,13 @@ myjump:
         // cairo_line_to (cr, clip_x2, 0.0);
         // cairo_move_to (cr, 0.0, clip_y1);
         // cairo_line_to (cr, 0.0, clip_y2);
-        cairo_stroke (cr);
+        // cairo_stroke (cr);
 
 
         /* Link each data point */
 
         for (int i = 0; i < n; i ++) {
-            cairo_line_to (cr, trueX(((gdouble)i/(n-1)), da.width,1/20), trueY(MWCArray[i], da.height,1/20));
+            cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(MWCArray[i]));
             // cairo_line_to (cr, (gdouble)i, -MWCArray[i]);
             g_message("i=%d,val=%f",i,MWCArray[i]);
         }
@@ -1294,27 +1290,96 @@ myjump:
         cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
         cairo_stroke (cr);
 
-        cairo_set_source_rgb (cr, 0.1, 0.1, 0.1);
-        /* axis markers*/
-        for (int i = 1; i < n; i ++) {
-            cairo_move_to (cr, (gdouble)i, -0.03);
-            cairo_line_to (cr, (gdouble)i, 0.03);
+        cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
+        cairo_set_line_width (cr, dy/3);
+        /* axis markers or grid*/
+        for (int i = 10; i < n; i=i+10) {
+            // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
+            // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
+            cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(0.0));
+            cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(1.0));
             /* Draw the curve */
             cairo_stroke (cr);
         }
-    
+        for (double y = 0.1; y < 1; y=y+0.1) {
+            // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
+            // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
+            cairo_move_to (cr, trueX(0.0), trueY(y));
+            cairo_line_to (cr, trueX(1.0), trueY(y));
+            /* Draw the curve */
+            cairo_stroke (cr);
+        }    
         // for (i = clip_x1; i < clip_x2; i += dx)
         //     cairo_line_to (cr, i, -myf (i));
 
 
         //   do_drawing(cr);
-            g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f",clip_x1,clip_x2,clip_y1,clip_y2,dx,dy);
+            g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
+                clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
     } else 
         outputerrf("not enough points for plot");
 
     cairo_destroy (cr);
-    return FALSE;
+    return TRUE;
 }
+
+// static gboolean
+// on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+// {
+//     cairo_t *cr = gdk_cairo_create (widget->window);
+//     GdkRectangle da;            /* GtkDrawingArea size */
+//     gdouble dx = 5.0, dy = 5.0; /* Pixels between each point */
+//     gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+//     gint unused = 0;
+
+//     /* Define a clipping zone to improve performance */
+//     cairo_rectangle (cr,
+//             event->area.x,
+//             event->area.y,
+//             event->area.width,
+//             event->area.height);
+//     cairo_clip (cr);
+
+//     /* Determine GtkDrawingArea dimensions */
+//     gdk_window_get_geometry (widget->window,
+//             &da.x,
+//             &da.y,
+//             &da.width,
+//             &da.height,
+//             &unused);
+
+//     /* Draw on a black background */
+//     cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+//     cairo_paint (cr);
+
+//     /* Change the transformation matrix */
+//     cairo_translate (cr, da.width / 2, da.height / 2);
+//     cairo_scale (cr, ZOOM_X, -ZOOM_Y);
+
+//     /* Determine the data points to calculate (ie. those in the clipping zone */
+//     cairo_device_to_user_distance (cr, &dx, &dy);
+//     cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
+//     cairo_set_line_width (cr, dx);
+
+//     /* Draws x and y axis */
+//     cairo_set_source_rgb (cr, 0.0, 1.0, 0.0);
+//     cairo_move_to (cr, clip_x1, 0.0);
+//     cairo_line_to (cr, clip_x2, 0.0);
+//     cairo_move_to (cr, 0.0, clip_y1);
+//     cairo_line_to (cr, 0.0, clip_y2);
+//     cairo_stroke (cr);
+
+//     /* Link each data point */
+//     for (i = clip_x1; i < clip_x2; i += dx)
+//         cairo_line_to (cr, i, f (i));
+
+//     /* Draw the curve */
+//     cairo_set_source_rgba (cr, 1, 0.2, 0.2, 0.6);
+//     cairo_stroke (cr);
+
+//     cairo_destroy (cr);
+//     return FALSE;
+// }
 
 void PlotGraph(void)
 {

@@ -1285,6 +1285,7 @@ ParseOldmove(char *sz, int fInvert)
         pmr->anDice[0] = sz[4] - '0';
         pmr->anDice[1] = sz[6] - '0';
         pmr->fPlayer = iPlayer;
+        pmr->mwc=-2.0; /*initialization*/
 
         if (!StrNCaseCmp(sz + 9, "can't move", 10))
             c = 0;

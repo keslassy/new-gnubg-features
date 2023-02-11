@@ -723,8 +723,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     }
                     MT_Exclusive();
                     CopyMoveList(&pmr->ml, &ml);
-                    if (ml.cMoves)
+                    if (ml.cMoves){
                         g_free(ml.amMoves);
+                    }
                 }
 
             }
@@ -732,6 +733,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
                 if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
                     rChequerSkill = pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore;
+                        /* keep mwc in data structure */
+                        pmr->mwc= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
 
                     break;
                 }

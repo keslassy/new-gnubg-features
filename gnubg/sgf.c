@@ -1106,6 +1106,7 @@ RestoreNode(listOLD * pl)
     skilltype ast[2] = { SKILL_NONE, SKILL_NONE };
     lucktype lt = LUCK_NONE;
     float rLuck = ERR_VAL;
+    float mwc=-3.0;
 
 
     for (pl = pl->plNext; (pp = pl->p); pl = pl->plNext) {
@@ -1272,6 +1273,9 @@ RestoreNode(listOLD * pl)
         else if (pp->ach[0] == 'G' && pp->ach[1] == 'W')
             /* good for white */
             lt = *((char *) pp->pl->plNext->p) == '2' ? LUCK_VERYBAD : LUCK_BAD;
+        /* MWC */
+        else if (pp->ach[0] == 'M' && pp->ach[1] == 'W')
+            mwc = (float) g_ascii_strtod(pp->pl->plNext->p, NULL);
     }
 
     if (fSetBoard && !pmr) {
@@ -1306,6 +1310,7 @@ RestoreNode(listOLD * pl)
             pmr->stCube = ast[1];
             pmr->lt = fPlayer ? lt : LUCK_VERYGOOD - lt;
             pmr->rLuck = rLuck;
+            pmr->mwc=mwc;
             break;
 
         case MOVE_DOUBLE:
@@ -1892,6 +1897,16 @@ WriteMoveAnalysis(FILE * pf, int fPlayer, movelist * pml, unsigned int iMove)
 }
 
 static void
+WriteMWC(FILE * pf, float mwc)
+{
+    gchar buffer[G_ASCII_DTOSTR_BUF_SIZE];
+    if (mwc>=0.0 && mwc<=1.0) {
+        g_ascii_formatd(buffer, sizeof(buffer), "%.5f", mwc);
+        fprintf(pf, "MW[%s]", buffer);
+    }
+}
+
+static void
 WriteLuck(FILE * pf, int fPlayer, float rLuck, lucktype lt)
 {
     gchar buffer[G_ASCII_DTOSTR_BUF_SIZE];
@@ -2201,7 +2216,7 @@ SaveGame(FILE * pf, listOLD * plGame)
             /* FIXME: separate skill for cube and move */
             WriteSkill(pf, pmr->n.stMove);
             WriteSkillCube(pf, pmr->stCube);
-
+            WriteMWC(pf,pmr->mwc);
             break;
 
         case MOVE_DOUBLE:

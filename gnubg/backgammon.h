@@ -200,6 +200,7 @@ typedef struct {
     xmovesetboard sb;           /* setting up board */
     xmovesetcubeval scv;        /* setting cube */
     xmovesetcubepos scp;        /* setting cube owner */
+    double mwc;     /* added for easy access; =-1.0 at initialization */
 } moverecord;
 
 
