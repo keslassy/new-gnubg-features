@@ -8241,14 +8241,13 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
     // // cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
     // cairo_paint (cr);
 
-
     if(MWCLength>1){
 
         /* Determine the data points to calculate (ie. those in the clipping zone */
         cairo_device_to_user_distance (cr, &dx, &dy);
         cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
-
-        //cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+        cairo_set_font_size(cr, fontSize);
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
         /* Draws x and y axes */
         cairo_set_line_width (cr, dy);
@@ -8263,6 +8262,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_stroke (cr);
 
         /* Draw the main plot: link each data point */
+        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         for (int i = 0; i < MWCLength; i ++) {
             if(mwcMoves[i]>=0 && mwcMoves[i]<=1) {
                 cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcMoves[i]));
@@ -8270,7 +8270,6 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 // g_message("i=%d,val=%f",i,mwcMoves[i]);
             }
         }
-        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
         cairo_stroke (cr);
@@ -8314,6 +8313,24 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         }
         cairo_stroke (cr);
 
+
+        /* legend */
+            /*1:plot*/
+        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+        cairo_move_to (cr, trueX(0.1), trueY(1.0+margin2/2));
+        cairo_line_to (cr, trueX(0.15), trueY(1.0+margin2/2));
+        cairo_stroke (cr);
+        cairo_move_to(cr,  trueX(0.17), trueY(1.0+margin2/2)+0.5*fontSize);
+        cairo_show_text(cr, "MWC");
+            /*2:cumul. skill*/
+        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        cairo_move_to (cr, trueX(0.3), trueY(1.0+margin2/2));
+        cairo_line_to (cr, trueX(0.35), trueY(1.0+margin2/2));
+        cairo_stroke (cr);
+        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+        cairo_move_to(cr,  trueX(0.37), trueY(1.0+margin2/2)+0.5*fontSize);
+        cairo_show_text(cr, "Cumulative move skill difference");
+
         /* grid*/
         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
         cairo_set_line_width (cr, dy/3);
@@ -8347,7 +8364,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
         /* axis labels */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_set_font_size(cr, fontSize);
+
         for (int i = 10; i < MWCLength; i=i+10) {
             cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(0.0));
             cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(1.0));
@@ -8374,6 +8391,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 cairo_show_text(cr, strTemp);             
             }
         }
+
+
 
         // g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
         //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
