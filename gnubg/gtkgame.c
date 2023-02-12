@@ -7676,7 +7676,8 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_STATISTICS_MATCH),
                                  !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MWC),
-                                 !ListEmpty(&lMatch));
+                                    !ListEmpty(&lMatch) && (ms.nMatchTo > 0));
+
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MATCHEQUITYTABLE), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_CALIBRATION), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SWAP_PLAYERS), !ListEmpty(&lMatch));
@@ -8427,7 +8428,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
         //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
     } else 
-        outputerrf(_("Please run analysis again (not enough points for plot)"));
+        outputerrf(_("Please run analysis again (not enough datapoints for plot).\n"));
 
     cairo_destroy (cr);
     return FALSE;
@@ -8498,70 +8499,76 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
     /*   First compute the needed values  */
 
     // if(!alreadyComputed) {
-    for (plCurGame = lMatch.plNext; plCurGame != &lMatch; plCurGame = plCurGame->plNext) {
-                    // g_message("new game, i=%d",i);
-        plStartingMove=plCurGame->p;
-        NewGame[i]=1;
-    // for (plM = plMatch->plNext; plM != plMatch; plM = plM->plNext) {
-        for (plCurMove = plStartingMove->plNext; plCurMove != plStartingMove; plCurMove = plCurMove->plNext) {
-        // for (pl = plGame->plNext; pl != plGame; pl = pl->plNext)
-            // g_message("new move, i=%d",i);
-            pmrT = plCurMove->p;
-            // g_message("1, pmr->mt=%d",pmrT->mt);
-            // int numMoves = NumberMovesGame(plG);
-            // g_message("moves in game=%u",numMoves);
-            // if (pmrT && pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
-                // mwcTemp=(double) pmrT->mwc.mwcMove;
-                // if (mwcTemp<0){
-                //     g_message("MWC error");
-                //     return FALSE;
-                // }
-            // /* condition: "if either the mwcMove or the mwcCube looks valid"
-            // (the last sub-condition below on the mt is probably unneeded)
-            // */
-            // if (pmrT && ( (pmrT->mwc.mwcMove>=0.0 && pmrT->mwc.mwcMove <= 1.0) ||
-            //             (pmrT->mwc.mwcCube>=0.0 && pmrT->mwc.mwcCube <= 1.0) )
-            //          && (pmrT->mt == MOVE_NORMAL || pmrT->mt == MOVE_DOUBLE || 
-            //             pmrT->mt == MOVE_TAKE || pmrT->mt == MOVE_DROP || 
-            //             pmrT->mt == MOVE_RESIGN) ){
-            /* valid cube decision*/
-            if (pmrT && (pmrT->mwc.mwcCube>=0.0 && pmrT->mwc.mwcCube <= 1.0) ) {
-                mwcD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcCube): (1.0-((double) pmrT->mwc.mwcCube));
-                mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestCube): (1.0-((double) pmrT->mwc.mwcBestCube));
-                mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
-                CubeD[i]=1;
-                g_message("add cube: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
-                i++;
-            }
-            /* valid move decision */
-            if(pmrT && (pmrT->mwc.mwcMove>=0.0 && pmrT->mwc.mwcMove <= 1.0)) {
-                mwcD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcMove): (1.0-((double) pmrT->mwc.mwcMove));
-                mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestMove): (1.0-((double) pmrT->mwc.mwcBestMove));
-                mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
-                // if(mwcD[i]>=0 && mwcD[i]<=1) 
-                //     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
-                // else
-                //     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1];
-                g_message("add move: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
-                i++;
-            }
-
-            if(i>=MWCLength-1){
-                    outputerrf(_("Error: Too many decisions! Shouldn't happen..."));
-                    return;
+    if(ms.nMatchTo == 0)
+        outputerrf(_("This plot is only for regular matches, not money games."));
+    else {
+        for (plCurGame = lMatch.plNext; plCurGame != &lMatch; plCurGame = plCurGame->plNext) {
+                        // g_message("new game, i=%d",i);
+            plStartingMove=plCurGame->p;
+            NewGame[i]=1;
+        // for (plM = plMatch->plNext; plM != plMatch; plM = plM->plNext) {
+            for (plCurMove = plStartingMove->plNext; plCurMove != plStartingMove; plCurMove = plCurMove->plNext) {
+            // for (pl = plGame->plNext; pl != plGame; pl = pl->plNext)
+                // g_message("new move, i=%d",i);
+                pmrT = plCurMove->p;
+                // g_message("1, pmr->mt=%d",pmrT->mt);
+                // int numMoves = NumberMovesGame(plG);
+                // g_message("moves in game=%u",numMoves);
+                // if (pmrT && pmrT->mt == MOVE_NORMAL && pmrT->ml.cMoves>0) {
+                    // mwcTemp=(double) pmrT->mwc.mwcMove;
+                    // if (mwcTemp<0){
+                    //     g_message("MWC error");
+                    //     return FALSE;
+                    // }
+                // /* condition: "if either the mwcMove or the mwcCube looks valid"
+                // (the last sub-condition below on the mt is probably unneeded)
+                // */
+                // if (pmrT && ( (pmrT->mwc.mwcMove>=0.0 && pmrT->mwc.mwcMove <= 1.0) ||
+                //             (pmrT->mwc.mwcCube>=0.0 && pmrT->mwc.mwcCube <= 1.0) )
+                //          && (pmrT->mt == MOVE_NORMAL || pmrT->mt == MOVE_DOUBLE || 
+                //             pmrT->mt == MOVE_TAKE || pmrT->mt == MOVE_DROP || 
+                //             pmrT->mt == MOVE_RESIGN) ){
+                /* valid cube decision*/
+                if (pmrT && (pmrT->mwc.mwcCube>=0.0 && pmrT->mwc.mwcCube <= 1.0) ) {
+                    mwcD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcCube): (1.0-((double) pmrT->mwc.mwcCube));
+                    mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestCube): (1.0-((double) pmrT->mwc.mwcBestCube));
+                    mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
+                    CubeD[i]=1;
+                    g_message("add cube: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
+                    i++;
                 }
+                /* valid move decision */
+                if(pmrT && (pmrT->mwc.mwcMove>=0.0 && pmrT->mwc.mwcMove <= 1.0)) {
+                    mwcD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcMove): (1.0-((double) pmrT->mwc.mwcMove));
+                    mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestMove): (1.0-((double) pmrT->mwc.mwcBestMove));
+                    mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
+                    // if(mwcD[i]>=0 && mwcD[i]<=1) 
+                    //     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
+                    // else
+                    //     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1];
+                    g_message("add move: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
+                    i++;
+                }
+
+                if(i>=MWCLength-1){
+                        outputerrf(_("Error: Too many decisions! Shouldn't happen..."));
+                        return;
+                    }
+            }
         }
     }
-
     // myjump:
         // free(pmsT);
-        MWCLength=i;
+    MWCLength=i;
         // g_message("n=%d",MWCLength);
         // alreadyComputed=1;
-    
 
     /*   Now draw  */
-    DrawMWC();//pwParent);
+    if(i>1) 
+        DrawMWC();//pwParent);
+    else
+        outputerrf(_("Please run analysis again (not enough datapoints for plot).\n"));
+
     // alreadyComputed=0;
     return;
 }
@@ -8606,11 +8613,11 @@ GTKDumpStatcontext(int game)
                         addToDbButton = gtk_button_new_with_label(_("Add to DB")));
         g_signal_connect(addToDbButton, "clicked", G_CALLBACK(GtkRelationalAddMatch), pwStatDialog);
     }
-
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
-        mwcButton = gtk_button_new_with_label(_("Plot MWC")));
-    g_signal_connect(mwcButton, "clicked", G_CALLBACK(PlotMWCTrigger), NULL);
-
+    if(ms.nMatchTo > 0) {
+        gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
+            mwcButton = gtk_button_new_with_label(_("Plot MWC")));
+        g_signal_connect(mwcButton, "clicked", G_CALLBACK(PlotMWCTrigger), NULL);
+    }
 
     pwNotebook = gtk_notebook_new();
     gtk_notebook_set_scrollable(GTK_NOTEBOOK(pwNotebook), TRUE);
