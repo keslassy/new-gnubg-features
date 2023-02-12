@@ -8189,7 +8189,7 @@ double trueY (double y) { //}, gfloat h, gfloat margin) {
 void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
     {
         double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
-        double side=5.0;
+        double side=3.0;
         double degrees=0.5;
 
         double x1 = end_x + side * cos(angle - degrees);
@@ -8415,9 +8415,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 void DrawMWC (void) {
     GtkWidget *window;
     GtkWidget *da;
-    /*    //window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
-    */
-    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
     gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
@@ -8426,9 +8425,9 @@ void DrawMWC (void) {
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(CloseWindow), window);
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
 
-
     da = gtk_drawing_area_new ();
-    gtk_container_add (GTK_CONTAINER (window), da);
+    gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_MAIN)), da);
+    //gtk_container_add (GTK_CONTAINER (window), da);
 // g_message("1");
     g_signal_connect (G_OBJECT (da), "expose-event", G_CALLBACK (on_expose_event), NULL);
     // g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(gtk_main_quit), NULL);
