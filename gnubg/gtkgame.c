@@ -8133,7 +8133,7 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
 static GdkRectangle da;            /* GtkDrawingArea size */
 static double margin1x=0.08;
 static double margin2x=0.05;
-static double margin1y=0.05;
+static double margin1y=0.08;
 static double margin2y=0.05;
 // static int alreadyComputed=0; /* when drawing it computes all arrays twice :( )*/
 
@@ -8343,19 +8343,19 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         /* legend */
             /*1:plot*/
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to (cr, trueX(0.1), trueY(1.0+margin2y/2));
-        cairo_line_to (cr, trueX(0.15), trueY(1.0+margin2y/2));
+        cairo_move_to (cr, trueX(0.05), trueY(1.0+margin2y/2));
+        cairo_line_to (cr, trueX(0.1), trueY(1.0+margin2y/2));
         cairo_stroke (cr);
-        cairo_move_to(cr,  trueX(0.17), trueY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "MWC");
+        cairo_move_to(cr,  trueX(0.12), trueY(1.0+margin2y/2)+0.3*fontSize);
+        cairo_show_text(cr, "Match winning chances");
             /*2:cumul. skill*/
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
-        cairo_move_to (cr, trueX(0.3), trueY(1.0+margin2y/2));
-        cairo_line_to (cr, trueX(0.35), trueY(1.0+margin2y/2));
+        cairo_move_to (cr, trueX(0.5), trueY(1.0+margin2y/2));
+        cairo_line_to (cr, trueX(0.55), trueY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to(cr,  trueX(0.37), trueY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "Cumulative move skill difference");
+        cairo_move_to(cr,  trueX(0.57), trueY(1.0+margin2y/2)+0.3*fontSize);
+        cairo_show_text(cr, "Cumulative skill difference");
 
         /* grid*/
         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
@@ -8396,16 +8396,17 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             }
         }
 
-        /* axis labels */
+        /* text: axis labels */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-
         for (int i = 10; i < MWCLength; i=i+10) {
             cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(0.0));
             cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(1.0));
-            cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.0)+1.5*fontSize);
+            cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.0)+1.25*fontSize);
             sprintf(strTemp, "%d", i);
             cairo_show_text(cr, strTemp);             
-        }        
+        }     
+            cairo_move_to(cr, trueX(0.5)-2*dx, trueY(0.0)+2.5*fontSize);
+            cairo_show_text(cr, "decision (cube or move)");              
         for (int j = 0; j <=10; j++) {
         // for (double y = 0.0; y <= 1.0; y=y+0.1) {
             cairo_move_to(cr, trueX(-0.08), trueY(((double)j)/10)+0.3*fontSize);
