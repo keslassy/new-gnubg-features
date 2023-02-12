@@ -8579,7 +8579,7 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
                     mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestCube): (1.0-((double) pmrT->mwc.mwcBestCube));
                     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
                     CubeD[i]=1;
-                    g_message("add cube: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
+                    // g_message("add cube: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
                     i++;
                 }
                 /* valid move decision */
@@ -8591,7 +8591,7 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
                     //     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
                     // else
                     //     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1];
-                    g_message("add move: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
+                    // g_message("add move: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
                     i++;
                 }
 

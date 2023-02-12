@@ -1961,7 +1961,7 @@ The function updates the decision text in each square.
         if (width>0 && height>0)
             rescaleFactor=fminf(((float)allocation.width-4.0f)*(float)PANGO_SCALE/((float)width),((float)allocation.height-4.0f)*(float)PANGO_SCALE/((float)height));
         else {
-            g_message("error zero width/height\n");
+            outputerrf(_("Error: zero width/height\n"));
             rescaleFactor=0.5f;
             }
         pango_font_description_set_size(description, (gint)(fontsize*rescaleFactor*PANGO_SCALE));

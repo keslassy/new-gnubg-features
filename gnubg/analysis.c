@@ -688,8 +688,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             pmr->stCube = Skill(rSkill);
             pmr->mwc.mwcCube= eq2mwc(arDouble[OUTPUT_NODOUBLE], &ci);
             pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
-            g_message("CUBE(MOVE_NORMAL): pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
-                pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);            
+            // g_message("CUBE(MOVE_NORMAL): pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+            //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);            
 
         } else
             pmr->CubeDecPtr->esDouble.et = EVAL_NONE;
@@ -795,10 +795,10 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 doubleError[1] = arDouble[OUTPUT_OPTIMAL];
                 doubleError[2] = arDouble[OUTPUT_TAKE];
                 doubleError[3] = arDouble[OUTPUT_DROP];
-                g_message("doubled: (%f %f %f),(%f %f %f)",
-                    arDouble[OUTPUT_OPTIMAL],arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP],
-                    eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci),eq2mwc(arDouble[OUTPUT_TAKE], &ci),
-                    eq2mwc(arDouble[OUTPUT_DROP], &ci) );
+                //  g_message("doubled: (%f %f %f),(%f %f %f)",
+                //     arDouble[OUTPUT_OPTIMAL],arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP],
+                //     eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci),eq2mwc(arDouble[OUTPUT_TAKE], &ci),
+                //     eq2mwc(arDouble[OUTPUT_DROP], &ci) );
                 memcpy(pmr->CubeDecPtr->aarOutput, aarOutput, sizeof(aarOutput));
                 memcpy(pmr->CubeDecPtr->aarStdDev, aarStdDev, sizeof(aarStdDev));
 
@@ -841,8 +841,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             pmr->mwc.mwcBestCube= doubleError[2] < doubleError[3] ? 
                     //i.e.: arDouble[OUTPUT_TAKE]< arDouble[OUTPUT_DROP]?
                 (1.0-eq2mwc(doubleError[2], &ci)):(1.0-eq2mwc(doubleError[3], &ci));
-            g_message("MOVE_TAKE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
-                pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+            // g_message("MOVE_TAKE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+            //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
         }
 
         if (psc)
@@ -868,8 +868,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             pmr->mwc.mwcBestCube= doubleError[2] < doubleError[3] ? 
                     //i.e.: arDouble[OUTPUT_TAKE]< arDouble[OUTPUT_DROP]?
                 (1.0-eq2mwc(doubleError[2], &ci)):(1.0-eq2mwc(doubleError[3], &ci));
-            g_message("MOVE_DROP: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
-                pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+            // g_message("MOVE_DROP: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+            //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
         }
 
         if (psc)
@@ -914,8 +914,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 pmr->r.stAccept = SKILL_NONE;
                 pmr->mwc.mwcCube= eq2mwc(rAfter, &ci);
                 pmr->mwc.mwcBestCube= eq2mwc(rBefore, &ci);
-                g_message("pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
-                    pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+                // g_message("pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+                //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
             }
 
             if (rBefore < rAfter) {
@@ -924,8 +924,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 pmr->r.stResign = SKILL_NONE;
                 pmr->mwc.mwcCube= eq2mwc(rAfter, &ci); /* not sure here if it should be rBefore?*/
                 pmr->mwc.mwcBestCube= eq2mwc(rAfter, &ci);
-                g_message("pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
-                    pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);                
+                // g_message("pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+                //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);                
             }
 
 
