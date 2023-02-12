@@ -8443,10 +8443,45 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 //     gtk_widget_destroy(pw);
 // }
 
+void MWCPlotInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent) 
+{
+    GtkWidget* pwInfoDialog, * pwBox;
+    // const char* pch;
+
+    pwInfoDialog = GTKCreateDialog(_("MWC Plot Explanations"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwBox = gtk_vbox_new(FALSE, 0);
+#endif
+    gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwInfoDialog, DA_MAIN)), pwBox);
+
+        // Add explanation text for mwc plot
+    AddText(pwBox, _(" This plot shows how match winning chances (MWC) have evolved over the match:\
+\n\n- To draw the plot, you need to first analyze a given game or match (not money play).\
+\n\n- The x-axis represents all decisions in the match, including both cube and \
+move decisions, and including both the user and the opponent.\
+\n\n- The y-axis represents the chances of winning for the user \
+(i.e., the player sitting at the bottom of the board). For instance, at the start, \
+the user has 50% chances of winning. \
+\n\n- The black plot shows the chances of winning the match. At the end, it either gets \
+to 100\% (when the user wins) or 0\% (when the opponent wins). \
+\n\n- The vertical red (respectively green) arrows represent mistakes by the user \
+(resp. the opponent).\
+\n\n- The orange plot illustrates the cumulative skill difference. It is the sum of the \
+red (negative) and green (positive) arrows. It is centered at 50\% for convenience. \
+\n\n- The orange plot is not equal to the black plot because of the impact of dice (luck)."));
+
+    GTKRunDialog(pwInfoDialog);
+}
+
 void DrawMWC (void)  //GtkWidget* pwParent) {
 {
     GtkWidget *window;
     GtkWidget *da;
+    GtkWidget *helpButton;
     // window = GTKCreateDialog(_("MWC plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
     window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
@@ -8458,6 +8493,13 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(CloseWindow), window);
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_BUTTONS)),
+        helpButton = gtk_button_new_with_label(_("Explanations")));
+    gtk_widget_set_tooltip_text(helpButton, 
+        _("Click to obtain more explanations on this MWC plot")); 
+    g_signal_connect(helpButton, "clicked", G_CALLBACK(MWCPlotInfo), window);
+
 
     da = gtk_drawing_area_new ();
     gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_MAIN)), da);
