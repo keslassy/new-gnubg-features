@@ -8303,8 +8303,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                     drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(0.5),
                         trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]-mwcBestD[i]+0.5) );
                     if (CubeD[i]){
-                        cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.5)-1.0*fontSize);
-                        cairo_show_text(cr, "C"); 
+                        cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.5)-0.5*fontSize);
+                        cairo_show_text(cr, "c"); 
                     }
 
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcD[i-1]));
@@ -8320,8 +8320,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                     drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(0.5),
                         trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]-mwcBestD[i]+0.5) );
                     if (CubeD[i]){
-                        cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.5)+1.0*fontSize);
-                        cairo_show_text(cr, "C"); 
+                        cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.5)+1.3*fontSize);
+                        cairo_show_text(cr, "c"); 
                     }
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcD[i-1]));
                     // cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]));
@@ -8340,7 +8340,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_stroke (cr);
 
 
-        /* legend */
+        /* text: legend */
             /*1:plot*/
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to (cr, trueX(0.05), trueY(1.0+margin2y/2));
@@ -8386,7 +8386,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_stroke (cr);
         }         
 
-        /* new games (vertical lines) */
+        /* drawing: new games (vertical lines) */
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
         for (int i = 0; i < MWCLength; i ++) {
             if(NewGame[i]) {
@@ -8405,7 +8405,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             sprintf(strTemp, "%d", i);
             cairo_show_text(cr, strTemp);             
         }     
-            cairo_move_to(cr, trueX(0.5)-2*dx, trueY(0.0)+2.5*fontSize);
+            cairo_move_to(cr, trueX(0.5)-10*dx, trueY(0.0)+2.5*fontSize);
             cairo_show_text(cr, "decision (cube or move)");              
         for (int j = 0; j <=10; j++) {
         // for (double y = 0.0; y <= 1.0; y=y+0.1) {
@@ -8420,7 +8420,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         for (int i = 0; i < MWCLength; i ++) {
             if(NewGame[i]) {
                 jTemp++;
-                cairo_move_to(cr, trueX((((double)i)+0.5) / (MWCLength-1)), 
+                cairo_move_to(cr, trueX((((double)i)+1) / (MWCLength-1)), 
                         trueY(0.95)+fontSize/2);
                 sprintf(strTemp, "game %d", jTemp);
                 cairo_show_text(cr, strTemp);             
@@ -8469,7 +8469,9 @@ the user has 50% chances of winning. \
 \n\n- The black plot shows the chances of winning the match. At the end, it either gets \
 to 100\% (when the user wins) or 0\% (when the opponent wins). \
 \n\n- The vertical red (respectively green) arrows represent mistakes by the user \
-(resp. the opponent).\
+(resp. the opponent). Their size is equal to the MWC difference with the optimal decision.\
+\n\n- The c above the red arrows (resp. below the green ones) indicates that it is a cube \
+decision. Other mistakes correspond to move decisions. \
 \n\n- The orange plot illustrates the cumulative skill difference. It is the sum of the \
 red (negative) and green (positive) arrows. It is centered at 50\% for convenience. \
 \n\n- The orange plot is not equal to the black plot because of the impact of dice (luck)."));
