@@ -8148,6 +8148,7 @@ static double mwcBestD [MAX_DECISIONS]={-5.0}; /* optimal decisions*/
 // static double mwcBestCubes [MAX_DECISIONS]={-5.0}; 
 static double mwcCumulMoveSkill[MAX_DECISIONS]={0.0};
 static int NewGame [MAX_DECISIONS]={0}; 
+static int CubeD [MAX_DECISIONS]={0}; 
 static int MWCLength; 
 #define EPSILON 0.001
 
@@ -8286,29 +8287,41 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         for (int i = 1; i < MWCLength; i ++) {
             if(mwcD[i]>=0 && mwcD[i]<=1) {
                 if (mwcBestD[i] - mwcD[i]>EPSILON) {
+                    /* red: user's mistakes*/
                     /*
                     Version 1: plot from the last point (i-1) to the new best, i.e show
                     the alternative scenario
                     Version 2: plot from player's i to best i, i.e. vertical
-                    Version 3: vertical arrow
+                    Version 3: vertical arrow touching plot
+                    Version 4: vertical arrow touching the 0.5 line
                     */
                     // cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
                     cairo_set_source_rgb (cr, 0.5, 0.0, 0.0);
-                    drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestD[i]),
-                        trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]) );
+                    // drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestD[i]),
+                    //     trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]) );
                     drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(0.5),
                         trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]-mwcBestD[i]+0.5) );
+                    if (CubeD[i]){
+                        cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.5)-1.0*fontSize);
+                        cairo_show_text(cr, "C"); 
+                    }
+
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcD[i-1]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestD[i]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]));
                     // cairo_stroke (cr);
                 } else if (mwcBestD[i] - mwcD[i] <-EPSILON) {
+                    /* green: opponent's mistakes*/
                     // cairo_set_source_rgb (cr, 0.0, 0.5, 1.0);
                     cairo_set_source_rgb (cr, 0.0, 0.5, 0.0);
-                    drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestD[i]),
-                        trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]) );
+                    // drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestD[i]),
+                    //     trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]) );
                     drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(0.5),
                         trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]-mwcBestD[i]+0.5) );
+                    if (CubeD[i]){
+                        cairo_move_to(cr, trueX(((double)i)/(MWCLength-1))-2*dx, trueY(0.5)+1.0*fontSize);
+                        cairo_show_text(cr, "C"); 
+                    }
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcD[i-1]));
                     // cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestD[i]));
@@ -8372,7 +8385,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_stroke (cr);
         }         
 
-        /* new games*/
+        /* new games (vertical lines) */
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
         for (int i = 0; i < MWCLength; i ++) {
             if(NewGame[i]) {
@@ -8511,13 +8524,16 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
             //          && (pmrT->mt == MOVE_NORMAL || pmrT->mt == MOVE_DOUBLE || 
             //             pmrT->mt == MOVE_TAKE || pmrT->mt == MOVE_DROP || 
             //             pmrT->mt == MOVE_RESIGN) ){
+            /* valid cube decision*/
             if (pmrT && (pmrT->mwc.mwcCube>=0.0 && pmrT->mwc.mwcCube <= 1.0) ) {
                 mwcD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcCube): (1.0-((double) pmrT->mwc.mwcCube));
                 mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestCube): (1.0-((double) pmrT->mwc.mwcBestCube));
                 mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
+                CubeD[i]=1;
                 g_message("add cube: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
                 i++;
             }
+            /* valid move decision */
             if(pmrT && (pmrT->mwc.mwcMove>=0.0 && pmrT->mwc.mwcMove <= 1.0)) {
                 mwcD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcMove): (1.0-((double) pmrT->mwc.mwcMove));
                 mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestMove): (1.0-((double) pmrT->mwc.mwcBestMove));
