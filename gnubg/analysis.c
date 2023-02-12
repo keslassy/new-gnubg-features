@@ -625,6 +625,12 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
     const xmovegameinfo *pmgi = &((moverecord *) plParentGame->plNext->p)->g;
     int is_initial_position = 1;
 
+    /*initializing MWC elements with fake values outside [0,1]*/
+    pmr->mwc.mwcMove=-6.0; 
+    pmr->mwc.mwcBestMove=-6.0; 
+    pmr->mwc.mwcCube=-6.0; 
+    pmr->mwc.mwcBestCube=-6.0; 
+
     /* analyze this move */
     
     FixMatchState(pms, pmr);
@@ -831,10 +837,10 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     do that at the double and store the values...*/
             if (doubleError[0])
                 pmr->stCube = Skill(-doubleError[0]);
-            pmr->mwc.mwcCube= eq2mwc(doubleError[2], &ci);//i.e.: arDouble[OUTPUT_TAKE]
+            pmr->mwc.mwcCube= 1.0-eq2mwc(doubleError[2], &ci);//i.e.: arDouble[OUTPUT_TAKE]
             pmr->mwc.mwcBestCube= doubleError[2] < doubleError[3] ? 
                     //i.e.: arDouble[OUTPUT_TAKE]< arDouble[OUTPUT_DROP]?
-                eq2mwc(doubleError[2], &ci):eq2mwc(doubleError[3], &ci);
+                (1.0-eq2mwc(doubleError[2], &ci)):(1.0-eq2mwc(doubleError[3], &ci));
             g_message("MOVE_TAKE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
                 pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
         }
@@ -858,10 +864,10 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             GetMatchStateCubeInfo(&ci, pms);
             if (doubleError[0])
                 pmr->stCube = Skill(doubleError[0]);
-            pmr->mwc.mwcCube= eq2mwc(doubleError[3], &ci); //i.e.: arDouble[OUTPUT_DROP]
+            pmr->mwc.mwcCube= 1.0-eq2mwc(doubleError[3], &ci); //i.e.: arDouble[OUTPUT_DROP]
             pmr->mwc.mwcBestCube= doubleError[2] < doubleError[3] ? 
                     //i.e.: arDouble[OUTPUT_TAKE]< arDouble[OUTPUT_DROP]?
-                eq2mwc(doubleError[2], &ci):eq2mwc(doubleError[3], &ci);
+                (1.0-eq2mwc(doubleError[2], &ci)):(1.0-eq2mwc(doubleError[3], &ci));
             g_message("MOVE_DROP: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
                 pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
         }
@@ -999,7 +1005,7 @@ AnalyseMoveMT(Task * task)
     that's why doubleError was apparently created initially, to keep track of skill...
     */
     // float doubleError = 0.0f;
-    float doubleError [] = {0.0f,0.0f,0.0f,0.0f};
+    float doubleError [] = {0.0f,-5.0f,-5.0f,-5.0f};
     // float * doubleError ;
     // doubleError= malloc(4 * sizeof(float));
     // doubleError[0]=
