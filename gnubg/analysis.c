@@ -1005,15 +1005,18 @@ AnalyseMoveMT(Task * task)
     that's why doubleError was apparently created initially, to keep track of skill...
     */
     // float doubleError = 0.0f;
-    float doubleError [] = {0.0f,-5.0f,-5.0f,-5.0f};
+    float doubleError [4] = {0.0f,-5.0f,-5.0f,-5.0f};
     // float * doubleError ;
     // doubleError= malloc(4 * sizeof(float));
     // doubleError[0]=
+    float* p = doubleError; /*written this way so p references the first item of doubleError and not the whole array*/
 
   analyzeDouble:
     amt = (AnalyseMoveTask *) task;
+    //if (AnalyzeMove(amt->pmr, &amt->ms, amt->plGame, amt->psc,
+    //                &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, &doubleError) < 0)
     if (AnalyzeMove(amt->pmr, &amt->ms, amt->plGame, amt->psc,
-                    &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, &doubleError) < 0)
+        &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, p) < 0)
         MT_AbortTasks();
 
     if (task->pLinkedTask) {    /* Need to analyze take/drop decision in sequence */
@@ -1626,7 +1629,7 @@ extern void
 CommandShowMWC(char *UNUSED(sz))
 {
 
-    PlotMWC();
+    ComputeMWC(NULL);
 
 }
 

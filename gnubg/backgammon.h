@@ -1078,6 +1078,4 @@ extern int AddKeyName(const char sz[]); /* function that adds a key player name 
 extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/
 extern void DisplayKeyNames(void); /* debugging function to display the current key player names in the array*/
 
-extern void PlotMWC(void); /* plot MWC throughout the match */
-
 #endif	/* BACKGAMMON_H */

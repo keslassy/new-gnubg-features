@@ -8348,7 +8348,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_stroke (cr);
         }
         // for (double y = 0.1; y <= 1.0; y=y+0.1) 
-        for (int j = 0; j <=10; j++) {
+        for (int j = 1; j <=10; j++) {
             if(j==5 || j==10){
                 cairo_set_source_rgb (cr, 0.4, 0.4, 0.4);
                 cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
@@ -8417,13 +8417,15 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 //     gtk_widget_destroy(pw);
 // }
 
-void DrawMWC (void) {
+void DrawMWC (GtkWidget* pwParent) {
     GtkWidget *window;
     GtkWidget *da;
-    window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    window = GTKCreateDialog(_("MWC plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    //pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+    //window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
-    gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
+    //gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
@@ -8440,15 +8442,15 @@ void DrawMWC (void) {
 // g_message("2");
     gtk_widget_show_all (window);
 // g_message("3");
-     //gtk_widget_set_can_focus(window,TRUE);
-     //gtk_widget_set_can_focus(pwStatDialog, FALSE);
-     //gtk_window_set_focus (GTK_WINDOW(window), window);
+     gtk_widget_set_can_focus(window,TRUE);
+     gtk_widget_set_can_focus(pwStatDialog, FALSE);
+     gtk_window_set_focus (GTK_WINDOW(window), window);
     //gtk_widget_grab_focus(window);
     //gtk_main ();
 // g_message("4");
 }
 
-extern void PlotMWC(void)
+extern void ComputeMWC(GtkWidget* pwParent)
 {
     listOLD *plCurGame;
     listOLD *plCurMove;
@@ -8530,7 +8532,7 @@ extern void PlotMWC(void)
     
 
     /*   Now draw  */
-    DrawMWC();
+    DrawMWC(pwParent);
     // alreadyComputed=0;
     return;
 }
@@ -8538,7 +8540,9 @@ extern void PlotMWC(void)
 /* creating this placeholder function with all the inputs needed when pressing a button;
 the real function above doesn't have inputs*/
 void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
-    PlotMWC();
+    // this is a problem when we close the MWC window:
+    //gtk_widget_destroy(pwStatDialog);
+    ComputeMWC(pwStatDialog);
 }
 
 
@@ -8559,8 +8563,10 @@ GTKDumpStatcontext(int game)
     GraphData *gd = CreateGraphData();
 #endif
     /* made non-modal so we can close the MWC-plot window after opening it */
-    // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
-    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
+     pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+    //pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
+     //GTKCreateDialog(_("About GNU Backgammon"), DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL,
+     //    NULL);
 
     if (!fAutoDB) {
         gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
@@ -8629,10 +8635,10 @@ GTKDumpStatcontext(int game)
                                           " Chequer error in green, cube error in blue."));
     }
 #endif
-    // //pwPlot = PlotMWC();
+    // //pwPlot = ComputeMWC();
     // gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwPlot,
     //                          gtk_label_new(_("Match Winning Chances")));
-    // PlotMWC(pwPlot);
+    // ComputeMWC(pwPlot);
 
     pwUsePanels = gtk_check_button_new_with_label(_("Split statistics into panels"));
     gtk_widget_set_tooltip_text(pwUsePanels, _("Show data in a single list or split into several panels"));
