@@ -8420,9 +8420,9 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 void DrawMWC (GtkWidget* pwParent) {
     GtkWidget *window;
     GtkWidget *da;
-    window = GTKCreateDialog(_("MWC plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    // window = GTKCreateDialog(_("MWC plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
-    //window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
     //gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
@@ -8443,7 +8443,8 @@ void DrawMWC (GtkWidget* pwParent) {
     gtk_widget_show_all (window);
 // g_message("3");
      gtk_widget_set_can_focus(window,TRUE);
-     gtk_widget_set_can_focus(pwStatDialog, FALSE);
+     if(pwStatDialog)
+         gtk_widget_set_can_focus(pwStatDialog, FALSE);
      gtk_window_set_focus (GTK_WINDOW(window), window);
     //gtk_widget_grab_focus(window);
     //gtk_main ();
@@ -8563,8 +8564,8 @@ GTKDumpStatcontext(int game)
     GraphData *gd = CreateGraphData();
 #endif
     /* made non-modal so we can close the MWC-plot window after opening it */
-     pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
-    //pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
+    //  pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
      //GTKCreateDialog(_("About GNU Backgammon"), DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL,
      //    NULL);
 
