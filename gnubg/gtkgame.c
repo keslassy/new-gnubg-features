@@ -8320,7 +8320,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_move_to (cr, trueX(0.1), trueY(1.0+margin2/2));
         cairo_line_to (cr, trueX(0.15), trueY(1.0+margin2/2));
         cairo_stroke (cr);
-        cairo_move_to(cr,  trueX(0.17), trueY(1.0+margin2/2)+0.5*fontSize);
+        cairo_move_to(cr,  trueX(0.17), trueY(1.0+margin2/2)+0.3*fontSize);
         cairo_show_text(cr, "MWC");
             /*2:cumul. skill*/
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
@@ -8328,7 +8328,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_line_to (cr, trueX(0.35), trueY(1.0+margin2/2));
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to(cr,  trueX(0.37), trueY(1.0+margin2/2)+0.5*fontSize);
+        cairo_move_to(cr,  trueX(0.37), trueY(1.0+margin2/2)+0.3*fontSize);
         cairo_show_text(cr, "Cumulative move skill difference");
 
         /* grid*/
@@ -8346,13 +8346,17 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(1.0));
             cairo_stroke (cr);
         }
-        for (double y = 0.1; y <= 1.0; y=y+0.1) {
-            if(y==0.5 || y==1.0)
+        // for (double y = 0.1; y <= 1.0; y=y+0.1) 
+        for (int j = 0; j <=10; j++) {
+            if(j==5 || j==10){
+                cairo_set_source_rgb (cr, 0.4, 0.4, 0.4);
                 cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
-            else
+            } else {
+                cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
                 cairo_set_dash(cr, dashed2, len2, 1);
-            cairo_move_to (cr, trueX(0.0), trueY(y));
-            cairo_line_to (cr, trueX(1.0), trueY(y));
+            }
+            cairo_move_to (cr, trueX(0.0), trueY(((double)j)/10));
+            cairo_line_to (cr, trueX(1.0), trueY(((double)j)/10));
             cairo_stroke (cr);
         }         
 
@@ -8378,13 +8382,13 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         }        
         for (int j = 0; j <=10; j++) {
         // for (double y = 0.0; y <= 1.0; y=y+0.1) {
-            cairo_move_to(cr, trueX(-0.05), trueY(((double)j)/10)+fontSize/2);
+            cairo_move_to(cr, trueX(-0.08), trueY(((double)j)/10)+0.3*fontSize);
             sprintf(strTemp, "%d%%", 10*j);
             // sprintf(strTemp, "%.1f", y);
             cairo_show_text(cr, strTemp);             
         }
 
-        /* game-number text */
+        /* text: game 1, game 2... */
         int jTemp=0;
         for (int i = 0; i < MWCLength; i ++) {
             if(NewGame[i]) {
