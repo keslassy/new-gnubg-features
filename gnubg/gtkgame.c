@@ -17,7 +17,11 @@
  *
  * $Id: gtkgame.c,v 1.992 2023/01/18 21:49:36 plm Exp $
  */
-
+/*
+02/2023: Isaac Keslassy: introduced the "mwc plot" feature, together with two ways 
+of launching it graphically: a sub-menu command ("Analyze > Plot MWC"), and a button
+in "Match of session statistics". 
+*/
 #include "config.h"
 #include "gnubgmodule.h"
 #include "gtkuidefs.h"
