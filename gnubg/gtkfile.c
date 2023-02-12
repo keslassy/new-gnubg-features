@@ -1058,6 +1058,8 @@ GTKAnalyzeFile(void)
 {
     CURL *curl_handle;
   CURLcode res;
+//   char * url="https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/version.txt";
+  char * url="https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/newversion.txt";
  
   struct MemoryStruct chunk;
  
@@ -1070,7 +1072,7 @@ GTKAnalyzeFile(void)
   curl_handle = curl_easy_init();
  
   /* specify URL to get */
-  curl_easy_setopt(curl_handle, CURLOPT_URL, "https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/version.txt");
+  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
  
   /* send all data to this function  */
   curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
