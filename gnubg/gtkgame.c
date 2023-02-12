@@ -8159,11 +8159,7 @@ static int MWCLength;
 
 /*shows translation x->X when x=0=>X=a and x=1=>X=b*/
 double translateX(double x,double a,double b) {
-    if (a==b){
-        outputerrf("translation error");
-        return 0.0;
-    } else
-        return a+x*(b-a);
+    return a+x*(b-a);
 }
 
 double trueX (double x) { 

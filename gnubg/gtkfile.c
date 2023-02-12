@@ -863,7 +863,7 @@ void recentByModification(const char* path, char* recent){
         }
         closedir(dir);
     } else {
-        outputerrf("Unable to read the directory");
+        outputerrf(_("Unable to read the directory"));
     }
 }
 
