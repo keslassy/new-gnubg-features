@@ -680,6 +680,10 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
 
             rSkill = arDouble[OUTPUT_NODOUBLE] - arDouble[OUTPUT_OPTIMAL];
             pmr->stCube = Skill(rSkill);
+            pmr->mwc.mwcCube= eq2mwc(arDouble[OUTPUT_NODOUBLE], &ci);
+            pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
+            g_message("CUBE(MOVE_NORMAL): pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+                pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);            
 
         } else
             pmr->CubeDecPtr->esDouble.et = EVAL_NONE;
@@ -733,9 +737,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
                 if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
                     rChequerSkill = pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore;
-                        /* keep mwc in data structure */
-                        pmr->mwc.mwcMove= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
-                        pmr->mwc.mwcBestMove= eq2mwc(pmr->ml.amMoves[0].rScore, &ci);
+                    /* keep mwc in data structure */
+                    pmr->mwc.mwcMove= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
+                    pmr->mwc.mwcBestMove= eq2mwc(pmr->ml.amMoves[0].rScore, &ci);
                     break;
                 }
             pmr->n.stMove = Skill(rChequerSkill);
@@ -778,9 +782,17 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 }
 
                 FindCubeDecision(arDouble, aarOutput, &ci);
-                if (doubleError)
-                    *doubleError = arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_DROP];
-
+                if (doubleError[0]) {
+                    doubleError[0] = arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_DROP];
+                    // *doubleError = arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_DROP];
+                }
+                doubleError[1] = arDouble[OUTPUT_OPTIMAL];
+                doubleError[2] = arDouble[OUTPUT_TAKE];
+                doubleError[3] = arDouble[OUTPUT_DROP];
+                g_message("doubled: (%f %f %f),(%f %f %f)",
+                    arDouble[OUTPUT_OPTIMAL],arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP],
+                    eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci),eq2mwc(arDouble[OUTPUT_TAKE], &ci),
+                    eq2mwc(arDouble[OUTPUT_DROP], &ci) );
                 memcpy(pmr->CubeDecPtr->aarOutput, aarOutput, sizeof(aarOutput));
                 memcpy(pmr->CubeDecPtr->aarStdDev, aarStdDev, sizeof(aarStdDev));
 
@@ -789,8 +801,14 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_OPTIMAL] : arDouble[OUTPUT_DROP] - arDouble[OUTPUT_OPTIMAL];
 
                 pmr->stCube = Skill(rSkill);
-            } else if (doubleError)
-                *doubleError = ERR_VAL;
+                pmr->mwc.mwcCube= arDouble[OUTPUT_TAKE] < arDouble[OUTPUT_DROP] ? 
+                    eq2mwc(arDouble[OUTPUT_TAKE], &ci) : eq2mwc(arDouble[OUTPUT_DROP], &ci);
+                pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
+                // g_message("MOVE_DOUBLE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+                //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+            } else if (doubleError[0])
+                doubleError[0] = ERR_VAL;
+                // *doubleError = ERR_VAL;
         }
 
         if (psc)
@@ -808,9 +826,17 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
         if (tt > TT_NORMAL)     /* TODO: analyse beavers */
             break;
 
-        if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != ERR_VAL)) {
-            GetMatchStateCubeInfo(&ci, pms);
-            pmr->stCube = Skill(-*doubleError);
+        if (fAnalyseCube && pmgi->fCubeUse && (doubleError[0] != ERR_VAL)) {
+            GetMatchStateCubeInfo(&ci, pms); /*looks like it's not needed since we can
+                    do that at the double and store the values...*/
+            if (doubleError[0])
+                pmr->stCube = Skill(-doubleError[0]);
+            pmr->mwc.mwcCube= eq2mwc(doubleError[2], &ci);//i.e.: arDouble[OUTPUT_TAKE]
+            pmr->mwc.mwcBestCube= doubleError[2] < doubleError[3] ? 
+                    //i.e.: arDouble[OUTPUT_TAKE]< arDouble[OUTPUT_DROP]?
+                eq2mwc(doubleError[2], &ci):eq2mwc(doubleError[3], &ci);
+            g_message("MOVE_TAKE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+                pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
         }
 
         if (psc)
@@ -828,9 +854,16 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
         if (tt > TT_NORMAL)     /* TODO: analyse beavers */
             break;
 
-        if (fAnalyseCube && pmgi->fCubeUse && doubleError && (*doubleError != ERR_VAL)) {
+        if (fAnalyseCube && pmgi->fCubeUse && (doubleError[0] != ERR_VAL)) {
             GetMatchStateCubeInfo(&ci, pms);
-            pmr->stCube = Skill(*doubleError);
+            if (doubleError[0])
+                pmr->stCube = Skill(doubleError[0]);
+            pmr->mwc.mwcCube= eq2mwc(doubleError[3], &ci); //i.e.: arDouble[OUTPUT_DROP]
+            pmr->mwc.mwcBestCube= doubleError[2] < doubleError[3] ? 
+                    //i.e.: arDouble[OUTPUT_TAKE]< arDouble[OUTPUT_DROP]?
+                eq2mwc(doubleError[2], &ci):eq2mwc(doubleError[3], &ci);
+            g_message("MOVE_DROP: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+                pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
         }
 
         if (psc)
@@ -873,12 +906,20 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 /* wrong resign */
                 pmr->r.stResign = Skill(rAfter - rBefore);
                 pmr->r.stAccept = SKILL_NONE;
+                pmr->mwc.mwcCube= eq2mwc(rAfter, &ci);
+                pmr->mwc.mwcBestCube= eq2mwc(rBefore, &ci);
+                g_message("pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+                    pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
             }
 
             if (rBefore < rAfter) {
                 /* wrong accept */
                 pmr->r.stAccept = Skill(rBefore - rAfter);
                 pmr->r.stResign = SKILL_NONE;
+                pmr->mwc.mwcCube= eq2mwc(rAfter, &ci); /* not sure here if it should be rBefore?*/
+                pmr->mwc.mwcBestCube= eq2mwc(rAfter, &ci);
+                g_message("pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
+                    pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);                
             }
 
 
@@ -952,7 +993,16 @@ static void
 AnalyseMoveMT(Task * task)
 {
     AnalyseMoveTask *amt;
-    float doubleError = 0.0f;
+    /* we create a doubleError array of 4 values rather than store a single 1,
+    because when there is a take/pass decision, we want to know the MWC vs optimum, 
+    but we don't have access to the analysis results of the preceding double decision;
+    that's why doubleError was apparently created initially, to keep track of skill...
+    */
+    // float doubleError = 0.0f;
+    float doubleError [] = {0.0f,0.0f,0.0f,0.0f};
+    // float * doubleError ;
+    // doubleError= malloc(4 * sizeof(float));
+    // doubleError[0]=
 
   analyzeDouble:
     amt = (AnalyseMoveTask *) task;
