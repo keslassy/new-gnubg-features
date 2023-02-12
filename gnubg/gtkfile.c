@@ -1107,11 +1107,12 @@ GTKAnalyzeFile(void)
         // // fprintf(fp, chunk.memory);
         // fputs(chunk.memory, fp);
         // fclose(fp);
-
-        g_message("latest version=%s vs VERSION=%s",chunk.memory,VERSION);
-        if (strcmp(chunk.message,VERSION)==0) {
+        char *token;
+        token = strtok(chunk.memory, "\n");
+        g_message("latest version=%s vs VERSION=%s",token,VERSION);
+        if (strcmp(token,VERSION)==0) {
             g_message("nothing to do");
-        }   else if (strcmp(chunk.message,VERSION)>0) {
+        }   else if (strcmp(token,VERSION)>0) {
             g_message("newer version, need to download!");
         }   else {
             g_message("online is older???");
