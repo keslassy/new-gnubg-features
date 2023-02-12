@@ -1070,7 +1070,7 @@ GTKAnalyzeFile(void)
   curl_handle = curl_easy_init();
  
   /* specify URL to get */
-  curl_easy_setopt(curl_handle, CURLOPT_URL, "https://drive.google.com/file/d/1EBUW20VnWmi4GSHaEpjFbLGJkAV70ZOf/view?usp=sharing");
+  curl_easy_setopt(curl_handle, CURLOPT_URL, "https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/version.txt");
  
   /* send all data to this function  */
   curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
@@ -1098,17 +1098,24 @@ GTKAnalyzeFile(void)
         * Do something nice with it!
         */
     
-        printf("%lu bytes retrieved\n", (unsigned long)chunk.size);
+        // printf("%lu bytes retrieved\n", (unsigned long)chunk.size);
 
 
-    FILE *fp;
+        // FILE *fp;
 
-    fp = fopen("./test.txt", "w+");
-    // fprintf(fp, chunk.memory);
-    fputs(chunk.memory, fp);
-    fclose(fp);
+        // fp = fopen("./test.txt", "w+");
+        // // fprintf(fp, chunk.memory);
+        // fputs(chunk.memory, fp);
+        // fclose(fp);
 
-
+        g_message("latest version=%s vs VERSION=%s",chunk.memory,VERSION);
+        if (strcmp(chunk.message,VERSION)==0) {
+            g_message("nothing to do");
+        }   else if (strcmp(chunk.message,VERSION)>0) {
+            g_message("newer version, need to download!");
+        }   else {
+            g_message("online is older???");
+        }   
 
     }
  
