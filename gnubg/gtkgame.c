@@ -8346,11 +8346,15 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(1.0));
             cairo_stroke (cr);
         }
-        for (double y = 0.1; y < 1; y=y+0.1) {
+        for (double y = 0.1; y <= 1.0; y=y+0.1) {
+            if(y==0.5 || y==1.0)
+                cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
+            else
+                cairo_set_dash(cr, dashed2, len2, 1);
             cairo_move_to (cr, trueX(0.0), trueY(y));
             cairo_line_to (cr, trueX(1.0), trueY(y));
             cairo_stroke (cr);
-        }    
+        }         
 
         /* new games*/
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
@@ -8411,10 +8415,11 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 void DrawMWC (void) {
     GtkWidget *window;
     GtkWidget *da;
-
+    /*    //window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
+    */
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
-    gtk_window_set_title (GTK_WINDOW (window), "Graph drawing");
+    gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
@@ -8431,13 +8436,16 @@ void DrawMWC (void) {
 // g_message("2");
     gtk_widget_show_all (window);
 // g_message("3");
-    // gtk_main ();
+     //gtk_widget_set_can_focus(window,TRUE);
+     //gtk_widget_set_can_focus(pwStatDialog, FALSE);
+     //gtk_window_set_focus (GTK_WINDOW(window), window);
+    //gtk_widget_grab_focus(window);
+    //gtk_main ();
 // g_message("4");
 }
 
 extern void PlotMWC(void)
 {
-
     listOLD *plCurGame;
     listOLD *plCurMove;
     listOLD *plStartingMove;
@@ -8523,7 +8531,7 @@ GTKDumpStatcontext(int game)
 {
     GtkWidget *copyMenu, *menu_item, *pvbox, *pwUsePanels; //, *pwPlot;
     GtkWidget *navi_combo;
-    GtkWidget *addToDbButton;
+    GtkWidget *addToDbButton,*mwcButton;
 #if defined(USE_BOARD3D)
     int i;
     GtkWidget *pw;
@@ -8541,8 +8549,8 @@ GTKDumpStatcontext(int game)
     }
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
-                    addToDbButton = gtk_button_new_with_label(_("Plot MWC")));
-    g_signal_connect(addToDbButton, "clicked", G_CALLBACK(PlotMWCTrigger), NULL);
+        mwcButton = gtk_button_new_with_label(_("Plot MWC")));
+    g_signal_connect(mwcButton, "clicked", G_CALLBACK(PlotMWCTrigger), NULL);
 
 
     pwNotebook = gtk_notebook_new();
