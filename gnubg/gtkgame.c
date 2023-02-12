@@ -8392,8 +8392,6 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             }
         }
 
-
-
         // g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
         //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
     } else 
