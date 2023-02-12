@@ -8130,8 +8130,10 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
 #define MAX_DECISIONS (2*MAX_MOVES)
 
 static GdkRectangle da;            /* GtkDrawingArea size */
-static double margin1=0.05;
-static double margin2=0.05;
+static double margin1x=0.08;
+static double margin2x=0.05;
+static double margin1y=0.05;
+static double margin2y=0.05;
 // static int alreadyComputed=0; /* when drawing it computes all arrays twice :( )*/
 
 // #define ZOOM_X  100.0
@@ -8164,7 +8166,7 @@ double trueX (double x) {
     x=0->X=margin1*d
     x=1->X=(1-margin2)*d
     */   
-    return translateX(x,margin1*da.width,(1-margin2)*da.width);
+    return translateX(x,margin1x*da.width,(1-margin2x)*da.width);
     //  OLD   // (i/(n-1))*da.width*19/20+da.width/20
     // /*
     // x=0->X=margin*d
@@ -8178,7 +8180,7 @@ double trueY (double y) { //}, gfloat h, gfloat margin) {
     y=0->-h(1-margin1) on screen->Y=+h(1-margin1)
     y=1->-h*margin2 on screen->Y=+h*margin2
     */
-    return translateX(y,(1-margin1)*da.height,margin2*da.height);
+    return translateX(y,(1-margin1y)*da.height,margin2y*da.height);
 
 //    /*
 //    y=0->-h(1-margin) on screen->Y=+h(1-margin)
@@ -8187,10 +8189,15 @@ double trueY (double y) { //}, gfloat h, gfloat margin) {
 //     return (da.height*(1-y)*(1-margin));
 }
 
+// #define MAX(a,b) ((a) > (b) ? (a) : (b))
+// #define MIN(a,b) ((a) < (b) ? (a) : (b))
+
+
 void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
-    {
+    {        
         double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
-        double side=3.0;
+        double dist = sqrt((start_x-end_x)*(start_x-end_x)+(start_y-end_y)*(start_y-end_y));
+        double side=MIN(3.0,0.5*dist);
         double degrees=0.5;
 
         double x1 = end_x + side * cos(angle - degrees);
@@ -8289,6 +8296,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                     cairo_set_source_rgb (cr, 0.5, 0.0, 0.0);
                     drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestD[i]),
                         trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]) );
+                    drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(0.5),
+                        trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]-mwcBestD[i]+0.5) );
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcD[i-1]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestD[i]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]));
@@ -8298,6 +8307,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                     cairo_set_source_rgb (cr, 0.0, 0.5, 0.0);
                     drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(mwcBestD[i]),
                         trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]) );
+                    drawArrow(cr,  trueX(((double)i)/(MWCLength-1)),trueY(0.5),
+                        trueX(((double)i)/(MWCLength-1)),trueY(mwcD[i]-mwcBestD[i]+0.5) );
                     // cairo_move_to (cr, trueX(((double)i-1)/(MWCLength-1)), trueY(mwcD[i-1]));
                     // cairo_move_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]));
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestD[i]));
@@ -8318,18 +8329,18 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         /* legend */
             /*1:plot*/
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to (cr, trueX(0.1), trueY(1.0+margin2/2));
-        cairo_line_to (cr, trueX(0.15), trueY(1.0+margin2/2));
+        cairo_move_to (cr, trueX(0.1), trueY(1.0+margin2y/2));
+        cairo_line_to (cr, trueX(0.15), trueY(1.0+margin2y/2));
         cairo_stroke (cr);
-        cairo_move_to(cr,  trueX(0.17), trueY(1.0+margin2/2)+0.3*fontSize);
+        cairo_move_to(cr,  trueX(0.17), trueY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "MWC");
             /*2:cumul. skill*/
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
-        cairo_move_to (cr, trueX(0.3), trueY(1.0+margin2/2));
-        cairo_line_to (cr, trueX(0.35), trueY(1.0+margin2/2));
+        cairo_move_to (cr, trueX(0.3), trueY(1.0+margin2y/2));
+        cairo_line_to (cr, trueX(0.35), trueY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to(cr,  trueX(0.37), trueY(1.0+margin2/2)+0.3*fontSize);
+        cairo_move_to(cr,  trueX(0.37), trueY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Cumulative move skill difference");
 
         /* grid*/
@@ -8417,7 +8428,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 //     gtk_widget_destroy(pw);
 // }
 
-void DrawMWC (GtkWidget* pwParent) {
+void DrawMWC (void)  //GtkWidget* pwParent) {
+{
     GtkWidget *window;
     GtkWidget *da;
     // window = GTKCreateDialog(_("MWC plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
@@ -8451,7 +8463,7 @@ void DrawMWC (GtkWidget* pwParent) {
 // g_message("4");
 }
 
-extern void ComputeMWC(GtkWidget* pwParent)
+extern void ComputeMWC(void)//GtkWidget* pwParent)
 {
     listOLD *plCurGame;
     listOLD *plCurMove;
@@ -8533,7 +8545,7 @@ extern void ComputeMWC(GtkWidget* pwParent)
     
 
     /*   Now draw  */
-    DrawMWC(pwParent);
+    DrawMWC();//pwParent);
     // alreadyComputed=0;
     return;
 }
@@ -8543,7 +8555,7 @@ the real function above doesn't have inputs*/
 void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
     // this is a problem when we close the MWC window:
     //gtk_widget_destroy(pwStatDialog);
-    ComputeMWC(pwStatDialog);
+    ComputeMWC(); //pwStatDialog);
 }
 
 
@@ -8563,7 +8575,11 @@ GTKDumpStatcontext(int game)
     listOLD *pl;
     GraphData *gd = CreateGraphData();
 #endif
-    /* made non-modal so we can close the MWC-plot window after opening it */
+    /* made non-modal so we can close the MWC-plot window after opening it
+    ...else there are all sorts of problems when closing, including
+    gnubg closing the main window.
+    Also, a user may want to look at the moves while checking the plot.
+     */
     //  pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
     pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
      //GTKCreateDialog(_("About GNU Backgammon"), DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL,

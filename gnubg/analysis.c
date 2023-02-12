@@ -1629,7 +1629,7 @@ extern void
 CommandShowMWC(char *UNUSED(sz))
 {
 
-    ComputeMWC(pwMain);
+    ComputeMWC();//pwMain);
 
 }
 

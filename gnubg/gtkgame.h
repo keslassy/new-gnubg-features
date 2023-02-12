@@ -177,7 +177,7 @@ extern void ShowToolbar(void);
 extern void HideToolbar(void);
 extern void MoveListDestroy(void);
 
-extern void ComputeMWC(GtkWidget* pwParent); /* plot MWC throughout the match */
+extern void ComputeMWC(void);//GtkWidget* pwParent); /* plot MWC throughout the match */
 
 #if defined(HAVE_LIB_READLINE)
 extern int fReadingCommand;
