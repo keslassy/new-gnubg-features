@@ -8510,6 +8510,8 @@ extern void PlotMWC(void)
     return;
 }
 
+/* creating this placeholder function with all the inputs needed when pressing a button;
+the real function above doesn't have inputs*/
 void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
     PlotMWC();
 }
@@ -8542,7 +8544,7 @@ GTKDumpStatcontext(int game)
     }
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
-                    addToDbButton = gtk_button_new_with_label(_("Plot MWC through match")));
+                    addToDbButton = gtk_button_new_with_label(_("Plot MWC")));
     g_signal_connect(addToDbButton, "clicked", G_CALLBACK(PlotMWCTrigger), NULL);
 
 
