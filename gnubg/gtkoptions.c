@@ -93,6 +93,7 @@ typedef struct {
     GtkWidget *pwAutoSaveRollout;
     GtkWidget *pwAutoSaveAnalysis;
     GtkWidget *pwAutoSaveConfirmDelete;
+    GtkWidget *pwCheckUpdates;
     GtkWidget *pwIllegal;
     GtkWidget *pwUseDiceIcon;
     GtkWidget *pwShowIDs;
@@ -1707,6 +1708,11 @@ append_other_options(optionswidget * pow)
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwAutoSaveConfirmDelete, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(pow->pwAutoSaveConfirmDelete, _("Ask before auto saves are deleted"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoSaveConfirmDelete), fAutoSaveConfirmDelete);
+
+    pow->pwCheckUpdates = gtk_check_button_new_with_label(_("Check gnubg updates online"));
+    gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwCheckUpdates, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(pow->pwCheckUpdates, _("Automatically check gnubg updates online"));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwCheckUpdates), fCheckUpdates);
 }
 
 static GtkWidget *
@@ -1921,6 +1927,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwAutoSaveAnalysis, fAutoSaveAnalysis, "set autosave analysis %s");
     CHECKUPDATE(pow->pwAutoSaveRollout, fAutoSaveRollout, "set autosave rollout %s");
     CHECKUPDATE(pow->pwAutoSaveConfirmDelete, fAutoSaveConfirmDelete, "set autosave confirm %s");
+    CHECKUPDATE(pow->pwCheckUpdates, fCheckUpdates, "set checkupdates %s");
 
     if ((u = (unsigned int) gtk_adjustment_get_value(pow->padjDelay)) != nDelay) {
         sprintf(sz, "set delay %u", u);

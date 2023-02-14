@@ -200,6 +200,7 @@ int nAutoSaveTime = 15;
 int fAutoSaveRollout = FALSE;
 int fAutoSaveAnalysis = FALSE;
 int fAutoSaveConfirmDelete = TRUE;
+int fCheckUpdates = TRUE;
 
 /* FIXME: This is at best useless, at worst misleading, as a global flag.
  * It should be deduced from the rollout context when needed.
@@ -3349,6 +3350,7 @@ SaveMiscSettings(FILE * pf)
             g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rErrorRateFactor));
     fprintf(pf, "set prompt %s\n", szPrompt);
     fprintf(pf, "set browser \"%s\"\n", get_web_browser());
+    fprintf(pf, "set checkupdates %s\n", fCheckUpdates ? "on" : "off");    
     fprintf(pf, "set priority nice %d\n", nThreadPriority);
     fprintf(pf, "set ratingoffset %s\n", g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rRatingOffset));
 }

@@ -1143,6 +1143,8 @@ static command acSetVariation[] = {
     { "cheat", NULL, 
       N_("Control GNU Backgammon's manipulation of the dice"),
       NULL, acSetCheat },
+    { "checkupdates", CommandSetCheckUpdates, N_("Check gnubg updates online"), 
+      szONOFF, &cOnOff },
     { "clockwise", CommandSetClockwise, N_("Control the board orientation"),
       szONOFF, &cOnOff },
     { "colours", CommandSetAppearance, 

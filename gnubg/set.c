@@ -4838,3 +4838,9 @@ CommandSetAutoSaveTime(char *sz)
     }
     nAutoSaveTime = n;
 }
+extern void
+CommandSetCheckUpdates(char *sz)
+{
+    SetToggle("set checkupdates", &fCheckUpdates, sz,
+              _("Automatically check gnubg updates online"), _("Do not check gnubg updates online"));
+}
