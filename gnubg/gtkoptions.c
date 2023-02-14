@@ -1709,9 +1709,9 @@ append_other_options(optionswidget * pow)
     gtk_widget_set_tooltip_text(pow->pwAutoSaveConfirmDelete, _("Ask before auto saves are deleted"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwAutoSaveConfirmDelete), fAutoSaveConfirmDelete);
 
-    pow->pwCheckUpdates = gtk_check_button_new_with_label(_("Check gnubg updates online"));
+    pow->pwCheckUpdates = gtk_check_button_new_with_label(_("Check GNU-Backgammon updates online"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwCheckUpdates, FALSE, FALSE, 0);
-    gtk_widget_set_tooltip_text(pow->pwCheckUpdates, _("Automatically check gnubg updates online"));
+    gtk_widget_set_tooltip_text(pow->pwCheckUpdates, _("Automatically check GNU-Backgammon updates online"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwCheckUpdates), fCheckUpdates);
 }
 

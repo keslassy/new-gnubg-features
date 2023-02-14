@@ -4783,6 +4783,7 @@ main(int argc, char *argv[])
             g_set_print_handler(&GTKOutput);
             g_set_printerr_handler(&GTKOutputErr);
         }
+        /* typically: arrives here then starts the graphical version!*/        
         RunGTK(pwSplash, pchCommands, pchPythonScript, pchMatch);
         Shutdown();
         exit(EXIT_SUCCESS);

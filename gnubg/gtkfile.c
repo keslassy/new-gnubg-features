@@ -965,20 +965,20 @@ SmartAnalyze(void)
     UserCommand("show statistics match");
     return;
 }
-// extern void
-// GTKAnalyzeFile(void)
-// {
-//     // // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
-//     // if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
-//     //     GTKBatchAnalyse(NULL, 0, NULL);
-//     // } else if (AnalyzeFileSettingDef == AnalyzeFileRegular) {
-//     //     AnalyzeSingleFile();
-//     // } else { //   AnalyzeFileSmart, 
-//     //     SmartAnalyze();
-//     // }
-//     // return;
-// }
 
+extern void
+GTKAnalyzeFile(void)
+{
+    // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
+    if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
+        GTKBatchAnalyse(NULL, 0, NULL);
+    } else if (AnalyzeFileSettingDef == AnalyzeFileRegular) {
+        AnalyzeSingleFile();
+    } else { //   AnalyzeFileSmart, 
+        SmartAnalyze();
+    }
+    return;
+}
 
 extern void
 GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
@@ -1023,122 +1023,3 @@ GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     } else
         gtk_widget_destroy(fc);
 }
-
-
-
-
-/* ***************************************************** */
-struct MemoryStruct {
-  char *memory;
-  size_t size;
-};
- 
-static size_t
-WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-  size_t realsize = size * nmemb;
-  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
- 
-  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
-  if(!ptr) {
-    /* out of memory! */
-    printf("not enough memory (realloc returned NULL)\n");
-    return 0;
-  }
- 
-  mem->memory = ptr;
-  memcpy(&(mem->memory[mem->size]), contents, realsize);
-  mem->size += realsize;
-  mem->memory[mem->size] = 0;
- 
-  return realsize;
-}
-extern void
-GTKAnalyzeFile(void)
-{
-    CURL *curl_handle;
-  CURLcode res;
-//   char * url="https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/version.txt";
-  char * url="https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/newversion.txt";
- 
-  struct MemoryStruct chunk;
- 
-  chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
-  chunk.size = 0;    /* no data at this point */
- 
-  curl_global_init(CURL_GLOBAL_ALL);
- 
-  /* init the curl session */
-  curl_handle = curl_easy_init();
- 
-  /* specify URL to get */
-  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
- 
-  /* send all data to this function  */
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
- 
-  /* we pass our 'chunk' struct to the callback function */
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
- 
-  /* some servers do not like requests that are made without a user-agent
-     field, so we provide one */
-  curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
- 
-  /* get it! */
-  res = curl_easy_perform(curl_handle);
- 
-  /* check for errors */
-    if(res != CURLE_OK) {
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
-    }
-    else {
-        /*
-        * Now, our chunk.memory points to a memory block that is chunk.size
-        * bytes big and contains the remote file.
-        *
-        * Do something nice with it!
-        */
-    
-        // printf("%lu bytes retrieved\n", (unsigned long)chunk.size);
-
-
-        // FILE *fp;
-
-        // fp = fopen("./test.txt", "w+");
-        // // fprintf(fp, chunk.memory);
-        // fputs(chunk.memory, fp);
-        // fclose(fp);
-        char *token;
-        token = strtok(chunk.memory, "\n");
-        g_message("latest version=%s vs VERSION=%s",token,VERSION);
-        if (strcmp(token,VERSION)==0) {
-            g_message("nothing to do");
-        }   else if (strcmp(token,VERSION)>0) {
-            g_message("newer version, need to download!");
-        }   else {
-            g_message("online is older???");
-        }   
-
-    }
- 
-  /* cleanup curl stuff */
-  curl_easy_cleanup(curl_handle);
- 
-  free(chunk.memory);
- 
-  /* we are done with libcurl, so clean it up */
-  curl_global_cleanup();
- 
-  //return 0;
-
-// OpenURL("https://drive.google.com/file/d/1EBUW20VnWmi4GSHaEpjFbLGJkAV70ZOf/view?usp=sharing");
-
-// CURL *curl = curl_easy_init();
-// if(curl) {
-//   CURLcode res;
-//   curl_easy_setopt(curl, CURLOPT_URL, "https://drive.google.com/file/d/1EBUW20VnWmi4GSHaEpjFbLGJkAV70ZOf/view?usp=sharing");
-//   res = curl_easy_perform(curl);
-//   curl_easy_cleanup(curl);
-}
-

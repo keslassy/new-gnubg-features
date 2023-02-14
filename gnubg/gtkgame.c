@@ -85,6 +85,9 @@ in "Match of session statistics".
 #include "inc3d.h"
 #endif
 #include "gnubgstock.h"
+#if defined(LIBCURL_PROTOCOL_HTTPS)
+#include <curl/curl.h>
+#endif
 
 #define KEY_ESCAPE -229
 
@@ -4773,6 +4776,196 @@ InitGTK(int *argc, char ***argv)
     cb = gdk_atom_intern("CLIPBOARD", TRUE);
     clipboard = gtk_clipboard_get(cb);
 }
+/* ************************************************ */
+
+static void
+GoToGnubgWebsite(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
+{
+    OpenURL("https://www.gnu.org/software/gnubg/#downloading");
+}
+
+#define CHECKUPDATE(button,flag,string) \
+   n = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( (button) ) ); \
+   if ( n != (flag)){ \
+           sprintf(sz, (string), n ? "on" : "off"); \
+           UserCommand(sz); \
+   }
+
+/* Launches the update screen to inform the user there is a newer gnubg.
+
+The implementation is based on GTKMessage, which is at the basis of GetInputYN and
+GTKGetInputYN. However it is changed here because we also want to offer the user a 
+button where he can opt out of updates messages (same variable fCheckUpdates as in 
+the options).
+*/
+void AskToUpdate(char * availableVersion)
+{
+#define MAXWINSIZE 400
+#define MAXSTRLEN 300
+    int n; //for CHECKUPDATE
+    int answer = FALSE;
+    GtkWidget *pwDialog, *pwText, *sw, *pwv,*pwButton;
+    GtkWidget *pwCheckUpdates;
+    GtkRequisition req;
+    GtkTextBuffer *buffer;
+    time_t lastChecked=0;
+
+    char *sz = g_strdup_printf(_("A new version of GnuBG is available. "
+            "\n\n Current version:   %s"
+            "\n Available version: %s\n"),
+            VERSION, availableVersion);
+    g_message("%s",sz);
+
+    // pwDialog = GTKCreateDialog(_("GnuBG update"), DT_INFO, GTKGetCurrentParent(), DIALOG_FLAG_NONE, NULL, &answer);
+    pwDialog = GTKCreateDialog(_("GnuBG update"), DT_INFO, pwMain, DIALOG_FLAG_MODAL, NULL, &answer);
+    // pwDialog = GTKCreateDialog(_("GnuBG update"), DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    //gtk_window_set_default_size (GTK_WINDOW (pwDialog), 400, 300);
+    // g_signal_connect(G_OBJECT(pwDialog), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+
+    pwText = gtk_text_view_new();
+    gtk_text_view_set_editable(GTK_TEXT_VIEW(pwText), FALSE);
+    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(pwText), FALSE);
+    buffer = gtk_text_buffer_new(NULL);
+    gtk_text_buffer_set_text(buffer, sz, -1);
+    gtk_text_view_set_buffer(GTK_TEXT_VIEW(pwText), buffer);
+
+    sw = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+    // gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_container_add(GTK_CONTAINER(sw), pwText);
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_get_preferred_size(GTK_WIDGET(pwText), &req, NULL);
+#else
+    gtk_widget_size_request(GTK_WIDGET(pwText), &req);
+#endif
+    if (strlen(sz) > MAXSTRLEN || req.height > MAXWINSIZE) {
+        int wz = MIN(MAXWINSIZE, req.height + 100);
+        gtk_window_set_default_size(GTK_WINDOW(pwDialog), -1, wz);
+    }
+#if GTK_CHECK_VERSION(3,0,0)
+    pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+#else
+    pwv = gtk_vbox_new(FALSE, 2); //gtk_vbox_new (gboolean homogeneous, gint spacing);
+#endif
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwv);
+
+    gtk_box_pack_start(GTK_BOX(pwv), sw, FALSE, FALSE, 5);
+
+    gtk_box_pack_start(GTK_BOX(pwv), pwButton = gtk_button_new_with_label(_("Go to GNU-Backgammon website")), FALSE, FALSE, 8);
+    g_signal_connect(G_OBJECT(pwButton), "clicked", G_CALLBACK(GoToGnubgWebsite), NULL);
+
+    pwCheckUpdates = gtk_check_button_new_with_label(_("Keep checking for GNU-Backgammon updates online"));
+    gtk_box_pack_start(GTK_BOX(pwv), pwCheckUpdates, FALSE, FALSE, 5);
+    gtk_widget_set_tooltip_text(pwCheckUpdates, _("Automatically check gnubg updates online"));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwCheckUpdates), fCheckUpdates);
+    CHECKUPDATE(pwCheckUpdates, fCheckUpdates, "set checkupdates %s")
+
+    GTKRunDialog(pwDialog);
+
+    g_free(sz);
+    // g_message(GDK_CURRENT_TIME);
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    g_message("now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    if(t-lastChecked>1) {
+        g_message("%ld>%ld",t,lastChecked);
+        lastChecked = t;
+    }
+}
+#undef CHECKUPDATE
+ 
+static size_t
+WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+ 
+  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
+  if(!ptr) {
+    /* out of memory! */
+    printf("not enough memory (realloc returned NULL)\n");
+    return 0;
+  }
+ 
+  mem->memory = ptr;
+  memcpy(&(mem->memory[mem->size]), contents, realsize);
+  mem->size += realsize;
+  mem->memory[mem->size] = 0;
+ 
+  return realsize;
+}
+/*   check version update online*/
+void CheckVersionUpdate(void)
+{
+#if defined(LIBCURL_PROTOCOL_HTTPS)
+    CURL *curl_handle;
+    CURLcode res;
+    char * url;
+    /* first scenario is with no update online, second has an update*/
+    if(0)
+        url="https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/version.txt";
+    else
+        url="https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/newversion.txt";
+ 
+    struct MemoryStruct chunk;
+
+    chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
+    chunk.size = 0;    /* no data at this point */
+
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    /* init the curl session */
+    curl_handle = curl_easy_init();
+
+    /* specify URL to get */
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+
+    /* send all data to this function  */
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+
+    /* we pass our 'chunk' struct to the callback function */
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
+
+    /* some servers do not like requests that are made without a user-agent
+        field, so we provide one */
+    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+    /* get it! */
+    res = curl_easy_perform(curl_handle);
+
+    /* check for errors */
+    if(res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                curl_easy_strerror(res));
+    }
+    else {
+        /*
+        * Now, our chunk.memory points to a memory block that is chunk.size
+        * bytes big and contains the remote file.
+        */
+        char *token;
+        token = strtok(chunk.memory, "\n");
+        g_message("latest version=%s vs VERSION=%s",token,VERSION);
+        if (strcmp(token,VERSION)>0) {
+            g_message("newer version, need to download!");
+            AskToUpdate(token);
+        }   else {
+            return;
+        }   
+    }
+
+    /* cleanup curl stuff */
+    curl_easy_cleanup(curl_handle);
+
+    free(chunk.memory);
+
+    //   /* we are done with libcurl, so clean it up */
+    //   curl_global_cleanup(); //<- needed? done upon shutdown; we may also need this elsewhere, 
+                                //  e.g. for the random number generator
+#endif //end ifdefined LIBCURL
+}
+
+/* ************************************************ */
 
 enum { RE_NONE, RE_LANGUAGE_CHANGE };
 
@@ -4926,6 +5119,11 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
         if(fBackgroundAnalysis)
              fAnalysisRunning = FALSE;
 
+        /* check that there is no new gnubg version online */     
+#if defined(LIBCURL_PROTOCOL_HTTPS)
+        if(fCheckUpdates)
+            CheckVersionUpdate();
+#endif
         gtk_main();
 
         if (reasonExited == RE_LANGUAGE_CHANGE) {       /* Recreate main window with new language */
@@ -8513,11 +8711,13 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
 // g_message("2");
     gtk_widget_show_all (window);
 // g_message("3");
-     gtk_widget_set_can_focus(window,TRUE);
-     if(pwStatDialog)
-         gtk_widget_set_can_focus(pwStatDialog, FALSE);
-     gtk_window_set_focus (GTK_WINDOW(window), window);
-    //gtk_widget_grab_focus(window);
+    // /*run these 4 lines if needed:*/
+    //  gtk_widget_set_can_focus(window,TRUE);
+    //  if(pwStatDialog)
+    //      gtk_widget_set_can_focus(pwStatDialog, FALSE);
+    //  gtk_window_set_focus (GTK_WINDOW(window), window);
+            // gdk_window_raise(gtk_widget_get_window(window));
+    //gtk_widget_grab_focus(window); /*didn't work*/
     //gtk_main ();
 // g_message("4");
 }

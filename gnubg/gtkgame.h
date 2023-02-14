@@ -188,4 +188,10 @@ extern void ProcessInput(char *sz);
 extern void SetSwitchModeMenuText(void);
 #endif
 
+/* useful for CURL to check the latest update online */
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
+
 #endif
