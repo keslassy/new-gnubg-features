@@ -18,9 +18,16 @@
  * $Id: gtkgame.c,v 1.992 2023/01/18 21:49:36 plm Exp $
  */
 /*
-02/2023: Isaac Keslassy: introduced the "mwc plot" feature, together with two ways 
+02/2023: Isaac Keslassy: 
+- introduced the "mwc plot" feature, together with two ways 
 of launching it graphically: a sub-menu command ("Analyze > Plot MWC"), and a button
 in "Match of session statistics". 
+- introduced an automatic check online of the latest version. It is only done 
+once a week. If there is a newer version, it tells the user, who can click and 
+go the download website. The user can disable it, either in the 
+Settings>Options>Misc, or the first time the window appears. 
+Also added a menu command in Help so the user can click and go the download 
+website. 
 */
 #include "config.h"
 #include "gnubgmodule.h"
