@@ -24,7 +24,7 @@ of launching it graphically: a sub-menu command ("Analyze > Plot MWC"), and a bu
 in "Match of session statistics". 
 - introduced an automatic check online of the latest version. It is only done 
 once a week. If there is a newer version, it tells the user, who can click and 
-go the download website. The user can disable it, either in the 
+go to the download website. The user can disable it, either in the 
 Settings>Options>Misc, or the first time the window appears. 
 Also added a menu command in Help so the user can click and go the download 
 website. 
@@ -4088,7 +4088,7 @@ static GtkActionEntry actionEntries[] = {
     {"HelpManualAllAboutAction", NULL, N_("_Manual (all about)"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MANUAL_ABOUT)},
     {"HelpManualWebAction", NULL, N_("Manual (_web)"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MANUAL_WEB)},
-    {"HelpCheckGNUBGUpdatesAction", NULL, N_("Check updates"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_VERSION_UPDATES)},
+    {"HelpCheckGNUBGUpdatesAction", NULL, N_("Check for updates"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_VERSION_UPDATES)},
     {"HelpAboutGNUBGAction", GTK_STOCK_ABOUT, N_("_About GNU Backgammon"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_VERSION)}
 };
@@ -4339,7 +4339,7 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_Help/Manual (_web)"), NULL, Command,
      CMD_SHOW_MANUAL_WEB, NULL, NULL},
     {N_("/_Help/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_Help/Check updates"), NULL, Command, CMD_SHOW_VERSION_UPDATES, NULL, NULL},
+    {N_("/_Help/Check for updates"), NULL, Command, CMD_SHOW_VERSION_UPDATES, NULL, NULL},
     {N_("/_Help/_About GNU Backgammon"), NULL, Command, CMD_SHOW_VERSION,
      "<StockItem>", GTK_STOCK_ABOUT}
 };
