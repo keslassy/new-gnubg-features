@@ -427,6 +427,7 @@ extern unsigned int cAutoDoubles;
 extern unsigned int nBeavers;
 extern unsigned int nDefaultLength;
 extern rngcontext *rngctxRollout;
+extern intmax_t nextUpdateTime;
 
 extern command acAnnotateMove[];
 extern command acSetAnalysisPlayer[];
@@ -829,6 +830,7 @@ extern void CommandSetMatchRating(char *);
 extern void CommandSetMatchRound(char *);
 extern void CommandSetMessage(char *);
 extern void CommandSetMET(char *);
+extern void CommandSetNextUpdateTime(char *sz);
 extern void CommandSetOutputDigits(char *);
 extern void CommandSetOutputErrorRateFactor(char *);
 extern void CommandSetOutputMatchPC(char *);

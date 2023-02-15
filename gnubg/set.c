@@ -30,6 +30,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <inttypes.h> //for strtoimax
 
 #if defined(HAVE_SYS_RESOURCE_H)
 #include <sys/resource.h>
@@ -4843,4 +4844,17 @@ CommandSetCheckUpdates(char *sz)
 {
     SetToggle("set checkupdates", &fCheckUpdates, sz,
               _("Automatically check gnubg updates online"), _("Do not check gnubg updates online"));
+}
+
+extern void
+CommandSetNextUpdateTime(char *sz)
+{
+    // int seconds = ParseNumber(&sz);
+    intmax_t seconds = strtoimax(sz, NULL, 10);
+
+    if (seconds < 1) {
+        outputl(_("You must specify a positive time in seconds"));
+        return;
+    }
+    nextUpdateTime = seconds;
 }

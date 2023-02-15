@@ -1214,6 +1214,7 @@ static command acSetVariation[] = {
 #endif
     { "met", CommandSetMET,
       N_("Synonym for `set matchequitytable'"), szFILENAME, &cFilename },
+    { "nextupdatetime", CommandSetNextUpdateTime, N_("Set next time to check a gnubg update online"), NULL, NULL },
     { "output", NULL, N_("Modify options for formatting results"), NULL,
       acSetOutput },
 #if defined(USE_GTK)

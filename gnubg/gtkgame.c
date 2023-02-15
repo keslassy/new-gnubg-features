@@ -4327,6 +4327,7 @@ static GtkItemFactoryEntry aife[] = {
      CMD_SHOW_MANUAL_ABOUT, NULL, NULL},
     {N_("/_Help/Manual (_web)"), NULL, Command,
      CMD_SHOW_MANUAL_WEB, NULL, NULL},
+    // {N_("/_Help/Manual (_web)"), NULL, Command, CMD_SHOW_MANUAL_WEB, NULL, NULL},
     {N_("/_Help/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Help/_About GNU Backgammon"), NULL, Command, CMD_SHOW_VERSION,
      "<StockItem>", GTK_STOCK_ABOUT}
@@ -4808,16 +4809,31 @@ void AskToUpdate(char * availableVersion)
     GtkWidget *pwCheckUpdates;
     GtkRequisition req;
     GtkTextBuffer *buffer;
-    time_t lastChecked=0;
 
-    char *sz = g_strdup_printf(_("A new version of GnuBG is available. "
+    /* verify if it has been a week since the last update check*/
+    //time_t tSeconds = time(NULL);
+    // struct tm tm = *localtime(&seconds);
+    // g_message("now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    // long int test=(long int) (seconds);
+    /* using int rather than long int because that's what Parse gives us;
+    */
+    intmax_t intSeconds=(intmax_t) (time(NULL));
+    g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
+    if(intSeconds-nextUpdateTime>1) {
+        nextUpdateTime=intSeconds + 17;
+        UserCommand("save settings");
+    }
+
+
+
+    char *sz = g_strdup_printf(_("A new version of GNU Backgammon is available. "
             "\n\n Current version:   %s"
             "\n Available version: %s\n"),
             VERSION, availableVersion);
     g_message("%s",sz);
 
     // pwDialog = GTKCreateDialog(_("GnuBG update"), DT_INFO, GTKGetCurrentParent(), DIALOG_FLAG_NONE, NULL, &answer);
-    pwDialog = GTKCreateDialog(_("GnuBG update"), DT_INFO, pwMain, DIALOG_FLAG_MODAL, NULL, &answer);
+    pwDialog = GTKCreateDialog(_("GNU Backgammon update"), DT_INFO, pwMain, DIALOG_FLAG_MODAL, NULL, &answer);
     // pwDialog = GTKCreateDialog(_("GnuBG update"), DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //gtk_window_set_default_size (GTK_WINDOW (pwDialog), 400, 300);
     // g_signal_connect(G_OBJECT(pwDialog), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
@@ -4854,23 +4870,16 @@ void AskToUpdate(char * availableVersion)
     gtk_box_pack_start(GTK_BOX(pwv), pwButton = gtk_button_new_with_label(_("Go to GNU-Backgammon website")), FALSE, FALSE, 8);
     g_signal_connect(G_OBJECT(pwButton), "clicked", G_CALLBACK(GoToGnubgWebsite), NULL);
 
-    pwCheckUpdates = gtk_check_button_new_with_label(_("Keep checking for GNU-Backgammon updates online"));
+    pwCheckUpdates = gtk_check_button_new_with_label(_("Keep checking for GNU-Backgammon updates"));
     gtk_box_pack_start(GTK_BOX(pwv), pwCheckUpdates, FALSE, FALSE, 5);
-    gtk_widget_set_tooltip_text(pwCheckUpdates, _("Automatically check gnubg updates online"));
+    gtk_widget_set_tooltip_text(pwCheckUpdates, _("Automatically check if there are GNU Backgammon version updates online"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwCheckUpdates), fCheckUpdates);
     CHECKUPDATE(pwCheckUpdates, fCheckUpdates, "set checkupdates %s")
 
     GTKRunDialog(pwDialog);
 
     g_free(sz);
-    // g_message(GDK_CURRENT_TIME);
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    g_message("now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-    if(t-lastChecked>1) {
-        g_message("%ld>%ld",t,lastChecked);
-        lastChecked = t;
-    }
+
 }
 #undef CHECKUPDATE
  
@@ -5121,8 +5130,20 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 
         /* check that there is no new gnubg version online */     
 #if defined(LIBCURL_PROTOCOL_HTTPS)
-        if(fCheckUpdates)
-            CheckVersionUpdate();
+        if(fCheckUpdates) {
+            /* first verify that we haven't looked for an update in the past week */
+            intmax_t intSeconds=(intmax_t) (time(NULL));
+            g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
+            if(intSeconds-nextUpdateTime>1) {
+                /* inside this loop means we haven't checked in the past week.
+                - We first update the next time to check and set it a week from now
+                - Then we launch a splash screen with a notice for the user
+                */
+                nextUpdateTime=intSeconds + 604800; //3600*24*7
+                UserCommand("save settings");
+                CheckVersionUpdate();
+            }
+        }
 #endif
         gtk_main();
 

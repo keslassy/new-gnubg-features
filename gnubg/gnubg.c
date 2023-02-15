@@ -201,6 +201,7 @@ int fAutoSaveRollout = FALSE;
 int fAutoSaveAnalysis = FALSE;
 int fAutoSaveConfirmDelete = TRUE;
 int fCheckUpdates = TRUE;
+intmax_t nextUpdateTime = 0; /* hopefully settings update the true value*/
 
 /* FIXME: This is at best useless, at worst misleading, as a global flag.
  * It should be deduced from the rollout context when needed.
@@ -3341,6 +3342,7 @@ SaveMiscSettings(FILE * pf)
         fprintf(pf, "ask\n");
 
     fprintf(pf, "set gotofirstgame %s\n", fGotoFirstGame ? "on" : "off");
+    fprintf(pf, "set nextupdatetime %ld\n", (nextUpdateTime));
     fprintf(pf, "set output matchpc %s\n", fOutputMatchPC ? "on" : "off");
     fprintf(pf, "set output mwc %s\n", fOutputMWC ? "on" : "off");
     fprintf(pf, "set output rawboard %s\n", fOutputRawboard ? "on" : "off");
