@@ -186,6 +186,7 @@ typedef enum {
     CMD_SHOW_SCORE_MAP_CUBE,    
     CMD_SHOW_SCORE_MAP_MOVE,    
     CMD_SHOW_VERSION,
+    CMD_SHOW_VERSION_UPDATES,
     CMD_SHOW_WARRANTY,
     CMD_SWAP_PLAYERS,
     NUM_CMDS,
@@ -398,6 +399,7 @@ CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_TEMPERATURE_MAP_CUBE, "show temperaturemap =
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_SCORE_MAP_CUBE, "show scoremap");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_SCORE_MAP_MOVE, "show scoremap =move");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_VERSION, "show version");
+CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_VERSION_UPDATES, "show versionupdates");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_WARRANTY, "show warranty");
 CREATE_CMD_ACTION_CALLBACK(CMD_SWAP_PLAYERS, "swap players");
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_GAMELIST, TogglePanel);
@@ -479,6 +481,7 @@ static const char *aszCommands[NUM_CMDS] = {
     "show scoremap",  
     "show scoremap =move",  
     "show version",
+    "show versionupdates",
     "show warranty",
     "swap players",
 };
@@ -4078,6 +4081,7 @@ static GtkActionEntry actionEntries[] = {
     {"HelpManualAllAboutAction", NULL, N_("_Manual (all about)"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MANUAL_ABOUT)},
     {"HelpManualWebAction", NULL, N_("Manual (_web)"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MANUAL_WEB)},
+    {"HelpCheckGNUBGUpdatesAction", NULL, N_("Check updates"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_VERSION_UPDATES)},
     {"HelpAboutGNUBGAction", GTK_STOCK_ABOUT, N_("_About GNU Backgammon"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_VERSION)}
 };
@@ -4327,8 +4331,8 @@ static GtkItemFactoryEntry aife[] = {
      CMD_SHOW_MANUAL_ABOUT, NULL, NULL},
     {N_("/_Help/Manual (_web)"), NULL, Command,
      CMD_SHOW_MANUAL_WEB, NULL, NULL},
-    // {N_("/_Help/Manual (_web)"), NULL, Command, CMD_SHOW_MANUAL_WEB, NULL, NULL},
     {N_("/_Help/-"), NULL, NULL, 0, "<Separator>", NULL},
+    {N_("/_Help/Check updates"), NULL, Command, CMD_SHOW_VERSION_UPDATES, NULL, NULL},
     {N_("/_Help/_About GNU Backgammon"), NULL, Command, CMD_SHOW_VERSION,
      "<StockItem>", GTK_STOCK_ABOUT}
 };
@@ -4782,7 +4786,8 @@ InitGTK(int *argc, char ***argv)
 static void
 GoToGnubgWebsite(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
 {
-    OpenURL("https://www.gnu.org/software/gnubg/#downloading");
+    // OpenURL("https://www.gnu.org/software/gnubg/#downloading");
+    CommandShowVersionUpdates(NULL);
 }
 
 #define CHECKUPDATE(button,flag,string) \

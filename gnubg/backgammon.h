@@ -1031,6 +1031,7 @@ extern void CommandShowTurn(char *);
 extern void CommandShowTutor(char *);
 extern void CommandShowVariation(char *);
 extern void CommandShowVersion(char *);
+extern void CommandShowVersionUpdates(char *);
 extern void CommandShowWarning(char *);
 extern void CommandShowWarranty(char *);
 extern void CommandSwapPlayers(char *);

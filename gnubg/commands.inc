@@ -1456,6 +1456,8 @@ command  acShow[] = {
       N_("Show which player is on roll"), NULL, NULL },
     { "version", CommandShowVersion, 
       N_("Describe this version of GNU Backgammon"), NULL, NULL },
+    { "versionupdates", CommandShowVersionUpdates, 
+      N_("Check online for updates of GNU Backgammon"), NULL, NULL },
     { "tutor", CommandShowTutor, 
       N_("Give warnings for possible errors in play"), NULL, NULL },
     { "variation", CommandShowVariation, 

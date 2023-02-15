@@ -1546,6 +1546,12 @@ CommandShowVersion(char *UNUSED(sz))
 }
 
 extern void
+CommandShowVersionUpdates(char *UNUSED(sz))
+{
+ OpenURL("https://www.gnu.org/software/gnubg/#downloading");
+}
+
+extern void
 CommandShowMarketWindow(char *sz)
 {
 
