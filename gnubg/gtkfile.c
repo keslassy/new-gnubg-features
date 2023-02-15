@@ -37,8 +37,6 @@
 #include "gtkwindows.h"
 #include "file.h"
 #include "util.h"
-/*#include "openurl.h"*/ /*<--internet file*/
-#include <curl/curl.h> /*<--curl method?*/
 
 /*for picking the first file in folder...*/
 #include <stdio.h>
