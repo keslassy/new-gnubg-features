@@ -4815,33 +4815,14 @@ void AskToUpdate(char * availableVersion)
     GtkRequisition req;
     GtkTextBuffer *buffer;
 
-    /* verify if it has been a week since the last update check*/
-    //time_t tSeconds = time(NULL);
-    // struct tm tm = *localtime(&seconds);
-    // g_message("now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-    // long int test=(long int) (seconds);
-    /* using int rather than long int because that's what Parse gives us;
-    */
-    intmax_t intSeconds=(intmax_t) (time(NULL));
-    g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
-    if(intSeconds-nextUpdateTime>1) {
-        nextUpdateTime=intSeconds + 17;
-        UserCommand("save settings");
-    }
-
-
-
     char *sz = g_strdup_printf(_("A new version of GNU Backgammon is available. "
             "\n\n Current version:   %s"
             "\n Available version: %s\n"),
             VERSION, availableVersion);
     g_message("%s",sz);
-
-    // pwDialog = GTKCreateDialog(_("GnuBG update"), DT_INFO, GTKGetCurrentParent(), DIALOG_FLAG_NONE, NULL, &answer);
+    /* show a splash window in GTK, else just a message*/
+#if defined(USE_GTK)
     pwDialog = GTKCreateDialog(_("GNU Backgammon update"), DT_INFO, pwMain, DIALOG_FLAG_MODAL, NULL, &answer);
-    // pwDialog = GTKCreateDialog(_("GnuBG update"), DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
-    //gtk_window_set_default_size (GTK_WINDOW (pwDialog), 400, 300);
-    // g_signal_connect(G_OBJECT(pwDialog), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
 
     pwText = gtk_text_view_new();
     gtk_text_view_set_editable(GTK_TEXT_VIEW(pwText), FALSE);
@@ -4882,6 +4863,11 @@ void AskToUpdate(char * availableVersion)
     CHECKUPDATE(pwCheckUpdates, fCheckUpdates, "set checkupdates %s")
 
     GTKRunDialog(pwDialog);
+#else
+    /* the non-GTK version does not seem to put an error message, so using it:*/
+    outputerrf("%s",sz);
+    outputerrf(_("Please check online: %s"),websiteForUpdates);
+#endif //GTK
 
     g_free(sz);
 
@@ -4908,18 +4894,20 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
  
   return realsize;
 }
+
+/* first line is with no new update version online, second has an update*/
+char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/version.txt";
+// char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/newversion.txt";
+
+ 
+
 /*   check version update online*/
 void CheckVersionUpdate(void)
 {
 #if defined(LIBCURL_PROTOCOL_HTTPS)
     CURL *curl_handle;
     CURLcode res;
-    char * url;
-    /* first scenario is with no update online, second has an update*/
-    if(0)
-        url="https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/version.txt";
-    else
-        url="https://raw.githubusercontent.com/keslassy/new-gnubg-features/autoUpdate/gnubg/newversion.txt";
+    // char * url;
  
     struct MemoryStruct chunk;
 
@@ -4932,7 +4920,7 @@ void CheckVersionUpdate(void)
     curl_handle = curl_easy_init();
 
     /* specify URL to get */
-    curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+    curl_easy_setopt(curl_handle, CURLOPT_URL, urlForVersion);
 
     /* send all data to this function  */
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
@@ -5133,23 +5121,11 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
         if(fBackgroundAnalysis)
              fAnalysisRunning = FALSE;
 
-        /* check that there is no new gnubg version online */     
-#if defined(LIBCURL_PROTOCOL_HTTPS)
-        if(fCheckUpdates) {
-            /* first verify that we haven't looked for an update in the past week */
-            intmax_t intSeconds=(intmax_t) (time(NULL));
-            g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
-            if(intSeconds-nextUpdateTime>1) {
-                /* inside this loop means we haven't checked in the past week.
-                - We first update the next time to check and set it a week from now
-                - Then we launch a splash screen with a notice for the user
-                */
-                nextUpdateTime=intSeconds + 604800; //3600*24*7
-                UserCommand("save settings");
+        if(fCheckUpdateGTK) {
+                fCheckUpdateGTK = FALSE;
                 CheckVersionUpdate();
-            }
         }
-#endif
+
         gtk_main();
 
         if (reasonExited == RE_LANGUAGE_CHANGE) {       /* Recreate main window with new language */

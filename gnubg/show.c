@@ -65,6 +65,9 @@
 #include <io.h>
 #endif
 
+/* official GNUBG website */
+extern char * websiteForUpdates = "https://www.gnu.org/software/gnubg/#downloading";
+
 static void
 ShowMoveFilter(const movefilter * pmf, const int ply)
 {
@@ -1548,7 +1551,7 @@ CommandShowVersion(char *UNUSED(sz))
 extern void
 CommandShowVersionUpdates(char *UNUSED(sz))
 {
- OpenURL("https://www.gnu.org/software/gnubg/#downloading");
+ OpenURL(websiteForUpdates);
 }
 
 extern void

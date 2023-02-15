@@ -253,6 +253,9 @@ int keyNamesFirstEmpty=0;
 int fUseKeyNames=FALSE; /* for now assume that it's turned off by default, should set TRUE in the future*/
 int fWithinSmartOpen=FALSE;
 
+int fCheckUpdateGTK = FALSE;
+
+
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
 int fResetSync = FALSE;         /* May need to wait for main window */
@@ -4778,6 +4781,31 @@ main(int argc, char *argv[])
 
     /* start-up sound */
     playSound(SOUND_START);
+
+    /* check that there is no new gnubg version online */     
+#if defined(LIBCURL_PROTOCOL_HTTPS)
+    if(fCheckUpdates) {
+        /* first verify that we haven't looked for an update in the past week */
+        intmax_t intSeconds=(intmax_t) (time(NULL));
+        // g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
+        if(intSeconds-nextUpdateTime>1) {
+            /* inside this loop means we haven't checked in the past week.
+            - We first update the next time to check and set it a week from now
+            - Then we launch a splash screen with a notice for the user
+            */
+            nextUpdateTime=intSeconds + 604800; //3600*24*7
+            UserCommand("save settings");
+#if defined(USE_GTK)
+            // we postpone checking if there is a newer version to after the GTK window shows up
+            fCheckUpdateGTK = TRUE;
+#else
+            CheckVersionUpdate();
+#endif //GTK
+        }
+    }
+#endif //LIBCURL
+
+
 
 #if defined(USE_GTK)
     if (fX) {
