@@ -66,7 +66,7 @@
 #endif
 
 /* official GNUBG website */
-extern char * websiteForUpdates = "https://www.gnu.org/software/gnubg/#downloading";
+char * websiteForUpdates = "https://www.gnu.org/software/gnubg/#downloading";
 
 static void
 ShowMoveFilter(const movefilter * pmf, const int ply)

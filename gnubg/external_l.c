@@ -1,6 +1,6 @@
-#line 1 "external_l.c"
+#line 2 "external_l.c"
 
-#line 3 "external_l.c"
+#line 4 "external_l.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -253,8 +253,7 @@
 
 /* C99 systems have <inttypes.h>. Non-C99 systems may or may not. */
 
-#if defined(__FreeBSD__) || \
-    (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
+#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 
 /* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
  * if you want the limit (max/min) macros for int types. 
@@ -491,7 +490,6 @@ struct yy_buffer_state
 #define YY_CURRENT_BUFFER ( yyg->yy_buffer_stack \
                           ? yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] \
                           : NULL)
-#define yy_current_buffer YY_CURRENT_BUFFER
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
  */
@@ -962,10 +960,10 @@ void escapes(const char *cp, char *tp);
         } \
         yylval->str = g_string_new(yytext)
 
-#line 965 "external_l.c"
+#line 964 "external_l.c"
 #define YY_NO_INPUT 1
  
-#line 968 "external_l.c"
+#line 967 "external_l.c"
 
 #define INITIAL 0
 #define SBOARDP1 1
@@ -1244,7 +1242,7 @@ YY_DECL
 #line 60 "external_l.l"
 
 
-#line 1247 "external_l.c"
+#line 1246 "external_l.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1549,7 +1547,7 @@ YY_RULE_SETUP
 #line 147 "external_l.l"
 ECHO;
 	YY_BREAK
-#line 1552 "external_l.c"
+#line 1551 "external_l.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1938,11 +1936,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 				case EOB_ACT_END_OF_FILE:
 					{
 					if ( yywrap( yyscanner ) )
-#ifdef YY_FLEX_LEX_COMPAT
 						return 0;
-#else
-						return EOF;
-#endif
 
 					if ( ! yyg->yy_did_buffer_switch_on_eof )
 						YY_NEW_FILE;

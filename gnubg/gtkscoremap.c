@@ -2729,11 +2729,7 @@ Allows garbage collection.
 static void
 AddText(GtkWidget* pwBox, char* Text)
 {
-    /* TBD: gtk_rc_style_new is deprecated in GTK3.0:
-    "warning: 'gtk_rc_style_new' is deprecated: Use 'GtkStyleContext' instead"
-    same for gtk_widget_modify_style below
-    */
-    GtkRcStyle * ps = gtk_rc_style_new();
+
     GtkWidget * pwText = gtk_label_new(Text);
     GtkWidget * pwHBox;
 
@@ -2744,12 +2740,22 @@ AddText(GtkWidget* pwBox, char* Text)
 #endif
     gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, FALSE, FALSE, 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkCssProvider *provider = gtk_css_provider_new ();
+    GdkDisplay *display = gdk_display_get_default();
+    GdkScreen *screen = gdk_display_get_default_screen (display);
+    gtk_style_context_add_provider_for_screen (screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+    gtk_css_provider_load_from_data (
+        provider, "GtkLabel { font-size: 8px;}", -1, NULL); //to be fine-tuned
+        // provider, "GtkLabel { background-color: #AAAAAA;}", -1, NULL);
+#else
+    GtkRcStyle * ps = gtk_rc_style_new();
     ps->font_desc = pango_font_description_new();
     //pango_font_description_set_family_static(ps->font_desc, "serif");
     pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
     gtk_widget_modify_style(pwText, ps);
     g_object_unref(ps);
-
+#endif
     gtk_box_pack_start(GTK_BOX(pwHBox), pwText, TRUE, FALSE, 0);
 }
 

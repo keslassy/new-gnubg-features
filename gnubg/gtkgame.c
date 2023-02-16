@@ -7258,10 +7258,12 @@ GTKShowBuildInfo(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
 /* Stores names in credits so not duplicated in list at bottom */
 static listOLD names;
 
+/* this is a copy of AddText in gtkscoremap.c with the exception of the font size,
+consider merging*/
 static void
 AddTitle(GtkWidget * pwBox, char *Title)
 {
-    GtkRcStyle *ps = gtk_rc_style_new();
+
     GtkWidget *pwTitle = gtk_label_new(Title), *pwHBox;
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -7271,12 +7273,23 @@ AddTitle(GtkWidget * pwBox, char *Title)
 #endif
     gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, FALSE, FALSE, 4);
 
+
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkCssProvider *provider = gtk_css_provider_new ();
+    GdkDisplay *display = gdk_display_get_default();
+    GdkScreen *screen = gdk_display_get_default_screen (display);
+    gtk_style_context_add_provider_for_screen (screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+    gtk_css_provider_load_from_data (
+        provider, "GtkLabel { font-size: 16px;}", -1, NULL); //to be fine-tuned
+        // provider, "GtkLabel { background-color: #AAAAAA;}", -1, NULL);
+#else
+    GtkRcStyle * ps = gtk_rc_style_new();
     ps->font_desc = pango_font_description_new();
-    pango_font_description_set_family_static(ps->font_desc, "serif");
+    //pango_font_description_set_family_static(ps->font_desc, "serif");
     pango_font_description_set_size(ps->font_desc, 16 * PANGO_SCALE);
     gtk_widget_modify_style(pwTitle, ps);
     g_object_unref(ps);
-
+#endif
     gtk_box_pack_start(GTK_BOX(pwHBox), pwTitle, TRUE, FALSE, 0);
 }
 
@@ -7837,6 +7850,23 @@ GTKSet(void *p)
                                                            "/MainMenu/AnalyseMenu/AddMatchOrSessionStatsToDB"),
                                  !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/ShowRecords"), TRUE);
+
+        /*disabling everything when we analyze a game in the background*/
+
+        if(fBackgroundAnalysis){
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/FileMenu/"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/EditMenu/"), !fAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu/"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/SettingsMenu/"), !fAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GoMenu/"), !fAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/HelpMenu/"), !fAnalysisRunning);
+        } 
+
+
+
+
 #else
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Save..."), plGame != NULL);
 
@@ -7911,16 +7941,13 @@ GTKSet(void *p)
                                  !ListEmpty(&lMatch));
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif,
-                                                             "/Analyse/Add match or session to database"),
-                                 !ListEmpty(&lMatch));
+                    "/Analyse/Add match or session to database"), 
+                    !ListEmpty(&lMatch));
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Show Records"), TRUE);
-#endif
+
         
         /*disabling everything when we analyze a game in the background*/
-
-
-    // const char* aszMenus[8] = ...;
 
         if(fBackgroundAnalysis){
             gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File"), !fAnalysisRunning);
@@ -7933,7 +7960,7 @@ GTKSet(void *p)
             // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Help"), !fAnalysisRunning);
         } 
         
-        
+#endif       
         
         
         
@@ -8428,15 +8455,28 @@ void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, doubl
 static gboolean
 on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
 {
-    cairo_t *cr = gdk_cairo_create (widget->window);
     // GdkRectangle da;            /* GtkDrawingArea size */
     double dx = 2.0, dy = 2.0; /* Pixels between each point */
     double fontSize =11.0;
     double clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
-    int unused = 0;
     char strTemp[100];
 
+#if GTK_CHECK_VERSION(3,0,0)
+    /*this is an "on_draw" in GTK3*/
+        // "convert" the G*t*kWidget to G*d*kWindow (no, it's not a GtkWindow!)
+    GdkWindow* window = gtk_widget_get_window(widget);  
+
+    cairo_region_t * cairoRegion = cairo_region_create();
+
+    GdkDrawingContext * drawingContext;
+    drawingContext = gdk_window_begin_draw_frame (window,cairoRegion);
+
+    // say: "I want to start drawing"
+    cairo_t * cr = gdk_drawing_context_get_cairo_context (drawingContext);
+#else
+    cairo_t *cr = gdk_cairo_create (widget->window);
+#endif    
        /* Define a clipping zone to improve performance */
     cairo_rectangle (cr,
             event->area.x,
@@ -8444,14 +8484,24 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             event->area.width,
             event->area.height);
     cairo_clip (cr);
-
+#if GTK_CHECK_VERSION(3,0,0)
     /* Determine GtkDrawingArea dimensions */
+    gdk_window_get_geometry (window,
+            &da.x,
+            &da.y,
+            &da.width,
+            &da.height);
+#else
+    /* Determine GtkDrawingArea dimensions */
+    int unused = 0;
     gdk_window_get_geometry (widget->window,
             &da.x,
             &da.y,
             &da.width,
             &da.height,
             &unused);
+#endif  
+
 
     // /* Draw on a black background */
     // cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
@@ -8637,8 +8687,16 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
     } else 
         outputerrf(_("Please run analysis again (not enough datapoints for plot).\n"));
+#if GTK_CHECK_VERSION(3,0,0)
 
+    // say: "I'm finished drawing
+    gdk_window_end_draw_frame(window,drawingContext);
+ 
+    // cleanup
+    cairo_region_destroy(cairoRegion);
+#else
     cairo_destroy (cr);
+#endif 
     return FALSE;
 }
 // void CloseWindow(GObject * UNUSED(po), GtkWidget * pw)
@@ -8688,15 +8746,38 @@ red (negative) and green (positive) arrows. It is centered at 50\% for convenien
 
 void DrawMWC (void)  //GtkWidget* pwParent) {
 {
+
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkWindow * window; 
+    { // window setup
+        window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        gtk_window_set_default_size (window, WIDTH, HEIGHT);
+        gtk_window_set_position     (window, GTK_WIN_POS_CENTER);
+        gtk_window_set_title        (window, "MWC plot");
+
+        g_signal_connect(window, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+    }  
+    GtkDrawingArea* da;
+    {
+        da = (GtkDrawingArea*) gtk_drawing_area_new();
+        gtk_container_add(GTK_CONTAINER(window), 
+            (GtkWidget*)da);
+
+        g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(on_expose_event), NULL);    
+        // g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(on_draw), NULL);    
+    } 
+    gtk_widget_show_all ((GtkWidget*)window);
+#else
+
     GtkWidget *window;
-    GtkWidget *da;
+    // GtkWidget *da;
     GtkWidget *helpButton;
     // window = GTKCreateDialog(_("MWC plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
     window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
-    //gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
+    gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
@@ -8710,15 +8791,15 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
     g_signal_connect(helpButton, "clicked", G_CALLBACK(MWCPlotInfo), window);
 
 
-    da = gtk_drawing_area_new ();
+    GtkWidget * da = gtk_drawing_area_new ();
     gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_MAIN)), da);
-    //gtk_container_add (GTK_CONTAINER (window), da);
-// g_message("1");
     g_signal_connect (G_OBJECT (da), "expose-event", G_CALLBACK (on_expose_event), NULL);
+
     // g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(gtk_main_quit), NULL);
  //   g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(CloseWindow), window);        
 // g_message("2");
     gtk_widget_show_all (window);
+#endif    
 // g_message("3");
     // /*run these 4 lines if needed:*/
     //  gtk_widget_set_can_focus(window,TRUE);
