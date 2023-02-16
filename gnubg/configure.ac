@@ -355,6 +355,7 @@ no_gtk="yes"
 no_board3d="yes"
 AC_ARG_WITH(gtk,[  --with-gtk              use GTK+ 2.0 (Default if found)])
 AC_ARG_WITH(gtk3,[  --with-gtk3             use GTK+ 3.0 (Experimental, disabled by default)])
+AC_ARG_WITH(gtk4,[  --with-gtk4             use GTK 4.0 (Experimental, disabled by default)])
 AC_ARG_WITH(board3d,[  --with-board3d          compile with 3D boards (Default if found)])
 if test "$with_gtk" != "no" && test "x$have_gtk" = "xyes"; then
    AC_DEFINE(USE_GTK, 1, [Define if you want to use the gtk gui])
