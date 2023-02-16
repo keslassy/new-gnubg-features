@@ -116,11 +116,6 @@ It looks like this is not a scoremap issue. For instance, the "show" button has 
 and come back, it works again. It may be a movelist construction issue.
 */
 
-/* TBD: gtk_rc_style_new is deprecated in GTK3.0:
-"warning: 'gtk_rc_style_new' is deprecated: Use 'GtkStyleContext' instead"
-same for gtk_widget_modify_style 
-*/
-
 #include "config.h"
 #include "gtklocdefs.h"
 
@@ -2758,29 +2753,6 @@ AddText(GtkWidget* pwBox, char* Text)
 #endif
     gtk_box_pack_start(GTK_BOX(pwHBox), pwText, TRUE, FALSE, 0);
 }
-
-////Module to add text, based on AddTitle from gtkgame.c
-//static void
-//AddVText(GtkWidget* pwBox, char* Text)
-//{
-//    GtkRcStyle* ps = gtk_rc_style_new();
-//    GtkWidget* pwText = gtk_label_new(Text), * pwVBox;
-//
-//#if GTK_CHECK_VERSION(3,0,0)
-//    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-//#else
-//    pwVBox = gtk_vbox_new(FALSE, 0);
-//#endif
-//    gtk_box_pack_start(GTK_BOX(pwBox), pwVBox, FALSE, FALSE, 4);
-//
-//    ps->font_desc = pango_font_description_new();
-//    //pango_font_description_set_family_static(ps->font_desc, "serif");
-//    pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
-//    gtk_widget_modify_style(pwText, ps);
-//    g_object_unref(ps);
-//
-//    gtk_box_pack_start(GTK_BOX(pwVBox), pwText, TRUE, FALSE, 0);
-//}
 
 // display info on move scoremap
 extern void
