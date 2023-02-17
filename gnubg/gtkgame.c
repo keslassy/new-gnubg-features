@@ -4881,6 +4881,7 @@ void AskToUpdate(char * availableVersion)
 }
 #undef CHECKUPDATE
  
+/* gets an "unused" warning when compiling, but it looks like it is actually called below */
 static size_t
 WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
