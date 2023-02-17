@@ -8835,7 +8835,8 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
     moverecord * pmrT=NULL;
 
     /* if we already computed some MWC for some match, let's re-initialize 
-    all the static values and recompute the MWC */
+    all the static values and recompute the MWC; probably not needed but 
+    it's better to keep clean arrays */
     if (MWCLength<MAX_DECISIONS) {
         initArrays();
     }
