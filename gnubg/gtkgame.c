@@ -8384,11 +8384,9 @@ static double margin2y=0.05;
 */
 static double mwcD [MAX_DECISIONS]={-5.0}; /* vector of all decisions impacting mwc*/
 static double mwcBestD [MAX_DECISIONS]={-5.0}; /* optimal decisions*/
-// static double mwcCubes [MAX_DECISIONS]={-5.0}; 
-// static double mwcBestCubes [MAX_DECISIONS]={-5.0}; 
-static double mwcCumulMoveSkill[MAX_DECISIONS]={0.0};
-static int NewGame [MAX_DECISIONS]={0}; 
-static int CubeD [MAX_DECISIONS]={0}; 
+static double mwcCumulSkillDiff[MAX_DECISIONS]={-5.0}; /* cumulative skill difference*/
+static int NewGame [MAX_DECISIONS]={0};  /* indicator of start of new game */
+static int CubeD [MAX_DECISIONS]={0}; /* indicator for a cube decision */
 static int MWCLength; 
 #define EPSILON 0.001
 
@@ -8532,11 +8530,11 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         /* Draw the main plot: link each data point */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         for (int i = 0; i < MWCLength; i ++) {
-            if(mwcD[i]>=0 && mwcD[i]<=1) {
+            // if(mwcD[i]>=0 && mwcD[i]<=1) {
                 cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]));
                 // cairo_line_to (cr, (gdouble)i, -mwcD[i]);
                 // g_message("i=%d,val=%f",i,mwcD[i]);
-            }
+            // }
         }
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
@@ -8544,7 +8542,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
         /* Draw the best moves */
         for (int i = 1; i < MWCLength; i ++) {
-            if(mwcD[i]>=0 && mwcD[i]<=1) {
+            // if(mwcD[i]>=0 && mwcD[i]<=1) {
                 if (mwcBestD[i] - mwcD[i]>EPSILON) {
                     /* red: user's mistakes*/
                     /*
@@ -8586,14 +8584,16 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                     // cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcBestD[i]));
                     // cairo_stroke (cr);
                 }
-            }
+            // }
         }
+        cairo_stroke (cr);
+
         /* Cumulative skill */
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
         for (int i = 0; i < MWCLength; i ++) {
-            if(mwcD[i]>=0 && mwcD[i]<=1) {
-                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcCumulMoveSkill[i]));
-            }
+            // if(mwcD[i]>=0 && mwcD[i]<=1) {
+                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcCumulSkillDiff[i]));
+            // }
         }
         cairo_stroke (cr);
 
@@ -8813,24 +8813,33 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
 // g_message("4");
 }
 
+void initArrays(void) {
+    for (int i = 0; i < MWCLength; i++) {
+        mwcD [i]=-5.0; /* vector of all decisions impacting mwc*/
+        mwcBestD [i]=-5.0; /* optimal decisions*/
+        mwcCumulSkillDiff[i]=-5.0; /* cumulative skill difference*/
+        NewGame [i]=0; /* indicator of start of new game */
+        CubeD [i]=0; /* indicator for a cube decision */
+    }
+    mwcD[0]=0.5;
+    mwcBestD[0]=0.5;
+    mwcCumulSkillDiff[0]=0.5;
+    MWCLength=MAX_DECISIONS; /* resetting */
+}
+
 extern void ComputeMWC(void)//GtkWidget* pwParent)
 {
     listOLD *plCurGame;
     listOLD *plCurMove;
     listOLD *plStartingMove;
     moverecord * pmrT=NULL;
-    // matchstate * pmsT;
-    // pmsT=malloc(sizeof(matchstate));
-    // (*pmsT)=ms;
-    // cubeinfo ci;
-    // double mwcTemp;
+
+    /* if we already computed some MWC for some match, let's re-initialize 
+    all the static values and recompute the MWC */
+    if (MWCLength<MAX_DECISIONS) {
+        initArrays();
+    }
     int i=1;
-    MWCLength=MAX_DECISIONS; /* resetting for this problem */
-    mwcD[0]=0.5;
-    mwcBestD[0]=0.5;
-    // mwcCubes[0]=0.5;
-    // mwcBestCubes[0]=0.5;
-    mwcCumulMoveSkill[0]=0.5;
 
     /*   First compute the needed values  */
 
@@ -8868,21 +8877,21 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
                 if (pmrT && (pmrT->mwc.mwcCube>=0.0 && pmrT->mwc.mwcCube <= 1.0) ) {
                     mwcD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcCube): (1.0-((double) pmrT->mwc.mwcCube));
                     mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestCube): (1.0-((double) pmrT->mwc.mwcBestCube));
-                    mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
+                    mwcCumulSkillDiff[i]=mwcCumulSkillDiff[i-1]+(mwcD[i]-mwcBestD[i]);
                     CubeD[i]=1;
-                    // g_message("add cube: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
+                    // g_message("add cube: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulSkillDiff[i]);
                     i++;
                 }
                 /* valid move decision */
                 if(pmrT && (pmrT->mwc.mwcMove>=0.0 && pmrT->mwc.mwcMove <= 1.0)) {
                     mwcD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcMove): (1.0-((double) pmrT->mwc.mwcMove));
                     mwcBestD[i]=pmrT->fPlayer? ((double) pmrT->mwc.mwcBestMove): (1.0-((double) pmrT->mwc.mwcBestMove));
-                    mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
+                    mwcCumulSkillDiff[i]=mwcCumulSkillDiff[i-1]+(mwcD[i]-mwcBestD[i]);
                     // if(mwcD[i]>=0 && mwcD[i]<=1) 
-                    //     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1]+(mwcD[i]-mwcBestD[i]);
+                    //     mwcCumulSkillDiff[i]=mwcCumulSkillDiff[i-1]+(mwcD[i]-mwcBestD[i]);
                     // else
-                    //     mwcCumulMoveSkill[i]=mwcCumulMoveSkill[i-1];
-                    // g_message("add move: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulMoveSkill[i]);
+                    //     mwcCumulSkillDiff[i]=mwcCumulSkillDiff[i-1];
+                    // g_message("add move: i=%d: %f >= %f, %f",i,mwcBestD[i],mwcD[i],mwcCumulSkillDiff[i]);
                     i++;
                 }
 
