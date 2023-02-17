@@ -619,6 +619,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
     float rSkill, rChequerSkill;
     float aarOutput[2][NUM_ROLLOUT_OUTPUTS];
     float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
+    // char * positionid;
+    // positionid = (char *)malloc(sizeof(char) * (100 + 1));
+    TanBoard anBoardMistake;
 
     doubletype dt;
     taketype tt;
@@ -743,7 +746,28 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
                 if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
                     rChequerSkill = pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore;
-                    /* keep mwc in data structure */
+                    if(rChequerSkill<-0.030) {
+                        positionkey keyTemp=key;
+                        if (pmr->fPlayer) {
+                            PositionFromKey(anBoardMistake, &keyTemp);
+                            SwapSides(anBoardMistake);
+                            PositionKey((ConstTanBoard) anBoardMistake, &keyTemp);
+                        }
+                        // if (pmr->fPlayer) {
+                        //     PositionFromKey(anBoardMistake, &pmr->sb.key);
+                        //     // PositionFromKey(anBoardMistake, &pmr->sb.key);
+                        //     SwapSides(anBoardMistake);
+                        //     PositionKey((ConstTanBoard) anBoardMistake, &pmr->sb.key);
+                        // }
+                        // const positionkey * pkey=&pmr->sb.key;
+                        // positionid=PositionIDFromKey(pkey);
+                        // sprintf(positionid, " (set board %s)", PositionIDFromKey(pkey));
+                        // sprintf(positionid, " (set board %s)", PositionIDFromKey(&pmr->sb.key));
+                        char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&keyTemp));
+                        // char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&pmr->sb.key));
+                        g_message("mistake:%s",positionid);
+                    }
+                     /* keep mwc in data structure */
                     pmr->mwc.mwcMove= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
                     pmr->mwc.mwcBestMove= eq2mwc(pmr->ml.amMoves[0].rScore, &ci);
                     break;
@@ -969,6 +993,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
         psc->fDice = fAnalyseDice;
     }
     MT_Release();
+
+    // g_free(positionid);
 
     return fInterrupt ? -1 : 0;
 }

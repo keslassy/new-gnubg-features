@@ -1726,7 +1726,7 @@ CopyPositionID(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     }
 
     sz = g_strdup_printf("%s %s", _("Position ID:"), PositionID(msBoard()));
-
+    
     GTKTextToClipboard(sz);
 
     g_free(sz);
