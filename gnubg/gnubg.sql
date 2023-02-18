@@ -300,7 +300,7 @@ CREATE TABLE gamestat (
    ,error_based_fibs_rating           FLOAT           
    ,chequer_rating_loss               FLOAT           
    ,cube_rating_loss                  FLOAT           
-   -- for money sesisons only
+   -- for money sessions only
    ,actual_advantage                  FLOAT           
    ,actual_advantage_ci               FLOAT           
    ,luck_adjusted_advantage           FLOAT           

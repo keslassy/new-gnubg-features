@@ -86,6 +86,639 @@ static void DBListSelected(GtkTreeView * treeview, gpointer userdata);
 #define BUTTON_GAP PACK_OFFSET
 #define QUERY_BORDER 1
 
+
+/* ***************************************************************************** 
+    code for drawing the plot of GNU matchErrors using the records
+   ***************************************************************************** 
+
+This code is based on the MWC plot.
+
+*/
+#define WIDTH   640
+#define HEIGHT  480
+#define NUM_MATCHES (2*MAX_MOVES)
+
+static GdkRectangle da;            /* GtkDrawingArea size */
+static double margin1x=0.08;
+static double margin2x=0.05;
+static double margin1y=0.08;
+static double margin2y=0.05;
+// static int alreadyComputed=0; /* when drawing it computes all arrays twice :( )*/
+
+
+/*  static because needed for both the computing + drawing functions...
+*/
+static double matchErrors [NUM_MATCHES]={-1.0}; /* vector of all matchErrors*/
+static double matchErrorAvg [NUM_MATCHES]={-1.0}; /* optimal decisions*/
+static int numRecords; 
+// #define EPSILON 0.001
+
+// /*shows translation x->X when x=0=>X=a and x=1=>X=b*/
+// double translateX(double x,double a,double b) {
+//     return a+x*(b-a);
+// }
+
+// double trueX (double x) { 
+//     // (i/(n-1))*da.width*19/20+da.width/20
+//     /*
+//     x=0->X=margin1*d
+//     x=1->X=(1-margin2)*d
+//     */   
+//     return translateX(x,margin1x*da.width,(1-margin2x)*da.width);
+//     //  OLD   // (i/(n-1))*da.width*19/20+da.width/20
+//     // /*
+//     // x=0->X=margin*d
+//     // x=1->X=d
+//     // */       
+//     // return (da.width*(x*(1-margin)+margin));
+// }
+
+// double trueY (double y) { //}, gfloat h, gfloat margin) {
+//     /*
+//     y=0->-h(1-margin1) on screen->Y=+h(1-margin1)
+//     y=1->-h*margin2 on screen->Y=+h*margin2
+//     */
+//     return translateX(y,(1-margin1y)*da.height,margin2y*da.height);
+
+// //    /*
+// //    y=0->-h(1-margin) on screen->Y=+h(1-margin)
+// //    y=1->Y=0
+// //    */
+// //     return (da.height*(1-y)*(1-margin));
+// }
+
+// // #define MAX(a,b) ((a) > (b) ? (a) : (b))
+// // #define MIN(a,b) ((a) < (b) ? (a) : (b))
+
+
+// void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
+//     {        
+//         double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
+//         double dist = sqrt((start_x-end_x)*(start_x-end_x)+(start_y-end_y)*(start_y-end_y));
+//         double side=MIN(3.0,0.5*dist);
+//         double degrees=0.5;
+
+//         double x1 = end_x + side * cos(angle - degrees);
+//         double y1 = end_y + side * sin(angle - degrees);
+//         double x2 = end_x + side * cos(angle + degrees);
+//         double y2 = end_y + side * sin(angle + degrees);
+
+//         cairo_move_to (cr, start_x, start_y);
+//         cairo_line_to (cr, end_x,end_y);
+//         cairo_line_to (cr, x1,y1);
+//         cairo_line_to (cr, x2,y2);
+//         cairo_line_to (cr, end_x,end_y);
+        
+//         cairo_stroke (cr);
+
+//         // g_message("arrow: %f %f %f %f",x1,y1,x2,y2);
+//     }
+
+// static gboolean
+// on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
+// {
+//     // GdkRectangle da;            /* GtkDrawingArea size */
+//     double dx = 2.0, dy = 2.0; /* Pixels between each point */
+//     double fontSize =11.0;
+//     double clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+//     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
+//     char strTemp[100];
+
+// #if GTK_CHECK_VERSION(3,0,0)
+//     /*this is an "on_draw" in GTK3*/
+//         // "convert" the G*t*kWidget to G*d*kWindow (no, it's not a GtkWindow!)
+//     GdkWindow* window = gtk_widget_get_window(widget);  
+
+//     cairo_region_t * cairoRegion = cairo_region_create();
+
+//     GdkDrawingContext * drawingContext;
+//     drawingContext = gdk_window_begin_draw_frame (window,cairoRegion);
+
+//     // say: "I want to start drawing"
+//     cairo_t * cr = gdk_drawing_context_get_cairo_context (drawingContext);
+// #else
+//     cairo_t *cr = gdk_cairo_create (widget->window);
+// #endif    
+//        /* Define a clipping zone to improve performance */
+//     cairo_rectangle (cr,
+//             event->area.x,
+//             event->area.y,
+//             event->area.width,
+//             event->area.height);
+//     cairo_clip (cr);
+// #if GTK_CHECK_VERSION(3,0,0)
+//     /* Determine GtkDrawingArea dimensions */
+//     gdk_window_get_geometry (window,
+//             &da.x,
+//             &da.y,
+//             &da.width,
+//             &da.height);
+// #else
+//     /* Determine GtkDrawingArea dimensions */
+//     int unused = 0;
+//     gdk_window_get_geometry (widget->window,
+//             &da.x,
+//             &da.y,
+//             &da.width,
+//             &da.height,
+//             &unused);
+// #endif  
+
+
+//     // /* Draw on a black background */
+//     // cairo_set_source_rgb (cr, 1.0, 1.0, 1.0);
+//     // // cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+//     // cairo_paint (cr);
+
+//     if(numRecords>1){
+
+//         /* Determine the data points to calculate (ie. those in the clipping zone */
+//         cairo_device_to_user_distance (cr, &dx, &dy);
+//         cairo_clip_extents (cr, &clip_x1, &clip_y1, &clip_x2, &clip_y2);
+//         cairo_set_font_size(cr, fontSize);
+//         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+
+//         /* Draws x and y axes */
+//         cairo_set_line_width (cr, dy);
+//         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
+//         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+//         cairo_move_to (cr, trueX(0.0), trueY(0.0));
+//         cairo_line_to (cr, trueX(0.0), trueY(1.0));
+//         cairo_move_to (cr, trueX(0.0), trueY(0.0));
+//         cairo_line_to (cr, trueX(1.0), trueY(0.0));
+//         // cairo_move_to (cr, clip_x1, clip_y1/3);
+//         // cairo_line_to (cr, clip_x2, clip_y2*2/3);
+//         cairo_stroke (cr);
+
+//         /* Draw the main plot: link each data point */
+//         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+//         for (int i = 0; i < numRecords; i ++) {
+//             // if(matchErrors[i]>=0 && matchErrors[i]<=1) {
+//                 cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrors[i]));
+//                 // cairo_line_to (cr, (gdouble)i, -matchErrors[i]);
+//                 // g_message("i=%d,val=%f",i,matchErrors[i]);
+//             // }
+//         }
+//         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
+//                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
+//         cairo_stroke (cr);
+
+//         /* Draw the best moves */
+//         for (int i = 1; i < numRecords; i ++) {
+//             // if(matchErrors[i]>=0 && matchErrors[i]<=1) {
+//                 if (matchErrorAvg[i] - matchErrors[i]>EPSILON) {
+//                     /* red: user's mistakes*/
+//                     /*
+//                     Version 1: plot from the last point (i-1) to the new best, i.e show
+//                     the alternative scenario
+//                     Version 2: plot from player's i to best i, i.e. vertical
+//                     Version 3: vertical arrow touching plot
+//                     Version 4: vertical arrow touching the 0.5 line
+//                     */
+//                     // cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
+//                     cairo_set_source_rgb (cr, 0.5, 0.0, 0.0);
+//                     // drawArrow(cr,  trueX(((double)i)/(numRecords-1)),trueY(matchErrorAvg[i]),
+//                     //     trueX(((double)i)/(numRecords-1)),trueY(matchErrors[i]) );
+//                     drawArrow(cr,  trueX(((double)i)/(numRecords-1)),trueY(0.5),
+//                         trueX(((double)i)/(numRecords-1)),trueY(matchErrors[i]-matchErrorAvg[i]+0.5) );
+//                     if (CubeD[i]){
+//                         cairo_move_to(cr, trueX(((double)i)/(numRecords-1))-2*dx, trueY(0.5)-0.5*fontSize);
+//                         cairo_show_text(cr, "c"); 
+//                     }
+
+//                     // cairo_move_to (cr, trueX(((double)i-1)/(numRecords-1)), trueY(matchErrors[i-1]));
+//                     // cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrorAvg[i]));
+//                     // cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrors[i]));
+//                     // cairo_stroke (cr);
+//                 } else if (matchErrorAvg[i] - matchErrors[i] <-EPSILON) {
+//                     /* green: opponent's mistakes*/
+//                     // cairo_set_source_rgb (cr, 0.0, 0.5, 1.0);
+//                     cairo_set_source_rgb (cr, 0.0, 0.5, 0.0);
+//                     // drawArrow(cr,  trueX(((double)i)/(numRecords-1)),trueY(matchErrorAvg[i]),
+//                     //     trueX(((double)i)/(numRecords-1)),trueY(matchErrors[i]) );
+//                     drawArrow(cr,  trueX(((double)i)/(numRecords-1)),trueY(0.5),
+//                         trueX(((double)i)/(numRecords-1)),trueY(matchErrors[i]-matchErrorAvg[i]+0.5) );
+//                     if (CubeD[i]){
+//                         cairo_move_to(cr, trueX(((double)i)/(numRecords-1))-2*dx, trueY(0.5)+1.3*fontSize);
+//                         cairo_show_text(cr, "c"); 
+//                     }
+//                     // cairo_move_to (cr, trueX(((double)i-1)/(numRecords-1)), trueY(matchErrors[i-1]));
+//                     // cairo_move_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrors[i]));
+//                     // cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrorAvg[i]));
+//                     // cairo_stroke (cr);
+//                 }
+//             // }
+//         }
+//         cairo_stroke (cr);
+
+//         /* Cumulative skill */
+//         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+//         for (int i = 0; i < numRecords; i ++) {
+//             // if(matchErrors[i]>=0 && matchErrors[i]<=1) {
+//                 cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(mwcCumulSkillDiff[i]));
+//             // }
+//         }
+//         cairo_stroke (cr);
+
+
+//         /* text: legend */
+//             /*1:plot*/
+//         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+//         cairo_move_to (cr, trueX(0.05), trueY(1.0+margin2y/2));
+//         cairo_line_to (cr, trueX(0.1), trueY(1.0+margin2y/2));
+//         cairo_stroke (cr);
+//         cairo_move_to(cr,  trueX(0.12), trueY(1.0+margin2y/2)+0.3*fontSize);
+//         cairo_show_text(cr, "Match winning chances");
+//             /*2:cumul. skill*/
+//         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+//         cairo_move_to (cr, trueX(0.5), trueY(1.0+margin2y/2));
+//         cairo_line_to (cr, trueX(0.55), trueY(1.0+margin2y/2));
+//         cairo_stroke (cr);
+//         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+//         cairo_move_to(cr,  trueX(0.57), trueY(1.0+margin2y/2)+0.3*fontSize);
+//         cairo_show_text(cr, "Cumulative skill difference");
+
+//         /* grid*/
+//         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
+//         cairo_set_line_width (cr, dy/3);
+//         const double dashed2[] = {14.0, 6.0};
+//         int len2  = sizeof(dashed2) / sizeof(dashed2[0]);
+//         cairo_set_dash(cr, dashed2, len2, 1);
+
+//         for (int i = 10; i < numRecords; i=i+10) {
+//             // /* [commented: axis markers] */
+//             // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
+//             // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
+//             cairo_move_to (cr, trueX(((double)i)/(numRecords-1)), trueY(0.0));
+//             cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(1.0));
+//             cairo_stroke (cr);
+//         }
+//         // for (double y = 0.1; y <= 1.0; y=y+0.1) 
+//         for (int j = 1; j <=10; j++) {
+//             if(j==5 || j==10){
+//                 cairo_set_source_rgb (cr, 0.4, 0.4, 0.4);
+//                 cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
+//             } else {
+//                 cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
+//                 cairo_set_dash(cr, dashed2, len2, 1);
+//             }
+//             cairo_move_to (cr, trueX(0.0), trueY(((double)j)/10));
+//             cairo_line_to (cr, trueX(1.0), trueY(((double)j)/10));
+//             cairo_stroke (cr);
+//         }         
+
+//         /* drawing: new games (vertical lines) */
+//         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
+//         for (int i = 0; i < numRecords; i ++) {
+//             if(NewGame[i]) {
+//                 cairo_move_to (cr, trueX( (((double)i)-0.5) / (numRecords-1) ), trueY(0.0));
+//                 cairo_line_to (cr, trueX( (((double)i)-0.5) / (numRecords-1) ), trueY(1.0));
+//                 cairo_stroke (cr);
+//             }
+//         }
+
+//         /* text: axis labels */
+//         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+//         for (int i = 10; i < numRecords; i=i+10) {
+//             cairo_move_to (cr, trueX(((double)i)/(numRecords-1)), trueY(0.0));
+//             cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(1.0));
+//             cairo_move_to(cr, trueX(((double)i)/(numRecords-1))-2*dx, trueY(0.0)+1.25*fontSize);
+//             sprintf(strTemp, "%d", i);
+//             cairo_show_text(cr, strTemp);             
+//         }     
+//             cairo_move_to(cr, trueX(0.5)-10*dx, trueY(0.0)+2.5*fontSize);
+//             cairo_show_text(cr, "decision (cube or move)");              
+//         for (int j = 0; j <=10; j++) {
+//         // for (double y = 0.0; y <= 1.0; y=y+0.1) {
+//             cairo_move_to(cr, trueX(-0.08), trueY(((double)j)/10)+0.3*fontSize);
+//             sprintf(strTemp, "%d%%", 10*j);
+//             // sprintf(strTemp, "%.1f", y);
+//             cairo_show_text(cr, strTemp);             
+//         }
+
+//         /* text: game 1, game 2... */
+//         int jTemp=0;
+//         for (int i = 0; i < numRecords; i ++) {
+//             if(NewGame[i]) {
+//                 jTemp++;
+//                 cairo_move_to(cr, trueX((((double)i)+1) / (numRecords-1)), 
+//                         trueY(0.95)+fontSize/2);
+//                 sprintf(strTemp, "game %d", jTemp);
+//                 cairo_show_text(cr, strTemp);             
+//             }
+//         }
+//         // g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
+//         //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
+//     } else 
+//         outputerrf(_("Please run analysis again (not enough datapoints for plot).\n"));
+// #if GTK_CHECK_VERSION(3,0,0)
+
+//     // say: "I'm finished drawing
+//     gdk_window_end_draw_frame(window,drawingContext);
+ 
+//     // cleanup
+//     cairo_region_destroy(cairoRegion);
+// #else
+//     cairo_destroy (cr);
+// #endif 
+//     return FALSE;
+// }
+// // void CloseWindow(GObject * UNUSED(po), GtkWidget * pw)
+// // {
+// //     g_message("close!");
+// //     // gtk_widget_destroy(window);
+// //         // gtk_main_quit();
+// //         // gtk_widget_hide(window);
+// //     gtk_widget_destroy(pw);
+// // }
+
+// void HistoryPlotInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent) 
+// {
+//     GtkWidget* pwInfoDialog, * pwBox;
+//     // const char* pch;
+
+//     pwInfoDialog = GTKCreateDialog(_("History Plot Explanations"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+// #if GTK_CHECK_VERSION(3,0,0)
+//     pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+// #else
+//     pwBox = gtk_vbox_new(FALSE, 0);
+// #endif
+//     gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
+
+//     gtk_container_add(GTK_CONTAINER(DialogArea(pwInfoDialog, DA_MAIN)), pwBox);
+
+//         // Add explanation text for mwc plot
+//     AddText(pwBox, _(" This plot shows how match winning chances (History) have evolved over the match:\
+// \n\n- To draw the plot, you need to first analyze a given game or match (not money play).\
+// \n\n- The x-axis represents all decisions in the match, including both cube and \
+// move decisions, and including both the user and the opponent.\
+// \n\n- The y-axis represents the chances of winning for the user \
+// (i.e., the player sitting at the bottom of the board). For instance, at the start, \
+// the user has 50% chances of winning. \
+// \n\n- The black plot shows the chances of winning the match. At the end, it either gets \
+// to 100\% (when the user wins) or 0\% (when the opponent wins). \
+// \n\n- The vertical red (respectively green) arrows represent mistakes by the user \
+// (resp. the opponent). Their size is equal to the History difference with the optimal decision.\
+// \n\n- The c above the red arrows (resp. below the green ones) indicates that it is a cube \
+// decision. Other mistakes correspond to move decisions. \
+// \n\n- The orange plot illustrates the cumulative skill difference. It is the sum of the \
+// red (negative) and green (positive) arrows. It is centered at 50\% for convenience. \
+// \n\n- The orange plot is not equal to the black plot because of the impact of dice (luck)."));
+
+//     GTKRunDialog(pwInfoDialog);
+// }
+
+// void DrawHistory (void)  //GtkWidget* pwParent) {
+// {
+
+// #if GTK_CHECK_VERSION(3,0,0)
+//     GtkWindow * window; 
+//     { // window setup
+//         window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+//         gtk_window_set_default_size (window, WIDTH, HEIGHT);
+//         gtk_window_set_position     (window, GTK_WIN_POS_CENTER);
+//         gtk_window_set_title        (window, "History plot");
+
+//         g_signal_connect(window, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+//     }  
+//     GtkDrawingArea* da;
+//     {
+//         da = (GtkDrawingArea*) gtk_drawing_area_new();
+//         gtk_container_add(GTK_CONTAINER(window), 
+//             (GtkWidget*)da);
+
+//         g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(on_expose_event), NULL);    
+//         // g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(on_draw), NULL);    
+//     } 
+//     gtk_widget_show_all ((GtkWidget*)window);
+// #else
+
+//     GtkWidget *window;
+//     // GtkWidget *da;
+//     GtkWidget *helpButton;
+//     // window = GTKCreateDialog(_("History plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+//     //pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+//     window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+//     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+//     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
+//     gtk_window_set_title (GTK_WINDOW (window), "History plot");
+//     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
+//     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+//     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
+//     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(CloseWindow), window);
+//     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+
+//     gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_BUTTONS)),
+//         helpButton = gtk_button_new_with_label(_("Explanations")));
+//     gtk_widget_set_tooltip_text(helpButton, 
+//         _("Click to obtain more explanations on this History plot")); 
+//     g_signal_connect(helpButton, "clicked", G_CALLBACK(HistoryPlotInfo), window);
+
+
+//     GtkWidget * da = gtk_drawing_area_new ();
+//     gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_MAIN)), da);
+//     g_signal_connect (G_OBJECT (da), "expose-event", G_CALLBACK (on_expose_event), NULL);
+
+//     // g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+//  //   g_signal_connect(G_OBJECT(da), "destroy", G_CALLBACK(CloseWindow), window);        
+// // g_message("2");
+//     gtk_widget_show_all (window);
+// #endif    
+// // g_message("3");
+//     // /*run these 4 lines if needed:*/
+//     //  gtk_widget_set_can_focus(window,TRUE);
+//     //  if(pwStatDialog)
+//     //      gtk_widget_set_can_focus(pwStatDialog, FALSE);
+//     //  gtk_window_set_focus (GTK_WINDOW(window), window);
+//             // gdk_window_raise(gtk_widget_get_window(window));
+//     //gtk_widget_grab_focus(window); /*didn't work*/
+//     //gtk_main ();
+// // g_message("4");
+// }
+
+// void initArrays(void) {
+//     for (int i = 0; i < numRecords; i++) {
+//         matchErrors [i]=-5.0; /* vector of all decisions impacting mwc*/
+//         matchErrorAvg [i]=-5.0; /* optimal decisions*/
+//         mwcCumulSkillDiff[i]=-5.0; /* cumulative skill difference*/
+//         NewGame [i]=0; /* indicator of start of new game */
+//         CubeD [i]=0; /* indicator for a cube decision */
+//     }
+//     matchErrors[0]=0.5;
+//     matchErrorAvg[0]=0.5;
+//     mwcCumulSkillDiff[0]=0.5;
+//     numRecords=NUM_MATCHES; /* resetting */
+// }
+
+extern void ComputeHistory(void)//GtkWidget* pwParent)
+{
+    /* if we already computed some History for some match, let's re-initialize 
+    all the static values and recompute the History; probably not needed but 
+    it's better to keep clean arrays */
+    if (numRecords<NUM_MATCHES) {
+        initArrays();
+    }
+    // int i=1;
+
+    /*   compute the needed values and fill the arrays  */
+
+    RowSet *rs;
+
+    int moves[4];
+    unsigned int i, j;
+    gfloat stats[9];
+     
+
+    /* prepare the SQL query */
+    rs = RunQuery("matchstat_id,"
+                  "total_moves,"
+                  "unforced_moves," /*moves[1]*/
+                  "close_cube_decisions," /*moves[2]*/
+                  "snowie_moves,"
+                  "error_missed_doubles_below_cp_normalised,"
+                  "error_missed_doubles_above_cp_normalised,"
+                  "error_wrong_doubles_below_dp_normalised,"
+                  "error_wrong_doubles_above_tg_normalised,"
+                  "error_wrong_takes_normalised,"
+                  "error_wrong_passes_normalised,"
+                  "cube_error_total_normalised," /* stats[6]*/
+                  "chequer_error_total_normalised," /* stats[7]*/
+                   "luck_total_normalised,"
+                   "player_id0, player_id1,matchstat_id " 
+                    "FROM matchstat NATURAL JOIN player NATURAL JOIN session "
+                    "WHERE name='isaac' "
+                    "ORDER BY matchstat_id DESC");
+
+    if (!rs){
+        GTKMessage(_("Problem accessing database"), DT_INFO);
+        return;
+    }
+
+    if (rs->rows < 2) {
+        GTKMessage(_("No data in database"), DT_INFO);
+        FreeRowset(rs);
+        return ;
+    }
+
+    for (j = 1; j < rs->rows; ++j) {
+        for (i = 1; i < 5; ++i)
+            moves[i - 1] = (int) strtol(rs->data[j][i], NULL, 0);
+
+        for (i = 5; i < 14; ++i)
+            stats[i - 5] = (float) g_strtod(rs->data[j][i], NULL);
+
+        matchErrors[j]=Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f;
+        // int mID=(int) strtol(rs->data[j][0],NULL, 0);
+        // g_message("ID: %d, names: %s, %s, err: %f",mID,rs->data[j][14],rs->data[j][15],Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f);
+    }
+    numRecords=j;
+    g_message("%d",numRecords);
+    // if(j>1) 
+    //     DrawHistory();//pwParent);
+    // else
+    //     outputerrf(_("Please run analysis again (not enough datapoints for plot).\n"));
+
+
+    FreeRowset(rs);
+
+
+    return;
+}
+
+/* creating this placeholder function with all the inputs needed when pressing a button;
+the real function above doesn't have inputs*/
+void PlotHistoryTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
+    // this is a problem when we close the History window:
+    //gtk_widget_destroy(pwStatDialog);
+    ComputeHistory(); //pwStatDialog);
+}
+
+
+
+/* ***************************************************************************** */
+
+
+// void playerHistory(void) {
+//     RowSet *rs;
+
+//     int moves[4];
+//     unsigned int i, j;
+//     gfloat stats[9];
+     
+
+//     /* prepare the SQL query */
+//     rs = RunQuery("matchstat_id,"
+//                   "total_moves,"
+//                   "unforced_moves," /*moves[1]*/
+//                   "close_cube_decisions," /*moves[2]*/
+//                   "snowie_moves,"
+//                   "error_missed_doubles_below_cp_normalised,"
+//                   "error_missed_doubles_above_cp_normalised,"
+//                   "error_wrong_doubles_below_dp_normalised,"
+//                   "error_wrong_doubles_above_tg_normalised,"
+//                   "error_wrong_takes_normalised,"
+//                   "error_wrong_passes_normalised,"
+//                   "cube_error_total_normalised," /* stats[6]*/
+//                   "chequer_error_total_normalised," /* stats[7]*/
+//                    "luck_total_normalised,"
+//                    "player_id0, player_id1,matchstat_id " 
+//                     "FROM matchstat NATURAL JOIN player NATURAL JOIN session "
+//                     "WHERE name='isaac' "
+//                     "ORDER BY matchstat_id DESC");
+
+//     if (!rs){
+//         GTKMessage(_("Problem accessing database"), DT_INFO);
+//         return;
+//     }
+
+//     if (rs->rows < 2) {
+//         GTKMessage(_("No data in database"), DT_INFO);
+//         FreeRowset(rs);
+//         return ;
+//     }
+
+//     for (j = 1; j < rs->rows; ++j) {
+//         for (i = 1; i < 5; ++i)
+//             moves[i - 1] = (int) strtol(rs->data[j][i], NULL, 0);
+
+//         for (i = 5; i < 14; ++i)
+//             stats[i - 5] = (float) g_strtod(rs->data[j][i], NULL);
+
+//         // gtk_list_store_append(playerStore, &iter);
+//         // gtk_list_store_set(playerStore, &iter,
+//         //                    COLUMN_NICK,
+//         //                    rs->data[j][0],
+//         //                    COLUMN_GNUE,
+//         int mID=(int) strtol(rs->data[j][0],NULL, 0);
+//         g_message("ID: %d, names: %s, %s, err: %f",mID,rs->data[j][14],rs->data[j][15],Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f);
+//                         //    COLUMN_GCHE,
+//                         //    Ratio(stats[7], moves[1]) * 1000.0f,
+//                         //    COLUMN_GCUE,
+//                         //    Ratio(stats[6], moves[2]) * 1000.0f,
+//                         //    COLUMN_SNWE,
+//                         //    Ratio(stats[6] + stats[7], moves[3]) * 1000.0f,
+//                         //    COLUMN_SCHE,
+//                         //    Ratio(stats[7], moves[3]) * 1000.0f,
+//                         //    COLUMN_SCUE,
+//                         //    Ratio(stats[6], moves[3]) * 1000.0f,
+//                         //    COLUMN_WRPA,
+//                         //    Ratio(stats[5], moves[3]) * 1000.0f,
+//                         //    COLUMN_WRTA,
+//                         //    Ratio(stats[4], moves[3]) * 1000.0f,
+//                         //    COLUMN_WDTG,
+//                         //    Ratio(stats[3], moves[3]) * 1000.0f,
+//                         //    COLUMN_WDBD,
+//                         //    Ratio(stats[2], moves[3]) * 1000.0f,
+//                         //    COLUMN_MDAC,
+//                         //    Ratio(stats[1], moves[3]) * 1000.0f,
+//                         //    COLUMN_MDBC,
+//                         //    Ratio(stats[0], moves[3]) * 1000.0f, 
+//                         //    COLUMN_LUCK, Ratio(stats[8], moves[0]) * 1000.0f, 
+//                         //    -1);
+//     }
+//     FreeRowset(rs);
+// }
+
 static GtkTreeModel *
 create_model(void)
 {
@@ -95,6 +728,8 @@ create_model(void)
     int moves[4];
     unsigned int i, j;
     gfloat stats[9];
+
+    ComputeHistory();
 
     /* create list store */
     playerStore = gtk_list_store_new(NUM_COLUMNS,
@@ -123,7 +758,8 @@ create_model(void)
                   "SUM(error_wrong_passes_normalised),"
                   "SUM(cube_error_total_normalised),"
                   "SUM(chequer_error_total_normalised),"
-                  "SUM(luck_total_normalised) " "FROM matchstat NATURAL JOIN player group by name");
+                  "SUM(luck_total_normalised) " 
+                  "FROM matchstat NATURAL JOIN player group by name");
     if (!rs)
         return 0;
 
@@ -167,7 +803,9 @@ create_model(void)
                            COLUMN_MDAC,
                            Ratio(stats[1], moves[3]) * 1000.0f,
                            COLUMN_MDBC,
-                           Ratio(stats[0], moves[3]) * 1000.0f, COLUMN_LUCK, Ratio(stats[8], moves[0]) * 1000.0f, -1);
+                           Ratio(stats[0], moves[3]) * 1000.0f, 
+                           COLUMN_LUCK, Ratio(stats[8], moves[0]) * 1000.0f, 
+                           -1);
     }
     FreeRowset(rs);
     return GTK_TREE_MODEL(playerStore);
