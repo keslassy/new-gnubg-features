@@ -27,6 +27,7 @@
 #include "gtkrelational.h"
 #include "gtkwindows.h"
 #include "gtklocdefs.h"
+#include "gtkgame.h"
 
 enum {
     COLUMN_NICK,
@@ -181,29 +182,6 @@ double errorToY(double error){
 // #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
 
-// void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
-//     {        
-//         double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
-//         double dist = sqrt((start_x-end_x)*(start_x-end_x)+(start_y-end_y)*(start_y-end_y));
-//         double side=MIN(3.0,0.5*dist);
-//         double degrees=0.5;
-
-//         double x1 = end_x + side * cos(angle - degrees);
-//         double y1 = end_y + side * sin(angle - degrees);
-//         double x2 = end_x + side * cos(angle + degrees);
-//         double y2 = end_y + side * sin(angle + degrees);
-
-//         cairo_move_to (cr, start_x, start_y);
-//         cairo_line_to (cr, end_x,end_y);
-//         cairo_line_to (cr, x1,y1);
-//         cairo_line_to (cr, x2,y2);
-//         cairo_line_to (cr, end_x,end_y);
-        
-//         cairo_stroke (cr);
-
-//         // g_message("arrow: %f %f %f %f",x1,y1,x2,y2);
-//     }
-
 static gboolean
 DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
 {
@@ -276,11 +254,13 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to (cr, xToX(0.0), trueHistY(0.0));
-        cairo_line_to (cr, xToX(0.0), trueHistY(1.0));
-        cairo_move_to (cr, xToX(0.0), trueHistY(0.0));
-        cairo_line_to (cr, xToX(1.0), trueHistY(0.0));
-        cairo_stroke (cr);
+        drawArrow(cr, xToX(0.0), trueHistY(0.0),xToX(0.0), trueHistY(1.0));
+        drawArrow(cr, xToX(0.0), trueHistY(0.0),xToX(1.0), trueHistY(0.0));
+        // cairo_move_to (cr, xToX(0.0), trueHistY(0.0));
+        // cairo_line_to (cr, xToX(0.0), trueHistY(1.0));
+        // cairo_move_to (cr, xToX(0.0), trueHistY(0.0));
+        // cairo_line_to (cr, xToX(1.0), trueHistY(0.0));
+        // cairo_stroke (cr);
 
         /* Avg error */
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
@@ -376,10 +356,11 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         /* drawing: new matches (vertical lines) */
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
         int jTemp=0;
-        for (int i = numRecords-1; i >=0; i=MIN(i-1,i-numRecords/5)) {
+        for (int i = numRecords-1; i >=0; i=i-MAX(1,numRecords/5)) {
             g_message("i=%d",i);
-            cairo_move_to (cr, iToX(i), errorToY(matchErrorRate[i]));
-            cairo_line_to (cr, iToX(i), trueHistY(0.93));
+            // cairo_move_to (cr, iToX(i), errorToY(matchErrorRate[i]));
+            // cairo_line_to (cr, iToX(i), trueHistY(0.93));
+            drawArrow(cr, iToX(i), trueHistY(0.93), iToX(i), errorToY(matchErrorRate[i]));
             cairo_stroke (cr);
     
             /* text: match 1, match 2... */

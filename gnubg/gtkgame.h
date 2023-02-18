@@ -196,5 +196,7 @@ struct MemoryStruct {
 
 /*also used in scoremap and relational history plot*/
 extern void AddText(GtkWidget* pwBox, char* Text);
+/*used in history plot*/
+extern void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y);
 
 #endif
