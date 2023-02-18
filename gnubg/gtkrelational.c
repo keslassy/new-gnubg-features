@@ -126,7 +126,7 @@ static double minError=1000.0; //to avoid dividing by 0 in case of mistake
 
 static double minYScale, maxYScale;
 
-static int numRecords=NUM_PLOT+1; 
+static int numRecords=NUM_PLOT; 
 // #define EPSILON 0.001
 
 /*shows translation x->X when x=0=>X=a and x=1=>X=b
@@ -272,7 +272,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_stroke (cr);
             /*discs*/
         for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
-            cairo_arc(cr, iToX(i), errorToY(matchAvgErrorRate[i]), dx, 0, 2 * M_PI);
+            cairo_arc(cr, iToX(i), errorToY(matchAvgErrorRate[i]), dx/2, 0, 2 * M_PI);
             cairo_stroke_preserve(cr);
             cairo_fill(cr);
         }
@@ -293,7 +293,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         for (int i = numRecords-1; i >=0; --i) {
         // for (int i = 0; i < numRecords; i ++) {
             cairo_line_to (cr, iToX(i), errorToY(matchErrorRate[i]));
-            g_message("i=%d,val=%f",i,matchErrorRate[i]);
+            // g_message("i=%d,val=%f",i,matchErrorRate[i]);
         }
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
@@ -302,7 +302,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             /*discs*/
         for (int i = numRecords-1; i >=0; --i) {
         // for (int i = 0; i < numRecords; i ++) {
-            cairo_arc(cr, iToX(i), errorToY(matchErrorRate[i]), dx, 0, 2 * M_PI);
+            cairo_arc(cr, iToX(i), errorToY(matchErrorRate[i]), dx/2, 0, 2 * M_PI);
             cairo_stroke_preserve(cr);
             cairo_fill(cr);
         }        
@@ -326,7 +326,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_set_dash(cr, dashed2, len2, 1);          
             cairo_set_source_rgb (cr, 0.6, 0.6, 0.6);
             // for (int i = numRecords-1; i >=0; i=MIN(i-1,i-numRecords/5)) {
-            g_message("matchCumMoves[0]=%d,i=%f, xLabel=%f",matchCumMoves[0],i,xLabel);
+            // g_message("matchCumMoves[0]=%d,i=%f, xLabel=%f",matchCumMoves[0],i,xLabel);
             // double x=((double)matchCumMoves[i]) / ((double)matchCumMoves[0]);
             // /* [commented: axis markers] */
             // cairo_move_to (cr, xToX(((double)i)/(n-1)), trueHistY(-0.03));
@@ -372,7 +372,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         /* this time we start from i=0 to make sure to include the latest match */
         for (int i = 0; i <numRecords; i+=MAX(1,numRecords/7)) {
         // for (int i = numRecords-1; i >=0; i=i-MAX(1,numRecords/5)) {
-            g_message("i=%d",i);
+            // g_message("i=%d",i);
             // cairo_move_to (cr, iToX(i), errorToY(matchErrorRate[i]));
             // cairo_line_to (cr, iToX(i), trueHistY(0.93));
             cairo_set_source_rgb (cr, 0.0, 0.0, 0.55);
@@ -519,18 +519,15 @@ void initHistoryArrays(void) {
     }
     maxError=0.001;
     minError=1000.0;
-    numRecords=NUM_PLOT+1; /* resetting; and using a forbidden number as an indicator that we
-                scrubbed everything clean again */
+    numRecords=NUM_PLOT;
 }
 
 extern void ComputeHistory(void)//GtkWidget* pwParent)
 {
-    /* if we already computed some History for some match, let's re-initialize 
-    all the static values and recompute the History; probably not needed but 
-    it's better to keep clean arrays */
-    if (numRecords<NUM_PLOT+1) {
+    /* let's re-initialize all the static values and recompute the History */
+    // if (numRecords<NUM_PLOT+1) {
         initHistoryArrays();
-    }
+    // }
     /*   compute the needed values and fill the arrays  */
 
     RowSet *rs;
@@ -543,14 +540,14 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     /* get player_id of player at bottom*/
     char szRequest[600];
     sprintf(szRequest, "player_id FROM player WHERE name='%s'",ap[1].szName);
-    g_message("request1=%s",szRequest);
+    // g_message("request1=%s",szRequest);
     rs = RunQuery(szRequest);
     if (!rs){
         GTKMessage(_("Problem accessing database"), DT_INFO);
         return;
     }
     int userID=(int) strtol(rs->data[1][0], NULL, 0);
-    g_message("userID=%d",userID);
+    // g_message("userID=%d",userID);
 
     //  player_id, name FROM player WHERE player.player_id =2
     // char szRequest[600]; 
@@ -588,7 +585,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     //                 "ORDER BY matchstat_id DESC "
     //                 "LIMIT %d",
     //                 NUM_PLOT);
-    g_message("request=%s",szRequest);
+    // g_message("request=%s",szRequest);
     rs = RunQuery(szRequest);
 
     if (!rs){
@@ -613,17 +610,17 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         matchErrors[j-1]=(stats[0] + stats[1]) * 1000.0f;
         matchMoves[j-1]=moves[0] + moves[1];
         matchErrorRate[j-1]=Ratio(stats[0] + stats[1], moves[0] + moves[1]) * 1000.0f;
-        g_message("error:%f=%f/%d",matchErrorRate[j-1],matchErrors[j-1],matchMoves[j-1]);
+        // g_message("error:%f=%f/%d",matchErrorRate[j-1],matchErrors[j-1],matchMoves[j-1]);
         int mID=(int) strtol(rs->data[j][0],NULL, 0);
-        g_message("ID: %d, names: %s, %s",mID,rs->data[j][5],rs->data[j][6]);
+        // g_message("ID: %d, names: %s, %s",mID,rs->data[j][5],rs->data[j][6]);
 
 
         /* get name of player at top of screen*/
         int opponentID= (userID ==(int) strtol(rs->data[j][5],NULL, 0))?
             strtol(rs->data[j][6],NULL, 0) : strtol(rs->data[j][5],NULL, 0);
-        g_message("opponentID: %d",opponentID);
+        // g_message("opponentID: %d",opponentID);
         sprintf(szRequest, "name FROM player WHERE player_id='%d'",opponentID);
-        g_message("request=%s",szRequest);
+        // g_message("request=%s",szRequest);
         rs2 = RunQuery(szRequest);
         if (!rs2){
             GTKMessage(_("Problem accessing database"), DT_INFO);
@@ -631,11 +628,11 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         }
         sprintf(opponentNames[j-1], "%s",rs2->data[1][0]);
         // int userID=(int) strtol(rs->data[1][0], NULL, 0);
-        g_message("opponent name=%s",opponentNames[j-1]);
+        // g_message("opponent name=%s",opponentNames[j-1]);
 
     }   
     numRecords=MIN(j-1,NUM_PLOT);
-    g_message("numRecords=%d",numRecords);
+    // g_message("numRecords=%d",numRecords);
 
     /* counting backwards because the oldest record is at the end*/
     // matchCumMoves[numRecords-1]=matchMoves[numRecords];
@@ -652,7 +649,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
             matchAvgErrorRate[i]=Ratio((matchCumErrors[i]-matchCumErrors[i+PLOT_WINDOW]),
                     (matchCumMoves[i]-matchCumMoves[i+PLOT_WINDOW]));
-            g_message("matchAvgErrorRate[%d]=%f",i,matchAvgErrorRate[i]);
+            // g_message("matchAvgErrorRate[%d]=%f",i,matchAvgErrorRate[i]);
         }    
     }    
     if(numRecords>1) 
@@ -675,88 +672,6 @@ void PlotHistoryTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(
 
 
 /* ***************************************************************************** */
-
-
-// void playerHistory(void) {
-//     RowSet *rs;
-
-//     int moves[4];
-//     unsigned int i, j;
-//     gfloat stats[9];
-     
-
-//     /* prepare the SQL query */
-//     rs = RunQuery("matchstat_id,"
-//                   "total_moves,"
-//                   "unforced_moves," /*moves[1]*/
-//                   "close_cube_decisions," /*moves[2]*/
-//                   "snowie_moves,"
-//                   "error_missed_doubles_below_cp_normalised,"
-//                   "error_missed_doubles_above_cp_normalised,"
-//                   "error_wrong_doubles_below_dp_normalised,"
-//                   "error_wrong_doubles_above_tg_normalised,"
-//                   "error_wrong_takes_normalised,"
-//                   "error_wrong_passes_normalised,"
-//                   "cube_error_total_normalised," /* stats[6]*/
-//                   "chequer_error_total_normalised," /* stats[7]*/
-//                    "luck_total_normalised,"
-//                    "player_id0, player_id1,matchstat_id " 
-//                     "FROM matchstat NATURAL JOIN player NATURAL JOIN session "
-//                     "WHERE name='isaac' "
-//                     "ORDER BY matchstat_id DESC");
-
-//     if (!rs){
-//         GTKMessage(_("Problem accessing database"), DT_INFO);
-//         return;
-//     }
-
-//     if (rs->rows < 2) {
-//         GTKMessage(_("No data in database"), DT_INFO);
-//         FreeRowset(rs);
-//         return ;
-//     }
-
-//     for (j = 1; j < rs->rows; ++j) {
-//         for (i = 1; i < 5; ++i)
-//             moves[i - 1] = (int) strtol(rs->data[j][i], NULL, 0);
-
-//         for (i = 5; i < 14; ++i)
-//             stats[i - 5] = (float) g_strtod(rs->data[j][i], NULL);
-
-//         // gtk_list_store_append(playerStore, &iter);
-//         // gtk_list_store_set(playerStore, &iter,
-//         //                    COLUMN_NICK,
-//         //                    rs->data[j][0],
-//         //                    COLUMN_GNUE,
-//         int mID=(int) strtol(rs->data[j][0],NULL, 0);
-//         g_message("ID: %d, names: %s, %s, err: %f",mID,rs->data[j][14],rs->data[j][15],Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f);
-//                         //    COLUMN_GCHE,
-//                         //    Ratio(stats[7], moves[1]) * 1000.0f,
-//                         //    COLUMN_GCUE,
-//                         //    Ratio(stats[6], moves[2]) * 1000.0f,
-//                         //    COLUMN_SNWE,
-//                         //    Ratio(stats[6] + stats[7], moves[3]) * 1000.0f,
-//                         //    COLUMN_SCHE,
-//                         //    Ratio(stats[7], moves[3]) * 1000.0f,
-//                         //    COLUMN_SCUE,
-//                         //    Ratio(stats[6], moves[3]) * 1000.0f,
-//                         //    COLUMN_WRPA,
-//                         //    Ratio(stats[5], moves[3]) * 1000.0f,
-//                         //    COLUMN_WRTA,
-//                         //    Ratio(stats[4], moves[3]) * 1000.0f,
-//                         //    COLUMN_WDTG,
-//                         //    Ratio(stats[3], moves[3]) * 1000.0f,
-//                         //    COLUMN_WDBD,
-//                         //    Ratio(stats[2], moves[3]) * 1000.0f,
-//                         //    COLUMN_MDAC,
-//                         //    Ratio(stats[1], moves[3]) * 1000.0f,
-//                         //    COLUMN_MDBC,
-//                         //    Ratio(stats[0], moves[3]) * 1000.0f, 
-//                         //    COLUMN_LUCK, Ratio(stats[8], moves[0]) * 1000.0f, 
-//                         //    -1);
-//     }
-//     FreeRowset(rs);
-// }
 
 static GtkTreeModel *
 create_model(void)

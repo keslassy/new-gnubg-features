@@ -4858,7 +4858,7 @@ void AskToUpdate(char * availableVersion)
             "\n\n Current version:   %s"
             "\n Available version: %s\n"),
             VERSION, availableVersion);
-    g_message("%s",sz);
+    // g_message("%s",sz);
     /* show a splash window in GTK, else just a message*/
 #if defined(USE_GTK)
     pwDialog = GTKCreateDialog(_("GNU Backgammon update"), DT_INFO, pwMain, DIALOG_FLAG_MODAL, NULL, &answer);
@@ -4903,7 +4903,8 @@ void AskToUpdate(char * availableVersion)
 
     GTKRunDialog(pwDialog);
 #else
-    /* the non-GTK version does not seem to put an error message, so using it:*/
+    /* the non-GTK version with "error" does not seem to write "error", so 
+    we're using it:*/
     outputerrf("%s",sz);
     outputerrf(_("Please check online: %s"),websiteForUpdates);
 #endif //GTK
@@ -4987,9 +4988,9 @@ void CheckVersionUpdate(void)
         */
         char *token;
         token = strtok(chunk.memory, "\n");
-        g_message("latest version=%s vs VERSION=%s",token,VERSION);
+        // g_message("latest version=%s vs VERSION=%s",token,VERSION);
         if (strcmp(token,VERSION)>0) {
-            g_message("newer version, need to download!");
+            // g_message("newer version, need to download!");
             AskToUpdate(token);
         }   else {
             return;
@@ -8578,6 +8579,13 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
         cairo_stroke (cr);
 
+            /*discs*/
+        for (int i = 1; i < MWCLength; i ++) {
+            cairo_arc(cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]), dx/2, 0, 2 * M_PI);
+            cairo_stroke_preserve(cr);
+            cairo_fill(cr);
+        }   
+
         /* Draw the best moves */
         for (int i = 1; i < MWCLength; i ++) {
             // if(mwcD[i]>=0 && mwcD[i]<=1) {
@@ -8624,17 +8632,25 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 }
             // }
         }
-        cairo_stroke (cr);
+        // cairo_stroke (cr);
 
         /* Cumulative skill */
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
-        for (int i = 0; i < MWCLength; i ++) {
+        cairo_move_to (cr, trueX(0.0), trueY(0.5));
+        for (int i = 1; i < MWCLength; i ++) {
             // if(mwcD[i]>=0 && mwcD[i]<=1) {
-                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcCumulSkillDiff[i]));
+                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), 
+                    trueY(mwcCumulSkillDiff[i]));
             // }
         }
         cairo_stroke (cr);
-
+            /*discs*/
+        for (int i = 1; i < MWCLength; i ++) {
+            cairo_arc(cr, trueX(((double)i)/(MWCLength-1)), 
+                trueY(mwcCumulSkillDiff[i]), dx/2, 0, 2 * M_PI);
+            cairo_stroke_preserve(cr);
+            cairo_fill(cr);
+        }   
 
         /* text: legend */
             /*1:plot*/
@@ -8872,12 +8888,10 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
     listOLD *plStartingMove;
     moverecord * pmrT=NULL;
 
-    /* if we already computed some MWC for some match, let's re-initialize 
-    all the static values and recompute the MWC; probably not needed but 
-    it's better to keep clean arrays */
-    if (MWCLength<MAX_DECISIONS) {
-        initArrays();
-    }
+    /* let's re-initialize all the static values and recompute the MWC*/
+    // if (MWCLength<MAX_DECISIONS) {
+    initArrays();
+    // }
     int i=1;
 
     /*   First compute the needed values  */
