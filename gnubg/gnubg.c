@@ -252,9 +252,8 @@ char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]={""};
 int keyNamesFirstEmpty=0;
 int fUseKeyNames=FALSE; /* for now assume that it's turned off by default, should set TRUE in the future*/
 int fWithinSmartOpen=FALSE;
-
 int fCheckUpdateGTK = FALSE;
-
+int fTriggeredByRecordList=FALSE;
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */

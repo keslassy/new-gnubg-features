@@ -992,6 +992,7 @@ extern void CommandShowExport(char *);
 extern void CommandShowFullBoard(char *);
 extern void CommandShowGammonValues(char *);
 extern void CommandShowGeometry(char *);
+extern void CommandShowHistory(char *);
 extern void CommandShowJacoby(char *);
 extern void CommandShowKeith(char *);
 extern void CommandShowKleinman(char *);
@@ -1086,5 +1087,7 @@ extern void DisplayKeyNames(void); /* debugging function to display the current 
 extern char * websiteForUpdates; /* official GNUBG website */
 extern char * urlForVersion; /* official GNUBG website */
 extern int fCheckUpdateGTK; /* whether to check online if there is a new update */
+
+extern int fTriggeredByRecordList; /* whether history plot is launched from record list or from menu*/
 
 #endif	/* BACKGAMMON_H */

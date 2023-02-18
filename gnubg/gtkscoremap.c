@@ -132,6 +132,7 @@ and come back, it works again. It may be a movelist construction issue.
 #include "drawboard.h"
 #include "format.h"
 #include "gtkwindows.h"
+#include "gtkgame.h"
 //#include "gtkoptions.h"  
 
 

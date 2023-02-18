@@ -88,6 +88,25 @@ static void DBListSelected(GtkTreeView * treeview, gpointer userdata);
 #define QUERY_BORDER 1
 
 
+static char *
+GetSelectedPlayer(void)
+{
+    char *name;
+    GtkTreeModel *model;
+    if(!playerTreeview)
+        return NULL;
+    GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(playerTreeview));
+    if (gtk_tree_selection_count_selected_rows(sel) != 1)
+        return NULL;
+
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(playerTreeview));
+    gtk_tree_selection_get_selected(sel, &model, &selected_iter);
+
+    gtk_tree_model_get(model, &selected_iter, COLUMN_NICK, &name, -1);
+    return name;
+}
+
+
 /* ***************************************************************************** 
     code for drawing the plot of GNU matchErrorRate using the records
    ***************************************************************************** 
@@ -434,10 +453,10 @@ void HistoryPlotInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
         // Add explanation text for mwc plot
     AddText(pwBox, _(" This plot shows how the player's GNU error rate has evolved \
 throughout the player's history, as provided by the database records (for the up-to-100 \
-last matches).\   
+last matches).\
 \n\n- To draw the plot, you need to first add the analyses to the database. Also make sure \
 that the player you want to analyze is at the bottom of the screen.\
-\n\n- The x-axis represents all of the analyzed player's (non-trivial) cube and move 
+\n\n- The x-axis represents all of the analyzed player's (non-trivial) cube and move \
 decisions in the matches. \
 \n\n- The y-axis represents the GNU error rate, i.e., the ratio of the total errors by the \
 total number of non-trivial played decisions. Lower is better.\
@@ -529,6 +548,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
     RowSet *rs;
     RowSet *rs2;
+    RowSet *rs3;
 
     int moves[2];
     unsigned int i, j;
@@ -536,15 +556,52 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
     /* get player_id of player at bottom*/
     char szRequest[600];
-    sprintf(szRequest, "player_id FROM player WHERE name='%s'",ap[1].szName);
-    // g_message("request1=%s",szRequest);
+    char * listName=g_malloc(100 * sizeof(char));
+    char playerName[100];
+    // int needToFreeListName=FALSE;
+
+    /*if launched by record list, need to check if player was picked there*/
+    if (fTriggeredByRecordList) {
+        g_message("checking in list?");
+        listName = GetSelectedPlayer();
+        // needToFreeListName=TRUE;
+    }
+    // if(!triggeredByRecordList) {
+    // if(!triggeredByRecordList || (!playerName)) {
+    if(fTriggeredByRecordList && listName){
+        sprintf(playerName, "%s",listName);
+        g_message("using listName:%s",listName);
+        g_free(listName);
+    } else {
+        g_message("not from list");
+        if(fTriggeredByRecordList && !listName){
+            g_message("we free listName");
+            g_free(listName);
+        }
+        fTriggeredByRecordList=FALSE; /*re-initialize*/
+        if (!ap[1].szName){
+            GTKMessage(_("No player name. Please open a match or select one in the database records."), DT_INFO);
+            return;
+        }
+        g_message("player on board?");
+        sprintf(playerName, "%s",ap[1].szName);
+        // if (!playerName){
+        //     GTKMessage(_("No player name. Please open a match or select one in the database records."), DT_INFO);
+        //     return;
+        // }
+    }
+ 
+    /* get the player ID of playername for later*/
+    sprintf(szRequest, "player_id FROM player WHERE name='%s'", playerName);
+        g_message("request1=%s",szRequest);
     rs = RunQuery(szRequest);
-    if (!rs){
+    if (!rs || rs->rows <2){
         GTKMessage(_("Problem accessing database"), DT_INFO);
         return;
     }
     int userID=(int) strtol(rs->data[1][0], NULL, 0);
-    // g_message("userID=%d",userID);
+    g_message("userID=%d",userID);
+    FreeRowset(rs);
 
     //  player_id, name FROM player WHERE player.player_id =2
     // char szRequest[600]; 
@@ -559,7 +616,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
                     "WHERE name='%s' "
                     "ORDER BY matchstat_id DESC "
                     "LIMIT %d",
-                    ap[1].szName,
+                    playerName,
                     NUM_PLOT);
     // sprintf(szRequest, 
     //                 "matchstat_id,"
@@ -583,47 +640,48 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     //                 "LIMIT %d",
     //                 NUM_PLOT);
     // g_message("request=%s",szRequest);
-    rs = RunQuery(szRequest);
+    rs2 = RunQuery(szRequest);
 
-    if (!rs){
+    if (!rs2){
         GTKMessage(_("Problem accessing database"), DT_INFO);
         return;
     }
 
-    if (rs->rows < 2) {
+    if (rs2->rows < 2) {
         GTKMessage(_("No data in database"), DT_INFO);
-        FreeRowset(rs);
+        FreeRowset(rs2);
         return ;
     }
 
     // <= ?
-    for (j = 1; j < rs->rows; ++j) {
+    for (j = 1; j < rs2->rows; ++j) {
         for (i = 0; i < 2; ++i)
-            moves[i] = (int) strtol(rs->data[j][i], NULL, 0);
+            moves[i] = (int) strtol(rs2->data[j][i], NULL, 0);
 
         for (i = 2; i < 4; ++i)
-            stats[i - 2] = (float) g_strtod(rs->data[j][i], NULL);
+            stats[i - 2] = (float) g_strtod(rs2->data[j][i], NULL);
 
         matchErrors[j-1]=(stats[0] + stats[1]) * 1000.0f;
         matchMoves[j-1]=moves[0] + moves[1];
         matchErrorRate[j-1]=Ratio(stats[0] + stats[1], moves[0] + moves[1]) * 1000.0f;
         // g_message("error:%f=%f/%d",matchErrorRate[j-1],matchErrors[j-1],matchMoves[j-1]);
-        // int mID=(int) strtol(rs->data[j][0],NULL, 0);
-        // g_message("ID: %d, names: %s, %s",mID,rs->data[j][5],rs->data[j][6]);
+        // int mID=(int) strtol(rs2->data[j][0],NULL, 0);
+        // g_message("ID: %d, names: %s, %s",mID,rs2->data[j][5],rs2->data[j][6]);
 
         /* get name of player at top of screen*/
-        int opponentID= (userID ==(int) strtol(rs->data[j][4],NULL, 0))?
-            strtol(rs->data[j][5],NULL, 0) : strtol(rs->data[j][4],NULL, 0);
+        int opponentID= (userID ==(int) strtol(rs2->data[j][4],NULL, 0))?
+            strtol(rs2->data[j][5],NULL, 0) : strtol(rs2->data[j][4],NULL, 0);
         // g_message("opponentID: %d",opponentID);
         sprintf(szRequest, "name FROM player WHERE player_id='%d'",opponentID);
         // g_message("request=%s",szRequest);
-        rs2 = RunQuery(szRequest);
-        if (!rs2){
+        rs3 = RunQuery(szRequest);
+        if (!rs3){
             GTKMessage(_("Problem accessing database"), DT_INFO);
             return;
         }
-        sprintf(opponentNames[j-1], "%s",rs2->data[1][0]);
-        // int userID=(int) strtol(rs->data[1][0], NULL, 0);
+        sprintf(opponentNames[j-1], "%s",rs3->data[1][0]);
+        FreeRowset(rs3);
+        // int userID=(int) strtol(rs2->data[1][0], NULL, 0);
         // g_message("opponent name=%s",opponentNames[j-1]);
 
     }   
@@ -640,6 +698,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         minError=MIN(minError,matchErrorRate[i]);
         // g_message("maxerror:%f",maxError);
     }
+    FreeRowset(rs2);
 
     if(numRecords>=PLOT_WINDOW+1) { /* if we have enough data to get at least 2 points*/
         for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
@@ -648,20 +707,26 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
             // g_message("matchAvgErrorRate[%d]=%f",i,matchAvgErrorRate[i]);
         }    
     }    
+
     if(numRecords>1) 
         CreateHistoryWindow();
     else
         GTKMessage(_("Error, not enough datapoints for a plot."), DT_INFO);
 
-    FreeRowset(rs);
+
+    // if (needToFreeListName){
+    //     g_free(listName);
+    //     needToFreeListName=FALSE;
+    // }
+
     return;
 }
 
 /* creating this placeholder function with all the inputs needed when pressing a button;
 the real function above doesn't have inputs*/
 void PlotHistoryTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
-    // this is a problem when we close the History window:
-    //gtk_widget_destroy(pwStatDialog);
+    /*if launched by record list, need to check if player was picked there*/
+    fTriggeredByRecordList=TRUE; 
     ComputeHistory(); //pwStatDialog);
 }
 
@@ -830,22 +895,6 @@ do_list_store(void)
     add_columns(GTK_TREE_VIEW(treeview));
 
     return treeview;
-}
-
-static char *
-GetSelectedPlayer(void)
-{
-    char *name;
-    GtkTreeModel *model;
-    GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(playerTreeview));
-    if (gtk_tree_selection_count_selected_rows(sel) != 1)
-        return NULL;
-
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(playerTreeview));
-    gtk_tree_selection_get_selected(sel, &model, &selected_iter);
-
-    gtk_tree_model_get(model, &selected_iter, COLUMN_NICK, &name, -1);
-    return name;
 }
 
 static void

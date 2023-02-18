@@ -180,6 +180,7 @@ typedef enum {
     CMD_SHOW_COPYING,
     CMD_SHOW_ENGINE,
     CMD_SHOW_EXPORT,
+    CMD_SHOW_HISTORY,
     CMD_SHOW_MARKETWINDOW,
     CMD_SHOW_MATCHEQUITYTABLE,
     CMD_SHOW_KLEINMAN,
@@ -393,6 +394,7 @@ CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_CALIBRATION, "show calibration");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_COPYING, "show copying");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_ENGINE, "show engine");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_EXPORT, "show export");
+CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_HISTORY, "show history");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_MARKETWINDOW, "show marketwindow");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_MATCHEQUITYTABLE, "show matchequitytable");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_KLEINMAN, "show kleinman"); /* opens race theory window */
@@ -475,6 +477,7 @@ static const char *aszCommands[NUM_CMDS] = {
     "show copying",
     "show engine",
     "show export",
+    "show history",
     "show marketwindow",
     "show matchequitytable",
     "show kleinman",            /* opens race theory window */
@@ -4070,6 +4073,8 @@ static GtkActionEntry actionEntries[] = {
     {"AddMatchOrSessionStatsToDBAction", GTK_STOCK_ADD, N_("Add match or session to database"), NULL, NULL,
      G_CALLBACK(GtkRelationalAddMatch)},
     {"ShowRecordsAction", NULL, N_("Show Records"), NULL, NULL, G_CALLBACK(GtkShowRelational)},
+    {"PlotHistoryAction", NULL, N_("Plot History"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_HISTORY)},
     {"DistributionOfRollsAction", NULL, N_("Distribution of rolls"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_ROLLS)},
     {"TemperatureMapAction", NULL, N_("Temperature Map"), NULL, NULL,
@@ -4316,6 +4321,8 @@ static GtkItemFactoryEntry aife[] = {
      "<StockItem>", GTK_STOCK_ADD},
     {N_("/_Analyse/Show Records"), NULL,
      GtkShowRelational, 0, NULL, NULL},
+    {N_("/_Analyse/Plot History"), NULL, Command,
+     CMD_SHOW_HISTORY, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/Distribution of rolls"), NULL, Command,
      CMD_SHOW_ROLLS, NULL, NULL},
@@ -7952,6 +7959,8 @@ GTKSet(void *p)
                                  !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MWC),
                                     !ListEmpty(&lMatch) && (ms.nMatchTo > 0));
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_HISTORY),
+                                 !ListEmpty(&lMatch));
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MATCHEQUITYTABLE), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_CALIBRATION), TRUE);

@@ -1379,6 +1379,8 @@ command  acShow[] = {
     { "geometry", CommandShowGeometry, N_("Show geometry settings"), 
       NULL, NULL },
 #endif
+    { "history", CommandShowHistory,
+      N_("Show plot of player's historical error rate"), NULL, NULL },
     { "isight", CommandShowIsight, N_("Calculate Isight Count for "
       "position"), szOPTPOSITION, NULL },
     { "jacoby", CommandShowJacoby, 
