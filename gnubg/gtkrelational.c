@@ -120,9 +120,10 @@ static double matchAvgErrorRate [NUM_PLOT]={-1.0}; /* vector of match error rate
 static int matchCumMoves [NUM_PLOT+1]={0}; /* vector of cumulative numbers of moves in matches*/
 static double matchCumErrors [NUM_PLOT+1]={0.0}; /* vector of cumulative total errors in matches*/
 
-
-
 static double maxError=0.001; //to avoid dividing by 0 in case of mistake
+static double minError=1000.0; //to avoid dividing by 0 in case of mistake
+
+static double minYScale, maxYScale;
 
 static int numRecords=NUM_PLOT+1; 
 // #define EPSILON 0.001
@@ -134,6 +135,7 @@ and we'd need to start having the margins in the function parameters*/
 double scaleValue(double x,double a,double b) {
     return a+x*(b-a);
 }
+/* convert x in [0,1] to its X plotting value */
 double xToX (double x) { 
     /*
     x=0->X=margin1*d
@@ -147,13 +149,14 @@ double xToX (double x) {
     // */       
     // return (da.width*(x*(1-margin)+margin));
 }
+/* convert index i to its X plotting value by using the number of moves at match i */
 double iToX (int i) { 
     /* for i: how many moves have been played between i and "the end of the vector == 
         the beginning of the match records", scaled by total played moves */
     double x=((double)matchCumMoves[i]) / ((double)matchCumMoves[0]);
     return xToX(x);
 }
-
+/* convert y in [0,1] to its Y plotting value */
 double trueHistY (double y) { //}, gfloat h, gfloat margin) {
     /*
     y=0->-h(1-margin1) on screen->Y=+h(1-margin1)
@@ -167,6 +170,12 @@ double trueHistY (double y) { //}, gfloat h, gfloat margin) {
 //    */
 //     return (da.height*(1-y)*(1-margin));
 }
+/* convert error to its Y plotting value using the rigth scaling */
+double errorToY(double error){
+    double y=(error-minYScale)/(maxYScale-minYScale);
+    return trueHistY(y);
+}
+
 
 // #define MAX(a,b) ((a) > (b) ? (a) : (b))
 // #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -256,6 +265,11 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_set_font_size(cr, fontSize);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
+        /* set scale on y-axis plot + sanity check + making sure min<max + leaving some margin*/
+        minYScale=MIN(minError,maxError)/1.05+0.001;
+        maxYScale=MAX(minError,maxError)*1.05-0.001;
+
+
         /* Draws x and y axes */
         cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
@@ -272,8 +286,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         /* the newest record is the first, so we start by plotting the oldest*/
         for (int i = numRecords-1; i >=0; --i) {
         // for (int i = 0; i < numRecords; i ++) {
-            cairo_line_to (cr, iToX(i), 
-                trueHistY(matchErrorRate[i]/maxError));
+            cairo_line_to (cr, iToX(i), errorToY(matchErrorRate[i]));
             g_message("i=%d,val=%f",i,matchErrorRate[i]);
         }
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
@@ -545,6 +558,7 @@ void initHistoryArrays(void) {
         matchCumErrors[i]=0.0; 
     }
     maxError=0.001;
+    minError=1000.0;
     numRecords=NUM_PLOT+1; /* resetting; and using a forbidden number as an indicator that we
                 scrubbed everything clean again */
 }
@@ -645,9 +659,10 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         matchCumErrors[i]=matchCumErrors[i+1]+matchErrors[i];
         matchCumMoves[i]=matchCumMoves[i+1]+matchMoves[i];
         maxError=MAX(maxError,matchErrorRate[i]);
+        minError=MIN(minError,matchErrorRate[i]);
         // g_message("maxerror:%f",maxError);
     }
-    
+
     if(numRecords>=PLOT_WINDOW+1) { /* if we have enough data to get at least 2 points*/
         for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
             matchAvgErrorRate[i]=Ratio((matchCumErrors[i]-matchCumErrors[i+PLOT_WINDOW]),
