@@ -292,11 +292,20 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             // }
         }
         cairo_stroke (cr);
+            /* +legend */
+        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
+        cairo_move_to (cr, xToX(0.5), trueHistY(1.0+margin2y/2));
+        cairo_line_to (cr, xToX(0.55), trueHistY(1.0+margin2y/2));
+        cairo_stroke (cr);
+        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+        cairo_move_to(cr,  xToX(0.57), trueHistY(1.0+margin2y/2)+0.3*fontSize);
+        cairo_show_text(cr, "5-match averages");
+        cairo_stroke (cr);
 
         /* Draw the main plot: link each data point */
         // g_message("got here");
         cairo_set_line_width (cr, dy/3);
-        cairo_set_dash(cr, dashed2, len2, 1);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         for (int i = numRecords-1; i >=0; --i) {
         // for (int i = 0; i < numRecords; i ++) {
@@ -306,78 +315,17 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
         cairo_stroke (cr);
-
-        // /* Draw the best moves */
-        // for (int i = 1; i < numRecords; i ++) {
-        //     // if(matchErrorRate[i]>=0 && matchErrorRate[i]<=1) {
-        //         if (matchAvgErrorRate[i] - matchErrorRate[i]>EPSILON) {
-        //             /* red: user's mistakes*/
-        //             /*
-        //             Version 1: plot from the last point (i-1) to the new best, i.e show
-        //             the alternative scenario
-        //             Version 2: plot from player's i to best i, i.e. vertical
-        //             Version 3: vertical arrow touching plot
-        //             Version 4: vertical arrow touching the 0.5 line
-        //             */
-        //             // cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
-        //             cairo_set_source_rgb (cr, 0.5, 0.0, 0.0);
-        //             // drawArrow(cr,  xToX(((double)i)/(numRecords-1)),trueHistY(matchAvgErrorRate[i]),
-        //             //     xToX(((double)i)/(numRecords-1)),trueHistY(matchErrorRate[i]) );
-        //             drawArrow(cr,  xToX(((double)i)/(numRecords-1)),trueHistY(0.5),
-        //                 xToX(((double)i)/(numRecords-1)),trueHistY(matchErrorRate[i]-matchAvgErrorRate[i]+0.5) );
-        //             if (CubeD[i]){
-        //                 cairo_move_to(cr, xToX(((double)i)/(numRecords-1))-2*dx, trueHistY(0.5)-0.5*fontSize);
-        //                 cairo_show_text(cr, "c"); 
-        //             }
-
-        //             // cairo_move_to (cr, xToX(((double)i-1)/(numRecords-1)), trueHistY(matchErrorRate[i-1]));
-        //             // cairo_line_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(matchAvgErrorRate[i]));
-        //             // cairo_line_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(matchErrorRate[i]));
-        //             // cairo_stroke (cr);
-        //         } else if (matchAvgErrorRate[i] - matchErrorRate[i] <-EPSILON) {
-        //             /* green: opponent's mistakes*/
-        //             // cairo_set_source_rgb (cr, 0.0, 0.5, 1.0);
-        //             cairo_set_source_rgb (cr, 0.0, 0.5, 0.0);
-        //             // drawArrow(cr,  xToX(((double)i)/(numRecords-1)),trueHistY(matchAvgErrorRate[i]),
-        //             //     xToX(((double)i)/(numRecords-1)),trueHistY(matchErrorRate[i]) );
-        //             drawArrow(cr,  xToX(((double)i)/(numRecords-1)),trueHistY(0.5),
-        //                 xToX(((double)i)/(numRecords-1)),trueHistY(matchErrorRate[i]-matchAvgErrorRate[i]+0.5) );
-        //             if (CubeD[i]){
-        //                 cairo_move_to(cr, xToX(((double)i)/(numRecords-1))-2*dx, trueHistY(0.5)+1.3*fontSize);
-        //                 cairo_show_text(cr, "c"); 
-        //             }
-        //             // cairo_move_to (cr, xToX(((double)i-1)/(numRecords-1)), trueHistY(matchErrorRate[i-1]));
-        //             // cairo_move_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(matchErrorRate[i]));
-        //             // cairo_line_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(matchAvgErrorRate[i]));
-        //             // cairo_stroke (cr);
-        //         }
-        //     // }
-        // }
-        // cairo_stroke (cr);
-
-        /* text: legend */
-            /*1:error rates*/
+            /* +legend */
         cairo_set_line_width (cr, dy/3);
-        cairo_set_dash(cr, dashed2, len2, 1);        
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to (cr, xToX(0.05), trueHistY(1.0+margin2y/2));
         cairo_line_to (cr, xToX(0.1), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_move_to(cr,  xToX(0.12), trueHistY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Match error rates");
-
-            /*2:averages*/
-   
-        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
-        cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
-        cairo_move_to (cr, xToX(0.5), trueHistY(1.0+margin2y/2));
-        cairo_line_to (cr, xToX(0.55), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
-        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to(cr,  xToX(0.57), trueHistY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "5-match averages");
 
-        /* grid*/
+         /* grid*/
         cairo_set_line_width (cr, dy/3);
         cairo_set_dash(cr, dashed2, len2, 1);          
         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
@@ -394,30 +342,29 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_line_to (cr, xToX(xLabel/ ((double)matchCumMoves[0])), trueHistY(1.0));
             cairo_stroke (cr);
         }
-#if 0 /* *********************************************** */
         // for (double y = 0.1; y <= 1.0; y=y+0.1) 
         for (int j = 1; j <=10; j++) {
-            if(j==5 || j==10){
-                cairo_set_source_rgb (cr, 0.4, 0.4, 0.4);
-                cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
-            } else {
+            // if(j==5 || j==10){
+            //     cairo_set_source_rgb (cr, 0.4, 0.4, 0.4);
+            //     cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
+            // } else {
                 cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
                 cairo_set_dash(cr, dashed2, len2, 1);
-            }
+            // }
             cairo_move_to (cr, xToX(0.0), trueHistY(((double)j)/10));
             cairo_line_to (cr, xToX(1.0), trueHistY(((double)j)/10));
             cairo_stroke (cr);
         }         
 
-        /* drawing: new games (vertical lines) */
+        /* drawing: new matches (vertical lines) */
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
-        for (int i = 0; i < numRecords; i ++) {
-            if(NewGame[i]) {
-                cairo_move_to (cr, xToX( (((double)i)-0.5) / (numRecords-1) ), trueHistY(0.0));
-                cairo_line_to (cr, xToX( (((double)i)-0.5) / (numRecords-1) ), trueHistY(1.0));
+        for (int i = numRecords-1; i >=0; i=MIN(i-1,i-numRecords/5)) {
+                g_message("i=%d",i);
+                cairo_move_to (cr, iToX(i), trueHistY(0.0));
+                cairo_line_to (cr, iToX(i), trueHistY(1.0));
                 cairo_stroke (cr);
-            }
         }
+#if 0 /* *********************************************** */
 
         /* text: axis labels */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
