@@ -18,6 +18,12 @@
  * $Id: gtkrelational.c,v 1.60 2022/09/04 22:09:31 plm Exp $
  */
 
+/*
+02/2023: Isaac Keslassy: introduced the "history plot" feature, together with two ways 
+of launching it graphically: a sub-menu command ("Analyze > Plot History"), and a button
+in "Show Records". 
+*/
+
 #include "config.h"
 #include "backgammon.h"
 #include <gtk/gtk.h>

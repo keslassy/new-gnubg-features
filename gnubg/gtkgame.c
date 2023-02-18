@@ -21,7 +21,7 @@
 02/2023: Isaac Keslassy: 
 - introduced the "mwc plot" feature, together with two ways 
 of launching it graphically: a sub-menu command ("Analyze > Plot MWC"), and a button
-in "Match of session statistics". 
+in "Match or session statistics". 
 - introduced an automatic check online of the latest version. It is only done 
 once a week. If there is a newer version, it tells the user, who can click and 
 go to the download website. The user can disable it, either in the 
