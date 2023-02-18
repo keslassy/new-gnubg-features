@@ -1582,7 +1582,7 @@ RelationalOptions(void)
 
     return vb2;
 }
-
+ 
 extern void
 GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
