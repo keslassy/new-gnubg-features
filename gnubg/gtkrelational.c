@@ -300,7 +300,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to(cr,  xToX(0.57), trueHistY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "5-match averages");
+        cairo_show_text(cr, "5-match weighted average of error");
         cairo_stroke (cr);
 
         /* Draw the main plot: link each data point */
@@ -322,81 +322,81 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_line_to (cr, xToX(0.1), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_move_to(cr,  xToX(0.12), trueHistY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "Match error rates");
+        cairo_show_text(cr, "Match error rate");
         cairo_stroke (cr);
 
-         /* grid*/
-        cairo_set_line_width (cr, dy/3);
-        cairo_set_dash(cr, dashed2, len2, 1);          
-        cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
+         /* x axis*/
         // for (int i = 10; i < numRecords; i=i+10) {
         // for (int j = 1; j <=10; j++) {
-        for (double i = 0.1; i <1.0; i=i+0.1) {
-            double xLabel=ceil(i*((double)matchCumMoves[0]));
+        double xLabel=ceil(0.11*((double)matchCumMoves[0]));
+        for (double i = xLabel; i <(double)matchCumMoves[0]; i+=xLabel) {
+            /* grid lines*/
+            cairo_set_line_width (cr, dy/3);
+            cairo_set_dash(cr, dashed2, len2, 1);          
+            cairo_set_source_rgb (cr, 0.6, 0.6, 0.6);
+            // for (int i = numRecords-1; i >=0; i=MIN(i-1,i-numRecords/5)) {
             g_message("matchCumMoves[0]=%d,i=%f, xLabel=%f",matchCumMoves[0],i,xLabel);
             // double x=((double)matchCumMoves[i]) / ((double)matchCumMoves[0]);
             // /* [commented: axis markers] */
             // cairo_move_to (cr, xToX(((double)i)/(n-1)), trueHistY(-0.03));
             // cairo_line_to (cr, xToX(((double)i)/(n-1)), trueHistY(0.03));
-            cairo_move_to (cr, xToX(xLabel/ ((double)matchCumMoves[0])), trueHistY(0.0));
-            cairo_line_to (cr, xToX(xLabel/ ((double)matchCumMoves[0])), trueHistY(1.0));
+            cairo_move_to (cr, xToX(i/ ((double)matchCumMoves[0])), trueHistY(0.0));
+            cairo_line_to (cr, xToX(i/ ((double)matchCumMoves[0])), trueHistY(1.0));
             cairo_stroke (cr);
+
+            /* text: x-axis labels */
+            cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+            // cairo_move_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(0.0));
+            // cairo_line_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(1.0));
+            cairo_move_to(cr, xToX(i/ ((double)matchCumMoves[0]))-2*dx, trueHistY(0.0)+1.25*fontSize);
+            sprintf(strTemp, "%d", (int)i);
+            cairo_show_text(cr, strTemp);  
         }
-        // for (double y = 0.1; y <= 1.0; y=y+0.1) 
-        for (int j = 1; j <=10; j++) {
-            // if(j==5 || j==10){
-            //     cairo_set_source_rgb (cr, 0.4, 0.4, 0.4);
-            //     cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
-            // } else {
-                cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
+            cairo_move_to(cr, xToX(0.5)-10*dx, trueHistY(0.0)+2.5*fontSize);
+            cairo_show_text(cr, "decisions (cube or move)");  
+
+         /* y axis*/
+        for (double j = 0.0; j <1.0; j+=0.1) {
+            /*grid lines*/
+            if (j>0.0) {
+                cairo_set_source_rgb (cr, 0.6, 0.6, 0.6);
                 cairo_set_dash(cr, dashed2, len2, 1);
-            // }
-            cairo_move_to (cr, xToX(0.0), trueHistY(((double)j)/10));
-            cairo_line_to (cr, xToX(1.0), trueHistY(((double)j)/10));
+                cairo_move_to (cr, xToX(0.0), trueHistY(j));
+                cairo_line_to (cr, xToX(1.0), trueHistY(j));
+                cairo_stroke (cr);
+            }
+
+            /* text: y-axis labels */
+            cairo_move_to(cr, xToX(-0.08), trueHistY(j)+0.3*fontSize);
+            sprintf(strTemp, "%.1f", scaleValue(j,minYScale,maxYScale));
+            cairo_show_text(cr, strTemp); 
             cairo_stroke (cr);
         }         
 
         /* drawing: new matches (vertical lines) */
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
-        for (int i = numRecords-1; i >=0; i=MIN(i-1,i-numRecords/5)) {
-                g_message("i=%d",i);
-                cairo_move_to (cr, iToX(i), trueHistY(0.0));
-                cairo_line_to (cr, iToX(i), trueHistY(1.0));
-                cairo_stroke (cr);
-        }
-#if 0 /* *********************************************** */
-
-        /* text: axis labels */
-        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        for (int i = 10; i < numRecords; i=i+10) {
-            cairo_move_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(0.0));
-            cairo_line_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(1.0));
-            cairo_move_to(cr, xToX(((double)i)/(numRecords-1))-2*dx, trueHistY(0.0)+1.25*fontSize);
-            sprintf(strTemp, "%d", i);
-            cairo_show_text(cr, strTemp);             
-        }     
-            cairo_move_to(cr, xToX(0.5)-10*dx, trueHistY(0.0)+2.5*fontSize);
-            cairo_show_text(cr, "decision (cube or move)");              
-        for (int j = 0; j <=10; j++) {
-        // for (double y = 0.0; y <= 1.0; y=y+0.1) {
-            cairo_move_to(cr, xToX(-0.08), trueHistY(((double)j)/10)+0.3*fontSize);
-            sprintf(strTemp, "%d%%", 10*j);
-            // sprintf(strTemp, "%.1f", y);
-            cairo_show_text(cr, strTemp);             
-        }
-
-        /* text: game 1, game 2... */
         int jTemp=0;
-        for (int i = 0; i < numRecords; i ++) {
-            if(NewGame[i]) {
-                jTemp++;
-                cairo_move_to(cr, xToX((((double)i)+1) / (numRecords-1)), 
-                        trueHistY(0.95)+fontSize/2);
-                sprintf(strTemp, "game %d", jTemp);
-                cairo_show_text(cr, strTemp);             
-            }
-        }
-#endif //if 0
+        for (int i = numRecords-1; i >=0; i=MIN(i-1,i-numRecords/5)) {
+            g_message("i=%d",i);
+            cairo_move_to (cr, iToX(i), errorToY(matchErrorRate[i]));
+            cairo_line_to (cr, iToX(i), trueHistY(0.93));
+            cairo_stroke (cr);
+    
+            /* text: match 1, match 2... */
+            // int jTemp=0;
+
+            jTemp++;
+            cairo_move_to(cr, iToX(i)-10*dx, (jTemp % 2 == 0)?
+                    (trueHistY(0.95)+fontSize/2):(trueHistY(0.95)-fontSize/2) );
+            sprintf(strTemp, "match %d", numRecords-i);
+            cairo_show_text(cr, strTemp);             
+            cairo_stroke (cr);
+                    }    
+
+// #if 0 /* *********************************************** */
+// #endif //if 0
+
+
         // g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
         //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
     } else 
