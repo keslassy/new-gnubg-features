@@ -285,7 +285,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to(cr,  xToX(0.57), trueHistY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "5-match error");
+        cairo_show_text(cr, "5-match error rate");
         cairo_stroke (cr);
 
         /* PLOT 2: match error*/
@@ -432,22 +432,19 @@ void HistoryPlotInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
     gtk_container_add(GTK_CONTAINER(DialogArea(pwInfoDialog, DA_MAIN)), pwBox);
 
         // Add explanation text for mwc plot
-    AddText(pwBox, _(" This plot shows how match winning chances (History) have evolved over the match:\
-\n\n- To draw the plot, you need to first analyze a given game or match (not money play).\
-\n\n- The x-axis represents all decisions in the match, including both cube and \
-move decisions, and including both the user and the opponent.\
-\n\n- The y-axis represents the chances of winning for the user \
-(i.e., the player sitting at the bottom of the board). For instance, at the start, \
-the user has 50% chances of winning. \
-\n\n- The black plot shows the chances of winning the match. At the end, it either gets \
-to 100\% (when the user wins) or 0\% (when the opponent wins). \
-\n\n- The vertical red (respectively green) arrows represent mistakes by the user \
-(resp. the opponent). Their size is equal to the History difference with the optimal decision.\
-\n\n- The c above the red arrows (resp. below the green ones) indicates that it is a cube \
-decision. Other mistakes correspond to move decisions. \
-\n\n- The orange plot illustrates the cumulative skill difference. It is the sum of the \
-red (negative) and green (positive) arrows. It is centered at 50\% for convenience. \
-\n\n- The orange plot is not equal to the black plot because of the impact of dice (luck)."));
+    AddText(pwBox, _(" This plot shows how the player's GNU error rate has evolved \
+throughout the player's history, as provided by the database records (for the up-to-100 \
+last matches).\   
+\n\n- To draw the plot, you need to first add the analyses to the database. Also make sure \
+that the player you want to analyze is at the bottom of the screen.\
+\n\n- The x-axis represents all of the analyzed player's (non-trivial) cube and move 
+decisions in the matches. \
+\n\n- The y-axis represents the GNU error rate, i.e., the ratio of the total errors by the \
+total number of non-trivial played decisions. Lower is better.\
+\n\n- The black plot shows the GNU error rate for each match.\
+\n\n- The orange plot illustrates the weighted-average error rate over the past 5 matches. \
+It divides the total errors by the number of played decisions within these 5 matches.\
+\n\n- Some match examples are provided throughout the plot (blue arrows)."));
 
     GTKRunDialog(pwInfoDialog);
 }
@@ -552,11 +549,11 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     //  player_id, name FROM player WHERE player.player_id =2
     // char szRequest[600]; 
     sprintf(szRequest, 
-                    "matchstat_id,"
-                    "unforced_moves," /*moves[1]*/
-                    "close_cube_decisions," /*moves[2]*/
-                    "cube_error_total_normalised," /* stats[6]*/
-                    "chequer_error_total_normalised," /* stats[7]*/
+                    // "matchstat_id,"
+                    "unforced_moves," /*moves[0]*/
+                    "close_cube_decisions," /*moves[1]*/
+                    "cube_error_total_normalised," /* stats[0]*/
+                    "chequer_error_total_normalised," /* stats[1]*/
                     "player_id0, player_id1 " 
                     "FROM matchstat NATURAL JOIN player NATURAL JOIN session "
                     "WHERE name='%s' "
@@ -601,23 +598,22 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
     // <= ?
     for (j = 1; j < rs->rows; ++j) {
-        for (i = 1; i < 3; ++i)
-            moves[i - 1] = (int) strtol(rs->data[j][i], NULL, 0);
+        for (i = 0; i < 2; ++i)
+            moves[i] = (int) strtol(rs->data[j][i], NULL, 0);
 
-        for (i = 3; i < 5; ++i)
-            stats[i - 3] = (float) g_strtod(rs->data[j][i], NULL);
+        for (i = 2; i < 4; ++i)
+            stats[i - 2] = (float) g_strtod(rs->data[j][i], NULL);
 
         matchErrors[j-1]=(stats[0] + stats[1]) * 1000.0f;
         matchMoves[j-1]=moves[0] + moves[1];
         matchErrorRate[j-1]=Ratio(stats[0] + stats[1], moves[0] + moves[1]) * 1000.0f;
         // g_message("error:%f=%f/%d",matchErrorRate[j-1],matchErrors[j-1],matchMoves[j-1]);
-        int mID=(int) strtol(rs->data[j][0],NULL, 0);
+        // int mID=(int) strtol(rs->data[j][0],NULL, 0);
         // g_message("ID: %d, names: %s, %s",mID,rs->data[j][5],rs->data[j][6]);
 
-
         /* get name of player at top of screen*/
-        int opponentID= (userID ==(int) strtol(rs->data[j][5],NULL, 0))?
-            strtol(rs->data[j][6],NULL, 0) : strtol(rs->data[j][5],NULL, 0);
+        int opponentID= (userID ==(int) strtol(rs->data[j][4],NULL, 0))?
+            strtol(rs->data[j][5],NULL, 0) : strtol(rs->data[j][4],NULL, 0);
         // g_message("opponentID: %d",opponentID);
         sprintf(szRequest, "name FROM player WHERE player_id='%d'",opponentID);
         // g_message("request=%s",szRequest);
