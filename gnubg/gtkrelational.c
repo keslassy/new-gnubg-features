@@ -269,7 +269,6 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         minYScale=MIN(minError,maxError)/1.05+0.001;
         maxYScale=MAX(minError,maxError)*1.05-0.001;
 
-
         /* Draws x and y axes */
         cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
