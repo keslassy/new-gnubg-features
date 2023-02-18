@@ -113,47 +113,49 @@ static double margin2y=0.05;
 */
 static double matchErrors [NUM_PLOT]={-1.0}; /* vector of all matchErrors*/
 static double matchErrorAvg [NUM_PLOT]={-1.0}; /* optimal decisions*/
-static double maxError=0.0;
+static double maxError=0.001; //to avoid dividing by 0 in case of mistake
 
 static int numRecords=NUM_PLOT+1; 
 // #define EPSILON 0.001
 
-// /*shows translation x->X when x=0=>X=a and x=1=>X=b*/
-// double translateX(double x,double a,double b) {
-//     return a+x*(b-a);
-// }
+/*shows translation x->X when x=0=>X=a and x=1=>X=b
+defined with plot MWC, could make it extern there;
+but the functions below depends on the margin definitions, so extern is more tricky,
+and we'd need to start having the margins in the function parameters*/
+double xToX(double x,double a,double b) {
+    return a+x*(b-a);
+}
 
-// double trueX (double x) { 
-//     // (i/(n-1))*da.width*19/20+da.width/20
-//     /*
-//     x=0->X=margin1*d
-//     x=1->X=(1-margin2)*d
-//     */   
-//     return translateX(x,margin1x*da.width,(1-margin2x)*da.width);
-//     //  OLD   // (i/(n-1))*da.width*19/20+da.width/20
-//     // /*
-//     // x=0->X=margin*d
-//     // x=1->X=d
-//     // */       
-//     // return (da.width*(x*(1-margin)+margin));
-// }
+double trueHistX (double x) { 
+    /*
+    x=0->X=margin1*d
+    x=1->X=(1-margin2)*d
+    */   
+    return xToX(x,margin1x*da.width,(1-margin2x)*da.width);
+    //  OLD   // (i/(n-1))*da.width*19/20+da.width/20
+    // /*
+    // x=0->X=margin*d
+    // x=1->X=d
+    // */       
+    // return (da.width*(x*(1-margin)+margin));
+}
 
-// double trueY (double y) { //}, gfloat h, gfloat margin) {
-//     /*
-//     y=0->-h(1-margin1) on screen->Y=+h(1-margin1)
-//     y=1->-h*margin2 on screen->Y=+h*margin2
-//     */
-//     return translateX(y,(1-margin1y)*da.height,margin2y*da.height);
+double trueHistY (double y) { //}, gfloat h, gfloat margin) {
+    /*
+    y=0->-h(1-margin1) on screen->Y=+h(1-margin1)
+    y=1->-h*margin2 on screen->Y=+h*margin2
+    */
+    return xToX(y,(1-margin1y)*da.height,margin2y*da.height);
 
-// //    /*
-// //    y=0->-h(1-margin) on screen->Y=+h(1-margin)
-// //    y=1->Y=0
-// //    */
-// //     return (da.height*(1-y)*(1-margin));
-// }
+//    /*
+//    y=0->-h(1-margin) on screen->Y=+h(1-margin)
+//    y=1->Y=0
+//    */
+//     return (da.height*(1-y)*(1-margin));
+}
 
-// // #define MAX(a,b) ((a) > (b) ? (a) : (b))
-// // #define MIN(a,b) ((a) < (b) ? (a) : (b))
+// #define MAX(a,b) ((a) > (b) ? (a) : (b))
+// #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
 
 // void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
@@ -179,9 +181,8 @@ static int numRecords=NUM_PLOT+1;
 //         // g_message("arrow: %f %f %f %f",x1,y1,x2,y2);
 //     }
 
-#if 0 /* *********************************************** */
 static gboolean
-on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
+DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
 {
     // GdkRectangle da;            /* GtkDrawingArea size */
     double dx = 2.0, dy = 2.0; /* Pixels between each point */
@@ -245,24 +246,25 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to (cr, trueX(0.0), trueY(0.0));
-        cairo_line_to (cr, trueX(0.0), trueY(1.0));
-        cairo_move_to (cr, trueX(0.0), trueY(0.0));
-        cairo_line_to (cr, trueX(1.0), trueY(0.0));
+        cairo_move_to (cr, trueHistX(0.0), trueHistY(0.0));
+        cairo_line_to (cr, trueHistX(0.0), trueHistY(1.0));
+        cairo_move_to (cr, trueHistX(0.0), trueHistY(0.0));
+        cairo_line_to (cr, trueHistX(1.0), trueHistY(0.0));
         cairo_stroke (cr);
 
         /* Draw the main plot: link each data point */
+        // g_message("got here");
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        for (int i = 0; i < numRecords; i ++) {
-            // if(matchErrors[i]>=0 && matchErrors[i]<=1) {
-                cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrors[i]));
-                // cairo_line_to (cr, (gdouble)i, -matchErrors[i]);
-                // g_message("i=%d,val=%f",i,matchErrors[i]);
-            // }
+        /* the newest record is the first, so we start by plotting the oldest*/
+        for (int i = numRecords-1; i >=0; --i) {
+        // for (int i = 0; i < numRecords; i ++) {
+            cairo_line_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(matchErrors[i]/maxError));
+            g_message("i=%d,val=%f",i,matchErrors[i]);
         }
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
         cairo_stroke (cr);
+#if 0 /* *********************************************** */
 
         /* Draw the best moves */
         for (int i = 1; i < numRecords; i ++) {
@@ -278,34 +280,34 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                     */
                     // cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
                     cairo_set_source_rgb (cr, 0.5, 0.0, 0.0);
-                    // drawArrow(cr,  trueX(((double)i)/(numRecords-1)),trueY(matchErrorAvg[i]),
-                    //     trueX(((double)i)/(numRecords-1)),trueY(matchErrors[i]) );
-                    drawArrow(cr,  trueX(((double)i)/(numRecords-1)),trueY(0.5),
-                        trueX(((double)i)/(numRecords-1)),trueY(matchErrors[i]-matchErrorAvg[i]+0.5) );
+                    // drawArrow(cr,  trueHistX(((double)i)/(numRecords-1)),trueHistY(matchErrorAvg[i]),
+                    //     trueHistX(((double)i)/(numRecords-1)),trueHistY(matchErrors[i]) );
+                    drawArrow(cr,  trueHistX(((double)i)/(numRecords-1)),trueHistY(0.5),
+                        trueHistX(((double)i)/(numRecords-1)),trueHistY(matchErrors[i]-matchErrorAvg[i]+0.5) );
                     if (CubeD[i]){
-                        cairo_move_to(cr, trueX(((double)i)/(numRecords-1))-2*dx, trueY(0.5)-0.5*fontSize);
+                        cairo_move_to(cr, trueHistX(((double)i)/(numRecords-1))-2*dx, trueHistY(0.5)-0.5*fontSize);
                         cairo_show_text(cr, "c"); 
                     }
 
-                    // cairo_move_to (cr, trueX(((double)i-1)/(numRecords-1)), trueY(matchErrors[i-1]));
-                    // cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrorAvg[i]));
-                    // cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrors[i]));
+                    // cairo_move_to (cr, trueHistX(((double)i-1)/(numRecords-1)), trueHistY(matchErrors[i-1]));
+                    // cairo_line_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(matchErrorAvg[i]));
+                    // cairo_line_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(matchErrors[i]));
                     // cairo_stroke (cr);
                 } else if (matchErrorAvg[i] - matchErrors[i] <-EPSILON) {
                     /* green: opponent's mistakes*/
                     // cairo_set_source_rgb (cr, 0.0, 0.5, 1.0);
                     cairo_set_source_rgb (cr, 0.0, 0.5, 0.0);
-                    // drawArrow(cr,  trueX(((double)i)/(numRecords-1)),trueY(matchErrorAvg[i]),
-                    //     trueX(((double)i)/(numRecords-1)),trueY(matchErrors[i]) );
-                    drawArrow(cr,  trueX(((double)i)/(numRecords-1)),trueY(0.5),
-                        trueX(((double)i)/(numRecords-1)),trueY(matchErrors[i]-matchErrorAvg[i]+0.5) );
+                    // drawArrow(cr,  trueHistX(((double)i)/(numRecords-1)),trueHistY(matchErrorAvg[i]),
+                    //     trueHistX(((double)i)/(numRecords-1)),trueHistY(matchErrors[i]) );
+                    drawArrow(cr,  trueHistX(((double)i)/(numRecords-1)),trueHistY(0.5),
+                        trueHistX(((double)i)/(numRecords-1)),trueHistY(matchErrors[i]-matchErrorAvg[i]+0.5) );
                     if (CubeD[i]){
-                        cairo_move_to(cr, trueX(((double)i)/(numRecords-1))-2*dx, trueY(0.5)+1.3*fontSize);
+                        cairo_move_to(cr, trueHistX(((double)i)/(numRecords-1))-2*dx, trueHistY(0.5)+1.3*fontSize);
                         cairo_show_text(cr, "c"); 
                     }
-                    // cairo_move_to (cr, trueX(((double)i-1)/(numRecords-1)), trueY(matchErrors[i-1]));
-                    // cairo_move_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrors[i]));
-                    // cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(matchErrorAvg[i]));
+                    // cairo_move_to (cr, trueHistX(((double)i-1)/(numRecords-1)), trueHistY(matchErrors[i-1]));
+                    // cairo_move_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(matchErrors[i]));
+                    // cairo_line_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(matchErrorAvg[i]));
                     // cairo_stroke (cr);
                 }
             // }
@@ -316,7 +318,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
         for (int i = 0; i < numRecords; i ++) {
             // if(matchErrors[i]>=0 && matchErrors[i]<=1) {
-                cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(mwcCumulSkillDiff[i]));
+                cairo_line_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(mwcCumulSkillDiff[i]));
             // }
         }
         cairo_stroke (cr);
@@ -325,18 +327,18 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         /* text: legend */
             /*1:plot*/
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to (cr, trueX(0.05), trueY(1.0+margin2y/2));
-        cairo_line_to (cr, trueX(0.1), trueY(1.0+margin2y/2));
+        cairo_move_to (cr, trueHistX(0.05), trueHistY(1.0+margin2y/2));
+        cairo_line_to (cr, trueHistX(0.1), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
-        cairo_move_to(cr,  trueX(0.12), trueY(1.0+margin2y/2)+0.3*fontSize);
+        cairo_move_to(cr,  trueHistX(0.12), trueHistY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Match winning chances");
             /*2:cumul. skill*/
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
-        cairo_move_to (cr, trueX(0.5), trueY(1.0+margin2y/2));
-        cairo_line_to (cr, trueX(0.55), trueY(1.0+margin2y/2));
+        cairo_move_to (cr, trueHistX(0.5), trueHistY(1.0+margin2y/2));
+        cairo_line_to (cr, trueHistX(0.55), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to(cr,  trueX(0.57), trueY(1.0+margin2y/2)+0.3*fontSize);
+        cairo_move_to(cr,  trueHistX(0.57), trueHistY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Cumulative skill difference");
 
         /* grid*/
@@ -348,10 +350,10 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
         for (int i = 10; i < numRecords; i=i+10) {
             // /* [commented: axis markers] */
-            // cairo_move_to (cr, trueX(((double)i)/(n-1)), trueY(-0.03));
-            // cairo_line_to (cr, trueX(((double)i)/(n-1)), trueY(0.03));
-            cairo_move_to (cr, trueX(((double)i)/(numRecords-1)), trueY(0.0));
-            cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(1.0));
+            // cairo_move_to (cr, trueHistX(((double)i)/(n-1)), trueHistY(-0.03));
+            // cairo_line_to (cr, trueHistX(((double)i)/(n-1)), trueHistY(0.03));
+            cairo_move_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(0.0));
+            cairo_line_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(1.0));
             cairo_stroke (cr);
         }
         // for (double y = 0.1; y <= 1.0; y=y+0.1) 
@@ -363,8 +365,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
                 cairo_set_dash(cr, dashed2, len2, 1);
             }
-            cairo_move_to (cr, trueX(0.0), trueY(((double)j)/10));
-            cairo_line_to (cr, trueX(1.0), trueY(((double)j)/10));
+            cairo_move_to (cr, trueHistX(0.0), trueHistY(((double)j)/10));
+            cairo_line_to (cr, trueHistX(1.0), trueHistY(((double)j)/10));
             cairo_stroke (cr);
         }         
 
@@ -372,8 +374,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
         for (int i = 0; i < numRecords; i ++) {
             if(NewGame[i]) {
-                cairo_move_to (cr, trueX( (((double)i)-0.5) / (numRecords-1) ), trueY(0.0));
-                cairo_line_to (cr, trueX( (((double)i)-0.5) / (numRecords-1) ), trueY(1.0));
+                cairo_move_to (cr, trueHistX( (((double)i)-0.5) / (numRecords-1) ), trueHistY(0.0));
+                cairo_line_to (cr, trueHistX( (((double)i)-0.5) / (numRecords-1) ), trueHistY(1.0));
                 cairo_stroke (cr);
             }
         }
@@ -381,17 +383,17 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         /* text: axis labels */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         for (int i = 10; i < numRecords; i=i+10) {
-            cairo_move_to (cr, trueX(((double)i)/(numRecords-1)), trueY(0.0));
-            cairo_line_to (cr, trueX(((double)i)/(numRecords-1)), trueY(1.0));
-            cairo_move_to(cr, trueX(((double)i)/(numRecords-1))-2*dx, trueY(0.0)+1.25*fontSize);
+            cairo_move_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(0.0));
+            cairo_line_to (cr, trueHistX(((double)i)/(numRecords-1)), trueHistY(1.0));
+            cairo_move_to(cr, trueHistX(((double)i)/(numRecords-1))-2*dx, trueHistY(0.0)+1.25*fontSize);
             sprintf(strTemp, "%d", i);
             cairo_show_text(cr, strTemp);             
         }     
-            cairo_move_to(cr, trueX(0.5)-10*dx, trueY(0.0)+2.5*fontSize);
+            cairo_move_to(cr, trueHistX(0.5)-10*dx, trueHistY(0.0)+2.5*fontSize);
             cairo_show_text(cr, "decision (cube or move)");              
         for (int j = 0; j <=10; j++) {
         // for (double y = 0.0; y <= 1.0; y=y+0.1) {
-            cairo_move_to(cr, trueX(-0.08), trueY(((double)j)/10)+0.3*fontSize);
+            cairo_move_to(cr, trueHistX(-0.08), trueHistY(((double)j)/10)+0.3*fontSize);
             sprintf(strTemp, "%d%%", 10*j);
             // sprintf(strTemp, "%.1f", y);
             cairo_show_text(cr, strTemp);             
@@ -402,12 +404,13 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         for (int i = 0; i < numRecords; i ++) {
             if(NewGame[i]) {
                 jTemp++;
-                cairo_move_to(cr, trueX((((double)i)+1) / (numRecords-1)), 
-                        trueY(0.95)+fontSize/2);
+                cairo_move_to(cr, trueHistX((((double)i)+1) / (numRecords-1)), 
+                        trueHistY(0.95)+fontSize/2);
                 sprintf(strTemp, "game %d", jTemp);
                 cairo_show_text(cr, strTemp);             
             }
         }
+#endif //if 0
         // g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
         //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
     } else 
@@ -461,7 +464,7 @@ red (negative) and green (positive) arrows. It is centered at 50\% for convenien
     GTKRunDialog(pwInfoDialog);
 }
 
-void DrawHistory (void)  //GtkWidget* pwParent) {
+void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
 {
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -510,19 +513,19 @@ void DrawHistory (void)  //GtkWidget* pwParent) {
 
     GtkWidget * da = gtk_drawing_area_new ();
     gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_MAIN)), da);
-    g_signal_connect (G_OBJECT (da), "expose-event", G_CALLBACK (on_expose_event), NULL);
+    g_signal_connect (G_OBJECT (da), "expose-event", G_CALLBACK (DrawHistoryPlot), NULL);
 
     gtk_widget_show_all (window);
 #endif    
 }
 
-#endif //if 0
 
 void initHistoryArrays(void) {
     for (int i = 0; i < numRecords; i++) {
         matchErrors [i]=-1.0; /* vector of all decisions impacting mwc*/
         matchErrorAvg [i]=-1.0; /* optimal decisions*/
     }
+    maxError=0.001;
     numRecords=NUM_PLOT+1; /* resetting */
 }
 
@@ -614,11 +617,12 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         maxError=MAX(maxError,matchErrors[j]);
         g_message("maxerror:%f",maxError);
     }
+    
     g_message("numRecords=%d",numRecords);
-    // if(numRecords>1) 
-    //     DrawHistory();
-    // else
-    //     GTKMessage(_("Error, not enough datapoints for a plot."), DT_INFO);
+    if(numRecords>1) 
+        CreateHistoryWindow();
+    else
+        GTKMessage(_("Error, not enough datapoints for a plot."), DT_INFO);
 
 
     FreeRowset(rs);
@@ -731,7 +735,7 @@ create_model(void)
     unsigned int i, j;
     gfloat stats[9];
 
-    ComputeHistory();
+
 
     /* create list store */
     playerStore = gtk_list_store_new(NUM_COLUMNS,
@@ -1535,6 +1539,9 @@ RelationalOptions(void)
 extern void
 GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
+    ComputeHistory();
+#if 0 /////////////////////////////////////////////////////////////
+    
     GtkWidget *pwRun, *pwDialog, *pwHbox2, *pwVbox2,
         *pwPlayerFrame, *pwUpdate, *pwPaned, *pwVbox, *pwErase, *pwOpen, *pwn, *pwLabel, *pwScrolled, *pwHbox;
     DBProvider *pdb;
@@ -1728,6 +1735,7 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwn);
 
     GTKRunDialog(pwDialog);
+#endif
 }
 
 extern void

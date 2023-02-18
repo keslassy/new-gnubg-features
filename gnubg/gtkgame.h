@@ -194,4 +194,7 @@ struct MemoryStruct {
   size_t size;
 };
 
+/*also used in scoremap and relational history plot*/
+extern void AddText(GtkWidget* pwBox, char* Text);
+
 #endif
