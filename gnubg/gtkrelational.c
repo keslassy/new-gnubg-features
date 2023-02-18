@@ -269,6 +269,9 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         minYScale=MIN(minError,maxError)/1.05+0.001;
         maxYScale=MAX(minError,maxError)*1.05-0.001;
 
+        const double dashed2[] = {14.0, 6.0};
+        int len2  = sizeof(dashed2) / sizeof(dashed2[0]);
+
         /* Draws x and y axes */
         cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
@@ -292,8 +295,9 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
         /* Draw the main plot: link each data point */
         // g_message("got here");
+        cairo_set_line_width (cr, dy/3);
+        cairo_set_dash(cr, dashed2, len2, 1);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-
         for (int i = numRecords-1; i >=0; --i) {
         // for (int i = 0; i < numRecords; i ++) {
             cairo_line_to (cr, iToX(i), errorToY(matchErrorRate[i]));
@@ -352,38 +356,45 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_stroke (cr);
 
         /* text: legend */
-            /*1:plot*/
+            /*1:error rates*/
+        cairo_set_line_width (cr, dy/3);
+        cairo_set_dash(cr, dashed2, len2, 1);        
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to (cr, xToX(0.05), trueHistY(1.0+margin2y/2));
         cairo_line_to (cr, xToX(0.1), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_move_to(cr,  xToX(0.12), trueHistY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Match error rates");
-            /*2:cumul. skill*/
+
+            /*2:averages*/
+   
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
         cairo_move_to (cr, xToX(0.5), trueHistY(1.0+margin2y/2));
         cairo_line_to (cr, xToX(0.55), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to(cr,  xToX(0.57), trueHistY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "5-match averages");
-#if 0 /* *********************************************** */
 
         /* grid*/
-        cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
         cairo_set_line_width (cr, dy/3);
-        const double dashed2[] = {14.0, 6.0};
-        int len2  = sizeof(dashed2) / sizeof(dashed2[0]);
-        cairo_set_dash(cr, dashed2, len2, 1);
-
-        for (int i = 10; i < numRecords; i=i+10) {
+        cairo_set_dash(cr, dashed2, len2, 1);          
+        cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
+        // for (int i = 10; i < numRecords; i=i+10) {
+        // for (int j = 1; j <=10; j++) {
+        for (double i = 0.1; i <1.0; i=i+0.1) {
+            double xLabel=ceil(i*((double)matchCumMoves[0]));
+            g_message("matchCumMoves[0]=%d,i=%f, xLabel=%f",matchCumMoves[0],i,xLabel);
+            // double x=((double)matchCumMoves[i]) / ((double)matchCumMoves[0]);
             // /* [commented: axis markers] */
             // cairo_move_to (cr, xToX(((double)i)/(n-1)), trueHistY(-0.03));
             // cairo_line_to (cr, xToX(((double)i)/(n-1)), trueHistY(0.03));
-            cairo_move_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(0.0));
-            cairo_line_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(1.0));
+            cairo_move_to (cr, xToX(xLabel/ ((double)matchCumMoves[0])), trueHistY(0.0));
+            cairo_line_to (cr, xToX(xLabel/ ((double)matchCumMoves[0])), trueHistY(1.0));
             cairo_stroke (cr);
         }
+#if 0 /* *********************************************** */
         // for (double y = 0.1; y <= 1.0; y=y+0.1) 
         for (int j = 1; j <=10; j++) {
             if(j==5 || j==10){
