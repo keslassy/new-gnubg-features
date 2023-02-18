@@ -285,7 +285,6 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
         /* Draw the main plot: link each data point */
         // g_message("got here");
-        cairo_set_line_width (cr, dy/3);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         for (int i = numRecords-1; i >=0; --i) {
         // for (int i = 0; i < numRecords; i ++) {
@@ -328,7 +327,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
             // cairo_move_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(0.0));
             // cairo_line_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(1.0));
-            cairo_move_to(cr, xToX(i/ ((double)matchCumMoves[0]))-2*dx, trueHistY(0.0)+1.25*fontSize);
+            cairo_move_to(cr, xToX(i/ ((double)matchCumMoves[0]))-4*dx, trueHistY(0.0)+1.25*fontSize);
             sprintf(strTemp, "%d", (int)i);
             cairo_show_text(cr, strTemp);  
         }
@@ -354,12 +353,15 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         }         
 
         /* drawing: new matches (vertical lines) */
+        cairo_set_line_width (cr, dy/3);
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
+        cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
         int jTemp=0;
         for (int i = numRecords-1; i >=0; i=i-MAX(1,numRecords/5)) {
             g_message("i=%d",i);
             // cairo_move_to (cr, iToX(i), errorToY(matchErrorRate[i]));
             // cairo_line_to (cr, iToX(i), trueHistY(0.93));
+            cairo_set_source_rgb (cr, 0.0, 0.0, 0.55);
             drawArrow(cr, iToX(i), trueHistY(0.93), iToX(i), errorToY(matchErrorRate[i]));
             cairo_stroke (cr);
     
