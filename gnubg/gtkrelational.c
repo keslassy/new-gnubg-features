@@ -179,7 +179,7 @@ static int numRecords=NUM_PLOT+1;
 //         // g_message("arrow: %f %f %f %f",x1,y1,x2,y2);
 //     }
 
-#if 0
+#if 0 /* *********************************************** */
 static gboolean
 on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
 {
@@ -230,6 +230,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             &unused);
 #endif  
 
+    /* we check already before calling the function, this is just to make sure and 
+    could be deleted*/
 
     if(numRecords>1){
 
@@ -541,7 +543,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     gfloat stats[9];
     char szRequest[600]; 
     sprintf(szRequest, 
-                    "SELECT matchstat_id,"
+                    "matchstat_id,"
                     "total_moves,"
                     "unforced_moves," /*moves[1]*/
                     "close_cube_decisions," /*moves[2]*/
@@ -561,7 +563,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
                     "ORDER BY matchstat_id DESC "
                     "LIMIT %d",
                     NUM_RECORDS);
-    g_message(szRequest);
+    g_message("request=%s",szRequest);
     rs = RunQuery(szRequest);
     /* prepare the SQL query */
     // rs = RunQuery("matchstat_id,"
@@ -594,6 +596,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         return ;
     }
 
+    // <= ?
     for (j = 1; j < rs->rows; ++j) {
         for (i = 1; i < 5; ++i)
             moves[i - 1] = (int) strtol(rs->data[j][i], NULL, 0);
@@ -601,11 +604,16 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         for (i = 5; i < 14; ++i)
             stats[i - 5] = (float) g_strtod(rs->data[j][i], NULL);
 
-        matchErrors[j]=Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f;
+        matchErrors[j-1]=Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f;
+        g_message("error:%f",matchErrors[j-1]);
         // int mID=(int) strtol(rs->data[j][0],NULL, 0);
         // g_message("ID: %d, names: %s, %s, err: %f",mID,rs->data[j][14],rs->data[j][15],Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f);
     }
-    numRecords=j;
+    numRecords=MIN(j-1,NUM_PLOT);
+    for (j = 0; j < numRecords; ++j) {
+        maxError=MAX(maxError,matchErrors[j]);
+        g_message("maxerror:%f",maxError);
+    }
     g_message("numRecords=%d",numRecords);
     // if(numRecords>1) 
     //     DrawHistory();
