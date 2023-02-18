@@ -562,7 +562,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
     /*if launched by record list, need to check if player was picked there*/
     if (fTriggeredByRecordList) {
-        g_message("checking in list?");
+        // g_message("checking in list?");
         listName = GetSelectedPlayer();
         // needToFreeListName=TRUE;
     }
@@ -570,20 +570,20 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     // if(!triggeredByRecordList || (!playerName)) {
     if(fTriggeredByRecordList && listName){
         sprintf(playerName, "%s",listName);
-        g_message("using listName:%s",listName);
+        // g_message("using listName:%s",listName);
         g_free(listName);
     } else {
-        g_message("not from list");
-        if(fTriggeredByRecordList && !listName){
-            g_message("we free listName");
-            g_free(listName);
-        }
+        // g_message("not from list");
+        // if(fTriggeredByRecordList && !listName){
+            // g_message("we free listName");
+        g_free(listName);
+        // }
         fTriggeredByRecordList=FALSE; /*re-initialize*/
         if (!ap[1].szName){
             GTKMessage(_("No player name. Please open a match or select one in the database records."), DT_INFO);
             return;
         }
-        g_message("player on board?");
+        // g_message("player on board?");
         sprintf(playerName, "%s",ap[1].szName);
         // if (!playerName){
         //     GTKMessage(_("No player name. Please open a match or select one in the database records."), DT_INFO);
@@ -593,14 +593,14 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
  
     /* get the player ID of playername for later*/
     sprintf(szRequest, "player_id FROM player WHERE name='%s'", playerName);
-        g_message("request1=%s",szRequest);
+        // g_message("request1=%s",szRequest);
     rs = RunQuery(szRequest);
     if (!rs || rs->rows <2){
         GTKMessage(_("Problem accessing database"), DT_INFO);
         return;
     }
     int userID=(int) strtol(rs->data[1][0], NULL, 0);
-    g_message("userID=%d",userID);
+    // g_message("userID=%d",userID);
     FreeRowset(rs);
 
     //  player_id, name FROM player WHERE player.player_id =2
