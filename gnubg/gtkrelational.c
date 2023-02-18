@@ -97,15 +97,14 @@ This code is based on the MWC plot.
 */
 #define WIDTH   640
 #define HEIGHT  480
-/* We get a few more records than plotted in order to get 
-a nicer exponential average*/
-#define NUM_PLOT 200
-#define PLOT_WINDOW 2
+/* Number of matches to fetch and plot */
+#define NUM_PLOT 100
+#define PLOT_WINDOW 5
 // #define NUM_RECORDS 250 /* make sure it's no less than NUM_PLOT*/
 
 static GdkRectangle da;            /* GtkDrawingArea size */
 static double margin1x=0.08;
-static double margin2x=0.05;
+static double margin2x=0.08;
 static double margin1y=0.08;
 static double margin2y=0.05;
 // static int alreadyComputed=0; /* when drawing it computes all arrays twice :( )*/
@@ -120,6 +119,7 @@ static double matchAvgErrorRate [NUM_PLOT]={-1.0}; /* vector of match error rate
                                     PLOT_WINDOW matches*/
 static int matchCumMoves [NUM_PLOT+1]={0}; /* vector of cumulative numbers of moves in matches*/
 static double matchCumErrors [NUM_PLOT+1]={0.0}; /* vector of cumulative total errors in matches*/
+static char opponentNames[NUM_PLOT][100]; /* names of opponentNames*/
 
 static double maxError=0.001; //to avoid dividing by 0 in case of mistake
 static double minError=1000.0; //to avoid dividing by 0 in case of mistake
@@ -176,7 +176,6 @@ double errorToY(double error){
     double y=(error-minYScale)/(maxYScale-minYScale);
     return trueHistY(y);
 }
-
 
 // #define MAX(a,b) ((a) > (b) ? (a) : (b))
 // #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -262,16 +261,22 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_line_to (cr, xToX(1.0), trueHistY(0.0));
         // cairo_stroke (cr);
 
-        /* Avg error */
+        /* PLOT 1: Avg error */
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
         /* 1. the newest record is the first, so we conceptually start by plotting 
         the oldest; 2. it's an average, so it's not defined on all i's*/
         for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
-            // if(matchErrorRate[i]>=0 && matchErrorRate[i]<=1) {
-                cairo_line_to (cr, iToX(i), errorToY(matchAvgErrorRate[i]));
-            // }
+            cairo_line_to (cr, iToX(i), errorToY(matchAvgErrorRate[i]));
         }
+        cairo_set_line_join(cr, CAIRO_LINE_JOIN_MITER); 
         cairo_stroke (cr);
+            /*discs*/
+        for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
+            cairo_arc(cr, iToX(i), errorToY(matchAvgErrorRate[i]), dx, 0, 2 * M_PI);
+            cairo_stroke_preserve(cr);
+            cairo_fill(cr);
+        }
+        
             /* +legend */
         cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
         cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
@@ -280,11 +285,10 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to(cr,  xToX(0.57), trueHistY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "5-match weighted average of error");
+        cairo_show_text(cr, "5-match error");
         cairo_stroke (cr);
 
-        /* Draw the main plot: link each data point */
-        // g_message("got here");
+        /* PLOT 2: match error*/
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         for (int i = numRecords-1; i >=0; --i) {
         // for (int i = 0; i < numRecords; i ++) {
@@ -293,7 +297,15 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         }
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
+        cairo_set_line_join(cr, CAIRO_LINE_JOIN_MITER); 
         cairo_stroke (cr);
+            /*discs*/
+        for (int i = numRecords-1; i >=0; --i) {
+        // for (int i = 0; i < numRecords; i ++) {
+            cairo_arc(cr, iToX(i), errorToY(matchErrorRate[i]), dx, 0, 2 * M_PI);
+            cairo_stroke_preserve(cr);
+            cairo_fill(cr);
+        }        
             /* +legend */
         cairo_set_line_width (cr, dy/3);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
@@ -357,24 +369,31 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_set_source_rgb (cr, 0.3, 0.3, 0.3);
         cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
         int jTemp=0;
-        for (int i = numRecords-1; i >=0; i=i-MAX(1,numRecords/5)) {
+        /* this time we start from i=0 to make sure to include the latest match */
+        for (int i = 0; i <numRecords; i+=MAX(1,numRecords/7)) {
+        // for (int i = numRecords-1; i >=0; i=i-MAX(1,numRecords/5)) {
             g_message("i=%d",i);
             // cairo_move_to (cr, iToX(i), errorToY(matchErrorRate[i]));
             // cairo_line_to (cr, iToX(i), trueHistY(0.93));
             cairo_set_source_rgb (cr, 0.0, 0.0, 0.55);
-            drawArrow(cr, iToX(i), trueHistY(0.93), iToX(i), errorToY(matchErrorRate[i]));
+            drawArrow(cr, iToX(i), trueHistY(0.86), iToX(i), 
+                errorToY(matchErrorRate[i])-3*dy);
             cairo_stroke (cr);
     
             /* text: match 1, match 2... */
             // int jTemp=0;
 
             jTemp++;
-            cairo_move_to(cr, iToX(i)-10*dx, (jTemp % 2 == 0)?
-                    (trueHistY(0.95)+fontSize/2):(trueHistY(0.95)-fontSize/2) );
+            double Y1= (jTemp % 2 == 0)? fontSize:-fontSize;
+            double Y2= (jTemp % 2 == 0)? 2*fontSize:0;
+            cairo_move_to(cr, iToX(i)-10*dx,(trueHistY(0.95)+Y1));
             sprintf(strTemp, "match %d", numRecords-i);
-            cairo_show_text(cr, strTemp);             
+            cairo_show_text(cr, strTemp);    
+            cairo_move_to(cr, iToX(i)-10*dx,(trueHistY(0.95)+Y2));
+            sprintf(strTemp, "vs. %s", opponentNames[i]);
+            cairo_show_text(cr, strTemp);    
             cairo_stroke (cr);
-                    }    
+        }    
 
 // #if 0 /* *********************************************** */
 // #endif //if 0
@@ -515,36 +534,41 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     /*   compute the needed values and fill the arrays  */
 
     RowSet *rs;
+    RowSet *rs2;
 
-    int moves[4];
+    int moves[2];
     unsigned int i, j;
-    gfloat stats[9];
-    char szRequest[600]; 
+    gfloat stats[2];
+
+    /* get player_id of player at bottom*/
+    char szRequest[600];
+    sprintf(szRequest, "player_id FROM player WHERE name='%s'",ap[1].szName);
+    g_message("request1=%s",szRequest);
+    rs = RunQuery(szRequest);
+    if (!rs){
+        GTKMessage(_("Problem accessing database"), DT_INFO);
+        return;
+    }
+    int userID=(int) strtol(rs->data[1][0], NULL, 0);
+    g_message("userID=%d",userID);
+
+    //  player_id, name FROM player WHERE player.player_id =2
+    // char szRequest[600]; 
     sprintf(szRequest, 
                     "matchstat_id,"
-                    "total_moves,"
                     "unforced_moves," /*moves[1]*/
                     "close_cube_decisions," /*moves[2]*/
-                    "snowie_moves,"
-                    "error_missed_doubles_below_cp_normalised,"
-                    "error_missed_doubles_above_cp_normalised,"
-                    "error_wrong_doubles_below_dp_normalised,"
-                    "error_wrong_doubles_above_tg_normalised,"
-                    "error_wrong_takes_normalised,"
-                    "error_wrong_passes_normalised,"
                     "cube_error_total_normalised," /* stats[6]*/
                     "chequer_error_total_normalised," /* stats[7]*/
-                    "luck_total_normalised,"
-                    "player_id0, player_id1,matchstat_id " 
+                    "player_id0, player_id1 " 
                     "FROM matchstat NATURAL JOIN player NATURAL JOIN session "
-                    "WHERE name='isaac' "
+                    "WHERE name='%s' "
                     "ORDER BY matchstat_id DESC "
                     "LIMIT %d",
+                    ap[1].szName,
                     NUM_PLOT);
-    g_message("request=%s",szRequest);
-    rs = RunQuery(szRequest);
-    /* prepare the SQL query */
-    // rs = RunQuery("matchstat_id,"
+    // sprintf(szRequest, 
+    //                 "matchstat_id,"
     //                 "total_moves,"
     //                 "unforced_moves," /*moves[1]*/
     //                 "close_cube_decisions," /*moves[2]*/
@@ -561,7 +585,11 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     //                 "player_id0, player_id1,matchstat_id " 
     //                 "FROM matchstat NATURAL JOIN player NATURAL JOIN session "
     //                 "WHERE name='isaac' "
-    //                 "ORDER BY matchstat_id DESC");
+    //                 "ORDER BY matchstat_id DESC "
+    //                 "LIMIT %d",
+    //                 NUM_PLOT);
+    g_message("request=%s",szRequest);
+    rs = RunQuery(szRequest);
 
     if (!rs){
         GTKMessage(_("Problem accessing database"), DT_INFO);
@@ -576,20 +604,36 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
     // <= ?
     for (j = 1; j < rs->rows; ++j) {
-        for (i = 1; i < 5; ++i)
+        for (i = 1; i < 3; ++i)
             moves[i - 1] = (int) strtol(rs->data[j][i], NULL, 0);
 
-        for (i = 5; i < 14; ++i)
-            stats[i - 5] = (float) g_strtod(rs->data[j][i], NULL);
+        for (i = 3; i < 5; ++i)
+            stats[i - 3] = (float) g_strtod(rs->data[j][i], NULL);
 
-        
-        matchErrors[j-1]=(stats[6] + stats[7]) * 1000.0f;
-        matchMoves[j-1]=moves[1] + moves[2];
-        matchErrorRate[j-1]=Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f;
+        matchErrors[j-1]=(stats[0] + stats[1]) * 1000.0f;
+        matchMoves[j-1]=moves[0] + moves[1];
+        matchErrorRate[j-1]=Ratio(stats[0] + stats[1], moves[0] + moves[1]) * 1000.0f;
         g_message("error:%f=%f/%d",matchErrorRate[j-1],matchErrors[j-1],matchMoves[j-1]);
-        // int mID=(int) strtol(rs->data[j][0],NULL, 0);
-        // g_message("ID: %d, names: %s, %s, err: %f",mID,rs->data[j][14],rs->data[j][15],Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f);
-    }
+        int mID=(int) strtol(rs->data[j][0],NULL, 0);
+        g_message("ID: %d, names: %s, %s",mID,rs->data[j][5],rs->data[j][6]);
+
+
+        /* get name of player at top of screen*/
+        int opponentID= (userID ==(int) strtol(rs->data[j][5],NULL, 0))?
+            strtol(rs->data[j][6],NULL, 0) : strtol(rs->data[j][5],NULL, 0);
+        g_message("opponentID: %d",opponentID);
+        sprintf(szRequest, "name FROM player WHERE player_id='%d'",opponentID);
+        g_message("request=%s",szRequest);
+        rs2 = RunQuery(szRequest);
+        if (!rs2){
+            GTKMessage(_("Problem accessing database"), DT_INFO);
+            return;
+        }
+        sprintf(opponentNames[j-1], "%s",rs2->data[1][0]);
+        // int userID=(int) strtol(rs->data[1][0], NULL, 0);
+        g_message("opponent name=%s",opponentNames[j-1]);
+
+    }   
     numRecords=MIN(j-1,NUM_PLOT);
     g_message("numRecords=%d",numRecords);
 

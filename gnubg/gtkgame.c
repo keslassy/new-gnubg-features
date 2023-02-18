@@ -8459,7 +8459,7 @@ double trueY (double y) { //}, gfloat h, gfloat margin) {
 // #define MAX(a,b) ((a) > (b) ? (a) : (b))
 // #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
-
+/* Credit: partly based on http://kapo-cpp.blogspot.com */
 extern void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
 {        
     double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
