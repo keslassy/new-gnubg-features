@@ -8387,7 +8387,7 @@ static double mwcBestD [MAX_DECISIONS]={-5.0}; /* optimal decisions*/
 static double mwcCumulSkillDiff[MAX_DECISIONS]={-5.0}; /* cumulative skill difference*/
 static int NewGame [MAX_DECISIONS]={0};  /* indicator of start of new game */
 static int CubeD [MAX_DECISIONS]={0}; /* indicator for a cube decision */
-static int MWCLength; 
+static int MWCLength=MAX_DECISIONS; 
 #define EPSILON 0.001
 
 /*shows translation x->X when x=0=>X=a and x=1=>X=b*/
