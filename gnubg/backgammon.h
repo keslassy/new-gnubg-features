@@ -1084,10 +1084,19 @@ extern int AddKeyName(const char sz[]); /* function that adds a key player name 
 extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/
 extern void DisplayKeyNames(void); /* debugging function to display the current key player names in the array*/
 
+/* definitions for version checks in updates */
 extern char * websiteForUpdates; /* official GNUBG website */
 extern char * urlForVersion; /* official GNUBG website */
 extern int fCheckUpdateGTK; /* whether to check online if there is a new update */
+extern void CheckVersionUpdate(void);
+/* useful for CURL to check the latest update online */
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
 
 extern int fTriggeredByRecordList; /* whether history plot is launched from record list or from menu*/
+
+extern void UserCommand2(const char *szCommand); /* UserCommand is GTK-only, this function also works outside GTK*/
 
 #endif	/* BACKGAMMON_H */

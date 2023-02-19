@@ -740,7 +740,9 @@ CommandShowEvaluation(char *UNUSED(sz))
 extern void
 CommandShowHistory(char *UNUSED(sz))
 {
+#if defined(USE_GTK)
     ComputeHistory();
+#endif    
 }
 
 extern void

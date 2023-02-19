@@ -4827,9 +4827,11 @@ InitGTK(int *argc, char ***argv)
     cb = gdk_atom_intern("CLIPBOARD", TRUE);
     clipboard = gtk_clipboard_get(cb);
 }
-/* ************************************************ */
 
-static void
+/* ************** */
+/* this function needed to be in a GTK file because it is launched by GTK
+with an UNUSED GTK pointer*/
+void
 GoToGnubgWebsite(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
 {
     // OpenURL("https://www.gnu.org/software/gnubg/#downloading");
@@ -4850,7 +4852,7 @@ GTKGetInputYN. However it is changed here because we also want to offer the user
 button where he can opt out of updates messages (same variable fCheckUpdates as in 
 the options).
 */
-void AskToUpdate(char * availableVersion)
+extern void GTKAskToUpdate(char * availableVersion)
 {
 #define MAXWINSIZE 400
 #define MAXSTRLEN 300
@@ -4867,7 +4869,7 @@ void AskToUpdate(char * availableVersion)
             VERSION, availableVersion);
     // g_message("%s",sz);
     /* show a splash window in GTK, else just a message*/
-#if defined(USE_GTK)
+
     pwDialog = GTKCreateDialog(_("GNU Backgammon update"), DT_INFO, pwMain, DIALOG_FLAG_MODAL, NULL, &answer);
 
     pwText = gtk_text_view_new();
@@ -4909,113 +4911,12 @@ void AskToUpdate(char * availableVersion)
     CHECKUPDATE(pwCheckUpdates, fCheckUpdates, "set checkupdates %s")
 
     GTKRunDialog(pwDialog);
-#else
-    /* the non-GTK version with "error" does not seem to write "error", so 
-    we're using it:*/
-    outputerrf("%s",sz);
-    outputerrf(_("Please check online: %s"),websiteForUpdates);
-#endif //GTK
 
     g_free(sz);
 
 }
 #undef CHECKUPDATE
- 
-/* gets an "unused" warning when compiling, but it looks like it is actually called below */
-static size_t
-WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-  size_t realsize = size * nmemb;
-  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
- 
-  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
-  if(!ptr) {
-    /* out of memory! */
-    printf("not enough memory (realloc returned NULL)\n");
-    return 0;
-  }
- 
-  mem->memory = ptr;
-  memcpy(&(mem->memory[mem->size]), contents, realsize);
-  mem->size += realsize;
-  mem->memory[mem->size] = 0;
- 
-  return realsize;
-}
-
-/* first line is with no new update version online, second has an update*/
-char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/version.txt";
-// char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/newversion.txt";
-
- 
-
-/*   check version update online*/
-void CheckVersionUpdate(void)
-{
-#if defined(LIBCURL_PROTOCOL_HTTPS)
-    CURL *curl_handle;
-    CURLcode res;
-    // char * url;
- 
-    struct MemoryStruct chunk;
-
-    chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
-    chunk.size = 0;    /* no data at this point */
-
-    curl_global_init(CURL_GLOBAL_ALL);
-
-    /* init the curl session */
-    curl_handle = curl_easy_init();
-
-    /* specify URL to get */
-    curl_easy_setopt(curl_handle, CURLOPT_URL, urlForVersion);
-
-    /* send all data to this function  */
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-
-    /* we pass our 'chunk' struct to the callback function */
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
-
-    /* some servers do not like requests that are made without a user-agent
-        field, so we provide one */
-    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
-    /* get it! */
-    res = curl_easy_perform(curl_handle);
-
-    /* check for errors */
-    if(res != CURLE_OK) {
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
-    }
-    else {
-        /*
-        * Now, our chunk.memory points to a memory block that is chunk.size
-        * bytes big and contains the remote file.
-        */
-        char *token;
-        token = strtok(chunk.memory, "\n");
-        // g_message("latest version=%s vs VERSION=%s",token,VERSION);
-        if (strcmp(token,VERSION)>0) {
-            // g_message("newer version, need to download!");
-            AskToUpdate(token);
-        }   else {
-            return;
-        }   
-    }
-
-    /* cleanup curl stuff */
-    curl_easy_cleanup(curl_handle);
-
-    free(chunk.memory);
-
-    //   /* we are done with libcurl, so clean it up */
-    //   curl_global_cleanup(); //<- needed? done upon shutdown; we may also need this elsewhere, 
-                                //  e.g. for the random number generator
-#endif //end ifdefined LIBCURL
-}
-
-/* ************************************************ */
+/* ************** */
 
 enum { RE_NONE, RE_LANGUAGE_CHANGE };
 

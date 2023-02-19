@@ -1254,7 +1254,9 @@ CommandAnalyseGame(char *UNUSED(sz))
         fAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
         "feel free to browse and check the early analysis results."), nMoves);        ShowBoard(); /* hide unallowd toolbar items*/
+#if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
+#endif  
     } else
         ProgressStartValue(_("Analysing game"), nMoves);
 
@@ -1265,7 +1267,9 @@ CommandAnalyseGame(char *UNUSED(sz))
     if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
         ShowBoard(); /* hide unallowd toolbar items*/
+#if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
+#endif  
     }
 
 #if defined(USE_GTK)
@@ -1303,7 +1307,9 @@ CommandAnalyseMatch(char *UNUSED(sz))
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
         "feel free to browse and check the early analysis results."), nMoves); 
         ShowBoard(); /* hide unallowd toolbar items*/
+#if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
+#endif  
     } else {
         /* this was supposed to show nMoves, but it's not used at the end;
         on the right side we see "n/nTotal"; so we update the text
@@ -1336,7 +1342,9 @@ CommandAnalyseMatch(char *UNUSED(sz))
         fAnalysisRunning = FALSE;
          // CalculateBoard();
         ShowBoard(); /* show toolbar items*/
+#if defined(USE_GTK)
         GTKRegenerateGames(); /* show menu items*/
+#endif        
     }
 
 #if defined(USE_GTK)
@@ -1629,9 +1637,9 @@ DumpStatcontext(char *szOutput, const statcontext * psc, const char *player, con
 extern void
 CommandShowMWC(char *UNUSED(sz))
 {
-
-    ComputeMWC();//pwMain);
-
+#if defined(USE_GTK)
+    ComputeMWC();
+#endif   
 }
 
 extern void

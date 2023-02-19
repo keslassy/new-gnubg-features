@@ -188,15 +188,10 @@ extern void ProcessInput(char *sz);
 extern void SetSwitchModeMenuText(void);
 #endif
 
-/* useful for CURL to check the latest update online */
-struct MemoryStruct {
-  char *memory;
-  size_t size;
-};
-
 /*also used in scoremap and relational history plot*/
 extern void AddText(GtkWidget* pwBox, char* Text);
 /*used in history plot*/
 extern void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y);
 
+extern void GTKAskToUpdate(char * availableVersion);
 #endif

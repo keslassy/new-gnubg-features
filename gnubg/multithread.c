@@ -377,7 +377,11 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
                     // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
                     // if (pwMoveAnalysis!=NULL)
                     //     g_message("new results");
-                    if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
+#if defined(USE_GTK)
+                   if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
+#else
+                   if (strcmp(tmp1,tmp2) != 0) {
+#endif
                         // g_message("STOP");
                         start2=0;
                     } else {
