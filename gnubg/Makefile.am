@@ -194,7 +194,7 @@ if USE_PYTHON
 gnubg_LDADD += @PYTHON_LIBS@
 endif
 if USE_BOARD3D
-gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS) $(EPOXY_LIBS)
+gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) -lOpenGL $(GLU_LIBS) $(EPOXY_LIBS)
 endif
 
 if WIN32
