@@ -59,6 +59,7 @@
 #include "gtkscoremap.h"
 #include "gtkoptions.h"
 #include "gtkcube.h"
+#include "gtkrelational.h"
 #endif
 
 #if defined(WIN32)
@@ -734,6 +735,14 @@ CommandShowEvaluation(char *UNUSED(sz))
     outputl(_("    Cube decisions:"));
     ShowEvalSetup(GetEvalCube());
 
+}
+
+extern void
+CommandShowHistory(char *UNUSED(sz))
+{
+#if defined(USE_GTK)
+    ComputeHistory();
+#endif    
 }
 
 extern void

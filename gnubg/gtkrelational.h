@@ -30,4 +30,6 @@ extern GtkWidget *RelationalOptions(void);
 extern void RelationalOptionsShown(void);
 extern void RelationalSaveOptions(void);
 extern void GtkShowQuery(RowSet * pRow);
+
+extern void ComputeHistory(void); /*for history plot*/
 #endif

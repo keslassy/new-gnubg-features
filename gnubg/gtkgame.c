@@ -21,7 +21,7 @@
 02/2023: Isaac Keslassy: 
 - introduced the "mwc plot" feature, together with two ways 
 of launching it graphically: a sub-menu command ("Analyze > Plot MWC"), and a button
-in "Match of session statistics". 
+in "Match or session statistics". 
 - introduced an automatic check online of the latest version. It is only done 
 once a week. If there is a newer version, it tells the user, who can click and 
 go to the download website. The user can disable it, either in the 
@@ -180,6 +180,7 @@ typedef enum {
     CMD_SHOW_COPYING,
     CMD_SHOW_ENGINE,
     CMD_SHOW_EXPORT,
+    CMD_SHOW_HISTORY,
     CMD_SHOW_MARKETWINDOW,
     CMD_SHOW_MATCHEQUITYTABLE,
     CMD_SHOW_KLEINMAN,
@@ -393,6 +394,7 @@ CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_CALIBRATION, "show calibration");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_COPYING, "show copying");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_ENGINE, "show engine");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_EXPORT, "show export");
+CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_HISTORY, "show history");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_MARKETWINDOW, "show marketwindow");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_MATCHEQUITYTABLE, "show matchequitytable");
 CREATE_CMD_ACTION_CALLBACK(CMD_SHOW_KLEINMAN, "show kleinman"); /* opens race theory window */
@@ -475,6 +477,7 @@ static const char *aszCommands[NUM_CMDS] = {
     "show copying",
     "show engine",
     "show export",
+    "show history",
     "show marketwindow",
     "show matchequitytable",
     "show kleinman",            /* opens race theory window */
@@ -2936,11 +2939,10 @@ CreateEvalSettings(GtkWidget * pwParent, const char *title, evalcontext * pecheq
     return pAnalDetail;
 }
 
-//Module to add text
-static void
+//Module to add text, based on AddTitle from gtkgame.c
+extern void
 AddText(GtkWidget* pwBox, char* Text)
 {
-    GtkRcStyle * ps = gtk_rc_style_new();
     GtkWidget * pwText = gtk_label_new(Text);
     GtkWidget * pwHBox;
 
@@ -2951,14 +2953,46 @@ AddText(GtkWidget* pwBox, char* Text)
 #endif
     gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, FALSE, FALSE, 4);
 
+#if GTK_CHECK_VERSION(3,0,0)
+    GtkCssProvider *provider = gtk_css_provider_new ();
+    GdkDisplay *display = gdk_display_get_default();
+    GdkScreen *screen = gdk_display_get_default_screen (display);
+    gtk_style_context_add_provider_for_screen (screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+    gtk_css_provider_load_from_data (
+        provider, "GtkLabel { font-size: 8px;}", -1, NULL); //to be fine-tuned
+        // provider, "GtkLabel { background-color: #AAAAAA;}", -1, NULL);
+#else
+    GtkRcStyle * ps = gtk_rc_style_new();
     ps->font_desc = pango_font_description_new();
     //pango_font_description_set_family_static(ps->font_desc, "serif");
     //pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
     gtk_widget_modify_style(pwText, ps);
     g_object_unref(ps);
-
-    gtk_box_pack_start(GTK_BOX(pwHBox), pwText, FALSE, FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwHBox), pwText, FALSE, FALSE, 2);
 }
+// static void
+// AddText(GtkWidget* pwBox, char* Text)
+// {
+//     GtkRcStyle * ps = gtk_rc_style_new();
+//     GtkWidget * pwText = gtk_label_new(Text);
+//     GtkWidget * pwHBox;
+
+// #if GTK_CHECK_VERSION(3,0,0)
+//     pwHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+// #else
+//     pwHBox = gtk_hbox_new(FALSE, 0);
+// #endif
+//     gtk_box_pack_start(GTK_BOX(pwBox), pwHBox, FALSE, FALSE, 4);
+
+//     ps->font_desc = pango_font_description_new();
+//     //pango_font_description_set_family_static(ps->font_desc, "serif");
+//     //pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
+//     gtk_widget_modify_style(pwText, ps);
+//     g_object_unref(ps);
+
+//     gtk_box_pack_start(GTK_BOX(pwHBox), pwText, FALSE, FALSE, 0);
+// }
 
 
 static void
@@ -4038,6 +4072,8 @@ static GtkActionEntry actionEntries[] = {
     {"AddMatchOrSessionStatsToDBAction", GTK_STOCK_ADD, N_("Add match or session to database"), NULL, NULL,
      G_CALLBACK(GtkRelationalAddMatch)},
     {"ShowRecordsAction", NULL, N_("Show Records"), NULL, NULL, G_CALLBACK(GtkShowRelational)},
+    {"PlotHistoryAction", NULL, N_("Plot History"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_HISTORY)},
     {"DistributionOfRollsAction", NULL, N_("Distribution of rolls"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_ROLLS)},
     {"TemperatureMapAction", NULL, N_("Temperature Map"), NULL, NULL,
@@ -4284,6 +4320,8 @@ static GtkItemFactoryEntry aife[] = {
      "<StockItem>", GTK_STOCK_ADD},
     {N_("/_Analyse/Show Records"), NULL,
      GtkShowRelational, 0, NULL, NULL},
+    {N_("/_Analyse/Plot History"), NULL, Command,
+     CMD_SHOW_HISTORY, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/Distribution of rolls"), NULL, Command,
      CMD_SHOW_ROLLS, NULL, NULL},
@@ -4788,9 +4826,11 @@ InitGTK(int *argc, char ***argv)
     cb = gdk_atom_intern("CLIPBOARD", TRUE);
     clipboard = gtk_clipboard_get(cb);
 }
-/* ************************************************ */
 
-static void
+/* ************** */
+/* this function needed to be in a GTK file because it is launched by GTK
+with an UNUSED GTK pointer*/
+void
 GoToGnubgWebsite(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
 {
     // OpenURL("https://www.gnu.org/software/gnubg/#downloading");
@@ -4811,7 +4851,7 @@ GTKGetInputYN. However it is changed here because we also want to offer the user
 button where he can opt out of updates messages (same variable fCheckUpdates as in 
 the options).
 */
-void AskToUpdate(char * availableVersion)
+extern void GTKAskToUpdate(char * availableVersion)
 {
 #define MAXWINSIZE 400
 #define MAXSTRLEN 300
@@ -4826,9 +4866,9 @@ void AskToUpdate(char * availableVersion)
             "\n\n Current version:   %s"
             "\n Available version: %s\n"),
             VERSION, availableVersion);
-    g_message("%s",sz);
+    // g_message("%s",sz);
     /* show a splash window in GTK, else just a message*/
-#if defined(USE_GTK)
+
     pwDialog = GTKCreateDialog(_("GNU Backgammon update"), DT_INFO, pwMain, DIALOG_FLAG_MODAL, NULL, &answer);
 
     pwText = gtk_text_view_new();
@@ -4870,112 +4910,12 @@ void AskToUpdate(char * availableVersion)
     CHECKUPDATE(pwCheckUpdates, fCheckUpdates, "set checkupdates %s")
 
     GTKRunDialog(pwDialog);
-#else
-    /* the non-GTK version does not seem to put an error message, so using it:*/
-    outputerrf("%s",sz);
-    outputerrf(_("Please check online: %s"),websiteForUpdates);
-#endif //GTK
 
     g_free(sz);
 
 }
 #undef CHECKUPDATE
- 
-/* gets an "unused" warning when compiling, but it looks like it is actually called below */
-static size_t
-WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-  size_t realsize = size * nmemb;
-  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
- 
-  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
-  if(!ptr) {
-    /* out of memory! */
-    printf("not enough memory (realloc returned NULL)\n");
-    return 0;
-  }
- 
-  mem->memory = ptr;
-  memcpy(&(mem->memory[mem->size]), contents, realsize);
-  mem->size += realsize;
-  mem->memory[mem->size] = 0;
- 
-  return realsize;
-}
-
-/* first line is with no new update version online, second has an update*/
-char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/version.txt";
-// char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/newversion.txt";
-
- 
-
-/*   check version update online*/
-void CheckVersionUpdate(void)
-{
-#if defined(LIBCURL_PROTOCOL_HTTPS)
-    CURL *curl_handle;
-    CURLcode res;
-    // char * url;
- 
-    struct MemoryStruct chunk;
-
-    chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
-    chunk.size = 0;    /* no data at this point */
-
-    curl_global_init(CURL_GLOBAL_ALL);
-
-    /* init the curl session */
-    curl_handle = curl_easy_init();
-
-    /* specify URL to get */
-    curl_easy_setopt(curl_handle, CURLOPT_URL, urlForVersion);
-
-    /* send all data to this function  */
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-
-    /* we pass our 'chunk' struct to the callback function */
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
-
-    /* some servers do not like requests that are made without a user-agent
-        field, so we provide one */
-    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
-    /* get it! */
-    res = curl_easy_perform(curl_handle);
-
-    /* check for errors */
-    if(res != CURLE_OK) {
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
-    }
-    else {
-        /*
-        * Now, our chunk.memory points to a memory block that is chunk.size
-        * bytes big and contains the remote file.
-        */
-        char *token;
-        token = strtok(chunk.memory, "\n");
-        g_message("latest version=%s vs VERSION=%s",token,VERSION);
-        if (strcmp(token,VERSION)>0) {
-            g_message("newer version, need to download!");
-            AskToUpdate(token);
-        }   else {
-            return;
-        }   
-    }
-
-    /* cleanup curl stuff */
-    curl_easy_cleanup(curl_handle);
-
-    free(chunk.memory);
-
-    //   /* we are done with libcurl, so clean it up */
-    //   curl_global_cleanup(); //<- needed? done upon shutdown; we may also need this elsewhere, 
-                                //  e.g. for the random number generator
-#endif //end ifdefined LIBCURL
-}
-
-/* ************************************************ */
+/* ************** */
 
 enum { RE_NONE, RE_LANGUAGE_CHANGE };
 
@@ -7919,6 +7859,8 @@ GTKSet(void *p)
                                  !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MWC),
                                     !ListEmpty(&lMatch) && (ms.nMatchTo > 0));
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_HISTORY),
+                                 !ListEmpty(&lMatch));
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MATCHEQUITYTABLE), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_CALIBRATION), TRUE);
@@ -8387,7 +8329,7 @@ static double mwcBestD [MAX_DECISIONS]={-5.0}; /* optimal decisions*/
 static double mwcCumulSkillDiff[MAX_DECISIONS]={-5.0}; /* cumulative skill difference*/
 static int NewGame [MAX_DECISIONS]={0};  /* indicator of start of new game */
 static int CubeD [MAX_DECISIONS]={0}; /* indicator for a cube decision */
-static int MWCLength; 
+static int MWCLength=MAX_DECISIONS; 
 #define EPSILON 0.001
 
 /*shows translation x->X when x=0=>X=a and x=1=>X=b*/
@@ -8427,29 +8369,32 @@ double trueY (double y) { //}, gfloat h, gfloat margin) {
 // #define MAX(a,b) ((a) > (b) ? (a) : (b))
 // #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
+/* Credit: partly based on http://kapo-cpp.blogspot.com */
+extern void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
+{        
+    double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
+    double dist = sqrt((start_x-end_x)*(start_x-end_x)+(start_y-end_y)*(start_y-end_y));
+    double side=MIN(6.0,0.5*dist);
+    double degrees=0.6;
 
-void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y) //, double& x1, double& y1, double& x2, double& y2)
-    {        
-        double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
-        double dist = sqrt((start_x-end_x)*(start_x-end_x)+(start_y-end_y)*(start_y-end_y));
-        double side=MIN(3.0,0.5*dist);
-        double degrees=0.5;
+    double x1 = end_x + side * cos(angle - degrees);
+    double y1 = end_y + side * sin(angle - degrees);
+    double x2 = end_x + side * cos(angle + degrees);
+    double y2 = end_y + side * sin(angle + degrees);
 
-        double x1 = end_x + side * cos(angle - degrees);
-        double y1 = end_y + side * sin(angle - degrees);
-        double x2 = end_x + side * cos(angle + degrees);
-        double y2 = end_y + side * sin(angle + degrees);
+    cairo_move_to (cr, start_x, start_y);
+    cairo_line_to (cr, end_x,end_y);
+    cairo_stroke(cr);
 
-        cairo_move_to (cr, start_x, start_y);
-        cairo_line_to (cr, end_x,end_y);
-        cairo_line_to (cr, x1,y1);
-        cairo_line_to (cr, x2,y2);
-        cairo_line_to (cr, end_x,end_y);
-        
-        cairo_stroke (cr);
+    cairo_move_to (cr, end_x,end_y);
+    cairo_line_to (cr, x1,y1);
+    cairo_line_to (cr, x2,y2);
+    cairo_line_to (cr, end_x,end_y);
+    cairo_fill(cr);
+    // cairo_stroke (cr);
 
-        // g_message("arrow: %f %f %f %f",x1,y1,x2,y2);
-    }
+    // g_message("arrow: %f %f %f %f",x1,y1,x2,y2);
+}
 
 static gboolean
 on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_data))
@@ -8515,21 +8460,24 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_set_font_size(cr, fontSize);
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
-        /* Draws x and y axes */
+        /* Draw x and y axes */
         cairo_set_line_width (cr, dy);
         // cairo_set_source_rgb (cr, 0.1, 0.9, 0.0);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to (cr, trueX(0.0), trueY(0.0));
-        cairo_line_to (cr, trueX(0.0), trueY(1.0));
-        cairo_move_to (cr, trueX(0.0), trueY(0.0));
-        cairo_line_to (cr, trueX(1.0), trueY(0.0));
-        // cairo_move_to (cr, clip_x1, clip_y1/3);
-        // cairo_line_to (cr, clip_x2, clip_y2*2/3);
-        cairo_stroke (cr);
+        drawArrow(cr, trueX(0.0), trueY(0.0),trueX(0.0), trueY(1.0));
+        drawArrow(cr, trueX(0.0), trueY(0.0),trueX(1.0), trueY(0.0));
+        // cairo_move_to (cr, trueX(0.0), trueY(0.0));
+        // cairo_line_to (cr, trueX(0.0), trueY(1.0));
+        // cairo_move_to (cr, trueX(0.0), trueY(0.0));
+        // cairo_line_to (cr, trueX(1.0), trueY(0.0));
+        // // cairo_move_to (cr, clip_x1, clip_y1/3);
+        // // cairo_line_to (cr, clip_x2, clip_y2*2/3);
+        // cairo_stroke (cr);
 
         /* Draw the main plot: link each data point */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        for (int i = 0; i < MWCLength; i ++) {
+        cairo_move_to (cr, trueX(0.0), trueY(0.5));
+        for (int i = 1; i < MWCLength; i ++) {
             // if(mwcD[i]>=0 && mwcD[i]<=1) {
                 cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]));
                 // cairo_line_to (cr, (gdouble)i, -mwcD[i]);
@@ -8539,6 +8487,13 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
         cairo_stroke (cr);
+
+            /*discs*/
+        for (int i = 1; i < MWCLength; i ++) {
+            cairo_arc(cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcD[i]), dx/2, 0, 2 * M_PI);
+            cairo_stroke_preserve(cr);
+            cairo_fill(cr);
+        }   
 
         /* Draw the best moves */
         for (int i = 1; i < MWCLength; i ++) {
@@ -8586,17 +8541,25 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
                 }
             // }
         }
-        cairo_stroke (cr);
+        // cairo_stroke (cr);
 
         /* Cumulative skill */
-        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
-        for (int i = 0; i < MWCLength; i ++) {
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
+        cairo_move_to (cr, trueX(0.0), trueY(0.5));
+        for (int i = 1; i < MWCLength; i ++) {
             // if(mwcD[i]>=0 && mwcD[i]<=1) {
-                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), trueY(mwcCumulSkillDiff[i]));
+                cairo_line_to (cr, trueX(((double)i)/(MWCLength-1)), 
+                    trueY(mwcCumulSkillDiff[i]));
             // }
         }
         cairo_stroke (cr);
-
+            /*discs*/
+        for (int i = 1; i < MWCLength; i ++) {
+            cairo_arc(cr, trueX(((double)i)/(MWCLength-1)), 
+                trueY(mwcCumulSkillDiff[i]), dx/2, 0, 2 * M_PI);
+            cairo_stroke_preserve(cr);
+            cairo_fill(cr);
+        }   
 
         /* text: legend */
             /*1:plot*/
@@ -8607,7 +8570,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_move_to(cr,  trueX(0.12), trueY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Match winning chances");
             /*2:cumul. skill*/
-        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         cairo_move_to (cr, trueX(0.5), trueY(1.0+margin2y/2));
         cairo_line_to (cr, trueX(0.55), trueY(1.0+margin2y/2));
         cairo_stroke (cr);
@@ -8778,7 +8741,14 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
     window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
-    gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
+    char plotTitle[300];
+    if (!ap[1].szName[0] || !ap[0].szName[0]) {
+        sprintf(plotTitle, "MWC plot");
+    } else {
+        sprintf(plotTitle, "MWC plot for %s (in %s vs. %s)", 
+            ap[1].szName, ap[0].szName, ap[1].szName);
+    }
+    gtk_window_set_title (GTK_WINDOW (window), plotTitle);
     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
@@ -8834,12 +8804,10 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
     listOLD *plStartingMove;
     moverecord * pmrT=NULL;
 
-    /* if we already computed some MWC for some match, let's re-initialize 
-    all the static values and recompute the MWC; probably not needed but 
-    it's better to keep clean arrays */
-    if (MWCLength<MAX_DECISIONS) {
-        initArrays();
-    }
+    /* let's re-initialize all the static values and recompute the MWC*/
+    // if (MWCLength<MAX_DECISIONS) {
+    initArrays();
+    // }
     int i=1;
 
     /*   First compute the needed values  */

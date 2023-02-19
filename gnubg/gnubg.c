@@ -250,11 +250,10 @@ const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", 
 /*initialization*/
 char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]={""};
 int keyNamesFirstEmpty=0;
-int fUseKeyNames=FALSE; /* for now assume that it's turned off by default, should set TRUE in the future*/
+int fUseKeyNames=TRUE; 
 int fWithinSmartOpen=FALSE;
-
 int fCheckUpdateGTK = FALSE;
-
+int fTriggeredByRecordList=FALSE;
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
@@ -3319,17 +3318,9 @@ static void
 SaveMiscSettings(FILE * pf)
 {
     gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
-    fprintf(pf, "set tutor mode %s\n", fTutor ? "on" : "off");
-    fprintf(pf, "set tutor cube %s\n", fTutorCube ? "on" : "off");
-    fprintf(pf, "set tutor chequer %s\n", fTutorChequer ? "on" : "off");
-    fprintf(pf, "set tutor skill ");
-    if (TutorSkill == SKILL_VERYBAD)
-        fprintf(pf, "very bad\n");
-    else if (TutorSkill == SKILL_BAD)
-        fprintf(pf, "bad\n");
-    else
-        fprintf(pf, "doubtful\n");
 
+    fprintf(pf, "set browser \"%s\"\n", get_web_browser());
+    fprintf(pf, "set checkupdates %s\n", fCheckUpdates ? "on" : "off");    
     fprintf(pf, "set clockwise %s\n", fClockwise ? "on" : "off");
     fprintf(pf, "set confirm new %s\n", fConfirmNew ? "on" : "off");
     fprintf(pf, "set confirm save %s\n", fConfirmSave ? "on" : "off");
@@ -3353,11 +3344,22 @@ SaveMiscSettings(FILE * pf)
     fprintf(pf, "set output digits %d\n", fOutputDigits);
     fprintf(pf, "set output errorratefactor %s\n",
             g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rErrorRateFactor));
-    fprintf(pf, "set prompt %s\n", szPrompt);
-    fprintf(pf, "set browser \"%s\"\n", get_web_browser());
-    fprintf(pf, "set checkupdates %s\n", fCheckUpdates ? "on" : "off");    
     fprintf(pf, "set priority nice %d\n", nThreadPriority);
+    fprintf(pf, "set prompt %s\n", szPrompt);
     fprintf(pf, "set ratingoffset %s\n", g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rRatingOffset));
+
+    fprintf(pf, "set tutor mode %s\n", fTutor ? "on" : "off");
+    fprintf(pf, "set tutor cube %s\n", fTutorCube ? "on" : "off");
+    fprintf(pf, "set tutor chequer %s\n", fTutorChequer ? "on" : "off");
+    fprintf(pf, "set tutor skill ");
+    if (TutorSkill == SKILL_VERYBAD)
+        fprintf(pf, "very bad\n");
+    else if (TutorSkill == SKILL_BAD)
+        fprintf(pf, "bad\n");
+    else
+        fprintf(pf, "doubtful\n");
+
+    fprintf(pf, "set usekeynames %s\n", fUseKeyNames ? "on" : "off");    
 }
 
 extern void
@@ -3841,6 +3843,20 @@ NextTurnNotify(gpointer UNUSED(p))
     return FALSE;               /* remove idle handler, if GTK */
 }
 #endif
+
+/* UserCommand is GTK-only, this function also works outside GTK*/
+extern void
+UserCommand2(const char *szCommand)
+{
+#if defined (USE_GTK)
+    UserCommand(szCommand);
+#else
+    char *line = g_strdup(szCommand);
+    HandleCommand(line, acTop);
+    g_free(line);
+#endif
+}
+
 
 /* Read a line from stdin, and handle X and readline input if
  * appropriate.  This function blocks until a line is ready, and does
@@ -4586,6 +4602,140 @@ callback_parse_python_option(const gchar *UNUSED(name), const gchar *value, gpoi
     return TRUE;
 }
 
+
+/* ************************************************ */
+
+
+
+/* Launches the update screen to inform the user there is a newer gnubg.
+
+The implementation is based on GTKMessage, which is at the basis of GetInputYN and
+GTKGetInputYN. However it is changed here because we also want to offer the user a 
+button where he can opt out of updates messages (same variable fCheckUpdates as in 
+the options).
+
+Note that we split between this function and GTKAskToUpdate for the GTK side.
+*/
+void AskToUpdate(char * availableVersion)
+{
+
+    char *sz = g_strdup_printf(_("A new version of GNU Backgammon is available. "
+            "\n\n Current version:   %s"
+            "\n Available version: %s\n"),
+            VERSION, availableVersion);
+
+    /* the non-GTK version with "error" does not seem to write "error", so 
+    we're using it:*/
+    outputerrf("%s",sz);
+    outputerrf(_("Please check online: %s"),websiteForUpdates);
+
+    g_free(sz);
+
+}
+#undef CHECKUPDATE
+ 
+/* This is the "official" recommended function.
+It gets an "unused" warning when compiling, but it looks like it is actually 
+called below. */
+static size_t
+WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+ 
+  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
+  if(!ptr) {
+    /* out of memory! */
+    printf("not enough memory (realloc returned NULL)\n");
+    return 0;
+  }
+ 
+  mem->memory = ptr;
+  memcpy(&(mem->memory[mem->size]), contents, realsize);
+  mem->size += realsize;
+  mem->memory[mem->size] = 0;
+ 
+  return realsize;
+}
+
+/* first line is with no new update version online, second has an update*/
+char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/version.txt";
+// char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/newversion.txt";
+
+ 
+
+/*   check version update online*/
+extern void CheckVersionUpdate(void)
+{
+#if defined(LIBCURL_PROTOCOL_HTTPS)
+    CURL *curl_handle;
+    CURLcode res;
+    // char * url;
+ 
+    struct MemoryStruct chunk;
+
+    chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
+    chunk.size = 0;    /* no data at this point */
+
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    /* init the curl session */
+    curl_handle = curl_easy_init();
+
+    /* specify URL to get */
+    curl_easy_setopt(curl_handle, CURLOPT_URL, urlForVersion);
+
+    /* send all data to this function  */
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+
+    /* we pass our 'chunk' struct to the callback function */
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
+
+    /* some servers do not like requests that are made without a user-agent
+        field, so we provide one */
+    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+    /* get it! */
+    res = curl_easy_perform(curl_handle);
+
+    /* check for errors */
+    if(res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                curl_easy_strerror(res));
+    }
+    else {
+        /*
+        * Now, our chunk.memory points to a memory block that is chunk.size
+        * bytes big and contains the remote file.
+        */
+        char *token;
+        token = strtok(chunk.memory, "\n");
+        // g_message("latest version=%s vs VERSION=%s",token,VERSION);
+        if (strcmp(token,VERSION)>0) {
+            // g_message("newer version, need to download!");
+#if defined(USE_GTK)
+            GTKAskToUpdate(token);
+#else            
+            AskToUpdate(token);
+#endif
+        }   else {
+            return;
+        }   
+    }
+
+    /* cleanup curl stuff */
+    curl_easy_cleanup(curl_handle);
+
+    free(chunk.memory);
+
+    //   /* we are done with libcurl, so clean it up */
+    //   curl_global_cleanup(); //<- needed? done upon shutdown; we may also need this elsewhere, 
+                                //  e.g. for the random number generator
+#endif //end ifdefined LIBCURL
+}
+
+/* ************************************************ */
+
 int
 main(int argc, char *argv[])
 {
@@ -4794,7 +4944,7 @@ main(int argc, char *argv[])
             - Then we launch a splash screen with a notice for the user
             */
             nextUpdateTime=intSeconds + 604800; //3600*24*7
-            UserCommand("save settings");
+            UserCommand2("save settings");
 #if defined(USE_GTK)
             // we postpone checking if there is a newer version to after the GTK window shows up
             fCheckUpdateGTK = TRUE;
@@ -5035,13 +5185,13 @@ DeleteKeyName(const char sz[])
             // g_message("EXISTS! %s=%s, i=%d, keyNamesFirstEmpty=%d", sz,keyNames[i],i,keyNamesFirstEmpty);
             if (keyNamesFirstEmpty==(i+1)) {
                 keyNamesFirstEmpty--;
-                UserCommand("save settings");
+                UserCommand2("save settings");
                 return 1;
             } else {
                 strcpy(keyNames[i],keyNames[keyNamesFirstEmpty-1]); 
                 keyNamesFirstEmpty--;
                 // DisplayKeyNames();
-                UserCommand("save settings");
+                UserCommand2("save settings");
                 return 1;
             }
         }
@@ -5083,7 +5233,7 @@ AddKeyName(const char sz[])
         keyNamesFirstEmpty++;
     }
     // DisplayKeyNames();
-    UserCommand("save settings");
+    UserCommand2("save settings");
     return 1;
 }
 
