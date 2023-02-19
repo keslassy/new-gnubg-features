@@ -3358,7 +3358,7 @@ SaveMiscSettings(FILE * pf)
         fprintf(pf, "bad\n");
     else
         fprintf(pf, "doubtful\n");
-        
+
     fprintf(pf, "set usekeynames %s\n", fUseKeyNames ? "on" : "off");    
 }
 
@@ -4634,7 +4634,9 @@ void AskToUpdate(char * availableVersion)
 }
 #undef CHECKUPDATE
  
-/* gets an "unused" warning when compiling, but it looks like it is actually called below */
+/* This is the "official" recommended function.
+It gets an "unused" warning when compiling, but it looks like it is actually 
+called below. */
 static size_t
 WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {

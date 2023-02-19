@@ -8544,7 +8544,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_stroke (cr);
 
         /* Cumulative skill */
-        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         cairo_move_to (cr, trueX(0.0), trueY(0.5));
         for (int i = 1; i < MWCLength; i ++) {
             // if(mwcD[i]>=0 && mwcD[i]<=1) {
@@ -8570,7 +8570,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_move_to(cr,  trueX(0.12), trueY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Match winning chances");
             /*2:cumul. skill*/
-        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         cairo_move_to (cr, trueX(0.5), trueY(1.0+margin2y/2));
         cairo_line_to (cr, trueX(0.55), trueY(1.0+margin2y/2));
         cairo_stroke (cr);

@@ -289,7 +289,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_stroke (cr);
 
         /* PLOT 1: 5-match avg error */
-        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         /* 1. the newest record is the first, so we conceptually start by plotting 
         the oldest; 2. it's an average, so it's not defined on all i's*/
         for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
@@ -305,7 +305,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         }
         
             /* +legend */
-        cairo_set_source_rgb (cr, 1.0, 0.65, 0.0);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
         cairo_move_to (cr, xToX(0.4), trueHistY(1.0+margin2y/2));
         cairo_line_to (cr, xToX(0.45), trueHistY(1.0+margin2y/2));
