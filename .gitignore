@@ -50,3 +50,12 @@ gnubg/libtool
 /.vs/g2/v17
 !configure.ac
 /.vs/slnx.sqlite
+/gnubg/AUTHORS
+/gnubg/credits.c
+/gnubg/credits.h
+/gnubg/copying.c
+/gnubg/external_y.c
+/gnubg/external_y.h
+/gnubg/sgf_y.c
+/gnubg/sgf_y.h
+/gnubg/sgf_l.c
