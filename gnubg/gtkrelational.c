@@ -1585,6 +1585,9 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_BUTTONS)),
         histButton = gtk_button_new_with_label(_("Plot History")));
+    gtk_widget_set_tooltip_text(histButton, _("Click on the button to plot the historical "
+            "error of (1) a player selected in the above list, or if no player is selected, "
+            "(2) the player sitting at the bottom of the board in the current match."));
     g_signal_connect(histButton, "clicked", G_CALLBACK(PlotHistoryTrigger), NULL);
 
     pwn = gtk_notebook_new();
