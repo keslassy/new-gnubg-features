@@ -133,7 +133,7 @@ static double margin2x=0.08;
 static double margin1y=0.08;
 static double margin2y=0.05;
 // static int alreadyComputed=0; /* when drawing it computes all arrays twice :( )*/
-
+static char playerName[100]; /* name of the player for whom we plot the history*/
 
 /*  static because needed for both the computing + drawing functions...
 */
@@ -533,7 +533,9 @@ void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
     window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
-    gtk_window_set_title (GTK_WINDOW (window), "History plot");
+    char plotTitle[200];
+    sprintf(plotTitle, "History plot for %s", playerName);
+    gtk_window_set_title (GTK_WINDOW (window), plotTitle);
     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
@@ -589,7 +591,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     /* get player_id of player at bottom*/
     char szRequest[600];
     char * listName=g_malloc(100 * sizeof(char));
-    char playerName[100];
+    // char playerName[100];
     // int needToFreeListName=FALSE;
 
     /*if launched by record list, need to check if player was picked there*/
