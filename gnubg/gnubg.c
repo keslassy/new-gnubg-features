@@ -3347,6 +3347,7 @@ SaveMiscSettings(FILE * pf)
     fprintf(pf, "set priority nice %d\n", nThreadPriority);
     fprintf(pf, "set prompt %s\n", szPrompt);
     fprintf(pf, "set ratingoffset %s\n", g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rRatingOffset));
+
     fprintf(pf, "set tutor mode %s\n", fTutor ? "on" : "off");
     fprintf(pf, "set tutor cube %s\n", fTutorCube ? "on" : "off");
     fprintf(pf, "set tutor chequer %s\n", fTutorChequer ? "on" : "off");
@@ -3357,6 +3358,7 @@ SaveMiscSettings(FILE * pf)
         fprintf(pf, "bad\n");
     else
         fprintf(pf, "doubtful\n");
+        
     fprintf(pf, "set usekeynames %s\n", fUseKeyNames ? "on" : "off");    
 }
 

@@ -2943,7 +2943,6 @@ CreateEvalSettings(GtkWidget * pwParent, const char *title, evalcontext * pecheq
 extern void
 AddText(GtkWidget* pwBox, char* Text)
 {
-
     GtkWidget * pwText = gtk_label_new(Text);
     GtkWidget * pwHBox;
 
@@ -2966,11 +2965,11 @@ AddText(GtkWidget* pwBox, char* Text)
     GtkRcStyle * ps = gtk_rc_style_new();
     ps->font_desc = pango_font_description_new();
     //pango_font_description_set_family_static(ps->font_desc, "serif");
-    pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
+    //pango_font_description_set_size(ps->font_desc, 8 * PANGO_SCALE);
     gtk_widget_modify_style(pwText, ps);
     g_object_unref(ps);
 #endif
-    gtk_box_pack_start(GTK_BOX(pwHBox), pwText, TRUE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwHBox), pwText, FALSE, FALSE, 2);
 }
 // static void
 // AddText(GtkWidget* pwBox, char* Text)
