@@ -250,7 +250,7 @@ const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", 
 /*initialization*/
 char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]={""};
 int keyNamesFirstEmpty=0;
-int fUseKeyNames=FALSE; /* for now assume that it's turned off by default, should set TRUE in the future*/
+int fUseKeyNames=TRUE; 
 int fWithinSmartOpen=FALSE;
 int fCheckUpdateGTK = FALSE;
 int fTriggeredByRecordList=FALSE;
@@ -3318,17 +3318,9 @@ static void
 SaveMiscSettings(FILE * pf)
 {
     gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
-    fprintf(pf, "set tutor mode %s\n", fTutor ? "on" : "off");
-    fprintf(pf, "set tutor cube %s\n", fTutorCube ? "on" : "off");
-    fprintf(pf, "set tutor chequer %s\n", fTutorChequer ? "on" : "off");
-    fprintf(pf, "set tutor skill ");
-    if (TutorSkill == SKILL_VERYBAD)
-        fprintf(pf, "very bad\n");
-    else if (TutorSkill == SKILL_BAD)
-        fprintf(pf, "bad\n");
-    else
-        fprintf(pf, "doubtful\n");
 
+    fprintf(pf, "set browser \"%s\"\n", get_web_browser());
+    fprintf(pf, "set checkupdates %s\n", fCheckUpdates ? "on" : "off");    
     fprintf(pf, "set clockwise %s\n", fClockwise ? "on" : "off");
     fprintf(pf, "set confirm new %s\n", fConfirmNew ? "on" : "off");
     fprintf(pf, "set confirm save %s\n", fConfirmSave ? "on" : "off");
@@ -3352,11 +3344,20 @@ SaveMiscSettings(FILE * pf)
     fprintf(pf, "set output digits %d\n", fOutputDigits);
     fprintf(pf, "set output errorratefactor %s\n",
             g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rErrorRateFactor));
-    fprintf(pf, "set prompt %s\n", szPrompt);
-    fprintf(pf, "set browser \"%s\"\n", get_web_browser());
-    fprintf(pf, "set checkupdates %s\n", fCheckUpdates ? "on" : "off");    
     fprintf(pf, "set priority nice %d\n", nThreadPriority);
+    fprintf(pf, "set prompt %s\n", szPrompt);
     fprintf(pf, "set ratingoffset %s\n", g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rRatingOffset));
+    fprintf(pf, "set tutor mode %s\n", fTutor ? "on" : "off");
+    fprintf(pf, "set tutor cube %s\n", fTutorCube ? "on" : "off");
+    fprintf(pf, "set tutor chequer %s\n", fTutorChequer ? "on" : "off");
+    fprintf(pf, "set tutor skill ");
+    if (TutorSkill == SKILL_VERYBAD)
+        fprintf(pf, "very bad\n");
+    else if (TutorSkill == SKILL_BAD)
+        fprintf(pf, "bad\n");
+    else
+        fprintf(pf, "doubtful\n");
+    fprintf(pf, "set usekeynames %s\n", fUseKeyNames ? "on" : "off");    
 }
 
 extern void
