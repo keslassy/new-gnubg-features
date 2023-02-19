@@ -361,7 +361,11 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_move_to(cr,  xToX(0.82), trueHistY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Average");
         cairo_stroke (cr);
-
+            /* +text to the right of line */
+        cairo_move_to(cr, xToX(1.0)+dx/2, errorToY(matchAvg) + 0.3 * fontSize);
+        sprintf(strTemp, "%.1f", matchAvg);
+        cairo_show_text(cr, strTemp);
+        cairo_stroke(cr);
 
          /* x axis*/
         // for (int i = 10; i < numRecords; i=i+10) {
@@ -607,7 +611,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         g_free(listName);
         // }
         fTriggeredByRecordList=FALSE; /*re-initialize*/
-        if (!ap[1].szName){
+        if (!ap[1].szName[0]) {
             GTKMessage(_("No player name. Please open a match or select one in the database records."), DT_INFO);
             return;
         }
