@@ -519,7 +519,7 @@ void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
         gtk_container_add(GTK_CONTAINER(window), 
             (GtkWidget*)da);
 
-        g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(on_expose_event), NULL);    
+        g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(DrawHistoryPlot), NULL);    
         // g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(on_draw), NULL);    
     } 
     gtk_widget_show_all ((GtkWidget*)window);
