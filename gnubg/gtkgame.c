@@ -8742,7 +8742,14 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
     window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
-    gtk_window_set_title (GTK_WINDOW (window), "MWC plot");
+    char plotTitle[300];
+    if (!ap[1].szName[0] || !ap[0].szName[0]) {
+        sprintf(plotTitle, "MWC plot");
+    } else {
+        sprintf(plotTitle, "MWC plot for %s (in %s vs. %s)", 
+            ap[1].szName, ap[0].szName, ap[1].szName);
+    }
+    gtk_window_set_title (GTK_WINDOW (window), plotTitle);
     // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
