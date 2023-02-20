@@ -971,7 +971,7 @@ GTKAnalyzeFile(void)
 fQuiz=TRUE;
 UserCommand2("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
 
-#ifdef (0)    
+#if (0)    
     // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
     if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
         GTKBatchAnalyse(NULL, 0, NULL);

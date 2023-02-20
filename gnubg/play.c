@@ -2721,7 +2721,16 @@ CommandMove(char *sz)
         /* update or set the move */
         memcpy(pmr_cur->n.anMove, an, sizeof an);
         hint_move("", FALSE, NULL);
-        if (!GiveAdvice(pmr_cur->n.stMove)) {
+        if(fQuiz){
+            if(pmr_cur->n.stMove> TutorSkill){
+                g_message("add GOOD");
+            } else {
+                g_message("add BAD");
+            }
+            UserCommand("hint"); /*crashed when clickig MWC, why?*/
+            // UserCommand("analyse move");
+            // return;
+        } else if (!GiveAdvice(pmr_cur->n.stMove)) {
             g_free(pmr);
             return;
         }

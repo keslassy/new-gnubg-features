@@ -5428,20 +5428,30 @@ GiveAdvice(skilltype Skill)
 
     switch (Skill) {
 
+
     case SKILL_VERYBAD:
+        if(fQuiz)          
+            g_message("wrong move 1!");
         sz = _("You may be about to make a very bad play");
         break;
 
     case SKILL_BAD:
+        if(fQuiz)          
+            g_message("wrong move 2!");
         sz = _("You may be about to make a bad play");
         break;
 
     case SKILL_DOUBTFUL:
+        if(fQuiz)          
+            g_message("wrong move 3!");
         sz = _("You may be about to make a doubtful play");
         break;
 
     default:
+        if(fQuiz)          
+            g_message("great!");
         return (TRUE);
+    
     }
 
     if (Skill > TutorSkill)
