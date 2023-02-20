@@ -262,6 +262,12 @@ typedef struct {
     const evalcontext *pec;
 } scoreData;
 
+/* structure for quiz mode*/
+typedef struct {
+    char * position; 
+    float ewmaError; 
+    long int lastSeen; 
+} quiz;
 
 
 /* Defining structures for AnalyzeFileSetting.

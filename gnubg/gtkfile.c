@@ -966,13 +966,16 @@ SmartAnalyze(void)
 }
 
 #define MAX_ROWS 1024
+#define MAX_ROW_CHARS 1024
 static char positionsFile []="./quiz/positions.csv";
+static quiz q [MAX_ROWS];
+// q=(quiz *) malloc()
 
 /* based on standard csv program from geeksforgeeks*/
 int OpenQuizPositions(void)
 {
-    char buffer[MAX_ROWS];
-    int row = 0;
+    char row[MAX_ROW_CHARS];
+    int i = -2;
     int column = 0;
 
 	FILE* fp = fopen(positionsFile, "r");
@@ -982,53 +985,71 @@ int OpenQuizPositions(void)
         return FALSE;
     }
 
-    while (fgets(buffer, MAX_ROWS, fp)) {
+    while (fgets(row, MAX_ROW_CHARS, fp)) {
         column = 0;
-        row++;
+        i++;
 
         // To avoid printing of column
         // names in file can be changed
         // according to need
-        if (row == 1)
+        if (i == -1)
             continue;
 
         // Splitting the data
-        char* value = strtok(buffer, ", ");
+        char* token = strtok(row, ", ");
+        // g_message("i:%d, token:%s",i,token);
 
-        while (value) {
-            // Column 1
+        while (token) {
+            // // Column 1
+            // if (column == 0) {
+            //     printf("Position:");
+            // }
+            // // Column 2
+            // if (column == 1) {
+            //     printf("\tError:");
+            // }
+            // // Column 3
+            // if (column == 2) {
+            //     printf("\tTime:");
+            // }
+            // printf("%s", token);
             if (column == 0) {
-                printf("Position:");
-            }
-            // Column 2
-            if (column == 1) {
-                printf("\tError:");
-            }
-            // Column 3
-            if (column == 2) {
-                printf("\tTime:");
-            }
-            // Column 4
-            if (column == 3) {
-                printf("\tEWMA:");
-            }
-            printf("%s", value);
-            value = strtok(NULL, ", ");
+                // g_message("i=%d",i);
+                q[i].position = malloc(50 * sizeof(char));
+                strcpy(q[i].position,token); 
+        // g_message("read new line %d: %s\n", i, q[i].position);
+            } else if (column == 1) {
+                q[i].ewmaError=atof(token);
+        // g_message("read new line %d: %s, %.3f\n", i, q[i].position, q[i].ewmaError);
+            } else if (column == 2) {
+                q[i].lastSeen=strtol(token, NULL, 10);
+                // q[i].lastSeen=strtoimax(sz, NULL, 10);
+        // g_message("read new line %d: %s, %.3f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
+            } 
+            // printf("%s", token);
+
+
+            // g_message("i:%d,col=%d, token:%s",i,column,token);
+            token = strtok(NULL, ", ");
             column++;
         }
-        printf("\n");
+        // printf("\n");
         //    intmax_t seconds = strtoimax(sz, NULL, 10);
+        g_message("read new line %d: %s, %.3f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
+
     }
     // Close the file
     fclose(fp);
 	return TRUE;
 }
-
+// typedef struct {
+//     char * position; 
+//     double ewmaError; 
+//     long int lastSeen; 
+// } quiz;
 /* based on standard csv program from geeksforgeeks*/
-int AddQuizPositions(char * position, double error, long int time, double ewma)
+int AddQuizPositions(quiz q)
 {
-    char name[50];
-    int accountno, amount;
 
 	FILE* fp = fopen(positionsFile, "a+");
 
@@ -1046,7 +1067,7 @@ int AddQuizPositions(char * position, double error, long int time, double ewma)
     // scanf("%d", &amount);
  
     // Saving data in file
-    fprintf(fp, "%s, %f, %ld, %f\n", position, error, time, ewma);
+    fprintf(fp, "%s, %.3f, %ld\n", q.position, q.ewmaError, q.lastSeen);
     g_message("New Account added to record");
     fclose(fp);
 
@@ -1058,10 +1079,10 @@ extern void
 GTKAnalyzeFile(void)
 {
     if(1) {
-        long int seconds=(long int) (time(NULL));
+        // long int seconds=(long int) (time(NULL));
                 // intmax_t intSeconds=(intmax_t) (time(NULL));
-        AddQuizPositions("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
-        g_message("added");
+        // AddQuizPositions("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
+        // g_message("added");
         OpenQuizPositions();
     } else {
         int ok = FALSE;
