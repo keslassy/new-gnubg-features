@@ -658,8 +658,7 @@ GTKSuspendInput(void)
         return;
 
     /* when the fBackgroundAnalysis global variable is set, we allow the user to 
-    (1) continue browsing and (2) stop the computation; else we grab the focus and 
-    kill any user input
+    continue browsing; we disallow user input in any case (thanks Philippe for catching this!)
     */
     if (!fBackgroundAnalysis) {
         if (suspendCount == 0 && pwGrab && GDK_IS_WINDOW(gtk_widget_get_window(pwGrab))) {
@@ -673,16 +672,15 @@ GTKSuspendInput(void)
             gtk_grab_add(pwGrab);
             grabIdSignal = g_signal_connect_after(G_OBJECT(pwGrab), "key-press-event", G_CALLBACK(gtk_true), NULL);
         }
-
-        /* Don't check stdin here; readline isn't ready yet. */
-        GTKDisallowStdin();
-        suspendCount++;
     } else {
         if (pwGrab == pwStop) {
             gtk_widget_grab_focus(pwStop);
             gtk_widget_set_sensitive(pwStop, TRUE);
         }
     }
+    /* Don't check stdin here; readline isn't ready yet. */
+    GTKDisallowStdin();
+    suspendCount++;
 }
 
 extern void
@@ -701,7 +699,6 @@ GTKResumeInput(void)
         if (pwGrab == pwStop)
             gtk_widget_set_sensitive(pwStop, FALSE);
     }
-
     GTKAllowStdin();
 }
 
