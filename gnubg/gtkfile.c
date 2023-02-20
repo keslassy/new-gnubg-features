@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+// #include <conio.h> /*opening file*/
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -964,17 +965,115 @@ SmartAnalyze(void)
     return;
 }
 
+#define MAX_ROWS 1024
+static char positionsFile []="./quiz/positions.csv";
+
+/* based on standard csv program from geeksforgeeks*/
+int OpenQuizPositions(void)
+{
+    char buffer[MAX_ROWS];
+    int row = 0;
+    int column = 0;
+
+	FILE* fp = fopen(positionsFile, "r");
+
+	if (!fp){
+		printf("Can't open file\n");
+        return FALSE;
+    }
+
+    while (fgets(buffer, MAX_ROWS, fp)) {
+        column = 0;
+        row++;
+
+        // To avoid printing of column
+        // names in file can be changed
+        // according to need
+        if (row == 1)
+            continue;
+
+        // Splitting the data
+        char* value = strtok(buffer, ", ");
+
+        while (value) {
+            // Column 1
+            if (column == 0) {
+                printf("Position:");
+            }
+            // Column 2
+            if (column == 1) {
+                printf("\tError:");
+            }
+            // Column 3
+            if (column == 2) {
+                printf("\tTime:");
+            }
+            // Column 4
+            if (column == 3) {
+                printf("\tEWMA:");
+            }
+            printf("%s", value);
+            value = strtok(NULL, ", ");
+            column++;
+        }
+        printf("\n");
+        //    intmax_t seconds = strtoimax(sz, NULL, 10);
+    }
+    // Close the file
+    fclose(fp);
+	return TRUE;
+}
+
+/* based on standard csv program from geeksforgeeks*/
+int AddQuizPositions(char * position, double error, long int time, double ewma)
+{
+    char name[50];
+    int accountno, amount;
+
+	FILE* fp = fopen(positionsFile, "a+");
+
+	if (!fp){
+		printf("Can't open file\n");
+        return FALSE;
+    } 
+    // // Asking user input for the
+    // // new record to be added
+    // printf("\nEnter Account Holder Name\n");
+    // scanf("%s", &name);
+    // printf("\nEnter Account Number\n");
+    // scanf("%d", &accountno);
+    // printf("\nEnter Available Amount\n");
+    // scanf("%d", &amount);
+ 
+    // Saving data in file
+    fprintf(fp, "%s, %f, %ld, %f\n", position, error, time, ewma);
+    g_message("New Account added to record");
+    fclose(fp);
+
+    return TRUE;
+}
+
+
 extern void
 GTKAnalyzeFile(void)
 {
-    int ok = FALSE;
-    ok = GTKGetInputYN(_("Want to play?"));
-    if(ok) {
-        fQuiz=TRUE;
-        CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
-        // UserCommand("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
+    if(1) {
+        long int seconds=(long int) (time(NULL));
+                // intmax_t intSeconds=(intmax_t) (time(NULL));
+        AddQuizPositions("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
+        g_message("added");
+        OpenQuizPositions();
     } else {
-        fQuiz=FALSE;
+        int ok = FALSE;
+        ok = GTKGetInputYN(_("Want to play?"));
+        if(ok) {
+            fQuiz=TRUE;
+            CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
+            // UserCommand("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
+        } else {
+            fQuiz=FALSE;
+    }
+
 }
 
 #if (0)    

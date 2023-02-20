@@ -170,7 +170,7 @@ MoveListRefreshSize(void)
 }
 
 /*
- * Call UpdateMostList to update the movelist in the GTK hint window.
+ * Call MoveListUpdate to update the movelist in the GTK hint window.
  * For example, after new evaluations, rollouts or toggle of MWC/Equity.
  *
  */
@@ -278,6 +278,8 @@ MoveListUpdate(const hintdata * phd)
         if (i != 0) {
             gtk_list_store_set(store, &iter, ML_COL_DIFF + offset,
                                OutputEquityDiff(pml->amMoves[i].rScore, rBest, &ci), -1);
+            if(fQuiz && phd->piHighlight && *phd->piHighlight == i)
+                g_message("i=%u,diff=%f",i,pml->amMoves[i].rScore-rBest);                             
         }
 
         gtk_list_store_set(store, &iter, ML_COL_MOVE + offset, FormatMove(sz, msBoard(), pml->amMoves[i].anMove), -1);
