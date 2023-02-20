@@ -1035,7 +1035,7 @@ int OpenQuizPositions(void)
         }
         // printf("\n");
         //    intmax_t seconds = strtoimax(sz, NULL, 10);
-        g_message("read new line %d: %s, %.3f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
+        g_message("read new line %d: %s, %.5f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
 
     }
     qLength=i+1;
@@ -1050,7 +1050,7 @@ int OpenQuizPositions(void)
 //     long int lastSeen; 
 // } quiz;
 /* based on standard csv program from geeksforgeeks*/
-int AddQuizPositions(quiz qRow)
+int AddQuizPosition(quiz qRow)
 {
 
 	FILE* fp = fopen(positionsFile, "a");
@@ -1061,10 +1061,9 @@ int AddQuizPositions(quiz qRow)
         return FALSE;
     } 
     // Saving data in file
-    fprintf(fp, "%s, %.3f, %ld\n", qRow.position, qRow.ewmaError, qRow.lastSeen);
+    fprintf(fp, "%s, %.5f, %ld\n", qRow.position, qRow.ewmaError, qRow.lastSeen);
     g_message("Added a line");
     fclose(fp);
-
     return TRUE;
 }
 int SaveQuizPositions(void)
@@ -1081,40 +1080,64 @@ int SaveQuizPositions(void)
     fprintf(fp, "position, ewmaError, lastSeen\n");
     for (int i = 0; i < qLength; ++i) {
         // Saving data in file
-        fprintf(fp, "%s, %.3f, %ld\n", q[i].position, q[i].ewmaError, q[i].lastSeen);
+        fprintf(fp, "%s, %.5f, %ld\n", q[i].position, q[i].ewmaError, q[i].lastSeen);
     }
     g_message("Saved q");
     fclose(fp);
-
     return TRUE;
 }
 
 extern void
 GTKAnalyzeFile(void)
 {
-    if(1) {
-    // if(!q[0].position) {
-        // long int seconds=(long int) (time(NULL));
-                // intmax_t intSeconds=(intmax_t) (time(NULL));
-        // AddQuizPositions("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
-        // g_message("added");
-        OpenQuizPositions();
-        if(!q[0].position) {
-            GTKMessage(_("problem, maybe no positions in file?"), DT_INFO);
-        } 
-        SaveQuizPositions(); 
-    } else {
-        int ok = FALSE;
-        ok = GTKGetInputYN(_("Want to play?"));
-        if(ok) {
-            fQuiz=TRUE;
-            CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
-            // UserCommand("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
-        } else {
-            fQuiz=FALSE;
+    if(!GTKGetInputYN(_("Want to play?"))){
+        fQuiz=FALSE;
+        return;
     }
+    fQuiz=TRUE;
+        // UserCommand("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
+    // if(!q[0].position) {
+    // long int seconds=(long int) (time(NULL));
+            // intmax_t intSeconds=(intmax_t) (time(NULL));
+    // AddQuizPosition("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
+    // g_message("added");
+    /* we assume that the size of q doesn't change while in quiz mode
+    => we don't read the file in the middle.
+    We do update the values of our considered q[i] in the file as the user
+    is done going through it  => we write into the file 
+    */
+    if(qLength<1) 
+        OpenQuizPositions(); /*this shouls update qLength*/
+    if(qLength<1) {
+        GTKMessage(_("Error: no positions in file?"), DT_INFO);
+        return;
+    } 
+    //  || !q[0].position
+    long int seconds=(long int) (time(NULL));
+    float maxPriority=0;
+    int iOpt=0;
+    for (int i = 0; i < qLength; ++i) {
+        /* heuristic formula, the "secret sauce"...
+        Very roughly: a 2x bigger typical error should be seen 4x more often -
+        and then the error hopefully goes down.
+        */
+        q[i].priority=q[i].ewmaError * q[i].ewmaError * (float) (seconds-q[i].lastSeen); // /1000.0;
+        // g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
+        if(q[i].priority>maxPriority &&  i>iOpt) {
+            maxPriority=q[i].priority;
+            iOpt=i;
+        }
+    }
+    g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
+        q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
+        q[iOpt].lastSeen);
 
-}
+    CommandSetGNUBgID(q[iOpt].position);     
+
+    SaveQuizPositions(); 
+    // CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
+
+
 
 #if (0)    
     // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);

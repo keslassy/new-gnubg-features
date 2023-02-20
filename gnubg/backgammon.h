@@ -267,6 +267,7 @@ typedef struct {
     char * position; 
     float ewmaError; 
     long int lastSeen; 
+    float priority;
 } quiz;
 
 
