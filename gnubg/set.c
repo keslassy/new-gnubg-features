@@ -1020,7 +1020,8 @@ CommandSetDice(char *sz)
 
     AddMoveRecord(pmr);
 
-    outputf(_("The dice have been set to %d and %d.\n"), n0, n1);
+    if(!fQuiz)
+        outputf(_("The dice have been set to %d and %d.\n"), n0, n1);
 
 #if defined(USE_GTK)
     if (fX)
@@ -4802,7 +4803,8 @@ CommandSetGNUBgID(char *sz)
         CommandSetMatchID(matchid);
     if (posid)
         CommandSetBoard(posid);
-    outputf(_("Setting GNUbg ID %s:%s\n"), posid ? posid : "", matchid ? matchid : "");
+    if(!fQuiz)
+        outputf(_("Setting GNUbg ID %s:%s\n"), posid ? posid : "", matchid ? matchid : "");
     g_free(posid);
     g_free(matchid);
 }
