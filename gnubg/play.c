@@ -2712,6 +2712,35 @@ CommandMove(char *sz)
     pmr->fPlayer = ms.fTurn;
     memcpy(pmr->n.anMove, an, sizeof pmr->n.anMove);
 
+    if (fQuiz) {
+        moverecord *pmr_cur = get_current_moverecord(NULL);
+
+        if (!pmr_cur) {
+            g_assert_not_reached();
+            g_free(pmr);
+            return;
+        }
+        /* update or set the move */
+        memcpy(pmr_cur->n.anMove, an, sizeof an);
+        hint_move("", TRUE, NULL);
+        // if(fQuiz){
+        g_message("imove=%u",pmr_cur->n.iMove);
+            if(pmr_cur->n.stMove> TutorSkill){
+                g_message("add GOOD");
+            } else {
+                g_message("add BAD");
+            }
+        //     // UserCommand("hint"); /*crashed when clicking MWC, why?*/
+        //     // UserCommand("analyse move");
+        //     // return;
+        //     if (!GiveAdvice(pmr_cur->n.stMove)) {
+        //     g_free(pmr);
+        //     return;
+        //     }
+        // }
+    }
+
+
     if (fTutor && fTutorChequer) {
         moverecord *pmr_cur = get_current_moverecord(NULL);
 
@@ -2723,12 +2752,12 @@ CommandMove(char *sz)
         /* update or set the move */
         memcpy(pmr_cur->n.anMove, an, sizeof an);
         hint_move("", FALSE, NULL);
-        if(fQuiz){
-            if(pmr_cur->n.stMove> TutorSkill){
-                g_message("add GOOD");
-            } else {
-                g_message("add BAD");
-            }
+        // if(fQuiz){
+            // if(pmr_cur->n.stMove> TutorSkill){
+            //     g_message("add GOOD");
+            // } else {
+            //     g_message("add BAD");
+            // }
             // UserCommand("hint"); /*crashed when clicking MWC, why?*/
             // UserCommand("analyse move");
             // return;
@@ -2736,8 +2765,9 @@ CommandMove(char *sz)
             g_free(pmr);
             return;
             }
-        }
+        // }
     }
+
 #if defined (USE_GTK)
     /* There's no point delaying here. */
     if (nTimeout) {
