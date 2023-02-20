@@ -965,12 +965,14 @@ SmartAnalyze(void)
     return;
 }
 
+/* ************ QUIZ ************************** */
 #define MAX_ROWS 1024
 #define MAX_ROW_CHARS 1024
 static char positionsFile []="./quiz/positions.csv";
-static quiz q [MAX_ROWS];
+static quiz q [MAX_ROWS]; 
 static int qLength=0;
-static int iOpt=-1;
+static int iOpt=-1; 
+// quiz qNow; /*extern*/
 
 /* based on standard csv program from geeksforgeeks*/
 int OpenQuizPositions(void)
@@ -1088,6 +1090,13 @@ int SaveQuizPositions(void)
     return TRUE;
 }
 
+extern void qUpdate(float error) {
+    q[iOpt].ewmaError=2/3*q[iOpt].ewmaError+1/3*error;
+    long int seconds=(long int) (time(NULL));
+    q[iOpt].lastSeen=seconds;
+    SaveQuizPositions();
+}
+
 extern void
 GTKAnalyzeFile(void)
 {
@@ -1114,7 +1123,7 @@ GTKAnalyzeFile(void)
             return;
         } 
         //  || 
-    do {    
+    // do {    
         if(iOpt>=0){
             /* iOpt is defined =>  we are coming back from a quiz decision,
              and need (1) to update q and (2) to save the result to the file */
@@ -1140,15 +1149,18 @@ GTKAnalyzeFile(void)
             q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
             q[iOpt].lastSeen);
 
+        // qNow=q[iOpt];
+
         if(!q[iOpt].position){
             sprintf(buf, _("Error: wrong position in line %d of file?"), iOpt+1);
             GTKMessage(_(buf), DT_INFO);
             return;
         }
-        CommandSetGNUBgID(q[iOpt].position);     
-    } while (!GTKGetInputYN(_("Want to play?")));
-    fQuiz=FALSE;
-    SaveQuizPositions(); 
+        CommandSetGNUBgID(q[iOpt].position);   
+
+    // } while (GTKGetInputYN(_("Want to play?")));
+    // fQuiz=FALSE;
+    // SaveQuizPositions(); 
     // CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
 
 
@@ -1165,6 +1177,7 @@ GTKAnalyzeFile(void)
     return;
 #endif
 }
+/* ************ END OF QUIZ ************************** */
 
 extern void
 GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))

@@ -269,7 +269,8 @@ typedef struct {
     long int lastSeen; 
     float priority;
 } quiz;
-
+// extern quiz qNow; 
+extern void qUpdate(float error);
 
 /* Defining structures for AnalyzeFileSetting.
 Other defined structures throughout the files: 

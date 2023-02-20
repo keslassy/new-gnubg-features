@@ -6700,9 +6700,12 @@ HintOK(GtkWidget * UNUSED(pw), void *UNUSED(unused))
     DestroyPanel(WINDOW_HINT);
     if(fQuiz){
         // HintOK(NULL,NULL);
-        GTKAnalyzeFile();
+        if (GTKGetInputYN(_("Want to play?"))) {
+            GTKAnalyzeFile();
+        } else {
+            fQuiz=FALSE;
+        }
     }
-
 }
 
 extern void
