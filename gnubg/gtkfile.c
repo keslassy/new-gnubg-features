@@ -970,6 +970,7 @@ SmartAnalyze(void)
 static char positionsFile []="./quiz/positions.csv";
 static quiz q [MAX_ROWS];
 static int qLength=0;
+static int iOpt=-1;
 
 /* based on standard csv program from geeksforgeeks*/
 int OpenQuizPositions(void)
@@ -1090,50 +1091,63 @@ int SaveQuizPositions(void)
 extern void
 GTKAnalyzeFile(void)
 {
-    if(!GTKGetInputYN(_("Want to play?"))){
-        fQuiz=FALSE;
-        return;
-    }
+    char buf[256];
+    // int play=TRUE;
     fQuiz=TRUE;
-        // UserCommand("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
-    // if(!q[0].position) {
-    // long int seconds=(long int) (time(NULL));
-            // intmax_t intSeconds=(intmax_t) (time(NULL));
-    // AddQuizPosition("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
-    // g_message("added");
-    /* we assume that the size of q doesn't change while in quiz mode
-    => we don't read the file in the middle.
-    We do update the values of our considered q[i] in the file as the user
-    is done going through it  => we write into the file 
-    */
-    if(qLength<1) 
-        OpenQuizPositions(); /*this shouls update qLength*/
-    if(qLength<1) {
-        GTKMessage(_("Error: no positions in file?"), DT_INFO);
-        return;
-    } 
-    //  || !q[0].position
-    long int seconds=(long int) (time(NULL));
-    float maxPriority=0;
-    int iOpt=0;
-    for (int i = 0; i < qLength; ++i) {
-        /* heuristic formula, the "secret sauce"...
-        Very roughly: a 2x bigger typical error should be seen 4x more often -
-        and then the error hopefully goes down.
+
+            // UserCommand("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
+        // if(!q[0].position) {
+        // long int seconds=(long int) (time(NULL));
+                // intmax_t intSeconds=(intmax_t) (time(NULL));
+        // AddQuizPosition("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
+        // g_message("added");
+        /* we assume that the size of q doesn't change while in quiz mode
+        => we don't read the file in the middle.
+        We do update the values of our considered q[i] in the file as the user
+        is done going through it  (=> we write into the file), as we don't want 
+        to lose everything if gnubg gets shut down 
         */
-        q[i].priority=q[i].ewmaError * q[i].ewmaError * (float) (seconds-q[i].lastSeen); // /1000.0;
-        // g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
-        if(q[i].priority>maxPriority &&  i>iOpt) {
-            maxPriority=q[i].priority;
-            iOpt=i;
+        if(qLength<1) 
+            OpenQuizPositions(); /*this should update qLength*/
+        if(qLength<1) {
+            GTKMessage(_("Error: no positions in file?"), DT_INFO);
+            return;
+        } 
+        //  || 
+    do {    
+        if(iOpt>=0){
+            /* iOpt is defined =>  we are coming back from a quiz decision,
+             and need (1) to update q and (2) to save the result to the file */
+            /* TBD!!!*/
         }
-    }
-    g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
-        q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
-        q[iOpt].lastSeen);
 
-    CommandSetGNUBgID(q[iOpt].position);     
+        long int seconds=(long int) (time(NULL));
+        float maxPriority=0;
+        iOpt=0;
+        for (int i = 0; i < qLength; ++i) {
+            /* heuristic formula, the "secret sauce"...
+            Very roughly: a 2x bigger typical error should be seen 4x more often -
+            and then the error hopefully goes down.
+            */
+            q[i].priority=q[i].ewmaError * q[i].ewmaError * (float) (seconds-q[i].lastSeen); // /1000.0;
+            // g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
+            if(q[i].priority>maxPriority &&  i>iOpt) {
+                maxPriority=q[i].priority;
+                iOpt=i;
+            }
+        }
+        g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
+            q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
+            q[iOpt].lastSeen);
 
+        if(!q[iOpt].position){
+            sprintf(buf, _("Error: wrong position in line %d of file?"), iOpt+1);
+            GTKMessage(_(buf), DT_INFO);
+            return;
+        }
+        CommandSetGNUBgID(q[iOpt].position);     
+    } while (!GTKGetInputYN(_("Want to play?")));
+    fQuiz=FALSE;
     SaveQuizPositions(); 
     // CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
 
