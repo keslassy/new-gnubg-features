@@ -401,6 +401,8 @@ extern int nThreadPriority;
 extern int nToolbarStyle;
 extern int nTutorSkillCurrent;
 
+extern int fQuiz;
+
 extern int fBackgroundAnalysis; /* define whether to analyze in the background*/
 extern int fAnalysisRunning; /* when analyzing a match in background */
 #if defined(USE_BOARD3D)

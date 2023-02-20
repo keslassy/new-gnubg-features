@@ -224,6 +224,7 @@ int fTruncEqualPlayer0 = TRUE;
 int fTutorChequer = TRUE;
 int fTutorCube = TRUE;
 int fTutor = FALSE;
+int fQuiz=FALSE;
 int fEvalSameAsAnalysis = FALSE;
 int fJustSwappedPlayers = FALSE;
 int nConfirmDefault = -1;

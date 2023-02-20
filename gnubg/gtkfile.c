@@ -954,19 +954,24 @@ SmartAnalyze(void)
     //CommandImportAuto(recent);
 
     /*analyze match*/
-    UserCommand("analyse match");
+    UserCommand2("analyse match");
     if(fAutoDB) {
         /*add match to db*/
         CommandRelationalAddMatch(NULL);
     }
     /*show stats panel*/
-    UserCommand("show statistics match");
+    UserCommand2("show statistics match");
     return;
 }
 
 extern void
 GTKAnalyzeFile(void)
 {
+
+fQuiz=TRUE;
+UserCommand2("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
+
+#ifdef (0)    
     // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
     if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
         GTKBatchAnalyse(NULL, 0, NULL);
@@ -976,6 +981,7 @@ GTKAnalyzeFile(void)
         SmartAnalyze();
     }
     return;
+#endif
 }
 
 extern void
