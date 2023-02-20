@@ -969,7 +969,7 @@ SmartAnalyze(void)
 #define MAX_ROW_CHARS 1024
 static char positionsFile []="./quiz/positions.csv";
 static quiz q [MAX_ROWS];
-// q=(quiz *) malloc()
+static int qLength=0;
 
 /* based on standard csv program from geeksforgeeks*/
 int OpenQuizPositions(void)
@@ -1038,6 +1038,8 @@ int OpenQuizPositions(void)
         g_message("read new line %d: %s, %.3f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
 
     }
+    qLength=i+1;
+    g_message("qLength=%d",qLength);
     // Close the file
     fclose(fp);
 	return TRUE;
@@ -1048,42 +1050,59 @@ int OpenQuizPositions(void)
 //     long int lastSeen; 
 // } quiz;
 /* based on standard csv program from geeksforgeeks*/
-int AddQuizPositions(quiz q)
+int AddQuizPositions(quiz qRow)
 {
 
-	FILE* fp = fopen(positionsFile, "a+");
+	FILE* fp = fopen(positionsFile, "a");
 
 	if (!fp){
-		printf("Can't open file\n");
+        GTKMessage(_("problem saving quiz positions, can't open file"), DT_INFO);
+		// printf("Can't open file\n");
         return FALSE;
     } 
-    // // Asking user input for the
-    // // new record to be added
-    // printf("\nEnter Account Holder Name\n");
-    // scanf("%s", &name);
-    // printf("\nEnter Account Number\n");
-    // scanf("%d", &accountno);
-    // printf("\nEnter Available Amount\n");
-    // scanf("%d", &amount);
- 
     // Saving data in file
-    fprintf(fp, "%s, %.3f, %ld\n", q.position, q.ewmaError, q.lastSeen);
-    g_message("New Account added to record");
+    fprintf(fp, "%s, %.3f, %ld\n", qRow.position, qRow.ewmaError, qRow.lastSeen);
+    g_message("Added a line");
+    fclose(fp);
+
+    return TRUE;
+}
+int SaveQuizPositions(void)
+{
+
+	FILE* fp = fopen(positionsFile, "w");
+
+	if (!fp){
+        GTKMessage(_("problem saving quiz positions, can't open file"), DT_INFO);
+		// printf("Can't open file\n");
+        return FALSE;
+    } 
+    /*header*/
+    fprintf(fp, "position, ewmaError, lastSeen\n");
+    for (int i = 0; i < qLength; ++i) {
+        // Saving data in file
+        fprintf(fp, "%s, %.3f, %ld\n", q[i].position, q[i].ewmaError, q[i].lastSeen);
+    }
+    g_message("Saved q");
     fclose(fp);
 
     return TRUE;
 }
 
-
 extern void
 GTKAnalyzeFile(void)
 {
     if(1) {
+    // if(!q[0].position) {
         // long int seconds=(long int) (time(NULL));
                 // intmax_t intSeconds=(intmax_t) (time(NULL));
         // AddQuizPositions("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
         // g_message("added");
         OpenQuizPositions();
+        if(!q[0].position) {
+            GTKMessage(_("problem, maybe no positions in file?"), DT_INFO);
+        } 
+        SaveQuizPositions(); 
     } else {
         int ok = FALSE;
         ok = GTKGetInputYN(_("Want to play?"));
