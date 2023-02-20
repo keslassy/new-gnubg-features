@@ -967,9 +967,15 @@ SmartAnalyze(void)
 extern void
 GTKAnalyzeFile(void)
 {
-
-fQuiz=TRUE;
-UserCommand2("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
+    int ok = FALSE;
+    ok = GTKGetInputYN(_("Want to play?"));
+    if(ok) {
+        fQuiz=TRUE;
+        CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
+        // UserCommand("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
+    } else {
+        fQuiz=FALSE;
+}
 
 #if (0)    
     // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);

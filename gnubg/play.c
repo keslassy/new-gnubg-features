@@ -2620,7 +2620,9 @@ CommandMove(char *sz)
     int an[8];
     movelist ml;
     moverecord *pmr;
-
+        // if(fQuiz){
+        //     UserCommand("hint"); /*crashed when clicking on MWC, why?*/
+        // }
     if (ms.gs != GAME_PLAYING) {
         outputl(_("No game in progress (type `new game' to start one)."));
 
@@ -2727,12 +2729,13 @@ CommandMove(char *sz)
             } else {
                 g_message("add BAD");
             }
-            UserCommand("hint"); /*crashed when clickig MWC, why?*/
+            // UserCommand("hint"); /*crashed when clicking MWC, why?*/
             // UserCommand("analyse move");
             // return;
-        } else if (!GiveAdvice(pmr_cur->n.stMove)) {
+            if (!GiveAdvice(pmr_cur->n.stMove)) {
             g_free(pmr);
             return;
+            }
         }
     }
 #if defined (USE_GTK)
@@ -2748,14 +2751,17 @@ CommandMove(char *sz)
         outputx();
     }
 #endif
-
-    AddMoveRecord(pmr);
+    if(!fQuiz) {
+        AddMoveRecord(pmr);
 
 #if defined (USE_GTK)
-    /* Don't animate this move. */
-    fLastMove = FALSE;
+        /* Don't animate this move. */
+        fLastMove = FALSE;
+        // fLastMove = fQuiz? TRUE: FALSE;
 #endif
-    TurnDone();
+        TurnDone();
+    }
+            // g_free(ml.amMoves);
 
     return;
 }

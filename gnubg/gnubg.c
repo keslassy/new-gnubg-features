@@ -2361,6 +2361,9 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         }
         if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt) {
             fShowProgress = fSaveShowProg;
+            // if(fQuiz)
+            //     g_free(&fd.pml->amMoves);
+                // g_free(pmr);
             return;
         }
         fShowProgress = fSaveShowProg;
@@ -2389,6 +2392,11 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         asyncFindMove(&fd);
         pmr_movelist_set(pmr, GetEvalChequer(), &ml);
         find_skills(pmr, &ms, FALSE, -1);
+        // g_free(&fd);
+            // if(fQuiz)
+                // g_free(&fd.pml->amMoves);
+                // g_free(&ml.amMoves);
+
     }
 
     /* resort the moves according to cubeful (if applicable),
@@ -2435,6 +2443,9 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
                 break;
         }
     }
+            // g_free(&pmr->ml.amMoves);
+        // g_free(&fd);
+        //  g_free(&pmr);
 }
 
 extern void
@@ -5426,44 +5437,50 @@ GiveAdvice(skilltype Skill)
     if (!fTutor)
         return FALSE;
 
-    switch (Skill) {
+    if(fQuiz){
+        UserCommand("hint");
+    } else {
+
+        switch (Skill) {
 
 
-    case SKILL_VERYBAD:
-        if(fQuiz)          
-            g_message("wrong move 1!");
-        sz = _("You may be about to make a very bad play");
-        break;
+        case SKILL_VERYBAD:
+            if(fQuiz)          
+                g_message("wrong move 1!");
+            sz = _("You may be about to make a very bad play");
+            break;
 
-    case SKILL_BAD:
-        if(fQuiz)          
-            g_message("wrong move 2!");
-        sz = _("You may be about to make a bad play");
-        break;
+        case SKILL_BAD:
+            if(fQuiz)          
+                g_message("wrong move 2!");
+            sz = _("You may be about to make a bad play");
+            break;
 
-    case SKILL_DOUBTFUL:
-        if(fQuiz)          
-            g_message("wrong move 3!");
-        sz = _("You may be about to make a doubtful play");
-        break;
+        case SKILL_DOUBTFUL:
+            if(fQuiz)          
+                g_message("wrong move 3!");
+            sz = _("You may be about to make a doubtful play");
+            break;
 
-    default:
-        if(fQuiz)          
-            g_message("great!");
-        return (TRUE);
-    
+        default:
+            if(fQuiz)          
+                g_message("great!");
+            return (TRUE);
+
+        }
+
+        if (Skill > TutorSkill)
+            return (TRUE);
+
+        {
+            int ret;
+            char *buf = g_strdup_printf("%s. %s", sz, _("Are you sure?"));
+            ret = GetAdviceAnswer(buf);
+            g_free(buf);
+            return ret;
+        }
     }
-
-    if (Skill > TutorSkill)
-        return (TRUE);
-
-    {
-        int ret;
-        char *buf = g_strdup_printf("%s. %s", sz, _("Are you sure?"));
-        ret = GetAdviceAnswer(buf);
-        g_free(buf);
-        return ret;
-    }
+        return (FALSE);
 }
 
 extern void

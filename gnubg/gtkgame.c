@@ -6677,6 +6677,10 @@ DestroyHint(gpointer p, GObject * UNUSED(obj))
     }
 
     SetPanelWidget(WINDOW_HINT, NULL);
+
+    if(fQuiz)
+        GTKAnalyzeFile();
+
 }
 
 static void
