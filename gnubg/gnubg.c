@@ -5437,9 +5437,9 @@ GiveAdvice(skilltype Skill)
     if (!fTutor)
         return FALSE;
 
-    // if(fQuiz){
-    //     UserCommand("hint");
-    // } else {
+    if(fQuiz){
+        UserCommand("hint");
+    } else {
 
         switch (Skill) {
 
@@ -5479,7 +5479,7 @@ GiveAdvice(skilltype Skill)
             g_free(buf);
             return ret;
         }
-    // }
+    }
         return (FALSE);
 }
 

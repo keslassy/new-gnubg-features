@@ -5158,8 +5158,13 @@ GtkTutor(char *sz)
     int f = FALSE;
     GtkWidget *pwTutorDialog, *pwOK, *pwCancel, *pwEndTutor, *pwButtons, *pwPrompt, *pwHint;
 
-    pwTutorDialog = GTKCreateDialog(_("GNU Backgammon - Tutor"),
-                                    DT_CUSTOM, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(OK), (void *) &f);
+    if (!fQuiz) {
+        pwTutorDialog = GTKCreateDialog(_("GNU Backgammon - Tutor"),
+                                        DT_CUSTOM, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(OK), (void *) &f);
+    } else{
+        pwTutorDialog = GTKCreateDialog(_("GNU Backgammon - Tutor"),
+                                        DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, G_CALLBACK(OK), (void *) &f);
+    }
 
     if(!fQuiz) {
         pwOK = DialogArea(pwTutorDialog, DA_OK);
