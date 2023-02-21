@@ -70,7 +70,7 @@ static gboolean ShowAnnotation(void);
 static gboolean ShowMessage(void);
 static gboolean ShowAnalysis(void);
 static gboolean ShowTheoryWindow(void);
-static gboolean ShowQuizWindow(void);
+// static gboolean ShowQuizWindow(void);
 static gboolean ShowCommandWindow(void);
 
 typedef struct {
@@ -258,7 +258,8 @@ ShowTheoryWindow(void)
     return TRUE;
 }
 
-static gboolean
+// static gboolean
+gboolean
 ShowQuizWindow(void)
 {
     // GTKMessage(_("ShowQuizWindow"), DT_INFO);
@@ -441,9 +442,11 @@ CreateTheoryWindow(void)
 enum
 {
   COL_NAME = 0,
-  COL_AGE,
+  COL_NUM,
   NUM_COLS
 } ;
+
+
 
 
 static GtkTreeModel *
@@ -457,22 +460,22 @@ create_and_fill_model (void)
   GtkTreeIter iter;
   gtk_list_store_append (store, &iter);
   gtk_list_store_set (store, &iter,
-                      COL_NAME, "Heinz El-Mann",
-                      COL_AGE, 51,
+                      COL_NAME, "Blitzing",
+                      COL_NUM, 51,
                       -1);
 
   /* append another row and fill in some data */
   gtk_list_store_append (store, &iter);
   gtk_list_store_set (store, &iter,
-                      COL_NAME, "Jane Doe",
-                      COL_AGE, 23,
+                      COL_NAME, "Holding",
+                      COL_NUM, 23,
                       -1);
 
   /* ... and a third row */
   gtk_list_store_append (store, &iter);
   gtk_list_store_set (store, &iter,
-                      COL_NAME, "Joe Bungop",
-                      COL_AGE, 91,
+                      COL_NAME, "Hit vs. prime",
+                      COL_NUM, 91,
                       -1);
 
   return GTK_TREE_MODEL (store);
@@ -489,7 +492,7 @@ create_view_and_model (void)
   renderer = gtk_cell_renderer_text_new ();
   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
                                                -1,      
-                                               "Name",  
+                                               _("Category"),  
                                                renderer,
                                                "text", COL_NAME,
                                                NULL);
@@ -498,9 +501,9 @@ create_view_and_model (void)
   renderer = gtk_cell_renderer_text_new ();
   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
                                                -1,      
-                                               "Age",  
+                                               _("Positions"),  
                                                renderer,
-                                               "text", COL_AGE,
+                                               "text", COL_NUM,
                                                NULL);
 
   GtkTreeModel *model = create_and_fill_model ();
@@ -541,16 +544,107 @@ main (int argc, char **argv)
 static GtkWidget *
 CreateQuizWindow(void)
 {
+    GtkWidget *pwQuizView = gtk_tree_view_new ();
+
+    GtkCellRenderer *renderer;
+
+    /* --- Column #1 --- */
+    renderer = gtk_cell_renderer_text_new ();
+    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (pwQuizView),
+                                                -1,      
+                                                _("Category"),  
+                                                renderer,
+                                                "text", COL_NAME,
+                                                NULL);
+
+    /* --- Column #2 --- */
+    renderer = gtk_cell_renderer_text_new ();
+    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (pwQuizView),
+                                                -1,      
+                                                _("Positions"),  
+                                                renderer,
+                                                "text", COL_NUM,
+                                                NULL);
+
+    GtkTreeStore *treestore;
+    GtkTreeIter iter, child;
+
+    treestore = gtk_tree_store_new(NUM_COLS,G_TYPE_STRING,G_TYPE_UINT);
+
+    /* Append an empty top-level row to the tree store.
+    *  Iter will point to the new row */
+    gtk_tree_store_append(treestore, &iter, NULL);
+    gtk_tree_store_set (treestore, &iter,
+                        COL_NAME, "Blitzing",
+                        COL_NUM, 51,
+                        -1);
+
+    /* Append another empty top-level row to the tree store.
+    *  Iter will point to the new row */
+    gtk_tree_store_append(treestore, &iter, NULL);
+    gtk_tree_store_set (treestore, &iter,
+                        COL_NAME, "Holding",
+                        COL_NUM, 23,
+                        -1);
+
+    /* Append a child to the row we just added.
+    *  Child will point to the new row */
+    gtk_tree_store_append(treestore, &child, &iter);
+    gtk_tree_store_set (treestore, &child,
+                        COL_NAME, "Hit vs. prime",
+                        COL_NUM, 91,
+                        -1);
 
 
 
+    // GtkListStore *store = gtk_list_store_new (NUM_COLS,
+    //                                             G_TYPE_STRING,
+    //                                             G_TYPE_UINT);
 
-    //   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    //   g_signal_connect (window, "destroy", gtk_main_quit, NULL);
-    //   GtkWidget *view = create_view_and_model ();
-    pwQuizView=create_view_and_model ();
-    // gtk_container_add (GTK_CONTAINER (window), view);
-    //   gtk_widget_show_all (window);
+    // /* Append a row and fill in some data */
+    // GtkTreeIter iter;
+    // gtk_list_store_append (store, &iter);
+    // gtk_list_store_set (store, &iter,
+    //                     COL_NAME, "Blitzing",
+    //                     COL_NUM, 51,
+    //                     -1);
+
+    // /* append another row and fill in some data */
+    // gtk_list_store_append (store, &iter);
+    // gtk_list_store_set (store, &iter,
+    //                     COL_NAME, "Holding",
+    //                     COL_NUM, 23,
+    //                     -1);
+
+    // /* ... and a third row */
+    // gtk_list_store_append (store, &iter);
+    // gtk_list_store_set (store, &iter,
+    //                     COL_NAME, "Hit vs. prime",
+    //                     COL_NUM, 91,
+    //                     -1);
+
+    GtkTreeModel *model = GTK_TREE_MODEL (treestore);
+
+    gtk_tree_view_set_model (GTK_TREE_VIEW (pwQuizView), model);
+
+    /* The tree view has acquired its own reference to the
+    *  model, so we can drop ours. That way the model will
+    *  be freed automatically when the tree view is destroyed
+    */
+    g_object_unref (model);
+
+    // /* Get the first row, and add a child to it as well (could have been done
+    // *  right away earlier of course, this is just for demonstration purposes) */
+    // if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(treestore), &iter))
+    // {
+    //     /* Child will point to new row */
+    //     gtk_tree_store_append(treestore, &child, &iter);
+    // }
+    // else
+    // {
+    //     g_error("Oops, we should have a first row in the tree store!\n");
+    // }
+
 
     CreatePanel(WINDOW_QUIZ, pwQuizView, _("GNU Backgammon - Quiz"), "quiz");
     return woPanel[WINDOW_QUIZ].pwWin;

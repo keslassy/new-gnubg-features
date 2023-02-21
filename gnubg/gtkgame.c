@@ -5082,6 +5082,8 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
                 CheckVersionUpdate();
         }
 
+        ShowQuizWindow();
+
         gtk_main();
 
         if (reasonExited == RE_LANGUAGE_CHANGE) {       /* Recreate main window with new language */
