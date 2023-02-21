@@ -435,11 +435,93 @@ CreateTheoryWindow(void)
 }
 
 
-static GtkWidget *
-CreateQuizWindow(void)
-{
+/* ********** */
 
-/*
+/* inspired by gtk.org tutorial */
+enum
+{
+  COL_NAME = 0,
+  COL_AGE,
+  NUM_COLS
+} ;
+
+
+static GtkTreeModel *
+create_and_fill_model (void)
+{
+  GtkListStore *store = gtk_list_store_new (NUM_COLS,
+                                            G_TYPE_STRING,
+                                            G_TYPE_UINT);
+
+  /* Append a row and fill in some data */
+  GtkTreeIter iter;
+  gtk_list_store_append (store, &iter);
+  gtk_list_store_set (store, &iter,
+                      COL_NAME, "Heinz El-Mann",
+                      COL_AGE, 51,
+                      -1);
+
+  /* append another row and fill in some data */
+  gtk_list_store_append (store, &iter);
+  gtk_list_store_set (store, &iter,
+                      COL_NAME, "Jane Doe",
+                      COL_AGE, 23,
+                      -1);
+
+  /* ... and a third row */
+  gtk_list_store_append (store, &iter);
+  gtk_list_store_set (store, &iter,
+                      COL_NAME, "Joe Bungop",
+                      COL_AGE, 91,
+                      -1);
+
+  return GTK_TREE_MODEL (store);
+}
+
+static GtkWidget *
+create_view_and_model (void)
+{
+  GtkWidget *view = gtk_tree_view_new ();
+
+  GtkCellRenderer *renderer;
+
+  /* --- Column #1 --- */
+  renderer = gtk_cell_renderer_text_new ();
+  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
+                                               -1,      
+                                               "Name",  
+                                               renderer,
+                                               "text", COL_NAME,
+                                               NULL);
+
+  /* --- Column #2 --- */
+  renderer = gtk_cell_renderer_text_new ();
+  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
+                                               -1,      
+                                               "Age",  
+                                               renderer,
+                                               "text", COL_AGE,
+                                               NULL);
+
+  GtkTreeModel *model = create_and_fill_model ();
+
+  gtk_tree_view_set_model (GTK_TREE_VIEW (view), model);
+
+  /* The tree view has acquired its own reference to the
+   *  model, so we can drop ours. That way the model will
+   *  be freed automatically when the tree view is destroyed
+   */
+  g_object_unref (model);
+
+  return view;
+}
+
+#if(0) /**************/
+int
+main (int argc, char **argv)
+{
+  gtk_init (&argc, &argv);
+
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   g_signal_connect (window, "destroy", gtk_main_quit, NULL);
 
@@ -451,8 +533,29 @@ CreateQuizWindow(void)
 
   gtk_main ();
 
+  return 0;
+}
 
-*/
+#endif /***********/
+
+static GtkWidget *
+CreateQuizWindow(void)
+{
+
+
+
+
+    //   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    //   g_signal_connect (window, "destroy", gtk_main_quit, NULL);
+    //   GtkWidget *view = create_view_and_model ();
+    pwQuizView=create_view_and_model ();
+    // gtk_container_add (GTK_CONTAINER (window), view);
+    //   gtk_widget_show_all (window);
+
+    CreatePanel(WINDOW_QUIZ, pwQuizView, _("GNU Backgammon - Quiz"), "quiz");
+    return woPanel[WINDOW_QUIZ].pwWin;
+
+
 
     // GtkListStore *store;
     // GtkTreeIter iter;
@@ -480,17 +583,17 @@ CreateQuizWindow(void)
     // CreatePanel(WINDOW_QUIZ, pwQuizView, _("GNU Backgammon - Quiz"), "quiz");
     // return woPanel[WINDOW_QUIZ].pwWin;
 
-         GtkWidget *psw;
+    //      GtkWidget *psw;
 
-    pwMessageText = gtk_text_view_new();
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(pwMessageText), GTK_WRAP_WORD_CHAR);
-    gtk_text_view_set_editable(GTK_TEXT_VIEW(pwMessageText), FALSE);
-    psw = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-    gtk_widget_set_size_request(psw, -1, 150);
-    gtk_container_add(GTK_CONTAINER(psw), pwMessageText);
-    CreatePanel(WINDOW_QUIZ, psw,  _("GNU Backgammon - Quiz"), "quiz");
-    return woPanel[WINDOW_QUIZ].pwWin;
+    // pwMessageText = gtk_text_view_new();
+    // gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(pwMessageText), GTK_WRAP_WORD_CHAR);
+    // gtk_text_view_set_editable(GTK_TEXT_VIEW(pwMessageText), FALSE);
+    // psw = gtk_scrolled_window_new(NULL, NULL);
+    // gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+    // gtk_widget_set_size_request(psw, -1, 150);
+    // gtk_container_add(GTK_CONTAINER(psw), pwMessageText);
+    // CreatePanel(WINDOW_QUIZ, psw,  _("GNU Backgammon - Quiz"), "quiz");
+    // return woPanel[WINDOW_QUIZ].pwWin;
 }
 
 
