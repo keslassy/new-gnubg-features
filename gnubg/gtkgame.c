@@ -203,6 +203,7 @@ typedef enum {
     TOGGLE_COMMENTARY,
     TOGGLE_MESSAGE,
     TOGGLE_THEORY,
+    TOGGLE_QUIZ,
     TOGGLE_COMMAND,
     VIEW_TOOLBAR_ICONSONLY,
     VIEW_TOOLBAR_TEXTONLY,
@@ -416,6 +417,7 @@ CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_COMMENTARY, TogglePanel);
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_MESSAGE, TogglePanel);
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_ANALYSIS, TogglePanel);
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_THEORY, TogglePanel);
+CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_QUIZ, TogglePanel);
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_COMMAND, TogglePanel);
 CREATE_GENERIC_RADIO_CALLBACK(VIEW_TOOLBAR_ICONSONLY, ToolbarStyle);
 CREATE_CMD_RADIO_CALLBACK(CMD_SET_TURN_0, NULL);
@@ -1762,6 +1764,9 @@ TogglePanel(guint UNUSED(iType), guint iActionID, GtkToggleAction * action, GtkT
     case TOGGLE_COMMAND:
         panel = WINDOW_COMMAND;
         break;
+    case TOGGLE_QUIZ:
+        panel = WINDOW_QUIZ;
+        break;
     default:
         g_assert_not_reached();
     }
@@ -1802,6 +1807,9 @@ TogglePanel(gpointer UNUSED(p), guint n, GtkWidget * pw)
         break;
     case TOGGLE_COMMAND:
         panel = WINDOW_COMMAND;
+        break;
+    case TOGGLE_QUIZ:
+        panel = WINDOW_QUIZ;
         break;
     default:
         g_assert_not_reached();
@@ -4134,6 +4142,7 @@ static GtkToggleActionEntry toggleActionEntries[] = {
     {"PanelCommentaryAction", NULL, N_("_Commentary"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMENTARY), FALSE},   /* TOGGLE */
     {"PanelMessageAction", NULL, N_("_Message"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_MESSAGE), FALSE},    /* TOGGLE */
     {"PanelTheoryAction", NULL, N_("_Theory"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_THEORY), FALSE},       /* TOGGLE */
+    {"PanelQuizAction", NULL, N_("_Quiz"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_QUIZ), FALSE},       /* TOGGLE */
     {"PanelCommandAction", NULL, N_("Command"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMAND), FALSE},     /* TOGGLE */
 
     {"DockPanelsAction", NULL, N_("_Dock panels"), NULL, NULL, G_CALLBACK(ToggleDockPanels), FALSE},
@@ -4204,6 +4213,8 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_View/_Panels/_Game record"), NULL, TogglePanel, TOGGLE_GAMELIST,
      "<CheckItem>", NULL},
     {N_("/_View/_Panels/_Analysis"), NULL, TogglePanel, TOGGLE_ANALYSIS,
+     "<CheckItem>", NULL},
+    {N_("/_View/_Panels/_Quiz"), NULL, TogglePanel, TOGGLE_QUIZ,
      "<CheckItem>", NULL},
     {N_("/_View/_Panels/_Commentary"), NULL, TogglePanel, TOGGLE_COMMENTARY,
      "<CheckItem>", NULL},
@@ -7947,6 +7958,8 @@ GTKSet(void *p)
         ShowHidePanel(WINDOW_MESSAGE);
     } else if (IsPanelShowVar(WINDOW_THEORY, p)) {
         ShowHidePanel(WINDOW_THEORY);
+    } else if (IsPanelShowVar(WINDOW_QUIZ, p)) {
+        ShowHidePanel(WINDOW_QUIZ);
     } else if (IsPanelShowVar(WINDOW_COMMAND, p)) {
         ShowHidePanel(WINDOW_COMMAND);
     } else if (p == &bd->rd->fDiceArea) {

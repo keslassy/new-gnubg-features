@@ -62,6 +62,7 @@ static gboolean DeleteMessage(void);
 static gboolean DeleteAnalysis(void);
 static gboolean DeleteAnnotation(void);
 static gboolean DeleteGame(void);
+static gboolean DeleteQuizWindow(void);
 static gboolean DeleteTheoryWindow(void);
 static gboolean DeleteCommandWindow(void);
 
@@ -69,6 +70,7 @@ static gboolean ShowAnnotation(void);
 static gboolean ShowMessage(void);
 static gboolean ShowAnalysis(void);
 static gboolean ShowTheoryWindow(void);
+static gboolean ShowQuizWindow(void);
 static gboolean ShowCommandWindow(void);
 
 typedef struct {
@@ -117,14 +119,6 @@ static windowobject woPanel[NUM_WINDOWS] = {
      0,
      {400, 200, 50, 50, FALSE}
      },
-    /* hint */
-    {
-     "hint",
-     FALSE, FALSE, FALSE, FALSE,
-     NULL, NULL,
-     0,
-     {0, 450, 20, 20, FALSE}
-     },
     /* message */
     {
      "message",
@@ -141,6 +135,14 @@ static windowobject woPanel[NUM_WINDOWS] = {
      0,
      {0, 0, 20, 20, FALSE}
      },
+    /* quiz */
+    {
+     "quiz",
+     FALSE, TRUE, TRUE, TRUE,
+     ShowQuizWindow, DeleteQuizWindow,
+     0,
+     {160, 20, 20, 20, FALSE} /*    int nWidth, nHeight; int nPosX, nPosY, max;*/
+     },
     /* theory */
     {
      "theory",
@@ -148,6 +150,14 @@ static windowobject woPanel[NUM_WINDOWS] = {
      ShowTheoryWindow, DeleteTheoryWindow,
      0,
      {160, 0, 20, 20, FALSE}
+     },
+    /* hint */
+    {
+     "hint",
+     FALSE, FALSE, FALSE, FALSE,
+     NULL, NULL,
+     0,
+     {0, 450, 20, 20, FALSE}
      }
 };
 
@@ -246,6 +256,21 @@ ShowTheoryWindow(void)
 }
 
 static gboolean
+ShowQuizWindow(void)
+{
+    
+    ShowPanel(WINDOW_QUIZ);
+#if defined(USE_GTKUIMANAGER)
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
+                                                                                 "/MainMenu/ViewMenu/PanelsMenu/Quiz")),
+                                   TRUE);
+#else
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz")), TRUE);
+#endif
+    return TRUE;
+}
+
+static gboolean
 ShowCommandWindow(void)
 {
     ShowPanel(WINDOW_COMMAND);
@@ -293,6 +318,7 @@ CreateMessageWindow(void)
 }
 
 static GtkWidget *pwTheoryView = NULL;
+static GtkWidget *pwQuizView = NULL;
 
 
 void
@@ -404,6 +430,66 @@ CreateTheoryWindow(void)
     CreatePanel(WINDOW_THEORY, pwTheoryView, _("GNU Backgammon - Theory"), "theory");
     return woPanel[WINDOW_THEORY].pwWin;
 }
+
+
+static GtkWidget *
+CreateQuizWindow(void)
+{
+
+/*
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  g_signal_connect (window, "destroy", gtk_main_quit, NULL);
+
+  GtkWidget *view = create_view_and_model ();
+
+  gtk_container_add (GTK_CONTAINER (window), view);
+
+  gtk_widget_show_all (window);
+
+  gtk_main ();
+
+
+*/
+
+    // GtkListStore *store;
+    // GtkTreeIter iter;
+    // GtkCellRenderer *renderer;
+
+    // store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING, -1);
+    // gtk_list_store_append(store, &iter);
+    // gtk_list_store_set(store, &iter, 0, _("Pip count"), 1, "", -1);
+    // gtk_list_store_append(store, &iter);
+    // gtk_list_store_set(store, &iter, 0, _("EPC"), 1, "", -1);
+    // gtk_list_store_append(store, &iter);
+    // gtk_list_store_set(store, &iter, 0, _("Return hits"), 1, "", -1);
+    // gtk_list_store_append(store, &iter);
+    // gtk_list_store_set(store, &iter, 0, _("Kleinman count"), 1, "", -1);
+
+    // pwQuizView = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
+    // g_object_unref(store);
+    // renderer = gtk_cell_renderer_text_new();
+    // gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(pwQuizView), -1, NULL, renderer, "text", 0, NULL);
+    // renderer = gtk_cell_renderer_text_new();
+    // gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(pwQuizView), -1, NULL, renderer, "text", 1, NULL);
+    // gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pwQuizView), FALSE);
+
+    // g_message("here");
+    // CreatePanel(WINDOW_QUIZ, pwQuizView, _("GNU Backgammon - Quiz"), "quiz");
+    // return woPanel[WINDOW_QUIZ].pwWin;
+
+        GtkWidget *psw;
+
+    pwMessageText = gtk_text_view_new();
+    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(pwMessageText), GTK_WRAP_WORD_CHAR);
+    gtk_text_view_set_editable(GTK_TEXT_VIEW(pwMessageText), FALSE);
+    psw = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+    gtk_widget_set_size_request(psw, -1, 150);
+    gtk_container_add(GTK_CONTAINER(psw), pwMessageText);
+    CreatePanel(WINDOW_QUIZ, psw,  _("GNU Backgammon - Quiz"), "quiz");
+    return woPanel[WINDOW_QUIZ].pwWin;
+}
+
 
 /* Display help for command (pStr) in widget (pwText) */
 static void
@@ -894,6 +980,11 @@ CreatePanels(void)
 
     CreateHeadWindow(WINDOW_THEORY, _("Theory"), CreateTheoryWindow());
     gtk_box_pack_start(GTK_BOX(pwPanelVbox), woPanel[WINDOW_THEORY].pwWin, FALSE, FALSE, 0);
+
+    CreateHeadWindow(WINDOW_QUIZ, _("Quiz"), CreateQuizWindow());
+    // CreateQuizWindow();
+    // CreateHeadWindow(WINDOW_QUIZ, _("Quiz"), woPanel[WINDOW_QUIZ].pwWin);
+    gtk_box_pack_start(GTK_BOX(pwPanelVbox), woPanel[WINDOW_QUIZ].pwWin, FALSE, FALSE, 0);
 }
 
 static gboolean
@@ -971,6 +1062,21 @@ DeleteTheoryWindow(void)
 }
 
 static gboolean
+DeleteQuizWindow(void)
+{
+    HidePanel(WINDOW_QUIZ);
+#if defined(USE_GTKUIMANAGER)
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
+                                                                                 "/MainMenu/ViewMenu/PanelsMenu/Quiz")),
+                                   FALSE);
+#else
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz")), FALSE);
+#endif
+    return TRUE;
+}
+
+
+static gboolean
 DeleteCommandWindow(void)
 {
     HidePanel(WINDOW_COMMAND);
@@ -1015,6 +1121,7 @@ SaveWindowSettings(FILE * pf)
     fprintf(pf, "set gamelist %s\n", woPanel[WINDOW_GAME].showing ? "yes" : "no");
     fprintf(pf, "set analysis window %s\n", woPanel[WINDOW_ANALYSIS].showing ? "yes" : "no");
     fprintf(pf, "set theorywindow %s\n", woPanel[WINDOW_THEORY].showing ? "yes" : "no");
+    fprintf(pf, "set quizwindow %s\n", woPanel[WINDOW_QUIZ].showing ? "yes" : "no");
     fprintf(pf, "set commandwindow %s\n", woPanel[WINDOW_COMMAND].showing ? "yes" : "no");
 
     fprintf(pf, "set panels %s\n", saveShowingPanels ? "yes" : "no");
@@ -1110,6 +1217,7 @@ DockPanels(void)
                 woPanel[i].docked = TRUE;
         }
         CreatePanels();
+        
         if (fDisplayPanels)
             SwapBoardToPanel(TRUE, TRUE);
     } else {
@@ -1135,6 +1243,7 @@ DockPanels(void)
         }
         CreateGameWindow();
         CreateAnalysisWindow();
+        CreateQuizWindow();
         CreateMessageWindow();
         CreateTheoryWindow();
         CreateCommandWindow();
@@ -1151,6 +1260,8 @@ DockPanels(void)
                              || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Command"), !fDockPanels
                              || fDisplayPanels);
+    gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), !fDockPanels
+                             || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Theory"), !fDockPanels
                              || fDisplayPanels);
 #else
@@ -1161,6 +1272,7 @@ DockPanels(void)
                              || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Analysis"), !fDockPanels || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Command"), !fDockPanels || fDisplayPanels);
+    gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz"), !fDockPanels || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Theory"), !fDockPanels || fDisplayPanels);
 #endif
     if (!fDockPanels || fDisplayPanels) {
@@ -1220,6 +1332,7 @@ ShowAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Commentary"), TRUE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Analysis"), TRUE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Command"), TRUE);
+    gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), TRUE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Theory"), TRUE);
 #else
     gtk_widget_show(gtk_item_factory_get_widget(pif, "/View/Hide panels"));
@@ -1230,6 +1343,7 @@ ShowAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Commentary"), TRUE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Analysis"), TRUE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Command"), TRUE);
+    gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz"), TRUE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Theory"), TRUE);
 #endif
     SwapBoardToPanel(TRUE, TRUE);
@@ -1277,8 +1391,9 @@ DoHideAllPanels(int updateEvents)
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/GameRecord"), FALSE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Commentary"), FALSE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Analysis"), FALSE);
-    gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Command"), FALSE);
+    gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), FALSE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Theory"), FALSE);
+    gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Command"), FALSE);
 #else
     gtk_widget_show(gtk_item_factory_get_widget(pif, "/View/Restore panels"));
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Restore panels"), TRUE);
@@ -1288,6 +1403,7 @@ DoHideAllPanels(int updateEvents)
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Game record"), FALSE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Commentary"), FALSE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Analysis"), FALSE);
+    gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz"), FALSE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Theory"), FALSE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Command"), FALSE);
 #endif
@@ -1450,7 +1566,7 @@ CommandSetMessage(char *sz)
 {
 
     SetToggle("message", &woPanel[WINDOW_MESSAGE].showing, sz,
-              _("Show window with messages"), _("Do not show window with messages."));
+              _("Show window with messages."), _("Do not show window with messages."));
 }
 
 extern void
@@ -1458,7 +1574,15 @@ CommandSetTheoryWindow(char *sz)
 {
 
     SetToggle("theorywindow", &woPanel[WINDOW_THEORY].showing, sz,
-              _("Show window with theory"), _("Do not show window with theory."));
+              _("Show window with theory."), _("Do not show window with theory."));
+}
+
+extern void
+CommandSetQuizWindow(char *sz)
+{
+
+    SetToggle("quizwindow", &woPanel[WINDOW_QUIZ].showing, sz,
+              _("Show window with quiz categories."), _("Do not show window with quiz categories."));
 }
 
 extern void
@@ -1466,7 +1590,7 @@ CommandSetCommandWindow(char *sz)
 {
 
     SetToggle("commandwindow", &woPanel[WINDOW_COMMAND].showing, sz,
-              _("Show window to enter commands"), _("Do not show window to enter commands."));
+              _("Show window to enter commands."), _("Do not show window to enter commands."));
 }
 
 extern void
@@ -1474,7 +1598,7 @@ CommandSetGameList(char *sz)
 {
 
     SetToggle("gamelist", &woPanel[WINDOW_GAME].showing, sz,
-              _("Show game window with moves"), _("Do not show game window with moves."));
+              _("Show game window with moves."), _("Do not show game window with moves."));
 }
 
 extern void
@@ -1482,7 +1606,7 @@ CommandSetAnalysisWindows(char *sz)
 {
 
     SetToggle("analysis window", &woPanel[WINDOW_ANALYSIS].showing, sz,
-              _("Show window with analysis"), _("Do not show window with analysis."));
+              _("Show window with analysis."), _("Do not show window with analysis."));
 }
 
 static gnubgwindow pwoSetPanel;
@@ -1533,6 +1657,13 @@ extern void
 CommandSetGeometryTheory(char *sz)
 {
     pwoSetPanel = WINDOW_THEORY;
+    HandleCommand(sz, acSetGeometryValues);
+}
+
+extern void
+CommandSetGeometryQuiz(char *sz)
+{
+    pwoSetPanel = WINDOW_QUIZ;
     HandleCommand(sz, acSetGeometryValues);
 }
 

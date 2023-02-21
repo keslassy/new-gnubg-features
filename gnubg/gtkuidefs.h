@@ -59,6 +59,7 @@
 	      "<menu name='PanelsMenu' action='PanelsMenuAction'>" \
 	        "<menuitem name='GameRecord' action='PanelGameRecordAction' />" \
 	        "<menuitem name='Analysis' action='PanelAnalysisAction' />" \
+	        "<menuitem name='Theory' action='PanelQuizAction' />" \
 	        "<menuitem name='Commentary' action='PanelCommentaryAction' />" \
 	        "<menuitem name='Message' action='PanelMessageAction' />" \
 	        "<menuitem name='Theory' action='PanelTheoryAction' />" \

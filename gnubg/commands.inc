@@ -591,6 +591,8 @@ static command acSetGeometry[] = {
       N_("set geometry of main window"), NULL, acSetGeometryValues },
     { "message", CommandSetGeometryMessage,
       N_("set geometry of message window"), NULL, acSetGeometryValues },
+    { "quiz", CommandSetGeometryQuiz,
+      N_("set geometry of quiz window"), NULL, acSetGeometryValues },
     { "theory", CommandSetGeometryTheory,
       N_("set geometry of theory window"), NULL, acSetGeometryValues },
     { NULL, NULL, NULL, NULL, NULL }
@@ -1231,6 +1233,10 @@ static command acSetVariation[] = {
     { "priority", NULL, N_("Set the priority of the gnubg process"), NULL, acSetPriority },
     { "prompt", CommandSetPrompt, N_("Customise the prompt GNUbg prints when "
       "ready for commands"), szPROMPT, NULL },
+#if defined(USE_GTK)
+    { "quizwindow", CommandSetQuizWindow, N_("Display quiz categories in window"),
+      szONOFF, &cOnOff },
+#endif
     { "ratingoffset", CommandSetRatingOffset,
       N_("Set rating offset used for estimating abs. rating"),
       szVALUE, NULL },
@@ -1276,6 +1282,10 @@ static command acSetVariation[] = {
       szONOFF, &cOnOff },
     { "markedsameplayer", CommandSetMarkedSamePlayer, N_("Focus on same player when moving between marked moves"),
       szONOFF, &cOnOff },      
+#if defined(USE_GTK)
+    { "quizwindow", CommandSetQuizWindow, N_("Display quiz categories in window"),
+      szONOFF, &cOnOff },
+#endif
 #if defined(USE_GTK)
     { "theorywindow", CommandSetTheoryWindow, N_("Display game theory in window"),
       szONOFF, &cOnOff },

@@ -975,6 +975,10 @@ static int iOpt=-1;
 static int iOptCounter=0; 
 // quiz qNow; /*extern*/
 
+/*initialization*/
+char positionTypes[MAX_POSITION_TYPES][MAX_POS_NAME_LENGTH]={""};
+int positionTypesLength=0;
+
 /* based on standard csv program from geeksforgeeks*/
 int OpenQuizPositions(void)
 {
@@ -1103,6 +1107,194 @@ extern void qUpdate(float error) {
             SaveQuizPositions();
     }
 }
+#if(0) /***********/
+extern void
+DisplayPositionTypes(void)
+{
+    for(int i=0;i < positionTypesLength; i++) {
+        g_message("in DisplayPositionTypes: %d->%s", i,positionTypes[i]);
+    }
+}
+
+int NameIsKey (const char sz[]) {
+    for(int i=0;i < positionTypesLength; i++) {
+        if (!strcmp(sz, positionTypes[i])) {
+            // g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,positionTypes[i],i);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/*  delete a position type from the positionTypes array */
+extern int
+DeletePositionType(const char sz[])
+{
+    // g_message("in DeletePositionType: %s, length=%zu", sz, strlen(sz));
+
+    for(int i=0;i < positionTypesLength; i++) {
+        if (!strcmp(sz, positionTypes[i])) {
+            // g_message("EXISTS! %s=%s, i=%d, positionTypesLength=%d", sz,positionTypes[i],i,positionTypesLength);
+            if (positionTypesLength==(i+1)) {
+                positionTypesLength--;
+                UserCommand2("save settings");
+                return 1;
+            } else {
+                strcpy(positionTypes[i],positionTypes[positionTypesLength-1]); 
+                positionTypesLength--;
+                // DisplayPositionTypes();
+                UserCommand2("save settings");
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+/*  add a new position category to the positionTypes array
+Based on AddKeyName() function (and same for the similar functions above)
+Return 1 if success, 0 if problem */
+extern int
+AddPositionType(const char sz[])
+{
+    // g_message("in AddPositionType: %s, length=%zu", sz, strlen(sz));
+    /* check that the name doesn't contain "\t", "\n" */
+    if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL) {
+        // for(unsigned int j=0;j < strlen(sz); j++) {
+        //     g_message("%c", sz[j]);
+        // }
+        outputerrf(_("Position category name contains unallowed character"));
+        return 0;
+    }
+
+    /* check that the category name is not too long*/
+    if(strlen(sz) > MAX_POS_NAME_LENGTH) {
+        outputerrf(_("Position category name is too long"));
+        return 0;
+    }
+
+    /* check that the positionTypes array is not full */
+    if(positionTypesLength >= MAX_POSITION_TYPES) {
+        outputerrf(_("We have reached the maximum allowed number of position categories"));
+        return 0;
+    }
+
+    /* check that the position type doesn't already exist */
+    for(int i=0;i < positionTypesLength; i++) {
+        if (!strcmp(sz, positionTypes[i])) {
+            outputerrf(_("This category name already exists"));
+            // g_message("EXISTS! %s=%s", sz,positionTypes[i]);
+            return 0;
+        }
+    }
+    strcpy(positionTypes[positionTypesLength],sz); 
+    positionTypesLength++;
+
+    // DisplayPositionTypes();
+    UserCommand2("save settings");
+    return 1;
+}
+// #endif /***********/
+
+/* inspired by gtk.org tutorial */
+enum
+{
+  COL_NAME = 0,
+  COL_AGE,
+  NUM_COLS
+} ;
+
+
+static GtkTreeModel *
+create_and_fill_model (void)
+{
+  GtkListStore *store = gtk_list_store_new (NUM_COLS,
+                                            G_TYPE_STRING,
+                                            G_TYPE_UINT);
+
+  /* Append a row and fill in some data */
+  GtkTreeIter iter;
+  gtk_list_store_append (store, &iter);
+  gtk_list_store_set (store, &iter,
+                      COL_NAME, "Heinz El-Mann",
+                      COL_AGE, 51,
+                      -1);
+
+  /* append another row and fill in some data */
+  gtk_list_store_append (store, &iter);
+  gtk_list_store_set (store, &iter,
+                      COL_NAME, "Jane Doe",
+                      COL_AGE, 23,
+                      -1);
+
+  /* ... and a third row */
+  gtk_list_store_append (store, &iter);
+  gtk_list_store_set (store, &iter,
+                      COL_NAME, "Joe Bungop",
+                      COL_AGE, 91,
+                      -1);
+
+  return GTK_TREE_MODEL (store);
+}
+
+static GtkWidget *
+create_view_and_model (void)
+{
+  GtkWidget *view = gtk_tree_view_new ();
+
+  GtkCellRenderer *renderer;
+
+  /* --- Column #1 --- */
+  renderer = gtk_cell_renderer_text_new ();
+  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
+                                               -1,      
+                                               "Name",  
+                                               renderer,
+                                               "text", COL_NAME,
+                                               NULL);
+
+  /* --- Column #2 --- */
+  renderer = gtk_cell_renderer_text_new ();
+  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
+                                               -1,      
+                                               "Age",  
+                                               renderer,
+                                               "text", COL_AGE,
+                                               NULL);
+
+  GtkTreeModel *model = create_and_fill_model ();
+
+  gtk_tree_view_set_model (GTK_TREE_VIEW (view), model);
+
+  /* The tree view has acquired its own reference to the
+   *  model, so we can drop ours. That way the model will
+   *  be freed automatically when the tree view is destroyed
+   */
+  g_object_unref (model);
+
+  return view;
+}
+
+int
+main (int argc, char **argv)
+{
+  gtk_init (&argc, &argv);
+
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  g_signal_connect (window, "destroy", gtk_main_quit, NULL);
+
+  GtkWidget *view = create_view_and_model ();
+
+  gtk_container_add (GTK_CONTAINER (window), view);
+
+  gtk_widget_show_all (window);
+
+  gtk_main ();
+
+  return 0;
+}
+
+#endif /***********/
 
 extern void
 GTKAnalyzeFile(void)

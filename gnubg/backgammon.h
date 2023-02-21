@@ -802,6 +802,7 @@ extern void CommandSetGeometryMax(char *);
 extern void CommandSetGeometryMessage(char *);
 extern void CommandSetGeometryPosX(char *);
 extern void CommandSetGeometryPosY(char *);
+extern void CommandSetGeometryQuiz(char *);
 extern void CommandSetGeometryTheory(char *);
 extern void CommandSetGeometryWidth(char *);
 extern void CommandSetGNUBgID(char *);
@@ -955,6 +956,7 @@ extern void CommandSetSoundSoundTake(char *);
 extern void CommandSetSoundSystemCommand(char *);
 extern void CommandSetStyledGameList(char *);
 extern void CommandSetMarkedSamePlayer(char *);
+extern void CommandSetQuizWindow(char *);
 extern void CommandSetTheoryWindow(char *);
 extern void CommandSetThreads(char *);
 extern void CommandSetToolbar(char *);
@@ -1083,6 +1085,7 @@ extern int quick_roll(void);
 extern int board_in_list(const movelist * pml, const TanBoard old_board, const TanBoard board, int *an);
 extern int GetManualDice(unsigned int anDice[2]);
 
+/* definitions for SmartOpen and keyNames*/
 extern void SmartOpen(void); /* function that makes sure that player 1 is a key player, if there is one */
 #define MAX_KEY_NAMES 200 /* number of defined key player names*/
 extern char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]; /* array with all key player names*/
@@ -1093,6 +1096,15 @@ extern int fWithinSmartOpen; /* whether we are within the SmartOpen function: if
 extern int AddKeyName(const char sz[]); /* function that adds a key player name to the array*/
 extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/
 extern void DisplayKeyNames(void); /* debugging function to display the current key player names in the array*/
+
+/* definitions for positionTypes*/
+#define MAX_POSITION_TYPES 200 /* number of defined posiiton types*/
+#define MAX_POS_NAME_LENGTH 32
+extern char positionTypes[MAX_POSITION_TYPES][MAX_POS_NAME_LENGTH]; /* array with all position types*/
+extern int positionTypesLength; /* the positionTypes array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
+
+
+
 
 /* definitions for version checks in updates */
 extern char * websiteForUpdates; /* official GNUBG website */
