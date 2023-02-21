@@ -972,6 +972,7 @@ static char positionsFile []="./quiz/positions.csv";
 static quiz q [MAX_ROWS]; 
 static int qLength=0;
 static int iOpt=-1; 
+static int iOptCounter=0; 
 // quiz qNow; /*extern*/
 
 /* based on standard csv program from geeksforgeeks*/
@@ -1091,10 +1092,16 @@ int SaveQuizPositions(void)
 }
 
 extern void qUpdate(float error) {
-    q[iOpt].ewmaError=2/3*q[iOpt].ewmaError+1/3*error;
-    long int seconds=(long int) (time(NULL));
-    q[iOpt].lastSeen=seconds;
-    SaveQuizPositions();
+    /* if someone makes a mistake, then plays again the same position after seeing the 
+    answer, only the first time should count */
+    if(iOptCounter<1) {
+        g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
+        q[iOpt].ewmaError=0.667*(q[iOpt].ewmaError)+0.333*error;
+        g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
+        q[iOpt].lastSeen=(long int) (time(NULL));
+        if(0)
+            SaveQuizPositions();
+    }
 }
 
 extern void
@@ -1145,6 +1152,7 @@ GTKAnalyzeFile(void)
                 iOpt=i;
             }
         }
+        iOptCounter=0;
         g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
             q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
             q[iOpt].lastSeen);
