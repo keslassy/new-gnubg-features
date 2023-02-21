@@ -119,6 +119,14 @@ static windowobject woPanel[NUM_WINDOWS] = {
      0,
      {400, 200, 50, 50, FALSE}
      },
+    /* hint */
+    {
+     "hint",
+     FALSE, FALSE, FALSE, FALSE,
+     NULL, NULL,
+     0,
+     {0, 450, 20, 20, FALSE}
+     },
     /* message */
     {
      "message",
@@ -141,7 +149,7 @@ static windowobject woPanel[NUM_WINDOWS] = {
      FALSE, TRUE, TRUE, TRUE,
      ShowQuizWindow, DeleteQuizWindow,
      0,
-     {160, 20, 20, 20, FALSE} /*    int nWidth, nHeight; int nPosX, nPosY, max;*/
+     {160, 20, 50, 50, FALSE} /*    int nWidth, nHeight; int nPosX, nPosY, max;*/
      },
     /* theory */
     {
@@ -150,14 +158,6 @@ static windowobject woPanel[NUM_WINDOWS] = {
      ShowTheoryWindow, DeleteTheoryWindow,
      0,
      {160, 0, 20, 20, FALSE}
-     },
-    /* hint */
-    {
-     "hint",
-     FALSE, FALSE, FALSE, FALSE,
-     NULL, NULL,
-     0,
-     {0, 450, 20, 20, FALSE}
      }
 };
 
@@ -258,7 +258,7 @@ ShowTheoryWindow(void)
 static gboolean
 ShowQuizWindow(void)
 {
-    
+    GTKMessage(_("ShowQuizWindow"), DT_INFO);
     ShowPanel(WINDOW_QUIZ);
 #if defined(USE_GTKUIMANAGER)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
@@ -477,16 +477,16 @@ CreateQuizWindow(void)
     // CreatePanel(WINDOW_QUIZ, pwQuizView, _("GNU Backgammon - Quiz"), "quiz");
     // return woPanel[WINDOW_QUIZ].pwWin;
 
-        GtkWidget *psw;
+    //      GtkWidget *psw;
 
-    pwMessageText = gtk_text_view_new();
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(pwMessageText), GTK_WRAP_WORD_CHAR);
-    gtk_text_view_set_editable(GTK_TEXT_VIEW(pwMessageText), FALSE);
-    psw = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-    gtk_widget_set_size_request(psw, -1, 150);
-    gtk_container_add(GTK_CONTAINER(psw), pwMessageText);
-    CreatePanel(WINDOW_QUIZ, psw,  _("GNU Backgammon - Quiz"), "quiz");
+    // // pwMessageText = gtk_text_view_new();
+    // // gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(pwMessageText), GTK_WRAP_WORD_CHAR);
+    // // gtk_text_view_set_editable(GTK_TEXT_VIEW(pwMessageText), FALSE);
+    // psw = gtk_scrolled_window_new(NULL, NULL);
+    // // gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+    // // gtk_widget_set_size_request(psw, -1, 150);
+    // // gtk_container_add(GTK_CONTAINER(psw), pwMessageText);
+    // CreatePanel(WINDOW_QUIZ, psw,  _("GNU Backgammon - Quiz"), "quiz");
     return woPanel[WINDOW_QUIZ].pwWin;
 }
 
