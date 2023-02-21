@@ -85,7 +85,10 @@ typedef struct {
     windowgeometry wg;
 } windowobject;
 
-/* Set up window and panel details */
+/* Set up window and panel details 
+Careful! It needs to be in the same order as the gnubgwindow enum definition! Else some
+windows open together...
+*/
 static windowobject woPanel[NUM_WINDOWS] = {
     /* main window */
     {
@@ -127,6 +130,14 @@ static windowobject woPanel[NUM_WINDOWS] = {
      0,
      {0, 450, 20, 20, FALSE}
      },
+    /* quiz */
+    {
+     "quiz",
+     FALSE, TRUE, TRUE, TRUE,
+     ShowQuizWindow, DeleteQuizWindow,
+     0,
+     {160, 20, 50, 50, FALSE} /*    int nWidth, nHeight; int nPosX, nPosY, max;*/
+     },
     /* message */
     {
      "message",
@@ -142,14 +153,6 @@ static windowobject woPanel[NUM_WINDOWS] = {
      ShowCommandWindow, DeleteCommandWindow,
      0,
      {0, 0, 20, 20, FALSE}
-     },
-    /* quiz */
-    {
-     "quiz",
-     FALSE, TRUE, TRUE, TRUE,
-     ShowQuizWindow, DeleteQuizWindow,
-     0,
-     {160, 20, 50, 50, FALSE} /*    int nWidth, nHeight; int nPosX, nPosY, max;*/
      },
     /* theory */
     {
