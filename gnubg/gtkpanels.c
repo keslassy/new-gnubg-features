@@ -584,15 +584,29 @@ CreateQuizWindow(void)
     gtk_tree_store_append(treestore, &iter, NULL);
     gtk_tree_store_set (treestore, &iter,
                         COL_NAME, "Holding",
-                        COL_NUM, 23,
+                        COL_NUM, 223,
                         -1);
 
     /* Append a child to the row we just added.
     *  Child will point to the new row */
     gtk_tree_store_append(treestore, &child, &iter);
     gtk_tree_store_set (treestore, &child,
-                        COL_NAME, "Hit vs. prime",
+                        COL_NAME, "5-pt holding",
+                        COL_NUM, 50,
+                        -1);
+    /* Append a child to the row we just added.
+    *  Child will point to the new row */
+    gtk_tree_store_append(treestore, &child, &iter);
+    gtk_tree_store_set (treestore, &child,
+                        COL_NAME, "4-pt holding",
                         COL_NUM, 91,
+                        -1);
+    /* Append a child to the row we just added.
+    *  Child will point to the new row */
+    gtk_tree_store_append(treestore, &child, &iter);
+    gtk_tree_store_set (treestore, &child,
+                        COL_NAME, "3-pt holding",
+                        COL_NUM, 17,
                         -1);
 
 
@@ -1089,6 +1103,56 @@ SelectGame(GtkWidget * pw, void *UNUSED(data))
     ChangeGame(pl->p);
 }
 
+// /***********/
+
+// int show_popup(GtkWidget *widget, GdkEvent *event) {
+  
+//   const gint RIGHT_CLICK = 3;
+//     g_message("I'm in the show popup func");
+    
+//   if (event->type == GDK_BUTTON_PRESS) {
+//     g_message("button press");
+      
+//       GdkEventButton *bevent = (GdkEventButton *) event;
+      
+//       if (bevent->button == RIGHT_CLICK) {      
+//     g_message("right button press");
+          
+//           gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
+//               bevent->button, bevent->time);
+//           }
+          
+//       return TRUE;
+//   }
+
+//   return FALSE;
+// }
+// static gboolean button_press_event_clbk ( GtkWidget *widget, GdkEvent *event )
+// {
+//     g_return_val_if_fail ( GTK_IS_LABEL ( widget ), FALSE );
+
+//     switch ( event->type )
+//     {
+//         case GDK_BUTTON_PRESS :
+//             printf ( "The Button was Pressed\n" );
+//             return TRUE;
+
+//         case GDK_BUTTON_RELEASE :
+//             printf ( "\tThe Button was Released\n" );
+//             return TRUE;
+
+//         default:
+//             return FALSE;
+//     }
+
+//     return FALSE;
+// }
+
+// void TestFunction2(void) {
+//     g_message("I'm in the test func");
+// }
+// // /* *************** */
+
 static void
 CreateGameWindow(void)
 {
@@ -1118,6 +1182,31 @@ CreateGameWindow(void)
     }
     gtk_box_pack_start(GTK_BOX(pvbox), phbox, FALSE, FALSE, 4);
 
+
+// /********************/
+
+
+//     // GtkWidget *window;
+
+//     //   GtkWidget *label;
+//     GtkWidget *event_box;
+//     event_box = gtk_event_box_new();
+//     gtk_container_add ( GTK_CONTAINER ( woPanel[WINDOW_GAME].pwWin ), event_box );
+//      gtk_event_box_set_visible_window(event_box, FALSE);
+// // gtk_event_box_set_above_child (event_box,FALSE);
+//     /// *** Create the label
+//     // label = gtk_label_new ( "Click here" );
+//     // gtk_container_add ( GTK_CONTAINER ( event_box ), label );
+
+//     /// ***
+//     g_signal_connect_swapped ( GTK_OBJECT (event_box), "button-press-event",   G_CALLBACK ( button_press_event_clbk ), NULL );
+//     g_signal_connect_swapped ( GTK_OBJECT (event_box), "button-release-event", G_CALLBACK ( button_press_event_clbk ), NULL );
+//     gtk_container_add(GTK_CONTAINER(event_box), pvbox);
+//     gtk_window_add_accel_group(GTK_WINDOW(event_box), pagMain);
+
+
+
+// /*****************/
     game_select_combo = gtk_combo_box_text_new();
     g_signal_connect(G_OBJECT(game_select_combo), "changed", G_CALLBACK(SelectGame), NULL);
     gtk_box_pack_start(GTK_BOX(phbox), game_select_combo, TRUE, TRUE, 4);
@@ -1133,6 +1222,71 @@ CreateGameWindow(void)
                          G_CALLBACK(woPanel[WINDOW_GAME].hideFun), NULL);
     } else
         woPanel[WINDOW_GAME].pwWin = pvbox;
+
+
+
+
+//       GtkWidget *label;
+//     GtkWidget *event_box;
+//     event_box = gtk_event_box_new();
+//     gtk_container_add ( GTK_CONTAINER ( woPanel[WINDOW_GAME].pwWin ), event_box );
+//     gtk_event_box_set_visible_window(event_box, FALSE);
+// gtk_event_box_set_above_child (event_box,FALSE);
+//     /// *** Create the label
+//     label = gtk_label_new ( "Click here" );
+//     gtk_container_add ( GTK_CONTAINER ( event_box ), label );
+
+//     /// ***
+//     g_signal_connect_swapped ( event_box, "button-press-event",   G_CALLBACK ( button_press_event_clbk ), label );
+//     g_signal_connect_swapped ( event_box, "button-release-event", G_CALLBACK ( button_press_event_clbk ), label );
+
+
+        // /* ****************** */
+
+        // // GtkWidget *window;
+        // GtkWidget *ebox;
+        // GtkWidget *pmenu;
+        // GtkWidget *hideMi;
+        // GtkWidget *quitMi;
+
+        // // window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        // // gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+        // // gtk_window_set_default_size(GTK_WINDOW(window), 300, 200);
+        // // gtk_window_set_title(GTK_WINDOW(window), "Popup menu");
+
+        // ebox = gtk_event_box_new();
+        // gtk_container_add(GTK_CONTAINER(pvbox), ebox);
+        // // gtk_container_add(GTK_CONTAINER(woPanel[WINDOW_GAME].pwWin), ebox);
+        // gtk_event_box_set_visible_window(ebox, FALSE);
+        // gtk_event_box_set_above_child (ebox,TRUE);
+        // // gtk_widget_hide(ebox);
+        // pmenu = gtk_menu_new();
+        
+        // hideMi = gtk_menu_item_new_with_label("Minimize");
+        // gtk_widget_show(hideMi);
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), hideMi);
+        
+        // quitMi = gtk_menu_item_new_with_label("Print");
+        // gtk_widget_show(quitMi);
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), quitMi);
+        
+        // // g_signal_connect_swapped(G_OBJECT(hideMi), "activate", 
+        // //     G_CALLBACK(gtk_window_iconify), GTK_WINDOW(woPanel[WINDOW_GAME].pwWin));    
+        
+        // g_signal_connect(G_OBJECT(quitMi), "activate", 
+        //     G_CALLBACK(TestFunction), NULL);  
+
+        // // g_signal_connect(G_OBJECT(woPanel[WINDOW_GAME].pwWin), "destroy",
+        // //     G_CALLBACK(gtk_main_quit), NULL);
+                
+        // // g_signal_connect_swapped(G_OBJECT(ebox), "button-press-event", 
+        // //     G_CALLBACK(show_popup), pmenu);          
+        // g_signal_connect_swapped(G_OBJECT(pvbox), "button-press-event", 
+        //     G_CALLBACK(show_popup), pmenu);  
+
+        // // gtk_widget_show_all(woPanel[WINDOW_GAME].pwWin);
+
+        // /**************************/    
 }
 
 static void
@@ -1721,9 +1875,93 @@ ShowHidePanel(gnubgwindow panel)
         woPanel[panel].hideFun();
 }
 
+// /***********/
+
+// int show_popup(GtkWidget *widget, GdkEvent *event) {
+  
+//   const gint RIGHT_CLICK = 3;
+//     g_message("I'm in the show popup func");
+    
+//   if (event->type == GDK_BUTTON_PRESS) {
+//     g_message("button press");
+      
+//       GdkEventButton *bevent = (GdkEventButton *) event;
+      
+//       if (bevent->button == RIGHT_CLICK) {      
+//     g_message("right button press");
+          
+//           gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
+//               bevent->button, bevent->time);
+//           }
+          
+//       return TRUE;
+//   }
+
+//   return FALSE;
+// }
+
+// void TestFunction(void) {
+//     g_message("I'm in the test func");
+// }
+// /* *************** */
+
+
+   
+
+
 int
 SetMainWindowSize(void)
 {
+
+
+        // /* ****************** */
+
+        // // GtkWidget *window;
+        // GtkWidget *ebox;
+        // GtkWidget *pmenu;
+        // GtkWidget *hideMi;
+        // GtkWidget *quitMi;
+
+        // // window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        // // gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+        // // gtk_window_set_default_size(GTK_WINDOW(window), 300, 200);
+        // // gtk_window_set_title(GTK_WINDOW(window), "Popup menu");
+
+        // ebox = gtk_event_box_new();
+        // gtk_container_add(GTK_CONTAINER(woPanel[WINDOW_MAIN].pwWin), ebox);
+        // // gtk_container_add(GTK_CONTAINER(woPanel[WINDOW_GAME].pwWin), ebox);
+        // gtk_event_box_set_visible_window(ebox, FALSE);
+        // gtk_event_box_set_above_child (ebox,TRUE);
+        // // gtk_widget_hide(ebox);
+        // pmenu = gtk_menu_new();
+        
+        // hideMi = gtk_menu_item_new_with_label("Minimize");
+        // gtk_widget_show(hideMi);
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), hideMi);
+        
+        // quitMi = gtk_menu_item_new_with_label("Print");
+        // gtk_widget_show(quitMi);
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), quitMi);
+        
+        // // g_signal_connect_swapped(G_OBJECT(hideMi), "activate", 
+        // //     G_CALLBACK(gtk_window_iconify), GTK_WINDOW(woPanel[WINDOW_GAME].pwWin));    
+        
+        // g_signal_connect(G_OBJECT(quitMi), "activate", 
+        //     G_CALLBACK(TestFunction), NULL);  
+
+        // // g_signal_connect(G_OBJECT(woPanel[WINDOW_GAME].pwWin), "destroy",
+        // //     G_CALLBACK(gtk_main_quit), NULL);
+                
+        // // g_signal_connect_swapped(G_OBJECT(ebox), "button-press-event", 
+        // //     G_CALLBACK(show_popup), pmenu);          
+        // g_signal_connect_swapped(G_OBJECT(woPanel[WINDOW_MAIN].pwWin), "button-press-event", 
+        //     G_CALLBACK(show_popup), pmenu);  
+
+        // // gtk_widget_show_all(woPanel[WINDOW_GAME].pwWin);
+
+        // /**************************/   
+
+
     if (woPanel[WINDOW_MAIN].wg.nWidth && woPanel[WINDOW_MAIN].wg.nHeight) {
         gtk_window_set_default_size(GTK_WINDOW(pwMain),
                                     woPanel[WINDOW_MAIN].wg.nWidth, woPanel[WINDOW_MAIN].wg.nHeight);

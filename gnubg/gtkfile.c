@@ -1197,9 +1197,15 @@ AddPositionType(const char sz[])
 #endif /***********/
 
 
+/* *************** */
+
 extern void
 GTKAnalyzeFile(void)
 {
+
+
+#if (0)    
+
     char buf[256];
     // int play=TRUE;
     fQuiz=TRUE;
@@ -1266,7 +1272,7 @@ GTKAnalyzeFile(void)
 
 
 
-#if (0)    
+// #if (0)    
     // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
     if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
         GTKBatchAnalyse(NULL, 0, NULL);

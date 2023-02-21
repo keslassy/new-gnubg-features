@@ -297,6 +297,33 @@ CreateStyles(GtkWidget * UNUSED(widget), gpointer UNUSED(p))
     GetStyleFromRCFile(&psLucky[LUCK_VERYGOOD], "gamelist-luck-good", psGameList);
 }
 
+int show_popup(GtkWidget *widget, GdkEvent *event) {
+
+      const gint RIGHT_CLICK = 3;
+    g_message("I'm in the show popup func");
+
+  if (event->type == GDK_BUTTON_PRESS) {
+    g_message("button press");
+      
+      GdkEventButton *bevent = (GdkEventButton *) event;
+      
+      if (bevent->button == RIGHT_CLICK) {      
+            g_message("right button press");
+          
+          gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
+              bevent->button, bevent->time);
+            return TRUE;
+        }
+          
+      return FALSE;
+  } else 
+        return FALSE;
+}
+
+void TestFunction3(void) {
+    g_message("I'm in the test func");
+}
+
 extern GtkWidget *
 GL_Create(void)
 {
@@ -358,6 +385,92 @@ GL_Create(void)
 #else
     CreateStyles(pwGameList, NULL);
 #endif
+
+    // /* list view (selections) */
+    // GtkWidget *copyMenu;
+    // GtkWidget *menu_item;
+    // copyMenu = gtk_menu_new();
+
+    // menu_item = gtk_menu_item_new_with_label(_("Copy selection"));
+    // gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
+    // gtk_widget_show(menu_item);
+    // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(show_popup), pwGameList);
+
+    // menu_item = gtk_menu_item_new_with_label(_("Copy all"));
+    // gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
+    // gtk_widget_show(menu_item);
+    // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(show_popup), pwGameList);
+
+    // g_signal_connect(G_OBJECT(pwGameList), "button-press-event", G_CALLBACK(show_popup), copyMenu);
+
+
+
+        // GtkWidget *window;
+        GtkWidget *ebox;
+        GtkWidget *pmenu;
+        GtkWidget *hideMi;
+        GtkWidget *quitMi;
+
+        // window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        // gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+        // gtk_window_set_default_size(GTK_WINDOW(window), 300, 200);
+        // gtk_window_set_title(GTK_WINDOW(window), "Popup menu");
+
+        ebox = gtk_event_box_new();
+        gtk_container_add(GTK_CONTAINER(pwGameList), ebox);
+        // gtk_container_add(GTK_CONTAINER(woPanel[WINDOW_GAME].pwWin), ebox);
+        // gtk_event_box_set_visible_window(ebox, FALSE);
+        // gtk_event_box_set_above_child (ebox,TRUE);
+        // gtk_widget_hide(ebox);
+        pmenu = gtk_menu_new();
+        
+        // hideMi = gtk_menu_item_new_with_label("Minimize");
+        // gtk_widget_show(hideMi);
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), hideMi);
+        
+        // quitMi = gtk_menu_item_new_with_label("Print");
+        // gtk_widget_show(quitMi);
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), quitMi);
+        
+        // // g_signal_connect_swapped(G_OBJECT(hideMi), "activate", 
+        // //     G_CALLBACK(gtk_window_iconify), GTK_WINDOW(woPanel[WINDOW_GAME].pwWin));    
+        // g_signal_connect(G_OBJECT(quitMi), "activate", 
+        //     G_CALLBACK(TestFunction3), NULL);  
+
+        GtkWidget *menu_item;
+        menu_item = gtk_menu_item_new();
+        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        gtk_widget_show(menu_item);
+        menu_item = gtk_menu_item_new_with_label(_("Add to: Blitzing"));
+        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        gtk_widget_show(menu_item);
+        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        menu_item = gtk_menu_item_new();
+        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        gtk_widget_show(menu_item);
+        menu_item = gtk_menu_item_new_with_label(_("Add to: 5-pt holding"));
+        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        gtk_widget_show(menu_item);
+        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        menu_item = gtk_menu_item_new_with_label(_("Add to: 4-pt holding"));
+        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        gtk_widget_show(menu_item);
+        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        menu_item = gtk_menu_item_new_with_label(_("Add to: 3-pt holding"));
+        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        gtk_widget_show(menu_item);
+        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+
+
+
+
+        // g_signal_connect(G_OBJECT(woPanel[WINDOW_GAME].pwWin), "destroy",
+        //     G_CALLBACK(gtk_main_quit), NULL);
+                
+        // g_signal_connect_swapped(G_OBJECT(ebox), "button-press-event", 
+        //     G_CALLBACK(show_popup), pmenu);          
+        g_signal_connect_swapped(G_OBJECT(pwGameList), "button-press-event", 
+            G_CALLBACK(show_popup), pmenu);  
 
     return pwGameList;
 }
