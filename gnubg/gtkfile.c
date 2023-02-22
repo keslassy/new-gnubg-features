@@ -1204,7 +1204,7 @@ GTKAnalyzeFile(void)
 {
 
 
-#if (0)    
+// #if (0)    
 
     char buf[256];
     // int play=TRUE;
@@ -1270,9 +1270,9 @@ GTKAnalyzeFile(void)
     // SaveQuizPositions(); 
     // CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
 
+/* ************ END OF QUIZ ************************** */
 
-
-// #if (0)    
+#if (0)    
     // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
     if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
         GTKBatchAnalyse(NULL, 0, NULL);
@@ -1284,7 +1284,7 @@ GTKAnalyzeFile(void)
     return;
 #endif
 }
-/* ************ END OF QUIZ ************************** */
+
 
 extern void
 GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
