@@ -218,7 +218,8 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
  
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
 
-    pwDialog = GTKCreateDialog(_("Edit key player names"), DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+    pwDialog = GTKCreateDialog(_("Edit key player names"), DT_INFO, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
+    // pwDialog = GTKCreateDialog(_("Edit key player names"), DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
