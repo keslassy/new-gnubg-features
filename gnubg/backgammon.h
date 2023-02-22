@@ -1097,11 +1097,11 @@ extern int AddKeyName(const char sz[]); /* function that adds a key player name 
 extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/
 extern void DisplayKeyNames(void); /* debugging function to display the current key player names in the array*/
 
-/* definitions for positionTypes*/
-#define MAX_POSITION_TYPES 200 /* number of defined posiiton types*/
+/* definitions for positionCategory*/
+#define MAX_POS_CATEGORIES 200 /* number of defined posiiton types*/
 #define MAX_POS_NAME_LENGTH 32
-extern char positionTypes[MAX_POSITION_TYPES][MAX_POS_NAME_LENGTH]; /* array with all position types*/
-extern int positionTypesLength; /* the positionTypes array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
+extern char positionCategory[MAX_POS_CATEGORIES][MAX_POS_NAME_LENGTH]; /* array with all position categories*/
+extern int positionCategoryLength; /* the positionCategory array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
 
 
 

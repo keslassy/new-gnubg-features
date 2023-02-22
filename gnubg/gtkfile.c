@@ -968,6 +968,8 @@ SmartAnalyze(void)
 /* ************ QUIZ ************************** */
 #define MAX_ROWS 1024
 #define MAX_ROW_CHARS 1024
+static char positionsFolder []="./quiz/";
+
 static char positionsFile []="./quiz/positions.csv";
 static quiz q [MAX_ROWS]; 
 static int qLength=0;
@@ -976,8 +978,8 @@ static int iOptCounter=0;
 // quiz qNow; /*extern*/
 
 /*initialization*/
-char positionTypes[MAX_POSITION_TYPES][MAX_POS_NAME_LENGTH]={""};
-int positionTypesLength=0;
+char positionCategory[MAX_POS_CATEGORIES][MAX_POS_NAME_LENGTH]={""};
+int positionCategoryLength=0;
 
 /* based on standard csv program from geeksforgeeks*/
 int OpenQuizPositions(void)
@@ -1107,94 +1109,329 @@ extern void qUpdate(float error) {
             SaveQuizPositions();
     }
 }
-#if(0) /***********/
-extern void
-DisplayPositionTypes(void)
-{
-    for(int i=0;i < positionTypesLength; i++) {
-        g_message("in DisplayPositionTypes: %d->%s", i,positionTypes[i]);
+// #if(0) /***********/
+// static void
+// DisplayPositionCategories(void)
+// {
+//     for(int i=0;i < positionCategoryLength; i++) {
+//         g_message("in DisplayPositionCategories: %d->%s", i,positionCategory[i]);
+//     }
+// }
+
+// int NameIsCategory (const char sz[]) {
+//     for(int i=0;i < positionCategoryLength; i++) {
+//         if (!strcmp(sz, positionCategory[i])) {
+//             // g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,positionCategory[i],i);
+//             return 1;
+//         }
+//     }
+//     return 0;
+// }
+
+static void InitPositionCategoryArray(void) {
+    for(int i=0;i < MAX_POS_CATEGORIES; i++) {
+        positionCategory[i][0]='\0';
+        positionCategoryLength=0;
     }
 }
 
-int NameIsKey (const char sz[]) {
-    for(int i=0;i < positionTypesLength; i++) {
-        if (!strcmp(sz, positionTypes[i])) {
-            // g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,positionTypes[i],i);
-            return 1;
+
+// /* from ad absurdum, stackoverflow*/
+// void strip_ext(char *fname)
+// {
+//     char *end = fname + strlen(fname);
+
+//     while (end > fname && *end != '.' && *end != '\\' && *end != '/') {
+//         --end;
+//     }
+//     if ((end > fname && *end == '.') &&
+//         (*(end - 1) != '\\' && *(end - 1) != '/')) {
+//         *end = '\0';
+//     }  
+// }
+
+int string_cmp (const void * a, const void * b ) {
+    const char * pa = (const char *) a;
+    const char * pb = (const char *) b;
+
+    return strcmp(pa,pb);
+}
+
+static void
+GetPositionCategories(void)
+{
+    //     char buffer[MAX_LEN];
+    // FilePreviewData *fdp;
+    struct dirent* entry;
+    // time_t recenttime = 0;
+    // struct stat statbuf;
+    InitPositionCategoryArray();
+
+    DIR* dir  = opendir(positionsFolder);
+
+    while (NULL != (entry = readdir(dir))) {
+        g_message("entry->d_name=%s",entry->d_name);
+        const char *dot = strrchr(entry->d_name, '.');
+        if(dot && dot != entry->d_name && (strcmp(dot+1,"csv") == 0)) {
+            int offset = dot - entry->d_name;
+            entry->d_name[offset] = '\0';
+            strcpy(positionCategory[positionCategoryLength], entry->d_name);
+            g_message("stripped entry->d_name=%s=%s",entry->d_name,
+                positionCategory[positionCategoryLength]);
+            positionCategoryLength++;
         }
     }
-    return 0;
+    /* sorting alphabetically */
+    qsort( positionCategory, positionCategoryLength, 
+        sizeof(positionCategory[0]), string_cmp );
+
+    closedir(dir);
 }
 
-/*  delete a position type from the positionTypes array */
-extern int
-DeletePositionType(const char sz[])
-{
-    // g_message("in DeletePositionType: %s, length=%zu", sz, strlen(sz));
 
-    for(int i=0;i < positionTypesLength; i++) {
-        if (!strcmp(sz, positionTypes[i])) {
-            // g_message("EXISTS! %s=%s, i=%d, positionTypesLength=%d", sz,positionTypes[i],i,positionTypesLength);
-            if (positionTypesLength==(i+1)) {
-                positionTypesLength--;
+
+/*  delete a position category from the positionCategory array */
+static int
+DeletePositionCategory(const char sz[])
+{
+    // g_message("in DeletePositionCategory: %s, length=%zu", sz, strlen(sz));
+
+    for(int i=0;i < positionCategoryLength; i++) {
+        if (!strcmp(sz, positionCategory[i])) {
+            // g_message("EXISTS! %s=%s, i=%d, positionCategoryLength=%d", sz,positionCategory[i],i,positionCategoryLength);
+            if (positionCategoryLength==(i+1)) {
+                positionCategoryLength--;
                 UserCommand2("save settings");
-                return 1;
+                // return 1;
             } else {
-                strcpy(positionTypes[i],positionTypes[positionTypesLength-1]); 
-                positionTypesLength--;
-                // DisplayPositionTypes();
+                for(int j=i+1;j < positionCategoryLength; j++) {
+                    strcpy(positionCategory[j-1],positionCategory[j]); 
+                }
+                positionCategoryLength--;
+                // DisplayPositionCategories();
                 UserCommand2("save settings");
-                return 1;
+                // return 1;
             }
+            char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
+            if (remove(fullPath)!=0){
+                GTKMessage(_("Error: File could not be removed"), DT_INFO);
+                return 0;
+            }
+            else
+                return 1;
         }
     }
+    GTKMessage(_("Error: Position category name not found"), DT_INFO);
     return 0;
 }
 
-/*  add a new position category to the positionTypes array
-Based on AddKeyName() function (and same for the similar functions above)
+
+
+/*  add a new position category to the positionCategory array ... 
+and make a corresponding file.
+Based on AddPositionCategory() function (and same for the similar functions above)
 Return 1 if success, 0 if problem */
-extern int
-AddPositionType(const char sz[])
+static int
+AddPositionCategory(const char sz[])
 {
-    // g_message("in AddPositionType: %s, length=%zu", sz, strlen(sz));
+    // g_message("in AddPositionCategory: %s, length=%zu", sz, strlen(sz));
     /* check that the name doesn't contain "\t", "\n" */
     if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL) {
         // for(unsigned int j=0;j < strlen(sz); j++) {
         //     g_message("%c", sz[j]);
         // }
-        outputerrf(_("Position category name contains unallowed character"));
+            GTKMessage(_("Error: Position category name contains unallowed character"), DT_INFO);
         return 0;
     }
 
     /* check that the category name is not too long*/
     if(strlen(sz) > MAX_POS_NAME_LENGTH) {
-        outputerrf(_("Position category name is too long"));
+            GTKMessage(_("Error: Position category name is too long"), DT_INFO);
         return 0;
     }
 
-    /* check that the positionTypes array is not full */
-    if(positionTypesLength >= MAX_POSITION_TYPES) {
-        outputerrf(_("We have reached the maximum allowed number of position categories"));
+    /* check that the positionCategory array is not full */
+    if(positionCategoryLength >= MAX_POS_CATEGORIES) {
+            GTKMessage(_("Error: We have reached the maximum allowed number of position categories"), DT_INFO);
         return 0;
     }
 
-    /* check that the position type doesn't already exist */
-    for(int i=0;i < positionTypesLength; i++) {
-        if (!strcmp(sz, positionTypes[i])) {
-            outputerrf(_("This category name already exists"));
-            // g_message("EXISTS! %s=%s", sz,positionTypes[i]);
+    /* check that the position category doesn't already exist */
+    for(int i=0;i < positionCategoryLength; i++) {
+        if (!strcmp(sz, positionCategory[i])) {
+            GTKMessage(_("Error: This category name already exists"), DT_INFO);
+            // g_message("EXISTS! %s=%s", sz,positionCategory[i]);
             return 0;
         }
     }
-    strcpy(positionTypes[positionTypesLength],sz); 
-    positionTypesLength++;
 
-    // DisplayPositionTypes();
+    /* check that file can be added*/
+
+    char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
+    g_message("fullPath=%s",fullPath);
+
+	FILE* fp = fopen(fullPath, "w");
+
+    if(fp==NULL) {
+        char buf[100];
+        sprintf(buf,_("Error: Problem writing into file %s"),fullPath);
+        GTKMessage(_("Error: Problem "), DT_INFO);
+        return 0;
+    }
+    /*header*/
+    fprintf(fp, "position, ewmaError, lastSeen\n");
+    fclose(fp);
+
+    strcpy(positionCategory[positionCategoryLength],sz); 
+    positionCategoryLength++;
+
+    // DisplayPositionCategories();
     UserCommand2("save settings");
     return 1;
 }
-#endif /***********/
+// #endif /***********/
+
+
+static GtkTreeIter selected_iter;
+static GtkListStore *nameStore;
+
+static void
+AddPositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+{
+    GtkTreeIter iter;
+    char *positionCategory = GTKGetInput(_("Add position category"), _("Position category:"), NULL);
+    if(positionCategory) {
+        // g_message("message=%s",positionCategory);
+        if (AddPositionCategory(positionCategory)) {
+            gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
+            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, positionCategory, -1);
+            gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
+            selected_iter=iter;
+        }  else {
+            GTKMessage(_("Error: problem adding this position category"), DT_INFO);
+        }
+        g_free(positionCategory);
+    }
+}
+
+static char *
+GetSelectedName(GtkTreeView * treeview)
+{
+    GtkTreeModel *model;
+    char *positionCategory = NULL;
+    GtkTreeSelection *sel = gtk_tree_view_get_selection(treeview);
+    if (gtk_tree_selection_count_selected_rows(sel) != 1)
+        return NULL;
+    
+    /* Sets selected_iter to the currently selected node: */
+    gtk_tree_selection_get_selected(sel, &model, &selected_iter);
+    
+    /* Gets the value of the char* cell (in column 0) in the row 
+        referenced by selected_iter */
+    gtk_tree_model_get(model, &selected_iter, 0, &positionCategory, -1);
+    // g_message("GetSelectedName gives positionCategory=%s",positionCategory);
+    return positionCategory;
+}
+
+static void
+DeletePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+{
+    char *positionCategory = GetSelectedName(GTK_TREE_VIEW(treeview));
+    if(positionCategory){
+        if (DeletePositionCategory(positionCategory)) {
+            if (GTKGetInputYN(_("Are you sure?"))) 
+                gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+            // DisplayPositionCategories();
+            else
+                return;
+        } else {
+            GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
+        }
+    }
+}
+
+
+static void
+ManagePositionCategories(void)
+{
+    GtkWidget *pwDialog;
+    GtkWidget *pwMainHBox;
+    GtkWidget *pwVBox;
+    GtkWidget *hb1;
+    GtkWidget *pwScrolled;
+    GtkWidget *treeview;
+    GtkWidget *addButton;
+    GtkWidget *delButton;
+    GtkCellRenderer *renderer;
+    GtkTreeViewColumn *column;
+    // GtkListStore *store;
+    GtkTreeIter iter;
+ 
+    GetPositionCategories();
+
+    pwScrolled = gtk_scrolled_window_new(NULL, NULL);
+
+    pwDialog = GTKCreateDialog(_("Manage position categories"), DT_INFO, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwMainHBox = gtk_hbox_new(FALSE, 0);
+#endif
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainHBox);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwMainHBox), pwVBox, FALSE, FALSE, 0);
+
+    //AddTitle(pwVBox, _("?"));
+
+    /* create list store */
+    nameStore = gtk_list_store_new(1, G_TYPE_STRING);
+
+
+    for(int i=0;i < positionCategoryLength; i++) {
+        gtk_list_store_append(nameStore, &iter);
+        gtk_list_store_set(nameStore, &iter, 0, positionCategory[i], -1);
+        // g_message("in DisplayPositionCategories: %d->%s", i,positionCategory[i]);
+    }
+
+    /* create tree view */
+    treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(nameStore));
+    // g_object_unref(nameStore);
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes(_("Position categories"), renderer, "text", 0, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+
+    gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
+    gtk_box_pack_start(GTK_BOX(pwVBox), pwScrolled, TRUE, TRUE, 0);
+    gtk_widget_set_size_request(pwScrolled, 100, 200);//-1);
+#if GTK_CHECK_VERSION(3, 8, 0)
+    gtk_container_add(GTK_CONTAINER(pwScrolled), treeview);
+#else
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(pwScrolled), treeview);
+#endif
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    hb1 = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwVBox), hb1, FALSE, FALSE, 0);
+    addButton = gtk_button_new_with_label(_("Add category"));
+    g_signal_connect(addButton, "clicked", G_CALLBACK(AddPositionCategoryClicked), treeview);
+    gtk_box_pack_start(GTK_BOX(hb1), addButton, FALSE, FALSE, 0);
+    delButton = gtk_button_new_with_label(_("Delete category"));
+    g_signal_connect(delButton, "clicked", G_CALLBACK(DeletePositionCategoryClicked), treeview);
+    gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
+
+    GTKRunDialog(pwDialog);
+}
 
 
 /* *************** */
@@ -1202,9 +1439,9 @@ AddPositionType(const char sz[])
 extern void
 GTKAnalyzeFile(void)
 {
+ManagePositionCategories();
 
-
-// #if (0)    
+ #if (0)    
 
     char buf[256];
     // int play=TRUE;
@@ -1270,6 +1507,7 @@ GTKAnalyzeFile(void)
     // SaveQuizPositions(); 
     // CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
 
+#endif
 /* ************ END OF QUIZ ************************** */
 
 #if (0)    
