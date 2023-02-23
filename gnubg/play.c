@@ -2621,7 +2621,7 @@ CommandMove(char *sz)
     int an[8];
     movelist ml;
     moverecord *pmr;
-        // if(fQuiz){
+        // if(fInQuizMode){
         //     UserCommand("hint"); /*crashed when clicking on MWC, why?*/
         // }
     if (ms.gs != GAME_PLAYING) {
@@ -2713,7 +2713,7 @@ CommandMove(char *sz)
     pmr->fPlayer = ms.fTurn;
     memcpy(pmr->n.anMove, an, sizeof pmr->n.anMove);
 
-    if (fQuiz) {
+    if (fInQuizMode) {
         moverecord *pmr_cur = get_current_moverecord(NULL);
 
         if (!pmr_cur) {
@@ -2724,7 +2724,7 @@ CommandMove(char *sz)
         /* update or set the move */
         memcpy(pmr_cur->n.anMove, an, sizeof an);
         hint_move("", TRUE, NULL);
-        // // if(fQuiz){
+        // // if(fInQuizMode){
         // g_message("imove=%u",pmr_cur->n.iMove);
         //     if(pmr_cur->n.stMove> TutorSkill){
         //         g_message("add GOOD");
@@ -2753,7 +2753,7 @@ CommandMove(char *sz)
         /* update or set the move */
         memcpy(pmr_cur->n.anMove, an, sizeof an);
         hint_move("", FALSE, NULL);
-        // if(fQuiz){
+        // if(fInQuizMode){
             // if(pmr_cur->n.stMove> TutorSkill){
             //     g_message("add GOOD");
             // } else {
@@ -2782,13 +2782,13 @@ CommandMove(char *sz)
         outputx();
     }
 #endif
-    if(!fQuiz) {
+    if(!fInQuizMode) {
         AddMoveRecord(pmr);
 
 #if defined (USE_GTK)
         /* Don't animate this move. */
         fLastMove = FALSE;
-        // fLastMove = fQuiz? TRUE: FALSE;
+        // fLastMove = fInQuizMode? TRUE: FALSE;
 #endif
         TurnDone();
     }

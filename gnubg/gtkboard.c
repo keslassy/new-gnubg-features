@@ -759,7 +759,7 @@ update_move(BoardData * bd)
             char *pch;
             PositionFromKey(anBoard, &bd->valid_move->key);
             if ((pch = ReturnHits(anBoard))) {
-                if(!fQuiz){
+                if(!fInQuizMode){
                     outputf(_("Return hits: %s\n"), pch);
                     outputx();
                 }

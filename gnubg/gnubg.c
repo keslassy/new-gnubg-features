@@ -224,7 +224,7 @@ int fTruncEqualPlayer0 = TRUE;
 int fTutorChequer = TRUE;
 int fTutorCube = TRUE;
 int fTutor = FALSE;
-int fQuiz=FALSE;
+int fInQuizMode=FALSE;
 int fEvalSameAsAnalysis = FALSE;
 int fJustSwappedPlayers = FALSE;
 int nConfirmDefault = -1;
@@ -2361,7 +2361,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         }
         if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt) {
             fShowProgress = fSaveShowProg;
-            // if(fQuiz)
+            // if(fInQuizMode)
             //     g_free(&fd.pml->amMoves);
                 // g_free(pmr);
             return;
@@ -2393,7 +2393,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         pmr_movelist_set(pmr, GetEvalChequer(), &ml);
         find_skills(pmr, &ms, FALSE, -1);
         // g_free(&fd);
-            // if(fQuiz)
+            // if(fInQuizMode)
                 // g_free(&fd.pml->amMoves);
                 // g_free(&ml.amMoves);
 
@@ -5437,7 +5437,7 @@ GiveAdvice(skilltype Skill)
     if (!fTutor)
         return FALSE;
 
-    if(fQuiz){
+    if(fInQuizMode){
         UserCommand("hint");
     } else {
 
@@ -5445,25 +5445,25 @@ GiveAdvice(skilltype Skill)
 
 
         case SKILL_VERYBAD:
-            if(fQuiz)          
+            if(fInQuizMode)          
                 g_message("wrong move 1!");
             sz = _("You may be about to make a very bad play");
             break;
 
         case SKILL_BAD:
-            if(fQuiz)          
+            if(fInQuizMode)          
                 g_message("wrong move 2!");
             sz = _("You may be about to make a bad play");
             break;
 
         case SKILL_DOUBTFUL:
-            if(fQuiz)          
+            if(fInQuizMode)          
                 g_message("wrong move 3!");
             sz = _("You may be about to make a doubtful play");
             break;
 
         default:
-            if(fQuiz)          
+            if(fInQuizMode)          
                 g_message("great!");
             return (TRUE);
 

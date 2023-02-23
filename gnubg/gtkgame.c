@@ -5168,7 +5168,7 @@ GtkTutor(char *sz)
     int f = FALSE;
     GtkWidget *pwTutorDialog, *pwOK, *pwCancel, *pwEndTutor, *pwButtons, *pwPrompt, *pwHint;
 
-    if (!fQuiz) {
+    if (!fInQuizMode) {
         pwTutorDialog = GTKCreateDialog(_("GNU Backgammon - Tutor"),
                                         DT_CUSTOM, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(OK), (void *) &f);
     } else{
@@ -5176,13 +5176,13 @@ GtkTutor(char *sz)
                                         DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, G_CALLBACK(OK), (void *) &f);
     }
 
-    if(!fQuiz) {
+    if(!fInQuizMode) {
         pwOK = DialogArea(pwTutorDialog, DA_OK);
         gtk_button_set_label(GTK_BUTTON(pwOK), _("Play Anyway"));
     }
 
     pwCancel = gtk_button_new_with_label(_("Rethink"));
-    if(!fQuiz) {
+    if(!fInQuizMode) {
         pwEndTutor = gtk_button_new_with_label(_("End Tutor Mode"));
     }
     pwHint = gtk_button_new_with_label(_("Hint"));
@@ -5191,7 +5191,7 @@ GtkTutor(char *sz)
     gtk_container_add(GTK_CONTAINER(pwButtons), pwCancel);
     g_signal_connect(G_OBJECT(pwCancel), "clicked", G_CALLBACK(TutorRethink), (void *) &f);
 
-    if(!fQuiz) {
+    if(!fInQuizMode) {
     gtk_container_add(GTK_CONTAINER(pwButtons), pwEndTutor);
     g_signal_connect(G_OBJECT(pwEndTutor), "clicked", G_CALLBACK(TutorEnd), (void *) &f);
     }
@@ -6699,7 +6699,7 @@ DestroyHint(gpointer p, GObject * UNUSED(obj))
 
     SetPanelWidget(WINDOW_HINT, NULL);
 
-    // if(fQuiz){
+    // if(fInQuizMode){
     //     HintOK(NULL,NULL);
     //     GTKAnalyzeFile();
     // }
@@ -6711,13 +6711,9 @@ HintOK(GtkWidget * UNUSED(pw), void *UNUSED(unused))
 {
     getWindowGeometry(WINDOW_HINT);
     DestroyPanel(WINDOW_HINT);
-    if(fQuiz){
+    if(fInQuizMode){
+        BackFromHint();
         // HintOK(NULL,NULL);
-        if (GTKGetInputYN(_("Play another position?"))) {
-            GTKAnalyzeFile();
-        } else {
-            fQuiz=FALSE;
-        }
     }
 }
 

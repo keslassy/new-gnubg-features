@@ -966,11 +966,22 @@ SmartAnalyze(void)
 }
 
 /* ************ QUIZ ************************** */
+/*
+The quiz mode defines a full loop, from picking the position category to play with,
+to playing, to getting the hint screen, to starting again. Formally, here are the 
+functions in the loop:
+ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
+    ->CommandSetGNUBgID->(play)->MoveListUpdate->qUpdate(play error)
+    ->SaveQuizPositionFile [screen: could play again] -> HintOK->BackFromHint
+    ->either LoadPositionAndStart or ManagePositionCategories
+*/
+
+
 #define MAX_ROWS 1024
 #define MAX_ROW_CHARS 1024
 static char positionsFolder []="./quiz/";
-
-static char positionsFile []="./quiz/positions.csv";
+//static char positionsFileFullPath []="./quiz/positions.csv";
+static char * positionsFileFullPath;
 static quiz q [MAX_ROWS]; 
 static int qLength=0;
 static int iOpt=-1; 
@@ -981,20 +992,30 @@ static int iOptCounter=0;
 char positionCategory[MAX_POS_CATEGORIES][MAX_POS_NAME_LENGTH]={""};
 int positionCategoryLength=0;
 
-/* based on standard csv program from geeksforgeeks*/
-int OpenQuizPositions(void)
+
+/* the following function:
+- updates positionsFileFullPath,
+- opens the corrsponding file, 
+- and saves the parsing results in the positionCategory static array */
+int OpenQuizPositionsFile(char * category)
 {
     char row[MAX_ROW_CHARS];
     int i = -2;
     int column = 0;
 
-	FILE* fp = fopen(positionsFile, "r");
+    positionsFileFullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, category, ".csv", NULL);
+    g_message("fullPath=%s",positionsFileFullPath);
 
-	if (!fp){
-		printf("Can't open file\n");
+	FILE* fp = fopen(positionsFileFullPath, "r");
+
+    if(fp==NULL) {
+        char buf[100];
+        sprintf(buf,_("Error: Problem reading file %s"),positionsFileFullPath);
+        GTKMessage(_(buf), DT_INFO);
         return FALSE;
     }
 
+    /* based on standard csv program from geeksforgeeks*/
     while (fgets(row, MAX_ROW_CHARS, fp)) {
         column = 0;
         i++;
@@ -1052,6 +1073,10 @@ int OpenQuizPositions(void)
     g_message("qLength=%d",qLength);
     // Close the file
     fclose(fp);
+    if(qLength<1) {
+        GTKMessage(_("Error: no positions in file?"), DT_INFO);
+        return FALSE;
+    } 
 	return TRUE;
 }
 // typedef struct {
@@ -1063,7 +1088,7 @@ int OpenQuizPositions(void)
 int AddQuizPosition(quiz qRow)
 {
 
-	FILE* fp = fopen(positionsFile, "a");
+	FILE* fp = fopen(positionsFileFullPath, "a");
 
 	if (!fp){
         GTKMessage(_("problem saving quiz positions, can't open file"), DT_INFO);
@@ -1076,13 +1101,13 @@ int AddQuizPosition(quiz qRow)
     fclose(fp);
     return TRUE;
 }
-int SaveQuizPositions(void)
+int SaveQuizPositionFile(void)
 {
 
-	FILE* fp = fopen(positionsFile, "w");
+	FILE* fp = fopen(positionsFileFullPath, "w");
 
 	if (!fp){
-        GTKMessage(_("problem saving quiz positions, can't open file"), DT_INFO);
+        GTKMessage(_("Error: problem saving quiz position, cannot open file"), DT_INFO);
 		// printf("Can't open file\n");
         return FALSE;
     } 
@@ -1099,14 +1124,15 @@ int SaveQuizPositions(void)
 
 extern void qUpdate(float error) {
     /* if someone makes a mistake, then plays again the same position after seeing the 
-    answer, only the first time should count */
-    if(iOptCounter<1) {
+    answer, only the first time should count => we use iOptCounter 
+    */
+    if(iOptCounter==0) {
         g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
         q[iOpt].ewmaError=0.667*(q[iOpt].ewmaError)+0.333*error;
         g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
         q[iOpt].lastSeen=(long int) (time(NULL));
-        if(0)
-            SaveQuizPositions();
+        SaveQuizPositionFile();
+        iOptCounter=1;
     }
 }
 // #if(0) /***********/
@@ -1426,105 +1452,58 @@ static void
 DeletePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     char *category = GetSelectedCategory(GTK_TREE_VIEW(treeview));
-    // if(category){
-    //     if (GTKGetInputYN(_("Are you sure?"))) { 
-    //         if (DeletePositionCategory(category)) {
-    //             gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-    //         // DisplayPositionCategories();
-    //         } else {
-    //             GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
-    //         }
-    //     } 
-    //     g_free(category);
-    //     return;
-    // } else {
-    //     GTKMessage(_("Error: please select a position category"), DT_INFO);
-    //     return;
-    // }
+    if(category){
+        if (GTKGetInputYN(_("Are you sure?"))) { 
+            if (DeletePositionCategory(category)) {
+                gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+            // DisplayPositionCategories();
+            } else {
+                GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
+            }
+        } 
+        g_free(category);
+        return;
+    } else {
+        GTKMessage(_("Error: please select a position category"), DT_INFO);
+        return;
+    }
 }
 
-
-extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
-
-// OK(GtkWidget * pw, int *pf)
-// {
-
-//     if (pf)
-//         *pf = TRUE;
-
-//     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
-// }
-
-    GetSelectedCategory(treeview);
-    gtk_widget_destroy(gtk_widget_get_toplevel(pw));
-//  #if (0)    
-
-    char buf[256];
-    // int play=TRUE;
-    fQuiz=TRUE;
-
-            // UserCommand("set gnubgid MeeYEwCcnYMDCA:cAmvACAAAAAE");
-        // if(!q[0].position) {
-        // long int seconds=(long int) (time(NULL));
-                // intmax_t intSeconds=(intmax_t) (time(NULL));
-        // AddQuizPosition("MeeYEwCcnYMDCA:cAmvACAAAAAE",0.123,seconds,0.6);
-        // g_message("added");
-        /* we assume that the size of q doesn't change while in quiz mode
-        => we don't read the file in the middle.
-        We do update the values of our considered q[i] in the file as the user
-        is done going through it  (=> we write into the file), as we don't want 
-        to lose everything if gnubg gets shut down 
+static void LoadPositionAndStart (void) {
+    fInQuizMode=TRUE;
+    long int seconds=(long int) (time(NULL));
+    float maxPriority=0;
+    iOpt=0;
+    for (int i = 0; i < qLength; ++i) {
+        /* heuristic formula, the "secret sauce"...
+        Very roughly: a 2x bigger typical error should be seen 4x more often -
+        and then the error hopefully goes down.
         */
-        if(qLength<1) {
-            OpenQuizPositions(); /*this should update qLength*/
-            if(qLength<1) {
-                GTKMessage(_("Error: no positions in file?"), DT_INFO);
-                return;
-            } 
+        q[i].priority=q[i].ewmaError * q[i].ewmaError * (float) (seconds-q[i].lastSeen); // /1000.0;
+        // g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
+        if(q[i].priority>maxPriority &&  i>iOpt) {
+            maxPriority=q[i].priority;
+            iOpt=i;
         }
-        //  || 
-    // do {    
-        if(iOpt>=0){
-            /* iOpt is defined =>  we are coming back from a quiz decision,
-             and need (1) to update q and (2) to save the result to the file */
-            /* TBD!!!*/
-        }
+    }
+    iOptCounter=0;
+    g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
+        q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
+        q[iOpt].lastSeen);
 
-        long int seconds=(long int) (time(NULL));
-        float maxPriority=0;
-        iOpt=0;
-        for (int i = 0; i < qLength; ++i) {
-            /* heuristic formula, the "secret sauce"...
-            Very roughly: a 2x bigger typical error should be seen 4x more often -
-            and then the error hopefully goes down.
-            */
-            q[i].priority=q[i].ewmaError * q[i].ewmaError * (float) (seconds-q[i].lastSeen); // /1000.0;
-            // g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
-            if(q[i].priority>maxPriority &&  i>iOpt) {
-                maxPriority=q[i].priority;
-                iOpt=i;
-            }
-        }
-        iOptCounter=0;
-        g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
-            q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
-            q[iOpt].lastSeen);
+    // qNow=q[iOpt];
 
-        // qNow=q[iOpt];
+    if(!q[iOpt].position){
+        char buf[100];
+        sprintf(buf, _("Error: wrong position in line %d of file?"), iOpt+1);
+        GTKMessage(_(buf), DT_INFO);
+        return;
+    }
 
-        if(!q[iOpt].position){
-            sprintf(buf, _("Error: wrong position in line %d of file?"), iOpt+1);
-            GTKMessage(_(buf), DT_INFO);
-            return;
-        }
-        CommandSetGNUBgID(q[iOpt].position);   
+    /* start quiz-mode play! */
+    // fInQuizMode=TRUE;
 
-    // } while (GTKGetInputYN(_("Want to play?")));
-    // fQuiz=FALSE;
-    // SaveQuizPositions(); 
-    // CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
-
-// #endif
+    CommandSetGNUBgID(q[iOpt].position); 
 }
 
 static void
@@ -1539,7 +1518,7 @@ ManagePositionCategories(void)
     GtkWidget *addButton;
     GtkWidget *delButton;
     GtkWidget *renameButton;
-    GtkWidget *startButton;
+    // GtkWidget *startButton;
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
     // GtkListStore *store;
@@ -1547,10 +1526,8 @@ ManagePositionCategories(void)
  
     GetPositionCategories();
 
-
     /* create list store */
     nameStore = gtk_list_store_new(1, G_TYPE_STRING);
-
 
     for(int i=0;i < positionCategoryLength; i++) {
         gtk_list_store_append(nameStore, &iter);
@@ -1616,11 +1593,64 @@ ManagePositionCategories(void)
     g_signal_connect(delButton, "clicked", G_CALLBACK(DeletePositionCategoryClicked), treeview);
     gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
 
-    startButton = gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
+    gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
                               GTK_RESPONSE_YES);
     gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), GTK_RESPONSE_YES);
 
     GTKRunDialog(pwDialog);
+}
+
+/* Now we are back from the hint function within quiz mode. 
+- The position category is well known. 
+- The values have already been updated and saved in a file 
+        (in MoveListUpdate->qUpdate->SaveQuizPositionFile)
+We need to ask the player whether to play again within this category.
+    (YES) We want to pick a new position in the category and start
+    (NO) We get back to the main panel in case the user wants to 
+            change category.
+*/
+extern void BackFromHint (void) {
+
+    if (GTKGetInputYN(_("Play another position?"))) {
+        LoadPositionAndStart();
+    } else {
+        fInQuizMode=FALSE;
+        ManagePositionCategories();
+    }
+}
+
+extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
+
+// OK(GtkWidget * pw, int *pf)
+// {
+
+//     if (pf)
+//         *pf = TRUE;
+
+//     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+// }
+
+    char * category =GetSelectedCategory(treeview);
+    if(!category) {
+        GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
+        ManagePositionCategories();
+        return;
+    }
+    gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+
+    /* the following function:
+    - updates positionsFileFullPath,
+    - opens the corrsponding file, 
+    - and saves the parsing results in the positionCategory static array */
+    int result= OpenQuizPositionsFile(category);
+    g_free(category);
+
+    if(result==FALSE) {
+        ManagePositionCategories();
+        return;
+    }
+    fInQuizMode=TRUE;
+    LoadPositionAndStart();
 }
 
 
@@ -1628,7 +1658,7 @@ ManagePositionCategories(void)
 
 extern void
 GTKAnalyzeFile(void) {
-ManagePositionCategories();
+    ManagePositionCategories();
 
 /* ************ END OF QUIZ ************************** */
 
