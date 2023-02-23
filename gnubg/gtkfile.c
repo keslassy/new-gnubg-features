@@ -1356,7 +1356,7 @@ static GtkListStore *nameStore;
 
 
 static char *
-GetSelectedName(GtkTreeView * treeview)
+GetSelectedCategory(GtkTreeView * treeview)
 {
     GtkTreeModel *model;
     char *category = NULL;
@@ -1370,7 +1370,7 @@ GetSelectedName(GtkTreeView * treeview)
     /* Gets the value of the char* cell (in column 0) in the row 
         referenced by selected_iter */
     gtk_tree_model_get(model, &selected_iter, 0, &category, -1);
-    // g_message("GetSelectedName gives category=%s",category);
+    g_message("GetSelectedCategory gives category=%s",category);
     return category;
 }
 
@@ -1401,7 +1401,7 @@ static void
 RenamePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     GtkTreeIter iter;
-    char * oldCategory = GetSelectedName(GTK_TREE_VIEW(treeview));
+    char * oldCategory = GetSelectedCategory(GTK_TREE_VIEW(treeview));
     if(oldCategory){
         char *newCategory = GTKGetInput(_("Add position category"), 
             _("Position category:"), NULL);
@@ -1425,123 +1425,39 @@ RenamePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 static void
 DeletePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
-    char *category = GetSelectedName(GTK_TREE_VIEW(treeview));
-    if(category){
-        if (GTKGetInputYN(_("Are you sure?"))) { 
-            if (DeletePositionCategory(category)) {
-                gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-            // DisplayPositionCategories();
-            } else {
-                GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
-            }
-        } 
-        g_free(category);
-        return;
-    } else {
-        GTKMessage(_("Error: please select a position category"), DT_INFO);
-        return;
-    }
+    char *category = GetSelectedCategory(GTK_TREE_VIEW(treeview));
+    // if(category){
+    //     if (GTKGetInputYN(_("Are you sure?"))) { 
+    //         if (DeletePositionCategory(category)) {
+    //             gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+    //         // DisplayPositionCategories();
+    //         } else {
+    //             GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
+    //         }
+    //     } 
+    //     g_free(category);
+    //     return;
+    // } else {
+    //     GTKMessage(_("Error: please select a position category"), DT_INFO);
+    //     return;
+    // }
 }
 
 
-static void
-ManagePositionCategories(void)
-{
-    GtkWidget *pwDialog;
-    GtkWidget *pwMainHBox;
-    GtkWidget *pwVBox;
-    GtkWidget *hb1;
-    GtkWidget *pwScrolled;
-    GtkWidget *treeview;
-    GtkWidget *addButton;
-    GtkWidget *delButton;
-    GtkWidget *renameButton;
-    GtkCellRenderer *renderer;
-    GtkTreeViewColumn *column;
-    // GtkListStore *store;
-    GtkTreeIter iter;
- 
-    GetPositionCategories();
+extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
 
-    pwScrolled = gtk_scrolled_window_new(NULL, NULL);
+// OK(GtkWidget * pw, int *pf)
+// {
 
-    pwDialog = GTKCreateDialog(_("Manage position categories"), DT_INFO, NULL, 
-        DIALOG_FLAG_NONE, NULL, NULL);
-        // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
-    //    DIALOG_FLAG_NONE
+//     if (pf)
+//         *pf = TRUE;
 
-#if GTK_CHECK_VERSION(3,0,0)
-    pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-#else
-    pwMainHBox = gtk_hbox_new(FALSE, 0);
-#endif
+//     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+// }
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainHBox);
-
-#if GTK_CHECK_VERSION(3,0,0)
-    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-#else
-    pwVBox = gtk_vbox_new(FALSE, 0);
-#endif
-    gtk_box_pack_start(GTK_BOX(pwMainHBox), pwVBox, FALSE, FALSE, 0);
-
-    //AddTitle(pwVBox, _("?"));
-
-    /* create list store */
-    nameStore = gtk_list_store_new(1, G_TYPE_STRING);
-
-
-    for(int i=0;i < positionCategoryLength; i++) {
-        gtk_list_store_append(nameStore, &iter);
-        gtk_list_store_set(nameStore, &iter, 0, positionCategory[i], -1);
-        // g_message("in DisplayPositionCategories: %d->%s", i,positionCategory[i]);
-    }
-
-    /* create tree view */
-    treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(nameStore));
-    // g_object_unref(nameStore);
-    renderer = gtk_cell_renderer_text_new();
-    column = gtk_tree_view_column_new_with_attributes(_("Position categories"), renderer, "text", 0, NULL);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
-
-    gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
-    gtk_box_pack_start(GTK_BOX(pwVBox), pwScrolled, TRUE, TRUE, 0);
-    gtk_widget_set_size_request(pwScrolled, 100, 200);//-1);
-#if GTK_CHECK_VERSION(3, 8, 0)
-    gtk_container_add(GTK_CONTAINER(pwScrolled), treeview);
-#else
-    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(pwScrolled), treeview);
-#endif
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-#if GTK_CHECK_VERSION(3,0,0)
-    hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-#else
-    hb1 = gtk_hbox_new(FALSE, 0);
-#endif
-    gtk_box_pack_start(GTK_BOX(pwVBox), hb1, FALSE, FALSE, 0);
-    addButton = gtk_button_new_with_label(_("Add category"));
-    g_signal_connect(addButton, "clicked", G_CALLBACK(AddPositionCategoryClicked), treeview);
-    gtk_box_pack_start(GTK_BOX(hb1), addButton, FALSE, FALSE, 0);
-    renameButton = gtk_button_new_with_label(_("Rename category"));
-    g_signal_connect(renameButton, "clicked", G_CALLBACK(RenamePositionCategoryClicked), treeview);
-    gtk_box_pack_start(GTK_BOX(hb1), renameButton, FALSE, FALSE, 0);
-    delButton = gtk_button_new_with_label(_("Delete category"));
-    g_signal_connect(delButton, "clicked", G_CALLBACK(DeletePositionCategoryClicked), treeview);
-    gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
-
-    GTKRunDialog(pwDialog);
-}
-
-
-/* *************** */
-
-extern void
-GTKAnalyzeFile(void)
-{
-ManagePositionCategories();
-
- #if (0)    
+    GetSelectedCategory(treeview);
+    gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+//  #if (0)    
 
     char buf[256];
     // int play=TRUE;
@@ -1559,12 +1475,13 @@ ManagePositionCategories();
         is done going through it  (=> we write into the file), as we don't want 
         to lose everything if gnubg gets shut down 
         */
-        if(qLength<1) 
-            OpenQuizPositions(); /*this should update qLength*/
         if(qLength<1) {
-            GTKMessage(_("Error: no positions in file?"), DT_INFO);
-            return;
-        } 
+            OpenQuizPositions(); /*this should update qLength*/
+            if(qLength<1) {
+                GTKMessage(_("Error: no positions in file?"), DT_INFO);
+                return;
+            } 
+        }
         //  || 
     // do {    
         if(iOpt>=0){
@@ -1607,7 +1524,112 @@ ManagePositionCategories();
     // SaveQuizPositions(); 
     // CommandSetGNUBgID("MeeYEwCcnYMDCA:cAmvACAAAAAE");     
 
+// #endif
+}
+
+static void
+ManagePositionCategories(void)
+{
+    GtkWidget *pwDialog;
+    GtkWidget *pwMainHBox;
+    GtkWidget *pwVBox;
+    GtkWidget *hb1;
+    GtkWidget *pwScrolled;
+    GtkWidget *treeview;
+    GtkWidget *addButton;
+    GtkWidget *delButton;
+    GtkWidget *renameButton;
+    GtkWidget *startButton;
+    GtkCellRenderer *renderer;
+    GtkTreeViewColumn *column;
+    // GtkListStore *store;
+    GtkTreeIter iter;
+ 
+    GetPositionCategories();
+
+
+    /* create list store */
+    nameStore = gtk_list_store_new(1, G_TYPE_STRING);
+
+
+    for(int i=0;i < positionCategoryLength; i++) {
+        gtk_list_store_append(nameStore, &iter);
+        gtk_list_store_set(nameStore, &iter, 0, positionCategory[i], -1);
+        // g_message("in DisplayPositionCategories: %d->%s", i,positionCategory[i]);
+    }
+
+    /* create tree view */
+    treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(nameStore));
+    // g_object_unref(nameStore);
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes(_("Position categories"), 
+        renderer, "text", 0, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+
+    pwScrolled = gtk_scrolled_window_new(NULL, NULL);
+
+    pwDialog = GTKCreateDialog(_("Manage position categories"), DT_INFO, NULL, 
+        DIALOG_FLAG_NONE, (GCallback) StartQuiz, treeview);
+        // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
+    //    DIALOG_FLAG_NONE
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    pwMainHBox = gtk_hbox_new(FALSE, 0);
 #endif
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainHBox);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwVBox = gtk_vbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwMainHBox), pwVBox, FALSE, FALSE, 0);
+
+    //AddTitle(pwVBox, _("?"));
+
+    gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
+    gtk_box_pack_start(GTK_BOX(pwVBox), pwScrolled, TRUE, TRUE, 0);
+    gtk_widget_set_size_request(pwScrolled, 100, 200);//-1);
+#if GTK_CHECK_VERSION(3, 8, 0)
+    gtk_container_add(GTK_CONTAINER(pwScrolled), treeview);
+#else
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(pwScrolled), treeview);
+#endif
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#else
+    hb1 = gtk_hbox_new(FALSE, 0);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwVBox), hb1, FALSE, FALSE, 0);
+    addButton = gtk_button_new_with_label(_("Add category"));
+    g_signal_connect(addButton, "clicked", G_CALLBACK(AddPositionCategoryClicked), treeview);
+    gtk_box_pack_start(GTK_BOX(hb1), addButton, FALSE, FALSE, 0);
+    renameButton = gtk_button_new_with_label(_("Rename category"));
+    g_signal_connect(renameButton, "clicked", G_CALLBACK(RenamePositionCategoryClicked), treeview);
+    gtk_box_pack_start(GTK_BOX(hb1), renameButton, FALSE, FALSE, 0);
+    delButton = gtk_button_new_with_label(_("Delete category"));
+    g_signal_connect(delButton, "clicked", G_CALLBACK(DeletePositionCategoryClicked), treeview);
+    gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
+
+    startButton = gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
+                              GTK_RESPONSE_YES);
+    gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), GTK_RESPONSE_YES);
+
+    GTKRunDialog(pwDialog);
+}
+
+
+/* *************** */
+
+extern void
+GTKAnalyzeFile(void) {
+ManagePositionCategories();
+
 /* ************ END OF QUIZ ************************** */
 
 #if (0)    

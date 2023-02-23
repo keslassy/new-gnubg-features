@@ -26,6 +26,7 @@
 #include <gtk/gtk.h>
 #include "gtkwindows.h"
 #include "gtkgame.h"
+#include "gtkfile.h" //for StartQuiz(), may change
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 typedef void (*dialog_func_ty) (GtkWidget *, void *);
@@ -88,13 +89,19 @@ typedef struct {
 static void
 DialogResponse(GtkWidget * dialog, gint response, CallbackStruct * data)
 {
-    if (response == GTK_RESPONSE_OK || response == GTK_RESPONSE_CLOSE) {
+    if (response == GTK_RESPONSE_OK || response == GTK_RESPONSE_CLOSE) { 
         if (data->DialogFun)
             data->DialogFun(dialog, data->data);
         else
             OK(dialog, data->data);
     } else if (response == GTK_RESPONSE_CANCEL) {
         gtk_widget_destroy(dialog);
+    } else if (response == GTK_RESPONSE_YES) { //YES added for quiz mode, can also create
+             // a specific extern variable if needed; it's not used anywhere else
+        if (data->DialogFun)
+            data->DialogFun(dialog, data->data);
+        else
+            StartQuiz(dialog, data->data);
     } else {                    /* Ignore response */
     }
 }

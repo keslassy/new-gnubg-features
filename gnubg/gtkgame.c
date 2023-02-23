@@ -6713,7 +6713,7 @@ HintOK(GtkWidget * UNUSED(pw), void *UNUSED(unused))
     DestroyPanel(WINDOW_HINT);
     if(fQuiz){
         // HintOK(NULL,NULL);
-        if (GTKGetInputYN(_("Want to play?"))) {
+        if (GTKGetInputYN(_("Play another position?"))) {
             GTKAnalyzeFile();
         } else {
             fQuiz=FALSE;
