@@ -1006,7 +1006,7 @@ int OpenQuizPositionsFile(const char * category)
     int column = 0;
 
     positionsFileFullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, category, ".csv", NULL);
-    g_message("fullPath=%s",positionsFileFullPath);
+    // g_message("fullPath=%s",positionsFileFullPath);
 
 	FILE* fp = fopen(positionsFileFullPath, "r");
 
@@ -1068,11 +1068,11 @@ int OpenQuizPositionsFile(const char * category)
         }
         // printf("\n");
         //    intmax_t seconds = strtoimax(sz, NULL, 10);
-        g_message("read new line %d: %s, %.5f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
+        // g_message("read new line %d: %s, %.5f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
 
     }
     qLength=i+1;
-    g_message("qLength=%d",qLength);
+    // g_message("qLength=%d",qLength);
     // Close the file
     fclose(fp);
     if(qLength<1) {
@@ -1099,7 +1099,7 @@ int AddQuizPosition(quiz qRow)
     } 
     // Saving data in file
     fprintf(fp, "%s, %.5f, %ld\n", qRow.position, qRow.ewmaError, qRow.lastSeen);
-    g_message("Added a line");
+    // g_message("Added a line");
     fclose(fp);
     return TRUE;
 }
@@ -1119,7 +1119,7 @@ int SaveQuizPositionFile(void)
         // Saving data in file
         fprintf(fp, "%s, %.5f, %ld\n", q[i].position, q[i].ewmaError, q[i].lastSeen);
     }
-    g_message("Saved q");
+    // g_message("Saved q");
     fclose(fp);
     return TRUE;
 }
@@ -1129,9 +1129,9 @@ extern void qUpdate(float error) {
     answer, only the first time should count => we use iOptCounter 
     */
     if(iOptCounter==0) {
-        g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
+        // g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
         q[iOpt].ewmaError=0.667*(q[iOpt].ewmaError)+0.333*error;
-        g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
+        // g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
         q[iOpt].lastSeen=(long int) (time(NULL));
         SaveQuizPositionFile();
         iOptCounter=1;
@@ -1198,14 +1198,14 @@ GetPositionCategories(void)
     DIR* dir  = opendir(positionsFolder);
 
     while (NULL != (entry = readdir(dir))) {
-        g_message("entry->d_name=%s",entry->d_name);
+        // g_message("entry->d_name=%s",entry->d_name);
         const char *dot = strrchr(entry->d_name, '.');
         if(dot && dot != entry->d_name && (strcmp(dot+1,"csv") == 0)) {
             int offset = dot - entry->d_name;
             entry->d_name[offset] = '\0';
             strcpy(positionCategory[positionCategoryLength], entry->d_name);
-            g_message("stripped entry->d_name=%s=%s",entry->d_name,
-                positionCategory[positionCategoryLength]);
+            // g_message("stripped entry->d_name=%s=%s",entry->d_name,
+                // positionCategory[positionCategoryLength]);
             positionCategoryLength++;
         }
     }
@@ -1296,7 +1296,7 @@ AddPositionCategory(const char *sz)
     /* check that file can be added*/
 
     char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
-    g_message("fullPath=%s",fullPath);
+    // g_message("fullPath=%s",fullPath);
 
 	FILE* fp = fopen(fullPath, "w");
 
@@ -1398,7 +1398,7 @@ GetSelectedCategory(GtkTreeView * treeview)
     /* Gets the value of the char* cell (in column 0) in the row 
         referenced by selected_iter */
     gtk_tree_model_get(model, &selected_iter, 0, &category, -1);
-    g_message("GetSelectedCategory gives category=%s",category);
+    // g_message("GetSelectedCategory gives category=%s",category);
     return category;
 }
 
@@ -1489,9 +1489,9 @@ static void LoadPositionAndStart (void) {
         }
     }
     iOptCounter=0;
-    g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
-        q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
-        q[iOpt].lastSeen);
+    // g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
+        // q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
+        // q[iOpt].lastSeen);
 
     // qNow=q[iOpt];
 
@@ -1506,6 +1506,28 @@ static void LoadPositionAndStart (void) {
     // fInQuizMode=TRUE;
 
     CommandSetGNUBgID(q[iOpt].position); 
+}
+
+static int CountPositions(char * category) {
+
+    char * fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, category, ".csv", NULL);
+    // g_message("fullPath=%s",fullPath);
+
+	FILE* fp = fopen(fullPath, "r");
+    if (fp == NULL) {
+        return -1;
+    }
+
+    int c;    // this must be an int
+    int count = 0;
+
+    for (c = getc(fp); c != EOF; c = getc(fp)) {
+        if (c == '\n') // Increment count if this character is newline 
+            count = count + 1;
+    }
+
+    fclose(fp);
+    return count;
 }
 
 static void
@@ -1525,24 +1547,37 @@ ManagePositionCategories(void)
     GtkTreeViewColumn *column;
     // GtkListStore *store;
     GtkTreeIter iter;
+    GtkTreeViewColumn   *col;
  
     GetPositionCategories();
 
     /* create list store */
-    nameStore = gtk_list_store_new(1, G_TYPE_STRING);
+    enum {COLUMN_STRING, COLUMN_INT, N_COLUMNS};
+    nameStore = gtk_list_store_new(N_COLUMNS, G_TYPE_STRING,G_TYPE_INT);
 
     for(int i=0;i < positionCategoryLength; i++) {
         gtk_list_store_append(nameStore, &iter);
-        gtk_list_store_set(nameStore, &iter, 0, positionCategory[i], -1);
+        int numberPositions=CountPositions(positionCategory[i]);
+        gtk_list_store_set(nameStore, &iter, 
+                            COLUMN_STRING, positionCategory[i],
+                            COLUMN_INT, numberPositions,
+                            -1);
         // g_message("in DisplayPositionCategories: %d->%s", i,positionCategory[i]);
     }
 
     /* create tree view */
     treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(nameStore));
-    // g_object_unref(nameStore);
+
+    g_object_unref(nameStore);
+
     renderer = gtk_cell_renderer_text_new();
-    column = gtk_tree_view_column_new_with_attributes(_("Position categories"), 
-        renderer, "text", 0, NULL);
+    column = gtk_tree_view_column_new_with_attributes(_("Position category"), 
+        renderer, "text", COLUMN_STRING, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes(_("Positions"), 
+        renderer, "text", COLUMN_INT, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
