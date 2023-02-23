@@ -1192,33 +1192,34 @@ GetPositionCategories(void)
 
 /*  delete a position category from the positionCategory array */
 static int
-DeletePositionCategory(const char sz[])
+DeletePositionCategory(const char *sz)
 {
     // g_message("in DeletePositionCategory: %s, length=%zu", sz, strlen(sz));
 
     for(int i=0;i < positionCategoryLength; i++) {
         if (!strcmp(sz, positionCategory[i])) {
             // g_message("EXISTS! %s=%s, i=%d, positionCategoryLength=%d", sz,positionCategory[i],i,positionCategoryLength);
-            if (positionCategoryLength==(i+1)) {
-                positionCategoryLength--;
-                UserCommand2("save settings");
-                // return 1;
-            } else {
-                for(int j=i+1;j < positionCategoryLength; j++) {
-                    strcpy(positionCategory[j-1],positionCategory[j]); 
-                }
-                positionCategoryLength--;
-                // DisplayPositionCategories();
-                UserCommand2("save settings");
-                // return 1;
-            }
             char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
             if (remove(fullPath)!=0){
                 GTKMessage(_("Error: File could not be removed"), DT_INFO);
                 return 0;
             }
-            else
+            else {
+                if (positionCategoryLength==(i+1)) {
+                    positionCategoryLength--;
+                    // UserCommand2("save settings");
+                    // return 1;
+                } else {
+                    for(int j=i+1;j < positionCategoryLength; j++) {
+                        strcpy(positionCategory[j-1],positionCategory[j]); 
+                    }
+                    positionCategoryLength--;
+                    // DisplayPositionCategories();
+                    // UserCommand2("save settings");
+                    // return 1;
+                }
                 return 1;
+            }
         }
     }
     GTKMessage(_("Error: Position category name not found"), DT_INFO);
@@ -1229,10 +1230,10 @@ DeletePositionCategory(const char sz[])
 
 /*  add a new position category to the positionCategory array ... 
 and make a corresponding file.
-Based on AddPositionCategory() function (and same for the similar functions above)
+Based on AddkeyName() function (and same for the similar functions above)
 Return 1 if success, 0 if problem */
 static int
-AddPositionCategory(const char sz[])
+AddPositionCategory(const char *sz)
 {
     // g_message("in AddPositionCategory: %s, length=%zu", sz, strlen(sz));
     /* check that the name doesn't contain "\t", "\n" */
@@ -1260,7 +1261,6 @@ AddPositionCategory(const char sz[])
     for(int i=0;i < positionCategoryLength; i++) {
         if (!strcmp(sz, positionCategory[i])) {
             GTKMessage(_("Error: This category name already exists"), DT_INFO);
-            // g_message("EXISTS! %s=%s", sz,positionCategory[i]);
             return 0;
         }
     }
@@ -1275,7 +1275,7 @@ AddPositionCategory(const char sz[])
     if(fp==NULL) {
         char buf[100];
         sprintf(buf,_("Error: Problem writing into file %s"),fullPath);
-        GTKMessage(_("Error: Problem "), DT_INFO);
+        GTKMessage(_(buf), DT_INFO);
         return 0;
     }
     /*header*/
@@ -1286,39 +1286,80 @@ AddPositionCategory(const char sz[])
     positionCategoryLength++;
 
     // DisplayPositionCategories();
-    UserCommand2("save settings");
+    // UserCommand2("save settings");
     return 1;
 }
+
+/*  rename a position category in the array, and its corresponding file.
+Return the position of the category, -1 if problem */
+static int
+RenamePositionCategory(const char * szOld, const char * szNew)
+{
+    if (!strcmp(szOld, szNew)) {
+        GTKMessage(_("Error: The old and new category names are the same"), DT_INFO);
+        return -1;
+    }
+
+    /* check that the new name doesn't contain "\t", "\n" */
+    if (strstr(szNew, "\t") != NULL || strstr(szNew, "\n") != NULL) {
+        GTKMessage(_("Error: Position category name contains unallowed character"), DT_INFO);
+        return -1;
+    }
+
+    /* check that the new category name is not too long*/
+    if(strlen(szNew) > MAX_POS_NAME_LENGTH) {
+        GTKMessage(_("Error: Position category name is too long"), DT_INFO);
+        return -1;
+    }
+
+    /* check that the old position category exists, and the new one does not! */
+    int positionIndex=-1;
+    for(int i=0;i < positionCategoryLength; i++) {
+        if (!strcmp(szNew, positionCategory[i])) {
+            GTKMessage(_("Error: This category name already exists"), DT_INFO);
+            return -1;
+        }
+        if (!strcmp(szOld, positionCategory[i])) {
+            positionIndex=i;
+        }
+    }
+    if(positionIndex==-1) {
+        GTKMessage(_("Error: Could not find the old position name"), DT_INFO);
+        return -1;
+    }
+
+    /* replace file*/
+    char *fullOldPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szOld, ".csv", NULL);
+    char *fullNewPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szNew, ".csv", NULL);
+
+    int result = rename(fullOldPath, fullNewPath);
+	
+    if(result!=0) {
+        char buf[200];
+        sprintf(buf,_("Error: Problem renaming file %s as %s"),fullOldPath,fullNewPath);
+        GTKMessage(_(buf), DT_INFO);
+        return -1;
+    }
+
+    strcpy(positionCategory[positionIndex],szNew); 
+
+    // DisplayPositionCategories();
+    // UserCommand2("save settings");
+    return positionIndex;
+}
+
 // #endif /***********/
 
 
 static GtkTreeIter selected_iter;
 static GtkListStore *nameStore;
 
-static void
-AddPositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
-{
-    GtkTreeIter iter;
-    char *positionCategory = GTKGetInput(_("Add position category"), _("Position category:"), NULL);
-    if(positionCategory) {
-        // g_message("message=%s",positionCategory);
-        if (AddPositionCategory(positionCategory)) {
-            gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
-            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, positionCategory, -1);
-            gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
-            selected_iter=iter;
-        }  else {
-            GTKMessage(_("Error: problem adding this position category"), DT_INFO);
-        }
-        g_free(positionCategory);
-    }
-}
 
 static char *
 GetSelectedName(GtkTreeView * treeview)
 {
     GtkTreeModel *model;
-    char *positionCategory = NULL;
+    char *category = NULL;
     GtkTreeSelection *sel = gtk_tree_view_get_selection(treeview);
     if (gtk_tree_selection_count_selected_rows(sel) != 1)
         return NULL;
@@ -1328,25 +1369,77 @@ GetSelectedName(GtkTreeView * treeview)
     
     /* Gets the value of the char* cell (in column 0) in the row 
         referenced by selected_iter */
-    gtk_tree_model_get(model, &selected_iter, 0, &positionCategory, -1);
-    // g_message("GetSelectedName gives positionCategory=%s",positionCategory);
-    return positionCategory;
+    gtk_tree_model_get(model, &selected_iter, 0, &category, -1);
+    // g_message("GetSelectedName gives category=%s",category);
+    return category;
+}
+
+static void
+AddPositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+{
+    GtkTreeIter iter;
+    char *category = GTKGetInput(_("Add position category"), 
+        _("Position category:"), NULL);
+    if(category) {
+        // g_message("message=%s",category);
+        // if (AddPositionCategory(category)) {
+        AddPositionCategory(category);
+        gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
+        gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, category, -1);
+        gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
+        selected_iter=iter;
+        // }  else {
+        //     GTKMessage(_("Error: problem adding this position category"), DT_INFO);
+        // }
+        g_free(category);
+        return;
+    } else
+        return;
+}
+
+static void
+RenamePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+{
+    GtkTreeIter iter;
+    char * oldCategory = GetSelectedName(GTK_TREE_VIEW(treeview));
+    if(oldCategory){
+        char *newCategory = GTKGetInput(_("Add position category"), 
+            _("Position category:"), NULL);
+        if(newCategory){
+            int positionIndex = RenamePositionCategory(oldCategory, newCategory);
+            /* we assume below that the array and the presented list are kept 
+            in the same order, else need to iterate through the list */
+            gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+            gtk_list_store_insert(GTK_LIST_STORE(nameStore), &iter, positionIndex);
+            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, newCategory, -1);
+            selected_iter=iter;
+
+            g_free(newCategory);
+        }
+        g_free(oldCategory);
+    } else {
+            GTKMessage(_("Error: please select a position category to rename"), DT_INFO);
+    }
 }
 
 static void
 DeletePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
-    char *positionCategory = GetSelectedName(GTK_TREE_VIEW(treeview));
-    if(positionCategory){
-        if (DeletePositionCategory(positionCategory)) {
-            if (GTKGetInputYN(_("Are you sure?"))) 
+    char *category = GetSelectedName(GTK_TREE_VIEW(treeview));
+    if(category){
+        if (GTKGetInputYN(_("Are you sure?"))) { 
+            if (DeletePositionCategory(category)) {
                 gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
             // DisplayPositionCategories();
-            else
-                return;
-        } else {
-            GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
-        }
+            } else {
+                GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
+            }
+        } 
+        g_free(category);
+        return;
+    } else {
+        GTKMessage(_("Error: please select a position category"), DT_INFO);
+        return;
     }
 }
 
@@ -1362,6 +1455,7 @@ ManagePositionCategories(void)
     GtkWidget *treeview;
     GtkWidget *addButton;
     GtkWidget *delButton;
+    GtkWidget *renameButton;
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
     // GtkListStore *store;
@@ -1371,7 +1465,10 @@ ManagePositionCategories(void)
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
 
-    pwDialog = GTKCreateDialog(_("Manage position categories"), DT_INFO, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
+    pwDialog = GTKCreateDialog(_("Manage position categories"), DT_INFO, NULL, 
+        DIALOG_FLAG_NONE, NULL, NULL);
+        // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
+    //    DIALOG_FLAG_NONE
 
 #if GTK_CHECK_VERSION(3,0,0)
     pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -1426,6 +1523,9 @@ ManagePositionCategories(void)
     addButton = gtk_button_new_with_label(_("Add category"));
     g_signal_connect(addButton, "clicked", G_CALLBACK(AddPositionCategoryClicked), treeview);
     gtk_box_pack_start(GTK_BOX(hb1), addButton, FALSE, FALSE, 0);
+    renameButton = gtk_button_new_with_label(_("Rename category"));
+    g_signal_connect(renameButton, "clicked", G_CALLBACK(RenamePositionCategoryClicked), treeview);
+    gtk_box_pack_start(GTK_BOX(hb1), renameButton, FALSE, FALSE, 0);
     delButton = gtk_button_new_with_label(_("Delete category"));
     g_signal_connect(delButton, "clicked", G_CALLBACK(DeletePositionCategoryClicked), treeview);
     gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
