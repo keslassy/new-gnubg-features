@@ -982,11 +982,13 @@ ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
 static char positionsFolder []="./quiz/";
 //static char positionsFileFullPath []="./quiz/positions.csv";
 static char * positionsFileFullPath;
+static char * currentCategory;
 static quiz q [MAX_ROWS]; 
 static int qLength=0;
 static int iOpt=-1; 
 static int iOptCounter=0; 
 // quiz qNow; /*extern*/
+static int counterForFile=0;
 
 /*initialization*/
 char positionCategory[MAX_POS_CATEGORIES][MAX_POS_NAME_LENGTH]={""};
@@ -997,7 +999,7 @@ int positionCategoryLength=0;
 - updates positionsFileFullPath,
 - opens the corrsponding file, 
 - and saves the parsing results in the positionCategory static array */
-int OpenQuizPositionsFile(char * category)
+int OpenQuizPositionsFile(const char * category)
 {
     char row[MAX_ROW_CHARS];
     int i = -2;
@@ -1610,8 +1612,13 @@ We need to ask the player whether to play again within this category.
             change category.
 */
 extern void BackFromHint (void) {
+    char buf[100];
+    counterForFile++;
+    sprintf(buf,_("%d positions played in category %s (which has %d positions)."
+    "\n\n Play another position?"),
+    counterForFile,currentCategory,positionCategoryLength);
 
-    if (GTKGetInputYN(_("Play another position?"))) {
+    if (GTKGetInputYN(buf)) {
         LoadPositionAndStart();
     } else {
         fInQuizMode=FALSE;
@@ -1630,8 +1637,8 @@ extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
 //     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
 // }
 
-    char * category =GetSelectedCategory(treeview);
-    if(!category) {
+    currentCategory = GetSelectedCategory(treeview);
+    if(!currentCategory) {
         GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
         ManagePositionCategories();
         return;
@@ -1642,8 +1649,8 @@ extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
     - updates positionsFileFullPath,
     - opens the corrsponding file, 
     - and saves the parsing results in the positionCategory static array */
-    int result= OpenQuizPositionsFile(category);
-    g_free(category);
+    int result= OpenQuizPositionsFile(currentCategory);
+    // g_free(currentCategory); //when should we free a static var that is to be reused?
 
     if(result==FALSE) {
         ManagePositionCategories();
