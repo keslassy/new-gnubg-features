@@ -979,7 +979,9 @@ ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
 
 #define MAX_ROWS 1024
 #define MAX_ROW_CHARS 1024
-static char positionsFolder []="./quiz";
+static const char positionsFolder []="/home/isaac/g/new-gnubg-features/gnubg/quiz";
+// static const char positionsFolder2 []="~/g/new-gnubg-features/gnubg/quiz/";
+
 //static char positionsFileFullPath []="./quiz/positions.csv";
 static char * positionsFileFullPath;
 // static char * currentCategory;
@@ -1330,12 +1332,14 @@ DeleteCategory(const char *sz)
 }
 
 static int CheckbadCharacters(const char * name) {
-    char bad_chars[] = "!@%^*~|<>:"; //\"\t\n";
+    g_message("checking");
+    char bad_chars[] = "!@%^*~|<>:$/?\\\"";
     int invalid_found = FALSE;
     int i;
     for (i = 0; i < (int) strlen(bad_chars); ++i) {
         if (strchr(name, bad_chars[i]) != NULL) {
             invalid_found = TRUE;
+            g_message("invalid:%c",bad_chars[i]);
             break;
         }
     }
@@ -1384,7 +1388,7 @@ AddCategory(const char *sz)
     char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
     g_message("fullPath=%s",fullPath);
 
-	FILE* fp = fopen(sz, "w");
+	FILE* fp = fopen(fullPath, "w");
 
     if(fp==NULL) {
         char buf[100];
@@ -1392,9 +1396,21 @@ AddCategory(const char *sz)
         GTKMessage(_(buf), DT_INFO);
         return 0;
     }
+    //  perror("fopen");
     /*header*/
     fprintf(fp, "position, ewmaError, lastSeen\n");
     fclose(fp);
+
+	// FILE* fp2 = fopen(sz, "r");
+
+    // if(fp2==NULL) {
+    //     char buf[100];
+    //     sprintf(buf,_("Error: Could not create file %s, maybe we do not have writing right?"),
+    //         fullPath);
+    //     GTKMessage(_(buf), DT_INFO);
+    //     return 0;
+    // }
+    // fclose(fp2);
 
     populateCategory(numCategories,sz,FALSE);
 
@@ -1417,7 +1433,8 @@ RenameCategory(const char * szOld, const char * szNew)
     }
 
     /* check that the new name doesn't contain "\t", "\n" */
-    if (strstr(szNew, "\t") != NULL || strstr(szNew, "\n") != NULL) {
+    if (strstr(szNew, "\t") != NULL || strstr(szNew, "\n") != NULL
+         || CheckbadCharacters(szNew)) {
         GTKMessage(_("Error: Position category name contains unallowed character"), DT_INFO);
         return -1;
     }
@@ -1492,7 +1509,7 @@ static char *
 GetSelectedCategory(GtkTreeView * treeview)
 {
     GtkTreeModel *model;
-    char *category = NULL;
+    char *categoryName = NULL;
     GtkTreeSelection *sel = gtk_tree_view_get_selection(treeview);
     if (gtk_tree_selection_count_selected_rows(sel) != 1)
         return NULL;
@@ -1502,23 +1519,23 @@ GetSelectedCategory(GtkTreeView * treeview)
     
     /* Gets the value of the char* cell (in column 0) in the row 
         referenced by selected_iter */
-    gtk_tree_model_get(model, &selected_iter, 0, &category, -1);
-    // g_message("GetSelectedCategory gives category=%s",category);
-    return category;
+    gtk_tree_model_get(model, &selected_iter, 0, &categoryName, -1);
+    // g_message("GetSelectedCategory gives categoryName=%s",categoryName);
+    return categoryName;
 }
 
 static void
 AddCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     GtkTreeIter iter;
-    char *category = GTKGetInput(_("Add position category"), 
+    char *categoryName = GTKGetInput(_("Add position category"), 
         _("Position category:"), NULL);
-    if(category) {
-        // g_message("message=%s",category);
-        if (AddCategory(category)) {
+    if(categoryName) {
+        g_message("add=%s",categoryName);
+        if (AddCategory(categoryName)) {
         // AddCategory(category);
             gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
-            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, category, -1);
+            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, categoryName, -1);
             gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
             selected_iter=iter;
         }  
@@ -1526,7 +1543,7 @@ AddCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
         // else {
         //     GTKMessage(_("Error: problem adding this position category"), DT_INFO);
         // }
-        g_free(category);
+        g_free(categoryName);
         return;
     } else
         return;
