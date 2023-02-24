@@ -300,25 +300,21 @@ CreateStyles(GtkWidget * UNUSED(widget), gpointer UNUSED(p))
 // int show_popup(GtkWidget *widget, GdkEvent *event,gpointer *treeview) {
 int show_popup(GtkTreeView *widget, GdkEvent *event) {
 
-      const gint RIGHT_CLICK = 3;
-    g_message("I'm in the show popup func");
+    const gint RIGHT_CLICK = 3;
+    // g_message("I'm in the show popup func");
             //   GameListSelectRow(treeview, NULL);
-  if (event->type == GDK_BUTTON_PRESS) {
-    g_message("button press");
+    if (event->type == GDK_BUTTON_PRESS) {
+        // g_message("button press");
       
-      GdkEventButton *bevent = (GdkEventButton *) event;
+        GdkEventButton *bevent = (GdkEventButton *) event;
       
-      if (bevent->button == RIGHT_CLICK) {      
-            g_message("right button press");
-
-            g_message("done");
-          
-          gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
-              bevent->button, bevent->time);
+        if (bevent->button == RIGHT_CLICK) {      
+            // g_message("right button press");          
+            gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
+                    bevent->button, bevent->time);
             //   GameListSelectRow(treeview, NULL);
             return FALSE; //<-- to have the menu with usual clicks!!!
         }
-          
       return FALSE;
   } else 
         return FALSE;
@@ -407,7 +403,6 @@ GL_Create(void)
 
     // g_signal_connect(G_OBJECT(pwGameList), "button-press-event", G_CALLBACK(show_popup), copyMenu);
 
-
     if (fUseQuiz) {
 
         // GtkWidget *window;
@@ -444,9 +439,22 @@ GL_Create(void)
         //     G_CALLBACK(TestFunction3), NULL);  
 
         GtkWidget *menu_item;
-        menu_item = gtk_menu_item_new();
-        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
-        gtk_widget_show(menu_item);
+        /*separator*/
+        // menu_item = gtk_menu_item_new();
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        // gtk_widget_show(menu_item);
+        int tempArray [numCategories];
+        g_message("numCategories=%d",numCategories);
+        for(int i=0;i < numCategories; i++) {
+            tempArray[i]=i;
+            char buf[MAX_CATEGORY_NAME_LENGTH+8];
+            sprintf(buf,_("Add to: %s"),categories[i].name);
+            menu_item = gtk_menu_item_new_with_label(_(buf));
+            gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+            gtk_widget_show(menu_item);
+            g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), &(tempArray[i]));
+        }       
+
         menu_item = gtk_menu_item_new_with_label(_("Add to: Blitzing"));
         gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         gtk_widget_show(menu_item);
@@ -462,7 +470,7 @@ GL_Create(void)
         gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         gtk_widget_show(menu_item);
         g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
-        menu_item = gtk_menu_item_new_with_label(_("Add to: 3-pt holding"));
+        menu_item = gtk_menu_item_new_with_label(_("Add to: 1-pt holding"));
         gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         gtk_widget_show(menu_item);
         g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);

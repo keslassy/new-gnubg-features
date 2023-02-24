@@ -1149,6 +1149,7 @@ static void DisplayCategories(void)
         g_message("in DisplayCategories: %d->%s,%d,%s", 
             i,categories[i].name,categories[i].number,categories[i].path);
     }
+        g_message("numCategories=%d",numCategories);
 }
 
 // int NameIsCategory (const char sz[]) {
@@ -1364,7 +1365,7 @@ AddCategory(const char *sz)
     }
 
     /* check that the category name is not too long*/
-    if(strlen(sz) > MAX_POS_NAME_LENGTH) {
+    if(strlen(sz) > MAX_CATEGORY_NAME_LENGTH) {
             GTKMessage(_("Error: Position category name is too long"), DT_INFO);
         return 0;
     }
@@ -1440,7 +1441,7 @@ RenameCategory(const char * szOld, const char * szNew)
     }
 
     /* check that the new category name is not too long*/
-    if(strlen(szNew) > MAX_POS_NAME_LENGTH) {
+    if(strlen(szNew) > MAX_CATEGORY_NAME_LENGTH) {
         GTKMessage(_("Error: Position category name is too long"), DT_INFO);
         return -1;
     }
@@ -1463,7 +1464,7 @@ RenameCategory(const char * szOld, const char * szNew)
 
     /* replace file*/
     // char *fullOldPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szOld, ".csv", NULL);
-    // char fullOldPath [MAX_POS_PATH_LENGTH];
+    // char fullOldPath [MAX_CATEGORY_PATH_LENGTH];
     // strcpy(fullOldPath, categories[i].path);
     char *fullNewPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szNew, ".csv", NULL);
 

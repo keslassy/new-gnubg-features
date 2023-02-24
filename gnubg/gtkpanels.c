@@ -1318,6 +1318,19 @@ CreateHeadWindow(gnubgwindow panel, const char *sz, GtkWidget * pwWidge)
 static void
 CreatePanels(void)
 {
+    /* 
+    - Compute positionCategories array at start-up, so we can use it 
+    in right-click mode 
+    - Careful! We need to do this before loading the right-click variables in
+    CreateGameWindow() 
+    */
+    if(fUseQuiz){
+        // ShowQuizWindow();
+        // g_message("start-up");
+        GetPositionCategories();
+        g_message("numCategories at start=%d",numCategories);
+    } 
+
     CreateGameWindow();
     gtk_box_pack_start(GTK_BOX(pwPanelVbox), woPanel[WINDOW_GAME].pwWin, TRUE, TRUE, 0);
 
@@ -1602,6 +1615,7 @@ DockPanels(void)
         CreateTheoryWindow();
         CreateCommandWindow();
     }
+
 #if defined(USE_GTKUIMANAGER)
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                        "/MainMenu/ViewMenu/PanelsMenu/Message"), !fDockPanels

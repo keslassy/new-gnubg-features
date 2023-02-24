@@ -1099,14 +1099,14 @@ extern void DisplayKeyNames(void); /* debugging function to display the current 
 
 /* definitions for Quiz (categories)*/
 #define MAX_POS_CATEGORIES 50 /* number of defined position types*/
-#define MAX_POS_NAME_LENGTH 32
-#define MAX_POS_PATH_LENGTH 150
+#define MAX_CATEGORY_NAME_LENGTH 32
+#define MAX_CATEGORY_PATH_LENGTH 150
 // #define MAX_NOTE_LENGTH 300
 typedef struct 
 {
-    char name[MAX_POS_NAME_LENGTH];
+    char name[MAX_CATEGORY_NAME_LENGTH];
     int number; /*number of positions*/
-    char path[MAX_POS_PATH_LENGTH];
+    char path[MAX_CATEGORY_PATH_LENGTH];
     // char notes[MAX_NOTE_LENGTH]; /*future feature? not sure if needed*/
 } categorytype;
 extern categorytype categories[MAX_POS_CATEGORIES]; /* array with all position categories*/
