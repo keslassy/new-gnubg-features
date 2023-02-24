@@ -983,6 +983,7 @@ static char positionsFolder []="./quiz/";
 //static char positionsFileFullPath []="./quiz/positions.csv";
 static char * positionsFileFullPath;
 static char * currentCategory;
+static int currentCategoryIndex;
 static quiz q [MAX_ROWS]; 
 static int qLength=0;
 static int iOpt=-1; 
@@ -990,25 +991,27 @@ static int iOptCounter=0;
 // quiz qNow; /*extern*/
 static int counterForFile=0;
 
-/*initialization*/
-char positionCategory[MAX_POS_CATEGORIES][MAX_POS_NAME_LENGTH]={""};
-int positionCategoryLength=0;
+// /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
+// static const categorytype emptyCategory={NULL,0,NULL,NULL};
+categorytype categories[MAX_POS_CATEGORIES]; //={""};
+int numCategories;//=0
+// int numPositionsInCategory[MAX_POS_CATEGORIES]={0}; /* array with #positions per category file*/
 
 
 /* the following function:
 - updates positionsFileFullPath,
 - opens the corrsponding file, 
-- and saves the parsing results in the positionCategory static array */
-int OpenQuizPositionsFile(const char * category)
+- and saves the parsing results in the categories static array */
+int OpenQuizPositionsFile(const int index)
 {
     char row[MAX_ROW_CHARS];
     int i = -2;
     int column = 0;
 
-    positionsFileFullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, category, ".csv", NULL);
+    // positionsFileFullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, category, ".csv", NULL);
     // g_message("fullPath=%s",positionsFileFullPath);
 
-	FILE* fp = fopen(positionsFileFullPath, "r");
+	FILE* fp = fopen(categories[index].path, "r");
 
     if(fp==NULL) {
         char buf[100];
@@ -1072,7 +1075,8 @@ int OpenQuizPositionsFile(const char * category)
 
     }
     qLength=i+1;
-    // g_message("qLength=%d",qLength);
+    // g_message("qLength=%d ==??? categories[index].number=%d ",qLength,categories[index].number);
+    g_assert(qLength==categories[index].number);
     // Close the file
     fclose(fp);
     if(qLength<1) {
@@ -1138,29 +1142,32 @@ extern void qUpdate(float error) {
     }
 }
 // #if(0) /***********/
-// static void
-// DisplayPositionCategories(void)
-// {
-//     for(int i=0;i < positionCategoryLength; i++) {
-//         g_message("in DisplayPositionCategories: %d->%s", i,positionCategory[i]);
-//     }
-// }
+static void DisplayCategories(void)
+{
+    for(int i=0;i < numCategories; i++) {
+        g_message("in DisplayPositionCategories: %d->%s,%d,%s", 
+            i,categories[i].name,categories[i].number,categories[i].path);
+    }
+}
 
 // int NameIsCategory (const char sz[]) {
-//     for(int i=0;i < positionCategoryLength; i++) {
-//         if (!strcmp(sz, positionCategory[i])) {
-//             // g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,positionCategory[i],i);
+//     for(int i=0;i < numCategories; i++) {
+//         if (!strcmp(sz, categories[i])) {
+//             // g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,categories[i],i);
 //             return 1;
 //         }
 //     }
 //     return 0;
 // }
 
-static void InitPositionCategoryArray(void) {
+static void InitCategoryArray(void) {
+    const categorytype emptyCategory={"\0",0,"\0"};
     for(int i=0;i < MAX_POS_CATEGORIES; i++) {
-        positionCategory[i][0]='\0';
-        positionCategoryLength=0;
+        categories[i]=emptyCategory;
+        // categories[i][0]='\0';
+        // numCategories=0;
     }
+    numCategories=0;
 }
 
 
@@ -1178,70 +1185,130 @@ static void InitPositionCategoryArray(void) {
 //     }  
 // }
 
-int string_cmp (const void * a, const void * b ) {
-    const char * pa = (const char *) a;
-    const char * pb = (const char *) b;
 
-    return strcmp(pa,pb);
+static int CountPositions(categorytype category) {
+
+    //char * fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, category, ".csv", NULL);
+    // g_message("fullPath=%s",fullPath);
+
+
+	FILE* fp = fopen(category.path, "r");
+    if (fp == NULL) {
+        g_message("error: opening file: %s ", category.path);
+        return 0; //category.number=0;
+    }
+
+    int c;    // this must be an int
+    int count = -1; //don't count the title
+
+    for (c = getc(fp); c != EOF; c = getc(fp)) {
+        if (c == '\n') // Increment count if this character is newline 
+            count = count + 1;
+    }
+
+    fclose(fp);
+    // g_message("count=%d",count);
+    return count; //category.number=count;
 }
 
-static void
-GetPositionCategories(void)
-{
+int string_cmp (const void * p1, const void * p2) {
+    // const char * pa = (const char *) a;
+    // const char * pb = (const char *) b;
+    // return strcmp(pa,pb);
+
+    return strcmp(((const categorytype *)p1)->name, ((const categorytype *)p2)->name);
+}
+
+static void populateCategory(const int index, const char * name, const int updateNumber) {
+    /* add name*/
+    strcpy(categories[index].name, name);
+    /* add file path */
+    strcpy(categories[index].path,g_strconcat(positionsFolder, 
+        G_DIR_SEPARATOR_S, categories[index].name, ".csv", NULL));
+    /*compute and add number of positions*/
+    if (updateNumber)
+        categories[index].number=CountPositions(categories[index]);
+}
+
+extern void GetPositionCategories(void) {
     //     char buffer[MAX_LEN];
     // FilePreviewData *fdp;
     struct dirent* entry;
     // time_t recenttime = 0;
     // struct stat statbuf;
-    InitPositionCategoryArray();
+    InitCategoryArray();
 
     DIR* dir  = opendir(positionsFolder);
-
     while (NULL != (entry = readdir(dir))) {
-        // g_message("entry->d_name=%s",entry->d_name);
+        //g_message("entry->d_name=%s",entry->d_name);
         const char *dot = strrchr(entry->d_name, '.');
         if(dot && dot != entry->d_name && (strcmp(dot+1,"csv") == 0)) {
             int offset = dot - entry->d_name;
             entry->d_name[offset] = '\0';
-            strcpy(positionCategory[positionCategoryLength], entry->d_name);
-            // g_message("stripped entry->d_name=%s=%s",entry->d_name,
-                // positionCategory[positionCategoryLength]);
-            positionCategoryLength++;
+            populateCategory(numCategories, entry->d_name,TRUE);
+            // strcpy(categories[numCategories].name, entry->d_name);
+            // // g_message("stripped entry->d_name=%s=%s",entry->d_name,
+            //     // categories[numCategories]);
+            // /*computes number of positions*/
+            // CountPositions(&(categories[numCategories]));
+            // // categories[numCategories].number=CountPositions(categories[numCategories]);
+            // categories[numCategories].path=g_strconcat(positionsFolder, 
+            //     G_DIR_SEPARATOR_S, categories[numCategories].name, ".csv", NULL);
+            
+            numCategories++;
         }
     }
-    /* sorting alphabetically */
-    qsort( positionCategory, positionCategoryLength, 
-        sizeof(positionCategory[0]), string_cmp );
+    /* sorting 2 arrays alphabetically */
+    qsort(categories, numCategories, sizeof(categorytype), string_cmp );
 
     closedir(dir);
+    if(0)
+        DisplayCategories();
 }
 
-
-
-/*  delete a position category from the positionCategory array */
-static int
-DeletePositionCategory(const char *sz)
+/* for reference: code for deleting several rows, if needed once (Fedor, stackoverflow):
+static void
+delete_selected_rows (GtkButton * activated, GtkTreeView * tree_view)
 {
-    // g_message("in DeletePositionCategory: %s, length=%zu", sz, strlen(sz));
+  GtkTreeSelection * selection = gtk_tree_view_get_selection (tree_view);
+  GtkTreeModel *model;
+  GList * selected_list = gtk_tree_selection_get_selected_rows (selection, &model);
+  GList * cursor = g_list_last (selected_list);
+  while (cursor != NULL) {
+    GtkTreeIter iter;
+    GtkTreePath * path = cursor->data;
+    gtk_tree_model_get_iter (model, &iter, path);
+    gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
+    cursor = cursor->prev;
+  }
+  g_list_free_full (selected_list, (GDestroyNotify) gtk_tree_path_free);
+}
+*/
 
-    for(int i=0;i < positionCategoryLength; i++) {
-        if (!strcmp(sz, positionCategory[i])) {
-            // g_message("EXISTS! %s=%s, i=%d, positionCategoryLength=%d", sz,positionCategory[i],i,positionCategoryLength);
-            char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
-            if (remove(fullPath)!=0){
+/*  delete a position category from the categories array */
+static int
+DeleteCategory(const char *sz)
+{
+    // g_message("in DeleteCategory: %s, length=%zu", sz, strlen(sz));
+
+    for(int i=0;i < numCategories; i++) {
+        if (!strcmp(sz, categories[i].name)) {
+            // g_message("EXISTS! %s=%s, i=%d, numCategories=%d", sz,categories[i],i,numCategories);
+            // char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
+            if (remove(categories[i].path)!=0){
                 GTKMessage(_("Error: File could not be removed"), DT_INFO);
                 return 0;
             }
             else {
-                if (positionCategoryLength==(i+1)) {
-                    positionCategoryLength--;
+                if (numCategories==(i+1)) {
+                    numCategories--;
                     // UserCommand2("save settings");
                     // return 1;
                 } else {
-                    for(int j=i+1;j < positionCategoryLength; j++) {
-                        strcpy(positionCategory[j-1],positionCategory[j]); 
+                    for(int j=i+1;j < numCategories; j++) {
+                        categories[j-1]=categories[j]; 
                     }
-                    positionCategoryLength--;
+                    numCategories--;
                     // DisplayPositionCategories();
                     // UserCommand2("save settings");
                     // return 1;
@@ -1256,14 +1323,14 @@ DeletePositionCategory(const char *sz)
 
 
 
-/*  add a new position category to the positionCategory array ... 
+/*  add a new position category to the categories array ... 
 and make a corresponding file.
 Based on AddkeyName() function (and same for the similar functions above)
 Return 1 if success, 0 if problem */
 static int
-AddPositionCategory(const char *sz)
+AddCategory(const char *sz)
 {
-    // g_message("in AddPositionCategory: %s, length=%zu", sz, strlen(sz));
+    // g_message("in AddCategory: %s, length=%zu", sz, strlen(sz));
     /* check that the name doesn't contain "\t", "\n" */
     if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL) {
         // for(unsigned int j=0;j < strlen(sz); j++) {
@@ -1279,15 +1346,15 @@ AddPositionCategory(const char *sz)
         return 0;
     }
 
-    /* check that the positionCategory array is not full */
-    if(positionCategoryLength >= MAX_POS_CATEGORIES) {
+    /* check that the categories array is not full */
+    if(numCategories >= MAX_POS_CATEGORIES) {
             GTKMessage(_("Error: We have reached the maximum allowed number of position categories"), DT_INFO);
         return 0;
     }
 
     /* check that the position category doesn't already exist */
-    for(int i=0;i < positionCategoryLength; i++) {
-        if (!strcmp(sz, positionCategory[i])) {
+    for(int i=0;i < numCategories; i++) {
+        if (!strcmp(sz, categories[i].name)) {
             GTKMessage(_("Error: This category name already exists"), DT_INFO);
             return 0;
         }
@@ -1295,14 +1362,14 @@ AddPositionCategory(const char *sz)
 
     /* check that file can be added*/
 
-    char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
+    // char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
     // g_message("fullPath=%s",fullPath);
 
-	FILE* fp = fopen(fullPath, "w");
+	FILE* fp = fopen(sz, "w");
 
     if(fp==NULL) {
         char buf[100];
-        sprintf(buf,_("Error: Problem writing into file %s"),fullPath);
+        sprintf(buf,_("Error: Problem writing into file %s"),categories[numCategories].path);
         GTKMessage(_(buf), DT_INFO);
         return 0;
     }
@@ -1310,8 +1377,10 @@ AddPositionCategory(const char *sz)
     fprintf(fp, "position, ewmaError, lastSeen\n");
     fclose(fp);
 
-    strcpy(positionCategory[positionCategoryLength],sz); 
-    positionCategoryLength++;
+    populateCategory(numCategories,sz,FALSE);
+
+    // strcpy(categories[numCategories].name,sz); 
+    numCategories++;
 
     // DisplayPositionCategories();
     // UserCommand2("save settings");
@@ -1321,7 +1390,7 @@ AddPositionCategory(const char *sz)
 /*  rename a position category in the array, and its corresponding file.
 Return the position of the category, -1 if problem */
 static int
-RenamePositionCategory(const char * szOld, const char * szNew)
+RenameCategory(const char * szOld, const char * szNew)
 {
     if (!strcmp(szOld, szNew)) {
         GTKMessage(_("Error: The old and new category names are the same"), DT_INFO);
@@ -1342,12 +1411,12 @@ RenamePositionCategory(const char * szOld, const char * szNew)
 
     /* check that the old position category exists, and the new one does not! */
     int positionIndex=-1;
-    for(int i=0;i < positionCategoryLength; i++) {
-        if (!strcmp(szNew, positionCategory[i])) {
+    for(int i=0;i < numCategories; i++) {
+        if (!strcmp(szNew, categories[i].name)) {
             GTKMessage(_("Error: This category name already exists"), DT_INFO);
             return -1;
         }
-        if (!strcmp(szOld, positionCategory[i])) {
+        if (!strcmp(szOld, categories[i].name)) {
             positionIndex=i;
         }
     }
@@ -1357,20 +1426,22 @@ RenamePositionCategory(const char * szOld, const char * szNew)
     }
 
     /* replace file*/
-    char *fullOldPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szOld, ".csv", NULL);
+    // char *fullOldPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szOld, ".csv", NULL);
+    // char fullOldPath [MAX_POS_PATH_LENGTH];
+    // strcpy(fullOldPath, categories[i].path);
     char *fullNewPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szNew, ".csv", NULL);
 
-    int result = rename(fullOldPath, fullNewPath);
+    int result = rename(categories[positionIndex].path, fullNewPath);
 	
     if(result!=0) {
         char buf[200];
-        sprintf(buf,_("Error: Problem renaming file %s as %s"),fullOldPath,fullNewPath);
+        sprintf(buf,_("Error: Problem renaming file %s as %s"),categories[positionIndex].path,fullNewPath);
         GTKMessage(_(buf), DT_INFO);
         return -1;
     }
 
-    strcpy(positionCategory[positionIndex],szNew); 
-
+    // strcpy(categories[positionIndex].name,szNew); 
+    populateCategory(positionIndex,szNew,TRUE);
     // DisplayPositionCategories();
     // UserCommand2("save settings");
     return positionIndex;
@@ -1382,6 +1453,21 @@ RenamePositionCategory(const char * szOld, const char * szNew)
 static GtkTreeIter selected_iter;
 static GtkListStore *nameStore;
 
+static int
+GetSelectedCategoryIndex(GtkTreeView * treeview)
+{
+    GtkTreeModel *model;
+    // char *category = NULL;
+    GtkTreeSelection *sel = gtk_tree_view_get_selection(treeview);
+    if (gtk_tree_selection_count_selected_rows(sel) != 1)
+        return -1;
+    GList * selected_list = gtk_tree_selection_get_selected_rows (sel, &model);
+    GList * cursor = g_list_first (selected_list);
+    GtkTreePath * path = cursor->data;
+    gint * a = gtk_tree_path_get_indices (path);
+    g_message("index=%d",a[0]);
+    return a[0];
+}
 
 static char *
 GetSelectedCategory(GtkTreeView * treeview)
@@ -1403,20 +1489,22 @@ GetSelectedCategory(GtkTreeView * treeview)
 }
 
 static void
-AddPositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+AddCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     GtkTreeIter iter;
     char *category = GTKGetInput(_("Add position category"), 
         _("Position category:"), NULL);
     if(category) {
         // g_message("message=%s",category);
-        // if (AddPositionCategory(category)) {
-        AddPositionCategory(category);
+        if (AddCategory(category)) {
+        // AddCategory(category);
         gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
         gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, category, -1);
         gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
         selected_iter=iter;
-        // }  else {
+        }  
+        /* assuming AddCategory already gave an error message*/
+        // else {
         //     GTKMessage(_("Error: problem adding this position category"), DT_INFO);
         // }
         g_free(category);
@@ -1426,15 +1514,16 @@ AddPositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 }
 
 static void
-RenamePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+RenameCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     GtkTreeIter iter;
+    GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
     char * oldCategory = GetSelectedCategory(GTK_TREE_VIEW(treeview));
     if(oldCategory){
         char *newCategory = GTKGetInput(_("Add position category"), 
             _("Position category:"), NULL);
         if(newCategory){
-            int positionIndex = RenamePositionCategory(oldCategory, newCategory);
+            int positionIndex = RenameCategory(oldCategory, newCategory);
             /* we assume below that the array and the presented list are kept 
             in the same order, else need to iterate through the list */
             gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
@@ -1451,12 +1540,12 @@ RenamePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 }
 
 static void
-DeletePositionCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     char *category = GetSelectedCategory(GTK_TREE_VIEW(treeview));
     if(category){
         if (GTKGetInputYN(_("Are you sure?"))) { 
-            if (DeletePositionCategory(category)) {
+            if (DeleteCategory(category)) {
                 gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
             // DisplayPositionCategories();
             } else {
@@ -1508,28 +1597,6 @@ static void LoadPositionAndStart (void) {
     CommandSetGNUBgID(q[iOpt].position); 
 }
 
-static int CountPositions(char * category) {
-
-    char * fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, category, ".csv", NULL);
-    // g_message("fullPath=%s",fullPath);
-
-	FILE* fp = fopen(fullPath, "r");
-    if (fp == NULL) {
-        return -1;
-    }
-
-    int c;    // this must be an int
-    int count = 0;
-
-    for (c = getc(fp); c != EOF; c = getc(fp)) {
-        if (c == '\n') // Increment count if this character is newline 
-            count = count + 1;
-    }
-
-    fclose(fp);
-    return count;
-}
-
 static void
 ManagePositionCategories(void)
 {
@@ -1547,22 +1614,27 @@ ManagePositionCategories(void)
     GtkTreeViewColumn *column;
     // GtkListStore *store;
     GtkTreeIter iter;
-    GtkTreeViewColumn   *col;
+    // GtkTreeViewColumn   *col;
  
-    GetPositionCategories();
+    // DisplayCategories();
+
+    if(!categories[0].name) {
+        g_message("The categories array was expected to be initialized at start-up...");
+        GetPositionCategories();
+    }
 
     /* create list store */
     enum {COLUMN_STRING, COLUMN_INT, N_COLUMNS};
     nameStore = gtk_list_store_new(N_COLUMNS, G_TYPE_STRING,G_TYPE_INT);
 
-    for(int i=0;i < positionCategoryLength; i++) {
+    for(int i=0;i < numCategories; i++) {
         gtk_list_store_append(nameStore, &iter);
-        int numberPositions=CountPositions(positionCategory[i]);
+        // int numberPositions=CountPositions(categories[i]);
         gtk_list_store_set(nameStore, &iter, 
-                            COLUMN_STRING, positionCategory[i],
-                            COLUMN_INT, numberPositions,
+                            COLUMN_STRING, categories[i].name,
+                            COLUMN_INT, categories[i].number,
                             -1);
-        // g_message("in DisplayPositionCategories: %d->%s", i,positionCategory[i]);
+        // g_message("in DisplayPositionCategories: %d->%s", i,categories[i]);
     }
 
     /* create tree view */
@@ -1621,13 +1693,13 @@ ManagePositionCategories(void)
 #endif
     gtk_box_pack_start(GTK_BOX(pwVBox), hb1, FALSE, FALSE, 0);
     addButton = gtk_button_new_with_label(_("Add category"));
-    g_signal_connect(addButton, "clicked", G_CALLBACK(AddPositionCategoryClicked), treeview);
+    g_signal_connect(addButton, "clicked", G_CALLBACK(AddCategoryClicked), treeview);
     gtk_box_pack_start(GTK_BOX(hb1), addButton, FALSE, FALSE, 0);
     renameButton = gtk_button_new_with_label(_("Rename category"));
-    g_signal_connect(renameButton, "clicked", G_CALLBACK(RenamePositionCategoryClicked), treeview);
+    g_signal_connect(renameButton, "clicked", G_CALLBACK(RenameCategoryClicked), treeview);
     gtk_box_pack_start(GTK_BOX(hb1), renameButton, FALSE, FALSE, 0);
     delButton = gtk_button_new_with_label(_("Delete category"));
-    g_signal_connect(delButton, "clicked", G_CALLBACK(DeletePositionCategoryClicked), treeview);
+    g_signal_connect(delButton, "clicked", G_CALLBACK(DeleteCategoryClicked), treeview);
     gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
 
     gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
@@ -1650,8 +1722,8 @@ extern void BackFromHint (void) {
     char buf[100];
     counterForFile++;
     sprintf(buf,_("%d positions played in category %s (which has %d positions)."
-    "\n\n Play another position?"),
-    counterForFile,currentCategory,positionCategoryLength);
+        "\n\n Play another position?"), counterForFile,categories[currentCategoryIndex].name,
+        categories[currentCategoryIndex].number);
 
     if (GTKGetInputYN(buf)) {
         LoadPositionAndStart();
@@ -1672,19 +1744,27 @@ extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
 //     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
 // }
 
-    currentCategory = GetSelectedCategory(treeview);
-    if(!currentCategory) {
+    // currentCategory = GetSelectedCategory(treeview);
+    // if(!currentCategory) {
+    //     GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
+    //     ManagePositionCategories();
+    //     return;
+    // }
+
+    currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+    g_message("currentCategoryIndex=%d",currentCategoryIndex);
+    gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+    if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
         GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
         ManagePositionCategories();
         return;
     }
-    gtk_widget_destroy(gtk_widget_get_toplevel(pw));
 
     /* the following function:
     - updates positionsFileFullPath,
     - opens the corrsponding file, 
-    - and saves the parsing results in the positionCategory static array */
-    int result= OpenQuizPositionsFile(currentCategory);
+    - and saves the parsing results in the categories static array */
+    int result= OpenQuizPositionsFile(currentCategoryIndex);
     // g_free(currentCategory); //when should we free a static var that is to be reused?
 
     if(result==FALSE) {

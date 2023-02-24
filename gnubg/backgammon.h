@@ -1097,12 +1097,24 @@ extern int AddKeyName(const char sz[]); /* function that adds a key player name 
 extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/
 extern void DisplayKeyNames(void); /* debugging function to display the current key player names in the array*/
 
-/* definitions for positionCategory*/
-#define MAX_POS_CATEGORIES 200 /* number of defined posiiton types*/
+/* definitions for Quiz (categories)*/
+#define MAX_POS_CATEGORIES 50 /* number of defined position types*/
 #define MAX_POS_NAME_LENGTH 32
-extern char positionCategory[MAX_POS_CATEGORIES][MAX_POS_NAME_LENGTH]; /* array with all position categories*/
-extern int positionCategoryLength; /* the positionCategory array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
-
+#define MAX_POS_PATH_LENGTH 150
+// #define MAX_NOTE_LENGTH 300
+typedef struct 
+{
+    char name[MAX_POS_NAME_LENGTH];
+    int number; /*number of positions*/
+    char path[MAX_POS_PATH_LENGTH];
+    // char notes[MAX_NOTE_LENGTH]; /*future feature? not sure if needed*/
+} categorytype;
+extern categorytype categories[MAX_POS_CATEGORIES]; /* array with all position categories*/
+extern int numCategories; /* the categories array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
+// extern int numPositionsInCategory[MAX_POS_CATEGORIES]; /* array with #positions per category file*/
+extern void BackFromHint (void);
+extern void GetPositionCategories(void);
+extern int fUseQuiz;
 
 
 

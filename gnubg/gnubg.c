@@ -255,6 +255,7 @@ int fUseKeyNames=TRUE;
 int fWithinSmartOpen=FALSE;
 int fCheckUpdateGTK = FALSE;
 int fTriggeredByRecordList=FALSE;
+int fUseQuiz=TRUE;
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */

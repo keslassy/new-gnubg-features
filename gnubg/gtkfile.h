@@ -30,6 +30,6 @@ extern void GTKAnalyzeCurrent(void);
 extern void GTKAnalyzeFile(void);
 extern void GTKBatchAnalyse(gpointer p, guint n, GtkWidget * pw);
 
-extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview);
-extern void BackFromHint (void);
+/* For quiz mode; note that it uses GTKWidget so cannot be in backgammon.h */
+extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview); 
 #endif

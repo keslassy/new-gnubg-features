@@ -308,7 +308,7 @@ int show_popup(GtkTreeView *widget, GdkEvent *event) {
       
       GdkEventButton *bevent = (GdkEventButton *) event;
       
-    //   if (bevent->button == RIGHT_CLICK) {      
+      if (bevent->button == RIGHT_CLICK) {      
             g_message("right button press");
 
             g_message("done");
@@ -317,9 +317,9 @@ int show_popup(GtkTreeView *widget, GdkEvent *event) {
               bevent->button, bevent->time);
             //   GameListSelectRow(treeview, NULL);
             return FALSE; //<-- to have the menu with usual clicks!!!
-    //     }
+        }
           
-    //   return FALSE;
+      return FALSE;
   } else 
         return FALSE;
 }
@@ -408,19 +408,20 @@ GL_Create(void)
     // g_signal_connect(G_OBJECT(pwGameList), "button-press-event", G_CALLBACK(show_popup), copyMenu);
 
 
+    if (fUseQuiz) {
 
         // GtkWidget *window;
-        GtkWidget *ebox;
+        // GtkWidget *ebox;
         GtkWidget *pmenu;
-        GtkWidget *hideMi;
-        GtkWidget *quitMi;
+        // GtkWidget *hideMi;
+        // GtkWidget *quitMi;
 
         // window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         // gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
         // gtk_window_set_default_size(GTK_WINDOW(window), 300, 200);
         // gtk_window_set_title(GTK_WINDOW(window), "Popup menu");
 
-        ebox = gtk_event_box_new();
+        // ebox = gtk_event_box_new();
         // gtk_container_add((column), ebox);
         // gtk_container_add(GTK_CONTAINER(pwGameList), ebox);
         // gtk_container_add(GTK_CONTAINER(woPanel[WINDOW_GAME].pwWin), ebox);
@@ -466,17 +467,16 @@ GL_Create(void)
         gtk_widget_show(menu_item);
         g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
 
-        // g_signal_connect_swapped((pwGameList), "cursor-changed", 
-        //     G_CALLBACK(show_popup), pmenu);  
+    // g_signal_connect_swapped((pwGameList), "cursor-changed", 
+    //     G_CALLBACK(show_popup), pmenu);  
 
 
-        // g_signal_connect(G_OBJECT(woPanel[WINDOW_GAME].pwWin), "destroy",
-        //     G_CALLBACK(gtk_main_quit), NULL);
-                
-        
+    // g_signal_connect(G_OBJECT(woPanel[WINDOW_GAME].pwWin), "destroy",
+    //     G_CALLBACK(gtk_main_quit), NULL);
+            
         g_signal_connect_swapped((pwGameList), "button-press-event", 
             G_CALLBACK(show_popup), pmenu);  
-
+    }
     return pwGameList;
 }
 

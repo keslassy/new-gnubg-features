@@ -322,7 +322,7 @@ CreateMessageWindow(void)
 }
 
 static GtkWidget *pwTheoryView = NULL;
-static GtkWidget *pwQuizView = NULL;
+// static GtkWidget *pwQuizView = NULL;
 
 
 void
@@ -449,75 +449,75 @@ enum
 
 
 
-static GtkTreeModel *
-create_and_fill_model (void)
-{
-  GtkListStore *store = gtk_list_store_new (NUM_COLS,
-                                            G_TYPE_STRING,
-                                            G_TYPE_UINT);
+// static GtkTreeModel *
+// create_and_fill_model (void)
+// {
+//   GtkListStore *store = gtk_list_store_new (NUM_COLS,
+//                                             G_TYPE_STRING,
+//                                             G_TYPE_UINT);
 
-  /* Append a row and fill in some data */
-  GtkTreeIter iter;
-  gtk_list_store_append (store, &iter);
-  gtk_list_store_set (store, &iter,
-                      COL_NAME, "Blitzing",
-                      COL_NUM, 51,
-                      -1);
+//   /* Append a row and fill in some data */
+//   GtkTreeIter iter;
+//   gtk_list_store_append (store, &iter);
+//   gtk_list_store_set (store, &iter,
+//                       COL_NAME, "Blitzing",
+//                       COL_NUM, 51,
+//                       -1);
 
-  /* append another row and fill in some data */
-  gtk_list_store_append (store, &iter);
-  gtk_list_store_set (store, &iter,
-                      COL_NAME, "Holding",
-                      COL_NUM, 23,
-                      -1);
+//   /* append another row and fill in some data */
+//   gtk_list_store_append (store, &iter);
+//   gtk_list_store_set (store, &iter,
+//                       COL_NAME, "Holding",
+//                       COL_NUM, 23,
+//                       -1);
 
-  /* ... and a third row */
-  gtk_list_store_append (store, &iter);
-  gtk_list_store_set (store, &iter,
-                      COL_NAME, "Hit vs. prime",
-                      COL_NUM, 91,
-                      -1);
+//   /* ... and a third row */
+//   gtk_list_store_append (store, &iter);
+//   gtk_list_store_set (store, &iter,
+//                       COL_NAME, "Hit vs. prime",
+//                       COL_NUM, 91,
+//                       -1);
 
-  return GTK_TREE_MODEL (store);
-}
+//   return GTK_TREE_MODEL (store);
+// }
 
-static GtkWidget *
-create_view_and_model (void)
-{
-  GtkWidget *view = gtk_tree_view_new ();
+// static GtkWidget *
+// create_view_and_model (void)
+// {
+//   GtkWidget *view = gtk_tree_view_new ();
 
-  GtkCellRenderer *renderer;
+//   GtkCellRenderer *renderer;
 
-  /* --- Column #1 --- */
-  renderer = gtk_cell_renderer_text_new ();
-  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
-                                               -1,      
-                                               _("Category"),  
-                                               renderer,
-                                               "text", COL_NAME,
-                                               NULL);
+//   /* --- Column #1 --- */
+//   renderer = gtk_cell_renderer_text_new ();
+//   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
+//                                                -1,      
+//                                                _("Category"),  
+//                                                renderer,
+//                                                "text", COL_NAME,
+//                                                NULL);
 
-  /* --- Column #2 --- */
-  renderer = gtk_cell_renderer_text_new ();
-  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
-                                               -1,      
-                                               _("Positions"),  
-                                               renderer,
-                                               "text", COL_NUM,
-                                               NULL);
+//   /* --- Column #2 --- */
+//   renderer = gtk_cell_renderer_text_new ();
+//   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
+//                                                -1,      
+//                                                _("Positions"),  
+//                                                renderer,
+//                                                "text", COL_NUM,
+//                                                NULL);
 
-  GtkTreeModel *model = create_and_fill_model ();
+//   GtkTreeModel *model = create_and_fill_model ();
 
-  gtk_tree_view_set_model (GTK_TREE_VIEW (view), model);
+//   gtk_tree_view_set_model (GTK_TREE_VIEW (view), model);
 
-  /* The tree view has acquired its own reference to the
-   *  model, so we can drop ours. That way the model will
-   *  be freed automatically when the tree view is destroyed
-   */
-  g_object_unref (model);
+//   /* The tree view has acquired its own reference to the
+//    *  model, so we can drop ours. That way the model will
+//    *  be freed automatically when the tree view is destroyed
+//    */
+//   g_object_unref (model);
 
-  return view;
-}
+//   return view;
+// }
 
 #if(0) /**************/
 int

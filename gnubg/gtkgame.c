@@ -5081,8 +5081,13 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
                 fCheckUpdateGTK = FALSE;
                 CheckVersionUpdate();
         }
-
-        ShowQuizWindow();
+        /* compute positionCategories array at start-up, so we can use it 
+        in right-click mode */
+        if(fUseQuiz){
+            // ShowQuizWindow();
+            // g_message("start-up");
+            GetPositionCategories();
+        }
 
         gtk_main();
 

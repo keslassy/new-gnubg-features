@@ -98,9 +98,9 @@ DialogResponse(GtkWidget * dialog, gint response, CallbackStruct * data)
         gtk_widget_destroy(dialog);
     } else if (response == GTK_RESPONSE_YES) { //YES added for quiz mode, can also create
              // a specific extern variable if needed; it's not used anywhere else
-        if (data->DialogFun)
-            data->DialogFun(dialog, data->data);
-        else
+        // if (data->DialogFun)
+        //     data->DialogFun(dialog, data->data);
+        // else
             StartQuiz(dialog, data->data);
     } else {                    /* Ignore response */
     }
