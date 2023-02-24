@@ -320,8 +320,8 @@ int show_popup(GtkTreeView *widget, GdkEvent *event) {
         return FALSE;
 }
 
-void TestFunction3(void) {
-    g_message("I'm in the test func");
+void TestFunction3(categorytype * pcategory, GtkWidget * pw) {
+    g_message("I'm in the test func: %s", pcategory->name);
 }
 
 extern GtkWidget *
@@ -445,6 +445,7 @@ GL_Create(void)
         // gtk_widget_show(menu_item);
         int tempArray [numCategories];
         g_message("numCategories=%d",numCategories);
+        // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
         for(int i=0;i < numCategories; i++) {
             tempArray[i]=i;
             char buf[MAX_CATEGORY_NAME_LENGTH+8];
@@ -452,28 +453,28 @@ GL_Create(void)
             menu_item = gtk_menu_item_new_with_label(_(buf));
             gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
             gtk_widget_show(menu_item);
-            g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), &(tempArray[i]));
+            g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), 
+                &(categories[i])); //(tempArray[i]));
         }       
-
-        menu_item = gtk_menu_item_new_with_label(_("Add to: Blitzing"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
-        menu_item = gtk_menu_item_new();
-        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
-        gtk_widget_show(menu_item);
-        menu_item = gtk_menu_item_new_with_label(_("Add to: 5-pt holding"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
-        menu_item = gtk_menu_item_new_with_label(_("Add to: 4-pt holding"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
-        menu_item = gtk_menu_item_new_with_label(_("Add to: 1-pt holding"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        // menu_item = gtk_menu_item_new_with_label(_("Add to: Blitzing"));
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        // gtk_widget_show(menu_item);
+        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        // menu_item = gtk_menu_item_new();
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        // gtk_widget_show(menu_item);
+        // menu_item = gtk_menu_item_new_with_label(_("Add to: 5-pt holding"));
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        // gtk_widget_show(menu_item);
+        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        // menu_item = gtk_menu_item_new_with_label(_("Add to: 4-pt holding"));
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        // gtk_widget_show(menu_item);
+        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        // menu_item = gtk_menu_item_new_with_label(_("Add to: 1-pt holding"));
+        // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+        // gtk_widget_show(menu_item);
+        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
 
     // g_signal_connect_swapped((pwGameList), "cursor-changed", 
     //     G_CALLBACK(show_popup), pmenu);  
