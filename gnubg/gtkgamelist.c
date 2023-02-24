@@ -68,6 +68,25 @@ GTKClearMoveRecord(void)
     gtk_list_store_clear(plsGameList);
 }
 
+// /* Copy the GNUBG ID to q.position */
+// static void qUpdatePosition(void)
+// {                               
+//     // char buffer[L_MATCHID + 1 + L_POSITIONID + 1];
+
+//     /* assuming we are in quiet mode...*/
+//     // if (ms.gs == GAME_NONE) {
+//     //     output(_("No game in progress."));
+//     //     outputx();
+//     //     return;
+//     // }
+
+//     sprintf(qNow.position, "%s:%s", PositionID(msBoard()), MatchIDFromMatchState(&ms));
+
+//     // GTKTextToClipboard(buffer);
+
+//     // gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Position and Match IDs copied to the clipboard"));
+// }
+
 static void
 GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
 {
@@ -324,6 +343,107 @@ void TestFunction3(categorytype * pcategory, GtkWidget * pw) {
     g_message("I'm in the test func: %s", pcategory->name);
 }
 
+
+// /* inspired by https://docs.gtk.org/gtk3/treeview-tutorial.html*/
+// void
+// view_popup_menu_onDoSomething (GtkWidget *menuitem,
+//                                gpointer userdata)
+// {
+//   /* we passed the view as userdata when we connected the signal */
+//   GtkTreeView *treeview = GTK_TREE_VIEW(userdata);
+
+//   g_print ("Do something!\n");
+// }
+
+// void
+// view_popup_menu (GtkWidget *treeview, GdkEventButton *event, gpointer userdata) 
+// {
+//     // GtkWidget *menu;
+//     // GtkWidget *menu_item;
+//     // menu = gtk_menu_new();
+//     // int tempArray [numCategories];
+//     // g_message("numCategories=%d",numCategories);
+//     // // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
+//     // for(int i=0;i < numCategories; i++) {
+//     //     tempArray[i]=i;
+//     //     char buf[MAX_CATEGORY_NAME_LENGTH+8];
+//     //     sprintf(buf,_("Add to: %s"),categories[i].name);
+//     //     menu_item = gtk_menu_item_new_with_label(_(buf));
+//     //     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+//     //     gtk_widget_show(menu_item);
+//     //     // g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), 
+//     //     //     &(categories[i])); //(tempArray[i]));
+//     //     g_signal_connect(menuitem, "activate",
+//     //                (GCallback) view_popup_menu_onDoSomething, treeview);
+
+//     // }    
+//     GtkWidget *menu, *menuitem;
+//     menu = gtk_menu_new();
+//     menuitem = gtk_menu_item_new_with_label("Do something");
+//     g_signal_connect(menuitem, "activate",
+//                     (GCallback) view_popup_menu_onDoSomething, treeview);
+//     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+//     gtk_widget_show_all(menu);
+//     /* Note: event can be NULL here when called from view_onPopupMenu;
+//     * gdk_event_get_time() accepts a NULL argument
+//     */
+//     gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
+//                     (event != NULL) ? event->button : 0,
+//                     gdk_event_get_time((GdkEvent*)event));
+// }
+
+// gboolean
+// view_onButtonPressed (GtkWidget *treeview,
+//                       GdkEventButton *event,
+//               gpointer userdata)
+// {
+//   /* single click with the right mouse button? */
+//   if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
+//   {
+//     g_print ("Single right click on the tree view.\n");
+
+//     /* optional: select row if no row is selected or only
+//      *  one other row is selected (will only do something
+//      *  if you set a tree selection mode as described later
+//      *  in the tutorial) */
+//     if (1)
+//     {
+//       GtkTreeSelection *selection;
+
+//       selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+
+//       /* Note: gtk_tree_selection_count_selected_rows() does not
+//        *   exist in gtk+-2.0, only in gtk+ >= v2.2 ! */
+//       if (gtk_tree_selection_count_selected_rows(selection)  <= 1)
+//       {
+//          GtkTreePath *path;
+
+//          /* Get tree path for row that was clicked */
+//          if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
+//                                            (gint) event->x, 
+//                                            (gint) event->y,
+//                                            &path, NULL, NULL, NULL))
+//          {
+//            gtk_tree_selection_unselect_all(selection);
+//            gtk_tree_selection_select_path(selection, path);
+//            gtk_tree_path_free(path);
+//          }
+//       }
+//     } /* end of optional bit */
+
+//     view_popup_menu(treeview, event, userdata);
+
+//     return TRUE; //GDK_EVENT_STOP;
+//   }
+
+//   return FALSE; //GDK_EVENT_PROPAGATE;
+// }
+
+// gboolean view_onPopupMenu (GtkWidget *treeview, gpointer userdata) {
+//   view_popup_menu(treeview, NULL, userdata);
+//   return TRUE; //GDK_EVENT_STOP;
+// }
+
 extern GtkWidget *
 GL_Create(void)
 {
@@ -404,10 +524,37 @@ GL_Create(void)
     // g_signal_connect(G_OBJECT(pwGameList), "button-press-event", G_CALLBACK(show_popup), copyMenu);
 
     if (fUseQuiz) {
+        GtkWidget *pmenu;
+        pmenu = gtk_menu_new();
+        GtkWidget *menu_item;
+        int tempArray [numCategories];
+        g_message("numCategories=%d",numCategories);
+        // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
+        for(int i=0;i < numCategories; i++) {
+            tempArray[i]=i;
+            char buf[MAX_CATEGORY_NAME_LENGTH+8];
+            sprintf(buf,_("Add to: %s"),categories[i].name);
+            menu_item = gtk_menu_item_new_with_label(_(buf));
+            gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+            gtk_widget_show(menu_item);
+            g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), 
+                &(categories[i])); //(tempArray[i]));
+        }       
+
+        g_signal_connect_swapped(pwGameList, "button-press-event", 
+            G_CALLBACK(show_popup), pmenu);  
+        
+        // g_signal_connect(pwGameList, "button-press-event", G_CALLBACK(view_onButtonPressed), 
+        //     NULL);    
+        // g_signal_connect(pwGameList, "popup-menu", G_CALLBACK(view_onPopupMenu), NULL); 
+
+   
+    }
+    return pwGameList;
+}
 
         // GtkWidget *window;
         // GtkWidget *ebox;
-        GtkWidget *pmenu;
         // GtkWidget *hideMi;
         // GtkWidget *quitMi;
 
@@ -423,7 +570,6 @@ GL_Create(void)
         // gtk_event_box_set_visible_window(ebox, FALSE);
         // gtk_event_box_set_above_child (ebox,TRUE);
         // gtk_widget_hide(ebox);
-        pmenu = gtk_menu_new();
         
         // hideMi = gtk_menu_item_new_with_label("Minimize");
         // gtk_widget_show(hideMi);
@@ -438,24 +584,10 @@ GL_Create(void)
         // g_signal_connect(G_OBJECT(quitMi), "activate", 
         //     G_CALLBACK(TestFunction3), NULL);  
 
-        GtkWidget *menu_item;
         /*separator*/
         // menu_item = gtk_menu_item_new();
         // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         // gtk_widget_show(menu_item);
-        int tempArray [numCategories];
-        g_message("numCategories=%d",numCategories);
-        // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
-        for(int i=0;i < numCategories; i++) {
-            tempArray[i]=i;
-            char buf[MAX_CATEGORY_NAME_LENGTH+8];
-            sprintf(buf,_("Add to: %s"),categories[i].name);
-            menu_item = gtk_menu_item_new_with_label(_(buf));
-            gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
-            gtk_widget_show(menu_item);
-            g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), 
-                &(categories[i])); //(tempArray[i]));
-        }       
         // menu_item = gtk_menu_item_new_with_label(_("Add to: Blitzing"));
         // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         // gtk_widget_show(menu_item);
@@ -483,11 +615,8 @@ GL_Create(void)
     // g_signal_connect(G_OBJECT(woPanel[WINDOW_GAME].pwWin), "destroy",
     //     G_CALLBACK(gtk_main_quit), NULL);
             
-        g_signal_connect_swapped((pwGameList), "button-press-event", 
-            G_CALLBACK(show_popup), pmenu);  
-    }
-    return pwGameList;
-}
+
+
 
 static void
 AddStyle(GtkStyle ** ppsComb, GtkStyle * psNew)

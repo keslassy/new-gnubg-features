@@ -990,7 +990,7 @@ static quiz q [MAX_ROWS];
 static int qLength=0;
 static int iOpt=-1; 
 static int iOptCounter=0; 
-// quiz qNow; /*extern*/
+// quiz qNow={"\0",0,0,0.0}; /*extern*/
 static int counterForFile=0;
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
@@ -1087,11 +1087,13 @@ int OpenQuizPositionsFile(const int index)
     } 
 	return TRUE;
 }
+/* in backgammon.h, we define: */
 // typedef struct {
 //     char * position; 
 //     double ewmaError; 
 //     long int lastSeen; 
 // } quiz;
+
 /* based on standard csv program from geeksforgeeks*/
 int AddQuizPosition(quiz qRow)
 {

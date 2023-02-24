@@ -262,16 +262,6 @@ typedef struct {
     const evalcontext *pec;
 } scoreData;
 
-/* structure for quiz mode*/
-typedef struct {
-    char * position; 
-    float ewmaError; 
-    long int lastSeen; 
-    float priority;
-} quiz;
-// extern quiz qNow; 
-extern void qUpdate(float error);
-
 /* Defining structures for AnalyzeFileSetting.
 Other defined structures throughout the files: 
 - apwAnalyzeFileSetting (gtkgame.c); 
@@ -408,8 +398,6 @@ extern int log_rollouts;
 extern int nThreadPriority;
 extern int nToolbarStyle;
 extern int nTutorSkillCurrent;
-
-extern int fInQuizMode;
 
 extern int fBackgroundAnalysis; /* define whether to analyze in the background*/
 extern int fAnalysisRunning; /* when analyzing a match in background */
@@ -1097,7 +1085,9 @@ extern int AddKeyName(const char sz[]); /* function that adds a key player name 
 extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/
 extern void DisplayKeyNames(void); /* debugging function to display the current key player names in the array*/
 
-/* definitions for Quiz (categories)*/
+/* ************* */
+
+/* definitions for Quiz */
 #define MAX_POS_CATEGORIES 50 /* number of defined position types*/
 #define MAX_CATEGORY_NAME_LENGTH 32
 #define MAX_CATEGORY_PATH_LENGTH 150
@@ -1114,9 +1104,20 @@ extern int numCategories; /* the categories array should be filled from index 0 
 // extern int numPositionsInCategory[MAX_POS_CATEGORIES]; /* array with #positions per category file*/
 extern void BackFromHint (void);
 extern void GetPositionCategories(void);
-extern int fUseQuiz;
+extern int fUseQuiz;    /* enable quiz features */
+extern int fInQuizMode; /* we are inside quiz mode, so no match etc. */
 
+/* structure for quiz mode*/
+typedef struct {
+    char * position; 
+    float ewmaError; 
+    long int lastSeen; 
+    float priority;
+} quiz;
+extern quiz qNow; 
+extern void qUpdate(float error);
 
+/* ************* */
 
 /* definitions for version checks in updates */
 extern char * websiteForUpdates; /* official GNUBG website */

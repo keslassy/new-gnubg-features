@@ -1524,6 +1524,7 @@ ShowBoard(void)
             sprintf(strchr(sz, 0), ", %s %s", _("resigns"), gettext(aszGameResult[ms.fResigned - 1]));
 
         outputl(DrawBoard(szBoard, (ConstTanBoard) an, ms.fMove, apch, MatchIDFromMatchState(&ms), anChequers[ms.bgv]));
+         g_message("matchID=%s",MatchIDFromMatchState(&ms));
 
         if (
 #if defined(USE_GTK)
@@ -1543,7 +1544,13 @@ ShowBoard(void)
                  ap[ms.fTurn].pt != PLAYER_HUMAN && !fComputing && !nNextTurn, anChequers[ms.bgv]);
     }
 #endif
+    {
+        char *pc;
+        printf("%s: %s\n", _("MatchID"), pc = MatchIDFromMatchState(&ms));
+        // MatchStateFromID(&ms, pc);
+         g_message("matchID2=%s",MatchIDFromMatchState(&ms));
 
+    }
 #ifdef UNDEF
     {
         char *pc;
@@ -1551,6 +1558,22 @@ ShowBoard(void)
         MatchStateFromID(&ms, pc);
     }
 #endif
+    if(fUseQuiz==1){
+    //         if (ms.gs == GAME_NONE) {
+    //     output(_("No game in progress."));
+    //     outputx();
+    //     return;
+    // }
+        // qNow={"\0",0,0,0.0};
+        quiz qNow={"\0",0,0,0.0}; /*extern*/
+        qNow.position=(char *)malloc(sizeof(char) * (200));
+        // g_message("matchID=%s",MatchIDFromMatchState(&ms));
+        // g_message("posID=%s",PositionID(msBoard()));
+        // if(PositionID(msBoard()) && MatchIDFromMatchState(&ms)) {
+            sprintf(qNow.position, "%s:%s", PositionID(msBoard()), MatchIDFromMatchState(&ms));
+            g_message("copied position: %s",qNow.position);
+        // }
+    }
 }
 
 extern char *
