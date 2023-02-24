@@ -979,7 +979,7 @@ ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
 
 #define MAX_ROWS 1024
 #define MAX_ROW_CHARS 1024
-static char positionsFolder []="./quiz/";
+static char positionsFolder []="./quiz";
 //static char positionsFileFullPath []="./quiz/positions.csv";
 static char * positionsFileFullPath;
 // static char * currentCategory;
@@ -1144,7 +1144,7 @@ extern void qUpdate(float error) {
 static void DisplayCategories(void)
 {
     for(int i=0;i < numCategories; i++) {
-        g_message("in DisplayPositionCategories: %d->%s,%d,%s", 
+        g_message("in DisplayCategories: %d->%s,%d,%s", 
             i,categories[i].name,categories[i].number,categories[i].path);
     }
 }
@@ -1227,6 +1227,7 @@ static void populateCategory(const int index, const char * name, const int updat
     /*compute and add number of positions*/
     if (updateNumber)
         categories[index].number=CountPositions(categories[index]);
+    g_message("at index %d with name=%s, number=%d",index,name,categories[index].number);
 }
 
 extern void GetPositionCategories(void) {
@@ -1316,7 +1317,7 @@ DeleteCategory(const char *sz)
                         categories[j-1]=categories[j]; 
                     }
                     numCategories--;
-                    // DisplayPositionCategories();
+                    // DisplayCategories();
                     // UserCommand2("save settings");
                     // return 1;
                 }
@@ -1328,7 +1329,18 @@ DeleteCategory(const char *sz)
     return 0;
 }
 
-
+static int CheckbadCharacters(const char * name) {
+    char bad_chars[] = "!@%^*~|<>:"; //\"\t\n";
+    int invalid_found = FALSE;
+    int i;
+    for (i = 0; i < (int) strlen(bad_chars); ++i) {
+        if (strchr(name, bad_chars[i]) != NULL) {
+            invalid_found = TRUE;
+            break;
+        }
+    }
+    return invalid_found;
+}
 
 /*  add a new position category to the categories array ... 
 and make a corresponding file.
@@ -1339,7 +1351,7 @@ AddCategory(const char *sz)
 {
     // g_message("in AddCategory: %s, length=%zu", sz, strlen(sz));
     /* check that the name doesn't contain "\t", "\n" */
-    if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL) {
+    if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL || CheckbadCharacters(sz)) {
         // for(unsigned int j=0;j < strlen(sz); j++) {
         //     g_message("%c", sz[j]);
         // }
@@ -1369,14 +1381,14 @@ AddCategory(const char *sz)
 
     /* check that file can be added*/
 
-    // char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
-    // g_message("fullPath=%s",fullPath);
+    char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
+    g_message("fullPath=%s",fullPath);
 
 	FILE* fp = fopen(sz, "w");
 
     if(fp==NULL) {
         char buf[100];
-        sprintf(buf,_("Error: Problem writing into file %s"),categories[numCategories].path);
+        sprintf(buf,_("Error: Problem writing into file %s"),fullPath);
         GTKMessage(_(buf), DT_INFO);
         return 0;
     }
@@ -1389,7 +1401,7 @@ AddCategory(const char *sz)
     // strcpy(categories[numCategories].name,sz); 
     numCategories++;
 
-    // DisplayPositionCategories();
+    // DisplayCategories();
     // UserCommand2("save settings");
     return 1;
 }
@@ -1449,7 +1461,7 @@ RenameCategory(const char * szOld, const char * szNew)
 
     // strcpy(categories[positionIndex].name,szNew); 
     populateCategory(positionIndex,szNew,TRUE);
-    // DisplayPositionCategories();
+    DisplayCategories();
     // UserCommand2("save settings");
     return positionIndex;
 }
@@ -1505,10 +1517,10 @@ AddCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
         // g_message("message=%s",category);
         if (AddCategory(category)) {
         // AddCategory(category);
-        gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
-        gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, category, -1);
-        gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
-        selected_iter=iter;
+            gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
+            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, category, -1);
+            gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
+            selected_iter=iter;
         }  
         /* assuming AddCategory already gave an error message*/
         // else {
@@ -1554,7 +1566,7 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
         if (GTKGetInputYN(_("Are you sure?"))) { 
             if (DeleteCategory(category)) {
                 gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-            // DisplayPositionCategories();
+            // DisplayCategories();
             } else {
                 GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
             }
@@ -1644,7 +1656,7 @@ ManagePositionCategories(void)
                             COLUMN_STRING, categories[i].name,
                             COLUMN_INT, categories[i].number,
                             -1);
-        // g_message("in DisplayPositionCategories: %d->%s", i,categories[i]);
+        // g_message("in DisplayCategories: %d->%s", i,categories[i]);
     }
 
     /* create tree view */
