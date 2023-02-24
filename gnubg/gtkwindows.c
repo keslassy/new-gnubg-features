@@ -76,6 +76,8 @@ static char *aszNamedIcon[NUM_DIALOG_TYPES] = {
 static void
 quitter(GtkWidget * UNUSED(widget), GtkWidget * parent)
 {
+    // if(fInQuizMode)
+    //     fInQuizMode=FALSE;
     gtk_main_quit();
     if (parent)
         gtk_window_present(GTK_WINDOW(parent));
@@ -90,18 +92,25 @@ static void
 DialogResponse(GtkWidget * dialog, gint response, CallbackStruct * data)
 {
     if (response == GTK_RESPONSE_OK || response == GTK_RESPONSE_CLOSE) { 
-        if (data->DialogFun)
+        // g_message("A) response %d",response );
+        if (data->DialogFun) {
+        // g_message("A1) response %d",response );
             data->DialogFun(dialog, data->data);
-        else
+        }
+        else {
+        // g_message("A2) response %d",response );
             OK(dialog, data->data);
+        }
     } else if (response == GTK_RESPONSE_CANCEL) {
         gtk_widget_destroy(dialog);
-    } else if (response == GTK_RESPONSE_YES) { //YES added for quiz mode, can also create
-             // a specific extern variable if needed; it's not used anywhere else
-        // if (data->DialogFun)
-        //     data->DialogFun(dialog, data->data);
-        // else
-            StartQuiz(dialog, data->data);
+    // } else if (response == GTK_RESPONSE_YES) { //YES added for quiz mode, can also create
+    //          // a specific extern variable if needed; it's not used anywhere else
+    //     // if (data->DialogFun)
+    //     //     data->DialogFun(dialog, data->data);
+    //     // else
+    //     g_message("B) response %d",response );
+
+    //         StartQuiz(dialog, data->data);
     } else {                    /* Ignore response */
     }
 }
@@ -203,8 +212,13 @@ GTKCreateDialog(const char *szTitle, const dialogtype dt,
     if ((flags & DIALOG_FLAG_NOOK) == 0) {
         int OkButton = (flags & DIALOG_FLAG_MODAL && (flags & DIALOG_FLAG_CLOSEBUTTON) == 0);
 
+        // if(!fInQuizMode) {
         gtk_dialog_add_button(GTK_DIALOG(pwDialog), OkButton ? _("OK") : _("Close"),
-                              OkButton ? GTK_RESPONSE_OK : GTK_RESPONSE_CLOSE);
+                                OkButton ? GTK_RESPONSE_OK : GTK_RESPONSE_CLOSE);
+        // } else {
+        //     gtk_dialog_add_button(GTK_DIALOG(pwDialog),  _("Start quiz!"),
+        //         GTK_RESPONSE_OK);
+        // }
         gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), OkButton ? GTK_RESPONSE_OK : GTK_RESPONSE_CLOSE);
 
         if (!fQuestion)

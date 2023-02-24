@@ -982,7 +982,7 @@ ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
 static char positionsFolder []="./quiz/";
 //static char positionsFileFullPath []="./quiz/positions.csv";
 static char * positionsFileFullPath;
-static char * currentCategory;
+// static char * currentCategory;
 static int currentCategoryIndex;
 static quiz q [MAX_ROWS]; 
 static int qLength=0;
@@ -1015,7 +1015,7 @@ int OpenQuizPositionsFile(const int index)
 
     if(fp==NULL) {
         char buf[100];
-        sprintf(buf,_("Error: Problem reading file %s"),positionsFileFullPath);
+        sprintf(buf,_("Error: Problem reading file %s"),categories[index].path);
         GTKMessage(_(buf), DT_INFO);
         return FALSE;
     }
@@ -1110,11 +1110,10 @@ int AddQuizPosition(quiz qRow)
 int SaveQuizPositionFile(void)
 {
 
-	FILE* fp = fopen(positionsFileFullPath, "w");
+	FILE* fp = fopen(categories[currentCategoryIndex].path, "w");
 
 	if (!fp){
         GTKMessage(_("Error: problem saving quiz position, cannot open file"), DT_INFO);
-		// printf("Can't open file\n");
         return FALSE;
     } 
     /*header*/
@@ -1283,6 +1282,14 @@ delete_selected_rows (GtkButton * activated, GtkTreeView * tree_view)
   }
   g_list_free_full (selected_list, (GDestroyNotify) gtk_tree_path_free);
 }
+*/
+
+/* another reference: the code below could be shorter with:
+  if (gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(store), &iter, NULL, n))
+    {
+      gtk_list_store_remove(store, &iter);
+      return TRUE;
+    }
 */
 
 /*  delete a position category from the categories array */
@@ -1609,7 +1616,7 @@ ManagePositionCategories(void)
     GtkWidget *addButton;
     GtkWidget *delButton;
     GtkWidget *renameButton;
-    // GtkWidget *startButton;
+    GtkWidget *startButton;
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
     // GtkListStore *store;
@@ -1617,6 +1624,9 @@ ManagePositionCategories(void)
     // GtkTreeViewColumn   *col;
  
     // DisplayCategories();
+
+
+    fInQuizMode=TRUE;
 
     if(!categories[0].name) {
         g_message("The categories array was expected to be initialized at start-up...");
@@ -1654,9 +1664,13 @@ ManagePositionCategories(void)
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
 
-    pwDialog = GTKCreateDialog(_("Manage position categories"), DT_INFO, NULL, 
-        DIALOG_FLAG_NONE, (GCallback) StartQuiz, treeview);
+    pwDialog = GTKCreateDialog(_("Position categories"), DT_INFO, NULL, 
+        DIALOG_FLAG_NONE, NULL, NULL);
+        // DIALOG_FLAG_NONE, (GCallback) StartQuiz, treeview);
+        // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON,(GCallback) StartQuiz, 
+        //     GTK_TREE_VIEW(treeview));
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
+        // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, treeview);
     //    DIALOG_FLAG_NONE
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -1674,7 +1688,6 @@ ManagePositionCategories(void)
 #endif
     gtk_box_pack_start(GTK_BOX(pwMainHBox), pwVBox, FALSE, FALSE, 0);
 
-    //AddTitle(pwVBox, _("?"));
 
     gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwScrolled, TRUE, TRUE, 0);
@@ -1693,18 +1706,32 @@ ManagePositionCategories(void)
 #endif
     gtk_box_pack_start(GTK_BOX(pwVBox), hb1, FALSE, FALSE, 0);
     addButton = gtk_button_new_with_label(_("Add category"));
-    g_signal_connect(addButton, "clicked", G_CALLBACK(AddCategoryClicked), treeview);
+    g_signal_connect(addButton, "clicked", G_CALLBACK(AddCategoryClicked), GTK_TREE_VIEW(treeview));
     gtk_box_pack_start(GTK_BOX(hb1), addButton, FALSE, FALSE, 0);
     renameButton = gtk_button_new_with_label(_("Rename category"));
-    g_signal_connect(renameButton, "clicked", G_CALLBACK(RenameCategoryClicked), treeview);
+    g_signal_connect(renameButton, "clicked", G_CALLBACK(RenameCategoryClicked), GTK_TREE_VIEW(treeview));
     gtk_box_pack_start(GTK_BOX(hb1), renameButton, FALSE, FALSE, 0);
     delButton = gtk_button_new_with_label(_("Delete category"));
-    g_signal_connect(delButton, "clicked", G_CALLBACK(DeleteCategoryClicked), treeview);
+    g_signal_connect(delButton, "clicked", G_CALLBACK(DeleteCategoryClicked), GTK_TREE_VIEW(treeview));
     gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
+    
+    AddText(pwVBox, _("\nSelect a category to start playing"));
+    //  quizManage 
 
-    gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
-                              GTK_RESPONSE_YES);
-    gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), GTK_RESPONSE_YES);
+    // startButton = gtk_button_new_from_stock(GTK_STOCK_FIND_AND_REPLACE, GTK_ICON_SIZE_BUTTON);
+    startButton = gtk_button_new(); //gtk_button_new_with_label(_("Start quiz!"));
+    // button = gtk_button_new();
+    GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_DIALOG);
+    // GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
+    gtk_button_set_image(GTK_BUTTON(startButton), image);
+    // gtk_button_set_label(GTK_BUTTON(startButton), _("Start quiz!"));
+    // gtk_widget_set_sensitive(startButton, (selected_iter!=NULL));
+    
+    g_signal_connect(startButton, "clicked", G_CALLBACK(StartQuiz), GTK_TREE_VIEW(treeview));
+    gtk_box_pack_start(GTK_BOX(pwVBox), startButton, FALSE, FALSE, 4);
+    // gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
+    //                           GTK_RESPONSE_YES);
+    // gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), GTK_RESPONSE_YES);
 
     GTKRunDialog(pwDialog);
 }
@@ -1734,6 +1761,7 @@ extern void BackFromHint (void) {
 }
 
 extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
+    g_message("in StartQuiz");
 
 // OK(GtkWidget * pw, int *pf)
 // {

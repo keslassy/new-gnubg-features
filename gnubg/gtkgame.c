@@ -5128,7 +5128,7 @@ ShowList(char *psz[], const char *szTitle, GtkWidget * parent)
 extern void
 OK(GtkWidget * pw, int *pf)
 {
-
+    // g_message("in OK");
     if (pf)
         *pf = TRUE;
 
