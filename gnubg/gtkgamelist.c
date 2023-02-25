@@ -344,7 +344,6 @@ void AddPositionToFile(categorytype * pcategory, GtkWidget * pw) {
     g_message("position: %s, error: %f",qNow.position,qNow.ewmaError);
     qNow.lastSeen=(long int) (time(NULL));
     AddQuizPosition(qNow,pcategory);
-
 }
 
 

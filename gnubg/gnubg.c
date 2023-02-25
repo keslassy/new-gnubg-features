@@ -256,7 +256,10 @@ int fWithinSmartOpen=FALSE;
 int fCheckUpdateGTK = FALSE;
 int fTriggeredByRecordList=FALSE;
 int fUseQuiz=TRUE;
-quiz qNow={"\0",0,0,0.0}; /*extern*/
+quiz qNow={"\0",0,0.0,0,0.0}; /*extern*/
+// qNow.position=(char *)malloc(sizeof(char) * (200));
+// qNow.position=malloc(200);
+
 
 
 #if defined(USE_BOARD3D)
@@ -1546,13 +1549,6 @@ ShowBoard(void)
                  ap[ms.fTurn].pt != PLAYER_HUMAN && !fComputing && !nNextTurn, anChequers[ms.bgv]);
     }
 #endif
-    {
-        char *pc;
-        printf("%s: %s\n", _("MatchID"), pc = MatchIDFromMatchState(&ms));
-        // MatchStateFromID(&ms, pc);
-         g_message("matchID2=%s",MatchIDFromMatchState(&ms));
-
-    }
 #ifdef UNDEF
     {
         char *pc;
@@ -1569,12 +1565,11 @@ ShowBoard(void)
         if (ms.gs != GAME_NONE) {
             // qNow={"\0",0,0,0.0};
             // quiz qNow={"\0",0,0,0.0}; /*extern*/
-            qNow.position=(char *)malloc(sizeof(char) * (200));
             // g_message("matchID=%s",MatchIDFromMatchState(&ms));
             // g_message("posID=%s",PositionID(msBoard()));
             // if(PositionID(msBoard()) && MatchIDFromMatchState(&ms)) {
-                sprintf(qNow.position, "%s:%s", PositionID(msBoard()), MatchIDFromMatchState(&ms));
-                g_message("copied position: %s",qNow.position);
+            sprintf(qNow.position, "%s:%s", PositionID(msBoard()), MatchIDFromMatchState(&ms));
+                // g_message("copied position: %s",qNow.position);
         }
     }
 }
@@ -2127,6 +2122,7 @@ no_double_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
+        qNow.cubedecision=cd;
         g_message("copied no_double error: %f",qNow.ewmaError);
     }
     return Skill(eq);
@@ -2161,6 +2157,7 @@ double_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
+        qNow.cubedecision=cd;
         g_message("copied double error: %f",qNow.ewmaError);
     }
     return Skill(eq);
@@ -2196,6 +2193,7 @@ drop_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
+        qNow.cubedecision=cd;
         g_message("copied drop error: %f",qNow.ewmaError);
     }
     return Skill(eq);
@@ -2225,6 +2223,7 @@ take_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
+        qNow.cubedecision=cd;
         g_message("copied take error: %f",qNow.ewmaError);
     }
     return Skill(eq);
@@ -2242,6 +2241,7 @@ move_skill(moverecord * pmr)
     if (move_i->esMove.et == EVAL_NONE || move_0->esMove.et == EVAL_NONE){
         if(fUseQuiz){
             qNow.ewmaError=0.0;
+            qNow.cubedecision=move_i->esMove.et;
             g_message("no moves, reset error: %f",qNow.ewmaError);
         }
         return SKILL_NONE;
@@ -2249,6 +2249,7 @@ move_skill(moverecord * pmr)
     else {
         if(fUseQuiz){
             qNow.ewmaError=move_0->rScore-move_i->rScore;
+            qNow.cubedecision=move_i->esMove.et;
             g_message("copied move error: %f",qNow.ewmaError);
         }
         return Skill(move_i->rScore - move_0->rScore);

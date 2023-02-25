@@ -1101,7 +1101,8 @@ typedef struct
     // char notes[MAX_NOTE_LENGTH]; /*future feature? not sure if needed*/
 } categorytype;
 typedef struct {
-    char * position; 
+    char position [100]; 
+    cubedecision cubedecision; /*position type: move, double etc*/
     float ewmaError; 
     long int lastSeen; 
     float priority;

@@ -1053,13 +1053,15 @@ int OpenQuizPositionsFile(const int index)
             // printf("%s", token);
             if (column == 0) {
                 // g_message("i=%d",i);
-                q[i].position = malloc(50 * sizeof(char));
+                // q[i].position = malloc(50 * sizeof(char));
                 strcpy(q[i].position,token); 
         // g_message("read new line %d: %s\n", i, q[i].position);
             } else if (column == 1) {
+                q[i].cubedecision=strtol(token, NULL, 10); //atof(token);
+            } else if (column == 2) {
                 q[i].ewmaError=atof(token);
         // g_message("read new line %d: %s, %.3f\n", i, q[i].position, q[i].ewmaError);
-            } else if (column == 2) {
+            } else if (column == 3) {
                 q[i].lastSeen=strtol(token, NULL, 10);
                 // q[i].lastSeen=strtoimax(sz, NULL, 10);
         // g_message("read new line %d: %s, %.3f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
@@ -1106,7 +1108,7 @@ extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
         return FALSE;
     } 
     // Saving data in file
-    fprintf(fp, "%s, %.5f, %ld\n", qRow.position, qRow.ewmaError, qRow.lastSeen);
+    fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, (int)qRow.cubedecision, qRow.ewmaError, qRow.lastSeen);
     g_message("Added a line");
     fclose(fp);
     return TRUE;
@@ -1121,10 +1123,10 @@ static int SaveFullPositionFile(void)
         return FALSE;
     } 
     /*header*/
-    fprintf(fp, "position, ewmaError, lastSeen\n");
+    fprintf(fp, "position, cubedecision, ewmaError, lastSeen\n");
     for (int i = 0; i < qLength; ++i) {
         // Saving data in file
-        fprintf(fp, "%s, %.5f, %ld\n", q[i].position, q[i].ewmaError, q[i].lastSeen);
+        fprintf(fp, "%s, %d, %.5f, %ld\n", q[i].position, (int)q[i].cubedecision, q[i].ewmaError, q[i].lastSeen);
     }
     // g_message("Saved q");
     fclose(fp);
@@ -1401,7 +1403,7 @@ AddCategory(const char *sz)
     }
     //  perror("fopen");
     /*header*/
-    fprintf(fp, "position, ewmaError, lastSeen\n");
+    fprintf(fp, "position, cubedecision, ewmaError, lastSeen\n");
     fclose(fp);
 
 	// FILE* fp2 = fopen(sz, "r");
@@ -1657,8 +1659,9 @@ ManagePositionCategories(void)
  
     // DisplayCategories();
 
-
-    fInQuizMode=TRUE;
+    /* putting true means that we need to end it when we leave by using the close button and
+    only for this screen; so we put false by default for now */
+    fInQuizMode=FALSE;
 
     /* We always check the positions again because the user may have added positions since the
     gnubg start-up */
