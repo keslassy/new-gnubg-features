@@ -755,8 +755,9 @@ CubeAnalysis(cubehintdata * pchd)
     // (eg from aarOutput[5,6])
     // then converts into mwc (when NMatchTo!=0) then stores them in arDouble[1,2,3]
     // and stores the best in arDouble[0]
-    //reminder: typedef struct _cubedecisiondata {float aarOutput[2][NUM_ROLLOUT_OUTPUTS]; float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
-    //                      evalsetup esDouble; CMark cmark; } cubedecisiondata;
+    //reminder: typedef struct _cubedecisiondata {float aarOutput[2][NUM_ROLLOUT_OUTPUTS]; 
+    //                                  float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
+    //                                  evalsetup esDouble; CMark cmark; } cubedecisiondata;
     cd = FindCubeDecision(arDouble, cdec->aarOutput, &ci); 
 
     if (!GetDPEq(NULL, NULL, &ci) && !(pchd->pmr->mt == MOVE_DOUBLE))
