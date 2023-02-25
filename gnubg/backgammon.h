@@ -1102,7 +1102,7 @@ typedef struct
 } categorytype;
 typedef struct {
     char position [100]; 
-    cubedecision cubedecision; /*position type: move, double etc*/
+    int decisionType; /*position type: if non-negative: =cubedecision; ==-1 for move*/
     float ewmaError; 
     long int lastSeen; 
     float priority;

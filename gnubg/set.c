@@ -939,8 +939,8 @@ CommandSetCubeValue(char *sz)
             pmr->scv.nCube = n;
 
             AddMoveRecord(pmr);
-
-            outputf(_("The cube has been set to %d.\n"), n);
+            if (!fInQuizMode)
+                outputf(_("The cube has been set to %d.\n"), n);
 
 #if defined(USE_GTK)
             if (fX)

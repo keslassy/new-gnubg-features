@@ -2122,7 +2122,7 @@ no_double_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
-        qNow.cubedecision=cd;
+        qNow.decisionType=cd;
         g_message("copied no_double error: %f",qNow.ewmaError);
     }
     return Skill(eq);
@@ -2157,7 +2157,7 @@ double_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
-        qNow.cubedecision=cd;
+        qNow.decisionType=cd;
         g_message("copied double error: %f",qNow.ewmaError);
     }
     return Skill(eq);
@@ -2193,7 +2193,7 @@ drop_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
-        qNow.cubedecision=cd;
+        qNow.decisionType=cd;
         g_message("copied drop error: %f",qNow.ewmaError);
     }
     return Skill(eq);
@@ -2223,7 +2223,7 @@ take_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
-        qNow.cubedecision=cd;
+        qNow.decisionType=cd;
         g_message("copied take error: %f",qNow.ewmaError);
     }
     return Skill(eq);
@@ -2241,7 +2241,7 @@ move_skill(moverecord * pmr)
     if (move_i->esMove.et == EVAL_NONE || move_0->esMove.et == EVAL_NONE){
         if(fUseQuiz){
             qNow.ewmaError=0.0;
-            qNow.cubedecision=move_i->esMove.et;
+            qNow.decisionType=-1;
             g_message("no moves, reset error: %f",qNow.ewmaError);
         }
         return SKILL_NONE;
@@ -2249,7 +2249,7 @@ move_skill(moverecord * pmr)
     else {
         if(fUseQuiz){
             qNow.ewmaError=move_0->rScore-move_i->rScore;
-            qNow.cubedecision=move_i->esMove.et;
+            qNow.decisionType=move_i->esMove.et;
             g_message("copied move error: %f",qNow.ewmaError);
         }
         return Skill(move_i->rScore - move_0->rScore);

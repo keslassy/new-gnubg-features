@@ -1057,7 +1057,7 @@ int OpenQuizPositionsFile(const int index)
                 strcpy(q[i].position,token); 
         // g_message("read new line %d: %s\n", i, q[i].position);
             } else if (column == 1) {
-                q[i].cubedecision=strtol(token, NULL, 10); //atof(token);
+                q[i].decisionType=strtol(token, NULL, 10); //atof(token);
             } else if (column == 2) {
                 q[i].ewmaError=atof(token);
         // g_message("read new line %d: %s, %.3f\n", i, q[i].position, q[i].ewmaError);
@@ -1108,7 +1108,7 @@ extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
         return FALSE;
     } 
     // Saving data in file
-    fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, (int)qRow.cubedecision, qRow.ewmaError, qRow.lastSeen);
+    fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, (int)qRow.decisionType, qRow.ewmaError, qRow.lastSeen);
     g_message("Added a line");
     fclose(fp);
     return TRUE;
@@ -1126,7 +1126,7 @@ static int SaveFullPositionFile(void)
     fprintf(fp, "position, cubedecision, ewmaError, lastSeen\n");
     for (int i = 0; i < qLength; ++i) {
         // Saving data in file
-        fprintf(fp, "%s, %d, %.5f, %ld\n", q[i].position, (int)q[i].cubedecision, q[i].ewmaError, q[i].lastSeen);
+        fprintf(fp, "%s, %d, %.5f, %ld\n", q[i].position, (int)q[i].decisionType, q[i].ewmaError, q[i].lastSeen);
     }
     // g_message("Saved q");
     fclose(fp);
@@ -1636,6 +1636,14 @@ static void LoadPositionAndStart (void) {
     // fInQuizMode=TRUE;
 
     CommandSetGNUBgID(q[iOpt].position); 
+
+    // if (ap[ms.fTurn].pt != PLAYER_HUMAN) {
+    if(ms.fTurn == 0) {
+        g_message("swap?");
+        // SwapSides(ms.anBoard);
+        CommandSwapPlayers(NULL);
+
+    }
 }
 
 static void
