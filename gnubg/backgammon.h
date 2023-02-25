@@ -1092,6 +1092,7 @@ extern void DisplayKeyNames(void); /* debugging function to display the current 
 #define MAX_CATEGORY_NAME_LENGTH 32
 #define MAX_CATEGORY_PATH_LENGTH 150
 // #define MAX_NOTE_LENGTH 300
+/*quiz structures*/
 typedef struct 
 {
     char name[MAX_CATEGORY_NAME_LENGTH];
@@ -1099,23 +1100,22 @@ typedef struct
     char path[MAX_CATEGORY_PATH_LENGTH];
     // char notes[MAX_NOTE_LENGTH]; /*future feature? not sure if needed*/
 } categorytype;
-extern categorytype categories[MAX_POS_CATEGORIES]; /* array with all position categories*/
-extern int numCategories; /* the categories array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
-// extern int numPositionsInCategory[MAX_POS_CATEGORIES]; /* array with #positions per category file*/
-extern void BackFromHint (void);
-extern void GetPositionCategories(void);
-extern int fUseQuiz;    /* enable quiz features */
-extern int fInQuizMode; /* we are inside quiz mode, so no match etc. */
-
-/* structure for quiz mode*/
 typedef struct {
     char * position; 
     float ewmaError; 
     long int lastSeen; 
     float priority;
 } quiz;
+extern categorytype categories[MAX_POS_CATEGORIES]; /* array with all position categories*/
+extern int numCategories; /* the categories array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
+// extern int numPositionsInCategory[MAX_POS_CATEGORIES]; /* array with #positions per category file*/
+extern int fUseQuiz;    /* enable quiz features */
+extern int fInQuizMode; /* we are inside quiz mode, so no match etc. */
+extern void BackFromHint (void);
+extern void GetPositionCategories(void);
 extern quiz qNow; 
 extern void qUpdate(float error);
+extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
 
 /* ************* */
 

@@ -972,7 +972,7 @@ to playing, to getting the hint screen, to starting again. Formally, here are th
 functions in the loop:
 ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
     ->CommandSetGNUBgID->(play)->MoveListUpdate->qUpdate(play error)
-    ->SaveQuizPositionFile [screen: could play again] -> HintOK->BackFromHint
+    ->SaveFullPositionFile [screen: could play again] -> HintOK->BackFromHint
     ->either LoadPositionAndStart or ManagePositionCategories
 */
 
@@ -1095,23 +1095,23 @@ int OpenQuizPositionsFile(const int index)
 // } quiz;
 
 /* based on standard csv program from geeksforgeeks*/
-int AddQuizPosition(quiz qRow)
+extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
 {
 
-	FILE* fp = fopen(positionsFileFullPath, "a");
+	FILE* fp = fopen(pcategory->path, "a");
 
 	if (!fp){
-        GTKMessage(_("problem saving quiz positions, can't open file"), DT_INFO);
+        GTKMessage(_("Error: problem saving quiz position, cannot open file"), DT_INFO);
 		// printf("Can't open file\n");
         return FALSE;
     } 
     // Saving data in file
     fprintf(fp, "%s, %.5f, %ld\n", qRow.position, qRow.ewmaError, qRow.lastSeen);
-    // g_message("Added a line");
+    g_message("Added a line");
     fclose(fp);
     return TRUE;
 }
-int SaveQuizPositionFile(void)
+static int SaveFullPositionFile(void)
 {
 
 	FILE* fp = fopen(categories[currentCategoryIndex].path, "w");
@@ -1140,7 +1140,7 @@ extern void qUpdate(float error) {
         q[iOpt].ewmaError=0.667*(q[iOpt].ewmaError)+0.333*error;
         // g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
         q[iOpt].lastSeen=(long int) (time(NULL));
-        SaveQuizPositionFile();
+        SaveFullPositionFile();
         iOptCounter=1;
     }
 }
@@ -1771,7 +1771,7 @@ ManagePositionCategories(void)
 /* Now we are back from the hint function within quiz mode. 
 - The position category is well known. 
 - The values have already been updated and saved in a file 
-        (in MoveListUpdate->qUpdate->SaveQuizPositionFile)
+        (in MoveListUpdate->qUpdate->SaveFullPositionFile)
 We need to ask the player whether to play again within this category.
     (YES) We want to pick a new position in the category and start
     (NO) We get back to the main panel in case the user wants to 

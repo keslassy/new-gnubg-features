@@ -339,8 +339,12 @@ int show_popup(GtkTreeView *widget, GdkEvent *event) {
         return FALSE;
 }
 
-void TestFunction3(categorytype * pcategory, GtkWidget * pw) {
+void AddPositionToFile(categorytype * pcategory, GtkWidget * pw) {
     g_message("I'm in the test func: %s", pcategory->name);
+    g_message("position: %s, error: %f",qNow.position,qNow.ewmaError);
+    qNow.lastSeen=(long int) (time(NULL));
+    AddQuizPosition(qNow,pcategory);
+
 }
 
 
@@ -371,7 +375,7 @@ void TestFunction3(categorytype * pcategory, GtkWidget * pw) {
 //     //     menu_item = gtk_menu_item_new_with_label(_(buf));
 //     //     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 //     //     gtk_widget_show(menu_item);
-//     //     // g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), 
+//     //     // g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), 
 //     //     //     &(categories[i])); //(tempArray[i]));
 //     //     g_signal_connect(menuitem, "activate",
 //     //                (GCallback) view_popup_menu_onDoSomething, treeview);
@@ -537,7 +541,7 @@ GL_Create(void)
             menu_item = gtk_menu_item_new_with_label(_(buf));
             gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
             gtk_widget_show(menu_item);
-            g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), 
+            g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), 
                 &(categories[i])); //(tempArray[i]));
         }       
 
@@ -582,7 +586,7 @@ GL_Create(void)
         // // g_signal_connect_swapped(G_OBJECT(hideMi), "activate", 
         // //     G_CALLBACK(gtk_window_iconify), GTK_WINDOW(woPanel[WINDOW_GAME].pwWin));    
         // g_signal_connect(G_OBJECT(quitMi), "activate", 
-        //     G_CALLBACK(TestFunction3), NULL);  
+        //     G_CALLBACK(AddPositionToFile), NULL);  
 
         /*separator*/
         // menu_item = gtk_menu_item_new();
@@ -591,22 +595,22 @@ GL_Create(void)
         // menu_item = gtk_menu_item_new_with_label(_("Add to: Blitzing"));
         // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         // gtk_widget_show(menu_item);
-        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), NULL);
         // menu_item = gtk_menu_item_new();
         // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         // gtk_widget_show(menu_item);
         // menu_item = gtk_menu_item_new_with_label(_("Add to: 5-pt holding"));
         // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         // gtk_widget_show(menu_item);
-        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), NULL);
         // menu_item = gtk_menu_item_new_with_label(_("Add to: 4-pt holding"));
         // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         // gtk_widget_show(menu_item);
-        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), NULL);
         // menu_item = gtk_menu_item_new_with_label(_("Add to: 1-pt holding"));
         // gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
         // gtk_widget_show(menu_item);
-        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(TestFunction3), NULL);
+        // g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), NULL);
 
     // g_signal_connect_swapped((pwGameList), "cursor-changed", 
     //     G_CALLBACK(show_popup), pmenu);  

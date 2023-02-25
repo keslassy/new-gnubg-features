@@ -291,7 +291,7 @@ MoveListUpdate(const hintdata * phd)
                     g_message("keeping error in q.error: i=%u,diff=%f",
                         i,pml->amMoves[i].rScore-rBest);
                     qNow.ewmaError=-(pml->amMoves[i].rScore-rBest);
-                    g_message("copied error: %f",-(pml->amMoves[i].rScore-rBest));
+                    g_message("copied error: %f",qNow.ewmaError);
                 } 
             }                             
         }
