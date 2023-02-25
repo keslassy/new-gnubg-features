@@ -256,6 +256,8 @@ int fWithinSmartOpen=FALSE;
 int fCheckUpdateGTK = FALSE;
 int fTriggeredByRecordList=FALSE;
 int fUseQuiz=TRUE;
+quiz qNow={"\0",0,0,0.0}; /*extern*/
+
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
@@ -1564,15 +1566,16 @@ ShowBoard(void)
     //     outputx();
     //     return;
     // }
-        // qNow={"\0",0,0,0.0};
-        quiz qNow={"\0",0,0,0.0}; /*extern*/
-        qNow.position=(char *)malloc(sizeof(char) * (200));
-        // g_message("matchID=%s",MatchIDFromMatchState(&ms));
-        // g_message("posID=%s",PositionID(msBoard()));
-        // if(PositionID(msBoard()) && MatchIDFromMatchState(&ms)) {
-            sprintf(qNow.position, "%s:%s", PositionID(msBoard()), MatchIDFromMatchState(&ms));
-            g_message("copied position: %s",qNow.position);
-        // }
+        if (ms.gs != GAME_NONE) {
+            // qNow={"\0",0,0,0.0};
+            // quiz qNow={"\0",0,0,0.0}; /*extern*/
+            qNow.position=(char *)malloc(sizeof(char) * (200));
+            // g_message("matchID=%s",MatchIDFromMatchState(&ms));
+            // g_message("posID=%s",PositionID(msBoard()));
+            // if(PositionID(msBoard()) && MatchIDFromMatchState(&ms)) {
+                sprintf(qNow.position, "%s:%s", PositionID(msBoard()), MatchIDFromMatchState(&ms));
+                g_message("copied position: %s",qNow.position);
+        }
     }
 }
 

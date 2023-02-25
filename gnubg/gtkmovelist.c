@@ -278,9 +278,21 @@ MoveListUpdate(const hintdata * phd)
         if (i != 0) {
             gtk_list_store_set(store, &iter, ML_COL_DIFF + offset,
                                OutputEquityDiff(pml->amMoves[i].rScore, rBest, &ci), -1);
-            if(fInQuizMode && phd->piHighlight && *phd->piHighlight == i) {
-                g_message("i=%u,diff=%f",i,pml->amMoves[i].rScore-rBest);
-                qUpdate(-(pml->amMoves[i].rScore-rBest)); 
+            /* 1) if we play in quiz mode, we want to take into account the player's mistake
+            2) if we collect errors manually, we want to save the error in case the users
+                needs to add it to a position list
+            3) TBD: if we collect errors automatically, we add it to a position list directly
+            */
+            if(fUseQuiz && phd->piHighlight && *phd->piHighlight == i) {
+                if(fInQuizMode) {
+                    g_message("i=%u,diff=%f",i,pml->amMoves[i].rScore-rBest);
+                    qUpdate(-(pml->amMoves[i].rScore-rBest));
+                } else {
+                    g_message("keeping error in q.error: i=%u,diff=%f",
+                        i,pml->amMoves[i].rScore-rBest);
+                    qNow.ewmaError=-(pml->amMoves[i].rScore-rBest);
+                    g_message("copied error: %f",-(pml->amMoves[i].rScore-rBest));
+                } 
             }                             
         }
 
