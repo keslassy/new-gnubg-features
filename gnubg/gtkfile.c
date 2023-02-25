@@ -983,7 +983,7 @@ static const char positionsFolder []="/home/isaac/g/new-gnubg-features/gnubg/qui
 // static const char positionsFolder2 []="~/g/new-gnubg-features/gnubg/quiz/";
 
 //static char positionsFileFullPath []="./quiz/positions.csv";
-static char * positionsFileFullPath;
+// static char * positionsFileFullPath;
 // static char * currentCategory;
 static int currentCategoryIndex;
 static quiz q [MAX_ROWS]; 
@@ -1660,10 +1660,12 @@ ManagePositionCategories(void)
 
     fInQuizMode=TRUE;
 
-    if(!categories[0].name) {
-        g_message("The categories array was expected to be initialized at start-up...");
-        GetPositionCategories();
-    }
+    /* We always check the positions again because the user may have added positions since the
+    gnubg start-up */
+    // if(!categories[0].name) {
+    //     g_message("The categories array was expected to be initialized at start-up...");
+    GetPositionCategories();
+    // }
 
     /* create list store */
     enum {COLUMN_STRING, COLUMN_INT, N_COLUMNS};

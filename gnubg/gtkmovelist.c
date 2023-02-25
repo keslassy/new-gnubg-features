@@ -289,12 +289,13 @@ MoveListUpdate(const hintdata * phd)
             if(fInQuizMode) {
                 g_message("i=%u,diff=%f",i,pml->amMoves[i].rScore-rBest);
                 qUpdate(-(pml->amMoves[i].rScore-rBest));
-            } else {
-                g_message("keeping error in q.error: i=%u,diff=%f",
-                    i,pml->amMoves[i].rScore-rBest);
-                qNow.ewmaError=-(pml->amMoves[i].rScore-rBest);
-                g_message("copied error: %f",qNow.ewmaError);
             } 
+            // else {
+            //     g_message("keeping error in q.error: i=%u,diff=%f",
+            //         i,pml->amMoves[i].rScore-rBest);
+            //     qNow.ewmaError=-(pml->amMoves[i].rScore-rBest);
+            //     g_message("copied error: %f",qNow.ewmaError);
+            // } 
         }
          
         gtk_list_store_set(store, &iter, ML_COL_MOVE + offset, FormatMove(sz, msBoard(), pml->amMoves[i].anMove), -1);
