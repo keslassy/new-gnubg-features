@@ -1102,7 +1102,8 @@ typedef struct
 } categorytype;
 typedef struct {
     char position [100]; 
-    int decisionType; /*position type: if non-negative: =cubedecision; ==-1 for move*/
+    int player; /*player when adding position*/
+    // int player;
     float ewmaError; 
     long int lastSeen; 
     float priority;

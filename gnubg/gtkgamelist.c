@@ -339,7 +339,7 @@ int show_popup(GtkTreeView *widget, GdkEvent *event) {
         return FALSE;
 }
 
-void AddPositionToFile(categorytype * pcategory, GtkWidget * pw) {
+void AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
     g_message("I'm in the test func: %s", pcategory->name);
     g_message("position: %s, error: %f",qNow.position,qNow.ewmaError);
     qNow.lastSeen=(long int) (time(NULL));
@@ -530,11 +530,11 @@ GL_Create(void)
         GtkWidget *pmenu;
         pmenu = gtk_menu_new();
         GtkWidget *menu_item;
-        int tempArray [numCategories];
+        // int tempArray [numCategories];
         g_message("numCategories=%d",numCategories);
         // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
         for(int i=0;i < numCategories; i++) {
-            tempArray[i]=i;
+            // tempArray[i]=i;
             char buf[MAX_CATEGORY_NAME_LENGTH+8];
             sprintf(buf,_("Add to: %s"),categories[i].name);
             menu_item = gtk_menu_item_new_with_label(_(buf));

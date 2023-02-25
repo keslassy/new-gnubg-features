@@ -999,6 +999,7 @@ categorytype categories[MAX_POS_CATEGORIES]; //={""};
 int numCategories;//=0
 // int numPositionsInCategory[MAX_POS_CATEGORIES]={0}; /* array with #positions per category file*/
 
+static GtkWidget *pwDialog = NULL;
 
 /* the following function:
 - updates positionsFileFullPath,
@@ -1057,7 +1058,7 @@ int OpenQuizPositionsFile(const int index)
                 strcpy(q[i].position,token); 
         // g_message("read new line %d: %s\n", i, q[i].position);
             } else if (column == 1) {
-                q[i].decisionType=strtol(token, NULL, 10); //atof(token);
+                q[i].player=strtol(token, NULL, 10); //atof(token);
             } else if (column == 2) {
                 q[i].ewmaError=atof(token);
         // g_message("read new line %d: %s, %.3f\n", i, q[i].position, q[i].ewmaError);
@@ -1096,6 +1097,12 @@ int OpenQuizPositionsFile(const int index)
 //     long int lastSeen; 
 // } quiz;
 
+static void writeQuizLine (quiz q, FILE* fp) {
+        fprintf(fp, "%s, %d, %.5f, %ld\n", q.position, q.player, q.ewmaError, q.lastSeen);
+}
+static void writeQuizHeader (FILE* fp) {
+        fprintf(fp, "position, player, ewmaError, lastSeen\n");
+}
 /* based on standard csv program from geeksforgeeks*/
 extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
 {
@@ -1108,7 +1115,8 @@ extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
         return FALSE;
     } 
     // Saving data in file
-    fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, (int)qRow.decisionType, qRow.ewmaError, qRow.lastSeen);
+    // fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, qRow.player, qRow.ewmaError, qRow.lastSeen);
+    writeQuizLine (qRow, fp);
     g_message("Added a line");
     fclose(fp);
     return TRUE;
@@ -1123,10 +1131,12 @@ static int SaveFullPositionFile(void)
         return FALSE;
     } 
     /*header*/
-    fprintf(fp, "position, cubedecision, ewmaError, lastSeen\n");
+    // fprintf(fp, "position, player, ewmaError, lastSeen\n");
+    writeQuizHeader (fp);
     for (int i = 0; i < qLength; ++i) {
         // Saving data in file
-        fprintf(fp, "%s, %d, %.5f, %ld\n", q[i].position, (int)q[i].decisionType, q[i].ewmaError, q[i].lastSeen);
+        // fprintf(fp, "%s, %d, %.5f, %ld\n", q[i].position, q[i].player, q[i].ewmaError, q[i].lastSeen);
+        writeQuizLine (q[i], fp);
     }
     // g_message("Saved q");
     fclose(fp);
@@ -1638,18 +1648,31 @@ static void LoadPositionAndStart (void) {
     CommandSetGNUBgID(q[iOpt].position); 
 
     // if (ap[ms.fTurn].pt != PLAYER_HUMAN) {
-    if(ms.fTurn == 0) {
-        g_message("swap?");
+        g_message("player=%d",q[iOpt].player);
+    if(q[iOpt].player==0) {
+    // if(ms.fTurn == 0) {
+        g_message("swap!");
         // SwapSides(ms.anBoard);
         CommandSwapPlayers(NULL);
+    }
+}
 
+static void
+DestroyDialog(gpointer UNUSED(p), GObject * UNUSED(obj))
+/* Called by gtk when the window is closed.
+Allows garbage collection.
+*/
+{
+
+    if (pwDialog) {//should always be the case
+        pwDialog = NULL;
     }
 }
 
 static void
 ManagePositionCategories(void)
 {
-    GtkWidget *pwDialog;
+    // GtkWidget *pwDialog;
     GtkWidget *pwMainHBox;
     GtkWidget *pwVBox;
     GtkWidget *hb1;
@@ -1708,6 +1731,11 @@ ManagePositionCategories(void)
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
+
+    if (pwDialog) { //i.e. we didn't close it using DestroyDialog()
+        gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
+        pwDialog = NULL;
+    }
 
     pwDialog = GTKCreateDialog(_("Position categories"), DT_INFO, NULL, 
         DIALOG_FLAG_NONE, NULL, NULL);
@@ -1777,6 +1805,8 @@ ManagePositionCategories(void)
     // gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
     //                           GTK_RESPONSE_YES);
     // gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), GTK_RESPONSE_YES);
+
+    g_object_weak_ref(G_OBJECT(pwDialog), DestroyDialog, NULL);
 
     GTKRunDialog(pwDialog);
 }
