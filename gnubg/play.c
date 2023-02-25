@@ -2415,7 +2415,7 @@ CommandDouble(char *UNUSED(sz))
         return;
     }
 
-    if (fDisplay)
+    if (fDisplay && !fInQuizMode)
         outputf(_("%s doubles.\n"), ap[ms.fTurn].szName);
 
 #if defined (USE_GTK)
@@ -2762,10 +2762,10 @@ CommandMove(char *sz)
             // UserCommand("hint"); /*crashed when clicking MWC, why?*/
             // UserCommand("analyse move");
             // return;
-            if (!GiveAdvice(pmr_cur->n.stMove)) {
+        if (!GiveAdvice(pmr_cur->n.stMove)) {
             g_free(pmr);
             return;
-            }
+        }
         // }
     }
 
@@ -4098,7 +4098,11 @@ CommandTake(char *UNUSED(sz))
         g_free(pmr);            /* garbage collect */
         return;
     }
-
+if(fInQuizMode){
+    g_message("within CommandTake");
+    // CommandHint("");
+}
+if(!fInQuizMode) {
     if (fDisplay)
         outputf(_("%s accepts the cube at %d.\n"), ap[ms.fTurn].szName, ms.nCube << 1);
 
@@ -4110,6 +4114,7 @@ CommandTake(char *UNUSED(sz))
     memset(&currentkey, 0, sizeof(positionkey));
 
     TurnDone();
+}
 }
 
 extern void
@@ -4157,8 +4162,10 @@ SetMatchID(const char *szMatchID)
     }
 
     if (fDoubled) {
+        if(!fInQuizMode) {
         outputl(_("SetMatchID cannot handle positions where a double has been offered."));
         outputf(_("Stepping back to the offering of the cube. "));
+        }
         fMove = fTurn = !fTurn;
         fDoubled = 0;
     }

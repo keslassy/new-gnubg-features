@@ -1524,7 +1524,8 @@ CommandSetPlayerHuman(char *UNUSED(sz))
 
     ap[iPlayerSet].pt = PLAYER_HUMAN;
 
-    outputf(_("Moves for %s must now be entered manually.\n"), ap[iPlayerSet].szName);
+    if(!fInQuizMode)
+        outputf(_("Moves for %s must now be entered manually.\n"), ap[iPlayerSet].szName);
 }
 
 extern void
@@ -1560,7 +1561,8 @@ CommandSetPlayerName(char *sz)
 
     strcpy(ap[iPlayerSet].szName, sz);
 
-    outputf(_("Player %d is now known as `%s'.\n"), iPlayerSet, sz);
+    if(!fInQuizMode)
+        outputf(_("Player %d is now known as `%s'.\n"), iPlayerSet, sz);
 
 #if defined(USE_GTK)
     if (fX)

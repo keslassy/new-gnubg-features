@@ -1646,15 +1646,35 @@ static void LoadPositionAndStart (void) {
     // fInQuizMode=TRUE;
 
     CommandSetGNUBgID(q[iOpt].position); 
-
+        g_message("fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+            ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+    UserCommand2("set player 0 human");
+    g_message("human");
+    UserCommand2("set player 0 name QuizOpponent");
+    g_message("name");
     // if (ap[ms.fTurn].pt != PLAYER_HUMAN) {
-        g_message("player=%d",q[iOpt].player);
+        // g_message("player=%d",q[iOpt].player);
     if(q[iOpt].player==0) {
     // if(ms.fTurn == 0) {
         g_message("swap!");
         // SwapSides(ms.anBoard);
         CommandSwapPlayers(NULL);
-    }
+}
+    g_message("Pre-double: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+        ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+    // CommandPlay(""); //<-if opponent is computer; but what if its right 
+                        //decision is not to double? We need a double
+    /* User is player 1.
+    When player 1 has a take, we need player 0 to double, else 1 cannot play. 
+    In such a case:
+    Before doubling: fMove=0,fTurn=0 (and fDoubled=0)
+    After doubling: fMove=0,fTurn=1 (and fDoubled=0)
+    */
+   if(ms.fTurn ==0)
+        CommandDouble("");
+    g_message("Post-double: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+        ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+    
 }
 
 static void
