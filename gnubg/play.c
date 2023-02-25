@@ -4100,7 +4100,7 @@ CommandTake(char *UNUSED(sz))
     }
 if(fInQuizMode){
     g_message("within CommandTake");
-    // CommandHint("");
+    CommandHint("");
 }
 if(!fInQuizMode) {
     if (fDisplay)
