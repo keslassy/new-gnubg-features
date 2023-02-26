@@ -361,32 +361,34 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         */
         // if (pwMoveAnalysis!=NULL)       
         //        g_message("sensitive:%d", gtk_widget_is_sensitive(pwAnalysis));
-        i++;
-        if (i==3) {
-            i=0;
-            if (fAnalysisRunning && start2) {
-                if(start1) { 
-                    pmr1 = get_current_moverecord(NULL);
-                    start1=0;
-                    FormatMove(tmp1, msBoard(), pmr1->n.anMove);
-                    // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
-                    ChangeGame(NULL); 
-                } else {
-                    pmr2 = get_current_moverecord(NULL);
-                    FormatMove(tmp2, msBoard(), pmr2->n.anMove);
-                    // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
-                    // if (pwMoveAnalysis!=NULL)
-                    //     g_message("new results");
-#if defined(USE_GTK)
-                   if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
-#else
-                   if (strcmp(tmp1,tmp2) != 0) {
-#endif
-                        // g_message("STOP");
-                        start2=0;
-                    } else {
-                        // g_message("change");
+        if(fAnalysisRunning) {
+            i++;
+            if (i==3) {
+                i=0;
+                if (start2) {
+                    if(start1) { 
+                        pmr1 = get_current_moverecord(NULL);
+                        start1=0;
+                        FormatMove(tmp1, msBoard(), pmr1->n.anMove);
+                        // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
                         ChangeGame(NULL); 
+                    } else {
+                        pmr2 = get_current_moverecord(NULL);
+                        FormatMove(tmp2, msBoard(), pmr2->n.anMove);
+                        // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
+                        // if (pwMoveAnalysis!=NULL)
+                        //     g_message("new results");
+#if defined(USE_GTK)
+                        if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
+#else
+                        if (strcmp(tmp1,tmp2) != 0) {
+#endif
+                            // g_message("STOP");
+                            start2=0;
+                        } else {
+                            // g_message("change");
+                            ChangeGame(NULL); 
+                        }
                     }
                 }
             }
