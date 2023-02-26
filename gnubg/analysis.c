@@ -612,7 +612,7 @@ extern int
 AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             statcontext * psc, const evalsetup * pesChequer, evalsetup * pesCube,
             /* const */ movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES], const int analysePlayers[2],
-            float *doubleError)
+            float *pdoubleError)
 {
     TanBoard anBoardMove;
     cubeinfo ci;
@@ -788,13 +788,13 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 }
 
                 FindCubeDecision(arDouble, aarOutput, &ci);
-                if (doubleError[0]) {
-                    doubleError[0] = arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_DROP];
+                if (pdoubleError) {
+                    *pdoubleError = arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_DROP];
                     // *doubleError = arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_DROP];
+                    *(pdoubleError+1) = arDouble[OUTPUT_OPTIMAL];
+                    *(pdoubleError+2) = arDouble[OUTPUT_TAKE];
+                    *(pdoubleError+3) = arDouble[OUTPUT_DROP];
                 }
-                doubleError[1] = arDouble[OUTPUT_OPTIMAL];
-                doubleError[2] = arDouble[OUTPUT_TAKE];
-                doubleError[3] = arDouble[OUTPUT_DROP];
                 //  g_message("doubled: (%f %f %f),(%f %f %f)",
                 //     arDouble[OUTPUT_OPTIMAL],arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP],
                 //     eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci),eq2mwc(arDouble[OUTPUT_TAKE], &ci),
@@ -812,8 +812,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
                 // g_message("MOVE_DOUBLE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
                 //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
-            } else if (doubleError[0])
-                doubleError[0] = ERR_VAL;
+            } else if (pdoubleError)
+                *pdoubleError = ERR_VAL;
                 // *doubleError = ERR_VAL;
         }
 
@@ -832,15 +832,15 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
         if (tt > TT_NORMAL)     /* TODO: analyse beavers */
             break;
 
-        if (fAnalyseCube && pmgi->fCubeUse && (doubleError[0] != ERR_VAL)) {
+        if (fAnalyseCube && pmgi->fCubeUse && (*(pdoubleError)!= ERR_VAL)) {
             GetMatchStateCubeInfo(&ci, pms); /*looks like it's not needed since we can
                     do that at the double and store the values...*/
-            if (doubleError[0])
-                pmr->stCube = Skill(-doubleError[0]);
-            pmr->mwc.mwcCube= 1.0-eq2mwc(doubleError[2], &ci);//i.e.: arDouble[OUTPUT_TAKE]
-            pmr->mwc.mwcBestCube= doubleError[2] < doubleError[3] ? 
+            if (pdoubleError)
+                pmr->stCube = Skill(-(*pdoubleError));
+            pmr->mwc.mwcCube= 1.0-eq2mwc(*(pdoubleError+2), &ci);//i.e.: arDouble[OUTPUT_TAKE]
+            pmr->mwc.mwcBestCube= (*(pdoubleError+2) < *(pdoubleError+3)) ? 
                     //i.e.: arDouble[OUTPUT_TAKE]< arDouble[OUTPUT_DROP]?
-                (1.0-eq2mwc(doubleError[2], &ci)):(1.0-eq2mwc(doubleError[3], &ci));
+                (1.0-eq2mwc(*(pdoubleError+2), &ci)):(1.0-eq2mwc(*(pdoubleError+3), &ci));
             // g_message("MOVE_TAKE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
             //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
         }
@@ -860,14 +860,14 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
         if (tt > TT_NORMAL)     /* TODO: analyse beavers */
             break;
 
-        if (fAnalyseCube && pmgi->fCubeUse && (doubleError[0] != ERR_VAL)) {
+        if (fAnalyseCube && pmgi->fCubeUse && (*pdoubleError!= ERR_VAL)) {
             GetMatchStateCubeInfo(&ci, pms);
-            if (doubleError[0])
-                pmr->stCube = Skill(doubleError[0]);
-            pmr->mwc.mwcCube= 1.0-eq2mwc(doubleError[3], &ci); //i.e.: arDouble[OUTPUT_DROP]
-            pmr->mwc.mwcBestCube= doubleError[2] < doubleError[3] ? 
+            if (pdoubleError)
+                pmr->stCube = Skill(*pdoubleError);
+            pmr->mwc.mwcCube= 1.0-eq2mwc(*(pdoubleError+3), &ci); //i.e.: arDouble[OUTPUT_DROP]
+            pmr->mwc.mwcBestCube= (*(pdoubleError+2) < *(pdoubleError+3)) ? 
                     //i.e.: arDouble[OUTPUT_TAKE]< arDouble[OUTPUT_DROP]?
-                (1.0-eq2mwc(doubleError[2], &ci)):(1.0-eq2mwc(doubleError[3], &ci));
+                (1.0-eq2mwc(*(pdoubleError+2), &ci)):(1.0-eq2mwc(*(pdoubleError+3), &ci));
             // g_message("MOVE_DROP: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
             //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
         }
@@ -1009,14 +1009,14 @@ AnalyseMoveMT(Task * task)
     // float * doubleError ;
     // doubleError= malloc(4 * sizeof(float));
     // doubleError[0]=
-    float* p = doubleError; /*written this way so p references the first item of doubleError and not the whole array*/
+    float* pdoubleError = doubleError; /*written this way so p references the first item of doubleError and not the whole array*/
 
   analyzeDouble:
     amt = (AnalyseMoveTask *) task;
     //if (AnalyzeMove(amt->pmr, &amt->ms, amt->plGame, amt->psc,
     //                &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, &doubleError) < 0)
     if (AnalyzeMove(amt->pmr, &amt->ms, amt->plGame, amt->psc,
-        &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, p) < 0)
+        &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, pdoubleError) < 0)
         MT_AbortTasks();
 
     if (task->pLinkedTask) {    /* Need to analyze take/drop decision in sequence */
