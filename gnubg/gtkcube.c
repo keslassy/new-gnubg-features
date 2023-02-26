@@ -1151,6 +1151,8 @@ It is called after something in pchd has changed, e.g., eval at different ply.
     */
     doubletype dt = DoubleType(pchd->ms.fDoubled, pchd->ms.fMove, pchd->ms.fTurn);
 
+    g_message("in UpdateCubeAnalysis,pchd->did_double=%d",pchd->did_double);
+
     if(!pchd->evalAtMoney) 
         find_skills(pchd->pmr, &pchd->ms, pchd->did_double, pchd->did_take);//gnubg.c / backgammon.h: 
     // Don't find skills for hypothetical money decision, because this is not relevant.

@@ -1660,8 +1660,8 @@ static void LoadPositionAndStart (void) {
         // SwapSides(ms.anBoard);
         CommandSwapPlayers(NULL);
 }
-    g_message("Pre-double: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
-        ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+    // g_message("Pre-double: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+    //     ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
     // CommandPlay(""); //<-if opponent is computer; but what if its right 
                         //decision is not to double? We need a double
     /* User is player 1.
@@ -1670,11 +1670,13 @@ static void LoadPositionAndStart (void) {
     Before doubling: fMove=0,fTurn=0 (and fDoubled=0)
     After doubling: fMove=0,fTurn=1 (and fDoubled=0)
     */
-   if(ms.fTurn ==0)
-        CommandDouble("");
-    g_message("Post-double: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+   if(ms.fTurn ==0) {
+         CommandDouble("");
+   }
+    // g_message("double");
+    g_message("Post-analyse: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
         ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
-    
+
 }
 
 static void

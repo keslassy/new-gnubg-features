@@ -566,6 +566,7 @@ copy_from_pmr_cur(moverecord * pmr, gboolean get_move, gboolean get_cube)
 static void
 add_moverecord_get_cur(moverecord * pmr)
 {
+    g_message("in add_moverecord_get_cur, maybe find_skills from there?");
     switch (pmr->mt) {
     case MOVE_NORMAL:
     case MOVE_RESIGN:
@@ -2306,6 +2307,12 @@ CommandDecline(char *UNUSED(sz))
         return;
     }
 
+    if(fInQuizMode){
+        g_message("within CommandDecline");
+        CommandHint("");
+    }
+    if(!fInQuizMode) {
+
     if (fDisplay) {
         {
             if (ms.fResigned > 0)
@@ -2320,6 +2327,7 @@ CommandDecline(char *UNUSED(sz))
     ms.fTurn = !ms.fTurn;
 
     TurnDone();
+}
 }
 
 static skilltype
@@ -2410,12 +2418,15 @@ CommandDouble(char *UNUSED(sz))
 
     pmr->mt = MOVE_DOUBLE;
     pmr->fPlayer = ms.fTurn;
+
+
+
     if (fTutor && fTutorCube && !GiveAdvice(tutor_double(TRUE))) {
         g_free(pmr);
         return;
     }
 
-    if (fDisplay && !fInQuizMode)
+    if (fDisplay) // && !fInQuizMode)
         outputf(_("%s doubles.\n"), ap[ms.fTurn].szName);
 
 #if defined (USE_GTK)
@@ -2425,10 +2436,21 @@ CommandDouble(char *UNUSED(sz))
         nTimeout = 0;
     }
 #endif
-
-    AddMoveRecord(pmr);
-
     TurnDone();
+    // if(fInQuizMode){
+    //     g_message("within CommandDouble");
+    //     // CommandHint("");
+    //     UserCommand2("analyse move");
+
+    // }
+    // if(!fInQuizMode) {
+    AddMoveRecord(pmr);
+    if(fInQuizMode){
+        g_message("within CommandDouble");
+        // CommandHint("");
+        UserCommand2("analyse move");
+
+    }
 }
 
 static skilltype
@@ -3859,7 +3881,11 @@ CommandRedouble(char *UNUSED(sz))
 
     if (!move_not_last_in_match_ok())
         return;
-
+    if(fInQuizMode){
+        g_message("within Command*Re*Double");
+        CommandHint("");
+    }
+    if(!fInQuizMode) {
     pmr = NewMoveRecord();
 
     playSound(SOUND_REDOUBLE);
@@ -3876,6 +3902,7 @@ CommandRedouble(char *UNUSED(sz))
     AddMoveRecord(pmr);
 
     TurnDone();
+}
 }
 
 extern void
@@ -3994,10 +4021,16 @@ CommandRoll(char *UNUSED(sz))
 
     if (!move_not_last_in_match_ok())
         return;
+    
 
     if (fTutor && fTutorCube && !GiveAdvice(tutor_double(FALSE)))
         return;
-
+ /* if we put this after GetDice(), it provides the hint for the next move*/
+if(fInQuizMode){
+    g_message("within CommandRoll");
+    CommandHint("");
+}
+if(!fInQuizMode) {   
     if (!fCheat || CheatDice(ms.anDice, &ms, afCheatRoll[ms.fMove]))
         if (GetDice(ms.anDice, ms.fTurn, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
             return;
@@ -4059,7 +4092,7 @@ CommandRoll(char *UNUSED(sz))
     } else if (fAutoBearoff && !TryBearoff())
         TurnDone();
 }
-
+}
 
 
 extern void
@@ -4098,23 +4131,24 @@ CommandTake(char *UNUSED(sz))
         g_free(pmr);            /* garbage collect */
         return;
     }
-if(fInQuizMode){
-    g_message("within CommandTake");
-    CommandHint("");
-}
-if(!fInQuizMode) {
-    if (fDisplay)
-        outputf(_("%s accepts the cube at %d.\n"), ap[ms.fTurn].szName, ms.nCube << 1);
+    
+    if(fInQuizMode){
+        g_message("within CommandTake");
+        CommandHint("");
+    }
+    if(!fInQuizMode) {
+        if (fDisplay)
+            outputf(_("%s accepts the cube at %d.\n"), ap[ms.fTurn].szName, ms.nCube << 1);
 
-    AddMoveRecord(pmr);
+        AddMoveRecord(pmr);
 
-    UpdateSetting(&ms.nCube);
-    UpdateSetting(&ms.fCubeOwner);
+        UpdateSetting(&ms.nCube);
+        UpdateSetting(&ms.fCubeOwner);
 
-    memset(&currentkey, 0, sizeof(positionkey));
+        memset(&currentkey, 0, sizeof(positionkey));
 
-    TurnDone();
-}
+        TurnDone();
+    }
 }
 
 extern void

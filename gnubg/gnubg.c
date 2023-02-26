@@ -2085,7 +2085,9 @@ static int
 hint_cube(moverecord * pmr, cubeinfo * pci)
 {
     static decisionData dd;
+    g_message("in hint_cube");
     if (pmr->CubeDecPtr->esDouble.et == EVAL_NONE) {
+        g_message("in hint_cube: EVAL_NONE");
         /* no analysis performed yet */
         dd.pboard = msBoard();
         dd.pci = pci;
@@ -2094,6 +2096,9 @@ hint_cube(moverecord * pmr, cubeinfo * pci)
             return -1;
 
         pmr_cubedata_set(pmr, dd.pes, dd.aarOutput, dd.aarStdDev);
+        // if(fInQuizMode)
+        //     no_double_skill(pmr, pci);
+
     }
     return 0;
 }
@@ -2104,6 +2109,8 @@ no_double_skill(moverecord * pmr, cubeinfo * pci)
     float arDouble[4];
     float eq = 0.0f;
     cubedecision cd;
+        g_message("in no_double_skill");
+
     if (pmr->CubeDecPtr->esDouble.et == EVAL_NONE)
         return SKILL_NONE;
     cd = FindCubeDecision(arDouble, pmr->CubeDecPtr->aarOutput, pci);
@@ -2120,7 +2127,10 @@ no_double_skill(moverecord * pmr, cubeinfo * pci)
     default:
         break;
     }
-    if(fUseQuiz){
+    if (fInQuizMode) {
+        g_message("no-double error in quiz: %f",-eq);
+        qUpdate(-eq);
+    } else if(fUseQuiz){
         qNow.ewmaError=-(eq);
         qNow.player=ms.fTurn;
         g_message("copied no_double error: %f, player: %d",qNow.ewmaError,qNow.player);
@@ -2134,9 +2144,12 @@ double_skill(moverecord * pmr, cubeinfo * pci)
     float arDouble[4];
     float eq = 0.0f;
     cubedecision cd;
+        g_message("in double_skill (start)");
+
     if (pmr->CubeDecPtr->esDouble.et == EVAL_NONE)
         return SKILL_NONE;
     cd = FindCubeDecision(arDouble, pmr->CubeDecPtr->aarOutput, pci);
+    g_message("in double_skill: cd=%d",(int)cd);
 
     switch (cd) {
     case NODOUBLE_TAKE:
@@ -2155,7 +2168,12 @@ double_skill(moverecord * pmr, cubeinfo * pci)
     default:
         break;
     }
-    if(fUseQuiz){
+    g_message("in double_skill (end)");
+
+    if (fInQuizMode) {
+        g_message("double error in quiz: %f",-eq);
+        qUpdate(-eq);
+    } else if(fUseQuiz){
         qNow.ewmaError=-(eq);
         qNow.player=ms.fTurn;
         g_message("copied double error: %f",qNow.ewmaError);
@@ -2280,6 +2298,7 @@ find_skills(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         pmr->stCube = SKILL_NONE;
         return;
     }
+    g_message("in find_skills: did_double=%d,did_take=%d",did_double,did_take);
 
     if (did_double == FALSE)
         pmr->stCube = no_double_skill(pmr, &ci);
@@ -2292,6 +2311,7 @@ find_skills(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
 
     if (pmr->mt == MOVE_NORMAL && pmr->ml.cMoves > 0 && pmr->n.iMove < pmr->ml.cMoves)
         pmr->n.stMove = move_skill(pmr);
+    g_message("in end of find_skills");
 
 }
 
@@ -2316,6 +2336,7 @@ hint_double(int show, int did_double)
     }
 
     pmr = get_current_moverecord(&hist);
+    g_message("hint_double: hist=%d,did_double=%d, movetype=%d",hist,did_double, pmr->mt);
 
     if (!pmr)
         return;
@@ -2326,19 +2347,29 @@ hint_double(int show, int did_double)
     if (hist && did_double == -1)
         did_double = (pmr->mt == MOVE_DOUBLE) ? TRUE : FALSE;
 
+    g_message("hint_double: did_double=%d, movetype=%d",did_double, pmr->mt);
+
     find_skills(pmr, &ms, did_double, -1);
+
+    g_message("in hint_double after find_skills");
 
 #if defined(USE_GTK)
     if (fX) {
         if (hist && show)
             ChangeGame(NULL);
+    g_message("hint_double before GTK: did_double=%d, movetype=%d",did_double, pmr->mt);
+
         if (show)
             GTKCubeHint(pmr, &ms, did_double, -1, hist);
+    g_message("hint_double after GTK: did_double=%d, movetype=%d",did_double, pmr->mt);
+
         return;
     }
 #endif
     outputl(OutputCubeAnalysis
             (pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble, &ci, -1));
+    g_message("hint_double end: did_double=%d, movetype=%d",did_double, pmr->mt);
+
 }
 
 extern void
@@ -5519,7 +5550,7 @@ GiveAdvice(skilltype Skill)
         break;
 
     default:
-        if(fInQuizMode)          
+        // if(fInQuizMode)          
             // g_message("great!");
         return (TRUE);
 
