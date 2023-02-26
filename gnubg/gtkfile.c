@@ -1147,14 +1147,18 @@ extern void qUpdate(float error) {
     /* if someone makes a mistake, then plays again the same position after seeing the 
     answer, only the first time should count => we use iOptCounter 
     */
+
     if(iOptCounter==0) {
+        g_message("updating in qUpdate");
         // g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
         q[iOpt].ewmaError=0.667*(q[iOpt].ewmaError)+0.333*error;
         // g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
         q[iOpt].lastSeen=(long int) (time(NULL));
         SaveFullPositionFile();
         iOptCounter=1;
-    }
+    } else  
+        g_message("NOT updating in qUpdate! 2nd update or more...");
+
 }
 // #if(0) /***********/
 static void DisplayCategories(void)
@@ -1613,6 +1617,8 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 
 static void LoadPositionAndStart (void) {
     fInQuizMode=TRUE;
+    qDecision=QUIZ_UNKNOWN;
+
     long int seconds=(long int) (time(NULL));
     float maxPriority=0;
     iOpt=0;

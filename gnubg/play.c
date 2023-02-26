@@ -1946,7 +1946,10 @@ CommandAgree(char *UNUSED(sz))
 
         return;
     }
-
+    if(fInQuizMode){
+        g_message("within CommandAgree");
+        CommandHint("");
+    }
     if (!move_not_last_in_match_ok())
         return;
 
@@ -2437,20 +2440,20 @@ CommandDouble(char *UNUSED(sz))
     }
 #endif
     TurnDone();
+    if(fInQuizMode &&ms.fMove==1){
+        g_message("within CommandDouble");
+        qDecision=QUIZ_DOUBLE;
+        CommandHint("");
+    //     UserCommand2("analyse move");
+    }
+    // if(!fInQuizMode) {
+    AddMoveRecord(pmr);
     // if(fInQuizMode){
     //     g_message("within CommandDouble");
     //     // CommandHint("");
     //     UserCommand2("analyse move");
 
     // }
-    // if(!fInQuizMode) {
-    AddMoveRecord(pmr);
-    if(fInQuizMode){
-        g_message("within CommandDouble");
-        // CommandHint("");
-        UserCommand2("analyse move");
-
-    }
 }
 
 static skilltype
@@ -2498,21 +2501,29 @@ CommandDrop(char *UNUSED(sz))
         return;
     }
 
-    if (fTutor && fTutorCube && !GiveAdvice(tutor_take(FALSE))) {
-        g_free(pmr);            /* garbage collect */
-        return;
+        if (fTutor && fTutorCube && !GiveAdvice(tutor_take(FALSE))) {
+            g_free(pmr);            /* garbage collect */
+            return;
+        }
+    if(!fInQuizMode) {
+        if (fDisplay)
+            outputf(ngettext
+                    ("%s refuses the cube and gives up %d point.\n", "%s refuses the cube and gives up %d points.\n",
+                    ms.nCube), ap[ms.fTurn].szName, ms.nCube);
+
+
+        AddMoveRecord(pmr);
+
+        memset(&currentkey, 0, sizeof(positionkey));
+        TurnDone();
     }
+    if(fInQuizMode){
+        g_message("within CommandDrop");
+        qDecision=QUIZ_PASS;
+        g_message("in CommandDrop, qdecision=%d",qDecision);
 
-    if (fDisplay)
-        outputf(ngettext
-                ("%s refuses the cube and gives up %d point.\n", "%s refuses the cube and gives up %d points.\n",
-                 ms.nCube), ap[ms.fTurn].szName, ms.nCube);
-
-    AddMoveRecord(pmr);
-
-    memset(&currentkey, 0, sizeof(positionkey));
-
-    TurnDone();
+        CommandHint("");
+    }
 }
 
 static void
@@ -4134,16 +4145,18 @@ CommandTake(char *UNUSED(sz))
     
     if(fInQuizMode){
         g_message("within CommandTake");
+        qDecision=QUIZ_TAKE;
         CommandHint("");
     }
     if(!fInQuizMode) {
         if (fDisplay)
             outputf(_("%s accepts the cube at %d.\n"), ap[ms.fTurn].szName, ms.nCube << 1);
+    // }
 
         AddMoveRecord(pmr);
-
         UpdateSetting(&ms.nCube);
         UpdateSetting(&ms.fCubeOwner);
+    // if(!fInQuizMode) {
 
         memset(&currentkey, 0, sizeof(positionkey));
 

@@ -259,7 +259,7 @@ int fUseQuiz=TRUE;
 quiz qNow={"\0",0,0.0,0,0.0}; /*extern*/
 // qNow.position=(char *)malloc(sizeof(char) * (200));
 // qNow.position=malloc(200);
-
+quizdecision qDecision=QUIZ_UNKNOWN;
 
 
 #if defined(USE_BOARD3D)

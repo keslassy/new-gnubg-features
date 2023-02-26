@@ -1118,7 +1118,16 @@ extern void GetPositionCategories(void);
 extern quiz qNow; 
 extern void qUpdate(float error);
 extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
-
+typedef enum {
+    QUIZ_UNKNOWN,
+    QUIZ_MOVE,
+    QUIZ_DOUBLE,
+    QUIZ_NODOUBLE,
+    QUIZ_PASS,
+    QUIZ_TAKE,
+    N_QUIZ_DECISIONS
+} quizdecision;
+extern quizdecision qDecision; /*last player's decision in quiz*/
 /* ************* */
 
 /* definitions for version checks in updates */
