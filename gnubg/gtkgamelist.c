@@ -331,11 +331,12 @@ void AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
     qNow.lastSeen=(long int) (time(NULL));
     AddQuizPosition(qNow,pcategory);
 }
-void AddCubePositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
+void AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
     // g_message("I'm in the test func: %s", pcategory->name);
     UserCommand2("previous roll");
     UserCommand2("previous roll");
     UserCommand2("next roll");
+    qNow.ewmaError=qNow_NDBeforeMoveError;
     g_message("Adding CUBE position: %s to category %s, error: %f",
         qNow.position,pcategory->name,qNow.ewmaError);
     qNow.lastSeen=(long int) (time(NULL));
@@ -371,16 +372,30 @@ extern void BuildQuizMenu(GdkEventButton *event){
         g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
             G_CALLBACK(AddPositionToFile), &(categories[i])); 
     }    
-    /*separator*/
-    for(int i=0;i < numCategories; i++) {
-        // char buf[MAX_CATEGORY_NAME_LENGTH+8];
-        sprintf(buf,_("Add cube decision to: %s"),categories[i].name);
-        menu_item = gtk_menu_item_new_with_label(_(buf));
+    /* If there was a no-double=roll event just before the move, we need to 
+    be able to add it as well. It's a problem because the gamelist doesn't 
+    really show it. Now we offer the user the option to pick it.
+
+    Potential alternative: let the user right-click on the cube decision
+    panel. But it's not clear that this is better, because now the user
+    (1) needs to know he can do it, and (2) needs to start clicking around. 
+    So not implemented for now. */
+    if(qNow_NDBeforeMoveError >-0.001) {
+        /*separator*/
+        menu_item = gtk_menu_item_new();
         gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
         gtk_widget_show(menu_item);
-        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
-            G_CALLBACK(AddCubePositionToFile), &(categories[i])); 
-    }    
+        /*add the no-double decision*/
+        for(int i=0;i < numCategories; i++) {
+            // char buf[MAX_CATEGORY_NAME_LENGTH+8];
+            sprintf(buf,_("Add no-double to: %s"),categories[i].name);
+            menu_item = gtk_menu_item_new_with_label(_(buf));
+            gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+            gtk_widget_show(menu_item);
+            g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
+                G_CALLBACK(AddNDPositionToFile), &(categories[i])); 
+        }    
+    }
     gtk_widget_show_all(pQuizMenu);
 
     /* Note: event can be NULL here when called from view_onPopupMenu;

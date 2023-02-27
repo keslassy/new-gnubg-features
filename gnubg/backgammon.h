@@ -1116,6 +1116,7 @@ extern int fInQuizMode; /* we are inside quiz mode, so no match etc. */
 extern void BackFromHint (void);
 extern void GetPositionCategories(void);
 extern quiz qNow; 
+extern float qNow_NDBeforeMoveError;
 extern void qUpdate(float error);
 extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
 typedef enum {
@@ -1127,7 +1128,7 @@ typedef enum {
     QUIZ_TAKE,
     N_QUIZ_DECISIONS
 } quizdecision;
-extern quizdecision qDecision; /*last player's decision in quiz*/
+extern quizdecision qDecision; /*user's last decision in quiz mode*/
 // extern void CreateGameWindow(void);
 /* ************* */
 

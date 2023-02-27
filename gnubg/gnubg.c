@@ -257,6 +257,8 @@ int fCheckUpdateGTK = FALSE;
 int fTriggeredByRecordList=FALSE;
 int fUseQuiz=TRUE;
 quiz qNow={"\0",0,0.0,0,0.0}; /*extern*/
+float qNow_NDBeforeMoveError=-1.0; /*extern*/
+
 // qNow.position=(char *)malloc(sizeof(char) * (200));
 // qNow.position=malloc(200);
 quizdecision qDecision=QUIZ_UNKNOWN;
@@ -2131,9 +2133,11 @@ no_double_skill(moverecord * pmr, cubeinfo * pci)
         g_message("no-double error in quiz: %f",-eq);
         qUpdate(-eq);
     } else if(fUseQuiz){
-        qNow.ewmaError=-(eq);
+        // qNow.ewmaError=-(eq);
+        qNow.ewmaError=-1.0;
+        qNow_NDBeforeMoveError=-eq;
         qNow.player=ms.fTurn;
-        g_message("copied no_double error: %f, player: %d",qNow.ewmaError,qNow.player);
+        g_message("copied no_double error: %f, player: %d",qNow_NDBeforeMoveError,qNow.player);
     }
     return Skill(eq);
 }
@@ -2175,6 +2179,7 @@ double_skill(moverecord * pmr, cubeinfo * pci)
         qUpdate(-eq);
     } else if(fUseQuiz){
         qNow.ewmaError=-(eq);
+        qNow_NDBeforeMoveError=-1.0;
         qNow.player=ms.fTurn;
         g_message("copied double error: %f",qNow.ewmaError);
             g_message("player=%d",ms.fTurn);
@@ -2212,6 +2217,7 @@ drop_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
+        qNow_NDBeforeMoveError=-1.0;
         qNow.player=ms.fTurn;
         g_message("copied drop error: %f",qNow.ewmaError);
     }
@@ -2242,6 +2248,7 @@ take_skill(moverecord * pmr, cubeinfo * pci)
     }
     if(fUseQuiz){
         qNow.ewmaError=-(eq);
+        qNow_NDBeforeMoveError=-1.0;
         qNow.player=ms.fTurn;
         g_message("copied take error: %f",qNow.ewmaError);
             g_message("player=%d",ms.fTurn);
@@ -2262,13 +2269,19 @@ move_skill(moverecord * pmr)
         if(fUseQuiz){
             qNow.ewmaError=0.0;
             qNow.player=ms.fTurn;
-            g_message("no moves, reset error: %f",qNow.ewmaError);
+            g_message("no eval => zero error: %f",qNow.ewmaError);
         }
         return SKILL_NONE;
     }
     else {
         if(fUseQuiz){
-            qNow.ewmaError=move_0->rScore-move_i->rScore;
+            /* when there is a no-double roll before a move, we set the error for the move at -1
+            => if the previous move error is not a negative number, the NDBeforeMove value is 
+            irrelevant and set to -1 - e.g. when we look at the first move in a game
+            */
+            if (qNow.ewmaError>-0.001) /*old value*/
+                qNow_NDBeforeMoveError=-1.0;
+            qNow.ewmaError=move_0->rScore-move_i->rScore; /*new value*/
             qNow.player=ms.fTurn;
             g_message("copied move error: %f",qNow.ewmaError);
             g_message("player=%d",ms.fTurn);
