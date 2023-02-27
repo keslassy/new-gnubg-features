@@ -49,6 +49,7 @@
 
 #define MAX_LEN 1024
 
+
 static void
 FilterAdd(const char *fn, const char *pt, GtkFileChooser * fc)
 {
@@ -976,6 +977,9 @@ ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
     ->either LoadPositionAndStart or ManagePositionCategories
 */
 
+ /*extern:right-click menu, to be updated in quiz mode; used in gtkgamelist.c*/
+GtkWidget *pQuizMenu;
+
 
 #define MAX_ROWS 1024
 #define MAX_ROW_CHARS 1024
@@ -1279,7 +1283,7 @@ extern void GetPositionCategories(void) {
             numCategories++;
         }
     }
-    /* sorting 2 arrays alphabetically */
+    /* sorting alphabetically */
     qsort(categories, numCategories, sizeof(categorytype), string_cmp );
 
     closedir(dir);
@@ -1346,6 +1350,7 @@ DeleteCategory(const char *sz)
             }
         }
     }
+
     GTKMessage(_("Error: Position category name not found"), DT_INFO);
     return 0;
 }
@@ -1436,6 +1441,10 @@ AddCategory(const char *sz)
     // strcpy(categories[numCategories].name,sz); 
     numCategories++;
 
+        /* sorting alphabetically */
+    qsort(categories, numCategories, sizeof(categorytype), string_cmp );
+    BuildQuizMenu();
+
     // DisplayCategories();
     // UserCommand2("save settings");
     return 1;
@@ -1497,6 +1506,10 @@ RenameCategory(const char * szOld, const char * szNew)
 
     // strcpy(categories[positionIndex].name,szNew); 
     populateCategory(positionIndex,szNew,TRUE);
+
+    // /* sorting alphabetically */
+    // qsort(categories, numCategories, sizeof(categorytype), string_cmp );
+
     DisplayCategories();
     // UserCommand2("save settings");
     return positionIndex;
@@ -1543,6 +1556,20 @@ GetSelectedCategory(GtkTreeView * treeview)
     return categoryName;
 }
 
+
+static void
+RefreshLists(void)
+{
+    GetPositionCategories();
+    
+    // UpdateGame(FALSE);
+    // GTKClearMoveRecord();
+            // CreateGameWindow();
+            //CreatePanels();
+    // UserCommand2("set dockpanels off"); //       DockPanels();
+    UserCommand2("set dockpanels on"); //       DockPanels();
+}
+
 static void
 AddCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
@@ -1553,15 +1580,28 @@ AddCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
         g_message("add=%s",categoryName);
         if (AddCategory(categoryName)) {
         // AddCategory(category);
-            gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
-            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, categoryName, -1);
-            gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
-            selected_iter=iter;
+            // gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
+            // gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, categoryName, -1);
+            // gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
+            // selected_iter=iter;
+            RefreshLists();
         }  
         /* assuming AddCategory already gave an error message*/
         // else {
         //     GTKMessage(_("Error: problem adding this position category"), DT_INFO);
         // }
+
+        /*if we don't refresh the game window, the right-click won't show the newly added
+        category*/
+        
+        // ShowHidePanel(WINDOW_GAME);
+        // ShowHidePanel(WINDOW_GAME);
+        // GL_Create();
+
+        // GTKRegenerateGames();
+        // gtk_list_store_clear(plsGameList);
+
+        // 
         g_free(categoryName);
         return;
     } else
@@ -1586,6 +1626,8 @@ RenameCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
             gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, newCategory, -1);
             selected_iter=iter;
 
+            RefreshLists();
+
             g_free(newCategory);
         }
         g_free(oldCategory);
@@ -1598,21 +1640,26 @@ static void
 DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     char *category = GetSelectedCategory(GTK_TREE_VIEW(treeview));
-    if(category){
-        if (GTKGetInputYN(_("Are you sure?"))) { 
-            if (DeleteCategory(category)) {
-                gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-            // DisplayCategories();
-            } else {
-                GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
-            }
-        } 
-        g_free(category);
-        return;
-    } else {
+    if(!category) {
         GTKMessage(_("Error: please select a position category"), DT_INFO);
         return;
     }
+    if (!GTKGetInputYN(_("Are you sure?"))) { 
+        GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
+        g_free(category);
+        return;
+    }
+    if (!DeleteCategory(category)) {
+        return;
+    }
+
+    gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+
+    RefreshLists();
+    // DisplayCategories();
+    
+    g_free(category);
+        return;
 }
 
 static void LoadPositionAndStart (void) {

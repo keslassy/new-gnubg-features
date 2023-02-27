@@ -33,6 +33,7 @@
 #include "gtkgame.h"
 #include "util.h"
 
+
 static GtkListStore *plsGameList;
 static GtkWidget *pwGameList;
 static GtkStyle *psGameList, *psCurrent, *psCubeErrors[3], *psChequerErrors[3], *psLucky[N_LUCKS];
@@ -447,6 +448,24 @@ void AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
 //   return TRUE; //GDK_EVENT_STOP;
 // }
 
+extern void BuildQuizMenu(void){
+    pQuizMenu = gtk_menu_new(); /*extern*/
+    GtkWidget *menu_item;
+    g_message("numCategories=%d",numCategories);
+    // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
+
+    for(int i=0;i < numCategories; i++) {
+        char buf[MAX_CATEGORY_NAME_LENGTH+8];
+        sprintf(buf,_("Add to: %s"),categories[i].name);
+        menu_item = gtk_menu_item_new_with_label(_(buf));
+        gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+        gtk_widget_show(menu_item);
+        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
+            G_CALLBACK(AddPositionToFile), &(categories[i])); 
+    }    
+}
+
+
 extern GtkWidget *
 GL_Create(void)
 {
@@ -527,8 +546,8 @@ GL_Create(void)
     // g_signal_connect(G_OBJECT(pwGameList), "button-press-event", G_CALLBACK(show_popup), copyMenu);
 
     if (fUseQuiz) {
-        GtkWidget *pmenu;
-        pmenu = gtk_menu_new();
+        // GtkWidget *pQuizMenu;
+        pQuizMenu = gtk_menu_new();
         GtkWidget *menu_item;
         // int tempArray [numCategories];
         g_message("numCategories=%d",numCategories);
@@ -538,14 +557,14 @@ GL_Create(void)
             char buf[MAX_CATEGORY_NAME_LENGTH+8];
             sprintf(buf,_("Add to: %s"),categories[i].name);
             menu_item = gtk_menu_item_new_with_label(_(buf));
-            gtk_menu_shell_append(GTK_MENU_SHELL(pmenu), menu_item);
+            gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
             gtk_widget_show(menu_item);
             g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), 
                 &(categories[i])); //(tempArray[i]));
         }       
 
         g_signal_connect_swapped(pwGameList, "button-press-event", 
-            G_CALLBACK(show_popup), pmenu);  
+            G_CALLBACK(show_popup), pQuizMenu);  
         
         // g_signal_connect(pwGameList, "button-press-event", G_CALLBACK(view_onButtonPressed), 
         //     NULL);    

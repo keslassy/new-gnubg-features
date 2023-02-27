@@ -1128,6 +1128,7 @@ typedef enum {
     N_QUIZ_DECISIONS
 } quizdecision;
 extern quizdecision qDecision; /*last player's decision in quiz*/
+// extern void CreateGameWindow(void);
 /* ************* */
 
 /* definitions for version checks in updates */

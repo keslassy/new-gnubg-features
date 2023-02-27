@@ -1153,6 +1153,7 @@ SelectGame(GtkWidget * pw, void *UNUSED(data))
 // }
 // // /* *************** */
 
+// extern void
 static void
 CreateGameWindow(void)
 {

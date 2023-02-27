@@ -195,4 +195,8 @@ extern void AddText(GtkWidget* pwBox, char* Text);
 extern void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y);
 
 extern void GTKAskToUpdate(char * availableVersion);
+
+extern GtkWidget *pQuizMenu; /*extern:right-click menu, to be updated in quiz mode*/
+extern void BuildQuizMenu(void);
+
 #endif
