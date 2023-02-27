@@ -979,6 +979,8 @@ ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
 
  /*extern:right-click menu, to be updated in quiz mode; used in gtkgamelist.c*/
 GtkWidget *pQuizMenu;
+static GtkWidget *pwDialog = NULL;
+static void ManagePositionCategories(void);
 
 
 #define MAX_ROWS 1024
@@ -1003,7 +1005,6 @@ categorytype categories[MAX_POS_CATEGORIES]; //={""};
 int numCategories;//=0
 // int numPositionsInCategory[MAX_POS_CATEGORIES]={0}; /* array with #positions per category file*/
 
-static GtkWidget *pwDialog = NULL;
 
 /* the following function:
 - updates positionsFileFullPath,
@@ -1556,6 +1557,20 @@ GetSelectedCategory(GtkTreeView * treeview)
     return categoryName;
 }
 
+static void
+DestroyDialog(gpointer UNUSED(p), GObject * UNUSED(obj))
+/* Called by gtk when the window is closed.
+Allows garbage collection.
+*/
+{
+        g_message("in destroy");
+
+    if (pwDialog) { //i.e. we didn't close it using DestroyDialog()
+        gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
+        g_message("in destroy loop");
+        pwDialog = NULL;
+    }
+}
 
 static void
 RefreshLists(void)
@@ -1568,12 +1583,16 @@ RefreshLists(void)
             //CreatePanels();
     // UserCommand2("set dockpanels off"); //       DockPanels();
     UserCommand2("set dockpanels on"); //       DockPanels();
+
+    DestroyDialog(NULL,NULL);
+    ManagePositionCategories();
+
 }
 
 static void
-AddCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+AddCategoryClicked(GtkButton * UNUSED(button), gpointer UNUSED(treeview))
 {
-    GtkTreeIter iter;
+    // GtkTreeIter iter;
     char *categoryName = GTKGetInput(_("Add position category"), 
         _("Position category:"), NULL);
     if(categoryName) {
@@ -1732,31 +1751,10 @@ static void LoadPositionAndStart (void) {
 
 }
 
-static void
-DestroyDialog(gpointer UNUSED(p), GObject * UNUSED(obj))
-/* Called by gtk when the window is closed.
-Allows garbage collection.
-*/
-{
 
-    if (pwDialog) {//should always be the case
-        pwDialog = NULL;
-    }
-}
-
-static void
-ManagePositionCategories(void)
-{
-    // GtkWidget *pwDialog;
-    GtkWidget *pwMainHBox;
-    GtkWidget *pwVBox;
-    GtkWidget *hb1;
-    GtkWidget *pwScrolled;
+static GtkWidget * BuildCategoryList(void) {
+   // GtkWidget *pwDialog;
     GtkWidget *treeview;
-    GtkWidget *addButton;
-    GtkWidget *delButton;
-    GtkWidget *renameButton;
-    GtkWidget *startButton;
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
     // GtkListStore *store;
@@ -1804,6 +1802,23 @@ ManagePositionCategories(void)
     column = gtk_tree_view_column_new_with_attributes(_("Positions"), 
         renderer, "text", COLUMN_INT, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
+
+    return treeview;
+}
+
+static void
+ManagePositionCategories(void)
+{
+    GtkWidget *pwScrolled;
+    GtkWidget *pwMainHBox;
+    GtkWidget *pwVBox;
+    GtkWidget *addButton;
+    GtkWidget *delButton;
+    GtkWidget *renameButton;
+    GtkWidget *startButton;
+    GtkWidget *hb1;
+
+    GtkWidget *treeview = BuildCategoryList();
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
 
