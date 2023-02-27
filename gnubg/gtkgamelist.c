@@ -317,32 +317,27 @@ CreateStyles(GtkWidget * UNUSED(widget), gpointer UNUSED(p))
     GetStyleFromRCFile(&psLucky[LUCK_VERYGOOD], "gamelist-luck-good", psGameList);
 }
 
-// int show_popup(GtkWidget *widget, GdkEvent *event,gpointer *treeview) {
-int show_popup(GtkTreeView *widget, GdkEvent *event) {
+/* ************** right-click quiz menu **************  */
 
-    const gint RIGHT_CLICK = 3;
-    // g_message("I'm in the show popup func");
-            //   GameListSelectRow(treeview, NULL);
-    if (event->type == GDK_BUTTON_PRESS) {
-        // g_message("button press");
-      
-        GdkEventButton *bevent = (GdkEventButton *) event;
-      
-        if (bevent->button == RIGHT_CLICK) {      
-            // g_message("right button press");          
-            gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
-                    bevent->button, bevent->time);
-            //   GameListSelectRow(treeview, NULL);
-            return FALSE; //<-- to have the menu with usual clicks!!!
-        }
-      return FALSE;
-  } else 
-        return FALSE;
-}
+// static    GtkWidget *menu_item;
+
+
+
 
 void AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
-    g_message("I'm in the test func: %s", pcategory->name);
-    g_message("position: %s, error: %f",qNow.position,qNow.ewmaError);
+    // g_message("I'm in the test func: %s", pcategory->name);
+    g_message("Adding position: %s to category %s, error: %f",
+        qNow.position,pcategory->name,qNow.ewmaError);
+    qNow.lastSeen=(long int) (time(NULL));
+    AddQuizPosition(qNow,pcategory);
+}
+void AddCubePositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
+    // g_message("I'm in the test func: %s", pcategory->name);
+    UserCommand2("previous roll");
+    UserCommand2("previous roll");
+    UserCommand2("next roll");
+    g_message("Adding CUBE position: %s to category %s, error: %f",
+        qNow.position,pcategory->name,qNow.ewmaError);
     qNow.lastSeen=(long int) (time(NULL));
     AddQuizPosition(qNow,pcategory);
 }
@@ -358,6 +353,43 @@ void AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
 
 //   g_print ("Do something!\n");
 // }
+
+
+extern void BuildQuizMenu(GdkEventButton *event){
+    pQuizMenu = gtk_menu_new(); /*extern*/
+    GtkWidget *menu_item;
+    char buf[MAX_CATEGORY_NAME_LENGTH+30];
+
+    g_message("numCategories=%d",numCategories);
+    // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
+
+    for(int i=0;i < numCategories; i++) {
+        sprintf(buf,_("Add to: %s"),categories[i].name);
+        menu_item = gtk_menu_item_new_with_label(_(buf));
+        gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+        gtk_widget_show(menu_item);
+        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
+            G_CALLBACK(AddPositionToFile), &(categories[i])); 
+    }    
+    /*separator*/
+    for(int i=0;i < numCategories; i++) {
+        // char buf[MAX_CATEGORY_NAME_LENGTH+8];
+        sprintf(buf,_("Add cube decision to: %s"),categories[i].name);
+        menu_item = gtk_menu_item_new_with_label(_(buf));
+        gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+        gtk_widget_show(menu_item);
+        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
+            G_CALLBACK(AddCubePositionToFile), &(categories[i])); 
+    }    
+    gtk_widget_show_all(pQuizMenu);
+
+    /* Note: event can be NULL here when called from view_onPopupMenu;
+    * gdk_event_get_time() accepts a NULL argument
+    */
+    gtk_menu_popup(GTK_MENU(pQuizMenu), NULL, NULL, NULL, NULL,
+                    (event != NULL) ? event->button : 0,
+                    gdk_event_get_time((GdkEvent*)event));
+}
 
 // void
 // view_popup_menu (GtkWidget *treeview, GdkEventButton *event, gpointer userdata) 
@@ -387,6 +419,11 @@ void AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
 //     g_signal_connect(menuitem, "activate",
 //                     (GCallback) view_popup_menu_onDoSomething, treeview);
 //     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+//     menuitem = gtk_menu_item_new_with_label("Do something2");
+//     g_signal_connect(menuitem, "activate",
+//                     (GCallback) view_popup_menu_onDoSomething, treeview);
+//     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+    
 //     gtk_widget_show_all(menu);
 //     /* Note: event can be NULL here when called from view_onPopupMenu;
 //     * gdk_event_get_time() accepts a NULL argument
@@ -396,74 +433,86 @@ void AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
 //                     gdk_event_get_time((GdkEvent*)event));
 // }
 
-// gboolean
-// view_onButtonPressed (GtkWidget *treeview,
-//                       GdkEventButton *event,
-//               gpointer userdata)
-// {
-//   /* single click with the right mouse button? */
-//   if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3)
-//   {
-//     g_print ("Single right click on the tree view.\n");
+// int show_popup(GtkWidget *widget, GdkEvent *event,gpointer *treeview) {
+int show_popup(GtkTreeView *widget, GdkEvent *event) {
 
-//     /* optional: select row if no row is selected or only
-//      *  one other row is selected (will only do something
-//      *  if you set a tree selection mode as described later
-//      *  in the tutorial) */
-//     if (1)
-//     {
-//       GtkTreeSelection *selection;
-
-//       selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-
-//       /* Note: gtk_tree_selection_count_selected_rows() does not
-//        *   exist in gtk+-2.0, only in gtk+ >= v2.2 ! */
-//       if (gtk_tree_selection_count_selected_rows(selection)  <= 1)
-//       {
-//          GtkTreePath *path;
-
-//          /* Get tree path for row that was clicked */
-//          if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
-//                                            (gint) event->x, 
-//                                            (gint) event->y,
-//                                            &path, NULL, NULL, NULL))
-//          {
-//            gtk_tree_selection_unselect_all(selection);
-//            gtk_tree_selection_select_path(selection, path);
-//            gtk_tree_path_free(path);
-//          }
-//       }
-//     } /* end of optional bit */
-
-//     view_popup_menu(treeview, event, userdata);
-
-//     return TRUE; //GDK_EVENT_STOP;
-//   }
-
-//   return FALSE; //GDK_EVENT_PROPAGATE;
-// }
-
-// gboolean view_onPopupMenu (GtkWidget *treeview, gpointer userdata) {
-//   view_popup_menu(treeview, NULL, userdata);
-//   return TRUE; //GDK_EVENT_STOP;
-// }
-
-extern void BuildQuizMenu(void){
-    pQuizMenu = gtk_menu_new(); /*extern*/
-    GtkWidget *menu_item;
-    g_message("numCategories=%d",numCategories);
-    // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
-
-    for(int i=0;i < numCategories; i++) {
-        char buf[MAX_CATEGORY_NAME_LENGTH+8];
-        sprintf(buf,_("Add to: %s"),categories[i].name);
-        menu_item = gtk_menu_item_new_with_label(_(buf));
-        gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
-            G_CALLBACK(AddPositionToFile), &(categories[i])); 
-    }    
+    const gint RIGHT_CLICK = 3;
+    // g_message("I'm in the show popup func");
+            //   GameListSelectRow(treeview, NULL);
+    if (event->type == GDK_BUTTON_PRESS) {
+        // g_message("button press");
+      
+        GdkEventButton *bevent = (GdkEventButton *) event;
+      
+        if (bevent->button == RIGHT_CLICK) {      
+            // g_message("right button press");          
+            gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
+                    bevent->button, bevent->time);
+            //   GameListSelectRow(treeview, NULL);
+            return FALSE; //<-- to have the menu with usual clicks!!!
+        }
+      return FALSE;
+  } else 
+        return FALSE;
 }
+
+gboolean
+view_onButtonPressed (GtkWidget *UNUSED(treeview),
+                      GdkEventButton *event,
+              gpointer UNUSED(userdata))
+{
+
+    // GameListSelectRow(GTK_TREE_VIEW(pwGameList), NULL);
+
+    /* single click with the right mouse button? */
+    if (event->type == GDK_BUTTON_PRESS  &&  event->button == 3){
+    // if (event->type == GDK_BUTTON_PRESS) {
+    //     GdkEventButton *bevent = (GdkEventButton *) event;     
+    //     if (bevent->button == 3) {         
+            g_print ("Single right click on the tree view.\n");
+
+            /* optional: select row if no row is selected or only
+            *  one other row is selected (will only do something
+            *  if you set a tree selection mode as described later
+            *  in the tutorial) */
+            
+                GtkTreeSelection *selection;
+
+                selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pwGameList));
+            if (0){
+                /* Note: gtk_tree_selection_count_selected_rows() does not
+                *   exist in gtk+-2.0, only in gtk+ >= v2.2 ! */
+                if (gtk_tree_selection_count_selected_rows(selection)  <= 1){
+                    GtkTreePath *path;
+
+                    /* Get tree path for row that was clicked */
+                    if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(pwGameList),
+                                                    (gint) event->x, 
+                                                    (gint) event->y,
+                                                    &path, NULL, NULL, NULL)){
+                    gtk_tree_selection_unselect_all(selection);
+                    gtk_tree_selection_select_path(selection, path);
+                    gtk_tree_path_free(path);
+                    }
+                }
+            } /* end of optional bit */
+        
+        BuildQuizMenu(event);
+        // view_popup_menu(treeview, event, userdata);
+
+        /*this enables it to apply also the left button and go there!*/
+        return FALSE; //TRUE; //GDK_EVENT_STOP;
+    }
+
+    return FALSE; //GDK_EVENT_PROPAGATE;
+}
+
+gboolean view_onPopupMenu (GtkWidget * UNUSED(treeview), gpointer UNUSED(userdata)) {
+//   view_popup_menu(treeview, NULL, userdata);
+    BuildQuizMenu(NULL);
+    return TRUE; //GDK_EVENT_STOP;
+}
+
 
 
 extern GtkWidget *
@@ -546,32 +595,38 @@ GL_Create(void)
     // g_signal_connect(G_OBJECT(pwGameList), "button-press-event", G_CALLBACK(show_popup), copyMenu);
 
     if (fUseQuiz) {
-        // GtkWidget *pQuizMenu;
-        pQuizMenu = gtk_menu_new();
-        GtkWidget *menu_item;
-        // int tempArray [numCategories];
-        g_message("numCategories=%d",numCategories);
-        // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
-        for(int i=0;i < numCategories; i++) {
-            // tempArray[i]=i;
-            char buf[MAX_CATEGORY_NAME_LENGTH+8];
-            sprintf(buf,_("Add to: %s"),categories[i].name);
-            menu_item = gtk_menu_item_new_with_label(_(buf));
-            gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
-            gtk_widget_show(menu_item);
-            g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), 
-                &(categories[i])); //(tempArray[i]));
-        }       
+        BuildQuizMenu(NULL);
+        g_signal_connect(pwGameList, "button-press-event", G_CALLBACK(view_onButtonPressed), 
+            NULL);    
+        g_signal_connect(pwGameList, "popup-menu", G_CALLBACK(view_onPopupMenu), NULL); 
+    }
 
-        g_signal_connect_swapped(pwGameList, "button-press-event", 
-            G_CALLBACK(show_popup), pQuizMenu);  
+        // GtkWidget *pQuizMenu;
+
+        // pQuizMenu = gtk_menu_new();
+        // GtkWidget *menu_item;
+        // // int tempArray [numCategories];
+        // g_message("numCategories=%d",numCategories);
+        // // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
+        // for(int i=0;i < numCategories; i++) {
+        //     // tempArray[i]=i;
+        //     char buf[MAX_CATEGORY_NAME_LENGTH+8];
+        //     sprintf(buf,_("Add to: %s"),categories[i].name);
+        //     menu_item = gtk_menu_item_new_with_label(_(buf));
+        //     gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+        //     gtk_widget_show(menu_item);
+        //     g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(AddPositionToFile), 
+        //         &(categories[i])); //(tempArray[i]));
+        // }       
+
+        // g_signal_connect_swapped(pwGameList, "button-press-event", 
+        //     G_CALLBACK(show_popup), pQuizMenu);  
         
         // g_signal_connect(pwGameList, "button-press-event", G_CALLBACK(view_onButtonPressed), 
         //     NULL);    
         // g_signal_connect(pwGameList, "popup-menu", G_CALLBACK(view_onPopupMenu), NULL); 
 
    
-    }
     return pwGameList;
 }
 

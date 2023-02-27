@@ -985,6 +985,9 @@ static void ManagePositionCategories(void);
 
 #define MAX_ROWS 1024
 #define MAX_ROW_CHARS 1024
+#define ERROR_DECAY 0.6
+#define SMALL_ERROR 0.2
+
 static const char positionsFolder []="/home/isaac/g/new-gnubg-features/gnubg/quiz";
 // static const char positionsFolder2 []="~/g/new-gnubg-features/gnubg/quiz/";
 
@@ -1091,9 +1094,9 @@ int OpenQuizPositionsFile(const int index)
     fclose(fp);
     if(qLength<1) {
         GTKMessage(_("Error: no positions in file?"), DT_INFO);
-        return FALSE;
+        // return FALSE;
     } 
-	return TRUE;
+	return qLength;
 }
 /* in backgammon.h, we define: */
 // typedef struct {
@@ -1154,9 +1157,9 @@ extern void qUpdate(float error) {
     */
 
     if(iOptCounter==0) {
-        g_message("updating in qUpdate");
+        g_message("updating in qUpdate with error=%f",error);
         // g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
-        q[iOpt].ewmaError=0.667*(q[iOpt].ewmaError)+0.333*error;
+        q[iOpt].ewmaError=ERROR_DECAY*(q[iOpt].ewmaError)+(1-ERROR_DECAY)*error;
         // g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
         q[iOpt].lastSeen=(long int) (time(NULL));
         SaveFullPositionFile();
@@ -1444,7 +1447,7 @@ AddCategory(const char *sz)
 
         /* sorting alphabetically */
     qsort(categories, numCategories, sizeof(categorytype), string_cmp );
-    BuildQuizMenu();
+    BuildQuizMenu(NULL);
 
     // DisplayCategories();
     // UserCommand2("save settings");
@@ -1685,18 +1688,27 @@ static void LoadPositionAndStart (void) {
     fInQuizMode=TRUE;
     qDecision=QUIZ_UNKNOWN;
 
+    /*this should not happen as it was previously checked before calling the function:*/
+    if(qLength<0) {
+        GTKMessage(_("Error: no positions in this category"), DT_INFO);
+        ManagePositionCategories();
+        return;
+    }
+
     long int seconds=(long int) (time(NULL));
-    float maxPriority=0;
+    // float maxPriority=0;
     iOpt=0;
-    for (int i = 0; i < qLength; ++i) {
+    for (int i = 1; i < qLength; ++i) {
         /* heuristic formula, the "secret sauce"...
-        Very roughly: a 2x bigger typical error should be seen 4x more often -
+        1) Very roughly: a 2x bigger typical error should be seen 4x more often -
         and then the error hopefully goes down.
-        */
-        q[i].priority=q[i].ewmaError * q[i].ewmaError * (float) (seconds-q[i].lastSeen); // /1000.0;
+        2) If we add a non-analyzed position, or a position with 0 error, then it will never appear in the loop 
+        unless we add something to get a non-null priority */
+    
+        q[i].priority=(q[i].ewmaError + SMALL_ERROR) * (q[i].ewmaError + SMALL_ERROR) * (float) (seconds-q[i].lastSeen); // /1000.0;
         // g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
-        if(q[i].priority>maxPriority &&  i>iOpt) {
-            maxPriority=q[i].priority;
+        if(q[i].priority>q[iOpt].priority) {
+            // maxPriority=q[i].priority;
             iOpt=i;
         }
     }
@@ -1925,17 +1937,8 @@ extern void BackFromHint (void) {
     }
 }
 
-extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
+extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     g_message("in StartQuiz");
-
-// OK(GtkWidget * pw, int *pf)
-// {
-
-//     if (pf)
-//         *pf = TRUE;
-
-//     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
-// }
 
     // currentCategory = GetSelectedCategory(treeview);
     // if(!currentCategory) {
@@ -1946,7 +1949,8 @@ extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
 
     currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
     g_message("currentCategoryIndex=%d",currentCategoryIndex);
-    gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+    // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+    DestroyDialog(NULL,NULL);
     if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
         GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
         ManagePositionCategories();
@@ -1960,11 +1964,13 @@ extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview) {
     int result= OpenQuizPositionsFile(currentCategoryIndex);
     // g_free(currentCategory); //when should we free a static var that is to be reused?
 
-    if(result==FALSE) {
+    /*empty file, no positions*/
+    if(result==0) {
         ManagePositionCategories();
         return;
     }
     fInQuizMode=TRUE;
+    counterForFile=0; /*first one for this category*/
     LoadPositionAndStart();
 }
 
