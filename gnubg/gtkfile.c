@@ -982,7 +982,8 @@ GtkWidget *pQuizMenu;
 static GtkWidget *pwDialog = NULL;
 // static void ManagePositionCategories(void);
 
-
+#define WIDTH   640
+#define HEIGHT  480
 #define MAX_ROWS 1024
 #define MAX_ROW_CHARS 1024
 #define ERROR_DECAY 0.6
@@ -1426,7 +1427,8 @@ AddCategory(const char *sz)
     }
     //  perror("fopen");
     /*header*/
-    fprintf(fp, "position, cubedecision, ewmaError, lastSeen\n");
+    writeQuizHeader (fp);
+    // fprintf(fp, "position, cubedecision, ewmaError, lastSeen\n");
     fclose(fp);
 
 	// FILE* fp2 = fopen(sz, "r");
@@ -1576,7 +1578,7 @@ Allows garbage collection.
 }
 
 static void
-RefreshLists(void)
+RefreshManageWindow(void)
 {
     // GetPositionCategories();
     
@@ -1594,6 +1596,56 @@ RefreshLists(void)
     ManagePositionCategories();
 
 }
+// extern void
+// CommandAddQuizPosition(char *sz)
+// {
+
+//     char *pch = NextToken(&sz);
+//     int i;
+
+//     if (!pch) {
+//         outputl(_("To which quiz category do you want to add this position?"));
+//         return;
+//     }
+
+//     GetPositionCategories();
+//     for(int i=0;i < numCategories; i++) {
+//         if (!strcmp(sz, categories[i].name)) {
+//             AddPositionToFile(&(categories[i]),NULL);
+//             return;
+//         }
+//     }
+//     outputl(_("Error: This category does not exist; please create it first"), DT_INFO);
+//     // GTKMessage(_("Error: This category name already exists"), DT_INFO);
+// }
+
+static void
+AddPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
+{
+    // GtkTreeIter iter;
+    // GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+    int categoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+    if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
+        GTKMessage(_("Error: please select a position category to rename"), DT_INFO);
+        return;
+    }
+    if(AddPositionToFile(&(categories[categoryIndex]),NULL))
+        GTKMessage(_("The position was added successfully."), DT_INFO);
+    return;    
+}
+
+static void
+AddNDPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
+{
+    int categoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+    if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
+        GTKMessage(_("Error: please select a position category to rename"), DT_INFO);
+        return;
+    }
+    if(AddNDPositionToFile(&(categories[categoryIndex]),NULL))
+        GTKMessage(_("The double/no-double decision was added successfully."), DT_INFO);
+    return; 
+}
 
 static void
 AddCategoryClicked(GtkButton * UNUSED(button), gpointer UNUSED(treeview))
@@ -1601,64 +1653,64 @@ AddCategoryClicked(GtkButton * UNUSED(button), gpointer UNUSED(treeview))
     // GtkTreeIter iter;
     char *categoryName = GTKGetInput(_("Add position category"), 
         _("Position category:"), NULL);
-    if(categoryName) {
-        g_message("add=%s",categoryName);
-        if (AddCategory(categoryName)) {
-        // AddCategory(category);
-            // gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
-            // gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, categoryName, -1);
-            // gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
-            // selected_iter=iter;
-            RefreshLists();
-        }  
-        /* assuming AddCategory already gave an error message*/
-        // else {
-        //     GTKMessage(_("Error: problem adding this position category"), DT_INFO);
-        // }
-
-        /*if we don't refresh the game window, the right-click won't show the newly added
-        category*/
-        
-        // ShowHidePanel(WINDOW_GAME);
-        // ShowHidePanel(WINDOW_GAME);
-        // GL_Create();
-
-        // GTKRegenerateGames();
-        // gtk_list_store_clear(plsGameList);
-
-        // 
-        g_free(categoryName);
+    if(!categoryName) 
         return;
-    } else
-        return;
+    g_message("add=%s",categoryName);
+    if (AddCategory(categoryName)) {
+    // AddCategory(category);
+        // gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
+        // gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, categoryName, -1);
+        // gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
+        // selected_iter=iter;
+        RefreshManageWindow();
+    }  
+    /* assuming AddCategory already gave an error message*/
+    // else {
+    //     GTKMessage(_("Error: problem adding this position category"), DT_INFO);
+    // }
+
+    /*if we don't refresh the game window, the right-click won't show the newly added
+    category*/
+    
+    // ShowHidePanel(WINDOW_GAME);
+    // ShowHidePanel(WINDOW_GAME);
+    // GL_Create();
+
+    // GTKRegenerateGames();
+    // gtk_list_store_clear(plsGameList);
+
+    // 
+    g_free(categoryName);
+    return;    
 }
 
 static void
 RenameCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     GtkTreeIter iter;
-    GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+    // GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
     char * oldCategory = GetSelectedCategory(GTK_TREE_VIEW(treeview));
-    if(oldCategory){
-        char *newCategory = GTKGetInput(_("Add position category"), 
-            _("Position category:"), NULL);
-        if(newCategory){
-            int positionIndex = RenameCategory(oldCategory, newCategory);
-            /* we assume below that the array and the presented list are kept 
-            in the same order, else need to iterate through the list */
-            gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-            gtk_list_store_insert(GTK_LIST_STORE(nameStore), &iter, positionIndex);
-            gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, newCategory, -1);
-            selected_iter=iter;
-
-            RefreshLists();
-
-            g_free(newCategory);
-        }
-        g_free(oldCategory);
-    } else {
-            GTKMessage(_("Error: please select a position category to rename"), DT_INFO);
+    if(!oldCategory){
+        GTKMessage(_("Error: please select a position category to rename"), DT_INFO);
     }
+    char *newCategory = GTKGetInput(_("Add position category"), 
+        _("Position category:"), NULL);
+    if(!newCategory) {
+        g_free(oldCategory);
+        return;
+    }
+    
+    int positionIndex = RenameCategory(oldCategory, newCategory);
+
+    gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+    gtk_list_store_insert(GTK_LIST_STORE(nameStore), &iter, positionIndex);
+    gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, newCategory, -1);
+    selected_iter=iter;
+
+    RefreshManageWindow();
+
+    g_free(newCategory);
+    g_free(oldCategory);
 }
 
 static void
@@ -1680,7 +1732,7 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 
     gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
 
-    RefreshLists();
+    RefreshManageWindow();
     // DisplayCategories();
     
     g_free(category);
@@ -1831,7 +1883,10 @@ ManagePositionCategories(void)
     GtkWidget *delButton;
     GtkWidget *renameButton;
     GtkWidget *startButton;
-    GtkWidget *hb1;
+    GtkWidget *pwMainVBox;
+    GtkWidget *addPos1Button;
+    GtkWidget *addPos2Button;
+    
 
     GtkWidget *treeview = BuildCategoryList();
 
@@ -1841,7 +1896,14 @@ ManagePositionCategories(void)
         gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
         pwDialog = NULL;
     }
-
+#if GTK_CHECK_VERSION(3,0,0)
+    pwDialog = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_size (pwDialog, WIDTH, HEIGHT);
+    gtk_window_set_position     (pwDialog, GTK_WIN_POS_CENTER);
+    gtk_window_set_title        (pwDialog, "MWC plot");
+    g_signal_connect(pwDialog, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+    gtk_widget_show_all ((GtkWidget*)pwDialog);
+#else
     pwDialog = GTKCreateDialog(_("Position categories"), DT_INFO, NULL, 
         DIALOG_FLAG_NONE, NULL, NULL);
         // DIALOG_FLAG_NONE, (GCallback) StartQuiz, treeview);
@@ -1850,26 +1912,33 @@ ManagePositionCategories(void)
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, treeview);
     //    DIALOG_FLAG_NONE
-
+    gtk_window_set_default_size (GTK_WINDOW (pwDialog), WIDTH, HEIGHT);
+#endif
 #if GTK_CHECK_VERSION(3,0,0)
-    pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
 #else
-    pwMainHBox = gtk_hbox_new(FALSE, 0);
+    pwMainVBox = gtk_vbox_new(FALSE, 2);
 #endif
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainHBox);
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainVBox);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 #else
-    pwVBox = gtk_vbox_new(FALSE, 0);
+    pwMainHBox = gtk_hbox_new(FALSE, 2);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, FALSE, FALSE, 0);
+    // gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainHBox);
+    gtk_box_pack_start(GTK_BOX(pwMainHBox), pwScrolled, TRUE, TRUE, 0);
+    gtk_widget_set_size_request(pwScrolled, 100, 200);//-1);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+#else
+    pwVBox = gtk_vbox_new(FALSE, 2);
 #endif
     gtk_box_pack_start(GTK_BOX(pwMainHBox), pwVBox, FALSE, FALSE, 0);
+    // gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
 
-
-    gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
-    gtk_box_pack_start(GTK_BOX(pwVBox), pwScrolled, TRUE, TRUE, 0);
-    gtk_widget_set_size_request(pwScrolled, 100, 200);//-1);
 #if GTK_CHECK_VERSION(3, 8, 0)
     gtk_container_add(GTK_CONTAINER(pwScrolled), treeview);
 #else
@@ -1877,23 +1946,53 @@ ManagePositionCategories(void)
 #endif
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
+// #if GTK_CHECK_VERSION(3,0,0)
+//     hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+// #else
+//     hb1 = gtk_hbox_new(FALSE, 0);
+// #endif
+    // gtk_box_pack_start(GTK_BOX(pwVBox), hb1, FALSE, FALSE, 0);
+
+
+    if(numCategories>0) {
+        /*first, if single position to add from current board*/
+        if(qNow_NDBeforeMoveError <-0.001) {
+            addPos1Button = gtk_button_new_with_label(_("Add position to category"));
+            g_signal_connect(addPos1Button, "clicked", G_CALLBACK(AddPositionClicked), GTK_TREE_VIEW(treeview));
+            gtk_box_pack_start(GTK_BOX(pwVBox), addPos1Button, FALSE, FALSE, 0);
+        } else {
+            /*now it means there is a no-double event before a move event,
+            so we need to allow users to add both*/
+            addPos1Button = gtk_button_new_with_label(_("Add move decision to category"));
+            g_signal_connect(addPos1Button, "clicked", G_CALLBACK(AddPositionClicked), GTK_TREE_VIEW(treeview));
+            gtk_box_pack_start(GTK_BOX(pwVBox), addPos1Button, FALSE, FALSE, 0);
+
+            addPos2Button = gtk_button_new_with_label(_("Add double/no-double decision to category"));
+            g_signal_connect(addPos2Button, "clicked", G_CALLBACK(AddNDPositionClicked), GTK_TREE_VIEW(treeview));
+            gtk_box_pack_start(GTK_BOX(pwVBox), addPos2Button, FALSE, FALSE, 0);
+        }
+    }
+
 #if GTK_CHECK_VERSION(3,0,0)
-    hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_pack_start(GTK_BOX(pwVBox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 2);
 #else
-    hb1 = gtk_hbox_new(FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwVBox), gtk_hseparator_new(), FALSE, FALSE, 2);
 #endif
-    gtk_box_pack_start(GTK_BOX(pwVBox), hb1, FALSE, FALSE, 0);
+
     addButton = gtk_button_new_with_label(_("Add category"));
     g_signal_connect(addButton, "clicked", G_CALLBACK(AddCategoryClicked), GTK_TREE_VIEW(treeview));
-    gtk_box_pack_start(GTK_BOX(hb1), addButton, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwVBox), addButton, FALSE, FALSE, 0);
+ 
     renameButton = gtk_button_new_with_label(_("Rename category"));
     g_signal_connect(renameButton, "clicked", G_CALLBACK(RenameCategoryClicked), GTK_TREE_VIEW(treeview));
-    gtk_box_pack_start(GTK_BOX(hb1), renameButton, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwVBox), renameButton, FALSE, FALSE, 0);
+ 
     delButton = gtk_button_new_with_label(_("Delete category"));
     g_signal_connect(delButton, "clicked", G_CALLBACK(DeleteCategoryClicked), GTK_TREE_VIEW(treeview));
-    gtk_box_pack_start(GTK_BOX(hb1), delButton, FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(pwVBox), delButton, FALSE, FALSE, 4);
     
-    AddText(pwVBox, _("\nSelect a category to start playing"));
+    
+    AddText(pwMainVBox, _("\nSelect a category to start playing"));
     //  quizManage 
 
     // startButton = gtk_button_new_from_stock(GTK_STOCK_FIND_AND_REPLACE, GTK_ICON_SIZE_BUTTON);
@@ -1906,7 +2005,7 @@ ManagePositionCategories(void)
     // gtk_widget_set_sensitive(startButton, (selected_iter!=NULL));
     
     g_signal_connect(startButton, "clicked", G_CALLBACK(StartQuiz), GTK_TREE_VIEW(treeview));
-    gtk_box_pack_start(GTK_BOX(pwVBox), startButton, FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(pwMainVBox), startButton, FALSE, FALSE, 4);
     // gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
     //                           GTK_RESPONSE_YES);
     // gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), GTK_RESPONSE_YES);
@@ -1983,28 +2082,7 @@ CommandQuiz(char *UNUSED(sz))
     ManagePositionCategories();
 }
 
-// extern void
-// CommandAddQuizPosition(char *sz)
-// {
 
-//     char *pch = NextToken(&sz);
-//     int i;
-
-//     if (!pch) {
-//         outputl(_("To which quiz category do you want to add this position?"));
-//         return;
-//     }
-
-//     GetPositionCategories();
-//     for(int i=0;i < numCategories; i++) {
-//         if (!strcmp(sz, categories[i].name)) {
-//             AddPositionToFile(&(categories[i]),NULL);
-//             return;
-//         }
-//     }
-//     outputl(_("Error: This category does not exist; please create it first"), DT_INFO);
-//     // GTKMessage(_("Error: This category name already exists"), DT_INFO);
-// }
 
 /* *************** */
 

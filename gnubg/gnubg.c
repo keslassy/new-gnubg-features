@@ -1558,7 +1558,7 @@ ShowBoard(void)
         MatchStateFromID(&ms, pc);
     }
 #endif
-    if(fUseQuiz==1){
+    if(fUseQuiz){
     //         if (ms.gs == GAME_NONE) {
     //     output(_("No game in progress."));
     //     outputx();
