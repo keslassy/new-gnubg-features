@@ -1578,14 +1578,17 @@ Allows garbage collection.
 static void
 RefreshLists(void)
 {
-    GetPositionCategories();
+    // GetPositionCategories();
     
     // UpdateGame(FALSE);
     // GTKClearMoveRecord();
             // CreateGameWindow();
             //CreatePanels();
     // UserCommand2("set dockpanels off"); //       DockPanels();
-    UserCommand2("set dockpanels on"); //       DockPanels();
+
+
+    /*this was needed to apply the change in the gamelist menu, but is not anymore*/
+    //UserCommand2("set dockpanels on"); //       DockPanels();
 
     DestroyDialog(NULL,NULL);
     ManagePositionCategories();

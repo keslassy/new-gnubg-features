@@ -1847,7 +1847,7 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
 #else
     pchd->pw = pw = gtk_hbox_new(FALSE, 2);
 #endif
-
+    g_message("in CreateCubeAnalysis");
     UpdateCubeAnalysis(pchd);
     
     if (pchd->pwFrame == NULL) {

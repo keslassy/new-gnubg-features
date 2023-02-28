@@ -88,6 +88,9 @@ GTKClearMoveRecord(void)
 //     // gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Position and Match IDs copied to the clipboard"));
 // }
 
+static GdkEventButton *LastEvent;
+static int globalCounter=0;
+
 static void
 GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
 {
@@ -102,6 +105,10 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     int *pPlayer;
     listOLD *pl;
 
+    // tree_view=GTK_TREE_VIEW(pwGameList);
+    //  GdkEventButton * event = LastEvent;
+
+    g_message("---start of GameListSelectRow, dice=%d,%d---",ms.anDice[0],ms.anDice[1]);
     gtk_tree_view_get_cursor(tree_view, &path, &column);
     if (!path)
         return;
@@ -185,6 +192,14 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     SetMoveRecord(pl->p);
 
     ShowBoard();
+    // if(qNow_NDBeforeMoveError>-0.001){
+    globalCounter=1;
+    BuildQuizMenu(LastEvent);
+    globalCounter=0;
+    // }
+        // gtk_widget_show_all(pQuizMenu);
+
+    g_message("in end of GameListSelectRow, dice=%d,%d, qNowND:%f",ms.anDice[0],ms.anDice[1],qNow_NDBeforeMoveError);
 }
 
 extern void
@@ -361,49 +376,71 @@ extern void BuildQuizMenu(GdkEventButton *event){
     GtkWidget *menu_item;
     char buf[MAX_CATEGORY_NAME_LENGTH+30];
 
-    g_message("numCategories=%d",numCategories);
+
+
+    g_message("BuildQuizMenu: numCategories=%d,qNow_NDBeforeMoveError=%f,globalCounter=%d",
+        numCategories,qNow_NDBeforeMoveError,globalCounter);
     // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
 
-    for(int i=0;i < numCategories; i++) {
-        sprintf(buf,_("Add to: %s"),categories[i].name);
-        menu_item = gtk_menu_item_new_with_label(_(buf));
-        gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
-            G_CALLBACK(AddPositionToFile), &(categories[i])); 
-    }    
-    /* If there was a no-double=roll event just before the move, we need to 
-    be able to add it as well. It's a problem because the gamelist doesn't 
-    really show it. Now we offer the user the option to pick it.
 
-    Potential alternative: let the user right-click on the cube decision
-    panel. But it's not clear that this is better, because now the user
-    (1) needs to know he can do it, and (2) needs to start clicking around. 
-    So not implemented for now. */
-    if(qNow_NDBeforeMoveError >-0.001) {
-        /*separator*/
-        menu_item = gtk_menu_item_new();
-        gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
-        gtk_widget_show(menu_item);
-        /*add the no-double decision*/
+    /*Convoluted setting: by default right-click gets first, then left-click.
+    But we want left-click to go first, select the row, then compute whether
+    to display a menu with "no-double before move" or not, and only then
+    display the right-click menu. 
+    So we disable the first pass through the right-click menu with 
+    globalCounter=0 but record the right-click event, and later set
+    globalCounter=1 to activate the right-click menu. 
+     */
+    if(globalCounter){
         for(int i=0;i < numCategories; i++) {
-            // char buf[MAX_CATEGORY_NAME_LENGTH+8];
-            sprintf(buf,_("Add no-double to: %s"),categories[i].name);
+            sprintf(buf,_("Add to: %s"),categories[i].name);
             menu_item = gtk_menu_item_new_with_label(_(buf));
             gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
             gtk_widget_show(menu_item);
             g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
-                G_CALLBACK(AddNDPositionToFile), &(categories[i])); 
+                G_CALLBACK(AddPositionToFile), &(categories[i])); 
         }    
-    }
-    gtk_widget_show_all(pQuizMenu);
+        /* If there was a no-double=roll event just before the move, we need to 
+        be able to add it as well. It's a problem because the gamelist doesn't 
+        really show it. Now we offer the user the option to pick it.
 
-    /* Note: event can be NULL here when called from view_onPopupMenu;
-    * gdk_event_get_time() accepts a NULL argument
-    */
-    gtk_menu_popup(GTK_MENU(pQuizMenu), NULL, NULL, NULL, NULL,
-                    (event != NULL) ? event->button : 0,
-                    gdk_event_get_time((GdkEvent*)event));
+        Potential alternative: let the user right-click on the cube decision
+        panel. But it's not clear that this is better, because now the user
+        (1) needs to know he can do it, and (2) needs to start clicking around. 
+        So not implemented for now. */
+        g_message("Build:  qNowND:%f",qNow_NDBeforeMoveError);
+
+        if(qNow_NDBeforeMoveError >-0.001) {
+            g_message("creating 2nd part of popup");
+            /*separator*/
+            menu_item = gtk_menu_item_new();
+            gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+            gtk_widget_show(menu_item);
+            /*add the no-double decision*/
+            for(int i=0;i < numCategories; i++) {
+                // char buf[MAX_CATEGORY_NAME_LENGTH+8];
+                sprintf(buf,_("Add no-double to: %s"),categories[i].name);
+                menu_item = gtk_menu_item_new_with_label(_(buf));
+                gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+                gtk_widget_show(menu_item);
+                g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
+                    G_CALLBACK(AddNDPositionToFile), &(categories[i])); 
+            }    
+        }
+        gtk_widget_show_all(pQuizMenu);
+
+        /* Note: event can be NULL here when called from view_onPopupMenu;
+        * gdk_event_get_time() accepts a NULL argument
+        */
+    if(event != NULL){
+        g_message("popup event!");
+        gtk_menu_popup(GTK_MENU(pQuizMenu), NULL, NULL, NULL, NULL,
+                        (event != NULL) ? event->button : 0,
+                        gdk_event_get_time((GdkEvent*)event));
+    }                    
+    } 
+// else
+//         LastEvent=event;
 }
 
 // void
@@ -448,28 +485,28 @@ extern void BuildQuizMenu(GdkEventButton *event){
 //                     gdk_event_get_time((GdkEvent*)event));
 // }
 
-// int show_popup(GtkWidget *widget, GdkEvent *event,gpointer *treeview) {
-int show_popup(GtkTreeView *widget, GdkEvent *event) {
+// // int show_popup(GtkWidget *widget, GdkEvent *event,gpointer *treeview) {
+// int show_popup(GtkTreeView *widget, GdkEvent *event) {
 
-    const gint RIGHT_CLICK = 3;
-    // g_message("I'm in the show popup func");
-            //   GameListSelectRow(treeview, NULL);
-    if (event->type == GDK_BUTTON_PRESS) {
-        // g_message("button press");
+//     const gint RIGHT_CLICK = 3;
+//     // g_message("I'm in the show popup func");
+//             //   GameListSelectRow(treeview, NULL);
+//     if (event->type == GDK_BUTTON_PRESS) {
+//         // g_message("button press");
       
-        GdkEventButton *bevent = (GdkEventButton *) event;
+//         GdkEventButton *bevent = (GdkEventButton *) event;
       
-        if (bevent->button == RIGHT_CLICK) {      
-            // g_message("right button press");          
-            gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
-                    bevent->button, bevent->time);
-            //   GameListSelectRow(treeview, NULL);
-            return FALSE; //<-- to have the menu with usual clicks!!!
-        }
-      return FALSE;
-  } else 
-        return FALSE;
-}
+//         if (bevent->button == RIGHT_CLICK) {      
+//             // g_message("right button press");          
+//             gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL,
+//                     bevent->button, bevent->time);
+//             //   GameListSelectRow(treeview, NULL);
+//             return FALSE; //<-- to have the menu with usual clicks!!!
+//         }
+//       return FALSE;
+//   } else 
+//         return FALSE;
+// }
 
 gboolean
 view_onButtonPressed (GtkWidget *UNUSED(treeview),
@@ -484,34 +521,41 @@ view_onButtonPressed (GtkWidget *UNUSED(treeview),
     // if (event->type == GDK_BUTTON_PRESS) {
     //     GdkEventButton *bevent = (GdkEventButton *) event;     
     //     if (bevent->button == 3) {         
-            g_print ("Single right click on the tree view.\n");
-
-            /* optional: select row if no row is selected or only
-            *  one other row is selected (will only do something
-            *  if you set a tree selection mode as described later
-            *  in the tutorial) */
-            
-                GtkTreeSelection *selection;
-
-                selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pwGameList));
-            if (0){
-                /* Note: gtk_tree_selection_count_selected_rows() does not
-                *   exist in gtk+-2.0, only in gtk+ >= v2.2 ! */
-                if (gtk_tree_selection_count_selected_rows(selection)  <= 1){
-                    GtkTreePath *path;
-
-                    /* Get tree path for row that was clicked */
-                    if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(pwGameList),
-                                                    (gint) event->x, 
-                                                    (gint) event->y,
-                                                    &path, NULL, NULL, NULL)){
-                    gtk_tree_selection_unselect_all(selection);
-                    gtk_tree_selection_select_path(selection, path);
-                    gtk_tree_path_free(path);
-                    }
-                }
-            } /* end of optional bit */
+        g_print ("Single right click on the tree view.\n");
         
+        // CalculateBoard();
+        // ShowBoard();
+        // GameListSelectRow(GTK_TREE_VIEW(pwGameList), NULL);
+        //     CalculateBoard();
+        // ShowBoard();
+        // UserCommand2("set dockpanels on");
+
+        /* optional: select row if no row is selected or only
+        *  one other row is selected (will only do something
+        *  if you set a tree selection mode as described later
+        *  in the tutorial) */
+        if (0){            
+            GtkTreeSelection *selection;
+
+            selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pwGameList));
+
+            /* Note: gtk_tree_selection_count_selected_rows() does not
+            *   exist in gtk+-2.0, only in gtk+ >= v2.2 ! */
+            if (gtk_tree_selection_count_selected_rows(selection)  <= 1){
+                GtkTreePath *path;
+
+                /* Get tree path for row that was clicked */
+                if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(pwGameList),
+                                                (gint) event->x, 
+                                                (gint) event->y,
+                                                &path, NULL, NULL, NULL)){
+                gtk_tree_selection_unselect_all(selection);
+                gtk_tree_selection_select_path(selection, path);
+                gtk_tree_path_free(path);
+                }
+            }
+        } /* end of optional bit */
+        LastEvent=event;
         BuildQuizMenu(event);
         // view_popup_menu(treeview, event, userdata);
 
@@ -524,6 +568,7 @@ view_onButtonPressed (GtkWidget *UNUSED(treeview),
 
 gboolean view_onPopupMenu (GtkWidget * UNUSED(treeview), gpointer UNUSED(userdata)) {
 //   view_popup_menu(treeview, NULL, userdata);
+g_message("view_onPopupMenu");
     BuildQuizMenu(NULL);
     return TRUE; //GDK_EVENT_STOP;
 }
@@ -610,10 +655,10 @@ GL_Create(void)
     // g_signal_connect(G_OBJECT(pwGameList), "button-press-event", G_CALLBACK(show_popup), copyMenu);
 
     if (fUseQuiz) {
-        BuildQuizMenu(NULL);
+        // BuildQuizMenu(NULL);
         g_signal_connect(pwGameList, "button-press-event", G_CALLBACK(view_onButtonPressed), 
             NULL);    
-        g_signal_connect(pwGameList, "popup-menu", G_CALLBACK(view_onPopupMenu), NULL); 
+        // g_signal_connect(pwGameList, "popup-menu", G_CALLBACK(view_onPopupMenu), NULL); 
     }
 
         // GtkWidget *pQuizMenu;
