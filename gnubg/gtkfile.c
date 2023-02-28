@@ -1138,16 +1138,28 @@ extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
 
 extern int AutoAddQuizPosition(quiz q, quizdecision UNUSED(qdec)) {
 
-	FILE* fp = fopen(g_build_filename(szHomeDirectory, "quiz", "autoadd.csv", NULL), "a");
+    char * file = g_build_filename(szHomeDirectory, "quiz", "autoadd.csv", NULL);
 
-	if (!fp){
-        GTKMessage(_("Error: problem saving quiz position, cannot open file"), DT_INFO);
-		// printf("Can't open file\n");
+    // if (!g_file_test(file, G_FILE_TEST_IS_REGULAR)) {
+    //     g_message("autoadd file had a problem: %s",file);
+    //     return FALSE;
+    // }
+
+    if(!g_file_test(file, G_FILE_TEST_EXISTS )){
+        g_message("autoadd file doesn't exist: %s",file);
+        	FILE* fp0 = fopen(file, "w");        
+            if(!fp0){
+                g_message("autoadd file had a pointer problem:fp0-> %s",file);
+                return FALSE;
+            }
+            writeQuizHeader (fp0);
+            fclose(fp0);
+    }
+    FILE* fp = fopen(file, "a");
+    if(!fp){
+        g_message("autoadd file had a pointer problem: %s",file);
         return FALSE;
-    } 
-
-    // Saving data in file
-    // fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, qRow.player, qRow.ewmaError, qRow.lastSeen);
+    }
     writeQuizLine (q, fp);
     g_message("Added a line");
     fclose(fp);
