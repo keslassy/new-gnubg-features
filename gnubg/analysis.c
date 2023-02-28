@@ -695,7 +695,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
             // g_message("CUBE(MOVE_NORMAL): pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
             //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);      
-            if(fAutoAddToQuiz && rSkill<AutoAddToQuizThreshold) {
+            if(fAutoAddToQuiz && rSkill<-AutoAddToQuizThreshold) {
                 sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
                 q.ewmaError=-rSkill;
                 q.lastSeen=(long int) (time(NULL));
@@ -777,6 +777,13 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     //     // char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&pmr->sb.key));
                     //     g_message("mistake:%s",positionid);
                     // }
+                    if(fAutoAddToQuiz && rChequerSkill<-AutoAddToQuizThreshold) {
+                        sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
+                        q.ewmaError=-rChequerSkill;
+                        q.lastSeen=(long int) (time(NULL));
+                        q.player=pms->fTurn;
+                        AutoAddQuizPosition(q,QUIZ_MOVE);  
+                    }
                      /* keep mwc in data structure */
                     pmr->mwc.mwcMove= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
                     pmr->mwc.mwcBestMove= eq2mwc(pmr->ml.amMoves[0].rScore, &ci);
@@ -846,6 +853,13 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
                 // g_message("MOVE_DOUBLE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
                 //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+                if(fAutoAddToQuiz && rSkill<-AutoAddToQuizThreshold) {
+                    sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
+                    q.ewmaError=-rSkill;
+                    q.lastSeen=(long int) (time(NULL));
+                    q.player=pms->fTurn;
+                    AutoAddQuizPosition(q,QUIZ_DOUBLE);  
+                }
             } else if (pdoubleError)
                 *pdoubleError = ERR_VAL;
                 // *doubleError = ERR_VAL;
@@ -877,6 +891,13 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 (1.0-eq2mwc(*(pdoubleError+2), &ci)):(1.0-eq2mwc(*(pdoubleError+3), &ci));
             // g_message("MOVE_TAKE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
             //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+                if(fAutoAddToQuiz && -(*pdoubleError)<-AutoAddToQuizThreshold) {
+                    sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
+                    q.ewmaError=(*pdoubleError);
+                    q.lastSeen=(long int) (time(NULL));
+                    q.player=pms->fTurn;
+                    AutoAddQuizPosition(q,QUIZ_TAKE);  
+                }
         }
 
         if (psc)
@@ -904,6 +925,13 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 (1.0-eq2mwc(*(pdoubleError+2), &ci)):(1.0-eq2mwc(*(pdoubleError+3), &ci));
             // g_message("MOVE_DROP: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
             //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+                if(fAutoAddToQuiz && (*pdoubleError)<-AutoAddToQuizThreshold) {
+                    sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
+                    q.ewmaError=-(*pdoubleError);
+                    q.lastSeen=(long int) (time(NULL));
+                    q.player=pms->fTurn;
+                    AutoAddQuizPosition(q,QUIZ_PASS);  
+                }
         }
 
         if (psc)
@@ -949,7 +977,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 pmr->mwc.mwcCube= eq2mwc(rAfter, &ci);
                 pmr->mwc.mwcBestCube= eq2mwc(rBefore, &ci);
                 // g_message("pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
-                //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+                //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);                
             }
 
             if (rBefore < rAfter) {
