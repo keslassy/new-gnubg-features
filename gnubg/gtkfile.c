@@ -980,7 +980,7 @@ ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
  /*extern:right-click menu, to be updated in quiz mode; used in gtkgamelist.c*/
 GtkWidget *pQuizMenu;
 static GtkWidget *pwDialog = NULL;
-static void ManagePositionCategories(void);
+// static void ManagePositionCategories(void);
 
 
 #define MAX_ROWS 1024
@@ -1821,7 +1821,7 @@ static GtkWidget * BuildCategoryList(void) {
     return treeview;
 }
 
-static void
+extern void
 ManagePositionCategories(void)
 {
     GtkWidget *pwScrolled;

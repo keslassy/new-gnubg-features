@@ -358,6 +358,9 @@ void AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
     AddQuizPosition(qNow,pcategory);
 }
 
+static void ManagePositionCategoriesClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(userdata)) {
+    ManagePositionCategories();
+}
 
 // /* inspired by https://docs.gtk.org/gtk3/treeview-tutorial.html*/
 // void
@@ -392,40 +395,55 @@ extern void BuildQuizMenu(GdkEventButton *event){
     globalCounter=1 to activate the right-click menu. 
      */
     if(globalCounter){
-        for(int i=0;i < numCategories; i++) {
-            sprintf(buf,_("Add to: %s"),categories[i].name);
-            menu_item = gtk_menu_item_new_with_label(_(buf));
-            gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
-            gtk_widget_show(menu_item);
-            g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
-                G_CALLBACK(AddPositionToFile), &(categories[i])); 
-        }    
-        /* If there was a no-double=roll event just before the move, we need to 
-        be able to add it as well. It's a problem because the gamelist doesn't 
-        really show it. Now we offer the user the option to pick it.
-
-        Potential alternative: let the user right-click on the cube decision
-        panel. But it's not clear that this is better, because now the user
-        (1) needs to know he can do it, and (2) needs to start clicking around. 
-        So not implemented for now. */
-        g_message("Build:  qNowND:%f",qNow_NDBeforeMoveError);
-
-        if(qNow_NDBeforeMoveError >-0.001) {
-            g_message("creating 2nd part of popup");
+        menu_item = gtk_menu_item_new_with_label(_("Start quiz!"));
+        gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+        gtk_widget_show(menu_item);
+        g_signal_connect(G_OBJECT(menu_item), "activate", 
+            G_CALLBACK(ManagePositionCategoriesClicked), NULL); 
+        if(numCategories>0) {
             /*separator*/
             menu_item = gtk_menu_item_new();
             gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
             gtk_widget_show(menu_item);
-            /*add the no-double decision*/
+            /*first set of categories*/
             for(int i=0;i < numCategories; i++) {
-                // char buf[MAX_CATEGORY_NAME_LENGTH+8];
-                sprintf(buf,_("Add no-double to: %s"),categories[i].name);
+                sprintf(buf,_("+ %s"),categories[i].name);
+                // sprintf(buf,_("Add to: %s"),categories[i].name);
                 menu_item = gtk_menu_item_new_with_label(_(buf));
                 gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
                 gtk_widget_show(menu_item);
                 g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
-                    G_CALLBACK(AddNDPositionToFile), &(categories[i])); 
+                    G_CALLBACK(AddPositionToFile), &(categories[i])); 
             }    
+            /* If there was a no-double=roll event just before the move, we need to 
+            be able to add it as well. It's a problem because the gamelist doesn't 
+            really show it. Now we offer the user the option to pick it.
+
+            Non-implemented potential future alternatives:
+            (A) Let the user right-click on the cube decision
+            panel. But it's not clear that this is better, because now the user
+            (1) needs to know he can do it, and (2) needs to start clicking around. 
+            (B) Only present each category once, but when a user picks a category,
+            a window asks whether to add the ND decision or the move decision.  */
+            g_message("Build:  qNowND:%f",qNow_NDBeforeMoveError);
+            /*second set of categories for ND before move*/
+            if(qNow_NDBeforeMoveError >-0.001) {
+                g_message("creating 2nd part of popup");
+                /*separator*/
+                menu_item = gtk_menu_item_new();
+                gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+                gtk_widget_show(menu_item);
+                /*add the no-double decision*/
+                for(int i=0;i < numCategories; i++) {
+                    // char buf[MAX_CATEGORY_NAME_LENGTH+8];
+                    sprintf(buf,_("(ND) + %s"),categories[i].name);
+                    menu_item = gtk_menu_item_new_with_label(_(buf));
+                    gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
+                    gtk_widget_show(menu_item);
+                    g_signal_connect_swapped(G_OBJECT(menu_item), "activate", 
+                        G_CALLBACK(AddNDPositionToFile), &(categories[i])); 
+                }    
+            }
         }
         gtk_widget_show_all(pQuizMenu);
 

@@ -1119,6 +1119,7 @@ extern quiz qNow;
 extern float qNow_NDBeforeMoveError;
 extern void qUpdate(float error);
 extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
+extern void ManagePositionCategories(void); /*start quiz window*/
 typedef enum {
     QUIZ_UNKNOWN,
     QUIZ_MOVE,
