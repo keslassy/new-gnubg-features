@@ -566,7 +566,7 @@ copy_from_pmr_cur(moverecord * pmr, gboolean get_move, gboolean get_cube)
 static void
 add_moverecord_get_cur(moverecord * pmr)
 {
-    g_message("in add_moverecord_get_cur, maybe find_skills from there?");
+    // g_message("in add_moverecord_get_cur, maybe find_skills from there?");
     switch (pmr->mt) {
     case MOVE_NORMAL:
     case MOVE_RESIGN:
@@ -1947,7 +1947,7 @@ CommandAgree(char *UNUSED(sz))
         return;
     }
     if(fInQuizMode){
-        g_message("within CommandAgree");
+        // g_message("within CommandAgree");
         CommandHint("");
     }
     if (!move_not_last_in_match_ok())
@@ -2311,7 +2311,7 @@ CommandDecline(char *UNUSED(sz))
     }
 
     if(fInQuizMode){
-        g_message("within CommandDecline");
+        // g_message("within CommandDecline");
         CommandHint("");
     }
     if(!fInQuizMode) {
@@ -2441,7 +2441,7 @@ CommandDouble(char *UNUSED(sz))
 #endif
     TurnDone();
     if(fInQuizMode &&ms.fMove==1){
-        g_message("within CommandDouble");
+        // g_message("within CommandDouble");
         qDecision=QUIZ_DOUBLE;
         CommandHint("");
     //     UserCommand2("analyse move");
@@ -2518,9 +2518,9 @@ CommandDrop(char *UNUSED(sz))
         TurnDone();
     }
     if(fInQuizMode){
-        g_message("within CommandDrop");
+        // g_message("within CommandDrop");
         qDecision=QUIZ_PASS;
-        g_message("in CommandDrop, qdecision=%d",qDecision);
+        // g_message("in CommandDrop, qdecision=%d",qDecision);
 
         CommandHint("");
     }

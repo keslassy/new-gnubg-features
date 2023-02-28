@@ -989,7 +989,12 @@ static GtkWidget *pwDialog = NULL;
 #define ERROR_DECAY 0.6
 #define SMALL_ERROR 0.2
 
-static const char positionsFolder []="/home/isaac/g/new-gnubg-features/gnubg/quiz";
+// static char positionsFolder [200];
+// char * tempPath= g_build_filename(szHomeDirectory, "quiz", NULL);
+// strcpy(positionsFolder,tempPath);
+    // 
+    // if (g_file_test(path, G_FILE_TEST_IS_REGULAR)) {
+// "/home/isaac/g/new-gnubg-features/gnubg/quiz";
 // static const char positionsFolder2 []="~/g/new-gnubg-features/gnubg/quiz/";
 
 //static char positionsFileFullPath []="./quiz/positions.csv";
@@ -1132,6 +1137,7 @@ extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
 }
 static int SaveFullPositionFile(void)
 {
+        // szFile = g_build_filename(szHomeDirectory, "gnubgautorc", NULL);
 
 	FILE* fp = fopen(categories[currentCategoryIndex].path, "w");
 
@@ -1252,8 +1258,13 @@ static void populateCategory(const int index, const char * name, const int updat
     /* add name*/
     strcpy(categories[index].name, name);
     /* add file path */
-    strcpy(categories[index].path,g_strconcat(positionsFolder, 
-        G_DIR_SEPARATOR_S, categories[index].name, ".csv", NULL));
+    // strcpy(categories[index].path,g_strconcat(positionsFolder, 
+    //     G_DIR_SEPARATOR_S, categories[index].name, ".csv", NULL));
+    gchar *file = g_strdup_printf("%s.csv", name);
+    gchar *path = g_build_filename(szHomeDirectory, "quiz", file, NULL);
+    strcpy(categories[index].path,path);
+    // if (g_file_test(path, G_FILE_TEST_IS_REGULAR)) {
+
     /*compute and add number of positions*/
     if (updateNumber)
         categories[index].number=CountPositions(categories[index]);
@@ -1268,7 +1279,7 @@ extern void GetPositionCategories(void) {
     // struct stat statbuf;
     InitCategoryArray();
 
-    DIR* dir  = opendir(positionsFolder);
+    DIR* dir  = opendir(g_build_filename(szHomeDirectory, "quiz", NULL));
     while (NULL != (entry = readdir(dir))) {
         //g_message("entry->d_name=%s",entry->d_name);
         const char *dot = strrchr(entry->d_name, '.');
@@ -1413,8 +1424,9 @@ AddCategory(const char *sz)
     }
 
     /* check that file can be added*/
-
-    char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
+    gchar *file = g_strdup_printf("%s.csv", sz);
+    gchar *fullPath = g_build_filename(szHomeDirectory, "quiz", file, NULL);
+    // char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
     g_message("fullPath=%s",fullPath);
 
 	FILE* fp = fopen(fullPath, "w");
@@ -1499,7 +1511,9 @@ RenameCategory(const char * szOld, const char * szNew)
     // char *fullOldPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szOld, ".csv", NULL);
     // char fullOldPath [MAX_CATEGORY_PATH_LENGTH];
     // strcpy(fullOldPath, categories[i].path);
-    char *fullNewPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szNew, ".csv", NULL);
+    // char *fullNewPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, szNew, ".csv", NULL);
+    gchar *file = g_strdup_printf("%s.csv", szNew);
+    gchar *fullNewPath = g_build_filename(szHomeDirectory, "quiz", file, NULL);
 
     int result = rename(categories[positionIndex].path, fullNewPath);
 	
@@ -1533,8 +1547,10 @@ GetSelectedCategoryIndex(GtkTreeView * treeview)
     GtkTreeModel *model;
     // char *category = NULL;
     GtkTreeSelection *sel = gtk_tree_view_get_selection(treeview);
-    if (gtk_tree_selection_count_selected_rows(sel) != 1)
-        return -1;
+    if (gtk_tree_selection_count_selected_rows(sel) != 1) {
+        g_message("no index!");
+        return (-1);
+    }
     GList * selected_list = gtk_tree_selection_get_selected_rows (sel, &model);
     GList * cursor = g_list_first (selected_list);
     GtkTreePath * path = cursor->data;
@@ -1625,25 +1641,37 @@ AddPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
     // GtkTreeIter iter;
     // GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
     int categoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
-    if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
-        GTKMessage(_("Error: please select a position category to rename"), DT_INFO);
+    // g_position("got back with int=%d",categoryIndex);
+    if(categoryIndex<0 || categoryIndex>=numCategories) {
+        GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
         return;
     }
-    if(AddPositionToFile(&(categories[categoryIndex]),NULL))
+    if(AddPositionToFile(&(categories[categoryIndex]),NULL)){
         GTKMessage(_("The position was added successfully."), DT_INFO);
+        RefreshManageWindow();
+    }
     return;    
 }
 
 static void
 AddNDPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
+    if(qNow_NDBeforeMoveError <-0.001) {
+        /*should not happen, there is no ND position; maybe user clicked outside 
+        the manage window*/
+        GTKMessage(_("Error: the selected move seems to have changed, reloading the quiz window"), DT_INFO);
+        RefreshManageWindow();
+        return;        
+    }
     int categoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
-    if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
-        GTKMessage(_("Error: please select a position category to rename"), DT_INFO);
+    if(categoryIndex<0 || categoryIndex>=numCategories) {
+        GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
         return;
     }
-    if(AddNDPositionToFile(&(categories[categoryIndex]),NULL))
+    if(AddNDPositionToFile(&(categories[categoryIndex]),NULL)){
         GTKMessage(_("The double/no-double decision was added successfully."), DT_INFO);
+        RefreshManageWindow();
+    }
     return; 
 }
 

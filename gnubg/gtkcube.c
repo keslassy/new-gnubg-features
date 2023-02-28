@@ -285,7 +285,7 @@ TakeAnalysis(cubehintdata * pchd)
     const evalsetup *pes = &cdec->esDouble;
 
 
-g_message("in TakeAnalysis, qdecision=%d",qDecision);
+// g_message("in TakeAnalysis, qdecision=%d",qDecision);
 
     if (pes->et == EVAL_NONE)
         return NULL;
@@ -552,17 +552,17 @@ g_message("in TakeAnalysis, qdecision=%d",qDecision);
                 float error;
                 if(qDecision==QUIZ_PASS) {
                     error=MAX(0,arDouble[OUTPUT_DROP]-arDouble[OUTPUT_TAKE]);
-                    g_message("error=%f, note diff=%f?",error,
-                        -(arDouble[OUTPUT_DROP] - arDouble[OUTPUT_TAKE]));
+                    // g_message("error=%f, note diff=%f?",error,
+                        // -(arDouble[OUTPUT_DROP] - arDouble[OUTPUT_TAKE]));
                     qUpdate(error);
-                    // g_message("error=%f?",arDouble[ai[0]] - arDouble[ai[i]]);
+                    // // g_message("error=%f?",arDouble[ai[0]] - arDouble[ai[i]]);
                     // qUpdate(arDouble[ai[0]] - arDouble[ai[i]]);
                 } else if(qDecision==QUIZ_TAKE) {
                     error=MAX(0,-arDouble[OUTPUT_DROP]+arDouble[OUTPUT_TAKE]);
-                    g_message("error=%f, note diff=%f?",error,
-                        -arDouble[OUTPUT_DROP] + arDouble[OUTPUT_TAKE]);
+                    // g_message("error=%f, note diff=%f?",error,
+                        // -arDouble[OUTPUT_DROP] + arDouble[OUTPUT_TAKE]);
                     qUpdate(error);
-                    // g_message("error=%f?",arDouble[ai[0]] - arDouble[ai[i]]);
+                    // // g_message("error=%f?",arDouble[ai[0]] - arDouble[ai[i]]);
                     // qUpdate(arDouble[ai[0]] - arDouble[ai[i]]);
                 }
             }
@@ -745,7 +745,7 @@ CubeAnalysis(cubehintdata * pchd)
     cubedecisiondata *cdec = (pchd->evalAtMoney ? pchd->pmr->MoneyCubeDecPtr : pchd->pmr->CubeDecPtr);
     const evalsetup *pes = &cdec->esDouble;
 
-g_message("in CubeAnalysis, qdecision=%d",qDecision);
+// g_message("in CubeAnalysis, qdecision=%d",qDecision);
 
 
     if (pes->et == EVAL_NONE)
@@ -1174,7 +1174,7 @@ It is called after something in pchd has changed, e.g., eval at different ply.
     */
     doubletype dt = DoubleType(pchd->ms.fDoubled, pchd->ms.fMove, pchd->ms.fTurn);
 
-    g_message("in UpdateCubeAnalysis,pchd->did_double=%d",pchd->did_double);
+    // g_message("in UpdateCubeAnalysis,pchd->did_double=%d",pchd->did_double);
 
     if(!pchd->evalAtMoney) 
         find_skills(pchd->pmr, &pchd->ms, pchd->did_double, pchd->did_take);//gnubg.c / backgammon.h: 
@@ -1847,7 +1847,7 @@ CreateCubeAnalysis(moverecord * pmr, const matchstate * pms, int did_double, int
 #else
     pchd->pw = pw = gtk_hbox_new(FALSE, 2);
 #endif
-    g_message("in CreateCubeAnalysis");
+    // g_message("in CreateCubeAnalysis");
     UpdateCubeAnalysis(pchd);
     
     if (pchd->pwFrame == NULL) {
