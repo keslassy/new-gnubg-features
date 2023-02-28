@@ -193,8 +193,10 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
 
     ShowBoard();
     // if(qNow_NDBeforeMoveError>-0.001){
-    globalCounter=1;
-    BuildQuizMenu(LastEvent);
+    if(globalCounter==1) {
+        globalCounter=2;
+        BuildQuizMenu(LastEvent);
+    }
     globalCounter=0;
     // }
         // gtk_widget_show_all(pQuizMenu);
@@ -390,11 +392,13 @@ extern void BuildQuizMenu(GdkEventButton *event){
     But we want left-click to go first, select the row, then compute whether
     to display a menu with "no-double before move" or not, and only then
     display the right-click menu. 
-    So we disable the first pass through the right-click menu with 
-    globalCounter=0 but record the right-click event, and later set
-    globalCounter=1 to activate the right-click menu. 
+    On the other hand, we don't want a menu with left-click only.
+    So we use a globalCounter:
+    right-click=>globalCounter=1
+        =>go to left-click and select row=>globalCounter=2
+        =>come back to right-click and display menu=>reset globalCounter=0
      */
-    if(globalCounter){
+    if(globalCounter>1){
         menu_item = gtk_menu_item_new_with_label(_("Start quiz!"));
         gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
         gtk_widget_show(menu_item);
@@ -450,12 +454,12 @@ extern void BuildQuizMenu(GdkEventButton *event){
         /* Note: event can be NULL here when called from view_onPopupMenu;
         * gdk_event_get_time() accepts a NULL argument
         */
-    if(event != NULL){
-        g_message("popup event!");
-        gtk_menu_popup(GTK_MENU(pQuizMenu), NULL, NULL, NULL, NULL,
-                        (event != NULL) ? event->button : 0,
-                        gdk_event_get_time((GdkEvent*)event));
-    }                    
+        if(event != NULL){
+            g_message("popup event!");
+            gtk_menu_popup(GTK_MENU(pQuizMenu), NULL, NULL, NULL, NULL,
+                            (event != NULL) ? event->button : 0,
+                            gdk_event_get_time((GdkEvent*)event));
+        }                    
     } 
 // else
 //         LastEvent=event;
@@ -574,6 +578,7 @@ view_onButtonPressed (GtkWidget *UNUSED(treeview),
             }
         } /* end of optional bit */
         LastEvent=event;
+        globalCounter=1;
         BuildQuizMenu(event);
         // view_popup_menu(treeview, event, userdata);
 
