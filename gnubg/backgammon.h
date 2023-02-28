@@ -651,6 +651,7 @@ extern void CommandNotImplemented(char *);
 extern void CommandPlay(char *);
 extern void CommandPrevious(char *);
 extern void CommandQuit(char *);
+extern void CommandQuiz(char *);
 extern void CommandRedouble(char *);
 extern void CommandReject(char *);
 extern void CommandRelationalAddMatch(char *);
@@ -1118,7 +1119,7 @@ extern void GetPositionCategories(void);
 extern quiz qNow; 
 extern float qNow_NDBeforeMoveError;
 extern void qUpdate(float error);
-extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
+// extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
 extern void ManagePositionCategories(void); /*start quiz window*/
 typedef enum {
     QUIZ_UNKNOWN,

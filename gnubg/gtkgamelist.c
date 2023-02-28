@@ -339,14 +339,14 @@ CreateStyles(GtkWidget * UNUSED(widget), gpointer UNUSED(p))
 
 
 
-void AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
+extern int AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
     // g_message("I'm in the test func: %s", pcategory->name);
     g_message("Adding position: %s to category %s, error: %f",
         qNow.position,pcategory->name,qNow.ewmaError);
     qNow.lastSeen=(long int) (time(NULL));
-    AddQuizPosition(qNow,pcategory);
+    return (AddQuizPosition(qNow,pcategory));
 }
-void AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
+extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
     // g_message("I'm in the test func: %s", pcategory->name);
     UserCommand2("previous roll");
     UserCommand2("previous roll");
@@ -355,7 +355,7 @@ void AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
     g_message("Adding CUBE position: %s to category %s, error: %f",
         qNow.position,pcategory->name,qNow.ewmaError);
     qNow.lastSeen=(long int) (time(NULL));
-    AddQuizPosition(qNow,pcategory);
+    return (AddQuizPosition(qNow,pcategory));
 }
 
 static void ManagePositionCategoriesClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(userdata)) {

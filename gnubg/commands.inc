@@ -1549,6 +1549,7 @@ command acTop[] = {
     { "previous", CommandPrevious, N_("Step backward within the game"), szSTEP,
       NULL },
     { "quit", CommandQuit, N_("Leave GNU Backgammon"), NULL, NULL },
+    { "quiz", CommandQuiz, N_("Quiz"), NULL, NULL },
     { "r", CommandRoll, NULL, NULL, NULL },
     { "redouble", CommandRedouble, N_("Accept the cube one level higher "
       "than it was offered"), NULL, NULL },

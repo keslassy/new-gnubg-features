@@ -166,6 +166,7 @@ typedef enum {
     CMD_PREV_ROLL,
     CMD_PREV_ROLLED,
     CMD_QUIT,
+    CMD_QUIZ,
     CMD_REJECT,
     CMD_RELATIONAL_ADD_MATCH,
     CMD_ROLL,
@@ -381,6 +382,7 @@ CREATE_CMD_ACTION_CALLBACK(CMD_PREV_CMARKED, "previous cmarked");
 CREATE_CMD_ACTION_CALLBACK(CMD_PREV_ROLL, "previous roll");
 CREATE_CMD_ACTION_CALLBACK(CMD_PREV_ROLLED, "previous rolled");
 CREATE_CMD_ACTION_CALLBACK(CMD_QUIT, "quit");
+CREATE_CMD_ACTION_CALLBACK(CMD_QUIZ, "quiz");
 CREATE_CMD_ACTION_CALLBACK(CMD_REJECT, "reject");
 CREATE_CMD_ACTION_CALLBACK(CMD_RELATIONAL_ADD_MATCH, "relational add match");
 CREATE_CMD_ACTION_CALLBACK(CMD_ROLL, "roll");
@@ -465,6 +467,7 @@ static const char *aszCommands[NUM_CMDS] = {
     "previous roll",
     "previous rolled",
     "quit",
+    "quiz",
     "reject",
     "relational add match",
     "roll",
@@ -4029,6 +4032,8 @@ static GtkActionEntry actionEntries[] = {
 
     {"ClearTurnAction", NULL, N_("Clear turn"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CLEAR_TURN)},
 
+    {"QuizAction", NULL, N_("Quiz"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIZ)},
+
     {"AnalyseMenuAction", NULL, N_("_Analyse"), NULL, NULL, G_CALLBACK(NULL)},
     {"EvaluateAction", NULL, N_("_Evaluate"), "<control>E", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_EVAL)},
     {"HintAction", GNUBG_STOCK_HINT, N_("_Hint"), "<control>H", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_HINT)},
@@ -4271,6 +4276,8 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_Game/Set turn/1"), NULL, Command, CMD_SET_TURN_1,
      "/Game/Set turn/0", NULL},
     {N_("/_Game/Clear turn"), NULL, Command, CMD_CLEAR_TURN, NULL, NULL},
+    {N_("/_Game/-"), NULL, NULL, 0, "<Separator>", NULL},
+    {N_("/_Game/Quiz"), NULL, Command, CMD_QUIZ, NULL, NULL},
     {N_("/_Analyse"), NULL, NULL, 0, "<Branch>", NULL},
     {N_("/_Analyse/_Evaluate"), "<control>E", Command, CMD_EVAL, NULL, NULL},
     {N_("/_Analyse/_Hint"), "<control>H", Command, CMD_HINT,

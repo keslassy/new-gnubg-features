@@ -4853,7 +4853,6 @@ getMoveNumber(const listOLD * plGame, const void *p)
 
 }
 
-
 extern void
 CommandClearTurn(char *UNUSED(sz))
 {

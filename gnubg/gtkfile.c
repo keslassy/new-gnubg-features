@@ -1977,6 +1977,34 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     LoadPositionAndStart();
 }
 
+extern void
+CommandQuiz(char *UNUSED(sz))
+{
+    ManagePositionCategories();
+}
+
+// extern void
+// CommandAddQuizPosition(char *sz)
+// {
+
+//     char *pch = NextToken(&sz);
+//     int i;
+
+//     if (!pch) {
+//         outputl(_("To which quiz category do you want to add this position?"));
+//         return;
+//     }
+
+//     GetPositionCategories();
+//     for(int i=0;i < numCategories; i++) {
+//         if (!strcmp(sz, categories[i].name)) {
+//             AddPositionToFile(&(categories[i]),NULL);
+//             return;
+//         }
+//     }
+//     outputl(_("Error: This category does not exist; please create it first"), DT_INFO);
+//     // GTKMessage(_("Error: This category name already exists"), DT_INFO);
+// }
 
 /* *************** */
 

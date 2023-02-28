@@ -112,6 +112,9 @@
 	      "</menu>" \
 	      \
 	      "<menuitem name='ClearTurn' action='ClearTurnAction' />" \
+		  "<separator/>" \
+	      "<menuitem name='Quiz' action='QuizAction' />" \
+	      "<menuitem name='AddPositionToQuiz' action='AddPositionToQuizAction' />" \
 	    "</menu>" \
 	    \
 	    "<menu name='AnalyseMenu' action='AnalyseMenuAction'>" \
