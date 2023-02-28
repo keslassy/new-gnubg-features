@@ -1135,6 +1135,35 @@ extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
     fclose(fp);
     return TRUE;
 }
+
+extern int AutoAddQuizPosition(quiz q, quizdecision UNUSED(qdec)) {
+
+	FILE* fp = fopen(g_build_filename(szHomeDirectory, "quiz", "autoadd.csv", NULL), "a");
+
+	if (!fp){
+        GTKMessage(_("Error: problem saving quiz position, cannot open file"), DT_INFO);
+		// printf("Can't open file\n");
+        return FALSE;
+    } 
+
+    // Saving data in file
+    // fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, qRow.player, qRow.ewmaError, qRow.lastSeen);
+    writeQuizLine (q, fp);
+    g_message("Added a line");
+    fclose(fp);
+    return TRUE;
+}
+
+// extern int AutoAddQuizPosition(-rSkill,QUIZ_NODOUBLE)(float error, quizdecision qdec) {
+
+
+
+
+//     g_message("Adding position: %s to category %s, error: %f",
+//         qNow.position,pcategory->name,qNow.ewmaError);
+//     qNow.lastSeen=(long int) (time(NULL));
+//     return (AddQuizPosition(qNow,pcategory));
+// }
 static int SaveFullPositionFile(void)
 {
         // szFile = g_build_filename(szHomeDirectory, "gnubgautorc", NULL);

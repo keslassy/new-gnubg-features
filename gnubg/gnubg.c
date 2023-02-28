@@ -224,7 +224,6 @@ int fTruncEqualPlayer0 = TRUE;
 int fTutorChequer = TRUE;
 int fTutorCube = TRUE;
 int fTutor = FALSE;
-int fInQuizMode=FALSE;
 int fEvalSameAsAnalysis = FALSE;
 int fJustSwappedPlayers = FALSE;
 int nConfirmDefault = -1;
@@ -255,9 +254,14 @@ int fUseKeyNames=TRUE;
 int fWithinSmartOpen=FALSE;
 int fCheckUpdateGTK = FALSE;
 int fTriggeredByRecordList=FALSE;
+    /*quiz*/
+int fInQuizMode=FALSE;
 int fUseQuiz=TRUE;
+int fAutoAddToQuiz=TRUE;
 quiz qNow={"\0",0,0.0,0,0.0}; /*extern*/
 float qNow_NDBeforeMoveError=-1.0; /*extern*/
+extern float AutoAddToQuizThreshold=0.050;
+
 
 // qNow.position=(char *)malloc(sizeof(char) * (200));
 // qNow.position=malloc(200);

@@ -66,6 +66,7 @@ When analyzing in the background, various menus are disabled so the user does no
 #include "multithread.h"
 #include "format.h"
 #include "lib/simd.h"
+#include "matchid.h" /*for quiz autoadd*/
 
 const char *aszRating[N_RATINGS] = {
     N_("rating|Awful!"),
@@ -621,7 +622,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
     float aarStdDev[2][NUM_ROLLOUT_OUTPUTS];
     // char * positionid;
     // positionid = (char *)malloc(sizeof(char) * (100 + 1));
-    TanBoard anBoardMistake;
+    // TanBoard anBoardMistake;
+    quiz q;
 
     doubletype dt;
     taketype tt;
@@ -692,7 +694,15 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             pmr->mwc.mwcCube= eq2mwc(arDouble[OUTPUT_NODOUBLE], &ci);
             pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
             // g_message("CUBE(MOVE_NORMAL): pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
-            //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);            
+            //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);      
+            if(fAutoAddToQuiz && rSkill<AutoAddToQuizThreshold) {
+                sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
+                q.ewmaError=-rSkill;
+                q.lastSeen=(long int) (time(NULL));
+                q.player=pms->fTurn;
+                AutoAddQuizPosition(q,QUIZ_NODOUBLE);  
+                g_message("in no-double");
+            }
 
         } else
             pmr->CubeDecPtr->esDouble.et = EVAL_NONE;
@@ -746,27 +756,27 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
                 if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
                     rChequerSkill = pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore;
-                    if(rChequerSkill<-0.030) {
-                        positionkey keyTemp=key;
-                        if (pmr->fPlayer) {
-                            PositionFromKey(anBoardMistake, &keyTemp);
-                            SwapSides(anBoardMistake);
-                            PositionKey((ConstTanBoard) anBoardMistake, &keyTemp);
-                        }
-                        // if (pmr->fPlayer) {
-                        //     PositionFromKey(anBoardMistake, &pmr->sb.key);
-                        //     // PositionFromKey(anBoardMistake, &pmr->sb.key);
-                        //     SwapSides(anBoardMistake);
-                        //     PositionKey((ConstTanBoard) anBoardMistake, &pmr->sb.key);
-                        // }
-                        // const positionkey * pkey=&pmr->sb.key;
-                        // positionid=PositionIDFromKey(pkey);
-                        // sprintf(positionid, " (set board %s)", PositionIDFromKey(pkey));
-                        // sprintf(positionid, " (set board %s)", PositionIDFromKey(&pmr->sb.key));
-                        char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&keyTemp));
-                        // char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&pmr->sb.key));
-                        g_message("mistake:%s",positionid);
-                    }
+                    // if(rChequerSkill<-0.030) {
+                    //     positionkey keyTemp=key;
+                    //     if (pmr->fPlayer) {
+                    //         PositionFromKey(anBoardMistake, &keyTemp);
+                    //         SwapSides(anBoardMistake);
+                    //         PositionKey((ConstTanBoard) anBoardMistake, &keyTemp);
+                    //     }
+                    //     // if (pmr->fPlayer) {
+                    //     //     PositionFromKey(anBoardMistake, &pmr->sb.key);
+                    //     //     // PositionFromKey(anBoardMistake, &pmr->sb.key);
+                    //     //     SwapSides(anBoardMistake);
+                    //     //     PositionKey((ConstTanBoard) anBoardMistake, &pmr->sb.key);
+                    //     // }
+                    //     // const positionkey * pkey=&pmr->sb.key;
+                    //     // positionid=PositionIDFromKey(pkey);
+                    //     // sprintf(positionid, " (set board %s)", PositionIDFromKey(pkey));
+                    //     // sprintf(positionid, " (set board %s)", PositionIDFromKey(&pmr->sb.key));
+                    //     char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&keyTemp));
+                    //     // char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&pmr->sb.key));
+                    //     g_message("mistake:%s",positionid);
+                    // }
                      /* keep mwc in data structure */
                     pmr->mwc.mwcMove= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
                     pmr->mwc.mwcBestMove= eq2mwc(pmr->ml.amMoves[0].rScore, &ci);
