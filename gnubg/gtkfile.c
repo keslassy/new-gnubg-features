@@ -1136,15 +1136,25 @@ extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
     return TRUE;
 }
 
-extern int AutoAddQuizPosition(quiz q, quizdecision UNUSED(qdec)) {
+extern int AutoAddQuizPosition(quiz q, quizdecision qdec) {
 
-    char * file = g_build_filename(szHomeDirectory, "quiz", "autoadd.csv", NULL);
+    char * file;
+    // char * file = g_build_filename(szHomeDirectory, "quiz", "autoadd.csv", NULL);
 
     // if (!g_file_test(file, G_FILE_TEST_IS_REGULAR)) {
     //     g_message("autoadd file had a problem: %s",file);
     //     return FALSE;
     // }
 
+    if(qdec==QUIZ_MOVE)
+        file = g_build_filename(szHomeDirectory, "quiz", "MOVE-autoadded.csv", NULL);
+    else if(qdec==QUIZ_DOUBLE || qdec==QUIZ_NODOUBLE)
+        file = g_build_filename(szHomeDirectory, "quiz", "DOUBLE-NO_DOUBLE-autoadded.csv", NULL);
+    else if(qdec==QUIZ_PASS || qdec==QUIZ_TAKE)
+        file = g_build_filename(szHomeDirectory, "quiz", "PASS-TAKE-autoadded.csv", NULL);
+    else
+        return FALSE;
+        
     if(!g_file_test(file, G_FILE_TEST_EXISTS )){
         g_message("autoadd file doesn't exist: %s",file);
         	FILE* fp0 = fopen(file, "w");        
