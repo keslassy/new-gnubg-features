@@ -984,7 +984,7 @@ static GtkWidget *pwDialog = NULL;
 
 #define WIDTH   640
 #define HEIGHT  480
-#define MAX_ROWS 1024
+#define MAX_ROWS 3000
 #define MAX_ROW_CHARS 1024
 #define ERROR_DECAY 0.6
 #define SMALL_ERROR 0.2
@@ -1146,18 +1146,33 @@ static int writeQuizLineFull (quiz q, char * file, int quiet) {
         return FALSE;
     }
     char line[1000];
+    int lineCounter=-2;
     while (fgets(line, sizeof(line), fp)){
-        g_message("%s->%s?",line, q.position);
+        lineCounter++;
+        // g_message("%s->%s?",line, q.position);
         if (strstr(line, q.position)!=NULL) {
-            g_message("writeQuizLineFull found a match for position");
+            // g_message("writeQuizLineFull found a match for position");
             if(!quiet) {
                 char buf[100];
                 sprintf(buf,_("Error: the position is already in file %s"),file);
                 GTKMessage(_(buf), DT_INFO);
             }
+            fclose(fp);
             return FALSE;
         }
     }
+    g_message("lineCounter=%d",lineCounter);
+    if(lineCounter>MAX_ROWS){
+        g_message("writeQuizLineFull full file-> %s",file);
+        if(!quiet) {
+            char buf[100];
+            sprintf(buf,_("Error: file %s has reached the maximum allowed number %d of positions"),
+                file,MAX_ROWS);
+            GTKMessage(_(buf), DT_INFO);
+        }
+        fclose(fp);
+        return FALSE;
+    }    
     writeQuizLine (q, fp);
     g_message("Added a line");
     fclose(fp);
