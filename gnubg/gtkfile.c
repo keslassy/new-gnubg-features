@@ -1896,7 +1896,12 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
         return;
 }
 
-extern void LoadPositionAndStart (GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
+static void updatePriority(quiz * pq, long int seconds) {
+    pq->priority = (pq->ewmaError + SMALL_ERROR) * (pq->ewmaError + SMALL_ERROR) * (float) (seconds-pq->lastSeen);
+    // return ( (q.ewmaError + SMALL_ERROR) * (q.ewmaError + SMALL_ERROR) * (float) (seconds-q.lastSeen));
+}
+
+extern void LoadPositionAndStart (void) {
     fInQuizMode=TRUE;
     qDecision=QUIZ_UNKNOWN;
 
@@ -1910,24 +1915,26 @@ extern void LoadPositionAndStart (GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
     long int seconds=(long int) (time(NULL));
     // float maxPriority=0;
     iOpt=0;
+    updatePriority(&(q[iOpt]),seconds);
     for (int i = 1; i < qLength; ++i) {
         /* heuristic formula, the "secret sauce"...
         1) Very roughly: a 2x bigger typical error should be seen 4x more often -
         and then the error hopefully goes down.
         2) If we add a non-analyzed position, or a position with 0 error, then it will never appear in the loop 
-        unless we add something to get a non-null priority */
-    
-        q[i].priority=(q[i].ewmaError + SMALL_ERROR) * (q[i].ewmaError + SMALL_ERROR) * (float) (seconds-q[i].lastSeen); // /1000.0;
-        // g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
+        unless we add something to get a non-null priority 
+        */
+        updatePriority(&(q[i]),seconds);
+        // q[i].priority=(q[i].ewmaError + SMALL_ERROR) * (q[i].ewmaError + SMALL_ERROR) * (float) (seconds-q[i].lastSeen); // /1000.0;
+        g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
         if(q[i].priority>q[iOpt].priority) {
             // maxPriority=q[i].priority;
             iOpt=i;
         }
     }
     iOptCounter=0;
-    // g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
-        // q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
-        // q[iOpt].lastSeen);
+    g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
+        q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
+        q[iOpt].lastSeen);
 
     // qNow=q[iOpt];
 
@@ -2189,7 +2196,7 @@ extern void BackFromHint (void) {
         categories[currentCategoryIndex].number);
 
     if (GTKGetInputYN(buf)) {
-        LoadPositionAndStart(NULL,NULL);
+        LoadPositionAndStart();
     } else {
         fInQuizMode=FALSE;
         ManagePositionCategories();
@@ -2230,7 +2237,7 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     }
     fInQuizMode=TRUE;
     counterForFile=0; /*first one for this category*/
-    LoadPositionAndStart(NULL,NULL);
+    LoadPositionAndStart();
 }
 
 extern void

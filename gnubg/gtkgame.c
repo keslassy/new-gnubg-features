@@ -6913,6 +6913,13 @@ static void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
     fInQuizMode=FALSE;
     ManagePositionCategories();    
 }
+static void LoadPositionAndStartClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
+    getWindowGeometry(WINDOW_HINT);
+    DestroyPanel(WINDOW_HINT);
+    LoadPositionAndStart();    
+}
+
+
 
 extern void
 GTKHint(moverecord * pmr, int hist)
@@ -6953,7 +6960,8 @@ GTKHint(moverecord * pmr, int hist)
 
         char buf[200];
         counterForFile++;
-        sprintf(buf,_("\n\n%d positions played in category %s (which has %d positions). Play another?\n"), 
+        sprintf(buf,_("\n\n%d positions played in category %s (which has %d positions). "
+            "Play another in category?\n"), 
             counterForFile,categories[currentCategoryIndex].name,
             categories[currentCategoryIndex].number);    
         AddText(pwMainVBox, _(buf));
@@ -6970,9 +6978,8 @@ GTKHint(moverecord * pmr, int hist)
         gtk_box_pack_start(GTK_BOX(pwMainHBox), stopButton, TRUE, FALSE, 0);
 
         againButton = gtk_button_new_with_label(_("Play again!"));
-        g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStart), NULL);
+        g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
         gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
-
     }
 
     setWindowGeometry(WINDOW_HINT);

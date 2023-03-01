@@ -34,5 +34,5 @@ extern void GTKBatchAnalyse(gpointer p, guint n, GtkWidget * pw);
 extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview); 
 extern int AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw));
 extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw));
-extern void LoadPositionAndStart (GtkWidget * UNUSED(pw), gpointer UNUSED(p));
+extern void LoadPositionAndStart (void);
 #endif
