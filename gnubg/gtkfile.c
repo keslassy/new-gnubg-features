@@ -1018,7 +1018,8 @@ int numCategories;//=0
 /* the following function:
 - updates positionsFileFullPath,
 - opens the corrsponding file, 
-- and saves the parsing results in the categories static array */
+- and saves the parsing results in the categories static array 
+*/
 int OpenQuizPositionsFile(const int index)
 {
     char row[MAX_ROW_CHARS];
@@ -1118,7 +1119,7 @@ static void writeQuizHeader (FILE* fp) {
 static void writeQuizLine (quiz q, FILE* fp) {
         fprintf(fp, "%s, %d, %.5f, %ld\n", q.position, q.player, q.ewmaError, q.lastSeen);
 }
-static int writeQuizLineFull (quiz q, char * file, int quiet) {
+extern int writeQuizLineFull (quiz q, char * file, int quiet) {
     /*test that file exists, else write header*/
     if(!g_file_test(file, G_FILE_TEST_EXISTS )){
         g_message("writeQuizLineFull file doesn't exist: %s",file);
@@ -1135,9 +1136,18 @@ static int writeQuizLineFull (quiz q, char * file, int quiet) {
             writeQuizHeader(fp0);
             fclose(fp0);
     }
+    if(!g_file_test(file, G_FILE_TEST_IS_REGULAR)){
+        g_message("writeQuizLineFull problem with file %s",file);
+        if(!quiet) {
+            char buf[100];
+            sprintf(buf,_("Error: problem with file %s, not a regular file?"),file);
+            GTKMessage(_(buf), DT_INFO);
+        }
+        return FALSE;
+    }
     FILE* fp = fopen(file, "r+");
     if(!fp){
-        g_message("writeQuizLineFull file had a pointer problem: fp-> %s",file);
+        g_message("writeQuizLineFull cannot read/write: fp-> %s",file);
         if(!quiet) {
             char buf[100];
             sprintf(buf,_("Error: cannot read/write file %s"),file);
@@ -1145,7 +1155,7 @@ static int writeQuizLineFull (quiz q, char * file, int quiet) {
         }
         return FALSE;
     }
-    char line[1000];
+    char line[MAX_ROW_CHARS];
     int lineCounter=-2;
     while (fgets(line, sizeof(line), fp)){
         lineCounter++;
@@ -1179,24 +1189,24 @@ static int writeQuizLineFull (quiz q, char * file, int quiet) {
     return TRUE;
 }
 
-/* based on standard csv program from geeksforgeeks*/
-extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
-{
+// extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
+// {
+//     writeQuizLineFull (qRow, pcategory->path, FALSE);
 
-	FILE* fp = fopen(pcategory->path, "a");
+// 	// FILE* fp = fopen(pcategory->path, "a");
 
-	if (!fp){
-        GTKMessage(_("Error: problem saving quiz position, cannot open file"), DT_INFO);
-		// printf("Can't open file\n");
-        return FALSE;
-    } 
-    // Saving data in file
-    // fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, qRow.player, qRow.ewmaError, qRow.lastSeen);
-    writeQuizLine (qRow, fp);
-    g_message("Added a line");
-    fclose(fp);
-    return TRUE;
-}
+// 	// if (!fp){
+//     //     GTKMessage(_("Error: problem saving quiz position, cannot open file"), DT_INFO);
+// 	// 	// printf("Can't open file\n");
+//     //     return FALSE;
+//     // } 
+//     // // Saving data in file
+//     // // fprintf(fp, "%s, %d, %.5f, %ld\n", qRow.position, qRow.player, qRow.ewmaError, qRow.lastSeen);
+//     // writeQuizLine (qRow, fp);
+//     // g_message("Added a line");
+//     // fclose(fp);
+//     // return TRUE;
+// }
 
 extern int AutoAddQuizPosition(quiz q, quizdecision qdec) {
 
@@ -1250,11 +1260,13 @@ extern int AutoAddQuizPosition(quiz q, quizdecision qdec) {
 //     qNow.lastSeen=(long int) (time(NULL));
 //     return (AddQuizPosition(qNow,pcategory));
 // }
+/* Here we save a full file with all positions. We assume that they were already checked to 
+be distinct. */
 static int SaveFullPositionFile(void)
 {
         // szFile = g_build_filename(szHomeDirectory, "gnubgautorc", NULL);
 
-	FILE* fp = fopen(categories[currentCategoryIndex].path, "w");
+    FILE* fp = fopen(categories[currentCategoryIndex].path, "w");
 
 	if (!fp){
         GTKMessage(_("Error: problem saving quiz position, cannot open file"), DT_INFO);
@@ -1267,6 +1279,7 @@ static int SaveFullPositionFile(void)
         // Saving data in file
         // fprintf(fp, "%s, %d, %.5f, %ld\n", q[i].position, q[i].player, q[i].ewmaError, q[i].lastSeen);
         writeQuizLine (q[i], fp);
+        // writeQuizLineFull (quiz q, categories[currentCategoryIndex].path, int quiet);
     }
     // g_message("Saved q");
     fclose(fp);
@@ -1284,6 +1297,8 @@ extern void qUpdate(float error) {
         q[iOpt].ewmaError=ERROR_DECAY*(q[iOpt].ewmaError)+(1-ERROR_DECAY)*error;
         // g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
         q[iOpt].lastSeen=(long int) (time(NULL));
+        /*Here we save the whole file again. If it gets slow, alternative=keep line
+        number and only update this line.*/
         SaveFullPositionFile();
         iOptCounter=1;
     } else  
@@ -1378,7 +1393,6 @@ static void populateCategory(const int index, const char * name, const int updat
     gchar *file = g_strdup_printf("%s.csv", name);
     gchar *path = g_build_filename(szHomeDirectory, "quiz", file, NULL);
     strcpy(categories[index].path,path);
-    // if (g_file_test(path, G_FILE_TEST_IS_REGULAR)) {
 
     /*compute and add number of positions*/
     if (updateNumber)

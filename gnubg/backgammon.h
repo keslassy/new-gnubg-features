@@ -1132,7 +1132,8 @@ extern void GetPositionCategories(void);
 extern quiz qNow; 
 extern float qNow_NDBeforeMoveError;
 extern void qUpdate(float error);
-extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
+// extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
+extern int writeQuizLineFull (quiz q, char * file, int quiet);
 extern int AutoAddQuizPosition(quiz q, quizdecision qdec);
 extern void ManagePositionCategories(void); /*start quiz window*/
 
