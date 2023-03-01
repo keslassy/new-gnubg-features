@@ -98,6 +98,10 @@ website.
 
 #define KEY_ESCAPE -229
 
+/*For MWC & quiz: hint window*/
+#define WIDTH   640
+#define HEIGHT  480
+
 #if defined(USE_BOARD3D)
 	gboolean widget3dValid;
 
@@ -6716,10 +6720,10 @@ HintOK(GtkWidget * UNUSED(pw), void *UNUSED(unused))
 {
     getWindowGeometry(WINDOW_HINT);
     DestroyPanel(WINDOW_HINT);
-    if(fInQuizMode){
-        BackFromHint();
-        // HintOK(NULL,NULL);
-    }
+    // if(fInQuizMode){
+    //     BackFromHint();
+    //     // HintOK(NULL,NULL);
+    // }
 }
 
 extern void
@@ -6903,10 +6907,18 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     GTKRunDialog(pwDialog);
 }
 
+static void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
+    getWindowGeometry(WINDOW_HINT);
+    DestroyPanel(WINDOW_HINT);
+    fInQuizMode=FALSE;
+    ManagePositionCategories();    
+}
+
 extern void
 GTKHint(moverecord * pmr, int hist)
 {
-    GtkWidget *pwMoves, *pwHint;
+    GtkWidget *pwMoves, *pwHint, *pwMainVBox, *pwMainHBox, *stopButton, *againButton;
+
     if (!pmr || pmr->ml.cMoves < 1) {
         outputerrf(_("There are no legal moves. Figure it out yourself."));
         return;
@@ -6918,11 +6930,50 @@ GTKHint(moverecord * pmr, int hist)
     pwMoves = CreateMoveList(pmr, TRUE, TRUE, TRUE, hist);
 
     /* create dialog */
-
-    pwHint = GTKCreateDialog(_("GNU Backgammon - Hint"), DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(HintOK), NULL);
+    if(!fInQuizMode)
+        pwHint = GTKCreateDialog(_("GNU Backgammon - Hint"), DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(HintOK), NULL);
+    else {
+        // pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(HintOK), NULL);
+        pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NOOK, G_CALLBACK(HintOK), NULL);
+        gtk_window_set_default_size (GTK_WINDOW (pwHint), WIDTH, HEIGHT);
+    }
     SetPanelWidget(WINDOW_HINT, pwHint);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMoves);
+    if(!fInQuizMode)
+        gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMoves);
+    else {
+#if GTK_CHECK_VERSION(3,0,0)
+        pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+#else
+        pwMainVBox = gtk_vbox_new(FALSE, 2);
+#endif
+
+        gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMainVBox);
+        gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMoves, TRUE, TRUE, 0);
+
+        char buf[200];
+        counterForFile++;
+        sprintf(buf,_("\n\n%d positions played in category %s (which has %d positions). Play another?\n"), 
+            counterForFile,categories[currentCategoryIndex].name,
+            categories[currentCategoryIndex].number);    
+        AddText(pwMainVBox, _(buf));
+
+#if GTK_CHECK_VERSION(3,0,0)
+        pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+#else
+        pwMainHBox = gtk_hbox_new(FALSE, 2);
+#endif
+        gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, FALSE, FALSE, 0);
+
+        stopButton = gtk_button_new_with_label(_("No, thanks."));
+        g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
+        gtk_box_pack_start(GTK_BOX(pwMainHBox), stopButton, TRUE, FALSE, 0);
+
+        againButton = gtk_button_new_with_label(_("Play again!"));
+        g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStart), NULL);
+        gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
+
+    }
 
     setWindowGeometry(WINDOW_HINT);
     g_object_weak_ref(G_OBJECT(pwHint), DestroyHint, NULL);
@@ -8345,8 +8396,7 @@ stat_dialog_map(GtkWidget * UNUSED(window), GtkWidget * pwUsePanels)
     code for drawing the plot of MWC evolution through a given match
    ***************************************************************************** 
 */
-#define WIDTH   640
-#define HEIGHT  480
+
 #define MAX_DECISIONS (2*MAX_MOVES)
 
 static GdkRectangle da;            /* GtkDrawingArea size */

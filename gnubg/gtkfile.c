@@ -1000,13 +1000,13 @@ static GtkWidget *pwDialog = NULL;
 //static char positionsFileFullPath []="./quiz/positions.csv";
 // static char * positionsFileFullPath;
 // static char * currentCategory;
-static int currentCategoryIndex;
+int currentCategoryIndex; /*extern*/
 static quiz q [MAX_ROWS]; 
 static int qLength=0;
 static int iOpt=-1; 
 static int iOptCounter=0; 
 // quiz qNow={"\0",0,0,0.0}; /*extern*/
-static int counterForFile=0;
+int counterForFile=0; /*extern*/
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
 // static const categorytype emptyCategory={NULL,0,NULL,NULL};
@@ -1397,7 +1397,7 @@ static void populateCategory(const int index, const char * name, const int updat
     /*compute and add number of positions*/
     if (updateNumber)
         categories[index].number=CountPositions(categories[index]);
-    g_message("at index %d with name=%s, number=%d",index,name,categories[index].number);
+    // g_message("at index %d with name=%s, number=%d",index,name,categories[index].number);
 }
 
 extern void GetPositionCategories(void) {
@@ -1896,7 +1896,7 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
         return;
 }
 
-static void LoadPositionAndStart (void) {
+extern void LoadPositionAndStart (GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
     fInQuizMode=TRUE;
     qDecision=QUIZ_UNKNOWN;
 
@@ -2182,14 +2182,14 @@ We need to ask the player whether to play again within this category.
             change category.
 */
 extern void BackFromHint (void) {
-    char buf[100];
+    char buf[200];
     counterForFile++;
     sprintf(buf,_("%d positions played in category %s (which has %d positions)."
         "\n\n Play another position?"), counterForFile,categories[currentCategoryIndex].name,
         categories[currentCategoryIndex].number);
 
     if (GTKGetInputYN(buf)) {
-        LoadPositionAndStart();
+        LoadPositionAndStart(NULL,NULL);
     } else {
         fInQuizMode=FALSE;
         ManagePositionCategories();
@@ -2230,7 +2230,7 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     }
     fInQuizMode=TRUE;
     counterForFile=0; /*first one for this category*/
-    LoadPositionAndStart();
+    LoadPositionAndStart(NULL,NULL);
 }
 
 extern void
