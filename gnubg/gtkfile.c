@@ -988,6 +988,7 @@ static GtkWidget *pwDialog = NULL;
 #define MAX_ROW_CHARS 1024
 #define ERROR_DECAY 0.6
 #define SMALL_ERROR 0.2
+// #define BGCOLOR "#EDF5FF"
 
 // static char positionsFolder [200];
 // char * tempPath= g_build_filename(szHomeDirectory, "quiz", NULL);
@@ -2092,7 +2093,24 @@ ManagePositionCategories(void)
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, treeview);
     //    DIALOG_FLAG_NONE
-    gtk_window_set_default_size (GTK_WINDOW (pwDialog), WIDTH, HEIGHT);
+    gtk_window_set_default_size (GTK_WINDOW (pwDialog), WIDTH, 350);
+    GdkColor color;
+    gdk_color_parse ("#EDF5FF", &color);
+    gtk_widget_modify_bg(pwDialog, GTK_STATE_NORMAL, &color);
+
+    // color.red = 0xcfff;
+    // color.green = 0xdfff;
+    // color.blue = 0xefff;
+    // gdk_color_parse ("red", &color);
+    // gdk_color_parse ("black", &color);
+    //  gdk_color_parse (BGCOLOR, &color);    
+    // gtk_window_set_title(GTK_WINDOW(pwDialog), "hello");
+    // if (gdk_color_parse("#c0deed", &color)) {
+    // } else {
+    //     gtk_widget_modify_bg(pwDialog, GTK_STATE_NORMAL, &color);
+    // }
+    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // gtk_widget_show_all(pwDialog);
 #endif
 #if GTK_CHECK_VERSION(3,0,0)
     pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
@@ -2260,6 +2278,25 @@ extern void
 CommandQuiz(char *UNUSED(sz))
 {
     ManagePositionCategories();
+    // GdkColor color;
+    // color.red = 0xffff;
+    // color.green = 0xffff;
+    // color.blue = 0;
+    // gtk_window_set_title(GTK_WINDOW(pwMain), "hello");
+    // if (gdk_color_parse("#c0deed", &color)) {
+    //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // } else {
+    //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // }
+    // // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // gtk_widget_show_all(pwMain);
+        // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_SELECTED]);
+
+    // gdk_color_parse ("black", &color);
+    // // gdk_color_parse (BGCOLOR, &color);
+    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_PRELIGHT]);
+
 }
 
 
@@ -2268,7 +2305,8 @@ CommandQuiz(char *UNUSED(sz))
 
 extern void
 GTKAnalyzeFile(void) {
-    ManagePositionCategories();
+    // ManagePositionCategories();
+    CommandQuiz("");
 
 /* ************ END OF QUIZ ************************** */
 

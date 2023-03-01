@@ -5177,33 +5177,22 @@ GtkTutor(char *sz)
     int f = FALSE;
     GtkWidget *pwTutorDialog, *pwOK, *pwCancel, *pwEndTutor, *pwButtons, *pwPrompt, *pwHint;
 
-    if (!fInQuizMode) {
         pwTutorDialog = GTKCreateDialog(_("GNU Backgammon - Tutor"),
                                         DT_CUSTOM, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(OK), (void *) &f);
-    } else{
-        pwTutorDialog = GTKCreateDialog(_("GNU Backgammon - Tutor"),
-                                        DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, G_CALLBACK(OK), (void *) &f);
-    }
 
-    if(!fInQuizMode) {
         pwOK = DialogArea(pwTutorDialog, DA_OK);
         gtk_button_set_label(GTK_BUTTON(pwOK), _("Play Anyway"));
-    }
 
     pwCancel = gtk_button_new_with_label(_("Rethink"));
-    if(!fInQuizMode) {
         pwEndTutor = gtk_button_new_with_label(_("End Tutor Mode"));
-    }
     pwHint = gtk_button_new_with_label(_("Hint"));
     pwButtons = DialogArea(pwTutorDialog, DA_BUTTONS);
 
     gtk_container_add(GTK_CONTAINER(pwButtons), pwCancel);
     g_signal_connect(G_OBJECT(pwCancel), "clicked", G_CALLBACK(TutorRethink), (void *) &f);
 
-    if(!fInQuizMode) {
     gtk_container_add(GTK_CONTAINER(pwButtons), pwEndTutor);
     g_signal_connect(G_OBJECT(pwEndTutor), "clicked", G_CALLBACK(TutorEnd), (void *) &f);
-    }
 
     gtk_container_add(GTK_CONTAINER(pwButtons), pwHint);
     g_signal_connect(G_OBJECT(pwHint), "clicked", G_CALLBACK(TutorHint), (void *) &f);
@@ -6756,6 +6745,9 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
     else {
         // pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(HintOK), NULL);
         pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NOOK, G_CALLBACK(HintOK), NULL);
+        GdkColor color;
+        gdk_color_parse ("#EDF5FF", &color);
+        gtk_widget_modify_bg(pwHint, GTK_STATE_NORMAL, &color);
     }        
     SetPanelWidget(WINDOW_HINT, pwHint);
 
@@ -6994,6 +6986,9 @@ GTKHint(moverecord * pmr, int hist)
     else {
         // pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(HintOK), NULL);
         pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NOOK, G_CALLBACK(HintOK), NULL);
+        GdkColor color;
+        gdk_color_parse ("#EDF5FF", &color);
+        gtk_widget_modify_bg(pwHint, GTK_STATE_NORMAL, &color);
     }
     SetPanelWidget(WINDOW_HINT, pwHint);
 
@@ -7356,7 +7351,7 @@ GTKShowBuildInfo(GtkWidget * UNUSED(pw), GtkWidget * pwParent)
 static listOLD names;
 
 /* this is a copy of AddText in gtkscoremap.c with the exception of the font size,
-consider merging*/
+merged*/
 static void
 AddTitle(GtkWidget * pwBox, char *Title)
 {
@@ -8021,6 +8016,7 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MATCHEQUITYTABLE), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_CALIBRATION), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SWAP_PLAYERS), !ListEmpty(&lMatch));
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_QUIZ), fUseQuiz);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_CMARK_CUBE_CLEAR), !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_CMARK_CUBE_SHOW), !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_CMARK_MOVE_CLEAR), !ListEmpty(&lMatch));
