@@ -108,6 +108,13 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     // tree_view=GTK_TREE_VIEW(pwGameList);
     //  GdkEventButton * event = LastEvent;
 
+    if(fInQuizMode){
+        fInQuizMode=FALSE;
+        UserCommand2("new match");
+        return;
+    }
+
+
     g_message("---start of GameListSelectRow, dice=%d,%d---",ms.anDice[0],ms.anDice[1]);
     gtk_tree_view_get_cursor(tree_view, &path, &column);
     if (!path)

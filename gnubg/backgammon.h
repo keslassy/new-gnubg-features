@@ -1127,7 +1127,7 @@ extern int fInQuizMode; /* we are inside quiz mode, so no match etc. */
 extern int fAutoAddToQuiz; /*for each analysis, add all mistakes of player 1 above: */
 extern float AutoAddToQuizThreshold;
 extern int AutoAddPlayerOneOnly;
-extern void BackFromHint (void);
+// extern void BackFromHint (void);
 extern void GetPositionCategories(void);
 extern quiz qNow; 
 extern float qNow_NDBeforeMoveError;

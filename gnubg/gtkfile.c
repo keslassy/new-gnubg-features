@@ -2317,29 +2317,29 @@ extern void ManagePositionCategories(void) {
     GTKRunDialog(pwDialog);
 }
 
-/* Now we are back from the hint function within quiz mode. 
-- The position category is well known. 
-- The values have already been updated and saved in a file 
-        (in MoveListUpdate->qUpdate->SaveFullPositionFile)
-We need to ask the player whether to play again within this category.
-    (YES) We want to pick a new position in the category and start
-    (NO) We get back to the main panel in case the user wants to 
-            change category.
-*/
-extern void BackFromHint (void) {
-    char buf[200];
-    // counterForFile++;
-    sprintf(buf,_("%d positions played in category %s (which has %d positions)."
-        "\n\n Play another position?"), counterForFile,categories[currentCategoryIndex].name,
-        categories[currentCategoryIndex].number);
+// /* Now we are back from the hint function within quiz mode. 
+// - The position category is well known. 
+// - The values have already been updated and saved in a file 
+//         (in MoveListUpdate->qUpdate->SaveFullPositionFile)
+// We need to ask the player whether to play again within this category.
+//     (YES) We want to pick a new position in the category and start
+//     (NO) We get back to the main panel in case the user wants to 
+//             change category.
+// */
+// extern void BackFromHint (void) {
+//     char buf[200];
+//     // counterForFile++;
+//     sprintf(buf,_("%d positions played in category %s (which has %d positions)."
+//         "\n\n Play another position?"), counterForFile,categories[currentCategoryIndex].name,
+//         categories[currentCategoryIndex].number);
 
-    if (GTKGetInputYN(buf)) {
-        LoadPositionAndStart();
-    } else {
-        fInQuizMode=FALSE;
-        ManagePositionCategories();
-    }
-}
+//     if (GTKGetInputYN(buf)) {
+//         LoadPositionAndStart();
+//     } else {
+//         fInQuizMode=FALSE;
+//         ManagePositionCategories();
+//     }
+// }
 
 extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     g_message("in StartQuiz");
