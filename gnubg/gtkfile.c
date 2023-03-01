@@ -1001,7 +1001,7 @@ static GtkWidget *pwDialog = NULL;
 //static char positionsFileFullPath []="./quiz/positions.csv";
 // static char * positionsFileFullPath;
 // static char * currentCategory;
-int currentCategoryIndex; /*extern*/
+int currentCategoryIndex=-1; /*extern*/
 static quiz q[MAX_ROWS]; 
 static int qLength=0;
 static int iOpt=-1; 
@@ -2000,6 +2000,7 @@ extern void LoadPositionAndStart (void) {
 
 }
 
+enum {COLUMN_INDEX, COLUMN_STRING, COLUMN_INT, N_COLUMNS};
 
 static GtkWidget * BuildCategoryList(void) {
    // GtkWidget *pwDialog;
@@ -2024,13 +2025,14 @@ static GtkWidget * BuildCategoryList(void) {
     // }
 
     /* create list store */
-    enum {COLUMN_STRING, COLUMN_INT, N_COLUMNS};
-    nameStore = gtk_list_store_new(N_COLUMNS, G_TYPE_STRING,G_TYPE_INT);
+
+    nameStore = gtk_list_store_new(N_COLUMNS, G_TYPE_INT, G_TYPE_STRING, G_TYPE_INT);
 
     for(int i=0;i < numCategories; i++) {
         gtk_list_store_append(nameStore, &iter);
         // int numberPositions=CountPositions(categories[i]);
         gtk_list_store_set(nameStore, &iter, 
+                            COLUMN_INDEX,i,
                             COLUMN_STRING, categories[i].name,
                             COLUMN_INT, categories[i].number,
                             -1);
@@ -2041,6 +2043,11 @@ static GtkWidget * BuildCategoryList(void) {
     treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(nameStore));
 
     g_object_unref(nameStore);
+
+    renderer = gtk_cell_renderer_text_new();
+    column = gtk_tree_view_column_new_with_attributes(_("No."), 
+        renderer, "text", COLUMN_INDEX, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
     renderer = gtk_cell_renderer_text_new();
     column = gtk_tree_view_column_new_with_attributes(_("Position category"), 
@@ -2086,12 +2093,13 @@ static GtkWidget * BuildCategoryList(void) {
 // }
 static void QuizManageClicked(GtkWidget * UNUSED(widget), GdkEventButton  * event, GtkTreeView * treeview) {
     
-    // g_message("before: currentCategoryIndex=%d",currentCategoryIndex);
+    g_message("before: currentCategoryIndex=%d",currentCategoryIndex);
+    currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+    g_message("after: currentCategoryIndex=%d",currentCategoryIndex);
+
     /*double-click, e.g. w/ left or middle click, not right*/
     if (event->type == GDK_2BUTTON_PRESS  &&  event->button != 3){
         // g_message("double-click time=%d",event->time);
-        currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
-        // g_message("after: currentCategoryIndex=%d",currentCategoryIndex);
         // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
         // if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
         //     // GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
@@ -2102,6 +2110,21 @@ static void QuizManageClicked(GtkWidget * UNUSED(widget), GdkEventButton  * even
         }
     }
 }
+
+void on_changed(GtkWidget *widget, gpointer UNUSED(p))
+{
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    int value;
+
+    if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(widget), &model, &iter))
+    {
+        gtk_tree_model_get(model, &iter, COLUMN_INDEX, &value,  -1);
+        g_print("%d is selected\n", value);
+        // g_free(value);
+    }
+}
+
 extern void ManagePositionCategories(void) {
 
     GtkWidget *pwScrolled;
@@ -2115,7 +2138,7 @@ extern void ManagePositionCategories(void) {
     GtkWidget *addPos1Button;
     GtkWidget *addPos2Button;
     
-
+    // currentCategoryIndex=-1;
     GtkWidget *treeview = BuildCategoryList();
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
@@ -2192,6 +2215,9 @@ extern void ManagePositionCategories(void) {
 #endif
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pwScrolled), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+    g_signal_connect(selection, "changed", G_CALLBACK(on_changed), NULL);
+
 // #if GTK_CHECK_VERSION(3,0,0)
 //     hb1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 // #else
@@ -2249,6 +2275,12 @@ extern void ManagePositionCategories(void) {
     gtk_button_set_image(GTK_BUTTON(startButton), image);
     // gtk_button_set_label(GTK_BUTTON(startButton), _("Start quiz!"));
     // gtk_widget_set_sensitive(startButton, (&selected_iter!=NULL));
+
+    g_message("in window: currentCategoryIndex=%d",currentCategoryIndex);
+    
+    gtk_widget_set_sensitive(startButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
+    gtk_widget_set_sensitive(renameButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
+    gtk_widget_set_sensitive(delButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
     // gtk_button_set_relief(GTK_BUTTON(startButton), GTK_RELIEF_NONE);
 
     g_signal_connect(startButton, "clicked", G_CALLBACK(StartQuiz), GTK_TREE_VIEW(treeview));
