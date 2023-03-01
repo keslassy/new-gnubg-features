@@ -1001,7 +1001,7 @@ static GtkWidget *pwDialog = NULL;
 // static char * positionsFileFullPath;
 // static char * currentCategory;
 int currentCategoryIndex; /*extern*/
-static quiz q [MAX_ROWS]; 
+static quiz q[MAX_ROWS]; 
 static int qLength=0;
 static int iOpt=-1; 
 static int iOptCounter=0; 
@@ -1251,15 +1251,13 @@ extern int AutoAddQuizPosition(quiz q, quizdecision qdec) {
 }
 
 // extern int AutoAddQuizPosition(-rSkill,QUIZ_NODOUBLE)(float error, quizdecision qdec) {
-
-
-
-
 //     g_message("Adding position: %s to category %s, error: %f",
 //         qNow.position,pcategory->name,qNow.ewmaError);
 //     qNow.lastSeen=(long int) (time(NULL));
 //     return (AddQuizPosition(qNow,pcategory));
 // }
+
+
 /* Here we save a full file with all positions. We assume that they were already checked to 
 be distinct. */
 static int SaveFullPositionFile(void)
@@ -1285,6 +1283,23 @@ static int SaveFullPositionFile(void)
     fclose(fp);
     return TRUE;
 }
+
+extern void DeletePosition(void) {
+    if (!GTKGetInputYN(_("Are you sure you want to delete this position?")))
+        return;
+    q[iOpt]=q[qLength-1];
+    qLength-=1;
+    SaveFullPositionFile();
+    GTKMessage(_("Position deleted."), DT_INFO);
+    if (qLength==0) {
+        StopLoopClicked(NULL,NULL);
+        return;
+    }
+    else {
+        return;
+    }
+}
+
 
 extern void qUpdate(float error) {
     /* if someone makes a mistake, then plays again the same position after seeing the 
@@ -1978,8 +1993,8 @@ extern void LoadPositionAndStart (void) {
          CommandDouble("");
    }
     // g_message("double");
-    g_message("Post-analyse: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
-        ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+    // g_message("Post-analyse: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+    //     ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
 
 }
 

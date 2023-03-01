@@ -35,4 +35,5 @@ extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview);
 extern int AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw));
 extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw));
 extern void LoadPositionAndStart (void);
+extern void DeletePosition(void) ;
 #endif

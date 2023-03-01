@@ -6726,7 +6726,7 @@ HintOK(GtkWidget * UNUSED(pw), void *UNUSED(unused))
     // }
 }
 
-static void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
+extern void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
     getWindowGeometry(WINDOW_HINT);
     DestroyPanel(WINDOW_HINT);
     fInQuizMode=FALSE;
@@ -6737,13 +6737,16 @@ static void LoadPositionAndStartClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(
     DestroyPanel(WINDOW_HINT);
     LoadPositionAndStart();    
 }
+static void DeletePositionClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
+    DeletePosition();
+}
 
 
 extern void
 GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_take, int hist)
 {
 
-    GtkWidget *pw, *pwHint, *pwMainVBox, *pwMainHBox, *stopButton, *againButton;
+    GtkWidget *pw, *pwHint, *pwMainVBox, *pwMainHBox, *stopButton, *againButton, *deleteButton;
 
     if (GetPanelWidget(WINDOW_HINT))
         gtk_widget_destroy(GetPanelWidget(WINDOW_HINT));
@@ -6788,6 +6791,10 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         pwMainHBox = gtk_hbox_new(FALSE, 2);
 #endif
         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, TRUE, FALSE, 0);
+
+        deleteButton = gtk_button_new_with_label(_("Delete this position"));
+        g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
+        gtk_box_pack_start(GTK_BOX(pwMainHBox), deleteButton, TRUE, FALSE, 0);
 
         stopButton = gtk_button_new_with_label(_("No, thanks."));
         g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
@@ -6969,7 +6976,7 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
 extern void
 GTKHint(moverecord * pmr, int hist)
 {
-    GtkWidget *pwMoves, *pwHint, *pwMainVBox, *pwMainHBox, *stopButton, *againButton;
+    GtkWidget *pwMoves, *pwHint, *pwMainVBox, *pwMainHBox, *stopButton, *againButton, *deleteButton;
 
     if (!pmr || pmr->ml.cMoves < 1) {
         outputerrf(_("There are no legal moves. Figure it out yourself."));
@@ -7019,6 +7026,10 @@ GTKHint(moverecord * pmr, int hist)
         pwMainHBox = gtk_hbox_new(FALSE, 2);
 #endif
         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, FALSE, FALSE, 0);
+
+        deleteButton = gtk_button_new_with_label(_("Delete this position"));
+        g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
+        gtk_box_pack_start(GTK_BOX(pwMainHBox), deleteButton, TRUE, FALSE, 0);
 
         stopButton = gtk_button_new_with_label(_("No, thanks."));
         g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
