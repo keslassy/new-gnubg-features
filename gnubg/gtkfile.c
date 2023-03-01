@@ -1301,6 +1301,7 @@ extern void qUpdate(float error) {
         number and only update this line.*/
         SaveFullPositionFile();
         iOptCounter=1;
+        counterForFile++;
     } else  
         g_message("NOT updating in qUpdate! 2nd update or more...");
 
@@ -2190,7 +2191,7 @@ We need to ask the player whether to play again within this category.
 */
 extern void BackFromHint (void) {
     char buf[200];
-    counterForFile++;
+    // counterForFile++;
     sprintf(buf,_("%d positions played in category %s (which has %d positions)."
         "\n\n Play another position?"), counterForFile,categories[currentCategoryIndex].name,
         categories[currentCategoryIndex].number);

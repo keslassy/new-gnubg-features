@@ -6771,14 +6771,15 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         gtk_box_pack_start(GTK_BOX(pwMainVBox), pw, TRUE, FALSE, 0);
 
         char buf[200];
-        counterForFile++;
+        // counterForFile++;
+        g_message("at hint");
         sprintf(buf,_("\n\n%d %s played in category %s (which has %d %s). "
             "\n Play another position in this category?\n"), 
             counterForFile,
             (counterForFile==1)?"position":"positions",
             categories[currentCategoryIndex].name,
             categories[currentCategoryIndex].number,
-            (categories[currentCategoryIndex].number==1)?"position":"positions",);    
+            (categories[currentCategoryIndex].number==1)?"position":"positions");    
         AddText(pwMainVBox, _(buf));
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -7002,14 +7003,14 @@ GTKHint(moverecord * pmr, int hist)
         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMoves, TRUE, TRUE, 0);
 
         char buf[200];
-        counterForFile++;
+        // counterForFile++;
         sprintf(buf,_("\n\n%d %s played in category %s (which has %d %s). "
             "\n Play another position in this category?\n"), 
             counterForFile,
             (counterForFile==1)?"position":"positions",
             categories[currentCategoryIndex].name,
             categories[currentCategoryIndex].number,
-            (categories[currentCategoryIndex].number==1)?"position":"positions",);   
+            (categories[currentCategoryIndex].number==1)?"position":"positions");   
         AddText(pwMainVBox, _(buf));
 
 #if GTK_CHECK_VERSION(3,0,0)
