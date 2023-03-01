@@ -260,7 +260,8 @@ int fUseQuiz=TRUE;
 int fAutoAddToQuiz=TRUE;
 quiz qNow={"\0",0,0.0,0,0.0}; /*extern*/
 float qNow_NDBeforeMoveError=-1.0; /*extern*/
-float AutoAddToQuizThreshold=SKILL_VERYBAD; //0.050;
+float AutoAddToQuizThreshold=0.1;
+// float AutoAddToQuizThreshold=arSkillLevel[SKILL_VERYBAD]; //<--pb, not constant?
 int AutoAddPlayerOneOnly=TRUE;
 
 // qNow.position=(char *)malloc(sizeof(char) * (200));

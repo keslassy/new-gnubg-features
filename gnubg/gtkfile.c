@@ -1111,12 +1111,59 @@ int OpenQuizPositionsFile(const int index)
 //     long int lastSeen; 
 // } quiz;
 
-static void writeQuizLine (quiz q, FILE* fp) {
-        fprintf(fp, "%s, %d, %.5f, %ld\n", q.position, q.player, q.ewmaError, q.lastSeen);
-}
+
 static void writeQuizHeader (FILE* fp) {
         fprintf(fp, "position, player, ewmaError, lastSeen\n");
 }
+static void writeQuizLine (quiz q, FILE* fp) {
+        fprintf(fp, "%s, %d, %.5f, %ld\n", q.position, q.player, q.ewmaError, q.lastSeen);
+}
+static int writeQuizLineFull (quiz q, char * file, int quiet) {
+    /*test that file exists, else write header*/
+    if(!g_file_test(file, G_FILE_TEST_EXISTS )){
+        g_message("writeQuizLineFull file doesn't exist: %s",file);
+        	FILE* fp0 = fopen(file, "w");        
+            if(!fp0){
+                g_message("writeQuizLineFull file had a pointer problem: fp0-> %s",file);
+                if(!quiet) {
+                    char buf[100];
+                    sprintf(buf,_("Error: cannot write into file %s"),file);
+                    GTKMessage(_(buf), DT_INFO);
+                }
+                return FALSE;
+            }
+            writeQuizHeader(fp0);
+            fclose(fp0);
+    }
+    FILE* fp = fopen(file, "r+");
+    if(!fp){
+        g_message("writeQuizLineFull file had a pointer problem: fp-> %s",file);
+        if(!quiet) {
+            char buf[100];
+            sprintf(buf,_("Error: cannot read/write file %s"),file);
+            GTKMessage(_(buf), DT_INFO);
+        }
+        return FALSE;
+    }
+    char line[1000];
+    while (fgets(line, sizeof(line), fp)){
+        g_message("%s->%s?",line, q.position);
+        if (strstr(line, q.position)!=NULL) {
+            g_message("writeQuizLineFull found a match for position");
+            if(!quiet) {
+                char buf[100];
+                sprintf(buf,_("Error: the position is already in file %s"),file);
+                GTKMessage(_(buf), DT_INFO);
+            }
+            return FALSE;
+        }
+    }
+    writeQuizLine (q, fp);
+    g_message("Added a line");
+    fclose(fp);
+    return TRUE;
+}
+
 /* based on standard csv program from geeksforgeeks*/
 extern int AddQuizPosition(quiz qRow, categorytype * pcategory)
 {
@@ -1154,26 +1201,28 @@ extern int AutoAddQuizPosition(quiz q, quizdecision qdec) {
         file = g_build_filename(szHomeDirectory, "quiz", "PASS-TAKE-autoadded.csv", NULL);
     else
         return FALSE;
-        
-    if(!g_file_test(file, G_FILE_TEST_EXISTS )){
-        g_message("autoadd file doesn't exist: %s",file);
-        	FILE* fp0 = fopen(file, "w");        
-            if(!fp0){
-                g_message("autoadd file had a pointer problem:fp0-> %s",file);
-                return FALSE;
-            }
-            writeQuizHeader (fp0);
-            fclose(fp0);
-    }
-    FILE* fp = fopen(file, "a");
-    if(!fp){
-        g_message("autoadd file had a pointer problem: %s",file);
-        return FALSE;
-    }
-    writeQuizLine (q, fp);
-    g_message("Added a line");
-    fclose(fp);
-    return TRUE;
+
+    return (writeQuizLineFull (q, file, TRUE));//TRUE for quiet
+
+    // if(!g_file_test(file, G_FILE_TEST_EXISTS )){
+    //     g_message("autoadd file doesn't exist: %s",file);
+    //     	FILE* fp0 = fopen(file, "w");        
+    //         if(!fp0){
+    //             g_message("autoadd file had a pointer problem:fp0-> %s",file);
+    //             return FALSE;
+    //         }
+    //         writeQuizHeader (fp0);
+    //         fclose(fp0);
+    // }
+    // FILE* fp = fopen(file, "a");
+    // if(!fp){
+    //     g_message("autoadd file had a pointer problem: %s",file);
+    //     return FALSE;
+    // }
+    // writeQuizLine (q, fp);
+    // g_message("Added a line");
+    // fclose(fp);
+    // return TRUE;
 }
 
 // extern int AutoAddQuizPosition(-rSkill,QUIZ_NODOUBLE)(float error, quizdecision qdec) {

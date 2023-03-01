@@ -780,7 +780,17 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     // }
                     if(fAutoAddToQuiz && rChequerSkill<-AutoAddToQuizThreshold 
                             &&(!(AutoAddPlayerOneOnly && pms->fTurn==0))) {
-                        sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
+                        g_message("rChequerSkill %f<-AutoAddToQuizThreshold %f",rChequerSkill,-AutoAddToQuizThreshold);
+                        sprintf(q.position, "%s:%s", 
+                                PositionID(pms->anBoard), 
+                                MatchID((unsigned int *) pmr->anDice, pms->fTurn, pms->fResigned,
+                                    pms->fDoubled, ci.fMove, ci.fCubeOwner, ci.fCrawford, ci.nMatchTo,
+                                    ci.anScore, ci.nCube, ci.fJacoby, pms->gs) );
+                        // sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms)); //wrong, doesn't use the dice
+                        // g_message("%s vs.......", q.position);
+                        // g_message("%s",g_strdup(MatchID((unsigned int *) pmr->anDice, pms->fTurn, pms->fResigned,
+                        //          pms->fDoubled, ci.fMove, ci.fCubeOwner, ci.fCrawford, ci.nMatchTo,
+                        //          ci.anScore, ci.nCube, ci.fJacoby, pms->gs)));
                         q.ewmaError=-rChequerSkill;
                         q.lastSeen=(long int) (time(NULL));
                         q.player=pms->fTurn;
