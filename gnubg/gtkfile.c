@@ -2045,17 +2045,17 @@ static GtkWidget * BuildCategoryList(void) {
     g_object_unref(nameStore);
 
     renderer = gtk_cell_renderer_text_new();
-    column = gtk_tree_view_column_new_with_attributes(_("No."), 
+    column = gtk_tree_view_column_new_with_attributes(_(""), 
         renderer, "text", COLUMN_INDEX, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
     renderer = gtk_cell_renderer_text_new();
-    column = gtk_tree_view_column_new_with_attributes(_("Position category"), 
+    column = gtk_tree_view_column_new_with_attributes(_("Category"), 
         renderer, "text", COLUMN_STRING, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
     renderer = gtk_cell_renderer_text_new();
-    column = gtk_tree_view_column_new_with_attributes(_("Positions"), 
+    column = gtk_tree_view_column_new_with_attributes(_("Number of positions"), 
         renderer, "text", COLUMN_INT, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
@@ -2110,18 +2110,30 @@ static void QuizManageClicked(GtkWidget * UNUSED(widget), GdkEventButton  * even
         }
     }
 }
+/* We disable / enable buttons depending on whether a category is 
+selected. To do so, (1) here, we set these variables static.
+Potential alternatives: (2) Refresh the quiz manage window when
+a category is selected to enable the buttons, or 
+(3) not disable the buttons at all. */
+static GtkWidget *delButton;
+static GtkWidget *renameButton;
+static GtkWidget *startButton;
 
 void on_changed(GtkWidget *widget, gpointer UNUSED(p))
 {
     GtkTreeIter iter;
     GtkTreeModel *model;
-    int value;
+    // int value;
 
     if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(widget), &model, &iter))
     {
-        gtk_tree_model_get(model, &iter, COLUMN_INDEX, &value,  -1);
-        g_print("%d is selected\n", value);
+        gtk_tree_model_get(model, &iter, COLUMN_INDEX, &currentCategoryIndex,  -1);
+        g_print("%d is selected\n", currentCategoryIndex);
         // g_free(value);
+        gtk_widget_set_sensitive(startButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
+        gtk_widget_set_sensitive(renameButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
+        gtk_widget_set_sensitive(delButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
+
     }
 }
 
@@ -2131,9 +2143,6 @@ extern void ManagePositionCategories(void) {
     GtkWidget *pwMainHBox;
     GtkWidget *pwVBox;
     GtkWidget *addButton;
-    GtkWidget *delButton;
-    GtkWidget *renameButton;
-    GtkWidget *startButton;
     GtkWidget *pwMainVBox;
     GtkWidget *addPos1Button;
     GtkWidget *addPos2Button;
