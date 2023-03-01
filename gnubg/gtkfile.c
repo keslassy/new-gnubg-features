@@ -1008,6 +1008,7 @@ static int iOpt=-1;
 static int iOptCounter=0; 
 // quiz qNow={"\0",0,0,0.0}; /*extern*/
 int counterForFile=0; /*extern*/
+float latestErrorInQuiz=-1.0; /*extern*/
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
 // static const categorytype emptyCategory={NULL,0,NULL,NULL};
@@ -1316,6 +1317,7 @@ extern void qUpdate(float error) {
         /*Here we save the whole file again. If it gets slow, alternative=keep line
         number and only update this line.*/
         SaveFullPositionFile();
+        latestErrorInQuiz=error;
         iOptCounter=1;
         counterForFile++;
     } else  
@@ -1517,7 +1519,7 @@ DeleteCategory(const char *sz)
     return 0;
 }
 
-static int CheckbadCharacters(const char * name) {
+static int CheckBadCharacters(const char * name) {
     g_message("checking");
     char bad_chars[] = "!@%^*~|<>:$/?\\\"";
     int invalid_found = FALSE;
@@ -1541,7 +1543,7 @@ AddCategory(const char *sz)
 {
     // g_message("in AddCategory: %s, length=%zu", sz, strlen(sz));
     /* check that the name doesn't contain "\t", "\n" */
-    if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL || CheckbadCharacters(sz)) {
+    if (strstr(sz, "\t") != NULL || strstr(sz, "\n") != NULL || CheckBadCharacters(sz)) {
         // for(unsigned int j=0;j < strlen(sz); j++) {
         //     g_message("%c", sz[j]);
         // }
@@ -1626,7 +1628,7 @@ RenameCategory(const char * szOld, const char * szNew)
 
     /* check that the new name doesn't contain "\t", "\n" */
     if (strstr(szNew, "\t") != NULL || strstr(szNew, "\n") != NULL
-         || CheckbadCharacters(szNew)) {
+         || CheckBadCharacters(szNew)) {
         GTKMessage(_("Error: Position category name contains unallowed character"), DT_INFO);
         return -1;
     }
@@ -1988,13 +1990,16 @@ extern void LoadPositionAndStart (void) {
     Before doubling: fMove=0,fTurn=0 (and fDoubled=0)
     After doubling: fMove=0,fTurn=1 (and fDoubled=0)
     */
-   if(ms.fTurn ==0) {
-         CommandDouble("");
-   }
+   if(ms.fTurn ==0) { /*T/P*/
+        CommandDouble("");
+        StatusBarMessage(_("Your turn to play this quiz position: take or pass?"));
+   } else if(ms.anDice[0]>0) /*move*/
+        StatusBarMessage(_("Your turn to play this quiz position: best move?"));
+    else /*T/K*/
+        StatusBarMessage(_("Your turn to play this quiz position: double or no-double?"));
     // g_message("double");
     // g_message("Post-analyse: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
     //     ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
-    StatusBarMessage("Your turn to play this quiz position!");
     // gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Your turn to play this quiz position!"));
 
 
@@ -2055,7 +2060,7 @@ static GtkWidget * BuildCategoryList(void) {
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
     renderer = gtk_cell_renderer_text_new();
-    column = gtk_tree_view_column_new_with_attributes(_("Number of positions"), 
+    column = gtk_tree_view_column_new_with_attributes(_("Num. positions"), 
         renderer, "text", COLUMN_INT, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
@@ -2147,7 +2152,7 @@ extern void ManagePositionCategories(void) {
     GtkWidget *addPos1Button;
     GtkWidget *addPos2Button;
     
-    // currentCategoryIndex=-1;
+    currentCategoryIndex=-1;
     GtkWidget *treeview = BuildCategoryList();
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
@@ -2156,6 +2161,7 @@ extern void ManagePositionCategories(void) {
         gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
         pwDialog = NULL;
     }
+
 #if GTK_CHECK_VERSION(3,0,0)
     pwDialog = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (pwDialog, WIDTH, HEIGHT);
@@ -2200,6 +2206,8 @@ extern void ManagePositionCategories(void) {
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainVBox);
 
+   AddText(pwMainVBox, _("\nSelect a category to start playing"));
+
 #if GTK_CHECK_VERSION(3,0,0)
     pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 #else
@@ -2241,16 +2249,19 @@ extern void ManagePositionCategories(void) {
             addPos1Button = gtk_button_new_with_label(_("Add position to category"));
             g_signal_connect(addPos1Button, "clicked", G_CALLBACK(AddPositionClicked), GTK_TREE_VIEW(treeview));
             gtk_box_pack_start(GTK_BOX(pwVBox), addPos1Button, FALSE, FALSE, 0);
+            gtk_widget_set_sensitive(addPos1Button, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
         } else {
             /*now it means there is a no-double event before a move event,
             so we need to allow users to add both*/
             addPos1Button = gtk_button_new_with_label(_("Add move decision to category"));
             g_signal_connect(addPos1Button, "clicked", G_CALLBACK(AddPositionClicked), GTK_TREE_VIEW(treeview));
             gtk_box_pack_start(GTK_BOX(pwVBox), addPos1Button, FALSE, FALSE, 0);
+            gtk_widget_set_sensitive(addPos1Button, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
 
             addPos2Button = gtk_button_new_with_label(_("Add double/no-double decision to category"));
             g_signal_connect(addPos2Button, "clicked", G_CALLBACK(AddNDPositionClicked), GTK_TREE_VIEW(treeview));
             gtk_box_pack_start(GTK_BOX(pwVBox), addPos2Button, FALSE, FALSE, 0);
+            gtk_widget_set_sensitive(addPos2Button, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
         }
     }
 
@@ -2271,18 +2282,17 @@ extern void ManagePositionCategories(void) {
     delButton = gtk_button_new_with_label(_("Delete category"));
     g_signal_connect(delButton, "clicked", G_CALLBACK(DeleteCategoryClicked), GTK_TREE_VIEW(treeview));
     gtk_box_pack_start(GTK_BOX(pwVBox), delButton, FALSE, FALSE, 4);
-    
-    
-    AddText(pwMainVBox, _("\nSelect a category to start playing"));
-    //  quizManage 
-
-    // startButton = gtk_button_new_from_stock(GTK_STOCK_FIND_AND_REPLACE, GTK_ICON_SIZE_BUTTON);
-    startButton = gtk_button_new(); //gtk_button_new_with_label(_("Start quiz!"));
+        
+    // startButton = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
+    startButton = gtk_button_new(); 
+    //gtk_button_new_with_label(_("Start quiz!"));
     // button = gtk_button_new();
     // GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_DIALOG);
     GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
+    // gtk_button_set_use_stock (GTK_BUTTON(startButton), FALSE);
     gtk_button_set_image(GTK_BUTTON(startButton), image);
     // gtk_button_set_label(GTK_BUTTON(startButton), _("Start quiz!"));
+    // gtk_button_set_always_show_image (GTK_BUTTON (button), TRUE);
     // gtk_widget_set_sensitive(startButton, (&selected_iter!=NULL));
 
     g_message("in window: currentCategoryIndex=%d",currentCategoryIndex);
