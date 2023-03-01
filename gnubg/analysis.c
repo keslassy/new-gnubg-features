@@ -1332,7 +1332,8 @@ CommandAnalyseGame(char *UNUSED(sz))
     if(fBackgroundAnalysis) {
         fAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves);        ShowBoard(); /* hide unallowd toolbar items*/
+        "feel free to browse and check the early analysis results."), nMoves);        
+        ShowBoard(); /* hide unallowd toolbar items*/
 #if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
 #endif  

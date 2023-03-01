@@ -199,4 +199,5 @@ extern void GTKAskToUpdate(char * availableVersion);
 extern GtkWidget *pQuizMenu; /*extern:right-click menu, to be updated in quiz mode*/
 extern void BuildQuizMenu(GdkEventButton *event);
 extern void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p));
+extern void StatusBarMessage (char* text);
 #endif

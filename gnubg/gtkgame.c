@@ -657,6 +657,9 @@ static GtkWidget *pwEventBox;
 static int panelSize = 325;
 static GtkWidget *pwStop;
 
+extern void StatusBarMessage (char* text) {
+    gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _(text));
+}
 
 extern void
 GTKSuspendInput(void)

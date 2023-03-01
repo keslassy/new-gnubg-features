@@ -1821,8 +1821,7 @@ AddNDPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
     return; 
 }
 
-static void
-AddCategoryClicked(GtkButton * UNUSED(button), gpointer UNUSED(treeview))
+static void AddCategoryClicked(GtkButton * UNUSED(button), gpointer UNUSED(treeview))
 {
     // GtkTreeIter iter;
     char *categoryName = GTKGetInput(_("Add position category"), 
@@ -1858,8 +1857,7 @@ AddCategoryClicked(GtkButton * UNUSED(button), gpointer UNUSED(treeview))
     return;    
 }
 
-static void
-RenameCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
+static void RenameCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     GtkTreeIter iter;
     // GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
@@ -1996,6 +1994,9 @@ extern void LoadPositionAndStart (void) {
     // g_message("double");
     // g_message("Post-analyse: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
     //     ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+    StatusBarMessage("Your turn to play this quiz position!");
+    // gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Your turn to play this quiz position!"));
+
 
 }
 
@@ -2053,10 +2054,56 @@ static GtkWidget * BuildCategoryList(void) {
 
     return treeview;
 }
+// static int eventCounter=0;
 
-extern void
-ManagePositionCategories(void)
-{
+// static gboolean QuizManageReleased(GtkWidget * UNUSED(widget), GdkEventButton  * event, GtkWidget * myTreeView)
+// {
+//     switch (event->type) {
+//     // case GDK_BUTTON_PRESS:
+//     //     fScrollComplete = FALSE;
+//     //     break;
+//     case GDK_BUTTON_RELEASE:
+//         // fScrollComplete = TRUE;
+//         // g_signal_emit_by_name(G_OBJECT(prw->pScale), "value-changed", prw);
+//         // g_message("released");
+//         g_message("released time=%d",event->time);
+
+        
+//         currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(myTreeView));
+//         g_message("currentCategoryIndex=%d",currentCategoryIndex);
+//         // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+//         if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
+//             // GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
+//             // ManagePositionCategories();
+//             return FALSE;
+//         }
+//         break;
+//     default:
+//         ;
+//     }
+
+//     return FALSE;
+// }
+static void QuizManageClicked(GtkWidget * UNUSED(widget), GdkEventButton  * event, GtkTreeView * treeview) {
+    
+    // g_message("before: currentCategoryIndex=%d",currentCategoryIndex);
+    /*double-click, e.g. w/ left or middle click, not right*/
+    if (event->type == GDK_2BUTTON_PRESS  &&  event->button != 3){
+        // g_message("double-click time=%d",event->time);
+        currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+        // g_message("after: currentCategoryIndex=%d",currentCategoryIndex);
+        // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+        // if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
+        //     // GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
+        //     // ManagePositionCategories();
+        // }
+        if(currentCategoryIndex>=0 && currentCategoryIndex<numCategories) {
+            StartQuiz(NULL, treeview);
+        }
+    }
+}
+extern void ManagePositionCategories(void) {
+
     GtkWidget *pwScrolled;
     GtkWidget *pwMainHBox;
     GtkWidget *pwVBox;
@@ -2086,7 +2133,8 @@ ManagePositionCategories(void)
     gtk_widget_show_all ((GtkWidget*)pwDialog);
 #else
     pwDialog = GTKCreateDialog(_("Position categories"), DT_INFO, NULL, 
-        DIALOG_FLAG_NONE, NULL, NULL);
+        DIALOG_FLAG_NOOK, NULL, NULL);
+        // DIALOG_FLAG_NONE, NULL, NULL);
         // DIALOG_FLAG_NONE, (GCallback) StartQuiz, treeview);
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON,(GCallback) StartQuiz, 
         //     GTK_TREE_VIEW(treeview));
@@ -2196,17 +2244,22 @@ ManagePositionCategories(void)
     // startButton = gtk_button_new_from_stock(GTK_STOCK_FIND_AND_REPLACE, GTK_ICON_SIZE_BUTTON);
     startButton = gtk_button_new(); //gtk_button_new_with_label(_("Start quiz!"));
     // button = gtk_button_new();
-    GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_DIALOG);
-    // GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
+    // GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_DIALOG);
+    GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
     gtk_button_set_image(GTK_BUTTON(startButton), image);
     // gtk_button_set_label(GTK_BUTTON(startButton), _("Start quiz!"));
-    // gtk_widget_set_sensitive(startButton, (selected_iter!=NULL));
-    
+    // gtk_widget_set_sensitive(startButton, (&selected_iter!=NULL));
+    // gtk_button_set_relief(GTK_BUTTON(startButton), GTK_RELIEF_NONE);
+
     g_signal_connect(startButton, "clicked", G_CALLBACK(StartQuiz), GTK_TREE_VIEW(treeview));
-    gtk_box_pack_start(GTK_BOX(pwMainVBox), startButton, FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(pwMainVBox), startButton, TRUE, TRUE, 10);
     // gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
     //                           GTK_RESPONSE_YES);
     // gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), GTK_RESPONSE_YES);
+
+    g_signal_connect(G_OBJECT(treeview), "button-press-event", G_CALLBACK(QuizManageClicked), GTK_TREE_VIEW(treeview));
+    // g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(QuizManageReleased), treeview);
+    
 
     g_object_weak_ref(G_OBJECT(pwDialog), DestroyDialog, NULL);
 
@@ -2250,10 +2303,9 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
     g_message("currentCategoryIndex=%d",currentCategoryIndex);
     // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
-    DestroyDialog(NULL,NULL);
     if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
         GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
-        ManagePositionCategories();
+        // ManagePositionCategories();
         return;
     }
 
@@ -2266,11 +2318,15 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
 
     /*empty file, no positions*/
     if(result==0) {
-        ManagePositionCategories();
+        GTKMessage(_("Error: problem with the file of this category"), DT_INFO);
+        // ManagePositionCategories();
         return;
     }
+
+    /*start!*/
+    DestroyDialog(NULL,NULL);
     fInQuizMode=TRUE;
-    counterForFile=0; /*first one for this category*/
+    counterForFile=0; /*first one for this category in this round*/
     LoadPositionAndStart();
 }
 
