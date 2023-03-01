@@ -6726,28 +6726,83 @@ HintOK(GtkWidget * UNUSED(pw), void *UNUSED(unused))
     // }
 }
 
+static void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
+    getWindowGeometry(WINDOW_HINT);
+    DestroyPanel(WINDOW_HINT);
+    fInQuizMode=FALSE;
+    ManagePositionCategories();    
+}
+static void LoadPositionAndStartClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
+    getWindowGeometry(WINDOW_HINT);
+    DestroyPanel(WINDOW_HINT);
+    LoadPositionAndStart();    
+}
+
+
 extern void
 GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_take, int hist)
 {
 
-    GtkWidget *pw, *pwHint;
+    GtkWidget *pw, *pwHint, *pwMainVBox, *pwMainHBox, *stopButton, *againButton;
 
     if (GetPanelWidget(WINDOW_HINT))
         gtk_widget_destroy(GetPanelWidget(WINDOW_HINT));
 
-    pwHint = GTKCreateDialog(_("GNU Backgammon - Hint"), DT_INFO, NULL, DIALOG_FLAG_NOTIDY, G_CALLBACK(HintOK), NULL);
+    if(!fInQuizMode)
+        pwHint = GTKCreateDialog(_("GNU Backgammon - Hint"), DT_INFO, NULL, DIALOG_FLAG_NOTIDY, G_CALLBACK(HintOK), NULL);
+    else {
+        // pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(HintOK), NULL);
+        pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NOOK, G_CALLBACK(HintOK), NULL);
+    }        
     SetPanelWidget(WINDOW_HINT, pwHint);
 
     pw = CreateCubeAnalysis(pmr, pms, did_double, did_take, hist);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pw);
+    if(!fInQuizMode)
+        gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pw);
+    else {
+#if GTK_CHECK_VERSION(3,0,0)
+        pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+#else
+        pwMainVBox = gtk_vbox_new(FALSE, 2);
+#endif
 
-    gtk_widget_grab_focus(DialogArea(pwHint, DA_OK));
+        gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMainVBox);
+        gtk_box_pack_start(GTK_BOX(pwMainVBox), pw, TRUE, FALSE, 0);
+
+        char buf[200];
+        counterForFile++;
+        sprintf(buf,_("\n\n%d positions played in category %s (which has %d positions). "
+            "\n Play another position in this category?\n"), 
+            counterForFile,categories[currentCategoryIndex].name,
+            categories[currentCategoryIndex].number);    
+        AddText(pwMainVBox, _(buf));
+
+#if GTK_CHECK_VERSION(3,0,0)
+        pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+#else
+        pwMainHBox = gtk_hbox_new(FALSE, 2);
+#endif
+        gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, TRUE, FALSE, 0);
+
+        stopButton = gtk_button_new_with_label(_("No, thanks."));
+        g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
+        gtk_box_pack_start(GTK_BOX(pwMainHBox), stopButton, TRUE, FALSE, 0);
+
+        againButton = gtk_button_new_with_label(_("Play again!"));
+        g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
+        gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
+    }
+    gtk_widget_grab_focus(DialogArea(pwHint, DA_MAIN));
+    // gtk_widget_grab_focus(DialogArea(pwHint, DA_OK));
 
     setWindowGeometry(WINDOW_HINT);
     g_object_weak_ref(G_OBJECT(pwHint), DestroyHint, NULL);
 
-    gtk_window_set_default_size(GTK_WINDOW(pwHint), 400, 300);
+    if(!fInQuizMode)
+        gtk_window_set_default_size(GTK_WINDOW(pwHint), 400, 300);
+    else
+        gtk_window_set_default_size (GTK_WINDOW (pwHint), 450, 450);
 
     gtk_widget_show_all(pwHint);
 }
@@ -6907,20 +6962,6 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     GTKRunDialog(pwDialog);
 }
 
-static void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
-    getWindowGeometry(WINDOW_HINT);
-    DestroyPanel(WINDOW_HINT);
-    fInQuizMode=FALSE;
-    ManagePositionCategories();    
-}
-static void LoadPositionAndStartClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
-    getWindowGeometry(WINDOW_HINT);
-    DestroyPanel(WINDOW_HINT);
-    LoadPositionAndStart();    
-}
-
-
-
 extern void
 GTKHint(moverecord * pmr, int hist)
 {
@@ -6942,7 +6983,6 @@ GTKHint(moverecord * pmr, int hist)
     else {
         // pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(HintOK), NULL);
         pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NOOK, G_CALLBACK(HintOK), NULL);
-        gtk_window_set_default_size (GTK_WINDOW (pwHint), WIDTH, HEIGHT);
     }
     SetPanelWidget(WINDOW_HINT, pwHint);
 
@@ -6961,7 +7001,7 @@ GTKHint(moverecord * pmr, int hist)
         char buf[200];
         counterForFile++;
         sprintf(buf,_("\n\n%d positions played in category %s (which has %d positions). "
-            "Play another in category?\n"), 
+            "Play another position in this category?\n"), 
             counterForFile,categories[currentCategoryIndex].name,
             categories[currentCategoryIndex].number);    
         AddText(pwMainVBox, _(buf));
@@ -6985,8 +7025,12 @@ GTKHint(moverecord * pmr, int hist)
     setWindowGeometry(WINDOW_HINT);
     g_object_weak_ref(G_OBJECT(pwHint), DestroyHint, NULL);
 
-    if (!IsPanelDocked(WINDOW_HINT))
-        gtk_window_set_default_size(GTK_WINDOW(pwHint), 400, 300);
+    if (!IsPanelDocked(WINDOW_HINT)) {
+        if(!fInQuizMode)
+            gtk_window_set_default_size(GTK_WINDOW(pwHint), 400, 300);
+        else
+            gtk_window_set_default_size (GTK_WINDOW (pwHint), WIDTH, HEIGHT);
+    }
 
     gtk_widget_show_all(pwHint);
 }
