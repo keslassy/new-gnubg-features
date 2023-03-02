@@ -2142,12 +2142,55 @@ void on_changed(GtkWidget *widget, gpointer UNUSED(p))
     }
 }
 
+// display info on quiz feature
+static void ExplanationsClicked(GtkWidget * UNUSED(widget), GtkWidget* pwParent) {
+    
+    GtkWidget* pwInfoDialog, * pwBox;
+    // const char* pch;
+
+    pwInfoDialog = GTKCreateDialog(_("Quiz Info"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+#else
+    pwBox = gtk_vbox_new(FALSE, 0);
+#endif
+    gtk_container_set_border_width(GTK_CONTAINER(pwBox), 8);
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwInfoDialog, DA_MAIN)), pwBox);
+
+    AddText(pwBox, _("The quiz feature enables you to collect and try again positions where you blundered. \
+        \n\n- It is managed through the quiz console. To launch the quiz console, either \
+        \n\t (1) right-click and select it, or \
+        \n\t (2) use the menu: \"Game > Quiz \", \
+        \n\n- There are two ways to collect positions: \
+        \n\t * AUTOMATIC: GNUBG can automatically add blundered positions to three pre-defined files, \
+        \n\t\t depending on whether they correspond to (1) move, (2) double/no-double or \
+        \n\t\t (3) pass/take decisions. \
+        \n\t * MANUAL: You can create a category in the quiz console, and manually add a position \
+        \n\t\t to this category: \
+        \n\t\t (1) Either by right-clicking on the position in the (top-right) move-list window \
+        \n\t\t (2) Or by launching the quiz console, then selecting the category, then clicking the \
+        \n\t\t\t add-position button. \
+        \n\n- To start playing the quiz with the positions of a given category, open the quiz console, \
+        \n\t then either double-click on the category, or click once and select the play-quiz arrow. \
+        \n\t GNUBG manages the behind-the-scenes algorithms that present you first the positions \
+        \n\t that have bigger blunders and/or that are harder to you and/or that you haven't seen \
+        \n\t for a while. \
+        \n\n - You can change the quiz options in \"Settings > Options > Quiz\", e.g., to disable \
+        \n\t the automatic collection of blundered positions, or to disable the quiz feature completely."));
+
+    GTKRunDialog(pwInfoDialog);
+}
+
+/*"Quiz console" = central management window for the quiz feature */
+
 extern void ManagePositionCategories(void) {
 
     GtkWidget *pwScrolled;
     GtkWidget *pwMainHBox;
     GtkWidget *pwVBox;
-    GtkWidget *addButton;
+    GtkWidget *addButton; /*and more buttons are in static outside the function*/
+    GtkWidget *helpButton;
     GtkWidget *pwMainVBox;
     GtkWidget *addPos1Button;
     GtkWidget *addPos2Button;
@@ -2170,7 +2213,7 @@ extern void ManagePositionCategories(void) {
     g_signal_connect(pwDialog, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
     gtk_widget_show_all ((GtkWidget*)pwDialog);
 #else
-    pwDialog = GTKCreateDialog(_("Position categories"), DT_INFO, NULL, 
+    pwDialog = GTKCreateDialog(_("Quiz console"), DT_INFO, NULL, 
         DIALOG_FLAG_NOOK, NULL, NULL);
         // DIALOG_FLAG_NONE, NULL, NULL);
         // DIALOG_FLAG_NONE, (GCallback) StartQuiz, treeview);
@@ -2282,7 +2325,18 @@ extern void ManagePositionCategories(void) {
     delButton = gtk_button_new_with_label(_("Delete category"));
     g_signal_connect(delButton, "clicked", G_CALLBACK(DeleteCategoryClicked), GTK_TREE_VIEW(treeview));
     gtk_box_pack_start(GTK_BOX(pwVBox), delButton, FALSE, FALSE, 4);
-        
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_box_pack_start(GTK_BOX(pwVBox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 2);
+#else
+    gtk_box_pack_start(GTK_BOX(pwVBox), gtk_hseparator_new(), FALSE, FALSE, 2);
+#endif
+
+    helpButton = gtk_button_new_with_label(_("Explanations"));
+    g_signal_connect(helpButton, "clicked", G_CALLBACK(ExplanationsClicked), pwDialog);
+    gtk_box_pack_start(GTK_BOX(pwVBox), helpButton, FALSE, FALSE, 4);
+    gtk_widget_set_tooltip_text(helpButton, _("Click to obtain more explanations on the quiz mode")); 
+
     // startButton = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
     startButton = gtk_button_new(); 
     //gtk_button_new_with_label(_("Start quiz!"));

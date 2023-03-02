@@ -409,7 +409,7 @@ extern void BuildQuizMenu(GdkEventButton *event){
         =>come back to right-click and display menu=>reset globalCounter=0
      */
     if(globalCounter>1){
-        menu_item = gtk_menu_item_new_with_label(_("Start quiz!"));
+        menu_item = gtk_menu_item_new_with_label(_("Start quiz! (quiz console)"));
         gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
         gtk_widget_show(menu_item);
         g_signal_connect(G_OBJECT(menu_item), "activate", 
