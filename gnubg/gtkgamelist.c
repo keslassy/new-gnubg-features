@@ -132,7 +132,8 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     //  GdkEventButton * event = LastEvent;
 
     if(fInQuizMode){
-        fInQuizMode=FALSE;
+        // fInQuizMode=FALSE;
+        TurnOffQuizMode();
         UserCommand2("new match");
         return FALSE;
     }

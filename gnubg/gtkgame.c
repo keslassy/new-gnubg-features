@@ -6710,7 +6710,8 @@ HintOK(GtkWidget * UNUSED(pw), void *UNUSED(unused))
 extern void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
     getWindowGeometry(WINDOW_HINT);
     DestroyPanel(WINDOW_HINT);
-    fInQuizMode=FALSE;
+    if(fInQuizMode)
+        TurnOffQuizMode();
     QuizConsole();    
 }
 static void LoadPositionAndStartClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {

@@ -1009,8 +1009,10 @@ static int iOptCounter=0;
 // quiz qNow={"\0",0,0,0.0}; /*extern*/
 int counterForFile=0; /*extern*/
 float latestErrorInQuiz=-1.0; /*extern*/
-char name0BeforeQuiz[MAX_NAME_LEN+1];
-char name1BeforeQuiz[MAX_NAME_LEN+1];
+// char * name0BeforeQuiz=NULL; //[MAX_NAME_LEN+1];
+// char * name1BeforeQuiz=NULL; //[MAX_NAME_LEN+1];
+char name0BeforeQuiz[MAX_NAME_LEN];
+char name1BeforeQuiz[MAX_NAME_LEN];
 
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
@@ -1730,14 +1732,17 @@ GetSelectedCategory(GtkTreeView * treeview)
 }
 
 static void
-DestroyDialog(gpointer UNUSED(p), GObject * UNUSED(obj))
+DestroyQuizDialog(gpointer UNUSED(p), GObject * UNUSED(obj))
 /* Called by gtk when the window is closed.
 Allows garbage collection.
 */
 {
-        g_message("in destroy");
+    g_message("in destroy");
+    // sprintf(name0BeforeQuiz, "%s",ap[0].szName);
+    // sprintf(name1BeforeQuiz, "%s",ap[0].szName);
+    
 
-    if (pwQuiz) { //i.e. we didn't close it using DestroyDialog()
+    if (pwQuiz) { //i.e. we didn't close it using DestroyQuizDialog()
         gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
         g_message("in destroy loop");
         pwQuiz = NULL;
@@ -1757,7 +1762,7 @@ extern void ReloadQuizConsole(void) {
     /*this was needed to apply the change in the gamelist menu, but is not anymore*/
     //UserCommand2("set dockpanels on"); //       DockPanels();
 
-    DestroyDialog(NULL,NULL);
+    DestroyQuizDialog(NULL,NULL);
     QuizConsole();
 
 }
@@ -1906,7 +1911,7 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
     // char *categoryName =g_strdup(GetSelectedCategory(GTK_TREE_VIEW(treeview)));
     // g_message("categoryName=%s",categoryName);
     gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-    
+
     if (!DeleteCategory(categoryIndex)) {
         return;
     }
@@ -2196,6 +2201,36 @@ static void ExplanationsClicked(GtkWidget * UNUSED(widget), GtkWidget* pwParent)
     GTKRunDialog(pwInfoDialog);
 }
 
+extern void TurnOnQuizMode(void){
+    fInQuizMode=TRUE;
+    if(strcmp(ap[0].szName,name0BeforeQuiz))
+        // name0BeforeQuiz=g_strdup(ap[0].szName);
+        strncpy(name0BeforeQuiz, ap[0].szName, MAX_NAME_LEN);
+    if(strcmp(ap[1].szName,name1BeforeQuiz))
+        strncpy(name1BeforeQuiz, ap[1].szName, MAX_NAME_LEN);
+    g_message("After TurnOn: ap names: (%s,%s) vs: (%s,%s)",
+        ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+}
+extern void TurnOffQuizMode(void){
+    fInQuizMode=FALSE;
+    g_message("before TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+        ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    if(strcmp(ap[0].szName,name0BeforeQuiz))
+        // sprintf(ap[0].szName, "%s",name0BeforeQuiz);
+        strncpy(ap[0].szName, name0BeforeQuiz, MAX_NAME_LEN);
+    if(strcmp(ap[1].szName,name1BeforeQuiz))
+        strncpy(ap[1].szName, name1BeforeQuiz, MAX_NAME_LEN);
+    g_message("TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+        ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    char buf[100];
+    sprintf(buf,"set player 0 name %s",ap[0].szName);
+    UserCommand2(buf);
+    sprintf(buf,"set player 1 name %s",ap[1].szName);
+    UserCommand2(buf);
+    g_message("after TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+    ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+}
+
 /*"Quiz console" = central management window for the quiz feature */
 
 extern void QuizConsole(void) {
@@ -2212,15 +2247,14 @@ extern void QuizConsole(void) {
     currentCategoryIndex=-1;
     /* putting true means that we need to end it when we leave by using the close button and
     only for this screen; so we put false by default for now */
-    fInQuizMode=FALSE;
-    sprintf(ap[0].szName, "%s",name0BeforeQuiz);
-    sprintf(ap[1].szName, "%s",name1BeforeQuiz);
+    if(fInQuizMode)
+        TurnOffQuizMode();
 
     GtkWidget *treeview = BuildCategoryList();
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
 
-    if (pwQuiz) { //i.e. we didn't close it using DestroyDialog()
+    if (pwQuiz) { //i.e. we didn't close it using DestroyQuizDialog()
         gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
         pwQuiz = NULL;
     }
@@ -2386,7 +2420,7 @@ extern void QuizConsole(void) {
     // g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(QuizManageReleased), treeview);
     
 
-    g_object_weak_ref(G_OBJECT(pwQuiz), DestroyDialog, NULL);
+    g_object_weak_ref(G_OBJECT(pwQuiz), DestroyQuizDialog, NULL);
 
     GTKRunDialog(pwQuiz);
 }
@@ -2449,10 +2483,14 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     }
 
     /*start!*/
-    DestroyDialog(NULL,NULL);
-    fInQuizMode=TRUE;
-    sprintf(name0BeforeQuiz, "%s", ap[0].szName);
-    sprintf(name1BeforeQuiz, "%s", ap[1].szName);
+    DestroyQuizDialog(NULL,NULL);
+    if(!fInQuizMode)
+        TurnOnQuizMode();
+    // // sprintf(name0BeforeQuiz, "%s", ap[0].szName);
+    // // sprintf(name1BeforeQuiz, "%s", ap[1].szName);
+    // name0BeforeQuiz=g_strdup(ap[0].szName);
+    // name1BeforeQuiz=g_strdup(ap[1].szName);
+
     counterForFile=0; /*first one for this category in this round*/
     LoadPositionAndStart();
 }

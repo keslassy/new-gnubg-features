@@ -1132,8 +1132,10 @@ extern float qNow_NDBeforeMoveError;
 extern int counterForFile;
 extern int currentCategoryIndex;
 extern float latestErrorInQuiz;
-extern char name0BeforeQuiz[MAX_NAME_LEN+1];
-extern char name1BeforeQuiz[MAX_NAME_LEN+1];
+// extern char * name0BeforeQuiz;
+extern char name0BeforeQuiz[MAX_NAME_LEN];
+extern char name1BeforeQuiz[MAX_NAME_LEN];
+
 
 extern void qUpdate(float error);
 // extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
@@ -1142,6 +1144,8 @@ extern int AutoAddQuizPosition(quiz q, quizdecision qdec);
 extern void QuizConsole(void); /*start quiz window*/
 extern void ReloadQuizConsole(void);
 // extern void CreateGameWindow(void);
+extern void TurnOnQuizMode(void);
+extern void TurnOffQuizMode(void);
 /* ************* */
 
 /* definitions for version checks in updates */
