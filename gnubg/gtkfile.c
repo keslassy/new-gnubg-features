@@ -979,7 +979,7 @@ ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
 
  /*extern:right-click menu, to be updated in quiz mode; used in gtkgamelist.c*/
 GtkWidget *pQuizMenu;
-static GtkWidget *pwDialog = NULL;
+static GtkWidget *pwQuiz = NULL;
 // static void ManagePositionCategories(void);
 
 #define WIDTH   640
@@ -1734,10 +1734,10 @@ Allows garbage collection.
 {
         g_message("in destroy");
 
-    if (pwDialog) { //i.e. we didn't close it using DestroyDialog()
-        gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
+    if (pwQuiz) { //i.e. we didn't close it using DestroyDialog()
+        gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
         g_message("in destroy loop");
-        pwDialog = NULL;
+        pwQuiz = NULL;
     }
 }
 
@@ -2008,7 +2008,7 @@ extern void LoadPositionAndStart (void) {
 enum {COLUMN_INDEX, COLUMN_STRING, COLUMN_INT, N_COLUMNS};
 
 static GtkWidget * BuildCategoryList(void) {
-   // GtkWidget *pwDialog;
+   // GtkWidget *pwQuiz;
     GtkWidget *treeview;
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
@@ -2203,20 +2203,20 @@ extern void ManagePositionCategories(void) {
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
 
-    if (pwDialog) { //i.e. we didn't close it using DestroyDialog()
-        gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
-        pwDialog = NULL;
+    if (pwQuiz) { //i.e. we didn't close it using DestroyDialog()
+        gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
+        pwQuiz = NULL;
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    pwDialog = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_default_size (pwDialog, WIDTH, HEIGHT);
-    gtk_window_set_position     (pwDialog, GTK_WIN_POS_CENTER);
-    gtk_window_set_title        (pwDialog, "MWC plot");
-    g_signal_connect(pwDialog, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
-    gtk_widget_show_all ((GtkWidget*)pwDialog);
+    pwQuiz = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_size (pwQuiz, WIDTH, HEIGHT);
+    gtk_window_set_position     (pwQuiz, GTK_WIN_POS_CENTER);
+    gtk_window_set_title        (pwQuiz, "MWC plot");
+    g_signal_connect(pwQuiz, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+    gtk_widget_show_all ((GtkWidget*)pwQuiz);
 #else
-    pwDialog = GTKCreateDialog(_("Quiz console"), DT_INFO, NULL, 
+    pwQuiz = GTKCreateDialog(_("Quiz console"), DT_INFO, NULL, 
         DIALOG_FLAG_NOOK, NULL, NULL);
         // DIALOG_FLAG_NONE, NULL, NULL);
         // DIALOG_FLAG_NONE, (GCallback) StartQuiz, treeview);
@@ -2225,10 +2225,10 @@ extern void ManagePositionCategories(void) {
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, treeview);
     //    DIALOG_FLAG_NONE
-    gtk_window_set_default_size (GTK_WINDOW (pwDialog), WIDTH, 350);
+    gtk_window_set_default_size (GTK_WINDOW (pwQuiz), WIDTH, 350);
     GdkColor color;
     gdk_color_parse ("#EDF5FF", &color);
-    gtk_widget_modify_bg(pwDialog, GTK_STATE_NORMAL, &color);
+    gtk_widget_modify_bg(pwQuiz, GTK_STATE_NORMAL, &color);
 
     // color.red = 0xcfff;
     // color.green = 0xdfff;
@@ -2236,13 +2236,13 @@ extern void ManagePositionCategories(void) {
     // gdk_color_parse ("red", &color);
     // gdk_color_parse ("black", &color);
     //  gdk_color_parse (BGCOLOR, &color);    
-    // gtk_window_set_title(GTK_WINDOW(pwDialog), "hello");
+    // gtk_window_set_title(GTK_WINDOW(pwQuiz), "hello");
     // if (gdk_color_parse("#c0deed", &color)) {
     // } else {
-    //     gtk_widget_modify_bg(pwDialog, GTK_STATE_NORMAL, &color);
+    //     gtk_widget_modify_bg(pwQuiz, GTK_STATE_NORMAL, &color);
     // }
     // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // gtk_widget_show_all(pwDialog);
+    // gtk_widget_show_all(pwQuiz);
 #endif
 #if GTK_CHECK_VERSION(3,0,0)
     pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
@@ -2250,7 +2250,7 @@ extern void ManagePositionCategories(void) {
     pwMainVBox = gtk_vbox_new(FALSE, 2);
 #endif
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainVBox);
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwQuiz, DA_MAIN)), pwMainVBox);
 
    AddText(pwMainVBox, _("\nSelect a category to start playing"));
 
@@ -2260,7 +2260,7 @@ extern void ManagePositionCategories(void) {
     pwMainHBox = gtk_hbox_new(FALSE, 2);
 #endif
     gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, FALSE, FALSE, 0);
-    // gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwMainHBox);
+    // gtk_container_add(GTK_CONTAINER(DialogArea(pwQuiz, DA_MAIN)), pwMainHBox);
     gtk_box_pack_start(GTK_BOX(pwMainHBox), pwScrolled, TRUE, TRUE, 0);
     gtk_widget_set_size_request(pwScrolled, 100, 200);//-1);
 #if GTK_CHECK_VERSION(3,0,0)
@@ -2336,7 +2336,7 @@ extern void ManagePositionCategories(void) {
 #endif
 
     helpButton = gtk_button_new_with_label(_("Explanations"));
-    g_signal_connect(helpButton, "clicked", G_CALLBACK(ExplanationsClicked), pwDialog);
+    g_signal_connect(helpButton, "clicked", G_CALLBACK(ExplanationsClicked), pwQuiz);
     gtk_box_pack_start(GTK_BOX(pwVBox), helpButton, FALSE, FALSE, 4);
     gtk_widget_set_tooltip_text(helpButton, _("Click to obtain more explanations on the quiz mode")); 
 
@@ -2361,17 +2361,17 @@ extern void ManagePositionCategories(void) {
 
     g_signal_connect(startButton, "clicked", G_CALLBACK(StartQuiz), GTK_TREE_VIEW(treeview));
     gtk_box_pack_start(GTK_BOX(pwMainVBox), startButton, TRUE, TRUE, 10);
-    // gtk_dialog_add_button(GTK_DIALOG(pwDialog), _("Start quiz!"),
+    // gtk_dialog_add_button(GTK_DIALOG(pwQuiz), _("Start quiz!"),
     //                           GTK_RESPONSE_YES);
-    // gtk_dialog_set_default_response(GTK_DIALOG(pwDialog), GTK_RESPONSE_YES);
+    // gtk_dialog_set_default_response(GTK_DIALOG(pwQuiz), GTK_RESPONSE_YES);
 
     g_signal_connect(G_OBJECT(treeview), "button-press-event", G_CALLBACK(QuizManageClicked), GTK_TREE_VIEW(treeview));
     // g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(QuizManageReleased), treeview);
     
 
-    g_object_weak_ref(G_OBJECT(pwDialog), DestroyDialog, NULL);
+    g_object_weak_ref(G_OBJECT(pwQuiz), DestroyDialog, NULL);
 
-    GTKRunDialog(pwDialog);
+    GTKRunDialog(pwQuiz);
 }
 
 // /* Now we are back from the hint function within quiz mode. 
