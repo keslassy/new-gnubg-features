@@ -2159,7 +2159,7 @@ static void ExplanationsClicked(GtkWidget * UNUSED(widget), GtkWidget* pwParent)
     gtk_container_add(GTK_CONTAINER(DialogArea(pwInfoDialog, DA_MAIN)), pwBox);
 
     AddText(pwBox, _("The quiz feature enables you to collect and try again positions where you blundered. \
-        \n\n- It is managed through the quiz console. To launch the quiz console, either: \
+        \n\n- It is managed through the quiz console. To launch the quiz console, either \
         \n\t (1) right-click and select it, or \
         \n\t (2) use the menu: \"Game > Quiz \", \
         \n\n- There are two ways to collect positions: \
@@ -2171,16 +2171,13 @@ static void ExplanationsClicked(GtkWidget * UNUSED(widget), GtkWidget* pwParent)
         \n\t\t (1) Either by right-clicking on the position in the (top-right) move-list window \
         \n\t\t (2) Or by launching the quiz console, then selecting the category, then clicking the \
         \n\t\t\t add-position button. \
-        \n\t\t Note that sometimes, a position in the move-list window corresponds to two consecutive \
-        \n\t\t decisions: roll the dice (ND=no-double) instead of doubling, then move. GNUBG enables you \
-        \n\t\t to add both decisions to the quiz positions. \
         \n\n- To start playing the quiz with the positions of a given category, open the quiz console, \
         \n\t then either double-click on the category, or click once and select the play-quiz arrow. \
         \n\t GNUBG manages the behind-the-scenes algorithms that present you first the positions \
         \n\t that have bigger blunders and/or that are harder to you and/or that you haven't seen \
         \n\t for a while. \
-        \n\n - You can change the quiz options in \"Settings > Options > Quiz\", e.g., to disable the \
-        \n\t automatic collection of blundered positions, or to disable the quiz feature completely."));
+        \n\n - You can change the quiz options in \"Settings > Options > Quiz\", e.g., to disable \
+        \n\t the automatic collection of blundered positions, or to disable the quiz feature completely."));
 
     GTKRunDialog(pwInfoDialog);
 }
