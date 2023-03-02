@@ -1009,6 +1009,9 @@ static int iOptCounter=0;
 // quiz qNow={"\0",0,0,0.0}; /*extern*/
 int counterForFile=0; /*extern*/
 float latestErrorInQuiz=-1.0; /*extern*/
+char name0BeforeQuiz[100];
+char name1BeforeQuiz[100];
+
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
 // static const categorytype emptyCategory={NULL,0,NULL,NULL};
@@ -1912,13 +1915,16 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 }
 
 static void updatePriority(quiz * pq, long int seconds) {
-    pq->priority = (pq->ewmaError + SMALL_ERROR) * (pq->ewmaError + SMALL_ERROR) * (float) (seconds-pq->lastSeen);
+    pq->priority = (pq->ewmaError + SMALL_ERROR) * (float) (seconds-pq->lastSeen);
+    // pq->priority = (pq->ewmaError + SMALL_ERROR) * (pq->ewmaError + SMALL_ERROR) * (float) (seconds-pq->lastSeen);
     // return ( (q.ewmaError + SMALL_ERROR) * (q.ewmaError + SMALL_ERROR) * (float) (seconds-q.lastSeen));
 }
 
 extern void LoadPositionAndStart (void) {
     fInQuizMode=TRUE;
     qDecision=QUIZ_UNKNOWN;
+    sprintf(name0BeforeQuiz, "%s", ap[0].szName);
+    sprintf(name1BeforeQuiz, "%s", ap[1].szName);
 
     /*this should not happen as it was previously checked before calling the function:*/
     if(qLength<0) {
@@ -1933,7 +1939,7 @@ extern void LoadPositionAndStart (void) {
     updatePriority(&(q[iOpt]),seconds);
     for (int i = 1; i < qLength; ++i) {
         /* heuristic formula, the "secret sauce"...
-        1) Very roughly: a 2x bigger typical error should be seen 4x more often -
+        1) Very roughly: a 2x bigger typical error should be seen 2x more often -
         and then the error hopefully goes down.
         2) If we add a non-analyzed position, or a position with 0 error, then it will never appear in the loop 
         unless we add something to get a non-null priority 
@@ -1947,7 +1953,8 @@ extern void LoadPositionAndStart (void) {
         }
     }
     iOptCounter=0;
-    g_message("iOpt=%d: priority %.3f <-- %.3f, %.3f, %ld\n", iOpt,
+    g_message("iOpt=%d: priority %.3f <-- error %.3f, delta t %.3f, %ld\n", 
+        iOpt,
         q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
         q[iOpt].lastSeen);
 
@@ -1962,22 +1969,29 @@ extern void LoadPositionAndStart (void) {
 
     /* start quiz-mode play! */
     // fInQuizMode=TRUE;
-
+    // g_message("names: %s %s",ap[0].szName,ap[1].szName);
+  
     CommandSetGNUBgID(q[iOpt].position); 
-        g_message("fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+
+    g_message("fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
             ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
-    UserCommand2("set player 0 human");
-    g_message("human");
-    UserCommand2("set player 0 name QuizOpponent");
-    g_message("name");
-    // if (ap[ms.fTurn].pt != PLAYER_HUMAN) {
-        // g_message("player=%d",q[iOpt].player);
     if(q[iOpt].player==0) {
     // if(ms.fTurn == 0) {
         g_message("swap!");
         // SwapSides(ms.anBoard);
-        CommandSwapPlayers(NULL);
-}
+        CommandSwapPlayers(NULL);   
+        sprintf(ap[1].szName, "%s", name1BeforeQuiz);
+        g_message("names: %s %s",ap[0].szName,ap[1].szName);
+    }
+    UserCommand2("set player 0 human");
+    g_message("human");
+    UserCommand2("set player 0 name QuizOpponent");
+    g_message("name");
+        g_message("names: %s %s",ap[0].szName,ap[1].szName);
+
+    // if (ap[ms.fTurn].pt != PLAYER_HUMAN) {
+        // g_message("player=%d",q[iOpt].player);
+
     // g_message("Pre-double: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
     //     ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
     // CommandPlay(""); //<-if opponent is computer; but what if its right 
@@ -1996,8 +2010,8 @@ extern void LoadPositionAndStart (void) {
     else /*T/K*/
         StatusBarMessage(_("Your turn to play this quiz position: double or no-double?"));
     // g_message("double");
-    // g_message("Post-analyse: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
-    //     ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+     g_message("Post: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+        ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
     // gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Your turn to play this quiz position!"));
 
 
@@ -2015,10 +2029,6 @@ static GtkWidget * BuildCategoryList(void) {
     // GtkTreeViewColumn   *col;
  
     // DisplayCategories();
-
-    /* putting true means that we need to end it when we leave by using the close button and
-    only for this screen; so we put false by default for now */
-    fInQuizMode=FALSE;
 
     /* We always check the positions again because the user may have added positions since the
     gnubg start-up */
@@ -2197,6 +2207,12 @@ extern void QuizConsole(void) {
     GtkWidget *addPos2Button;
     
     currentCategoryIndex=-1;
+    /* putting true means that we need to end it when we leave by using the close button and
+    only for this screen; so we put false by default for now */
+    fInQuizMode=FALSE;
+    sprintf(ap[0].szName, "%s",name0BeforeQuiz);
+    sprintf(ap[1].szName, "%s",name1BeforeQuiz);
+
     GtkWidget *treeview = BuildCategoryList();
 
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
