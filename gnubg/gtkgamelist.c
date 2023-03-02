@@ -32,6 +32,7 @@
 #include "positionid.h"
 #include "gtkgame.h"
 #include "util.h"
+#include "gtkfile.h" /*for the quiz, can delete if moved elsewhere*/
 
 
 static GtkListStore *plsGameList;
@@ -88,10 +89,32 @@ GTKClearMoveRecord(void)
 //     // gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Position and Match IDs copied to the clipboard"));
 // }
 
+// void NewPosition(GtkTreeSelection *selection, gpointer UNUSED(p))
+// {
+//     GtkTreeIter iter;
+//     GtkTreeModel *model;
+//     int value;
+//     char * str;
+//     g_message("in NewPosition:%d rows", gtk_tree_selection_count_selected_rows(selection));
+//     if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), &model, &iter))
+//     {
+//         gtk_tree_model_get(model, &iter, GL_COL_MOVE_NUMBER, &value,  -1);
+//         gtk_tree_model_get(model, &iter, GL_COL_MOVE_STRING_1, str,  -1);
+        
+//         g_print("%d is selected\n", value);
+//         // // g_free(value);
+//         // gtk_widget_set_sensitive(startButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
+//         // gtk_widget_set_sensitive(renameButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
+//         // gtk_widget_set_sensitive(delButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
+
+//     }
+// }
+
+
 static GdkEventButton *LastEvent;
 static int globalCounter=0;
 
-static void
+static gboolean
 GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
 {
 #if defined(USE_BOARD3D)
@@ -111,25 +134,25 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     if(fInQuizMode){
         fInQuizMode=FALSE;
         UserCommand2("new match");
-        return;
+        return FALSE;
     }
 
 
     g_message("---start of GameListSelectRow, dice=%d,%d---",ms.anDice[0],ms.anDice[1]);
     gtk_tree_view_get_cursor(tree_view, &path, &column);
     if (!path)
-        return;
+        return FALSE;
 
     /* This didn't seem to happen with GTK2 but has been noticed with GTK3 */
     if (!column) {
         gtk_tree_path_free(path);
-        return;
+        return FALSE;
     }
 
     pPlayer = g_object_get_data(G_OBJECT(column), "player");
     if (!pPlayer) {
         gtk_tree_path_free(path);
-        return;
+        return FALSE;
     }
 
     gtk_tree_model_get_iter(GTK_TREE_MODEL(plsGameList), &iter, path);
@@ -154,7 +177,7 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     gtk_tree_path_free(path);
 
     if (!pmr && !pmrPrev)
-        return;
+        return FALSE;
 
     for (pl = plGame->plPrev; pl != plGame; pl = pl->plPrev) {
         g_assert(pl->p);
@@ -172,7 +195,7 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
 
     if (pl == plGame)
         /* couldn't find the moverecord they selected */
-        return;
+        return FALSE;
 
     plLastMove = pl;
 
@@ -200,15 +223,21 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
 
     ShowBoard();
     // if(qNow_NDBeforeMoveError>-0.001){
-    if(globalCounter==1) {
-        globalCounter=2;
-        BuildQuizMenu(LastEvent);
+    if(fUseQuiz) {
+        if(globalCounter==1) {
+            globalCounter=2;
+            BuildQuizMenu(LastEvent);
+        }
+        if (pwQuiz)
+            ReloadQuizConsole();
+        // GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pwGameList));
+        // NewPosition(selection, NULL);
+        globalCounter=0;
     }
-    globalCounter=0;
-    // }
         // gtk_widget_show_all(pQuizMenu);
 
     g_message("in end of GameListSelectRow, dice=%d,%d, qNowND:%f",ms.anDice[0],ms.anDice[1],qNow_NDBeforeMoveError);
+    return FALSE;
 }
 
 extern void
@@ -370,8 +399,8 @@ extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw))
     // return (AddQuizPosition(qNow,pcategory));
 }
 
-static void ManagePositionCategoriesClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(userdata)) {
-    ManagePositionCategories();
+static void QuizConsoleClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(userdata)) {
+    QuizConsole();
 }
 
 // /* inspired by https://docs.gtk.org/gtk3/treeview-tutorial.html*/
@@ -413,7 +442,7 @@ extern void BuildQuizMenu(GdkEventButton *event){
         gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
         gtk_widget_show(menu_item);
         g_signal_connect(G_OBJECT(menu_item), "activate", 
-            G_CALLBACK(ManagePositionCategoriesClicked), NULL); 
+            G_CALLBACK(QuizConsoleClicked), NULL); 
         if(numCategories>0) {
             /*separator*/
             menu_item = gtk_menu_item_new();
@@ -562,31 +591,31 @@ view_onButtonPressed (GtkWidget *UNUSED(treeview),
         // ShowBoard();
         // UserCommand2("set dockpanels on");
 
-        /* optional: select row if no row is selected or only
-        *  one other row is selected (will only do something
-        *  if you set a tree selection mode as described later
-        *  in the tutorial) */
-        if (0){            
-            GtkTreeSelection *selection;
+        // /* optional: select row if no row is selected or only
+        // *  one other row is selected (will only do something
+        // *  if you set a tree selection mode as described later
+        // *  in the tutorial) */
+        // if (0){            
+        //     GtkTreeSelection *selection;
 
-            selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pwGameList));
+        //     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pwGameList));
 
-            /* Note: gtk_tree_selection_count_selected_rows() does not
-            *   exist in gtk+-2.0, only in gtk+ >= v2.2 ! */
-            if (gtk_tree_selection_count_selected_rows(selection)  <= 1){
-                GtkTreePath *path;
+        //     /* Note: gtk_tree_selection_count_selected_rows() does not
+        //     *   exist in gtk+-2.0, only in gtk+ >= v2.2 ! */
+        //     if (gtk_tree_selection_count_selected_rows(selection)  <= 1){
+        //         GtkTreePath *path;
 
-                /* Get tree path for row that was clicked */
-                if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(pwGameList),
-                                                (gint) event->x, 
-                                                (gint) event->y,
-                                                &path, NULL, NULL, NULL)){
-                gtk_tree_selection_unselect_all(selection);
-                gtk_tree_selection_select_path(selection, path);
-                gtk_tree_path_free(path);
-                }
-            }
-        } /* end of optional bit */
+        //         /* Get tree path for row that was clicked */
+        //         if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(pwGameList),
+        //                                         (gint) event->x, 
+        //                                         (gint) event->y,
+        //                                         &path, NULL, NULL, NULL)){
+        //         gtk_tree_selection_unselect_all(selection);
+        //         gtk_tree_selection_select_path(selection, path);
+        //         gtk_tree_path_free(path);
+        //         }
+        //     }
+        // } /* end of optional bit */
         LastEvent=event;
         globalCounter=1;
         BuildQuizMenu(event);
@@ -603,9 +632,8 @@ gboolean view_onPopupMenu (GtkWidget * UNUSED(treeview), gpointer UNUSED(userdat
 //   view_popup_menu(treeview, NULL, userdata);
 g_message("view_onPopupMenu");
     BuildQuizMenu(NULL);
-    return TRUE; //GDK_EVENT_STOP;
+    return FALSE; //GDK_EVENT_STOP;
 }
-
 
 
 extern GtkWidget *
@@ -663,6 +691,11 @@ GL_Create(void)
     gtk_tree_view_column_set_fixed_width(gtk_tree_view_get_column(GTK_TREE_VIEW(pwGameList), 2), nMaxWidth - 22);
 
     g_signal_connect(G_OBJECT(pwGameList), "cursor-changed", G_CALLBACK(GameListSelectRow), NULL);
+    // GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pwGameList));
+    // g_signal_connect(selection, "changed", G_CALLBACK(NewPosition), NULL);
+    if (fUseQuiz) 
+        g_signal_connect(pwGameList, "button-press-event", G_CALLBACK(view_onButtonPressed), NULL);    
+
 #if GTK_CHECK_VERSION(3,0,0)
     /* Set up styles after the widget's base GtkStyleContext has been created */
     g_signal_connect(G_OBJECT(pwGameList), "style-updated", G_CALLBACK(CreateStyles), NULL);
@@ -687,12 +720,7 @@ GL_Create(void)
 
     // g_signal_connect(G_OBJECT(pwGameList), "button-press-event", G_CALLBACK(show_popup), copyMenu);
 
-    if (fUseQuiz) {
-        // BuildQuizMenu(NULL);
-        g_signal_connect(pwGameList, "button-press-event", G_CALLBACK(view_onButtonPressed), 
-            NULL);    
         // g_signal_connect(pwGameList, "popup-menu", G_CALLBACK(view_onPopupMenu), NULL); 
-    }
 
         // GtkWidget *pQuizMenu;
 

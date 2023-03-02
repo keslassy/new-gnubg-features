@@ -971,16 +971,16 @@ SmartAnalyze(void)
 The quiz mode defines a full loop, from picking the position category to play with,
 to playing, to getting the hint screen, to starting again. Formally, here are the 
 functions in the loop:
-ManagePositionCategories->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
+QuizConsole->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
     ->CommandSetGNUBgID->(play)->MoveListUpdate->qUpdate(play error)
     ->SaveFullPositionFile [screen: could play again] -> HintOK->BackFromHint
-    ->either LoadPositionAndStart or ManagePositionCategories
+    ->either LoadPositionAndStart or QuizConsole
 */
 
  /*extern:right-click menu, to be updated in quiz mode; used in gtkgamelist.c*/
 GtkWidget *pQuizMenu;
-static GtkWidget *pwQuiz = NULL;
-// static void ManagePositionCategories(void);
+GtkWidget *pwQuiz = NULL;
+// static void QuizConsole(void);
 
 #define WIDTH   640
 #define HEIGHT  480
@@ -1741,9 +1741,7 @@ Allows garbage collection.
     }
 }
 
-static void
-RefreshManageWindow(void)
-{
+extern void ReloadQuizConsole(void) {
     // GetPositionCategories();
     
     // UpdateGame(FALSE);
@@ -1757,7 +1755,7 @@ RefreshManageWindow(void)
     //UserCommand2("set dockpanels on"); //       DockPanels();
 
     DestroyDialog(NULL,NULL);
-    ManagePositionCategories();
+    QuizConsole();
 
 }
 // extern void
@@ -1796,7 +1794,7 @@ AddPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
     }
     if(AddPositionToFile(&(categories[categoryIndex]),NULL)){
         GTKMessage(_("The position was added successfully."), DT_INFO);
-        RefreshManageWindow();
+        ReloadQuizConsole();
     }
     return;    
 }
@@ -1808,7 +1806,7 @@ AddNDPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
         /*should not happen, there is no ND position; maybe user clicked outside 
         the manage window*/
         GTKMessage(_("Error: the selected move seems to have changed, reloading the quiz window"), DT_INFO);
-        RefreshManageWindow();
+        ReloadQuizConsole();
         return;        
     }
     int categoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
@@ -1818,7 +1816,7 @@ AddNDPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
     }
     if(AddNDPositionToFile(&(categories[categoryIndex]),NULL)){
         GTKMessage(_("The double/no-double decision was added successfully."), DT_INFO);
-        RefreshManageWindow();
+        ReloadQuizConsole();
     }
     return; 
 }
@@ -1837,7 +1835,7 @@ static void AddCategoryClicked(GtkButton * UNUSED(button), gpointer UNUSED(treev
         // gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, categoryName, -1);
         // gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
         // selected_iter=iter;
-        RefreshManageWindow();
+        ReloadQuizConsole();
     }  
     /* assuming AddCategory already gave an error message*/
     // else {
@@ -1881,7 +1879,7 @@ static void RenameCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
     gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, newCategory, -1);
     selected_iter=iter;
 
-    RefreshManageWindow();
+    ReloadQuizConsole();
 
     g_free(newCategory);
     g_free(oldCategory);
@@ -1906,7 +1904,7 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 
     gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
 
-    RefreshManageWindow();
+    ReloadQuizConsole();
     // DisplayCategories();
     
     g_free(category);
@@ -1925,7 +1923,7 @@ extern void LoadPositionAndStart (void) {
     /*this should not happen as it was previously checked before calling the function:*/
     if(qLength<0) {
         GTKMessage(_("Error: no positions in this category"), DT_INFO);
-        ManagePositionCategories();
+        QuizConsole();
         return;
     }
 
@@ -2086,7 +2084,7 @@ static GtkWidget * BuildCategoryList(void) {
 //         // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
 //         if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
 //             // GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
-//             // ManagePositionCategories();
+//             // QuizConsole();
 //             return FALSE;
 //         }
 //         break;
@@ -2108,7 +2106,7 @@ static void QuizManageClicked(GtkWidget * UNUSED(widget), GdkEventButton  * even
         // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
         // if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
         //     // GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
-        //     // ManagePositionCategories();
+        //     // QuizConsole();
         // }
         if(currentCategoryIndex>=0 && currentCategoryIndex<numCategories) {
             StartQuiz(NULL, treeview);
@@ -2124,13 +2122,13 @@ static GtkWidget *delButton;
 static GtkWidget *renameButton;
 static GtkWidget *startButton;
 
-void on_changed(GtkWidget *widget, gpointer UNUSED(p))
+void on_changed(GtkTreeSelection *selection, gpointer UNUSED(p))
 {
     GtkTreeIter iter;
     GtkTreeModel *model;
     // int value;
 
-    if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(widget), &model, &iter))
+    if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), &model, &iter))
     {
         gtk_tree_model_get(model, &iter, COLUMN_INDEX, &currentCategoryIndex,  -1);
         g_print("%d is selected\n", currentCategoryIndex);
@@ -2187,7 +2185,7 @@ static void ExplanationsClicked(GtkWidget * UNUSED(widget), GtkWidget* pwParent)
 
 /*"Quiz console" = central management window for the quiz feature */
 
-extern void ManagePositionCategories(void) {
+extern void QuizConsole(void) {
 
     GtkWidget *pwScrolled;
     GtkWidget *pwMainHBox;
@@ -2394,7 +2392,7 @@ extern void ManagePositionCategories(void) {
 //         LoadPositionAndStart();
 //     } else {
 //         fInQuizMode=FALSE;
-//         ManagePositionCategories();
+//         QuizConsole();
 //     }
 // }
 
@@ -2404,7 +2402,7 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     // currentCategory = GetSelectedCategory(treeview);
     // if(!currentCategory) {
     //     GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
-    //     ManagePositionCategories();
+    //     QuizConsole();
     //     return;
     // }
 
@@ -2413,7 +2411,7 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
     if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
         GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
-        // ManagePositionCategories();
+        // QuizConsole();
         return;
     }
 
@@ -2427,7 +2425,7 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     /*empty file, no positions*/
     if(result==0) {
         GTKMessage(_("Error: problem with the file of this category"), DT_INFO);
-        // ManagePositionCategories();
+        // QuizConsole();
         return;
     }
 
@@ -2441,7 +2439,7 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
 extern void
 CommandQuiz(char *UNUSED(sz))
 {
-    ManagePositionCategories();
+    QuizConsole();
     // GdkColor color;
     // color.red = 0xffff;
     // color.green = 0xffff;
@@ -2469,7 +2467,7 @@ CommandQuiz(char *UNUSED(sz))
 
 extern void
 GTKAnalyzeFile(void) {
-    // ManagePositionCategories();
+    // QuizConsole();
     CommandQuiz("");
 
 /* ************ END OF QUIZ ************************** */

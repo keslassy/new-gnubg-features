@@ -6722,7 +6722,7 @@ extern void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
     getWindowGeometry(WINDOW_HINT);
     DestroyPanel(WINDOW_HINT);
     fInQuizMode=FALSE;
-    ManagePositionCategories();    
+    QuizConsole();    
 }
 static void LoadPositionAndStartClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
     getWindowGeometry(WINDOW_HINT);
