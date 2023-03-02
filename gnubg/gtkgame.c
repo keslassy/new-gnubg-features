@@ -208,7 +208,6 @@ typedef enum {
     TOGGLE_COMMENTARY,
     TOGGLE_MESSAGE,
     TOGGLE_THEORY,
-    TOGGLE_QUIZ,
     TOGGLE_COMMAND,
     VIEW_TOOLBAR_ICONSONLY,
     VIEW_TOOLBAR_TEXTONLY,
@@ -423,7 +422,6 @@ CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_COMMENTARY, TogglePanel);
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_MESSAGE, TogglePanel);
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_ANALYSIS, TogglePanel);
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_THEORY, TogglePanel);
-CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_QUIZ, TogglePanel);
 CREATE_GENERIC_TOGGLE_CALLBACK(TOGGLE_COMMAND, TogglePanel);
 CREATE_GENERIC_RADIO_CALLBACK(VIEW_TOOLBAR_ICONSONLY, ToolbarStyle);
 CREATE_CMD_RADIO_CALLBACK(CMD_SET_TURN_0, NULL);
@@ -4148,7 +4146,6 @@ static GtkToggleActionEntry toggleActionEntries[] = {
     {"PanelCommentaryAction", NULL, N_("_Commentary"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMENTARY), FALSE},   /* TOGGLE */
     {"PanelMessageAction", NULL, N_("_Message"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_MESSAGE), FALSE},    /* TOGGLE */
     {"PanelTheoryAction", NULL, N_("_Theory"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_THEORY), FALSE},       /* TOGGLE */
-    {"PanelQuizAction", NULL, N_("_Quiz"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_QUIZ), FALSE},       /* TOGGLE */
     {"PanelCommandAction", NULL, N_("Command"), NULL, NULL, GENERIC_TOGGLE_CALLBACK_FROMID(TOGGLE_COMMAND), FALSE},     /* TOGGLE */
 
     {"DockPanelsAction", NULL, N_("_Dock panels"), NULL, NULL, G_CALLBACK(ToggleDockPanels), FALSE},
@@ -4219,8 +4216,6 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_View/_Panels/_Game record"), NULL, TogglePanel, TOGGLE_GAMELIST,
      "<CheckItem>", NULL},
     {N_("/_View/_Panels/_Analysis"), NULL, TogglePanel, TOGGLE_ANALYSIS,
-     "<CheckItem>", NULL},
-    {N_("/_View/_Panels/_Quiz"), NULL, TogglePanel, TOGGLE_QUIZ,
      "<CheckItem>", NULL},
     {N_("/_View/_Panels/_Commentary"), NULL, TogglePanel, TOGGLE_COMMENTARY,
      "<CheckItem>", NULL},

@@ -2274,7 +2274,8 @@ move_skill(moverecord * pmr)
         if(fUseQuiz){
             qNow.ewmaError=0.0;
             qNow.player=ms.fTurn;
-            // g_message("no eval => zero error: %f",qNow.ewmaError);
+            g_message("no eval => zero error: %f, player %d",
+                qNow.ewmaError,qNow.player);
         }
         return SKILL_NONE;
     }
@@ -2282,14 +2283,14 @@ move_skill(moverecord * pmr)
         if(fUseQuiz){
             /* when there is a no-double roll before a move, we set the error for the move at -1
             => if the previous move error is not a negative number, the NDBeforeMove value is 
-            irrelevant and set to -1 - e.g. when we look at the first move in a game
+            irrelevant and thus we set it to -1 - e.g. when we look at the first move in a game
             */
             if (qNow.ewmaError>-0.001) /*old value*/
                 qNow_NDBeforeMoveError=-1.0;
             qNow.ewmaError=move_0->rScore-move_i->rScore; /*new value*/
             qNow.player=ms.fTurn;
-            // g_message("copied move error: %f",qNow.ewmaError);
-            // g_message("player=%d",ms.fTurn);
+            g_message("copied move error: %f",qNow.ewmaError);
+            g_message("player=%d",qNow.player);
         }
         return Skill(move_i->rScore - move_0->rScore);
     }

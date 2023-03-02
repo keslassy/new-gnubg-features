@@ -1009,8 +1009,8 @@ static int iOptCounter=0;
 // quiz qNow={"\0",0,0,0.0}; /*extern*/
 int counterForFile=0; /*extern*/
 float latestErrorInQuiz=-1.0; /*extern*/
-char name0BeforeQuiz[MAX_NAME_LEN];
-char name1BeforeQuiz[MAX_NAME_LEN];
+char name0BeforeQuiz[MAX_NAME_LEN+1];
+char name1BeforeQuiz[MAX_NAME_LEN+1];
 
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
@@ -1019,6 +1019,7 @@ categorytype categories[MAX_POS_CATEGORIES]; //={""};
 int numCategories;//=0
 // int numPositionsInCategory[MAX_POS_CATEGORIES]={0}; /* array with #positions per category file*/
 
+enum {COLUMN_INDEX, COLUMN_STRING, COLUMN_INT, N_COLUMNS};
 
 /* the following function:
 - updates positionsFileFullPath,
@@ -1486,40 +1487,39 @@ delete_selected_rows (GtkButton * activated, GtkTreeView * tree_view)
 */
 
 /*  delete a position category from the categories array */
-static int
-DeleteCategory(const char *sz)
-{
+static int DeleteCategory(const int categoryIndex) {
     // g_message("in DeleteCategory: %s, length=%zu", sz, strlen(sz));
-
-    for(int i=0;i < numCategories; i++) {
-        if (!strcmp(sz, categories[i].name)) {
-            // g_message("EXISTS! %s=%s, i=%d, numCategories=%d", sz,categories[i],i,numCategories);
-            // char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
-            if (remove(categories[i].path)!=0){
-                GTKMessage(_("Error: File could not be removed"), DT_INFO);
-                return 0;
-            }
-            else {
-                if (numCategories==(i+1)) {
-                    numCategories--;
-                    // UserCommand2("save settings");
-                    // return 1;
-                } else {
-                    for(int j=i+1;j < numCategories; j++) {
-                        categories[j-1]=categories[j]; 
-                    }
-                    numCategories--;
-                    // DisplayCategories();
-                    // UserCommand2("save settings");
-                    // return 1;
-                }
-                return 1;
-            }
-        }
+    // g_message("before loop in DeleteCategory:numCategories=%d, look for %s ",numCategories, sz);
+    if(categoryIndex<0 || categoryIndex>=numCategories) {
+        GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
+        return 0;
     }
+    // for(int i=0;i < numCategories; i++) {
+    //     g_message("loop in DeleteCategory: i=%d, numCategories=%d, %s =?= %s ",i,numCategories, sz,categories[i]);
+    //     if (!strcmp(sz, categories[i].name)) {
+    //         g_message("EXISTS! %s=%s, i=%d, numCategories=%d", sz,categories[i],i,numCategories);
+    //         // char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
+    if (remove(categories[categoryIndex].path)!=0){
+        GTKMessage(_("Error: File could not be removed"), DT_INFO);
+        return 0;
+    }
+    // if (numCategories==(categoryIndex+1)) {
+    //         g_message("DeleteCategory: last category");
+    //         numCategories--;
+    //         // UserCommand2("save settings");
+    //         // return 1;
+    // } else {
 
-    GTKMessage(_("Error: Position category name not found"), DT_INFO);
-    return 0;
+    for(int j=categoryIndex+1;j < numCategories; j++) {
+        g_message("loop2 in DeleteCategory: j=%d",j);
+        categories[j-1]=categories[j]; 
+    }
+    numCategories--;
+        // DisplayCategories();
+        // UserCommand2("save settings");
+        // return 1;
+    g_message("end of deletecategory");
+    return 1;
 }
 
 static int CheckBadCharacters(const char * name) {
@@ -1722,9 +1722,9 @@ GetSelectedCategory(GtkTreeView * treeview)
     /* Sets selected_iter to the currently selected node: */
     gtk_tree_selection_get_selected(sel, &model, &selected_iter);
     
-    /* Gets the value of the char* cell (in column 0) in the row 
+    /* Gets the value of the char* cell (in column COLUMN_STRING) in the row 
         referenced by selected_iter */
-    gtk_tree_model_get(model, &selected_iter, 0, &categoryName, -1);
+    gtk_tree_model_get(model, &selected_iter, COLUMN_STRING, &categoryName, -1);
     // g_message("GetSelectedCategory gives categoryName=%s",categoryName);
     return categoryName;
 }
@@ -1790,11 +1790,11 @@ AddPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
     // GtkTreeIter iter;
     // GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
     int categoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
-    // g_position("got back with int=%d",categoryIndex);
     if(categoryIndex<0 || categoryIndex>=numCategories) {
         GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
         return;
     }
+    // g_position("got back with int=%d",categoryIndex);
     if(AddPositionToFile(&(categories[categoryIndex]),NULL)){
         GTKMessage(_("The position was added successfully."), DT_INFO);
         ReloadQuizConsole();
@@ -1891,26 +1891,30 @@ static void RenameCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 static void
 DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
-    char *category = GetSelectedCategory(GTK_TREE_VIEW(treeview));
-    if(!category) {
-        GTKMessage(_("Error: please select a position category"), DT_INFO);
+
+    int categoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+    if(categoryIndex<0 || categoryIndex>=numCategories) {
+        GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
         return;
     }
     if (!GTKGetInputYN(_("Are you sure?"))) { 
         GTKMessage(_("Error: problem deleting this position category"), DT_INFO);
-        g_free(category);
         return;
     }
-    if (!DeleteCategory(category)) {
+    /*just to update the selected_iter...*/
+    GetSelectedCategory(GTK_TREE_VIEW(treeview));
+    // char *categoryName =g_strdup(GetSelectedCategory(GTK_TREE_VIEW(treeview)));
+    // g_message("categoryName=%s",categoryName);
+    gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+    
+    if (!DeleteCategory(categoryIndex)) {
         return;
     }
 
-    gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
 
     ReloadQuizConsole();
     // DisplayCategories();
     
-    g_free(category);
         return;
 }
 
@@ -2017,7 +2021,6 @@ extern void LoadPositionAndStart (void) {
 
 }
 
-enum {COLUMN_INDEX, COLUMN_STRING, COLUMN_INT, N_COLUMNS};
 
 static GtkWidget * BuildCategoryList(void) {
    // GtkWidget *pwQuiz;

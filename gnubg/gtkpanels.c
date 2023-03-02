@@ -1323,7 +1323,6 @@ DockPanels(void)
                              || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Analysis"), !fDockPanels || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Command"), !fDockPanels || fDisplayPanels);
-    gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz"), !fDockPanels || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Theory"), !fDockPanels || fDisplayPanels);
 #endif
     if (!fDockPanels || fDisplayPanels) {
@@ -1394,7 +1393,6 @@ ShowAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Commentary"), TRUE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Analysis"), TRUE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Command"), TRUE);
-    gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz"), TRUE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Theory"), TRUE);
 #endif
     SwapBoardToPanel(TRUE, TRUE);
@@ -1454,7 +1452,6 @@ DoHideAllPanels(int updateEvents)
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Game record"), FALSE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Commentary"), FALSE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Analysis"), FALSE);
-    gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz"), FALSE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Theory"), FALSE);
     gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View/Panels/Command"), FALSE);
 #endif
