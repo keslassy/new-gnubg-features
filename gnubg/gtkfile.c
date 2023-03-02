@@ -1009,8 +1009,8 @@ static int iOptCounter=0;
 // quiz qNow={"\0",0,0,0.0}; /*extern*/
 int counterForFile=0; /*extern*/
 float latestErrorInQuiz=-1.0; /*extern*/
-char name0BeforeQuiz[100];
-char name1BeforeQuiz[100];
+char name0BeforeQuiz[MAX_NAME_LEN];
+char name1BeforeQuiz[MAX_NAME_LEN];
 
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
@@ -1921,10 +1921,10 @@ static void updatePriority(quiz * pq, long int seconds) {
 }
 
 extern void LoadPositionAndStart (void) {
-    fInQuizMode=TRUE;
+    // fInQuizMode=TRUE;
     qDecision=QUIZ_UNKNOWN;
-    sprintf(name0BeforeQuiz, "%s", ap[0].szName);
-    sprintf(name1BeforeQuiz, "%s", ap[1].szName);
+    // sprintf(name0BeforeQuiz, "%s", ap[0].szName);
+    // sprintf(name1BeforeQuiz, "%s", ap[1].szName);
 
     /*this should not happen as it was previously checked before calling the function:*/
     if(qLength<0) {
@@ -2448,6 +2448,8 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     /*start!*/
     DestroyDialog(NULL,NULL);
     fInQuizMode=TRUE;
+    sprintf(name0BeforeQuiz, "%s", ap[0].szName);
+    sprintf(name1BeforeQuiz, "%s", ap[1].szName);
     counterForFile=0; /*first one for this category in this round*/
     LoadPositionAndStart();
 }

@@ -1132,8 +1132,8 @@ extern float qNow_NDBeforeMoveError;
 extern int counterForFile;
 extern int currentCategoryIndex;
 extern float latestErrorInQuiz;
-extern char name0BeforeQuiz[100];
-extern char name1BeforeQuiz[100];
+extern char name0BeforeQuiz[MAX_NAME_LEN];
+extern char name1BeforeQuiz[MAX_NAME_LEN];
 
 extern void qUpdate(float error);
 // extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
