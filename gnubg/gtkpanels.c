@@ -62,7 +62,6 @@ static gboolean DeleteMessage(void);
 static gboolean DeleteAnalysis(void);
 static gboolean DeleteAnnotation(void);
 static gboolean DeleteGame(void);
-static gboolean DeleteQuizWindow(void);
 static gboolean DeleteTheoryWindow(void);
 static gboolean DeleteCommandWindow(void);
 
@@ -70,7 +69,6 @@ static gboolean ShowAnnotation(void);
 static gboolean ShowMessage(void);
 static gboolean ShowAnalysis(void);
 static gboolean ShowTheoryWindow(void);
-// static gboolean ShowQuizWindow(void);
 static gboolean ShowCommandWindow(void);
 
 typedef struct {
@@ -129,14 +127,6 @@ static windowobject woPanel[NUM_WINDOWS] = {
      NULL, NULL,
      0,
      {0, 450, 20, 20, FALSE}
-     },
-    /* quiz */
-    {
-     "quiz",
-     FALSE, TRUE, TRUE, TRUE,
-     ShowQuizWindow, DeleteQuizWindow,
-     0,
-     {160, 20, 50, 50, FALSE} /*    int nWidth, nHeight; int nPosX, nPosY, max;*/
      },
     /* message */
     {
@@ -258,21 +248,6 @@ ShowTheoryWindow(void)
     return TRUE;
 }
 
-// static gboolean
-gboolean
-ShowQuizWindow(void)
-{
-    // GTKMessage(_("ShowQuizWindow"), DT_INFO);
-    ShowPanel(WINDOW_QUIZ);
-#if defined(USE_GTKUIMANAGER)
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
-                                                                                 "/MainMenu/ViewMenu/PanelsMenu/Quiz")),
-                                   TRUE);
-#else
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz")), TRUE);
-#endif
-    return TRUE;
-}
 
 static gboolean
 ShowCommandWindow(void)
@@ -434,276 +409,6 @@ CreateTheoryWindow(void)
     CreatePanel(WINDOW_THEORY, pwTheoryView, _("GNU Backgammon - Theory"), "theory");
     return woPanel[WINDOW_THEORY].pwWin;
 }
-
-
-/* ********** */
-
-/* inspired by gtk.org tutorial */
-enum
-{
-  COL_NAME = 0,
-  COL_NUM,
-  NUM_COLS
-} ;
-
-
-
-
-// static GtkTreeModel *
-// create_and_fill_model (void)
-// {
-//   GtkListStore *store = gtk_list_store_new (NUM_COLS,
-//                                             G_TYPE_STRING,
-//                                             G_TYPE_UINT);
-
-//   /* Append a row and fill in some data */
-//   GtkTreeIter iter;
-//   gtk_list_store_append (store, &iter);
-//   gtk_list_store_set (store, &iter,
-//                       COL_NAME, "Blitzing",
-//                       COL_NUM, 51,
-//                       -1);
-
-//   /* append another row and fill in some data */
-//   gtk_list_store_append (store, &iter);
-//   gtk_list_store_set (store, &iter,
-//                       COL_NAME, "Holding",
-//                       COL_NUM, 23,
-//                       -1);
-
-//   /* ... and a third row */
-//   gtk_list_store_append (store, &iter);
-//   gtk_list_store_set (store, &iter,
-//                       COL_NAME, "Hit vs. prime",
-//                       COL_NUM, 91,
-//                       -1);
-
-//   return GTK_TREE_MODEL (store);
-// }
-
-// static GtkWidget *
-// create_view_and_model (void)
-// {
-//   GtkWidget *view = gtk_tree_view_new ();
-
-//   GtkCellRenderer *renderer;
-
-//   /* --- Column #1 --- */
-//   renderer = gtk_cell_renderer_text_new ();
-//   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
-//                                                -1,      
-//                                                _("Category"),  
-//                                                renderer,
-//                                                "text", COL_NAME,
-//                                                NULL);
-
-//   /* --- Column #2 --- */
-//   renderer = gtk_cell_renderer_text_new ();
-//   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (view),
-//                                                -1,      
-//                                                _("Positions"),  
-//                                                renderer,
-//                                                "text", COL_NUM,
-//                                                NULL);
-
-//   GtkTreeModel *model = create_and_fill_model ();
-
-//   gtk_tree_view_set_model (GTK_TREE_VIEW (view), model);
-
-//   /* The tree view has acquired its own reference to the
-//    *  model, so we can drop ours. That way the model will
-//    *  be freed automatically when the tree view is destroyed
-//    */
-//   g_object_unref (model);
-
-//   return view;
-// }
-
-#if(0) /**************/
-int
-main (int argc, char **argv)
-{
-  gtk_init (&argc, &argv);
-
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  g_signal_connect (window, "destroy", gtk_main_quit, NULL);
-
-  GtkWidget *view = create_view_and_model ();
-
-  gtk_container_add (GTK_CONTAINER (window), view);
-
-  gtk_widget_show_all (window);
-
-  gtk_main ();
-
-  return 0;
-}
-
-#endif /***********/
-
-static GtkWidget *
-CreateQuizWindow(void)
-{
-    GtkWidget *pwQuizView = gtk_tree_view_new ();
-
-    GtkCellRenderer *renderer;
-
-    /* --- Column #1 --- */
-    renderer = gtk_cell_renderer_text_new ();
-    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (pwQuizView),
-                                                -1,      
-                                                _("Category"),  
-                                                renderer,
-                                                "text", COL_NAME,
-                                                NULL);
-
-    /* --- Column #2 --- */
-    renderer = gtk_cell_renderer_text_new ();
-    gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (pwQuizView),
-                                                -1,      
-                                                _("Positions"),  
-                                                renderer,
-                                                "text", COL_NUM,
-                                                NULL);
-
-    GtkTreeStore *treestore;
-    GtkTreeIter iter, child;
-
-    treestore = gtk_tree_store_new(NUM_COLS,G_TYPE_STRING,G_TYPE_UINT);
-
-    /* Append an empty top-level row to the tree store.
-    *  Iter will point to the new row */
-    gtk_tree_store_append(treestore, &iter, NULL);
-    gtk_tree_store_set (treestore, &iter,
-                        COL_NAME, "Blitzing",
-                        COL_NUM, 51,
-                        -1);
-
-    /* Append another empty top-level row to the tree store.
-    *  Iter will point to the new row */
-    gtk_tree_store_append(treestore, &iter, NULL);
-    gtk_tree_store_set (treestore, &iter,
-                        COL_NAME, "Holding",
-                        COL_NUM, 223,
-                        -1);
-
-    /* Append a child to the row we just added.
-    *  Child will point to the new row */
-    gtk_tree_store_append(treestore, &child, &iter);
-    gtk_tree_store_set (treestore, &child,
-                        COL_NAME, "5-pt holding",
-                        COL_NUM, 50,
-                        -1);
-    /* Append a child to the row we just added.
-    *  Child will point to the new row */
-    gtk_tree_store_append(treestore, &child, &iter);
-    gtk_tree_store_set (treestore, &child,
-                        COL_NAME, "4-pt holding",
-                        COL_NUM, 91,
-                        -1);
-    /* Append a child to the row we just added.
-    *  Child will point to the new row */
-    gtk_tree_store_append(treestore, &child, &iter);
-    gtk_tree_store_set (treestore, &child,
-                        COL_NAME, "3-pt holding",
-                        COL_NUM, 17,
-                        -1);
-
-
-
-    // GtkListStore *store = gtk_list_store_new (NUM_COLS,
-    //                                             G_TYPE_STRING,
-    //                                             G_TYPE_UINT);
-
-    // /* Append a row and fill in some data */
-    // GtkTreeIter iter;
-    // gtk_list_store_append (store, &iter);
-    // gtk_list_store_set (store, &iter,
-    //                     COL_NAME, "Blitzing",
-    //                     COL_NUM, 51,
-    //                     -1);
-
-    // /* append another row and fill in some data */
-    // gtk_list_store_append (store, &iter);
-    // gtk_list_store_set (store, &iter,
-    //                     COL_NAME, "Holding",
-    //                     COL_NUM, 23,
-    //                     -1);
-
-    // /* ... and a third row */
-    // gtk_list_store_append (store, &iter);
-    // gtk_list_store_set (store, &iter,
-    //                     COL_NAME, "Hit vs. prime",
-    //                     COL_NUM, 91,
-    //                     -1);
-
-    GtkTreeModel *model = GTK_TREE_MODEL (treestore);
-
-    gtk_tree_view_set_model (GTK_TREE_VIEW (pwQuizView), model);
-
-    /* The tree view has acquired its own reference to the
-    *  model, so we can drop ours. That way the model will
-    *  be freed automatically when the tree view is destroyed
-    */
-    g_object_unref (model);
-
-    // /* Get the first row, and add a child to it as well (could have been done
-    // *  right away earlier of course, this is just for demonstration purposes) */
-    // if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(treestore), &iter))
-    // {
-    //     /* Child will point to new row */
-    //     gtk_tree_store_append(treestore, &child, &iter);
-    // }
-    // else
-    // {
-    //     g_error("Oops, we should have a first row in the tree store!\n");
-    // }
-
-
-    CreatePanel(WINDOW_QUIZ, pwQuizView, _("GNU Backgammon - Quiz"), "quiz");
-    return woPanel[WINDOW_QUIZ].pwWin;
-
-
-
-    // GtkListStore *store;
-    // GtkTreeIter iter;
-    // GtkCellRenderer *renderer;
-
-    // store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING, -1);
-    // gtk_list_store_append(store, &iter);
-    // gtk_list_store_set(store, &iter, 0, _("Pip count"), 1, "", -1);
-    // gtk_list_store_append(store, &iter);
-    // gtk_list_store_set(store, &iter, 0, _("EPC"), 1, "", -1);
-    // gtk_list_store_append(store, &iter);
-    // gtk_list_store_set(store, &iter, 0, _("Return hits"), 1, "", -1);
-    // gtk_list_store_append(store, &iter);
-    // gtk_list_store_set(store, &iter, 0, _("Kleinman count"), 1, "", -1);
-
-    // pwQuizView = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
-    // g_object_unref(store);
-    // renderer = gtk_cell_renderer_text_new();
-    // gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(pwQuizView), -1, NULL, renderer, "text", 0, NULL);
-    // renderer = gtk_cell_renderer_text_new();
-    // gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(pwQuizView), -1, NULL, renderer, "text", 1, NULL);
-    // gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pwQuizView), FALSE);
-
-    // g_message("here");
-    // CreatePanel(WINDOW_QUIZ, pwQuizView, _("GNU Backgammon - Quiz"), "quiz");
-    // return woPanel[WINDOW_QUIZ].pwWin;
-
-    //      GtkWidget *psw;
-
-    // pwMessageText = gtk_text_view_new();
-    // gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(pwMessageText), GTK_WRAP_WORD_CHAR);
-    // gtk_text_view_set_editable(GTK_TEXT_VIEW(pwMessageText), FALSE);
-    // psw = gtk_scrolled_window_new(NULL, NULL);
-    // gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(psw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-    // gtk_widget_set_size_request(psw, -1, 150);
-    // gtk_container_add(GTK_CONTAINER(psw), pwMessageText);
-    // CreatePanel(WINDOW_QUIZ, psw,  _("GNU Backgammon - Quiz"), "quiz");
-    // return woPanel[WINDOW_QUIZ].pwWin;
-}
-
 
 /* Display help for command (pStr) in widget (pwText) */
 static void
@@ -1326,7 +1031,6 @@ CreatePanels(void)
     CreateGameWindow() 
     */
     if(fUseQuiz){
-        // ShowQuizWindow();
         // g_message("start-up");
         GetPositionCategories();
         g_message("numCategories at start=%d",numCategories);
@@ -1348,11 +1052,6 @@ CreatePanels(void)
 
     CreateHeadWindow(WINDOW_THEORY, _("Theory"), CreateTheoryWindow());
     gtk_box_pack_start(GTK_BOX(pwPanelVbox), woPanel[WINDOW_THEORY].pwWin, FALSE, FALSE, 0);
-
-    CreateHeadWindow(WINDOW_QUIZ, _("Quiz"), CreateQuizWindow());
-    // CreateQuizWindow();
-    // CreateHeadWindow(WINDOW_QUIZ, _("Quiz"), woPanel[WINDOW_QUIZ].pwWin);
-    gtk_box_pack_start(GTK_BOX(pwPanelVbox), woPanel[WINDOW_QUIZ].pwWin, FALSE, FALSE, 0);
 }
 
 static gboolean
@@ -1430,21 +1129,6 @@ DeleteTheoryWindow(void)
 }
 
 static gboolean
-DeleteQuizWindow(void)
-{
-    HidePanel(WINDOW_QUIZ);
-#if defined(USE_GTKUIMANAGER)
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
-                                                                                 "/MainMenu/ViewMenu/PanelsMenu/Quiz")),
-                                   FALSE);
-#else
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget(pif, "/View/Panels/Quiz")), FALSE);
-#endif
-    return TRUE;
-}
-
-
-static gboolean
 DeleteCommandWindow(void)
 {
     HidePanel(WINDOW_COMMAND);
@@ -1489,7 +1173,6 @@ SaveWindowSettings(FILE * pf)
     fprintf(pf, "set gamelist %s\n", woPanel[WINDOW_GAME].showing ? "yes" : "no");
     fprintf(pf, "set analysis window %s\n", woPanel[WINDOW_ANALYSIS].showing ? "yes" : "no");
     fprintf(pf, "set theorywindow %s\n", woPanel[WINDOW_THEORY].showing ? "yes" : "no");
-    fprintf(pf, "set quizwindow %s\n", woPanel[WINDOW_QUIZ].showing ? "yes" : "no");
     fprintf(pf, "set commandwindow %s\n", woPanel[WINDOW_COMMAND].showing ? "yes" : "no");
 
     fprintf(pf, "set panels %s\n", saveShowingPanels ? "yes" : "no");
@@ -1611,7 +1294,6 @@ DockPanels(void)
         }
         CreateGameWindow();
         CreateAnalysisWindow();
-        CreateQuizWindow();
         CreateMessageWindow();
         CreateTheoryWindow();
         CreateCommandWindow();
@@ -2031,14 +1713,6 @@ CommandSetTheoryWindow(char *sz)
 }
 
 extern void
-CommandSetQuizWindow(char *sz)
-{
-
-    SetToggle("quizwindow", &woPanel[WINDOW_QUIZ].showing, sz,
-              _("Show window with quiz categories."), _("Do not show window with quiz categories."));
-}
-
-extern void
 CommandSetCommandWindow(char *sz)
 {
 
@@ -2110,13 +1784,6 @@ extern void
 CommandSetGeometryTheory(char *sz)
 {
     pwoSetPanel = WINDOW_THEORY;
-    HandleCommand(sz, acSetGeometryValues);
-}
-
-extern void
-CommandSetGeometryQuiz(char *sz)
-{
-    pwoSetPanel = WINDOW_QUIZ;
     HandleCommand(sz, acSetGeometryValues);
 }
 

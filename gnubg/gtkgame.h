@@ -62,7 +62,6 @@ extern moverecord *pmrCurAnn;
 
 extern char *ReturnHits(TanBoard anBoard);
 extern gboolean ShowGameWindow(void);
-extern gboolean ShowQuizWindow(void);
 extern gint MoveListClearSelection(GtkWidget * pw, GdkEventSelection * pes, hintdata * phd);
 extern gint NextTurnNotify(gpointer p);
 extern GList *MoveListGetSelectionList(const hintdata * phd);

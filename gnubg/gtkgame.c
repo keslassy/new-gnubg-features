@@ -1774,9 +1774,6 @@ TogglePanel(guint UNUSED(iType), guint iActionID, GtkToggleAction * action, GtkT
     case TOGGLE_COMMAND:
         panel = WINDOW_COMMAND;
         break;
-    case TOGGLE_QUIZ:
-        panel = WINDOW_QUIZ;
-        break;
     default:
         g_assert_not_reached();
     }
@@ -1817,9 +1814,6 @@ TogglePanel(gpointer UNUSED(p), guint n, GtkWidget * pw)
         break;
     case TOGGLE_COMMAND:
         panel = WINDOW_COMMAND;
-        break;
-    case TOGGLE_QUIZ:
-        panel = WINDOW_QUIZ;
         break;
     default:
         g_assert_not_reached();
@@ -8094,8 +8088,6 @@ GTKSet(void *p)
         ShowHidePanel(WINDOW_MESSAGE);
     } else if (IsPanelShowVar(WINDOW_THEORY, p)) {
         ShowHidePanel(WINDOW_THEORY);
-    } else if (IsPanelShowVar(WINDOW_QUIZ, p)) {
-        ShowHidePanel(WINDOW_QUIZ);
     } else if (IsPanelShowVar(WINDOW_COMMAND, p)) {
         ShowHidePanel(WINDOW_COMMAND);
     } else if (p == &bd->rd->fDiceArea) {

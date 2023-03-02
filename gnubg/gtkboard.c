@@ -1666,35 +1666,6 @@ ShowBoardPopup(GdkEventButton * event)
         gtk_widget_show(menu_item);
         g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(GTKShowScoreSheet), NULL);
  
-        menu_item = gtk_menu_item_new();
-        gtk_menu_shell_append(GTK_MENU_SHELL(boardMenu), menu_item);
-        gtk_widget_show(menu_item);
-        menu_item = gtk_menu_item_new_with_label(_("Add to: Blitzing"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(boardMenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(GTKShowScoreSheet), NULL);
-        menu_item = gtk_menu_item_new();
-        gtk_menu_shell_append(GTK_MENU_SHELL(boardMenu), menu_item);
-        gtk_widget_show(menu_item);
-        menu_item = gtk_menu_item_new_with_label(_("Add to: 5-pt holding"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(boardMenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(GTKShowScoreSheet), NULL);
-        menu_item = gtk_menu_item_new_with_label(_("Add to: 4-pt holding"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(boardMenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(GTKShowScoreSheet), NULL);
-        menu_item = gtk_menu_item_new_with_label(_("Add to: 3-pt holding"));
-        gtk_menu_shell_append(GTK_MENU_SHELL(boardMenu), menu_item);
-        gtk_widget_show(menu_item);
-        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(GTKShowScoreSheet), NULL);
-
-
-
-
-
-
-
     }
 #if GTK_CHECK_VERSION(3,22,0)
     gtk_menu_popup_at_pointer(GTK_MENU(boardMenu), (GdkEvent *)event);

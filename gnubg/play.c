@@ -2611,7 +2611,6 @@ CommandListMatch(char *UNUSED(sz))
 #if defined (USE_GTK)
     if (fX) {
         ShowGameWindow();
-        // ShowQuizWindow();
         return;
     }
 #endif
