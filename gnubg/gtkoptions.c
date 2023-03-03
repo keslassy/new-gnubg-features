@@ -832,7 +832,7 @@ append_quiz_options(optionswidget * pow)
                                 "they can later be replayed. "));
     g_signal_connect(G_OBJECT(pow->pwQuizAutoAdd), "toggled", G_CALLBACK(QuizToggled), pow);
 
-    pow->pwQuizOnePlayer = gtk_check_button_new_with_label(_("For player 1 only"));
+    pow->pwQuizOnePlayer = gtk_check_button_new_with_label(_("Automatically collect for player 1 only"));
     // gtk_frame_set_label_widget(GTK_FRAME(pwf2), pow->pwQuizOnePlayer);
     gtk_box_pack_start(GTK_BOX(pwvbox2), pow->pwQuizOnePlayer, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(pow->pwQuizOnePlayer,
@@ -858,7 +858,7 @@ append_quiz_options(optionswidget * pow)
 #endif
     gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
 
-    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Minimum mistake level:")), FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Automatically collect with minimum mistake level:")), FALSE, FALSE, 0);
     pow->pwQuizSkill = gtk_combo_box_text_new();
     gtk_box_pack_start(GTK_BOX(pwhbox), pow->pwQuizSkill, FALSE, FALSE, 0);
     for (ppch = aszQuiz; *ppch; ppch++) {
@@ -1978,17 +1978,17 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
 
             if (!strcmp(selection, gettext(aszQuiz[0]))) {     /* N_("Doubtful") */
                 if (QuizSkill != SKILL_DOUBTFUL)
-                    UserCommand("set Quiz skill doubtful");
+                    UserCommand("set quiz skill doubtful");
             } else if (!strcmp(selection, gettext(aszQuiz[1]))) {      /* N_("Bad") */
                 if (QuizSkill != SKILL_BAD)
-                    UserCommand("set Quiz skill bad");
+                    UserCommand("set quiz skill bad");
             } else if (!strcmp(selection, gettext(aszQuiz[2]))) {      /* N_("Very Bad") */
                 if (QuizSkill != SKILL_VERYBAD)
-                    UserCommand("set Quiz skill very bad");
+                    UserCommand("set quiz skill very bad");
             } else {
                 /* g_assert(FALSE); Unknown Selection, defaulting */
-                if (QuizSkill != SKILL_DOUBTFUL)
-                    UserCommand("set Quiz skill doubtful");
+                if (QuizSkill != SKILL_VERYBAD)
+                    UserCommand("set quiz skill very bad");
             }
             g_free(selection);
         }
@@ -2250,7 +2250,7 @@ OptionsSet(optionswidget * pow)
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuiz), fUseQuiz);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizAutoAdd), fQuizAutoAdd);
-    // gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizOnePlayer), fQuizOnePlayer);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizOnePlayer), fQuizOnePlayer);
     gtk_combo_box_set_active(GTK_COMBO_BOX(pow->pwQuizSkill), nQuizSkillCurrent);
 
 

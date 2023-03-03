@@ -3933,7 +3933,7 @@ set_quiz_skill(skilltype Skill, int skillno, char *skill)
 
     nQuizSkillCurrent = skillno;
     QuizSkill = Skill;
-    outputf(_("Quiz automatic collection will be given for mistakes marked at least `%s'.\n"), skill);
+    // outputf(_("Quiz automatic collection will be given for mistakes marked at least `%s'.\n"), skill);
 }
 
 extern void
