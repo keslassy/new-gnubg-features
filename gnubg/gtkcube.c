@@ -548,24 +548,27 @@ TakeAnalysis(cubehintdata * pchd)
             else
                 sz = g_strdup_printf("%+7.3f%%",
                                      100.0f * eq2mwc(arDouble[ai[0]], &ci) - 100.0f * eq2mwc(arDouble[ai[i]], &ci));
-            if(fInQuizMode){
-                float error;
-                if(qDecision==QUIZ_PASS) {
-                    error=MAX(0,arDouble[OUTPUT_DROP]-arDouble[OUTPUT_TAKE]);
-                    // g_message("error=%f, note diff=%f?",error,
-                        // -(arDouble[OUTPUT_DROP] - arDouble[OUTPUT_TAKE]));
-                    qUpdate(error);
-                    // // g_message("error=%f?",arDouble[ai[0]] - arDouble[ai[i]]);
-                    // qUpdate(arDouble[ai[0]] - arDouble[ai[i]]);
-                } else if(qDecision==QUIZ_TAKE) {
-                    error=MAX(0,-arDouble[OUTPUT_DROP]+arDouble[OUTPUT_TAKE]);
-                    // g_message("error=%f, note diff=%f?",error,
-                        // -arDouble[OUTPUT_DROP] + arDouble[OUTPUT_TAKE]);
-                    qUpdate(error);
-                    // // g_message("error=%f?",arDouble[ai[0]] - arDouble[ai[i]]);
-                    // qUpdate(arDouble[ai[0]] - arDouble[ai[i]]);
-                }
-            }
+            /*in quiz mode, we already call qUpdate from take_skill etc., so no need 
+            to do it again here
+            */
+            // if(fInQuizMode){
+            //     float error;
+            //     if(qDecision==QUIZ_PASS) {
+            //         error=MAX(0,arDouble[OUTPUT_DROP]-arDouble[OUTPUT_TAKE]);
+            //         g_message("TakeAnalysis: error=%f, note diff=%f?",error,
+            //             -(arDouble[OUTPUT_DROP] - arDouble[OUTPUT_TAKE]));
+            //         qUpdate(error);
+            //         // // g_message("error=%f?",arDouble[ai[0]] - arDouble[ai[i]]);
+            //         // qUpdate(arDouble[ai[0]] - arDouble[ai[i]]);
+            //     } else if(qDecision==QUIZ_TAKE) {
+            //         error=MAX(0,-arDouble[OUTPUT_DROP]+arDouble[OUTPUT_TAKE]);
+            //         g_message("TakeAnalysis: error=%f, note diff=%f?",error,
+            //              -arDouble[OUTPUT_DROP] + arDouble[OUTPUT_TAKE]);
+            //         qUpdate(error);
+            //         // // g_message("error=%f?",arDouble[ai[0]] - arDouble[ai[i]]);
+            //         // qUpdate(arDouble[ai[0]] - arDouble[ai[i]]);
+            //     }
+            // }
             pw = gtk_label_new(sz);
 #if GTK_CHECK_VERSION(3,0,0)
             gtk_widget_set_halign(pw, GTK_ALIGN_END);

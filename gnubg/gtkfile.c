@@ -1316,7 +1316,7 @@ extern void qUpdate(float error) {
     */
 
     if(iOptCounter==0) {
-        // g_message("updating in qUpdate with error=%f",error);
+        g_message("updating in qUpdate with error=%f",error);
         // g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
         q[iOpt].ewmaError=ERROR_DECAY*(q[iOpt].ewmaError)+(1-ERROR_DECAY)*error;
         // g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
@@ -1327,8 +1327,9 @@ extern void qUpdate(float error) {
         latestErrorInQuiz=error;
         iOptCounter=1;
         counterForFile++;
-    } //else  
-        // g_message("NOT updating in qUpdate! 2nd update or more...");
+        g_message("qUpdate:counterForFile=%d",counterForFile);
+    } else  
+         g_message("NOT updating in qUpdate! 2nd update or more...");
 
 }
 // #if(0) /***********/
@@ -2533,7 +2534,8 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     - updates positionsFileFullPath,
     - opens the corrsponding file, 
     - and saves the parsing results in the categories static array */
-    int result= OpenQuizPositionsFile(currentCategoryIndex);
+    // int result= OpenQuizPositionsFile(currentCategoryIndex);
+    OpenQuizPositionsFile(currentCategoryIndex);
     // g_free(currentCategory); //when should we free a static var that is to be reused?
 
     /* no need for message, the OpenQuizPositionsFile already gives it*/

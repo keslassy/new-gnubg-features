@@ -6740,6 +6740,7 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         pwHint = GTKCreateDialog(_("GNU Backgammon - Hint"), DT_INFO, NULL, DIALOG_FLAG_NOTIDY, G_CALLBACK(HintOK), NULL);
     else {
         char buf[100];
+        g_message("latestErrorInQuiz=%f",latestErrorInQuiz);
         if(ABS(latestErrorInQuiz)<0.0001)
             sprintf(buf,_("Perfect play, well done!"));
         else if(latestErrorInQuiz>=0.0001)
@@ -6747,7 +6748,7 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         else /*undefined, problem?*/
             sprintf(buf,_("Quiz answer"));
         // pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(HintOK), NULL);
-        pwHint = GTKCreateDialog(_("Quiz Mode: Answer"), DT_INFO, NULL, DIALOG_FLAG_NOOK, G_CALLBACK(HintOK), NULL);
+        pwHint = GTKCreateDialog(_(buf), DT_INFO, NULL, DIALOG_FLAG_NOOK, G_CALLBACK(HintOK), NULL);
         GdkColor color;
         gdk_color_parse ("#EDF5FF", &color);
         gtk_widget_modify_bg(pwHint, GTK_STATE_NORMAL, &color);

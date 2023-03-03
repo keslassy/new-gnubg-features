@@ -2443,7 +2443,8 @@ CommandDouble(char *UNUSED(sz))
     if(fInQuizMode &&ms.fMove==1){
         // g_message("within CommandDouble");
         qDecision=QUIZ_DOUBLE;
-        CommandHint("");
+        hint_double(TRUE, 1);
+        // CommandHint("");
     //     UserCommand2("analyse move");
     }
     // if(!fInQuizMode) {
@@ -2520,9 +2521,10 @@ CommandDrop(char *UNUSED(sz))
     if(fInQuizMode){
         // g_message("within CommandDrop");
         qDecision=QUIZ_PASS;
-        // g_message("in CommandDrop, qdecision=%d",qDecision);
+        hint_take(TRUE, 0);
 
-        CommandHint("");
+        // g_message("in CommandDrop, qdecision=%d",qDecision);
+        // CommandHint("");
     }
 }
 
@@ -2754,6 +2756,7 @@ CommandMove(char *sz)
             return;
         }
         /* update or set the move */
+        qDecision=QUIZ_MOVE;
         memcpy(pmr_cur->n.anMove, an, sizeof an);
         hint_move("", TRUE, NULL);
         // // if(fInQuizMode){
@@ -3898,7 +3901,9 @@ CommandRedouble(char *UNUSED(sz))
         return;
     if(fInQuizMode){
         g_message("within Command*Re*Double");
-        CommandHint("");
+        qDecision=QUIZ_DOUBLE;
+        hint_double(TRUE, 1);
+        // CommandHint("");
     }
     if(!fInQuizMode) {
     pmr = NewMoveRecord();
@@ -4040,73 +4045,75 @@ CommandRoll(char *UNUSED(sz))
 
     if (fTutor && fTutorCube && !GiveAdvice(tutor_double(FALSE)))
         return;
- /* if we put this after GetDice(), it provides the hint for the next move*/
-if(fInQuizMode){
-    g_message("within CommandRoll");
-    CommandHint("");
-}
-if(!fInQuizMode) {   
-    if (!fCheat || CheatDice(ms.anDice, &ms, afCheatRoll[ms.fMove]))
-        if (GetDice(ms.anDice, ms.fTurn, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
-            return;
 
-    pmr = NewMoveRecord();
+     /* if we put this after GetDice(), it provides the hint for the next move*/
+    if(fInQuizMode){
+        g_message("within CommandRoll");
+        qDecision=QUIZ_NODOUBLE;
+        hint_double(TRUE, 0);    
+        // CommandHint("");
+    } else {
+        if (!fCheat || CheatDice(ms.anDice, &ms, afCheatRoll[ms.fMove]))
+            if (GetDice(ms.anDice, ms.fTurn, &rngCurrent, rngctxCurrent, ms.anBoard) < 0)
+                return;
 
-    pmr->mt = MOVE_SETDICE;
-    pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
-    pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
-    pmr->fPlayer = ms.fTurn;
+        pmr = NewMoveRecord();
 
-    AddMoveRecord(pmr);
+        pmr->mt = MOVE_SETDICE;
+        pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+        pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
+        pmr->fPlayer = ms.fTurn;
 
-    DiceRolled();
+        AddMoveRecord(pmr);
+
+        DiceRolled();
 
 #if defined (USE_GTK)
-    if (fX) {
+        if (fX) {
 
-        outputnew();
-        outputf(_("%s rolls %1u and %1u.\n"), ap[ms.fTurn].szName, ms.anDice[0], ms.anDice[1]);
-        outputx();
+            outputnew();
+            outputf(_("%s rolls %1u and %1u.\n"), ap[ms.fTurn].szName, ms.anDice[0], ms.anDice[1]);
+            outputx();
 
-    }
+        }
 #endif
 
-    ResetDelayTimer();
+        ResetDelayTimer();
 
-    if (!GenerateMoves(&ml, msBoard(), ms.anDice[0], ms.anDice[1], FALSE)) {
+        if (!GenerateMoves(&ml, msBoard(), ms.anDice[0], ms.anDice[1], FALSE)) {
 
-        playSound(ap[ms.fTurn].pt == PLAYER_HUMAN ? SOUND_HUMAN_DANCE : SOUND_BOT_DANCE);
+            playSound(ap[ms.fTurn].pt == PLAYER_HUMAN ? SOUND_HUMAN_DANCE : SOUND_BOT_DANCE);
 
-        pmr = NewMoveRecord();
+            pmr = NewMoveRecord();
 
-        pmr->mt = MOVE_NORMAL;
-        pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
-        pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
-        pmr->fPlayer = ms.fTurn;
+            pmr->mt = MOVE_NORMAL;
+            pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+            pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
+            pmr->fPlayer = ms.fTurn;
 
-        ShowAutoMove(msBoard(), pmr->n.anMove);
+            ShowAutoMove(msBoard(), pmr->n.anMove);
 
-        AddMoveRecord(pmr);
+            AddMoveRecord(pmr);
 
-        TurnDone();
-    } else if (ml.cMoves == 1 && (fAutoMove || (ClassifyPosition(msBoard(), ms.bgv)
-                                                <= CLASS_BEAROFF1 && fAutoBearoff))) {
+            TurnDone();
+        } else if (ml.cMoves == 1 && (fAutoMove || (ClassifyPosition(msBoard(), ms.bgv)
+                                                    <= CLASS_BEAROFF1 && fAutoBearoff))) {
 
-        pmr = NewMoveRecord();
+            pmr = NewMoveRecord();
 
-        pmr->mt = MOVE_NORMAL;
-        pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
-        pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
-        pmr->fPlayer = ms.fTurn;
-        memcpy(pmr->n.anMove, ml.amMoves[0].anMove, sizeof(pmr->n.anMove));
+            pmr->mt = MOVE_NORMAL;
+            pmr->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
+            pmr->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
+            pmr->fPlayer = ms.fTurn;
+            memcpy(pmr->n.anMove, ml.amMoves[0].anMove, sizeof(pmr->n.anMove));
 
-        ShowAutoMove(msBoard(), pmr->n.anMove);
+            ShowAutoMove(msBoard(), pmr->n.anMove);
 
-        AddMoveRecord(pmr);
-        TurnDone();
-    } else if (fAutoBearoff && !TryBearoff())
-        TurnDone();
-}
+            AddMoveRecord(pmr);
+            TurnDone();
+        } else if (fAutoBearoff && !TryBearoff())
+            TurnDone();
+    }
 }
 
 
@@ -4150,7 +4157,8 @@ CommandTake(char *UNUSED(sz))
     if(fInQuizMode){
         g_message("within CommandTake");
         qDecision=QUIZ_TAKE;
-        CommandHint("");
+        hint_take(TRUE, 1);
+        // CommandHint("");
     }
     if(!fInQuizMode) {
         if (fDisplay)

@@ -2225,7 +2225,10 @@ drop_skill(moverecord * pmr, cubeinfo * pci)
     default:
         break;
     }
-    if(fUseQuiz){
+    if (fInQuizMode) {
+        // g_message("no-double error in quiz: %f",-eq);
+        qUpdate(-eq);
+    } else if(fUseQuiz){
         qNow.ewmaError=-(eq);
         qNow_NDBeforeMoveError=-1.0;
         qNow.player=ms.fTurn;
@@ -2256,7 +2259,10 @@ take_skill(moverecord * pmr, cubeinfo * pci)
     default:
         break;
     }
-    if(fUseQuiz){
+    if (fInQuizMode) {
+        // g_message("no-double error in quiz: %f",-eq);
+        qUpdate(-eq);
+    } else if(fUseQuiz){
         qNow.ewmaError=-(eq);
         qNow_NDBeforeMoveError=-1.0;
         qNow.player=ms.fTurn;
@@ -2285,7 +2291,10 @@ move_skill(moverecord * pmr)
         return SKILL_NONE;
     }
     else {
-        if(fUseQuiz){
+        if (fInQuizMode) {
+            // g_message("no-double error in quiz: %f",-eq);
+            qUpdate(move_0->rScore-move_i->rScore);
+        } else if(fUseQuiz){
             /* when there is a no-double roll before a move, we set the error for the move at -1
             => if the previous move error is not a negative number, the NDBeforeMove value is 
             irrelevant and thus we set it to -1 - e.g. when we look at the first move in a game
@@ -2321,7 +2330,7 @@ find_skills(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         pmr->stCube = SKILL_NONE;
         return;
     }
-    // g_message("in find_skills: did_double=%d,did_take=%d",did_double,did_take);
+    g_message("in find_skills: did_double=%d,did_take=%d",did_double,did_take);
 
     if (did_double == FALSE)
         pmr->stCube = no_double_skill(pmr, &ci);
@@ -2334,7 +2343,7 @@ find_skills(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
 
     if (pmr->mt == MOVE_NORMAL && pmr->ml.cMoves > 0 && pmr->n.iMove < pmr->ml.cMoves)
         pmr->n.stMove = move_skill(pmr);
-    // g_message("in end of find_skills");
+    g_message("in end of find_skills");
 
 }
 
@@ -2374,7 +2383,7 @@ hint_double(int show, int did_double)
 
     find_skills(pmr, &ms, did_double, -1);
 
-    // g_message("in hint_double after find_skills");
+    g_message("in hint_double after find_skills");
 
 #if defined(USE_GTK)
     if (fX) {
@@ -2384,7 +2393,7 @@ hint_double(int show, int did_double)
 
         if (show)
             GTKCubeHint(pmr, &ms, did_double, -1, hist);
-    // g_message("hint_double after GTK: did_double=%d, movetype=%d",did_double, pmr->mt);
+    g_message("hint_double after GTK: did_double=%d, movetype=%d",did_double, pmr->mt);
 
         return;
     }
