@@ -1436,8 +1436,7 @@ int string_cmp (const void * p1, const void * p2) {
         s1++;
         s2++;
     }
-    g_message("string comp: %s vs %s, %c vs %c=>%d|%d",s1,s2,(toupper(*s1)),(toupper(*s2)),*s1 - *s2,toupper(*s1) - toupper(*s2));
-    // return *s1 - *s2;
+    // g_message("string comp: %s vs %s, %c vs %c=>%d|%d",s1,s2,(toupper(*s1)),(toupper(*s2)),*s1 - *s2,toupper(*s1) - toupper(*s2));
     return toupper(*s1) - toupper(*s2);
 }
 

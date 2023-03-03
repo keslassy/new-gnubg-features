@@ -6788,11 +6788,11 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
         gtk_box_pack_start(GTK_BOX(pwMainHBox), deleteButton, TRUE, FALSE, 0);
 
-        stopButton = gtk_button_new_with_label(_("No, thanks."));
+        stopButton = gtk_button_new_with_label(_("Back to console"));
         g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
         gtk_box_pack_start(GTK_BOX(pwMainHBox), stopButton, TRUE, FALSE, 0);
 
-        againButton = gtk_button_new_with_label(_("Play again!"));
+        againButton = gtk_button_new_with_label(_("Continue quiz!"));
         g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
         gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
     }
