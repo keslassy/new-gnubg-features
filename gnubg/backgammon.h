@@ -1145,7 +1145,7 @@ extern float latestErrorInQuiz;
 // extern char * name0BeforeQuiz;
 extern char name0BeforeQuiz[MAX_NAME_LEN];
 extern char name1BeforeQuiz[MAX_NAME_LEN];
-
+extern playertype type0BeforeQuiz;
 
 extern void qUpdate(float error);
 // extern int AddQuizPosition(quiz qRow, categorytype * pcategory);

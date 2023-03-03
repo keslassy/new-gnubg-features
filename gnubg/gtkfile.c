@@ -1013,7 +1013,7 @@ float latestErrorInQuiz=-1.0; /*extern*/
 // char * name1BeforeQuiz=NULL; //[MAX_NAME_LEN+1];
 char name0BeforeQuiz[MAX_NAME_LEN];
 char name1BeforeQuiz[MAX_NAME_LEN];
-
+playertype type0BeforeQuiz;
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
 // static const categorytype emptyCategory={NULL,0,NULL,NULL};
@@ -2020,14 +2020,23 @@ extern void LoadPositionAndStart (void) {
         g_message("swap!");
         // SwapSides(ms.anBoard);
         CommandSwapPlayers(NULL);   
-        sprintf(ap[1].szName, "%s", name1BeforeQuiz);
-        g_message("names: %s %s",ap[0].szName,ap[1].szName);
+        // sprintf(ap[1].szName, "%s", name1BeforeQuiz);
+        // g_message("names: %s %s",ap[0].szName,ap[1].szName);
     }
-    UserCommand2("set player 0 human");
-    g_message("human");
-    UserCommand2("set player 0 name QuizOpponent");
-    g_message("name");
-        g_message("names: %s %s",ap[0].szName,ap[1].szName);
+    // UserCommand2("set player 0 human");
+    // g_message("human");
+    // UserCommand2("set player 0 name QuizOpponent");
+    // g_message("name");
+    //     g_message("names: %s %s",ap[0].szName,ap[1].szName);
+
+    char name0InQuiz[MAX_NAME_LEN]="Quiz Opponent";
+    // char name1InQuiz[MAX_NAME_LEN];
+    if(strcmp(ap[0].szName,name0InQuiz))
+        strncpy(ap[0].szName, name0InQuiz, MAX_NAME_LEN);
+    if(strcmp(ap[1].szName,name1BeforeQuiz))
+        strncpy(ap[1].szName, name1BeforeQuiz, MAX_NAME_LEN);
+    g_message("Starting quiz mode: ap names: (%s,%s) vs: (%s,%s)",
+        ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);        
 
     // if (ap[ms.fTurn].pt != PLAYER_HUMAN) {
         // g_message("player=%d",q[iOpt].player);
@@ -2239,8 +2248,10 @@ extern void TurnOnQuizMode(void){
         strncpy(name0BeforeQuiz, ap[0].szName, MAX_NAME_LEN);
     if(strcmp(ap[1].szName,name1BeforeQuiz))
         strncpy(name1BeforeQuiz, ap[1].szName, MAX_NAME_LEN);
-    g_message("After TurnOn: ap names: (%s,%s) vs: (%s,%s)",
-        ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    // g_message("After TurnOn: ap names: (%s,%s) vs: (%s,%s)",
+    //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    type0BeforeQuiz=ap[0].pt;
+    ap[0].pt = PLAYER_HUMAN;
 }
 extern void TurnOffQuizMode(void){
     fInQuizMode=FALSE;
@@ -2251,15 +2262,16 @@ extern void TurnOffQuizMode(void){
         strncpy(ap[0].szName, name0BeforeQuiz, MAX_NAME_LEN);
     if(strcmp(ap[1].szName,name1BeforeQuiz))
         strncpy(ap[1].szName, name1BeforeQuiz, MAX_NAME_LEN);
-    g_message("TurnOff: ap names: (%s,%s) vs: (%s,%s)",
-        ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
-    char buf[100];
-    sprintf(buf,"set player 0 name %s",ap[0].szName);
-    UserCommand2(buf);
-    sprintf(buf,"set player 1 name %s",ap[1].szName);
-    UserCommand2(buf);
-    g_message("after TurnOff: ap names: (%s,%s) vs: (%s,%s)",
-    ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    // g_message("TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+    //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    // char buf[100];
+    // sprintf(buf,"set player 0 name %s",ap[0].szName);
+    // UserCommand2(buf);
+    // sprintf(buf,"set player 1 name %s",ap[1].szName);
+    // UserCommand2(buf);
+    // g_message("after TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+    // ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    ap[0].pt = type0BeforeQuiz;
 }
 
 /*"Quiz console" = central management window for the quiz feature */
