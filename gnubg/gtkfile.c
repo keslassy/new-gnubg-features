@@ -1775,7 +1775,7 @@ Allows garbage collection.
     // sprintf(name1BeforeQuiz, "%s",ap[0].szName);
     
 
-    if (pwQuiz) { //i.e. we didn't close it using DestroyQuizDialog()
+    if (pwQuiz!=NULL) { //i.e. we haven't closed it using DestroyQuizDialog()
         gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
         // g_message("in destroy loop");
         pwQuiz = NULL;

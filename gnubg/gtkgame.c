@@ -4031,7 +4031,7 @@ static GtkActionEntry actionEntries[] = {
 
     {"ClearTurnAction", NULL, N_("Clear turn"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CLEAR_TURN)},
 
-    {"QuizAction", NULL, N_("Quiz"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIZ)},
+    {"QuizAction", NULL, N_("Quiz"), "<control>U", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIZ)},
 
     {"AnalyseMenuAction", NULL, N_("_Analyse"), NULL, NULL, G_CALLBACK(NULL)},
     {"EvaluateAction", NULL, N_("_Evaluate"), "<control>E", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_EVAL)},
@@ -4273,7 +4273,7 @@ static GtkItemFactoryEntry aife[] = {
      "/Game/Set turn/0", NULL},
     {N_("/_Game/Clear turn"), NULL, Command, CMD_CLEAR_TURN, NULL, NULL},
     {N_("/_Game/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_Game/Quiz"), NULL, Command, CMD_QUIZ, NULL, NULL},
+    {N_("/_Game/Quiz"), "<control>U", Command, CMD_QUIZ, NULL, NULL},
     {N_("/_Analyse"), NULL, NULL, 0, "<Branch>", NULL},
     {N_("/_Analyse/_Evaluate"), "<control>E", Command, CMD_EVAL, NULL, NULL},
     {N_("/_Analyse/_Hint"), "<control>H", Command, CMD_HINT,
@@ -6727,11 +6727,73 @@ static void DeletePositionClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
 }
 
 
+extern void BuildQuizHintBottom(GtkWidget *pwHint, GtkWidget *pwMoves){
+    GtkWidget *pwMainVBox, *pwMainHBox, *pwMainHBox2, *pwv, *pwh,
+        *stopButton, *againButton, *deleteButton;
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+#else
+    pwMainVBox = gtk_vbox_new(FALSE, 2);
+#endif
+
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMainVBox);
+    gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMoves, TRUE, TRUE, 0);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+    pwMainHBox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+#else
+    pwMainHBox = gtk_hbox_new(FALSE, 2);
+    pwMainHBox2 = gtk_hbox_new(FALSE, 2);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox2, TRUE, TRUE, 0);
+
+    char buf[200];
+    // counterForFile++;
+    sprintf(buf,_("\n\n%d %s played in category %s \n(which has %d %s). "
+        "Play another position in this category?\n"), 
+        counterForFile,
+        (counterForFile==1)?"position":"positions",
+        categories[currentCategoryIndex].name,
+        categories[currentCategoryIndex].number,
+        (categories[currentCategoryIndex].number==1)?"position":"positions");   
+    AddText(pwMainHBox, _(buf));
+#if GTK_CHECK_VERSION(3,0,0)
+    pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+    pwh=gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+#else
+    pwv = gtk_vbox_new(FALSE, 2);
+    pwh = gtk_hbox_new(FALSE, 2);
+#endif
+    gtk_box_pack_start(GTK_BOX(pwMainHBox), pwv, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwv), pwh, TRUE, FALSE, 0);
+    deleteButton = gtk_button_new_with_label(_("(Delete this position)"));
+    g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
+    gtk_box_pack_start(GTK_BOX(pwv), deleteButton, FALSE, FALSE, 0);
+
+    stopButton = gtk_button_new_with_label(_("Go back to console"));
+    g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
+    gtk_box_pack_start(GTK_BOX(pwMainHBox2), stopButton, TRUE, TRUE, 0);
+
+    // againButton = gtk_button_new_with_label(_("Play again!"));
+    // g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
+    // gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
+
+    againButton = gtk_button_new(); 
+    GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
+    gtk_button_set_image(GTK_BUTTON(againButton), image);
+    gtk_box_pack_start(GTK_BOX(pwMainHBox2), againButton, TRUE, TRUE, 0);
+    g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
+
+}
+
 extern void
 GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_take, int hist)
 {
 
-    GtkWidget *pw, *pwHint, *pwMainVBox, *pwMainHBox, *stopButton, *againButton, *deleteButton;
+    GtkWidget *pw, *pwHint; //, *pwMainVBox, *pwMainHBox, *stopButton, *againButton, *deleteButton;
 
     if (GetPanelWidget(WINDOW_HINT))
         gtk_widget_destroy(GetPanelWidget(WINDOW_HINT));
@@ -6760,45 +6822,53 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
     if(!fInQuizMode)
         gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pw);
     else {
-#if GTK_CHECK_VERSION(3,0,0)
-        pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-#else
-        pwMainVBox = gtk_vbox_new(FALSE, 2);
-#endif
+        BuildQuizHintBottom(pwHint,pw);
 
-        gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMainVBox);
-        gtk_box_pack_start(GTK_BOX(pwMainVBox), pw, TRUE, FALSE, 0);
+// #if GTK_CHECK_VERSION(3,0,0)
+//         pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+// #else
+//         pwMainVBox = gtk_vbox_new(FALSE, 2);
+// #endif
 
-        char buf[200];
-        // counterForFile++;
-        // g_message("at hint");
-        sprintf(buf,_("\n\n%d %s played in category %s (which has %d %s). "
-            "\n Play another position in this category?\n"), 
-            counterForFile,
-            (counterForFile==1)?"position":"positions",
-            categories[currentCategoryIndex].name,
-            categories[currentCategoryIndex].number,
-            (categories[currentCategoryIndex].number==1)?"position":"positions");    
-        AddText(pwMainVBox, _(buf));
+//         gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMainVBox);
+//         gtk_box_pack_start(GTK_BOX(pwMainVBox), pw, TRUE, FALSE, 0);
 
-#if GTK_CHECK_VERSION(3,0,0)
-        pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-#else
-        pwMainHBox = gtk_hbox_new(FALSE, 2);
-#endif
-        gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, TRUE, FALSE, 0);
+//         char buf[200];
+//         // counterForFile++;
+//         // g_message("at hint");
+//         sprintf(buf,_("\n\n%d %s played in category %s (which has %d %s). "
+//             "\n Play another position in this category?\n"), 
+//             counterForFile,
+//             (counterForFile==1)?"position":"positions",
+//             categories[currentCategoryIndex].name,
+//             categories[currentCategoryIndex].number,
+//             (categories[currentCategoryIndex].number==1)?"position":"positions");    
+//         AddText(pwMainVBox, _(buf));
 
-        deleteButton = gtk_button_new_with_label(_("Delete this position"));
-        g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
-        gtk_box_pack_start(GTK_BOX(pwMainHBox), deleteButton, TRUE, FALSE, 0);
+// #if GTK_CHECK_VERSION(3,0,0)
+//         pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+// #else
+//         pwMainHBox = gtk_hbox_new(FALSE, 2);
+// #endif
+//         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, TRUE, FALSE, 0);
 
-        stopButton = gtk_button_new_with_label(_("Back to console"));
-        g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
-        gtk_box_pack_start(GTK_BOX(pwMainHBox), stopButton, TRUE, FALSE, 0);
+//         deleteButton = gtk_button_new_with_label(_("Delete this position"));
+//         g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
+//         gtk_box_pack_start(GTK_BOX(pwMainHBox), deleteButton, TRUE, FALSE, 0);
 
-        againButton = gtk_button_new_with_label(_("Continue quiz!"));
-        g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
-        gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
+//         stopButton = gtk_button_new_with_label(_("Back to console"));
+//         g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
+//         gtk_box_pack_start(GTK_BOX(pwMainHBox), stopButton, TRUE, FALSE, 0);
+
+//         /*pick either text or image...*/
+//         // againButton = gtk_button_new_with_label(_("Continue quiz!"));
+//         againButton = gtk_button_new(); 
+//         GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
+//         gtk_button_set_image(GTK_BUTTON(againButton), image);
+
+//         g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
+//         gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, TRUE, 10);
+
     }
     gtk_widget_grab_focus(DialogArea(pwHint, DA_MAIN));
     // gtk_widget_grab_focus(DialogArea(pwHint, DA_OK));
@@ -6969,10 +7039,13 @@ GTKResignHint(float UNUSED(arOutput[]), float rEqBefore, float rEqAfter, cubeinf
     GTKRunDialog(pwDialog);
 }
 
+
 extern void
 GTKHint(moverecord * pmr, int hist)
 {
-    GtkWidget *pwMoves, *pwHint, *pwMainVBox, *pwMainHBox, *stopButton, *againButton, *deleteButton;
+    GtkWidget *pwMoves, *pwHint; 
+    //  *pwMainVBox, *pwMainHBox, *pwMainHBox2, *pwv, *pwh,
+    //     *stopButton, *againButton, *deleteButton;
 
     if (!pmr || pmr->ml.cMoves < 1) {
         outputerrf(_("There are no legal moves. Figure it out yourself."));
@@ -7006,44 +7079,65 @@ GTKHint(moverecord * pmr, int hist)
     if(!fInQuizMode)
         gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMoves);
     else {
-#if GTK_CHECK_VERSION(3,0,0)
-        pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-#else
-        pwMainVBox = gtk_vbox_new(FALSE, 2);
-#endif
+        BuildQuizHintBottom(pwHint,pwMoves);
+// #if GTK_CHECK_VERSION(3,0,0)
+//         pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+// #else
+//         pwMainVBox = gtk_vbox_new(FALSE, 2);
+// #endif
 
-        gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMainVBox);
-        gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMoves, TRUE, TRUE, 0);
+//         gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMainVBox);
+//         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMoves, TRUE, TRUE, 0);
 
-        char buf[200];
-        // counterForFile++;
-        sprintf(buf,_("\n\n%d %s played in category %s (which has %d %s). "
-            "\n Play another position in this category?\n"), 
-            counterForFile,
-            (counterForFile==1)?"position":"positions",
-            categories[currentCategoryIndex].name,
-            categories[currentCategoryIndex].number,
-            (categories[currentCategoryIndex].number==1)?"position":"positions");   
-        AddText(pwMainVBox, _(buf));
+// #if GTK_CHECK_VERSION(3,0,0)
+//         pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+//         pwMainHBox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+// #else
+//         pwMainHBox = gtk_hbox_new(FALSE, 2);
+//         pwMainHBox2 = gtk_hbox_new(FALSE, 2);
+// #endif
+//         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, FALSE, FALSE, 0);
+//         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox2, FALSE, FALSE, 0);
 
-#if GTK_CHECK_VERSION(3,0,0)
-        pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-#else
-        pwMainHBox = gtk_hbox_new(FALSE, 2);
-#endif
-        gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, FALSE, FALSE, 0);
+//         char buf[200];
+//         // counterForFile++;
+//         sprintf(buf,_("\n\n%d %s played in category %s (which has %d %s). "
+//             "\n Play another position in this category?\n"), 
+//             counterForFile,
+//             (counterForFile==1)?"position":"positions",
+//             categories[currentCategoryIndex].name,
+//             categories[currentCategoryIndex].number,
+//             (categories[currentCategoryIndex].number==1)?"position":"positions");   
+//         AddText(pwMainHBox, _(buf));
+// #if GTK_CHECK_VERSION(3,0,0)
+//         pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+//         pwh=gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+// #else
+//         pwv = gtk_vbox_new(FALSE, 2);
+//         pwh = gtk_hbox_new(FALSE, 2);
+// #endif
+//         gtk_box_pack_start(GTK_BOX(pwMainHBox), pwv, FALSE, FALSE, 0);
+//         gtk_box_pack_start(GTK_BOX(pwv), pwh, TRUE, FALSE, 0);
+//         deleteButton = gtk_button_new_with_label(_("(Delete this position)"));
+//         g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
+//         gtk_box_pack_start(GTK_BOX(pwv), deleteButton, FALSE, FALSE, 0);
 
-        deleteButton = gtk_button_new_with_label(_("Delete this position"));
-        g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
-        gtk_box_pack_start(GTK_BOX(pwMainHBox), deleteButton, TRUE, FALSE, 0);
+//         stopButton = gtk_button_new_with_label(_("Go back to console"));
+//         g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
+//         gtk_box_pack_start(GTK_BOX(pwMainHBox2), stopButton, TRUE, TRUE, 20);
 
-        stopButton = gtk_button_new_with_label(_("No, thanks."));
-        g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
-        gtk_box_pack_start(GTK_BOX(pwMainHBox), stopButton, TRUE, FALSE, 0);
-
-        againButton = gtk_button_new_with_label(_("Play again!"));
-        g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
-        gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
+//         // againButton = gtk_button_new_with_label(_("Play again!"));
+//         // g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
+//         // gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
+    
+//         againButton = gtk_button_new(); 
+//         GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
+//         gtk_button_set_image(GTK_BUTTON(againButton), image);
+//         gtk_box_pack_start(GTK_BOX(pwMainHBox2), againButton, TRUE, TRUE, 0);
+//         g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
+    
+    
+    
     }
 
     setWindowGeometry(WINDOW_HINT);
