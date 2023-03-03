@@ -1401,12 +1401,44 @@ static int CountPositions(categorytype category) {
     return count; //category.number=count;
 }
 
+// /*case-insensitive string comparison, inspired by minilibc code from JL2210 */
+
+// int strcasecmp(const char *restrict str1, const char *restrict str2)
+// {
+//     const unsigned char *s1 = (const unsigned char *)str1,
+//                         *s2 = (const unsigned char *)str2;
+
+//     if(str1 == str2)
+//         return 0;
+
+//     while( *s1 && toupper(*s1) == toupper(*s2) )
+//     {
+//         s1++;
+//         s2++;
+//     }
+
+//     return *s1 - *s2;
+// }
+
+/*case-insensitive string comparison*/
+// int string_cmp (const categorytype * p1, const categorytype * p2) {
 int string_cmp (const void * p1, const void * p2) {
     // const char * pa = (const char *) a;
     // const char * pb = (const char *) b;
     // return strcmp(pa,pb);
-
-    return strcmp(((const categorytype *)p1)->name, ((const categorytype *)p2)->name);
+    // return strcmp(((const categorytype *)p1)->name, ((const categorytype *)p2)->name);
+    const unsigned char *s1 = (const unsigned char *)((const categorytype *)p1)->name,
+                        *s2 = (const unsigned char *)((const categorytype *)p2)->name;
+    if(s1 == s2)
+        return 0;
+    while( *s1 && toupper(*s1) == toupper(*s2) )
+    {
+        s1++;
+        s2++;
+    }
+    g_message("string comp: %s vs %s, %c vs %c=>%d|%d",s1,s2,(toupper(*s1)),(toupper(*s2)),*s1 - *s2,toupper(*s1) - toupper(*s2));
+    // return *s1 - *s2;
+    return toupper(*s1) - toupper(*s2);
 }
 
 static void populateCategory(const int index, const char * name, const int updateNumber) {

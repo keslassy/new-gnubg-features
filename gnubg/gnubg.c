@@ -2289,8 +2289,8 @@ move_skill(moverecord * pmr)
                 qNow_NDBeforeMoveError=-1.0;
             qNow.ewmaError=move_0->rScore-move_i->rScore; /*new value*/
             qNow.player=ms.fTurn;
-            g_message("copied move error: %f",qNow.ewmaError);
-            g_message("player=%d",qNow.player);
+            g_message("move: error: %f, player %d",
+                qNow.ewmaError,qNow.player);
         }
         return Skill(move_i->rScore - move_0->rScore);
     }
