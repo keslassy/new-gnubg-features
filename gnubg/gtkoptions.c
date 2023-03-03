@@ -333,6 +333,14 @@ static void QuizToggled(GtkWidget * UNUSED(pw), optionswidget * pow)
     gtk_widget_set_sensitive(pow->pwQuizAutoAdd, n);
     gtk_widget_set_sensitive(pow->pwQuizSkill, n&&n2);
     gtk_widget_set_sensitive(pow->pwQuizOnePlayer, n&&n2);
+
+
+    // gtk_widget_set_sensitive(pow->pwQuizAutoAdd, fUseQuiz);
+    // gtk_widget_set_sensitive(pow->pwQuizSkill, fUseQuiz && fQuizAutoAdd);
+    // gtk_widget_set_sensitive(pow->pwQuizOnePlayer, fUseQuiz && fQuizAutoAdd);
+
+
+
 }
 
 static void
@@ -817,12 +825,19 @@ append_quiz_options(optionswidget * pow)
                                   "ready to be collected."));
     g_signal_connect(G_OBJECT(pow->pwQuiz), "toggled", G_CALLBACK(QuizToggled), pow);
 
-    pow->pwQuizAutoAdd = gtk_check_button_new_with_label(_("Automatically collect mistakes."));
+    pow->pwQuizAutoAdd = gtk_check_button_new_with_label(_("Automatically collect mistakes"));
     gtk_frame_set_label_widget(GTK_FRAME(pwf2), pow->pwQuizAutoAdd);
     gtk_widget_set_tooltip_text(pow->pwQuizAutoAdd,
                                 _("Allow GNU Backgammon to automatically collect mistakes so "
                                 "they can later be replayed. "));
     g_signal_connect(G_OBJECT(pow->pwQuizAutoAdd), "toggled", G_CALLBACK(QuizToggled), pow);
+
+    pow->pwQuizOnePlayer = gtk_check_button_new_with_label(_("For player 1 only"));
+    // gtk_frame_set_label_widget(GTK_FRAME(pwf2), pow->pwQuizOnePlayer);
+    gtk_box_pack_start(GTK_BOX(pwvbox2), pow->pwQuizOnePlayer, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(pow->pwQuizOnePlayer,
+                                _("Set quiz automatic collection for player 1 only."));
+    // g_signal_connect(G_OBJECT(pow->pwQuizOnePlayer), "toggled", G_CALLBACK(QuizToggled), pow);
 
 
     // pow->pwQuizCube = gtk_check_button_new_with_label(_("Cube Decisions"));
@@ -854,9 +869,9 @@ append_quiz_options(optionswidget * pow)
                                 _("Specify how bad GNU Backgammon must think a "
                                   "decision is before adding it to the quiz positions."));
 
-    gtk_widget_set_sensitive(pow->pwQuizAutoAdd, fUseQuiz);
-    gtk_widget_set_sensitive(pow->pwQuizSkill, fUseQuiz && fQuizAutoAdd);
-    gtk_widget_set_sensitive(pow->pwQuizOnePlayer, fUseQuiz && fQuizAutoAdd);
+    gtk_widget_set_sensitive(pow->pwQuizAutoAdd, TRUE);//fUseQuiz);
+    gtk_widget_set_sensitive(pow->pwQuizSkill, TRUE);//fUseQuiz && fQuizAutoAdd);
+    gtk_widget_set_sensitive(pow->pwQuizOnePlayer, TRUE);//fUseQuiz && fQuizAutoAdd);
 }
 
 
@@ -1916,6 +1931,7 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwAutoGame, fAutoGame, "set automatic game %s");
     CHECKUPDATE(pow->pwAutoRoll, fAutoRoll, "set automatic roll %s");
     CHECKUPDATE(pow->pwAutoMove, fAutoMove, "set automatic move %s");
+
     CHECKUPDATE(pow->pwTutor, fTutor, "set tutor mode %s");
     CHECKUPDATE(pow->pwTutorCube, fTutorCube, "set tutor cube %s");
     CHECKUPDATE(pow->pwTutorChequer, fTutorChequer, "set tutor chequer %s");
@@ -1947,10 +1963,9 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
         }
     }
 
-    CHECKUPDATE(pow->pwQuiz, fUseQuiz, "set tutor mode %s");
-    CHECKUPDATE(pow->pwQuizAutoAdd, fQuizAutoAdd, "set tutor cube %s");
-    CHECKUPDATE(pow->pwQuizSkill, fQuizSkill, "set tutor chequer %s");
-    CHECKUPDATE(pow->pwQuizOnePlayer, fQuizOnePlayer, "set tutor chequer %s");
+    CHECKUPDATE(pow->pwQuiz, fUseQuiz, "set quiz allow %s");
+    CHECKUPDATE(pow->pwQuizAutoAdd, fQuizAutoAdd, "set quiz autoadd %s");
+    CHECKUPDATE(pow->pwQuizOnePlayer, fQuizOnePlayer, "set quiz oneplayer %s");
     {
         GtkTreeModel *model;
         GtkTreeIter iter;
@@ -2235,8 +2250,7 @@ OptionsSet(optionswidget * pow)
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuiz), fUseQuiz);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizAutoAdd), fQuizAutoAdd);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizOnePlayer), 
-        fQuizOnePlayer);
+    // gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizOnePlayer), fQuizOnePlayer);
     gtk_combo_box_set_active(GTK_COMBO_BOX(pow->pwQuizSkill), nQuizSkillCurrent);
 
 
