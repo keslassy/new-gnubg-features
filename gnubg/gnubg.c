@@ -260,7 +260,7 @@ int fUseQuiz=TRUE;
 int fQuizAutoAdd=TRUE;
 quiz qNow={"\0",0,0.0,0,0.0}; /*extern*/
 float qNow_NDBeforeMoveError=-1.0; /*extern*/
-float fQuizAutoAddThreshold=0.1;
+// float fQuizAutoAddThreshold=0.1;
 // float fQuizAutoAddThreshold=arSkillLevel[SKILL_VERYBAD]; //<--pb, not constant?
 int fQuizOnePlayer=TRUE;
 // int fQuizSkill;
@@ -5569,27 +5569,23 @@ GiveAdvice(skilltype Skill)
     if (!fTutor)
         return FALSE;
 
-    // if(fInQuizMode){
-    //     UserCommand("hint");
-    // } else {
-
     switch (Skill) {
 
 
     case SKILL_VERYBAD:
-        if(fInQuizMode)          
+        // if(fInQuizMode)          
             // g_message("wrong move 1!");
         sz = _("You may be about to make a very bad play");
         break;
 
     case SKILL_BAD:
-        if(fInQuizMode)          
+        // if(fInQuizMode)          
             // g_message("wrong move 2!");
         sz = _("You may be about to make a bad play");
         break;
 
     case SKILL_DOUBTFUL:
-        if(fInQuizMode)          
+        // if(fInQuizMode)          
             // g_message("wrong move 3!");
         sz = _("You may be about to make a doubtful play");
         break;
@@ -5611,8 +5607,7 @@ GiveAdvice(skilltype Skill)
         g_free(buf);
         return ret;
     }
-    // }
-        return (FALSE);
+    return (FALSE);
 }
 
 extern void

@@ -1129,7 +1129,7 @@ extern int numCategories; /* the categories array should be filled from index 0 
 extern int fUseQuiz;    /* enable quiz features */
 extern int fInQuizMode; /* we are inside quiz mode, so no match etc. */
 extern int fQuizAutoAdd; /*for each analysis, add all mistakes of player 1 above: */
-extern float fQuizAutoAddThreshold;
+// extern float fQuizAutoAddThreshold;
 // extern int fQuizSkill;
 extern int fQuizOnePlayer;
 extern int nQuizSkillCurrent;
