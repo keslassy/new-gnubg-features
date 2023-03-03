@@ -3928,7 +3928,7 @@ CommandSetQuizOnePlayer(char *sz)
 }
 
 static void
-set_quiz_skill(skilltype Skill, int skillno, char *skill)
+set_quiz_skill(skilltype Skill, int skillno, char *UNUSED(skill))
 {
 
     nQuizSkillCurrent = skillno;

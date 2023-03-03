@@ -1778,6 +1778,8 @@ Allows garbage collection.
         g_message("in destroy loop");
         pwQuiz = NULL;
     }
+    if(fDelayNewMatchTillLeavingConsole)
+        UserCommand2("new match");
 }
 
 extern void ReloadQuizConsole(void) {
@@ -2292,8 +2294,10 @@ extern void QuizConsole(void) {
     currentCategoryIndex=-1;
     /* putting true means that we need to end it when we leave by using the close button and
     only for this screen; so we put false by default for now */
-    if(fInQuizMode)
+    if(fInQuizMode) {
         TurnOffQuizMode();
+        // UserCommand2("new match");
+    }
 
     GtkWidget *treeview = BuildCategoryList();
 

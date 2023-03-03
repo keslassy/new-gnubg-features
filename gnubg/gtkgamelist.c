@@ -131,7 +131,7 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     // tree_view=GTK_TREE_VIEW(pwGameList);
     //  GdkEventButton * event = LastEvent;
 
-    if(fInQuizMode){
+    if(fInQuizMode || fDelayNewMatchTillLeavingConsole){
         // fInQuizMode=FALSE;
         TurnOffQuizMode();
         UserCommand2("new match");

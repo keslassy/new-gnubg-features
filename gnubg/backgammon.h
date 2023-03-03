@@ -1134,7 +1134,7 @@ extern float fQuizAutoAddThreshold;
 extern int fQuizOnePlayer;
 extern int nQuizSkillCurrent;
 extern skilltype QuizSkill;
-
+extern int fDelayNewMatchTillLeavingConsole;
 // extern void BackFromHint (void);
 extern void GetPositionCategories(void);
 extern quiz qNow; 

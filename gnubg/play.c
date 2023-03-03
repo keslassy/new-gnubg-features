@@ -2823,6 +2823,9 @@ CommandMove(char *sz)
         // fLastMove = fInQuizMode? TRUE: FALSE;
 #endif
         TurnDone();
+    } else {
+        if(pmr)
+            g_free(pmr);
     }
             // g_free(ml.amMoves);
 

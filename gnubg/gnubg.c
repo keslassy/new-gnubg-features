@@ -266,6 +266,8 @@ int fQuizOnePlayer=TRUE;
 // int fQuizSkill;
 skilltype QuizSkill = SKILL_DOUBTFUL;
 int nQuizSkillCurrent = 0;
+int fDelayNewMatchTillLeavingConsole=0;
+
 
 // qNow.position=(char *)malloc(sizeof(char) * (200));
 // qNow.position=malloc(200);
