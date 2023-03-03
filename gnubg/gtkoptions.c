@@ -60,6 +60,10 @@ typedef struct {
     GtkWidget *pwTutorCube;
     GtkWidget *pwTutorChequer;
     GtkWidget *pwTutorSkill;
+    GtkWidget *pwQuiz;
+    GtkWidget *pwQuizAutoAdd;
+    GtkWidget *pwQuizOnePlayer;
+    GtkWidget *pwQuizSkill;
     GtkAdjustment *padjCubeBeaver;
     GtkAdjustment *padjCubeAutomatic;
     GtkAdjustment *padjLength;
@@ -321,6 +325,16 @@ TutorToggled(GtkWidget * UNUSED(pw), optionswidget * pow)
     gtk_widget_set_sensitive(pow->pwTutorSkill, n);
 }
 
+static void QuizToggled(GtkWidget * UNUSED(pw), optionswidget * pow)
+{
+    gint n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->pwQuiz));
+    gint n2 = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pow->pwQuizAutoAdd));
+
+    gtk_widget_set_sensitive(pow->pwQuizAutoAdd, n);
+    gtk_widget_set_sensitive(pow->pwQuizSkill, n&&n2);
+    gtk_widget_set_sensitive(pow->pwQuizOnePlayer, n&&n2);
+}
+
 static void
 ToggleAnimation(GtkWidget * pw, GtkWidget * pwSpeed)
 {
@@ -328,6 +342,9 @@ ToggleAnimation(GtkWidget * pw, GtkWidget * pwSpeed)
 }
 
 static char *aszTutor[] = {
+    N_("Doubtful"), N_("Bad"), N_("Very bad"), NULL
+};
+static char *aszQuiz[] =  {
     N_("Doubtful"), N_("Bad"), N_("Very bad"), NULL
 };
 
@@ -740,6 +757,108 @@ append_tutor_options(optionswidget * pow)
     gtk_widget_set_sensitive(pow->pwTutorCube, fTutor);
     gtk_widget_set_sensitive(pow->pwTutorChequer, fTutor);
 }
+
+static void
+append_quiz_options(optionswidget * pow)
+{
+    GtkWidget *pwvbox;
+    GtkWidget *pwvbox2;
+    GtkWidget *pwf;
+    GtkWidget *pwf2;
+    GtkWidget *pwev;
+    GtkWidget *pwhbox;
+#if !GTK_CHECK_VERSION(3,0,0)
+    GtkWidget *pwp;
+#endif
+    char **ppch;
+
+    /* Quiz options */
+
+    pwf = gtk_frame_new(NULL);
+    pwf2 = gtk_frame_new(NULL);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwf, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwf, GTK_ALIGN_START);
+    gtk_container_set_border_width(GTK_CONTAINER(pwf), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwf, gtk_label_new(_("Quiz")));
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
+    gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
+
+    gtk_container_add(GTK_CONTAINER(pwvbox), pwf2);
+    pwvbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 6);
+    gtk_container_add(GTK_CONTAINER(pwf2), pwvbox2);
+#else
+    pwp = gtk_alignment_new(0, 0, 0, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(pow->pwNoteBook), pwp, gtk_label_new(_("Quiz")));
+    gtk_container_add(GTK_CONTAINER(pwp), pwf);
+    pwvbox = gtk_vbox_new(FALSE, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
+    gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
+
+    gtk_container_add(GTK_CONTAINER(pwvbox), pwf2);
+    pwvbox2 = gtk_vbox_new(FALSE, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 6);
+    gtk_container_add(GTK_CONTAINER(pwf2), pwvbox2);
+#endif
+    // GtkWidget *pwQuiz;
+    // GtkWidget *pwQuizAutoAdd;
+    // GtkWidget *pwQuizSkill;
+    // GtkWidget *pwQuizOnePlayer;
+
+    pow->pwQuiz = gtk_check_button_new_with_label(_("Allow quiz"));
+    gtk_frame_set_label_widget(GTK_FRAME(pwf), pow->pwQuiz);
+    gtk_widget_set_tooltip_text(pow->pwQuiz,
+                                _("The quiz mode allows replaying collected mistakes. "
+                                  "Selecting this option allows GNU Backgammon to get positions "
+                                  "ready to be collected."));
+    g_signal_connect(G_OBJECT(pow->pwQuiz), "toggled", G_CALLBACK(QuizToggled), pow);
+
+    pow->pwQuizAutoAdd = gtk_check_button_new_with_label(_("Automatically collect mistakes."));
+    gtk_frame_set_label_widget(GTK_FRAME(pwf2), pow->pwQuizAutoAdd);
+    gtk_widget_set_tooltip_text(pow->pwQuizAutoAdd,
+                                _("Allow GNU Backgammon to automatically collect mistakes so "
+                                "they can later be replayed. "));
+    g_signal_connect(G_OBJECT(pow->pwQuizAutoAdd), "toggled", G_CALLBACK(QuizToggled), pow);
+
+
+    // pow->pwQuizCube = gtk_check_button_new_with_label(_("Cube Decisions"));
+    // gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwQuizCube, FALSE, FALSE, 0);
+    // gtk_widget_set_tooltip_text(pow->pwQuizCube, _("Use the Quiz for cube decisions."));
+
+    // pow->pwQuizChequer = gtk_check_button_new_with_label(_("Chequer play"));
+    // gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwQuizChequer, FALSE, FALSE, 0);
+    // gtk_widget_set_tooltip_text(pow->pwQuizChequer, _("Use the Quiz for chequer play decisions."));
+
+    pwev = gtk_event_box_new();
+    gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
+    gtk_box_pack_start(GTK_BOX(pwvbox2), pwev, FALSE, FALSE, 4);
+#if GTK_CHECK_VERSION(3,0,0)
+    pwhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
+#else
+    pwhbox = gtk_hbox_new(FALSE, 4);
+#endif
+    gtk_container_add(GTK_CONTAINER(pwev), pwhbox);
+
+    gtk_box_pack_start(GTK_BOX(pwhbox), gtk_label_new(_("Minimum mistake level:")), FALSE, FALSE, 0);
+    pow->pwQuizSkill = gtk_combo_box_text_new();
+    gtk_box_pack_start(GTK_BOX(pwhbox), pow->pwQuizSkill, FALSE, FALSE, 0);
+    for (ppch = aszQuiz; *ppch; ppch++) {
+        gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pow->pwQuizSkill), gettext(*ppch));
+    }
+    g_assert(nQuizSkillCurrent >= 0 && nQuizSkillCurrent <= 2);
+    gtk_widget_set_tooltip_text(pwev,
+                                _("Specify how bad GNU Backgammon must think a "
+                                  "decision is before adding it to the quiz positions."));
+
+    gtk_widget_set_sensitive(pow->pwQuizAutoAdd, fUseQuiz);
+    gtk_widget_set_sensitive(pow->pwQuizSkill, fUseQuiz && fQuizAutoAdd);
+    gtk_widget_set_sensitive(pow->pwQuizOnePlayer, fUseQuiz && fQuizAutoAdd);
+}
+
 
 static void
 append_display_options(optionswidget * pow)
@@ -1727,6 +1846,7 @@ OptionsPages(optionswidget * pow)
     append_game_options(pow);
     append_cube_options(pow);
     append_tutor_options(pow);
+    append_quiz_options(pow);
     append_display_options(pow);
     append_match_options(pow);
     append_sound_options(pow);
@@ -1826,6 +1946,39 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
             g_free(selection);
         }
     }
+
+    CHECKUPDATE(pow->pwQuiz, fUseQuiz, "set tutor mode %s");
+    CHECKUPDATE(pow->pwQuizAutoAdd, fQuizAutoAdd, "set tutor cube %s");
+    CHECKUPDATE(pow->pwQuizSkill, fQuizSkill, "set tutor chequer %s");
+    CHECKUPDATE(pow->pwQuizOnePlayer, fQuizOnePlayer, "set tutor chequer %s");
+    {
+        GtkTreeModel *model;
+        GtkTreeIter iter;
+
+        model = gtk_combo_box_get_model(GTK_COMBO_BOX(pow->pwQuizSkill));
+
+        if (gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pow->pwQuizSkill), &iter)) {
+            gchar *selection;
+            gtk_tree_model_get(model, &iter, 0, &selection, -1);
+
+            if (!strcmp(selection, gettext(aszQuiz[0]))) {     /* N_("Doubtful") */
+                if (QuizSkill != SKILL_DOUBTFUL)
+                    UserCommand("set Quiz skill doubtful");
+            } else if (!strcmp(selection, gettext(aszQuiz[1]))) {      /* N_("Bad") */
+                if (QuizSkill != SKILL_BAD)
+                    UserCommand("set Quiz skill bad");
+            } else if (!strcmp(selection, gettext(aszQuiz[2]))) {      /* N_("Very Bad") */
+                if (QuizSkill != SKILL_VERYBAD)
+                    UserCommand("set Quiz skill very bad");
+            } else {
+                /* g_assert(FALSE); Unknown Selection, defaulting */
+                if (QuizSkill != SKILL_DOUBTFUL)
+                    UserCommand("set Quiz skill doubtful");
+            }
+            g_free(selection);
+        }
+    }
+
 
     CHECKUPDATE(pow->pwCubeUsecube, fCubeUse, "set cube use %s");
     CHECKUPDATE(pow->pwCubeJacoby, fJacoby, "set jacoby %s");
@@ -2079,6 +2232,14 @@ OptionsSet(optionswidget * pow)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwTutorChequer), fTutorChequer);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(pow->pwTutorSkill), nTutorSkillCurrent);
+
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuiz), fUseQuiz);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizAutoAdd), fQuizAutoAdd);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizOnePlayer), 
+        fQuizOnePlayer);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(pow->pwQuizSkill), nQuizSkillCurrent);
+
+
     gtk_adjustment_set_value(pow->padjCubeBeaver, nBeavers);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwCubeUsecube), fCubeUse);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwCubeJacoby), fJacoby);

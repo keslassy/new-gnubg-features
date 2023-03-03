@@ -856,6 +856,12 @@ extern void CommandSetPriorityNice(char *);
 extern void CommandSetPriorityNormal(char *);
 extern void CommandSetPriorityTimeCritical(char *);
 extern void CommandSetPrompt(char *);
+extern void CommandSetQuizAllow(char *);
+extern void CommandSetQuizAutoAdd(char *);
+extern void CommandSetQuizOnePlayer(char *);
+extern void CommandSetQuizSkillBad(char *);
+extern void CommandSetQuizSkillDoubtful(char *);
+extern void CommandSetQuizSkillVeryBad(char *);
 extern void CommandSetRatingOffset(char *);
 extern void CommandSetRecord(char *);
 extern void CommandSetRNGBBS(char *);
@@ -1122,9 +1128,13 @@ extern int numCategories; /* the categories array should be filled from index 0 
 // extern int numPositionsInCategory[MAX_POS_CATEGORIES]; /* array with #positions per category file*/
 extern int fUseQuiz;    /* enable quiz features */
 extern int fInQuizMode; /* we are inside quiz mode, so no match etc. */
-extern int fAutoAddToQuiz; /*for each analysis, add all mistakes of player 1 above: */
-extern float AutoAddToQuizThreshold;
-extern int AutoAddPlayerOneOnly;
+extern int fQuizAutoAdd; /*for each analysis, add all mistakes of player 1 above: */
+extern float fQuizAutoAddThreshold;
+extern int fQuizSkill;
+extern int fQuizOnePlayer;
+extern int nQuizSkillCurrent;
+extern skilltype QuizSkill;
+
 // extern void BackFromHint (void);
 extern void GetPositionCategories(void);
 extern quiz qNow; 

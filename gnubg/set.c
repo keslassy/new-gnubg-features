@@ -3899,6 +3899,64 @@ CommandSetTutorSkillVeryBad(char *UNUSED(sz))
 
     set_tutor_skill(SKILL_VERYBAD, 2, _("very bad"));
 }
+/************/
+
+
+extern void
+CommandSetQuizAllow(char *sz)
+{
+
+    SetToggle("quiz-allow", &fUseQuiz, sz, _("Allow quiz mode."), _("Don't allow quiz mode"));
+}
+
+extern void
+CommandSetQuizAutoAdd(char *sz)
+{
+
+    SetToggle("quiz-autoadd", &fQuizAutoAdd, sz,
+              _("Set quiz automatic collection of positions."),
+              _("Cancel quiz automatic collection of positions."));
+}
+
+extern void
+CommandSetQuizOnePlayer(char *sz)
+{
+
+    SetToggle("quiz-oneplayer", &fQuizOnePlayer, sz,
+              _("Any quiz automatic collection should only be for player 1."), 
+              _("Any quiz automatic collection should only be for both players."));
+}
+
+static void
+set_quiz_skill(skilltype Skill, int skillno, char *skill)
+{
+
+    nQuizSkillCurrent = skillno;
+    QuizSkill = Skill;
+    outputf(_("Quiz automatic collection will be given for mistakes marked at least `%s'.\n"), skill);
+}
+
+extern void
+CommandSetQuizSkillDoubtful(char *UNUSED(sz))
+{
+
+    set_quiz_skill(SKILL_DOUBTFUL, 0, _("doubtful"));
+}
+
+extern void
+CommandSetQuizSkillBad(char *UNUSED(sz))
+{
+
+    set_quiz_skill(SKILL_BAD, 1, _("bad"));
+}
+
+extern void
+CommandSetQuizSkillVeryBad(char *UNUSED(sz))
+{
+
+    set_quiz_skill(SKILL_VERYBAD, 2, _("very bad"));
+}
+
 
 /*
  * Sounds

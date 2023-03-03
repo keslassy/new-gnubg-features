@@ -257,12 +257,15 @@ int fTriggeredByRecordList=FALSE;
     /*quiz*/
 int fInQuizMode=FALSE;
 int fUseQuiz=TRUE;
-int fAutoAddToQuiz=TRUE;
+int fQuizAutoAdd=TRUE;
 quiz qNow={"\0",0,0.0,0,0.0}; /*extern*/
 float qNow_NDBeforeMoveError=-1.0; /*extern*/
-float AutoAddToQuizThreshold=0.1;
-// float AutoAddToQuizThreshold=arSkillLevel[SKILL_VERYBAD]; //<--pb, not constant?
-int AutoAddPlayerOneOnly=TRUE;
+float fQuizAutoAddThreshold=0.1;
+// float fQuizAutoAddThreshold=arSkillLevel[SKILL_VERYBAD]; //<--pb, not constant?
+int fQuizOnePlayer=TRUE;
+int fQuizSkill;
+skilltype QuizSkill = SKILL_DOUBTFUL;
+int nQuizSkillCurrent = 0;
 
 // qNow.position=(char *)malloc(sizeof(char) * (200));
 // qNow.position=malloc(200);
@@ -276,6 +279,7 @@ int fResetSync = FALSE;         /* May need to wait for main window */
 
 skilltype TutorSkill = SKILL_DOUBTFUL;
 int nTutorSkillCurrent = 0;
+
 
 char *szCurrentFileName = NULL;
 char *szCurrentFolder = NULL;
@@ -3473,6 +3477,17 @@ SaveMiscSettings(FILE * pf)
     if (TutorSkill == SKILL_VERYBAD)
         fprintf(pf, "very bad\n");
     else if (TutorSkill == SKILL_BAD)
+        fprintf(pf, "bad\n");
+    else
+        fprintf(pf, "doubtful\n");
+
+    fprintf(pf, "set quiz allow %s\n", fUseQuiz ? "on" : "off");
+    fprintf(pf, "set quiz autoadd %s\n", fQuizAutoAdd ? "on" : "off");
+    fprintf(pf, "set quiz oneplayer %s\n", fQuizOnePlayer ? "on" : "off");
+    fprintf(pf, "set quiz skill ");
+    if (QuizSkill == SKILL_VERYBAD)
+        fprintf(pf, "very bad\n");
+    else if (QuizSkill == SKILL_BAD)
         fprintf(pf, "bad\n");
     else
         fprintf(pf, "doubtful\n");

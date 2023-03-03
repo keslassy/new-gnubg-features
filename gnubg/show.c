@@ -1981,8 +1981,6 @@ CommandShowExport(char *UNUSED(sz))
 
 }
 
-
-
 extern void
 CommandShowTutor(char *UNUSED(sz))
 {

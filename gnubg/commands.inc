@@ -1063,6 +1063,25 @@ static command acSetExportHTMLType[] = {
   { "system", NULL, 
     N_("Select sound system"), NULL, acSetSoundSystem },
   { NULL, NULL, NULL, NULL, NULL }    
+}, acSetQuizSkill[] = {
+  { "doubtful", CommandSetQuizSkillDoubtful, N_("Collect `doubtful' play"),
+    NULL, NULL },
+  { "bad", CommandSetQuizSkillBad, N_("Collect `bad' play"),
+    NULL, NULL },
+  { "verybad", CommandSetQuizSkillVeryBad, N_("Collect `very bad' play"),
+    NULL, NULL },
+  { NULL, NULL, NULL, NULL, NULL }    
+}, acSetQuiz[] = {
+  { "allow", CommandSetQuizAllow, N_("Allow quiz mode"),
+    szONOFF, &cOnOff },
+  { "autoadd", CommandSetQuizAutoAdd, N_("Set quiz automatic collection of positions"),
+    szONOFF, &cOnOff },
+  { "oneplayer", CommandSetQuizOnePlayer, 
+    N_("Set quiz automatic collection for player 1 only"),
+    szONOFF, &cOnOff },
+  { "skill", NULL, N_("Set level for quiz automatic collection"), 
+    NULL, acSetQuizSkill },
+  { NULL, NULL, NULL, NULL, NULL }    
 }, acSetTutorSkill[] = {
   { "doubtful", CommandSetTutorSkillDoubtful, N_("Warn about `doubtful' play"),
     NULL, NULL },
@@ -1231,6 +1250,7 @@ static command acSetVariation[] = {
     { "priority", NULL, N_("Set the priority of the gnubg process"), NULL, acSetPriority },
     { "prompt", CommandSetPrompt, N_("Customise the prompt GNUbg prints when "
       "ready for commands"), szPROMPT, NULL },
+    { "quiz", NULL, N_("Control quiz setup"), NULL, acSetQuiz }, 
     { "ratingoffset", CommandSetRatingOffset,
       N_("Set rating offset used for estimating abs. rating"),
       szVALUE, NULL },
