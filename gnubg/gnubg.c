@@ -2280,8 +2280,8 @@ move_skill(moverecord * pmr)
         if(fUseQuiz){
             qNow.ewmaError=0.0;
             qNow.player=ms.fTurn;
-            g_message("no eval => zero error: %f, player %d",
-                qNow.ewmaError,qNow.player);
+            // g_message("no eval => zero error: %f, player %d",
+            //     qNow.ewmaError,qNow.player);
         }
         return SKILL_NONE;
     }
@@ -2295,8 +2295,7 @@ move_skill(moverecord * pmr)
                 qNow_NDBeforeMoveError=-1.0;
             qNow.ewmaError=move_0->rScore-move_i->rScore; /*new value*/
             qNow.player=ms.fTurn;
-            g_message("move: error: %f, player %d",
-                qNow.ewmaError,qNow.player);
+            // g_message("move: error: %f, player %d",qNow.ewmaError,qNow.player);
         }
         return Skill(move_i->rScore - move_0->rScore);
     }
@@ -5001,7 +5000,7 @@ main(int argc, char *argv[])
     init_autosave();
     if(fUseQuiz) {
         initQuizDir();
-        g_message("created quiz dir");
+        // g_message("created quiz dir");
     }
 
     RenderInitialise();

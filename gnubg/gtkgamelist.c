@@ -139,7 +139,7 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     }
 
 
-    g_message("---start of GameListSelectRow, dice=%d,%d---",ms.anDice[0],ms.anDice[1]);
+    // g_message("---start of GameListSelectRow, dice=%d,%d---",ms.anDice[0],ms.anDice[1]);
     gtk_tree_view_get_cursor(tree_view, &path, &column);
     if (!path)
         return FALSE;
@@ -237,7 +237,7 @@ GameListSelectRow(GtkTreeView * tree_view, gpointer UNUSED(p))
     }
         // gtk_widget_show_all(pQuizMenu);
 
-    g_message("in end of GameListSelectRow, dice=%d,%d, qNowND:%f",ms.anDice[0],ms.anDice[1],qNow_NDBeforeMoveError);
+    // g_message("in end of GameListSelectRow, dice=%d,%d, qNowND:%f",ms.anDice[0],ms.anDice[1],qNow_NDBeforeMoveError);
     return FALSE;
 }
 
@@ -380,8 +380,8 @@ CreateStyles(GtkWidget * UNUSED(widget), gpointer UNUSED(p))
 
 extern int AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
     // g_message("I'm in the test func: %s", pcategory->name);
-    g_message("Adding position: %s to category %s, error: %f",
-        qNow.position,pcategory->name,qNow.ewmaError);
+    // g_message("Adding position: %s to category %s, error: %f",
+    //     qNow.position,pcategory->name,qNow.ewmaError);
     qNow.lastSeen=(long int) (time(NULL));
     // return (AddQuizPosition(qNow,pcategory));
     return(writeQuizLineFull (qNow, pcategory->path, FALSE));
@@ -393,8 +393,8 @@ extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw))
     UserCommand2("previous roll");
     UserCommand2("next roll");
     qNow.ewmaError=qNow_NDBeforeMoveError;
-    g_message("Adding CUBE position: %s to category %s, error: %f",
-        qNow.position,pcategory->name,qNow.ewmaError);
+    // g_message("Adding CUBE position: %s to category %s, error: %f",
+    //     qNow.position,pcategory->name,qNow.ewmaError);
     qNow.lastSeen=(long int) (time(NULL));
     return(writeQuizLineFull (qNow, pcategory->path, FALSE));
     // return (AddQuizPosition(qNow,pcategory));
@@ -423,8 +423,8 @@ extern void BuildQuizMenu(GdkEventButton *event){
 
 
 
-    g_message("BuildQuizMenu: numCategories=%d,qNow_NDBeforeMoveError=%f,globalCounter=%d",
-        numCategories,qNow_NDBeforeMoveError,globalCounter);
+    // g_message("BuildQuizMenu: numCategories=%d,qNow_NDBeforeMoveError=%f,globalCounter=%d",
+    //     numCategories,qNow_NDBeforeMoveError,globalCounter);
     // gtk_image_menu_item_set_always_show_image(menu_item,TRUE);
 
 
@@ -469,10 +469,10 @@ extern void BuildQuizMenu(GdkEventButton *event){
             (1) needs to know he can do it, and (2) needs to start clicking around. 
             (B) Only present each category once, but when a user picks a category,
             a window asks whether to add the ND decision or the move decision.  */
-            g_message("Build:  qNowND:%f",qNow_NDBeforeMoveError);
+            // g_message("Build:  qNowND:%f",qNow_NDBeforeMoveError);
             /*second set of categories for ND before move*/
             if(qNow_NDBeforeMoveError >-0.001) {
-                g_message("creating 2nd part of popup");
+                // g_message("creating 2nd part of popup");
                 /*separator*/
                 menu_item = gtk_menu_item_new();
                 gtk_menu_shell_append(GTK_MENU_SHELL(pQuizMenu), menu_item);
@@ -495,7 +495,7 @@ extern void BuildQuizMenu(GdkEventButton *event){
         * gdk_event_get_time() accepts a NULL argument
         */
         if(event != NULL){
-            g_message("popup event!");
+            // g_message("popup event!");
             gtk_menu_popup(GTK_MENU(pQuizMenu), NULL, NULL, NULL, NULL,
                             (event != NULL) ? event->button : 0,
                             gdk_event_get_time((GdkEvent*)event));
@@ -631,7 +631,7 @@ view_onButtonPressed (GtkWidget *UNUSED(treeview),
 
 gboolean view_onPopupMenu (GtkWidget * UNUSED(treeview), gpointer UNUSED(userdata)) {
 //   view_popup_menu(treeview, NULL, userdata);
-g_message("view_onPopupMenu");
+// g_message("view_onPopupMenu");
     BuildQuizMenu(NULL);
     return FALSE; //GDK_EVENT_STOP;
 }

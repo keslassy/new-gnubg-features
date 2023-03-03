@@ -1033,7 +1033,7 @@ CreatePanels(void)
     if(fUseQuiz){
         // g_message("start-up");
         GetPositionCategories();
-        g_message("numCategories at start=%d",numCategories);
+        // g_message("numCategories at start=%d",numCategories);
     } 
 
     CreateGameWindow();

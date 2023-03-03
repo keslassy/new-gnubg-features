@@ -6770,7 +6770,7 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
 
         char buf[200];
         // counterForFile++;
-        g_message("at hint");
+        // g_message("at hint");
         sprintf(buf,_("\n\n%d %s played in category %s (which has %d %s). "
             "\n Play another position in this category?\n"), 
             counterForFile,

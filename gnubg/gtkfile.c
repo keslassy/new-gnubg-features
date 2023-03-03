@@ -1130,10 +1130,10 @@ static void writeQuizLine (quiz q, FILE* fp) {
 extern int writeQuizLineFull (quiz q, char * file, int quiet) {
     /*test that file exists, else write header*/
     if(!g_file_test(file, G_FILE_TEST_EXISTS )){
-        g_message("writeQuizLineFull file doesn't exist: %s",file);
+        // g_message("writeQuizLineFull file doesn't exist: %s",file);
         	FILE* fp0 = fopen(file, "w");        
             if(!fp0){
-                g_message("writeQuizLineFull file had a pointer problem: fp0-> %s",file);
+                // g_message("writeQuizLineFull file had a pointer problem: fp0-> %s",file);
                 if(!quiet) {
                     char buf[100];
                     sprintf(buf,_("Error: cannot write into file %s"),file);
@@ -1145,7 +1145,7 @@ extern int writeQuizLineFull (quiz q, char * file, int quiet) {
             fclose(fp0);
     }
     if(!g_file_test(file, G_FILE_TEST_IS_REGULAR)){
-        g_message("writeQuizLineFull problem with file %s",file);
+        // g_message("writeQuizLineFull problem with file %s",file);
         if(!quiet) {
             char buf[100];
             sprintf(buf,_("Error: problem with file %s, not a regular file?"),file);
@@ -1155,7 +1155,7 @@ extern int writeQuizLineFull (quiz q, char * file, int quiet) {
     }
     FILE* fp = fopen(file, "r+");
     if(!fp){
-        g_message("writeQuizLineFull cannot read/write: fp-> %s",file);
+        // g_message("writeQuizLineFull cannot read/write: fp-> %s",file);
         if(!quiet) {
             char buf[100];
             sprintf(buf,_("Error: cannot read/write file %s"),file);
@@ -1179,9 +1179,9 @@ extern int writeQuizLineFull (quiz q, char * file, int quiet) {
             return FALSE;
         }
     }
-    g_message("lineCounter=%d",lineCounter);
+    // g_message("lineCounter=%d",lineCounter);
     if(lineCounter>MAX_ROWS){
-        g_message("writeQuizLineFull full file-> %s",file);
+        // g_message("writeQuizLineFull full file-> %s",file);
         if(!quiet) {
             char buf[100];
             sprintf(buf,_("Error: file %s has reached the maximum allowed number %d of positions"),
@@ -1192,7 +1192,7 @@ extern int writeQuizLineFull (quiz q, char * file, int quiet) {
         return FALSE;
     }    
     writeQuizLine (q, fp);
-    g_message("Added a line");
+    // g_message("Added a line");
     fclose(fp);
     return TRUE;
 }
@@ -1315,7 +1315,7 @@ extern void qUpdate(float error) {
     */
 
     if(iOptCounter==0) {
-        g_message("updating in qUpdate with error=%f",error);
+        // g_message("updating in qUpdate with error=%f",error);
         // g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
         q[iOpt].ewmaError=ERROR_DECAY*(q[iOpt].ewmaError)+(1-ERROR_DECAY)*error;
         // g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
@@ -1326,8 +1326,8 @@ extern void qUpdate(float error) {
         latestErrorInQuiz=error;
         iOptCounter=1;
         counterForFile++;
-    } else  
-        g_message("NOT updating in qUpdate! 2nd update or more...");
+    } //else  
+        // g_message("NOT updating in qUpdate! 2nd update or more...");
 
 }
 // #if(0) /***********/
@@ -1384,7 +1384,7 @@ static int CountPositions(categorytype category) {
 
 	FILE* fp = fopen(category.path, "r");
     if (fp == NULL) {
-        g_message("error: opening file: %s ", category.path);
+        // g_message("error: opening file: %s ", category.path);
         return 0; //category.number=0;
     }
 
@@ -1544,26 +1544,26 @@ static int DeleteCategory(const int categoryIndex) {
     // } else {
 
     for(int j=categoryIndex+1;j < numCategories; j++) {
-        g_message("loop2 in DeleteCategory: j=%d",j);
+        // g_message("loop2 in DeleteCategory: j=%d",j);
         categories[j-1]=categories[j]; 
     }
     numCategories--;
         // DisplayCategories();
         // UserCommand2("save settings");
         // return 1;
-    g_message("end of deletecategory");
+    // g_message("end of deletecategory");
     return 1;
 }
 
 static int CheckBadCharacters(const char * name) {
-    g_message("checking");
+    // g_message("checking");
     char bad_chars[] = "!@%^*~|<>:$/?\\\"";
     int invalid_found = FALSE;
     int i;
     for (i = 0; i < (int) strlen(bad_chars); ++i) {
         if (strchr(name, bad_chars[i]) != NULL) {
             invalid_found = TRUE;
-            g_message("invalid:%c",bad_chars[i]);
+            // g_message("invalid:%c",bad_chars[i]);
             break;
         }
     }
@@ -1611,7 +1611,7 @@ AddCategory(const char *sz)
     gchar *file = g_strdup_printf("%s.csv", sz);
     gchar *fullPath = g_build_filename(szHomeDirectory, "quiz", file, NULL);
     // char *fullPath = g_strconcat(positionsFolder, G_DIR_SEPARATOR_S, sz, ".csv", NULL);
-    g_message("fullPath=%s",fullPath);
+    // g_message("fullPath=%s",fullPath);
 
 	FILE* fp = fopen(fullPath, "w");
 
@@ -1732,14 +1732,14 @@ GetSelectedCategoryIndex(GtkTreeView * treeview)
     // char *category = NULL;
     GtkTreeSelection *sel = gtk_tree_view_get_selection(treeview);
     if (gtk_tree_selection_count_selected_rows(sel) != 1) {
-        g_message("no index!");
+        // g_message("no index!");
         return (-1);
     }
     GList * selected_list = gtk_tree_selection_get_selected_rows (sel, &model);
     GList * cursor = g_list_first (selected_list);
     GtkTreePath * path = cursor->data;
     gint * a = gtk_tree_path_get_indices (path);
-    g_message("index=%d",a[0]);
+    // g_message("index=%d",a[0]);
     return a[0];
 }
 
@@ -1768,14 +1768,14 @@ DestroyQuizDialog(gpointer UNUSED(p), GObject * UNUSED(obj))
 Allows garbage collection.
 */
 {
-    g_message("in destroy");
+    // g_message("in destroy");
     // sprintf(name0BeforeQuiz, "%s",ap[0].szName);
     // sprintf(name1BeforeQuiz, "%s",ap[0].szName);
     
 
     if (pwQuiz) { //i.e. we didn't close it using DestroyQuizDialog()
         gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
-        g_message("in destroy loop");
+        // g_message("in destroy loop");
         pwQuiz = NULL;
     }
     if(fDelayNewMatchTillLeavingConsole)
@@ -1869,7 +1869,7 @@ static void AddCategoryClicked(GtkButton * UNUSED(button), gpointer UNUSED(treev
         _("Position category:"), NULL);
     if(!categoryName) 
         return;
-    g_message("add=%s",categoryName);
+    // g_message("add=%s",categoryName);
     if (AddCategory(categoryName)) {
     // AddCategory(category);
         // gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
@@ -1988,17 +1988,17 @@ extern void LoadPositionAndStart (void) {
         */
         updatePriority(&(q[i]),seconds);
         // q[i].priority=(q[i].ewmaError + SMALL_ERROR) * (q[i].ewmaError + SMALL_ERROR) * (float) (seconds-q[i].lastSeen); // /1000.0;
-        g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
+        // g_message("priority %.3f <-- %.3f, %.3f, %ld\n", q[i].priority, q[i].ewmaError, (float) (seconds-q[i].lastSeen)/1000.0,q[i].lastSeen);
         if(q[i].priority>q[iOpt].priority) {
             // maxPriority=q[i].priority;
             iOpt=i;
         }
     }
     iOptCounter=0;
-    g_message("iOpt=%d: priority %.3f <-- error %.3f, delta t %.3f, %ld\n", 
-        iOpt,
-        q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
-        q[iOpt].lastSeen);
+    // g_message("iOpt=%d: priority %.3f <-- error %.3f, delta t %.3f, %ld\n", 
+    //     iOpt,
+    //     q[iOpt].priority, q[iOpt].ewmaError, (float) (seconds-q[iOpt].lastSeen),
+    //     q[iOpt].lastSeen);
 
     // qNow=q[iOpt];
 
@@ -2015,11 +2015,11 @@ extern void LoadPositionAndStart (void) {
   
     CommandSetGNUBgID(q[iOpt].position); 
 
-    g_message("fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
-            ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+    // g_message("fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+    //         ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
     if(q[iOpt].player==0) {
     // if(ms.fTurn == 0) {
-        g_message("swap!");
+        // g_message("swap!");
         // SwapSides(ms.anBoard);
         CommandSwapPlayers(NULL);   
         // sprintf(ap[1].szName, "%s", name1BeforeQuiz);
@@ -2040,7 +2040,7 @@ extern void LoadPositionAndStart (void) {
     char buf[100];
     sprintf(buf,"set player 1 name %s",name1BeforeQuiz);
     UserCommand2(buf);
-    g_message("names: %s %s",ap[0].szName,ap[1].szName);
+    // g_message("names: %s %s",ap[0].szName,ap[1].szName);
 
     // if (ap[ms.fTurn].pt != PLAYER_HUMAN) {
         // g_message("player=%d",q[iOpt].player);
@@ -2063,8 +2063,8 @@ extern void LoadPositionAndStart (void) {
     else /*T/K*/
         StatusBarMessage(_("Your turn to play this quiz position: double or no-double?"));
     // g_message("double");
-     g_message("Post: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
-        ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
+    //  g_message("Post: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
+    //     ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
     // gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Your turn to play this quiz position!"));
 
 
@@ -2158,9 +2158,9 @@ static GtkWidget * BuildCategoryList(void) {
 // }
 static void QuizManageClicked(GtkWidget * UNUSED(widget), GdkEventButton  * event, GtkTreeView * treeview) {
     
-    g_message("before: currentCategoryIndex=%d",currentCategoryIndex);
+    // g_message("before: currentCategoryIndex=%d",currentCategoryIndex);
     currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
-    g_message("after: currentCategoryIndex=%d",currentCategoryIndex);
+    // g_message("after: currentCategoryIndex=%d",currentCategoryIndex);
 
     /*double-click, e.g. w/ left or middle click, not right*/
     if (event->type == GDK_2BUTTON_PRESS  &&  event->button != 3){
@@ -2259,8 +2259,8 @@ extern void TurnOnQuizMode(void){
 }
 extern void TurnOffQuizMode(void){
     fInQuizMode=FALSE;
-    g_message("before TurnOff: ap names: (%s,%s) vs: (%s,%s)",
-        ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    // g_message("before TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+        // ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
     // if(strcmp(ap[0].szName,name0BeforeQuiz))
     //     // sprintf(ap[0].szName, "%s",name0BeforeQuiz);
     //     strncpy(ap[0].szName, name0BeforeQuiz, MAX_NAME_LEN);
@@ -2452,7 +2452,7 @@ extern void QuizConsole(void) {
     // gtk_button_set_always_show_image (GTK_BUTTON (button), TRUE);
     // gtk_widget_set_sensitive(startButton, (&selected_iter!=NULL));
 
-    g_message("in window: currentCategoryIndex=%d",currentCategoryIndex);
+    // g_message("in window: currentCategoryIndex=%d",currentCategoryIndex);
     
     gtk_widget_set_sensitive(startButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
     gtk_widget_set_sensitive(renameButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
@@ -2499,7 +2499,7 @@ extern void QuizConsole(void) {
 // }
 
 extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
-    g_message("in StartQuiz");
+    // g_message("in StartQuiz");
 
     // currentCategory = GetSelectedCategory(treeview);
     // if(!currentCategory) {
@@ -2509,7 +2509,7 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     // }
 
     currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
-    g_message("currentCategoryIndex=%d",currentCategoryIndex);
+    // g_message("currentCategoryIndex=%d",currentCategoryIndex);
     // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
     if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
         GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
@@ -2572,15 +2572,12 @@ CommandQuiz(char *UNUSED(sz))
 
 
 /* *************** */
+    // CommandQuiz("");
+/* ************ END OF QUIZ ************************** */
 
 extern void
 GTKAnalyzeFile(void) {
-    // QuizConsole();
-    CommandQuiz("");
-
-/* ************ END OF QUIZ ************************** */
-
-#if (0)    
+ 
     // g_message("GTKAnalyzeFile(): %d\n", AnalyzeFileSettingDef);
     if (AnalyzeFileSettingDef == AnalyzeFileBatch) {
         GTKBatchAnalyse(NULL, 0, NULL);
@@ -2590,7 +2587,6 @@ GTKAnalyzeFile(void) {
         SmartAnalyze();
     }
     return;
-#endif
 }
 
 
