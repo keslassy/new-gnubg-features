@@ -267,7 +267,7 @@ int fQuizOnePlayer=TRUE;
 skilltype QuizSkill = SKILL_VERYBAD;
 int nQuizSkillCurrent = 0;
 int fDelayNewMatchTillLeavingConsole=0;
-
+int fQuietNewMatch=0;
 // qNow.position=(char *)malloc(sizeof(char) * (200));
 // qNow.position=malloc(200);
 quizdecision qDecision=QUIZ_UNKNOWN;

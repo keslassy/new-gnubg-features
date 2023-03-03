@@ -1779,8 +1779,12 @@ Allows garbage collection.
         // g_message("in destroy loop");
         pwQuiz = NULL;
     }
-    if(fDelayNewMatchTillLeavingConsole)
+    if(fDelayNewMatchTillLeavingConsole) {
+        fDelayNewMatchTillLeavingConsole=0;
+        fQuietNewMatch=1;
         UserCommand2("new match");
+        fQuietNewMatch=0;
+    }
 }
 
 extern void ReloadQuizConsole(void) {

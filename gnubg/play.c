@@ -2975,7 +2975,8 @@ CommandNewMatch(char *sz)
     UpdateSetting(&ms.fJacoby);
     UpdateSetting(&ms.gs);
 
-    outputf(ngettext("A new %d point match has been started.\n", "A new %d points match has been started.\n", n), n);
+    if(!fInQuizMode && !fQuietNewMatch)  
+        outputf(ngettext("A new %d point match has been started.\n", "A new %d points match has been started.\n", n), n);
 
 #if defined (USE_GTK)
     if (fX)
@@ -3012,7 +3013,7 @@ CommandNewSession(char *UNUSED(sz))
     UpdateSetting(&ms.fJacoby);
     UpdateSetting(&ms.gs);
 
-    if(!fInQuizMode && !fDelayNewMatchTillLeavingConsole)
+    if(!fInQuizMode && !fQuietNewMatch)  
         outputl(_("A new session has been started."));
 
 #if defined (USE_GTK)

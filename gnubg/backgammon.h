@@ -1135,6 +1135,7 @@ extern int fQuizOnePlayer;
 extern int nQuizSkillCurrent;
 extern skilltype QuizSkill;
 extern int fDelayNewMatchTillLeavingConsole;
+extern int fQuietNewMatch; /*starts at 1, then goes to 0*/
 // extern void BackFromHint (void);
 extern void GetPositionCategories(void);
 extern quiz qNow; 
