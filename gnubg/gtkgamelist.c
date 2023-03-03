@@ -583,7 +583,7 @@ view_onButtonPressed (GtkWidget *UNUSED(treeview),
     // if (event->type == GDK_BUTTON_PRESS) {
     //     GdkEventButton *bevent = (GdkEventButton *) event;     
     //     if (bevent->button == 3) {         
-        g_print ("Single right click on the tree view.\n");
+        // g_print ("Single right click on the tree view.\n");
         
         // CalculateBoard();
         // ShowBoard();

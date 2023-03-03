@@ -1014,6 +1014,7 @@ float latestErrorInQuiz=-1.0; /*extern*/
 char name0BeforeQuiz[MAX_NAME_LEN];
 char name1BeforeQuiz[MAX_NAME_LEN];
 playertype type0BeforeQuiz;
+int fTutorBeforeQuiz;
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
 // static const categorytype emptyCategory={NULL,0,NULL,NULL};
@@ -2110,7 +2111,7 @@ static GtkWidget * BuildCategoryList(void) {
     g_object_unref(nameStore);
 
     renderer = gtk_cell_renderer_text_new();
-    column = gtk_tree_view_column_new_with_attributes(_(""), 
+    column = gtk_tree_view_column_new_with_attributes(_("#"), 
         renderer, "text", COLUMN_INDEX, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 
@@ -2193,7 +2194,7 @@ void on_changed(GtkTreeSelection *selection, gpointer UNUSED(p))
     if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(selection), &model, &iter))
     {
         gtk_tree_model_get(model, &iter, COLUMN_INDEX, &currentCategoryIndex,  -1);
-        g_print("%d is selected\n", currentCategoryIndex);
+        // g_print("%d is selected\n", currentCategoryIndex);
         // g_free(value);
         gtk_widget_set_sensitive(startButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
         gtk_widget_set_sensitive(renameButton, (currentCategoryIndex>=0 && currentCategoryIndex<numCategories));
@@ -2247,6 +2248,7 @@ static void ExplanationsClicked(GtkWidget * UNUSED(widget), GtkWidget* pwParent)
 
 extern void TurnOnQuizMode(void){
     fInQuizMode=TRUE;
+    
     if(strcmp(ap[0].szName,name0BeforeQuiz))
         // name0BeforeQuiz=g_strdup(ap[0].szName);
         strncpy(name0BeforeQuiz, ap[0].szName, MAX_NAME_LEN);
@@ -2254,8 +2256,12 @@ extern void TurnOnQuizMode(void){
         strncpy(name1BeforeQuiz, ap[1].szName, MAX_NAME_LEN);
     // g_message("After TurnOn: ap names: (%s,%s) vs: (%s,%s)",
     //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    
     type0BeforeQuiz=ap[0].pt;
     ap[0].pt = PLAYER_HUMAN;
+
+    fTutorBeforeQuiz=fTutor;
+    fTutor=FALSE;
 }
 extern void TurnOffQuizMode(void){
     fInQuizMode=FALSE;
@@ -2276,6 +2282,8 @@ extern void TurnOffQuizMode(void){
     // g_message("after TurnOff: ap names: (%s,%s) vs: (%s,%s)",
     // ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
     ap[0].pt = type0BeforeQuiz;
+
+    fTutor=fTutorBeforeQuiz;
 }
 
 /*"Quiz console" = central management window for the quiz feature */
@@ -2524,12 +2532,13 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     int result= OpenQuizPositionsFile(currentCategoryIndex);
     // g_free(currentCategory); //when should we free a static var that is to be reused?
 
-    /*empty file, no positions*/
-    if(result==0) {
-        GTKMessage(_("Error: problem with the file of this category"), DT_INFO);
-        // QuizConsole();
-        return;
-    }
+    /* no need for message, the OpenQuizPositionsFile already gives it*/
+    // /*empty file, no positions*/
+    // if(result==0) {
+    //     GTKMessage(_("Error: problem with the file of this category"), DT_INFO);
+    //     // QuizConsole();
+    //     return;
+    // }
 
     /*start!*/
     DestroyQuizDialog(NULL,NULL);

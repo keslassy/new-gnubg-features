@@ -3012,7 +3012,8 @@ CommandNewSession(char *UNUSED(sz))
     UpdateSetting(&ms.fJacoby);
     UpdateSetting(&ms.gs);
 
-    outputl(_("A new session has been started."));
+    if(!fInQuizMode && !fDelayNewMatchTillLeavingConsole)
+        outputl(_("A new session has been started."));
 
 #if defined (USE_GTK)
     if (fX)
