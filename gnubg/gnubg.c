@@ -264,7 +264,7 @@ float qNow_NDBeforeMoveError=-1.0; /*extern*/
 // float fQuizAutoAddThreshold=arSkillLevel[SKILL_VERYBAD]; //<--pb, not constant?
 int fQuizOnePlayer=TRUE;
 // int fQuizSkill;
-skilltype QuizSkill = SKILL_DOUBTFUL;
+skilltype QuizSkill = SKILL_VERYBAD;
 int nQuizSkillCurrent = 0;
 int fDelayNewMatchTillLeavingConsole=0;
 
