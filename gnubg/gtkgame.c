@@ -6728,7 +6728,7 @@ static void DeletePositionClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p)) {
 
 
 extern void BuildQuizHintBottom(GtkWidget *pwHint, GtkWidget *pwMoves){
-    GtkWidget *pwMainVBox, *pwMainHBox, *pwMainHBox2, *pwv, *pwh,
+    GtkWidget *pwMainVBox, *pwMainHBox, *pwMainHBox2, *pwv, *pwh, *pwh2,
         *stopButton, *againButton, *deleteButton;
 
 #if GTK_CHECK_VERSION(3,0,0)
@@ -6752,28 +6752,34 @@ extern void BuildQuizHintBottom(GtkWidget *pwHint, GtkWidget *pwMoves){
 
     char buf[200];
     // counterForFile++;
-    sprintf(buf,_("\n\n%d %s played in category %s \n(which has %d %s). "
-        "Play another position in this category?\n"), 
+    sprintf(buf,_("\n\n%d %s played in category \"%s\" \n(which has %d %s). "
+        "Play another position in this category, \nor open console?\n"), 
         counterForFile,
         (counterForFile==1)?"position":"positions",
         categories[currentCategoryIndex].name,
         categories[currentCategoryIndex].number,
         (categories[currentCategoryIndex].number==1)?"position":"positions");   
     AddText(pwMainHBox, _(buf));
+    /*using a convoluted way to align the deleteButton vertically*/
 #if GTK_CHECK_VERSION(3,0,0)
     pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
     pwh=gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 #else
     pwv = gtk_vbox_new(FALSE, 2);
     pwh = gtk_hbox_new(FALSE, 2);
+    pwh2 = gtk_hbox_new(FALSE, 2);
 #endif
     gtk_box_pack_start(GTK_BOX(pwMainHBox), pwv, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwv), pwh, TRUE, FALSE, 0);
     deleteButton = gtk_button_new_with_label(_("(Delete this position)"));
     g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwv), deleteButton, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pwv), pwh2, TRUE, FALSE, 0);
 
-    stopButton = gtk_button_new_with_label(_("Go back to console"));
+    // stopButton = gtk_button_new_with_label(_("Open\nconsole"));
+    stopButton = gtk_button_new(); 
+    GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_HOME, GTK_ICON_SIZE_BUTTON);
+    gtk_button_set_image(GTK_BUTTON(stopButton), image);
     g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
     gtk_box_pack_start(GTK_BOX(pwMainHBox2), stopButton, TRUE, TRUE, 0);
 
@@ -6782,7 +6788,7 @@ extern void BuildQuizHintBottom(GtkWidget *pwHint, GtkWidget *pwMoves){
     // gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
 
     againButton = gtk_button_new(); 
-    GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
+    image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
     gtk_button_set_image(GTK_BUTTON(againButton), image);
     gtk_box_pack_start(GTK_BOX(pwMainHBox2), againButton, TRUE, TRUE, 0);
     g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
