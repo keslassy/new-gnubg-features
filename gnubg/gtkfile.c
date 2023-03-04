@@ -2042,7 +2042,7 @@ extern void LoadPositionAndStart (void) {
     //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);        
 
     UserCommand2("set player 0 human");
-    UserCommand2("set player 0 name Quiz_Opponent");
+    UserCommand2("set player 0 name QuizOpponent");
     char buf[100];
     sprintf(buf,"set player 1 name %s",name1BeforeQuiz);
     UserCommand2(buf);

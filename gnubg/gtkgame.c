@@ -4031,7 +4031,7 @@ static GtkActionEntry actionEntries[] = {
 
     {"ClearTurnAction", NULL, N_("Clear turn"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CLEAR_TURN)},
 
-    {"QuizAction", NULL, N_("Quiz"), "<control>U", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIZ)},
+    {"QuizAction", NULL, N_("Quiz"), "<control>u", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIZ)},
 
     {"AnalyseMenuAction", NULL, N_("_Analyse"), NULL, NULL, G_CALLBACK(NULL)},
     {"EvaluateAction", NULL, N_("_Evaluate"), "<control>E", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_EVAL)},
@@ -4273,7 +4273,7 @@ static GtkItemFactoryEntry aife[] = {
      "/Game/Set turn/0", NULL},
     {N_("/_Game/Clear turn"), NULL, Command, CMD_CLEAR_TURN, NULL, NULL},
     {N_("/_Game/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_Game/Quiz"), "<control>U", Command, CMD_QUIZ, NULL, NULL},
+    {N_("/_Game/Quiz"), "<control>u", Command, CMD_QUIZ, NULL, NULL},
     {N_("/_Analyse"), NULL, NULL, 0, "<Branch>", NULL},
     {N_("/_Analyse/_Evaluate"), "<control>E", Command, CMD_EVAL, NULL, NULL},
     {N_("/_Analyse/_Hint"), "<control>H", Command, CMD_HINT,
@@ -6753,7 +6753,7 @@ extern void BuildQuizHintBottom(GtkWidget *pwHint, GtkWidget *pwMoves){
     char buf[200];
     // counterForFile++;
     sprintf(buf,_("\n\n%d %s played in category \"%s\" \n(which has %d %s). "
-        "Play another position in this category, \nor open console?\n"), 
+        "Play another position in this \ncategory, or open console?\n"), 
         counterForFile,
         (counterForFile==1)?"position":"positions",
         categories[currentCategoryIndex].name,
