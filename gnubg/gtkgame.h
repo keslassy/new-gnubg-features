@@ -199,4 +199,14 @@ extern GtkWidget *pQuizMenu; /*extern:right-click menu, to be updated in quiz mo
 extern void BuildQuizMenu(GdkEventButton *event);
 extern void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p));
 extern void StatusBarMessage (char* text);
+
+/* For quiz mode; note that it uses GTKWidget so cannot be in backgammon.h */
+extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview); 
+extern int AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw));
+extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw));
+extern void LoadPositionAndStart (void);
+extern void DeletePosition(void) ;
+extern GtkWidget *pwQuiz;
+// extern void CommandQuiz(char *);
+
 #endif
