@@ -3900,7 +3900,7 @@ CommandRedouble(char *UNUSED(sz))
     if (!move_not_last_in_match_ok())
         return;
     if(fInQuizMode){
-        g_message("within Command*Re*Double");
+        // g_message("within Command*Re*Double");
         qDecision=QUIZ_DOUBLE;
         hint_double(TRUE, 1);
         // CommandHint("");
@@ -4048,7 +4048,7 @@ CommandRoll(char *UNUSED(sz))
 
      /* if we put this after GetDice(), it provides the hint for the next move*/
     if(fInQuizMode){
-        g_message("within CommandRoll");
+        // g_message("within CommandRoll");
         qDecision=QUIZ_NODOUBLE;
         hint_double(TRUE, 0);    
         // CommandHint("");
@@ -4155,7 +4155,7 @@ CommandTake(char *UNUSED(sz))
     }
     
     if(fInQuizMode){
-        g_message("within CommandTake");
+        // g_message("within CommandTake");
         qDecision=QUIZ_TAKE;
         hint_take(TRUE, 1);
         // CommandHint("");

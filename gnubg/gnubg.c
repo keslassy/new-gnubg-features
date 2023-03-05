@@ -1541,7 +1541,7 @@ ShowBoard(void)
             sprintf(strchr(sz, 0), ", %s %s", _("resigns"), gettext(aszGameResult[ms.fResigned - 1]));
 
         outputl(DrawBoard(szBoard, (ConstTanBoard) an, ms.fMove, apch, MatchIDFromMatchState(&ms), anChequers[ms.bgv]));
-         g_message("matchID=%s",MatchIDFromMatchState(&ms));
+        //  g_message("matchID=%s",MatchIDFromMatchState(&ms));
 
         if (
 #if defined(USE_GTK)
@@ -2139,6 +2139,7 @@ no_double_skill(moverecord * pmr, cubeinfo * pci)
     default:
         break;
     }
+#if defined(USE_GTK)    
     if (fInQuizMode) {
         // g_message("no-double error in quiz: %f",-eq);
         qUpdate(-eq);
@@ -2149,6 +2150,7 @@ no_double_skill(moverecord * pmr, cubeinfo * pci)
         qNow.player=ms.fTurn;
         // g_message("copied no_double error: %f, player: %d",qNow_NDBeforeMoveError,qNow.player);
     }
+#endif
     return Skill(eq);
 }
 
@@ -2183,7 +2185,7 @@ double_skill(moverecord * pmr, cubeinfo * pci)
         break;
     }
     // g_message("in double_skill (end)");
-
+#if defined(USE_GTK)    
     if (fInQuizMode) {
         // g_message("double error in quiz: %f",-eq);
         qUpdate(-eq);
@@ -2194,6 +2196,7 @@ double_skill(moverecord * pmr, cubeinfo * pci)
         // g_message("copied double error: %f",qNow.ewmaError);
             // g_message("player=%d",ms.fTurn);
     }
+#endif
     return Skill(eq);
 }
 
@@ -2225,6 +2228,7 @@ drop_skill(moverecord * pmr, cubeinfo * pci)
     default:
         break;
     }
+#if defined(USE_GTK)    
     if (fInQuizMode) {
         // g_message("no-double error in quiz: %f",-eq);
         qUpdate(-eq);
@@ -2234,6 +2238,7 @@ drop_skill(moverecord * pmr, cubeinfo * pci)
         qNow.player=ms.fTurn;
         // g_message("copied drop error: %f",qNow.ewmaError);
     }
+#endif
     return Skill(eq);
 }
 
@@ -2259,6 +2264,7 @@ take_skill(moverecord * pmr, cubeinfo * pci)
     default:
         break;
     }
+#if defined(USE_GTK)    
     if (fInQuizMode) {
         // g_message("no-double error in quiz: %f",-eq);
         qUpdate(-eq);
@@ -2269,6 +2275,7 @@ take_skill(moverecord * pmr, cubeinfo * pci)
         // g_message("copied take error: %f",qNow.ewmaError);
             // g_message("player=%d",ms.fTurn);
     }
+#endif    
     return Skill(eq);
 }
 
@@ -2282,15 +2289,18 @@ move_skill(moverecord * pmr)
     move_i = &pmr->ml.amMoves[pmr->n.iMove];
     move_0 = &pmr->ml.amMoves[0];
     if (move_i->esMove.et == EVAL_NONE || move_0->esMove.et == EVAL_NONE){
+#if defined(USE_GTK)    
         if(fUseQuiz){
             qNow.ewmaError=0.0;
             qNow.player=ms.fTurn;
             // g_message("no eval => zero error: %f, player %d",
             //     qNow.ewmaError,qNow.player);
         }
+#endif      
         return SKILL_NONE;
     }
     else {
+#if defined(USE_GTK)    
         if (fInQuizMode) {
             // g_message("no-double error in quiz: %f",-eq);
             qUpdate(move_0->rScore-move_i->rScore);
@@ -2305,6 +2315,7 @@ move_skill(moverecord * pmr)
             qNow.player=ms.fTurn;
             // g_message("move: error: %f, player %d",qNow.ewmaError,qNow.player);
         }
+#endif        
         return Skill(move_i->rScore - move_0->rScore);
     }
 }
@@ -2330,7 +2341,7 @@ find_skills(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         pmr->stCube = SKILL_NONE;
         return;
     }
-    g_message("in find_skills: did_double=%d,did_take=%d",did_double,did_take);
+    // g_message("in find_skills: did_double=%d,did_take=%d",did_double,did_take);
 
     if (did_double == FALSE)
         pmr->stCube = no_double_skill(pmr, &ci);
@@ -2343,7 +2354,7 @@ find_skills(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
 
     if (pmr->mt == MOVE_NORMAL && pmr->ml.cMoves > 0 && pmr->n.iMove < pmr->ml.cMoves)
         pmr->n.stMove = move_skill(pmr);
-    g_message("in end of find_skills");
+    // g_message("in end of find_skills");
 
 }
 
@@ -2383,7 +2394,7 @@ hint_double(int show, int did_double)
 
     find_skills(pmr, &ms, did_double, -1);
 
-    g_message("in hint_double after find_skills");
+    // g_message("in hint_double after find_skills");
 
 #if defined(USE_GTK)
     if (fX) {
@@ -2393,7 +2404,7 @@ hint_double(int show, int did_double)
 
         if (show)
             GTKCubeHint(pmr, &ms, did_double, -1, hist);
-    g_message("hint_double after GTK: did_double=%d, movetype=%d",did_double, pmr->mt);
+    // g_message("hint_double after GTK: did_double=%d, movetype=%d",did_double, pmr->mt);
 
         return;
     }

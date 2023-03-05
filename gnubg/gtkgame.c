@@ -6772,6 +6772,7 @@ extern void BuildQuizHintBottom(GtkWidget *pwHint, GtkWidget *pwMoves){
 #if GTK_CHECK_VERSION(3,0,0)
     pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
     pwh=gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+    pwh2=gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
 #else
     pwv = gtk_vbox_new(FALSE, 2);
     pwh = gtk_hbox_new(FALSE, 2);
@@ -6816,7 +6817,7 @@ GTKCubeHint(moverecord * pmr, const matchstate * pms, int did_double, int did_ta
         pwHint = GTKCreateDialog(_("GNU Backgammon - Hint"), DT_INFO, NULL, DIALOG_FLAG_NOTIDY, G_CALLBACK(HintOK), NULL);
     else {
         char buf[100];
-        g_message("latestErrorInQuiz=%f",latestErrorInQuiz);
+        // g_message("latestErrorInQuiz=%f",latestErrorInQuiz);
         if(ABS(latestErrorInQuiz)<0.0001)
             sprintf(buf,_("Perfect play, well done!"));
         else if(latestErrorInQuiz>=0.0001)

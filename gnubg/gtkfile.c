@@ -1316,7 +1316,7 @@ extern void qUpdate(float error) {
     */
 
     if(iOptCounter==0) {
-        g_message("updating in qUpdate with error=%f",error);
+        // g_message("updating in qUpdate with error=%f",error);
         // g_message("q[iOpt].ewmaError=%f, error=%f => ?",q[iOpt].ewmaError,error);//        2/3*q[iOpt].ewmaError+1/3*error);
         q[iOpt].ewmaError=ERROR_DECAY*(q[iOpt].ewmaError)+(1-ERROR_DECAY)*error;
         // g_message("result: q[iOpt].ewmaError=%f", q[iOpt].ewmaError);  
@@ -1327,9 +1327,10 @@ extern void qUpdate(float error) {
         latestErrorInQuiz=error;
         iOptCounter=1;
         counterForFile++;
-        g_message("qUpdate:counterForFile=%d",counterForFile);
-    } else  
-         g_message("NOT updating in qUpdate! 2nd update or more...");
+        // g_message("qUpdate:counterForFile=%d",counterForFile);
+    } 
+    // else  
+    //      g_message("NOT updating in qUpdate! 2nd update or more...");
 
 }
 // #if(0) /***********/
@@ -2559,30 +2560,30 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     LoadPositionAndStart();
 }
 
-extern void
-CommandQuiz(char *UNUSED(sz))
-{
-    QuizConsole();
-    // GdkColor color;
-    // color.red = 0xffff;
-    // color.green = 0xffff;
-    // color.blue = 0;
-    // gtk_window_set_title(GTK_WINDOW(pwMain), "hello");
-    // if (gdk_color_parse("#c0deed", &color)) {
-    //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // } else {
-    //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // }
-    // // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // gtk_widget_show_all(pwMain);
-        // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_SELECTED]);
+// extern void
+// CommandQuiz(char *UNUSED(sz))
+// {
+//     QuizConsole();
+//     // GdkColor color;
+//     // color.red = 0xffff;
+//     // color.green = 0xffff;
+//     // color.blue = 0;
+//     // gtk_window_set_title(GTK_WINDOW(pwMain), "hello");
+//     // if (gdk_color_parse("#c0deed", &color)) {
+//     //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+//     // } else {
+//     //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+//     // }
+//     // // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+//     // gtk_widget_show_all(pwMain);
+//         // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_SELECTED]);
 
-    // gdk_color_parse ("black", &color);
-    // // gdk_color_parse (BGCOLOR, &color);
-    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_PRELIGHT]);
+//     // gdk_color_parse ("black", &color);
+//     // // gdk_color_parse (BGCOLOR, &color);
+//     // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+//     // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_PRELIGHT]);
 
-}
+// }
 
 
 

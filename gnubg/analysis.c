@@ -623,8 +623,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
     // char * positionid;
     // positionid = (char *)malloc(sizeof(char) * (100 + 1));
     // TanBoard anBoardMistake;
+#if defined(USE_GTK)    
     quiz q;
-
+#endif
     doubletype dt;
     taketype tt;
     const xmovegameinfo *pmgi = &((moverecord *) plParentGame->plNext->p)->g;
@@ -695,6 +696,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
             // g_message("CUBE(MOVE_NORMAL): pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
             //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);      
+#if defined(USE_GTK)    
             if(fQuizAutoAdd && rSkill<-arSkillLevel[QuizSkill]
                     &&(!(fQuizOnePlayer && pms->fTurn==0)) ) {
                 sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
@@ -704,7 +706,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 AutoAddQuizPosition(q,QUIZ_NODOUBLE);  
                 // g_message("in no-double");
             }
-
+#endif
         } else
             pmr->CubeDecPtr->esDouble.et = EVAL_NONE;
 
@@ -778,6 +780,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     //     // char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&pmr->sb.key));
                     //     g_message("mistake:%s",positionid);
                     // }
+#if defined(USE_GTK)    
                     if(fQuizAutoAdd && rChequerSkill<-arSkillLevel[QuizSkill] 
                             &&(!(fQuizOnePlayer && pms->fTurn==0))) {
                         // g_message("rChequerSkill %f<-arSkillLevel[QuizSkill] %f",rChequerSkill,-arSkillLevel[QuizSkill] );
@@ -796,6 +799,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                         q.player=pms->fTurn;
                         AutoAddQuizPosition(q,QUIZ_MOVE);  
                     }
+#endif                    
                      /* keep mwc in data structure */
                     pmr->mwc.mwcMove= eq2mwc(pmr->ml.amMoves[pmr->n.iMove].rScore, &ci);
                     pmr->mwc.mwcBestMove= eq2mwc(pmr->ml.amMoves[0].rScore, &ci);
@@ -865,6 +869,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
                 // g_message("MOVE_DOUBLE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
                 //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+#if defined(USE_GTK)    
                 if(fQuizAutoAdd && rSkill<-arSkillLevel[QuizSkill] 
                         &&(!(fQuizOnePlayer && pms->fTurn==0))) {
                     sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
@@ -873,6 +878,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     q.player=pms->fTurn;
                     AutoAddQuizPosition(q,QUIZ_DOUBLE);  
                 }
+#endif                
             } else if (pdoubleError)
                 *pdoubleError = ERR_VAL;
                 // *doubleError = ERR_VAL;
@@ -904,6 +910,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 (1.0-eq2mwc(*(pdoubleError+2), &ci)):(1.0-eq2mwc(*(pdoubleError+3), &ci));
             // g_message("MOVE_TAKE: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
             //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+#if defined(USE_GTK)    
                 if(fQuizAutoAdd && -(*pdoubleError)<-arSkillLevel[QuizSkill]
                         &&(!(fQuizOnePlayer && pms->fTurn==0))) {
                     sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
@@ -912,6 +919,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     q.player=pms->fTurn;
                     AutoAddQuizPosition(q,QUIZ_TAKE);  
                 }
+#endif                
         }
 
         if (psc)
@@ -939,6 +947,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 (1.0-eq2mwc(*(pdoubleError+2), &ci)):(1.0-eq2mwc(*(pdoubleError+3), &ci));
             // g_message("MOVE_DROP: pmr->mwc.mwcCube: %f vs pmr->mwc.mwcBestCube: %f",
             //     pmr->mwc.mwcCube,pmr->mwc.mwcBestCube);
+#if defined(USE_GTK)    
                 if(fQuizAutoAdd && (*pdoubleError)<-arSkillLevel[QuizSkill] 
                         &&(!(fQuizOnePlayer && pms->fTurn==0))) {
                     sprintf(q.position, "%s:%s", PositionID(pms->anBoard), MatchIDFromMatchState(pms));
@@ -947,6 +956,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     q.player=pms->fTurn;
                     AutoAddQuizPosition(q,QUIZ_PASS);  
                 }
+#endif                
         }
 
         if (psc)
