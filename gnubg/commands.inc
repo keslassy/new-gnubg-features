@@ -1192,6 +1192,9 @@ static command acSetVariation[] = {
     { "evaluation", NULL, N_("Control position evaluation "
       "parameters"), NULL, acSetEval },
     { "export", NULL, N_("Set settings for export"), NULL, acSetExport },
+    { "firsttimeupdates", CommandSetFirstTimeUpdates,
+      N_("Set fFirstTimeUpdates parameter"),
+      szVALUE, NULL},    
     { "fullscreen", CommandSetFullScreen, N_("Change to full screen mode"),
       szONOFF, &cOnOff },
 #if defined(USE_GTK)

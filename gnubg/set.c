@@ -4901,11 +4901,27 @@ CommandSetAutoSaveTime(char *sz)
     }
     nAutoSaveTime = n;
 }
+
 extern void
 CommandSetCheckUpdates(char *sz)
 {
     SetToggle("set checkupdates", &fCheckUpdates, sz,
               _("Automatically check gnubg updates online"), _("Do not check gnubg updates online"));
+}
+
+extern void
+CommandSetFirstTimeUpdates(char *sz)
+{
+
+    int n = ParseNumber(&sz);
+
+    if (n < 0 || n > 2) {
+        outputf(_("You must specify a number between 1 and %d.\n"), 2);
+        return;
+    }
+
+    fFirstTimeUpdates = n;
+
 }
 
 extern void

@@ -201,6 +201,7 @@ int fAutoSaveRollout = FALSE;
 int fAutoSaveAnalysis = FALSE;
 int fAutoSaveConfirmDelete = TRUE;
 int fCheckUpdates = TRUE;
+int fFirstTimeUpdates=2;
 intmax_t nextUpdateTime = 0; /* hopefully settings update the true value*/
 
 /* FIXME: This is at best useless, at worst misleading, as a global flag.
@@ -3492,8 +3493,6 @@ SaveMiscSettings(FILE * pf)
     fprintf(pf, "set clockwise %s\n", fClockwise ? "on" : "off");
     fprintf(pf, "set confirm new %s\n", fConfirmNew ? "on" : "off");
     fprintf(pf, "set confirm save %s\n", fConfirmSave ? "on" : "off");
-    fprintf(pf, "set cube use %s\n", fCubeUse ? "on" : "off");
-    fprintf(pf, "set display %s\n", fDisplay ? "on" : "off");
 
     fprintf(pf, "set confirm default ");
     if (nConfirmDefault == 1)
@@ -3503,6 +3502,9 @@ SaveMiscSettings(FILE * pf)
     else
         fprintf(pf, "ask\n");
 
+    fprintf(pf, "set cube use %s\n", fCubeUse ? "on" : "off");
+    fprintf(pf, "set display %s\n", fDisplay ? "on" : "off");
+    fprintf(pf, "set firsttimeupdates %d\n", fFirstTimeUpdates);    
     fprintf(pf, "set gotofirstgame %s\n", fGotoFirstGame ? "on" : "off");
     fprintf(pf, "set nextupdatetime %ld\n", (nextUpdateTime));
     fprintf(pf, "set output matchpc %s\n", fOutputMatchPC ? "on" : "off");
@@ -4796,7 +4798,7 @@ callback_parse_python_option(const gchar *UNUSED(name), const gchar *value, gpoi
 
 The implementation is based on GTKMessage, which is at the basis of GetInputYN and
 GTKGetInputYN. However it is changed here because we also want to offer the user a 
-button where he can opt out of updates messages (same variable fCheckUpdates as in 
+button where he can opt out of update messages (same variable fCheckUpdates as in 
 the options).
 
 Note that we split between this function and GTKAskToUpdate for the GTK side.
@@ -4852,6 +4854,19 @@ char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-fea
 /*   check version update online*/
 extern void CheckVersionUpdate(void)
 {
+    if(fFirstTimeUpdates==1) {
+        if (!GetInputYN(_("Do you allow GNU Backgammon to check online for updates?"))) {
+            fCheckUpdates=FALSE;
+            fFirstTimeUpdates=0;
+            UserCommand2("save settings");
+            return;
+        } else {
+            fCheckUpdates=TRUE; /*it probably already was TRUE*/
+            fFirstTimeUpdates=0;
+            UserCommand2("save settings");
+        }
+    }
+
 #if defined(LIBCURL_PROTOCOL_HTTPS)
     CURL *curl_handle;
     CURLcode res;
@@ -5123,15 +5138,30 @@ main(int argc, char *argv[])
 
     /* check that there is no new gnubg version online */     
 #if defined(LIBCURL_PROTOCOL_HTTPS)
+    g_message("fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
+        fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
     if(fCheckUpdates) {
-        /* first verify that we haven't looked for an update in the past week */
-        intmax_t intSeconds=(intmax_t) (time(NULL));
-        // g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
-        if(intSeconds-nextUpdateTime>1) {
-            /* inside this loop means we haven't checked in the past week.
-            - We first update the next time to check and set it a week from now
-            - Then we launch a splash screen with a notice for the user
-            */
+            intmax_t intSeconds=(intmax_t) (time(NULL)); /*=current time*/
+        if (fFirstTimeUpdates==2) {
+            nextUpdateTime=intSeconds + 2592000; //3600*24*30
+            fFirstTimeUpdates=1;
+            UserCommand2("save settings");
+            g_message("save settings: fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
+                fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
+        } else if (intSeconds-nextUpdateTime>1) { /* <=> first verify that we haven't 
+                    looked for an update in the past week */
+                // g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
+                /* 
+                    - Inside this loop means we haven't checked in the past week.
+                    - We first update the next time to check and set it a week from now
+                    - Then we launch a splash screen with a notice for the user
+                    - If it's the first time we launch gnubg, we only check in a month: 
+                    3 states: (a) fFirstTimeUpdates==2=>postpone by a month; 
+                    (b) fFirstTimeUpdates==1=>when the month is over, ask the user whether
+                    we are allowed to check for an update (following bug-gnubg feedback, 
+                    don't do it automatically)
+                    (c) fFirstTimeUpdates==0
+                */
             nextUpdateTime=intSeconds + 604800; //3600*24*7
             UserCommand2("save settings");
 #if defined(USE_GTK)

@@ -5080,6 +5080,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
         if(fBackgroundAnalysis)
              fAnalysisRunning = FALSE;
 
+        /* fCheckUpdateGTK==TRUE means we postponed checking if there is an update to now*/
         if(fCheckUpdateGTK) {
                 fCheckUpdateGTK = FALSE;
                 CheckVersionUpdate();
