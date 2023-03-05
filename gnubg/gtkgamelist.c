@@ -21,9 +21,11 @@
 /*
 03/2023: Isaac Keslassy: new Quiz feature:
 - we start it with the quiz console
-- see explanations in the quiz console: we can either launch it through the menu bar, 
-or through a right-click menu in the gamelist; it has a configurable auto-add feature;
-and so on
+- see explanations in the quiz console: 
+* we can either launch it through the menu bar, or through a right-click menu in 
+the gamelist; 
+* it has a configurable auto-add feature;
+* and so on.
 - behind the scenes, we analyze positions in three different settings for the quiz:
 1) In quiz mode, when the user answers something, we display the result in the 
 hint window, and record the result. We use different functions for different 
@@ -35,8 +37,6 @@ AnalyzeMove() to do so
 3) When we right-click on a position and want to add it to some arbitrary position
 category, we need the error for the position. We do so in double_skill as in the 
 first case above.
-
-
 */
 
 
@@ -55,7 +55,7 @@ first case above.
 #include "gtkgame.h"
 #include "util.h"
 #include "gtkfile.h" /*for the quiz, can delete if moved elsewhere*/
-
+#include <dirent.h> /*for opendir function in quiz */
 
 static GtkListStore *plsGameList;
 static GtkWidget *pwGameList;
