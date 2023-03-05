@@ -207,6 +207,5 @@ extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw))
 extern void LoadPositionAndStart (void);
 extern void DeletePosition(void) ;
 extern GtkWidget *pwQuiz;
-// extern void CommandQuiz(char *);
 
 #endif

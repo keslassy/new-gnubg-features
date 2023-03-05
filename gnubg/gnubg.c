@@ -2760,6 +2760,32 @@ CommandQuit(char *UNUSED(sz))
     PromptForExit();
 }
 
+extern void
+CommandQuiz(char *UNUSED(sz))
+{
+#if defined(USE_GTK)    
+    QuizConsole();
+#endif
+    // GdkColor color;
+    // color.red = 0xffff;
+    // color.green = 0xffff;
+    // color.blue = 0;
+    // gtk_window_set_title(GTK_WINDOW(pwMain), "hello");
+    // if (gdk_color_parse("#c0deed", &color)) {
+    //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // } else {
+    //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // }
+    // // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // gtk_widget_show_all(pwMain);
+        // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_SELECTED]);
+
+    // gdk_color_parse ("black", &color);
+    // // gdk_color_parse (BGCOLOR, &color);
+    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
+    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_PRELIGHT]);
+
+}
 
 extern void
 CommandRollout(char *sz)
