@@ -1656,6 +1656,7 @@ extern void TurnOffQuizMode(void){
     UserCommand2(buf);
     // g_message("after TurnOff: ap names: (%s,%s) vs: (%s,%s)",
     // ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    
     ap[0].pt = type0BeforeQuiz;
 
     fTutor=fTutorBeforeQuiz;
