@@ -61,8 +61,12 @@ static GtkListStore *plsGameList;
 static GtkWidget *pwGameList;
 static GtkStyle *psGameList, *psCurrent, *psCubeErrors[3], *psChequerErrors[3], *psLucky[N_LUCKS];
 
-static GtkWidget *pwQuiz;
+/*quiz stuff*/
 static void ReloadQuizConsole(void);
+ /*for quiz right-click menu, to be updated in quiz mode*/
+static GtkWidget *pQuizMenu;
+static GtkWidget *pwQuiz = NULL;
+static void BuildQuizMenu(GdkEventButton *event);
 
 static int
 gtk_compare_fonts(GtkStyle * psOne, GtkStyle * psTwo)
@@ -408,9 +412,6 @@ QuizConsole->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
     ->either LoadPositionAndStart or QuizConsole
 */
 
- /*extern:right-click menu, to be updated in quiz mode; used in gtkgamelist.c*/
-GtkWidget *pQuizMenu;
-GtkWidget *pwQuiz = NULL;
 // static void QuizConsole(void);
 
 #define WIDTH   640
@@ -2043,7 +2044,7 @@ static void QuizConsoleClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(userdata)
 // }
 
 
-extern void BuildQuizMenu(GdkEventButton *event){
+static void BuildQuizMenu(GdkEventButton *event){
     pQuizMenu = gtk_menu_new(); /*extern*/
     GtkWidget *menu_item;
     char buf[MAX_CATEGORY_NAME_LENGTH+30];
