@@ -47,6 +47,8 @@ first case above.
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+// #include <stdio.h> 
+#include <ctype.h> /* for toupper function*/
 
 #include "backgammon.h"
 #include "gtkboard.h"
@@ -1619,6 +1621,46 @@ static GtkWidget * BuildCategoryList(void) {
 //     return FALSE;
 // }
 
+static void TurnOnQuizMode(void){
+    fInQuizMode=TRUE;
+    
+    if(strcmp(ap[0].szName,name0BeforeQuiz))
+        // name0BeforeQuiz=g_strdup(ap[0].szName);
+        strncpy(name0BeforeQuiz, ap[0].szName, MAX_NAME_LEN);
+    if(strcmp(ap[1].szName,name1BeforeQuiz))
+        strncpy(name1BeforeQuiz, ap[1].szName, MAX_NAME_LEN);
+    // g_message("After TurnOn: ap names: (%s,%s) vs: (%s,%s)",
+    //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    
+    type0BeforeQuiz=ap[0].pt;
+    ap[0].pt = PLAYER_HUMAN;
+
+    fTutorBeforeQuiz=fTutor;
+    fTutor=FALSE;
+}
+extern void TurnOffQuizMode(void){
+    fInQuizMode=FALSE;
+    // g_message("before TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+        // ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    // if(strcmp(ap[0].szName,name0BeforeQuiz))
+    //     // sprintf(ap[0].szName, "%s",name0BeforeQuiz);
+    //     strncpy(ap[0].szName, name0BeforeQuiz, MAX_NAME_LEN);
+    // if(strcmp(ap[1].szName,name1BeforeQuiz))
+    //     strncpy(ap[1].szName, name1BeforeQuiz, MAX_NAME_LEN);
+    // g_message("TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+    //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    char buf[100];
+    sprintf(buf,"set player 0 name %s",name0BeforeQuiz);
+    UserCommand2(buf);
+    sprintf(buf,"set player 1 name %s",name1BeforeQuiz);
+    UserCommand2(buf);
+    // g_message("after TurnOff: ap names: (%s,%s) vs: (%s,%s)",
+    // ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
+    ap[0].pt = type0BeforeQuiz;
+
+    fTutor=fTutorBeforeQuiz;
+}
+
 static void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
     // g_message("in StartQuiz");
 
@@ -1754,46 +1796,6 @@ static void ExplanationsClicked(GtkWidget * UNUSED(widget), GtkWidget* pwParent)
         \n\t automatic collection of blundered positions, or to disable the quiz feature completely."));
 
     GTKRunDialog(pwInfoDialog);
-}
-
-static void TurnOnQuizMode(void){
-    fInQuizMode=TRUE;
-    
-    if(strcmp(ap[0].szName,name0BeforeQuiz))
-        // name0BeforeQuiz=g_strdup(ap[0].szName);
-        strncpy(name0BeforeQuiz, ap[0].szName, MAX_NAME_LEN);
-    if(strcmp(ap[1].szName,name1BeforeQuiz))
-        strncpy(name1BeforeQuiz, ap[1].szName, MAX_NAME_LEN);
-    // g_message("After TurnOn: ap names: (%s,%s) vs: (%s,%s)",
-    //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
-    
-    type0BeforeQuiz=ap[0].pt;
-    ap[0].pt = PLAYER_HUMAN;
-
-    fTutorBeforeQuiz=fTutor;
-    fTutor=FALSE;
-}
-extern void TurnOffQuizMode(void){
-    fInQuizMode=FALSE;
-    // g_message("before TurnOff: ap names: (%s,%s) vs: (%s,%s)",
-        // ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
-    // if(strcmp(ap[0].szName,name0BeforeQuiz))
-    //     // sprintf(ap[0].szName, "%s",name0BeforeQuiz);
-    //     strncpy(ap[0].szName, name0BeforeQuiz, MAX_NAME_LEN);
-    // if(strcmp(ap[1].szName,name1BeforeQuiz))
-    //     strncpy(ap[1].szName, name1BeforeQuiz, MAX_NAME_LEN);
-    // g_message("TurnOff: ap names: (%s,%s) vs: (%s,%s)",
-    //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
-    char buf[100];
-    sprintf(buf,"set player 0 name %s",name0BeforeQuiz);
-    UserCommand2(buf);
-    sprintf(buf,"set player 1 name %s",name1BeforeQuiz);
-    UserCommand2(buf);
-    // g_message("after TurnOff: ap names: (%s,%s) vs: (%s,%s)",
-    // ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);
-    ap[0].pt = type0BeforeQuiz;
-
-    fTutor=fTutorBeforeQuiz;
 }
 
 /*"Quiz console" = central management window for the quiz feature */
