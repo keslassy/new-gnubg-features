@@ -1149,16 +1149,16 @@ extern float latestErrorInQuiz;
 extern char name0BeforeQuiz[MAX_NAME_LEN];
 extern char name1BeforeQuiz[MAX_NAME_LEN];
 extern playertype type0BeforeQuiz;
-extern int fTutorBeforeQuiz;
+// extern int fTutorBeforeQuiz;
 
 extern void qUpdate(float error);
 // extern int AddQuizPosition(quiz qRow, categorytype * pcategory);
-extern int writeQuizLineFull (quiz q, char * file, int quiet);
+// extern int writeQuizLineFull (quiz q, char * file, int quiet);
 extern int AutoAddQuizPosition(quiz q, quizdecision qdec);
 extern void QuizConsole(void); /*start quiz window*/
-extern void ReloadQuizConsole(void);
+// extern void ReloadQuizConsole(void);
 // extern void CreateGameWindow(void);
-extern void TurnOnQuizMode(void);
+// extern void TurnOnQuizMode(void);
 extern void TurnOffQuizMode(void);
 /* ************* */
 

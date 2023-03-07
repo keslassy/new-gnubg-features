@@ -26,7 +26,7 @@
 #include <gtk/gtk.h>
 #include "gtkwindows.h"
 #include "gtkgame.h"
-#include "gtkfile.h" //for StartQuiz(), may change
+// #include "gtkfile.h" //for StartQuiz(), may change
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 typedef void (*dialog_func_ty) (GtkWidget *, void *);

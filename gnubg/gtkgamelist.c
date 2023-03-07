@@ -61,6 +61,9 @@ static GtkListStore *plsGameList;
 static GtkWidget *pwGameList;
 static GtkStyle *psGameList, *psCurrent, *psCubeErrors[3], *psChequerErrors[3], *psLucky[N_LUCKS];
 
+static GtkWidget *pwQuiz;
+static void ReloadQuizConsole(void);
+
 static int
 gtk_compare_fonts(GtkStyle * psOne, GtkStyle * psTwo)
 {
@@ -442,7 +445,7 @@ float latestErrorInQuiz=-1.0; /*extern*/
 char name0BeforeQuiz[MAX_NAME_LEN];
 char name1BeforeQuiz[MAX_NAME_LEN];
 playertype type0BeforeQuiz;
-int fTutorBeforeQuiz;
+static int fTutorBeforeQuiz;
 
 // /*initialization: maybe not needed, using GetCategory->InitCategoryArray */
 // static const categorytype emptyCategory={NULL,0,NULL,NULL};
@@ -556,7 +559,7 @@ static void writeQuizHeader (FILE* fp) {
 static void writeQuizLine (quiz q, FILE* fp) {
         fprintf(fp, "%s, %d, %.5f, %ld\n", q.position, q.player, q.ewmaError, q.lastSeen);
 }
-extern int writeQuizLineFull (quiz q, char * file, int quiet) {
+static int writeQuizLineFull (quiz q, char * file, int quiet) {
     /*test that file exists, else write header*/
     if(!g_file_test(file, G_FILE_TEST_EXISTS )){
         // g_message("writeQuizLineFull file doesn't exist: %s",file);
@@ -1217,7 +1220,7 @@ Allows garbage collection.
     }
 }
 
-extern void ReloadQuizConsole(void) {
+static void ReloadQuizConsole(void) {
     // GetPositionCategories();
     
     // UpdateGame(FALSE);
@@ -1257,6 +1260,16 @@ extern void ReloadQuizConsole(void) {
 //     // GTKMessage(_("Error: This category name already exists"), DT_INFO);
 // }
 
+static int AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
+    // g_message("I'm in the test func: %s", pcategory->name);
+    // g_message("Adding position: %s to category %s, error: %f",
+    //     qNow.position,pcategory->name,qNow.ewmaError);
+    qNow.lastSeen=(long int) (time(NULL));
+    // return (AddQuizPosition(qNow,pcategory));
+    return(writeQuizLineFull (qNow, pcategory->path, FALSE));
+
+}
+
 static void
 AddPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
@@ -1273,6 +1286,19 @@ AddPositionClicked(GtkButton * UNUSED(button), gpointer treeview)
         ReloadQuizConsole();
     }
     return;    
+}
+
+extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
+    // g_message("I'm in the test func: %s", pcategory->name);
+    UserCommand2("previous roll");
+    UserCommand2("previous roll");
+    UserCommand2("next roll");
+    qNow.ewmaError=qNow_NDBeforeMoveError;
+    // g_message("Adding CUBE position: %s to category %s, error: %f",
+    //     qNow.position,pcategory->name,qNow.ewmaError);
+    qNow.lastSeen=(long int) (time(NULL));
+    return(writeQuizLineFull (qNow, pcategory->path, FALSE));
+    // return (AddQuizPosition(qNow,pcategory));
 }
 
 static void
@@ -1591,6 +1617,55 @@ static GtkWidget * BuildCategoryList(void) {
 
 //     return FALSE;
 // }
+
+static void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
+    // g_message("in StartQuiz");
+
+    // currentCategory = GetSelectedCategory(treeview);
+    // if(!currentCategory) {
+    //     GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
+    //     QuizConsole();
+    //     return;
+    // }
+
+    currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
+    // g_message("currentCategoryIndex=%d",currentCategoryIndex);
+    // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+    if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
+        GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
+        // QuizConsole();
+        return;
+    }
+
+    /* the following function:
+    - updates positionsFileFullPath,
+    - opens the corrsponding file, 
+    - and saves the parsing results in the categories static array */
+    // int result= OpenQuizPositionsFile(currentCategoryIndex);
+    OpenQuizPositionsFile(currentCategoryIndex);
+    // g_free(currentCategory); //when should we free a static var that is to be reused?
+
+    /* no need for message, the OpenQuizPositionsFile already gives it*/
+    // /*empty file, no positions*/
+    // if(result==0) {
+    //     GTKMessage(_("Error: problem with the file of this category"), DT_INFO);
+    //     // QuizConsole();
+    //     return;
+    // }
+
+    /*start!*/
+    DestroyQuizDialog(NULL,NULL);
+    if(!fInQuizMode)
+        TurnOnQuizMode();
+    // // sprintf(name0BeforeQuiz, "%s", ap[0].szName);
+    // // sprintf(name1BeforeQuiz, "%s", ap[1].szName);
+    // name0BeforeQuiz=g_strdup(ap[0].szName);
+    // name1BeforeQuiz=g_strdup(ap[1].szName);
+
+    counterForFile=0; /*first one for this category in this round*/
+    LoadPositionAndStart();
+}
+
 static void QuizManageClicked(GtkWidget * UNUSED(widget), GdkEventButton  * event, GtkTreeView * treeview) {
     
     // g_message("before: currentCategoryIndex=%d",currentCategoryIndex);
@@ -1680,7 +1755,7 @@ static void ExplanationsClicked(GtkWidget * UNUSED(widget), GtkWidget* pwParent)
     GTKRunDialog(pwInfoDialog);
 }
 
-extern void TurnOnQuizMode(void){
+static void TurnOnQuizMode(void){
     fInQuizMode=TRUE;
     
     if(strcmp(ap[0].szName,name0BeforeQuiz))
@@ -1940,53 +2015,6 @@ extern void QuizConsole(void) {
 //     }
 // }
 
-extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
-    // g_message("in StartQuiz");
-
-    // currentCategory = GetSelectedCategory(treeview);
-    // if(!currentCategory) {
-    //     GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
-    //     QuizConsole();
-    //     return;
-    // }
-
-    currentCategoryIndex = GetSelectedCategoryIndex(GTK_TREE_VIEW(treeview));
-    // g_message("currentCategoryIndex=%d",currentCategoryIndex);
-    // gtk_widget_destroy(gtk_widget_get_toplevel(pw));
-    if(currentCategoryIndex<0 || currentCategoryIndex>=numCategories) {
-        GTKMessage(_("Error: you forgot to select a position category"), DT_INFO);
-        // QuizConsole();
-        return;
-    }
-
-    /* the following function:
-    - updates positionsFileFullPath,
-    - opens the corrsponding file, 
-    - and saves the parsing results in the categories static array */
-    // int result= OpenQuizPositionsFile(currentCategoryIndex);
-    OpenQuizPositionsFile(currentCategoryIndex);
-    // g_free(currentCategory); //when should we free a static var that is to be reused?
-
-    /* no need for message, the OpenQuizPositionsFile already gives it*/
-    // /*empty file, no positions*/
-    // if(result==0) {
-    //     GTKMessage(_("Error: problem with the file of this category"), DT_INFO);
-    //     // QuizConsole();
-    //     return;
-    // }
-
-    /*start!*/
-    DestroyQuizDialog(NULL,NULL);
-    if(!fInQuizMode)
-        TurnOnQuizMode();
-    // // sprintf(name0BeforeQuiz, "%s", ap[0].szName);
-    // // sprintf(name1BeforeQuiz, "%s", ap[1].szName);
-    // name0BeforeQuiz=g_strdup(ap[0].szName);
-    // name1BeforeQuiz=g_strdup(ap[1].szName);
-
-    counterForFile=0; /*first one for this category in this round*/
-    LoadPositionAndStart();
-}
 
 
 
@@ -1998,29 +2026,6 @@ extern void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
 // static    GtkWidget *menu_item;
 
 
-
-
-extern int AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
-    // g_message("I'm in the test func: %s", pcategory->name);
-    // g_message("Adding position: %s to category %s, error: %f",
-    //     qNow.position,pcategory->name,qNow.ewmaError);
-    qNow.lastSeen=(long int) (time(NULL));
-    // return (AddQuizPosition(qNow,pcategory));
-    return(writeQuizLineFull (qNow, pcategory->path, FALSE));
-
-}
-extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw)) {
-    // g_message("I'm in the test func: %s", pcategory->name);
-    UserCommand2("previous roll");
-    UserCommand2("previous roll");
-    UserCommand2("next roll");
-    qNow.ewmaError=qNow_NDBeforeMoveError;
-    // g_message("Adding CUBE position: %s to category %s, error: %f",
-    //     qNow.position,pcategory->name,qNow.ewmaError);
-    qNow.lastSeen=(long int) (time(NULL));
-    return(writeQuizLineFull (qNow, pcategory->path, FALSE));
-    // return (AddQuizPosition(qNow,pcategory));
-}
 
 static void QuizConsoleClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(userdata)) {
     QuizConsole();
