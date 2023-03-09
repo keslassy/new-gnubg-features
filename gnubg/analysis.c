@@ -609,10 +609,10 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
 
 }
 
-
+/*based on cmark_move_rollout() */
 static int MoveRollout(moverecord * pmr, positionkey * pkey)
 {
-    gboolean destroy=TRUE;
+    // gboolean destroy=TRUE;
     gchar(*asz)[FORMATEDMOVESIZE];
     cubeinfo ci;
     cubeinfo **ppci;
@@ -628,9 +628,10 @@ static int MoveRollout(moverecord * pmr, positionkey * pkey)
     g_return_val_if_fail(pmr, -1);
 
     for (j = 0; j < pmr->ml.cMoves; j++) {
-        if ( (EqualKeys((*pkey), pmr->ml.amMoves[j].key)) ||
+        if ( //(EqualKeys((*pkey), pmr->ml.amMoves[j].key)) ||
                 (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.02)) {
             g_message("added: j=%d",j);       
+            // pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
             list = g_slist_append(list, GINT_TO_POINTER(j));
         }
     }
@@ -643,8 +644,8 @@ static int MoveRollout(moverecord * pmr, positionkey * pkey)
     ppm = g_new(move *, c);
     ppci = g_new(cubeinfo *, c);
     asz = (char (*)[FORMATEDMOVESIZE]) g_malloc(FORMATEDMOVESIZE * c);
-    if (pmr->n.iMove != UINT_MAX)
-        CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, (*pkey));
+    // if (pmr->n.iMove != UINT_MAX)
+    //     CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, (*pkey));
     GetMatchStateCubeInfo(&ci, &ms);
 
     g_message("00");
@@ -656,11 +657,11 @@ static int MoveRollout(moverecord * pmr, positionkey * pkey)
         FormatMove(asz[j], msBoard(), m->anMove);
     }
 
-    RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
+    RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, FALSE, &p);
     g_message("01");
     ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
     g_message("02");
-    res = RolloutProgressEnd(&p, destroy);
+    res = RolloutProgressEnd(&p, FALSE);
     g_message("03");
 
     g_free(asz);
@@ -833,11 +834,11 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 }
 
             }
-                    MT_Release();
-
+            
+            MT_Release();
             g_message("we are here");
             MoveRollout(pmr,&key);
-                    MT_Exclusive();
+            MT_Exclusive();
 
 
 
