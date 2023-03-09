@@ -4929,10 +4929,13 @@ CommandSetNextUpdateTime(char *sz)
 {
     // int seconds = ParseNumber(&sz);
     intmax_t seconds = strtoimax(sz, NULL, 10);
-
-    if (seconds < 1) {
-        outputl(_("You must specify a positive time in seconds"));
+    // g_message("%ld",seconds);
+    if (seconds < 0) {
+        /*is outputf disabled with gtk?*/
+        outputf(_("You must specify a positive time in seconds")); /*didn't output this text?*/
+        // g_message(_("You must specify a positive time in seconds"));
         return;
     }
     nextUpdateTime = seconds;
+    // g_message("%ld",nextUpdateTime);
 }

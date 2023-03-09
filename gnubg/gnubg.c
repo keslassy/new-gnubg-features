@@ -282,10 +282,8 @@ int fResetSync = FALSE;         /* May need to wait for main window */
 skilltype TutorSkill = SKILL_DOUBTFUL;
 int nTutorSkillCurrent = 0;
 
-
 char *szCurrentFileName = NULL;
 char *szCurrentFolder = NULL;
-
 
 int fNextTurn = FALSE, fComputing = FALSE;
 
@@ -4854,6 +4852,7 @@ char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-fea
 /*   check version update online*/
 extern void CheckVersionUpdate(void)
 {
+    // g_message("in CheckVersionUpdate");
     if(fFirstTimeUpdates==1) {
         if (!GetInputYN(_("Do you allow GNU Backgammon to check online for updates?"))) {
             fCheckUpdates=FALSE;
@@ -4918,7 +4917,7 @@ extern void CheckVersionUpdate(void)
 #else            
             AskToUpdate(token);
 #endif
-        }   else {
+        } else {
             return;
         }   
     }
@@ -5138,19 +5137,19 @@ main(int argc, char *argv[])
 
     /* check that there is no new gnubg version online */     
 #if defined(LIBCURL_PROTOCOL_HTTPS)
-    g_message("fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
+    // g_message("fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
         fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
     if(fCheckUpdates) {
-            intmax_t intSeconds=(intmax_t) (time(NULL)); /*=current time*/
+        intmax_t intSeconds=(intmax_t) (time(NULL)); /*=current time*/
+        // g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
         if (fFirstTimeUpdates==2) {
             nextUpdateTime=intSeconds + 2592000; //3600*24*30
             fFirstTimeUpdates=1;
             UserCommand2("save settings");
-            g_message("save settings: fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
-                fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
+            // g_message("save settings: fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
+            //     fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
         } else if (intSeconds-nextUpdateTime>1) { /* <=> first verify that we haven't 
                     looked for an update in the past week */
-                // g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
                 /* 
                     - Inside this loop means we haven't checked in the past week.
                     - We first update the next time to check and set it a week from now
