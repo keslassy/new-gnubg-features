@@ -1667,7 +1667,7 @@ append_other_options(optionswidget * pow)
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwMarkedSamePlayer, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(pow->pwMarkedSamePlayer,
                                 _("This option enables jumps between moves in the "
-                                  "game list window (using the red arrows) to stay within the same player," 
+                                  "game list window (using the red arrows) to stay within the same player, " 
                                   "thus allowing a player to focus on his own mistakes only"));
 
 
