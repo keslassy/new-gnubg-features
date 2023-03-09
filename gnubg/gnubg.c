@@ -5138,7 +5138,7 @@ main(int argc, char *argv[])
     /* check that there is no new gnubg version online */     
 #if defined(LIBCURL_PROTOCOL_HTTPS)
     // g_message("fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
-        fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
+    //     fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
     if(fCheckUpdates) {
         intmax_t intSeconds=(intmax_t) (time(NULL)); /*=current time*/
         // g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
