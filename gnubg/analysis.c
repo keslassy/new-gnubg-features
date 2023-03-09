@@ -609,6 +609,84 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
 
 }
 
+
+static int MoveRollout(moverecord * pmr, positionkey * pkey)
+{
+    gboolean destroy=TRUE;
+    gchar(*asz)[FORMATEDMOVESIZE];
+    cubeinfo ci;
+    cubeinfo **ppci;
+    GSList *pl = NULL;
+    gint c;
+    guint j;
+    gint res;
+    move **ppm;
+    void *p;
+    GSList *list = NULL;
+    // positionkey key = { {0, 0, 0, 0, 0, 0, 0} };
+
+    g_return_val_if_fail(pmr, -1);
+
+    for (j = 0; j < pmr->ml.cMoves; j++) {
+        if ( (EqualKeys((*pkey), pmr->ml.amMoves[j].key)) ||
+                (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.02)) {
+            g_message("added: j=%d",j);       
+            list = g_slist_append(list, GINT_TO_POINTER(j));
+        }
+    }
+
+    if ((c = g_slist_length(list)) <=1) { //}== 0) {
+        g_message("no rollout, c=%d",c);    
+        return 0;
+    }
+
+    ppm = g_new(move *, c);
+    ppci = g_new(cubeinfo *, c);
+    asz = (char (*)[FORMATEDMOVESIZE]) g_malloc(FORMATEDMOVESIZE * c);
+    if (pmr->n.iMove != UINT_MAX)
+        CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, (*pkey));
+    GetMatchStateCubeInfo(&ci, &ms);
+
+    g_message("00");
+    for (pl = list, j = 0; pl; pl = g_slist_next(pl), j++) {
+        g_message("in list: j=%d",j);       
+        gint i = GPOINTER_TO_INT(pl->data);
+        move *m = ppm[j] = &pmr->ml.amMoves[i];
+        ppci[j] = &ci;
+        FormatMove(asz[j], msBoard(), m->anMove);
+    }
+
+    RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
+    g_message("01");
+    ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
+    g_message("02");
+    res = RolloutProgressEnd(&p, destroy);
+    g_message("03");
+
+    g_free(asz);
+    g_free(ppm);
+    g_free(ppci);
+
+    RefreshMoveList(&pmr->ml, NULL);
+
+    if (pmr->n.iMove != UINT_MAX)
+        for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
+            if (EqualKeys((*pkey), pmr->ml.amMoves[pmr->n.iMove].key)) {
+                pmr->n.stMove = Skill(pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore);
+
+                break;
+            }
+#if defined(USE_GTK)
+    if (fX)
+        ChangeGame(NULL);
+    else
+#endif
+        ShowBoard();
+    return res == 0 ? c : res;
+}
+
+
+
 extern int
 AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             statcontext * psc, const evalsetup * pesChequer, evalsetup * pesCube,
@@ -755,31 +833,18 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 }
 
             }
+                    MT_Release();
+
+            g_message("we are here");
+            MoveRollout(pmr,&key);
+                    MT_Exclusive();
+
+
 
             for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
                 if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
                     rChequerSkill = pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore;
-                    // if(rChequerSkill<-0.030) {
-                    //     positionkey keyTemp=key;
-                    //     if (pmr->fPlayer) {
-                    //         PositionFromKey(anBoardMistake, &keyTemp);
-                    //         SwapSides(anBoardMistake);
-                    //         PositionKey((ConstTanBoard) anBoardMistake, &keyTemp);
-                    //     }
-                    //     // if (pmr->fPlayer) {
-                    //     //     PositionFromKey(anBoardMistake, &pmr->sb.key);
-                    //     //     // PositionFromKey(anBoardMistake, &pmr->sb.key);
-                    //     //     SwapSides(anBoardMistake);
-                    //     //     PositionKey((ConstTanBoard) anBoardMistake, &pmr->sb.key);
-                    //     // }
-                    //     // const positionkey * pkey=&pmr->sb.key;
-                    //     // positionid=PositionIDFromKey(pkey);
-                    //     // sprintf(positionid, " (set board %s)", PositionIDFromKey(pkey));
-                    //     // sprintf(positionid, " (set board %s)", PositionIDFromKey(&pmr->sb.key));
-                    //     char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&keyTemp));
-                    //     // char * positionid = g_strdup_printf("%s %s", _("Position ID:"), PositionIDFromKey(&pmr->sb.key));
-                    //     g_message("mistake:%s",positionid);
-                    // }
+
 #if defined(USE_GTK)    
                     if(fQuizAutoAdd && rChequerSkill<-arSkillLevel[QuizSkill] 
                             &&(!(fQuizOnePlayer && pms->fTurn==0))) {

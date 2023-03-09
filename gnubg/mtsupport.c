@@ -316,7 +316,9 @@ extern void
 MT_Exclusive(void)
 {
     multi_debug("exclusive asks lock (multiLock)");
+    g_message("30");
     Mutex_Lock(&td.multiLock);
+    g_message("31");
     multi_debug("exclusive gets lock (multiLock)");
 }
 

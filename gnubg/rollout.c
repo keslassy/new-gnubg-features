@@ -1258,23 +1258,31 @@ static void *ro_pUserData;
 static gboolean
 UpdateProgress(gpointer UNUSED(unused))
 {
+    g_message("20-,fShowProgress=%d, ro_alternatives=%d",fShowProgress, ro_alternatives);
     if (fShowProgress && ro_alternatives > 0) {
         int alt;
+    g_message("20-+");
 
         multi_debug("exclusive lock: update progress");
         MT_Exclusive();
+    g_message("20");
 
         for (alt = 0; alt < ro_alternatives; ++alt) {
+    g_message("21:alt=%d",alt);
             rolloutcontext *prc = &ro_apes[alt]->rc;
 
             (*ro_pfProgress) (aarMu, aarSigma, prc, aciLocal, initial_game_count, altGameCount[alt] - 1, alt,
                               ajiJSD[alt].nRank + 1, ajiJSD[alt].rJSD, fNoMore[alt], show_jsds, ro_fCubeRollout,
                               ro_pUserData);
+    g_message("22");
         }
+    g_message("23");
 
         MT_Release();
         multi_debug("exclusive release: update progress");
+    g_message("24");
     }
+    g_message("25");
     return TRUE;
 }
 
@@ -1286,7 +1294,8 @@ RolloutGeneral(ConstTanBoard * apBoard,
                evalsetup(*apes[]),
                const cubeinfo(*apci[]),
                int (*apCubeDecTop[]), int alternatives,
-               int fInvert, int fCubeRollout, rolloutprogressfunc * pfProgress, void *pUserData)
+               int fInvert, int fCubeRollout, rolloutprogressfunc * pfProgress, 
+               void *pUserData)
 {
     unsigned int j;
     int alt;
@@ -1339,11 +1348,14 @@ RolloutGeneral(ConstTanBoard * apBoard,
      * some rolls for initial positions */
     if (rcRollout.fInitial)
         rcRollout.fRotate = FALSE;
+    g_message("10");
 
     /* nFirstTrial will be the smallest number of trials done for an alternative */
     nFirstTrial = cGames = rcRollout.nTrials;
     initial_game_count = 0;
     for (alt = 0; alt < alternatives; ++alt) {
+        g_message("alt=%d",alt);
+
         pes = apes[alt];
         prc = &pes->rc;
 
@@ -1361,6 +1373,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
             aciLocal[alt].fMove = !aciLocal[alt].fMove;
 
         if ((pes->et != EVAL_ROLLOUT) || (prc->nGamesDone == 0)) {
+    g_message("11");
             /* later the saved context may to be stored with the move, so cubeful/cubeless must be made
              * consistent */
             rcRolloutSave.fCubeful = rcRolloutSave.aecCubeTrunc.fCubeful =
@@ -1387,6 +1400,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
                 aarResult[alt][j] = aarVariance[alt][j] = aarMu[alt][j] = aarSigma[alt][j] = 0.0f;
             }
         } else {
+    g_message("12");
             int nGames = prc->nGamesDone;
 
             previous_rollouts++;
@@ -1416,6 +1430,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
         /* force all moves/cube decisions to be considered and reset the upper bound on trials */
         fNoMore[alt] = 0;
         prc->nTrials = cGames;
+    g_message("13");
 
         pes->et = EVAL_ROLLOUT;
         if (prc->fCubeful)
@@ -1430,6 +1445,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
         }
 
     }
+    g_message("14");
 
     /* we can't do JSD tricks if some rollouts are cubeful and some not */
     if (nIsCubeful && nIsCubeless)
@@ -1453,19 +1469,25 @@ RolloutGeneral(ConstTanBoard * apBoard,
     ro_pUserData = pUserData;
 
     active_alternatives = ro_alternatives;
+    g_message("14a, ro_alternatives=%d",ro_alternatives);
 
     /* check if rollout alternatives are done, but only when extending
      * all candidates */
     if (previous_rollouts == active_alternatives) {
+    g_message("14a1");
         if (show_jsds) {
+    g_message("14a2");
             check_jsds(&active_alternatives);
         }
         if (rcRollout.fStopOnSTD) {
+    g_message("14a3");
             check_sds(&active_alternatives);
         }
     }
+    g_message("14b");
 
     UpdateProgress(NULL);
+    g_message("15");
 
     if (active_alternatives > 1 || (!rcRollout.fStopOnJsd && active_alternatives > 0)) {
         multi_debug("rollout adding tasks");
@@ -1475,6 +1497,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
         MT_WaitForTasks(UpdateProgress, 2000, fAutoSaveRollout);
         multi_debug("rollout finished waiting for tasks to complete");
     }
+    g_message("16");
 
     /* Make sure final output is up to date */
 #if defined(USE_GTK)
@@ -1840,10 +1863,11 @@ ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc 
         /* swap fMove in cubeinfo */
         aci[i].fMove = !aci[i].fMove;
     }
+    g_message("04");
 
-    nGamesDone = RolloutGeneral(apBoard,
-                                apOutput, apStdDev, NULL, apes, apci, apCubeDecTop, cMoves, TRUE, FALSE,
-                                pfRolloutProgress, pUserData);
+    nGamesDone = RolloutGeneral(apBoard, apOutput, apStdDev, NULL, apes, apci, 
+                    apCubeDecTop, cMoves, TRUE, FALSE, pfRolloutProgress, pUserData);
+    g_message("05");
     /* put fMove back again */
     for (i = 0; i < cMoves; ++i) {
         aci[i].fMove = !aci[i].fMove;
@@ -1851,6 +1875,7 @@ ScoreMoveRollout(move ** ppm, cubeinfo ** ppci, int cMoves, rolloutprogressfunc 
 
     if (nGamesDone < 0)
         return -1;
+    g_message("06");
 
     for (i = 0; i < cMoves; ++i) {
         const cubeinfo *pci;
