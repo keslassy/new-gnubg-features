@@ -844,13 +844,23 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             //     g_message("=>close score: c=%d",pmr->ml.cMoves);
             // }
 
-            if ( (pmr->ml.cMoves >=2) && ((!EqualKeys(key, pmr->ml.amMoves[0].key)) ||
-                        (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[1].rScore <0.01)) ) {
-                pmr->ml.amMoves[0].cmark = CMARK_ROLLOUT;
+            if ( (pmr->ml.cMoves >=2) /*not a trivial decision or a doubling decision*/ 
+                    // && (pmr->ml.amMoves[1].rScore >-0.999 || pmr->ml.amMoves[1].rScore <0.999) 
+                    //         /* not a decision where there is nothing really to decide,
+                    //             e.g. bearoff decisions at the end with a 100% win (or lose) 
+                    //             percentage no matter what [this criterion could be refined] */
+                    && ((!EqualKeys(key, pmr->ml.amMoves[0].key)) 
+                        || (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[1].rScore <0.01)) ) {
+                            /*there is something interesting to roll out: close decisions,
+                            or the player didn't choose the best decision*/
+                pmr->ml.amMoves[0].cmark = CMARK_ROLLOUT; /*always roll out the best move,
+                        then add close decisions or the player's decision if it's different */
+                g_message("added: j=0/%d, score=%f",pmr->ml.cMoves,pmr->ml.amMoves[0].rScore);       
                 for (guint j = 1; j < pmr->ml.cMoves; j++) {
-                    if ( (EqualKeys(key, pmr->ml.amMoves[j].key)) ||
-                            (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.01)) {
-                        g_message("added: j=%d/%d",j,pmr->ml.cMoves);       
+                    if ( EqualKeys(key, pmr->ml.amMoves[j].key) ||
+                            (j<4 && pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.030 )) {
+                            // && ((pmr->ml.amMoves[j].rScore >-0.999 || pmr->ml.amMoves[j].rScore <0.999)) )) {
+                        g_message("added: j=%d/%d, score=%f",j,pmr->ml.cMoves,pmr->ml.amMoves[j].rScore);       
                         pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
                     }
                 }
@@ -1283,7 +1293,7 @@ AnalyzeGame(listOLD * plGame, int wait)
         if (result == -1)
             IniStatcontext(psc);
 
-        cmark_game_rollout(plGame);
+        // cmark_game_rollout(plGame);
 
 
         return result;
@@ -2553,7 +2563,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
 
     for (j = 0; j < pmr->ml.cMoves; j++) {
         if (pmr->ml.amMoves[j].cmark == CMARK_ROLLOUT) {
-            g_message("cmark_move_rollout: looking at j=%d",j);
+            // g_message("cmark_move_rollout: looking at j=%d",j);
             list = g_slist_append(list, GINT_TO_POINTER(j));
         }
     }

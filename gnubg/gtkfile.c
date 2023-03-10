@@ -872,22 +872,25 @@ void recentByModification(const char* path, char* recent){
 extern void
 GTKAnalyzeCurrent(void)
 {
-    /*analyze match*/
-    UserCommand("analyse match");
 
-    CommandAnalyseRolloutMatch(NULL);
+    UserCommand("analyse game");
+    CommandAnalyseRolloutGame(NULL);
+    // CommandAnalyseRolloutMatch(NULL);
+    CommandCMarkGameClear(NULL);
+    // CommandCMarkMatchClear(NULL);
 
+    // /*analyze match*/
+    // UserCommand("analyse match");
 
+    // CommandAnalyseRolloutMatch(NULL);
 
-
-
-    if(fAutoDB) {
-        /*add match to db*/
-        CommandRelationalAddMatch(NULL);
-    }
-    /*show stats panel*/
-    UserCommand("show statistics match");
-    return;
+    // if(fAutoDB) {
+    //     /*add match to db*/
+    //     CommandRelationalAddMatch(NULL);
+    // }
+    // /*show stats panel*/
+    // UserCommand("show statistics match");
+    // return;
 }
 
 extern void
