@@ -873,24 +873,27 @@ extern void
 GTKAnalyzeCurrent(void)
 {
 
-    UserCommand("analyse game");
-    CommandAnalyseRolloutGame(NULL);
-    // CommandAnalyseRolloutMatch(NULL);
-    CommandCMarkGameClear(NULL);
-    // CommandCMarkMatchClear(NULL);
+    if(fMiniRollout) {
+        UserCommand("analyse game");
+        CommandAnalyseRolloutGame(NULL);
+        // CommandAnalyseRolloutMatch(NULL);
+        CommandCMarkGameClear(NULL);
+        // CommandCMarkMatchClear(NULL);
+        return;
+    } else {
+        /*analyze match*/
+        UserCommand("analyse match");
 
-    // /*analyze match*/
-    // UserCommand("analyse match");
+        // CommandAnalyseRolloutMatch(NULL);
 
-    // CommandAnalyseRolloutMatch(NULL);
-
-    // if(fAutoDB) {
-    //     /*add match to db*/
-    //     CommandRelationalAddMatch(NULL);
-    // }
-    // /*show stats panel*/
-    // UserCommand("show statistics match");
-    // return;
+        if(fAutoDB) {
+            /*add match to db*/
+            CommandRelationalAddMatch(NULL);
+        }
+        /*show stats panel*/
+        UserCommand("show statistics match");
+        return;
+    }
 }
 
 extern void

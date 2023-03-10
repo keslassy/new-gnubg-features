@@ -1177,4 +1177,8 @@ extern int fTriggeredByRecordList; /* whether history plot is launched from reco
 
 extern void UserCommand2(const char *szCommand); /* UserCommand is GTK-only, this function also works outside GTK*/
 
+/* ***** MiniRollouts ****** */
+extern int fMiniRollout;
+
+
 #endif	/* BACKGAMMON_H */

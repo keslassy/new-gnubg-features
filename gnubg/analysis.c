@@ -98,6 +98,8 @@ int afAnalysePlayers[2] = { TRUE, TRUE };
 
 evalcontext ecLuck = { TRUE, 0, FALSE, TRUE, 0.0 };
 
+// #define ABS(a) (a > 0 ? (a) : (-a))
+
 extern ratingtype
 GetRating(const float rError)
 {
@@ -772,6 +774,16 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             FindCubeDecision(arDouble, pmr->CubeDecPtr->aarOutput, &ci);
 
             rSkill = arDouble[OUTPUT_NODOUBLE] - arDouble[OUTPUT_OPTIMAL];
+
+            if(fMiniRollout && (rSkill<0 
+                    || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])<0.030
+                    || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])<0.030) ) {
+                g_message("added: cube: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
+                    rSkill,arDouble[OUTPUT_NODOUBLE],
+                    arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP]);       
+                pmr->CubeDecPtr->cmark = CMARK_ROLLOUT;
+            }
+
             pmr->stCube = Skill(rSkill);
             pmr->mwc.mwcCube= eq2mwc(arDouble[OUTPUT_NODOUBLE], &ci);
             pmr->mwc.mwcBestCube= eq2mwc(arDouble[OUTPUT_OPTIMAL], &ci);
@@ -844,7 +856,8 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             //     g_message("=>close score: c=%d",pmr->ml.cMoves);
             // }
 
-            if ( (pmr->ml.cMoves >=2) /*not a trivial decision or a doubling decision*/ 
+            if ( fMiniRollout && (pmr->ml.cMoves >=2) /*not a trivial decision or 
+                            a doubling decision*/ 
                     // && (pmr->ml.amMoves[1].rScore >-0.999 || pmr->ml.amMoves[1].rScore <0.999) 
                     //         /* not a decision where there is nothing really to decide,
                     //             e.g. bearoff decisions at the end with a 100% win (or lose) 
@@ -961,6 +974,24 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 rSkill = arDouble[OUTPUT_TAKE] <
                     arDouble[OUTPUT_DROP] ?
                     arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_OPTIMAL] : arDouble[OUTPUT_DROP] - arDouble[OUTPUT_OPTIMAL];
+
+                if(fMiniRollout && (rSkill<0 
+                        || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])<0.030
+                        || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])<0.030) ) {
+                    g_message("added: double: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
+                        rSkill,arDouble[OUTPUT_NODOUBLE],
+                        arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP]);       
+                    pmr->CubeDecPtr->cmark = CMARK_ROLLOUT;
+                }
+
+                // if(fMiniRollout && (rSkill<0 
+                //     || ABS(arDouble[OUTPUT_DOUBLE]-arDouble[OUTPUT_NODOUBLE])<0.030 
+                //     || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_DROP])<0.030 ) ) {
+                //         g_message("added: double: rSkill=%f,arDouble[OUTPUT_DOUBLE]-arDouble[OUTPUT_NODOUBLE]=%f,arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_DROP]=%f",
+                //             rSkill,arDouble[OUTPUT_DOUBLE]-arDouble[OUTPUT_NODOUBLE],
+                //             arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_DROP]);       
+                //         pmr->CubeDecPtr->cmark = CMARK_ROLLOUT;
+                // }
 
                 pmr->stCube = Skill(rSkill);
                 pmr->mwc.mwcCube= arDouble[OUTPUT_TAKE] < arDouble[OUTPUT_DROP] ? 
