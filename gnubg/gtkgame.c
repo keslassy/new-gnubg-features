@@ -585,6 +585,8 @@ typedef struct {
     GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
 
     GtkWidget *pwAutoRollout;
+    GtkWidget *pwAutoRolloutClose;
+    GtkWidget *pwAutoRolloutMistake;
 
     GtkWidget *pwScoreMap;
     GtkWidget* apwScoreMapPly[NUM_PLY];
@@ -3126,12 +3128,25 @@ static void append_autorollout_options (analysiswidget* paw)
         "\n\n- You can see the details in the \"Cube decision\"/\"Chequer play\" right-side frames "
         "by running a rollout there. "
         "\n\n- AutoRollout relies on CMarks. Therefore, you can click on Next/previous CMark (among "
-        "the top-right arrows) to focus on such rollouts.  "
+        "the top-right arrows) to focus on such rollouts. "
+        "\n\n- AutoRollout can roll-out two types of alternatives and compare them against the best "
+        "alternative: (1) Alternatives with close scores, and (2) Mistakes made by players. "
         ));   
     gtk_widget_set_tooltip_text(paw->pwAutoRollout, _(buf));
-    // g_signal_connect(G_OBJECT(paw->pwAutoRollout), "toggled", G_CALLBACK(QuizToggled), pow);
+    // g_signal_connect(G_OBJECT(paw->pwAutoRollout), "toggled", G_CALLBACK(QuizToggled), paw);
 
+    paw->pwAutoRolloutClose = gtk_check_button_new_with_label(_("Enable AutoRollout for close decisions"));
+    gtk_frame_set_label_widget(GTK_FRAME(pwf2), paw->pwAutoRolloutClose);
+    char buf2[1000];
+    sprintf(buf2,_("As for higher plies in analysis eval, rollout time can be devoted to analyse close decisions."));   
+    gtk_widget_set_tooltip_text(paw->pwAutoRolloutClose, _(buf2));
+    // g_signal_connect(G_OBJECT(paw->pwAutoRolloutClose), "toggled", G_CALLBACK(QuizToggled), paw);
 
+    paw->pwAutoRolloutMistake = gtk_check_button_new_with_label(_("Enable AutoRollout for player mistakes"));
+    gtk_box_pack_start(GTK_BOX(pwvbox), paw->pwAutoRolloutMistake, FALSE, FALSE, 4);
+    gtk_widget_set_tooltip_text(paw->pwAutoRolloutMistake,
+          _("As for higher plies in analysis eval, rollout time can be devoted to analyse player mistakes."));
+ 
 
     // pwFrame = gtk_frame_new(_("Default ScoreMap settings"));
     // gtk_box_pack_start(GTK_BOX(pwvbox), pwFrame, vAlignExpand, FALSE, 0);
