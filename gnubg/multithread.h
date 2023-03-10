@@ -37,7 +37,7 @@
 
 #include "backgammon.h"
 
-/* #define DEBUG_MULTITHREADED 1 */
+// #define DEBUG_MULTITHREADED 1 
 
 #if defined (USE_MULTITHREAD) && defined(DEBUG_MULTITHREADED)
 void multi_debug(const char *str, ...);

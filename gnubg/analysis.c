@@ -608,9 +608,10 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
     }                           /* switch */
 
 }
-
+static int
+cmark_move_rollout(moverecord * pmr, gboolean destroy);
 /*based on cmark_move_rollout() */
-static int MoveRollout(moverecord * pmr, positionkey * pkey)
+static int MoveRollout(moverecord * pmr)//, positionkey * pkey)
 {
     // gboolean destroy=TRUE;
     gchar(*asz)[FORMATEDMOVESIZE];
@@ -623,7 +624,7 @@ static int MoveRollout(moverecord * pmr, positionkey * pkey)
     move **ppm;
     void *p;
     GSList *list = NULL;
-    // positionkey key = { {0, 0, 0, 0, 0, 0, 0} };
+    positionkey key = { {0, 0, 0, 0, 0, 0, 0} };
 
     g_return_val_if_fail(pmr, -1);
 
@@ -644,8 +645,8 @@ static int MoveRollout(moverecord * pmr, positionkey * pkey)
     ppm = g_new(move *, c);
     ppci = g_new(cubeinfo *, c);
     asz = (char (*)[FORMATEDMOVESIZE]) g_malloc(FORMATEDMOVESIZE * c);
-    // if (pmr->n.iMove != UINT_MAX)
-    //     CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, (*pkey));
+    if (pmr->n.iMove != UINT_MAX)
+        CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, key);
     GetMatchStateCubeInfo(&ci, &ms);
 
     g_message("00");
@@ -672,7 +673,7 @@ static int MoveRollout(moverecord * pmr, positionkey * pkey)
 
     if (pmr->n.iMove != UINT_MAX)
         for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
-            if (EqualKeys((*pkey), pmr->ml.amMoves[pmr->n.iMove].key)) {
+            if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
                 pmr->n.stMove = Skill(pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore);
 
                 break;
@@ -691,8 +692,8 @@ static int MoveRollout(moverecord * pmr, positionkey * pkey)
 extern int
 AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             statcontext * psc, const evalsetup * pesChequer, evalsetup * pesCube,
-            /* const */ movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES], const int analysePlayers[2],
-            float *pdoubleError)
+            /* const */ movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES], 
+            const int analysePlayers[2], float *pdoubleError)
 {
     TanBoard anBoardMove;
     cubeinfo ci;
@@ -834,11 +835,21 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 }
 
             }
-            
-            MT_Release();
-            g_message("we are here");
-            MoveRollout(pmr,&key);
-            MT_Exclusive();
+            // GSList *list = NULL;
+            for (guint j = 0; j < pmr->ml.cMoves; j++) {
+                if ( (EqualKeys(key, pmr->ml.amMoves[j].key)) ||
+                        (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.02)) {
+                    g_message("added: j=%d",j);       
+                    pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
+                    // list = g_slist_append(list, GINT_TO_POINTER(j));
+                }
+            }
+
+            // MT_Release();
+            // // g_message("we are here");
+            // // MoveRollout(pmr,&key);
+            // cmark_move_rollout(pmr, TRUE);
+            // MT_Exclusive();
 
 
 
@@ -1124,6 +1135,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
     MT_Release();
 
     // g_free(positionid);
+
+
+            // cmark_move_rollout(pmr, TRUE);
 
     return fInterrupt ? -1 : 0;
 }
@@ -1877,6 +1891,8 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.pesCube = &esAnalysisCube;
         md.aamf = aamfAnalysis;
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
+
+                cmark_move_rollout(md.pmr, TRUE);
 
 #if defined(USE_GTK)
         if (fX)
