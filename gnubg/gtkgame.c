@@ -2702,7 +2702,7 @@ AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
     g_signal_connect(G_OBJECT(pAnalDetails->pwOptionMenu), "changed", G_CALLBACK(SummaryMenuActivate), pAnalDetails);
     gtk_container_add(GTK_CONTAINER(pw2), pAnalDetails->pwOptionMenu);
 
-    pwAdvanced = gtk_button_new_with_label(_("Advanced Settings..."));
+    pwAdvanced = gtk_button_new_with_label(_("Advanced Settings"));
     g_signal_connect(G_OBJECT(pwAdvanced), "clicked", G_CALLBACK(ShowDetailedAnalysis), (void *) pAnalDetails);
 #if GTK_CHECK_VERSION(3,0,0)
     hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -3975,11 +3975,11 @@ ReportBug(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
 
 static GtkActionEntry actionEntries[] = {
     {"FileMenuAction", NULL, N_("_File"), NULL, NULL, G_CALLBACK(NULL)},
-    {"FileNewAction", GTK_STOCK_NEW, N_("_New..."), "<control>N", NULL, G_CALLBACK(NewClicked)},
+    {"FileNewAction", GTK_STOCK_NEW, N_("_New"), "<control>N", NULL, G_CALLBACK(NewClicked)},
     {"FileOpenAction", GTK_STOCK_OPEN, N_("_Open"), "<control>O", NULL, G_CALLBACK(GTKOpen)},
     {"FileSaveAction", GTK_STOCK_SAVE, N_("_Save"), "<control>S", NULL, G_CALLBACK(GTKSave)},
-    {"FileCommandsOpenAction", NULL, N_("Open _Commands..."), NULL, NULL, G_CALLBACK(GTKCommandsOpen)},
-    {"FileMatchInfoAction", NULL, N_("Match information..."), NULL, NULL, G_CALLBACK(GTKMatchInfo)},
+    {"FileCommandsOpenAction", NULL, N_("Open _Commands"), NULL, NULL, G_CALLBACK(GTKCommandsOpen)},
+    {"FileMatchInfoAction", NULL, N_("Match information"), NULL, NULL, G_CALLBACK(GTKMatchInfo)},
 #if defined(WIN32)
     {"FileExitAction", NULL, N_("E_xit"), "<control>Q", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIT)},
 #else
@@ -4024,8 +4024,8 @@ static GtkActionEntry actionEntries[] = {
     {"EndGameAction", GNUBG_STOCK_END_GAME, N_("_End Game"), "<control>G", NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_END_GAME)},
     {"SwapPlayersAction", NULL, N_("Swap players"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SWAP_PLAYERS)},
-    {"SetCubeAction", NULL, N_("Set cube..."), NULL, NULL, G_CALLBACK(GTKSetCube)},
-    {"SetDiceAction", NULL, N_("Set _dice..."), NULL, NULL, G_CALLBACK(GTKSetDice)},
+    {"SetCubeAction", NULL, N_("Set cube"), NULL, NULL, G_CALLBACK(GTKSetCube)},
+    {"SetDiceAction", NULL, N_("Set _dice"), NULL, NULL, G_CALLBACK(GTKSetDice)},
 
     {"SetTurnMenuAction", NULL, N_("Set _turn"), NULL, NULL, G_CALLBACK(NULL)},
 
@@ -4073,7 +4073,7 @@ static GtkActionEntry actionEntries[] = {
     {"RolloutMatchAction", NULL, N_("CMarked from Match"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_ROLLOUT_MATCH)},
     {"AnalyseFileAction", NULL, N_("Analyse File"), NULL, NULL, G_CALLBACK(GTKAnalyzeFile)},
-    {"BatchAnalyseAction", NULL, N_("Batch analyse..."), NULL, NULL, G_CALLBACK(GTKBatchAnalyse)},
+    {"BatchAnalyseAction", NULL, N_("Batch analyse"), NULL, NULL, G_CALLBACK(GTKBatchAnalyse)},
     {"MatchOrSessionStatsAction", NULL, N_("Match or session statistics"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_STATISTICS_MATCH)},
     {"PlotMWCAction", NULL, N_("Plot MWC"), NULL, NULL,
@@ -4101,14 +4101,14 @@ static GtkActionEntry actionEntries[] = {
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_CALIBRATION)},
 
     {"SettingsMenuAction", NULL, N_("_Settings"), NULL, NULL, G_CALLBACK(NULL)},
-    {"SettingsAnalysisAction", NULL, N_("_Analysis..."), NULL, NULL, G_CALLBACK(SetAnalysis)},
-    {"SettingsBoardAppearanceAction", NULL, N_("_Board Appearance..."), NULL, NULL,
+    {"SettingsOptionsAction", NULL, N_("_Options"), NULL, NULL, G_CALLBACK(SetOptions)},
+    {"SettingsAnalysisAction", NULL, N_("_Analysis"), NULL, NULL, G_CALLBACK(SetAnalysis)},
+    {"SettingsBoardAppearanceAction", NULL, N_("_Board Appearance"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SET_APPEARANCE)},
-    {"SettingsExportAction", NULL, N_("E_xport..."), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_EXPORT)},
-    {"SettingsPlayersAction", NULL, N_("_Players..."), NULL, NULL, G_CALLBACK(SetPlayers)},
-    {"SettingsRolloutsAction", NULL, N_("_Rollouts..."), NULL, NULL, G_CALLBACK(SetRollouts)},
-    {"SettingsOptionsAction", NULL, N_("_Options..."), NULL, NULL, G_CALLBACK(SetOptions)},
-    {"SettingsLanguageAction", NULL, N_("_Language..."), NULL, NULL, G_CALLBACK(SetLanguage)},
+    {"SettingsPlayersAction", NULL, N_("_Players"), NULL, NULL, G_CALLBACK(SetPlayers)},
+    {"SettingsRolloutsAction", NULL, N_("_Rollouts"), NULL, NULL, G_CALLBACK(SetRollouts)},
+    {"SettingsLanguageAction", NULL, N_("_Language"), NULL, NULL, G_CALLBACK(SetLanguage)},
+    {"SettingsExportAction", NULL, N_("E_xport"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_EXPORT)},
 
     {"GoMenuAction", NULL, N_("G_o"), NULL, NULL, G_CALLBACK(NULL)},
     {"GoPreviousMarkedMoveAction", GNUBG_STOCK_GO_PREV_MARKED, N_("Previous marked move"), "<shift><control>Page_Up",
@@ -4168,17 +4168,17 @@ static GtkRadioActionEntry setTurnRadioActionEntries[] = {
 #else
 static GtkItemFactoryEntry aife[] = {
     {N_("/_File"), NULL, NULL, 0, "<Branch>", NULL},
-    {N_("/_File/_New..."), "<control>N", NewClicked, 0,
+    {N_("/_File/_New"), "<control>N", NewClicked, 0,
      "<StockItem>", GTK_STOCK_NEW},
-    {N_("/_File/_Open..."), "<control>O", GTKOpen, 0,
+    {N_("/_File/_Open"), "<control>O", GTKOpen, 0,
      "<StockItem>", GTK_STOCK_OPEN},
-    {N_("/_File/_Save..."), "<control>S", GTKSave, 0,
+    {N_("/_File/_Save"), "<control>S", GTKSave, 0,
      "<StockItem>", GTK_STOCK_SAVE},
     {N_("/_File/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_File/Open _Commands..."), NULL, GTKCommandsOpen, 0,
+    {N_("/_File/Open _Commands"), NULL, GTKCommandsOpen, 0,
      NULL, NULL},
     {N_("/_File/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_File/Match information..."), NULL, GTKMatchInfo, 0, NULL,
+    {N_("/_File/Match information"), NULL, GTKMatchInfo, 0, NULL,
      NULL},
     {N_("/_File/-"), NULL, NULL, 0, "<Separator>", NULL},
     {
@@ -4264,8 +4264,8 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_Game/Swap players"), NULL, Command, CMD_SWAP_PLAYERS, NULL,
      NULL},
     {N_("/_Game/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_Game/Set cube..."), NULL, GTKSetCube, 0, NULL, NULL},
-    {N_("/_Game/Set _dice..."), NULL, GTKSetDice, 0, NULL, NULL},
+    {N_("/_Game/Set cube"), NULL, GTKSetCube, 0, NULL, NULL},
+    {N_("/_Game/Set _dice"), NULL, GTKSetDice, 0, NULL, NULL},
     {N_("/_Game/Set _turn"), NULL, NULL, 0, "<Branch>", NULL},
     {N_("/_Game/Set turn/0"),
      NULL, Command, CMD_SET_TURN_0, "<RadioItem>", NULL},
@@ -4319,7 +4319,7 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_Analyse/Rollout/CMarked from Match"), NULL, Command, CMD_ANALYSE_ROLLOUT_MATCH, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/Analyse File"), NULL, GTKAnalyzeFile, 0, NULL, NULL},
-    {N_("/_Analyse/Batch analyse..."), NULL, GTKBatchAnalyse, 0, NULL, NULL},
+    {N_("/_Analyse/Batch analyse"), NULL, GTKBatchAnalyse, 0, NULL, NULL},
     {N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Analyse/Match or session statistics"), NULL, Command,
      CMD_SHOW_STATISTICS_MATCH, NULL, NULL},
@@ -4356,16 +4356,15 @@ static GtkItemFactoryEntry aife[] = {
     {N_("/_Analyse/Evaluation speed"), NULL, Command,
      CMD_SHOW_CALIBRATION, NULL, NULL},
     {N_("/_Settings"), NULL, NULL, 0, "<Branch>", NULL},
-    {N_("/_Settings/_Analysis..."), NULL, SetAnalysis, 0, NULL, NULL},
-    {N_("/_Settings/_Board Appearance..."), NULL, Command, CMD_SET_APPEARANCE,
+    {N_("/_Settings/_Options"), NULL, SetOptions, 0, NULL, NULL},
+    {N_("/_Settings/_Analysis"), NULL, SetAnalysis, 0, NULL, NULL},
+    {N_("/_Settings/_Board Appearance"), NULL, Command, CMD_SET_APPEARANCE,
      NULL, NULL},
-    {N_("/_Settings/E_xport..."), NULL, Command, CMD_SHOW_EXPORT,
+    {N_("/_Settings/_Players"), NULL, SetPlayers, 0, NULL, NULL},
+    {N_("/_Settings/_Rollouts"), NULL, SetRollouts, 0, NULL, NULL},
+    {N_("/_Settings/_Language"), NULL, SetLanguage, 0, NULL, NULL},
+    {N_("/_Settings/E_xport"), NULL, Command, CMD_SHOW_EXPORT,
      NULL, NULL},
-    {N_("/_Settings/_Players..."), NULL, SetPlayers, 0, NULL, NULL},
-    {N_("/_Settings/_Rollouts..."), NULL, SetRollouts, 0, NULL, NULL},
-    {N_("/_Settings/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_Settings/_Options..."), NULL, SetOptions, 0, NULL, NULL},
-    {N_("/_Settings/_Language..."), NULL, SetLanguage, 0, NULL, NULL},
     {N_("/G_o"), NULL, NULL, 0, "<Branch>", NULL},
     {N_("/G_o/Previous marked move"), "<shift><control>Page_Up", Command, CMD_PREV_MARKED, "<StockItem>",
      GNUBG_STOCK_GO_PREV_MARKED},
@@ -5502,7 +5501,7 @@ NewWidget(newwidget * pnw)
     gtk_box_pack_start(GTK_BOX(pwVbox2), pnw->pwGNUvsHuman, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(pwVbox2), pnw->pwHumanHuman, FALSE, FALSE, 0);
 
-    pwButtons = gtk_button_new_with_label(_("Modify player settings..."));
+    pwButtons = gtk_button_new_with_label(_("Modify player settings"));
     gtk_container_set_border_width(GTK_CONTAINER(pwButtons), 10);
 
     gtk_container_add(GTK_CONTAINER(pwVbox2), pwButtons);
@@ -8081,7 +8080,7 @@ GTKSet(void *p)
 
 
 #else
-        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Save..."), plGame != NULL);
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Save"), plGame != NULL);
 
         enable_sub_menu(gtk_item_factory_get_widget(pif, "/Game"), ms.gs == GAME_PLAYING);       
 
@@ -8100,13 +8099,13 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_CMARKED), plGame != NULL);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_NEXT_GAME), !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_GAME), !ListEmpty(&lMatch));
-        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Match information..."), !ListEmpty(&lMatch));
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Match information"), !ListEmpty(&lMatch));
 
         if (!fAnalysisRunning)
             enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse"), ms.gs == GAME_PLAYING);
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Analyse File"), TRUE);
-        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Batch analyse..."), TRUE);
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Batch analyse"), TRUE);
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_ANALYSE_MOVE),
                                  plLastMove && plLastMove->plNext && plLastMove->plNext->p);

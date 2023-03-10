@@ -846,7 +846,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
  * individual boards are not in and of themselves a contiguous set of
  * arrays and can't be treated as int x[alternative][2][25]. 2 copies
  * of the same board for cube decisions, 1 per move for move rollouts
- * asz an array of pointers to strings. These will be a contiguous array of
+ * asz - an array of pointers to strings. These will be a contiguous array of
  * text labels for displaying results. 2 pointers for cube decisions, 
  * 1 per move for move rollouts
  * aarOutput - an array[alternatives] of explicit pointers to arrays for the
@@ -858,7 +858,7 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
  * pprc - an array of explicit pointers to rollout contexts. There will be
  * 2 pointers to the same context for cube decisions, 1 per move for move 
  * rollouts 
- * aci  - an array of explicit pointers cubeinfo's. 2 for cube decisions, one
+ * aci  - an array of explicit pointers to cubeinfo's. 2 for cube decisions, one
  * per move for move rollouts
  * alternatives - a count of the number of things to be rolled out. 2 for 
  * cube decisions, number of different moves for move rollouts

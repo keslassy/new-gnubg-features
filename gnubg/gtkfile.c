@@ -874,12 +874,15 @@ GTKAnalyzeCurrent(void)
 {
 
     if(fMiniRollout) {
-        UserCommand("analyse game");
-        CommandAnalyseRolloutGame(NULL);
-        // CommandAnalyseRolloutMatch(NULL);
-        CommandCMarkGameClear(NULL);
-        // CommandCMarkMatchClear(NULL);
-        return;
+        if(1) { //game
+            UserCommand("analyse game");
+            CommandAnalyseRolloutGame(NULL);
+            // CommandCMarkGameClear(NULL);
+        } else { //match
+            UserCommand("analyse match");
+            CommandAnalyseRolloutMatch(NULL);
+            // CommandCMarkMatchClear(NULL);
+        }
     } else {
         /*analyze match*/
         UserCommand("analyse match");
@@ -892,7 +895,6 @@ GTKAnalyzeCurrent(void)
         }
         /*show stats panel*/
         UserCommand("show statistics match");
-        return;
     }
 }
 
