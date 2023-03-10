@@ -608,8 +608,9 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
     }                           /* switch */
 
 }
-static int
-cmark_move_rollout(moverecord * pmr, gboolean destroy);
+// static int cmark_move_rollout(moverecord * pmr, gboolean destroy);
+static int cmark_game_rollout(listOLD * game);
+
 /*based on cmark_move_rollout() */
 static int MoveRollout(moverecord * pmr)//, positionkey * pkey)
 {
@@ -1271,6 +1272,9 @@ AnalyzeGame(listOLD * plGame, int wait)
         if (result == -1)
             IniStatcontext(psc);
 
+        cmark_game_rollout(plGame);
+
+
         return result;
     } else
         return 0;
@@ -1892,7 +1896,7 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.aamf = aamfAnalysis;
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
 
-                cmark_move_rollout(md.pmr, TRUE);
+    cmark_move_rollout(md.pmr, TRUE);
 
 #if defined(USE_GTK)
         if (fX)
@@ -2537,8 +2541,10 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
     g_return_val_if_fail(pmr, -1);
 
     for (j = 0; j < pmr->ml.cMoves; j++) {
-        if (pmr->ml.amMoves[j].cmark == CMARK_ROLLOUT)
+        if (pmr->ml.amMoves[j].cmark == CMARK_ROLLOUT) {
+            g_message("cmark_move_rollout: looking at j=%d",j);
             list = g_slist_append(list, GINT_TO_POINTER(j));
+        }
     }
 
     if ((c = g_slist_length(list)) == 0) {
