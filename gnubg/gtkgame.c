@@ -584,6 +584,8 @@ typedef struct {
     GtkWidget *pwBackgroundAnalysis;
     GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
 
+    GtkWidget *pwAutoRollout;
+
     GtkWidget *pwScoreMap;
     GtkWidget* apwScoreMapPly[NUM_PLY];
     GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
@@ -3053,11 +3055,108 @@ BuildRadioButtons(GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* 
         //g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK((*functionWhenToggled)), psm);
     }}
 
+static void append_autorollout_options (analysiswidget* paw) 
+{
+    GtkWidget * pwvbox;
+    GtkWidget * pwvbox2;
+    GtkWidget * pwFrame;
+    GtkWidget * pwv;
+    GtkWidget * pwf;
+    GtkWidget * pwf2;
+
+// #if !GTK_CHECK_VERSION(3,0,0)
+//     GtkWidget* pwp;
+// #endif
+
+    int vAlignExpand = FALSE; // set to true to expand vertically the group of frames rather than packing them to the top
+
+    /* Display options */
+
+    pwf = gtk_frame_new(NULL);
+    pwf2 = gtk_frame_new(NULL);
+
+// #if GTK_CHECK_VERSION(3,0,0)
+//     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+//     gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+//     gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
+//     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+//     gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwvbox, gtk_label_new(_("AutoRollout")));
+// #else
+//     pwvbox = gtk_vbox_new(FALSE, 0);
+//     pwp = gtk_alignment_new(0, 0, 0, 0);
+//     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
+//     gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwp, gtk_label_new(_("AutoRollout")));
+//     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+// #endif
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_widget_set_halign(pwf, GTK_ALIGN_START);
+    gtk_widget_set_valign(pwf, GTK_ALIGN_START);
+    gtk_container_set_border_width(GTK_CONTAINER(pwf), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwf, gtk_label_new(_("AutoRollout")));
+    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
+    gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
+
+    gtk_container_add(GTK_CONTAINER(pwvbox), pwf2);
+    pwvbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 6);
+    gtk_container_add(GTK_CONTAINER(pwf2), pwvbox2);
+#else
+    GtkWidget* pwp = gtk_alignment_new(0, 0, 0, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
+    gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwp, gtk_label_new(_("AutoRollout")));
+    gtk_container_add(GTK_CONTAINER(pwp), pwf);
+    pwvbox = gtk_vbox_new(FALSE, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
+    gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
+
+    gtk_container_add(GTK_CONTAINER(pwvbox), pwf2);
+    pwvbox2 = gtk_vbox_new(FALSE, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 6);
+    gtk_container_add(GTK_CONTAINER(pwf2), pwvbox2);
+#endif
+
+    paw->pwAutoRollout = gtk_check_button_new_with_label(_("Enable AutoRollout (hover for details)"));
+    gtk_frame_set_label_widget(GTK_FRAME(pwf), paw->pwAutoRollout);
+    char buf[1000];
+    sprintf(buf,_("After the usual analysis (defined in the previous tab), AutoRollout can "
+        "automatically launch a rollout to refine selected move & cube decisions, "
+        "as if we were running an analysis with a higher ply. "
+        "\n\n- Its rollout settings are the default rollout settings defined in Settings>Rollouts"
+        "\n\n- You can see the details in the \"Cube decision\"/\"Chequer play\" right-side frames "
+        "by running a rollout there. "
+        "\n\n- AutoRollout relies on CMarks. Therefore, you can click on Next/previous CMark (among "
+        "the top-right arrows) to focus on such rollouts.  "
+        ));   
+    gtk_widget_set_tooltip_text(paw->pwAutoRollout, _(buf));
+    // g_signal_connect(G_OBJECT(paw->pwAutoRollout), "toggled", G_CALLBACK(QuizToggled), pow);
 
 
 
-static void
-append_scoremap_options(analysiswidget* paw) 
+    // pwFrame = gtk_frame_new(_("Default ScoreMap settings"));
+    // gtk_box_pack_start(GTK_BOX(pwvbox), pwFrame, vAlignExpand, FALSE, 0);
+    // gtk_widget_set_tooltip_text(pwFrame, _("Select the settings with which to initialize each new ScoreMap window")); 
+    // gtk_widget_set_sensitive(pwFrame, TRUE);
+
+// #if GTK_CHECK_VERSION(3,0,0)
+//         pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
+// #else
+//         pwv = gtk_vbox_new(FALSE, 0);
+// #endif
+//     gtk_container_add(GTK_CONTAINER(pwFrame), pwv);
+
+//     BuildRadioButtons(pwv, paw->apwScoreMapPly,_("Evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault);
+//     BuildRadioButtons(pwv, paw->apwScoreMapMatchLength,_("Simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx);
+//     BuildRadioButtons(pwv, paw->apwScoreMapJacoby,_("Money-play analysis:"), _("Select the default Jacoby option in the money play analysis of the top-left ScoreMap square"), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef);
+//     BuildRadioButtons(pwv, paw->apwScoreMapCubeEquityDisplay,_("Cube equity display:"), _("Select the default equity text to display in the squares of the cube ScoreMap"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef);
+//     BuildRadioButtons(pwv, paw->apwScoreMapMoveEquityDisplay,_("Move equity display:"), _("Select the default equity text to display in the squares of the move ScoreMap"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef);
+//     BuildRadioButtons(pwv, paw->apwScoreMapColour,_("In cube ScoreMaps, colour by:"), _("Select what equity to use when deciding to colour the cube ScoreMap"), aszScoreMapColour, NUM_COLOUR, scoreMapColourDef);
+//     BuildRadioButtons(pwv, paw->apwScoreMapLabel,_("Axis orientation:"), _("Select how to orient the ScoreMap axes by default"), aszScoreMapLabel, NUM_LABEL, scoreMapLabelDef);
+//     BuildRadioButtons(pwv, paw->apwScoreMapLayout,_("Option pane location:"), _("Decide where to place the options with respect to the ScoreMap table"), aszScoreMapLayout, NUM_LAYOUT, scoreMapLayoutDef);
+
+}
+
+static void append_scoremap_options(analysiswidget* paw) 
 {
     GtkWidget* pwvbox;
     GtkWidget* pwFrame;
@@ -3422,6 +3521,7 @@ AnalysisPages(analysiswidget * paw)
     gtk_container_set_border_width(GTK_CONTAINER(paw->pwNoteBook), 8);
 
     append_analysis_options(paw);
+    append_autorollout_options(paw); 
     append_scoremap_options(paw); 
 
     AnalysisSet(paw);
