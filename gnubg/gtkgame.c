@@ -3055,7 +3055,18 @@ BuildRadioButtons(GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* 
         if (toggleDefault == i) // again use "if (DefaultLabel==labelEnum[i])" if needed
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(apwScoreMapFrame[i]), 1); //we set this to toggle it on in case it's the default option
         //g_signal_connect(G_OBJECT(pw), "toggled", G_CALLBACK((*functionWhenToggled)), psm);
-    }}
+    }
+}
+
+static void AutoRolloutToggled(GtkWidget * UNUSED(pw), analysiswidget* paw) 
+{
+    gint n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwAutoRollout));
+    //gint n2 = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutClose));
+
+    //gtk_widget_set_sensitive(paw->pwAutoRollout, n);
+    gtk_widget_set_sensitive(paw->pwAutoRolloutClose, n);
+    gtk_widget_set_sensitive(paw->pwAutoRolloutMistake, n);
+}
 
 static void append_autorollout_options (analysiswidget* paw) 
 {
@@ -3133,41 +3144,20 @@ static void append_autorollout_options (analysiswidget* paw)
         "alternative: (1) Alternatives with close scores, and (2) Mistakes made by players. "
         ));   
     gtk_widget_set_tooltip_text(paw->pwAutoRollout, _(buf));
-    // g_signal_connect(G_OBJECT(paw->pwAutoRollout), "toggled", G_CALLBACK(QuizToggled), paw);
+    g_signal_connect(G_OBJECT(paw->pwAutoRollout), "toggled", G_CALLBACK(AutoRolloutToggled), paw);
 
     paw->pwAutoRolloutClose = gtk_check_button_new_with_label(_("Enable AutoRollout for close decisions"));
     gtk_frame_set_label_widget(GTK_FRAME(pwf2), paw->pwAutoRolloutClose);
     char buf2[1000];
     sprintf(buf2,_("As for higher plies in analysis eval, rollout time can be devoted to analyse close decisions."));   
     gtk_widget_set_tooltip_text(paw->pwAutoRolloutClose, _(buf2));
-    // g_signal_connect(G_OBJECT(paw->pwAutoRolloutClose), "toggled", G_CALLBACK(QuizToggled), paw);
+    // g_signal_connect(G_OBJECT(paw->pwAutoRolloutClose), "toggled", G_CALLBACK(AutoRolloutToggled), paw);
 
     paw->pwAutoRolloutMistake = gtk_check_button_new_with_label(_("Enable AutoRollout for player mistakes"));
     gtk_box_pack_start(GTK_BOX(pwvbox), paw->pwAutoRolloutMistake, FALSE, FALSE, 4);
     gtk_widget_set_tooltip_text(paw->pwAutoRolloutMistake,
           _("As for higher plies in analysis eval, rollout time can be devoted to analyse player mistakes."));
  
-
-    // pwFrame = gtk_frame_new(_("Default ScoreMap settings"));
-    // gtk_box_pack_start(GTK_BOX(pwvbox), pwFrame, vAlignExpand, FALSE, 0);
-    // gtk_widget_set_tooltip_text(pwFrame, _("Select the settings with which to initialize each new ScoreMap window")); 
-    // gtk_widget_set_sensitive(pwFrame, TRUE);
-
-// #if GTK_CHECK_VERSION(3,0,0)
-//         pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 4);
-// #else
-//         pwv = gtk_vbox_new(FALSE, 0);
-// #endif
-//     gtk_container_add(GTK_CONTAINER(pwFrame), pwv);
-
-//     BuildRadioButtons(pwv, paw->apwScoreMapPly,_("Evaluation strength:"), _("Select the ply at which to evaluate the equity at each score"), aszScoreMapPly, NUM_PLY, scoreMapPlyDefault);
-//     BuildRadioButtons(pwv, paw->apwScoreMapMatchLength,_("Simulated match length:"), _("Select the default match length for which to draw the ScoreMap; a variable length picks a length of 3 for current real short matches, 7 for long, and 5 otherwise."), aszScoreMapMatchLength, NUM_MATCH_LENGTH, scoreMapMatchLengthDefIdx);
-//     BuildRadioButtons(pwv, paw->apwScoreMapJacoby,_("Money-play analysis:"), _("Select the default Jacoby option in the money play analysis of the top-left ScoreMap square"), aszScoreMapJacoby, NUM_JACOBY, scoreMapJacobyDef);
-//     BuildRadioButtons(pwv, paw->apwScoreMapCubeEquityDisplay,_("Cube equity display:"), _("Select the default equity text to display in the squares of the cube ScoreMap"), aszScoreMapCubeEquityDisplay, NUM_CUBEDISP, scoreMapCubeEquityDisplayDef);
-//     BuildRadioButtons(pwv, paw->apwScoreMapMoveEquityDisplay,_("Move equity display:"), _("Select the default equity text to display in the squares of the move ScoreMap"), aszScoreMapMoveEquityDisplay, NUM_MOVEDISP, scoreMapMoveEquityDisplayDef);
-//     BuildRadioButtons(pwv, paw->apwScoreMapColour,_("In cube ScoreMaps, colour by:"), _("Select what equity to use when deciding to colour the cube ScoreMap"), aszScoreMapColour, NUM_COLOUR, scoreMapColourDef);
-//     BuildRadioButtons(pwv, paw->apwScoreMapLabel,_("Axis orientation:"), _("Select how to orient the ScoreMap axes by default"), aszScoreMapLabel, NUM_LABEL, scoreMapLabelDef);
-//     BuildRadioButtons(pwv, paw->apwScoreMapLayout,_("Option pane location:"), _("Decide where to place the options with respect to the ScoreMap table"), aszScoreMapLayout, NUM_LAYOUT, scoreMapLayoutDef);
 
 }
 

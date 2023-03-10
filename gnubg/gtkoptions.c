@@ -334,13 +334,9 @@ static void QuizToggled(GtkWidget * UNUSED(pw), optionswidget * pow)
     gtk_widget_set_sensitive(pow->pwQuizSkill, n&&n2);
     gtk_widget_set_sensitive(pow->pwQuizOnePlayer, n&&n2);
 
-
     // gtk_widget_set_sensitive(pow->pwQuizAutoAdd, fUseQuiz);
     // gtk_widget_set_sensitive(pow->pwQuizSkill, fUseQuiz && fQuizAutoAdd);
     // gtk_widget_set_sensitive(pow->pwQuizOnePlayer, fUseQuiz && fQuizAutoAdd);
-
-
-
 }
 
 static void
