@@ -874,6 +874,13 @@ GTKAnalyzeCurrent(void)
 {
     /*analyze match*/
     UserCommand("analyse match");
+
+    CommandAnalyseRolloutMatch(NULL);
+
+
+
+
+
     if(fAutoDB) {
         /*add match to db*/
         CommandRelationalAddMatch(NULL);

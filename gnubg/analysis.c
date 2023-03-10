@@ -611,82 +611,82 @@ updateStatcontext(statcontext * psc, const moverecord * pmr, const matchstate * 
 // static int cmark_move_rollout(moverecord * pmr, gboolean destroy);
 static int cmark_game_rollout(listOLD * game);
 
-/*based on cmark_move_rollout() */
-static int MoveRollout(moverecord * pmr)//, positionkey * pkey)
-{
-    // gboolean destroy=TRUE;
-    gchar(*asz)[FORMATEDMOVESIZE];
-    cubeinfo ci;
-    cubeinfo **ppci;
-    GSList *pl = NULL;
-    gint c;
-    guint j;
-    gint res;
-    move **ppm;
-    void *p;
-    GSList *list = NULL;
-    positionkey key = { {0, 0, 0, 0, 0, 0, 0} };
+// /*based on cmark_move_rollout() */
+// static int MoveRollout(moverecord * pmr)//, positionkey * pkey)
+// {
+//     // gboolean destroy=TRUE;
+//     gchar(*asz)[FORMATEDMOVESIZE];
+//     cubeinfo ci;
+//     cubeinfo **ppci;
+//     GSList *pl = NULL;
+//     gint c;
+//     guint j;
+//     gint res;
+//     move **ppm;
+//     void *p;
+//     GSList *list = NULL;
+//     positionkey key = { {0, 0, 0, 0, 0, 0, 0} };
 
-    g_return_val_if_fail(pmr, -1);
+//     g_return_val_if_fail(pmr, -1);
 
-    for (j = 0; j < pmr->ml.cMoves; j++) {
-        if ( //(EqualKeys((*pkey), pmr->ml.amMoves[j].key)) ||
-                (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.02)) {
-            g_message("added: j=%d",j);       
-            // pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
-            list = g_slist_append(list, GINT_TO_POINTER(j));
-        }
-    }
+//     for (j = 0; j < pmr->ml.cMoves; j++) {
+//         if ( //(EqualKeys((*pkey), pmr->ml.amMoves[j].key)) ||
+//                 (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.02)) {
+//             g_message("added: j=%d",j);       
+//             // pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
+//             list = g_slist_append(list, GINT_TO_POINTER(j));
+//         }
+//     }
 
-    if ((c = g_slist_length(list)) <=1) { //}== 0) {
-        g_message("no rollout, c=%d",c);    
-        return 0;
-    }
+//     if ((c = g_slist_length(list)) <=1) { //}== 0) {
+//         g_message("no rollout, c=%d",c);    
+//         return 0;
+//     }
 
-    ppm = g_new(move *, c);
-    ppci = g_new(cubeinfo *, c);
-    asz = (char (*)[FORMATEDMOVESIZE]) g_malloc(FORMATEDMOVESIZE * c);
-    if (pmr->n.iMove != UINT_MAX)
-        CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, key);
-    GetMatchStateCubeInfo(&ci, &ms);
+//     ppm = g_new(move *, c);
+//     ppci = g_new(cubeinfo *, c);
+//     asz = (char (*)[FORMATEDMOVESIZE]) g_malloc(FORMATEDMOVESIZE * c);
+//     if (pmr->n.iMove != UINT_MAX)
+//         CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, key);
+//     GetMatchStateCubeInfo(&ci, &ms);
 
-    g_message("00");
-    for (pl = list, j = 0; pl; pl = g_slist_next(pl), j++) {
-        g_message("in list: j=%d",j);       
-        gint i = GPOINTER_TO_INT(pl->data);
-        move *m = ppm[j] = &pmr->ml.amMoves[i];
-        ppci[j] = &ci;
-        FormatMove(asz[j], msBoard(), m->anMove);
-    }
+//     g_message("00");
+//     for (pl = list, j = 0; pl; pl = g_slist_next(pl), j++) {
+//         g_message("in list: j=%d",j);       
+//         gint i = GPOINTER_TO_INT(pl->data);
+//         move *m = ppm[j] = &pmr->ml.amMoves[i];
+//         ppci[j] = &ci;
+//         FormatMove(asz[j], msBoard(), m->anMove);
+//     }
 
-    RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, FALSE, &p);
-    g_message("01");
-    ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
-    g_message("02");
-    res = RolloutProgressEnd(&p, FALSE);
-    g_message("03");
+//     RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, FALSE, &p);
+//     g_message("01");
+//     ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
+//     g_message("02");
+//     res = RolloutProgressEnd(&p, FALSE);
+//     g_message("03");
 
-    g_free(asz);
-    g_free(ppm);
-    g_free(ppci);
+//     g_free(asz);
+//     g_free(ppm);
+//     g_free(ppci);
 
-    RefreshMoveList(&pmr->ml, NULL);
+//     RefreshMoveList(&pmr->ml, NULL);
 
-    if (pmr->n.iMove != UINT_MAX)
-        for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
-            if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
-                pmr->n.stMove = Skill(pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore);
+//     if (pmr->n.iMove != UINT_MAX)
+//         for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
+//             if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
+//                 pmr->n.stMove = Skill(pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore);
 
-                break;
-            }
-#if defined(USE_GTK)
-    if (fX)
-        ChangeGame(NULL);
-    else
-#endif
-        ShowBoard();
-    return res == 0 ? c : res;
-}
+//                 break;
+//             }
+// #if defined(USE_GTK)
+//     if (fX)
+//         ChangeGame(NULL);
+//     else
+// #endif
+//         ShowBoard();
+//     return res == 0 ? c : res;
+// }
 
 
 
@@ -836,15 +836,26 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 }
 
             }
-            // GSList *list = NULL;
-            for (guint j = 0; j < pmr->ml.cMoves; j++) {
-                if ( (EqualKeys(key, pmr->ml.amMoves[j].key)) ||
-                        (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.02)) {
-                    g_message("added: j=%d",j);       
-                    pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
-                    // list = g_slist_append(list, GINT_TO_POINTER(j));
+            // g_message("test: c=%d",pmr->ml.cMoves);
+            // if (!EqualKeys(key, pmr->ml.amMoves[0].key)) {
+            //     g_message("=>equal keys: c=%d",pmr->ml.cMoves);
+            // }
+            // if (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[1].rScore <0.01) {
+            //     g_message("=>close score: c=%d",pmr->ml.cMoves);
+            // }
+
+            if ( (pmr->ml.cMoves >=2) && ((!EqualKeys(key, pmr->ml.amMoves[0].key)) ||
+                        (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[1].rScore <0.01)) ) {
+                pmr->ml.amMoves[0].cmark = CMARK_ROLLOUT;
+                for (guint j = 1; j < pmr->ml.cMoves; j++) {
+                    if ( (EqualKeys(key, pmr->ml.amMoves[j].key)) ||
+                            (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.01)) {
+                        g_message("added: j=%d/%d",j,pmr->ml.cMoves);       
+                        pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
+                    }
                 }
             }
+
 
             // MT_Release();
             // // g_message("we are here");
@@ -1896,7 +1907,7 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.aamf = aamfAnalysis;
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
 
-    cmark_move_rollout(md.pmr, TRUE);
+    // cmark_move_rollout(md.pmr, TRUE);
 
 #if defined(USE_GTK)
         if (fX)
