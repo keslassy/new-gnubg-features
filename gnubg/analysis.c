@@ -775,7 +775,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
 
             rSkill = arDouble[OUTPUT_NODOUBLE] - arDouble[OUTPUT_OPTIMAL];
 
-            if(fMiniRollout && (rSkill<0 
+            if(fAutoRollout && (rSkill<0 
                     || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])<0.030
                     || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])<0.030) ) {
                 g_message("added: cube: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
@@ -856,7 +856,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             //     g_message("=>close score: c=%d",pmr->ml.cMoves);
             // }
 
-            if ( fMiniRollout && (pmr->ml.cMoves >=2) /*not a trivial decision or 
+            if ( fAutoRollout && (pmr->ml.cMoves >=2) /*not a trivial decision or 
                             a doubling decision*/ 
                     // && (pmr->ml.amMoves[1].rScore >-0.999 || pmr->ml.amMoves[1].rScore <0.999) 
                     //         /* not a decision where there is nothing really to decide,
@@ -975,7 +975,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     arDouble[OUTPUT_DROP] ?
                     arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_OPTIMAL] : arDouble[OUTPUT_DROP] - arDouble[OUTPUT_OPTIMAL];
 
-                if(fMiniRollout && (rSkill<0 
+                if(fAutoRollout && (rSkill<0 
                         || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])<0.030
                         || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])<0.030) ) {
                     g_message("added: double: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
@@ -984,7 +984,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     pmr->CubeDecPtr->cmark = CMARK_ROLLOUT;
                 }
 
-                // if(fMiniRollout && (rSkill<0 
+                // if(fAutoRollout && (rSkill<0 
                 //     || ABS(arDouble[OUTPUT_DOUBLE]-arDouble[OUTPUT_NODOUBLE])<0.030 
                 //     || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_DROP])<0.030 ) ) {
                 //         g_message("added: double: rSkill=%f,arDouble[OUTPUT_DOUBLE]-arDouble[OUTPUT_NODOUBLE]=%f,arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_DROP]=%f",

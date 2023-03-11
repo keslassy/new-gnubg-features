@@ -93,6 +93,7 @@ typedef struct {
     unsigned int fDeterministic:1;
     unsigned int :25;		/* padding */
     float rNoise;               /* standard deviation */
+    unsigned int fAutoRollout:1;    /*  use post-eval AutoRollout*/
 } evalcontext;
 
 /* identifies the format of evaluation info in .sgf files
@@ -235,10 +236,14 @@ typedef enum {
 extern const char *aszDoubleTypes[NUM_DOUBLE_TYPES];
 
 /*
- * prefined settings
+ * predefined settings
  */
 
-#define NUM_SETTINGS            9
+#define NUM_SETTINGS            11
+// #define NUM_SETTINGS_EVAL_ONLY  (NUM_SETTINGS-2)
+
+#define SETTINGS_2PLY_AR        10
+#define SETTINGS_0PLY_AR        9
 #define SETTINGS_4PLY           8
 #define SETTINGS_GRANDMASTER    7
 #define SETTINGS_SUPREMO        6

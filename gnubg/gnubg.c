@@ -273,7 +273,9 @@ int fQuietNewMatch=0;
 // qNow.position=malloc(200);
 quizdecision qDecision=QUIZ_UNKNOWN;
     /*mini-rollout*/
-int fMiniRollout=TRUE;
+int fAutoRollout=TRUE;
+int fAutoRolloutClose=TRUE;
+int fAutoRolloutMistake=TRUE;
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */

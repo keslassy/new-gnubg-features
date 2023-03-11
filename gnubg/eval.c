@@ -302,28 +302,32 @@ static randctx rc;
  */
 
 const char *aszSettings[NUM_SETTINGS] = {
-    N_("setting|beginner"),
-    N_("setting|casual play"),
-    N_("setting|intermediate"),
-    N_("setting|advanced"),
-    N_("setting|expert"),
-    N_("setting|world class"),
-    N_("setting|supremo"),
-    N_("setting|grandmaster"),
-    N_("setting|4ply")
+    N_("setting|0ply: beginner"),
+    N_("setting|0ply: casual play"),
+    N_("setting|0ply: intermediate"),
+    N_("setting|0ply: advanced"),
+    N_("setting|0ply: expert"),
+    N_("setting|2ply: world class"),
+    N_("setting|2ply: supremo"),
+    N_("setting|3ply: grandmaster"),
+    N_("setting|4ply"),
+    N_("setting|0ply + AutoRollout"),
+    N_("setting|2ply + AutoRollout")
 };
 
 /* which evaluation context does the predefined settings use */
 evalcontext aecSettings[NUM_SETTINGS] = {
-    {TRUE, 0, FALSE, TRUE, 0.060f},     /* beginner */
-    {TRUE, 0, FALSE, TRUE, 0.050f},     /* casual player */
-    {TRUE, 0, FALSE, TRUE, 0.040f},     /* intermediate */
-    {TRUE, 0, FALSE, TRUE, 0.015f},     /* advanced */
-    {TRUE, 0, FALSE, TRUE, 0.0f},       /* expert */
-    {TRUE, 2, TRUE, TRUE, 0.0f},        /* world class */
-    {TRUE, 2, TRUE, TRUE, 0.0f},        /* supremo */
-    {TRUE, 3, TRUE, TRUE, 0.0f},        /* grand master */
-    {TRUE, 4, TRUE, TRUE, 0.0f},        /* 4ply */
+    {TRUE, 0, FALSE, TRUE, 0.060f, FALSE},     /* beginner */
+    {TRUE, 0, FALSE, TRUE, 0.050f, FALSE},     /* casual player */
+    {TRUE, 0, FALSE, TRUE, 0.040f, FALSE},     /* intermediate */
+    {TRUE, 0, FALSE, TRUE, 0.015f, FALSE},     /* advanced */
+    {TRUE, 0, FALSE, TRUE, 0.0f, FALSE},       /* expert */
+    {TRUE, 2, TRUE, TRUE, 0.0f, FALSE},        /* world class */
+    {TRUE, 2, TRUE, TRUE, 0.0f, FALSE},        /* supremo */
+    {TRUE, 3, TRUE, TRUE, 0.0f, FALSE},        /* grand master */
+    {TRUE, 4, TRUE, TRUE, 0.0f, FALSE},        /* 4ply */
+    {TRUE, 0, FALSE, TRUE, 0.0f, TRUE},       /* 0ply (expert)+AR */
+    {TRUE, 2, TRUE, TRUE, 0.0f, TRUE}         /* 2ply (world class)+AR */
 };
 
 /* which move filter does the predefined settings use */
@@ -337,6 +341,8 @@ int aiSettingsMoveFilter[NUM_SETTINGS] = {
     3,                          /* supremo: large */
     3,                          /* grandmaster: large */
     3,                          /* 4ply: large */
+    -1,                         /* expert+AR: n/a */
+    2                           /* wc+AR: normal */
 };
 
 /* the predefined move filters */

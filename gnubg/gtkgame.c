@@ -567,7 +567,6 @@ typedef struct {
 
 
 typedef struct {
-
     evalsetup esChequer;
     evalsetup esCube;
     movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
@@ -2316,7 +2315,8 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     gtk_container_add(GTK_CONTAINER(pw2), gtk_label_new(_("Select a predefined setting:")));
 
     gtk_widget_set_tooltip_text(pwev,
-                                _("Select a predefined setting, ranging from " "beginner's play to the 4ply setting."));
+                                _("Select a predefined setting, ranging from " 
+                                "beginner's play to the 4ply setting."));
 
     pew->pwOptionMenu = gtk_combo_box_text_new();
 
@@ -2778,7 +2778,14 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
             break;
         } 
 
-    /* Score Map */
+    /*AutoRollout*/
+
+    CHECKUPDATE(paw->pwAutoRollout, fAutoRollout, "set autorollout enable %s")
+    CHECKUPDATE(paw->pwAutoRolloutClose, fAutoRolloutClose, "set autorollout close %s")
+    CHECKUPDATE(paw->pwAutoRolloutMistake, fAutoRolloutMistake, "set autorollout mistake %s")
+
+
+    /* ScoreMap */
 
     for (i = 0; i < NUM_PLY; ++i)
         {if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapPly[i])) && scoreMapPlyDefault != (scoreMapPly) i) {
@@ -2894,7 +2901,15 @@ AnalysisSet(analysiswidget * paw)
     for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i]), AnalyzeFileSettingDef == (analyzeFileSetting) i); 
 
-    /*Score Map*/ 
+    /* AutoRollout */
+
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRollout), fAutoRollout);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutClose), fAutoRolloutClose);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutMistake), fAutoRolloutMistake);
+
+
+
+    /*ScoreMap*/ 
 
     for (i = 0; i < NUM_PLY; ++i){
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapPly[i]), scoreMapPlyDefault == (scoreMapPly)i);
@@ -3146,14 +3161,14 @@ static void append_autorollout_options (analysiswidget* paw)
     gtk_widget_set_tooltip_text(paw->pwAutoRollout, _(buf));
     g_signal_connect(G_OBJECT(paw->pwAutoRollout), "toggled", G_CALLBACK(AutoRolloutToggled), paw);
 
-    paw->pwAutoRolloutClose = gtk_check_button_new_with_label(_("Enable AutoRollout for close decisions"));
+    paw->pwAutoRolloutClose = gtk_check_button_new_with_label(_("(1) Enable AutoRollout for close decisions"));
     gtk_frame_set_label_widget(GTK_FRAME(pwf2), paw->pwAutoRolloutClose);
     char buf2[1000];
     sprintf(buf2,_("As for higher plies in analysis eval, rollout time can be devoted to analyse close decisions."));   
     gtk_widget_set_tooltip_text(paw->pwAutoRolloutClose, _(buf2));
     // g_signal_connect(G_OBJECT(paw->pwAutoRolloutClose), "toggled", G_CALLBACK(AutoRolloutToggled), paw);
 
-    paw->pwAutoRolloutMistake = gtk_check_button_new_with_label(_("Enable AutoRollout for player mistakes"));
+    paw->pwAutoRolloutMistake = gtk_check_button_new_with_label(_("(2 Enable AutoRollout for player mistakes"));
     gtk_box_pack_start(GTK_BOX(pwvbox), paw->pwAutoRolloutMistake, FALSE, FALSE, 4);
     gtk_widget_set_tooltip_text(paw->pwAutoRolloutMistake,
           _("As for higher plies in analysis eval, rollout time can be devoted to analyse player mistakes."));
@@ -3501,8 +3516,8 @@ append_analysis_options(analysiswidget * paw)
     gtk_box_pack_start(GTK_BOX(vbox3), paw->pwBackgroundAnalysis, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(paw->pwBackgroundAnalysis,
                                 _("Allow browsing a match and its early analysis results while "
-                                "analysis is still running in the background. Some features may be "
-                                "disabled until the nalysis is over."));
+                                "analysis is still running in the background. Some menu options may be "
+                                "disabled until the analysis is over."));
 
     BuildRadioButtons(vbox3, paw->apwAnalyzeFileSetting,
         _("Select the default file analysis settings (hover for details):"), 
@@ -4462,8 +4477,10 @@ static GtkItemFactoryEntry aife[] = {
      CMD_SHOW_CALIBRATION, NULL, NULL},
     {N_("/_Settings"), NULL, NULL, 0, "<Branch>", NULL},
     {N_("/_Settings/_Options"), NULL, SetOptions, 0, NULL, NULL},
+    {N_("/_Settings/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Settings/_Analysis"), NULL, SetAnalysis, 0, NULL, NULL},
     {N_("/_Settings/_Rollouts"), NULL, SetRollouts, 0, NULL, NULL},
+    {N_("/_Settings/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_Settings/_Board Appearance"), NULL, Command, CMD_SET_APPEARANCE,
      NULL, NULL},
     {N_("/_Settings/_Players"), NULL, SetPlayers, 0, NULL, NULL},
