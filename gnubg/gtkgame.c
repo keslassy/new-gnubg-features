@@ -583,9 +583,9 @@ typedef struct {
     GtkWidget *pwBackgroundAnalysis;
     GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
 
-    GtkWidget *pwAutoRollout;
-    GtkWidget *pwAutoRolloutClose;
-    GtkWidget *pwAutoRolloutMistake;
+    // GtkWidget *pwAutoRollout;
+    // GtkWidget *pwAutoRolloutClose;
+    // GtkWidget *pwAutoRolloutMistake;
 
     GtkWidget *pwScoreMap;
     GtkWidget* apwScoreMapPly[NUM_PLY];
@@ -2150,7 +2150,7 @@ FinishMove(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 typedef struct {
     evalcontext *pec;
     movefilter *pmf;
-    GtkWidget *pwCubeful, *pwUsePrune, *pwDeterministic;
+    GtkWidget *pwCubeful, *pwUsePrune, *pwDeterministic, *pwAutoRollout;
     GtkAdjustment *padjPlies, *padjSearchCandidates, *padjSearchTolerance, *padjNoise;
     int *pfOK;
     GtkWidget *pwOptionMenu;
@@ -2166,6 +2166,7 @@ EvalGetValues(evalcontext * pec, evalwidget * pew)
     pec->fCubeful = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwCubeful));
 
     pec->fUsePrune = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwUsePrune));
+    pec->fAutoRollout = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout));
 
     pec->rNoise = (float) gtk_adjustment_get_value(pew->padjNoise);
     pec->fDeterministic = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwDeterministic));
@@ -2254,7 +2255,8 @@ SettingsMenuActivate(GtkComboBox * box, evalwidget * pew)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwUsePrune), pec->fUsePrune);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwCubeful), pec->fCubeful);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwDeterministic), pec->fDeterministic);
-
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
+		    
     if (pew->fMoveFilter)
         MoveFilterSetPredefined(pew->pwMoveFilter, aiSettingsMoveFilter[iSelected]);
 
@@ -2316,7 +2318,8 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     gtk_widget_set_tooltip_text(pwev,
                                 _("Select a predefined setting, ranging from " 
-                                "beginner's play to the 4ply setting."));
+                                "beginner's play to the 4ply setting or a setting "
+                                "with AutoRollout."));
 
     pew->pwOptionMenu = gtk_combo_box_text_new();
 
@@ -2369,6 +2372,33 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     gtk_container_add(GTK_CONTAINER(pw), gtk_label_new(_("Plies:")));
     gtk_container_add(GTK_CONTAINER(pw), gtk_spin_button_new(pew->padjPlies, 1, 0));
 
+    /* Use AutoRollout*/
+
+    pwFrame2 = gtk_frame_new(_("AutoRollout"));
+    gtk_container_add(GTK_CONTAINER(pw2), pwFrame2);
+
+    gtk_container_add(GTK_CONTAINER(pwFrame2),
+                      pew->pwUsePrune = gtk_check_button_new_with_label(_("Use AutoRollout")));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
+
+    gtk_widget_set_tooltip_text(pew->pwAutoRollout,
+                                _("Instruct GNU Backgammon to use a set of neural networks "
+                                  "just to prune away move candidates within a deeper ply search. "
+                                  "This increases the speed considerably at a negligible cost in playing strength. "
+                                  "It is recommended to enable this option."));
+    char buf[1000];
+    sprintf(buf,_("After the usual analysis (defined in the previous tab), AutoRollout can "
+        "automatically launch a rollout to refine selected move & cube decisions, "
+        "as if we were running an analysis with a higher ply. "
+        "\n\n- Its rollout settings are the default rollout settings defined in Settings>Rollouts"
+        "\n\n- You can see the details in the \"Cube decision\"/\"Chequer play\" right-side frames "
+        "by running a rollout there. "
+        "\n\n- AutoRollout relies on CMarks. Therefore, you can click on Next/previous CMark (among "
+        "the top-right arrows) to focus on such rollouts. "
+        "\n\n- After the analysis ranks all alternatives, AutoRollout rolls out two types of "
+        " alternatives to compare them against the best ranked alternative: "
+        "(1) Alternatives with close scores, and (2) Mistakes made by players. "
+        ));   
     /* Use pruning neural nets */
 
     pwFrame2 = gtk_frame_new(_("Pruning neural nets"));
@@ -2493,6 +2523,8 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     g_signal_connect(G_OBJECT(pew->pwUsePrune), "toggled", G_CALLBACK(EvalChanged), pew);
 
+    g_signal_connect(G_OBJECT(pew->pwAutoRollout), "toggled", G_CALLBACK(EvalChanged), pew);
+
     g_object_set_data_full(G_OBJECT(pwEval), "user_data", pew, g_free);
 
     return pwEval;
@@ -2545,6 +2577,11 @@ SetEvalCommands(const char *szPrefix, evalcontext * pec, evalcontext * pecOrig)
 
     if (pec->fDeterministic != pecOrig->fDeterministic) {
         sprintf(sz, "%s deterministic %s", szPrefix, pec->fDeterministic ? "on" : "off");
+        UserCommand(sz);
+    }
+
+    if (pec->fAutoRollout != pecOrig->fAutoRollout) {
+        sprintf(sz, "%s autorollout %s", szPrefix, pec->fAutoRollout ? "on" : "off");
         UserCommand(sz);
     }
 
@@ -2648,7 +2685,7 @@ static void
 SummaryMenuActivate(GtkComboBox * box, AnalysisDetails * pAnalDetails)
 {
     int selected = gtk_combo_box_get_active(box) + (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
-
+        g_message("SummaryMenuActivate: selected=%d",selected);
     if (selected == NUM_SETTINGS)
         return;                 /* user defined */
 
@@ -2778,11 +2815,11 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
             break;
         } 
 
-    /*AutoRollout*/
+    // /*AutoRollout*/
 
-    CHECKUPDATE(paw->pwAutoRollout, fAutoRollout, "set autorollout enable %s")
-    CHECKUPDATE(paw->pwAutoRolloutClose, fAutoRolloutClose, "set autorollout close %s")
-    CHECKUPDATE(paw->pwAutoRolloutMistake, fAutoRolloutMistake, "set autorollout mistake %s")
+    // CHECKUPDATE(paw->pwAutoRollout, fAutoRollout, "set autorollout enable %s")
+    // CHECKUPDATE(paw->pwAutoRolloutClose, fAutoRolloutClose, "set autorollout close %s")
+    // CHECKUPDATE(paw->pwAutoRolloutMistake, fAutoRolloutMistake, "set autorollout mistake %s")
 
 
     /* ScoreMap */
@@ -2901,13 +2938,11 @@ AnalysisSet(analysiswidget * paw)
     for (i = 0; i < NUM_AnalyzeFileSettings; ++i)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->apwAnalyzeFileSetting[i]), AnalyzeFileSettingDef == (analyzeFileSetting) i); 
 
-    /* AutoRollout */
+    // /* AutoRollout */
 
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRollout), fAutoRollout);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutClose), fAutoRolloutClose);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutMistake), fAutoRolloutMistake);
-
-
+    // gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRollout), fAutoRollout);
+    // gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutClose), fAutoRolloutClose);
+    // gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutMistake), fAutoRolloutMistake);
 
     /*ScoreMap*/ 
 
@@ -3073,108 +3108,108 @@ BuildRadioButtons(GtkWidget* pwvbox, GtkWidget* apwScoreMapFrame[], const char* 
     }
 }
 
-static void AutoRolloutToggled(GtkWidget * UNUSED(pw), analysiswidget* paw) 
-{
-    gint n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwAutoRollout));
-    //gint n2 = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutClose));
+// static void AutoRolloutToggled(GtkWidget * UNUSED(pw), analysiswidget* paw) 
+// {
+//     gint n = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwAutoRollout));
+//     //gint n2 = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->pwAutoRolloutClose));
 
-    //gtk_widget_set_sensitive(paw->pwAutoRollout, n);
-    gtk_widget_set_sensitive(paw->pwAutoRolloutClose, n);
-    gtk_widget_set_sensitive(paw->pwAutoRolloutMistake, n);
-}
+//     //gtk_widget_set_sensitive(paw->pwAutoRollout, n);
+//     gtk_widget_set_sensitive(paw->pwAutoRolloutClose, n);
+//     gtk_widget_set_sensitive(paw->pwAutoRolloutMistake, n);
+// }
 
-static void append_autorollout_options (analysiswidget* paw) 
-{
-    GtkWidget * pwvbox;
-    GtkWidget * pwvbox2;
-    GtkWidget * pwFrame;
-    GtkWidget * pwv;
-    GtkWidget * pwf;
-    GtkWidget * pwf2;
+// static void append_autorollout_options (analysiswidget* paw) 
+// {
+//     GtkWidget * pwvbox;
+//     GtkWidget * pwvbox2;
+//     GtkWidget * pwFrame;
+//     GtkWidget * pwv;
+//     GtkWidget * pwf;
+//     GtkWidget * pwf2;
 
-// #if !GTK_CHECK_VERSION(3,0,0)
-//     GtkWidget* pwp;
-// #endif
+// // #if !GTK_CHECK_VERSION(3,0,0)
+// //     GtkWidget* pwp;
+// // #endif
 
-    int vAlignExpand = FALSE; // set to true to expand vertically the group of frames rather than packing them to the top
+//     int vAlignExpand = FALSE; // set to true to expand vertically the group of frames rather than packing them to the top
 
-    /* Display options */
+//     /* Display options */
 
-    pwf = gtk_frame_new(NULL);
-    pwf2 = gtk_frame_new(NULL);
+//     pwf = gtk_frame_new(NULL);
+//     pwf2 = gtk_frame_new(NULL);
 
+// // #if GTK_CHECK_VERSION(3,0,0)
+// //     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+// //     gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
+// //     gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
+// //     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
+// //     gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwvbox, gtk_label_new(_("AutoRollout")));
+// // #else
+// //     pwvbox = gtk_vbox_new(FALSE, 0);
+// //     pwp = gtk_alignment_new(0, 0, 0, 0);
+// //     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
+// //     gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwp, gtk_label_new(_("AutoRollout")));
+// //     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+// // #endif
 // #if GTK_CHECK_VERSION(3,0,0)
+//     gtk_widget_set_halign(pwf, GTK_ALIGN_START);
+//     gtk_widget_set_valign(pwf, GTK_ALIGN_START);
+//     gtk_container_set_border_width(GTK_CONTAINER(pwf), 4);
+//     gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwf, gtk_label_new(_("AutoRollout")));
 //     pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-//     gtk_widget_set_halign(pwvbox, GTK_ALIGN_START);
-//     gtk_widget_set_valign(pwvbox, GTK_ALIGN_START);
-//     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 4);
-//     gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwvbox, gtk_label_new(_("AutoRollout")));
+//     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
+//     gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
+
+//     gtk_container_add(GTK_CONTAINER(pwvbox), pwf2);
+//     pwvbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+//     gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 6);
+//     gtk_container_add(GTK_CONTAINER(pwf2), pwvbox2);
 // #else
-//     pwvbox = gtk_vbox_new(FALSE, 0);
-//     pwp = gtk_alignment_new(0, 0, 0, 0);
+//     GtkWidget* pwp = gtk_alignment_new(0, 0, 0, 0);
 //     gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
 //     gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwp, gtk_label_new(_("AutoRollout")));
-//     gtk_container_add(GTK_CONTAINER(pwp), pwvbox);
+//     gtk_container_add(GTK_CONTAINER(pwp), pwf);
+//     pwvbox = gtk_vbox_new(FALSE, 0);
+//     gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
+//     gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
+
+//     gtk_container_add(GTK_CONTAINER(pwvbox), pwf2);
+//     pwvbox2 = gtk_vbox_new(FALSE, 0);
+//     gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 6);
+//     gtk_container_add(GTK_CONTAINER(pwf2), pwvbox2);
 // #endif
-#if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_set_halign(pwf, GTK_ALIGN_START);
-    gtk_widget_set_valign(pwf, GTK_ALIGN_START);
-    gtk_container_set_border_width(GTK_CONTAINER(pwf), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwf, gtk_label_new(_("AutoRollout")));
-    pwvbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
-    gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
 
-    gtk_container_add(GTK_CONTAINER(pwvbox), pwf2);
-    pwvbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 6);
-    gtk_container_add(GTK_CONTAINER(pwf2), pwvbox2);
-#else
-    GtkWidget* pwp = gtk_alignment_new(0, 0, 0, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwp), 4);
-    gtk_notebook_append_page(GTK_NOTEBOOK(paw->pwNoteBook), pwp, gtk_label_new(_("AutoRollout")));
-    gtk_container_add(GTK_CONTAINER(pwp), pwf);
-    pwvbox = gtk_vbox_new(FALSE, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwvbox), 6);
-    gtk_container_add(GTK_CONTAINER(pwf), pwvbox);
+//     paw->pwAutoRollout = gtk_check_button_new_with_label(_("Enable AutoRollout (hover for details)"));
+//     gtk_frame_set_label_widget(GTK_FRAME(pwf), paw->pwAutoRollout);
+//     char buf[1000];
+//     sprintf(buf,_("After the usual analysis (defined in the previous tab), AutoRollout can "
+//         "automatically launch a rollout to refine selected move & cube decisions, "
+//         "as if we were running an analysis with a higher ply. "
+//         "\n\n- Its rollout settings are the default rollout settings defined in Settings>Rollouts"
+//         "\n\n- You can see the details in the \"Cube decision\"/\"Chequer play\" right-side frames "
+//         "by running a rollout there. "
+//         "\n\n- AutoRollout relies on CMarks. Therefore, you can click on Next/previous CMark (among "
+//         "the top-right arrows) to focus on such rollouts. "
+//         "\n\n- AutoRollout can roll-out two types of alternatives and compare them against the best "
+//         "alternative: (1) Alternatives with close scores, and (2) Mistakes made by players. "
+//         ));   
+//     gtk_widget_set_tooltip_text(paw->pwAutoRollout, _(buf));
+//     g_signal_connect(G_OBJECT(paw->pwAutoRollout), "toggled", G_CALLBACK(AutoRolloutToggled), paw);
 
-    gtk_container_add(GTK_CONTAINER(pwvbox), pwf2);
-    pwvbox2 = gtk_vbox_new(FALSE, 0);
-    gtk_container_set_border_width(GTK_CONTAINER(pwvbox2), 6);
-    gtk_container_add(GTK_CONTAINER(pwf2), pwvbox2);
-#endif
+//     paw->pwAutoRolloutClose = gtk_check_button_new_with_label(_("(1) Enable AutoRollout for close decisions"));
+//     gtk_frame_set_label_widget(GTK_FRAME(pwf2), paw->pwAutoRolloutClose);
+//     char buf2[1000];
+//     sprintf(buf2,_("As for higher plies in analysis eval, rollout time can be devoted to analyse close decisions."));   
+//     gtk_widget_set_tooltip_text(paw->pwAutoRolloutClose, _(buf2));
+//     // g_signal_connect(G_OBJECT(paw->pwAutoRolloutClose), "toggled", G_CALLBACK(AutoRolloutToggled), paw);
 
-    paw->pwAutoRollout = gtk_check_button_new_with_label(_("Enable AutoRollout (hover for details)"));
-    gtk_frame_set_label_widget(GTK_FRAME(pwf), paw->pwAutoRollout);
-    char buf[1000];
-    sprintf(buf,_("After the usual analysis (defined in the previous tab), AutoRollout can "
-        "automatically launch a rollout to refine selected move & cube decisions, "
-        "as if we were running an analysis with a higher ply. "
-        "\n\n- Its rollout settings are the default rollout settings defined in Settings>Rollouts"
-        "\n\n- You can see the details in the \"Cube decision\"/\"Chequer play\" right-side frames "
-        "by running a rollout there. "
-        "\n\n- AutoRollout relies on CMarks. Therefore, you can click on Next/previous CMark (among "
-        "the top-right arrows) to focus on such rollouts. "
-        "\n\n- AutoRollout can roll-out two types of alternatives and compare them against the best "
-        "alternative: (1) Alternatives with close scores, and (2) Mistakes made by players. "
-        ));   
-    gtk_widget_set_tooltip_text(paw->pwAutoRollout, _(buf));
-    g_signal_connect(G_OBJECT(paw->pwAutoRollout), "toggled", G_CALLBACK(AutoRolloutToggled), paw);
-
-    paw->pwAutoRolloutClose = gtk_check_button_new_with_label(_("(1) Enable AutoRollout for close decisions"));
-    gtk_frame_set_label_widget(GTK_FRAME(pwf2), paw->pwAutoRolloutClose);
-    char buf2[1000];
-    sprintf(buf2,_("As for higher plies in analysis eval, rollout time can be devoted to analyse close decisions."));   
-    gtk_widget_set_tooltip_text(paw->pwAutoRolloutClose, _(buf2));
-    // g_signal_connect(G_OBJECT(paw->pwAutoRolloutClose), "toggled", G_CALLBACK(AutoRolloutToggled), paw);
-
-    paw->pwAutoRolloutMistake = gtk_check_button_new_with_label(_("(2 Enable AutoRollout for player mistakes"));
-    gtk_box_pack_start(GTK_BOX(pwvbox), paw->pwAutoRolloutMistake, FALSE, FALSE, 4);
-    gtk_widget_set_tooltip_text(paw->pwAutoRolloutMistake,
-          _("As for higher plies in analysis eval, rollout time can be devoted to analyse player mistakes."));
+//     paw->pwAutoRolloutMistake = gtk_check_button_new_with_label(_("(2 Enable AutoRollout for player mistakes"));
+//     gtk_box_pack_start(GTK_BOX(pwvbox), paw->pwAutoRolloutMistake, FALSE, FALSE, 4);
+//     gtk_widget_set_tooltip_text(paw->pwAutoRolloutMistake,
+//           _("As for higher plies in analysis eval, rollout time can be devoted to analyse player mistakes."));
  
 
-}
+// }
 
 static void append_scoremap_options(analysiswidget* paw) 
 {
@@ -3541,7 +3576,7 @@ AnalysisPages(analysiswidget * paw)
     gtk_container_set_border_width(GTK_CONTAINER(paw->pwNoteBook), 8);
 
     append_analysis_options(paw);
-    append_autorollout_options(paw); 
+    // append_autorollout_options(paw); 
     append_scoremap_options(paw); 
 
     AnalysisSet(paw);

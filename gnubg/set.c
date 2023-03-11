@@ -1072,6 +1072,23 @@ CommandSetEvalPrune(char *sz)
 }
 
 extern void
+CommandSetEvalAutoRollout(char *sz)
+{
+    gchar *asz0, *asz1, *szCommand;
+    int f = pecSet->fAutoRollout;
+
+    asz0 = g_strdup_printf(_("%s will use autorollout.\n"), szSet);
+    asz1 = g_strdup_printf(_("%s will not use autorollout.\n"), szSet);
+    szCommand = g_strdup_printf("%s autorollout", szSetCommand);
+    SetToggle(szCommand, &f, sz, asz0, asz1);
+    pecSet->fAutoRollout = f;
+
+    g_free(szCommand);
+    g_free(asz1);
+    g_free(asz0);
+}
+
+extern void
 CommandSetEvalDeterministic(char *sz)
 {
     gchar *asz0, *asz1, *szCommand;

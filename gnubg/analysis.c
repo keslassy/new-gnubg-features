@@ -96,7 +96,7 @@ static const float arThrsRating[RAT_SUPERNATURAL + 1] = {
 
 int afAnalysePlayers[2] = { TRUE, TRUE };
 
-evalcontext ecLuck = { TRUE, 0, FALSE, TRUE, 0.0 };
+evalcontext ecLuck = { TRUE, 0, FALSE, TRUE, 0.0, FALSE };
 
 // #define ABS(a) (a > 0 ? (a) : (-a))
 

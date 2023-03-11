@@ -311,7 +311,7 @@ static void
 MoveListEvalPly(GtkWidget * pw, hintdata * phd)
 {
     char *szPly = (char *) g_object_get_data(G_OBJECT(pw), "user_data");
-    evalcontext ec = { TRUE, 0, TRUE, TRUE, 0.0 };
+    evalcontext ec = { TRUE, 0, TRUE, TRUE, 0.0, FALSE };
     /* Reset interrupt flag */
     fInterrupt = FALSE;
 

@@ -123,6 +123,10 @@ OutputEvalContext(const evalcontext * pec, const int fChequer)
 
     sprintf(sz, "%u-%s %s", pec->nPlies, _("ply"), (!fChequer || pec->fCubeful) ? _("cubeful") : _("cubeless"));
 
+    if (pec->fAutoRollout) {
+        sprintf(strchr(sz, 0), " %s", _("autorollout"));
+    }
+
     if (pec->fUsePrune) {
         sprintf(strchr(sz, 0), " %s", _("prune"));
     }
@@ -162,11 +166,24 @@ GetPredefinedChequerplaySetting(const evalcontext * pec, const movefilter aamf[M
     int fSame;
     int nPreset;
     int Accept;
+    int nEvalMatch=-1;
+    int counter=0;
 
     if (nPlies > MAX_FILTER_PLIES) {
         return -1;
     }
 
+    /* start by checking if there is a single match*/
+    for (nEval = 0; nEval < NUM_SETTINGS; ++nEval) {
+        if (cmp_evalcontext(aecSettings + nEval, pec) == 0) {
+            nEvalMatch=nEval;
+            counter++;
+        }
+    }
+    if(counter==1)
+        return nEvalMatch;
+
+    /* several matches => make it more complicated*/
     for (nEval = 0; nEval < NUM_SETTINGS; ++nEval) {
         if (cmp_evalcontext(aecSettings + nEval, pec) == 0) {
             /* eval matches and it's 0 ply, we have a predefined one */

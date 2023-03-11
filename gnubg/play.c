@@ -934,7 +934,7 @@ ShowAutoMove(const TanBoard anBoard, int anMove[8])
 static void
 get_eq_before_resign(cubeinfo * pci, decisionData * pdd)
 {
-    static const evalcontext ecResign = { FALSE, 0, FALSE, TRUE, 0.0 };
+    static const evalcontext ecResign = { FALSE, 0, FALSE, TRUE, 0.0, FALSE };
 
     pdd->pboard = msBoard();
     pdd->pci = pci;
@@ -1270,7 +1270,7 @@ ComputerTurn(void)
                 float arResign[NUM_ROLLOUT_OUTPUTS];
                 int nResign;
 
-                evalcontext ecResign = { FALSE, 0, FALSE, TRUE, 0.0 };
+                evalcontext ecResign = { FALSE, 0, FALSE, TRUE, 0.0, FALSE };
                 evalsetup esResign;
 
                 esResign.et = EVAL_EVAL;
@@ -3492,7 +3492,7 @@ CommandEndGame(char *UNUSED(sz))
     const playertype pt_store[2] = { ap[0].pt, ap[1].pt };
     const evalcontext ec_cheq_store[2] = { ap[0].esChequer.ec, ap[1].esChequer.ec};
     const evalcontext ec_cube_store[2] = { ap[0].esCube.ec, ap[1].esCube.ec};
-    const evalcontext ec_quick = { .fCubeful=FALSE, .nPlies=0, .fUsePrune=FALSE, .fDeterministic=TRUE, .rNoise=0.0 };
+    const evalcontext ec_quick = { .fCubeful=FALSE, .nPlies=0, .fUsePrune=FALSE, .fDeterministic=TRUE, .rNoise=0.0, .fAutoRollout=FALSE };
 
     int fAutoGame_store = fAutoGame;
     int fDisplay_store = fDisplay;
@@ -4474,7 +4474,7 @@ static int
 CheatDice(unsigned int anDice[2], matchstate * pms, const int fBest)
 {
 
-    static evalcontext ec0ply = { FALSE, 0, FALSE, TRUE, 0.0 };
+    static evalcontext ec0ply = { FALSE, 0, FALSE, TRUE, 0.0, FALSE };
     static cubeinfo ci;
 
     GetMatchStateCubeInfo(&ci, pms);

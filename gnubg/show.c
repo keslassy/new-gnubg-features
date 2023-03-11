@@ -118,11 +118,15 @@ ShowEvaluation(const evalcontext * pec)
 {
 
     outputf(_("        %d-ply evaluation.\n"
-              "        %s"
+              "        %s.\n"
+              "        %s.\n"
               "        %s evaluations.\n"),
             pec->nPlies,
+            (pec->fAutoRollout) ? _("Using AutoRollout.") :
+            _("Not using AutoRollout."), 
             (pec->fUsePrune) ? _("Using pruning neural nets.") :
-            _("Not using pruning neural nets."), pec->fCubeful ? _("Cubeful") : _("Cubeless"));
+            _("Not using pruning neural nets."), 
+            pec->fCubeful ? _("Cubeful") : _("Cubeless"));
 
     if (pec->rNoise > 0.0f) {
         outputf("%s%s %5.3f", ("        "), _("Noise standard deviation"), pec->rNoise);

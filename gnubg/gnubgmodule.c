@@ -624,9 +624,12 @@ static PyObject *
 EvalContextToPy(const evalcontext * pec)
 {
     return Py_BuildValue("{s:i,s:i,s:i,s:i,s:f}",
+                         "autorollout", pec->fAutoRollout,
                          "cubeful", pec->fCubeful,
-                         "plies", pec->nPlies, "deterministic", pec->fDeterministic,
-                         "prune", pec->fUsePrune, "noise", pec->rNoise);
+                         "plies", pec->nPlies, 
+                         "deterministic", pec->fDeterministic,
+                         "prune", pec->fUsePrune, 
+                         "noise", pec->rNoise);
 }
 
 
@@ -637,7 +640,7 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
     PyObject *pyKey, *pyValue;
     Py_ssize_t iPos = 0;
     static const char *aszKeys[] = {
-        "cubeful", "plies", "deterministic", "prune", "noise", NULL
+         "cubeful", "plies", "autorollout", "deterministic", "prune", "noise", NULL
     };
     int i;
 
@@ -670,6 +673,7 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
         case 1:
         case 2:
         case 3:
+        case 4:
             /* simple integer */
             if (!PyInt_Check(pyValue)) {
                 /* not an integer */
@@ -684,14 +688,16 @@ PyToEvalContext(PyObject * p, evalcontext * pec)
                 pec->fCubeful = i ? 1 : 0;
             else if (iKey == 1)
                 pec->nPlies = (i < 8) ? i : 7;
-            else if (iKey == 2) {
+            else if (iKey == 2) 
+                pec->fAutoRollout = i ? 1 : 0;            
+            else if (iKey == 3) 
                 pec->fDeterministic = i ? 1 : 0;
-            } else
+            else
                 pec->fUsePrune = i ? 1 : 0;
 
             break;
 
-        case 4:
+        case 5:
             /* float */
             if (!PyFloat_Check(pyValue)) {
                 /* not a float */
@@ -931,7 +937,7 @@ PythonEvalContext(PyObject * UNUSED(self), PyObject * args)
 
     evalcontext ec;
     evalcontext *gec = &GetEvalChequer()->ec;
-    int fCubeful = gec->fCubeful, nPlies = gec->nPlies, fDeterministic = gec->fDeterministic, fPrune = gec->fUsePrune;
+    int fCubeful = gec->fCubeful, nPlies = gec->nPlies, fDeterministic = gec->fDeterministic, fPrune = gec->fUsePrune, fAutoRollout=gec->fAutoRollout;
     float rNoise = gec->rNoise;
 
     if (!PyArg_ParseTuple(args, "|iiiif", &fCubeful, &nPlies, &fDeterministic, &fPrune, &rNoise))
@@ -941,6 +947,7 @@ PythonEvalContext(PyObject * UNUSED(self), PyObject * args)
     ec.nPlies = (nPlies < 8) ? nPlies : 7;
     ec.fDeterministic = fDeterministic ? 1 : 0;
     ec.fUsePrune = fPrune ? 1 : 0;
+    ec.fAutoRollout = fAutoRollout ? 1 : 0;
     ec.rNoise = rNoise;
 
     return EvalContextToPy(&ec);
@@ -1933,6 +1940,9 @@ diffContext(const evalcontext * c, PyMatchState * ms)
             DictSetItemSteal(context, "prune", PyBool_FromLong(c->fUsePrune));
         }
 
+        if (c->fAutoRollout != s->fAutoRollout) {
+            DictSetItemSteal(context, "autorollout", PyBool_FromLong(c->fAutoRollout));
+        }
         return context;
     }
 }

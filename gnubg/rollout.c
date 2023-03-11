@@ -372,8 +372,8 @@ BasicCubefulRollout(unsigned int aanBoard[][2][25],
     float aaar[6][6][NUM_ROLLOUT_OUTPUTS];
 #endif
 
-    evalcontext ecCubeless0ply = { FALSE, 0, FALSE, TRUE, 0.0 };
-    evalcontext ecCubeful0ply = { TRUE, 0, FALSE, TRUE, 0.0 };
+    evalcontext ecCubeless0ply = { FALSE, 0, FALSE, TRUE, 0.0, FALSE };
+    evalcontext ecCubeful0ply = { TRUE, 0, FALSE, TRUE, 0.0, FALSE };
 
     /* local pointers to the eval contexts to use */
     evalcontext *pecCube[2], *pecChequer[2];

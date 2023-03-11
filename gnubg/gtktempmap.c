@@ -502,7 +502,7 @@ TempMapPlyToggled(GtkWidget * pw, tempmapwidget * ptmw)
 {
     int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
 
-    evalcontext ec = { TRUE, 0, FALSE, TRUE, 0.0 };
+    evalcontext ec = { TRUE, 0, FALSE, TRUE, 0.0, FALSE };
 
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw))) {
 
@@ -574,7 +574,7 @@ extern void
 GTKShowTempMap(const matchstate ams[], const int n, gchar * aszTitle[], const int fInvert)
 {
 
-    evalcontext ec = { TRUE, 0, FALSE, TRUE, 0.0 };
+    evalcontext ec = { TRUE, 0, FALSE, TRUE, 0.0, FALSE};
 
     tempmapwidget *ptmw;
     int *pi;

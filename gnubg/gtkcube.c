@@ -1354,10 +1354,11 @@ CubeAnalysisEvalPly(GtkWidget * pw, cubehintdata * pchd)
 */
 
     int *pi = (int *)g_object_get_data(G_OBJECT(pw), "ply");
-    evalcontext ec = { 0, 0, 0, TRUE, 0.0 };
+    evalcontext ec = { 0, 0, 0, TRUE, 0.0, FALSE };
 
     ec.fCubeful = esAnalysisCube.ec.fCubeful; //from backgammon.h: extern evalsetup esAnalysisCube;
     ec.fUsePrune = esAnalysisCube.ec.fUsePrune;
+    ec.fAutoRollout = esAnalysisCube.ec.fAutoRollout;
     ec.nPlies = *pi;
 
     EvalCube(pchd, &ec);

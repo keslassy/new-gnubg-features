@@ -3104,8 +3104,11 @@ SaveEvalSettings(FILE * pf, const char *sz, evalcontext * pec)
             "%s noise %s\n"
             "%s deterministic %s\n",
             sz, pec->nPlies,
+            sz, pec->fAutoRollout ? "on" : "off",
             sz, pec->fUsePrune ? "on" : "off",
-            sz, pec->fCubeful ? "on" : "off", sz, szNoise, sz, pec->fDeterministic ? "on" : "off");
+            sz, pec->fCubeful ? "on" : "off", 
+            sz, szNoise, 
+            sz, pec->fDeterministic ? "on" : "off");
 }
 
 

@@ -171,6 +171,7 @@ typedef struct scancontext {
     int fDeterministic;
     int fCubeful;
     int fUsePrune;
+    int fAutoRollout;
 
     /* session rules */
     int fJacobyRule;

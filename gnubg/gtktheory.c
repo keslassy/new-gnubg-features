@@ -94,7 +94,7 @@ static void
 ResetTheory(GtkWidget * UNUSED(pw), theorywidget * ptw)
 {
     float aarRates[2][2];
-    evalcontext ec = { FALSE, 0, FALSE, TRUE, 0.0 };
+    evalcontext ec = { FALSE, 0, FALSE, TRUE, 0.0, FALSE };
     float arOutput[NUM_OUTPUTS];
     int i, j;
 
@@ -565,7 +565,7 @@ PlyClicked(GtkWidget * pw, theorywidget * ptw)
     int f = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pw));
     cubeinfo ci;
     decisionData dd;
-    evalcontext ec = { FALSE, 0, FALSE, TRUE, 0.0 };
+    evalcontext ec = { FALSE, 0, FALSE, TRUE, 0.0, FALSE };
     int i, j;
 
     if (!f)

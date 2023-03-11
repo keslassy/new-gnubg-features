@@ -421,6 +421,7 @@ ExtEvaluation(scancontext * pec)
     ec.fUsePrune = pec->fUsePrune;
     ec.fDeterministic = pec->fDeterministic;
     ec.rNoise = pec->rNoise;
+    ec.fAutoRollout = pec->fAutoRollout;
 
     if (GeneralEvaluationE(arOutput, (ConstTanBoard) processedBoard.anBoard, &ci, &ec))
         return NULL;

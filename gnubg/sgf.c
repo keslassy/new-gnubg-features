@@ -572,6 +572,7 @@ InitEvalContext(evalcontext * pec)
     pec->fUsePrune = FALSE;
     pec->fDeterministic = FALSE;
     pec->rNoise = 0.0;
+    pec->fAutoRollout = FALSE;
 
 }
 
@@ -595,6 +596,7 @@ RestoreEvalContext(evalcontext * pec, char *pc)
         pec->fDeterministic = (unsigned int) strtol(pc, &pc, 10);
         pec->rNoise = (float) g_ascii_strtod(pc, &pc);
         pec->fUsePrune = (unsigned int) strtol(pc, &pc, 10);
+        pec->fAutoRollout = (unsigned int) strtol(pc, &pc, 10);
     }
 }
 
@@ -908,6 +910,7 @@ RestoreDoubleAnalysis(property * pp,
             pes->ec.fDeterministic = (unsigned int) strtol(pch, &pch, 10);
             pes->ec.rNoise = (float) g_ascii_strtod(pch, &pch);
             fUsePrune = (int) strtol(pch, &pch, 10);
+            pes->ec.fAutoRollout = (unsigned int) strtol(pch, &pch, 10);
         }
         pes->ec.fUsePrune = fUsePrune;
 
@@ -1046,6 +1049,7 @@ RestoreMoveAnalysis(property * pp, int fPlayer,
                 pm->esMove.ec.fDeterministic = (unsigned int) strtol(pch, &pch, 10);
                 pm->esMove.ec.rNoise = (float) g_ascii_strtod(pch, &pch);
                 fUsePrune = (int) strtol(pch, &pch, 10);
+                pm->esMove.ec.fAutoRollout = (unsigned int) strtol(pch, &pch, 10);
             }
             pm->esMove.ec.fUsePrune = fUsePrune;
             break;
@@ -1661,8 +1665,8 @@ WriteEvalContext(FILE * pf, const evalcontext * pec)
 {
     gchar buffer[G_ASCII_DTOSTR_BUF_SIZE];
     g_ascii_formatd(buffer, sizeof(buffer), "%.6f", pec->rNoise);
-    fprintf(pf, "ver %d %u%s %u %s %u",
-            SGF_FORMAT_VER, pec->nPlies, pec->fCubeful ? "C" : "", pec->fDeterministic, buffer, pec->fUsePrune);
+    fprintf(pf, "ver %d %u%s %u %s %u %u",
+            SGF_FORMAT_VER, pec->nPlies, pec->fCubeful ? "C" : "", pec->fDeterministic, buffer, pec->fUsePrune, pec->fAutoRollout);
 }
 
 static void
@@ -1797,9 +1801,9 @@ WriteDoubleAnalysis(FILE * pf,
     switch (pes->et) {
     case EVAL_EVAL:
         g_ascii_formatd(buffer, sizeof(buffer), "%.6f", pes->ec.rNoise);
-        fprintf(pf, "E ver %d %u%s %u %s %u",
+        fprintf(pf, "E ver %d %u%s %u %s %u %u",
                 SGF_FORMAT_VER,
-                pes->ec.nPlies, pes->ec.fCubeful ? "C" : "", pes->ec.fDeterministic, buffer, pes->ec.fUsePrune);
+                pes->ec.nPlies, pes->ec.fCubeful ? "C" : "", pes->ec.fDeterministic, buffer, pes->ec.fUsePrune, pes->ec.fAutoRollout);
 
         for (i = 0; i < 2; i++) {
             for (j = 0; j < 7; j++) {
@@ -1879,7 +1883,7 @@ WriteMoveAnalysis(FILE * pf, int fPlayer, movelist * pml, unsigned int iMove)
             g_ascii_formatd(buffer, sizeof(buffer), "%.6f", pml->amMoves[i].rScore);
             fprintf(pf, "%s ", buffer);
             g_ascii_formatd(buffer, sizeof(buffer), "%.6f", pml->amMoves[i].esMove.ec.rNoise);
-            fprintf(pf, "%u%s %d %u %s %u",
+            fprintf(pf, "%u%s %d %u %s %u %u",
                     pml->amMoves[i].esMove.ec.nPlies,
                     pml->amMoves[i].esMove.ec.fCubeful ? "C" : "",
                     /*
@@ -1888,7 +1892,7 @@ WriteMoveAnalysis(FILE * pf, int fPlayer, movelist * pml, unsigned int iMove)
                      * Always 0 in SGF ver. 3
                      */
                     0,
-                    pml->amMoves[i].esMove.ec.fDeterministic, buffer, pml->amMoves[i].esMove.ec.fUsePrune);
+                    pml->amMoves[i].esMove.ec.fDeterministic, buffer, pml->amMoves[i].esMove.ec.fUsePrune, pml->amMoves[i].esMove.ec.fAutoRollout);
             break;
 
         case EVAL_ROLLOUT:

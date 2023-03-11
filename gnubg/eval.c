@@ -285,7 +285,7 @@ const char *aszEvalType[] = {
     N_("Rollout")
 };
 
-evalcontext ecBasic = { FALSE, 0, FALSE, TRUE, 0.0 };
+evalcontext ecBasic = { FALSE, 0, FALSE, TRUE, 0.0, FALSE };
 
 /* defaults for the filters  - 0 ply uses no filters */
 
@@ -2317,6 +2317,7 @@ EvalKey(const evalcontext * pec, const int nPlies, const cubeinfo * pci, int fCu
      * Bit 25   : fCrawford
      * Bit 26   : fJacoby
      * Bit 27   : fBeavers
+     [* Consider adding: Bit 28   : fAutoRollout  (not sure it's needed here)]
      */
 
     iKey = (nPlies | (pec->fCubeful << 4) | (pci->fMove << 5));
@@ -2337,7 +2338,7 @@ EvalKey(const evalcontext * pec, const int nPlies, const cubeinfo * pci, int fCu
             /* in cubeful money games the cube position and rules are important. */
             iKey ^=
                 ((pci->fCubeOwner < 0 ? 2 :
-                  pci->fCubeOwner == pci->fMove) << 23) ^ (pci->fJacoby << 26) ^ (pci->fBeavers << 27);
+                  pci->fCubeOwner == pci->fMove) << 23) ^ (pci->fJacoby << 26) ^ (pci->fBeavers << 27); // ^ (pci->fAutoRollout << 28);
 
         if (fCubefulEquity)
             iKey ^= 0x6a47b47e;
@@ -4295,6 +4296,14 @@ extern int
 cmp_evalcontext(const evalcontext * pec1, const evalcontext * pec2)
 {
 
+
+    /* Check for AutoRollout */
+
+    if (pec1->fAutoRollout < pec2->fAutoRollout)
+        return -1;
+    else if (pec1->fAutoRollout > pec2->fAutoRollout)
+        return +1;
+
     /* Check if plies are different */
 
     if (pec1->nPlies < pec2->nPlies)
@@ -4317,12 +4326,10 @@ cmp_evalcontext(const evalcontext * pec1, const evalcontext * pec2)
         return +1;
 
     if (pec1->rNoise > 0) {
-
         if (pec1->fDeterministic < pec2->fDeterministic)
             return -1;
         else if (pec1->fDeterministic > pec2->fDeterministic)
             return +1;
-
     }
 
     if (pec1->nPlies > 0) {

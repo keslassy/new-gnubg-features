@@ -3069,6 +3069,7 @@ if needed (this was initially planned for some explanation text, which was then 
     psm->ec.nPlies = scoreMapPlyDefault; // evalPlies;
     psm->ec.fUsePrune = TRUE; // FALSE;
     psm->ec.fDeterministic = TRUE;
+    psm->ec.fAutoRollout = FALSE;
     psm->ec.rNoise = 0.0f;
     psm->truenMatchTo = pms->nMatchTo;
     // psm->tempScaleUp=0;
