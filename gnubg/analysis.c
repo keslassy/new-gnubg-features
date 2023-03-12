@@ -776,7 +776,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
 
             rSkill = arDouble[OUTPUT_NODOUBLE] - arDouble[OUTPUT_OPTIMAL];
 
-            if(fAutoRollout && ARAnalysisFilter.Accept != -1 
+            if(esAnalysisCube.ec.fAutoRollout && ARAnalysisFilter.Accept != -1 
                 && (rSkill<0 /*i.e. player took wrong action*/
                     || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])
                             <ARAnalysisFilter.Threshold
@@ -865,7 +865,10 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             else we skip; then cMark the alternatives to roll out 
             V2: cMark, and cancel if not at least 2 elements; this allows us to avoid 
                 rolling out trivial moves*/
-            if (fAutoRollout && ARAnalysisFilter.Accept != -1 && pmr->ml.amMoves 
+
+            // g_message("esAnalysisChequer.ec.fAutoRollout=%d,esAnalysisCube.ec.fAutoRollout=%d",
+            //     esAnalysisChequer.ec.fAutoRollout,esAnalysisCube.ec.fAutoRollout);
+            if (esAnalysisChequer.ec.fAutoRollout && ARAnalysisFilter.Accept != -1 && pmr->ml.amMoves 
                     && (pmr->ml.cMoves >=2)) { /*not a trivial decision nor a doubling decision*/ 
                     // // && (pmr->ml.amMoves[1].rScore >-0.999 || pmr->ml.amMoves[1].rScore <0.999) 
                     // //         /* not a decision where there is nothing really to decide,
@@ -1007,7 +1010,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 // if(fAutoRollout && (rSkill<0 
                 //         || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])<0.030
                 //         || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])<0.030) ) {
-                if(fAutoRollout && ARAnalysisFilter.Accept != -1 
+                if(esAnalysisCube.ec.fAutoRollout && ARAnalysisFilter.Accept != -1 
                     && (rSkill<0 /*i.e. player took wrong action*/
                         || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])
                                 <ARAnalysisFilter.Threshold
