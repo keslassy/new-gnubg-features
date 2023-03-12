@@ -776,9 +776,12 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
 
             rSkill = arDouble[OUTPUT_NODOUBLE] - arDouble[OUTPUT_OPTIMAL];
 
-            if(fAutoRollout && (rSkill<0 
-                    || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])<0.030
-                    || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])<0.030) ) {
+            if(fAutoRollout && ARAnalysisFilter.Accept != -1 
+                && (rSkill<0 /*i.e. player took wrong action*/
+                    || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])
+                            <ARAnalysisFilter.Threshold
+                    || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])
+                            <ARAnalysisFilter.Threshold) ) { /* i.e. close decisions */
                 g_message("added: cube: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
                     rSkill,arDouble[OUTPUT_NODOUBLE],
                     arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP]);       
@@ -879,9 +882,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
 
                 pmr->ml.amMoves[0].cmark = CMARK_ROLLOUT; /*always roll out the best move,
                         then add close decisions or the player's decision if it's different */
-                g_message("AnalyzeMove: filter: Accept=%d,Extra=%d,Threshold=%f",
-                    ARAnalysisFilter.Accept,ARAnalysisFilter.Extra,ARAnalysisFilter.Threshold);
-                g_message("added: j=0/%d, score=%f",pmr->ml.cMoves,pmr->ml.amMoves[0].rScore);       
+                // g_message("AnalyzeMove: filter: Accept=%d,Extra=%d,Threshold=%f",
+                //     ARAnalysisFilter.Accept,ARAnalysisFilter.Extra,ARAnalysisFilter.Threshold);
+                // g_message("added: j=0/%d, score=%f",pmr->ml.cMoves,pmr->ml.amMoves[0].rScore);       
 
                 c=0;
                 for (int j = 1; j < (int)(pmr->ml.cMoves); j++) {
@@ -895,16 +898,14 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                         && (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore>0.00001)){
                             /*heuristically avoid trivial decisions*/
                             // && ((pmr->ml.amMoves[j].rScore >-0.999 || pmr->ml.amMoves[j].rScore <0.999)) )) {
-                        g_message("added: j=%d/%d, score=%f, delta=%f",j,pmr->ml.cMoves,
-                                pmr->ml.amMoves[j].rScore,pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore);       
+                        // g_message("added: j=%d/%d, score=%f, delta=%f",j,pmr->ml.cMoves,
+                        //         pmr->ml.amMoves[j].rScore,pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore);       
                         pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
                         c++;
                     }
                 }
-                if(c==0){
+                if(c==0)
                     pmr->ml.amMoves[0].cmark = CMARK_NONE;
-                }
-
             }
             
 
@@ -1003,9 +1004,15 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     arDouble[OUTPUT_DROP] ?
                     arDouble[OUTPUT_TAKE] - arDouble[OUTPUT_OPTIMAL] : arDouble[OUTPUT_DROP] - arDouble[OUTPUT_OPTIMAL];
 
-                if(fAutoRollout && (rSkill<0 
-                        || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])<0.030
-                        || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])<0.030) ) {
+                // if(fAutoRollout && (rSkill<0 
+                //         || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])<0.030
+                //         || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])<0.030) ) {
+                if(fAutoRollout && ARAnalysisFilter.Accept != -1 
+                    && (rSkill<0 /*i.e. player took wrong action*/
+                        || ABS(arDouble[OUTPUT_TAKE]-arDouble[OUTPUT_NODOUBLE])
+                                <ARAnalysisFilter.Threshold
+                        || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])
+                                <ARAnalysisFilter.Threshold) ) { /* i.e. close decisions */
                     g_message("added: double: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
                         rSkill,arDouble[OUTPUT_NODOUBLE],
                         arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP]);       
