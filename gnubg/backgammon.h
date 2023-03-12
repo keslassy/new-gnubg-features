@@ -734,6 +734,7 @@ extern void CommandSetDelay(char *);
 extern void CommandSetDice(char *);
 extern void CommandSetDisplay(char *);
 extern void CommandSetDockPanels(char *);
+extern void CommandSetEvalAutoRollout(char *);
 extern void CommandSetEvalChequerplay(char *);
 extern void CommandSetEvalCubedecision(char *);
 extern void CommandSetEvalCubeful(char *);

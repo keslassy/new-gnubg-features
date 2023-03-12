@@ -4298,7 +4298,7 @@ cmp_evalcontext(const evalcontext * pec1, const evalcontext * pec2)
 
 
     /* Check for AutoRollout */
-
+    // g_message("sizes: %lu,%lu",sizeof(pec1),sizeof(pec2));
     if (pec1->fAutoRollout < pec2->fAutoRollout)
         return -1;
     else if (pec1->fAutoRollout > pec2->fAutoRollout)

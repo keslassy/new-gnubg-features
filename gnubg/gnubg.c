@@ -477,9 +477,7 @@ evalsetup esEvalChequer = EVALSETUP_WORLDCLASS;
 evalsetup esEvalCube = EVALSETUP_WORLDCLASS;
 evalsetup esAnalysisChequer = EVALSETUP_SUPREMO;
 evalsetup esAnalysisCube = EVALSETUP_SUPREMO;
-// g_message("%d",esAnalysisChequer.ec.fCubeful);
-// g_message("%f",esAnalysisChequer.ec.rNoise);
-// g_message("%d",esAnalysisChequer.ec.fAutoRollout);
+
 
 
 

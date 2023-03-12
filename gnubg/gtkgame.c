@@ -2378,7 +2378,10 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     gtk_container_add(GTK_CONTAINER(pw2), pwFrame2);
 
     gtk_container_add(GTK_CONTAINER(pwFrame2),
-                      pew->pwUsePrune = gtk_check_button_new_with_label(_("Use AutoRollout")));
+                      pew->pwAutoRollout = gtk_check_button_new_with_label(_("Use AutoRollout")));
+    g_message("%d",pec->fCubeful);
+    g_message("%f",pec->rNoise);
+    g_message("%d",pec->fAutoRollout);            
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
 
     char buf[1000];
@@ -2392,8 +2395,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
         "the top-right arrows) to focus on such rollouts. "
         "\n\n- After the analysis ranks all alternatives, AutoRollout rolls out two types of "
         " alternatives to compare them against the best ranked alternative: "
-        "(1) Alternatives with close scores, and (2) Mistakes made by players. "
-        ));   
+        "(1) Alternatives with close scores, and (2) Mistakes made by players. "));   
     gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(buf));
 
     /* Use pruning neural nets */

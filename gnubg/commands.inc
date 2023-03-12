@@ -431,6 +431,8 @@ command acSetEvaluation[] = {
       szPLIES, NULL },
     { "prune", CommandSetEvalPrune,
       N_("use fast pruning networks"), szONOFF, NULL },
+    { "autorollout", CommandSetEvalAutoRollout, 
+      N_("Specify whether to run AutoRollout after the eval"), szONOFF, &cOnOff },
     { NULL, NULL, NULL, NULL, NULL }
 }, acSetPlayer[] = {
     { "chequerplay", CommandSetPlayerChequerplay, N_("Control chequerplay "
