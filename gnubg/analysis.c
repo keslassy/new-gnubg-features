@@ -713,6 +713,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
     taketype tt;
     const xmovegameinfo *pmgi = &((moverecord *) plParentGame->plNext->p)->g;
     int is_initial_position = 1;
+    int c;
 
     /*initializing MWC elements with fake values outside [0,1]*/
     pmr->mwc.mwcMove=-6.0; 
@@ -857,27 +858,53 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
             //     g_message("=>close score: c=%d",pmr->ml.cMoves);
             // }
 
-            if ( fAutoRollout && pmr->ml.amMoves && (pmr->ml.cMoves >=2) /*not a trivial decision or 
-                            a doubling decision*/ 
-                    // && (pmr->ml.amMoves[1].rScore >-0.999 || pmr->ml.amMoves[1].rScore <0.999) 
-                    //         /* not a decision where there is nothing really to decide,
-                    //             e.g. bearoff decisions at the end with a 100% win (or lose) 
-                    //             percentage no matter what [this criterion could be refined] */
-                    && ( (!EqualKeys(key, pmr->ml.amMoves[0].key)) 
-                        || (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[1].rScore <0.01) ) ) {
-                            /*there is something interesting to roll out: close decisions,
-                            or the player didn't choose the best decision*/
+            /* V1: we first check that there are at least 2 decision alternatives to roll out,
+            else we skip; then cMark the alternatives to roll out 
+            V2: cMark, and cancel if not at least 2 elements; this allows us to avoid 
+                rolling out trivial moves*/
+            if (fAutoRollout && ARAnalysisFilter.Accept != -1 && pmr->ml.amMoves 
+                    && (pmr->ml.cMoves >=2)) { /*not a trivial decision nor a doubling decision*/ 
+                    // // && (pmr->ml.amMoves[1].rScore >-0.999 || pmr->ml.amMoves[1].rScore <0.999) 
+                    // //         /* not a decision where there is nothing really to decide,
+                    // //             e.g. bearoff decisions at the end with a 100% win (or lose) 
+                    // //             percentage no matter what [this criterion could be refined] */
+                    // && ( !EqualKeys(key, pmr->ml.amMoves[0].key) /*the player 
+                    //             didn't choose the best decision*/ 
+                    //     ||  (ARAnalysisFilter.Accept >=2) /*we want at least 2 automatically*/ 
+                    //     || (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[1].rScore 
+                    //         <ARAnalysisFilter.Threshold 
+                    //         && ARAnalysisFilter.Accept+ARAnalysisFilter.Extra>=2) ) ) {
+                    //         /*the top decision alternatives are close and we are allowed
+                    //         to roll them out*/
+
                 pmr->ml.amMoves[0].cmark = CMARK_ROLLOUT; /*always roll out the best move,
                         then add close decisions or the player's decision if it's different */
-                // g_message("added: j=0/%d, score=%f",pmr->ml.cMoves,pmr->ml.amMoves[0].rScore);       
-                for (guint j = 1; j < pmr->ml.cMoves; j++) {
-                    if ( EqualKeys(key, pmr->ml.amMoves[j].key) ||
-                            (j<4 && pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore <0.030 )) {
+                g_message("AnalyzeMove: filter: Accept=%d,Extra=%d,Threshold=%f",
+                    ARAnalysisFilter.Accept,ARAnalysisFilter.Extra,ARAnalysisFilter.Threshold);
+                g_message("added: j=0/%d, score=%f",pmr->ml.cMoves,pmr->ml.amMoves[0].rScore);       
+
+                c=0;
+                for (int j = 1; j < (int)(pmr->ml.cMoves); j++) {
+                    if ( ( EqualKeys(key, pmr->ml.amMoves[j].key) /*the player 
+                                didn't choose the best decision*/
+                         || j<ARAnalysisFilter.Accept /*automatically added*/
+                         || (j<ARAnalysisFilter.Accept+ARAnalysisFilter.Extra 
+                            && pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore 
+                                <ARAnalysisFilter.Threshold) ) 
+                            /*the top decision alternatives are within the thereshold*/
+                        && (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore>0.00001)){
+                            /*heuristically avoid trivial decisions*/
                             // && ((pmr->ml.amMoves[j].rScore >-0.999 || pmr->ml.amMoves[j].rScore <0.999)) )) {
-                        // g_message("added: j=%d/%d, score=%f",j,pmr->ml.cMoves,pmr->ml.amMoves[j].rScore);       
+                        g_message("added: j=%d/%d, score=%f, delta=%f",j,pmr->ml.cMoves,
+                                pmr->ml.amMoves[j].rScore,pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[j].rScore);       
                         pmr->ml.amMoves[j].cmark = CMARK_ROLLOUT;
+                        c++;
                     }
                 }
+                if(c==0){
+                    pmr->ml.amMoves[0].cmark = CMARK_NONE;
+                }
+
             }
             
 

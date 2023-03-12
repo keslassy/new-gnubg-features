@@ -1180,8 +1180,9 @@ extern void UserCommand2(const char *szCommand); /* UserCommand is GTK-only, thi
 
 /* ***** AutoRollouts ****** */
 extern int fAutoRollout;
-extern int fAutoRolloutClose;
-extern int fAutoRolloutMistake;
+// extern int fAutoRolloutClose;
+// extern int fAutoRolloutMistake;
+extern movefilter ARAnalysisFilter;
 
 
 #endif	/* BACKGAMMON_H */

@@ -876,7 +876,7 @@ GTKAnalyzeCurrent(void)
     if(fAutoRollout) {
         if(1) { //game
             UserCommand("analyse game");
-            CommandAnalyseRolloutGame(NULL);
+            // CommandAnalyseRolloutGame(NULL);
             // CommandCMarkGameClear(NULL);
         } else { //match
             UserCommand("analyse match");

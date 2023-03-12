@@ -3349,9 +3349,13 @@ CommandSetEvalMoveFilter(char *sz)
 extern void
 CommandSetAnalysisMoveFilter(char *sz)
 {
-
+    // g_message("Before: Accept=%d,Extra=%d,Threshold=%f",
+    //     ARAnalysisFilter.Accept,ARAnalysisFilter.Extra,ARAnalysisFilter.Threshold);
     szSetCommand = "analysis";
     SetMoveFilter(sz, aamfAnalysis);
+    ARAnalysisFilter=aamfAnalysis[2][2];
+    // g_message("After: Accept=%d,Extra=%d,Threshold=%f",
+    //     ARAnalysisFilter.Accept,ARAnalysisFilter.Extra,ARAnalysisFilter.Threshold);
 
 }
 

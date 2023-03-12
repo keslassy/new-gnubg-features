@@ -274,8 +274,8 @@ int fQuietNewMatch=0;
 quizdecision qDecision=QUIZ_UNKNOWN;
     /*mini-rollout*/
 int fAutoRollout=TRUE;
-int fAutoRolloutClose=TRUE;
-int fAutoRolloutMistake=TRUE;
+// int fAutoRolloutClose=TRUE;
+// int fAutoRolloutMistake=TRUE;
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
@@ -483,6 +483,8 @@ evalsetup esAnalysisCube = EVALSETUP_SUPREMO;
 
 movefilter aamfEval[MAX_FILTER_PLIES][MAX_FILTER_PLIES] = MOVEFILTER_NORMAL;
 movefilter aamfAnalysis[MAX_FILTER_PLIES][MAX_FILTER_PLIES] = MOVEFILTER_LARGE;
+movefilter ARAnalysisFilter={ 0, 4, 0.08f }; /*aamfAnalysis[2][2]; */
+
 
 extern evalsetup *
 GetEvalChequer(void)

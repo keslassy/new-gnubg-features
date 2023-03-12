@@ -91,7 +91,7 @@ ShowMoveFilter(const movefilter * pmf, const int ply)
     outputf(_(" and up to %d more moves within equity %0.3g"), pmf->Extra, pmf->Threshold);
     outputf("\n");
 }
-
+// ShowMoveFilter(&ARAnalysisFilter,4);
 
 static void
 ShowMoveFilters(movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
@@ -2059,7 +2059,7 @@ CommandShowRolls(char *sz)
 #if defined(USE_GTK)
 
     if (fX) {
-        static evalcontext ec0ply = { TRUE, 0, FALSE, TRUE, 0.0 };
+        static evalcontext ec0ply = { TRUE, 0, FALSE, TRUE, 0.0,FALSE };
         GTKShowRolls(nDepth, &ec0ply, &ms);
         return;
     }
