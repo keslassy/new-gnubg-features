@@ -311,28 +311,28 @@ rngcontext *rngctxRollout = NULL;
 rolloutcontext rcRollout = {
     {
      /* player 0/1 cube decision */
-     {TRUE, 2, TRUE, TRUE, 0.0},
-     {TRUE, 2, TRUE, TRUE, 0.0}
+     {TRUE, 2, TRUE, TRUE, 0.0, FALSE},
+     {TRUE, 2, TRUE, TRUE, 0.0, FALSE}
      },
     {
      /* player 0/1 chequerplay */
-     {TRUE, 0, TRUE, TRUE, 0.0},
-     {TRUE, 0, TRUE, TRUE, 0.0}
+     {TRUE, 0, TRUE, TRUE, 0.0, FALSE},
+     {TRUE, 0, TRUE, TRUE, 0.0, FALSE}
      },
 
     {
      /* player 0/1 late cube decision */
-     {TRUE, 2, TRUE, TRUE, 0.0},
-     {TRUE, 2, TRUE, TRUE, 0.0}
+     {TRUE, 2, TRUE, TRUE, 0.0, FALSE},
+     {TRUE, 2, TRUE, TRUE, 0.0, FALSE}
      },
     {
      /* player 0/1 late chequerplay */
-     {TRUE, 0, TRUE, TRUE, 0.0},
-     {TRUE, 0, TRUE, TRUE, 0.0}
+     {TRUE, 0, TRUE, TRUE, 0.0, FALSE},
+     {TRUE, 0, TRUE, TRUE, 0.0, FALSE}
      },
     /* truncation point cube and chequerplay */
-    {TRUE, 2, TRUE, TRUE, 0.0},
-    {TRUE, 2, TRUE, TRUE, 0.0},
+    {TRUE, 2, TRUE, TRUE, 0.0, FALSE},
+    {TRUE, 2, TRUE, TRUE, 0.0, FALSE},
 
     /* move filters */
     {MOVEFILTER_NORMAL, MOVEFILTER_NORMAL},
@@ -369,27 +369,27 @@ rolloutcontext rcRollout = {
   /* evaltype */ \
   EVAL_EVAL, \
   /* evalcontext */ \
-  { TRUE, 2, TRUE, TRUE, 0.0 }, \
+  { TRUE, 2, TRUE, TRUE, 0.0, FALSE }, \
   /* rolloutcontext */ \
   { \
     { \
-      { FALSE, 2, TRUE, TRUE, 0.0 }, /* player 0 cube decision */ \
-      { FALSE, 2, TRUE, TRUE, 0.0 } /* player 1 cube decision */ \
+      { FALSE, 2, TRUE, TRUE, 0.0, FALSE }, /* player 0 cube decision */ \
+      { FALSE, 2, TRUE, TRUE, 0.0, FALSE } /* player 1 cube decision */ \
     }, \
     { \
-      { FALSE, 0, TRUE, TRUE, 0.0 }, /* player 0 chequerplay */ \
-      { FALSE, 0, TRUE, TRUE, 0.0 } /* player 1 chequerplay */ \
+      { FALSE, 0, TRUE, TRUE, 0.0, FALSE }, /* player 0 chequerplay */ \
+      { FALSE, 0, TRUE, TRUE, 0.0, FALSE } /* player 1 chequerplay */ \
     }, \
     { \
-      { FALSE, 2, TRUE, TRUE, 0.0 }, /* p 0 late cube decision */ \
-      { FALSE, 2, TRUE, TRUE, 0.0 } /* p 1 late cube decision */ \
+      { FALSE, 2, TRUE, TRUE, 0.0, FALSE }, /* p 0 late cube decision */ \
+      { FALSE, 2, TRUE, TRUE, 0.0, FALSE } /* p 1 late cube decision */ \
     }, \
     { \
-      { FALSE, 0, TRUE, TRUE, 0.0 }, /* p 0 late chequerplay */ \
-      { FALSE, 0, TRUE, TRUE, 0.0 } /* p 1 late chequerplay */ \
+      { FALSE, 0, TRUE, TRUE, 0.0, FALSE }, /* p 0 late chequerplay */ \
+      { FALSE, 0, TRUE, TRUE, 0.0, FALSE } /* p 1 late chequerplay */ \
     }, \
-    { FALSE, 2, TRUE, TRUE, 0.0 }, /* truncate cube decision */ \
-    { FALSE, 2, TRUE, TRUE, 0.0 }, /* truncate chequerplay */ \
+    { FALSE, 2, TRUE, TRUE, 0.0, FALSE }, /* truncate cube decision */ \
+    { FALSE, 2, TRUE, TRUE, 0.0, FALSE }, /* truncate chequerplay */ \
     { MOVEFILTER_NORMAL, MOVEFILTER_NORMAL }, \
     { MOVEFILTER_NORMAL, MOVEFILTER_NORMAL }, \
   FALSE, /* cubeful */ \
@@ -424,27 +424,27 @@ rolloutcontext rcRollout = {
   /* evaltype */ \
   EVAL_EVAL, \
   /* evalcontext */ \
-  { TRUE, 2, TRUE, TRUE, 0.0 }, \
+  { TRUE, 2, TRUE, TRUE, 0.0, FALSE }, \
   /* rolloutcontext */ \
   { \
     { \
-      { FALSE, 2, TRUE, TRUE, 0.0 }, /* player 0 cube decision */ \
-      { FALSE, 2, TRUE, TRUE, 0.0 } /* player 1 cube decision */ \
+      { FALSE, 2, TRUE, TRUE, 0.0, FALSE }, /* player 0 cube decision */ \
+      { FALSE, 2, TRUE, TRUE, 0.0, FALSE } /* player 1 cube decision */ \
     }, \
     { \
-      { FALSE, 0, TRUE, TRUE, 0.0 }, /* player 0 chequerplay */ \
-      { FALSE, 0, TRUE, TRUE, 0.0 } /* player 1 chequerplay */ \
+      { FALSE, 0, TRUE, TRUE, 0.0, FALSE }, /* player 0 chequerplay */ \
+      { FALSE, 0, TRUE, TRUE, 0.0, FALSE } /* player 1 chequerplay */ \
     }, \
     { \
-      { FALSE, 2, TRUE, TRUE, 0.0 }, /* p 0 late cube decision */ \
-      { FALSE, 2, TRUE, TRUE, 0.0 } /* p 1 late cube decision */ \
+      { FALSE, 2, TRUE, TRUE, 0.0, FALSE }, /* p 0 late cube decision */ \
+      { FALSE, 2, TRUE, TRUE, 0.0, FALSE } /* p 1 late cube decision */ \
     }, \
     { \
-      { FALSE, 0, TRUE, TRUE, 0.0 }, /* p 0 late chequerplay */ \
-      { FALSE, 0, TRUE, TRUE, 0.0 } /* p 1 late chequerplay */ \
+      { FALSE, 0, TRUE, TRUE, 0.0, FALSE }, /* p 0 late chequerplay */ \
+      { FALSE, 0, TRUE, TRUE, 0.0, FALSE } /* p 1 late chequerplay */ \
     }, \
-    { FALSE, 2, TRUE, TRUE, 0.0 }, /* truncate cube decision */ \
-    { FALSE, 2, TRUE, TRUE, 0.0 }, /* truncate chequerplay */ \
+    { FALSE, 2, TRUE, TRUE, 0.0, FALSE }, /* truncate cube decision */ \
+    { FALSE, 2, TRUE, TRUE, 0.0, FALSE }, /* truncate chequerplay */ \
     { MOVEFILTER_NORMAL, MOVEFILTER_NORMAL }, \
     { MOVEFILTER_NORMAL, MOVEFILTER_NORMAL }, \
   FALSE, /* cubeful */ \
@@ -477,6 +477,11 @@ evalsetup esEvalChequer = EVALSETUP_WORLDCLASS;
 evalsetup esEvalCube = EVALSETUP_WORLDCLASS;
 evalsetup esAnalysisChequer = EVALSETUP_SUPREMO;
 evalsetup esAnalysisCube = EVALSETUP_SUPREMO;
+// g_message("%d",esAnalysisChequer.ec.fCubeful);
+// g_message("%f",esAnalysisChequer.ec.rNoise);
+// g_message("%d",esAnalysisChequer.ec.fAutoRollout);
+
+
 
 movefilter aamfEval[MAX_FILTER_PLIES][MAX_FILTER_PLIES] = MOVEFILTER_NORMAL;
 movefilter aamfAnalysis[MAX_FILTER_PLIES][MAX_FILTER_PLIES] = MOVEFILTER_LARGE;
@@ -3099,6 +3104,7 @@ SaveEvalSettings(FILE * pf, const char *sz, evalcontext * pec)
     gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
     gchar *szNoise = g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%0.3f", pec->rNoise);
     fprintf(pf, "%s plies %u\n"
+            "%s autorollout %s\n"
             "%s prune %s\n"
             "%s cubeful %s\n"
             "%s noise %s\n"

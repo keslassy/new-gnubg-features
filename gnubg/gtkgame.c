@@ -2381,11 +2381,6 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                       pew->pwUsePrune = gtk_check_button_new_with_label(_("Use AutoRollout")));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
 
-    gtk_widget_set_tooltip_text(pew->pwAutoRollout,
-                                _("Instruct GNU Backgammon to use a set of neural networks "
-                                  "just to prune away move candidates within a deeper ply search. "
-                                  "This increases the speed considerably at a negligible cost in playing strength. "
-                                  "It is recommended to enable this option."));
     char buf[1000];
     sprintf(buf,_("After the usual analysis (defined in the previous tab), AutoRollout can "
         "automatically launch a rollout to refine selected move & cube decisions, "
@@ -2399,6 +2394,8 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
         " alternatives to compare them against the best ranked alternative: "
         "(1) Alternatives with close scores, and (2) Mistakes made by players. "
         ));   
+    gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(buf));
+
     /* Use pruning neural nets */
 
     pwFrame2 = gtk_frame_new(_("Pruning neural nets"));
@@ -2437,7 +2434,8 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                                       "cubeful evaluations for cube decisions. "
                                       "Disabling this option will make GNU Backgammon "
                                       "use cubeless evaluations in the interval nodes "
-                                      "of higher ply evaluations. It is recommended " "to enable this option."));
+                                      "of higher ply evaluations. It is recommended " 
+                                      "to enable this option."));
 
     /* noise */
 
