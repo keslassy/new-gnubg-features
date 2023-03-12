@@ -217,6 +217,35 @@ typedef enum {
 /* TRUE if gnubg is automatically setting the state of a menu item. */
 static int fAutoCommand;
 
+static char ARHelp[3000] = "AutoRollout is a new feature. "
+        "After the usual eval analysis (e.g., using a 0-ply or 2-ply eval), AutoRollout can "
+        "automatically launch a rollout to refine selected move & cube decisions, "
+        "as if we were running an analysis with a higher ply. "
+        "\n\n SETTINGS: "
+        "\n- The pre-rollout eval settings are defined here. The rollout settings are "
+        "the default ones, as defined in Settings>Rollouts."
+        "\n- After the eval analysis ranks all move/cube alternatives, AutoRollout rolls out "
+        "two types of "
+        " alternatives to compare them against the best ranked alternative: "
+        "(1) Alternatives with close scores, and (2) Mistakes made by players. "
+        "It uses the move filter defined by the user over 2-ply evals (filter used in 3-ply evals)."
+        "For instance, with the 'Normal' filter, it considers the top-two moves if their scores are "
+        "within 0.040, and add the user's move if it's not in the top two. Two changes vs. eval "
+        "to reduce rollouts: "
+        "(1) It also does this for cube decisions, and only considers them if they are close; "
+        "(2) It does not consider trivial move decisions where the top alternatives get the same score."
+        "\n\n RESULTS:"
+        "\n- You can see rollout results in the 'Cube decision'/'Chequer play' "
+        "right-side frames. "
+        "You can see the move details by selecting the moves and clicking Rollout, "
+        "and the cube details by clicking Rollout."
+        "\n- AutoRollout relies on CMarks. Therefore, you can browse rollouts by clicking "
+        "on Next/previous CMark (among "
+        "the top-right arrows). Note that this will skip the no-double "
+        "cube decisions. You can also select Analyze > CMark > Match > Show to see all CMarks. "; 
+
+
+
 #if defined(USE_GTKUIMANAGER)
 static void
 ExecToggleActionCommand_internal(guint UNUSED(iWidgetType), guint UNUSED(iCommand), gchar * szCommand,
@@ -2384,19 +2413,19 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     g_message("%d",pec->fAutoRollout);            
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
 
-    char buf[1000];
-    sprintf(buf,_("After the usual analysis (defined in the previous tab), AutoRollout can "
-        "automatically launch a rollout to refine selected move & cube decisions, "
-        "as if we were running an analysis with a higher ply. "
-        "\n\n- Its rollout settings are the default rollout settings defined in Settings>Rollouts"
-        "\n\n- You can see the details in the \"Cube decision\"/\"Chequer play\" right-side frames "
-        "by running a rollout there. "
-        "\n\n- AutoRollout relies on CMarks. Therefore, you can click on Next/previous CMark (among "
-        "the top-right arrows) to focus on such rollouts. "
-        "\n\n- After the analysis ranks all alternatives, AutoRollout rolls out two types of "
-        " alternatives to compare them against the best ranked alternative: "
-        "(1) Alternatives with close scores, and (2) Mistakes made by players. "));   
-    gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(buf));
+    // char buf[1000];
+    // sprintf(buf,_("After the usual analysis (defined in the previous tab), AutoRollout can "
+    //     "automatically launch a rollout to refine selected move & cube decisions, "
+    //     "as if we were running an analysis with a higher ply. "
+    //     "\n\n- Its rollout settings are the default rollout settings defined in Settings>Rollouts"
+    //     "\n\n- You can see the details in the \"Cube decision\"/\"Chequer play\" right-side frames "
+    //     "by running a rollout there. "
+    //     "\n\n- AutoRollout relies on CMarks. Therefore, you can click on Next/previous CMark (among "
+    //     "the top-right arrows) to focus on such rollouts. "
+    //     "\n\n- After the analysis ranks all alternatives, AutoRollout rolls out two types of "
+    //     " alternatives to compare them against the best ranked alternative: "
+    //     "(1) Alternatives with close scores, and (2) Mistakes made by players. "));   
+    gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(ARHelp));
 
     /* Use pruning neural nets */
 
@@ -3468,8 +3497,10 @@ append_analysis_options(analysiswidget * paw)
         gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(pwSpin), TRUE);
     }
 
-    pwFrame = gtk_frame_new(_("Analysis Level"));
+    pwFrame = gtk_frame_new(_("Analysis Level (hover for details)"));
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
+    gtk_widget_set_tooltip_text(pwFrame, _(ARHelp));
+
 
 #if GTK_CHECK_VERSION(3,0,0)
     vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
