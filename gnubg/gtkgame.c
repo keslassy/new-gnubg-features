@@ -3534,6 +3534,12 @@ append_analysis_options(analysiswidget * paw)
 
     pwFrame = gtk_frame_new(_("Eval Hint/Tutor Level"));
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
+    gtk_widget_set_tooltip_text(pwFrame, _("An automatic application of AutoRollout "
+    "after eval analysis is not yet available for hint/tutor. "
+    "However, once you get the hint window: "
+    " (1) for move decsions, you can click on the 'AR' button to run AutoRollout, "
+    "which automatically selects close moves and mistakes and rolls them out; and "
+    "(2) for cube decisions, you can click on the 'Rollout' button to get rollout results."));
 #if GTK_CHECK_VERSION(3,0,0)
     vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
@@ -7291,67 +7297,9 @@ GTKHint(moverecord * pmr, int hist)
 
     if(!fInQuizMode)
         gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMoves);
-    else {
+    else 
         BuildQuizHintBottom(pwHint,pwMoves);
-// #if GTK_CHECK_VERSION(3,0,0)
-//         pwMainVBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-// #else
-//         pwMainVBox = gtk_vbox_new(FALSE, 2);
-// #endif
-
-//         gtk_container_add(GTK_CONTAINER(DialogArea(pwHint, DA_MAIN)), pwMainVBox);
-//         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMoves, TRUE, TRUE, 0);
-
-// #if GTK_CHECK_VERSION(3,0,0)
-//         pwMainHBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-//         pwMainHBox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-// #else
-//         pwMainHBox = gtk_hbox_new(FALSE, 2);
-//         pwMainHBox2 = gtk_hbox_new(FALSE, 2);
-// #endif
-//         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox, FALSE, FALSE, 0);
-//         gtk_box_pack_start(GTK_BOX(pwMainVBox), pwMainHBox2, FALSE, FALSE, 0);
-
-//         char buf[200];
-//         // counterForFile++;
-//         sprintf(buf,_("\n\n%d %s played in category %s (which has %d %s). "
-//             "\n Play another position in this category?\n"), 
-//             counterForFile,
-//             (counterForFile==1)?"position":"positions",
-//             categories[currentCategoryIndex].name,
-//             categories[currentCategoryIndex].number,
-//             (categories[currentCategoryIndex].number==1)?"position":"positions");   
-//         AddText(pwMainHBox, _(buf));
-// #if GTK_CHECK_VERSION(3,0,0)
-//         pwv = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-//         pwh=gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-// #else
-//         pwv = gtk_vbox_new(FALSE, 2);
-//         pwh = gtk_hbox_new(FALSE, 2);
-// #endif
-//         gtk_box_pack_start(GTK_BOX(pwMainHBox), pwv, FALSE, FALSE, 0);
-//         gtk_box_pack_start(GTK_BOX(pwv), pwh, TRUE, FALSE, 0);
-//         deleteButton = gtk_button_new_with_label(_("(Delete this position)"));
-//         g_signal_connect(deleteButton, "clicked", G_CALLBACK(DeletePositionClicked), NULL);
-//         gtk_box_pack_start(GTK_BOX(pwv), deleteButton, FALSE, FALSE, 0);
-
-//         stopButton = gtk_button_new_with_label(_("Go back to console"));
-//         g_signal_connect(stopButton, "clicked", G_CALLBACK(StopLoopClicked), NULL);
-//         gtk_box_pack_start(GTK_BOX(pwMainHBox2), stopButton, TRUE, TRUE, 20);
-
-//         // againButton = gtk_button_new_with_label(_("Play again!"));
-//         // g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
-//         // gtk_box_pack_start(GTK_BOX(pwMainHBox), againButton, TRUE, FALSE, 0);
     
-//         againButton = gtk_button_new(); 
-//         GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_GO_FORWARD, GTK_ICON_SIZE_BUTTON);
-//         gtk_button_set_image(GTK_BUTTON(againButton), image);
-//         gtk_box_pack_start(GTK_BOX(pwMainHBox2), againButton, TRUE, TRUE, 0);
-//         g_signal_connect(againButton, "clicked", G_CALLBACK(LoadPositionAndStartClicked), NULL);
-    
-    
-    
-    }
 
     setWindowGeometry(WINDOW_HINT);
     g_object_weak_ref(G_OBJECT(pwHint), DestroyHint, NULL);
