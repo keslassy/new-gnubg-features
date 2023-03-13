@@ -272,8 +272,8 @@ int fQuietNewMatch=0;
 // qNow.position=(char *)malloc(sizeof(char) * (200));
 // qNow.position=malloc(200);
 quizdecision qDecision=QUIZ_UNKNOWN;
-    /*mini-rollout*/
-int fAutoRollout=TRUE;
+/* ***** AutoRollouts ****** */
+// int fAutoRollout=TRUE;
 // int fAutoRolloutClose=TRUE;
 // int fAutoRolloutMistake=TRUE;
 

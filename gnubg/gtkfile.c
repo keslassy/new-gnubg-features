@@ -873,7 +873,7 @@ extern void
 GTKAnalyzeCurrent(void)
 {
 
-    if(fAutoRollout) {
+    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
         if(1) { //game
             UserCommand("analyse game");
             CommandAnalyseRolloutGame(NULL);

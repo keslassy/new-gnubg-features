@@ -1179,7 +1179,7 @@ extern int fTriggeredByRecordList; /* whether history plot is launched from reco
 extern void UserCommand2(const char *szCommand); /* UserCommand is GTK-only, this function also works outside GTK*/
 
 /* ***** AutoRollouts ****** */
-extern int fAutoRollout;
+// extern int fAutoRollout;
 // extern int fAutoRolloutClose;
 // extern int fAutoRolloutMistake;
 extern movefilter ARAnalysisFilter;
