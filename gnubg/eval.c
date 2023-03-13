@@ -341,7 +341,7 @@ int aiSettingsMoveFilter[NUM_SETTINGS] = {
     3,                          /* supremo: large */
     3,                          /* grandmaster: large */
     3,                          /* 4ply: large */
-    -1,                         /* expert+AR: n/a */
+    2,                         /* expert+AR: normal */
     2                           /* wc+AR: normal */
 };
 

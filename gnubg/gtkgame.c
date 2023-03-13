@@ -214,8 +214,62 @@ typedef enum {
     VIEW_TOOLBAR_BOTH
 } gnubgcommand;
 
+
+typedef struct {
+    const char *title;
+    evalcontext *esChequer;
+    movefilter *mfChequer;
+    evalcontext *esCube;
+    movefilter *mfCube;
+    GtkWidget *pwCube, *pwChequer, *pwOptionMenu, *pwSettingWidgets;
+    int cubeDisabled;
+    int fWeakLevels;
+} AnalysisDetails;
+
+
+typedef struct {
+    evalsetup esChequer;
+    evalsetup esCube;
+    movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
+
+    evalsetup esEvalChequer;
+    evalsetup esEvalCube;
+    movefilter aaEvalmf[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
+
+    GtkWidget *pwNoteBook;
+    GtkAdjustment *apadjSkill[3], *apadjLuck[4];
+    GtkWidget *pwMoves, *pwCube, *pwLuck, *pwHintSame, *pwCubeSummary;
+    GtkWidget *apwAnalysePlayers[2];
+    GtkWidget *pwAutoDB;
+    GtkWidget *pwBackgroundAnalysis;
+    GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
+
+    GtkWidget *pwScoreMap;
+    GtkWidget* apwScoreMapPly[NUM_PLY];
+    GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
+    GtkWidget* apwScoreMapLabel[NUM_LABEL];
+    GtkWidget* apwScoreMapJacoby[NUM_JACOBY];
+    GtkWidget* apwScoreMapCubeEquityDisplay[NUM_CUBEDISP];
+    GtkWidget* apwScoreMapMoveEquityDisplay[NUM_MOVEDISP];
+    GtkWidget* apwScoreMapColour[NUM_COLOUR];
+    GtkWidget* apwScoreMapLayout[NUM_LAYOUT];
+
+    /* defining these just to be able to g_free them */
+    AnalysisDetails *pAnalDetailSettings1;
+    AnalysisDetails *pAnalDetailSettings2;
+
+} analysiswidget;
+
+
 /* TRUE if gnubg is automatically setting the state of a menu item. */
 static int fAutoCommand;
+
+/* for AutoRollout*/
+// static analysiswidget aw;
+static GtkWidget * latestMFWidget;
+static int moveNeedsMFWidget=TRUE;
+static int cubeNeedsMFWidget=TRUE;
+
 
 static char ARHelp[3000] = "AutoRollout is a new feature. "
         "After the usual eval analysis (e.g., after a 0-ply or 2-ply eval), AutoRollout can "
@@ -583,55 +637,6 @@ Command(gpointer UNUSED(p), guint iCommand, GtkWidget * widget)
 }
 
 #endif
-
-typedef struct {
-    const char *title;
-    evalcontext *esChequer;
-    movefilter *mfChequer;
-    evalcontext *esCube;
-    movefilter *mfCube;
-    GtkWidget *pwCube, *pwChequer, *pwOptionMenu, *pwSettingWidgets;
-    int cubeDisabled;
-    int fWeakLevels;
-} AnalysisDetails;
-
-
-typedef struct {
-    evalsetup esChequer;
-    evalsetup esCube;
-    movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
-
-    evalsetup esEvalChequer;
-    evalsetup esEvalCube;
-    movefilter aaEvalmf[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
-
-    GtkWidget *pwNoteBook;
-    GtkAdjustment *apadjSkill[3], *apadjLuck[4];
-    GtkWidget *pwMoves, *pwCube, *pwLuck, *pwHintSame, *pwCubeSummary;
-    GtkWidget *apwAnalysePlayers[2];
-    GtkWidget *pwAutoDB;
-    GtkWidget *pwBackgroundAnalysis;
-    GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
-
-    // GtkWidget *pwAutoRollout;
-    // GtkWidget *pwAutoRolloutClose;
-    // GtkWidget *pwAutoRolloutMistake;
-
-    GtkWidget *pwScoreMap;
-    GtkWidget* apwScoreMapPly[NUM_PLY];
-    GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
-    GtkWidget* apwScoreMapLabel[NUM_LABEL];
-    GtkWidget* apwScoreMapJacoby[NUM_JACOBY];
-    GtkWidget* apwScoreMapCubeEquityDisplay[NUM_CUBEDISP];
-    GtkWidget* apwScoreMapMoveEquityDisplay[NUM_MOVEDISP];
-    GtkWidget* apwScoreMapColour[NUM_COLOUR];
-    GtkWidget* apwScoreMapLayout[NUM_LAYOUT];
-
-    /* defining these just to be able to g_free them */
-    AnalysisDetails *pAnalDetailSettings1;
-    AnalysisDetails *pAnalDetailSettings2;
-
-} analysiswidget;
 
 /* A dummy widget that can grab events when others shouldn't see them. */
 GtkWidget *pwGrab;
@@ -2216,9 +2221,11 @@ EvalChanged(GtkWidget * UNUSED(pw), evalwidget * pew)
     for (int i = 0; i < NUM_SETTINGS; i++) {
 
         int fEval = !cmp_evalcontext(&aecSettings[i], &ecCurrent);
-        int fMoveFilter = !aecSettings[i].nPlies ||
-            (!pew->fMoveFilter || equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pew->pmf,
-                                                    aaamfMoveFilterSettings[aiSettingsMoveFilter[i]]));
+        
+        int fMoveFilter = (!aecSettings[i].nPlies && !aecSettings[i].fAutoRollout) 
+            || (!pew->fMoveFilter || 
+                    equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pew->pmf,
+                            aaamfMoveFilterSettings[aiSettingsMoveFilter[i]]));
 
         if (fEval && fMoveFilter) {
 
@@ -2239,9 +2246,17 @@ EvalChanged(GtkWidget * UNUSED(pw), evalwidget * pew)
         gtk_combo_box_set_active(GTK_COMBO_BOX(pew->pwOptionMenu), NUM_SETTINGS);
 
 
-    if (pew->fMoveFilter)
-        gtk_widget_set_sensitive(GTK_WIDGET(pew->pwMoveFilter), ecCurrent.nPlies);
-
+    if (pew->fMoveFilter) {
+        g_message("move changed?");
+        moveNeedsMFWidget=(ecCurrent.nPlies || ecCurrent.fAutoRollout);
+        gtk_widget_set_sensitive(latestMFWidget, moveNeedsMFWidget || cubeNeedsMFWidget);
+        // gtk_widget_set_sensitive(GTK_WIDGET(pew->pwMoveFilter), ecCurrent.nPlies || ecCurrent.fAutoRollout);
+    } else {
+        g_message("cube changed?");
+        cubeNeedsMFWidget=(ecCurrent.fAutoRollout);
+        gtk_widget_set_sensitive(latestMFWidget, moveNeedsMFWidget || cubeNeedsMFWidget);
+        // g_message("sensitive? %d",gtk_widget_get_sensitive(GTK_WIDGET(aw.pAnalDetailSettings1->pwChequer->fMoveFilter)));
+    }
 }
 
 
@@ -2413,19 +2428,6 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     g_message("%f",pec->rNoise);
     g_message("%d",pec->fAutoRollout);            
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
-
-    // char buf[1000];
-    // sprintf(buf,_("After the usual analysis (defined in the previous tab), AutoRollout can "
-    //     "automatically launch a rollout to refine selected move & cube decisions, "
-    //     "as if we were running an analysis with a higher ply. "
-    //     "\n\n- Its rollout settings are the default rollout settings defined in Settings>Rollouts"
-    //     "\n\n- You can see the details in the \"Cube decision\"/\"Chequer play\" right-side frames "
-    //     "by running a rollout there. "
-    //     "\n\n- AutoRollout relies on CMarks. Therefore, you can click on Next/previous CMark (among "
-    //     "the top-right arrows) to focus on such rollouts. "
-    //     "\n\n- After the analysis ranks all alternatives, AutoRollout rolls out two types of "
-    //     " alternatives to compare them against the best ranked alternative: "
-    //     "(1) Alternatives with close scores, and (2) Mistakes made by players. "));   
     gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(ARHelp));
 
     /* Use pruning neural nets */
@@ -2520,7 +2522,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     if (fMoveFilter) {
 
-        pew->pwMoveFilter = MoveFilterWidget(pmf, pfOK, G_CALLBACK(EvalChanged), pew);
+        latestMFWidget=pew->pwMoveFilter = MoveFilterWidget(pmf, pfOK, G_CALLBACK(EvalChanged), pew);
 
         pwev = gtk_event_box_new();
         gtk_event_box_set_visible_window(GTK_EVENT_BOX(pwev), FALSE);
@@ -2633,9 +2635,10 @@ EvalDefaultSetting(evalcontext * pec, movefilter * pmf)
     /* Look for predefined settings */
     for (int i = 0; i < NUM_SETTINGS; i++) {
         int fEval = !cmp_evalcontext(&aecSettings[i], pec);
-        int fMoveFilter = !aecSettings[i].nPlies || (!pmf || equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pmf,
-                                                                               aaamfMoveFilterSettings
-                                                                               [aiSettingsMoveFilter[i]]));
+        int fMoveFilter = !aecSettings[i].nPlies || 
+            (!pmf || equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pmf,
+                            aaamfMoveFilterSettings
+                            [aiSettingsMoveFilter[i]]));
 
         if (fEval && fMoveFilter)
             return i;
