@@ -367,9 +367,52 @@ MoveListRolloutPresets(GtkWidget * pw, hintdata * phd)
 }
 
 static void
-MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * UNUSED(phd))
+MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * phd)
 {
-    g_message("AR clicked");
+    // g_message("AR clicked");
+    // for (int i = 0; i < phd->pml->cMoves; i++) {
+    // }
+
+    int c;
+
+    if (ARAnalysisFilter.Accept == -1){
+        GTKMessage(_("Error: the user-defined filter (in Settings->Analysis) does not allow AutoRollout"), DT_INFO);
+        return;
+    }
+
+
+    if (!(phd->pml->amMoves) || (phd->pml->cMoves <=1)) { /*not a trivial decision nor a doubling decision*/ 
+        GTKMessage(_("Error: no non-trivial decision to roll out"), DT_INFO);
+        return;
+    }
+
+    phd->pml->amMoves[0].cmark = CMARK_ROLLOUT; /*always roll out the best move,
+            then add close decisions or the player's decision if it's different */   
+    c=0;
+    for (int j = 1; j < (int)(phd->pml->cMoves); j++) {
+        if ( (j==(int)(*phd->piHighlight) /*the player didn't choose the best decision*/
+                || j<ARAnalysisFilter.Accept /*automatically added*/
+                || (j<ARAnalysisFilter.Accept+ARAnalysisFilter.Extra 
+                        && phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore 
+                        <ARAnalysisFilter.Threshold) ) 
+                /*the top decision alternatives are within the thereshold*/
+            && (phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore>0.00001) ) {
+                /*heuristically avoid trivial decisions*/
+            g_message("added: j=%d/%d, score=%f, delta=%f",j,phd->pml->cMoves,
+                    phd->pml->amMoves[j].rScore,phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore);       
+            phd->pml->amMoves[j].cmark = CMARK_ROLLOUT;
+            c++;
+        }
+    }
+    if(c==0) {
+        phd->pml->amMoves[0].cmark = CMARK_NONE;
+        GTKMessage(_("Error: no close decisions and no player mistake to roll out"), DT_INFO);
+        return;
+    }
+
+    CommandAnalyseRolloutMove(NULL);
+
+    return; 
 }
 
 typedef int (*cfunc) (const void *, const void *);
