@@ -1530,9 +1530,9 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     if(fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
-        ShowBoard(); /* hide unallowd toolbar items*/
+        ShowBoard(); /* unhide unallowd toolbar items*/
 #if defined(USE_GTK)
-        GTKRegenerateGames(); /* hide unallowed menu items*/
+        GTKRegenerateGames(); /* unhide unallowed menu items*/
 #endif  
     }
 
@@ -1541,6 +1541,11 @@ CommandAnalyseGame(char *UNUSED(sz))
         ChangeGame(NULL);
 #endif
     ms.fCrawford = fStore_crawford;
+
+    /*Post-analysis AutoRollout*/
+    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
+        CommandAnalyseRolloutGame(NULL);
+    }
 
     playSound(SOUND_ANALYSIS_FINISHED);
 
@@ -1616,6 +1621,11 @@ CommandAnalyseMatch(char *UNUSED(sz))
         ChangeGame(NULL);
 #endif
     ms.fCrawford = fStore_crawford;
+
+    /*Post-analysis AutoRollout*/
+    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
+        CommandAnalyseRolloutMatch(NULL);
+    }
 
     playSound(SOUND_ANALYSIS_FINISHED);
 }
@@ -1992,6 +2002,13 @@ CommandAnalyseMove(char *UNUSED(sz))
         if (fX)
             ChangeGame(NULL);
 #endif
+
+    /*Post-analysis AutoRollout*/
+    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
+        CommandAnalyseRolloutMove(NULL);
+    }
+
+
     } else
         outputerrf("%s", _("Please use `hint' on unfinished moves"));
 }

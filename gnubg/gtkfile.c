@@ -873,29 +873,15 @@ extern void
 GTKAnalyzeCurrent(void)
 {
 
-    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
-        if(1) { //game
-            UserCommand("analyse game");
-            CommandAnalyseRolloutGame(NULL);
-            // CommandCMarkGameClear(NULL);
-        } else { //match
-            UserCommand("analyse match");
-            CommandAnalyseRolloutMatch(NULL);
-            // CommandCMarkMatchClear(NULL);
-        }
-    } else {
-        /*analyze match*/
-        UserCommand("analyse match");
+    /*analyze match*/
+    UserCommand("analyse match");
 
-        // CommandAnalyseRolloutMatch(NULL);
-
-        if(fAutoDB) {
-            /*add match to db*/
-            CommandRelationalAddMatch(NULL);
-        }
-        /*show stats panel*/
-        UserCommand("show statistics match");
+    if(fAutoDB) {
+        /*add match to db*/
+        CommandRelationalAddMatch(NULL);
     }
+    /*show stats panel*/
+    UserCommand("show statistics match");
 }
 
 extern void

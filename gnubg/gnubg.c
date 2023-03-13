@@ -478,9 +478,6 @@ evalsetup esEvalCube = EVALSETUP_WORLDCLASS;
 evalsetup esAnalysisChequer = EVALSETUP_SUPREMO;
 evalsetup esAnalysisCube = EVALSETUP_SUPREMO;
 
-
-
-
 movefilter aamfEval[MAX_FILTER_PLIES][MAX_FILTER_PLIES] = MOVEFILTER_NORMAL;
 movefilter aamfAnalysis[MAX_FILTER_PLIES][MAX_FILTER_PLIES] = MOVEFILTER_LARGE;
 movefilter ARAnalysisFilter={ 0, 4, 0.08f }; /*aamfAnalysis[2][2]; */

@@ -297,7 +297,11 @@ static char ARHelp[3000] = "AutoRollout is a new feature. "
         "\n- AutoRollout relies on CMarks. Therefore, you can browse rollouts by clicking "
         "on Next/previous CMark (among "
         "the top-right arrows). Note that this will skip the no-double "
-        "cube decisions. You can also select Analyze->CMark->-Match-> Show to see all CMarks. "; 
+        "cube decisions. You can also select Analyze->CMark->-Match-> Show to see all CMarks. "
+        "\n\n ALTERNATIVE: "
+        "After an eval analysis of a move decision, you can click on the 'AR' button of the "
+        "'Chequer play' right-side frame to launch an AutoRollout for this move."
+        ; 
 
 
 
