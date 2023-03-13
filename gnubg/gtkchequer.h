@@ -25,7 +25,7 @@
 
 typedef struct {
     GtkWidget *pwMoves;         /* the movelist */
-    GtkWidget *pwRollout, *pwRolloutSettings;   /* rollout buttons */
+    GtkWidget *pwRollout, *pwRolloutSettings, *pwAutoRollout;   /* rollout buttons */
     GtkWidget *pwEval, *pwEvalSettings; /* evaluation buttons */
     GtkWidget *pwMove;          /* move button */
     GtkWidget *pwCopy;          /* copy button */

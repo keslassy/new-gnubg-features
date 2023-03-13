@@ -1183,6 +1183,8 @@ extern void UserCommand2(const char *szCommand); /* UserCommand is GTK-only, thi
 // extern int fAutoRolloutClose;
 // extern int fAutoRolloutMistake;
 extern movefilter ARAnalysisFilter;
+// extern int fAutoRolloutMove; /*For the "Checker play" frame button*/
+// extern int fAutoRolloutCube; /*For the "Cube decision" frame button*/
 
 
 #endif	/* BACKGAMMON_H */

@@ -22,21 +22,21 @@
 03/2023: Isaac Keslassy: new Quiz feature:
 - we start it with the quiz console
 - see explanations in the quiz console: 
-* we can either launch it through the menu bar, or through a right-click menu in 
-the gamelist; 
-* it has a configurable auto-add feature;
-* and so on.
+    * we can either launch the console through the menu bar, or through a right-click 
+    menu in the gamelist; 
+    * it has a configurable auto-add feature;
+    * and so on.
 - behind the scenes, we analyze positions in three different settings for the quiz:
-1) In quiz mode, when the user answers something, we display the result in the 
-hint window, and record the result. We use different functions for different 
-types of decisions. For instance, for a double decision, we use:
-hint_double	() -> find_skills() -> double_skill() -> qUpdate(), which updates
-the user's error with this double position
-2) When analyzing a move/game/match and automatically add positions, we use:
-AnalyzeMove() to do so
-3) When we right-click on a position and want to add it to some arbitrary position
-category, we need the error for the position. We do so in double_skill as in the 
-first case above.
+    1) In quiz mode, when the user answers something, we display the result in the 
+    hint window, and record the result. We use different functions for different 
+    types of decisions. For instance, for a double decision, we use:
+    hint_double	() -> find_skills() -> double_skill() -> qUpdate(), which updates
+    the user's error with this double position
+    2) When analyzing a move/game/match and automatically adding positions, we use:
+    AnalyzeMove() to do so
+    3) When we right-click on a position and want to add it to some arbitrary position
+    category, we need the error for the position. We do so in double_skill as in the 
+    first case above.
 */
 
 

@@ -366,6 +366,12 @@ MoveListRolloutPresets(GtkWidget * pw, hintdata * phd)
     g_free(command);
 }
 
+static void
+AutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * UNUSED(phd))
+{
+    g_message("AR clicked");
+}
+
 typedef int (*cfunc) (const void *, const void *);
 
 static int
@@ -462,6 +468,7 @@ CreateMoveListTools(hintdata * phd)
     GtkWidget *pwEval = gtk_button_new_with_label(_("Eval"));
     GtkWidget *pwEvalSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwRollout = gtk_button_new_with_label(_("Rollout"));
+    GtkWidget *pwAutoRollout; // = gtk_button_new_with_label(_("AR"));
     GtkWidget *pwRolloutSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwMWC = gtk_toggle_button_new_with_label(_("MWC"));
     GtkWidget *pwMove = gtk_button_new_with_label(Q_("verb|Move"));
@@ -474,6 +481,7 @@ CreateMoveListTools(hintdata * phd)
 
     pwDetails = phd->fDetails ? NULL : gtk_toggle_button_new_with_label(_("Details"));
     phd->pwRollout = pwRollout;
+    phd->pwAutoRollout = pwAutoRollout;
     phd->pwRolloutSettings = pwRolloutSettings;
     phd->pwEval = pwEval;
     phd->pwEvalSettings = pwEvalSettings;
@@ -488,6 +496,7 @@ CreateMoveListTools(hintdata * phd)
     gtk_style_context_add_class(gtk_widget_get_style_context(pwEval), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwEvalSettings), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwRollout), "gnubg-analysis-button");
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwAutoRollout), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwRolloutSettings), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwMWC), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwMove), "gnubg-analysis-button");
@@ -554,6 +563,9 @@ CreateMoveListTools(hintdata * phd)
     if (!phd->fDetails)
         gtk_grid_attach(GTK_GRID(pwTools), pwDetails, 5, 0, 1, 1);
 
+    gtk_grid_attach(GTK_GRID(pwTools), pwTempMap, 6, 0, 1, 1);
+
+    /*2nd row*/
     gtk_grid_attach(GTK_GRID(pwTools), pwRollout, 0, 1, 1, 1);
 
     gtk_grid_attach(GTK_GRID(pwTools), pwRolloutSettings, 1, 1, 1, 1);
@@ -568,6 +580,10 @@ CreateMoveListTools(hintdata * phd)
         gtk_table_attach(GTK_TABLE(pwTools), pwDetails, 5, 6, 0, 1,
                          (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
 
+    gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 6, 7, 0, 1,
+                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
+
+    /*2nd row*/
     gtk_table_attach(GTK_TABLE(pwTools), pwRollout, 0, 1, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
@@ -584,7 +600,27 @@ CreateMoveListTools(hintdata * phd)
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
-    for (i = 0; i < 5; ++i) {
+    /*removed 'e' to put AutoRollout; could also remove the seldom-used "Move" button;
+    or move everything to the right */
+    gchar *sz = g_strdup_printf("AR");    /* string is freed by set_data_full */
+    pwAutoRollout = gtk_button_new_with_label(sz);
+
+#if GTK_CHECK_VERSION(3,0,0)
+    gtk_style_context_add_class(gtk_widget_get_style_context(pwAutoRollout), "gnubg-analysis-button");
+#endif
+    gtk_box_pack_start(GTK_BOX(phd->pwRolloutPresets), pwAutoRollout, TRUE, TRUE, 0);
+
+    g_signal_connect(G_OBJECT(pwAutoRollout), "clicked", G_CALLBACK(AutoRolloutClicked), phd);
+ 
+    sz = g_strdup_printf(_("AutoRollout: automatically rollout (1) the closest moves and "
+            "(2) a player mistake (if any). "
+            "AutoRollout automatically selects the moves before rollout. "
+            "Use the 'Rollout' button to select specific moves instead, and '...' for rollout settings. "
+            "See 'Settings->Analysis' for more details."));
+    gtk_widget_set_tooltip_text(pwAutoRollout, sz);
+    g_free(sz);
+
+    for (i = 0; i < 4; ++i) {
         gchar *sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
         GtkWidget *ro_preset = gtk_button_new_with_label(sz);
 
@@ -593,11 +629,11 @@ CreateMoveListTools(hintdata * phd)
 #endif
         gtk_box_pack_start(GTK_BOX(phd->pwRolloutPresets), ro_preset, TRUE, TRUE, 0);
 
-        g_signal_connect(G_OBJECT(ro_preset), "clicked", G_CALLBACK(MoveListRolloutPresets), phd);
+            g_signal_connect(G_OBJECT(ro_preset), "clicked", G_CALLBACK(MoveListRolloutPresets), phd);
 
         g_object_set_data_full(G_OBJECT(ro_preset), "user_data", sz, g_free);
 
-        sz = g_strdup_printf(_("Rollout preset %c"), i + 'a');
+            sz = g_strdup_printf(_("Rollout preset %c"), i + 'a');
         gtk_widget_set_tooltip_text(ro_preset, sz);
         g_free(sz);
 
@@ -610,8 +646,6 @@ CreateMoveListTools(hintdata * phd)
 
     gtk_grid_attach(GTK_GRID(pwTools), pwCmark, 5, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwTempMap, 6, 0, 1, 1);
-
     gtk_grid_attach(GTK_GRID(pwTools), pwScoreMap, 6, 1, 1, 1);
 #else
     gtk_table_attach(GTK_TABLE(pwTools), pwMove, 3, 4, 1, 2,
@@ -621,9 +655,6 @@ CreateMoveListTools(hintdata * phd)
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     gtk_table_attach(GTK_TABLE(pwTools), pwCmark, 5, 6, 1, 2,
-                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
-
-    gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 6, 7, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 6, 7, 1, 2,
@@ -643,15 +674,14 @@ CreateMoveListTools(hintdata * phd)
     gtk_widget_set_sensitive(pwRollout, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwRollout, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwRolloutSettings, !fAnalysisRunning);
+    // gtk_widget_set_sensitive(pwAutoRollout, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwEval, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwEvalSettings, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwMove, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwCopy, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwScoreMap, !fAnalysisRunning);
 
-
-
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMWC), fOutputMWC);
+     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMWC), fOutputMWC);
 
     if (pwDetails)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwDetails), showMoveListDetail);
@@ -745,9 +775,11 @@ CheckHintButtons(hintdata * phd)
     gtk_widget_set_sensitive(phd->pwRolloutPresets, c && phd->fButtonsValid && !fAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwEval, c && phd->fButtonsValid && !fAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwEvalPly, c && phd->fButtonsValid && !fAnalysisRunning);
+    // gtk_widget_set_sensitive(phd->pwAutoRollout, phd->fButtonsValid && !fAnalysisRunning);
 
     bd = BOARD(pwBoard)->board_data;
     gtk_widget_set_sensitive(phd->pwScoreMap, (bd->diceShown == DICE_ON_BOARD) && !fAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwAutoRollout, (bd->diceShown == DICE_ON_BOARD) && !fAnalysisRunning);
 
     return c;
 }
