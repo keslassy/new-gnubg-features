@@ -782,9 +782,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                             <ARAnalysisFilter.Threshold
                     || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])
                             <ARAnalysisFilter.Threshold) ) { /* i.e. close decisions */
-                g_message("added: cube: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
-                    rSkill,arDouble[OUTPUT_NODOUBLE],
-                    arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP]);       
+                // g_message("added: cube: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
+                //     rSkill,arDouble[OUTPUT_NODOUBLE],
+                //     arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP]);       
                 pmr->CubeDecPtr->cmark = CMARK_ROLLOUT;
             }
 
@@ -1016,9 +1016,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                                 <ARAnalysisFilter.Threshold
                         || ABS(arDouble[OUTPUT_DROP]-arDouble[OUTPUT_NODOUBLE])
                                 <ARAnalysisFilter.Threshold) ) { /* i.e. close decisions */
-                    g_message("added: double: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
-                        rSkill,arDouble[OUTPUT_NODOUBLE],
-                        arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP]);       
+                    // g_message("added: double: rSkill=%f,arDouble[OUTPUT_NODOUBLE]=%f, arDouble[OUTPUT_TAKE]=%f, arDouble[OUTPUT_DROP]=%f",
+                    //     rSkill,arDouble[OUTPUT_NODOUBLE],
+                    //     arDouble[OUTPUT_TAKE],arDouble[OUTPUT_DROP]);       
                     pmr->CubeDecPtr->cmark = CMARK_ROLLOUT;
                 }
 
@@ -1545,6 +1545,7 @@ CommandAnalyseGame(char *UNUSED(sz))
     /*Post-analysis AutoRollout*/
     if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
         CommandAnalyseRolloutGame(NULL);
+        CommandFirstMove(NULL);
     }
 
     playSound(SOUND_ANALYSIS_FINISHED);
@@ -1616,6 +1617,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
 #endif        
     }
 
+
 #if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
@@ -1624,7 +1626,10 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     /*Post-analysis AutoRollout*/
     if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
+        // fX=0;
         CommandAnalyseRolloutMatch(NULL);
+        CommandFirstGame(NULL);
+        // fX=1;
     }
 
     playSound(SOUND_ANALYSIS_FINISHED);

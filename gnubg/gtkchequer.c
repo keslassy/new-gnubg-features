@@ -398,8 +398,8 @@ MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * phd)
                 /*the top decision alternatives are within the thereshold*/
             && (phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore>0.00001) ) {
                 /*heuristically avoid trivial decisions*/
-            g_message("added: j=%d/%d, score=%f, delta=%f",j,phd->pml->cMoves,
-                    phd->pml->amMoves[j].rScore,phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore);       
+            // g_message("added: j=%d/%d, score=%f, delta=%f",j,phd->pml->cMoves,
+            //         phd->pml->amMoves[j].rScore,phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore);       
             phd->pml->amMoves[j].cmark = CMARK_ROLLOUT;
             c++;
         }
