@@ -366,12 +366,9 @@ MoveListRolloutPresets(GtkWidget * pw, hintdata * phd)
     g_free(command);
 }
 
-static void
-MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * phd)
+extern void MoveListAutoRollout(movelist * pml, int keyIndex)
 {
     // g_message("AR clicked");
-    // for (int i = 0; i < phd->pml->cMoves; i++) {
-    // }
 
     int c;
 
@@ -381,38 +378,42 @@ MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * phd)
     }
 
 
-    if (!(phd->pml->amMoves) || (phd->pml->cMoves <=1)) { /*not a trivial decision nor a doubling decision*/ 
+    if (!(pml->amMoves) || (pml->cMoves <=1)) { /*not a trivial decision nor a doubling decision*/ 
         GTKMessage(_("Error: no non-trivial decision to roll out"), DT_INFO);
         return;
     }
 
-    phd->pml->amMoves[0].cmark = CMARK_ROLLOUT; /*always roll out the best move,
+    pml->amMoves[0].cmark = CMARK_ROLLOUT; /*always roll out the best move,
             then add close decisions or the player's decision if it's different */   
     c=0;
-    for (int j = 1; j < (int)(phd->pml->cMoves); j++) {
-        if ( (j==(int)(*phd->piHighlight) /*the player didn't choose the best decision*/
+    for (int j = 1; j < (int)(pml->cMoves); j++) {
+        if ( (j==keyIndex /*the player didn't choose the best decision*/
                 || j<ARAnalysisFilter.Accept /*automatically added*/
                 || (j<ARAnalysisFilter.Accept+ARAnalysisFilter.Extra 
-                        && phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore 
+                        && pml->amMoves[0].rScore - pml->amMoves[j].rScore 
                         <ARAnalysisFilter.Threshold) ) 
                 /*the top decision alternatives are within the thereshold*/
-            && (phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore>0.00001) ) {
+            && (pml->amMoves[0].rScore - pml->amMoves[j].rScore>0.00001) ) {
                 /*heuristically avoid trivial decisions*/
-            // g_message("added: j=%d/%d, score=%f, delta=%f",j,phd->pml->cMoves,
-            //         phd->pml->amMoves[j].rScore,phd->pml->amMoves[0].rScore - phd->pml->amMoves[j].rScore);       
-            phd->pml->amMoves[j].cmark = CMARK_ROLLOUT;
+            // g_message("added: j=%d/%d, score=%f, delta=%f",j,pml->cMoves,
+            //         pml->amMoves[j].rScore,pml->amMoves[0].rScore - pml->amMoves[j].rScore);       
+            pml->amMoves[j].cmark = CMARK_ROLLOUT;
             c++;
         }
     }
     if(c==0) {
-        phd->pml->amMoves[0].cmark = CMARK_NONE;
+        pml->amMoves[0].cmark = CMARK_NONE;
         GTKMessage(_("Error: no close decisions and no player mistake to roll out"), DT_INFO);
         return;
     }
 
     CommandAnalyseRolloutMove(NULL);
+}
 
-    return; 
+static void
+MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * phd)
+{
+    MoveListAutoRollout(phd->pml,(int)(*phd->piHighlight));
 }
 
 typedef int (*cfunc) (const void *, const void *);

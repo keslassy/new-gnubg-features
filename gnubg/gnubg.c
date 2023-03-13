@@ -2541,6 +2541,7 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         int *ai = (int *) malloc(pmr->ml.cMoves * sizeof(int));
         RefreshMoveList(&pmr->ml, ai);
         free(ai);
+        // MoveListAutoRollout(&pmr->ml);
     }
 
 #if defined(USE_GTK)

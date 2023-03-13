@@ -301,6 +301,8 @@ static char ARHelp[3000] = "AutoRollout is a new feature. "
         "\n\n ALTERNATIVE: "
         "After an eval analysis of a move decision, you can click on the 'AR' button of the "
         "'Chequer play' right-side frame to launch an AutoRollout for this move."
+        "\n\n Note that AutoRollout will show the rollout windows, and therefore does not enable "
+        "browsing while analyzing (i.e. no background analysis). "
         ; 
 
 
