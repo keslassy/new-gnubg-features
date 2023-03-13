@@ -367,7 +367,7 @@ MoveListRolloutPresets(GtkWidget * pw, hintdata * phd)
 }
 
 static void
-AutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * UNUSED(phd))
+MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * UNUSED(phd))
 {
     g_message("AR clicked");
 }
@@ -468,7 +468,7 @@ CreateMoveListTools(hintdata * phd)
     GtkWidget *pwEval = gtk_button_new_with_label(_("Eval"));
     GtkWidget *pwEvalSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwRollout = gtk_button_new_with_label(_("Rollout"));
-    GtkWidget *pwAutoRollout; // = gtk_button_new_with_label(_("AR"));
+    GtkWidget *pwAutoRollout = gtk_button_new_with_label(_("A\nR"));
     GtkWidget *pwRolloutSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwMWC = gtk_toggle_button_new_with_label(_("MWC"));
     GtkWidget *pwMove = gtk_button_new_with_label(Q_("verb|Move"));
@@ -511,27 +511,43 @@ CreateMoveListTools(hintdata * phd)
 #if GTK_CHECK_VERSION(3,0,0)
     pwTools = gtk_grid_new();
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwEval, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwAutoRollout, 0, 0, 1, 2);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwEvalSettings, 1, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwEval, 1, 0, 1, 1);
+
+    gtk_grid_attach(GTK_GRID(pwTools), pwEvalSettings, 2, 0, 1, 1);
 #else
-    pwTools = gtk_table_new(2, 7, FALSE);
+    pwTools = gtk_table_new(2, 8, FALSE);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwEval, 0, 1, 0, 1,
+    /* The positioning of the AutoRollout button is a problem: Rollout and Eval currently
+    correspond to each other vertically.
+    V1: I tried to put AR instead of the "a"(.rol) button and keep a-d while removing e. But
+    this doesn't work well, because then AR is under RolloutPresets.
+    V2: current column on the left.
+    Alternatives: 
+        (1) make it only a height-1 button at the left of Rollouts ;
+        (2) replace the seldom-used "Move" button;
+        (3) put it at the right of ScoreMap
+    */
+
+    gtk_table_attach(GTK_TABLE(pwTools), pwAutoRollout, 0, 1, 0, 2,
+                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+    gtk_table_attach(GTK_TABLE(pwTools), pwEval, 1, 2, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwEvalSettings, 1, 2, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwEvalSettings, 2, 3, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     phd->pwEvalPly = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
-    gtk_grid_attach(GTK_GRID(pwTools), phd->pwEvalPly, 2, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), phd->pwEvalPly, 3, 0, 1, 1);
 #else
     phd->pwEvalPly = gtk_hbox_new(FALSE, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), phd->pwEvalPly, 2, 3, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), phd->pwEvalPly, 3, 4, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
@@ -556,69 +572,69 @@ CreateMoveListTools(hintdata * phd)
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_grid_attach(GTK_GRID(pwTools), pwShow, 3, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwShow, 4, 0, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwMWC, 4, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwMWC, 5, 0, 1, 1);
 
     if (!phd->fDetails)
-        gtk_grid_attach(GTK_GRID(pwTools), pwDetails, 5, 0, 1, 1);
+        gtk_grid_attach(GTK_GRID(pwTools), pwDetails, 6, 0, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwTempMap, 6, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwTempMap, 7, 0, 1, 1);
 
     /*2nd row*/
-    gtk_grid_attach(GTK_GRID(pwTools), pwRollout, 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwRollout, 1, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwRolloutSettings, 1, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwRolloutSettings, 2, 1, 1, 1);
 #else
-    gtk_table_attach(GTK_TABLE(pwTools), pwShow, 3, 4, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwShow, 4, 5, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwMWC, 4, 5, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwMWC, 5, 6, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     if (!phd->fDetails)
-        gtk_table_attach(GTK_TABLE(pwTools), pwDetails, 5, 6, 0, 1,
+        gtk_table_attach(GTK_TABLE(pwTools), pwDetails, 6, 7, 0, 1,
                          (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 6, 7, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 7, 8, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     /*2nd row*/
-    gtk_table_attach(GTK_TABLE(pwTools), pwRollout, 0, 1, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwRollout, 1, 2, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwRolloutSettings, 1, 2, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwRolloutSettings, 2, 3, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     phd->pwRolloutPresets = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_grid_attach(GTK_GRID(pwTools), phd->pwRolloutPresets, 2, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), phd->pwRolloutPresets, 3, 1, 1, 1);
 #else
     phd->pwRolloutPresets = gtk_hbox_new(FALSE, 0);
-    gtk_table_attach(GTK_TABLE(pwTools), phd->pwRolloutPresets, 2, 3, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), phd->pwRolloutPresets, 3, 4, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
-    /*removed 'e' to put AutoRollout; could also remove the seldom-used "Move" button;
-    or move everything to the right */
-    gchar *sz = g_strdup_printf("AR");    /* string is freed by set_data_full */
-    pwAutoRollout = gtk_button_new_with_label(sz);
+//     /*removed 'e' to put AutoRollout; could also remove the seldom-used "Move" button;
+//     or move everything to the right */
+//     gchar *sz = g_strdup_printf("AR");    /* string is freed by set_data_full */
+//     pwAutoRollout = gtk_button_new_with_label(sz);
 
-#if GTK_CHECK_VERSION(3,0,0)
-    gtk_style_context_add_class(gtk_widget_get_style_context(pwAutoRollout), "gnubg-analysis-button");
-#endif
-    gtk_box_pack_start(GTK_BOX(phd->pwRolloutPresets), pwAutoRollout, TRUE, TRUE, 0);
+// #if GTK_CHECK_VERSION(3,0,0)
+//     gtk_style_context_add_class(gtk_widget_get_style_context(pwAutoRollout), "gnubg-analysis-button");
+// #endif
+//     gtk_box_pack_start(GTK_BOX(phd->pwRolloutPresets), pwAutoRollout, TRUE, TRUE, 0);
 
-    g_signal_connect(G_OBJECT(pwAutoRollout), "clicked", G_CALLBACK(AutoRolloutClicked), phd);
+//     g_signal_connect(G_OBJECT(pwAutoRollout), "clicked", G_CALLBACK(AutoRolloutClicked), phd);
  
-    sz = g_strdup_printf(_("AutoRollout: automatically rollout (1) the closest moves and "
-            "(2) a player mistake (if any). "
-            "AutoRollout automatically selects the moves before rollout. "
-            "Use the 'Rollout' button to select specific moves instead, and '...' for rollout settings. "
-            "See 'Settings->Analysis' for more details."));
-    gtk_widget_set_tooltip_text(pwAutoRollout, sz);
-    g_free(sz);
+//     sz = g_strdup_printf(_("AutoRollout: automatically rollout (1) the closest moves and "
+//             "(2) a player mistake (if any). "
+//             "AutoRollout automatically selects the moves before rollout. "
+//             "Use the 'Rollout' button to select specific moves instead, and '...' for rollout settings. "
+//             "See 'Settings->Analysis' for more details."));
+//     gtk_widget_set_tooltip_text(pwAutoRollout, sz);
+//     g_free(sz);
 
     for (i = 0; i < 4; ++i) {
         gchar *sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
@@ -640,24 +656,24 @@ CreateMoveListTools(hintdata * phd)
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_grid_attach(GTK_GRID(pwTools), pwMove, 3, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwMove, 4, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwCopy, 4, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwCopy, 5, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwCmark, 5, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwCmark, 6, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwScoreMap, 6, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwScoreMap, 7, 1, 1, 1);
 #else
-    gtk_table_attach(GTK_TABLE(pwTools), pwMove, 3, 4, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwMove, 4, 5, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwCopy, 4, 5, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwCopy, 5, 6, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwCmark, 5, 6, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwCmark, 6, 7, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 6, 7, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 7, 8, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0); 
 #endif
 
@@ -674,20 +690,21 @@ CreateMoveListTools(hintdata * phd)
     gtk_widget_set_sensitive(pwRollout, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwRollout, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwRolloutSettings, !fAnalysisRunning);
-    // gtk_widget_set_sensitive(pwAutoRollout, !fAnalysisRunning);
+    gtk_widget_set_sensitive(pwAutoRollout, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwEval, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwEvalSettings, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwMove, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwCopy, !fAnalysisRunning);
     gtk_widget_set_sensitive(pwScoreMap, !fAnalysisRunning);
 
-     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMWC), fOutputMWC);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMWC), fOutputMWC);
 
     if (pwDetails)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwDetails), showMoveListDetail);
     /* signals */
 
     g_signal_connect(G_OBJECT(pwRollout), "clicked", G_CALLBACK(MoveListRolloutClicked), phd);
+    g_signal_connect(G_OBJECT(pwAutoRollout), "clicked", G_CALLBACK(MoveListAutoRolloutClicked), phd);
     g_signal_connect(G_OBJECT(pwEval), "clicked", G_CALLBACK(MoveListEval), phd);
     g_signal_connect(G_OBJECT(pwEvalSettings), "clicked", G_CALLBACK(MoveListEvalSettings), NULL);
     g_signal_connect(G_OBJECT(pwRolloutSettings), "clicked", G_CALLBACK(MoveListRolloutSettings), NULL);
@@ -724,6 +741,13 @@ CreateMoveListTools(hintdata * phd)
     gtk_widget_set_tooltip_text(pwTempMap, _("Show Sho Sengoku Temperature Map of position" " after selected move"));
 
     gtk_widget_set_tooltip_text(pwScoreMap, _("Show map of best moves at different scores"));
+
+    gtk_widget_set_tooltip_text(pwAutoRollout, 
+            _("AutoRollout: after an eval, automatically rollout (1) the closest moves and "
+            "(2) a player mistake (if any). "
+            "AutoRollout automatically selects the moves before rollout. "
+            "Use the 'Rollout' button to select specific moves instead, and '...' for rollout settings. "
+            "See 'Settings->Analysis' for more details."));
 
 
     return pwTools;
@@ -779,7 +803,7 @@ CheckHintButtons(hintdata * phd)
 
     bd = BOARD(pwBoard)->board_data;
     gtk_widget_set_sensitive(phd->pwScoreMap, (bd->diceShown == DICE_ON_BOARD) && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwAutoRollout, (bd->diceShown == DICE_ON_BOARD) && !fAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwAutoRollout, !fAnalysisRunning);
 
     return c;
 }
