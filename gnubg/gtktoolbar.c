@@ -90,33 +90,33 @@ ButtonClickedYesNo(GtkWidget * UNUSED(pw), char *sz)
 
 }
 
-static GtkWidget *
-toggle_button_from_images(GtkWidget * pwImageOff, GtkWidget * pwImageOn, char *sz)
-{
-    GtkWidget **aapw;
-    GtkWidget *pwm = gtk_multiview_new();
-    GtkWidget *pw = gtk_toggle_button_new();
-    GtkWidget *pwvbox = gtk_vbox_new(FALSE, 0);
+// static GtkWidget *
+// toggle_button_from_images(GtkWidget * pwImageOff, GtkWidget * pwImageOn, char *sz)
+// {
+//     GtkWidget **aapw;
+//     GtkWidget *pwm = gtk_multiview_new();
+//     GtkWidget *pw = gtk_toggle_button_new();
+//     GtkWidget *pwvbox = gtk_vbox_new(FALSE, 0);
 
-    aapw = (GtkWidget **) g_malloc(3 * sizeof(GtkWidget *));
+//     aapw = (GtkWidget **) g_malloc(3 * sizeof(GtkWidget *));
 
-    aapw[0] = pwImageOff;
-    aapw[1] = pwImageOn;
-    aapw[2] = pwm;
+//     aapw[0] = pwImageOff;
+//     aapw[1] = pwImageOn;
+//     aapw[2] = pwm;
 
-    gtk_container_add(GTK_CONTAINER(pwvbox), pwm);
+//     gtk_container_add(GTK_CONTAINER(pwvbox), pwm);
 
-    gtk_container_add(GTK_CONTAINER(pwm), pwImageOff);
-    gtk_container_add(GTK_CONTAINER(pwm), pwImageOn);
-    gtk_container_add(GTK_CONTAINER(pwvbox), gtk_label_new(sz));
-    gtk_container_add(GTK_CONTAINER(pw), pwvbox);
+//     gtk_container_add(GTK_CONTAINER(pwm), pwImageOff);
+//     gtk_container_add(GTK_CONTAINER(pwm), pwImageOn);
+//     gtk_container_add(GTK_CONTAINER(pwvbox), gtk_label_new(sz));
+//     gtk_container_add(GTK_CONTAINER(pw), pwvbox);
 
 
-    g_object_set_data_full(G_OBJECT(pw), "toggle_images", aapw, g_free);
+//     g_object_set_data_full(G_OBJECT(pw), "toggle_images", aapw, g_free);
 
-    return pw;
+//     return pw;
 
-}
+// }
 #endif
 
 extern void
@@ -603,7 +603,8 @@ ToolbarNew(void)
     */
     ptw->pwAnalyzeCurrent =
         ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyse"), 
-        _("Analyse current match (set default behavior in Settings -> Analysis)"), 
+        _("Analyze current match: \n(1) analyze match, \n(2) add match results to database "
+        "(if set in Settings -> Analysis), and finally \n(3) show match statistics panel."), 
         G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
     /* Analyze file button 
@@ -611,7 +612,8 @@ ToolbarNew(void)
     */
     ptw->pwAnalyzeFile =
         ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_FIND_AND_REPLACE, _("Analyse File"), 
-        _("Analyse match from file (set default behavior in Settings -> Analysis)"), 
+        _("Analyze match from file (set default behavior in Settings -> Analysis: "
+        "'batch analysis', 'single-file analysis', or 'smart analysis')"), 
         G_CALLBACK(GTKAnalyzeFile), NULL);
 
     ti = gtk_separator_tool_item_new();
