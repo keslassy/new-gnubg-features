@@ -271,7 +271,7 @@ static int moveNeedsMFWidget=TRUE;
 static int cubeNeedsMFWidget=TRUE;
 
 
-static char ARHelp[3000] = "AutoRollout is a new feature. "
+static char ARHelp[3000] = "AutoRollout is a new experimental feature. "
         "After the usual eval analysis (e.g., after a 0-ply or 2-ply eval), AutoRollout can "
         "automatically launch a rollout to refine selected move & cube decisions, "
         "as if we were running an analysis with a higher ply. "
@@ -293,7 +293,7 @@ static char ARHelp[3000] = "AutoRollout is a new feature. "
         "\n- You can see rollout results in the 'Cube decision'/'Chequer play' "
         "right-side frames. "
         "\n-You can see the move details by selecting the moves and clicking Rollout, "
-        "and the cube details by clicking Rollout."
+        "and the cube details by clicking Rollout (no need to select anything)."
         "\n- AutoRollout relies on CMarks. Therefore, you can browse rollouts by clicking "
         "on Next/previous CMark (among "
         "the top-right arrows). Note that this will skip the no-double "
@@ -301,8 +301,6 @@ static char ARHelp[3000] = "AutoRollout is a new feature. "
         "\n\n ALTERNATIVE: "
         "After an eval analysis of a move decision, you can click on the 'AR' button of the "
         "'Chequer play' right-side frame to launch an AutoRollout for this move."
-        "\n\n Note that AutoRollout will show the rollout windows, and therefore does not enable "
-        "browsing while analyzing (i.e. no background analysis). "
         ; 
 
 
