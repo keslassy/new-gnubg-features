@@ -1081,13 +1081,13 @@ extern int quick_roll(void);
 extern int board_in_list(const movelist * pml, const TanBoard old_board, const TanBoard board, int *an);
 extern int GetManualDice(unsigned int anDice[2]);
 
-/* definitions for SmartOpen and keyNames*/
-extern void SmartOpen(void); /* function that makes sure that player 1 is a key player, if there is one */
+/* definitions for SmartSit and keyNames*/
+extern void SmartSit(void); /* function that makes sure that player 1 is a key player, if there is one */
 #define MAX_KEY_NAMES 200 /* number of defined key player names*/
 extern char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]; /* array with all key player names*/
 extern int keyNamesFirstEmpty; /* the keyNames array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
 extern int fUseKeyNames; /* whether to use the keyNames array*/
-extern int fWithinSmartOpen; /* whether we are within the SmartOpen function: if it requests to permute users, no need to add the
+extern int fWithinSmartSit; /* whether we are within the SmartSit function: if it requests to permute users, no need to add the
                                     new player1 to the list of preferred users*/
 extern int AddKeyName(const char sz[]); /* function that adds a key player name to the array*/
 extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/

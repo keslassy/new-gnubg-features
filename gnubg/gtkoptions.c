@@ -923,7 +923,7 @@ append_display_options(optionswidget * pow)
 
     gtk_box_pack_start(GTK_BOX(pwvbox), pwh, FALSE, FALSE, 0);
 
-    // pow->pwKeyName = gtk_check_button_new_with_label(_("Use SmartOpen to sit at bottom of board in opened matches"));
+    // pow->pwKeyName = gtk_check_button_new_with_label(_("Use SmartSit to sit at bottom of board in opened matches"));
     // gtk_box_pack_start(GTK_BOX(pwh), pow->pwKeyName, FALSE, FALSE, 0);
     // gtk_widget_set_tooltip_text(pow->pwKeyName,
     //                             _("(1) If you select a player to be player1 (the second player) "
@@ -935,13 +935,13 @@ append_display_options(optionswidget * pow)
     pwEdit = gtk_button_new_with_label(_("Edit"));
     g_signal_connect(G_OBJECT(pwEdit), "clicked",  G_CALLBACK(GTKCommandEditKeyNames), pow);//(void *) pAnalDetails);
     gtk_box_pack_start(GTK_BOX(pwh), pwEdit, FALSE, FALSE, 0);
-    AddText(pwh,_("Use SmartOpen to automatically sit at bottom of board"));
+    AddText(pwh,_("Use SmartSit to automatically sit at bottom of board"));
     gtk_widget_set_tooltip_text(pwh,
-                                _("SmartOpen assumes that you'd like to arrange the board so "
+                                _("SmartSit assumes that you'd like to arrange the board so "
                                   "you can sit at the bottom (i.e. so you can be player1, the "
                                   "second player). "
                                   "\n(1) LEARNING: If you select a player to be player1 "
-                                  "and sit at the bottom of the board, SmartOpen guesses that "
+                                  "and sit at the bottom of the board, SmartSit guesses that "
                                   "the player's name is one of your aliases, and adds it"
                                   "to a list of key player names (which you can edit here).  "
                                   "\n(2) APPLYING: When you open a new match from a file "

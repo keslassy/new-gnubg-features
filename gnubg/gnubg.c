@@ -20,7 +20,7 @@
 
 
 /*
-02/2023: Isaac Keslassy: introduced the "smart open" feature 
+02/2023: Isaac Keslassy: introduced the "SmartSit" feature 
 that enables users to automatically to sit at the bottom of 
 the board (i.e. as player1) in opened matches.
     
@@ -33,7 +33,7 @@ It works as follows:
     Each time te user swaps the player order to highlight some player
     and set this player at the bottom of the board, we add this 
     player's name to the list.
-3) When opening a new file, SmartOpen() automatically checks if player0 
+3) When opening a new file, SmartSit() automatically checks if player0 
     is a key player while player1 is not. In such a case, it swaps 
     their places.
 */
@@ -253,7 +253,7 @@ const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", 
 char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]={""};
 int keyNamesFirstEmpty=0;
 int fUseKeyNames=TRUE; 
-int fWithinSmartOpen=FALSE;
+int fWithinSmartSit=FALSE;
 int fCheckUpdateGTK = FALSE;
 int fTriggeredByRecordList=FALSE;
     /*quiz*/
@@ -5474,10 +5474,10 @@ CommandSwapPlayers(char *UNUSED(sz))
     (now still player0)
     VERSION2: also add if fUseKeyNames is not enabled yet, so users don't think they 
     need to add names manually. We only check that the permutation wasn't launched 
-    by the SmartOpen() function, which would mean the name is already in the list.
+    by the SmartSit() function, which would mean the name is already in the list.
     */
-    // if (fUseKeyNames && !fWithinSmartOpen) {
-    if (!fWithinSmartOpen) {
+    // if (fUseKeyNames && !fWithinSmartSit) {
+    if (!fWithinSmartSit) {
         // g_message("in CommandSwapPlayers: %s", ap[0].szName);
         AddKeyName(ap[0].szName);
     }
@@ -5536,15 +5536,15 @@ and makes sure to set the priority player as player 1,
 i.e. the player that moves towards the bottom of the screen.
 */
 extern void 
-SmartOpen(void)
+SmartSit(void)
 {
     // g_message("O: %s", ap[0].szName);
     // g_message("X: %s", ap[1].szName);
 
     if (NameIsKey(ap[0].szName) && !NameIsKey(ap[1].szName)) {
-        fWithinSmartOpen=TRUE;
+        fWithinSmartSit=TRUE;
         CommandSwapPlayers(NULL);
-        fWithinSmartOpen=FALSE;
+        fWithinSmartSit=FALSE;
     } 
 
     // g_message("O: %s", ap[0].szName);
