@@ -1594,6 +1594,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
     moverecord *pmr;
     int nMoves;
     int fStore_crawford;
+    int doAR=0;
 
     if (!CheckGameExists())
         return;
@@ -1604,12 +1605,15 @@ CommandAnalyseMatch(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesMatch(&lMatch);
 
+    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout)
+            doAR=1;
+
     /* if we analyze in the background, we turn on a global flag to disable all sorts of 
     buttons during the analysis*/
     if(fBackgroundAnalysis) {
         fBackgroundAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves); 
+        "feel free to browse and check the early analysis results."), nMoves*(1+doAR)); 
         ShowBoard(); /* hide unallowd toolbar items*/
 #if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
@@ -1619,7 +1623,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
         on the right side we see "n/nTotal"; so we update the text
         */
         // ProgressStartValue(_("Analysing match; move:"), nMoves);
-        ProgressStartValue(_("Analysing match"), nMoves);
+        ProgressStartValue(_("Analysing match"), nMoves*(1+doAR));
     }
 
     IniStatcontext(&scMatch);
@@ -1632,6 +1636,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
             IniStatcontext(&scMatch);
             break;
         }
+
         pmr = (moverecord *) ((listOLD *) pl->p)->plNext->p;
         g_assert(pmr->mt == MOVE_GAMEINFO);
         AddStatcontext(&pmr->g.sc, &scMatch);
@@ -1639,6 +1644,15 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     multi_debug("wait for all task: analysis");
     MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+
+    /*Post-analysis AutoRollout*/
+    if(doAR) {
+        cmark_match_rollout(&lMatch);
+        // CommandFirstGame(NULL);
+        // cmark_game_rollout(plGame);
+        // if (!fBackgroundAnalysisRunning)
+        //     CommandFirstMove(NULL);
+    }
 
     ProgressEnd();
 
@@ -1649,23 +1663,13 @@ CommandAnalyseMatch(char *UNUSED(sz))
 #if defined(USE_GTK)
         GTKRegenerateGames(); /* show menu items*/
 #endif        
-    }
-
-
+    } else {
 #if defined(USE_GTK)
     if (fX)
         ChangeGame(NULL);
 #endif
-    ms.fCrawford = fStore_crawford;
-
-    /*Post-analysis AutoRollout*/
-    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
-        // fX=0;
-        // CommandAnalyseRolloutMatch(NULL);
-        cmark_match_rollout(&lMatch);
-        CommandFirstGame(NULL);
-        // fX=1;
     }
+    ms.fCrawford = fStore_crawford;
 
     playSound(SOUND_ANALYSIS_FINISHED);
 }
@@ -2064,7 +2068,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
     g_free(ppm);
     g_free(ppci);
 
-    g_message("cmark_move_rollout, before RefreshMoveList");
+    // g_message("cmark_move_rollout, before RefreshMoveList");
     RefreshMoveList(&pmr->ml, NULL);
 
     if (pmr->n.iMove != UINT_MAX)
@@ -2838,7 +2842,8 @@ cmark_game_rollout(listOLD * game)
     if (game_is_last(game))
         pl_hint = game_add_pmr_hint(game);
 
-    ChangeGame(game);
+    if(!fBackgroundAnalysisRunning)
+        ChangeGame(game);
 
     for (pl = game->plNext; pl != game; pl = pl->plNext) {
         moverecord *pmr_prev;
@@ -2873,8 +2878,7 @@ cmark_game_rollout(listOLD * game)
             break;
         }
         if (fBackgroundAnalysisRunning){
-            g_message("update...");
-	        // UpdateProgressBar(NULL);
+            // g_message("update...");
             ProgressValueAdd(1);
         }
     }
