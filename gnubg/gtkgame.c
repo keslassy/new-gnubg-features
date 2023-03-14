@@ -4443,7 +4443,7 @@ static GtkItemFactoryEntry aife[] = {
      "/View/Toolbar/Text only", NULL},
     {N_("/_View/Full screen"), "F11", DoFullScreenMode, 0, "<CheckItem>", NULL},
     {N_("/_View/-"), NULL, NULL, 0, "<Separator>", NULL},
-    {N_("/_View/Play _Clockwise"), NULL, click_swapdirection, 0, "<CheckItem>", NULL},
+    {N_("/_View/Play _Clockwise"), NULL, ToggleClockwise, 0, "<CheckItem>", NULL},
 #if defined(USE_BOARD3D)
     {N_("/_View/-"), NULL, NULL, 0, "<Separator>", NULL},
     {N_("/_View/Switch to xD view"), NULL, SwitchDisplayMode, TOOLBAR_ACTION_OFFSET + MENU_OFFSET, NULL, NULL},

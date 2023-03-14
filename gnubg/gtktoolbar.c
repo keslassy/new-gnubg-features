@@ -165,6 +165,16 @@ ToolbarSetAnalyzeFile(GtkWidget * pwToolbar, const int f)
 // #endif
 // }
 
+
+extern void ToggleClockwise(void)
+{
+        gchar *sz = g_strdup_printf("set clockwise %s", fClockwise ? "off" : "on");
+        UserCommand(sz);
+        g_free(sz);
+        UserCommand("save settings");
+}
+
+// 
 // #if defined(USE_GTKUIMANAGER)
 // extern void
 // ToggleClockwise(GtkToggleAction * action, gpointer UNUSED(user_data))

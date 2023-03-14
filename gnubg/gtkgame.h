@@ -171,6 +171,7 @@ extern void ToggleDockPanels(GtkToggleAction * action, gpointer user_data);
 #else
 extern void ToggleDockPanels(gpointer p, guint n, GtkWidget * pw);
 #endif
+extern void ToggleClockwise(void);
 extern void GTKUndo(void);
 extern void UserCommand(const char *szCommand);
 extern void ShowToolbar(void);
