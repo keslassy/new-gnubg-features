@@ -760,7 +760,6 @@ GTKAddGame(moverecord * pmr)
     model = gtk_combo_box_get_model(GTK_COMBO_BOX(game_select_combo));
     last_game = gtk_tree_model_iter_n_children(model, NULL);
     GTKSetGame(last_game - 1);
-
     /* Update Crawford flag on the board */
     ms.fCrawford = pmr->g.fCrawford && pmr->g.fCrawfordGame;
     GTKSet(&ms.fCrawford);
@@ -778,14 +777,15 @@ GTKRegenerateGames(void)
         listOLD *plg = pl->p;
         GTKAddGame(plg->plNext->p);
     }
-
     GTKSetGame(i);
 }
 
 extern void
 GTKSetGame(int i)
 {
+
     gtk_combo_box_set_active(GTK_COMBO_BOX(game_select_combo), i);
+
 }
 
 static void

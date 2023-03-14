@@ -401,7 +401,7 @@ extern int nToolbarStyle;
 extern int nTutorSkillCurrent;
 
 extern int fBackgroundAnalysis; /* define whether to analyze in the background*/
-extern int fAnalysisRunning; /* when analyzing a match in background */
+extern int fBackgroundAnalysisRunning; /* when analyzing a match in background */
 #if defined(USE_BOARD3D)
 extern int fSync;
 extern int fResetSync;
@@ -1186,5 +1186,6 @@ extern movefilter ARAnalysisFilter;
 // extern int fAutoRolloutMove; /*For the "Checker play" frame button*/
 // extern int fAutoRolloutCube; /*For the "Cube decision" frame button*/
 extern void MoveListAutoRollout(movelist * pml, int keyIndex);
-
+// extern int fBackgroundAutoRollout; /* flag that AR is in background i.e. enables parallel browsing*/
+extern int fMyDebug;
 #endif	/* BACKGAMMON_H */

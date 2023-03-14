@@ -5281,7 +5281,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 
         /* initialize by saying there is no analysis running now in the background*/
         if(fBackgroundAnalysis)
-             fAnalysisRunning = FALSE;
+             fBackgroundAnalysisRunning = FALSE;
 
         /* fCheckUpdateGTK==TRUE means we postponed checking if there is an update to now*/
         if(fCheckUpdateGTK) {
@@ -8212,14 +8212,14 @@ GTKSet(void *p)
         /*disabling everything when we analyze a game in the background*/
 
         if(fBackgroundAnalysis){
-            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/FileMenu/"), !fAnalysisRunning);
-            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/EditMenu/"), !fAnalysisRunning);
-            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/"), !fAnalysisRunning);
-            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu/"), !fAnalysisRunning);
-            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/"), !fAnalysisRunning);
-            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/SettingsMenu/"), !fAnalysisRunning);
-            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GoMenu/"), !fAnalysisRunning);
-            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/HelpMenu/"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/FileMenu/"), !fBackgroundAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/EditMenu/"), !fBackgroundAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/"), !fBackgroundAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu/"), !fBackgroundAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/"), !fBackgroundAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/SettingsMenu/"), !fBackgroundAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GoMenu/"), !fBackgroundAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/HelpMenu/"), !fBackgroundAnalysisRunning);
         } 
 
 
@@ -8247,7 +8247,7 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_PREV_GAME), !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File/Match information"), !ListEmpty(&lMatch));
 
-        if (!fAnalysisRunning)
+        if (!fBackgroundAnalysisRunning)
             enable_sub_menu(gtk_item_factory_get_widget(pif, "/Analyse"), ms.gs == GAME_PLAYING);
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Analyse File"), TRUE);
@@ -8311,14 +8311,14 @@ GTKSet(void *p)
         /*disabling everything when we analyze a game in the background*/
 
         if(fBackgroundAnalysis){
-            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File"), !fAnalysisRunning);
-            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Edit"), !fAnalysisRunning);
-            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View"), !fAnalysisRunning);
-            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Game"), !fAnalysisRunning);
-            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse"), !fAnalysisRunning);
-            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Settings"), !fAnalysisRunning);
-            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Go"), !fAnalysisRunning);
-            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Help"), !fAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/File"), !fBackgroundAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Edit"), !fBackgroundAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/View"), !fBackgroundAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Game"), !fBackgroundAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse"), !fBackgroundAnalysisRunning);
+            gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Settings"), !fBackgroundAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Go"), !fBackgroundAnalysisRunning);
+            // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Help"), !fBackgroundAnalysisRunning);
         } 
         
 #endif       

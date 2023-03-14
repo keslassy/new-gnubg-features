@@ -241,8 +241,10 @@ int fBackgroundAnalysis = FALSE;
 /* if we analyze in the background, we turn on the following global flag to disable all sorts of 
 buttons during the analysis (e.g. eval, rollout, etc.), since we are not equipped for a second
 parallel analysis */
-int fAnalysisRunning = FALSE;
-
+int fBackgroundAnalysisRunning = FALSE;
+// /*we also turn on the following flag*/
+// int fBackgroundAutoRollout = FALSE;
+int fMyDebug=FALSE;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};

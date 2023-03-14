@@ -1258,31 +1258,24 @@ static void *ro_pUserData;
 static gboolean
 UpdateProgress(gpointer UNUSED(unused))
 {
-    // g_message("20-,fShowProgress=%d, ro_alternatives=%d",fShowProgress, ro_alternatives);
-    if (fShowProgress && ro_alternatives > 0) {
+    // g_message("fShowProgress=%d, ro_alternatives=%d",fShowProgress, ro_alternatives);
+    if (fShowProgress && ro_alternatives > 0 && !fBackgroundAnalysisRunning) {
         int alt;
-    // g_message("20-+");
 
         multi_debug("exclusive lock: update progress");
         MT_Exclusive();
-    // g_message("20");
 
         for (alt = 0; alt < ro_alternatives; ++alt) {
-    // g_message("21:alt=%d",alt);
             rolloutcontext *prc = &ro_apes[alt]->rc;
 
             (*ro_pfProgress) (aarMu, aarSigma, prc, aciLocal, initial_game_count, altGameCount[alt] - 1, alt,
                               ajiJSD[alt].nRank + 1, ajiJSD[alt].rJSD, fNoMore[alt], show_jsds, ro_fCubeRollout,
                               ro_pUserData);
-    // g_message("22");
         }
-    // g_message("23");
 
         MT_Release();
         multi_debug("exclusive release: update progress");
-    // g_message("24");
     }
-    // g_message("25");
     return TRUE;
 }
 
@@ -1540,7 +1533,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
                 (*apStdDev[alt])[i] = aarSigma[alt][i];
     }
 
-    if (fShowProgress && !fInterrupt
+    if (fShowProgress && !fInterrupt && !fBackgroundAnalysisRunning
 #if defined(USE_GTK)
         && !fX
 #endif

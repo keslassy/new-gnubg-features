@@ -721,7 +721,7 @@ CreateMoveListTools(hintdata * phd)
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0); 
 #endif
 
-            // g_message("GTK chequer: fAnalysisRunning=%d",fAnalysisRunning);
+            // g_message("GTK chequer: fBackgroundAnalysisRunning=%d",fBackgroundAnalysisRunning);
     /* some buttons are always disabled anyway */
         gtk_widget_set_sensitive(pwMove, FALSE);
     gtk_widget_set_sensitive(pwCopy, FALSE);
@@ -729,17 +729,17 @@ CreateMoveListTools(hintdata * phd)
 
     /* We want to disable particularly when we are in the middle of running an analysis
     in the background*/
-    gtk_widget_set_sensitive(pwMWC, ms.nMatchTo && !fAnalysisRunning);
+    gtk_widget_set_sensitive(pwMWC, ms.nMatchTo && !fBackgroundAnalysisRunning);
 
-    gtk_widget_set_sensitive(pwRollout, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwRollout, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwRolloutSettings, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwAutoRollout, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwEval, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwEvalSettings, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwMove, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwCopy, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwScoreMap, !fAnalysisRunning);
+    gtk_widget_set_sensitive(pwRollout, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwRollout, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwRolloutSettings, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwAutoRollout, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwEval, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwEvalSettings, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwMove, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwCopy, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwScoreMap, !fBackgroundAnalysisRunning);
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwMWC), fOutputMWC);
 
@@ -835,19 +835,19 @@ CheckHintButtons(hintdata * phd)
     /* We want to disable particularly when we are in the middle of running an analysis
     in the background*/
 
-    gtk_widget_set_sensitive(phd->pwMove, c == 1 && phd->fButtonsValid && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwCopy, c && phd->fButtonsValid && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwTempMap, c && phd->fButtonsValid && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwCmark, c && phd->fButtonsValid && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwRollout, c && phd->fButtonsValid && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwRolloutPresets, c && phd->fButtonsValid && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwEval, c && phd->fButtonsValid && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwEvalPly, c && phd->fButtonsValid && !fAnalysisRunning);
-    // gtk_widget_set_sensitive(phd->pwAutoRollout, phd->fButtonsValid && !fAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwMove, c == 1 && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwCopy, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwTempMap, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwCmark, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwRollout, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwRolloutPresets, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwEval, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwEvalPly, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    // gtk_widget_set_sensitive(phd->pwAutoRollout, phd->fButtonsValid && !fBackgroundAnalysisRunning);
 
     bd = BOARD(pwBoard)->board_data;
-    gtk_widget_set_sensitive(phd->pwScoreMap, (bd->diceShown == DICE_ON_BOARD) && !fAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwAutoRollout, !fAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwScoreMap, (bd->diceShown == DICE_ON_BOARD) && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwAutoRollout, !fBackgroundAnalysisRunning);
 
     return c;
 }

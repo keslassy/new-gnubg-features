@@ -1728,21 +1728,21 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
     /* We want to disable some buttons particularly when we are in the middle of running an analysis
     in the background*/
 
-    gtk_widget_set_sensitive(pwRollout, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwEval, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwEvalSettings, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pw, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwRolloutSettings, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwRolloutPresets, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwCopy, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwTempMap, !fAnalysisRunning);
-    gtk_widget_set_sensitive(pwScoreMap, !fAnalysisRunning);
+    gtk_widget_set_sensitive(pwRollout, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwEval, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwEvalSettings, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pw, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwRolloutSettings, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwRolloutPresets, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwCopy, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwTempMap, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwScoreMap, !fBackgroundAnalysisRunning);
 
 
     // Note: evalAtMoney should always be false here.
     gtk_widget_set_sensitive(pwMWC, pchd->ms.nMatchTo && !pchd->evalAtMoney); //MWC not available in money play, i.e.
                                                 // either in true money play or in a hypothetical one
-    gtk_widget_set_sensitive(pwMoneyEval, pchd->ms.nMatchTo && !fAnalysisRunning); //i.e., the Money Eval
+    gtk_widget_set_sensitive(pwMoneyEval, pchd->ms.nMatchTo && !fBackgroundAnalysisRunning); //i.e., the Money Eval
                                                           // button is not available at money play since it doesn't help there
     //gtk_widget_set_sensitive(pwTempMap, !pchd->evalAtMoney);  
     gtk_widget_set_sensitive(pwCmark, !pchd->evalAtMoney);   

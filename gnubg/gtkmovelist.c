@@ -209,6 +209,7 @@ MoveListUpdate(const hintdata * phd)
 
     GetMatchStateCubeInfo(&ci, &ms);
     rBest = pml->amMoves[0].rScore;
+    g_message("rBest=%f",rBest);
 
     if (!showWLTree)
         gtk_tree_view_column_set_title(gtk_tree_view_get_column(GTK_TREE_VIEW(phd->pwMoves), col),

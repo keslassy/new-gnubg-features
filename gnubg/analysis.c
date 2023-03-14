@@ -1362,9 +1362,6 @@ AnalyzeGame(listOLD * plGame, int wait)
         if (result == -1)
             IniStatcontext(psc);
 
-        // cmark_game_rollout(plGame);
-
-
         return result;
     } else
         return 0;
@@ -1508,11 +1505,19 @@ cmark_match_rollout(listOLD * match)
     }
 }
 
+// static void WhereAmI(int index) {
+//     // pmr = (moverecord *) ((listOLD *) pl->p)->plNext->p;
+//     moverecord * pmr = (moverecord *) plGame->plNext->plNext->p;
+//     g_message("move %d:%d/%d",index,pmr->anDice[0],pmr->anDice[1]);
+// }
+
 extern void
 CommandAnalyseGame(char *UNUSED(sz))
 {
     int nMoves;
     int fStore_crawford;
+    // int fShowProgressOld;
+    int doAR=0;
 
     if (!CheckGameExists())
         return;
@@ -1523,42 +1528,58 @@ CommandAnalyseGame(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesGame(plGame);
 
+    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout)
+        doAR=1;
+
     /* see explanations in CommandAnalyseMatch()*/
     if(fBackgroundAnalysis) {
-        fAnalysisRunning = TRUE;
+        fBackgroundAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves);        
+        "feel free to browse and check the early analysis results."), nMoves*(1+doAR));        
         ShowBoard(); /* hide unallowd toolbar items*/
 #if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
 #endif  
     } else
-        ProgressStartValue(_("Analysing game"), nMoves);
+        ProgressStartValue(_("Analysing game"), nMoves*(1+doAR));
 
     AnalyzeGame(plGame, TRUE);
+
+    /*Post-analysis AutoRollout*/
+    if(doAR) {
+        // CommandAnalyseRolloutGame(NULL);
+        // fShowProgressOld=fShowProgress; 
+        // if (fBackgroundAnalysisRunning) {
+        //     fShowProgress=0;
+        // }
+        cmark_game_rollout(plGame);
+        // if (fBackgroundAnalysisRunning)
+        //     // fShowProgress=fShowProgressOld; 
+        // else {
+        if (!fBackgroundAnalysisRunning)
+            CommandFirstMove(NULL);
+    }
 
     ProgressEnd();
 
     if(fBackgroundAnalysis) {
-        fAnalysisRunning = FALSE;
+        fBackgroundAnalysisRunning = FALSE;
         ShowBoard(); /* unhide unallowd toolbar items*/
 #if defined(USE_GTK)
-        GTKRegenerateGames(); /* unhide unallowed menu items*/
+        // fMyDebug=TRUE;
+        GTKRegenerateGames(); /* unhide unallowed menu items; problem: it rebuilds 
+                the games and therefore sends us back to the first game move, even
+                if we were browsing elsewhere */
+        // fMyDebug=FALSE;
 #endif  
-    }
-
+    } else {
 #if defined(USE_GTK)
-    if (fX)
-        ChangeGame(NULL);
+        if (fX)
+            ChangeGame(NULL);
 #endif
-    ms.fCrawford = fStore_crawford;
-
-    /*Post-analysis AutoRollout*/
-    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout) {
-        // CommandAnalyseRolloutGame(NULL);
-        cmark_game_rollout(plGame);
-        CommandFirstMove(NULL);
     }
+
+    ms.fCrawford = fStore_crawford;
 
     playSound(SOUND_ANALYSIS_FINISHED);
 
@@ -1586,7 +1607,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
     /* if we analyze in the background, we turn on a global flag to disable all sorts of 
     buttons during the analysis*/
     if(fBackgroundAnalysis) {
-        fAnalysisRunning = TRUE;
+        fBackgroundAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
         "feel free to browse and check the early analysis results."), nMoves); 
         ShowBoard(); /* hide unallowd toolbar items*/
@@ -1622,7 +1643,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
     ProgressEnd();
 
     if(fBackgroundAnalysis) {
-        fAnalysisRunning = FALSE;
+        fBackgroundAnalysisRunning = FALSE;
          // CalculateBoard();
         ShowBoard(); /* show toolbar items*/
 #if defined(USE_GTK)
@@ -2000,7 +2021,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
     GSList *pl = NULL;
     gint c;
     guint j;
-    gint res;
+    gint res=0;
     move **ppm;
     void *p;
     GSList *list = NULL;
@@ -2032,15 +2053,18 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
         ppci[j] = &ci;
         FormatMove(asz[j], msBoard(), m->anMove);
     }
-
-    RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
+    
+    if (!fBackgroundAnalysisRunning)
+        RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
     ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
-    res = RolloutProgressEnd(&p, destroy);
+    if (!fBackgroundAnalysisRunning)
+        res = RolloutProgressEnd(&p, destroy);
 
     g_free(asz);
     g_free(ppm);
     g_free(ppci);
 
+    g_message("cmark_move_rollout, before RefreshMoveList");
     RefreshMoveList(&pmr->ml, NULL);
 
     if (pmr->n.iMove != UINT_MAX)
@@ -2050,12 +2074,15 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
 
                 break;
             }
+    
+    if (!fBackgroundAnalysisRunning) {
 #if defined(USE_GTK)
-    if (fX)
-        ChangeGame(NULL);
-    else
+        if (fX)
+            ChangeGame(NULL);
+        else
 #endif
-        ShowBoard();
+            ShowBoard();
+    }
     return res == 0 ? c : res;
 }
 
@@ -2082,8 +2109,6 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.pesCube = &esAnalysisCube;
         md.aamf = aamfAnalysis;
         RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
-
-    // cmark_move_rollout(md.pmr, TRUE);
 
 #if defined(USE_GTK)
         if (fX)
@@ -2824,8 +2849,10 @@ cmark_game_rollout(listOLD * game)
 
         switch (pmr->mt) {
         case MOVE_NORMAL:
-            if (!move_change(game, pl->plPrev))
-                goto finished;
+            if (!fBackgroundAnalysisRunning) {
+                if (!move_change(game, pl->plPrev))
+                    goto finished;
+            }
             if (cmark_move_rollout(pmr, TRUE) < -1)
                 goto finished;
             if (cmark_cube_rollout(pmr, TRUE) < -1)
@@ -2835,13 +2862,20 @@ cmark_game_rollout(listOLD * game)
             pmr_prev = game->plPrev->p;
             if (pmr_prev->mt == MOVE_DOUBLE)
                 break;
-            if (!move_change(game, pl->plPrev))
-                goto finished;
+            if (!fBackgroundAnalysisRunning) {
+                if (!move_change(game, pl->plPrev))
+                    goto finished;
+            }            
             if (cmark_cube_rollout(pmr, TRUE) < -1)
                 goto finished;
             break;
         default:
             break;
+        }
+        if (fBackgroundAnalysisRunning){
+            g_message("update...");
+	        // UpdateProgressBar(NULL);
+            ProgressValueAdd(1);
         }
     }
     if (pl_hint)
