@@ -1462,36 +1462,28 @@ RolloutGeneral(ConstTanBoard * apBoard,
     ro_pUserData = pUserData;
 
     active_alternatives = ro_alternatives;
-    // g_message("14a, ro_alternatives=%d",ro_alternatives);
 
     /* check if rollout alternatives are done, but only when extending
      * all candidates */
     if (previous_rollouts == active_alternatives) {
-    // g_message("14a1");
         if (show_jsds) {
-    // g_message("14a2");
             check_jsds(&active_alternatives);
         }
         if (rcRollout.fStopOnSTD) {
-    // g_message("14a3");
             check_sds(&active_alternatives);
         }
     }
-    // g_message("14b");
 
     UpdateProgress(NULL);
-    // g_message("15");
 
     if (active_alternatives > 1 || (!rcRollout.fStopOnJsd && active_alternatives > 0)) {
         multi_debug("rollout adding tasks");
         mt_add_tasks(MT_GetNumThreads(), RolloutLoopMT, NULL, NULL);
-    // g_message("15b");
 
         multi_debug("rollout waiting for tasks to complete");
         MT_WaitForTasks(UpdateProgress, 2000, fAutoSaveRollout);
         multi_debug("rollout finished waiting for tasks to complete");
     }
-    // g_message("16");
 
     /* Make sure final output is up to date */
 #if defined(USE_GTK)
@@ -1502,13 +1494,11 @@ RolloutGeneral(ConstTanBoard * apBoard,
 
     if (!fInterrupt)
         UpdateProgress(NULL);
-    // g_message("17");
 
     /* Signal to UpdateProgress() called from pending events that no
      * more progress should be displayed.
      */
     ro_alternatives = -1;
-    // g_message("18");
 
     for (alt = 0, trialsDone = 0; alt < alternatives; ++alt) {
         if (apes[alt]->rc.nGamesDone > trialsDone)

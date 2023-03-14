@@ -2111,11 +2111,11 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
         FormatMove(asz[j], msBoard(), m->anMove);
     }
     
-    if (!fGameARRunning)
-        RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
+    // if (!fGameARRunning) <-- moved to the function itself
+    RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
     ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
-    if (!fGameARRunning)
-        res = RolloutProgressEnd(&p, destroy);
+    // if (!fGameARRunning)
+    res = RolloutProgressEnd(&p, destroy);
 
     g_free(asz);
     g_free(ppm);
@@ -2838,14 +2838,14 @@ cmark_cube_rollout(moverecord * pmr, gboolean destroy)
     GetMatchStateCubeInfo(&ci, &ms);
     FormatCubePositions(&ci, asz);
 
-    if (!fGameARRunning)
-        RolloutProgressStart(&ci, 2, aarsStatistics, &pes->rc, asz, TRUE, &p);
+    // if (!fGameARRunning)
+    RolloutProgressStart(&ci, 2, aarsStatistics, &pes->rc, asz, TRUE, &p);
 
     GeneralCubeDecisionR(aarOutput, aarStdDev, aarsStatistics,
                          (ConstTanBoard) msBoard(), &ci, &pes->rc, pes, RolloutProgress, p);
     
-    if (!fGameARRunning)
-        res = RolloutProgressEnd(&p, destroy);
+    // if (!fGameARRunning)
+    res = RolloutProgressEnd(&p, destroy);
 
     memcpy(pmr->CubeDecPtr->aarOutput, aarOutput, 2 * NUM_ROLLOUT_OUTPUTS * sizeof(float));
     memcpy(pmr->CubeDecPtr->aarStdDev, aarStdDev, 2 * NUM_ROLLOUT_OUTPUTS * sizeof(float));
