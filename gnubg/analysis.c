@@ -1586,15 +1586,16 @@ CommandAnalyseGame(char *UNUSED(sz))
     //     doAR=1;
 
     /* see explanations in CommandAnalyseMatch()*/
-    if(fBackgroundAnalysis) {
+#if defined(USE_GTK)
+    if(fBackgroundAnalysis && fX) {
         fBackgroundAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves*(1+doAR));        
+            "feel free to browse and check the early analysis results."), 
+            nMoves*(1+doAR));        
         ShowBoard(); /* hide unallowd toolbar items*/
-#if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
-#endif  
     } else
+#endif  
         ProgressStartValue(_("Analysing game"), nMoves*(1+doAR));
 
     AnalyzeGame(plGame, TRUE);
@@ -1618,20 +1619,19 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis) {
-        fBackgroundAnalysisRunning = FALSE;
-        ShowBoard(); /* unhide unallowd toolbar items*/
 #if defined(USE_GTK)
-        GTKRegenerateGames(); /* unhide unallowed menu items; problem: it rebuilds 
-                the games and therefore sends us back to the first game move, even
-                if we were browsing elsewhere */
-#endif  
-    } else {
-#if defined(USE_GTK)
-        if (fX)
+    if (fX) {
+        if (fBackgroundAnalysis) {
+            fBackgroundAnalysisRunning = FALSE;
+            ShowBoard(); /* unhide unallowd toolbar items*/
+            GTKRegenerateGames(); /* unhide unallowed menu items; problem: it rebuilds 
+                    the games and therefore sends us back to the first game move, even
+                    if we were browsing elsewhere */
+        } else 
             ChangeGame(NULL);
-#endif
     }
+#endif
+    
 
     ms.fCrawford = fStore_crawford;
 
@@ -1648,7 +1648,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
     moverecord *pmr;
     int nMoves;
     int fStore_crawford;
-    int doAR=0;
+    int doAR=(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout);
 
     if (!CheckGameExists())
         return;
@@ -1659,20 +1659,22 @@ CommandAnalyseMatch(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesMatch(&lMatch);
 
-    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout)
-            doAR=1;
+    // if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout)
+    //         doAR=1;
 
     /* if we analyze in the background, we turn on a global flag to disable all sorts of 
     buttons during the analysis*/
-    if(fBackgroundAnalysis) {
+#if defined(USE_GTK)
+    if(fBackgroundAnalysis && fX) {
         fBackgroundAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves*(1+doAR)); 
+            "feel free to browse and check the early analysis results."), 
+            nMoves*(1+doAR)); 
         ShowBoard(); /* hide unallowd toolbar items*/
-#if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
+    } else 
 #endif  
-    } else {
+    {
         /* this was supposed to show nMoves, but it's not used at the end;
         on the right side we see "n/nTotal"; so we update the text
         */
@@ -1705,26 +1707,21 @@ CommandAnalyseMatch(char *UNUSED(sz))
         cmark_match_rollout(&lMatch);
         fGameARRunning=FALSE;
         // CommandFirstGame(NULL);
-        // cmark_game_rollout(plGame);
-        // if (!fBackgroundAnalysisRunning)
-        //     CommandFirstMove(NULL);
     }
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis) {
-        fBackgroundAnalysisRunning = FALSE;
-         // CalculateBoard();
-        ShowBoard(); /* show toolbar items*/
 #if defined(USE_GTK)
-        GTKRegenerateGames(); /* show menu items*/
-#endif        
-    } else {
-#if defined(USE_GTK)
-    if (fX)
-        ChangeGame(NULL);
-#endif
+    if (fX) {
+        if(fBackgroundAnalysis) {
+            fBackgroundAnalysisRunning = FALSE;
+            // CalculateBoard();
+            ShowBoard(); /* show toolbar items*/
+            GTKRegenerateGames(); /* show menu items*/
+        } else
+            ChangeGame(NULL);
     }
+#endif
     ms.fCrawford = fStore_crawford;
 
     playSound(SOUND_ANALYSIS_FINISHED);
@@ -2863,8 +2860,8 @@ cmark_cube_rollout(moverecord * pmr, gboolean destroy)
             ChangeGame(NULL);
 #endif
         ShowBoard();
-        return res;
     }
+    return res;
 }
 
 static int

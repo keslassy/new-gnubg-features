@@ -20,6 +20,9 @@
 
 
 /*
+03/2023: Isaac Keslassy: made the SmartSit feature mandatory. 
+Thanks to Philippe Michel for the suggestion!
+
 02/2023: Isaac Keslassy: introduced the "SmartSit" feature 
 that enables users to automatically to sit at the bottom of 
 the board (i.e. as player1) in opened matches.

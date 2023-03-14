@@ -62,7 +62,7 @@
 */
 
 /* 
-01/2023: Isaac Keslassy:
+01/2023: Isaac Keslassy: several ScoreMap improvements:
 - new Settings>Options>ScoreMap panel where all default options can be configured
     -> set as a frame
     -> later moved to Settings>Analysis>ScoreMap

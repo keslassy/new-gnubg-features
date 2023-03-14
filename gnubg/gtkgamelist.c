@@ -37,6 +37,7 @@
     3) When we right-click on a position and want to add it to some arbitrary position
     category, we need the error for the position. We do so in double_skill as in the 
     first case above.
+Thanks to Wayne Joseph for the feedback.
 */
 
 

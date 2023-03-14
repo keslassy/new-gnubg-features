@@ -18,11 +18,17 @@
  * $Id: gtkgame.c,v 1.992 2023/01/18 21:49:36 plm Exp $
  */
 /*
-02/2023: Isaac Keslassy: 
-- introduced the "mwc plot" feature, together with two ways 
+03/2023: Isaac Keslassy: to check GNUBG updates, we now make it opt-in rather 
+than opt-out: a month after starting GNUBG, the user is asked whether to check 
+updates online. Thanks to Russ Allbery for the feedback!
+
+02/2023: Isaac Keslassy: MWC plot + automatic update check:
+
+(1) introduced the "mwc plot" feature, together with two ways 
 of launching it graphically: a sub-menu command ("Analyze > Plot MWC"), and a button
 in "Match or session statistics". 
-- introduced an automatic check online of the latest version. It is only done 
+
+(2) introduced an automatic check online of the latest version. It is only done 
 once a week. If there is a newer version, it tells the user, who can click and 
 go to the download website. The user can disable it, either in the 
 Settings>Options>Misc, or the first time the window appears. 
