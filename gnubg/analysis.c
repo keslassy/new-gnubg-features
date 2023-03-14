@@ -2839,10 +2839,11 @@ cmark_cube_rollout(moverecord * pmr, gboolean destroy)
     pes = setup_cube_rollout(&pmr->CubeDecPtr->esDouble, pmr, aarOutput, aarStdDev);
 
     GetMatchStateCubeInfo(&ci, &ms);
-
     FormatCubePositions(&ci, asz);
+
     if (!fGameARRunning)
         RolloutProgressStart(&ci, 2, aarsStatistics, &pes->rc, asz, TRUE, &p);
+
     GeneralCubeDecisionR(aarOutput, aarStdDev, aarsStatistics,
                          (ConstTanBoard) msBoard(), &ci, &pes->rc, pes, RolloutProgress, p);
     
