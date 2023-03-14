@@ -49,8 +49,8 @@ extern void
 extern void
  ToolbarSetPlaying(GtkWidget * pwToolbar, const int f);
 
-extern void
- ToolbarSetClockwise(GtkWidget * pwToolbar, const int f);
+// extern void
+//  ToolbarSetClockwise(GtkWidget * pwToolbar, const int f);
 
 extern GtkWidget *image_from_xpm_d(char **xpm, GtkWidget * pw);
 

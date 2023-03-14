@@ -189,14 +189,15 @@
 	    "</menu>" \
 	    \
 	    "<menu name='SettingsMenu' action='SettingsMenuAction'>" \
+	      "<menuitem name='Options' action='SettingsOptionsAction' />" \
+	      "<separator/>" \
 	      "<menuitem name='Analysis' action='SettingsAnalysisAction' />" \
-	      "<menuitem name='BoardAppearance' action='SettingsBoardAppearanceAction' />" \
-	      "<menuitem name='Export' action='SettingsExportAction' />" \
-	      "<menuitem name='Players' action='SettingsPlayersAction' />" \
 	      "<menuitem name='Rollouts' action='SettingsRolloutsAction' />" \
 	      "<separator/>" \
-	      "<menuitem name='Options' action='SettingsOptionsAction' />" \
+	      "<menuitem name='BoardAppearance' action='SettingsBoardAppearanceAction' />" \
+	      "<menuitem name='Players' action='SettingsPlayersAction' />" \
 	      "<menuitem name='Language' action='SettingsLanguageAction' />" \
+	      "<menuitem name='Export' action='SettingsExportAction' />" \
 	    "</menu>" \
 	    \
 	    "<menu name='GoMenu' action='GoMenuAction'>" \
@@ -231,12 +232,13 @@
 	    "<toolitem name='Reject' action='RejectAction' />" \
 	    "<toolitem name='Double' action='DoubleAction' />" \
 	    "<toolitem name='Resign' action='ResignAction' />" \
-	    "<toolitem name='EndGame' action='EndGameAction' />" \
 	    "<separator/>" \
 	    "<toolitem name='Undo' action='UndoAction' />" \
 	    "<toolitem name='Hint' action='HintAction' />" \
 	    "<toolitem name='EditPosition' action='EditPositionAction' />" \
-	    "<toolitem name='PlayClockwise' action='PlayClockwiseAction' />" \
+	    "<separator/>" \
+	    "<toolitem name='Analyse' action='AnalyseCurrentAction' />" \
+	    "<toolitem name='Analyse File' action='AnalyseFileAction' />" \
 	    "<separator expand='true'/>" \
 	    "<toolitem name='PreviousMarkedMove' action='GoPreviousMarkedMoveAction' />" \
 	    "<toolitem name='PreviousCMarkedMove' action='GoPreviousCMarkedMoveAction' />" \

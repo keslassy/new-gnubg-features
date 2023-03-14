@@ -2621,7 +2621,7 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
         board_create_pixmaps(pwBoard, bd);
         gtk_widget_queue_draw(bd->drawing_area);
 
-        ToolbarSetClockwise(pwToolbar, fClockwise);
+        // ToolbarSetClockwise(pwToolbar, fClockwise);
 
         return 0;
     }
