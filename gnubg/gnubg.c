@@ -244,7 +244,6 @@ parallel analysis */
 int fBackgroundAnalysisRunning = FALSE;
 /*AR flags*/
 int fGameARRunning = FALSE;
-// int fMyDebug=FALSE;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
@@ -274,10 +273,7 @@ int fQuietNewMatch=0;
 // qNow.position=(char *)malloc(sizeof(char) * (200));
 // qNow.position=malloc(200);
 quizdecision qDecision=QUIZ_UNKNOWN;
-/* ***** AutoRollouts ****** */
-// int fAutoRollout=TRUE;
-// int fAutoRolloutClose=TRUE;
-// int fAutoRolloutMistake=TRUE;
+
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */

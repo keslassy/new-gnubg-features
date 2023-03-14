@@ -1179,15 +1179,9 @@ extern int fTriggeredByRecordList; /* whether history plot is launched from reco
 extern void UserCommand2(const char *szCommand); /* UserCommand is GTK-only, this function also works outside GTK*/
 
 /* ***** AutoRollouts ****** */
-// extern int fAutoRollout;
-// extern int fAutoRolloutClose;
-// extern int fAutoRolloutMistake;
 extern movefilter ARAnalysisFilter;
-// extern int fAutoRolloutMove; /*For the "Checker play" frame button*/
-// extern int fAutoRolloutCube; /*For the "Cube decision" frame button*/
 extern void MoveListAutoRollout(movelist * pml, int keyIndex);
 extern int fGameARRunning; /* flag that AR is running for game or match: 
     in post-eval Auto-Rollout, we want to avoid having dozens of windows pop up 
     for each game/match analysis; of course this could be changed if needed*/
-// extern int fMyDebug;
 #endif	/* BACKGAMMON_H */

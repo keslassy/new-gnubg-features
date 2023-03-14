@@ -2251,12 +2251,12 @@ EvalChanged(GtkWidget * UNUSED(pw), evalwidget * pew)
 
 
     if (pew->fMoveFilter) {
-        g_message("move changed?");
+        // g_message("move changed?");
         moveNeedsMFWidget=(ecCurrent.nPlies || ecCurrent.fAutoRollout);
         gtk_widget_set_sensitive(latestMFWidget, moveNeedsMFWidget || cubeNeedsMFWidget);
         // gtk_widget_set_sensitive(GTK_WIDGET(pew->pwMoveFilter), ecCurrent.nPlies || ecCurrent.fAutoRollout);
     } else {
-        g_message("cube changed?");
+        // g_message("cube changed?");
         cubeNeedsMFWidget=(ecCurrent.fAutoRollout);
         gtk_widget_set_sensitive(latestMFWidget, moveNeedsMFWidget || cubeNeedsMFWidget);
         // g_message("sensitive? %d",gtk_widget_get_sensitive(GTK_WIDGET(aw.pAnalDetailSettings1->pwChequer->fMoveFilter)));
@@ -2428,9 +2428,9 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     gtk_container_add(GTK_CONTAINER(pwFrame2),
                       pew->pwAutoRollout = gtk_check_button_new_with_label(_("Use AutoRollout")));
-    g_message("%d",pec->fCubeful);
-    g_message("%f",pec->rNoise);
-    g_message("%d",pec->fAutoRollout);            
+    // g_message("%d",pec->fCubeful);
+    // g_message("%f",pec->rNoise);
+    // g_message("%d",pec->fAutoRollout);            
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
     gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(ARHelp));
 
@@ -2722,7 +2722,7 @@ static void
 SummaryMenuActivate(GtkComboBox * box, AnalysisDetails * pAnalDetails)
 {
     int selected = gtk_combo_box_get_active(box) + (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
-        g_message("SummaryMenuActivate: selected=%d",selected);
+        // g_message("SummaryMenuActivate: selected=%d",selected);
     if (selected == NUM_SETTINGS)
         return;                 /* user defined */
 

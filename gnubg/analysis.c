@@ -1622,11 +1622,9 @@ CommandAnalyseGame(char *UNUSED(sz))
         fBackgroundAnalysisRunning = FALSE;
         ShowBoard(); /* unhide unallowd toolbar items*/
 #if defined(USE_GTK)
-        // fMyDebug=TRUE;
         GTKRegenerateGames(); /* unhide unallowed menu items; problem: it rebuilds 
                 the games and therefore sends us back to the first game move, even
                 if we were browsing elsewhere */
-        // fMyDebug=FALSE;
 #endif  
     } else {
 #if defined(USE_GTK)
