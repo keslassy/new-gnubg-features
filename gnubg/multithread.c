@@ -376,7 +376,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
                         pmr2 = get_current_moverecord(NULL);
                         FormatMove(tmp2, msBoard(), pmr2->n.anMove);
                         // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
-                        if (pwMoveAnalysis!=NULL)
+                        // if (pwMoveAnalysis!=NULL)
                             // g_message("new results");
 #if defined(USE_GTK)
                         if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
