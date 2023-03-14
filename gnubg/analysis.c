@@ -2831,7 +2831,7 @@ cmark_cube_rollout(moverecord * pmr, gboolean destroy)
     rolloutstat aarsStatistics[2][2];
     gchar asz[2][FORMATEDMOVESIZE];
     void *p;
-    int res;
+    int res=0;
 
     if (!pmr->CubeDecPtr || pmr->CubeDecPtr->cmark != CMARK_ROLLOUT)
         return 0;
@@ -2841,11 +2841,13 @@ cmark_cube_rollout(moverecord * pmr, gboolean destroy)
     GetMatchStateCubeInfo(&ci, &ms);
 
     FormatCubePositions(&ci, asz);
-    RolloutProgressStart(&ci, 2, aarsStatistics, &pes->rc, asz, TRUE, &p);
+    if (!fGameARRunning)
+        RolloutProgressStart(&ci, 2, aarsStatistics, &pes->rc, asz, TRUE, &p);
     GeneralCubeDecisionR(aarOutput, aarStdDev, aarsStatistics,
                          (ConstTanBoard) msBoard(), &ci, &pes->rc, pes, RolloutProgress, p);
-
-    res = RolloutProgressEnd(&p, destroy);
+    
+    if (!fGameARRunning)
+        res = RolloutProgressEnd(&p, destroy);
 
     memcpy(pmr->CubeDecPtr->aarOutput, aarOutput, 2 * NUM_ROLLOUT_OUTPUTS * sizeof(float));
     memcpy(pmr->CubeDecPtr->aarStdDev, aarStdDev, 2 * NUM_ROLLOUT_OUTPUTS * sizeof(float));
@@ -2854,13 +2856,14 @@ cmark_cube_rollout(moverecord * pmr, gboolean destroy)
         memcpy(&pmr->CubeDecPtr->esDouble.rc, &rcRollout, sizeof(rcRollout));
 
     pmr->CubeDecPtr->esDouble.et = EVAL_ROLLOUT;
-
+    if (!fGameARRunning) {
 #if defined(USE_GTK)
-    if (fX)
-        ChangeGame(NULL);
+        if (fX)
+            ChangeGame(NULL);
 #endif
-    ShowBoard();
-    return res;
+        ShowBoard();
+        return res;
+    }
 }
 
 static int
