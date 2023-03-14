@@ -900,7 +900,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                         return -1;
                     }
                     MT_Exclusive();
-                    CopyMoveList(&pmr->ml, &ml);
+                    CopyMoveList(&pmr->ml, &ml); /*! clang+LeakSanitizer complain about an unfreed malloc...*/
                     if (ml.cMoves){
                         g_free(ml.amMoves);
                     }
