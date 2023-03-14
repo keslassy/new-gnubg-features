@@ -1259,7 +1259,7 @@ static gboolean
 UpdateProgress(gpointer UNUSED(unused))
 {
     // g_message("fShowProgress=%d, ro_alternatives=%d",fShowProgress, ro_alternatives);
-    if (fShowProgress && ro_alternatives > 0 && !fBackgroundAnalysisRunning) {
+    if (fShowProgress && ro_alternatives > 0 && !fGameARRunning) {
         int alt;
 
         multi_debug("exclusive lock: update progress");
@@ -1533,7 +1533,7 @@ RolloutGeneral(ConstTanBoard * apBoard,
                 (*apStdDev[alt])[i] = aarSigma[alt][i];
     }
 
-    if (fShowProgress && !fInterrupt && !fBackgroundAnalysisRunning
+    if (fShowProgress && !fInterrupt && !fGameARRunning
 #if defined(USE_GTK)
         && !fX
 #endif

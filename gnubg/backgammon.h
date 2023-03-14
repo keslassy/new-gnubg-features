@@ -1186,6 +1186,8 @@ extern movefilter ARAnalysisFilter;
 // extern int fAutoRolloutMove; /*For the "Checker play" frame button*/
 // extern int fAutoRolloutCube; /*For the "Cube decision" frame button*/
 extern void MoveListAutoRollout(movelist * pml, int keyIndex);
-// extern int fBackgroundAutoRollout; /* flag that AR is in background i.e. enables parallel browsing*/
-extern int fMyDebug;
+extern int fGameARRunning; /* flag that AR is running for game or match: 
+    in post-eval Auto-Rollout, we want to avoid having dozens of windows pop up 
+    for each game/match analysis; of course this could be changed if needed*/
+// extern int fMyDebug;
 #endif	/* BACKGAMMON_H */

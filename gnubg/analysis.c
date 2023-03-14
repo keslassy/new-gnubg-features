@@ -1517,7 +1517,7 @@ CommandAnalyseGame(char *UNUSED(sz))
     int nMoves;
     int fStore_crawford;
     // int fShowProgressOld;
-    int doAR=0;
+    int doAR=(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout);
 
     if (!CheckGameExists())
         return;
@@ -1528,8 +1528,8 @@ CommandAnalyseGame(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesGame(plGame);
 
-    if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout)
-        doAR=1;
+    // if(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout)
+    //     doAR=1;
 
     /* see explanations in CommandAnalyseMatch()*/
     if(fBackgroundAnalysis) {
@@ -1547,6 +1547,7 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     /*Post-analysis AutoRollout*/
     if(doAR) {
+        fGameARRunning=TRUE;
         // CommandAnalyseRolloutGame(NULL);
         // fShowProgressOld=fShowProgress; 
         // if (fBackgroundAnalysisRunning) {
@@ -1556,8 +1557,9 @@ CommandAnalyseGame(char *UNUSED(sz))
         // if (fBackgroundAnalysisRunning)
         //     // fShowProgress=fShowProgressOld; 
         // else {
-        if (!fBackgroundAnalysisRunning)
-            CommandFirstMove(NULL);
+        // if (!fBackgroundAnalysisRunning)
+        //     CommandFirstMove(NULL);
+        fGameARRunning=FALSE;
     }
 
     ProgressEnd();
@@ -1647,7 +1649,9 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     /*Post-analysis AutoRollout*/
     if(doAR) {
+        fGameARRunning=TRUE;
         cmark_match_rollout(&lMatch);
+        fGameARRunning=FALSE;
         // CommandFirstGame(NULL);
         // cmark_game_rollout(plGame);
         // if (!fBackgroundAnalysisRunning)
@@ -2030,7 +2034,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
     void *p;
     GSList *list = NULL;
     positionkey key = { {0, 0, 0, 0, 0, 0, 0} };
-
+ 
     g_return_val_if_fail(pmr, -1);
 
     for (j = 0; j < pmr->ml.cMoves; j++) {
@@ -2058,10 +2062,10 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
         FormatMove(asz[j], msBoard(), m->anMove);
     }
     
-    if (!fBackgroundAnalysisRunning)
+    if (!fGameARRunning)
         RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
     ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
-    if (!fBackgroundAnalysisRunning)
+    if (!fGameARRunning)
         res = RolloutProgressEnd(&p, destroy);
 
     g_free(asz);
@@ -2079,7 +2083,7 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
                 break;
             }
     
-    if (!fBackgroundAnalysisRunning) {
+    if (!fGameARRunning) {
 #if defined(USE_GTK)
         if (fX)
             ChangeGame(NULL);
@@ -2836,13 +2840,13 @@ static int
 cmark_game_rollout(listOLD * game)
 {
     listOLD *pl, *pl_hint = NULL;
-
+ 
     g_return_val_if_fail(game, -1);
 
     if (game_is_last(game))
         pl_hint = game_add_pmr_hint(game);
 
-    if(!fBackgroundAnalysisRunning)
+    if (!fGameARRunning) 
         ChangeGame(game);
 
     for (pl = game->plNext; pl != game; pl = pl->plNext) {
@@ -2854,7 +2858,7 @@ cmark_game_rollout(listOLD * game)
 
         switch (pmr->mt) {
         case MOVE_NORMAL:
-            if (!fBackgroundAnalysisRunning) {
+            if (!fGameARRunning) {
                 if (!move_change(game, pl->plPrev))
                     goto finished;
             }
@@ -2867,7 +2871,7 @@ cmark_game_rollout(listOLD * game)
             pmr_prev = game->plPrev->p;
             if (pmr_prev->mt == MOVE_DOUBLE)
                 break;
-            if (!fBackgroundAnalysisRunning) {
+            if (!fGameARRunning) {
                 if (!move_change(game, pl->plPrev))
                     goto finished;
             }            
@@ -2877,7 +2881,7 @@ cmark_game_rollout(listOLD * game)
         default:
             break;
         }
-        if (fBackgroundAnalysisRunning){
+        if (fGameARRunning){
             // g_message("update...");
             ProgressValueAdd(1);
         }

@@ -242,9 +242,9 @@ int fBackgroundAnalysis = FALSE;
 buttons during the analysis (e.g. eval, rollout, etc.), since we are not equipped for a second
 parallel analysis */
 int fBackgroundAnalysisRunning = FALSE;
-// /*we also turn on the following flag*/
-// int fBackgroundAutoRollout = FALSE;
-int fMyDebug=FALSE;
+/*AR flags*/
+int fGameARRunning = FALSE;
+// int fMyDebug=FALSE;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
