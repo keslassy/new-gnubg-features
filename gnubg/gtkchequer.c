@@ -512,7 +512,7 @@ CreateMoveListTools(hintdata * phd)
     GtkWidget *pwEval = gtk_button_new_with_label(_("Eval"));
     GtkWidget *pwEvalSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwRollout = gtk_button_new_with_label(_("Rollout"));
-    GtkWidget *pwAutoRollout = gtk_button_new_with_label(_("A\nR"));
+    GtkWidget *pwAutoRollout = gtk_button_new_with_label(_("AR"));
     GtkWidget *pwRolloutSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwMWC = gtk_toggle_button_new_with_label(_("MWC"));
     GtkWidget *pwMove = gtk_button_new_with_label(Q_("verb|Move"));
@@ -556,6 +556,7 @@ CreateMoveListTools(hintdata * phd)
     pwTools = gtk_grid_new();
 
     gtk_grid_attach(GTK_GRID(pwTools), pwAutoRollout, 0, 0, 1, 2);
+    // gtk_grid_attach(GTK_GRID(pwTools), pwAutoRollout, 0, 0, 1, 1);
 
     gtk_grid_attach(GTK_GRID(pwTools), pwEval, 1, 0, 1, 1);
 
@@ -567,13 +568,16 @@ CreateMoveListTools(hintdata * phd)
     correspond to each other vertically.
     V1: I tried to put AR instead of the "a"(.rol) button and keep a-d while removing e. But
     this doesn't work well, because then AR is under RolloutPresets.
-    V2: current column on the left.
+    V2a: column on the left.
+    V2b: button on the left (bottom row).
+    V2a looks a bit better. Also AR can be seen as part of eval, so it's logical that it 
+    belongs to both.
     Alternatives: 
-        (1) make it only a height-1 button at the left of Rollouts ;
-        (2) replace the seldom-used "Move" button;
-        (3) put it at the right of ScoreMap
+        (1) replace the seldom-used "Move" button;
+        (2) put it at the right of ScoreMap
     */
 
+    // gtk_table_attach(GTK_TABLE(pwTools), pwAutoRollout, 0, 1, 1, 2,
     gtk_table_attach(GTK_TABLE(pwTools), pwAutoRollout, 0, 1, 0, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
 

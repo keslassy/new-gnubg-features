@@ -19,6 +19,60 @@
  */
 
 /*
+03/2023: Isaac Keslassy: introduced the experimental AutoRollout feature. 
+After the usual eval analysis (e.g., after a 0-ply or 2-ply eval), AutoRollout can 
+automatically launch a rollout to refine selected move & cube decisions, 
+as if we were running an analysis with a higher ply. 
+
+SETTINGS: 
+
+- The pre-rollout eval settings are defined in Settings ->Analysis. 
+The rollout settings are the default ones, as defined in Settings->Rollouts.
+(It would be great to define the optimal settings to optimize stdev vs. running time
+in the future, see thread in 
+https://lists.gnu.org/archive/html/bug-gnubg/2009-09/msg00287.html)
+
+- After the eval analysis ranks all move/cube alternatives, AutoRollout compares 
+the best ranked alternative against: 
+(1) Alternatives with close scores, and/or (2) A player mistake. 
+It uses the move filter defined by the user over 2-ply evals (filter used in 3-ply evals). 
+For instance, with the 'Normal' filter, it considers the top-two moves if their scores are 
+within 0.040, and adds the user's move if it's not in the top two. 
+To reduce rollouts, it further differs from eval analysis in two ways: 
+(1) It also does this for cube decisions, and therefore only considers them if 
+they are close or have a player mistake; 
+(2) It does not consider trivial move decisions where the top alternatives get the 
+same score (i.e. are within some epsilon).
+
+RESULTS:
+
+- You can see rollout results in the 'Cube decision'/'Chequer play' 
+right-side frames. 
+
+-You can see the move details by selecting the moves and clicking Rollout, 
+and the cube details by clicking Rollout (no need to select anything).
+
+- AutoRollout relies on CMarks. Therefore, you can browse rollouts by clicking 
+on Next/previous CMark (among the top-right arrows). Note that this will skip the 
+no-double cube decisions. You can also select Analyze->CMark->-Match-> Show to see all 
+CMarks. 
+
+ALTERNATIVE: 
+After an eval analysis of a move decision, you can click on the 'AR' button of the 
+'Chequer play' right-side frame to launch an AutoRollout for this move.
+
+CODE:
+AutoRollout consists in fact of two parts: 
+(1) A part that is typically launched with a game/match analysis. When we analyze with a 
+k-ply eval, we add CMarks for the needed decisions to roll out, then launch the rollouts
+later. In this part, we keep rollouts "quiet", i.e. do not show the window, and update
+progress as if they were part of the regular analysis.
+(2) A part that is launched with the "AR" button of the 'Chequer play' frame. Since
+the analysis already exists, it cannot rely on CMarks, and therefore needs to add
+CMarks based on the analysis results according to the same rules. In this part, we show
+the rollout window.
+
+
 02/2023: Isaac Keslassy: introduced the "background analysis" and "smart analysis" 
 features, together with two new buttons in the main toolbar: "Analyze" and 
 "Analyze File"
