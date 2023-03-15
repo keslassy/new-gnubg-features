@@ -1587,6 +1587,7 @@ CommandAnalyseGame(char *UNUSED(sz))
     /*Post-analysis AutoRollout*/
     if(doAR) {
         fGameARRunning=TRUE;
+        ProgressValue(nMoves);
         // CommandAnalyseRolloutGame(NULL);
         // fShowProgressOld=fShowProgress; 
         // if (fBackgroundAnalysisRunning) {
@@ -1688,6 +1689,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
     /*Post-analysis AutoRollout*/
     if(doAR) {
         fGameARRunning=TRUE;
+        ProgressValue(nMoves);
         cmark_match_rollout(&lMatch);
         fGameARRunning=FALSE;
         // CommandFirstGame(NULL);

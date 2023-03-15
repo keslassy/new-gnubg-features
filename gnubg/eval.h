@@ -239,9 +239,8 @@ extern const char *aszDoubleTypes[NUM_DOUBLE_TYPES];
  * predefined settings
  */
 
-#define NUM_SETTINGS            11
-// #define NUM_SETTINGS_EVAL_ONLY  (NUM_SETTINGS-2)
-
+#define NUM_SETTINGS            12
+#define SETTINGS_3PLY_AR        11
 #define SETTINGS_2PLY_AR        10
 #define SETTINGS_0PLY_AR        9
 #define SETTINGS_4PLY           8

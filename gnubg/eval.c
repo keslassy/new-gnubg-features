@@ -312,7 +312,8 @@ const char *aszSettings[NUM_SETTINGS] = {
     N_("setting|3ply: grandmaster"),
     N_("setting|4ply"),
     N_("setting|0ply + AutoRollout"),
-    N_("setting|2ply + AutoRollout")
+    N_("setting|2ply + AutoRollout"),
+    N_("setting|3ply + AutoRollout"),
 };
 
 /* which evaluation context does the predefined settings use */
@@ -324,13 +325,14 @@ evalcontext aecSettings[NUM_SETTINGS] = {
     {TRUE, 0, FALSE, TRUE, 0.0f, FALSE},       /* expert */
     {TRUE, 2, TRUE, TRUE, 0.0f, FALSE},        /* world class */
     {TRUE, 2, TRUE, TRUE, 0.0f, FALSE},        /* supremo */
-    {TRUE, 3, TRUE, TRUE, 0.0f, FALSE},        /* grand master */
+    {TRUE, 3, TRUE, TRUE, 0.0f, FALSE},        /* grandmaster */
     {TRUE, 4, TRUE, TRUE, 0.0f, FALSE},        /* 4ply */
-    {TRUE, 0, FALSE, TRUE, 0.0f, TRUE},       /* 0ply (expert)+AR */
-    {TRUE, 2, TRUE, TRUE, 0.0f, TRUE}         /* 2ply (world class)+AR */
+    {TRUE, 0, FALSE, TRUE, 0.0f, TRUE},        /* 0ply (expert)+AR */
+    {TRUE, 2, TRUE, TRUE, 0.0f, TRUE},         /* 2ply (world class)+AR */
+    {TRUE, 3, TRUE, TRUE, 0.0f, TRUE},         /* 3ply (grandmaster)+AR */
 };
 
-/* which move filter does the predefined settings use */
+/* which move filter does the predefined settings use [see below: 0=Tiny, 1=Narrow, etc] */
 int aiSettingsMoveFilter[NUM_SETTINGS] = {
     -1,                         /* beginner: n/a */
     -1,                         /* casual play: n/a */
@@ -341,8 +343,9 @@ int aiSettingsMoveFilter[NUM_SETTINGS] = {
     3,                          /* supremo: large */
     3,                          /* grandmaster: large */
     3,                          /* 4ply: large */
-    2,                         /* expert+AR: normal */
-    2                           /* wc+AR: normal */
+    2,                          /* expert+AR: normal */
+    2,                          /* wc+AR: normal */
+    3,                          /* grandmaster+AR: large */
 };
 
 /* the predefined move filters */
