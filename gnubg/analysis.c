@@ -907,18 +907,11 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 }
             }
             
-            // g_message("test: c=%d",pmr->ml.cMoves);
-            // if (!EqualKeys(key, pmr->ml.amMoves[0].key)) {
-            //     g_message("=>equal keys: c=%d",pmr->ml.cMoves);
-            // }
-            // if (pmr->ml.amMoves[0].rScore - pmr->ml.amMoves[1].rScore <0.01) {
-            //     g_message("=>close score: c=%d",pmr->ml.cMoves);
-            // }
-
-            /* V1: we first check that there are at least 2 decision alternatives to roll out,
+            /* AutoRollout: 
+            V1: we first check that there are at least 2 decision alternatives to roll out,
             else we skip; then cMark the alternatives to roll out 
-            V2: cMark, and cancel if not at least 2 elements; this allows us to avoid 
-                rolling out trivial moves*/
+            V2: first go through a loop and cMark all relevant alternatives, then cancel if 
+                not at least 2 elements; this allows us to avoid rolling out trivial moves*/
 
             // g_message("esAnalysisChequer.ec.fAutoRollout=%d,esAnalysisCube.ec.fAutoRollout=%d",
             //     esAnalysisChequer.ec.fAutoRollout,esAnalysisCube.ec.fAutoRollout);
@@ -965,15 +958,6 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     pmr->ml.amMoves[0].cmark = CMARK_NONE;
             }
             
-
-            // MT_Release();
-            // // g_message("we are here");
-            // // MoveRollout(pmr,&key);
-            // cmark_move_rollout(pmr, TRUE);
-            // MT_Exclusive();
-
-
-
             for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
                 if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
                     rChequerSkill = pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore;

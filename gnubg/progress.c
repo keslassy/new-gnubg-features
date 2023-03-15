@@ -1136,7 +1136,7 @@ RolloutProgressStart(const cubeinfo * pci, const int n,
                      void **pp)
 {
 
-    if (!fShowProgress || !fGameARRunning)
+    if (!fShowProgress || fGameARRunning)
         return;
 
 #if defined(USE_GTK)
@@ -1183,7 +1183,7 @@ extern int
 RolloutProgressEnd(void **pp, gboolean destroy)
 {
 
-    if (!fShowProgress || !fGameARRunning)
+    if (!fShowProgress || fGameARRunning)
         return 0;
 
 #if defined(USE_GTK)
