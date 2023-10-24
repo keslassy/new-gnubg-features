@@ -1421,6 +1421,7 @@ DeleteCategoryClicked(GtkButton * UNUSED(button), gpointer treeview)
         return;
 }
 
+/* secret formula with secret sauce for quiz*/
 static void updatePriority(quiz * pq, long int seconds) {
     pq->priority = (pq->ewmaError + SMALL_ERROR) * (float) (seconds-pq->lastSeen);
     // pq->priority = (pq->ewmaError + SMALL_ERROR) * (pq->ewmaError + SMALL_ERROR) * (float) (seconds-pq->lastSeen);

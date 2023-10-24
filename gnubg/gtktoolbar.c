@@ -603,8 +603,8 @@ ToolbarNew(void)
     */
     ptw->pwAnalyzeCurrent =
         ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyse"), 
-        _("Analyze current match: \n(1) analyze match, \n(2) add match results to database "
-        "(if set in Settings -> Analysis), and finally \n(3) show match statistics panel."), 
+        _("Analyze current match: \n(1) analyze match (or session), \n(2) add match results to " 
+        "database (if set in Settings -> Analysis), and finally \n(3) show match statistics panel."), 
         G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
     /* Analyze file button 
