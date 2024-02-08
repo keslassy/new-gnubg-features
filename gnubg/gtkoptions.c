@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2004 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2003-2022 the AUTHORS
+ * Copyright (C) 2003-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkoptions.c,v 1.140 2022/12/13 22:03:31 plm Exp $
+ * $Id: gtkoptions.c,v 1.143 2023/10/14 19:05:13 plm Exp $
  */
 
 #include "config.h"
@@ -156,14 +156,14 @@ AddKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     GtkTreeIter iter;
     char *keyName = GTKGetInput(_("Add key name"), _("Key Player Name:"), NULL);
-    if(keyName) {
+    if (keyName) {
         // g_message("message=%s",keyName);
         if (AddKeyName(keyName)) {
             gtk_list_store_append(GTK_LIST_STORE(nameStore), &iter);
             gtk_list_store_set(GTK_LIST_STORE(nameStore), &iter, 0, keyName, -1);
             gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview)), &iter);
-            selected_iter=iter;
-        }  else {
+            selected_iter = iter;
+        } else {
             outputerrf(_("there was a problem adding this key name"));
         }
         g_free(keyName);
@@ -178,10 +178,10 @@ GetSelectedName(GtkTreeView * treeview)
     GtkTreeSelection *sel = gtk_tree_view_get_selection(treeview);
     if (gtk_tree_selection_count_selected_rows(sel) != 1)
         return NULL;
-    
+
     /* Sets selected_iter to the currently selected node: */
     gtk_tree_selection_get_selected(sel, &model, &selected_iter);
-    
+
     /* Gets the value of the char* cell (in column 0) in the row 
         referenced by selected_iter */
     gtk_tree_model_get(model, &selected_iter, 0, &keyName, -1);
@@ -193,13 +193,13 @@ static void
 DeleteKeyNameClicked(GtkButton * UNUSED(button), gpointer treeview)
 {
     char *keyName = GetSelectedName(GTK_TREE_VIEW(treeview));
-    if(keyName){
-            if (DeleteKeyName(keyName)) {
-                gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
-                // DisplayKeyNames();
-            } else {
-                outputerrf(_("there was a problem deleting this key name"));
-            }
+    if (keyName) {
+        if (DeleteKeyName(keyName)) {
+            gtk_list_store_remove(GTK_LIST_STORE(nameStore), &selected_iter);
+            // DisplayKeyNames();
+        } else {
+            outputerrf(_("there was a problem deleting this key name"));
+        }
     }
 }
 
@@ -246,7 +246,7 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
     nameStore = gtk_list_store_new(1, G_TYPE_STRING);
 
 
-    for(int i=0;i < keyNamesFirstEmpty; i++) {
+    for (int i = 0; i < keyNamesFirstEmpty; i++) {
         gtk_list_store_append(nameStore, &iter);
         gtk_list_store_set(nameStore, &iter, 0, keyNames[i], -1);
         // g_message("in DisplayKeyNames: %d->%s", i,keyNames[i]);
@@ -261,7 +261,7 @@ GTKCommandEditKeyNames(GtkWidget * UNUSED(pw), GtkWidget * UNUSED(pwParent))
 
     gtk_container_set_border_width(GTK_CONTAINER(pwVBox), 8);
     gtk_box_pack_start(GTK_BOX(pwVBox), pwScrolled, TRUE, TRUE, 0);
-    gtk_widget_set_size_request(pwScrolled, 100, 200);//-1);
+    gtk_widget_set_size_request(pwScrolled, 100, 200);	//-1);
 #if GTK_CHECK_VERSION(3, 8, 0)
     gtk_container_add(GTK_CONTAINER(pwScrolled), treeview);
 #else
@@ -931,11 +931,11 @@ append_display_options(optionswidget * pow)
     //                               "automatically added to the list of key player names. "
     //                               "(2) Then, when you open a new match, if such a key player is player0 "
     //                               "and player1 is unknown, they swap places."));
-    
+
     pwEdit = gtk_button_new_with_label(_("Edit"));
-    g_signal_connect(G_OBJECT(pwEdit), "clicked",  G_CALLBACK(GTKCommandEditKeyNames), pow);//(void *) pAnalDetails);
+    g_signal_connect(G_OBJECT(pwEdit), "clicked", G_CALLBACK(GTKCommandEditKeyNames), pow);	//(void *) pAnalDetails);
     gtk_box_pack_start(GTK_BOX(pwh), pwEdit, FALSE, FALSE, 0);
-    AddText(pwh,_("Use SmartSit to automatically sit at bottom of board"));
+    AddText(pwh, _("Use SmartSit to automatically sit at bottom of board"));
     gtk_widget_set_tooltip_text(pwh,
                                 _("SmartSit assumes that you'd like to arrange the board so "
                                   "you can sit at the bottom (i.e. so you can be player1, the "
@@ -1493,9 +1493,7 @@ append_dice_options(optionswidget * pow)
                 gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(pw), TRUE);
 
                 gtk_widget_set_tooltip_text(pow->pwSeed,
-                                            _("Specify the \"seed\" (generator state), which "
-                                              "can be useful in some circumstances to provide "
-                                              "duplicate dice sequences."));
+                                            _("The seed is a number used to initialise the dice rolls generator. Reusing the same seed allows to reproduce the dice sequence. 0 is a special value that leaves GNU Backgammon use a random value."));
 
                 pow->fChanged = 0;
                 g_signal_connect(G_OBJECT(pw), "changed", G_CALLBACK(SeedChanged), &pow->fChanged);
@@ -1632,7 +1630,7 @@ append_other_options(optionswidget * pow)
 
     pow->pwConfOverwrite = gtk_check_button_new_with_label(_("Confirm when overwriting existing files"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwConfOverwrite, FALSE, FALSE, 0);
-    gtk_widget_set_tooltip_text(pow->pwConfOverwrite, _("Confirm when overwriting existing files"));
+    gtk_widget_set_tooltip_text(pow->pwConfOverwrite, _("Ask for confirmation when overwriting existing files."));
 
     pow->pwRecordGames = gtk_check_button_new_with_label(_("Record all games"));
     gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwRecordGames, FALSE, FALSE, 0);
@@ -1702,7 +1700,7 @@ append_other_options(optionswidget * pow)
     if (default_sgf_folder)
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(pow->pwDefaultSGFFolder), default_sgf_folder);
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_widget_set_hexpand(pow->pwDefaultSGFFolder,TRUE);
+    gtk_widget_set_hexpand(pow->pwDefaultSGFFolder, TRUE);
     gtk_grid_attach(GTK_GRID(grid), pow->pwDefaultSGFFolder, 1, 0, 1, 1);
 #else
     gtk_table_attach_defaults(GTK_TABLE(table), pow->pwDefaultSGFFolder, 1, 2, 0, 1);
@@ -1723,7 +1721,7 @@ append_other_options(optionswidget * pow)
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(pow->pwDefaultImportFolder), default_import_folder);
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_grid_attach(GTK_GRID(grid), pow->pwDefaultImportFolder, 1, 1, 1, 1);
-    gtk_widget_set_hexpand(pow->pwDefaultImportFolder,TRUE);
+    gtk_widget_set_hexpand(pow->pwDefaultImportFolder, TRUE);
 #else
     gtk_table_attach_defaults(GTK_TABLE(table), pow->pwDefaultImportFolder, 1, 2, 1, 2);
 #endif
@@ -1743,7 +1741,7 @@ append_other_options(optionswidget * pow)
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(pow->pwDefaultExportFolder), default_export_folder);
 #if GTK_CHECK_VERSION(3,0,0)
     gtk_grid_attach(GTK_GRID(grid), pow->pwDefaultExportFolder, 1, 2, 1, 1);
-    gtk_widget_set_hexpand(pow->pwDefaultExportFolder,TRUE);
+    gtk_widget_set_hexpand(pow->pwDefaultExportFolder, TRUE);
 #else
     gtk_table_attach_defaults(GTK_TABLE(table), pow->pwDefaultExportFolder, 1, 2, 2, 3);
 #endif
@@ -1796,8 +1794,13 @@ append_other_options(optionswidget * pow)
     gtk_widget_set_tooltip_text(pwev,
                                 _("GNU Backgammon uses a cache of previous "
                                   "evaluations to speed up processing. "
-                                  "Increasing the size may help evaluations "
-                                  "complete more quickly, but decreasing " "the size will use less memory."));
+                                  "Increasing the size will help evaluations "
+                                  "complete more quickly, although its benefits "
+                                  "decreases relatively fast.\n"
+                                  "The default value is fine for "
+                                  "2-ply play and analysis. Higher values "
+                                  "will help a little for higher plies "
+                                  "evaluations and for rollouts."));
 
 #if defined(USE_MULTITHREAD)
     pwev = gtk_event_box_new();
@@ -1941,7 +1944,6 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwAutoGame, fAutoGame, "set automatic game %s");
     CHECKUPDATE(pow->pwAutoRoll, fAutoRoll, "set automatic roll %s");
     CHECKUPDATE(pow->pwAutoMove, fAutoMove, "set automatic move %s");
-
     CHECKUPDATE(pow->pwTutor, fTutor, "set tutor mode %s");
     CHECKUPDATE(pow->pwTutorCube, fTutorCube, "set tutor cube %s");
     CHECKUPDATE(pow->pwTutorChequer, fTutorChequer, "set tutor chequer %s");

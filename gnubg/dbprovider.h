@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: dbprovider.h,v 1.21 2022/01/19 22:42:28 plm Exp $
+ * $Id: dbprovider.h,v 1.22 2023/12/18 21:14:48 plm Exp $
  */
 
 #ifndef DBPROVIDER_H
@@ -45,10 +45,10 @@ typedef struct {
     const char *desc;
     int HasUserDetails;
     int storeGameStats;
-    const char *database;
-    const char *username;
-    const char *password;
-    const char *hostname;
+    char *database;
+    char *username;
+    char *password;
+    char *hostname;
 } DBProvider;
 
 typedef enum {
@@ -74,9 +74,12 @@ typedef enum {
 #endif
 
 extern DBProviderType dbProviderType;
-extern DBProvider *GetDBProvider(DBProviderType dbType);
-extern const char *TestDB(DBProviderType dbType);
+
+DBProvider *GetDBProvider(DBProviderType dbType);
+const char *TestDB(DBProviderType dbType);
 DBProvider *ConnectToDB(DBProviderType dbType);
+
+void DefaultDBSettings(void);
 void SetDBType(const char *type);
 void SetDBSettings(DBProviderType dbType, const char *database, const char *user, const char *password,
                    const char *hostname);

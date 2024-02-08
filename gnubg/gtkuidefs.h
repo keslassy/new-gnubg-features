@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Michael Petch <mpetch@capp-sysware.com>
- * Copyright (C) 2013-2021 the AUTHORS
+ * Copyright (C) 2013-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkuidefs.h,v 1.7 2023/01/18 21:49:36 plm Exp $
+ * $Id: gtkuidefs.h,v 1.10 2023/11/20 21:00:06 plm Exp $
  */
 
 #define GNUBG_MAIN_UI \

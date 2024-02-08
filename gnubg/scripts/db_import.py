@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id: db_import.py,v 1.8 2022/06/29 21:09:18 plm Exp $
+# $Id: db_import.py,v 1.9 2023/12/18 21:20:28 plm Exp $
 #
 
 """
@@ -33,12 +33,13 @@ if sys.version_info >= (3, 0):
 
     raw_input = python3_raw_input
 
+
 def GetFiles(dir):
     "Look for gnubg import files in dir"
     try:
         files = os.listdir(dir)
-    except:
-        print ("  ** Directory not found **")
+    except OSError:
+        print("  ** Directory not found **")
         return 0
 
     fileList = []
@@ -61,15 +62,15 @@ def GetFiles(dir):
         return fileList
     else:
         if not foundAnyFile:
-            print ("  ** No files in directory **")
+            print("  ** No files in directory **")
         else:
-            print ("  ** No sgf files found in directory **")
+            print("  ** No sgf files found in directory **")
         return 0
 
 
 def ImportFile(prompt, file, dir):
     "Run commands to import stats into gnubg"
-    print (prompt + " Importing " + file)
+    print(prompt + " Importing " + file)
     gnubg.command('load match "' + dir + file + '"')
     gnubg.command('relational add match')
 
@@ -105,9 +106,9 @@ def BatchImport():
 
     # Display files that will be analyzed
     for file in inFiles:
-        print ("    " + file)
+        print("    " + file)
 
-    print ("\n", len(inFiles), "files found\n")
+    print("\n", len(inFiles), "files found\n")
 
     # Check user wants to continue
     if GetYN("Continue") == 'n':
@@ -120,13 +121,14 @@ def BatchImport():
         prompt = "(%d/%d)" % (num, len(inFiles))
         ImportFile(prompt, file, dir)
 
-    print ("\n** Finished **")
+    print("\n** Finished **")
     return
+
 
 # Run batchimport on load
 try:
-    print (__doc__)
+    print(__doc__)
     BatchImport()
 except Exception:
     e = sys.exc_info()[1].args[0]
-    print ("Error: " + e)
+    print("Error: " + e)

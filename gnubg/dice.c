@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 1999-2019 the AUTHORS
+ * Copyright (C) 1999-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: dice.c,v 1.106 2021/07/04 22:38:44 plm Exp $
+ * $Id: dice.c,v 1.107 2023/03/19 22:56:25 plm Exp $
  */
 
 #include "config.h"
@@ -43,7 +43,7 @@
 
 #include "dice.h"
 #include "md5.h"
-#include "mt19937ar.h"
+#include "SFMT.h"
 #include "isaac.h"
 #include <glib/gstdio.h>
 #include "glib-ext.h"
@@ -66,7 +66,7 @@ const char *aszRNGTip[NUM_RNGS] = {
     N_("Blum, Blum and Shub's verifiably strong generator"),
     N_("Bob Jenkins' Indirection, Shift, Accumulate, Add and Count " "cryptographic generator"),
     N_("A generator based on the Message Digest 5 algorithm"),
-    N_("Makoto Matsumoto and Takuji Nishimura's generator"),
+    N_("Makoto Matsumoto and  Mutsuo Saito's generator"),
     N_("Enter each dice roll by hand"),
     N_("The online non-deterministic generator from random.org"),
     N_("Dice loaded from a file"),
@@ -88,8 +88,7 @@ struct rngcontext {
     md5_uint32 nMD5;            /* the current MD5 seed */
 
     /* RNG_MERSENNE */
-    int mti;
-    unsigned long mt[MT_ARRAY_N];
+    sfmt_t sfmt;
 
     /* RNG_BBS */
 
@@ -486,7 +485,7 @@ InitRNGSeed(unsigned int n, const rng rngx, rngcontext * rngctx)
         break;
 
     case RNG_MERSENNE:
-        init_genrand((unsigned long) n, &rngctx->mti, rngctx->mt);
+        sfmt_init_gen_rand(&rngctx->sfmt, n);
         break;
 
     case RNG_MANUAL:
@@ -514,19 +513,18 @@ InitRNGSeedMP(mpz_t n, rng rng, rngcontext * rngctx)
     case RNG_MERSENNE:{
             if (mpz_cmp_ui(n, UINT_MAX) > 0) {
                 gint32 *achState;
-                unsigned long tempmtkey[MT_ARRAY_N];
+                uint32_t tempmtkey[SFMT_N32];
                 size_t cb;
                 unsigned int i;
 
                 achState = mpz_export(NULL, &cb, -1, sizeof(gint32), 0, 0, n);
-                for (i = 0; i < MT_ARRAY_N && i < cb; i++) {
-                    /* FIXME?  Initializing an unsigned long with a guint32 */
-                    tempmtkey[i] = (unsigned long) achState[i];
+                for (i = 0; i < SFMT_N32 && i < cb; i++) {
+                    tempmtkey[i] = achState[i];
                 }
-                for (; i < MT_ARRAY_N; i++) {
+                for (; i <SFMT_N32; i++) {
                     tempmtkey[i] = 0;
                 }
-                init_by_array(tempmtkey, MT_ARRAY_N, &rngctx->mti, rngctx->mt);
+                sfmt_init_by_array(&rngctx->sfmt, tempmtkey, SFMT_N32);
 
                 free(achState);
             } else {
@@ -734,7 +732,7 @@ InitRNG(unsigned long *pnSeed, int *pfInitFrom, const int fSet, const rng rngx)
     /* misc. initialisation */
 
     /* Mersenne-Twister */
-    rngctx->mti = MT_ARRAY_N + 1;
+    rngctx->sfmt.idx = SFMT_N32 + 1;
 
 #if defined(HAVE_LIBGMP)
     /* BBS */
@@ -814,9 +812,9 @@ RollDice(unsigned int anDice[2], rng * prng, rngcontext * rngctx)
         }
 
     case RNG_MERSENNE:
-        while ((tmprnd = genrand_int32(&rngctx->mti, rngctx->mt)) >= exp232_l); /* Try again */
+        while ((tmprnd = sfmt_genrand_uint32(&rngctx->sfmt)) >= exp232_l); /* Try again */
         anDice[0] = 1 + (unsigned int) (tmprnd / exp232_q);
-        while ((tmprnd = genrand_int32(&rngctx->mti, rngctx->mt)) >= exp232_l);
+        while ((tmprnd = sfmt_genrand_uint32(&rngctx->sfmt)) >= exp232_l);
         anDice[1] = 1 + (unsigned int) (tmprnd / exp232_q);
         rngctx->c += 2;
         break;

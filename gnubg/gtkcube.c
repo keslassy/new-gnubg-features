@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
  * Copyright (C) 2021 Aaron Tikuisis and Isaac Keslassy (MoneyEval)
- * Copyright (C) 2002-2022 the AUTHORS
+ * Copyright (C) 2002-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkcube.c,v 1.106 2023/01/18 21:49:36 plm Exp $
+ * $Id: gtkcube.c,v 1.108 2023/12/16 10:41:19 plm Exp $
  */
 
 #include "config.h"
@@ -1616,9 +1616,12 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
 
     for (i = 0; i < 5; ++i) {
 
-        gchar *sz = g_strdup_printf("%d", i);  
+        gchar *sz;  
         int *pi = g_malloc(sizeof(int));
+
+        sz = g_strdup_printf("%d", i);
         GtkWidget *pwply = gtk_button_new_with_label(sz);
+        g_free(sz);
 
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_style_context_add_class(gtk_widget_get_style_context(pwply), "gnubg-analysis-button");
@@ -1725,8 +1728,8 @@ CreateCubeAnalysisTools(cubehintdata * pchd)
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
-    /* We want to disable some buttons particularly when we are in the middle of running an analysis
-    in the background*/
+    /* We want to disable some buttons particularly when we are in the middle
+       of running an analysis in the background */
 
     gtk_widget_set_sensitive(pwRollout, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwEval, !fBackgroundAnalysisRunning);

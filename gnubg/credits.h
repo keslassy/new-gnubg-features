@@ -1,7 +1,6 @@
+/* Do not modify this file!  It is created automatically by credits.sh. */
+
 /*
- * Copyright (C) 2002 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2004-2015 the AUTHORS
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,17 +13,29 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * $Id: mt19937ar.h,v 1.7 2021/08/17 20:55:40 plm Exp $
  */
 
-#ifndef MT19937AR_H
-#define MT19937AR_H
+#include <glib/gi18n.h>
 
-#define MT_ARRAY_N 624
+typedef struct {
+	char* Name;
+	char* Type;
+} credEntry;
 
-extern void init_genrand(unsigned long s, int *mti, unsigned long mt[MT_ARRAY_N]);
-extern unsigned long genrand_int32(int *mti, unsigned long mt[MT_ARRAY_N]);
-void init_by_array(unsigned long init_key[], int key_length, int *mti, unsigned long mt[MT_ARRAY_N]);
+typedef struct {
+	const char* Title;
+	credEntry *Entry;
+} credits;
 
-#endif
+extern credEntry ceAuthors[];
+extern credEntry ceContrib[];
+extern credEntry ceTranslations[];
+extern credEntry ceSupport[];
+extern credEntry ceCredits[];
+
+extern credits creditList[];
+
+extern const char aszAUTHORS[];
+
+extern const char aszCOPYRIGHT[];
+

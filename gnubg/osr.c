@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2004 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2004-2015 the AUTHORS
+ * Copyright (C) 2004-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  *
  * Inspired from osr.cc from fibs2html <fibs2html.sourceforge.net>
  *
- * $Id: osr.c,v 1.45 2022/10/22 18:27:59 plm Exp $
+ * $Id: osr.c,v 1.46 2023/03/19 22:56:25 plm Exp $
  */
 
 /*lint -e514 */
@@ -30,14 +30,13 @@
 
 #include "eval.h"
 #include "positionid.h"
-#include "mt19937ar.h"
+#include "SFMT.h"
 #include "osr.h"
 
 #define MAX_PROBS        32
 #define MAX_GAMMON_PROBS 15
 
-static unsigned long mt[MT_ARRAY_N];
-static int mti = MT_ARRAY_N + 1;
+static sfmt_t sfmt;
 
 static void
 OSRQuasiRandomDice(const unsigned int iTurn, const unsigned int iGame, const unsigned int cGames, unsigned int anDice[2])
@@ -49,8 +48,8 @@ OSRQuasiRandomDice(const unsigned int iTurn, const unsigned int iGame, const uns
         anDice[0] = ((iGame / 36) % 6) + 1;
         anDice[1] = ((iGame / 216) % 6) + 1;
     } else {
-        anDice[0] = (unsigned int) (genrand_int32(&mti, mt) % 6) + 1;
-        anDice[1] = (unsigned int) (genrand_int32(&mti, mt) % 6) + 1;
+        anDice[0] = (unsigned int) (sfmt_genrand_uint32(&sfmt) % 6) + 1;
+        anDice[1] = (unsigned int) (sfmt_genrand_uint32(&sfmt) % 6) + 1;
     }
 }
 
@@ -822,7 +821,7 @@ raceProbs(const TanBoard anBoard, const unsigned int nGames, float arOutput[NUM_
 
     /* Seed set to ensure that OSR are reproducible */
 
-    init_genrand(0, &mti, mt);
+    sfmt_init_gen_rand(&sfmt, 0);
 
     for (i = 0; i < NUM_OUTPUTS; ++i)
         arOutput[i] = 0.0f;

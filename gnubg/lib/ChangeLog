@@ -1,3 +1,10 @@
+2023-03-14  Philippe Michel  <philippe.michel7@free.fr>
+
+	* Makefile.am, SFMT.c(+), SFMT.h(+), SFMT-common.h(+),
+	SFMT-params.h(+), SFMT-params19937.h(+), mt19937ar.c(-),
+	mt19937ar.h(-): replace the original Mersenne Twister RNG by the
+	improved SFMT version.
+
 2021-10-06  Philippe Michel  <philippe.michel7@free.fr>
 
 	* neuralnetsse.c, mm_malloc.h(-) Makefile.am, ../configura.ac:

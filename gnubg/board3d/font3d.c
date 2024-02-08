@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: font3d.c,v 1.48 2022/03/14 21:52:48 plm Exp $
+ * $Id: font3d.c,v 1.49 2024/01/21 22:46:17 plm Exp $
  */
 
 /* Draw 3d numbers using vera font and freetype library */
@@ -227,7 +227,7 @@ TidyMemory(const Vectoriser* pVect, const Mesh* pMesh)
 	g_array_free(pMesh->tesselations, TRUE);
 
 	for (pl = g_list_first(combineList); pl; pl = g_list_next(pl)) {
-		free(pl->data);
+		g_free(pl->data);
 	}
 	g_list_free(combineList);
 }
@@ -255,8 +255,8 @@ void TESS_CALLBACK
 tcbCombine(const double coords[3], const double* UNUSED(vertex_data[4]), float UNUSED(weight[4]), void** outData)
 {
 	/* Just return vertex position (colours etc. not required) */
-	Point3d* newEle = (Point3d*)malloc(sizeof(Point3d));
-	g_assert(newEle);
+	Point3d* newEle = (Point3d*)g_malloc(sizeof(Point3d));
+
 	memcpy(newEle->data, coords, sizeof(double[3]));
 
 	combineList = g_list_append(combineList, newEle);

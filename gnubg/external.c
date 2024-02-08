@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: external.c,v 1.108 2022/03/12 20:38:18 plm Exp $
+ * $Id: external.c,v 1.109 2023/03/21 21:49:06 plm Exp $
  */
 
 #include "config.h"
@@ -55,6 +55,8 @@
 #include <ws2tcpip.h>
 
 #ifndef _MSC_VER
+
+#if 0
 #define EWOULDBLOCK             WSAEWOULDBLOCK
 #define EINPROGRESS             WSAEINPROGRESS
 #define EALREADY                WSAEALREADY
@@ -92,12 +94,21 @@
 #define EDQUOT                  WSAEDQUOT
 #define ESTALE                  WSAESTALE
 #define EREMOTE                 WSAEREMOTE
-#define EINVAL                  WSAEINVAL
-#define EINTR                   WSAEINTR
 #endif
 
-#define inet_aton(ip,addr)  (addr)->s_addr = inet_addr(ip), 1
-#define inet_pton(fam,ip,addr) (addr)->s_addr = inet_addr(ip), 1
+/* only these are actually used */
+
+#ifdef EINVAL
+#undef EINVAL
+#endif
+#define EINVAL                  WSAEINVAL
+
+#ifdef EINTR
+#undef EINTR
+#endif
+#define EINTR                   WSAEINTR
+
+#endif				/* #ifndef _MSC_VER */
 
 #endif                          /* #ifndef WIN32 */
 
@@ -112,11 +123,6 @@
 #include "lib/gnubg-types.h"
 
 #if HAVE_SOCKETS
-
-#if defined(AF_UNIX) && !defined(AF_LOCAL)
-#define AF_LOCAL AF_UNIX
-#define PF_LOCAL PF_UNIX
-#endif
 
 #ifdef WIN32
 void
@@ -135,18 +141,14 @@ OutputWin32SocketError(const char *action)
 #endif
 
 extern int
-ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz)
+ExternalSocket(struct sockaddr **ppsa, socklen_t *pcb, char *sz)
 {
-
     int sock, f;
-#ifndef WIN32
-    struct sockaddr_un *psun;
-#endif
     struct sockaddr_in *psin;
     struct hostent *phe;
     char *pch;
 
-    if ((pch = strchr(sz, ':')) && !strchr(sz, '/')) {
+    if ((pch = strchr(sz, ':'))) {
         /* Internet domain socket. */
         if ((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0)
             return -1;
@@ -174,18 +176,14 @@ ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz)
         if (!*sz)
             /* no host specified */
             psin->sin_addr.s_addr = htonl(INADDR_ANY);
-#ifdef WIN32
-        else {
-#else
-        else if (!inet_aton(sz, &psin->sin_addr)) {
-#endif                          /* WIN32 */
+        else if (!inet_pton(psin->sin_family, sz, &psin->sin_addr)) {
             if ((phe = gethostbyname(sz)) == 0) {
                 *pch = ':';
                 errno = EINVAL;
                 g_free(psin);
                 return -1;
             }
-            memcpy(&(psin->sin_addr), phe->h_addr, phe->h_length);
+            memcpy(&(psin->sin_addr), phe->h_addr, (size_t) phe->h_length);
         }
 
         *pch++ = ':';
@@ -194,38 +192,12 @@ ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz)
 
         *ppsa = (struct sockaddr *) psin;
     } else {
-#ifndef WIN32
-        /* Local domain socket. */
-        if ((sock = socket(PF_LOCAL, SOCK_STREAM, 0)) < 0)
-            return -1;
-
-        /* yuck... there's no portable way to obtain the necessary
-         * sockaddr_un size, but this is a conservative estimate */
-        psun = g_malloc(*pcb = 16 + (int) strlen(sz));
-
-        psun->sun_family = AF_LOCAL;
-        strcpy(psun->sun_path, sz);
-        *ppsa = (struct sockaddr *) psun;
-#else                           /* #ifndef WIN32 */
-        /* FIXME: what will we do on Windows? */
+        /* Unix local sockets no longer supported */
+        errno = EINVAL;
         return -1;
-#endif                          /* #ifndef WIN32 */
     }
 
     return sock;
-}
-#endif                          /* HAVE_SOCKETS */
-
-#if HAVE_SOCKETS
-static void
-ExternalUnbind(char *sz)
-{
-
-    if (strchr(sz, ':') && !strchr(sz, '/'))
-        /* it was a TCP socket; no cleanup necessary */
-        return;
-
-    g_unlink(sz);
 }
 #endif                          /* HAVE_SOCKETS */
 
@@ -264,7 +236,7 @@ ExternalRead(int h, char *pch, size_t cch)
         PortableSignalRestore(SIGPIPE, &sh);
 #endif
 
-        if (!n) {
+        if (n == 0) {
             outputl(_("External connection closed."));
             return -1;
         } else if (n < 0) {
@@ -275,12 +247,12 @@ ExternalRead(int h, char *pch, size_t cch)
             return -1;
         }
 
-        if ((pEnd = memchr(p, '\n', n))) {
+        if ((pEnd = memchr(p, '\n', (size_t) n))) {
             *pEnd = 0;
             return 0;
         }
 
-        cch -= n;
+        cch -= (size_t) n;
         p += n;
 
     }
@@ -288,9 +260,7 @@ ExternalRead(int h, char *pch, size_t cch)
     p[cch - 1] = 0;
     return 0;
 }
-#endif                          /* HAVE_SOCKETS */
 
-#if HAVE_SOCKETS
 extern int
 ExternalWrite(int h, char *pch, size_t cch)
 {
@@ -302,7 +272,6 @@ ExternalWrite(int h, char *pch, size_t cch)
 #else
     int n;
 #endif
-    /* outputf("%s", pch); */
 
     while (cch) {
         ProcessEvents();
@@ -326,7 +295,7 @@ ExternalWrite(int h, char *pch, size_t cch)
         PortableSignalRestore(SIGPIPE, &sh);
 #endif
 
-        if (!n)
+        if (n == 0)
             return 0;
         else if (n < 0) {
             if (errno == EINTR)
@@ -336,7 +305,7 @@ ExternalWrite(int h, char *pch, size_t cch)
             return -1;
         }
 
-        cch -= n;
+        cch -= (size_t) n;
         p += n;
     }
 
@@ -607,7 +576,8 @@ CommandExternal(char *sz)
     outputl(_("This installation of GNU Backgammon was compiled without\n"
               "socket support, and does not implement external controllers."));
 #else
-    int h, hPeer, cb;
+    int h, hPeer;
+    socklen_t cb;
     struct sockaddr *psa;
     char szCommand[256];
     char *szResponse = NULL;
@@ -653,7 +623,6 @@ CommandExternal(char *sz)
         if (listen(h, 1) < 0) {
             SockErr("listen");
             closesocket(h);
-            ExternalUnbind(sz);
             ExtDestroyParse(scanctx.scanner);
             return;
         }
@@ -669,7 +638,6 @@ CommandExternal(char *sz)
 
                 if (fInterrupt) {
                     closesocket(h);
-                    ExternalUnbind(sz);
                     ExtDestroyParse(scanctx.scanner);
                     return;
                 }
@@ -679,13 +647,11 @@ CommandExternal(char *sz)
 
             SockErr("accept");
             closesocket(h);
-            ExternalUnbind(sz);
             ExtDestroyParse(scanctx.scanner);
             return;
         }
 
         closesocket(h);
-        ExternalUnbind(sz);
 
         /* print info about remove client */
 

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: graph.c,v 1.46 2022/03/06 22:45:43 plm Exp $
+ * $Id: graph.c,v 1.47 2023/05/19 09:45:13 plm Exp $
  */
 
 #include "config.h"
@@ -310,14 +310,14 @@ SetNumGames(GraphData * pgd, unsigned int numGames)
 extern GraphData *
 CreateGraphData(void)
 {
-    return (GraphData *) malloc(sizeof(GraphData));
+    return (GraphData *) g_malloc(sizeof(GraphData));
 }
 
 void
 TidyGraphData(GraphData * pgd)
 {
     Free3d(pgd->data, pgd->numGames + 1, 2);
-    free(pgd);
+    g_free(pgd);
 }
 
 void

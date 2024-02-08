@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: glib-ext.c,v 1.17 2022/12/30 11:59:35 plm Exp $
+ * $Id: glib-ext.c,v 1.18 2024/01/21 22:34:57 plm Exp $
  */
 
 /* Map/GList extensions and utility functions for GLIB */
 
-#include <stdio.h>
 #include "glib-ext.h"
 
 void

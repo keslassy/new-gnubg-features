@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: format.c,v 1.69 2022/01/11 21:48:34 plm Exp $
+ * $Id: format.c,v 1.70 2024/01/21 22:33:01 plm Exp $
  */
 
 #include "config.h"
@@ -868,8 +868,7 @@ OutputCubeAnalysis(float aarOutput[2][NUM_ROLLOUT_OUTPUTS],
 
     if (pci->nMatchTo)
         sprintf(strchr(sz, 0), " %s %s (%s: %s)\n",
-                (!pci->nMatchTo || !fOutputMWC) ?
-                _("cubeless equity") : _("cubeless MWC"),
+                fOutputMWC ? _("cubeless MWC") : _("cubeless equity"),
                 OutputEquity(aarOutput[0][OUTPUT_EQUITY], pci, TRUE),
                 _("Money"), OutputMoneyEquity(aarOutput[0], TRUE));
     else

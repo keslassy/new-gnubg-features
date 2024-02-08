@@ -1,6 +1,6 @@
-#line 2 "external_l.c"
+#line 1 "external_l.c"
 
-#line 4 "external_l.c"
+#line 3 "external_l.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -253,7 +253,8 @@
 
 /* C99 systems have <inttypes.h>. Non-C99 systems may or may not. */
 
-#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined(__FreeBSD__) || \
+    (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
 
 /* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
  * if you want the limit (max/min) macros for int types. 
@@ -490,6 +491,7 @@ struct yy_buffer_state
 #define YY_CURRENT_BUFFER ( yyg->yy_buffer_stack \
                           ? yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] \
                           : NULL)
+#define yy_current_buffer YY_CURRENT_BUFFER
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
  */
@@ -941,7 +943,7 @@ static const flex_int16_t yy_chk[878] =
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: external_l.c,v 1.27 2022/11/05 23:02:14 plm Exp $
+ * $Id: external_l.c,v 1.28 2024/01/22 20:49:36 plm Exp $
  */
 
 #include "common.h"
@@ -960,10 +962,10 @@ void escapes(const char *cp, char *tp);
         } \
         yylval->str = g_string_new(yytext)
 
-#line 964 "external_l.c"
+#line 965 "external_l.c"
 #define YY_NO_INPUT 1
  
-#line 967 "external_l.c"
+#line 968 "external_l.c"
 
 #define INITIAL 0
 #define SBOARDP1 1
@@ -1242,7 +1244,7 @@ YY_DECL
 #line 60 "external_l.l"
 
 
-#line 1246 "external_l.c"
+#line 1247 "external_l.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1376,7 +1378,7 @@ case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
 #line 78 "external_l.l"
-{   yylval->bool = 1; 
+{   yylval->boolean = 1; 
                             return (E_BOOLEAN);
                         }
 	YY_BREAK
@@ -1384,7 +1386,7 @@ case 14:
 /* rule 14 can match eol */
 YY_RULE_SETUP
 #line 81 "external_l.l"
-{   yylval->bool = 0; 
+{   yylval->boolean = 0; 
                             return (E_BOOLEAN);
                         }
 	YY_BREAK
@@ -1547,7 +1549,7 @@ YY_RULE_SETUP
 #line 147 "external_l.l"
 ECHO;
 	YY_BREAK
-#line 1551 "external_l.c"
+#line 1552 "external_l.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1936,7 +1938,11 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 				case EOB_ACT_END_OF_FILE:
 					{
 					if ( yywrap( yyscanner ) )
+#ifdef YY_FLEX_LEX_COMPAT
 						return 0;
+#else
+						return EOF;
+#endif
 
 					if ( ! yyg->yy_did_buffer_switch_on_eof )
 						YY_NEW_FILE;
@@ -2736,12 +2742,12 @@ void escapes(const char *cp, char *tp)
 void ExtStartParse(yyscan_t scanner, const char* szCommand)
 {
     struct yyguts_t * yyg = (struct yyguts_t *) scanner;
+    YY_BUFFER_STATE buf_state = NULL;
     BEGIN(INITIAL);    
-	YY_BUFFER_STATE buf_state = NULL;
-	buf_state = yy_scan_string(szCommand, scanner);
-	ext_parse(scanner);
+    buf_state = yy_scan_string(szCommand, scanner);
+    ext_parse(scanner);
     yy_flush_buffer(buf_state, scanner);
-	yy_delete_buffer(buf_state, scanner);
+    yy_delete_buffer(buf_state, scanner);
 }
 
 int ExtInitParse(yyscan_t *scancontext)

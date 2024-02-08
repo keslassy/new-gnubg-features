@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: commands.inc,v 1.61 2023/01/18 21:49:36 plm Exp $
+ * $Id: commands.inc,v 1.70 2023/11/20 21:00:06 plm Exp $
  */
 
 /* All the commands are in this file */
@@ -343,7 +343,7 @@ static command acAnnotateRoll[] = {
       N_("Start a new game within the current match or session"), NULL, NULL },
     { "match", CommandNewMatch, 
       N_("Play a new match to some number of points"), szOPTLENGTH, NULL },
-    { "session", CommandNewSession, N_("Start a new (money) session"), NULL,
+    { "session", CommandNewSession, N_("Start a new (money) session"), szOPTLENGTH,
       NULL },
     { NULL, NULL, NULL, NULL, NULL }
 }, acRelationalAdd[] = {
@@ -465,11 +465,11 @@ command acSetEvaluation[] = {
 };
 
 static command acSetAnalysis[] = {
-    { "background", CommandSetAnalysisBackground, 
-      N_("Select whether to run analysis in the background"), 
+    { "background", CommandSetAnalysisBackground,
+      N_("Select whether to run analysis in the background"),
       szONOFF, &cOnOff },
     { "chequerplay", CommandSetAnalysisChequerplay, N_("Specify parameters "
-      "for the analysis of chequerplay"), NULL, acSetEvalParam },      
+      "for the analysis of chequerplay"), NULL, acSetEvalParam },
     { "cube", CommandSetAnalysisCube, N_("Select whether cube action will be "
       "analysed"), szONOFF, &cOnOff },
     { "cubedecision", CommandSetAnalysisCubedecision, N_("Specify parameters "
@@ -505,7 +505,7 @@ static command acSetAutomatic[] = {
     { "crawford", CommandSetAutoCrawford, N_("Enable the Crawford game "
       "based on match score"), szONOFF, &cOnOff },
     { "db", CommandSetAutoDB, N_("Select whether to add to database after analysis"),
-      szONOFF, &cOnOff },      
+      szONOFF, &cOnOff },
     { "doubles", CommandSetAutoDoubles, N_("Control automatic doubles "
       "during (money) session play"), szLIMIT, NULL },
     { "game", CommandSetAutoGame, N_("Select whether to start new games "
@@ -1045,13 +1045,13 @@ static command acSetExportHTMLType[] = {
   { "humanwinsmatch", CommandSetSoundSoundHumanWinMatch, 
     N_("Human wins match"), szOPTFILENAME, &cFilename },
   { "move", CommandSetSoundSoundMove, 
-    N_("noun|Move"), szOPTFILENAME, &cFilename },
+    N_("verb|Move"), szOPTFILENAME, &cFilename },
   { "redouble", CommandSetSoundSoundRedouble, 
     N_("Redouble"), szOPTFILENAME, &cFilename },
   { "resign", CommandSetSoundSoundResign, 
     N_("Resign"), szOPTFILENAME, &cFilename },
   { "roll", CommandSetSoundSoundRoll, 
-    N_("Roll"), szOPTFILENAME, &cFilename },
+    N_("verb|Roll"), szOPTFILENAME, &cFilename },
   { "start", CommandSetSoundSoundStart, 
     N_("Starting of GNU Backgammon"), szOPTFILENAME, &cFilename },
   { "take", CommandSetSoundSoundTake, 
@@ -1218,15 +1218,14 @@ static command acSetVariation[] = {
       "money games"), szONOFF, &cOnOff },
     { "defaultnames", CommandSetDefaultNames, N_("Set default names for players"),
 	  szNAME, NULL },
-    { "aliases", CommandSetAliases, N_("Set aliases for player 1 when importing MAT files"), szNAME, NULL },
     { "keynames", CommandSetKeyNames, N_("Set key player names to highlight"),
-	  szNAME, NULL },
+          szNAME, NULL },
     { "lang", CommandSetLang, N_("Set your language preference"),
       szLANG, NULL },
     { "matchequitytable", CommandSetMET,
       N_("Read match equity table from XML file"), szFILENAME, &cFilename },
     { "matchid", CommandSetMatchID, N_("set Match ID"), szMATCHID, NULL },
-    { "gnubgid", CommandSetGNUBgID, N_("set GNUbg ID"), szGNUBGID, NULL },
+    { "gnubgid", CommandSetGNUbgID, N_("set GNUbg ID"), szGNUBGID, NULL },
     { "xgid", CommandSetXGID, N_("set GNUbg ID from XGID"), szXGID, NULL },
     { "matchinfo", NULL, N_("Record auxiliary match information"), NULL,
       acSetMatchInfo },
@@ -1299,8 +1298,6 @@ static command acSetVariation[] = {
       N_("Control audio parameters"), NULL, acSetSound },
     { "styledgamelist", CommandSetStyledGameList, N_("Display colours for marked moves in game window"),
       szONOFF, &cOnOff },
-    { "markedsameplayer", CommandSetMarkedSamePlayer, N_("Focus on same player when moving between marked moves"),
-      szONOFF, &cOnOff },      
 #if defined(USE_GTK)
     { "theorywindow", CommandSetTheoryWindow, N_("Display game theory in window"),
       szONOFF, &cOnOff },
@@ -1314,8 +1311,10 @@ static command acSetVariation[] = {
     { "turn", CommandSetTurn, N_("Set which player is on roll"), szPLAYER,
       &cPlayer },
     { "tutor", NULL, N_("Control tutor setup"), NULL, acSetTutor }, 
+#if 0
     { "usekeynames", CommandSetUseKeyNames, N_("Set whether to use the list of key player names"),
-      szONOFF, &cOnOff },    
+      szONOFF, &cOnOff },
+#endif
     { "variation", NULL, N_("Set which variation of backgammon is used"), 
       NULL, acSetVariation }, 
     { "vsync3d", CommandSetVsync3d, N_("Turn vertical sync on/off"), szONOFF, &cOnOff },
@@ -1341,7 +1340,6 @@ static command acSetVariation[] = {
 };
 
 command  acShow[] = {
-    { "aliases", CommandShowAliases, N_("Show aliases for player 1 when importing MAT files"), NULL, NULL }, 
     { "analysis", CommandShowAnalysis, N_("Show parameters used for analysing "
       "moves"), NULL, NULL },
     { "autosave", CommandShowAutoSave, N_("Show parameters used for autosaving"), NULL, NULL },
@@ -1403,6 +1401,8 @@ command  acShow[] = {
 #if defined(USE_GTK)
     { "geometry", CommandShowGeometry, N_("Show geometry settings"), 
       NULL, NULL },
+    { "history", CommandShowHistory,
+      N_("Show plot of player's historical error rate"), NULL, NULL },
 #endif
     { "history", CommandShowHistory,
       N_("Show plot of player's historical error rate"), NULL, NULL },

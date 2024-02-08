@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkmet.c,v 1.36 2022/08/30 18:38:35 plm Exp $
+ * $Id: gtkmet.c,v 1.37 2023/09/02 22:31:39 plm Exp $
  */
 
 #include "config.h"
@@ -100,8 +100,6 @@ UpdateAllTables(const metwidget * pmw)
 static GtkWidget *
 GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned int nAway0, const unsigned int nAway1)
 {
-    unsigned int i, j;
-    char sz[16];
     GtkWidget *pwScrolledWindow = gtk_scrolled_window_new(NULL, NULL);
 #if GTK_CHECK_VERSION(3,0,0)
     GtkWidget *pwGrid = gtk_grid_new();
@@ -142,8 +140,9 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
 
     /* header for rows */
 
-    for (i = 0; i < nCols; i++) {
-        sprintf(sz, _("%u-away"), i + 1);
+    for (unsigned int i = 0; i < nCols; i++) {
+        gchar *sz = g_strdup_printf(_("%u-away"), i + 1);
+
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), i + 1, 0, 1, 1);
 #else
@@ -152,12 +151,14 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
         if (i == nAway1) {
             gtk_widget_set_name(GTK_WIDGET(pw), "gnubg-met-matching-score");
         }
+	g_free(sz);
     }
 
     /* header for columns */
 
-    for (i = 0; i < nRows; i++) {
-        sprintf(sz, _("%u-away"), i + 1);
+    for (unsigned int i = 0; i < nRows; i++) {
+	gchar *sz = g_strdup_printf(_("%u-away"), i + 1);
+
 #if GTK_CHECK_VERSION(3,0,0)
         gtk_grid_attach(GTK_GRID(pwGrid), pw = gtk_label_new(sz), 0, i + 1, 1, 1);
 #else
@@ -166,14 +167,14 @@ GTKWriteMET(const unsigned int nRows, const unsigned int nCols, const unsigned i
         if (i == nAway0) {
             gtk_widget_set_name(GTK_WIDGET(pw), "gnubg-met-matching-score");
         }
-
+        g_free(sz);
     }
 
 
     /* fill out table */
 
-    for (i = 0; i < nRows; i++)
-        for (j = 0; j < nCols; j++) {
+    for (unsigned int i = 0; i < nRows; i++)
+        for (unsigned int j = 0; j < nCols; j++) {
 
             pmt->aapwLabel[i][j] = gtk_label_new(NULL);
 
@@ -232,8 +233,7 @@ extern void
 GTKShowMatchEquityTable(const unsigned int nMatchTo, const int anScore[2])
 {
     /* FIXME: Widget should update after 'Invert' or 'Load ...' */
-    int i;
-    char sz[50];
+    metwidget mw;
     GtkWidget *pwDialog = GTKCreateDialog(_("GNU Backgammon - Match equity table"),
                                           DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
     GtkWidget *pwNotebook = gtk_notebook_new();
@@ -246,8 +246,6 @@ GTKShowMatchEquityTable(const unsigned int nMatchTo, const int anScore[2])
                                 _("Use the specified match equity table "
                                   "around the other way (i.e., swap the players before "
                                   "looking up equities in the table)."));
-
-    metwidget mw;
 
     mw.nMatchTo = nMatchTo;
     mw.anAway[0] = (nMatchTo - (unsigned) anScore[0]) - 1;
@@ -264,12 +262,14 @@ GTKShowMatchEquityTable(const unsigned int nMatchTo, const int anScore[2])
     mw.pwPreCrawford = GTKWriteMET((unsigned) mw.nMatchTo, (unsigned) mw.nMatchTo, mw.anAway[0], mw.anAway[1]);
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), mw.pwPreCrawford, gtk_label_new(_("Pre-Crawford")));
 
-    for (i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++) {
 
-        sprintf(sz, _("Post-Crawford for player %s"), ap[i].szName);
+        gchar *sz = g_strdup_printf(_("Post-Crawford for player %s"), ap[i].szName);
 
         mw.apwPostCrawford[i] = GTKWriteMET(nMatchTo, 1, mw.anAway[i], mw.anAway[!i]);
         gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), mw.apwPostCrawford[i], gtk_label_new(sz));
+
+	g_free(sz);
     }
 
     gtk_window_set_default_size(GTK_WINDOW(pwDialog), 500, 300);

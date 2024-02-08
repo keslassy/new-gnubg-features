@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtklocdefs.c,v 1.17 2023/01/01 17:48:19 plm Exp $
+ * $Id: gtklocdefs.c,v 1.18 2023/12/02 22:08:33 plm Exp $
  */
 
 
@@ -38,9 +38,14 @@ extern GtkWidget *
 get_statusbar_label(GtkStatusbar * statusbar)
 {
 #if GTK_CHECK_VERSION(2,20,0)
-    return
-        GTK_WIDGET(gtk_container_get_children
-                   (GTK_CONTAINER(gtk_statusbar_get_message_area(GTK_STATUSBAR(statusbar))))->data);
+    GList *pl;
+    GtkWidget *label;
+   
+    pl = gtk_container_get_children(GTK_CONTAINER(gtk_statusbar_get_message_area(GTK_STATUSBAR(statusbar))));
+    label = g_list_first(pl)->data;
+
+    g_list_free(pl);
+    return label;
 #else
     return GTK_WIDGET(statusbar->label);
 #endif

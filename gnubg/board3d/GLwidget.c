@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: GLwidget.c,v 1.21 2022/09/05 20:00:33 plm Exp $
+ * $Id: GLwidget.c,v 1.22 2023/04/19 12:01:38 Superfly_Jon Exp $
  */
 
 #include "config.h"
@@ -118,7 +118,7 @@ void ModelManagerCopyModelToBuffer(ModelManager* modelHolder, int modelNumber)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, modelHolder->buffer);	/* this is the VBO that holds the vertex data */
 	glBufferSubData(GL_ARRAY_BUFFER, modelHolder->models[modelNumber].dataStart * sizeof(float), modelHolder->models[modelNumber].dataLength * sizeof(float), modelHolder->models[modelNumber].data);
-	free(modelHolder->models[modelNumber].data);
+	g_free(modelHolder->models[modelNumber].data);
 	modelHolder->models[modelNumber].data = NULL;
 }
 

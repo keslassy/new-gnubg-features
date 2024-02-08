@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkgame.h,v 1.163 2019/11/13 21:41:03 Superfly_Jon Exp $
+ * $Id: gtkgame.h,v 1.166 2023/12/20 14:17:30 plm Exp $
  */
 
 #ifndef GTKGAME_H
@@ -164,7 +164,9 @@ extern void ShowList(char *asz[], const char *szTitle, GtkWidget * parent);
 extern void ShowMove(hintdata * phd, const int f);
 extern void SwapBoardToPanel(int ToPanel, int updateEvents);
 extern void DoHideAllPanels(int updateEvents);
-#if defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
+extern void ToggleDockPanels(gpointer p, guint n, GtkWidget * pw);
+#else
 extern void ToggleEdit(GtkToggleAction * action, gpointer user_data);
 // extern void ToggleClockwise(GtkToggleAction * action, gpointer user_data);
 extern void ToggleDockPanels(GtkToggleAction * action, gpointer user_data);

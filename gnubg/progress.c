@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: progress.c,v 1.86 2022/01/09 14:09:14 plm Exp $
+ * $Id: progress.c,v 1.87 2023/12/31 16:05:15 plm Exp $
  */
 
 #include "config.h"
@@ -486,7 +486,7 @@ GTKStatPageClosedOut(const rolloutstat * prs, const int UNUSED(cGames))
     pw = gtk_vbox_new(FALSE, 0);
 #endif
 
-    pwLabel = gtk_label_new(_("Closed out statistics"));
+    pwLabel = gtk_label_new(_("Close-out statistics"));
 
     gtk_box_pack_start(GTK_BOX(pw), pwLabel, FALSE, FALSE, 4);
 
@@ -513,14 +513,14 @@ create_hit_model(const rolloutstat * prs, int cGames)
     s1 = g_strdup_printf("%d", prs->nOpponentHit);
     s2 = g_strdup_printf("%d", (prs + 1)->nOpponentHit);
     gtk_list_store_append(store, &iter);
-    gtk_list_store_set(store, &iter, 0, _("Number of games with hit(s)"), 1, s1, 2, s2, -1);
+    gtk_list_store_set(store, &iter, 0, _("Number of games with hits"), 1, s1, 2, s2, -1);
     g_free(s1);
     g_free(s2);
 
     s1 = g_strdup_printf("%7.2f%%", 100.0 * (prs)->nOpponentHit / (1.0 * cGames));
     s2 = g_strdup_printf("%7.2f%%", 100.0 * (prs + 1)->nOpponentHit / (1.0 * cGames));
     gtk_list_store_append(store, &iter);
-    gtk_list_store_set(store, &iter, 0, _("Percent games with hits"), 1, s1, 2, s2, -1);
+    gtk_list_store_set(store, &iter, 0, _("Percentage of games with hits"), 1, s1, 2, s2, -1);
     g_free(s1);
     g_free(s2);
 
@@ -852,8 +852,8 @@ GTKRolloutProgressStart(const cubeinfo * UNUSED(pci), const int n,
 }
 
 static void
-GTKRolloutProgress(float aarOutput[][NUM_ROLLOUT_OUTPUTS],
-                   float aarStdDev[][NUM_ROLLOUT_OUTPUTS],
+GTKRolloutProgress(const float aarOutput[][NUM_ROLLOUT_OUTPUTS],
+                   const float aarStdDev[][NUM_ROLLOUT_OUTPUTS],
                    const rolloutcontext * prc,
                    const cubeinfo aci[],
                    unsigned int initial_game_count,

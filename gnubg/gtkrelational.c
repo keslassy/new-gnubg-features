@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006-2008 Christian Anthon <anthon@kiku.dk>
- * Copyright (C) 2006-2022 the AUTHORS
+ * Copyright (C) 2006-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkrelational.c,v 1.60 2022/09/04 22:09:31 plm Exp $
+ * $Id: gtkrelational.c,v 1.64 2023/12/18 21:14:48 plm Exp $
  */
 
 /*
-02/2023: Isaac Keslassy: introduced the "history plot" feature, together with two ways 
-of launching it graphically: a sub-menu command ("Analyze > Plot History"), and a button
-in "Show Records". 
-*/
+ * 02/2023: Isaac Keslassy: introduced the "history plot" feature, together
+ * with two ways of launching it graphically: 
+ * a sub-menu command ("Analyze > Plot History"), and
+ * a button in "Show Records".
+ */
 
 #include "config.h"
 #include "backgammon.h"
@@ -80,8 +81,8 @@ static GtkListStore *playerStore;
 static GtkListStore *dbStore;
 static GtkTreeIter selected_iter;
 static int optionsValid;
-static GtkWidget *playerTreeview, *adddb, *deldb, *gameStats, *dbList, *dbtype, *user, *password, *hostname, *login,
-    *helptext;
+static GtkWidget *playerTreeview = NULL;
+static GtkWidget  *adddb, *deldb, *gameStats, *dbList, *dbtype, *user, *password, *hostname, *login, *helptext;
 
 static void CheckDatabase(const char *database);
 static void DBListSelected(GtkTreeView * treeview, gpointer userdata);
@@ -112,14 +113,10 @@ GetSelectedPlayer(void)
     return name;
 }
 
-
-/* ***************************************************************************** 
+/*****************************************************************************
     code for drawing the plot of GNU matchErrorRate using the records
-   ***************************************************************************** 
+ *****************************************************************************/
 
-This code is based on the MWC plot.
-
-*/
 #define WIDTH   640
 #define HEIGHT  480
 /* Number of matches to fetch and plot */
@@ -127,68 +124,75 @@ This code is based on the MWC plot.
 #define PLOT_WINDOW 5
 // #define NUM_RECORDS 250 /* make sure it's no less than NUM_PLOT*/
 
-static GdkRectangle da;            /* GtkDrawingArea size */
-static double margin1x=0.08;
-static double margin2x=0.08;
-static double margin1y=0.08;
-static double margin2y=0.05;
+static GdkRectangle plotarea;            /* GtkDrawingArea size */
+static double margin1x = 0.08;
+static double margin2x = 0.08;
+static double margin1y = 0.08;
+static double margin2y = 0.05;
+
 // static int alreadyComputed=0; /* when drawing it computes all arrays twice :( )*/
-static char playerName[100]; /* name of the player for whom we plot the history*/
+static char playerName[MAX_NAME_LEN]; /* name of the player for whom we plot the history*/
 
-/*  static because needed for both the computing + drawing functions...
-*/
-static int matchMoves [NUM_PLOT]={-1}; /* vector of numbers of moves in matches*/
-static double matchErrors [NUM_PLOT]={-1.0}; /* vector of total errors in matches*/
-static double matchErrorRate [NUM_PLOT]={-1.0}; /* vector of match error rate per match*/
-static double matchAvgErrorRate [NUM_PLOT]={-1.0}; /* vector of match error rate over last 
-                                    PLOT_WINDOW matches*/
-static int matchCumMoves [NUM_PLOT+1]={0}; /* vector of cumulative numbers of moves in matches*/
-static double matchCumErrors [NUM_PLOT+1]={0.0}; /* vector of cumulative total errors in matches*/
-static char opponentNames[NUM_PLOT][100]; /* names of opponentNames*/
+/*  static because needed for both the computing + drawing functions... */
 
-static double maxError=0.001; //to avoid dividing by 0 in case of mistake
-static double minError=1000.0; //to avoid dividing by 0 in case of mistake
+static int matchMoves [NUM_PLOT]={-1}; /* vector of numbers of moves in matches */
+static double matchErrors [NUM_PLOT]={-1.0}; /* vector of total errors in matches */
+static double matchErrorRate [NUM_PLOT]={-1.0}; /* vector of match error rate per match */
+static double matchAvgErrorRate [NUM_PLOT]={-1.0}; /* vector of match error rate over last PLOT_WINDOW matches */
+static int matchCumMoves [NUM_PLOT+1]={0}; /* vector of cumulative numbers of moves in matches */
+static double matchCumErrors [NUM_PLOT+1]={0.0}; /* vector of cumulative total errors in matches */
+static char opponentNames[NUM_PLOT][MAX_NAME_LEN]; /* names of opponentNames */
+
+static double maxError = 0.001;  // to avoid dividing by 0 in case of mistake
+static double minError = 1000.0; // to avoid dividing by 0 in case of mistake
 
 static double minYScale, maxYScale;
 
-static int numRecords=NUM_PLOT; 
+static int numRecords = NUM_PLOT;
 // #define EPSILON 0.001
 
-/*shows translation x->X when x=0=>X=a and x=1=>X=b
-defined with plot MWC, could also make it extern there;
-but the functions below depends on the margin definitions, so extern is more tricky,
-and we'd need to start having the margins in the function parameters*/
-double scaleValue(double x,double a,double b) {
+/* shows translation x->X when x=0=>X=a and x=1=>X=b
+ * defined with plot MWC, could also make it extern there;
+ * but the functions below depends on the margin definitions,
+ * so extern is more tricky, and we'd need to start having
+ * the margins in the function parameters
+ */
+
+static double scaleValue(double x,double a,double b) {
     return a+x*(b-a);
 }
+
 /* convert x in [0,1] to its X plotting value */
-double xToX (double x) { 
+
+static double xToX (double x) {
     /*
-    x=0->X=margin1*d
-    x=1->X=(1-margin2)*d
-    */   
-    return scaleValue(x,margin1x*da.width,(1-margin2x)*da.width);
-    //  OLD   // (i/(n-1))*da.width*19/20+da.width/20
-    // /*
-    // x=0->X=margin*d
-    // x=1->X=d
-    // */       
-    // return (da.width*(x*(1-margin)+margin));
+     * x = 0 -> X = margin1*d
+     * x = 1 -> X = (1-margin2)*d
+     */
+    return scaleValue(x, margin1x * plotarea.width, ( 1- margin2x) * plotarea.width);
 }
+
 /* convert index i to its X plotting value by using the number of moves at match i */
-double iToX (int i) { 
-    /* for i: how many moves have been played between i and "the end of the vector == 
-        the beginning of the match records", scaled by total played moves */
-    double x=((double)matchCumMoves[i]) / ((double)matchCumMoves[0]);
+
+static double iToX (int i) {
+    /* for i: how many moves have been played between i and
+     * "the end of the vector == the beginning of the match records",
+     * scaled by total played movesxi
+     */
+    double x = ((double)matchCumMoves[i]) / ((double)matchCumMoves[0]);
+
     return xToX(x);
-}
+}   
+
 /* convert y in [0,1] to its Y plotting value */
-double trueHistY (double y) { //}, gfloat h, gfloat margin) {
+
+static double trueHistY (double y) {
     /*
-    y=0->-h(1-margin1) on screen->Y=+h(1-margin1)
-    y=1->-h*margin2 on screen->Y=+h*margin2
-    */
-    return scaleValue(y,(1-margin1y)*da.height,margin2y*da.height);
+     * y = 0 -> -h(1-margin1) on screen->Y=+h(1-margin1)
+     * y = 1 -> -h*margin2 on screen->Y=+h*margin2
+     */
+    return scaleValue(y, (1 - margin1y) * plotarea.height, margin2y * plotarea.height);
+}
 
 //    /*
 //    y=0->-h(1-margin) on screen->Y=+h(1-margin)
@@ -197,8 +201,9 @@ double trueHistY (double y) { //}, gfloat h, gfloat margin) {
 //     return (da.height*(1-y)*(1-margin));
 }
 /* convert error to its Y plotting value using the rigth scaling */
-double errorToY(double error){
-    double y=(error-minYScale)/(maxYScale-minYScale);
+
+static double errorToY(double error) {
+    double y = (error-minYScale)/(maxYScale-minYScale);
     return trueHistY(y);
 }
 
@@ -214,49 +219,49 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
     double fontSize =11.0;
     double clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
     // gdouble i, clip_x1 = 0.0, clip_y1 = 0.0, clip_x2 = 0.0, clip_y2 = 0.0;
-    char strTemp[100];
+    char strTemp[40];
+
+    // "convert" the G*t*kWidget to G*d*kWindow (no, it's not a GtkWindow!)
+    GdkWindow* window = gtk_widget_get_window(widget);
 
 #if GTK_CHECK_VERSION(3,0,0)
     /*this is an "on_draw" in GTK3*/
-        // "convert" the G*t*kWidget to G*d*kWindow (no, it's not a GtkWindow!)
-    GdkWindow* window = gtk_widget_get_window(widget);  
 
-    cairo_region_t * cairoRegion = cairo_region_create();
+    /* Define a clipping zone to improve performance */
 
+    cairo_rectangle_int_t crt = { event->area.x, event->area.y, event->area.width, event->area.height };
+    
+    cairo_region_t * cairoRegion = cairo_region_create_rectangle(&crt);
+        
     GdkDrawingContext * drawingContext;
-    drawingContext = gdk_window_begin_draw_frame (window,cairoRegion);
-
+    drawingContext = gdk_window_begin_draw_frame(window, cairoRegion);
+            
     // say: "I want to start drawing"
-    cairo_t * cr = gdk_drawing_context_get_cairo_context (drawingContext);
+    cairo_t *cr = gdk_drawing_context_get_cairo_context(drawingContext);
 #else
-    cairo_t *cr = gdk_cairo_create (widget->window);
-#endif    
-       /* Define a clipping zone to improve performance */
-    cairo_rectangle (cr,
-            event->area.x,
-            event->area.y,
-            event->area.width,
-            event->area.height);
-    cairo_clip (cr);
+    (void) event;
+    cairo_t *cr = gdk_cairo_create(window);
+#endif
+
 #if GTK_CHECK_VERSION(3,0,0)
     /* Determine GtkDrawingArea dimensions */
-    gdk_window_get_geometry (window,
-            &da.x,
-            &da.y,
-            &da.width,
-            &da.height);
+    gdk_window_get_geometry(window,
+            &plotarea.x,
+            &plotarea.y,
+            &plotarea.width,
+            &plotarea.height);
 #else
     /* Determine GtkDrawingArea dimensions */
     int unused = 0;
-    gdk_window_get_geometry (widget->window,
-            &da.x,
-            &da.y,
-            &da.width,
-            &da.height,
+    gdk_window_get_geometry(window,
+            &plotarea.x,
+            &plotarea.y,
+            &plotarea.width,
+            &plotarea.height,
             &unused);
-#endif  
+#endif
 
-    /* we check already before calling the function, this is just to make sure and 
+    /* we check already before calling the function, this is just to make sure and
     could be deleted*/
 
     if(numRecords>1){
@@ -290,12 +295,12 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
 
         /* PLOT 1: 5-match avg error */
         cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
-        /* 1. the newest record is the first, so we conceptually start by plotting 
+        /* 1. the newest record is the first, so we conceptually start by plotting
         the oldest; 2. it's an average, so it's not defined on all i's*/
         for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
             cairo_line_to (cr, iToX(i), errorToY(matchAvgErrorRate[i]));
         }
-        cairo_set_line_join(cr, CAIRO_LINE_JOIN_MITER); 
+        cairo_set_line_join(cr, CAIRO_LINE_JOIN_MITER);
         cairo_stroke (cr);
             /*discs*/
         for (int i = numRecords-PLOT_WINDOW; i >=0; --i) {
@@ -303,7 +308,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_stroke_preserve(cr);
             cairo_fill(cr);
         }
-        
+    
             /* +legend */
         cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         cairo_set_dash(cr, dashed2, 0, 1); /*disable*/
@@ -312,7 +317,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to(cr,  xToX(0.47), trueHistY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "5-match average");
+        cairo_show_text(cr, _("5-match average"));
         cairo_stroke (cr);
 
         /* PLOT 2: match error*/
@@ -324,7 +329,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         }
         // cairo_set_source_rgba (cr, 1, 0.6, 0.0, 0.6); //red, green, blue, translucency;
                             //cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0) = black
-        cairo_set_line_join(cr, CAIRO_LINE_JOIN_MITER); 
+        cairo_set_line_join(cr, CAIRO_LINE_JOIN_MITER);
         cairo_stroke (cr);
             /*discs*/
         for (int i = numRecords-1; i >=0; --i) {
@@ -332,7 +337,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_arc(cr, iToX(i), errorToY(matchErrorRate[i]), dx/2, 0, 2 * M_PI);
             cairo_stroke_preserve(cr);
             cairo_fill(cr);
-        }        
+        }
             /* +legend */
         cairo_set_line_width (cr, dy/3);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
@@ -340,26 +345,26 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_line_to (cr, xToX(0.1), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_move_to(cr,  xToX(0.12), trueHistY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "Match error rate");
+        cairo_show_text(cr, _("Match error rate"));
         cairo_stroke (cr);
 
        /* PLOT 3: Avg error */
         cairo_set_source_rgb (cr, 0.0, 0.35, 0.65);
-        /* 1. the newest record is the first, so we conceptually start by plotting 
+        /* 1. the newest record is the first, so we conceptually start by plotting
         the oldest; 2. it's an average, so it's not defined on all i's*/
         cairo_set_dash(cr, dashed, len, 1);
         double matchAvg=Ratio(matchCumErrors[0], matchCumMoves[0]);
         cairo_move_to (cr, xToX(0.0), errorToY(matchAvg));
         cairo_line_to (cr, xToX(1.0), errorToY(matchAvg));
         cairo_stroke (cr);
-        
+    
             /* +legend */
         cairo_move_to (cr, xToX(0.75), trueHistY(1.0+margin2y/2));
         cairo_line_to (cr, xToX(0.8), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to(cr,  xToX(0.82), trueHistY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "Average");
+        cairo_show_text(cr, _("Average"));
         cairo_stroke (cr);
             /* +text to the right of line */
         cairo_move_to(cr, xToX(1.0)+dx/2, errorToY(matchAvg) + 0.3 * fontSize);
@@ -374,7 +379,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         for (double i = xLabel; i <(double)matchCumMoves[0]; i+=xLabel) {
             /* grid lines*/
             cairo_set_line_width (cr, dy/3);
-            cairo_set_dash(cr, dashed2, len2, 1);          
+            cairo_set_dash(cr, dashed2, len2, 1);
             cairo_set_source_rgb (cr, 0.6, 0.6, 0.6);
             // for (int i = numRecords-1; i >=0; i=MIN(i-1,i-numRecords/5)) {
             // g_message("matchCumMoves[0]=%d,i=%f, xLabel=%f",matchCumMoves[0],i,xLabel);
@@ -392,10 +397,10 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             // cairo_line_to (cr, xToX(((double)i)/(numRecords-1)), trueHistY(1.0));
             cairo_move_to(cr, xToX(i/ ((double)matchCumMoves[0]))-4*dx, trueHistY(0.0)+1.25*fontSize);
             sprintf(strTemp, "%d", (int)i);
-            cairo_show_text(cr, strTemp);  
+            cairo_show_text(cr, strTemp);
         }
             cairo_move_to(cr, xToX(0.5)-10*dx, trueHistY(0.0)+2.5*fontSize);
-            cairo_show_text(cr, "decisions (cube or move)");  
+            cairo_show_text(cr, _("decisions (cube or move)"));
 
          /* y axis*/
         for (double j = 0.0; j <1.0; j+=0.1) {
@@ -411,9 +416,9 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             /* text: y-axis labels */
             cairo_move_to(cr, xToX(-0.08), trueHistY(j)+0.3*fontSize);
             sprintf(strTemp, "%.1f", scaleValue(j,minYScale,maxYScale));
-            cairo_show_text(cr, strTemp); 
+            cairo_show_text(cr, strTemp);
             cairo_stroke (cr);
-        }         
+        }
 
         /* drawing: new matches (vertical lines) */
         cairo_set_line_width (cr, dy/3);
@@ -427,10 +432,10 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             // cairo_move_to (cr, iToX(i), errorToY(matchErrorRate[i]));
             // cairo_line_to (cr, iToX(i), trueHistY(0.93));
             cairo_set_source_rgb (cr, 0.0, 0.0, 0.55);
-            drawArrow(cr, iToX(i), trueHistY(0.86), iToX(i), 
+            drawArrow(cr, iToX(i), trueHistY(0.86), iToX(i),
                 errorToY(matchErrorRate[i])-3*dy);
             cairo_stroke (cr);
-    
+   
             /* text: match 1, match 2... */
             // int jTemp=0;
 
@@ -438,36 +443,30 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             double Y1= (jTemp % 2 == 0)? fontSize:-fontSize;
             double Y2= (jTemp % 2 == 0)? 2*fontSize:0;
             cairo_move_to(cr, iToX(i)-10*dx,(trueHistY(0.95)+Y1));
-            sprintf(strTemp, "match %d", numRecords-i);
-            cairo_show_text(cr, strTemp);    
+            sprintf(strTemp, _("match %d"), numRecords-i);
+            cairo_show_text(cr, strTemp);
             cairo_move_to(cr, iToX(i)-10*dx,(trueHistY(0.95)+Y2));
-            sprintf(strTemp, "vs. %s", opponentNames[i]);
-            cairo_show_text(cr, strTemp);    
+            sprintf(strTemp, _("vs. %s"), opponentNames[i]);
+            cairo_show_text(cr, strTemp);
             cairo_stroke (cr);
-        }    
+        }
 
-// #if 0 /* *********************************************** */
-// #endif //if 0
-
-
-        // g_message("clip_x1,clip_x2,clip_y1,clip_y2:(%f,%f,%f,%f), dx,dy=%f,%f, width, height=%d,%d",
-        //         clip_x1,clip_x2,clip_y1,clip_y2,dx,dy,da.width,da.height);
-    } else 
+    } else
         GTKMessage(_("Error, not enough datapoints for a plot."), DT_INFO);
 #if GTK_CHECK_VERSION(3,0,0)
 
     // say: "I'm finished drawing
-    gdk_window_end_draw_frame(window,drawingContext);
- 
+    gdk_window_end_draw_frame(window, drawingContext);
+
     // cleanup
     cairo_region_destroy(cairoRegion);
 #else
     cairo_destroy (cr);
-#endif 
+#endif
     return FALSE;
 }
 
-void HistoryPlotInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent) 
+static void HistoryPlotInfo(GtkWidget* UNUSED(pw), GtkWidget* pwParent)
 {
     GtkWidget* pwInfoDialog, * pwBox;
     // const char* pch;
@@ -496,35 +495,41 @@ total number of non-trivial played decisions. Lower is better.\
 \n\n- The orange plot illustrates the weighted-average error rate over the past 5 matches. \
 It divides the total errors by the number of played decisions within these 5 matches.\
 \n\n- Some match examples are provided throughout the plot (blue arrows)."));
-
+    
     GTKRunDialog(pwInfoDialog);
 }
 
-void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
+static void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
 {
+    char plotTitle[200];
+    sprintf(plotTitle, _("History plot for %s"), playerName);
 
 #if GTK_CHECK_VERSION(3,0,0)
-    GtkWindow * window; 
-    { // window setup
-        window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
-        gtk_window_set_default_size (window, WIDTH, HEIGHT);
-        gtk_window_set_position     (window, GTK_WIN_POS_CENTER);
-        gtk_window_set_title        (window, "History plot");
+    GtkWidget * window;
 
-        g_signal_connect(window, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
-    }  
-    GtkDrawingArea* da;
-    {
-        da = (GtkDrawingArea*) gtk_drawing_area_new();
-        gtk_container_add(GTK_CONTAINER(window), 
-            (GtkWidget*)da);
+    // window setup
+    // window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    gtk_window_set_default_size (GTK_WINDOW(window), WIDTH, HEIGHT);
+    gtk_window_set_position     (GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+    gtk_window_set_title        (GTK_WINDOW(window), plotTitle);
 
-        g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(DrawHistoryPlot), NULL);    
-        // g_signal_connect((GtkWidget*)da, "draw", G_CALLBACK(on_draw), NULL);    
-    } 
-    gtk_widget_show_all ((GtkWidget*)window);
+    g_signal_connect(window, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+
+    GtkWidget *helpButton;
+    gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_BUTTONS)),
+        helpButton = gtk_button_new_with_label(_("Explanations")));
+    gtk_widget_set_tooltip_text(helpButton,
+        _("Click to obtain more explanations on this History plot"));
+    g_signal_connect(helpButton, "clicked", G_CALLBACK(HistoryPlotInfo), window);
+
+    GtkWidget* da = gtk_drawing_area_new();
+    gtk_widget_set_hexpand(da, TRUE);
+    gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_MAIN)), da);
+    g_signal_connect(G_OBJECT(da), "draw", G_CALLBACK(DrawHistoryPlot), NULL);
+    
+    gtk_widget_show_all(window);
 #else
-
     GtkWidget *window;
     // GtkWidget *da;
     GtkWidget *helpButton;
@@ -533,46 +538,39 @@ void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
     window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
-    char plotTitle[200];
-    sprintf(plotTitle, "History plot for %s", playerName);
     gtk_window_set_title (GTK_WINDOW (window), plotTitle);
-    // g_signal_connect (G_OBJECT (window), "destroy", gtk_main_quit, NULL);
-    // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
-    // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
-    // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(CloseWindow), window);
+
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
 
     gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_BUTTONS)),
         helpButton = gtk_button_new_with_label(_("Explanations")));
-    gtk_widget_set_tooltip_text(helpButton, 
-        _("Click to obtain more explanations on this History plot")); 
+    gtk_widget_set_tooltip_text(helpButton,
+        _("Click to obtain more explanations on this History plot"));
     g_signal_connect(helpButton, "clicked", G_CALLBACK(HistoryPlotInfo), window);
-
 
     GtkWidget * da = gtk_drawing_area_new ();
     gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_MAIN)), da);
-    g_signal_connect (G_OBJECT (da), "expose-event", G_CALLBACK (DrawHistoryPlot), NULL);
+    g_signal_connect(G_OBJECT(da), "expose-event", G_CALLBACK (DrawHistoryPlot), NULL);
 
     gtk_widget_show_all (window);
-#endif    
+#endif
 }
 
-
-void initHistoryArrays(void) {
+static void initHistoryArrays(void) {
     for (int i = 0; i < numRecords; i++) {
-        matchErrorRate [i]=-1.0;
-        matchAvgErrorRate [i]=-1.0; 
-        matchMoves[i]=-1;
-        matchErrors[i]=-1.0;
-        matchCumMoves[i]=0;
-        matchCumErrors[i]=0.0; 
+        matchErrorRate[i] = -1.0;
+        matchAvgErrorRate[i] = -1.0;
+        matchMoves[i] = -1;
+        matchErrors[i] = -1.0;
+        matchCumMoves[i] = 0;
+        matchCumErrors[i] = 0.0;
     }
-    maxError=0.001;
-    minError=1000.0;
-    numRecords=NUM_PLOT;
+    maxError = 0.001;
+    minError = 1000.0;
+    numRecords = NUM_PLOT;
 }
 
-extern void ComputeHistory(void)//GtkWidget* pwParent)
+extern void ComputeHistory(void) //GtkWidget* pwParent)
 {
     /* let's re-initialize all the static values and recompute the History */
     // if (numRecords<NUM_PLOT+1) {
@@ -582,7 +580,6 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
     RowSet *rs;
     RowSet *rs2;
-    RowSet *rs3;
 
     int moves[2];
     unsigned int i, j;
@@ -590,9 +587,7 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
     /* get player_id of player at bottom*/
     char szRequest[600];
-    char * listName=g_malloc(100 * sizeof(char));
-    // char playerName[100];
-    // int needToFreeListName=FALSE;
+    char *listName = NULL;
 
     /*if launched by record list, need to check if player was picked there*/
     if (fTriggeredByRecordList) {
@@ -600,10 +595,9 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         listName = GetSelectedPlayer();
         // needToFreeListName=TRUE;
     }
-    // if(!triggeredByRecordList) {
-    // if(!triggeredByRecordList || (!playerName)) {
-    if(fTriggeredByRecordList && listName){
-        sprintf(playerName, "%s",listName);
+    
+    if (fTriggeredByRecordList && listName) {
+        sprintf(playerName, "%s", listName);
         // g_message("using listName:%s",listName);
         g_free(listName);
     } else {
@@ -611,14 +605,13 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
         // if(fTriggeredByRecordList && !listName){
             // g_message("we free listName");
         g_free(listName);
-        // }
-        fTriggeredByRecordList=FALSE; /*re-initialize*/
+        fTriggeredByRecordList = FALSE; /*re-initialize*/
         if (!ap[1].szName[0]) {
             GTKMessage(_("No player name. Please open a match or select one in the database records."), DT_INFO);
             return;
         }
         // g_message("player on board?");
-        sprintf(playerName, "%s",ap[1].szName);
+        sprintf(playerName, "%s", ap[1].szName);
         // if (!playerName){
         //     GTKMessage(_("No player name. Please open a match or select one in the database records."), DT_INFO);
         //     return;
@@ -629,11 +622,11 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     sprintf(szRequest, "player_id FROM player WHERE name='%s'", playerName);
         // g_message("request1=%s",szRequest);
     rs = RunQuery(szRequest);
-    if (!rs || rs->rows <2){
+    if (!rs || rs->rows < 2){
         GTKMessage(_("Problem accessing database"), DT_INFO);
         return;
     }
-    int userID=(int) strtol(rs->data[1][0], NULL, 0);
+    int userID = (int) strtol(rs->data[1][0], NULL, 0);
     // g_message("userID=%d",userID);
     FreeRowset(rs);
 
@@ -689,6 +682,8 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
     // <= ?
     for (j = 1; j < rs2->rows; ++j) {
+	RowSet *rs3;
+
         for (i = 0; i < 2; ++i)
             moves[i] = (int) strtol(rs2->data[j][i], NULL, 0);
 
@@ -697,17 +692,14 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
 
         matchErrors[j-1]=(stats[0] + stats[1]) * 1000.0f;
         matchMoves[j-1]=moves[0] + moves[1];
-        matchErrorRate[j-1]=Ratio(stats[0] + stats[1], moves[0] + moves[1]) * 1000.0f;
-        // g_message("error:%f=%f/%d",matchErrorRate[j-1],matchErrors[j-1],matchMoves[j-1]);
-        // int mID=(int) strtol(rs2->data[j][0],NULL, 0);
-        // g_message("ID: %d, names: %s, %s",mID,rs2->data[j][5],rs2->data[j][6]);
+        matchErrorRate[j-1]=Ratiof(stats[0] + stats[1], moves[0] + moves[1]) * 1000.0f;
 
         /* get name of player at top of screen*/
-        int opponentID= (userID ==(int) strtol(rs2->data[j][4],NULL, 0))?
-            strtol(rs2->data[j][5],NULL, 0) : strtol(rs2->data[j][4],NULL, 0);
-        // g_message("opponentID: %d",opponentID);
+        int opponentID = (userID == (int) strtol(rs2->data[j][4],NULL, 0)) ?
+            (int) strtol(rs2->data[j][5],NULL, 0) : (int) strtol(rs2->data[j][4],NULL, 0);
+
         sprintf(szRequest, "name FROM player WHERE player_id='%d'",opponentID);
-        // g_message("request=%s",szRequest);
+
         rs3 = RunQuery(szRequest);
         if (!rs3){
             GTKMessage(_("Problem accessing database"), DT_INFO);
@@ -756,11 +748,14 @@ extern void ComputeHistory(void)//GtkWidget* pwParent)
     return;
 }
 
-/* creating this placeholder function with all the inputs needed when pressing a button;
-the real function above doesn't have inputs*/
-void PlotHistoryTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
-    /*if launched by record list, need to check if player was picked there*/
-    fTriggeredByRecordList=TRUE; 
+/* creating this placeholder function with all the inputs needed when
+ * pressing a button; the real function above doesn't have inputs
+ */
+static void
+PlotHistoryTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
+{
+    /* if launched by record list, need to check if player was picked there */
+    fTriggeredByRecordList = TRUE;
     ComputeHistory(); //pwStatDialog);
 }
 
@@ -777,8 +772,6 @@ create_model(void)
     int moves[4];
     unsigned int i, j;
     gfloat stats[9];
-
-
 
     /* create list store */
     playerStore = gtk_list_store_new(NUM_COLUMNS,
@@ -830,31 +823,29 @@ create_model(void)
                            COLUMN_NICK,
                            rs->data[j][0],
                            COLUMN_GNUE,
-                           Ratio(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f,
+                           Ratiof(stats[6] + stats[7], moves[1] + moves[2]) * 1000.0f,
                            COLUMN_GCHE,
-                           Ratio(stats[7], moves[1]) * 1000.0f,
+                           Ratiof(stats[7], moves[1]) * 1000.0f,
                            COLUMN_GCUE,
-                           Ratio(stats[6], moves[2]) * 1000.0f,
+                           Ratiof(stats[6], moves[2]) * 1000.0f,
                            COLUMN_SNWE,
-                           Ratio(stats[6] + stats[7], moves[3]) * 1000.0f,
+                           Ratiof(stats[6] + stats[7], moves[3]) * 1000.0f,
                            COLUMN_SCHE,
-                           Ratio(stats[7], moves[3]) * 1000.0f,
+                           Ratiof(stats[7], moves[3]) * 1000.0f,
                            COLUMN_SCUE,
-                           Ratio(stats[6], moves[3]) * 1000.0f,
+                           Ratiof(stats[6], moves[3]) * 1000.0f,
                            COLUMN_WRPA,
-                           Ratio(stats[5], moves[3]) * 1000.0f,
+                           Ratiof(stats[5], moves[3]) * 1000.0f,
                            COLUMN_WRTA,
-                           Ratio(stats[4], moves[3]) * 1000.0f,
+                           Ratiof(stats[4], moves[3]) * 1000.0f,
                            COLUMN_WDTG,
-                           Ratio(stats[3], moves[3]) * 1000.0f,
+                           Ratiof(stats[3], moves[3]) * 1000.0f,
                            COLUMN_WDBD,
-                           Ratio(stats[2], moves[3]) * 1000.0f,
+                           Ratiof(stats[2], moves[3]) * 1000.0f,
                            COLUMN_MDAC,
-                           Ratio(stats[1], moves[3]) * 1000.0f,
+                           Ratiof(stats[1], moves[3]) * 1000.0f,
                            COLUMN_MDBC,
-                           Ratio(stats[0], moves[3]) * 1000.0f, 
-                           COLUMN_LUCK, Ratio(stats[8], moves[0]) * 1000.0f, 
-                           -1);
+                           Ratiof(stats[0], moves[3]) * 1000.0f, COLUMN_LUCK, Ratiof(stats[8], moves[0]) * 1000.0f, -1);
     }
     FreeRowset(rs);
     return GTK_TREE_MODEL(playerStore);
@@ -1144,7 +1135,7 @@ TryConnection(DBProvider * pdb, GtkWidget * dbList)
             if (seldb)
                 ok = TRUE;
             else {
-                const char *tmpDatabase = pdb->database;
+                char *tmpDatabase = pdb->database;
                 pdb->database = database;
                 ok = (TestDB(dbType) == NULL);
                 pdb->database = tmpDatabase;
@@ -1176,7 +1167,7 @@ CredentialsChanged(void)
 static void
 LoginClicked(GtkButton * UNUSED(button), gpointer dbList)
 {
-    const char *tmpUser, *tmpPass, *tmpHost;
+    char *tmpUser, *tmpPass, *tmpHost;
     DBProvider *pdb = GetSelectedDBType();
 
     if (pdb == NULL)
@@ -1186,9 +1177,9 @@ LoginClicked(GtkButton * UNUSED(button), gpointer dbList)
     tmpPass = pdb->password;
     tmpHost = pdb->hostname;
 
-    pdb->username = gtk_entry_get_text(GTK_ENTRY(user));
-    pdb->password = gtk_entry_get_text(GTK_ENTRY(password));
-    pdb->hostname = gtk_entry_get_text(GTK_ENTRY(hostname));
+    pdb->username = (char *) gtk_entry_get_text(GTK_ENTRY(user));
+    pdb->password = (char *) gtk_entry_get_text(GTK_ENTRY(password));
+    pdb->hostname = (char *) gtk_entry_get_text(GTK_ENTRY(hostname));
 
     TryConnection(pdb, dbList);
 
@@ -1503,7 +1494,7 @@ RelationalOptions(void)
     gtk_widget_set_valign(login, GTK_ALIGN_START);
     gtk_grid_attach(GTK_GRID(grid), login, 1, 3, 1, 1);
 #else
-    align = gtk_alignment_new(1, 0, 0, 0); 	 
+    align = gtk_alignment_new(1, 0, 0, 0);
     gtk_container_add(GTK_CONTAINER(align), login);
     gtk_table_attach(GTK_TABLE(table), align, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, 0, 0, 0);
 #endif
@@ -1562,13 +1553,13 @@ RelationalOptions(void)
 
     return vb2;
 }
- 
+
 extern void
 GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
     
     GtkWidget *pwRun, *pwDialog, *pwHbox2, *pwVbox2,
-        *pwPlayerFrame, *pwUpdate, *pwPaned, *pwVbox, *pwErase, *pwOpen, 
+        *pwPlayerFrame, *pwUpdate, *pwPaned, *pwVbox, *pwErase, *pwOpen,
         *pwn, *pwLabel, *pwScrolled, *pwHbox, *histButton;
     DBProvider *pdb;
     static GtkTextBuffer *query = NULL; /*remember query */

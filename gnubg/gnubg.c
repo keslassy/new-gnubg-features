@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gnubg.c,v 1.1027 2023/01/18 21:49:36 plm Exp $
+ * $Id: gnubg.c,v 1.1038 2024/01/04 21:10:49 plm Exp $
  */
 
 
@@ -239,18 +239,26 @@ unsigned int cAutoDoubles = 0;
 unsigned int nBeavers = 3;
 unsigned int nDefaultLength = 7;
 
-/* TRUE if analysis should run in the background; false by default, can be changed in menu*/
-int fBackgroundAnalysis = FALSE; 
-/* if we analyze in the background, we turn on the following global flag to disable all sorts of 
-buttons during the analysis (e.g. eval, rollout, etc.), since we are not equipped for a second
-parallel analysis */
+/*
+ * TRUE if analysis should run in the background
+ * FALSE by default
+ * can be chang edin menu
+ */
+int fBackgroundAnalysis = FALSE;
+
+/*
+ * if we analyze in the background, we turn on the following global flag
+ * to disable all sorts of buttons during the analysis (eval, rollout, etc.)
+ * since we are not equipped for a second parallel analysis
+ */
 int fBackgroundAnalysisRunning = FALSE;
 /*AR flags*/
 int fGameARRunning = FALSE;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
-const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
-const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
+const char *aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] =
+    { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis") };
+const char *aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart" };
 
 /*initialization*/
 char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]={""};
@@ -288,6 +296,7 @@ int nTutorSkillCurrent = 0;
 
 char *szCurrentFileName = NULL;
 char *szCurrentFolder = NULL;
+
 
 int fNextTurn = FALSE, fComputing = FALSE;
 
@@ -543,7 +552,7 @@ player ap[2] = {
     {"user", PLAYER_HUMAN, EVALSETUP_WORLDCLASS, EVALSETUP_WORLDCLASS, MOVEFILTER_NORMAL, 0, NULL}
 };
 
-char default_names[2][31] = { "gnubg", "user" };
+char default_names[2][MAX_NAME_LEN] = { "gnubg", "user" };
 
 char player1aliases[256] = "";
 
@@ -1566,6 +1575,7 @@ ShowBoard(void)
                  ap[ms.fTurn].pt != PLAYER_HUMAN && !fComputing && !nNextTurn, anChequers[ms.bgv]);
     }
 #endif
+
 #ifdef UNDEF
     {
         char *pc;
@@ -2496,9 +2506,6 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         }
         if ((RunAsyncProcess((AsyncFun) asyncFindMove, &fd, _("Considering move...")) != 0) || fInterrupt) {
             fShowProgress = fSaveShowProg;
-            // if(fInQuizMode)
-            //     g_free(&fd.pml->amMoves);
-                // g_free(pmr);
             return;
         }
         fShowProgress = fSaveShowProg;
@@ -2527,11 +2534,6 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         asyncFindMove(&fd);
         pmr_movelist_set(pmr, GetEvalChequer(), &ml);
         find_skills(pmr, &ms, FALSE, -1);
-        // g_free(&fd);
-            // if(fInQuizMode)
-                // g_free(&fd.pml->amMoves);
-                // g_free(&ml.amMoves);
-
     }
 
     /* resort the moves according to cubeful (if applicable),
@@ -2542,7 +2544,6 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
         int *ai = (int *) malloc(pmr->ml.cMoves * sizeof(int));
         RefreshMoveList(&pmr->ml, ai);
         free(ai);
-        // MoveListAutoRollout(&pmr->ml);
     }
 
 #if defined(USE_GTK)
@@ -2579,9 +2580,6 @@ hint_move(char *sz, gboolean show, procrecorddata * procdatarec)
                 break;
         }
     }
-            // g_free(&pmr->ml.amMoves);
-        // g_free(&fd);
-        //  g_free(&pmr);
 }
 
 extern void
@@ -2766,32 +2764,6 @@ CommandQuit(char *UNUSED(sz))
     PromptForExit();
 }
 
-extern void
-CommandQuiz(char *UNUSED(sz))
-{
-#if defined(USE_GTK)    
-    QuizConsole();
-#endif
-    // GdkColor color;
-    // color.red = 0xffff;
-    // color.green = 0xffff;
-    // color.blue = 0;
-    // gtk_window_set_title(GTK_WINDOW(pwMain), "hello");
-    // if (gdk_color_parse("#c0deed", &color)) {
-    //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // } else {
-    //     gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // }
-    // // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // gtk_widget_show_all(pwMain);
-        // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_SELECTED]);
-
-    // gdk_color_parse ("black", &color);
-    // // gdk_color_parse (BGCOLOR, &color);
-    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &color);
-    // gtk_widget_modify_bg(pwMain, GTK_STATE_NORMAL, &gtk_widget_get_style(pwMain)->bg[GTK_STATE_PRELIGHT]);
-
-}
 
 extern void
 CommandRollout(char *sz)
@@ -3103,17 +3075,13 @@ SaveEvalSettings(FILE * pf, const char *sz, evalcontext * pec)
     gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
     gchar *szNoise = g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%0.3f", pec->rNoise);
     fprintf(pf, "%s plies %u\n"
-            "%s autorollout %s\n"
             "%s prune %s\n"
             "%s cubeful %s\n"
             "%s noise %s\n"
             "%s deterministic %s\n",
             sz, pec->nPlies,
-            sz, pec->fAutoRollout ? "on" : "off",
             sz, pec->fUsePrune ? "on" : "off",
-            sz, pec->fCubeful ? "on" : "off", 
-            sz, szNoise, 
-            sz, pec->fDeterministic ? "on" : "off");
+            sz, pec->fCubeful ? "on" : "off", sz, szNoise, sz, pec->fDeterministic ? "on" : "off");
 }
 
 
@@ -3496,37 +3464,6 @@ static void
 SaveMiscSettings(FILE * pf)
 {
     gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
-
-    fprintf(pf, "set browser \"%s\"\n", get_web_browser());
-    fprintf(pf, "set checkupdates %s\n", fCheckUpdates ? "on" : "off");    
-    fprintf(pf, "set clockwise %s\n", fClockwise ? "on" : "off");
-    fprintf(pf, "set confirm new %s\n", fConfirmNew ? "on" : "off");
-    fprintf(pf, "set confirm save %s\n", fConfirmSave ? "on" : "off");
-
-    fprintf(pf, "set confirm default ");
-    if (nConfirmDefault == 1)
-        fprintf(pf, "yes\n");
-    else if (nConfirmDefault == 0)
-        fprintf(pf, "no\n");
-    else
-        fprintf(pf, "ask\n");
-
-    fprintf(pf, "set cube use %s\n", fCubeUse ? "on" : "off");
-    fprintf(pf, "set display %s\n", fDisplay ? "on" : "off");
-    fprintf(pf, "set firsttimeupdates %d\n", fFirstTimeUpdates);    
-    fprintf(pf, "set gotofirstgame %s\n", fGotoFirstGame ? "on" : "off");
-    fprintf(pf, "set nextupdatetime %ld\n", (nextUpdateTime));
-    fprintf(pf, "set output matchpc %s\n", fOutputMatchPC ? "on" : "off");
-    fprintf(pf, "set output mwc %s\n", fOutputMWC ? "on" : "off");
-    fprintf(pf, "set output rawboard %s\n", fOutputRawboard ? "on" : "off");
-    fprintf(pf, "set output winpc %s\n", fOutputWinPC ? "on" : "off");
-    fprintf(pf, "set output digits %d\n", fOutputDigits);
-    fprintf(pf, "set output errorratefactor %s\n",
-            g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rErrorRateFactor));
-    fprintf(pf, "set priority nice %d\n", nThreadPriority);
-    fprintf(pf, "set prompt %s\n", szPrompt);
-    fprintf(pf, "set ratingoffset %s\n", g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rRatingOffset));
-
     fprintf(pf, "set tutor mode %s\n", fTutor ? "on" : "off");
     fprintf(pf, "set tutor cube %s\n", fTutorCube ? "on" : "off");
     fprintf(pf, "set tutor chequer %s\n", fTutorChequer ? "on" : "off");
@@ -3538,18 +3475,32 @@ SaveMiscSettings(FILE * pf)
     else
         fprintf(pf, "doubtful\n");
 
-    fprintf(pf, "set quiz allow %s\n", fUseQuiz ? "on" : "off");
-    fprintf(pf, "set quiz autoadd %s\n", fQuizAutoAdd ? "on" : "off");
-    fprintf(pf, "set quiz oneplayer %s\n", fQuizOnePlayer ? "on" : "off");
-    fprintf(pf, "set quiz skill ");
-    if (QuizSkill == SKILL_VERYBAD)
-        fprintf(pf, "very bad\n");
-    else if (QuizSkill == SKILL_BAD)
-        fprintf(pf, "bad\n");
-    else
-        fprintf(pf, "doubtful\n");
+    fprintf(pf, "set clockwise %s\n", fClockwise ? "on" : "off");
+    fprintf(pf, "set confirm new %s\n", fConfirmNew ? "on" : "off");
+    fprintf(pf, "set confirm save %s\n", fConfirmSave ? "on" : "off");
+    fprintf(pf, "set cube use %s\n", fCubeUse ? "on" : "off");
+    fprintf(pf, "set display %s\n", fDisplay ? "on" : "off");
 
-    fprintf(pf, "set usekeynames %s\n", fUseKeyNames ? "on" : "off");    
+    fprintf(pf, "set confirm default ");
+    if (nConfirmDefault == 1)
+        fprintf(pf, "yes\n");
+    else if (nConfirmDefault == 0)
+        fprintf(pf, "no\n");
+    else
+        fprintf(pf, "ask\n");
+
+    fprintf(pf, "set gotofirstgame %s\n", fGotoFirstGame ? "on" : "off");
+    fprintf(pf, "set output matchpc %s\n", fOutputMatchPC ? "on" : "off");
+    fprintf(pf, "set output mwc %s\n", fOutputMWC ? "on" : "off");
+    fprintf(pf, "set output rawboard %s\n", fOutputRawboard ? "on" : "off");
+    fprintf(pf, "set output winpc %s\n", fOutputWinPC ? "on" : "off");
+    fprintf(pf, "set output digits %d\n", fOutputDigits);
+    fprintf(pf, "set output errorratefactor %s\n",
+            g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rErrorRateFactor));
+    fprintf(pf, "set prompt %s\n", szPrompt);
+    fprintf(pf, "set browser \"%s\"\n", get_web_browser());
+    fprintf(pf, "set priority nice %d\n", nThreadPriority);
+    fprintf(pf, "set ratingoffset %s\n", g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rRatingOffset));
 }
 
 extern void
@@ -4033,20 +3984,6 @@ NextTurnNotify(gpointer UNUSED(p))
     return FALSE;               /* remove idle handler, if GTK */
 }
 #endif
-
-/* UserCommand is GTK-only, this function also works outside GTK*/
-extern void
-UserCommand2(const char *szCommand)
-{
-#if defined (USE_GTK)
-    UserCommand(szCommand);
-#else
-    char *line = g_strdup(szCommand);
-    HandleCommand(line, acTop);
-    g_free(line);
-#endif
-}
-
 
 /* Read a line from stdin, and handle X and readline input if
  * appropriate.  This function blocks until a line is ready, and does
@@ -4770,12 +4707,6 @@ init_autosave(void)
     g_free(backupdir);
 }
 
-static void initQuizDir(void) {
-    char *quizdir = g_build_filename(szHomeDirectory, "quiz", NULL);
-    g_mkdir(quizdir, 0700);
-    g_free(quizdir);
-}
-
 static void
 null_debug(const gchar * UNUSED(dom), GLogLevelFlags UNUSED(logflags), const gchar * UNUSED(message),
            gpointer UNUSED(unused))
@@ -4797,154 +4728,6 @@ callback_parse_python_option(const gchar *UNUSED(name), const gchar *value, gpoi
 
     return TRUE;
 }
-
-
-/* ************************************************ */
-
-
-
-/* Launches the update screen to inform the user there is a newer gnubg.
-
-The implementation is based on GTKMessage, which is at the basis of GetInputYN and
-GTKGetInputYN. However it is changed here because we also want to offer the user a 
-button where he can opt out of update messages (same variable fCheckUpdates as in 
-the options).
-
-Note that we split between this function and GTKAskToUpdate for the GTK side.
-*/
-void AskToUpdate(char * availableVersion)
-{
-
-    char *sz = g_strdup_printf(_("A new version of GNU Backgammon is available. "
-            "\n\n Current version:   %s"
-            "\n Available version: %s\n"),
-            VERSION, availableVersion);
-
-    /* the non-GTK version with "error" does not seem to write "error", so 
-    we're using it:*/
-    outputerrf("%s",sz);
-    outputerrf(_("Please check online: %s"),websiteForUpdates);
-
-    g_free(sz);
-
-}
-#undef CHECKUPDATE
- 
-/* This is the "official" recommended function.
-It gets an "unused" warning when compiling, but it looks like it is actually 
-called below. */
-static size_t
-WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-  size_t realsize = size * nmemb;
-  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
- 
-  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
-  if(!ptr) {
-    /* out of memory! */
-    printf("not enough memory (realloc returned NULL)\n");
-    return 0;
-  }
- 
-  mem->memory = ptr;
-  memcpy(&(mem->memory[mem->size]), contents, realsize);
-  mem->size += realsize;
-  mem->memory[mem->size] = 0;
- 
-  return realsize;
-}
-
-/* first line is with no new update version online, second has an update*/
-char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/version.txt";
-// char * urlForVersion = "https://raw.githubusercontent.com/keslassy/new-gnubg-features/main/version/newversion.txt";
-
- 
-
-/*   check version update online*/
-extern void CheckVersionUpdate(void)
-{
-    // g_message("in CheckVersionUpdate");
-    if(fFirstTimeUpdates==1) {
-        if (!GetInputYN(_("Do you allow GNU Backgammon to check online for updates?"))) {
-            fCheckUpdates=FALSE;
-            fFirstTimeUpdates=0;
-            UserCommand2("save settings");
-            return;
-        } else {
-            fCheckUpdates=TRUE; /*it probably already was TRUE*/
-            fFirstTimeUpdates=0;
-            UserCommand2("save settings");
-        }
-    }
-
-#if defined(LIBCURL_PROTOCOL_HTTPS)
-    CURL *curl_handle;
-    CURLcode res;
-    // char * url;
- 
-    struct MemoryStruct chunk;
-
-    chunk.memory = malloc(1);  /* will be grown as needed by the realloc above */
-    chunk.size = 0;    /* no data at this point */
-
-    curl_global_init(CURL_GLOBAL_ALL);
-
-    /* init the curl session */
-    curl_handle = curl_easy_init();
-
-    /* specify URL to get */
-    curl_easy_setopt(curl_handle, CURLOPT_URL, urlForVersion);
-
-    /* send all data to this function  */
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-
-    /* we pass our 'chunk' struct to the callback function */
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
-
-    /* some servers do not like requests that are made without a user-agent
-        field, so we provide one */
-    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
-    /* get it! */
-    res = curl_easy_perform(curl_handle);
-
-    /* check for errors */
-    if(res != CURLE_OK) {
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
-    }
-    else {
-        /*
-        * Now, our chunk.memory points to a memory block that is chunk.size
-        * bytes big and contains the remote file.
-        */
-        char *token;
-        token = strtok(chunk.memory, "\n");
-        // g_message("latest version=%s vs VERSION=%s",token,VERSION);
-        if (strcmp(token,VERSION)>0) {
-            // g_message("newer version, need to download!");
-#if defined(USE_GTK)
-            GTKAskToUpdate(token);
-#else            
-            AskToUpdate(token);
-#endif
-        } else {
-            return;
-        }   
-    }
-
-    /* cleanup curl stuff */
-    curl_easy_cleanup(curl_handle);
-
-    free(chunk.memory);
-
-    //   /* we are done with libcurl, so clean it up */
-    //   curl_global_cleanup(); //<- needed? done upon shutdown; we may also need this elsewhere, 
-                                //  e.g. for the random number generator
-#endif //end ifdefined LIBCURL
-}
-
-/* ************************************************ */
 
 int
 main(int argc, char *argv[])
@@ -5068,10 +4851,6 @@ main(int argc, char *argv[])
         exit(EXIT_FAILURE);
 
     init_autosave();
-    if(fUseQuiz) {
-        initQuizDir();
-        // g_message("created quiz dir");
-    }
 
     RenderInitialise();
 
@@ -5146,53 +4925,12 @@ main(int argc, char *argv[])
     /* start-up sound */
     playSound(SOUND_START);
 
-    /* check that there is no new gnubg version online */     
-#if defined(LIBCURL_PROTOCOL_HTTPS)
-    // g_message("fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
-    //     fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
-    if(fCheckUpdates) {
-        intmax_t intSeconds=(intmax_t) (time(NULL)); /*=current time*/
-        // g_message("intSeconds=%ld,nextUpdateTime=%ld",intSeconds,nextUpdateTime);
-        if (fFirstTimeUpdates==2) {
-            nextUpdateTime=intSeconds + 2592000; //3600*24*30
-            fFirstTimeUpdates=1;
-            UserCommand2("save settings");
-            // g_message("save settings: fCheckUpdates=%d,fFirstTimeUpdates=%d,nextUpdateTime=%ld",
-            //     fCheckUpdates,fFirstTimeUpdates,nextUpdateTime);
-        } else if (intSeconds-nextUpdateTime>1) { /* <=> first verify that we haven't 
-                    looked for an update in the past week */
-                /* 
-                    - Inside this loop means we haven't checked in the past week.
-                    - We first update the next time to check and set it a week from now
-                    - Then we launch a splash screen with a notice for the user
-                    - If it's the first time we launch gnubg, we only check in a month: 
-                    3 states: (a) fFirstTimeUpdates==2=>postpone by a month; 
-                    (b) fFirstTimeUpdates==1=>when the month is over, ask the user whether
-                    we are allowed to check for an update (following bug-gnubg feedback, 
-                    don't do it automatically)
-                    (c) fFirstTimeUpdates==0
-                */
-            nextUpdateTime=intSeconds + 604800; //3600*24*7
-            UserCommand2("save settings");
-#if defined(USE_GTK)
-            // we postpone checking if there is a newer version to after the GTK window shows up
-            fCheckUpdateGTK = TRUE;
-#else
-            CheckVersionUpdate();
-#endif //GTK
-        }
-    }
-#endif //LIBCURL
-
-
-
 #if defined(USE_GTK)
     if (fX) {
         if (!fTTY) {
             g_set_print_handler(&GTKOutput);
             g_set_printerr_handler(&GTKOutputErr);
         }
-        /* typically: arrives here then starts the graphical version!*/        
         RunGTK(pwSplash, pchCommands, pchPythonScript, pchMatch);
         Shutdown();
         exit(EXIT_SUCCESS);
@@ -5414,13 +5152,13 @@ DeleteKeyName(const char sz[])
             // g_message("EXISTS! %s=%s, i=%d, keyNamesFirstEmpty=%d", sz,keyNames[i],i,keyNamesFirstEmpty);
             if (keyNamesFirstEmpty==(i+1)) {
                 keyNamesFirstEmpty--;
-                UserCommand2("save settings");
+                UserCommand("save settings");
                 return 1;
             } else {
                 strcpy(keyNames[i],keyNames[keyNamesFirstEmpty-1]); 
                 keyNamesFirstEmpty--;
                 // DisplayKeyNames();
-                UserCommand2("save settings");
+                UserCommand("save settings");
                 return 1;
             }
         }
@@ -5450,7 +5188,7 @@ AddKeyName(const char sz[])
     }
 
     /* check that the keyNames array is not full */
-    if (keyNamesFirstEmpty<MAX_KEY_NAMES) {
+    if (keyNamesFirstEmpty<MAX_KEY_PLAYERS) {
         /* check that the key player doesn't already exist */
         for(int i=0;i < keyNamesFirstEmpty; i++) {
             if (!strcmp(sz, keyNames[i])) {
@@ -5462,7 +5200,7 @@ AddKeyName(const char sz[])
         keyNamesFirstEmpty++;
     }
     // DisplayKeyNames();
-    UserCommand2("save settings");
+    UserCommand("save settings");
     return 1;
 }
 
@@ -5473,14 +5211,9 @@ CommandSwapPlayers(char *UNUSED(sz))
     char *pc;
     int n;
 
-    /* VERSION1: if fUseKeyNames enabled, then add the new player1 to the key players
-    (now still player0)
-    VERSION2: also add if fUseKeyNames is not enabled yet, so users don't think they 
-    need to add names manually. We only check that the permutation wasn't launched 
-    by the SmartSit() function, which would mean the name is already in the list.
-    */
-    // if (fUseKeyNames && !fWithinSmartSit) {
-    if (!fWithinSmartSit) {
+    /* if fUseKeyNames enabled, then add the new player1 to the key players
+    (now still player0)*/
+    if (fUseKeyNames && !fWithinSmartOpen) {
         // g_message("in CommandSwapPlayers: %s", ap[0].szName);
         AddKeyName(ap[0].szName);
     }
@@ -5539,15 +5272,15 @@ and makes sure to set the priority player as player 1,
 i.e. the player that moves towards the bottom of the screen.
 */
 extern void 
-SmartSit(void)
+SmartOpen(void)
 {
     // g_message("O: %s", ap[0].szName);
     // g_message("X: %s", ap[1].szName);
 
     if (NameIsKey(ap[0].szName) && !NameIsKey(ap[1].szName)) {
-        fWithinSmartSit=TRUE;
+        fWithinSmartOpen=TRUE;
         CommandSwapPlayers(NULL);
-        fWithinSmartSit=FALSE;
+        fWithinSmartOpen=FALSE;
     } 
 
     // g_message("O: %s", ap[0].szName);
@@ -5656,30 +5389,20 @@ GiveAdvice(skilltype Skill)
 
     switch (Skill) {
 
-
     case SKILL_VERYBAD:
-        // if(fInQuizMode)          
-            // g_message("wrong move 1!");
         sz = _("You may be about to make a very bad play");
         break;
 
     case SKILL_BAD:
-        // if(fInQuizMode)          
-            // g_message("wrong move 2!");
         sz = _("You may be about to make a bad play");
         break;
 
     case SKILL_DOUBTFUL:
-        // if(fInQuizMode)          
-            // g_message("wrong move 3!");
         sz = _("You may be about to make a doubtful play");
         break;
 
     default:
-        // if(fInQuizMode)          
-            // g_message("great!");
         return (TRUE);
-
     }
 
     if (Skill > TutorSkill)
@@ -5692,7 +5415,6 @@ GiveAdvice(skilltype Skill)
         g_free(buf);
         return ret;
     }
-    return (FALSE);
 }
 
 extern void

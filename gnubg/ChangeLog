@@ -1,7 +1,102 @@
+2024-02-04  Philippe Michel  <philippe.michel7@free.fr>
+
+	Version 1.08.001 released.
+
+2024-01-01  Philippe Michel  <philippe.michel7@free.fr>
+
+	* eval.c, eval.h, gnubg.weights: Fix old quirk in the
+	implementation of the PIPLOSS input (bug #65035). Retrain the
+	neural nets using it. The effect on evaluation accuracy is
+	marginally positive.
+
+2023-12-20  Philippe Michel  <philippe.michel7@free.fr>
+
+	* eval.c, eval.h, set.c, show.c: Use a different cube efficiency
+	ratio for 0- and 1-ply evaluations (0.76 instead of 0.68).
+
+	This improves cube decisions at these plies noticeably (cube
+	error rates are approximately halved) and the repartition of
+	errors (premature doubles vs. missed doubles vs. take or pass
+	errors) is now similar to higher plies instead of being mostly
+	premature doubles.
+
+2023-12-18  Philippe Michel  <philippe.michel7@free.fr>
+
+	* gtkgame.c, gtkgame.h, gtklocdefs.h, gtkpanels.c, gtktoolbar.c:
+	* gtktoolbar.h: build the GTK2 version using GtkUIManager by
+	default. To revert to GtkItemFactory, add -DUSE_GTKITEMFACTORY to
+	the compilation flags.
+
+2023-11-17  Isaac Keslassy <keslassy@gmail.com>
+
+	* backgammon.h, commands.inc, gnubg.c, gtkgame.c, gtkgame.h:
+	* gtkrelational.c, gtkuidefs.h, relational.c, relational.h:
+	* show.c:
+
+	Add a feature to show how the player's GNU error rate has evolved
+	throughout the player's history, as provided by the database
+	records.
+
+2023-10-18  Philippe Michel  <philippe.michel7@free.fr>
+
+	* met/cubeless.xml: Add cubeless MET contributed by Tilemachos Zoidis
+
+2023-03-14  Philippe Michel  <philippe.michel7@free.fr>
+
+	* dice.c, osr.c, credits.sh: replace the original Mersenne Twister
+	RNG by the improved SFMT version.
+
+2023-02-09  Isaac Keslassy <keslassy@gmail.com>
+
+	* backgammon.h, commands.inc, gnubg.c, gtkgame.c, gtkgame.h:
+	* gtkoptions.c, gtkoptions.h, import.c, set.c, sgf.c, show.c:
+
+	Introduce the "SmartSit" feature that enables to define a list of
+	users that automatically sit at the bottom of the board (as
+	player1) in opened matches.
+
+	Names can be added or deleted in Settings > Options > Display.
+
+	Remove the similar but more limited set/show aliases CLI commands.
+
+2023-02-04  Isaac Keslassy <keslassy@gmail.com>
+
+	* backgammon.h, commands.inc, gnubg.c, gtkfile.c, gtkfile.h:
+	* gtkgame.c, gtktoolbar.c, gtkuidefs.h, set.c:
+
+	Extend batch analysis feature with a new button in the main
+	toolbar: "Analyse file". Three options are available in Settings /
+	Analysis:
+
+	- regular batch analysis as peviously available
+	- single file analysis of a selected file
+	- smart analysis: analysis of the newest file in the default
+	  import folder (where an external client presumably added it)
+
+2023-01-22  Isaac Keslassy <keslassy@gmail.com>
+
+	* analysis.c, backgammon.h, commands.inc, gnubg.c, gtkchequer.c:
+	* gtkcube.c, gtkfile.c, gtkfile.h, gtkgame.c, gtktoolbar.c:
+	* multithread.c, set.c:
+
+	Introduce a background analysis feature with a new button in the
+	main toolbar: "Analyse"
+
+	- the "Analyze" button starts the analysis of the current match
+	- its behaviour is defined in Settings / Analysis:
+        - "background analysis" checkbox:
+            * unchecked => regular "analyze match", blocking
+            * checked => we can browse the moves list
+	                 and check the analysis immediately
+        - "automatic add-to-database" checkbox:
+            * Unchecked => match can be added from statistics page
+            * Checked => match is added automatically at the end of analysis
+
 2023-01-17  Isaac Keslassy <keslassy@gmail.com>
 
-	* gtkscoremap.c, gtkscoremap.h, backgammon.h, commands.inc,
-	gnubg.c, gtkchequer.c, gtkcube.c, gtkgame.c, gtkuidefs.h, set.c:
+	* gtkscoremap.c, gtkscoremap.h, backgammon.h, commands.inc:
+	* gnubg.c, gtkchequer.c, gtkcube.c, gtkgame.c, gtkuidefs.h, set.c:
+
 	Improvements to the score map feature ; notably its default
 	configuration is now configurable via Settings/Analysis/ScoreMap.
 
@@ -238,22 +333,22 @@
 2015-08-30  Michael Petch  <mpetch@gnubg.org>
 
 	* Makefile.am configure.ac m4/ChangeLog m4/Makefile.am,
-	  +m4/ax_python_devel.m4, 
-	-python-config -m4/az_python.m4: Modernize Python 
+	  +m4/ax_python_devel.m4,
+	-python-config -m4/az_python.m4: Modernize Python
 	detection of development requirements.
 
 2015-08-25  Michael Petch  <mpetch@gnubg.org>
 
 	* m4/ax_ext.h : Update this autconf script to detect
 	all currently known supplemental instruction sets and
-	extensions for the x86 processors. Includes 
-	HAVE_MMX, HAVE_RDRND, HAVE_BMI1,HAVE_BMI2, 
-	HAVE_ADX, HAVE_MPX, HAVE_PREFETCHWT1, HAVE_ABM, 
-	HAVE_SSE, HAVE_SSE2, HAVE_SSE3, HAVE_SSSE3, HAVE_SSE4_1, 
-	HAVE_SSE4_2, HAVE_SSE4a, HAVE_SHA, HAVE_AES, HAVE_AVX, 
-	HAVE_FMA3, HAVE_FMA4, HAVE_XOP, HAVE_AVX2, HAVE_AVX512_F, 
-	HAVE_AVX512_CD, HAVE_AVX512_PF, HAVE_AVX512_ER, 
-	HAVE_AVX512_VL, HAVE_AVX512_BW, HAVE_AVX512_DQ, 
+	extensions for the x86 processors. Includes
+	HAVE_MMX, HAVE_RDRND, HAVE_BMI1,HAVE_BMI2,
+	HAVE_ADX, HAVE_MPX, HAVE_PREFETCHWT1, HAVE_ABM,
+	HAVE_SSE, HAVE_SSE2, HAVE_SSE3, HAVE_SSSE3, HAVE_SSE4_1,
+	HAVE_SSE4_2, HAVE_SSE4a, HAVE_SHA, HAVE_AES, HAVE_AVX,
+	HAVE_FMA3, HAVE_FMA4, HAVE_XOP, HAVE_AVX2, HAVE_AVX512_F,
+	HAVE_AVX512_CD, HAVE_AVX512_PF, HAVE_AVX512_ER,
+	HAVE_AVX512_VL, HAVE_AVX512_BW, HAVE_AVX512_DQ,
 	HAVE_AVX512_IFMA, HAVE_AVX512_VBMI
 
 2015-07-31  Michael Petch  <mpetch@gnubg.org>
@@ -300,7 +395,7 @@
 
 	* configure.ac, Makefile.am, Makefile.w32, backgammon.h, dice.c,
 	  gnubg.c, +randomorg.c, +randomorg.h, set.c, +m4/libcurl.m4
-	Add https support for random.org using libcurl. Libcurl is 
+	Add https support for random.org using libcurl. Libcurl is
 	an optional dependency that is required to use ranom.org as
 	a dice source.
 
@@ -348,16 +443,16 @@
 
 2014-08-08  Michael Petch  <mpetch@gnubg.org>
 
-	* configure.ac: modify configure to properly support an argument 
+	* configure.ac: modify configure to properly support an argument
 	to --with-python. Supplying a python interpreter as an argument
-	will force configure to use the specified one. General Python 
+	will force configure to use the specified one. General Python
 	checking cleanup
 
 2014-08-07  Michael Petch  <mpetch@gnubg.org>
 
-	* configure.ac dbprovider.c gnubgmodule.c gnubgmodule.h 
+	* configure.ac dbprovider.c gnubgmodule.c gnubgmodule.h
 	m4/az_python.m4 scripts/gnubg.py scripts/db_import.py
-	scripts/batch.py scripts/matchseries.py +pylocdefs.h: Support 
+	scripts/batch.py scripts/matchseries.py +pylocdefs.h: Support
 	compiling with Python 3.x and modify Python modules to
 	support Python 2.x and 3.x.
 
@@ -407,13 +502,13 @@
 
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 
-	* gtklocdefs.c, gtklocdefs.h, glib-ext.h: add g_list_free_full 
+	* gtklocdefs.c, gtklocdefs.h, glib-ext.h: add g_list_free_full
 	function for environments using GLib < 2.28.
 
 2014-06-21  Michael Petch  <mpetch@gnubg.org>
 
 	* drawboard.c, drawboard.h, external.c, external.h, external_l.l,
-	  external_y.y, non-src/external_l.c, non-src/external_y.c, 
+	  external_y.y, non-src/external_l.c, non-src/external_y.c,
 	  non-src/external_y.h
 	Replace the external interface with a reentrant version that is
 	more extensible for storing more complex datatypes in the future.
@@ -574,30 +669,30 @@
 
 2013-07-22  Michael Petch  <mpetch@gnubg.org>
 
-	* configure.ac, openurl.c: Add a configure option 
+	* configure.ac, openurl.c: Add a configure option
 	--with-default-browser to override the default value "xdg-open".
 	if --with-default-browser is specified without an argument
-	it will look for a default in this order sensible-browser, 
-	xdg-open, firefox . If none are found the default xdg-open 
+	it will look for a default in this order sensible-browser,
+	xdg-open, firefox . If none are found the default xdg-open
 	will be used. This option is not available on Win32 platforms.
 
 	Add a new configure option --enable-gasserts . Previously
-	g_assert macros have been enabled by default. They are now 
+	g_assert macros have been enabled by default. They are now
 	disabled by default. This option is used to enable those
-	macros. 
+	macros.
 
 	Take the AVX code out of the experimental stage. If AVX is
 	supported on the processor and OS then it will be used by default.
 
 2013-07-22  Michael Petch  <mpetch@gnubg.org>
 
-	* gtk-multiview.c, gtk-multiview.h, mec.c, sound.c, board3d/tr.c, 
+	* gtk-multiview.c, gtk-multiview.h, mec.c, sound.c, board3d/tr.c,
 	board3d/tr.h, lib/mm_malloc.h: Fix some licensing inconsistencies
 	identified by Russ Allbery.
 
 2013-07-21  Michael Petch  <mpetch@gnubg.org>
 
-	* gnubg.c: When displaying "save settings to" attempt to output the 
+	* gnubg.c: When displaying "save settings to" attempt to output the
 	message immediately. This prevents some unnecessary popup messages.
 
 2013-07-20  Michael Petch  <mpetch@gnubg.org>
@@ -617,8 +712,8 @@
 
 	* analysis.c, dbprovider.c, eval.c, gnubgmodule.c, gnubgmodule.h,
 	  multithread.c, lib/inputs.c, lib/neuralnetsse.c, lib/simd.h:
-	Fix stack issues that cause AVX WIN32 builds to segfault when 
-	optimizations are used. 
+	Fix stack issues that cause AVX WIN32 builds to segfault when
+	optimizations are used.
 
 2013-07-17  Michael Petch  <mpetch@gnubg.org>
 
@@ -640,7 +735,7 @@
 	* gnubg.c, utils.h, utils.c: Added a new command line option
 	'-s <path>' to specify the location of the user's GNUBG preferences
 	directory. This overrides the default location of $(HOME)/.gnubg .
-	If you wish to save your settings to the directory that GNUBG 
+	If you wish to save your settings to the directory that GNUBG
 	was run from then use '-s .'
 
 2013-07-10  Michael Petch  <mpetch@gnubg.org>
@@ -652,9 +747,9 @@
 
 	* +mtsupport.c, Makefile.am, Makefile.w32, bearoffdump.c,
 	   makebearoff.c, makehyper.c, multithread.c, multithread.h:
-	Reduce the cpu cycle overhead of the new heap allocated thread 
+	Reduce the cpu cycle overhead of the new heap allocated thread
 	local data. Rework the multithreaded code. Split multithreaded
-	support functions out of multithread.c and into mtsupport.c . 
+	support functions out of multithread.c and into mtsupport.c .
 	mtsupport.c can be used by the utiltity programs (makebearoff etc).
 
 2013-07-08  Michael Petch  <mpetch@gnubg.org>
@@ -678,32 +773,32 @@
 
 2013-06-29  Michael Petch  <mpetch@gnubg.org>
 
-	* backgammon.h, gnubg.c, gnubgmodule.c: Added preliminary 
+	* backgammon.h, gnubg.c, gnubgmodule.c: Added preliminary
 	support for Python module function 'hint'. Work in progress
 	The function interface and the dictionary returned may change.
 	Added module functions mwc2eq_stderr and eq2mwc_stderr.
 
-	Inefficient memory use for eval and rollout contexts should be 
-	cleaned up. Rollout contexts should include all the cube and 
+	Inefficient memory use for eval and rollout contexts should be
+	cleaned up. Rollout contexts should include all the cube and
 	chequer play sub contexts. The hint dictionary needs to be
 	documented.
 
 2013-06-25  Michael Petch  <mpetch@gnubg.org>
 
-	* backgammon.h, gnubg.c, play.c: hint_move has been modified to 
+	* backgammon.h, gnubg.c, play.c: hint_move has been modified to
 	support external callbacks. Part of future Python integration.
 
 2013-06-25  Michael Petch  <mpetch@gnubg.org>
 
 	* eval.c, lib/neuralnet.c: If SIMD instructions are compiled in
-	and they are not supported by the processor, output an error 
+	and they are not supported by the processor, output an error
 	message and then terminate immediately.
 
 2013-06-22  Michael Petch  <mpetch@gnubg.org>
 
-	* INSTALL, configure.ac, eval.c, gnubg.c, gnubg.spec, 
+	* INSTALL, configure.ac, eval.c, gnubg.c, gnubg.spec,
 	  po/POTFILES.in
-	Rename file sse.h to simd.h. Rename USE_SSE_VECTORIZE to 
+	Rename file sse.h to simd.h. Rename USE_SSE_VECTORIZE to
 	USE_SIMD_INSTRUCTIONS, rename SSE_Supported to SIMD_Supported,
 	rename DISABLE_SSE_TEST to DISABLE_SIMD_TEST,
 	rename SSE_CFLAGS to SIMD_CFLAGS
@@ -713,9 +808,9 @@
 
 2013-06-20  Michael Petch  <mpetch@gnubg.org>
 
-	* +m4/ax_check_compile_flag.m4, +m4/ax_ext.m4 
+	* +m4/ax_check_compile_flag.m4, +m4/ax_ext.m4
 	+m4/ax_gcc_x86_avx_xgetbv.m4 +m4/ax_gcc_x86_cpuid.m4,
-	configure.ac: Added better autoconf support to determine 
+	configure.ac: Added better autoconf support to determine
 	whether the processor supports certain SIMD instruction sets
 	like SSE,SSE2,AVX etc.
 
@@ -738,7 +833,7 @@
 	* gnubg.c, eval.c, lib/neuralnet.c, lib/neuralnet.h,
 	configure.ac: Add support for plm's new AVX instruction
 	additions. Separate the cputest from the --enable-simd
-	configure option. Created a new option --disable-cputest. 
+	configure option. Created a new option --disable-cputest
 
 	Supports cputest functionality on GCC builds with either
 	64-bit or 32-Bit OSes on Intel processors. Code will work
@@ -746,7 +841,7 @@
 
 2013-06-18  Michael Petch  <mpetch@gnubg.org>
 
-	* gnubg.c: When using the -r flag to start GNUBG (start without 
+	* gnubg.c: When using the -r flag to start GNUBG (start without
 	reading the gnubgautorc file), the gnugbautorc file will be
 	overwritten with defaults if running with the GUI. Reported
 	by plm, see: https://savannah.gnu.org/bugs/?38497#postcomment
@@ -757,7 +852,7 @@
 	refreshing the screen when a new Language was chosen
 
 	* Makefile.am: Win32 builds have a localedir of ./locale relative
-	to the executables directory. A bug had newer windows builds 
+	to the executables directory. A bug had newer windows builds
 	seeking locale files in the default locations which was incorrect,
 	and consquently language translation didn't occur.
 
@@ -765,13 +860,13 @@
 
 	* All .c and .h files: Standardized the code formatting with
 	indent -kr -l120 -fc1 -sc -nut -psl . K&R style, 120 column limit
-	process comment in column 1, multiline comments have an asterisk 
+	process comment in column 1, multiline comments have an asterisk
 	at the beginning of each line, convert all tabs to spaces, and
 	split the return type of a function from the function name
 	(each on their own line). K&R uses 4 spaces for an indentation
 	level. Update the language files.
 
-	* script/*.py : Reformat the python files to conform to PEP8 
+	* script/*.py : Reformat the python files to conform to PEP8
 	standard. See http://www.python.org/dev/peps/pep-0008/#indentation
 
 2013-06-15  Michael Petch  <mpetch@gnubg.org>
@@ -779,7 +874,7 @@
 	* gnubgmodule.c, scripts/gnubg.py: Modify the python interpreter
 	processing so that it falls back to a simple command line
 	interface on older versions of Windows (Versions before WinXP SP2).
-	Fix segfault related to launching the Python command line 
+	Fix segfault related to launching the Python command line
 	interpreter
 
 2013-06-15  Philippe Michel  <philippe.michel7@sfr.fr>
@@ -810,12 +905,12 @@
 	* gnubgmodule.c, gnubgmodule.h, gtkgame.c, scripts/gnubg.py: Move
 	loading of the Python command line interpreter to Python functions
 	in gnubg.py. The Python command line now supports IPython if
-	present. IPython takes precedence over the standard Python 
+	present. IPython takes precedence over the standard Python
 	interpreter. If the standard interpreter is used, attempt to
 	load command history (readline module) and then try loading
-	auto completion (rlcompleter module) support if present. 	
+	auto completion (rlcompleter module) support if present.
 
-	Fix Python related ifdefs to allow compiling when built without 
+	Fix Python related ifdefs to allow compiling when built without
 	Python support.
 
 2013-06-05  Michael Petch  <mpetch@gnubg.org>
@@ -825,10 +920,10 @@
 
 2013-06-05  Michael Petch  <mpetch@gnubg.org>
 
-	* gnubgmodule.c, gtkgame.c, play.c: Modify the interactive Python 
+	* gnubgmodule.c, gtkgame.c, play.c: Modify the interactive Python
 	interpreter to support tab completion and command history. Begin
 	reintroducing Python IDLE, since it functions on MS Windows and
-	various GNU/Linux distros. Ubuntu/Debian installation of IDLE can be 
+	various GNU/Linux distros. Ubuntu/Debian installation of IDLE can be
 	done via: apt-get install idle . If IDLE is not present it will
 	drop back to the old method. CLI builds don't use IDLE at present.
 	IDLE is not on the GUI menu but can be activated by turning on the
@@ -838,7 +933,7 @@
 
 2013-06-04  Michael Petch  <mpetch@gnubg.org>
 
-	* gtkrelational.c: Don't allow a user to create a player database 
+	* gtkrelational.c: Don't allow a user to create a player database
 	that already exists.
 
 	* dbprovider.h, dbprovider.c, scripts/database.py, gnubgmodule.c:
@@ -847,19 +942,19 @@
 
 2013-06-04  Michael Petch  <mpetch@gnubg.org>
 
-	* configure.ac, multithread.h: Allow a new autoconf/configure 
+	* configure.ac, multithread.h: Allow a new autoconf/configure
 	parameter --with-eval-max-threads=size to allow the maximum number of
 	evaluation threads to be specified. Default is 48 if not specified.
 
 	* dbprovider.h, dbprovider.c, relational.c scripts/database.py:
-	Fix bugs that prevented proper connections and database usage 
-	when using the Mysql and Postgres player database providers. 
-	Mysql and Postgres are unsupported on the MS Windows platform - 
+	Fix bugs that prevented proper connections and database usage
+	when using the Mysql and Postgres player database providers.
+	Mysql and Postgres are unsupported on the MS Windows platform -
 	Disable them in the GUI
 
 2013-05-31  Michael Petch  <mpetch@gnubg.org>
 
-	* play.c: Under certain situations (load commands from a file 
+	* play.c: Under certain situations (load commands from a file
 	containing a play command within the GUI) would stop
 	on an assertion. PlayCommand not properly resetting the
 	notification handler. Reported by Ian Shaw
@@ -867,7 +962,7 @@
 2013-05-28  Michael Petch  <mpetch@gnubg.org>
 
 	* gnubg.c: Fix bugs related to python handling of
-	ParseMove and FormatMove . Fix bug that would cause crash when 
+	ParseMove and FormatMove . Fix bug that would cause crash when
 	command "load commands" used unquoted filenames on Win32 platform.
 	Reported by Ian Shaw
 
@@ -930,15 +1025,15 @@
 
 2012-10-23  Michael Petch  <mpetch@gnubg.org>
 
-	* gnubgmodule.c : recent removal of reduced dict item from the 
+	* gnubgmodule.c : recent removal of reduced dict item from the
 	Python eval contexts introduced a bug that produced an error
 	processing the noise dict item. Reported by Bagrat Lazaryan
 
 2012-10-21  Michael Petch  <mpetch@gnubg.org>
 
-	* play.c, gnubgmodule.c : Fix issue with GNUBG not resigning if the 
-	opponent is guaranteed to win a backgammon or a gammon. Discovered 
-	in matches played by Murat (R.G.B).  Add number of points resigned 
+	* play.c, gnubgmodule.c : Fix issue with GNUbg not resigning if the
+	opponent is guaranteed to win a backgammon or a gammon. Discovered
+	in matches played by Murat (R.G.B.).  Add number of points resigned
 	(1=regular,2=gammon,3=backgammon) to Python resign dictionary item.
 
 2012-10-20  Michael Petch  <mpetch@gnubg.org>
@@ -949,7 +1044,7 @@
 	will not be treated as a crawford game.
 	See: https://savannah.gnu.org/bugs/?35179
 
-	Fixed bug with the Crawford flag beneath the board not being 
+	Fixed bug with the Crawford flag beneath the board not being
 	properly set when Crawford game is reached.
 
 2012-10-19  Michael Petch  <mpetch@gnubg.org>
@@ -965,25 +1060,25 @@
 	On Win32/GCC builds, SSE instructions acting on variables
 	allocated on the stack in Python code would cause a segfault.
 	Properly align stack in Python functions that may call SSE
-	code. Reported by bagratte. See https://savannah.gnu.org/bugs/?37583 
+	code. Reported by bagratte. See https://savannah.gnu.org/bugs/?37583
 
 2012-10-18  Michael Petch  <mpetch@gnubg.org>
 
-	* play.c : Murat (R.G.B) noticed that resignations acted differently 
-	in some cases. Found that resignations can be analysed in 0 ply in 
-	some places and 2 ply in others. To remain consistent we now compute 
+	* play.c : Murat (R.G.B.) noticed that resignations acted differently
+	in some cases. Found that resignations can be analysed in 0 ply in
+	some places and 2 ply in others. To remain consistent we now compute
 	them at 0 ply.
 
 2012-10-11  Michael Petch  <mpetch@gnubg.org>
 
-	* import.c : Fix BGRoom import bug reported by Adi Kadmon where 
-	player names were not properly applied to Player 1 and 
+	* import.c : Fix BGRoom import bug reported by Adi Kadmon where
+	player names were not properly applied to Player 1 and
 	Player 2 (They could be reversed).
 
 2012-10-11  Michael Petch  <mpetch@gnubg.org>
 
-	* configure.ac : Configure process modified to support a thread type 
-	with --enable-threads default threading is GLib threads. 
+	* configure.ac : Configure process modified to support a thread type
+	with --enable-threads default threading is GLib threads.
 	Supports win32, GLib and no threading
 
 2012-10-08  Philippe Michel  <philippe.michel7@sfr.fr>
@@ -996,14 +1091,14 @@
 	* backgammon.h, gnubg.c, configure.in : Convert BUILD_DATE
 	define to literal string before usage. Allow VERSION_EXT
 	environment variable to be passed to autogen.sh to specify an
-	extension on a version number. VERSION_EXT="-mingw" 
-	would yield a version that would appear as 0.90.0-mingw .	
+	extension on a version number. VERSION_EXT="-mingw"
+	would yield a version that would appear as 0.90.0-mingw .
 
 2012-10-07  Michael Petch  <mpetch@gnubg.org>
 
-	* +win32/*, pixmaps/Makefile.am, configure.in, Makefile.am: 
+	* +win32/*, pixmaps/Makefile.am, configure.in, Makefile.am:
 	Added WIN32 resource support (icons etc), and general
-	automake cleanup 
+	automake cleanup
 
 2012-09-18  Michael Petch  <mpetch@gnubg.org>
 
@@ -1013,7 +1108,7 @@
 	Better Mersenne Twister seed support when compiled with libgmp.
 	MT Seeds with libgmp support can be full range from 0 to 2^19973-1. To
 	retain backward comaptibility with rolls generated from seeds between
-	0 and 2^32-1 on previous releases of GNUBG, seeds in this range will 
+	0 and 2^32-1 on previous releases of GNUBG, seeds in this range will
 	be set using the old method.
 
 	GUI modified to support a seed value between 0 and 2^32-1 instead
@@ -1024,14 +1119,14 @@
 	will be limited to 32 bit integers. Compile with libgmp to support
 	seeds greater than 32 bits.
 
-	Note: In previous releases, if libgmp support was present, seeds 
-	exceeding 2^32-1 did not work as expected even though the seed 
+	Note: In previous releases, if libgmp support was present, seeds
+	exceeding 2^32-1 did not work as expected even though the seed
 	appeared to be successfully set.
 
 2012-08-05  Michael Petch  <mpetch@gnubg.org>
 
 	* gtkchequer.c: Fix string buffer over run when copying
-	move analysis data. Reported by Mike Mannon, see bug 
+	move analysis data. Reported by Mike Mannon, see bug
 	http://savannah.gnu.org/bugs/?37025. TODO: introduce a better
 	way to allocate space for the text buffer.
 
@@ -1106,7 +1201,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 	* html.c: BBS Match output rendered with white space
 	when outputting a complete match. Rendering problem
 	was because Strict XHTML DocType. Reported by Chris Yep
-	BBS output cleaned up to validate properly as 
+	BBS output cleaned up to validate properly as
 	Strict XHTML 1.0.
 
 2011-09-08  Philippe Michel  <philippe.michel7@sfr.fr>
@@ -1191,7 +1286,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 2011-08-18  Michael Petch  <mpetch@gnubg.org>
 
 	* configure.in, Makefile.am, gnubgmodule.c: Fixed build issues
-	with Mingw/Msys environment. MingW doesn't output Binary data 
+	with Mingw/Msys environment. MingW doesn't output Binary data
 	by default to stdout. Use makeweights "-f" argument to output
 	proper binary weights files. On Windows path names need to be
 	properly escaped when passed to the Python interpreter.
@@ -1199,12 +1294,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 2011-08-16  Michael Petch  <mpetch@gnubg.org>
 
 	* sound.c, configure.in: Play CoreAudio sounds in the
-	background on OS/X builds. Deficiency found by Louis Zulli. 
-
-2011-08-16  Michael Petch  <mpetch@gnubg.org>
-
-	* sound.c, configure.in: Play CoreAudio sounds in the
-	background on OS/X builds. Deficiency found by Louis Zulli. 
+	background on OS/X builds. Deficiency found by Louis Zulli.
 
 2011-08-16  Philippe Michel  <philippe.michel7@sfr.fr>
 
@@ -1213,7 +1303,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 2011-08-15  Michael Petch  <mpetch@gnubg.org>
 
-	* Makefile.am, configure.in, util.c, board3d/Makefile.am, 
+	* Makefile.am, configure.in, util.c, board3d/Makefile.am,
 	doc/Makefile.am: better support for Mingw/Msys windows
 	builds.
 
@@ -1253,7 +1343,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 2011-08-07  Michael Petch  <mpetch@gnubg.org>
 
-	* play.c: Fixed bug #33143 reported by Kevin McDonough where 
+	* play.c: Fixed bug #33143 reported by Kevin McDonough where
 	interrupting a forced move in 2D got into wrong state causing
 	bot not to continue automatic play.
 
@@ -1291,8 +1381,8 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 2011-07-17  Michael Petch  <mpetch@gnubg.org>
 
-	* gnubgmodule.c: Fixed Python position key functions to internally call 
-	the old style position keys functions. Fixes compiler errors due to 
+	* gnubgmodule.c: Fixed Python position key functions to internally call
+	the old style position keys functions. Fixes compiler errors due to
 	new position key changes made on 2011/07/15.
 
 2011-07-15  Philippe Michel  <philippe.michel7@sfr.fr>
@@ -1317,18 +1407,18 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 2011-06-13  Michael Petch  <mpetch@gnubg.org>
 
 	* analysis.c: getLuckRating was returning values based
-	on old hard coded luck thresholds. Use the user supplied 
-	ones instead 
+	on old hard coded luck thresholds. Use the user supplied
+	ones instead
 
 2011-06-08  Michael Petch  <mpetch@gnubg.org>
 
-	* gnubgmodule.c: Add new python function "DiceRolls" to 
-	return the next "n" rolls from the current RNG. 
+	* gnubgmodule.c: Add new python function "DiceRolls" to
+	return the next "n" rolls from the current RNG.
 
 2011-05-18  Michael Petch  <mpetch@gnubg.org>
 
-	* configure.in:  --enable-threads and --enable-extmatchid are 
-	now the default. amd64 cpu types will automatically enable sse2
+	* configure.in:  --enable-threads and --enable-extmatchid are
+	now the default. amd64 cpu types will automatically enable SSE2
 
 2011-05-17  Michael Petch  <mpetch@gnubg.org>
 
@@ -1343,15 +1433,15 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 2011-05-17  Michael Petch  <mpetch@gnubg.org>
 
-	* gnubg.c, backgammon.h, gtkfile.c, gtkrelational.c: The word 
-	"Relational" has been removed from the GUI when referring to the 
-	database. This makes more sense to the casual users. Fixed the 
-	situation where a Batch sometimes had to be preceded by a clear 
-	match/session. Fixed bug reported by Leo that prevented matches 
+	* gnubg.c, backgammon.h, gtkfile.c, gtkrelational.c: The word
+	"Relational" has been removed from the GUI when referring to the
+	database. This makes more sense to the casual users. Fixed the
+	situation where a Batch sometimes had to be preceded by a clear
+	match/session. Fixed bug reported by Leo that prevented matches
 	being analysed with incomplete analysis settings. Fixed bug
 	reported by Leo Bueno that prevented matches that may not have been
-	played to completion from being analysed. Added Warning if you 
-	use incomplete analysis settings and have requested to save the 
+	played to completion from being analysed. Added Warning if you
+	use incomplete analysis settings and have requested to save the
 	matches to the database
 
 2011-05-13  Philippe Michel  <philippe.michel7@sfr.fr>
@@ -1373,7 +1463,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 	* board3d/drawboard3d.c board3d/fun3d.h board3d/shadow.c:
 	Converted int to GLint where appropriate to avoid compiler
-	warnings about incompatible types in certain build 
+	warnings about incompatible types in certain build
 	environments.
 
 2011-04-09  Philippe Michel  <philippe.michel7@sfr.fr>
@@ -1420,7 +1510,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 2011-03-23  Michael Petch  <mpetch@gnubg.org>
 
 	* gtkboard.c: Update global match state with changes in
-	score made through edit mode. Fixes hint/edit bug reported 
+	score made through edit mode. Fixes hint/edit bug reported
 	by Pierre Zakia
 
 2011-03-23  Michael Petch  <mpetch@gnubg.org>
@@ -1434,12 +1524,12 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 2011-03-22  Michael Petch  <mpetch@gnubg.org>
 
 	*  gnubg.c, gtkgame.c, gtkboard.c, matchid.c, play.c
-	set.c, gtkboard.h: Improve support for Jacoby. 
-	- When using extended Match ID's - Jacoby comes from 
-	  the ID, 
+	set.c, gtkboard.h: Improve support for Jacoby.
+	- When using extended Match ID's - Jacoby comes from
+	  the ID,
 	- When using regular ID's Jacoby is decided by the
-	  global "Jacoby" setting in options. 
-	- Fixed bug with Jacoby being read from an extended ID. 
+	  global "Jacoby" setting in options.
+	- Fixed bug with Jacoby being read from an extended ID.
 	- Added Jacoby flag to the table. When MatchLen is
 	  0 (money session) Crawford flag replaced by Jacoby
 	  and vice versa.
@@ -1477,7 +1567,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 2011-03-16  Michael Petch  <mpetch@gnubg.org>
 
-	*  gnubgmodule.c : Added GNUBG python module functions: 
+	*  gnubgmodule.c : Added GNUBG python module functions:
 	gnubgid, matchid, posinfo
 	ToDo: xgid
 
@@ -1491,7 +1581,7 @@ Mon Oct 31 10:40:01 CET 2011 Christian Anthon <anthon@kiku.dk>
 2011-03-10  Michael Petch  <mpetch@gnubg.org>
 
 	*  gnubg.c: Fixed bug with random numbers being read from
-	www.random.org preventing GNUBG from exiting. We now skip HTTP 
+	www.random.org preventing GNUBG from exiting. We now skip HTTP
 	headers and make sure we don't read more numbers than the
 	dice array can hold. Reported by Leo Bueno.
 
@@ -1524,7 +1614,7 @@ Mon Feb 14 21:11:28 CET 2011 Christian Anthon <anthon@kiku.dk>
 	* backgammon.h, commands.inc, gnubg.c, gtkchequer.c, gtkcube.c,
 	gtkexport.c, gtkfile.c, gtkgame.c, gtkmet.c, gtkmovefilter.c,
 	gtkoptions.c, gtktoolbar.c, gtkwindows.c, play.c, set.c: Have
-	different default and current player names. Only change default 
+	different default and current player names. Only change default
 	player names in dialog, not in edit mode. Attempt to autosave
 	settings.
 
@@ -1551,7 +1641,7 @@ Sat Feb 12 22:19:18 CET 2011 Christian Anthon <anthon@kiku.dk>
 
 2011-02-08  Philippe Michel  <philippe.michel7@sfr.fr>
 
-	* eval.c, lib/neuralnetsse.c, lib/neuralnet.h : ï¿½ystein Johansen's
+	* eval.c, lib/neuralnetsse.c, lib/neuralnet.h : Øystein Johansen's
 	patch to handle a different number of hidden nodes with SSE.
 
 Tue Feb  8 20:23:42 CET 2011 Christian Anthon <anthon@kiku.dk>
@@ -1565,7 +1655,7 @@ Tue Feb  8 19:54:13 CET 2011 Christian Anthon <anthon@kiku.dk>: :
 	* progress.c: convert the rollout clist to tree view, sortable and
 	simpler, but fewer details than before.
 
-Tue Feb  8 19:16:12 CET 2011 Christian Anthon <anthon@kiku.dk>: 
+Tue Feb  8 19:16:12 CET 2011 Christian Anthon <anthon@kiku.dk>:
 
 	* gtkgame.c, gtkgame.h: update the evaluation summary to gtk_combo_box
 
@@ -1627,7 +1717,7 @@ Wed Feb  2 22:00:24 CET 2011 Christian Anthon <anthon@kiku.dk>
 2011-01-05  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* gtkmovefilter.c, gtktheory.c: Prevent warnings about deprecated
-	usage of GtkSpinButton that appeared with a recent gtk2 update.
+	usage of GtkSpinButton that appeared with a recent GTK2 update.
 
 	* gtkgame.c: Decrease absurdly high page_increments in some
 	GtkSpinButtons.
@@ -1769,7 +1859,7 @@ Sat Jun 19 09:22:16 CEST 2010 Christian Anthon <anthon@kiku.dk>
 
 2010-05-26  Philippe Michel  <philippe.michel7@sfr.fr>
 
-	* gtkgame.c: compiles again with pre-2.12 gtk
+	* gtkgame.c: compiles again with pre-2.12 GTK
 	From http://lists.gnu.org/archive/html/bug-gnubg/2009-11/msg00016.html
 
 2010-05-23  Philippe Michel  <philippe.michel7@sfr.fr>
@@ -1800,7 +1890,7 @@ Tue Dec 29 19:56:07 CET 2009 Christian Anthon <anthon@kiku.dk>
 	jsd bug where the number of trials where checked for the wrong
 	alternative. c) allow trials to catch up when extending rollouts
 
-Tue Dec 29 07:36:41 MST 2009 Michael Petch <mpetch@gnubg.org>: 
+Tue Dec 29 07:36:41 MST 2009 Michael Petch <mpetch@gnubg.org>:
 
 	* gnubg.c: Fix random.org buffer overrun, Cleanup code and
 	add appropriate User-Agent string
@@ -1818,7 +1908,7 @@ Mon Nov 30 19:54:56 CET 2009 Christian Anthon <anthon@kiku.dk>
 
 	* gtkgame.c: add keyboard short-cuts to marked navigation menu items
 
-Tue Nov 24 21:51:56 CET 2009 Christian Anthon <anthon@kiku.dk>: 
+Tue Nov 24 21:51:56 CET 2009 Christian Anthon <anthon@kiku.dk>:
 
 	* gtkrolls.c: fix a bug where the printed average equity was wrong
 	when MWC printed as EM
@@ -1872,7 +1962,7 @@ Wed Oct  7 21:17:04 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
 Tue Oct  2 04:32:27 MDT 2009 Michael Petch <mpetch@gnubg.org>
 
-	* progress.c: Fix assert/crash when doing a single rollout 
+	* progress.c: Fix assert/crash when doing a single rollout
 	when no stopall button is present
 
 Thu Oct  1 23:04:28 CEST 2009 Christian Anthon <anthon@kiku.dk>
@@ -2091,7 +2181,7 @@ Tue Jul 07 12:00:00 2003  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 Tue Jun 30 12:00:00 2003  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
-	* neuralnet.c, gnubg.c,eval.c: Simplify SSE, now it's either supported or it isn't
+	* neuralnet.c, gnubg.c, eval.c: Simplify SSE, now it's either supported or it isn't
 
 Tue Jun 30 09:10:24 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
@@ -2122,8 +2212,8 @@ Mon Jun 22 05:47:27 CEST 2009 Michael Petch <mpetch@gnubg.org>
 
 Sun Jun 21 23:21:36 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
-	* configure.in, lib/neuralnetsse.c, lib/sigmoid.h: check ï¿½ysteins
-	sigmoid sse2 patch in.
+	* configure.in, lib/neuralnetsse.c, lib/sigmoid.h: check Øysteins
+	sigmoid SSE2 patch in.
 
 Sun Jun 14 22:00:00 2003  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
@@ -2138,7 +2228,7 @@ Sat Jun 13 02:04:28 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
 Wed Jun 12 23:00:00 2003  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
-	* matchequity.c: Replace libxml code that reads met (code from ï¿½ystein)
+	* matchequity.c: Replace libxml code that reads met (code from Øystein)
 
 Fri May  8 14:29:05 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
@@ -2217,7 +2307,7 @@ Sat Apr 18 23:45:02 CEST 2009 Christian Anthon <anthon@kiku.dk>
 Sat Apr 18 22:29:37 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
 	* gtkgame.c: set shrink FALSE in the panel pane
-	* rollout.c: fix typo in jsd check causing cube rollouts to stop early 
+	* rollout.c: fix typo in jsd check causing cube rollouts to stop early
 
 Wed Apr 15 19:51:11 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
@@ -2250,7 +2340,7 @@ Thu Apr  2 23:33:25 CEST 2009 Christian Anthon <anthon@kiku.dk>
 Thu Apr  2 22:32:14 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
 	* play.c: fix a crash (assert in getCubeDecisionOrdering) when
-	updating the current game annotions. 
+	updating the current game annotions.
 
 Thu Apr  2 10:13:47 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
@@ -2259,7 +2349,7 @@ Thu Apr  2 10:13:47 CEST 2009 Christian Anthon <anthon@kiku.dk>
 Wed Apr  1 17:41:13 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
 	* gtkoptions.c: display options was added twice and rng was update
-	even if unchanged 
+	even if unchanged
 
 Mon Mar 30 13:52:31 CEST 2009 Christian Anthon <anthon@kiku.dk>
 
@@ -2374,11 +2464,11 @@ Sat Mar 21 22:44:02 CET 2009 Christian Anthon <anthon@kiku.dk>
 	simpleboard.c, text.c, lib/gnubg-types.h: another bunch of hint
 	related changes.
 
-Sat Mar 21 11:44:35 WEST 2009 ï¿½ystein Johansen <oystein@gnubg.org>
+Sat Mar 21 11:44:35 WEST 2009 Øystein Johansen <oystein@gnubg.org>
 
 	* gtkprefs.c: Parse XML-boards with g_markup_parse.
 
-Fri Mar 20 21:37:46 WEST 2009 ï¿½ystein Johansen <oystein@gnubg.org>
+Fri Mar 20 21:37:46 WEST 2009 Øystein Johansen <oystein@gnubg.org>
 
 	* boards.xml: Change encoding to UTF-8.
 
@@ -2389,7 +2479,7 @@ Fri Mar 20 17:17:44 CET 2009 Christian Anthon <anthon@kiku.dk>
 
 Tue Mar 17 14:23:23 CET 2009 Christian Anthon <anthon@kiku.dk>
 
-	* sound.c: make gstreamer sounds wait till play is ready 
+	* sound.c: make gstreamer sounds wait till play is ready
 
 Fri Mar 13 22:50:48 CET 2009 Christian Anthon <anthon@kiku.dk>
 
@@ -2453,7 +2543,7 @@ Mon Mar  2 10:35:14 CET 2009 Christian Anthon <anthon@kiku.dk>
 	* gtkmet.c: the meaning of const int a[][] and const int **a is not
 	defined in C. We need confusing casts to avoid warnings in gcc.
 
-Sun Mar  1 10:02:02 CET 2009 ï¿½ystein Johansen <oystein@gnubg.org>
+Sun Mar  1 10:02:02 CET 2009 Øystein Johansen <oystein@gnubg.org>
 
 	* makebearoff.c, bearoff.c: Repair building of onesided
 	bearoff databases w/o gammon distributions. Fixed
@@ -2509,7 +2599,7 @@ Tue Feb  3 21:43:32 CET 2009 Christian Anthon <anthon@kiku.dk>
 
 	* backgammon.h, play.c: remove quick_roll from non-gtk code
 
-Sun Feb  1 16:59:04 CET 2009 Christian Anthon <anthon@kiku.dk>: 
+Sun Feb  1 16:59:04 CET 2009 Christian Anthon <anthon@kiku.dk>:
 
 	* gtkboard.c, play.c: New games/matches could be started when
 	ms.gs==GAME_NONE even though the move wasn't the last in the match
@@ -2662,9 +2752,6 @@ Mon Dec 29 22:06:40 CET 2008 Christian Anthon <anthon@kiku.dk>
 	* common.h, configure.in, lib/neuralnet.c, lib/neuralnetsse.c: move
 	replacement declarations of signbit and lrint to common.h
 
-Mon Dec 29 22:03:44 CET 2008 Christian Anthon <anthon@kiku.dk>
-
-	* common.h, configure.in: 
 Mon Dec 29 21:11:31 CET 2008 Christian Anthon <anthon@kiku.dk>
 
 	* po/es.po: updated spanish translation
@@ -2699,8 +2786,8 @@ Fri Dec 26 00:33:04 CET 2008 Christian Anthon <anthon@kiku.dk>
 
 Thu Dec 18 22:12:45 2008 Jon Kinsey <Jon_Kinsey@hotmail.com>
 
-	* gtkprogress.c: Fix bug in number of rollouts displayed when alternatives
-			finish early (reported by Bob Koca)
+	* gtkprogress.c: Fix bug in number of rollouts displayed when
+	alternatives finish early (reported by Bob Koca)
 
 Wed Dec 17 22:12:45 2008 Jon Kinsey <Jon_Kinsey@hotmail.com>
 
@@ -2717,7 +2804,7 @@ Tue Dec 16 22:12:45 2008 Jon Kinsey <Jon_Kinsey@hotmail.com>
 Sun Dec 14 20:12:45 2008 Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 	* gtktoolbar.c: Sort out spacing on toolbar with new "end game" button.
-					Update toolbar code to new style at same time.
+	Update toolbar code to new style at same time.
 
 Sun Dec 14 18:41:20 CET 2008 Christian Anthon <anthon@kiku.dk>
 
@@ -2754,7 +2841,7 @@ Tue Dec  9 16:59:54 CET 2008 Christian Anthon <anthon@kiku.dk>
 
 Tue Dec  9 14:03:52 CET 2008 Christian Anthon <anthon@kiku.dk>
 
-	* analysis.c: fix a bug causing wrong luck stats in matches as reported on savannah 
+	* analysis.c: fix a bug causing wrong luck stats in matches as reported on savannah
 
 Tue Dec  9 01:32:30 CET 2008 Christian Anthon <anthon@kiku.dk>
 
@@ -2767,12 +2854,12 @@ Mon Dec  8 22:22:19 CET 2008 Christian Anthon <anthon@kiku.dk>
 	pixmaps/gnubg-stock-pixbufs.h, pixmaps/16x16/actions/runit_16.png,
 	pixmaps/24x24/actions/runit_24.png: Add a quickgame button
 
-Mon Dec  8 21:29:12 CET 2008 Christian Anthon <anthon@kiku.dk>: 
+Mon Dec  8 21:29:12 CET 2008 Christian Anthon <anthon@kiku.dk>:
 
 	* gtkgame.c: UserCommand("set ..."); may have strange sideeffects
 	through GTKSet, and cannot be used in edit_new
 
-Dec  5 10:30:38 CET 2008 Christian Anthon <anthon@kiku.dk>: 
+Fri Dec  5 10:30:38 CET 2008 Christian Anthon <anthon@kiku.dk>:
 
 	* bearoff.c, bearoff.h: disable gmappedfile code when GLib is old, and
 	fix a bug causing a crash when mapping of the bearoffdb fails.
@@ -3258,7 +3345,7 @@ Mon May  5 09:36:34 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
 Sun May  4 21:53:07 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
-	* gtkgame.c: cleanup use of the word 'session' 
+	* gtkgame.c: cleanup use of the word 'session'
 
 Sat May  3 00:07:21 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
@@ -3299,7 +3386,7 @@ Sat Apr 26 19:09:00 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
 Fri Apr 25 17:33:11 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
-	* configure.in: try to guess the right sse flag according to cpu type
+	* configure.in: try to guess the right SSE flag according to cpu type
 
 Fri Apr 25 00:04:58 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
@@ -3369,7 +3456,7 @@ Mon Mar 31 12:58:06 CEST 2008 Christian Anthon <anthon@kiku.dk>
 
 Fri Mar 28 15:25:34 CET 2008 Achim Mueller <ace@gnubg.org>
 
-	* changed configure.in: new release number 0.9.0 
+	* changed configure.in: new release number 0.9.0
 
 Fri Mar 28 00:40:32 CET 2008 Christian Anthon <anthon@kiku.dk>
 
@@ -4242,7 +4329,7 @@ Tue Apr 17 09:08:36 CEST 2007 Christian Anthon <anthon@kiku.dk>
 
 	* doc/Makefile.am: DESTDIR support
 
-Thu Apr 12 20:43:03 2007 ï¿½ystein Johansen <oystein@gnubg.org>
+Thu Apr 12 20:43:03 2007 Øystein Johansen <oystein@gnubg.org>
 
 	* gtkfile.[ch], gtkgame.c: New feature: Batch analysis (still buggy)
 
@@ -4372,7 +4459,7 @@ Thu Feb 08 19:56:45 2006 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 Fri Feb 02 18:56:45 2006 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
-	* multithread.c/.h, lib/neuralnet.c, lib/neuralnetsse.c, lib/cache.c (new) : syncronize cache
+	* multithread.c/.h, lib/neuralnet.c, lib/neuralnetsse.c, lib/cache.c (new) : synchronize cache
 		access, fix mis-aligned mingw thread stack, remove frombase optimisation for SSE.
 
 Wed Jan 31 12:49:00 CET 2007 Christian Anthon <anthon@kiku.dk>
@@ -4451,7 +4538,7 @@ Tue Dec 12 15:54:22 CET 2006 Christian Anthon <anthon@kiku.dk>
 
 Sun Dec 10 17:27:29 CET 2006 Christian Anthon <anthon@kiku.dk>
 
-	* configure.in, lib/neuralnet.c: configure option to disable the sse
+	* configure.in, lib/neuralnet.c: configure option to disable the SSE
 	test (e.g. on amd64)
 
 Thu Dec  7 16:57:14 CET 2006 Christian Anthon <anthon@kiku.dk>
@@ -4514,7 +4601,7 @@ Sun Nov 26 16:59:28 CET 2006 Christian Anthon <anthon@kiku.dk>
 
 	* backgammon.h, gnubg.c, gtkfile.c, import.c, import.h: "import gam",
 	"import party" and "import empire", respectively imports, jellyfish .gam,
-	partygammon .gam and gammonempire .gam. 
+	partygammon .gam and gammonempire .gam.
 
 Sun Nov 26 16:24:30 CET 2006 Christian Anthon <anthon@kiku.dk>
 
@@ -4548,7 +4635,7 @@ Thu Nov 16 15:27:32 CET 2006 Christian Anthon <anthon@kiku.dk>
 
 Tue Nov 14 21:17:55 GMT 2006 Jim Segrave <jes@jes-2.demon.nl>
 
-	* gtkgame.c : GTKShowScoreSheet callback to MoveListIntoView 
+	* gtkgame.c : GTKShowScoreSheet callback to MoveListIntoView
 	  2nd parameter is pointer to int, not int
 
 Mon Nov 13 22:32:37 CET 2006 Christian Anthon <anthon@kiku.dk>
@@ -4670,7 +4757,7 @@ Wed Oct  4 14:18:35 CEST 2006 Christian Anthon <anthon@kiku.dk>
 Wed Oct  4 11:58:50 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
 	* gtktoolbar.c: make sure labels are shown
-	* .cvsignore: add linked files 
+	* .cvsignore: add linked files
 
 Mon Oct  2 00:49:27 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
@@ -4691,11 +4778,11 @@ Wed Sep 20 21:56:45 2006 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 Mon Sep 18 22:17:39 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
-	* misc: Keith Count 
+	* misc: Keith Count
 
 Wed Sep 13 21:42:45 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
-	* gtk*, Makefile.am: Cleanup after modal comit
+	* gtk*, Makefile.am: Cleanup after modal commit
 
 Wed Sep 13 21:38:50 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
@@ -4722,7 +4809,7 @@ Tue Aug 29 14:32:51 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
 	* drawboard.c: 'off' and 'bar' should not be translated
 
-Wed 23 Aug 2006 Jim Segrave <jes@jes-2.demon.nl>
+Wed Aug 23 2006 Jim Segrave <jes@jes-2.demon.nl>
 
 	* gnubg.c: initialise rollout context when calling RolloutGeneral
 
@@ -4767,9 +4854,9 @@ Thu Jun 22 20:53:54 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
 Sun Jun 18 01:26:05 CEST 2006 Christian Anthon <anthon@kiku.dk>
 
-	* Several files: cleanup after ï¿½ystein i18n changes
+	* Several files: cleanup after Øystein i18n changes
 
-Sat Jun 17 19:42:19 2006 ï¿½ystein Johansen <oystein@gnubg.org>
+Sat Jun 17 19:42:19 2006 Øystein Johansen <oystein@gnubg.org>
 
 	* Many files: Remove i18n functions like PushLocale and PopLocale,
 	use GLib's g_ascii_strtod and g_ascii_formatd instead.
@@ -4796,7 +4883,7 @@ Mon May 29 13:01:07 CEST 2006 Christian Anthon <anthon@kiku.dk>
 	* M gnubg.gtkrc : gtk2 cleanup, don't autogenerate from gnubg.gtkrc.in
 	anymore
 
-Fri May 26 20:35:05 2006 ï¿½ystein Johansen <oystein@gnubg.org>
+Fri May 26 20:35:05 2006 Øystein Johansen <oystein@gnubg.org>
 
 	* gnubg.c: Simple Win32 fixes (Windows doesn't use gdkx.h)
 
@@ -4817,18 +4904,18 @@ Sat May 21 15:56:45 2006 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 	* boards.xml : Added two new designs by Wilson Amaral Jorge.
 
-Mon May 8  21:32:34 2006 ï¿½ystein Johansen <oystein@gnubg.org>
+Mon May 8  21:32:34 2006 Øystein Johansen <oystein@gnubg.org>
 
 	* renderprefs.c: A revised 64 bit patch from Alex applied.
 
-Sun May 7  18:49:34 2006 ï¿½ystein Johansen <oystein@gnubg.org>
+Sun May 7  18:49:34 2006 Øystein Johansen <oystein@gnubg.org>
 
 	* renderprefs.c: Revert Alex' patch.
 
 Tue May  2 00:33:07 CEST 2006 Christian Anthon <anthon@kiku.dk>
 	* gtkgame.c: fix display of gtkeval window
 
-Mon May 1  22:06:34 2006 ï¿½ystein Johansen <oystein@gnubg.org>
+Mon May 1  22:06:34 2006 Øystein Johansen <oystein@gnubg.org>
 
 	* renderprefs.c: Apply Alex patch.
 	* texture.txt: Bump version
@@ -4842,7 +4929,7 @@ Tue Apr 14 09:56:45 2006 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 	* export.c : Fix 3d png export (and 3d preview bars in appearance dialog)
 
 Thu Apr 13 01:37:29 CEST 2006 Christian Anthon
-	* Make Jon's sse-splitup actually compile on linux. Moved
+	* Make Jon's SSE-splitup actually compile on linux. Moved
 	SSE_Support() to neuralnet.c to make makeweights compile. Added some
 	autoconf magick.
 
@@ -4867,7 +4954,7 @@ Mon Apr 10 09:49:03 CEST 2006 Christian Anthon <anthon@kiku.dk>
 Fri Apr  7 13:46:58 CEST 2006 Christian Anthon <anthon@kiku.dk>
 	* gnubg.c, gtkgame.c: Fix problems with help menus in gtk
 	* gtkgame.c         : Enable add game to relational in gtk(thx MaX)
-	* database.py       : Create games database when appropriate(thx MaX) 
+	* database.py       : Create games database when appropriate(thx MaX)
 	* html.c            : small improvement on previous
 
 Thu Apr  6 22:30:58 CEST 2006 Christian Anthon <anthon@kiku.dk>
@@ -4889,7 +4976,7 @@ Tue Mar 28 23:24:14 CEST 2006 Christian Anthon <anthon@kiku.dk>
 	* format.c eval.c analysis.c: Clean up isCloseCube and lower limit to
 	    0.16
 
-Sat Mar 20 23:16:45 2006 ï¿½ystein Johansen <oystein@gnubg.org>
+Sat Mar 20 23:16:45 2006 Øystein Johansen <oystein@gnubg.org>
 
 	* analysis.c: Fix for problem with wrong double statistics.
 	(Thanks to Christian Anthon)
@@ -4957,8 +5044,8 @@ Thu Dec 12 13:23:12 GMT 2005 Jim Segrave <jes@jes-2.demon.nl>
 
 Fri Nov 18 16:38:11 GMT 2005 Jim Segrave <jes@jes-2.demon.nl>
 
-	*gtktexi.c - make inclusion of io.h dependent on not having 
-	 unistd.h, as done in other routines (io.h is a Windows-only 
+	*gtktexi.c - make inclusion of io.h dependent on not having
+	 unistd.h, as done in other routines (io.h is a Windows-only
 	 header)
 
 Mon Sep 19 22:37:25 GMT 2005 Jim Segrave <jes@jes-2.demon.nl>
@@ -4966,7 +5053,7 @@ Mon Sep 19 22:37:25 GMT 2005 Jim Segrave <jes@jes-2.demon.nl>
 	* relational.c, gtkgame.c - don't reference non-existent gtk
 	  objects
 	  postgresql does not accept queries in the form
-	  SELECT column from A INNER JOIN B INNER JOIN C 
+	  SELECT column from A INNER JOIN B INNER JOIN C
 	    ON A.id1 = B.id1 AND B.id2 = C.id2
 
 	  must be
@@ -4995,7 +5082,7 @@ Sun May  8 12:56:45 2005 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 Wed May  4 18:10:43 GMT  2005  Jim Segrave <jes@jes-2.demon.nl>
 
-	* eval.c: Don't use MMAP for reading weights when using sse
+	* eval.c: Don't use mmap for reading weights when using SSE
 
 Fri Apr  29  20:56:45 2005 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
@@ -5135,7 +5222,7 @@ Sun Jan  2 13:44:55 2005 GMT  Jim Segrave <jes@jes-2.demon.nl>
 	* gnubgmodule.h - reinclude config.h to set HAVE_FSTAT (gcc
 	  doesn't like trying to redfine it and config.h is not
 	  idempotent)
-	* gnubgmodule.c - replace _getcwd with getcwd, _MAX_PATH with 
+	* gnubgmodule.c - replace _getcwd with getcwd, _MAX_PATH with
 	  PATH_MAX, which should be available in all C implementations
 
 Sun Jan  2 11:56:45 2005 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
@@ -5354,7 +5441,7 @@ Sun Jul 25 19:19:41 2004 GMT  TAKAHASHI Kaoru  <kaoru@kaisei.org>
 
 Sun Jul 25 18:15:47 UTC 2004 Jim Segrave   <jes@jes-2.demon.nl>
 
-	* gtkexport.c - fix handling of cube export settings (typo and 
+	* gtkexport.c - fix handling of cube export settings (typo and
 	  corrections for unused entries)
 
 Mon Jul 19 09:53:10 CEST 2004  Joern Thyssen  <jth@gnubg.org>
@@ -5411,7 +5498,7 @@ Sun Jul  4 14:22:59 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 
 	* analysis.c (CashPoint): fix bug leading to wrong
 	classification of wrong doubles.
-	(reported by Hans-Jï¿½rgen Schï¿½fer)
+	(reported by Hans-Jürgen Schäfer)
 	* eval.c (calculate_gammon_rates): new function.
 
 	* openurl.c, gtkgame.c, relational.c: pacify fussy compilers.
@@ -5643,7 +5730,7 @@ Fri Apr 30 18:56:45 2004 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 Thu Apr 29 20:44:24 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 
-	* bearoff.c (GetDistCompressed): fix sanity check for huge 
+	* bearoff.c (GetDistCompressed): fix sanity check for huge
 	databases.
 
 Wed Apr 28 20:28:22 CEST 2004  Joern Thyssen  <jth@gnubg.org>
@@ -5707,7 +5794,7 @@ Tue Apr 20 17:56:25 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 Mon Apr 19 22:52:41 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 
 	* gnubg.c (EPC): fix "same dice sequence for several games in a
-	row"-bug, reported by several users (Erik Barfoed, ï¿½ystein, Murat
+	row"-bug, reported by several users (Erik Barfoed, Øystein, Murat
 	etc). Well, this is not really a fix, I've just changed the code
        	to avoid calling the OSR code, that resets the seed.
 	We really need to introduce several RNG contexts...
@@ -5737,7 +5824,7 @@ Sat Apr 17 20:01:07 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 
 Sat Apr 17 10:58:18 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 
-	Save leading comment lines in the match information when 
+	Save leading comment lines in the match information when
 	reading Jellyfish .mat files
 	(e.g., the information Dueller adds to .mat files)
 
@@ -5751,7 +5838,7 @@ Fri Apr 16 22:02:23 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 	* mec.c: new file (copy of original mec.c with modfications
         for gnubg)
 	* Makefile.am: add mec.c
-	* matchequity.c (initMetFromParameters, 
+	* matchequity.c (initMetFromParameters,
 	initPostCrawfordMETFromParameters): support for mec.
 
 Fri Apr 16 16:56:45 2004 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
@@ -5865,7 +5952,7 @@ Mon Mar 29 17:56:45 2004 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 Mon Mar 29 09:40:02 CEST 2004  Joern Thyssen  <jth@gnubg.org>
 
 	* Makefile.am: target for br1.c not kept up to date with
-	changes in makebearoff	
+	changes in makebearoff
 	* Makefile.am: FLEX->LEX, BISON->YACC
 	* bearoff.h: declare BearoffAlloc extern
 	* configure.in: add "dynamic" as parameter to --enable-bearoff
@@ -5989,7 +6076,7 @@ Wed Feb 18 11:56:45 2004 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 	* gtkgame.c: Remove maximum column size of text copied to
 		clipboard from statistics view (Bug 4161).
 
-Mon Feb 16 21:57:18 CET 2004   Joern Thyssen  <jth@gnubg.org> 
+Mon Feb 16 21:57:18 CET 2004   Joern Thyssen  <jth@gnubg.org>
 
 	* bearoff.c (HeuristicDatabase): align heuristic database
 	with GetBearoffDistUncompressed (a.k.a. the 40 byte offset).
@@ -6056,7 +6143,7 @@ Mon Jan 26 07:31:03 2004  TAKAHASHI Kaoru  <kaoru@kaisei.org>
 
 Wed Jan 21 21:17:12 2004  Joern Thyssen  <jth@gnubg.org>
 
-	* bearoff.c (GetDistCompressed): fix stupid stupid stupid bug. 
+	* bearoff.c (GetDistCompressed): fix stupid stupid stupid bug.
 	(reported by several users)
 
 Tue Jan 20 00:22:21 CET 2004  Joern Thyssen  <jth@gnubg.org>
@@ -6098,7 +6185,7 @@ Sun Jan  4 13:35:16 2004  Joern Thyssen  <jth@gnubg.org>
 Sun Jan  4 11:05:03 2004  Joern Thyssen  <jth@gnubg.org>
 
 	The hint dialog will now always show the w/g/bg's whereas the panelled
-	analysis only shows the equity/MWC. Pressing the "details" button 
+	analysis only shows the equity/MWC. Pressing the "details" button
 	will pop up the hint dialog.
 
 	* gtkchequer.c: restore some of the old non-panel code
@@ -6221,7 +6308,7 @@ Sat Dec 13 21:15:52 2003  Joern Thyssen  <jth@gnubg.org>
 
 	* gtkrace.c (OneChequerPage): remove call to SwapSides
 	(reported by Ned Cross and Petr Kadlec)
-	* gnubg.c (HintChequer): compile error: move "moverecord *pmr" 
+	* gnubg.c (HintChequer): compile error: move "moverecord *pmr"
 	outside USE_GTK.
 	(reported by Nardy)
 	* gtkgame.c (ReportBug): remove extra slash in path
@@ -6229,9 +6316,9 @@ Sat Dec 13 21:15:52 2003  Joern Thyssen  <jth@gnubg.org>
 	* analysis.c (AnalyzeMove): generalise calculation of
 	is_initial_position. Use is_initial_position for calculation of luck.
 	(reported by Mathias Kegelmann)
-	* progress.c: print time elapsed, estimated time left, and 
+	* progress.c: print time elapsed, estimated time left, and
 	estimated final standard error.
-	* show.c (CommandShowVariation): 
+	* show.c (CommandShowVariation):
 	* bearoff.c, format.c, gtktheory.c: add some gettexts.
 	* import.c (isAscending): fix off-by-one bug.
 	(reported by Joseph Heled)
@@ -6372,7 +6459,7 @@ Sat Nov  8 19:56:58 GMT 2003  Jim Segrave <jes@jes-2.demon.nl>
 
 Thu Nov  6 13:18:48 GMT 2003  Jim Segrave <jes@jes-2.demon.nl>
 
-	* analysis.c - Stupid, stupid, stupid. My silly last minute change 
+	* analysis.c - Stupid, stupid, stupid. My silly last minute change
 	  prevented cube analysis on any position except the initial one.
 	  Arrgh.
 
@@ -6474,7 +6561,7 @@ Mon Oct 13 18:12:37 2003  Joern Thyssen  <jth@gnubg.org>
 Mon Oct 13 12:40:45 2003 GMT  Jon Kinsey <Jon_Kinsey@hotmail.com>
 
 	* gtkgame.c, gtkboard.c: Add _() translations to a few strings.
-	(reported by Hlynur Sigurgï¿½slason)
+	(reported by Hlynur Sigurgíslason)
 
 Sun Oct 12 15:13:46 2003  Joern Thyssen  <jth@gnubg.org>
 
@@ -6565,9 +6652,9 @@ Fri Oct  3 19:08:51 2003  Joern Thyssen  <jth@gnubg.org>
 
 Thu Oct  2 20:48:23 2003  Joern Thyssen  <jth@gnubg.org>
 
-	* formatgs.c (errorRateMP): remove extra digit in 
+	* formatgs.c (errorRateMP): remove extra digit in
 	error rates.
-	(suggested by olivier croisille)
+	(suggested by Olivier Croisille)
 
 Thu Oct  2 20:21:21 2003  Joern Thyssen  <jth@gnubg.org>
 
@@ -6653,7 +6740,7 @@ Sun Sep 21 16:57:55 2003  Joern Thyssen  <jth@gnubg.org>
 
 Sat Sep 20 22:07:59 2003  Joern Thyssen  <jth@gnubg.org>
 
-	* formatgs.c (errorrateMP): allow control of number of digits in 
+	* formatgs.c (errorrateMP): allow control of number of digits in
 	error rate and allow control over factor used (default is 1000).
 	* gnubg.c: new command "set output errorratefactor ...".
 	* set.c (CommandSetOutputErrorRateFactor): new function.
@@ -6683,7 +6770,7 @@ Thu Sep 19 22:06:27 2003 GMT  Jim Segrave <jes@jes-2.demon.nl>
 	  to alter the aspect ratio (adding space in the middle). A 72x108
 	  board is buildable, but should not be used (there's no guarantee
 	  that the dice or doubling cube can be placed on the board
-	  without intersecting chequers, although changing the die and 
+	  without intersecting chequers, although changing the die and
 	  doubling cube size will fix that)
 
 
@@ -6798,7 +6885,7 @@ Mon Sep 08 20:18:46 2003 GMT  Holger Bochnig <hbgg@gmx.net>
 Mon Sep 08 18:45:56 2003 GMT  Holger Bochnig <hbgg@gmx.net>
 
 	classify cube decisions into 3 categories: around DP, CP and TG
-	(suggested by Jï¿½rn)
+	(suggested by Jørn)
 
 	* analysis.c: rename getMarketWindowDividersMWC to
 	getMarketWindowDividersEq
@@ -6966,7 +7053,7 @@ Mon Sep 01 22:55:25 2003 GMT  Holger Bochnig <hbgg@gmx.net>
 	(needs tweaking for correct doubling window)
 
 	* analysis.c (updateStatcontext): alter logic
-	* analysis.c (getMarketWindowDividerMWC): new function 
+	* analysis.c (getMarketWindowDividerMWC): new function
 
 Mon Sep  1 21:19:42 2003  Joern Thyssen  <jth@gnubg.org>
 
@@ -6976,7 +7063,7 @@ Mon Sep  1 21:19:42 2003  Joern Thyssen  <jth@gnubg.org>
 Mon Sep  1 19:28:48 2003  Joern Thyssen  <jth@gnubg.org>
 
 	* import.c (ParseOldmove): do not subtract 1 from move
-	before calling CanonicalMoveOrder. 
+	before calling CanonicalMoveOrder.
 	(bug #5016 reported by Alix Martin)
 
 Mon Sep  1 10:16:46 2003  Jon Kinsey <Jon_Kinsey@hotmail.com>
@@ -6996,7 +7083,7 @@ Sun Aug 31 22:53:12 GMT 2003 Jim Segrave <jes@jes-2.demon.nl>
 
 	* gnubg.c conditionals around StartPythonHandleX/StopPythonHandleX
 	  for all  environments, as it appears to be for a later python
-	  version 
+	  version
 
 Sun Aug 31 22:53:12 GMT 2003 Jim Segrave <jes@jes-2.demon.nl>
 
@@ -7043,7 +7130,7 @@ Sat Aug 30 20:06:47 2003  Joern Thyssen  <jth@gnubg.org>
 
 	* Makefile.am: add formatgs.[ch]
 	* formatgs.c: new file. Return formatted match statistics.
-        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext), 
+        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext),
         analysis.c (DumpStatcontext): use formatGS.
 
 Sat Aug 30 08:45:23 2003  Joern Thyssen  <jth@gnubg.org>
@@ -7264,7 +7351,7 @@ Wed Aug 20 19:20:51 2003  Joern Thyssen  <jth@gnubg.org>
 	* gnubg.c: new command "set ratingoffset .."
 	* gnubg.c (CommandSaveSettings): save rating offset.
 	* set.c (CommandSetRatingOffset): new function.
-        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext), 
+        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext),
         analysis.c (DumpStatcontext): show abs. rating.
 	* analysis (absoluteFIBSRating): use formulae provided by Kees.
 
@@ -7320,18 +7407,18 @@ Sat Aug 16 11:24:24 2003  Joern Thyssen  <jth@gnubg.org>
 
 Sat Aug 16 11:05:45 2003  Joern Thyssen  <jth@gnubg.org>
 
-        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext), 
+        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext),
         analysis.c (DumpStatcontext): show actual and luck adj. result
 	relative instead of absolute.
 	(suggested by Chris D. Yep)
 
 Sat Aug 16 10:43:32 2003  Joern Thyssen  <jth@gnubg.org>
 
-        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext), 
+        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext),
         analysis.c (DumpStatcontext): show FIBS rating difference instead
 	of relative FIBS rating.
 	(suggested by Kees van den Doel)
-        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext), 
+        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext),
         analysis.c (DumpStatcontext): show only relative fibs rating
 	for the entire match
 	(suggested by Chris D. Yep)
@@ -7460,7 +7547,7 @@ Thu Aug  7 19:45:11 2003  Joern Thyssen  <jth@gnubg.org>
 
 Thu Aug  7 19:29:35 2003  Joern Thyssen  <jth@gnubg.org>
 
-        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext), 
+        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext),
         analysis.c (DumpStatcontext): don't show relative fibs rating
 	for p>1 or p<0.
 	(reported by Kees Van Doel)
@@ -7821,7 +7908,7 @@ Sat Jul 18 09:55:40 GMT 2003 Jim Segrave <jes@jes-2.demon.nl>
 Sat Jul 18 07:13:40 GMT 2003 Jim Segrave <jes@jes-2.demon.nl>
 
 	* gtkgame.c - search the stack of grab owners for the
-	  current caller of ResumeInput and trim the stack if 
+	  current caller of ResumeInput and trim the stack if
 	  found
 
 Sat Jul 18 00:22:40 GMT 2003 Jim Segrave <jes@jes-2.demon.nl>
@@ -7878,7 +7965,7 @@ Thu Jul 17 12:29:20 2003  Joern Thyssen  <jth@gnubg.org>
 	(b) REMOVE output of abs. fibs rating
 	(c) add output of relative fibs rating based on luck adj. results
 
-        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext), 
+        * html.c (HTMLDumpStatcontext), gtkgame.c (GTKDumpStatcontext),
         analysis.c (DumpStatcontext): see above.
 
 Wed Jul 16 21:28:23 2003  Joern Thyssen  <jth@gnubg.org>
@@ -8129,9 +8216,9 @@ Tue Jul 8 21:00 CET 2003 Olivier Baur <olivier.baur@noos.fr>
         "sound system" called "QuickTime", a new command "set sound system
         quicktime", and a new sound system radio button in the Options >
         Sound settings dialog.
-        
+
         * sound.h: define new sound system SOUND_SYSTEM_QUICKTIME
-        * sound.c: modify play_file() and play_file_child(); add functions 
+        * sound.c: modify play_file() and play_file_child(); add functions
             PlaySound_QuickTime() and Thread_PlaySound_QuickTime();
         * set.c: add new function CommandSetSoundSystemQuickTime()
 	* backgammon.h: add prototype to CommandSetSoundSystemQuickTime()
@@ -8157,7 +8244,7 @@ Tue Jul 8 11:15 GMT 2003 Jim Segrave jes@jes-2.demon.nl
 
         * rollout.c - initialise internal variables on first game of
           rollout
-        
+
 Mon Jul  7 12:33:17 2003  Joern Thyssen  <jth@gnubg.org>
 
         * rollout.c (RolloutDice): fix bug in generated dice for
@@ -8185,11 +8272,11 @@ Sun Jul 6 15:02 GMT 2003 Jim Segrave jes@jes-2.demon.nl
 
         * rolloutc it helps to call fabs() when dealing with floats.
           sigh - complete brain fade
-        
+
 Sun Jul  6 14:33:42 2003  Joern Thyssen  <jth@gnubg.org>
 
         * eval.c (EvalKey): do not include cubeful flags, match scores, etc.
-        in calculation of hash key for 0-ply evaluations unless called 
+        in calculation of hash key for 0-ply evaluations unless called
         from EvaluatePositionCubeful.
 
 Sun Jul  6 13:48:46 2003  Joern Thyssen  <jth@gnubg.org>
@@ -8206,7 +8293,7 @@ Thu Jul 3 15:02 GMT 2003 Jim Segrave jes@jes-2.demon.nl
 
         * openurl.c gtktheory.c gtkboard.c osr.c eval.c gnubg.c
           htmlimages.c export.c lib/event.c
-          fixes for compiler warnings - unused variables removed, 
+          fixes for compiler warnings - unused variables removed,
           cast added in gnubg.c, config.h included in event.c (and
           fix of call to outputerr()), add explicit returns in eval.c
           for reaching end of non-void function

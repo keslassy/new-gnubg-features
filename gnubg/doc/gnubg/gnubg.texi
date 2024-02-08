@@ -1543,11 +1543,6 @@ TrueMoneyGames@tab @code{import tmg <filepath>}
 Jellyfish Match is not formally defined and software exporting matches to this format often produce minor discrepancies.
 GNU Backgammon tries to cater to most of them automatically.
 
-Online sites do not always create their .mat files with the you as player 1, the one playing towards the bottom of the board.
-To have these matches converted to be displayed in the natural way, you can use de CLI command
-@code{set aliases <player name 1>;<player name 2>;[<etc...>]}
-GNU Backgammon will swap the players as needed so that player names matching these aliases are always imported as player 1.
-
 @node Saving and exporting positions; games or matches, , Opening and importing matches, Retrieving and storing backgammon files
 @subsection Saving and exporting positions, games or matches
 
@@ -2151,19 +2146,15 @@ Luck ratings:
 @item
 Normalized luck rate per move@tab Luck rating
 @item
-> 0.10@tab Cheater :-)
+> 0.06@tab Go to Las Vegas
 @item
-0.06 - 0.10@tab Go to Las Vegas immediately
+0.03 - 0.06@tab Good dice, man!
 @item
-0.02 - 0.06@tab Good dice, man!
+-0.03 - 0.03@tab None
 @item
--0.02 - 0.02@tab none
+-0.06 - -0.03@tab Bad dice, man!
 @item
--0.06 - -0.02@tab Better luck next time
-@item
--0.06 - -0.10@tab Go to bed
-@item
-< -0.10@tab Haaa-haaa
+< -0.06@tab Go to bed
 @end multitable
 
 @node Cube statistics, Overall rating, Luck analysis, Statistics
@@ -4692,7 +4683,9 @@ Evals/sec@tab CPU@tab System/Main board@tab RAM@tab OS @tab GNUBG-Version@tab
 @item
 21800@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 9.4@tab 1.06.002, --with-simd=neon@tab 1 thread
 @item
-10900@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 9.4@tab 1.06.002@tab 1 thread
+21700@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 10@tab 1.06.002, --with-simd=neon@tab 1 thread
+@item
+11100@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 10@tab 1.06.002@tab 1 thread
 @item
 10400@tab ARM Cortex-A53  600 MHz@tab Raspberry Pi 3 Model B@tab 1024 MB@tab Raspbian 9.4@tab 1.05.002@tab 1 thread
 @item

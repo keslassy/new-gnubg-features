@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: dbprovider.c,v 1.61 2022/03/22 16:55:46 plm Exp $
+ * $Id: dbprovider.c,v 1.64 2023/12/30 07:26:00 plm Exp $
  */
 
 #include "config.h"
@@ -64,28 +64,105 @@ static int SQLiteDeleteDatabase(const char *dbfilename, const char *user, const 
 static GList *SQLiteGetDatabaseList(const char *user, const char *password, const char *hostname);
 static DBProvider providers[NUM_PROVIDERS] = {
 #if defined(USE_SQLITE)
-    {SQLiteConnect, SQLiteDisconnect, SQLiteSelect, SQLiteUpdateCommand, SQLiteCommit, SQLiteGetDatabaseList,
-     SQLiteDeleteDatabase,
-     "SQLite", "SQLite", N_("Direct SQLite3 connection"), FALSE, TRUE, "gnubg", "", "", ""},
+    {
+	.Connect = SQLiteConnect,
+	.Disconnect = SQLiteDisconnect,
+	.Select = SQLiteSelect,
+	.UpdateCommand = SQLiteUpdateCommand,
+	.Commit = SQLiteCommit,
+	.GetDatabaseList = SQLiteGetDatabaseList,
+	.DeleteDatabase = SQLiteDeleteDatabase,
+	.name = "SQLite",
+	.shortname = "SQLite",
+	.desc = N_("Direct SQLite3 connection"),
+	.HasUserDetails = FALSE,
+	.storeGameStats = TRUE,
+	.database = NULL,
+	.username = NULL,
+	.password = NULL,
+	.hostname = NULL
+    },
 #endif
 #if defined(USE_PYTHON)
 #if !defined(USE_SQLITE)
-    {PySQLiteConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, SQLiteGetDatabaseList, SQLiteDeleteDatabase,
-     "SQLite (Python)", "PythonSQLite", N_("SQLite3 connection via Python"), FALSE, TRUE, "gnubg",
-     "", "", ""},
+    {
+	.Connect = PySQLiteConnect,
+	.Disconnect = PyDisconnect,
+	.Select = PySelect,
+	.UpdateCommand = PyUpdateCommand,
+	.Commit = PyCommit,
+	.GetDatabaseList = SQLiteGetDatabaseList,
+	.DeleteDatabase = SQLiteDeleteDatabase,
+	.name = "SQLite (Python)",
+	.shortname = "PythonSQLite",
+	.desc = N_("SQLite3 connection via Python"),
+	.HasUserDetails = FALSE,
+	.storeGameStats = TRUE,
+	.database = NULL,
+	.username = NULL,
+	.password = NULL,
+	.hostname = NULL
+    },
 #endif
-    {PyMySQLConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, PyMySQLGetDatabaseList, PyMySQLDeleteDatabase,
-     "MySQL (Python)", "PythonMySQL", N_("MySQL/MariaDB connection via MySQLdb Python module"), TRUE, TRUE, "gnubg", "", "",
-     "localhost:3306"},
-    {PyPostgreConnect, PyDisconnect, PySelect, PyUpdateCommand, PyCommit, PyPostgreGetDatabaseList,
-     PyPostgreDeleteDatabase,
-     "PostgreSQL (Python)", "PythonPostgre", N_("PostgreSQL connection via PyGreSQL Python module"), TRUE, TRUE, "gnubg", "",
-     "", "localhost:5432"},
+    {
+	.Connect = PyMySQLConnect,
+	.Disconnect = PyDisconnect,
+	.Select = PySelect,
+	.UpdateCommand = PyUpdateCommand,
+	.Commit = PyCommit,
+	.GetDatabaseList = PyMySQLGetDatabaseList,
+	.DeleteDatabase = PyMySQLDeleteDatabase,
+	.name = "MySQL (Python)",
+	.shortname = "PythonMySQL",
+	.desc = N_("MySQL/MariaDB connection via MySQLdb Python module"),
+	.HasUserDetails = TRUE,
+	.storeGameStats = TRUE,
+	.database = NULL,
+	.username = NULL,
+	.password = NULL,
+	.hostname = NULL
+    },
+    {
+	.Connect = PyPostgreConnect,
+	.Disconnect = PyDisconnect,
+	.Select = PySelect,
+	.UpdateCommand = PyUpdateCommand,
+	.Commit = PyCommit,
+	.GetDatabaseList = PyPostgreGetDatabaseList,
+	.DeleteDatabase = PyPostgreDeleteDatabase,
+	.name = "PostgreSQL (Python)",
+	.shortname = "PythonPostgre",
+	.desc = N_("PostgreSQL connection via PyGreSQL Python module"),
+	.HasUserDetails = TRUE,
+	.storeGameStats = TRUE,
+	.database = NULL,
+	.username = NULL,
+	.password = NULL,
+	.hostname = NULL
+    }
 #endif
 };
-
 #else
-DBProvider providers[1] = { {0, 0, 0, 0, 0, 0, 0, "No Providers", "No Providers", N_("No database providers"), 0, 0, 0, 0, 0, 0} };
+DBProvider providers[1] = {
+    {
+	.Connect = NULL,
+	.Disconnect = NULL,
+	.Select = NULL,
+	.UpdateCommand = NULL,
+	.Commit = NULL,
+	.GetDatabaseList = NULL,
+	.DeleteDatabase = NULL,
+	.name = "No Providers",
+	.shortname = "No Providers",
+	.desc = N_("No database providers"),
+	.HasUserDetails = FALSE,
+	.storeGameStats = FALSE,
+	.database = NULL,
+	.username = NULL,
+	.password = NULL,
+	.hostname = NULL
+    }
+};
 #endif
 
 #if defined(USE_PYTHON) || defined(USE_SQLITE)
@@ -196,20 +273,49 @@ GetTypeFromName(const char *name)
 }
 
 void
+DefaultDBSettings(void)
+{
+#if NUM_PROVIDERS
+    int i = 0;
+#if defined(USE_SQLITE)
+    /* native sqlite3 */
+    providers[i++].database = g_strdup("gnubg");
+#endif
+#if defined(USE_PYTHON)
+#if !defined(USE_SQLITE)
+    /* sqlite3 via Python */
+    providers[i++].database = g_strdup("gnubg");
+#endif
+    /* MySQL / MariaDB */
+    providers[i].hostname = g_strdup("localhost:3306");
+    providers[i++].database = g_strdup("gnubg");
+    /* PostgreSQL */
+    providers[i].hostname = g_strdup("localhost:5432");
+    providers[i++].database = g_strdup("gnubg");
+#endif
+#endif
+}
+
+void
 SetDBParam(const char *db, const char *key, const char *value)
 {
     DBProviderType type = GetTypeFromName(db);
     if (type == INVALID_PROVIDER)
         return;
 
-    if (!StrCaseCmp(key, "database"))
-        providers[type].database = g_strdup(value);
-    else if (!StrCaseCmp(key, "username"))
+    if (!StrCaseCmp(key, "database")) {
+        g_free(providers[type].database);
+        providers[type].database= g_strdup(value);
+    } else if (!StrCaseCmp(key, "username")) {
+        g_free(providers[type].username);
         providers[type].username = g_strdup(value);
-    else if (!StrCaseCmp(key, "password"))
+    } else if (!StrCaseCmp(key, "password")) {
+        g_free(providers[type].password);
         providers[type].password = g_strdup(value);
-    else if (!StrCaseCmp(key, "hostname"))
-        providers[type].hostname = g_strdup(value);
+    } else if (!StrCaseCmp(key, "hostname")) {
+        g_free(providers[type].hostname);
+	providers[type].hostname = g_strdup(value);
+    }
 }
 
 void
@@ -222,9 +328,17 @@ void
 SetDBSettings(DBProviderType dbType, const char *database, const char *user, const char *password, const char *hostname)
 {
     dbProviderType = dbType;
+    
+    g_free(providers[dbProviderType].database);
     providers[dbProviderType].database = g_strdup(database);
+
+    g_free(providers[dbProviderType].username);
     providers[dbProviderType].username = g_strdup(user);
+
+    g_free(providers[dbProviderType].password);
     providers[dbProviderType].password = g_strdup(password);
+
+    g_free(providers[dbProviderType].hostname);
     providers[dbProviderType].hostname = g_strdup(hostname);
 }
 

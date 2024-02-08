@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: widget3d.c,v 1.65 2022/04/22 21:07:49 plm Exp $
+ * $Id: widget3d.c,v 1.66 2023/12/17 18:03:55 plm Exp $
  */
 
 #include "config.h"
@@ -107,25 +107,34 @@ extern int
 CreateGLWidget(BoardData * bd, int useMouseEvents)
 {
     GtkWidget *p3dWidget;
-    bd->bd3d = (BoardData3d *) g_malloc(sizeof(BoardData3d));
+    int signals;
+
+    /*
+     * Initialise this else valgrind reports
+     * use of uninitialised values in GL related code
+     */
+    bd->bd3d = (BoardData3d *) g_malloc0(sizeof(BoardData3d));
+
     InitBoard3d(bd, bd->bd3d);
+
     /* Drawing area for OpenGL */
-	p3dWidget = bd->bd3d->drawing_area3d = GLWidgetCreate(realize_3dCB, configure_3dCB, expose_3dCB, bd);
+    p3dWidget = bd->bd3d->drawing_area3d = GLWidgetCreate(realize_3dCB, configure_3dCB, expose_3dCB, bd);
     if (p3dWidget == NULL)
         return FALSE;
 
     /* set up events and signals for OpenGL widget */
-    int signals = GDK_EXPOSURE_MASK;
+    signals = GDK_EXPOSURE_MASK;
     if (useMouseEvents)
         signals |= GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK;
-
     gtk_widget_set_events(p3dWidget, signals);
+
     if (useMouseEvents)
     {
         g_signal_connect(G_OBJECT(p3dWidget), "button_press_event", G_CALLBACK(board_button_press), bd);
         g_signal_connect(G_OBJECT(p3dWidget), "button_release_event", G_CALLBACK(board_button_release), bd);
         g_signal_connect(G_OBJECT(p3dWidget), "motion_notify_event", G_CALLBACK(board_motion_notify), bd);
     }
+
     return TRUE;
 }
 

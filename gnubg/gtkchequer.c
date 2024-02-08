@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002-2003 Joern Thyssen <jthyssen@dk.ibm.com>
- * Copyright (C) 2002-2022 the AUTHORS
+ * Copyright (C) 2002-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkchequer.c,v 1.135 2023/01/18 21:49:36 plm Exp $
+ * $Id: gtkchequer.c,v 1.136 2023/03/07 22:29:54 plm Exp $
  */
 
 #include "config.h"

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2003-2019 the AUTHORS
+ * Copyright (C) 2003-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtktoolbar.c,v 1.82 2023/01/01 17:37:16 plm Exp $
+ * $Id: gtktoolbar.c,v 1.88 2023/12/20 14:17:30 plm Exp $
  */
 
 #include "config.h"
@@ -59,14 +59,14 @@ typedef struct {
     GtkWidget *pwNextCMarked;   /* button for "Next CMarked" */
     GtkWidget *pwNextMarked;    /* button for "Next CMarked" */
     GtkWidget *pwReset;         /* button for "Reset" */
-    GtkWidget *pwAnalyzeCurrent;         /* button for "Analyze Current" */
-    GtkWidget *pwAnalyzeFile;         /* button for "Analyze File" */
+    GtkWidget *pwAnalyzeCurrent;        /* button for "Analyze Current" */
+    GtkWidget *pwAnalyzeFile;	/* button for "Analyze File" */
     GtkWidget *pwEdit;          /* button for "Edit" */
     // GtkWidget *pwButtonClockwise;       /* button for clockwise */
 
 } toolbarwidget;
 
-#if !defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
 static void
 ButtonClicked(GtkWidget * UNUSED(pw), char *sz)
 {
@@ -158,7 +158,7 @@ ToolbarSetAnalyzeFile(GtkWidget * pwToolbar, const int f)
 //     toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
 //                                            "toolbarwidget");
 
-// #if defined(USE_GTKUIMANAGER)
+// #if !defined(USE_GTKITEMFACTORY)
 //     gtk_toggle_tool_button_set_active(GTK_TOGGLE_TOOL_BUTTON(ptw->pwButtonClockwise), f);
 // #else
 //     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ptw->pwButtonClockwise), f);
@@ -172,10 +172,11 @@ extern void ToggleClockwise(void)
         UserCommand(sz);
         g_free(sz);
         UserCommand("save settings");
+    }
 }
 
 // 
-// #if defined(USE_GTKUIMANAGER)
+// #if !defined(USE_GTKITEMFACTORY)
 // extern void
 // ToggleClockwise(GtkToggleAction * action, gpointer UNUSED(user_data))
 // {
@@ -238,7 +239,7 @@ extern void
 click_edit(void)
 {
     if (!inCallback) {
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
         GtkAction *editstatus = gtk_ui_manager_get_action(puim, "/MainMenu/EditMenu/EditPosition");
         gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(editstatus), !gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(editstatus)));
 #else
@@ -248,7 +249,7 @@ click_edit(void)
     }
 }
 
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
 extern void
 ToggleEdit(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
@@ -355,7 +356,7 @@ ToolbarUpdate(GtkWidget * pwToolbar,
     return c;
 }
 
-#if !defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
 static GtkWidget *
 ToolbarAddButton(GtkToolbar * pwToolbar, const char *stockID, const char *label, const char *tooltip,
                  GCallback callback, void *data)
@@ -423,7 +424,7 @@ ToolbarAddSeparator(GtkToolbar * pwToolbar)
 extern GtkWidget *
 ToolbarNew(void)
 {
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
     GtkWidget *pwtb;
     toolbarwidget *ptw = (toolbarwidget *) g_malloc(sizeof(toolbarwidget));
 
@@ -587,6 +588,11 @@ ToolbarNew(void)
     ti = GTK_TOOL_ITEM(ToolbarAddWidget(GTK_TOOLBAR(pwtb), ptw->pwEdit, _("Toggle Edit Mode")));
     gtk_tool_item_set_homogeneous(ti, TRUE);
 
+    /* removed to make space for analysis buttons. 
+    (1) it's a seldom used button, 
+    (2) it's on the menu as well, 
+    (3) it also has a shortcut 
+    */
     // /* direction of play */
     // ptw->pwButtonClockwise =
     //     toggle_button_from_images(gtk_image_new_from_stock(GNUBG_STOCK_ANTI_CLOCKWISE, GTK_ICON_SIZE_LARGE_TOOLBAR),
@@ -597,22 +603,19 @@ ToolbarNew(void)
     // ToolbarAddWidget(GTK_TOOLBAR(pwtb), ptw->pwButtonClockwise, _("Reverse direction of play"));
 
     ToolbarAddSeparator(GTK_TOOLBAR(pwtb));
-
+    
     /* Analyze current match button 
     ... switching to the British "analyse" even though "analyze" is much more common in the world...
     */
     ptw->pwAnalyzeCurrent =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyse"), 
-        _("Analyze current match: \n(1) analyze match (or session), \n(2) add match results to " 
-        "database (if set in Settings -> Analysis), and finally \n(3) show match statistics panel."), 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyse"),
+        _("Analyse current match (set default behaviour in Settings -> Analysis)"),
         G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
-    /* Analyze file button 
-    ... switching to the British "analyse" even though "analyze" is much more common in the world...
-    */
+    /* Analyze file button */
     ptw->pwAnalyzeFile =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_FIND_AND_REPLACE, _("Analyse File"), 
-        _("Analyze match from file (set default behavior in Settings -> Analysis: "
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_DIRECTORY, _("Analyse File"),
+        _("Analyze match from file (set default behaviour in Settings -> Analysis -> Analysis Buttons:"
         "'batch analysis', 'single-file analysis', or 'smart analysis')"), 
         G_CALLBACK(GTKAnalyzeFile), NULL);
 
@@ -658,7 +661,7 @@ ToolbarNew(void)
 #endif
 }
 
-#if !defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
 static GtkWidget *
 firstChild(GtkWidget * widget)
 {
@@ -711,7 +714,7 @@ SetToolbarStyle(int value)
 // #endif
 
     if (value != nToolbarStyle) {
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
         gtk_toolbar_set_style(GTK_TOOLBAR(pwToolbar), (GtkToolbarStyle) value);
 #else
         toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
@@ -724,10 +727,11 @@ SetToolbarStyle(int value)
         /* Resize handle box parent */
         gtk_widget_queue_resize(pwToolbar);
         nToolbarStyle = value;
-#if !defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
                                        (gtk_item_factory_get_widget_by_action(pif, value + TOOLBAR_ACTION_OFFSET)),
                                        TRUE);
 #endif
+        UserCommand("save settings");
     }
 }

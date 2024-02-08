@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2020 Aaron Tikuisis <Aaron.Tikuisis@uottawa.ca>
  * Copyright (C) 2020-2023 Isaac Keslassy <keslassy@gmail.com>
- * Copyright (C) 2022 the AUTHORS
+ * Copyright (C) 2022-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkscoremap.c,v 1.26 2023/01/18 21:49:36 plm Exp $
+ * $Id: gtkscoremap.c,v 1.31 2023/11/15 20:01:05 plm Exp $
  */
 
 
@@ -457,17 +457,6 @@ mmwc2eq(const float rMwc, const cubeinfo *pci) {
         return mwc2eq(rMwc,pci);
 }
 
-
-// static int
-// DebugCalcQuadrantEquities(quadrantdata * pq, const scoremap * psm) {
-//         if (FindnSaveBestMoves(&(pq->ml),psm->pms->anDice[0],psm->pms->anDice[1], (ConstTanBoard) psm->pms->anBoard, NULL, //or pkey
-//                                         arSkillLevel[SKILL_DOUBTFUL], &(pq->ci), &psm->ec, aamfAnalysis) <0) { 
-//             strcpy(pq->decisionString,"");
-//             return -1;
-//         }
-//         return 0;
-// }
-
 static int
 CalcQuadrantEquities(quadrantdata * pq, const scoremap * psm, int recomputeFully) {
 /* In Cube ScoreMap: Calculates the DT and ND equities for the given quadrant. Updates data in pq accordingly.
@@ -513,7 +502,6 @@ In Move ScoreMap: Calculates the ordered best moves and their equities.
             //g_free(pq->ml.amMoves);
             return -1;
         }
-        // DebugCalcQuadrantEquities(pq, psm);
         //g_assert(pq->ml.cMoves > 0);
         if (pq->ml.cMoves > 0) {
             FormatMove(pq->decisionString, (ConstTanBoard) psm->pms->anBoard, pq->ml.amMoves[0].anMove);
@@ -1813,7 +1801,7 @@ The function updates the decision text in each square.
     float fontsize;
 
     int width, height;
-    float rescaleFactor=1.0f;
+    float rescaleFactor;
 
 #if GTK_CHECK_VERSION(3,0,0)
         width = gtk_widget_get_allocated_width(pw);
@@ -3027,7 +3015,7 @@ if needed (this was initially planned for some explanation text, which was then 
 
 
 
-#if GTK_CHECK_VERSION(3,2,2) // THIS CODE HAS NOT BEEN TRIED!
+#if GTK_CHECK_VERSION(3,22,0)
     GdkRectangle workarea = {0};
     gdk_monitor_get_workarea(gdk_display_get_primary_monitor(gdk_display_get_default()), &workarea);
     screenWidth=MAX(workarea.width,100); // in case we get 0...
@@ -3045,10 +3033,12 @@ if needed (this was initially planned for some explanation text, which was then 
 #else
     monitor = 0;
 #endif
+
     gdk_screen_get_monitor_geometry(screen, monitor, &screen_geometry);
     screenWidth=MAX(screen_geometry.width,100); // in case we get 0...
     screenHeight=MAX(screen_geometry.height,100);
 #endif
+
     MAX_TABLE_WIDTH = MIN(MAX_TABLE_WIDTH, (int)(0.3f * (float)screenWidth));
     MAX_TABLE_HEIGHT = MIN(MAX_TABLE_HEIGHT, (int)(0.6f * (float)screenHeight));
 

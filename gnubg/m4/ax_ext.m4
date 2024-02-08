@@ -44,7 +44,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 18
+#serial 19
 
 AC_DEFUN([AX_EXT],
 [
@@ -60,7 +60,7 @@ AC_DEFUN([AX_EXT],
           [
           AC_LANG_PUSH([C])
           AC_TRY_RUN([
-            int main(){
+            int main(void){
 	    #if defined(__ARM_FEATURE_SIMD32) || defined(__ARM_NEON)
               return 0;
 	    #else
@@ -84,7 +84,7 @@ AC_DEFUN([AX_EXT],
           [
           AC_LANG_PUSH([C])
           AC_TRY_RUN([
-            int main(){
+            int main(void){
 	    #if defined(__ARM_NEON)
               return 0;
 	    #else
@@ -215,7 +215,7 @@ AC_DEFUN([AX_EXT],
                control registers directly. Execute an SSE instruction.
                If it raises SIGILL then OS doesn't support SSE based instructions */
             void sig_handler(int signum){ exit(1); }
-            int main(){
+            int main(void){
               signal(SIGILL, sig_handler);
               /* SSE instruction xorps  %xmm0,%xmm0 */
               __asm__ __volatile__ (".byte 0x0f, 0x57, 0xc0");

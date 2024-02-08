@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id: database.py,v 1.35 2019/10/28 21:18:50 plm Exp $
+# $Id: database.py,v 1.36 2023/12/18 21:20:27 plm Exp $
 #
 
 connection = 0
@@ -26,7 +26,7 @@ def PyMySQLConnect(database, user, password, hostname):
 
     try:
         import MySQLdb
-    except:
+    except ImportError:
         # See if pymsql (pure Python replacement) is available. Works on MS
         # Windows
         import pymysql as MySQLdb
@@ -34,23 +34,23 @@ def PyMySQLConnect(database, user, password, hostname):
     hostport = hostname.strip().split(':')
     try:
         mysql_host = hostport[0]
-    except:
+    except IndexError:
         mysql_host = 'localhost'
 
     try:
         mysql_portstr = hostport[1]
         try:
             mysql_port = int(mysql_portstr)
-        except:
+        except ValueError:
             return -1
-    except:
+    except IndexError:
         mysql_port = 3306
 
     try:
         connection = MySQLdb.connect(
             host=mysql_host, port=mysql_port, db=database, user=user, passwd=password)
         return 1
-    except:
+    except Exception:
         # See if mysql is there
         try:
             connection = MySQLdb.connect(
@@ -65,7 +65,7 @@ def PyMySQLConnect(database, user, password, hostname):
             connection = MySQLdb.connect(
                 host=mysql_host, port=mysql_port, db=database, user=user, passwd=password)
             return 0
-        except:
+        except Exception:
             return -1  # failed
 
     return connection
@@ -80,7 +80,7 @@ def PyPostgreConnect(database, user, password, hostname):
         connection = pgdb.connect(
             host=postgres_host, user=user, password=password, database=database)
         return 1
-    except:
+    except Exception:
         # See if postgres is there
         try:
             # See if database present
@@ -99,7 +99,7 @@ def PyPostgreConnect(database, user, password, hostname):
             connection = pgdb.connect(
                 host=postgres_host, database=database, user=user, password=password)
             return 0
-        except:
+        except Exception:
             return -1  # failed
 
     return connection
@@ -116,7 +116,7 @@ def PyDisconnect():
     global connection
     try:
         connection.close()
-    except:
+    except Exception:
         pass
 
 
@@ -125,7 +125,7 @@ def PySelect(str):
     cursor = connection.cursor()
     try:
         cursor.execute("SELECT " + str)
-    except:
+    except Exception:
         return 0
 
     all = list(cursor.fetchall())

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: PickOGL.c,v 1.16 2021/10/30 13:56:08 plm Exp $
+ * $Id: PickOGL.c,v 1.17 2023/04/19 12:01:38 Superfly_Jon Exp $
  */
 
 #include "config.h"
@@ -38,8 +38,10 @@ static void SetPickObject(int value)
 }
 #endif
 
-static void
-drawPickObjects(const BoardData* bd, void* UNUSED(data))
+#ifndef TEST_HARNESS
+static
+#endif
+void drawPickObjects(const BoardData* bd, void* UNUSED(data))
 {
 	BoardData3d* bd3d = bd->bd3d;
 	renderdata* prd = bd->rd;
@@ -166,7 +168,7 @@ drawPickBoard(const BoardData* bd, void* data)
 	}
 }
 
-#if 0
+#ifdef TEST_HARNESS
 static void
 DrawPickIndividualPoint(const BoardData* bd, int point)
 {

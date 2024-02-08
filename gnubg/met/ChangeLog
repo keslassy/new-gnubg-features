@@ -1,3 +1,8 @@
+2023-10-18  Philippe Michel  <philippe.michel7@free.fr>
+
+	* cubeless.xml: new file, contributed by Tilemachos Zoidis
+	* Makefile.am: install the above
+
 2013-02-10  Philippe Michel  <philippe.michel7@sfr.fr>
 
 	* Makefile.am, Kazaross-Shaw.xml, dunstan.xml : remove older

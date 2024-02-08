@@ -12,15 +12,16 @@
 
                          Contributors of code include:
 
-    Olivier Baur            Petr Kadlec             Jeremy Moore
-    Holger Bochnig          Kaoru Takahashi         Rod Roark
-    Guido Flohr             Stein Kulseth
-    Nis Joergensen          Ingo Macherius
+    Olivier Baur            Petr Kadlec             Ingo Macherius
+    Holger Bochnig          Isaac Keslassy          Jeremy Moore
+    Guido Flohr             Kaoru Takahashi         Rod Roark
+    Nis Joergensen          Stein Kulseth           Aaron Tikuisis
 
                             Translations by:
 
      Petr Kadlec (Czech)
      Joern Thyssen (Danish)
+     Matti Kamppinen (Finnish)
      Olivier Baur (French)
      Achim Mueller (German)
      Vangelis Skarmoutsos (Greek)
@@ -29,6 +30,7 @@
      Yoshito Takeuchi (Japanese)
      Mihai Varzaru (Romanian)
      Dmitri I Gouliaev (Russian)
+     Fernando García García (Spanish)
      Akif Dinc (Turkish)
 
              Contributors (of bug reports and suggestions) include:
@@ -68,8 +70,8 @@
     Jeff Haferman           Billie Patterson        Christopher D. Yep
     Morten Juul Henriksen   Zvezdan Petkovic        Anders Zachrison
     Alain Henry             Petri Pitkanen          Douglas Zare
-    Jens Hoefkens           Sam Pottle              Louis Zulli
-    Casey Hopkins           Henrik Ravn
+    Jens Hoefkens           Sam Pottle              Tilemachos Zoidis
+    Casey Hopkins           Henrik Ravn             Louis Zulli
     Martin Janke            James Rech
 
 
@@ -80,10 +82,10 @@
     Hans Berliner     Rick Janowski     Gerry Tesauro     Douglas Zare
     Chuck Bower       Brian Sheppard    Morten Wang       Michael Zehr
 
-       
+ 
     The manual for GNU Backgammon includes a chapter describing the rules of
       backgammon, written by Tom Keith for his Backgammon Galore web site
-                             <http://www.bkgm.com/>.
+                             <https://www.bkgm.com/>.
 
 
   Library code from the following authors has been included in GNU Backgammon:
@@ -91,7 +93,7 @@
                Austin Appleby (the MurmurHash3 hashing function)
      Ulrich Drepper (an implementation of the public domain MD5 algorithm)
             Bob Jenkins (the ISAAC pseudo random number generator)
-       Takuji Nishimura and Makoto Matsumoto (the Mersenne Twister PRNG)
+         Mutsuo Saito and Makoto Matsumoto (the Mersenne Twister PRNG)
                    Brian Paul (the TR tile rendering library)
              Claes Tornberg (the mec match equity table generator)
 

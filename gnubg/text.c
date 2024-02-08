@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: text.c,v 1.128 2022/03/12 20:14:14 plm Exp $
+ * $Id: text.c,v 1.134 2023/10/18 20:30:47 plm Exp $
  */
 
 #include "config.h"
@@ -45,7 +45,7 @@ printTextBoard(FILE * pf, const matchstate * pms)
 
     TanBoard anBoard;
     char szBoard[2048];
-    char sz[32], szCube[32], szPlayer0[MAX_NAME_LEN + 3], szPlayer1[MAX_NAME_LEN + 3],
+    char sz[32], szCube[40], szPlayer0[MAX_NAME_LEN + 3], szPlayer1[MAX_NAME_LEN + 3],
         szScore0[35], szScore1[35], szMatch[35];
     char *apch[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
     unsigned int anPips[2];
@@ -81,25 +81,22 @@ printTextBoard(FILE * pf, const matchstate * pms)
         if (pms->fCubeOwner < 0) {
             apch[3] = szCube;
 
-            /* Using ngettext() below looks awkward, but it matters in case of multiple plurals, as in many eastern european languages */
-
             if (pms->nMatchTo)
                 if (pms->nMatchTo == 1)
                     sprintf(szCube, ngettext("%d point match", "%d points match", pms->nMatchTo), pms->nMatchTo);
-                else if (pms->fCrawford)
-                    sprintf(szCube, ngettext("%d point match (Crawford game)", "%d points match (Crawford game)", pms->nMatchTo), pms->nMatchTo);
-                else
-                    sprintf(szCube, ngettext("%d point match (Cube: %d)", "%d points match (Cube: %d)", pms->nMatchTo), pms->nMatchTo, pms->nCube);
+                else if (pms->fCrawford) {
+                    sprintf(szCube, ngettext("%d point match", "%d points match", pms->nMatchTo), pms->nMatchTo);
+                    strcat(szCube, " (");
+                    strcat(szCube, _("Crawford game"));
+                    strcat(szCube, ")");
+                 } else
+                    sprintf(szCube, ngettext("%d point match (Cube: %d)", "%d points match (Cube: %d)", pms->nMatchTo),
+                            pms->nMatchTo, pms->nCube);
             else
                 sprintf(szCube, _("(Cube: %d)"), pms->nCube);
         } else {
-            size_t cch = strlen(ap[pms->fCubeOwner].szName);
-
-            if (cch > 20)
-                cch = 20;
-
-            sprintf(szCube, _("%c: %*s (Cube: %d)"), pms->fCubeOwner ? 'X' :
-                    'O', (int) cch, ap[pms->fCubeOwner].szName, pms->nCube);
+            sprintf(szCube, _("%c: %.20s (Cube: %d)"), pms->fCubeOwner ? 'X' :
+                    'O', ap[pms->fCubeOwner].szName, pms->nCube);
 
             apch[pms->fCubeOwner ? 6 : 0] = szCube;
 
@@ -193,10 +190,12 @@ TextPrologue(GString * gsz, const matchstate * pms, const int UNUSED(iGame))
     if (pms->nMatchTo > 0) {
         g_string_append_printf(gsz,
                                ngettext(" (match to %d point)", " (match to %d points)", pms->nMatchTo), pms->nMatchTo);
-        if (pms->fCrawford)
-            g_string_append(gsz, _(", Crawford game"));
-        if (pms->fPostCrawford)
-            g_string_append(gsz, _(", post-Crawford play"));
+        if (pms->nMatchTo > 1) {
+            if (pms->fCrawford)
+                g_string_append(gsz, _(", Crawford game"));
+            if (pms->fPostCrawford)
+                g_string_append(gsz, _(", post-Crawford play"));
+        }
     }
 
     g_string_append(gsz, "\n\n");
@@ -218,18 +217,12 @@ TextEpilogue(FILE * pf, const matchstate * UNUSED(pms))
 {
 
     time_t t;
-
-    const char szVersion[] = "$Revision: 1.128 $";
-    int iMajor, iMinor;
-
-    iMajor = atoi(strchr(szVersion, ' '));
-    iMinor = atoi(strchr(szVersion, '.') + 1);
+    char tstr[11];              /* ISO 8601 date format: YYYY-MM-DD\0 */
 
     time(&t);
+    strftime(tstr, 11, "%Y-%m-%d", localtime(&t));
 
-    fprintf(pf, _("Output generated %s by %s "), ctime(&t), VERSION_STRING);
-
-    fprintf(pf, _("(Text Export version %d.%d)\n\n"), iMajor, iMinor);
+    fprintf(pf, _("Output generated %s by %s\n\n"), tstr, VERSION_STRING);
 
 }
 
@@ -589,7 +582,10 @@ TextMatchInfo(FILE * pf, const matchinfo * pmi)
     /* date */
 
     if (pmi->nYear) {
-        struct tm tmx;
+        /* the fields below are not used here but are read
+         * inside strftime(), so initialise them.
+         */
+        struct tm tmx = { .tm_sec=0, .tm_min=0, .tm_hour=0, .tm_isdst=(-1) };
         char sz[80];
 
         tmx.tm_year = pmi->nYear - 1900;

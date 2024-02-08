@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkrolls.c,v 1.47 2021/06/27 20:55:09 plm Exp $
+ * $Id: gtkrolls.c,v 1.49 2023/09/23 21:28:16 plm Exp $
  */
 
 #include "config.h"
@@ -194,13 +194,14 @@ RollsTree(const int n, evalcontext * pec, const matchstate * pms)
     GtkWidget *ptv;
     int i;
     static const char *aszColumn[] = {
-        N_("Roll"),
+        N_("noun|Roll"),
         N_("noun|Move"),
         N_("Equity")
     };
 
     pm = create_model(n, pec, pms);
     if (fInterrupt) {
+        g_object_unref(G_OBJECT(pm));
         return NULL;
     }
     ptv = gtk_tree_view_new_with_model(pm);
@@ -355,8 +356,8 @@ GTKShowRolls(const gint nDepth, evalcontext * pec, matchstate * pms)
 
     prw->psw = gtk_scrolled_window_new(NULL, NULL);
 #if GTK_CHECK_VERSION(3,0,0)
-/* This is apparently needed in 3.18.9 (Ubuntu 16.04)
-   but no longer in 3.22.15 (Fedora 25 / FreeBSD) */
+    /* This is apparently needed in 3.18.9 (Ubuntu 16.04)
+     * but no longer in 3.22.15 (Fedora 25 / FreeBSD) */
     g_object_set(G_OBJECT(prw->psw), "expand", TRUE, NULL);
 #endif
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(prw->psw), GTK_SHADOW_ETCHED_IN);

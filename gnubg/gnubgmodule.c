@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gnubgmodule.c,v 1.210 2022/05/22 21:35:50 plm Exp $
+ * $Id: gnubgmodule.c,v 1.212 2023/10/14 19:08:19 plm Exp $
  */
 
 #include "config.h"
@@ -1019,6 +1019,20 @@ PythonShow(PyObject * UNUSED(self), PyObject * args)
     szMemOutput = NULL;
 
     return p;
+}
+
+static PyObject *
+PythonSetGNUbgID(PyObject * UNUSED(self), PyObject * args)
+{
+    char *pch;
+
+    if (!PyArg_ParseTuple(args, "s:argument", &pch))
+        return NULL;
+
+    SetGNUbgID(pch);
+
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject *
@@ -2662,7 +2676,7 @@ PythonGame(const listOLD * plGame,
             int player = -1;
             long points = -1;
             PyObject *recordDict = PyDict_New();
-            PyObject *analysis = doAnalysis ? PyDict_New() : 0;
+            PyObject *analysis = doAnalysis ? PyDict_New() : NULL;
 
             pmr = pl->p;
 
@@ -2855,7 +2869,6 @@ PythonGame(const listOLD * plGame,
                     DictSetItemSteal(recordDict, "analysis", analysis);
                 } else {
                     Py_DECREF(analysis);
-                    analysis = 0;
                 }
             }
 
@@ -2865,7 +2878,7 @@ PythonGame(const listOLD * plGame,
 
             PyTuple_SET_ITEM(gameTuple, nRecords, recordDict);
             ++nRecords;
-        }
+        } /* for (pl ...) */
 
         DictSetItemSteal(gameDict, "game", gameTuple);
     }
@@ -3170,10 +3183,13 @@ static PyMethodDef gnubgMethods[] = {
      "        cube-info: see 'cfevaluate'\n" "    returns: cube-info dictionary"}
     ,
     {"command", PythonCommand, METH_VARARGS,
-     "Execute a command\n" "    arguments: string containing command\n" "    returns: nothing"}
+     "Execute a command\n" "    arguments: string containing command\n" "    returns: None"}
     ,
     {"show", PythonShow, METH_VARARGS,
      "Execute the 'show arguments' command\n" "    arguments: string containing arguments\n" "    returns: result, with final newline(s) stripped, as string"}
+    ,
+    {"setgnubgid", PythonSetGNUbgID, METH_VARARGS,
+     "Set current board and matchid\n" "    arguments: string containing a GNUbgID or XGID\n" "    returns: None"}
     ,
     {"cfevaluate", PythonEvaluateCubeful, METH_VARARGS,
      "Cubeful evaluation\n"
@@ -3481,12 +3497,24 @@ PythonInitialise(char *argv0)
     g_free(working_dir);
 #endif
 
+#if PY_VERSION_HEX < 0x030b0000
     Py_SetProgramName(progname);
+#else
+    /*
+     * Py_SetProgramName() is deprecated but from my reading of
+     * https://docs.python.org/3/c-api/init.html
+     * its alternative is not actually needed for the few Py*()
+     * functions we use later.
+     */
+    (void)progname;
+#endif
+
 #if PY_MAJOR_VERSION >= 3
     PyImport_AppendInittab("gnubg", &PyInit_gnubg);
 #else
     PyImport_AppendInittab("gnubg", &initgnubg);
 #endif
+
     Py_Initialize();
 
     /* ensure that python know about our gnubg module */

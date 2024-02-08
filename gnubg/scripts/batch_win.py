@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id: batch_win.py,v 1.6 2022/06/29 21:09:18 plm Exp $
+# $Id: batch_win.py,v 1.7 2023/12/18 21:20:27 plm Exp $
 #
 
 # This file is inspired of the batch.py file of Jon Kinsey. The code
@@ -54,6 +54,7 @@ def AnalyzeFile(file, type):
     gnubg.command('analyze match')
     file = file[:-len(extensions[type])] + "sgf"
     gnubg.command('save match "' + file + '"')
+
 
 files = GetFiles()
 BatchAnalyze(files)
