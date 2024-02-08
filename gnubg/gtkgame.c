@@ -8140,7 +8140,7 @@ GTKSet(void *p)
 
     if (p == ap) {
         /* Handle the player names. */
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
         gtk_label_set_text(GTK_LABEL
                            (gtk_bin_get_child
                             (GTK_BIN(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu/SetTurnMenu/SetTurnPlayer0")
@@ -8169,7 +8169,7 @@ GTKSet(void *p)
     } else if (p == &ms.fTurn) {
         /* Handle the player on roll. */
         fAutoCommand = TRUE;
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
         if (ms.fTurn >= 0) {
             if (ms.fTurn)
                 gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
@@ -8201,7 +8201,7 @@ GTKSet(void *p)
         board_set_playing(BOARD(pwBoard), plGame != NULL);
         ToolbarSetPlaying(pwToolbar, plGame != NULL);
 
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/FileMenu/Save"), plGame != NULL);
         enable_menu(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu"), ms.gs == GAME_PLAYING);
         if (ms.fTurn >= 0)
@@ -8447,11 +8447,10 @@ GTKSet(void *p)
         }
     } else if (p == &fShowIDs) {
         inCallback = TRUE;
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
                                                                                      "/MainMenu/ViewMenu/ShowIDStatusBar")),
                                        fShowIDs);
-
 #else
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
                                        (gtk_item_factory_get_widget(pif, "/View/Show ID in status bar")), fShowIDs);
