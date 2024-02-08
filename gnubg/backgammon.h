@@ -416,7 +416,7 @@ typedef const movefilter (*ConstTmoveFilter)[MAX_FILTER_PLIES];
 
 extern TmoveFilter *GetEvalMoveFilter(void);
 extern player ap[2];
-extern char default_names[2][31];
+extern char default_names[2][MAX_NAME_LEN];
 extern char player1aliases[256];
 extern rolloutcontext rcRollout;
 extern skilltype TutorSkill;
@@ -796,7 +796,7 @@ extern void CommandSetGeometryPosX(char *);
 extern void CommandSetGeometryPosY(char *);
 extern void CommandSetGeometryTheory(char *);
 extern void CommandSetGeometryWidth(char *);
-extern void CommandSetGNUBgID(char *);
+extern void CommandSetGNUbgID(char *);
 extern void CommandSetXGID(char *);
 extern void CommandSetGotoFirstGame(char *);
 extern void CommandSetGUIAnimationBlink(char *);

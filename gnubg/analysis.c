@@ -885,7 +885,6 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     // g_message("g_free:pmr->ml.cMoves=%d",pmr->ml.cMoves);
                     pmr->ml.amMoves = NULL;
                     g_free(pmr->ml.amMoves);
-                    pmr->ml.amMoves = NULL;
                 }
 
                 /* find best moves */
@@ -1620,10 +1619,6 @@ CommandAnalyseGame(char *UNUSED(sz))
 #endif
     
 
-#if defined(USE_GTK)
-    if (fX)
-        ChangeGame(NULL);
-#endif
     ms.fCrawford = fStore_crawford;
 
     playSound(SOUND_ANALYSIS_FINISHED);
@@ -1713,10 +1708,6 @@ CommandAnalyseMatch(char *UNUSED(sz))
         } else
             ChangeGame(NULL);
     }
-
-#if defined(USE_GTK)
-    if (fX)
-        ChangeGame(NULL);
 #endif
     ms.fCrawford = fStore_crawford;
 
@@ -2796,72 +2787,6 @@ cmark_match_clear(listOLD * match)
     }
 }
 
-static int
-cmark_move_rollout(moverecord * pmr, gboolean destroy)
-{
-    gchar(*asz)[FORMATEDMOVESIZE];
-    cubeinfo ci;
-    cubeinfo **ppci;
-    GSList *pl = NULL;
-    gint c;
-    guint j;
-    gint res;
-    move **ppm;
-    void *p;
-    GSList *list = NULL;
-    positionkey key = { {0, 0, 0, 0, 0, 0, 0} };
-
-    g_return_val_if_fail(pmr, -1);
-
-    for (j = 0; j < pmr->ml.cMoves; j++) {
-        if (pmr->ml.amMoves[j].cmark == CMARK_ROLLOUT)
-            list = g_slist_append(list, GINT_TO_POINTER(j));
-    }
-
-    if ((c = g_slist_length(list)) == 0) {
-        return 0;
-    }
-
-    ppm = g_new(move *, c);
-    ppci = g_new(cubeinfo *, c);
-    asz = (char (*)[FORMATEDMOVESIZE]) g_malloc(FORMATEDMOVESIZE * c);
-    if (pmr->n.iMove != UINT_MAX)
-        CopyKey(pmr->ml.amMoves[pmr->n.iMove].key, key);
-    GetMatchStateCubeInfo(&ci, &ms);
-
-    for (pl = list, j = 0; pl; pl = g_slist_next(pl), j++) {
-        gint i = GPOINTER_TO_INT(pl->data);
-        move *m = ppm[j] = &pmr->ml.amMoves[i];
-        ppci[j] = &ci;
-        FormatMove(asz[j], msBoard(), m->anMove);
-    }
-
-    RolloutProgressStart(&ci, c, NULL, &rcRollout, asz, TRUE, &p);
-    ScoreMoveRollout(ppm, ppci, c, RolloutProgress, p);
-    res = RolloutProgressEnd(&p, destroy);
-
-    g_free(asz);
-    g_free(ppm);
-    g_free(ppci);
-
-    RefreshMoveList(&pmr->ml, NULL);
-
-    if (pmr->n.iMove != UINT_MAX)
-        for (pmr->n.iMove = 0; pmr->n.iMove < pmr->ml.cMoves; pmr->n.iMove++)
-            if (EqualKeys(key, pmr->ml.amMoves[pmr->n.iMove].key)) {
-                pmr->n.stMove = Skill(pmr->ml.amMoves[pmr->n.iMove].rScore - pmr->ml.amMoves[0].rScore);
-
-                break;
-            }
-#if defined(USE_GTK)
-    if (fX)
-        ChangeGame(NULL);
-    else
-#endif
-        ShowBoard();
-    return res == 0 ? c : res;
-}
-
 static evalsetup *
 setup_cube_rollout(evalsetup * pes, moverecord * pmr,
                    float aarOutput[][NUM_ROLLOUT_OUTPUTS], float aarStdDev[][NUM_ROLLOUT_OUTPUTS])
@@ -3008,17 +2933,6 @@ cmark_game_rollout(listOLD * game)
     if (pl_hint)
         game_remove_pmr_hint(pl_hint);
     return -1;
-}
-
-static void
-cmark_match_rollout(listOLD * match)
-{
-    listOLD *pl;
-
-    for (pl = match->plNext; pl != match; pl = pl->plNext) {
-        if (cmark_game_rollout(pl->p) < 0)
-            break;
-    }
 }
 
 static gint

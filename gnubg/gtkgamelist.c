@@ -410,7 +410,7 @@ The quiz mode defines a full loop, from picking the position category to play wi
 to playing, to getting the hint screen, to starting again. Formally, here are the 
 functions in the loop:
 QuizConsole->StartQuiz->OpenQuizPositionsFile, LoadPositionAndStart
-    ->CommandSetGNUBgID->(play)->MoveListUpdate->qUpdate(play error)
+    ->CommandSetGNUbgID->(play)->MoveListUpdate->qUpdate(play error)
     ->SaveFullPositionFile [screen: could play again] -> HintOK->BackFromHint
     ->either LoadPositionAndStart or QuizConsole
 */
@@ -1479,7 +1479,7 @@ extern void LoadPositionAndStart (void) {
     // fInQuizMode=TRUE;
     // g_message("names: %s %s",ap[0].szName,ap[1].szName);
   
-    CommandSetGNUBgID(q[iOpt].position); 
+    CommandSetGNUbgID(q[iOpt].position); 
 
     // g_message("fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
     //         ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
