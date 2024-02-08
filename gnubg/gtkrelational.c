@@ -192,14 +192,13 @@ static double trueHistY (double y) {
      * y = 1 -> -h*margin2 on screen->Y=+h*margin2
      */
     return scaleValue(y, (1 - margin1y) * plotarea.height, margin2y * plotarea.height);
-}
-
 //    /*
 //    y=0->-h(1-margin) on screen->Y=+h(1-margin)
 //    y=1->Y=0
 //    */
 //     return (da.height*(1-y)*(1-margin));
 }
+
 /* convert error to its Y plotting value using the rigth scaling */
 
 static double errorToY(double error) {
