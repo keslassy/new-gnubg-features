@@ -8137,7 +8137,6 @@ GTKSet(void *p)
 {
 
     BoardData *bd = BOARD(pwBoard)->board_data;
-                    g_message("GTKSet\n");
 
     if (p == ap) {
         /* Handle the player names. */
@@ -8287,6 +8286,7 @@ GTKSet(void *p)
                                                            "/MainMenu/AnalyseMenu/AddMatchOrSessionStatsToDB"),
                                  !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/ShowRecords"), TRUE);
+        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu/Quiz"), TRUE);
 
         /*disabling everything when we analyze a game in the background*/
 

@@ -1314,8 +1314,8 @@ DockPanels(void)
                              || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Command"), !fDockPanels
                              || fDisplayPanels);
-    gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), !fDockPanels
-                             || fDisplayPanels);
+    // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), !fDockPanels
+                            //  || fDisplayPanels);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Theory"), !fDockPanels
                              || fDisplayPanels);
 #else
@@ -1385,7 +1385,7 @@ ShowAllPanels(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Commentary"), TRUE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Analysis"), TRUE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Command"), TRUE);
-    gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), TRUE);
+    // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), TRUE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Theory"), TRUE);
 #else
     gtk_widget_show(gtk_item_factory_get_widget(pif, "/View/Hide panels"));
@@ -1443,7 +1443,7 @@ DoHideAllPanels(int updateEvents)
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/GameRecord"), FALSE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Commentary"), FALSE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Analysis"), FALSE);
-    gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), FALSE);
+    // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Quiz"), FALSE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Theory"), FALSE);
     gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/PanelsMenu/Command"), FALSE);
 #else

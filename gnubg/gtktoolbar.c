@@ -146,6 +146,7 @@ ToolbarSetPlaying(GtkWidget * pwToolbar, const int f)
 
     toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
                                            "toolbarwidget");
+
     gtk_widget_set_sensitive(ptw->pwReset, f);
 
 }
