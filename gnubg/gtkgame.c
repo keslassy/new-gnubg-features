@@ -686,52 +686,6 @@ Command(gpointer UNUSED(p), guint iCommand, GtkWidget * widget)
 
 #endif
 
-typedef struct {
-    const char *title;
-    evalcontext *esChequer;
-    movefilter *mfChequer;
-    evalcontext *esCube;
-    movefilter *mfCube;
-    GtkWidget *pwCube, *pwChequer, *pwOptionMenu, *pwSettingWidgets;
-    int cubeDisabled;
-    int fWeakLevels;
-} AnalysisDetails;
-
-
-typedef struct {
-
-    evalsetup esChequer;
-    evalsetup esCube;
-    movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
-
-    evalsetup esEvalChequer;
-    evalsetup esEvalCube;
-    movefilter aaEvalmf[MAX_FILTER_PLIES][MAX_FILTER_PLIES];
-
-    GtkWidget *pwNoteBook;
-    GtkAdjustment *apadjSkill[3], *apadjLuck[4];
-    GtkWidget *pwMoves, *pwCube, *pwLuck, *pwHintSame, *pwCubeSummary;
-    GtkWidget *apwAnalysePlayers[2];
-    GtkWidget *pwAutoDB;
-    GtkWidget *pwBackgroundAnalysis;
-    GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
-
-    GtkWidget *pwScoreMap;
-    GtkWidget* apwScoreMapPly[NUM_PLY];
-    GtkWidget* apwScoreMapMatchLength[NUM_MATCH_LENGTH];
-    GtkWidget* apwScoreMapLabel[NUM_LABEL];
-    GtkWidget* apwScoreMapJacoby[NUM_JACOBY];
-    GtkWidget* apwScoreMapCubeEquityDisplay[NUM_CUBEDISP];
-    GtkWidget* apwScoreMapMoveEquityDisplay[NUM_MOVEDISP];
-    GtkWidget* apwScoreMapColour[NUM_COLOUR];
-    GtkWidget* apwScoreMapLayout[NUM_LAYOUT];
-
-    /* defining these just to be able to g_free them */
-    AnalysisDetails *pAnalDetailSettings1;
-    AnalysisDetails *pAnalDetailSettings2;
-
-} analysiswidget;
-
 /* A dummy widget that can grab events when others shouldn't see them. */
 GtkWidget *pwGrab;
 GtkWidget *pwOldGrab;
@@ -3156,7 +3110,6 @@ CreateEvalSettings(GtkWidget * pwParent, const char *title, evalcontext * pecheq
 extern void
 AddText(GtkWidget* pwBox, char* Text)
 {
-    GtkRcStyle * ps = gtk_rc_style_new();
     GtkWidget * pwText = gtk_label_new(Text);
     GtkWidget * pwHBox;
 
