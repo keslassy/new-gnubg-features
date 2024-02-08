@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtktoolbar.h,v 1.16 2021/06/30 21:11:44 plm Exp $
+ * $Id: gtktoolbar.h,v 1.17 2023/12/20 14:17:30 plm Exp $
  */
 
 #ifndef GTKTOOLBAR_H
 #define GTKTOOLBAR_H
 
 #include "gtkboard.h"
-#if !defined(USE_GTKUIMANAGER)
+
+#if defined(USE_GTKITEMFACTORY)
 extern GtkItemFactory *pif;
 #endif
 

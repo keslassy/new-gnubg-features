@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: mtsupport.c,v 1.23 2022/03/12 21:05:54 plm Exp $
+ * $Id: mtsupport.c,v 1.24 2023/10/25 14:43:58 plm Exp $
  */
 
 /*
@@ -26,11 +26,11 @@
 #include "multithread.h"
 
 #include <stdlib.h>
+#if defined (DEBUG_MULTITHREADED)
 #include <stdio.h>
+#endif
 #include <string.h>
 
-#include "rollout.h"
-#include "util.h"
 #include "lib/simd.h"
 
 SSE_ALIGN(ThreadData td);
@@ -42,9 +42,13 @@ MT_CreateThreadLocalData(int id)
     tld->id = id;
     tld->pnnState = (NNState *) g_malloc(sizeof(NNState) * 3);
     memset(tld->pnnState, 0, sizeof(NNState) * 3);
+    // cppcheck-suppress duplicateExpression
     tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase = g_malloc(nnRace.cHidden * sizeof(float));
+    // cppcheck-suppress duplicateExpression
     memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedBase, 0, nnRace.cHidden * sizeof(float));
+    // cppcheck-suppress duplicateExpression
     tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase = g_malloc(nnRace.cInput * sizeof(float));
+    // cppcheck-suppress duplicateExpression
     memset(tld->pnnState[CLASS_RACE - CLASS_RACE].savedIBase, 0, nnRace.cInput * sizeof(float));
     tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase = g_malloc(nnCrashed.cHidden * sizeof(float));
     memset(tld->pnnState[CLASS_CRASHED - CLASS_RACE].savedBase, 0, nnCrashed.cHidden * sizeof(float));
@@ -281,21 +285,24 @@ MT_InitThreads(void)
 extern void
 CloseThread(void *UNUSED(unused))
 {
-    int i;
-    NNState *pnnState = ((ThreadLocalData *) TLSGet(td.tlsItem))->pnnState;
+    ThreadLocalData *pTLD;
+    NNState *pnnState;
 
     g_assert(MT_SafeCompare(&td.closingThreads, TRUE));
 
-    ThreadLocalData *pTLD = (ThreadLocalData *) TLSGet(td.tlsItem);
-    if (pTLD->aMoves)
-        free(pTLD->aMoves);
+    pTLD = (ThreadLocalData *) TLSGet(td.tlsItem);
+    pnnState = pTLD->pnnState;
 
-    for (i = 0; i < 3; i++) {
-        free(pnnState[i].savedBase);
-        free(pnnState[i].savedIBase);
+    g_free(pTLD->aMoves);
+
+    for (int i = 0; i < 3; i++) {
+        g_free(pnnState[i].savedBase);
+        g_free(pnnState[i].savedIBase);
     }
-    free(((ThreadLocalData *) TLSGet(td.tlsItem))->pnnState);
-    free((void *) TLSGet(td.tlsItem));
+
+    g_free(pnnState);
+    g_free(pTLD);
+
     MT_SafeInc(&td.result);
 }
 

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: file.c,v 1.38 2022/02/06 15:34:32 plm Exp $
+ * $Id: file.c,v 1.41 2024/01/21 21:56:27 plm Exp $
  */
 
 #include "config.h"
@@ -127,7 +127,7 @@ static void
 CloseFileHelper( /*lint -e{818} */ FileHelper * fh)
 {
     fclose(fh->fp);
-    free(fh->data);
+    g_free(fh->data);
     g_free(fh);
 }
 
@@ -473,17 +473,13 @@ GetFilename(int CheckForCurrent, ExportType type)
     if (CheckForCurrent && szCurrentFileName && *szCurrentFileName)
         sz = g_strdup_printf("%s%s", szCurrentFileName, export_format[type].extension);
     else {
-        if (mi.nYear)
-            sz = g_strdup_printf("%s-%s_%dp_%04u-%02u-%02u.sgf", ap[0].szName, ap[1].szName, ms. nMatchTo, mi.nYear, mi.nMonth, mi.nDay);
-        else {
-            time_t t = time(NULL);
-            char tstr[15];
+        time_t t = time(NULL);
+        char tstr[16];
 
-            if (strftime(tstr, 14, "%Y-%m-%d-%H%M", localtime(&t)) == 0)
-                *tstr = '\0';
+        if (strftime(tstr, 16, "%Y-%m-%d-%H%M", localtime(&t)) == 0)
+            *tstr = '\0';
 
-            sz = g_strdup_printf("%s-%s_%dp_%s.sgf", ap[0].szName, ap[1].szName, ms.nMatchTo, tstr);
-        }
+        sz = g_strdup_printf("%s-%s_%dp_%s.sgf", ap[0].szName, ap[1].szName, ms.nMatchTo, tstr);
     }
 
     return sz;

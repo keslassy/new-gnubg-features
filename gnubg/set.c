@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: set.c,v 1.428 2023/01/18 21:49:36 plm Exp $
+ * $Id: set.c,v 1.437 2023/12/20 23:09:54 plm Exp $
  */
 
 #include "config.h"
@@ -329,7 +329,6 @@ SetMoveFilter(char *sz, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 extern void
 CommandSetAnalysisBackground(char *sz)
 {
-
     SetToggle("analysis background", &fBackgroundAnalysis, sz,
               _("Will run analysis in the background."), _("Will not run analysis in the background."));
 }
@@ -356,7 +355,6 @@ CommandSetAnalysisLuck(char *sz)
 extern void
 CommandSetAnalysisLuckAnalysis(char *sz)
 {
-
 
     szSet = _("luck analysis");
     szSetCommand = "set analysis luckanalysis";
@@ -471,15 +469,6 @@ CommandSetStyledGameList(char *sz)
     if (fX)
         ChangeGame(NULL);
 #endif
-}
-
-extern void
-CommandSetMarkedSamePlayer(char *sz)
-{
-
-    SetToggle("markedsameplayer", &fMarkedSamePlayer, sz,
-              _("Focus on same player when moving between marked moves."), _("Do not focus on same player when moving between marked moves."));
-
 }
 
 extern void
@@ -599,28 +588,27 @@ CorrectNumberOfChequers(TanBoard anBoard, int numCheq)
         return 0;
 }
 
-extern void
-CommandSetBoard(char *sz)
+extern int
+SetBoard(char *sz)
 {
-
     TanBoard an;
     moverecord *pmr;
 
     if (ms.gs != GAME_PLAYING) {
         outputl(_("There must be a game in progress to set the board."));
 
-        return;
+        return 1;
     }
 
     if (!*sz) {
         outputl(_("You must specify a position (see `help set board')."));
 
-        return;
+        return 1;
     }
 
     /* FIXME how should =n notation be handled? */
     if (ParsePosition(an, &sz, NULL) < 0 || !CorrectNumberOfChequers(an, anChequers[ms.bgv]))
-        return;
+        return 1;
 
     pmr = NewMoveRecord();
 
@@ -636,7 +624,14 @@ CommandSetBoard(char *sz)
     /* this way the player turn is stored */
     get_current_moverecord(NULL);
 
-    ShowBoard();
+    return 0;
+}
+
+extern void
+CommandSetBoard(char *sz)
+{
+    if (SetBoard(sz) == 0)
+        ShowBoard();
 }
 
 static int
@@ -917,17 +912,14 @@ CommandSetCubeUse(char *sz)
 #endif                          /* USE_GTK */
 }
 
-extern void
-CommandSetCubeValue(char *sz)
+extern int
+SetCubeValue(int n)
 {
-
-    int i, n;
+    int i;
     moverecord *pmr;
 
     if (CheckCubeAllowed())
-        return;
-
-    n = ParseNumber(&sz);
+        return 2;
 
     for (i = MAX_CUBE; i; i >>= 1)
         if (n == i) {
@@ -939,16 +931,34 @@ CommandSetCubeValue(char *sz)
 
             AddMoveRecord(pmr);
 
-            outputf(_("The cube has been set to %d.\n"), n);
-
-#if defined(USE_GTK)
-            if (fX)
-                ShowBoard();
-#endif                          /* USE_GTK */
-            return;
+            return 0;
         }
 
-    outputl(_("You must specify a legal cube value (see `help set cube " "value')."));
+    return 1;
+}
+
+extern void
+CommandSetCubeValue(char *sz)
+{
+
+    int n, rc;
+
+    n = ParseNumber(&sz);
+
+    rc = SetCubeValue(n);
+
+    if (rc == 0) {
+        outputf(_("The cube has been set to %d.\n"), n);
+
+#if defined(USE_GTK)
+        if (fX)
+            ShowBoard();
+#endif                          /* USE_GTK */
+        return;
+    }
+
+    if (rc == 1)
+        outputl(_("You must specify a legal cube value (see `help set cube " "value')."));
 }
 
 extern void
@@ -983,11 +993,28 @@ CommandSetDelay(char *sz)
 }
 
 extern void
+SetDice(int n0, int n1)
+{
+    moverecord *pmr;
+
+    g_assert(ms.gs == GAME_PLAYING);
+
+    pmr = NewMoveRecord();
+
+    pmr->mt = MOVE_SETDICE;
+    pmr->fPlayer = ms.fMove;
+    pmr->anDice[0] = n0;
+    pmr->anDice[1] = n1;
+
+    AddMoveRecord(pmr);
+
+    return;
+}
+
+extern void
 CommandSetDice(char *sz)
 {
-
     int n0, n1;
-    moverecord *pmr;
 
     if (ms.gs != GAME_PLAYING) {
         outputl(_("There must be a game in progress to set the dice."));
@@ -1010,14 +1037,7 @@ CommandSetDice(char *sz)
         return;
     }
 
-    pmr = NewMoveRecord();
-
-    pmr->mt = MOVE_SETDICE;
-    pmr->fPlayer = ms.fMove;
-    pmr->anDice[0] = n0;
-    pmr->anDice[1] = n1;
-
-    AddMoveRecord(pmr);
+    SetDice(n0, n1);
 
     outputf(_("The dice have been set to %d and %d.\n"), n0, n1);
 
@@ -1441,7 +1461,8 @@ CommandSetPlayerExternal(char *sz)
     outputl(_("This installation of GNU Backgammon was compiled without\n"
               "socket support, and does not implement external players."));
 #else
-    int h, cb;
+    int h;
+    socklen_t cb;
     struct sockaddr *psa;
     char *pch;
 
@@ -1686,22 +1707,6 @@ CommandSetDefaultNames(char *sz)
     outputf(_("Players will be known as `%s' and `%s'.\n This setting will take effect when a new match is started.\n"),
             default_names[0], default_names[1]);
 }
-
-extern void
-CommandSetAliases(char *sz)
-{
-    size_t buflen = sizeof(player1aliases);
-
-    if (strlen(sz) >= buflen)
-        outputf(ngettext("Aliases list limited to %zu character, truncating\n",
-				"Aliases list limited to %zu characters, truncating\n",
-			       	buflen - 1), buflen - 1);
-
-    g_strlcpy(player1aliases, sz, buflen);
-
-    outputf(_("Aliases for player 1 when importing MAT files set to \"%s\".\n "), player1aliases);
-}
-
 
 extern void
 CommandSetPrompt(char *szParam)
@@ -2950,22 +2955,6 @@ CommandSetScoreMapMatchLength(char* sz)
 }
 
 extern void
-CommandSetAnalysisFileSetting(char* sz)
-{
- 
-    for (int i=0; i<NUM_AnalyzeFileSettings; i++){
-        // g_print("\n test within loop: i: %d",i);
-
-        if (strcmp(sz, aszAnalyzeFileSettingCommands[i]) == 0) {
-           AnalyzeFileSettingDef = (analyzeFileSetting) i;
-            // g_message("\n selected option analyze file setting: i:%d->text=%s",i,aszAnalyzeFileSettingCommands[i]);
-           return; 
-        }
-    }
-    outputl(_("Wrong option."));
-}
-
-extern void
 CommandSetScoreMapLabel(char* sz)
 {
  
@@ -3043,6 +3032,22 @@ CommandSetScoreMapLayout(char* sz)
     outputl(_("Wrong option."));
 }
 #endif
+
+extern void
+CommandSetAnalysisFileSetting(char* sz)
+{
+  
+    for (int i=0; i<NUM_AnalyzeFileSettings; i++){
+        // g_print("\n test within loop: i: %d",i);
+  
+        if (strcmp(sz, aszAnalyzeFileSettingCommands[i]) == 0) {
+           AnalyzeFileSettingDef = (analyzeFileSetting) i;
+           // g_message("\n selected option analyze file setting: i:%d->text=%s",i,aszAnalyzeFileSettingCommands[i]);
+           return;
+        }
+    }
+    outputl(_("Wrong option."));
+}
 
 extern void
 CommandSetOutputDigits(char *sz)
@@ -3465,6 +3470,7 @@ extern void
 CommandSetMatchID(char *sz)
 {
     SetMatchID(sz);
+    ShowBoard();
 }
 
 extern void
@@ -4368,7 +4374,6 @@ CommandSetGotoFirstGame(char *sz)
 static void
 SetEfficiency(const char *szText, char *sz, float *prX)
 {
-
     float r = ParseReal(&sz);
 
     if (r >= 0.0f && r <= 1.0f) {
@@ -4376,75 +4381,66 @@ SetEfficiency(const char *szText, char *sz, float *prX)
         outputf("%s: %7.5f\n", szText, *prX);
     } else
         outputl(_("Cube efficiency must be between 0 and 1"));
-
 }
 
 extern void
 CommandSetCubeEfficiencyOS(char *sz)
 {
-
     SetEfficiency(_("Cube efficiency for one sided bearoff positions"), sz, &rOSCubeX);
-
 }
 
 extern void
 CommandSetCubeEfficiencyCrashed(char *sz)
 {
-
-    SetEfficiency(_("Cube efficiency for crashed positions"), sz, &rCrashedX);
-
+    SetEfficiency(_("Cube efficiency for crashed positions"), sz, &rCrashedX[0]);
+    rCrashedX[1] = rCrashedX[0];
 }
 
 extern void
 CommandSetCubeEfficiencyContact(char *sz)
 {
-
-    SetEfficiency(_("Cube efficiency for contact positions"), sz, &rContactX);
-
+    SetEfficiency(_("Cube efficiency for contact positions"), sz, &rContactX[0]);
+    rContactX[1] = rContactX[0];
 }
 
 extern void
 CommandSetCubeEfficiencyRaceFactor(char *sz)
 {
-
     float r = ParseReal(&sz);
 
     if (r >= 0) {
-        rRaceFactorX = r;
-        outputf(_("Cube efficiency race factor set to %7.5f\n"), rRaceFactorX);
+        rRaceFactorX[0] = r;
+        outputf(_("Cube efficiency race factor set to %7.5f\n"), r);
+        rRaceFactorX[1] = rRaceFactorX[0];
     } else
         outputl(_("Cube efficiency race factor must be larger than 0."));
-
 }
 
 extern void
 CommandSetCubeEfficiencyRaceMax(char *sz)
 {
-
-    SetEfficiency(_("Cube efficiency race max"), sz, &rRaceMax);
-
+    SetEfficiency(_("Cube efficiency race max"), sz, &rRaceMax[0]);
+    rRaceMax[1] = rRaceMax[0];
 }
 
 extern void
 CommandSetCubeEfficiencyRaceMin(char *sz)
 {
-
-    SetEfficiency(_("Cube efficiency race min"), sz, &rRaceMin);
-
+    SetEfficiency(_("Cube efficiency race min"), sz, &rRaceMin[0]);
+    rRaceMin[1] = rRaceMin[0];
 }
 
 extern void
 CommandSetCubeEfficiencyRaceCoefficient(char *sz)
 {
-
     float r = ParseReal(&sz);
 
     if (r >= 0) {
-        rRaceCoefficientX = r;
-        outputf(_("Cube efficiency race coefficient set to %7.5f\n"), rRaceCoefficientX);
+        rRaceCoefficientX[0] = r;
+        outputf(_("Cube efficiency race coefficient set to %7.5f\n"), r);
+        rRaceCoefficientX[1] = rRaceCoefficientX[0];
     } else
         outputl(_("Cube efficiency race coefficient must be larger than 0."));
-
 }
 
 
@@ -4571,6 +4567,9 @@ SetXGID(char *sz)
     int i;
     char v[9][5];
     int fSidesSwapped = FALSE;
+
+    if (s == NULL)
+        return 1;
 
     for (i = 0; i < 9 && (c = strrchr(s, ':')); i++) {
         g_strlcpy(v[i], c + 1, 5);
@@ -4711,7 +4710,7 @@ SetXGID(char *sz)
     msxg.gs = GAME_PLAYING;
 
     matchid = g_strdup(MatchIDFromMatchState(&msxg));
-    CommandSetMatchID(matchid);
+    SetMatchID(matchid);
     g_free(matchid);
 
     if (!fMove) {
@@ -4719,16 +4718,11 @@ SetXGID(char *sz)
         fSidesSwapped = TRUE;
     }
     posid = g_strdup(PositionID((ConstTanBoard) anBoard));
-    CommandSetBoard(posid);
+    SetBoard(posid);
     g_free(posid);
 
-    if ((anDice[0] == 0 && fSidesSwapped) || (anDice[0] && !fMove)) {
-
-        if (GetInputYN
-            (_
-             ("This position has player on roll appearing on top. \nSwap players so the player on roll appears on the bottom? ")))
-            CommandSwapPlayers(NULL);
-    }
+    if ((anDice[0] == 0 && fSidesSwapped) || (anDice[0] && !fMove))
+	return 2;	/* position has player on roll appearing on top */
     return 0;
 }
 
@@ -4763,18 +4757,34 @@ get_base64(char *inp, char **next)
 extern void
 CommandSetXGID(char *sz)
 {
-    if (SetXGID(sz))
+    int rc = SetXGID(sz);
+
+    if (rc == 1)
         outputerrf(_("Not a valid XGID '%s'"), sz);
+    else {
+	if (rc == 2)
+	    if (GetInputYN (_
+             ("This position has player on roll appearing on top. \nSwap players so the player on roll appears on the bottom? ")))
+                CommandSwapPlayers(NULL);
+
+        ShowBoard();
+    }
 }
 
-extern void
-CommandSetGNUBgID(char *sz)
+extern int
+SetGNUbgID(char *sz)
 {
     char *posid = NULL;
     char *matchid = NULL;
 
-    if (SetXGID(sz) == 0)
-        return;
+    switch (SetXGID(sz)) {
+    case 0:
+        return 0;
+    case 2:
+	return 2;
+    default:
+        ; /* continue below */
+    }
 
     while (sz && *sz) {
         char *out = get_base64(sz, &sz);
@@ -4795,15 +4805,33 @@ CommandSetGNUBgID(char *sz)
     }
     if (!posid && !matchid) {
         outputerrf(_("No valid IDs found"));
-        return;
+        return 1;
     }
     if (matchid)
-        CommandSetMatchID(matchid);
+        SetMatchID(matchid);
     if (posid)
-        CommandSetBoard(posid);
+        SetBoard(posid);
     outputf(_("Setting GNUbg ID %s:%s\n"), posid ? posid : "", matchid ? matchid : "");
     g_free(posid);
     g_free(matchid);
+
+    return 0;
+}
+
+extern void
+CommandSetGNUbgID(char *sz)
+{
+    int rc;
+
+    rc = SetGNUbgID(sz);
+
+    if (rc == 0)
+        ShowBoard();
+
+    if (rc == 2)
+        if (GetInputYN (_
+	    ("This position has player on roll appearing on top. \nSwap players so the player on roll appears on the bottom? ")))
+	    CommandSwapPlayers(NULL);
 }
 
 extern void

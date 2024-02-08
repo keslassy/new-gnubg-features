@@ -85,7 +85,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: external_y.y,v 1.36 2020/02/20 21:19:52 plm Exp $
+ * $Id: external_y.y,v 1.37 2023/12/14 07:02:38 plm Exp $
  */
 
 #ifndef EXTERNAL_Y_H
@@ -293,7 +293,7 @@ union YYSTYPE
 {
 #line 114 "external_y.y"
 
-    gboolean bool;
+    gboolean boolean;
     gchar character;
     gfloat floatnum;
     gint intnum;
@@ -2248,7 +2248,7 @@ yyreduce:
   case 44: /* boolean_type: E_BOOLEAN  */
 #line 529 "external_y.y"
         { 
-            GVALUE_CREATE(G_TYPE_INT, int, (yyvsp[0].bool), gvint); 
+            GVALUE_CREATE(G_TYPE_INT, int, (yyvsp[0].boolean), gvint); 
             (yyval.gv) = gvint; 
         }
 #line 2255 "external_y.c"

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtktheory.c,v 1.79 2022/09/11 12:38:03 plm Exp $
+ * $Id: gtktheory.c,v 1.80 2023/11/09 20:52:50 plm Exp $
  */
 
 #include "config.h"
@@ -1016,7 +1016,9 @@ GTKShowTheory(const int fActivePage)
     gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwVBox, gtk_label_new(_("Window graph")));
 
     for (i = 0; i < 2; i++) {
+#if !GTK_CHECK_VERSION(3,0,0)
         GtkWidget *pwAlign;
+#endif
         gchar *sz = g_strdup_printf( _("Window graph for player %s"), ap[i].szName);
 
         pwFrame = gtk_frame_new(sz);
@@ -1024,10 +1026,18 @@ GTKShowTheory(const int fActivePage)
 
         g_free(sz);
 
+        ptw->apwGraph[i] = gtk_drawing_area_new();
+#if GTK_CHECK_VERSION(3,0,0)
+        gtk_container_add(GTK_CONTAINER(pwFrame), ptw->apwGraph[i]);
+        gtk_widget_set_halign(ptw->apwGraph[i], GTK_ALIGN_FILL);
+        gtk_widget_set_valign(ptw->apwGraph[i], GTK_ALIGN_CENTER);
+	/* FIXME? gtk_container_set_border_width(...) */
+#else
         gtk_container_add(GTK_CONTAINER(pwFrame), pwAlign = gtk_alignment_new(0.5, 0.5, 1, 0));
-        gtk_container_add(GTK_CONTAINER(pwAlign), ptw->apwGraph[i] = gtk_drawing_area_new());
-        gtk_widget_set_name(ptw->apwGraph[i], "gnubg-doubling-window-graph");
+        gtk_container_add(GTK_CONTAINER(pwAlign), ptw->apwGraph[i]);
         gtk_container_set_border_width(GTK_CONTAINER(pwAlign), 4);
+#endif
+        gtk_widget_set_name(ptw->apwGraph[i], "gnubg-doubling-window-graph");
         gtk_widget_set_size_request(ptw->apwGraph[i], -1, 48);
 #if GTK_CHECK_VERSION(3,0,0)
         g_signal_connect(G_OBJECT(ptw->apwGraph[i]), "draw", G_CALLBACK(GraphDraw), ptw);

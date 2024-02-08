@@ -15,11 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: htmlimages.c,v 1.60 2022/02/21 22:15:02 plm Exp $
+ * $Id: htmlimages.c,v 1.62 2023/10/14 19:18:50 plm Exp $
  */
 
 #include "config.h"
-#include <errno.h>
 
 #include <string.h>
 #if defined(HAVE_UNISTD_H)
@@ -648,7 +647,11 @@ AllocObjects(void)
     auchArrow[1] = malloc(s * ARROW_WIDTH * 4 * s * ARROW_HEIGHT);
 #endif
 
-    auchBoard = malloc((BOARD_WIDTH * s * 3 * BOARD_HEIGHT * s) * sizeof(unsigned char));
+    /* Initialise this one else valgrind reports
+     * use of uninitialised values in libpng
+     */
+    auchBoard = calloc(sizeof(unsigned char), BOARD_WIDTH * s * 3 * BOARD_HEIGHT * s);
+
     for (i = 0; i < 2; i++)
         auchChequer[i] = malloc((CHEQUER_WIDTH * s * 4 * CHEQUER_HEIGHT * s) * sizeof(unsigned char));
     auchChequerLabels = malloc((12 * CHEQUER_LABEL_WIDTH * s * 3 * CHEQUER_LABEL_HEIGHT * s) * sizeof(unsigned char));

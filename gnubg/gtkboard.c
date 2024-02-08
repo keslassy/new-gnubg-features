@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkboard.c,v 1.384 2022/10/13 20:05:19 plm Exp $
+ * $Id: gtkboard.c,v 1.385 2023/01/23 20:27:46 plm Exp $
  */
 
 /*! \file gtkboard.c
@@ -2478,8 +2478,13 @@ board_set(Board * board, gchar * board_text, const gint resigned, const gint cub
     update_gnubg_id(bd, (ConstTanBoard) bd->old_board);
     update_move(bd);
 
-    if (fGUIHighDieFirst && bd->diceRoll[0] < bd->diceRoll[1])
-        swap_us(bd->diceRoll, bd->diceRoll + 1);
+    if (fGUIHighDieFirst) {
+        if (bd->diceRoll[0] < bd->diceRoll[1])
+            swap_us(bd->diceRoll, bd->diceRoll + 1);
+    } else {                    /* shuffle them in case they were ordered */
+        if (RAND % 2)
+            swap_us(bd->diceRoll, bd->diceRoll + 1);
+    }
 
     if (bd->diceRoll[0] != old_dice[0] ||
         bd->diceRoll[1] != old_dice[1] || (bd->diceRoll[0] > 0 && old_diceShown == DICE_BELOW_BOARD) || editing) {
@@ -2938,8 +2943,13 @@ game_set(Board * board, TanBoard points, int roll,
     bd->computer_turn = computer_turn;
 
     if (die0) {
-        if (fGUIHighDieFirst && die0 < die1)
-            swap(&die0, &die1);
+        if (fGUIHighDieFirst) {
+            if (die0 < die1)
+                swap(&die0, &die1);
+        } else {                /* shuffle them in case they were ordered */
+            if (RAND % 2)
+                swap(&die0, &die1);
+        }
     }
 
     update_buttons(bd);

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkscoremap.h,v 1.4 2023/01/18 21:49:36 plm Exp $
+ * $Id: gtkscoremap.h,v 1.5 2023/02/18 20:46:36 plm Exp $
  */
 
 #ifndef GTKSCOREMAP_H

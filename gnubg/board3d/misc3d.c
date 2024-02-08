@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: misc3d.c,v 1.145 2022/09/05 19:44:07 plm Exp $
+ * $Id: misc3d.c,v 1.149 2023/07/24 20:41:52 plm Exp $
  */
 
 #include "config.h"
@@ -581,6 +581,7 @@ LoadTexture(Texture * texture, const char *filename)
 
     if (pix_error) {
         g_printerr(_("Failed to open texture: %s, %s\n"), filename, pix_error->message);
+	g_object_unref(fpixbuf);
         return 0;               /* failed to load file */
     }
 
@@ -594,17 +595,20 @@ LoadTexture(Texture * texture, const char *filename)
 
     if (!bits) {
         g_printerr(_("Failed to load texture: %s\n"), filename);
+        g_object_unref(pixbuf);
         return 0;               /* failed to load file */
     }
 
     if (texture->width != texture->height) {
         g_printerr(_("Failed to load texture %s. width (%d) different to height (%d)\n)"),
                 filename, texture->width, texture->height);
+        g_object_unref(pixbuf);
         return 0;               /* failed to load file */
     }
     /* Check size is a power of 2 */
     if (texture->width <= 0 || (texture->width & (texture->width -1))) {
         g_printerr(_("Failed to load texture %s, size (%d) isn't a power of 2\n"), filename, texture->width);
+        g_object_unref(pixbuf);
         return 0;               /* failed to load file */
     }
 
@@ -1207,7 +1211,7 @@ TestPerformance3d(BoardData * bd)
     return ((float) numFrames / (elapsedTime / 1000.0f));
 }
 
-#if 0
+#ifdef TEST_HARNESS
 NTH_STATIC void
 EmptyPos(BoardData * bd)
 {                               /* All checkers home */
@@ -1353,8 +1357,8 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
     bd->DragTargetHelp = 0;
 
     SetupSimpleMat(&bd3d->gapColour, 0.f, 0.f, 0.f);
-	SetupSimpleMat(&bd3d->flagMat, 1.f, 1.f, 1.f);    /* White flag */
-	SetupSimpleMat(&bd3d->flagPoleMat, .2f, .2f, .4f);	/* Blue pole */
+    SetupSimpleMat(&bd3d->flagMat, 1.f, 1.f, 1.f);    /* White flag */
+    SetupSimpleMat(&bd3d->flagPoleMat, .2f, .2f, .4f);	/* Blue pole */
     SetupMat(&bd3d->flagNumberMat, 0.f, 0.f, .4f, 0.f, 0.f, .4f, 1.f, 1.f, 1.f, 100, 1.f);
 
     bd3d->numTextures = 0;
@@ -1363,7 +1367,7 @@ InitBoard3d(BoardData * bd, BoardData3d * bd3d)
 
     bd3d->fBuffers = FALSE;
 
-	ModelManagerInit(&bd3d->modelHolder);
+    ModelManagerInit(&bd3d->modelHolder);
 }
 
 #if defined(HAVE_LIBPNG)
@@ -1374,6 +1378,12 @@ void
 GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, unsigned int nSizeY)
 {
     RenderToBufferData renderToBufferData;
+
+    if (!fX) {
+	outputerrf(_("PNG file creation failed: %s\n"), _("exporting a 3D image is only supported from the GUI"));
+	return;
+    }
+
     renderToBufferData.bd = BOARD(pwBoard)->board_data;
     renderToBufferData.width = nSize * nSizeX;
     renderToBufferData.height = nSize * nSizeY;
@@ -1400,12 +1410,14 @@ GenerateImage3d(const char *szName, unsigned int nSize, unsigned int nSizeX, uns
                                       (int)renderToBufferData.width, (int)renderToBufferData.height, (int)renderToBufferData.width * 3, NULL, NULL);
 
     gdk_pixbuf_save(pixbuf, szName, "png", &error, NULL);
+
+    g_object_unref(pixbuf);
+    g_free(renderToBufferData.puch);
+
     if (error) {
         outputerrf(_("PNG file creation failed: %s\n"), error->message);
         g_error_free(error);
     }
-    g_object_unref(pixbuf);
-    g_free(renderToBufferData.puch);
 }
 
 #endif

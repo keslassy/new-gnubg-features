@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2003-2019 the AUTHORS
+ * Copyright (C) 2003-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtktoolbar.c,v 1.82 2023/01/01 17:37:16 plm Exp $
+ * $Id: gtktoolbar.c,v 1.88 2023/12/20 14:17:30 plm Exp $
  */
 
 #include "config.h"
@@ -48,8 +48,8 @@ typedef struct {
     GtkWidget *pwTake;          /* button for "Take" */
     GtkWidget *pwDrop;          /* button for "Drop" */
     GtkWidget *pwResign;        /* button for "Resign" */
-    // GtkWidget *pwEndGame;       /* button for "play game" */
-    // GtkWidget *pwHint;          /* button for "Hint" */
+    GtkWidget *pwEndGame;       /* button for "play game" */
+    GtkWidget *pwHint;          /* button for "Hint" */
     GtkWidget *pwPrevMarked;    /* button for "Previous Marked" */
     GtkWidget *pwPrevCMarked;   /* button for "Previous CMarked" */
     GtkWidget *pwPrev;          /* button for "Previous Roll" */
@@ -59,14 +59,14 @@ typedef struct {
     GtkWidget *pwNextCMarked;   /* button for "Next CMarked" */
     GtkWidget *pwNextMarked;    /* button for "Next CMarked" */
     GtkWidget *pwReset;         /* button for "Reset" */
-    GtkWidget *pwAnalyzeCurrent;         /* button for "Analyze Current" */
-    GtkWidget *pwAnalyzeFile;         /* button for "Analyze File" */
+    GtkWidget *pwAnalyzeCurrent;        /* button for "Analyze Current" */
+    GtkWidget *pwAnalyzeFile;	/* button for "Analyze File" */
     GtkWidget *pwEdit;          /* button for "Edit" */
     GtkWidget *pwButtonClockwise;       /* button for clockwise */
 
 } toolbarwidget;
 
-#if !defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
 static void
 ButtonClicked(GtkWidget * UNUSED(pw), char *sz)
 {
@@ -111,7 +111,6 @@ toggle_button_from_images(GtkWidget * pwImageOff, GtkWidget * pwImageOn, char *s
     gtk_container_add(GTK_CONTAINER(pwvbox), gtk_label_new(sz));
     gtk_container_add(GTK_CONTAINER(pw), pwvbox);
 
-
     g_object_set_data_full(G_OBJECT(pw), "toggle_images", aapw, g_free);
 
     return pw;
@@ -119,17 +118,7 @@ toggle_button_from_images(GtkWidget * pwImageOff, GtkWidget * pwImageOn, char *s
 }
 #endif
 
-extern void
-ToolbarSetPlaying(GtkWidget * pwToolbar, const int f)
-{
-
-    toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
-                                           "toolbarwidget");
-
-    gtk_widget_set_sensitive(ptw->pwReset, f);
-
-}
-
+#if 0	/* not (no longer? not yet?) used */
 extern void
 ToolbarSetAnalyzeCurrent(GtkWidget * pwToolbar, const int f)
 {
@@ -149,7 +138,18 @@ ToolbarSetAnalyzeFile(GtkWidget * pwToolbar, const int f)
 
     gtk_widget_set_sensitive(ptw->pwAnalyzeFile, f);
 }
+#endif
 
+extern void
+ToolbarSetPlaying(GtkWidget * pwToolbar, const int f)
+{
+
+    toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
+                                           "toolbarwidget");
+
+    gtk_widget_set_sensitive(ptw->pwReset, f);
+
+}
 
 extern void
 ToolbarSetClockwise(GtkWidget * pwToolbar, const int f)
@@ -158,14 +158,14 @@ ToolbarSetClockwise(GtkWidget * pwToolbar, const int f)
     toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
                                            "toolbarwidget");
 
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
     gtk_toggle_tool_button_set_active(GTK_TOGGLE_TOOL_BUTTON(ptw->pwButtonClockwise), f);
 #else
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ptw->pwButtonClockwise), f);
 #endif
 }
 
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
 extern void
 ToggleClockwise(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
@@ -190,14 +190,8 @@ extern void
 click_swapdirection(void)
 {
     if (!inCallback) {
-#if defined(USE_GTKUIMANAGER)
-        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(puim,
-                                                                                 "/MainMenu/ViewMenu/PlayClockwise")),
-                                     TRUE);
-#else
         toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
         gtk_button_clicked(GTK_BUTTON(ptw->pwButtonClockwise));
-#endif
     }
 }
 
@@ -228,7 +222,7 @@ extern void
 click_edit(void)
 {
     if (!inCallback) {
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
         GtkAction *editstatus = gtk_ui_manager_get_action(puim, "/MainMenu/EditMenu/EditPosition");
         gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(editstatus), !gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(editstatus)));
 #else
@@ -238,7 +232,7 @@ click_edit(void)
     }
 }
 
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
 extern void
 ToggleEdit(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
@@ -316,16 +310,16 @@ ToolbarUpdate(GtkWidget * pwToolbar,
     if (fEdit || !fPlaying)
         c = C_NONE;
 
-    /* We want to disable some buttons particularly when we are in the middle of running an analysis
-    in the background => we use !fAnalysisRunning */
+    /* We want to disable some buttons particularly when we are in the middle
+       of running an analysis in the background => we use !fAnalysisRunning */
 
     gtk_widget_set_sensitive(ptw->pwTake, (c == C_TAKEDROP || c == C_AGREEDECLINE) && !fAnalysisRunning );
-    gtk_widget_set_sensitive(ptw->pwDrop, (c == C_TAKEDROP || c == C_AGREEDECLINE) && !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwDouble, ((c == C_TAKEDROP && !pms->nMatchTo) || c == C_ROLLDOUBLE) && !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwDrop, (c == C_TAKEDROP || c == C_AGREEDECLINE) && !fAnalysisRunning );
+    gtk_widget_set_sensitive(ptw->pwDouble, ((c == C_TAKEDROP && !pms->nMatchTo) || c == C_ROLLDOUBLE) && !fAnalysisRunning );
 
     gtk_widget_set_sensitive(ptw->pwSave, plGame != NULL && !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwResign, fPlaying && !fEdit && !fAnalysisRunning);
-    // gtk_widget_set_sensitive(ptw->pwHint, fPlaying && !fEdit && !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwHint, fPlaying && !fEdit && !fAnalysisRunning);
     gtk_widget_set_sensitive(ptw->pwPrevMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwPrevCMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwPrev, fPlaying && !fEdit);
@@ -334,18 +328,16 @@ ToolbarUpdate(GtkWidget * pwToolbar,
     gtk_widget_set_sensitive(ptw->pwNext, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwNextCMarked, fPlaying && !fEdit);
     gtk_widget_set_sensitive(ptw->pwNextMarked, fPlaying && !fEdit);
-    // gtk_widget_set_sensitive(ptw->pwEndGame, fPlaying && !fEdit && !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwEdit,  !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwNew,  !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwOpen,  !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwReset,  !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwAnalyzeCurrent, plGame != NULL &&  !fAnalysisRunning);
-    gtk_widget_set_sensitive(ptw->pwAnalyzeFile,  !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwEndGame, fPlaying && !fEdit);
+    gtk_widget_set_sensitive(ptw->pwEdit, !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwOpen, !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwReset, !fAnalysisRunning);
+    gtk_widget_set_sensitive(ptw->pwAnalyzeCurrent, plGame != NULL && !fAnalysisRunning);
 
     return c;
 }
 
-#if !defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
 static GtkWidget *
 ToolbarAddButton(GtkToolbar * pwToolbar, const char *stockID, const char *label, const char *tooltip,
                  GCallback callback, void *data)
@@ -360,35 +352,6 @@ ToolbarAddButton(GtkToolbar * pwToolbar, const char *stockID, const char *label,
 
     return GTK_WIDGET(but);
 }
-
-// static GtkWidget *
-// ToolbarAddButtonFromFile(GtkToolbar * pwToolbar, const char *filename, const char *label, const char *tooltip,
-//                  GCallback callback, void *data)
-// {
-//     GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-//     int width, height;
-//     gdk_pixbuf_get_file_info (filename, &width, &height);
-//     gtk_icon_theme_add_builtin_icon ("custom_icon", width, pixbuf);
-//     g_object_unref (G_OBJECT (pixbuf)); 
-
-// //    GtkToolButton *but = gtk_tool_button_new(
-
-
-
-//     GtkToolItem *but = gtk_toggle_tool_button_new();
-//     gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON(but), "custom_icon");
-
-
-//     // GtkToolItem *but = gtk_image_new_from_file(filename);
-//     // gtk_widget_set_tooltip_text(GTK_WIDGET(but), tooltip);
-//     // if (label)
-//     //     gtk_tool_button_set_label(GTK_TOOL_BUTTON(but), label);
-//     gtk_toolbar_insert(GTK_TOOLBAR(pwToolbar), but, -1);
-
-//     g_signal_connect(G_OBJECT(but), "clicked", callback, data);
-
-//     return GTK_WIDGET(but);
-// }
 
 static GtkWidget *
 ToolbarAddWidget(GtkToolbar * pwToolbar, GtkWidget * pWidget, const char *tooltip)
@@ -413,7 +376,7 @@ ToolbarAddSeparator(GtkToolbar * pwToolbar)
 extern GtkWidget *
 ToolbarNew(void)
 {
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
     GtkWidget *pwtb;
     toolbarwidget *ptw = (toolbarwidget *) g_malloc(sizeof(toolbarwidget));
 
@@ -438,22 +401,22 @@ ToolbarNew(void)
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwDouble), TRUE);
     ptw->pwResign = gtk_ui_manager_get_widget(puim, "/MainToolBar/Resign");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwResign), TRUE);
-    // ptw->pwEndGame = gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame");
-    // gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
+    ptw->pwEndGame = gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
     ptw->pwReset = gtk_ui_manager_get_widget(puim, "/MainToolBar/Undo");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwReset), TRUE);
-    // ptw->pwHint = gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint");
-    // gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwHint), TRUE);
+    ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/Analyse");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
+    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/Analyse File");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeFile), TRUE);
+    ptw->pwHint = gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwHint), TRUE);
     ptw->pwEdit = gtk_ui_manager_get_widget(puim, "/MainToolBar/EditPosition");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEdit), TRUE);
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(ptw->pwEdit), NULL);
     ptw->pwButtonClockwise = gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwButtonClockwise), FALSE);
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(ptw->pwButtonClockwise), _("Direction"));
-    ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeCurrent");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
-    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeFile");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeFile), TRUE);
     ptw->pwPrevCMarked = gtk_ui_manager_get_widget(puim, "/MainToolBar/PreviousCMarkedMove");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwPrevCMarked), FALSE);
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(ptw->pwPrevCMarked), "");
@@ -500,8 +463,6 @@ ToolbarNew(void)
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(pwtb), GTK_ICON_SIZE_LARGE_TOOLBAR);
     gtk_orientable_set_orientation(GTK_ORIENTABLE(pwtb), GTK_ORIENTATION_HORIZONTAL);
     gtk_toolbar_set_style(GTK_TOOLBAR(pwtb), GTK_TOOLBAR_BOTH);
-        // gtk_toolbar_set_show_arrow(GTK_TOOLBAR(pwtb), FALSE);
-
     gtk_box_pack_start(GTK_BOX(vbox_toolbar), pwtb, FALSE, FALSE, 0);
 
     gtk_toolbar_set_tooltips(GTK_TOOLBAR(pwtb), TRUE);
@@ -545,16 +506,11 @@ ToolbarNew(void)
         ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_RESIGN, NULL, _("Resign the current game"),
                          G_CALLBACK(GTKResign), NULL);
 
-    /* removed to make space for analysis buttons. 
-    (1) it's a very seldom used button, 
-    (2) it's on the menu as well, 
-    (3) it also has a shortcut 
-    */
-    // /* End game button */
-    // ptw->pwEndGame =
-    //     ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_END_GAME, NULL, _("Let the computer end the game"),
-    //                      G_CALLBACK(ButtonClicked), "end game");
-    // gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
+    /* End game button */
+    ptw->pwEndGame =
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_END_GAME, NULL, _("Let the computer end the game"),
+                         G_CALLBACK(ButtonClicked), "end game");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
 
     ToolbarAddSeparator(GTK_TOOLBAR(pwtb));
 
@@ -562,15 +518,10 @@ ToolbarNew(void)
     ptw->pwReset =
         ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_UNDO, NULL, _("Undo moves"), G_CALLBACK(GTKUndo), NULL);
 
-    /* removed to make space for analysis buttons. 
-    (1) it's a less used button, 
-    (2) it's on the menu as well, 
-    (3) it also has a shortcut 
-    */
-    // /* Hint button */
-    // ptw->pwHint =
-    //     ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_HINT, NULL, _("Show the best moves or cube action"),
-    //                      G_CALLBACK(ButtonClicked), "hint");
+    /* Hint button */
+    ptw->pwHint =
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GNUBG_STOCK_HINT, NULL, _("Show the best moves or cube action"),
+                         G_CALLBACK(ButtonClicked), "hint");
 
     /* edit button */
     ptw->pwEdit = gtk_toggle_button_new();
@@ -592,22 +543,18 @@ ToolbarNew(void)
     ToolbarAddWidget(GTK_TOOLBAR(pwtb), ptw->pwButtonClockwise, _("Reverse direction of play"));
 
     ToolbarAddSeparator(GTK_TOOLBAR(pwtb));
-
+    
     /* Analyze current match button */
-    // ptw->pwAnalyzeCurrent =
-    //     ToolbarAddButtonFromFile(GTK_TOOLBAR(pwtb), 
-    //     "./AnalyzeMatchIcon.png", NULL, 
-    //     _("Analyze current match (set default behavior in Settings -> Analysis)"), 
-    //     G_CALLBACK(GTKAnalyzeCurrent), NULL);
+
     ptw->pwAnalyzeCurrent =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyze"), 
-        _("Analyze current match (set default behavior in Settings -> Analysis)"), 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_EXECUTE, _("Analyse"),
+        _("Analyse current match (set default behaviour in Settings -> Analysis)"),
         G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
     /* Analyze file button */
     ptw->pwAnalyzeFile =
-        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_FIND_AND_REPLACE, _("Analyze File"), 
-        _("Analyze match from file (set default behavior in Settings -> Analysis)"), 
+        ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_DIRECTORY, _("Analyse File"),
+        _("Analyze match from file (set default behaviour in Settings -> Analysis -> Analysis Buttons)"),
         G_CALLBACK(GTKAnalyzeFile), NULL);
 
     ti = gtk_separator_tool_item_new();
@@ -652,7 +599,7 @@ ToolbarNew(void)
 #endif
 }
 
-#if !defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
 static GtkWidget *
 firstChild(GtkWidget * widget)
 {
@@ -696,7 +643,7 @@ SetToolbarItemStyle(gpointer data, gpointer user_data)
 extern void
 SetToolbarStyle(int value)
 {
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
     toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
     GtkWidget *img = gtk_image_new_from_stock(fClockwise ? GNUBG_STOCK_CLOCKWISE : GNUBG_STOCK_ANTI_CLOCKWISE,
                                               GTK_ICON_SIZE_SMALL_TOOLBAR);
@@ -705,7 +652,7 @@ SetToolbarStyle(int value)
 #endif
 
     if (value != nToolbarStyle) {
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
         gtk_toolbar_set_style(GTK_TOOLBAR(pwToolbar), (GtkToolbarStyle) value);
 #else
         toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
@@ -718,10 +665,11 @@ SetToolbarStyle(int value)
         /* Resize handle box parent */
         gtk_widget_queue_resize(pwToolbar);
         nToolbarStyle = value;
-#if !defined(USE_GTKUIMANAGER)
+#if defined(USE_GTKITEMFACTORY)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
                                        (gtk_item_factory_get_widget_by_action(pif, value + TOOLBAR_ACTION_OFFSET)),
                                        TRUE);
 #endif
+        UserCommand("save settings");
     }
 }

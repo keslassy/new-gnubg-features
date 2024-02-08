@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: backgammon.h,v 1.471 2023/01/18 21:49:36 plm Exp $
+ * $Id: backgammon.h,v 1.478 2023/11/20 21:00:06 plm Exp $
  */
 
 #ifndef BACKGAMMON_H
@@ -253,8 +253,6 @@ typedef struct {
     const evalcontext *pec;
 } scoreData;
 
-
-
 /* Defining structures for AnalyzeFileSetting.
 Other defined structures throughout the files: 
 - apwAnalyzeFileSetting (gtkgame.c); 
@@ -382,7 +380,6 @@ extern int fOutputRawboard;
 extern int fRecord;
 extern int fShowProgress;
 extern int fStyledGamelist;
-extern int fMarkedSamePlayer;
 extern int fTutor;
 extern int fTutorChequer;
 extern int fTutorCube;
@@ -390,8 +387,7 @@ extern int log_rollouts;
 extern int nThreadPriority;
 extern int nToolbarStyle;
 extern int nTutorSkillCurrent;
-
-extern int fBackgroundAnalysis; /* define whether to analyze in the background*/
+extern int fBackgroundAnalysis; /* define whether to analyze in the background */
 extern int fAnalysisRunning; /* when analyzing a match in background */
 #if defined(USE_BOARD3D)
 extern int fSync;
@@ -407,8 +403,7 @@ typedef const movefilter (*ConstTmoveFilter)[MAX_FILTER_PLIES];
 
 extern TmoveFilter *GetEvalMoveFilter(void);
 extern player ap[2];
-extern char default_names[2][31];
-extern char player1aliases[256];
+extern char default_names[2][MAX_NAME_LEN];
 extern rolloutcontext rcRollout;
 extern skilltype TutorSkill;
 extern statcontext scMatch;
@@ -514,7 +509,11 @@ extern void PromptForExit(void);
 extern void Prompt(void);
 extern void ResetInterrupt(void);
 extern void SaveRolloutSettings(FILE * pf, const char *sz, rolloutcontext * prc);
+extern int SetBoard(char *szGNUbgID);
+extern int SetCubeValue(int n);
 extern void setDefaultFileName(char *path);
+extern void SetDice(int n0, int n1);
+extern int SetGNUbgID(char *szGNUbgID);
 extern void SetMatchDate(matchinfo * pmi);
 extern void SetMatchID(const char *szMatchID);
 extern void SetMatchInfo(char **ppch, const char *sz, char *szMessage);
@@ -659,11 +658,11 @@ extern void CommandSaveGame(char *);
 extern void CommandSaveMatch(char *);
 extern void CommandSavePosition(char *);
 extern void CommandSaveSettings(char *);
-extern void CommandSetAnalysisBackground(char *);
 extern void CommandSetAnalysisChequerplay(char *);
 extern void CommandSetAnalysisCube(char *);
 extern void CommandSetAnalysisCubedecision(char *);
 extern void CommandSetAnalysisFileSetting(char*);
+extern void CommandSetAnalysisBackground(char *);
 extern void CommandSetAnalysisLimit(char *);
 extern void CommandSetAnalysisLuckAnalysis(char *);
 extern void CommandSetAnalysisLuck(char *);
@@ -782,7 +781,7 @@ extern void CommandSetGeometryPosX(char *);
 extern void CommandSetGeometryPosY(char *);
 extern void CommandSetGeometryTheory(char *);
 extern void CommandSetGeometryWidth(char *);
-extern void CommandSetGNUBgID(char *);
+extern void CommandSetGNUbgID(char *);
 extern void CommandSetXGID(char *);
 extern void CommandSetGotoFirstGame(char *);
 extern void CommandSetGUIAnimationBlink(char *);
@@ -931,7 +930,6 @@ extern void CommandSetSoundSoundStart(char *);
 extern void CommandSetSoundSoundTake(char *);
 extern void CommandSetSoundSystemCommand(char *);
 extern void CommandSetStyledGameList(char *);
-extern void CommandSetMarkedSamePlayer(char *);
 extern void CommandSetTheoryWindow(char *);
 extern void CommandSetThreads(char *);
 extern void CommandSetToolbar(char *);
@@ -950,7 +948,6 @@ extern void CommandSetVariationStandard(char *);
 extern void CommandSetVsync3d(char *);
 extern void CommandSetWarning(char *);
 extern void CommandShow8912(char *);
-extern void CommandShowAliases(char *);
 extern void CommandShowAnalysis(char *);
 extern void CommandShowAutoSave(char *);
 extern void CommandShowAutomatic(char *);
@@ -979,6 +976,7 @@ extern void CommandShowExport(char *);
 extern void CommandShowFullBoard(char *);
 extern void CommandShowGammonValues(char *);
 extern void CommandShowGeometry(char *);
+extern void CommandShowHistory(char *);
 extern void CommandShowJacoby(char *);
 extern void CommandShowKeith(char *);
 extern void CommandShowKleinman(char *);
@@ -1023,7 +1021,7 @@ extern void CommandSwapPlayers(char *);
 extern void CommandTake(char *);
 extern void CommandSetDefaultNames(char *sz);
 extern void CommandSetKeyNames(char *sz);
-extern void CommandSetAliases(char *sz);
+extern void UserCommand(const char *szCommand);
 extern void hint_move(char *sz, gboolean show, procrecorddata * procdatarec);
 extern void hint_double(int show, int did_double);
 extern void hint_take(int show, int did_take);
@@ -1057,15 +1055,18 @@ extern int quick_roll(void);
 extern int board_in_list(const movelist * pml, const TanBoard old_board, const TanBoard board, int *an);
 extern int GetManualDice(unsigned int anDice[2]);
 
-extern void SmartOpen(void); /* function that makes sure that player 1 is a key player, if there is one */
-#define MAX_KEY_PLAYERS 100 /* number of defined key players*/
-extern char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]; /* array with all key players*/
-extern int keyNamesFirstEmpty; /* the keyNames array should be filled until keyName[keyNamesFirstEmpty] excluded*/
-extern int fUseKeyNames; /* whether both to use and update the keyNames array*/
-extern int fWithinSmartOpen; /* whether we are within the SmartOpen function: if it requests to permute users, no need to add the
+/* definitions for SmartSit and keyNames*/
+extern void SmartSit(void); /* function that makes sure that player 1 is a key player, if there is one */
+#define MAX_KEY_NAMES 200 /* number of defined key player names*/
+extern char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN]; /* array with all key player names*/
+extern int keyNamesFirstEmpty; /* the keyNames array should be filled from index 0 until keyNamesFirstEmpty-1 (included)*/
+extern int fUseKeyNames; /* whether to use the keyNames array*/
+extern int fWithinSmartSit; /* whether we are within the SmartSit function: if it requests to permute users, no need to add the
                                     new player1 to the list of preferred users*/
-extern int AddKeyName(const char sz[]); /* functions that adds a key player to the array*/
-extern int DeleteKeyName(const char sz[]);
-extern void DisplayKeyNames(void);
+extern int AddKeyName(const char sz[]); /* function that adds a key player name to the array*/
+extern int DeleteKeyName(const char sz[]); /* function that deletes a key player name to the array*/
+extern void DisplayKeyNames(void); /* debugging function to display the current key player names in the array*/
+
+extern int fTriggeredByRecordList; /* whether history plot is launched from record list or from menu */
 
 #endif	/* BACKGAMMON_H */

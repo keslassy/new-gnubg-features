@@ -1,9 +1,9 @@
                          GNU Backgammon was written by:
 
-    Joseph Heled            Jim Segrave             Michael Petch
-    Oystein Johansen        Joern Thyssen           Philippe Michel
-    Jonathan Kinsey         Gary Wong
-    David Montgomery        Christian Anthon
+    Joseph Heled            Jim Segrave             Christian Anthon
+    Oystein Johansen        Joern Thyssen           Michael Petch
+    Jonathan Kinsey         Gary Wong               Philippe Michel
+    David Montgomery
  
                                    Support by:
 
@@ -70,8 +70,8 @@
     Jeff Haferman           Billie Patterson        Christopher D. Yep
     Morten Juul Henriksen   Zvezdan Petkovic        Anders Zachrison
     Alain Henry             Petri Pitkanen          Douglas Zare
-    Jens Hoefkens           Sam Pottle              Louis Zulli
-    Casey Hopkins           Henrik Ravn
+    Jens Hoefkens           Sam Pottle              Tilemachos Zoidis
+    Casey Hopkins           Henrik Ravn             Louis Zulli
     Martin Janke            James Rech
 
 
@@ -93,7 +93,7 @@
                Austin Appleby (the MurmurHash3 hashing function)
      Ulrich Drepper (an implementation of the public domain MD5 algorithm)
             Bob Jenkins (the ISAAC pseudo random number generator)
-       Takuji Nishimura and Makoto Matsumoto (the Mersenne Twister PRNG)
+         Mutsuo Saito and Makoto Matsumoto (the Mersenne Twister PRNG)
                    Brian Paul (the TR tile rendering library)
              Claes Tornberg (the mec match equity table generator)
 

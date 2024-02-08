@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joern Thyssen <jth@gnubg.org>
- * Copyright (C) 2004-2021 the AUTHORS
+ * Copyright (C) 2004-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: relational.c,v 1.84 2021/03/10 20:44:47 plm Exp $
+ * $Id: relational.c,v 1.87 2023/12/06 22:01:46 plm Exp $
  */
 
 #include "config.h"
@@ -136,15 +136,6 @@ MatchResult(int nMatchTo)
     return result;
 }
 
-float
-Ratio(float a, int b)
-{
-    if (b != 0)
-        return a / (float) b;
-    else
-        return 0;
-}
-
 #define NS(x) (x == NULL) ? "NULL" : x
 #define APPENDF(x,y) {g_string_append_printf(column, "%s, ", x); \
 	g_string_append_printf(value, "'%s', ", g_ascii_dtostr(tmpf, G_ASCII_DTOSTR_BUF_SIZE, y));}
@@ -198,9 +189,9 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     APPENDI("very_bad_moves", sc->anMoves[player][SKILL_VERYBAD]);
     APPENDF("chequer_error_total_normalised", sc->arErrorCheckerplay[player][0]);
     APPENDF("chequer_error_total", sc->arErrorCheckerplay[player][1]);
-    APPENDF("chequer_error_per_move_normalised", Ratio(sc->arErrorCheckerplay[player][0], unforced));
-    APPENDF("chequer_error_per_move", Ratio(sc->arErrorCheckerplay[player][1], unforced));
-    APPENDU("chequer_rating", GetRating(Ratio(scMatch.arErrorCheckerplay[player][0], unforced)));
+    APPENDF("chequer_error_per_move_normalised", Ratiof(sc->arErrorCheckerplay[player][0], unforced));
+    APPENDF("chequer_error_per_move", Ratiof(sc->arErrorCheckerplay[player][1], unforced));
+    APPENDU("chequer_rating", GetRating(Ratiof(scMatch.arErrorCheckerplay[player][0], unforced)));
     APPENDI("very_lucky_rolls", sc->anLuck[player][LUCK_VERYGOOD]);
     APPENDI("lucky_rolls", sc->anLuck[player][LUCK_GOOD]);
     APPENDI("unmarked_rolls", sc->anLuck[player][LUCK_NONE]);
@@ -208,9 +199,9 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     APPENDI("very_unlucky_rolls", sc->anLuck[player][LUCK_VERYBAD]);
     APPENDF("luck_total_normalised", sc->arLuck[player][0]);
     APPENDF("luck_total", sc->arLuck[player][1]);
-    APPENDF("luck_per_move_normalised", Ratio(sc->arLuck[player][0], totalmoves));
-    APPENDF("luck_per_move", Ratio(sc->arLuck[player][1], totalmoves));
-    APPENDU("luck_rating", getLuckRating(Ratio(sc->arLuck[player][0], totalmoves)));
+    APPENDF("luck_per_move_normalised", Ratiof(sc->arLuck[player][0], totalmoves));
+    APPENDF("luck_per_move", Ratiof(sc->arLuck[player][1], totalmoves));
+    APPENDU("luck_rating", getLuckRating(Ratiof(sc->arLuck[player][0], totalmoves)));
     APPENDI("total_cube_decisions", sc->anTotalCube[player]);
     APPENDI("close_cube_decisions", sc->anCloseCube[player]);
     APPENDI("doubles", sc->anDouble[player]);
@@ -242,20 +233,20 @@ AddStats(DBProvider * pdb, int gm_id, int player_id, int player, const char *tab
     APPENDF("overall_error_total_normalised", errorskill * (float) sc->anCloseCube[player] + sc->arErrorCheckerplay[player][0]);
     APPENDF("overall_error_total", errorcost * (float) sc->anCloseCube[player] + sc->arErrorCheckerplay[player][1]);
     APPENDF("overall_error_per_move_normalised",
-            Ratio(errorskill * (float) sc->anCloseCube[player] +
+            Ratiof(errorskill * (float) sc->anCloseCube[player] +
                   sc->arErrorCheckerplay[player][0], sc->anCloseCube[player] + unforced));
     APPENDF("overall_error_per_move",
-            Ratio(errorcost * (float) sc->anCloseCube[player] +
+            Ratiof(errorcost * (float) sc->anCloseCube[player] +
                   sc->arErrorCheckerplay[player][1], sc->anCloseCube[player] + unforced));
     APPENDU("overall_rating",
-            GetRating(Ratio
+            GetRating(Ratiof
                       (errorskill * (float) sc->anCloseCube[player] +
                        sc->arErrorCheckerplay[player][0], sc->anCloseCube[player] + unforced)));
     APPENDF("actual_result", sc->arActualResult[player]);
     APPENDF("luck_adjusted_result", sc->arLuckAdj[player]);
     APPENDI("snowie_moves", totalmoves + scMatch.anTotalMoves[!player]);
     APPENDF("snowie_error_rate_per_move",
-            Ratio(errorskill * (float) scMatch.anCloseCube[player] +
+            Ratiof(errorskill * (float) scMatch.anCloseCube[player] +
                   scMatch.arErrorCheckerplay[player][0], totalmoves + scMatch.anTotalMoves[!player]));
     /*time */
     APPENDI("time_penalties", 0);
@@ -561,8 +552,10 @@ relational_player_stats_get(const char *player0, const char *player1)
     id0 = GetPlayerId(pdb, player0);
     if (player1)
         id1 = GetPlayerId(pdb, player1);
-    if (id0 == -1 || (player1 && id1 == -1))
+    if (id0 == -1 || (player1 && id1 == -1)) {
+        pdb->Disconnect();
         return NULL;
+    }
 
     psc = g_new0(statcontext, 1);
 
@@ -620,9 +613,12 @@ relational_player_stats_get(const char *player0, const char *player1)
                               "SUM(luck_total_normalised)" "from matchstat " "%s", query[i]);
         RowSet *rs = pdb->Select(buf);
         g_free(buf);
+        g_free(query[i]);
 
-        if ((!rs) || !strtol(rs->data[1][0], NULL, 0))
+        if ((!rs) || !strtol(rs->data[1][0], NULL, 0)) {
+            pdb->Disconnect();
             return NULL;
+        }
         psc->anTotalMoves[i] = (int) strtol(rs->data[1][0], NULL, 0);
         psc->anUnforcedMoves[i] = (int) strtol(rs->data[1][1], NULL, 0);
         psc->anTotalCube[i] = (int) strtol(rs->data[1][2], NULL, 0);
@@ -658,6 +654,8 @@ relational_player_stats_get(const char *player0, const char *player1)
     psc->fMoves = 1;
     psc->fCube = 1;
     psc->fDice = 1;
+
+    pdb->Disconnect();
 
     return psc;
 }

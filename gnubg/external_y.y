@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: external_y.y,v 1.36 2020/02/20 21:19:52 plm Exp $
+ * $Id: external_y.y,v 1.37 2023/12/14 07:02:38 plm Exp $
  */
 
 #ifndef EXTERNAL_Y_H
@@ -112,7 +112,7 @@ void yyerror(scancontext *scanner, const char *str)
 %token-table
 
 %union {
-    gboolean bool;
+    gboolean boolean;
     gchar character;
     gfloat floatnum;
     gint intnum;
@@ -132,7 +132,7 @@ void yyerror(scancontext *scanner, const char *str)
 %token CRAWFORDRULE JACOBYRULE RESIGNATION BEAVERS
 %token CUBE CUBEFUL CUBELESS DETERMINISTIC NOISE PLIES PRUNE
 
-%type <bool>        E_BOOLEAN
+%type <boolean>     E_BOOLEAN
 %type <str>         E_STRING
 %type <character>   E_CHARACTER
 %type <intnum>      E_INTEGER

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: rollout.c,v 1.262 2021/11/21 20:16:11 plm Exp $
+ * $Id: rollout.c,v 1.263 2023/12/14 07:02:38 plm Exp $
  */
 
 #include "config.h"
@@ -1578,7 +1578,7 @@ GeneralEvaluationR(float arOutput[NUM_ROLLOUT_OUTPUTS],
     evalsetup es;
     evalsetup(*apes[1]);
     const cubeinfo(*apci[1]);
-    int false = 0;
+    int cubedectop = 0;
     int (*apCubeDecTop[1]);
 
     apBoard[0] = anBoard;
@@ -1586,7 +1586,7 @@ GeneralEvaluationR(float arOutput[NUM_ROLLOUT_OUTPUTS],
     apStdDev[0] = (float (*)[NUM_ROLLOUT_OUTPUTS]) arStdDev;
     apes[0] = &es;
     apci[0] = pci;
-    apCubeDecTop[0] = &false;
+    apCubeDecTop[0] = &cubedectop;
 
     es.et = EVAL_NONE;
     memcpy(&es.rc, prc, sizeof(rolloutcontext));

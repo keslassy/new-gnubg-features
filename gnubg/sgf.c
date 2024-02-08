@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2000-2002 Gary Wong <gtw@gnu.org>
- * Copyright (C) 2001-2019 the AUTHORS
+ * Copyright (C) 2001-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: sgf.c,v 1.174 2022/02/26 20:22:15 plm Exp $
+ * $Id: sgf.c,v 1.175 2023/03/19 21:04:25 plm Exp $
  */
 
 #include "config.h"
@@ -1453,7 +1453,7 @@ CommandLoadGame(char *sz)
 
         setDefaultFileName(sz);
         if (fUseKeyNames)
-            SmartOpen();
+            SmartSit();
 
 
 #endif
@@ -1508,7 +1508,7 @@ CommandLoadPosition(char *sz)
 
         setDefaultFileName(sz);
         if (fUseKeyNames)
-            SmartOpen();
+            SmartSit();
 
 #endif
 
@@ -1563,7 +1563,7 @@ CommandLoadMatch(char *sz)
 
         setDefaultFileName(sz);
         if (fUseKeyNames)
-            SmartOpen();
+            SmartSit();
 
         for (pl = plGame->plNext; pl != plGame; pl = pl->plNext) {
             moverecord *pmr = pl->p;

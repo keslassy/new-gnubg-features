@@ -20,7 +20,7 @@
 #include "credits.h"
 
 const char aszCOPYRIGHT[] = N_("Copyright (C) 1999-2004 Gary Wong.\n"
-                               "Copyright (C) 2004-2022 the AUTHORS; for details type `show version'.");
+                               "Copyright (C) 2004-2024 the AUTHORS; for details type `show version'.");
 
 credEntry ceAuthors[] = {
   {"Joseph Heled", 0},
@@ -194,6 +194,7 @@ credEntry ceCredits[] = {
   {"Anders Zachrison", 0},
   {"Douglas Zare", 0},
   {"Michael Zehr", 0},
+  {"Tilemachos Zoidis", 0},
   {"Louis Zulli", 0},
   {0, 0}
 };
@@ -280,8 +281,8 @@ const char aszAUTHORS[] =
 "    Jeff Haferman           Billie Patterson        Christopher D. Yep\n"
 "    Morten Juul Henriksen   Zvezdan Petkovic        Anders Zachrison\n"
 "    Alain Henry             Petri Pitkanen          Douglas Zare\n"
-"    Jens Hoefkens           Sam Pottle              Louis Zulli\n"
-"    Casey Hopkins           Henrik Ravn\n"
+"    Jens Hoefkens           Sam Pottle              Tilemachos Zoidis\n"
+"    Casey Hopkins           Henrik Ravn             Louis Zulli\n"
 "    Martin Janke            James Rech\n"
 "\n"
 "\n"
@@ -303,7 +304,7 @@ const char aszAUTHORS[] =
 "               Austin Appleby (the MurmurHash3 hashing function)\n"
 "     Ulrich Drepper (an implementation of the public domain MD5 algorithm)\n"
 "            Bob Jenkins (the ISAAC pseudo random number generator)\n"
-"       Takuji Nishimura and Makoto Matsumoto (the Mersenne Twister PRNG)\n"
+"         Mutsuo Saito and Makoto Matsumoto (the Mersenne Twister PRNG)\n"
 "                   Brian Paul (the TR tile rendering library)\n"
 "             Claes Tornberg (the mec match equity table generator)\n"
 "\n"

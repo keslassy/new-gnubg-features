@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: external_l.l,v 1.32 2022/01/19 22:21:43 plm Exp $
+ * $Id: external_l.l,v 1.34 2023/12/14 07:02:38 plm Exp $
  */
 
 #include "common.h"
@@ -75,10 +75,10 @@ version{EOT}            {   return INTERFACEVERSION; }
 evaluation{EOT}         {   return EVALUATION; }
 fibsboard{EOT}          {   return FIBSBOARD; }
 
-<*>(yes|on|true){EOT}   {   yylval->bool = 1; 
+<*>(yes|on|true){EOT}   {   yylval->boolean = 1; 
                             return (E_BOOLEAN);
                         }
-<*>(no|off|false){EOT}  {   yylval->bool = 0; 
+<*>(no|off|false){EOT}  {   yylval->boolean = 0; 
                             return (E_BOOLEAN);
                         }
 
@@ -191,12 +191,12 @@ void escapes(const char *cp, char *tp)
 void ExtStartParse(yyscan_t scanner, const char* szCommand)
 {
     struct yyguts_t * yyg = (struct yyguts_t *) scanner;
+    YY_BUFFER_STATE buf_state = NULL;
     BEGIN(INITIAL);    
-	YY_BUFFER_STATE buf_state = NULL;
-	buf_state = yy_scan_string(szCommand, scanner);
-	ext_parse(scanner);
+    buf_state = yy_scan_string(szCommand, scanner);
+    ext_parse(scanner);
     yy_flush_buffer(buf_state, scanner);
-	yy_delete_buffer(buf_state, scanner);
+    yy_delete_buffer(buf_state, scanner);
 }
 
 int ExtInitParse(yyscan_t *scancontext)

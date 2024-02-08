@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 1999-2003 Gary Wong <gtw@gnu.org>
- * Copyright (C) 1999-2021 the AUTHORS
+ * Copyright (C) 1999-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: show.c,v 1.306 2022/03/12 20:14:14 plm Exp $
+ * $Id: show.c,v 1.311 2023/12/20 23:09:55 plm Exp $
  */
 
 #include "config.h"
@@ -59,6 +59,7 @@
 #include "gtkscoremap.h"
 #include "gtkoptions.h"
 #include "gtkcube.h"
+#include "gtkrelational.h"
 #endif
 
 #if defined(WIN32)
@@ -216,7 +217,7 @@ ShowRollout(rolloutcontext * prc)
     int fPlayersSameSettings = TRUE;
     int fCubeChequerSameSettings = TRUE;
 
-    if (prc->fLateEvals && (!fDoTruncate || (nTruncate > nLate) ))
+    if (prc->fLateEvals && (!fDoTruncate || (nTruncate > nLate)))
         fLateEvals = TRUE;
 
     outputf(ngettext("%u game will be played per rollout.\n",
@@ -499,7 +500,7 @@ CommandShowFullBoard(char *sz)
     {
         char szOut[2048];
         char *apch[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-       
+
         outputl(DrawBoard(szOut, (ConstTanBoard) an, TRUE, apch, MatchIDFromMatchState(&ms), anChequers[ms.bgv]));
     }
 }
@@ -516,12 +517,6 @@ CommandShowDelay(char *UNUSED(sz))
 #else
     outputl(_("The `show delay' command applies only when using the GUI"));
 #endif
-}
-
-extern void
-CommandShowAliases(char *UNUSED(sz))
-{
-    outputf(_("Aliases for player 1 when importing MAT files is set to \"%s\".\n "), player1aliases);
 }
 
 #if CACHE_STATS
@@ -733,6 +728,14 @@ CommandShowEvaluation(char *UNUSED(sz))
 
 }
 
+#if defined(USE_GTK)
+extern void
+CommandShowHistory(char *UNUSED(sz))
+{
+    ComputeHistory();
+}
+#endif
+
 extern void
 CommandShowJacoby(char *UNUSED(sz))
 {
@@ -900,14 +903,14 @@ CommandShowScore(char *UNUSED(sz))
 {
 
     outputf(ngettext("The score (after %d game) is: %s %d, %s %d",
-           "The score (after %d games) is: %s %d, %s %d", ms.cGames),
+                     "The score (after %d games) is: %s %d, %s %d", ms.cGames),
             ms.cGames, ap[0].szName, ms.anScore[0], ap[1].szName, ms.anScore[1]);
 
     if (ms.nMatchTo > 0) {
         outputf(ngettext(" (match to %d point%s)",
                          " (match to %d points%s)",
                          ms.nMatchTo),
-                ms.nMatchTo, ms.fCrawford ? _(", Crawford game") : (ms.fPostCrawford ? _(", post-Crawford play") : ""));
+                ms.nMatchTo, (ms.nMatchTo > 1 && ms.fCrawford) ? _(", Crawford game") : (ms.nMatchTo > 1 && ms.fPostCrawford) ? _(", post-Crawford play") : "");
     } else {
         if (ms.fJacoby)
             outputl(_(" (money session, with Jacoby rule)."));
@@ -2206,12 +2209,12 @@ CommandShowRatingOffset(char *UNUSED(sz))
 extern void
 CommandShowCubeEfficiency(char *UNUSED(sz))
 {
-    outputf(_("Parameters for cube evaluations:\n"));
-    outputf("%s :%7.4f\n", _("Cube efficiency for crashed positions"), rCrashedX);
-    outputf("%s :%7.4f\n", _("Cube efficiency for contact positions"), rContactX);
-    outputf("%s :%7.4f\n", _("Cube efficiency for one sided bearoff positions"), rOSCubeX);
-    outputf("%s * %.5f + %.5f\n", _("Cube efficiency for race: x = pips"), rRaceFactorX, rRaceCoefficientX);
-    outputf(_("(min value %.4f, max value %.4f)\n"), rRaceMin, rRaceMax);
+    outputf(_("Parameters for cube evaluations (2+ ply/0-1 ply):\n"));
+    outputf("%s: %.2f/%.2f\n", _("Cube efficiency for crashed positions"), rCrashedX[0], rCrashedX[1]);
+    outputf("%s: %.2f/%.2f\n", _("Cube efficiency for contact positions"), rContactX[0], rContactX[1]);
+    outputf("%s: %.2f/%.2f\n", _("Cube efficiency for one sided bearoff positions"), rOSCubeX, rOSCubeX);
+    outputf("%s * %.5f/%.5f + %.2f/%.2f\n", _("Cube efficiency for race: x = pips"), rRaceFactorX[0], rRaceFactorX[1], rRaceCoefficientX[0], rRaceCoefficientX[1]);
+    outputf(_("(min value %.2f/%.2f, max value %.2f/%.2f)\n"), rRaceMin[0], rRaceMin[1], rRaceMax[0], rRaceMax[1]);
 }
 
 extern void
@@ -2362,7 +2365,7 @@ extern void
 CommandShowAutoSave(char *UNUSED(sz))
 {
     outputf(ngettext
-            ("Auto save frequency every %d minute\n", "Auto save every %d minutes\n", nAutoSaveTime), nAutoSaveTime);
+            ("Auto save every %d minute\n", "Auto save every %d minutes\n", nAutoSaveTime), nAutoSaveTime);
     outputf(fAutoSaveRollout ? _("Match will be autosaved during and after rollouts\n") :
             _("Match will not be autosaved during and after rollouts\n"));
     outputf(fAutoSaveAnalysis ? _("Match will be autosaved during and after analysis\n") :

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006-2008 Christian Anthon <anthon@kiku.dk>
- * Copyright (C) 2007-2008 the AUTHORS
+ * Copyright (C) 2007-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkrelational.h,v 1.13 2020/02/18 21:49:13 plm Exp $
+ * $Id: gtkrelational.h,v 1.14 2023/11/20 21:00:06 plm Exp $
  */
 
 #include "relational.h"
@@ -30,4 +30,6 @@ extern GtkWidget *RelationalOptions(void);
 extern void RelationalOptionsShown(void);
 extern void RelationalSaveOptions(void);
 extern void GtkShowQuery(RowSet * pRow);
+
+extern void ComputeHistory(void); /* for history plot*/
 #endif

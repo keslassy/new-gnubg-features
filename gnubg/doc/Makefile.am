@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id: Makefile.am,v 1.50 2022/10/28 05:48:19 plm Exp $
+# $Id: Makefile.am,v 1.51 2023/06/24 21:26:55 plm Exp $
 #
 
 AM_CPPFLAGS = -DAC_DOCDIR='"$(docdir)"' -DAC_DATADIR='"$(datadir)"' -DAC_PKGDATADIR='"$(datadir)/gnubg"'
@@ -78,6 +78,11 @@ gnubg.pdf: gnubgdb.xml $(gnubg_image_DATA)
 allabout.pdf: allabout.xml $(gnubg_image_DATA)
 	$(DBLATEX) $< -o $@ || cp $(srcdir)/gnubg/allabout.pdf .
 
+# The warning:
+# 'failed to load external entity "http://docbook.sourceforge.net/release/xsl/current/xhtml/onechunk.xsl"'
+# at this point means that the DocBook XSL stylesheets (a package with a name similar to docbook-style-xsl)
+# are not installed.
+
 gnubg.html: gnubgdb.xml
 	$(XSLTPROC) \
 		--stringparam chunker.output.encoding UTF-8 \
@@ -98,8 +103,9 @@ allabout.html: allabout.xml
 		$< || \
 		cp $(srcdir)/gnubg/allabout.html .
 
-# encoding=UTF-8 needs texinfo 4.9 (partial support, western european languages
-# that should be good enough for GNUbg documentation) or 4.13 (full support)
+# encoding=UTF-8 needs texinfo 4.9 (partial support, western european languages) or 4.13 (full support).
+# The former should be enough for current GNUbg documentation.
+
 gnubg.texi: gnubgdb.xml
 	$(DOCBOOK2TEXI) --encoding=UTF-8 --string-param prefer-textobjects=1 $< || \
 	cp $(srcdir)/gnubg/gnubg.texi .

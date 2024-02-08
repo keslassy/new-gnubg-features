@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007-2009 Jon Kinsey <jonkinsey@gmail.com>
- * Copyright (C) 2007-2020 the AUTHORS
+ * Copyright (C) 2007-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 
- * $Id: multithread.c,v 1.104 2022/03/12 21:05:53 plm Exp $
+ * $Id: multithread.c,v 1.106 2023/08/22 19:17:27 plm Exp $
  */
 
 #include "config.h"
@@ -361,28 +361,36 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
         */
         // if (pwMoveAnalysis!=NULL)       
         //        g_message("sensitive:%d", gtk_widget_is_sensitive(pwAnalysis));
-        i++;
-        if (i==3) {
-            i=0;
-            if (fAnalysisRunning && start2) {
-                if(start1) { 
-                    pmr1 = get_current_moverecord(NULL);
-                    start1=0;
-                    FormatMove(tmp1, msBoard(), pmr1->n.anMove);
-                    // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
-                    ChangeGame(NULL); 
-                } else {
-                    pmr2 = get_current_moverecord(NULL);
-                    FormatMove(tmp2, msBoard(), pmr2->n.anMove);
-                    // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
-                    // if (pwMoveAnalysis!=NULL)
-                    //     g_message("new results");
-                    if (strcmp(tmp1,tmp2) != 0 && pwMoveAnalysis!=NULL) {
-                        // g_message("STOP");
-                        start2=0;
+        if(fAnalysisRunning) {
+            i++;
+            if (i==3) {
+                i=0;
+                if (start2) {
+                    if(start1) {
+                        pmr1 = get_current_moverecord(NULL);
+                        if (pmr1 != NULL)
+                            FormatMove(tmp1, msBoard(), pmr1->n.anMove);
+                        start1 = 0;
+                        // g_message("pmr1: move index i=%u; move=%s\n",pmr1->n.iMove, tmp1);
+                        ChangeGame(NULL);
                     } else {
-                        // g_message("change");
-                        ChangeGame(NULL); 
+                        pmr2 = get_current_moverecord(NULL);
+                        if (pmr2 != NULL)
+                            FormatMove(tmp2, msBoard(), pmr2->n.anMove);
+                        // g_message("pmr2: move index i=%u; move=%s\n",pmr2->n.iMove, tmp2);
+                        // if (pwMoveAnalysis!=NULL)
+                        //     g_message("new results");
+#if defined(USE_GTK)
+                        if (strcmp(tmp1, tmp2) != 0 && pwMoveAnalysis!=NULL) {
+#else
+                        if (strcmp(tmp1, tmp2) != 0) {
+#endif
+                            // g_message("STOP");
+                            start2 = 0;
+                        } else {
+                            // g_message("change");
+                            ChangeGame(NULL); 
+                        }
                     }
                 }
             }
@@ -396,7 +404,7 @@ MT_WaitForTasks(gboolean(*pCallback) (gpointer), int callbackTime, int autosave)
             // if (pwCubeAnalysis!=NULL)
             // g_message("oop cube!");
             /* at the start pmr_cur->n.iMove is not valid and returns an
-            arbitrary large number (even thouh pmr_cur is not NULL), then 
+            arbitrary large number (even though pmr_cur is not NULL), then 
             the first time it's valid it looks like it returns smaller numbers...
             also it seems that it's valid for analysed games 
             */

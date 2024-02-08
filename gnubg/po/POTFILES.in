@@ -112,15 +112,8 @@ lib/cache.c
 lib/cache.h
 lib/gnubg-types.h
 lib/inputs.c
-lib/isaac.c
-lib/isaac.h
-lib/isaacs.h
 lib/list.c
 lib/list.h
-lib/md5.c
-lib/md5.h
-lib/mt19937ar.c
-lib/mt19937ar.h
 lib/neuralnet.c
 lib/neuralnet.h
 lib/neuralnetsse.c

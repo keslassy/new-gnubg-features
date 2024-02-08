@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtklocdefs.h,v 1.24 2023/01/01 17:48:19 plm Exp $
+ * $Id: gtklocdefs.h,v 1.25 2023/12/20 14:17:30 plm Exp $
  */
 
 #ifndef GTKLOCDEFS_H
@@ -44,7 +44,6 @@ typedef const GdkRectangle gtk_locdef_cell_area;
     gtk_paint_box(style, cr, state_type, shadow_type, widget, detail, x, y, width, height)
 #define gdk_colormap_alloc_color(cm, c, w, bm)
 #define gtk_statusbar_set_has_resize_grip(pw, grip)
-#define USE_GTKUIMANAGER 1
 
 #else // GTK2
 typedef GdkRegion gtk_locdef_region;
@@ -100,10 +99,6 @@ extern GtkWidget *get_statusbar_label(GtkStatusbar * statusbar);
 #ifndef USE_GRESOURCE
 #define gnubg_stock_register_resource()
 extern GdkPixbuf *gdk_pixbuf_new_from_resource(const char *resource_path, GError **error);
-#endif
-
-#ifdef GTK_DISABLE_DEPRECATED
-#define USE_GTKUIMANAGER 1
 #endif
 
 #endif

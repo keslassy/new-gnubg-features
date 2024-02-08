@@ -15,12 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: external.h,v 1.26 2021/06/30 21:37:08 plm Exp $
+ * $Id: external.h,v 1.27 2023/03/21 21:49:06 plm Exp $
  */
 
 #ifndef EXTERNAL_H
 #define EXTERNAL_H
 
+#if HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
 #include <glib.h>
 #include <glib-object.h>
 #include "backgammon.h"
@@ -198,12 +201,13 @@ typedef struct scancontext {
 
 #else                           /* #ifndef WIN32 */
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #endif                          /* #ifndef WIN32 */
 
 #define EXTERNAL_INTERFACE_VERSION "2"
 #define RFBF_VERSION_SUPPORTED "0"
 
-extern int ExternalSocket(struct sockaddr **ppsa, int *pcb, char *sz);
+extern int ExternalSocket(struct sockaddr **ppsa, socklen_t *pcb, char *sz);
 extern int ExternalRead(int h, char *pch, size_t cch);
 extern int ExternalWrite(int h, char *pch, size_t cch);
 #ifdef WIN32

@@ -131,7 +131,7 @@ union YYSTYPE
 {
 #line 114 "external_y.y"
 
-    gboolean bool;
+    gboolean boolean;
     gchar character;
     gfloat floatnum;
     gint intnum;

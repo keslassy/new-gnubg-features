@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2000-2004 Joern Thyssen <joern@thyssen.nu>
- * Copyright (C) 2000-2019 the AUTHORS
+ * Copyright (C) 2000-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: analysis.c,v 1.261 2022/12/28 20:23:56 plm Exp $
+ * $Id: analysis.c,v 1.263 2023/09/05 20:34:21 plm Exp $
  */
 
 /*
-02/2023: Isaac Keslassy: introduced the "background analysis" and "smart analysis" 
-features, together with two new buttons in the main toolbar: "Analyze" and 
-"Analyze File"
-- 1st button: "Analyze":
-    - This is to analyze the current match. 
+02/2023: Isaac Keslassy: introduced the "background analysis"
+feature, together with a new button in the main toolbar: "Analyse"
+- button: "Analyse":
+    - This is to analyse the current match.
     - Define options for what it does (in Settings>Analysis):
         - "background analysis" checkbox:
-            * unchecked => regular "analyze match" (blocking, like today), vs. 
+            * unchecked => regular "analyse match" (blocking, like today), vs.
             * checked => we can browse at the same time and check the analysis
         - "automatic add-to-database" checkbox:
-            * Unchecked = like today, vs 
+            * Unchecked = like today, vs
             * Checked = automatic add-to-db at end of analysis (and we remove the add-to-db
                 button from the statistics page)
 - 2nd button: "Analyze file": 
@@ -43,7 +42,6 @@ features, together with two new buttons in the main toolbar: "Analyze" and
 When analyzing in the background, various menus are disabled so the user does not launch
     another analysis in the middle.
 */
-
 
 #include "config.h"
 
@@ -723,8 +721,9 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     }
                     MT_Exclusive();
                     CopyMoveList(&pmr->ml, &ml);
-                    if (ml.cMoves)
+                    if (ml.cMoves) {
                         g_free(ml.amMoves);
+                    }
                 }
 
             }
@@ -1035,8 +1034,8 @@ AnalyzeGame(listOLD * plGame, int wait)
     if (wait) {
         int result;
 
-            multi_debug("wait for all task: analysis");
-            result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
+        multi_debug("wait for all task: analysis");
+        result = MT_WaitForTasks(UpdateProgressBar, 250, fAutoSaveAnalysis);
 
         if (result == -1)
             IniStatcontext(psc);
@@ -1188,23 +1187,28 @@ CommandAnalyseGame(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesGame(plGame);
 
-    /* see explanations in CommandAnalyseMatch()*/
-    if(fBackgroundAnalysis) {
+ /* see explanations in CommandAnalyseMatch()*/
+#if defined(USE_GTK)
+    if (fBackgroundAnalysis && fX) {
         fAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves);        ShowBoard(); /* hide unallowd toolbar items*/
+          "feel free to browse and check the early analysis results."), nMoves);
+        ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
     } else
+#endif
         ProgressStartValue(_("Analysing game"), nMoves);
 
-        AnalyzeGame(plGame, TRUE);
+    AnalyzeGame(plGame, TRUE);
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis) {
+    if (fBackgroundAnalysis) {
         fAnalysisRunning = FALSE;
         ShowBoard(); /* hide unallowd toolbar items*/
+#if defined(USE_GTK)
         GTKRegenerateGames(); /* hide unallowed menu items*/
+#endif
     }
 
 #if defined(USE_GTK)
@@ -1235,15 +1239,20 @@ CommandAnalyseMatch(char *UNUSED(sz))
     fStore_crawford = ms.fCrawford;
     nMoves = NumberMovesMatch(&lMatch);
 
-    /* if we analyze in the background, we turn on a global flag to disable all sorts of 
-    buttons during the analysis*/
-    if(fBackgroundAnalysis) {
+    /* if we analyze in the background, we turn on a global flag
+       to disable all sorts of buttons during the analysis */
+
+#if defined(USE_GTK)
+    if(fBackgroundAnalysis && fX) {
         fAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
-        "feel free to browse and check the early analysis results."), nMoves); 
+        "feel free to browse and check the early analysis results."), nMoves);
         ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
-    } else {
+    }
+    else
+#endif
+    {
         /* this was supposed to show nMoves, but it's not used at the end;
         on the right side we see "n/nTotal"; so we update the text
         */
@@ -1252,7 +1261,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
     }
 
     IniStatcontext(&scMatch);
- 
+
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
 
         if (AnalyzeGame(pl->p, FALSE) < 0) {
@@ -1271,12 +1280,14 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
     ProgressEnd();
 
-    if(fBackgroundAnalysis) {
+#if defined(USE_GTK)
+    if (fBackgroundAnalysis && fX) {
         fAnalysisRunning = FALSE;
          // CalculateBoard();
         ShowBoard(); /* show toolbar items*/
         GTKRegenerateGames(); /* show menu items*/
     }
+#endif
 
 #if defined(USE_GTK)
     if (fX)

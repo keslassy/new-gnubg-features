@@ -20,7 +20,7 @@
 #include "credits.h"
 
 const char aszCOPYRIGHT[] = N_("Copyright (C) 1999-2004 Gary Wong.\n"
-                               "Copyright (C) 2004-2022 the AUTHORS; for details type `show version'.");
+                               "Copyright (C) 2004-2024 the AUTHORS; for details type `show version'.");
 
 credEntry ceAuthors[] = {
   {"Joseph Heled", 0},
@@ -99,17 +99,17 @@ credEntry ceCredits[] = {
   {"Olivier Croisille", 0},
   {"Ned Cross", 0},
   {"Ian Curtis", 0},
-  {"Christopher D. Yep", 0},
   {"Bill Davidson", 0},
   {"Giulio De Marco", 0},
   {"Michael Depreli", 0},
   {"Alberta di Silvio", 0},
   {"Ian Dunstan", 0},
   {"Max Durbano", 0},
+  {"Christopher D. Yep", 0},
   {"Peter Eberhard", 0},
   {"Robert Eberlein", 0},
-  {"James F. Kibler", 0},
   {"Dan Fandrich", 0},
+  {"James F. Kibler", 0},
   {"Kennedy Fraser", 0},
   {"Ric Gerace", 0},
   {"Michel Grimminck", 0},
@@ -184,8 +184,8 @@ credEntry ceCredits[] = {
   {"Sander van Rijnswou", 0},
   {"Robert-Jan Veldhuizen", 0},
   {"Morten Wang", 0},
-  {"JP White", 0},
   {"Jeff White", 0},
+  {"JP White", 0},
   {"Mike Whitton", 0},
   {"Chris Wilson", 0},
   {"Simon Woodhead", 0},
@@ -194,6 +194,7 @@ credEntry ceCredits[] = {
   {"Anders Zachrison", 0},
   {"Douglas Zare", 0},
   {"Michael Zehr", 0},
+  {"Tilemachos Zoidis", 0},
   {"Louis Zulli", 0},
   {0, 0}
 };
@@ -210,10 +211,10 @@ credits creditList[] =
 const char aszAUTHORS[] =
 "                         GNU Backgammon was written by:\n"
 "\n"
-"    Joseph Heled            Jim Segrave             Michael Petch\n"
-"    Oystein Johansen        Joern Thyssen           Philippe Michel\n"
-"    Jonathan Kinsey         Gary Wong\n"
-"    David Montgomery        Christian Anthon\n"
+"    Joseph Heled            Jim Segrave             Christian Anthon\n"
+"    Oystein Johansen        Joern Thyssen           Michael Petch\n"
+"    Jonathan Kinsey         Gary Wong               Philippe Michel\n"
+"    David Montgomery\n"
 " \n"
 "                                   Support by:\n"
 "\n"
@@ -280,8 +281,8 @@ const char aszAUTHORS[] =
 "    Jeff Haferman           Billie Patterson        Christopher D. Yep\n"
 "    Morten Juul Henriksen   Zvezdan Petkovic        Anders Zachrison\n"
 "    Alain Henry             Petri Pitkanen          Douglas Zare\n"
-"    Jens Hoefkens           Sam Pottle              Louis Zulli\n"
-"    Casey Hopkins           Henrik Ravn\n"
+"    Jens Hoefkens           Sam Pottle              Tilemachos Zoidis\n"
+"    Casey Hopkins           Henrik Ravn             Louis Zulli\n"
 "    Martin Janke            James Rech\n"
 "\n"
 "\n"
@@ -303,7 +304,7 @@ const char aszAUTHORS[] =
 "               Austin Appleby (the MurmurHash3 hashing function)\n"
 "     Ulrich Drepper (an implementation of the public domain MD5 algorithm)\n"
 "            Bob Jenkins (the ISAAC pseudo random number generator)\n"
-"       Takuji Nishimura and Makoto Matsumoto (the Mersenne Twister PRNG)\n"
+"         Mutsuo Saito and Makoto Matsumoto (the Mersenne Twister PRNG)\n"
 "                   Brian Paul (the TR tile rendering library)\n"
 "             Claes Tornberg (the mec match equity table generator)\n"
 "\n"

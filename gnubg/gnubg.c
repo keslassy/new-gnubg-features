@@ -15,28 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gnubg.c,v 1.1027 2023/01/18 21:49:36 plm Exp $
+ * $Id: gnubg.c,v 1.1038 2024/01/04 21:10:49 plm Exp $
  */
 
-
 /*
-02/2023: Isaac Keslassy: introduced the "smart open" feature 
-that enables users to automatically to sit at the bottom of 
-the board (i.e. as player1) in opened matches.
-    
-It works as follows:
-1) In Settings > Options > Display, the user can enable this option
-2) The user can define "key player names" in two ways:
-    a) Manually: 
-    In Settings > Options > Display, edit the list and add/delete names.
-    b) Automatically:
-    Each time te user swaps the player order to highlight some player
-    and set this player at the bottom of the board, we add this 
-    player's name to the list.
-3) When opening a new file, SmartOpen() automatically checks if player0 
-    is a key player while player1 is not. In such a case, it swaps 
-    their places.
-*/
+ * 02/2023: Isaac Keslassy: introduced the "SmartSit" feature
+ * that enables users to automatically sit at the bottom of
+ * the board (i.e. as player1) in opened matches.
+ * 
+ * It works as follows:
+ * 1) In Settings > Options > Display, the user can enable this option
+ * 2) The user can define "key player names" in two ways:
+ * a) Manually:
+ * In Settings > Options > Display, edit the list and add/delete names.
+ * b) Automatically:
+ * Each time te user swaps the player order to highlight some player
+ * and set this player at the bottom of the board, we add this
+ * player's name to the list.
+ * 3) When opening a new file, SmartSit() automatically checks if player0
+ * is a key player while player1 is not. In such a case, it swaps
+ * their places.
+ */
 
 #include "config.h"
 
@@ -119,7 +118,7 @@ static char szCommandSeparators[] = " \t\n\r\v\f";
 #include "gtksplash.h"
 #include "gtkchequer.h"
 #include "gtkwindows.h"
-#include "gtkscoremap.h" 
+#include "gtkscoremap.h"
 #endif
 
 #if defined(USE_BOARD3D)
@@ -217,7 +216,6 @@ int fPlayersAreSame = TRUE;
 int fRecord = TRUE;
 int fShowProgress;
 int fStyledGamelist = TRUE;
-int fMarkedSamePlayer = FALSE;
 int fTruncEqualPlayer0 = TRUE;
 int fTutorChequer = TRUE;
 int fTutorCube = TRUE;
@@ -233,23 +231,32 @@ unsigned int cAutoDoubles = 0;
 unsigned int nBeavers = 3;
 unsigned int nDefaultLength = 7;
 
-/* TRUE if analysis should run in the background; false by default, can be changed in menu*/
-int fBackgroundAnalysis = FALSE; 
-/* if we analyze in the background, we turn on the following global flag to disable all sorts of 
-buttons during the analysis (e.g. eval, rollout, etc.), since we are not equipped for a second
-parallel analysis */
+/*
+ * TRUE if analysis should run in the background
+ * FALSE by default
+ * can be chang edin menu
+ */
+int fBackgroundAnalysis = FALSE;
+
+/*
+ * if we analyze in the background, we turn on the following global flag
+ * to disable all sorts of buttons during the analysis (eval, rollout, etc.)
+ * since we are not equipped for a second parallel analysis
+ */
 int fAnalysisRunning = FALSE;
 
+/* initialization */
+char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN] = { "" };
+int keyNamesFirstEmpty = 0;
+int fUseKeyNames = TRUE;
+int fWithinSmartSit = FALSE;
+int fTriggeredByRecordList = FALSE;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
-const char* aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] = { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis")};
-const char* aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart"}; 
+const char *aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] =
+    { N_("Batch analysis"), N_("Single-File analysis"), N_("Smart analysis") };
+const char *aszAnalyzeFileSettingCommands[NUM_AnalyzeFileSettings] = { "batch", "single", "smart" };
 
-/*initialization*/
-char keyNames[MAX_KEY_PLAYERS][MAX_NAME_LEN]={""};
-int keyNamesFirstEmpty=0;
-int fUseKeyNames=TRUE;
-int fWithinSmartOpen=FALSE;
 
 #if defined(USE_BOARD3D)
 int fSync = -1;                 /* Not set */
@@ -515,9 +522,7 @@ player ap[2] = {
     {"user", PLAYER_HUMAN, EVALSETUP_WORLDCLASS, EVALSETUP_WORLDCLASS, MOVEFILTER_NORMAL, 0, NULL}
 };
 
-char default_names[2][31] = { "gnubg", "user" };
-
-char player1aliases[256] = "";
+char default_names[2][MAX_NAME_LEN] = { "gnubg", "user" };
 
 /* Usage strings */
 static char szDICE[] = N_("<die> <die>"),
@@ -1487,25 +1492,23 @@ ShowBoard(void)
             if (ms.fCubeOwner < 0) {
                 apch[3] = szCube;
 
-                /* Using ngettext() below looks awkward, but it matters in case of multiple plurals, as in many eastern european languages */
-
                 if (ms.nMatchTo)
                     if (ms.nMatchTo == 1)
                         sprintf(szCube, ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
-                    else if (ms.fCrawford)
-                        sprintf(szCube, ngettext("%d point match (Crawford game)", "%d points match (Crawford game)", ms.nMatchTo), ms.nMatchTo);
-                    else
-                        sprintf(szCube, ngettext("%d point match (Cube: %d)", "%d points match (Cube: %d)", ms.nMatchTo), ms.nMatchTo, ms.nCube);
+                    else if (ms.fCrawford) {
+                        sprintf(szCube, ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
+                        strcat(szCube, " (");
+                        strcat(szCube, _("Crawford game"));
+                        strcat(szCube, ")");
+                    } else
+                        sprintf(szCube,
+                                ngettext("%d point match (Cube: %d)", "%d points match (Cube: %d)", ms.nMatchTo),
+                                ms.nMatchTo, ms.nCube);
                 else
                     sprintf(szCube, "(%s: %d)", _("Cube"), ms.nCube);
             } else {
-                size_t cch = strlen(ap[ms.fCubeOwner].szName);
-
-                if (cch > 20)
-                    cch = 20;
-
-                sprintf(szCube, "%c: %*s (%s: %d)", ms.fCubeOwner ? 'X' : 'O',
-                        (int) cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
+                sprintf(szCube, "%c: %.20s (%s: %d)", ms.fCubeOwner ? 'X' : 'O',
+                        ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
 
                 apch[ms.fCubeOwner ? 6 : 0] = szCube;
 
@@ -1788,7 +1791,7 @@ CommandHelp(char *sz)
 
         for (; pc->sz; pc++)
             if (pc->szHelp)
-                outputf("%-15s\t%s\n", pc->sz, gettext(pc->szHelp));
+                outputf("%-15s\t%s\n", pc->sz, Q_(pc->szHelp));
     }
 }
 
@@ -2276,7 +2279,8 @@ hint_double(int show, int did_double)
         return;
     }
 #endif
-    outputl(OutputCubeAnalysis
+    if (show)
+        outputl(OutputCubeAnalysis
             (pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble, &ci, -1));
 }
 
@@ -2315,7 +2319,8 @@ hint_take(int show, int did_take)
     }
 #endif
 
-    outputl(OutputCubeAnalysis
+    if (show)
+        outputl(OutputCubeAnalysis
             (pmr->CubeDecPtr->aarOutput, pmr->CubeDecPtr->aarStdDev, &pmr->CubeDecPtr->esDouble, &ci, 1));
 }
 
@@ -2756,7 +2761,7 @@ CommandCopy(char *UNUSED(sz))
 {
     char *aps[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
     char szOut[2048];
-    char szCube[32], szPlayer0[MAX_NAME_LEN + 3], szPlayer1[MAX_NAME_LEN + 3], szScore0[35], szScore1[35], szMatch[35];
+    char szCube[40], szPlayer0[MAX_NAME_LEN + 3], szPlayer1[MAX_NAME_LEN + 3], szScore0[35], szScore1[35], szMatch[35];
     char szRolled[32];
     TanBoard anBoardTemp;
 
@@ -2789,25 +2794,22 @@ CommandCopy(char *UNUSED(sz))
         if (ms.fCubeOwner < 0) {
             aps[3] = szCube;
 
-            /* Using ngettext() below looks awkward, but it matters in case of multiple plurals, as in many eastern european languages */
-
             if (ms.nMatchTo)
                 if (ms.nMatchTo == 1)
                     sprintf(szCube, ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
-                else if (ms.fCrawford)
-                    sprintf(szCube, ngettext("%d point match (Crawford game)", "%d points match (Crawford game)", ms.nMatchTo), ms.nMatchTo);
-                else
-                    sprintf(szCube, ngettext("%d point match (Cube: %d)", "%d points match (Cube: %d)", ms.nMatchTo), ms.nMatchTo, ms.nCube);
+                else if (ms.fCrawford) {
+                    sprintf(szCube, ngettext("%d point match", "%d points match", ms.nMatchTo), ms.nMatchTo);
+                    strcat(szCube, " (");
+                    strcat(szCube, _("Crawford game"));
+                    strcat(szCube, ")");
+                } else
+                    sprintf(szCube, ngettext("%d point match (Cube: %d)", "%d points match (Cube: %d)", ms.nMatchTo),
+                            ms.nMatchTo, ms.nCube);
             else
                 sprintf(szCube, "(%s: %d)", _("Cube"), ms.nCube);
         } else {
-            size_t cch = strlen(ap[ms.fCubeOwner].szName);
-
-            if (cch > 20)
-                cch = 20;
-
-            sprintf(szCube, "%c: %*s (%s: %d)", ms.fCubeOwner ? 'X' :
-                    'O', (int) cch, ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
+            sprintf(szCube, "%c: %.20s (%s: %d)", ms.fCubeOwner ? 'X' :
+                    'O', ap[ms.fCubeOwner].szName, _("Cube"), ms.nCube);
 
             aps[ms.fCubeOwner ? 6 : 0] = szCube;
 
@@ -3180,12 +3182,11 @@ SaveGUISettings(FILE * pf)
     fprintf(pf, "set gui windowpositions %s\n", fGUISetWindowPos ? "on" : "off");
 
     fprintf(pf, "set styledgamelist %s\n", fStyledGamelist ? "on" : "off");
-    fprintf(pf, "set markedsameplayer %s\n", fMarkedSamePlayer ? "on" : "off");   
     fprintf(pf, "set delay %u\n", nDelay);
 
     fprintf(pf, "set toolbar %d\n", nToolbarStyle);
-    if (!fToolbarShowing)
-        fputs("set toolbar off\n", pf);
+
+    fprintf(pf, "set toolbar %s\n", fToolbarShowing ? "on" : "off");
 
 #if defined(USE_BOARD3D)
     if (fSync != -1)
@@ -3228,11 +3229,9 @@ SavePlayerSettings(FILE * pf)
     char szTemp[4096];
 
     fprintf(pf, "set defaultnames \"%s\" \"%s\"\n", default_names[0], default_names[1]);
-    if (strlen(player1aliases) > 0)
-        fprintf(pf, "set aliases %s\n", player1aliases);
 
     fprintf(pf, "set keynames");
-    for(int i=0;i < keyNamesFirstEmpty; i++) {
+    for(i = 0; i < keyNamesFirstEmpty; i++) {
         fprintf(pf, "\t%s", keyNames[i]);
     }
     fprintf(pf, "\n");
@@ -3351,6 +3350,8 @@ SaveMiscSettings(FILE * pf)
     fprintf(pf, "set browser \"%s\"\n", get_web_browser());
     fprintf(pf, "set priority nice %d\n", nThreadPriority);
     fprintf(pf, "set ratingoffset %s\n", g_ascii_formatd(buf, G_ASCII_DTOSTR_BUF_SIZE, "%f", rRatingOffset));
+
+    fprintf(pf, "set usekeynames %s\n", fUseKeyNames ? "on" : "off");
 }
 
 extern void
@@ -3760,12 +3761,37 @@ ProcessInput(char *sz)
         fReadingCommand = TRUE;
     }
 }
-
 #endif
+
+extern gint
+NextTurnNotify(gpointer UNUSED(p))
+{
+    NextTurn(TRUE);
+
+    ResetInterrupt();
+
+    if (fNeedPrompt) {
+#if defined(HAVE_LIB_READLINE)
+        if (fInteractive) {
+            char *sz = locale_from_utf8(FormatPrompt());
+            rl_callback_handler_install(sz, ProcessInput);
+            g_free(sz);
+            fReadingCommand = TRUE;
+        } else
+#endif
+            Prompt();
+
+        fNeedPrompt = FALSE;
+    }
+
+    return FALSE;               /* remove idle handler, if GTK */
+}
+#endif /* USE_GTK */
 
 /* Handle a command as if it had been typed by the user. */
 extern void
 UserCommand(const char *szCommand)
+#if defined (USE_GTK)
 {
     char *sz;
 
@@ -3809,29 +3835,11 @@ UserCommand(const char *szCommand)
     return;
 #endif
 }
-
-extern gint
-NextTurnNotify(gpointer UNUSED(p))
+#else /* !USE_GTK */
 {
-    NextTurn(TRUE);
-
-    ResetInterrupt();
-
-    if (fNeedPrompt) {
-#if defined(HAVE_LIB_READLINE)
-        if (fInteractive) {
-            char *sz = locale_from_utf8(FormatPrompt());
-            rl_callback_handler_install(sz, ProcessInput);
-            g_free(sz);
-            fReadingCommand = TRUE;
-        } else
-#endif
-            Prompt();
-
-        fNeedPrompt = FALSE;
-    }
-
-    return FALSE;               /* remove idle handler, if GTK */
+    char *line = g_strdup(szCommand);
+    HandleCommand(line, acTop);
+    g_free(line);
 }
 #endif
 
@@ -4645,6 +4653,8 @@ main(int argc, char *argv[])
 
     init_defaults();
 
+    DefaultDBSettings();
+
     /* set language */
 #if defined(USE_GTK)
     gtk_disable_setlocale();
@@ -4981,7 +4991,8 @@ DisplayKeyNames(void)
     }
 }
 
-int NameIsKey (const char sz[]) {
+static int
+NameIsKey (const char sz[]) {
     for(int i=0;i < keyNamesFirstEmpty; i++) {
         if (!strcmp(sz, keyNames[i])) {
             // g_message("NameIsKey: EXISTS! %s=%s at i=%d", sz,keyNames[i],i);
@@ -5038,7 +5049,7 @@ AddKeyName(const char sz[])
     }
 
     /* check that the keyNames array is not full */
-    if (keyNamesFirstEmpty<MAX_KEY_PLAYERS) {
+    if (keyNamesFirstEmpty<MAX_KEY_NAMES) {
         /* check that the key player doesn't already exist */
         for(int i=0;i < keyNamesFirstEmpty; i++) {
             if (!strcmp(sz, keyNames[i])) {
@@ -5061,12 +5072,17 @@ CommandSwapPlayers(char *UNUSED(sz))
     char *pc;
     int n;
 
-    /* if fUseKeyNames enabled, then add the new player1 to the key players
-    (now still player0)*/
-    if (fUseKeyNames && !fWithinSmartOpen) {
-        // g_message("in CommandSwapPlayers: %s", ap[0].szName);
-        AddKeyName(ap[0].szName);
-    }
+    /* VERSION1: if fUseKeyNames enabled, then add the new player1 to the key players
+    (now still player0)
+    VERSION2: also add if fUseKeyNames is not enabled yet, so users don't think they 
+    need to add names manually. We only check that the permutation wasn't launched 
+   by the SmartSit() function, which would mean the name is already in the list.
+   */
+   // if (fUseKeyNames && !fWithinSmartSit) {
+   if (!fWithinSmartSit) {
+       // g_message("in CommandSwapPlayers: %s", ap[0].szName);
+       AddKeyName(ap[0].szName);
+   }
 
     /* swap individual move records */
 
@@ -5118,20 +5134,20 @@ CommandSwapPlayers(char *UNUSED(sz))
 }
 
 /* The following function looks at a list of priority players,
-and makes sure to set the priority player as player 1, 
+and makes sure to set the priority player as player 1,
 i.e. the player that moves towards the bottom of the screen.
 */
-extern void 
-SmartOpen(void)
+extern void
+SmartSit(void)
 {
     // g_message("O: %s", ap[0].szName);
     // g_message("X: %s", ap[1].szName);
 
     if (NameIsKey(ap[0].szName) && !NameIsKey(ap[1].szName)) {
-        fWithinSmartOpen=TRUE;
+        fWithinSmartSit=TRUE;
         CommandSwapPlayers(NULL);
-        fWithinSmartOpen=FALSE;
-    } 
+        fWithinSmartSit=FALSE;
+    }
 
     // g_message("O: %s", ap[0].szName);
     // g_message("X: %s", ap[1].szName);

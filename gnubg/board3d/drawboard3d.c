@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: drawboard3d.c,v 1.133 2022/09/05 19:44:07 plm Exp $
+ * $Id: drawboard3d.c,v 1.134 2023/04/19 12:01:38 Superfly_Jon Exp $
  */
 
 #include "config.h"
@@ -2687,7 +2687,7 @@ setupDicePaths(const BoardData * bd, Path dicePaths[2], float diceMovingPos[2][3
 {
     int firstDie = (bd->turn == 1);
     int secondDie = !firstDie;
-    float dir = (bd->turn == 1) ? -1 : 1;
+    float dir = (bd->turn == 1) ? -1.0f : 1.0f;
 
     setupDicePath(firstDie, dir * DICE_STEP_SIZE0, &dicePaths[firstDie], bd);
     setupDicePath(secondDie, dir * DICE_STEP_SIZE1, &dicePaths[secondDie], bd);
@@ -3139,8 +3139,10 @@ extern void drawHinges(const ModelManager* modelHolder, const BoardData3d* UNUSE
 	glPopMatrix();
 }
 
-static void
-drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA, int nCube)
+#ifndef TEST_HARNESS
+static 
+#endif
+void drawDCNumbers(const BoardData* bd, const diceTest* dt, int MAA, int nCube)
 {
 	int c;
 	float radius = DOUBLECUBE_SIZE / 7.0f;

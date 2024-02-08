@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id: matchseries.py,v 1.7 2022/06/29 21:09:18 plm Exp $
+# $Id: matchseries.py,v 1.8 2023/12/18 21:20:28 plm Exp $
 #
 
 
@@ -48,6 +48,7 @@
 # EOF
 
 import gnubg
+
 
 def playMatchSeries(statsFile=None,  # log file
                     matchLength=7,
@@ -102,7 +103,7 @@ def formatMatchInfo(matchInfo):
         score[winner] += pw
 
         cube = getCube(game)
-        print ('cube: ', cube)
+        print('cube: ', cube)
 
         if pw == cube:
             gammon = ''

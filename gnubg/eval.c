@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: eval.c,v 1.493 2022/12/28 20:04:30 plm Exp $
+ * $Id: eval.c,v 1.498 2024/01/02 21:14:05 plm Exp $
  */
 
 #include "config.h"
@@ -83,7 +83,7 @@ enum {
      * 
      * Break Contact : (sum over x of C(x)) / 152
      * 
-     * 152 is dgree of contact of start position.
+     * 152 is degree of contact of start position.
      */
     I_BREAK_CONTACT,
 
@@ -91,7 +91,7 @@ enum {
      */
     I_BACK_CHEQUER,
 
-    /* Location of most backward anchor.  (Normalized to [01])
+    /* Location of most backward anchor (Normalized to [01])
      */
     I_BACK_ANCHOR,
 
@@ -111,9 +111,9 @@ enum {
      * Some heuristics are required to estimate it, since we have no idea what
      * the best move actually is.
      * 
-     * 1. If board is weak (less than 3 anchors), don't consider hitting on
-     * points 22 and 23.
-     * 2. Don't break anchors inside home to hit.
+     * 1. If board is weak (less than 3 inner points made), don't consider
+     *    hitting on points 23 and 24.
+     * 2. Don't break inner points to hit.
      */
     I_PIPLOSS,
 
@@ -368,12 +368,12 @@ const char *aszDoubleTypes[NUM_DOUBLE_TYPES] = {
 
 static float rTSCubeX = 0.6f;   /* for match play only */
 float rOSCubeX = 0.6f;
-float rRaceFactorX = 0.00125f;
-float rRaceCoefficientX = 0.55f;
-float rRaceMax = 0.7f;
-float rRaceMin = 0.6f;
-float rCrashedX = 0.68f;
-float rContactX = 0.68f;
+float rRaceFactorX[2] = { 0.00125f, 0.00250f };
+float rRaceCoefficientX[2] = { 0.55f, 0.60f };
+float rRaceMax[2] = { 0.7f, 0.8f };
+float rRaceMin[2] = { 0.6f, 0.6f };
+float rCrashedX[2] = { 0.68f, 0.76f };
+float rContactX[2] = { 0.68f, 0.76f };
 
 
 static inline int
@@ -1002,7 +1002,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
 
     nBoard = 0;
     for (i = 0; i < 6; i++)
-        if (anBoard[i])
+        if (anBoard[i] >= 2)
             nBoard++;
 
     memset(aHit, 0, sizeof(aHit));
@@ -1052,7 +1052,7 @@ CalculateHalfInputs(const unsigned int anBoard[25], const unsigned int anBoardOp
                         /* enter this shot as available */
 
                         aHit[aanCombination[j - 24 + i][n]] |= 1 << j;
-                      cannot_hit:;
+                    cannot_hit:;
                     }
 
     memset(aRoll, 0, sizeof(aRoll));
@@ -2417,8 +2417,7 @@ extern int
 GameStatus(const TanBoard anBoard, const bgvariation bgv)
 {
 
-    SSE_ALIGN(float ar[NUM_OUTPUTS]) = {
-    0, 0, 0, 0, 0};             /* NUM_OUTPUTS are 5 */
+    SSE_ALIGN(float ar[NUM_OUTPUTS]) = { 0.0f };
 
     if (ClassifyPosition(anBoard, bgv) != CLASS_OVER)
         return 0;
@@ -3343,6 +3342,14 @@ winGammon(const float arOutput[NUM_ROLLOUT_OUTPUTS])
 
 }
 
+static int
+winAny(const float arOutput[NUM_ROLLOUT_OUTPUTS])
+{
+
+    return (arOutput[OUTPUT_WIN] > 0.0f);
+
+}
+
 extern cubedecision
 FindBestCubeDecision(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], const cubeinfo * pci)
 {
@@ -3405,22 +3412,24 @@ FindBestCubeDecision(float arDouble[], float aarOutput[2][NUM_ROLLOUT_OUTPUTS], 
                     /*not a double if we can beaver */
                     return NODOUBLE_BEAVER;
                 } else
-                    /* beaver (jacoby paradox) */
+                    /* beaver (Jacoby paradox) */
                     return f ? OPTIONAL_DOUBLE_BEAVER : DOUBLE_BEAVER;
-            } else {
+            } else if (winAny(aarOutput[0])) {
                 /* ...take */
                 if (f)
                     return (pci->fCubeOwner == -1) ? OPTIONAL_DOUBLE_TAKE : OPTIONAL_REDOUBLE_TAKE;
                 else
                     return (pci->fCubeOwner == -1) ? DOUBLE_TAKE : REDOUBLE_TAKE;
-            }
+            } else
+		/* no (presumably optional) double if we are sure to lose */
+                return (pci->fCubeOwner == -1) ? NODOUBLE_TAKE : NO_REDOUBLE_TAKE;
 
         } else {
 
             /* 4. DT >= DP >= ND: Double, pass */
 
             /* 
-             * the double is optional iff:
+             * the double is optional if:
              * (1) equity(no double) = equity(drop)
              * (2) the player can win gammon
              * (3a) it's match play
@@ -4028,10 +4037,12 @@ Cl2CfMatch(float arOutput[NUM_OUTPUTS], cubeinfo * pci, float rCubeX)
 
 
 extern float
-EvalEfficiency(const TanBoard anBoard, positionclass pc)
+EvalEfficiency(const TanBoard anBoard, positionclass pc, int ply)
 {
     /* Since it's somewhat costly to call CalcInputs, the 
      * inputs should preferably be cached to save time. */
+
+    const int i = ply >= 2 ? 0 : 1;
 
     switch (pc) {
     case CLASS_OVER:
@@ -4065,12 +4076,12 @@ EvalEfficiency(const TanBoard anBoard, positionclass pc)
 
             PipCount(anBoard, anPips);
 
-            rEff = (float) anPips[1] * rRaceFactorX + rRaceCoefficientX;
-            if (rEff > rRaceMax)
-                return rRaceMax;
+            rEff = (float) anPips[1] * rRaceFactorX[i] + rRaceCoefficientX[i];
+            if (rEff > rRaceMax[i])
+                return rRaceMax[i];
             else {
-                if (rEff < rRaceMin)
-                    return rRaceMin;
+                if (rEff < rRaceMin[i])
+                    return rRaceMin[i];
                 else
                     return rEff;
             }
@@ -4085,11 +4096,11 @@ EvalEfficiency(const TanBoard anBoard, positionclass pc)
 
         /* FIXME: very important: use opponents inputs as well */
 
-        return rContactX;
+        return rContactX[i];
 
     case CLASS_CRASHED:
 
-        return rCrashedX;
+        return rCrashedX[i];
 
     case CLASS_BEAROFF2:
     case CLASS_BEAROFF_TS:
@@ -5053,11 +5064,11 @@ CopyMoveList(movelist * pmlDest, const movelist * pmlSrc)
     pmlDest->iMoveBest = pmlSrc->iMoveBest;
     pmlDest->rBestScore = pmlSrc->rBestScore;
 
-    if (pmlSrc->cMoves) {
-        pmlDest->amMoves = (move *) g_malloc(pmlSrc->cMoves * sizeof(move));
-        memcpy(pmlDest->amMoves, pmlSrc->amMoves, pmlSrc->cMoves * sizeof(move));
-    } else
-        pmlDest->amMoves = NULL;
+#if GLIB_CHECK_VERSION (2,67,4)
+    pmlDest->amMoves = (move *) g_memdup2(pmlSrc->amMoves, pmlSrc->cMoves * sizeof(move));
+#else
+    pmlDest->amMoves = (move *) g_memdup(pmlSrc->amMoves, pmlSrc->cMoves * sizeof(move));
+#endif
 
 }
 
@@ -5078,7 +5089,7 @@ isCloseCubedecision(const float arDouble[])
     float rDouble;
     rDouble = MIN(arDouble[OUTPUT_TAKE], 1.0f);
 
-    /* Report if doubling is less than very bad (0.16) */
+    /* Report if doubling is less than 0.16 */
     if (arDouble[OUTPUT_OPTIMAL] - rDouble < rThr)
         return 1;
 
@@ -5731,8 +5742,11 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
     }
 
     /* Save moves */
-    pm = (move *) g_malloc(pml->cMoves * sizeof(move));
-    memcpy(pm, pml->amMoves, pml->cMoves * sizeof(move));
+#if GLIB_CHECK_VERSION (2,67,4)
+    pm = (move *) g_memdup2(pml->amMoves, pml->cMoves * sizeof(move));
+#else
+    pm = (move *) g_memdup(pml->amMoves, pml->cMoves * sizeof(move));
+#endif
     pml->amMoves = pm;
     nMoves = pml->cMoves;
 
@@ -5848,15 +5862,11 @@ FindnSaveBestMoves(movelist * pml, int nDice0, int nDice1, const TanBoard anBoar
 
                     qsort(pml->amMoves, cOldMoves + 1, sizeof(move), (cfunc) CompareMoves);
 
-                    // /* added due to memory leaks in ScoreMap, check if it doesn't break sth...*/
-                    // g_free(&m);
-
                 }
                 break;
             }
     }
-    // /* added due to memory leaks in ScoreMap, check if it doesn't break sth...*/
-    // g_free(pm);
+
     return 0;
 
 }
@@ -6130,7 +6140,7 @@ EvaluatePositionCubeful4(NNState * nnStates, const TanBoard anBoard,
 
         /* Calculate cube efficiency */
 
-        rCubeX = EvalEfficiency(anBoard, pc);
+        rCubeX = EvalEfficiency(anBoard, pc, pec->nPlies);
 
         /* Build all possible cube positions */
 
@@ -6276,7 +6286,7 @@ EvaluatePositionCubeful3(NNState * nnStates, const TanBoard anBoard,
 {
 
     int ici;
-    int fAll = TRUE;
+    int fAll;
     evalcache ec;
 
     if (!cCache || pec->rNoise != 0.0f)

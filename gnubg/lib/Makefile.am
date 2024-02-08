@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id: Makefile.am,v 1.29 2021/10/06 21:17:00 plm Exp $
+# $Id: Makefile.am,v 1.30 2023/03/19 22:56:25 plm Exp $
 # 
 
 ##
@@ -33,9 +33,13 @@ noinst_LTLIBRARIES = libevent.la libsimd.la
 libsimd_la_SOURCES = neuralnetsse.c inputs.c output.c
 libsimd_la_CFLAGS = $(AM_CFLAGS) $(SIMD_CFLAGS)
 
-libevent_la_SOURCES = list.c neuralnet.c mt19937ar.c isaac.c md5.c simd.h cache.c \
-		      cache.h list.h neuralnet.h mt19937ar.h isaac.h isaacs.h md5.h $(srcdir)/../eval.h gnubg-types.h sigmoid.h
+libevent_la_SOURCES = list.c neuralnet.c SFMT.c isaac.c md5.c simd.h cache.c \
+		      cache.h list.h neuralnet.h SFMT.h SFMT-common.h \
+                      SFMT-params.h SFMT-params19937.h isaac.h isaacs.h md5.h \
+                      $(srcdir)/../eval.h gnubg-types.h sigmoid.h
 libevent_la_LIBADD = libsimd.la
 
-noinst_HEADERS = cache.h list.h neuralnet.h mt19937ar.h isaac.h isaacs.h md5.h simd.h $(srcdir)/../eval.h $(srcdir)/../output.h 
+noinst_HEADERS = cache.h list.h neuralnet.h SFMT.h SFMT-common.h \
+                 SFMT-params.h SFMT-params19937.h isaac.h isaacs.h md5.h \
+                 simd.h $(srcdir)/../eval.h $(srcdir)/../output.h 
 

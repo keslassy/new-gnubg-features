@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Ingo Macherius
- * Copyright (C) 2005-2019 the AUTHORS
+ * Copyright (C) 2005-2023 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkfile.c,v 1.78 2022/12/15 22:23:00 plm Exp $
+ * $Id: gtkfile.c,v 1.83 2023/12/17 17:58:31 plm Exp $
  */
 
 #include "config.h"
@@ -52,9 +52,12 @@ static void
 FilterAdd(const char *fn, const char *pt, GtkFileChooser * fc)
 {
     GtkFileFilter *aff = gtk_file_filter_new();
+    gchar *sz;
+
     gtk_file_filter_set_name(aff, fn);
     gtk_file_filter_add_pattern(aff, pt);
-    gtk_file_filter_add_pattern(aff, g_ascii_strup(pt, -1));
+    gtk_file_filter_add_pattern(aff, sz = g_ascii_strup(pt, -1));
+    g_free(sz);
     gtk_file_chooser_add_filter(fc, aff);
 }
 
@@ -290,10 +293,15 @@ static void
 selection_changed_cb(GtkFileChooser * file_chooser, void *UNUSED(notused))
 {
     const char *label;
-    char *buf;
-    char *filename = gtk_file_chooser_get_filename(file_chooser);
-    FilePreviewData *fpd = ReadFilePreview(filename);
+    gchar *buf;
+    gchar *filename;
+    FilePreviewData *fpd;
     int openable = FALSE;
+
+    filename = gtk_file_chooser_get_filename(file_chooser);
+    fpd = ReadFilePreview(filename);
+    g_free(filename);
+
     if (!fpd) {
         lastOpenType = N_IMPORT_TYPES;
         label = "";
@@ -316,13 +324,14 @@ add_import_filters(GtkFileChooser * fc)
 {
     GtkFileFilter *aff = gtk_file_filter_new();
     gint i;
-    gchar *sg;
+    gchar *sg, *sz;
 
     gtk_file_filter_set_name(aff, _("Supported files"));
     for (i = 0; i < N_IMPORT_TYPES; ++i) {
         sg = g_strdup_printf("*%s", import_format[i].extension);
         gtk_file_filter_add_pattern(aff, sg);
-        gtk_file_filter_add_pattern(aff, g_ascii_strup(sg, -1));
+        gtk_file_filter_add_pattern(aff, sz = g_ascii_strup(sg, -1));
+        g_free(sz);
         g_free(sg);
     }
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fc), aff);
@@ -503,7 +512,17 @@ batch_create_save(gchar * filename, gchar ** save, char **result)
     gchar *file;
     gchar *folder;
     gchar *dir;
+
     DisectPath(filename, NULL, &file, &folder);
+    
+    if (file == NULL || folder == NULL) {
+	g_free(file);
+	g_free(folder);
+	if (result)
+            *result = _("Incorrect path");
+	return FALSE;
+    }
+ 
     dir = g_build_filename(folder, "analysed", NULL);
     g_free(folder);
 
@@ -511,15 +530,17 @@ batch_create_save(gchar * filename, gchar ** save, char **result)
         g_mkdir(dir, 0700);
 
     if (!g_file_test(dir, G_FILE_TEST_IS_DIR)) {
+        g_free(file);
         g_free(dir);
         if (result)
-            *result = _("Failed to make directory");
+            *result = _("Failed to create directory");
         return FALSE;
     }
 
     *save = g_strconcat(dir, G_DIR_SEPARATOR_S, file, ".sgf", NULL);
     g_free(file);
     g_free(dir);
+
     return TRUE;
 }
 
@@ -540,7 +561,6 @@ batch_analyse(gchar * filename, char **result, gboolean add_to_db, gboolean add_
         g_free(save);
         return TRUE;
     }
-
 
     g_free(szCurrentFileName);
     szCurrentFileName = NULL;
@@ -755,15 +775,8 @@ batch_create_dialog_and_run(GSList * filenames, gboolean add_to_db)
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
     g_object_set_data(G_OBJECT(model), "cancelled", GINT_TO_POINTER(0));
 
-    // if(!fBackgroundAnalysis) {
-        dialog = GTKCreateDialog(_("Batch analyse files"), DT_INFO, NULL,
+    dialog = GTKCreateDialog(_("Batch analyse files"), DT_INFO, NULL,
                              DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS | DIALOG_FLAG_NOTIDY, NULL, NULL);
-    // } else {
-    //     dialog = GTKCreateDialog(_("Batch analyse files"), 
-    //                          DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS | DIALOG_FLAG_NOTIDY, NULL, NULL);
-    //     // dialog = GTKCreateDialog(_("Batch analyse files"), 
-    //     //                      DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
-    // }
 
     gtk_window_set_default_size(GTK_WINDOW(dialog), -1, 400);
 
@@ -808,10 +821,23 @@ batch_create_dialog_and_run(GSList * filenames, gboolean add_to_db)
     gtk_window_set_modal(GTK_WINDOW(dialog), FALSE);
 }
 
+extern void
+GTKAnalyzeCurrent(void)
+{
+    /*analyze match*/
+    UserCommand("analyse match");
+    if (fAutoDB) {
+        /*add match to db*/
+        CommandRelationalAddMatch(NULL);
+    }
+    /*show stats panel*/
+    UserCommand("show statistics match");
+    return;
+}
+
 /* functions to find latest file in folder */
 
-
-void recentByModification(const char* path, char* recent){
+static void recentByModification(const char* path, char* recent){
     char buffer[MAX_LEN];
     FilePreviewData *fdp;
     struct dirent* entry;
@@ -826,7 +852,7 @@ void recentByModification(const char* path, char* recent){
             /* we first check that it's a file*/
             if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0 || strncmp(entry->d_name, "/", 1) == 0 || strncmp(entry->d_name, "\\", 1) == 0)
                 continue;
-                /* check file type when DIRENT is defined; could use stat if not*/
+            /* check file type when DIRENT is defined; could use stat if not*/
 #ifdef _DIRENT_HAVE_D_TYPE
             if (entry->d_type == DT_REG) 
 // #else
@@ -849,9 +875,7 @@ void recentByModification(const char* path, char* recent){
                         g_free(fdp);
                         continue;
                     } else {
-                        /* finally it passed all the checks, we keep it for now in the 
-                        char * recent 
-                        */
+                        /* finally it passed all the checks, we keep it for now in the char * recent */
                         strncpy(recent, buffer, MAX_LEN);
                         // strncpy(recent, entry->d_name, MAX_LEN);
                         recenttime = statbuf.st_mtime;
@@ -867,21 +891,7 @@ void recentByModification(const char* path, char* recent){
     }
 }
 
-extern void
-GTKAnalyzeCurrent(void)
-{
-    /*analyze match*/
-    UserCommand("analyse match");
-    if(fAutoDB) {
-        /*add match to db*/
-        CommandRelationalAddMatch(NULL);
-    }
-    /*show stats panel*/
-    UserCommand("show statistics match");
-    return;
-}
-
-extern void
+static void
 AnalyzeSingleFile(void)
 {
     gchar *folder = NULL;
@@ -900,6 +910,9 @@ AnalyzeSingleFile(void)
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fc));
     }
     if (filename) {
+        gchar* cmd;
+
+        g_free(last_folder);
         last_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(fc));
         gtk_widget_destroy(fc);
 
@@ -909,7 +922,6 @@ AnalyzeSingleFile(void)
         // //     return;
 
         /*open this file*/
-        gchar* cmd;
         cmd = g_strdup_printf("import auto \"%s\"", filename);
         UserCommand(cmd);
         g_free(cmd);
@@ -932,11 +944,12 @@ AnalyzeSingleFile(void)
 }
 
 
-void
+static void
 SmartAnalyze(void)
 {
     gchar *folder = NULL;
-    char recent[MAX_LEN];
+    gchar *cmd;
+    char recent[MAX_LEN] = "";
 
     folder = default_import_folder ? default_import_folder : ".";
     // g_message("folder=%s\n", folder);
@@ -945,7 +958,6 @@ SmartAnalyze(void)
     recentByModification(folder, recent);
 
     /*open this file*/
-    gchar* cmd;
     cmd = g_strdup_printf("import auto \"%s\"", recent);
     UserCommand(cmd);
     g_free(cmd);
@@ -995,7 +1007,7 @@ GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     add_import_filters(GTK_FILE_CHOOSER(fc));
 
     add_to_db = gtk_check_button_new_with_label(_("Add to database"));
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(add_to_db), TRUE);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(add_to_db), fAutoDB);
 
     gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER(fc), add_to_db);
 

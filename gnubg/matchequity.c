@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: matchequity.c,v 1.108 2022/03/12 20:39:35 plm Exp $
+ * $Id: matchequity.c,v 1.109 2024/01/21 22:28:47 plm Exp $
  */
 
 #include "config.h"
@@ -755,8 +755,7 @@ static void
 freeP(parameter * pp)
 {
 
-    if (pp->szName)
-        g_free(pp->szName);
+    g_free(pp->szName);
     g_free(pp);
 
 }
@@ -768,8 +767,7 @@ freeMP(metparameters * pmp)
 
     listOLD *pl;
 
-    if (pmp->szName)
-        g_free(pmp->szName);
+    g_free(pmp->szName);
 
     pl = &pmp->lParameters;
 
@@ -1571,12 +1569,10 @@ InitMatchEquity(const char *szFileName)
     for (i = 0; i < 2; i++)
         freeMP(&md.ampPostCrawford[i]);
 
-    if (miCurrent.szName)
-        g_free(miCurrent.szName);
-    if (miCurrent.szFileName)
-        g_free(miCurrent.szFileName);
-    if (miCurrent.szDescription)
-        g_free(miCurrent.szDescription);
+    g_free(miCurrent.szName);
+    g_free(miCurrent.szFileName);
+    g_free(miCurrent.szDescription);
+
     /* save match equity table information */
     memcpy(&miCurrent, &md.mi, sizeof(metinfo));
 

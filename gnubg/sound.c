@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: sound.c,v 1.105 2023/01/12 20:49:08 plm Exp $
+ * $Id: sound.c,v 1.107 2023/09/23 21:28:16 plm Exp $
  */
 
 #include "config.h"
@@ -239,7 +239,7 @@ CoreAudio_PlayFile(char *const fileName)
     /* Load the file contents */
     fileDuration = CoreAudio_PrepareFileAU(&fileAU, &fileFormat, audioFile);
 
-    if (pthread_create(&CAThread, 0L, (void *)CoreAudio_PlayFile_Thread, NULL) == 0)
+    if (pthread_create(&CAThread, 0L, (void *) CoreAudio_PlayFile_Thread, NULL) == 0)
         pthread_detach(CAThread);
     else {
         CoreAudio_ShutDown();
@@ -274,9 +274,12 @@ CoreAudio_PrepareFileAU(AudioUnit * au, AudioStreamBasicDescription * fileFormat
                                            kAudioUnitScope_Global, 0, &rgn, sizeof(rgn)),
                       "kAudioUnitProperty_ScheduledFileRegion", 0.0);
 
-    UInt32 defaultVal = 0;
+    /* Disable priming entirely instead of doing it for 0 samples
+     * to fix bug #64596. As far as I understand it, priming would
+     * matter only for AAC encoded sources, which is not what we use */
+
     CoreAudioChkError(AudioUnitSetProperty(*au, kAudioUnitProperty_ScheduledFilePrime,
-                                           kAudioUnitScope_Global, 0, &defaultVal, sizeof(defaultVal)),
+                                           kAudioUnitScope_Global, 0, NULL, 0),
                       "kAudioUnitProperty_ScheduledFilePrime", 0.0);
 
 
@@ -348,7 +351,7 @@ const char *sound_description[NUM_SOUNDS] = {
     N_("noun|Move"),
     N_("Redouble"),
     N_("Resign"),
-    N_("Roll"),
+    N_("verb|Roll"),
     N_("Take"),
     N_("Human fans"),
     N_("Human wins game"),

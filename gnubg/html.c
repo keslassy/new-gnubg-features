@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: html.c,v 1.264 2022/10/22 18:27:59 plm Exp $
+ * $Id: html.c,v 1.273 2023/10/18 20:30:47 plm Exp $
  */
 
 #include "config.h"
@@ -159,9 +159,7 @@ WriteStyleSheet(FILE * pf, const htmlexportcss hecss)
     else if (hecss == HTML_EXPORT_CSS_EXTERNAL)
         /* write come comments in the file */
 
-        fputs("\n"
-              "/* CSS Stylesheet for " VERSION_STRING " */\n"
-              "/* $Id: html.c,v 1.264 2022/10/22 18:27:59 plm Exp $ */\n", pf);
+        fputs("\n" "/* CSS Stylesheet for " VERSION_STRING " */\n", pf);
 
     fputs("/* This file is distributed as a part of the "
           "GNU Backgammon program. */\n"
@@ -211,11 +209,10 @@ GetStyleGeneral(const int hecss, ...)
 
     static char sz[2048];
     va_list val;
-    stylesheetclass ssc;
     int i = 0;
     int j;
 
-    va_start(val, hecss);
+    va_start(val, (const int) hecss);
 
     switch (hecss) {
     case HTML_EXPORT_CSS_INLINE:
@@ -232,7 +229,7 @@ GetStyleGeneral(const int hecss, ...)
 
     while ((j = va_arg(val, int)) > -1) {
 
-        ssc = (stylesheetclass) j;
+        stylesheetclass ssc = (stylesheetclass) j;
 
         switch (hecss) {
         case HTML_EXPORT_CSS_INLINE:
@@ -460,7 +457,7 @@ printImage(FILE * pf, const char *szImageDir, const char *szImage,
 
 static void
 printPointBBS(FILE * pf, const char *szImageDir, const char *szExtension,
-              int iPoint0, int iPoint1, const int fColor, const int fUp, const htmlexportcss hecss)
+              unsigned int iPoint0, unsigned int iPoint1, const int fColor, const int fUp, const htmlexportcss hecss)
 {
 
     char sz[100];
@@ -473,14 +470,14 @@ printPointBBS(FILE * pf, const char *szImageDir, const char *szExtension,
 
         /* player 0 owns the point */
 
-        sprintf(sz, "p_%s_w_%d", aasz[fUp][fColor], iPoint0);
+        sprintf(sz, "p_%s_w_%u", aasz[fUp][fColor], iPoint0);
         sprintf(szAlt, "%1xX", iPoint0);
 
     } else if (iPoint1) {
 
         /* player 1 owns the point */
 
-        sprintf(sz, "p_%s_b_%d", aasz[fUp][fColor], iPoint1);
+        sprintf(sz, "p_%s_b_%u", aasz[fUp][fColor], iPoint1);
         sprintf(szAlt, "%1xO", iPoint1);
 
     } else {
@@ -672,7 +669,7 @@ printHTMLBoardBBS(FILE * pf, matchstate * pms, int fTurn,
 
 static void
 printPointF2H(FILE * pf, const char *szImageDir, const char *szExtension,
-              int iPoint0, int iPoint1, const int fColor, const int fUp, const htmlexportcss hecss)
+              unsigned int iPoint0, unsigned int iPoint1, const int fColor, const int fUp, const htmlexportcss hecss)
 {
 
     char sz[100];
@@ -682,14 +679,14 @@ printPointF2H(FILE * pf, const char *szImageDir, const char *szExtension,
 
         /* player 0 owns the point */
 
-        sprintf(sz, "b-%c%c-o%d", fColor ? 'g' : 'y', fUp ? 'd' : 'u', (iPoint0 >= 11) ? 11 : iPoint0);
+        sprintf(sz, "b-%c%c-o%u", fColor ? 'g' : 'y', fUp ? 'd' : 'u', (iPoint0 >= 11) ? 11 : iPoint0);
         sprintf(szAlt, "%1xX", iPoint0);
 
     } else if (iPoint1) {
 
         /* player 1 owns the point */
 
-        sprintf(sz, "b-%c%c-x%d", fColor ? 'g' : 'y', fUp ? 'd' : 'u', (iPoint1 >= 11) ? 11 : iPoint1);
+        sprintf(sz, "b-%c%c-x%u", fColor ? 'g' : 'y', fUp ? 'd' : 'u', (iPoint1 >= 11) ? 11 : iPoint1);
         sprintf(szAlt, "%1xO", iPoint1);
 
     } else {
@@ -982,7 +979,7 @@ printHTMLBoardF2H(FILE * pf, matchstate * pms, int fTurn,
 
 static void
 printPointGNU(FILE * pf, const char *szImageDir, const char *szExtension,
-              int iPoint0, int iPoint1, const int fColor, const int fUp, const htmlexportcss hecss)
+              unsigned int iPoint0, unsigned int iPoint1, const int fColor, const int fUp, const htmlexportcss hecss)
 {
 
     char sz[100];
@@ -992,14 +989,14 @@ printPointGNU(FILE * pf, const char *szImageDir, const char *szExtension,
 
         /* player 0 owns the point */
 
-        sprintf(sz, "b-%c%c-x%d", fColor ? 'g' : 'r', fUp ? 'd' : 'u', iPoint0);
+        sprintf(sz, "b-%c%c-x%u", fColor ? 'g' : 'r', fUp ? 'd' : 'u', iPoint0);
         sprintf(szAlt, "%1xX", iPoint0);
 
     } else if (iPoint1) {
 
         /* player 1 owns the point */
 
-        sprintf(sz, "b-%c%c-o%d", fColor ? 'g' : 'r', fUp ? 'd' : 'u', iPoint1);
+        sprintf(sz, "b-%c%c-o%u", fColor ? 'g' : 'r', fUp ? 'd' : 'u', iPoint1);
         sprintf(szAlt, "%1xO", iPoint1);
 
     } else {
@@ -1487,25 +1484,29 @@ static void
 HTMLPrologue(FILE * pf, const matchstate * pms,
              const int iGame, char *aszLinks[4], const htmlexporttype UNUSED(het), const htmlexportcss hecss)
 {
-    char szTitle[100];
+    GString *gszTitle;
 
     int i;
     int fFirst;
 
     /* DTD */
 
-    sprintf(szTitle,
-            ngettext("The score (after %d game) is: %s %d, %s %d",
-                     "The score (after %d games) is: %s %d, %s %d",
-                     pms->cGames), pms->cGames, ap[0].szName, pms->anScore[0], ap[1].szName, pms->anScore[1]);
+    gszTitle = g_string_new(NULL);
+
+    g_string_printf(gszTitle,
+                    ngettext("The score (after %d game) is: %s %d, %s %d",
+                             "The score (after %d games) is: %s %d, %s %d",
+                             pms->cGames), pms->cGames, ap[0].szName, pms->anScore[0], ap[1].szName, pms->anScore[1]);
 
     if (pms->nMatchTo > 0)
-        sprintf(strchr(szTitle, 0),
-                ngettext(" (match to %d point%s)",
-                         " (match to %d points%s)",
-                         pms->nMatchTo),
-                pms->nMatchTo,
-                pms->fCrawford ? _(", Crawford game") : (pms->fPostCrawford ? _(", post-Crawford play") : ""));
+        g_string_append_printf(gszTitle,
+                               ngettext(" (match to %d point%s)",
+                                        " (match to %d points%s)",
+                                        pms->nMatchTo),
+                               pms->nMatchTo,
+                               (pms->nMatchTo > 1 && pms->fCrawford)
+                               ? _(", Crawford game")
+                               : (pms->nMatchTo > 1 && pms->fPostCrawford) ? _(", post-Crawford play") : "");
 
     fprintf(pf,
             "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' "
@@ -1522,9 +1523,9 @@ HTMLPrologue(FILE * pf, const matchstate * pms,
             VERSION_STRING,
             GNUBG_CHARSET, ap[0].szName, ap[1].szName, (pms->nMatchTo) ? _("match play") : _("money game"));
 
-    fprintf(pf, _("%s (analysed by %s)"), szTitle, VERSION_STRING);
+    fprintf(pf, _("%s (analysed by %s)"), gszTitle->str, VERSION_STRING);
 
-    fprintf(pf, "\"/>\n" "<title>%s</title>\n", szTitle);
+    fprintf(pf, "\"/>\n" "<title>%s</title>\n", gszTitle->str);
 
     if (hecss == HTML_EXPORT_CSS_HEAD)
         WriteStyleSheet(pf, hecss);
@@ -1535,7 +1536,9 @@ HTMLPrologue(FILE * pf, const matchstate * pms,
 
     fprintf(pf, _("Game number %d"), iGame + 1);
 
-    fprintf(pf, "</h1>\n" "<h2>%s</h2>\n", szTitle);
+    fprintf(pf, "</h1>\n" "<h2>%s</h2>\n", gszTitle->str);
+
+    g_string_free(gszTitle, TRUE);
 
     /* add links to other games */
 
@@ -1558,12 +1561,8 @@ HTMLPrologue(FILE * pf, const matchstate * pms,
 
 
 /*
- * Print html footer
- *
- * Input:
- *   pf: output file
- *   ms: current match state
- *
+ * Print full HTML footer
+ * Used for export to file
  */
 
 static void
@@ -1574,11 +1573,7 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
     int fFirst;
     int i;
 
-    const char szVersion[] = "$Revision: 1.264 $";
-    int iMajor, iMinor;
-
-    iMajor = atoi(strchr(szVersion, ' '));
-    iMinor = atoi(strchr(szVersion, '.') + 1);
+    char tstr[11];              /* ISO 8601 date format: YYYY-MM-DD\0 */
 
     fputs("\n<!-- Epilogue -->\n\n", pf);
 
@@ -1601,16 +1596,13 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
         fputs("</p>\n", pf);
 
     time(&t);
+    strftime(tstr, 11, "%Y-%m-%d", localtime(&t));
 
     fputs("<hr/>\n" "<address>", pf);
 
     fprintf(pf,
             _("Output generated %s by "
-              "<a href=\"https://www.gnu.org/software/gnubg/\">%s</a>"), ctime(&t), VERSION_STRING);
-
-    fputs(" ", pf);
-
-    fprintf(pf, _("(HTML Export version %d.%d)"), iMajor, iMinor);
+            "<a href=\"https://www.gnu.org/software/gnubg/\">%s</a>"), tstr, VERSION_STRING);
 
     fprintf(pf,
             "</address>\n"
@@ -1624,18 +1616,13 @@ HTMLEpilogue(FILE * pf, const matchstate * UNUSED(pms), char *aszLinks[4], const
             "src=\"http://jigsaw.w3.org/css-validator/images/vcss\" "
             "alt=\"%s\"/>" "</a>\n" "</p>\n" "</body>\n" "</html>\n", _("Valid XHTML 1.0 Strict!"), _("Valid CSS!"));
 
-
 }
 
 
 
 /*
- * Print html footer.
- *
- * Input:
- *   pf: output file
- *   ms: current match state
- *
+ * Print short HTML footer.
+ * Used for copy to GammOnLine
  */
 
 static void
@@ -1644,26 +1631,14 @@ HTMLEpilogueComment(FILE * pf)
 
     time_t t;
 
-    const char szVersion[] = "$Revision: 1.264 $";
-    int iMajor, iMinor;
-    char *pc;
-
-    iMajor = atoi(strchr(szVersion, ' '));
-    iMinor = atoi(strchr(szVersion, '.') + 1);
+    char tstr[11];              /* ISO 8601 date format: YYYY-MM-DD\0 */
 
     time(&t);
-
-    pc = ctime(&t);
-    if ((pc = strchr(pc, '\n')))
-        *pc = 0;
+    strftime(tstr, 11, "%Y-%m-%d", localtime(&t));
 
     fputs("\n<!-- Epilogue -->\n\n", pf);
 
-    fprintf(pf, _("<!-- Output generated %s by %s " "(https://www.gnu.org/software/gnubg/) "), pc, VERSION_STRING);
-
-    fputs(" ", pf);
-
-    fprintf(pf, _("(HTML Export version %d.%d)"), iMajor, iMinor);
+    fprintf(pf, _("<!-- Output generated %s by %s " "(https://www.gnu.org/software/gnubg/) "), tstr, VERSION_STRING);
 
     fputs(" -->", pf);
 }
@@ -2181,12 +2156,12 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
     fprintf(pf,
             "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" %s>\n" "<tr>\n", GetStyle(CLASS_MOVETABLE, hecss));
     fprintf(pf, "<th %s colspan=\"2\">%s</th>\n",
-            GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVENUMBER, -1), _("#"));
-    fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVEPLY, -1), _("Ply"));
-    fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVEMOVE, -1), Q_("noun|Move"));
+            GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVENUMBER, -1), _("#"));
+    fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVEPLY, -1), _("Ply"));
+    fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVEMOVE, -1), Q_("noun|Move"));
     fprintf(pf,
             "<th %s>%s</th>\n" "</tr>\n",
-            GetStyleGeneral(hecss, CLASS_MOVEHEADER, CLASS_MOVEEQUITY, -1),
+            GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVEEQUITY, -1),
             (!pms->nMatchTo || !fOutputMWC) ? _("Equity") : _("MWC"));
 
 
@@ -2666,9 +2641,10 @@ HTMLPrintMI(FILE * pf, const char *szTitle, const char *sz)
 static void
 HTMLMatchInfo(FILE * pf, const matchinfo * pmi, const htmlexportcss UNUSED(hecss))
 {
-
-    int i;
-    struct tm tmx;
+    /* the fields below are not used here but are read
+     * inside strftime(), so initialise them.
+     */
+    struct tm tmx = { .tm_sec=0, .tm_min=0, .tm_hour=0, .tm_isdst=-1 };
 
     if (!pmi->nYear &&
         !pmi->pchRating[0] && !pmi->pchRating[1] &&
@@ -2686,7 +2662,7 @@ HTMLMatchInfo(FILE * pf, const matchinfo * pmi, const htmlexportcss UNUSED(hecss
 
     /* ratings */
 
-    for (i = 0; i < 2; ++i)
+    for (int i = 0; i < 2; ++i)
         if (pmi->pchRating[i]) {
             gchar *pch = g_strdup_printf(_("%s's rating"), ap[i].szName);
             HTMLPrintMI(pf, pch, pmi->pchRating[i] ? pmi->pchRating[i] : _("n/a"));
@@ -2716,7 +2692,6 @@ HTMLMatchInfo(FILE * pf, const matchinfo * pmi, const htmlexportcss UNUSED(hecss
     fputs("</table>\n", pf);
 
     fputs("\n<!-- End Match Information -->\n\n", pf);
-
 }
 
 /*
@@ -3234,6 +3209,7 @@ CommandExportPositionGOL2Clipboard(char *UNUSED(sz))
 {
     char *szClipboard;
     long l;
+    size_t s;
     FILE *pf;
     char *tmpFile;
 
@@ -3264,23 +3240,25 @@ CommandExportPositionGOL2Clipboard(char *UNUSED(sz))
 
     l = ftell(pf);
 
-    if (fseek(pf, 0L, SEEK_SET)) {
+    if (l < 0 || fseek(pf, 0L, SEEK_SET)) {
         outputerr(_("Error reading temporary file"));
         return;
     }
 
     /* copy file to clipboard */
 
-    szClipboard = (char *) malloc(l + 1);
+    s = (size_t) l;
 
-    if (fread(szClipboard, 1, l, pf) != (unsigned long) l) {
+    szClipboard = (char *) g_malloc(s + 1);
+
+    if (fread(szClipboard, 1, s, pf) != s) {
         outputerr(_("Error reading temporary file"));
     } else {
-        szClipboard[l] = 0;
+        szClipboard[s] = 0;
         TextToClipboard(szClipboard);
     }
 
-    free(szClipboard);
+    g_free(szClipboard);
     fclose(pf);
     g_unlink(tmpFile);
     g_free(tmpFile);

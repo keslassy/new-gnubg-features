@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-## $Id: Makefile.am,v 1.275 2022/10/16 19:05:38 plm Exp $
+## $Id: Makefile.am,v 1.276 2023/02/25 23:03:23 plm Exp $
 
 ACLOCAL_AMFLAGS = -I m4
 
@@ -194,7 +194,7 @@ if USE_PYTHON
 gnubg_LDADD += @PYTHON_LIBS@
 endif
 if USE_BOARD3D
-gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GLU_LIBS) $(EPOXY_LIBS)
+gnubg_LDADD += -L$(srcdir)/board3d board3d/libboard3d.la $(GTKGLEXT_LIBS) $(GL_LIBS) $(GLU_LIBS) $(EPOXY_LIBS)
 endif
 
 if WIN32

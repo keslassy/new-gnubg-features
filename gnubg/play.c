@@ -15,21 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: play.c,v 1.478 2022/12/13 22:14:50 plm Exp $
+ * $Id: play.c,v 1.485 2023/09/14 19:36:03 plm Exp $
  */
-
-/*
-01/2023: Isaac Keslassy: introduced "fMarkedSamePlayer":
-- MOTIVATION: When reviewing her mistakes in a game, a user may not be interested
-     in the mistakes of her opponent. Unfortunately, the current red arrow that
-     enables users to skip moves and jump directly to the mistakes, also forces
-     them to check the mistakes of both players. 
-- IDEA: Very simply, (1) a checkbox in Settings>Options>Other enables a user to focus 
-    only on the marked moves of a given player. 
-    (2) To do so, select a move of the desired player then click on next/previous 
-    marked move as previously. If the checkbox was enabled, then it will skip
-    the opponent's mistakes.
-*/
 
 #include "config.h"
 
@@ -105,6 +92,8 @@ statcontext scMatch;
 static int fComputerDecision = FALSE;
 static int fEndGame = FALSE;
 static int fCrawfordState = -1;
+static long nSessionLen;
+
 int automaticTask = FALSE;
 
 typedef enum {
@@ -868,7 +857,7 @@ NewGame(void)
         return -1;
     }
 
-    if (fDisplay) {
+    if (fDisplay && !automaticTask) {
         outputnew();
         outputf(_("%s rolls %u, %s rolls %u.\n"), ap[0].szName, ms.anDice[0], ap[1].szName, ms.anDice[1]);
     }
@@ -1631,6 +1620,7 @@ CancelCubeAction(void)
 static void
 StartAutomaticPlay(void)
 {
+    /* FIXME? doesn't PLAYER_EXTERNAL imply automatic task as well ? */
     if (ap[0].pt == PLAYER_GNU && ap[1].pt == PLAYER_GNU) {
         automaticTask = TRUE;
 #if defined (USE_GTK)
@@ -1799,7 +1789,7 @@ NextTurn(int fPlayNext)
         fCrawfordState = ms.fCrawford | (ms.fPostCrawford << 1);
 
 #if defined (USE_GTK)
-        if (!fX || fDisplay)
+        if (!fX || (fDisplay && !automaticTask))
 #endif
             { 
                 CommandShowScore(NULL);
@@ -1813,7 +1803,15 @@ NextTurn(int fPlayNext)
             outputx();
             fComputing = FALSE;
 
-            ShowBoard();
+            StopAutomaticPlay();
+
+            return -1;
+        }
+
+        if (!ms.nMatchTo && ms.cGames >= nSessionLen) {
+            outputl(_("Session complete"));
+            outputx();
+            fComputing = FALSE;
 
             StopAutomaticPlay();
 
@@ -2763,7 +2761,6 @@ StartNewGame(void)
 extern void
 CommandNewGame(char *UNUSED(sz))
 {
-    
     if (ms.nMatchTo && (ms.anScore[0] >= ms.nMatchTo || ms.anScore[1] >= ms.nMatchTo)) {
         outputl(_("The match is already over."));
         return;
@@ -2900,7 +2897,7 @@ CommandNewMatch(char *sz)
 }
 
 extern void
-CommandNewSession(char *UNUSED(sz))
+CommandNewSession(char *sz)
 {
     if (!get_input_discard())
         return;
@@ -2909,6 +2906,14 @@ CommandNewSession(char *UNUSED(sz))
     if (fX)
         GTKClearMoveRecord();
 #endif
+
+    if (sz == NULL)
+	nSessionLen = LONG_MAX;
+    else {
+        nSessionLen = strtol(sz, NULL, 10);
+        if (nSessionLen <= 0)
+            nSessionLen = LONG_MAX;
+    }
 
     FreeMatch();
     ClearMatch();
@@ -3166,6 +3171,8 @@ MoveIsCMarked(moverecord * pmr)
     case MOVE_NORMAL:
         if (pmr->CubeDecPtr->cmark != CMARK_NONE)
             return TRUE;
+        if (pmr->ml.amMoves == NULL)	/* can happen with background analysis, byg ? */
+            return FALSE;
         for (j = 0; j < pmr->ml.cMoves; j++) {
             if (pmr->ml.amMoves[j].cmark != CMARK_NONE)
                 return TRUE;
@@ -3239,12 +3246,6 @@ extern int
 InternalCommandNext(int mark, int cmark, int n)
 {
     int done = 0;
-    // char tmp[FORMATEDMOVESIZE];
-    // TanBoard anBoard;
-    int keyPlayer=-1;
-    int init=1;
-
-    // g_message("start: fMarkedSamePlayer=%d, mark=%d, cmark=%d, n=%d\n",fMarkedSamePlayer,mark,cmark,n);
 
     if (mark || cmark) {
         listOLD *pgame;
@@ -3256,46 +3257,16 @@ InternalCommandNext(int mark, int cmark, int n)
             /* current game not found */
             return 0;
 
-        /* we need to increment the count if we're pointing to a marked move 
-        ... b/c if we initially point at a marked move, then when we start by it in the 
-        while below we immediately decrement, so we essentially want to increment+decrement
-        to skip it in practice and look for the next one 
-        */
-        if (p->p && (mark && MoveIsMarked((moverecord *) p->p))){
+        /* we need to increment the count if we're pointing to a marked move */
+        if (p->p && (mark && MoveIsMarked((moverecord *) p->p)))
             ++n;
-            // g_message("incremented to n=%d\n",n);
-        }
-        if (p->p && (cmark && MoveIsCMarked((moverecord *) p->p))){
+        if (p->p && (cmark && MoveIsCMarked((moverecord *) p->p)))
             ++n;
-            // g_message("cmarked incremented to n=%d\n",n);
-        }
 
         while (p->p) {
             pmr = (moverecord *) p->p;
-            /* 
-            When the checkbox option fMarkedSamePlayer is set:
-            If we just call the function and get into this while loop for the first time,
-            then we set init=1 and determine the player that we want to focus on.
-            In the next marked moves, we check if it's the same player.
-            */
-            if(fMarkedSamePlayer && init){
-                keyPlayer=pmr->fPlayer;
-                init=0;
-            }
-            // InitBoard(anBoard, ms.bgv);
-            // g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
-            
-            if(fMarkedSamePlayer){
-                if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
-                    // g_message("got to break, n=%d\n",n);
-                    break;
-                }
-            } else {
-                if (mark && MoveIsMarked(pmr)  && (--n <= 0)){
-                    // g_message("got to break, n=%d\n",n);
-                    break;
-                }
-            }
+            if (mark && MoveIsMarked(pmr) && (--n <= 0))
+                break;
             if (cmark && MoveIsCMarked(pmr) && (--n <= 0))
                 break;
             p = p->plNext;
@@ -3318,7 +3289,6 @@ InternalCommandNext(int mark, int cmark, int n)
             ChangeGame(pgame->p);
 
         plLastMove = p->plPrev;
-            //g_message("got to break, n=%d\n",plLastMove->p->);
         CalculateBoard();
         ShowMark(pmr);
     } else {
@@ -3634,11 +3604,6 @@ CommandPrevious(char *sz)
     int cmark = FALSE;
     listOLD *p;
     moverecord *pmr = NULL;
-    int keyPlayer=-1;
-    int init=1;
-    /*for debugging: */
-    // char tmp[FORMATEDMOVESIZE];
-    // TanBoard anBoard;
 
     if (!plGame) {
         outputl(_("No game in progress (type `new game' to start one)."));
@@ -3694,35 +3659,8 @@ CommandPrevious(char *sz)
 
         while ((p->p) != 0) {
             pmr = (moverecord *) p->p;
-
-            /* See explanations on fMarkedSamePlayer (focusing on same player when 
-            jumping between marked moves) in function InternalCommandNext(); here 
-            the commands are copied verbatim.
-            Note that here we look at the moves backwards, so we don't know the player 
-            name of the current move, only that of the previous move. In general, it's
-            the other player: if player 0 played previously, it's likely that I am 
-            now focusing on player 1. 
-            However, if we are at the start of a game, the same player who 
-            starts the game may also have ended the previous game. So in a small 
-            minority of cases, we may switch to the wrong player. 
-            */
-            // InitBoard(anBoard, ms.bgv);
-            // g_message("player=%d, keyPlayer=%d,move index i=%d; move=%s, n=%d\n",pmr->fPlayer,keyPlayer,pmr->n.iMove, FormatMove(tmp, (ConstTanBoard) anBoard, pmr->n.anMove),n);
-            
-            if(fMarkedSamePlayer && init){
-                keyPlayer=1-pmr->fPlayer;
-                init=0;
-            }
-            if(fMarkedSamePlayer){
-                if (mark  && (pmr->fPlayer == keyPlayer) && MoveIsMarked(pmr)  && (--n <= 0)){
-                    break;
-                }
-            } else {
-                if (mark && MoveIsMarked(pmr)  && (--n <= 0)){
-                    break;
-                }
-            }
-
+            if (mark && MoveIsMarked(pmr) && (--n <= 0))
+                break;
             if (cmark && MoveIsCMarked(pmr) && (--n <= 0))
                 break;
 
@@ -4176,9 +4114,7 @@ SetMatchID(const char *szMatchID)
     ms.fJacoby = lfJacoby;
 
     if (anDice[0]) {
-        gchar *sz = g_strdup_printf("%u %u", anDice[0], anDice[1]);
-        CommandSetDice(sz);
-        g_free(sz);
+        SetDice(anDice[0], anDice[1]);
     }
 
     if (fCubeOwner != -1) {
@@ -4188,14 +4124,11 @@ SetMatchID(const char *szMatchID)
         AddMoveRecord(pmr);
     }
 
-    if (nCube != 1) {
-        gchar *sz = g_strdup_printf("%d", nCube);
-        CommandSetCubeValue(sz);
-        g_free(sz);
-    }
+    if (nCube != 1)
+        SetCubeValue(nCube);
 
     if (strlen(szID))
-        CommandSetBoard(szID);
+        SetBoard(szID);
 
     UpdateSetting(&ms.gs);
     UpdateSetting(&ms.nCube);
@@ -4214,8 +4147,6 @@ SetMatchID(const char *szMatchID)
         bd->diceRoll[1] = anDice[1];
     }
 #endif
-
-    ShowBoard();
 }
 
 
@@ -4298,8 +4229,8 @@ get_current_moverecord(int *pfHistory)
 
     if (ms.anDice[0] > 0) {
         pmr_hint->mt = MOVE_NORMAL;
-        pmr_hint->anDice[0] = MAX(ms.anDice[0], ms.anDice[1]);
-        pmr_hint->anDice[1] = MIN(ms.anDice[0], ms.anDice[1]);
+        pmr_hint->anDice[0] = ms.anDice[0];
+        pmr_hint->anDice[1] = ms.anDice[1];
     } else if (ms.fDoubled) {
         pmr_hint->mt = MOVE_TAKE;
     } else {
@@ -4516,7 +4447,7 @@ extern const char *
 GetMoveString(moverecord * pmr, int *pPlayer, gboolean addSkillMarks)
 {
     doubletype dt;
-    static char sz[40];
+    static char sz[18 + MAX_NAME_LEN]; /* " (set cube owner %s)" */
     const char *pch = NULL;
     TanBoard anBoard;
     *pPlayer = 0;

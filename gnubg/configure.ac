@@ -19,11 +19,11 @@ dnl You should have received a copy of the GNU General Public License
 dnl along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 dnl
-dnl $Id: configure.ac,v 1.117 2023/01/01 17:48:19 plm Exp $
+dnl $Id: configure.ac,v 1.123 2024/02/04 21:16:25 plm Exp $
 dnl
 
-AC_REVISION($Revision: 1.117 $)
-AC_INIT([GNU Backgammon],m4_esyscmd(echo 1.07.001$VERSION_EXT | tr -d '\n'),[bug-gnubg@gnu.org],[gnubg])
+AC_REVISION($Revision: 1.123 $)
+AC_INIT([GNU Backgammon],m4_esyscmd(echo 1.08.001$VERSION_EXT | tr -d '\n'),[bug-gnubg@gnu.org],[gnubg])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR(gnubg.c)
@@ -119,8 +119,14 @@ dnl
 dnl yacc and lex setup
 dnl
 
-AC_PROG_YACC
+# Sometimes Flex is installed as Lex, e.g., NetBSD.
+AC_CHECK_PROG([FLEX], [flex lex], [flex])
+# Force the use of `missing' to wrap Flex invocations.
+AM_MISSING_PROG([LEX], [$FLEX])
+
 AM_PROG_LEX
+AX_PROG_FLEX_VERSION([2.5.9],,AC_MSG_ERROR([flex 2.5.9 or higher is needed to build GNU Backgammon]))
+AC_PROG_YACC
 AM_YFLAGS='-d'
 AC_SUBST(AM_YFLAGS)
 
@@ -143,6 +149,7 @@ PKG_CHECK_MODULES(SQLITE, [sqlite3], have_sqlite="yes", AC_MSG_WARN([no sqlite s
 
 if test "x$win32" = "xyes"; then
     have_canberra="no"
+    have_gl="yes"
     have_glu="yes"
 else
     if test "x$darwin" = "xyes"; then
@@ -154,12 +161,13 @@ else
             PKG_CHECK_MODULES(CANBERRA, [libcanberra-gtk], have_canberra="yes", AC_MSG_WARN([no libcanberra-gtk support]))
         fi
     fi
+    PKG_CHECK_MODULES(GL, [gl], have_gl="yes", AC_MSG_WARN([no gl support]))
     PKG_CHECK_MODULES(GLU, [glu], have_glu="yes", AC_MSG_WARN([no glu support]))
 fi
 
 if test "x$with_gtk" != "xno"; then
     if test "x$with_gtk3" = "xyes"; then
-        PKG_CHECK_MODULES(GTK, [gtk+-3.0], have_gtk="yes", AC_MSG_WARN([no gtk3 support]))
+        PKG_CHECK_MODULES(GTK, [gtk+-3.0 >= 3.22.0], have_gtk="yes", AC_MSG_WARN([no gtk3 support]))
     else
         PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= 2.18.0], have_gtk="yes", AC_MSG_WARN([no gtk2 support]))
     fi
@@ -249,9 +257,9 @@ AC_CHECK_LIB(m,sqrt)
 AC_SEARCH_LIBS(gethostbyname,nsl)
 AC_SEARCH_LIBS(inet_aton,resolv)
 if test "x$win32" = "xyes"; then
-AC_DEFINE(HAVE_SOCKETS,1,Define if the system supports AF_LOCAL sockets.)
+AC_DEFINE(HAVE_SOCKETS,1,Define if the system supports sockets.)
 else
-AC_SEARCH_LIBS(connect,socket,AC_DEFINE(HAVE_SOCKETS,1,Define if the system supports AF_LOCAL sockets.))
+AC_SEARCH_LIBS(connect,socket,AC_DEFINE(HAVE_SOCKETS,1,Define if the system supports sockets.))
 fi
 
 dnl
@@ -373,7 +381,7 @@ if test "$with_board3d" != "no" && test "$with_gtk3" = "yes"; then
 		no_board3d="no"
 	fi
 else
-	if test "x$have_gtk" = "xyes" && test "x$have_gtkglext" = "xyes" && test "x$have_glu" = "xyes"; then
+	if test "x$have_gtk" = "xyes" && test "x$have_gtkglext" = "xyes" && test "x$have_gl" = "xyes" && test "x$have_glu" = "xyes"; then
 		AC_DEFINE(USE_BOARD3D,1, [Define if you want to use the 3D boards])
 		no_board3d="no"
 	fi
@@ -426,13 +434,12 @@ AS_HELP_STRING([--with-python=program],
 
 if test "x$with_python" != "xno"; then
     AM_PATH_PYTHON(2.6)
-    AX_PYTHON_DEVEL()
-    have_python=$ac_python_version
-    if test "x$have_python" != "x"; then
+    AX_PYTHON_DEVEL([], [true])
+    if test "x$ax_python_devel_found" != "xno"; then
         AC_DEFINE(USE_PYTHON,1,[Define if you want to use Python inside GNUbg])
     fi
 fi
-AM_CONDITIONAL(USE_PYTHON, test x"$with_python" != x"no" && test x"$have_python" != x"no" )
+AM_CONDITIONAL(USE_PYTHON, test x"$with_python" != x"no" && test x"$ax_python_devel_found" != x"no" )
 
 dnl
 dnl SIMD

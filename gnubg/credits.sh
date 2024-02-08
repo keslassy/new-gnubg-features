@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Copyright (C) 1998-2004 Gary Wong <gtw@gnu.org>
-# Copyright (C) 2004-2014 the AUTHORS
+# Copyright (C) 2004-2023 the AUTHORS
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #
-# $Id: credits.sh,v 1.166 2022/01/13 21:19:15 plm Exp $
+# $Id: credits.sh,v 1.169 2024/01/22 20:43:24 plm Exp $
 # 
 
 authors=/tmp/auth.$$
@@ -190,6 +190,7 @@ Frank Worrell
 Christopher D. Yep
 Anders Zachrison
 Douglas Zare
+Tilemachos Zoidis
 Louis Zulli
 EOF
 
@@ -272,7 +273,7 @@ cat > credits.c <<EOF
 #include "credits.h"
 
 const char aszCOPYRIGHT[] = N_("Copyright (C) 1999-2004 Gary Wong.\n"
-                               "Copyright (C) 2004-2022 the AUTHORS; for details type \`show version'.");
+                               "Copyright (C) 2004-2024 the AUTHORS; for details type \`show version'.");
 
 credEntry ceAuthors[] = {
 EOF
@@ -424,7 +425,7 @@ cat >> AUTHORS <<'EOF'
                Austin Appleby (the MurmurHash3 hashing function)
      Ulrich Drepper (an implementation of the public domain MD5 algorithm)
             Bob Jenkins (the ISAAC pseudo random number generator)
-       Takuji Nishimura and Makoto Matsumoto (the Mersenne Twister PRNG)
+         Mutsuo Saito and Makoto Matsumoto (the Mersenne Twister PRNG)
                    Brian Paul (the TR tile rendering library)
              Claes Tornberg (the mec match equity table generator)
 

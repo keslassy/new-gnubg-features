@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: makebearoff.c,v 1.111 2022/07/26 21:16:44 plm Exp $
+ * $Id: makebearoff.c,v 1.112 2023/08/09 21:12:14 plm Exp $
  */
 
 #include "config.h"
@@ -135,9 +135,11 @@ XhashAdd(xhash * ph, const unsigned int iKey, const void *data, const int size)
     }
 
     ph->phe[l].iKey = iKey;
-    ph->phe[l].p = g_malloc(size);
-    memcpy(ph->phe[l].p, data, size);
-
+#if GLIB_CHECK_VERSION (2,67,4)
+    ph->phe[l].p = g_memdup2(data, size);
+#else
+    ph->phe[l].p = g_memdup(data, size);
+#endif
 }
 
 
@@ -1265,7 +1267,7 @@ generate_ts(const int nTSP, const int nTSC,
 static void
 version(void)
 {
-    printf("makebearoff $Revision: 1.111 $\n");
+    printf("makebearoff $Revision: 1.112 $\n");
 }
 
 
