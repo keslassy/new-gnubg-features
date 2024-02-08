@@ -944,7 +944,24 @@ SetCubeValue(int n)
 
             AddMoveRecord(pmr);
 
-            outputf(_("The cube has been set to %d.\n"), n);
+            return 0;
+        }
+
+    return 1;
+}
+
+extern void
+CommandSetCubeValue(char *sz)
+{
+
+    int n, rc;
+
+    n = ParseNumber(&sz);
+
+    rc = SetCubeValue(n);
+
+    if (rc == 0) {
+        outputf(_("The cube has been set to %d.\n"), n);
 
 #if defined(USE_GTK)
         if (fX)
