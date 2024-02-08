@@ -4432,7 +4432,7 @@ static GtkToggleActionEntry toggleActionEntries[] = {
     { "DockPanelsAction", NULL, N_("_Dock panels"), NULL, NULL, G_CALLBACK(ToggleDockPanels), FALSE },
     { "ShowIDStatusBarAction", NULL, N_("Show _ID in status bar"), NULL, NULL, G_CALLBACK(ToggleShowingIDs), FALSE },   /* TOGGLE */
     { "FullScreenAction", NULL, N_("Full screen"), "F11", NULL, G_CALLBACK(DoFullScreenMode), FALSE },  /* TOGGLE */
-  //  { "PlayClockwiseAction", NULL, N_("Play _Clockwise"), NULL, N_("Reverse direction of play"), G_CALLBACK(ToggleClockwise), FALSE }   /* TOGGLE */
+    { "PlayClockwiseAction", NULL, N_("Play _Clockwise"), NULL, N_("Reverse direction of play"), G_CALLBACK(ToggleClockwise), FALSE }   /* TOGGLE */
 };
 
 static GtkRadioActionEntry toolbarRadioActionEntries[] = {
