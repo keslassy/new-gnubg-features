@@ -29,7 +29,7 @@
 
 #define TOOLBAR_ACTION_OFFSET 10000
 
-#if defined(USE_GTKUIMANAGER)
+#if !defined(USE_GTKITEMFACTORY)
 extern GtkUIManager *puim;
 #endif
 

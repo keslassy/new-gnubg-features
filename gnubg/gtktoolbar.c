@@ -172,7 +172,6 @@ extern void ToggleClockwise(void)
         UserCommand(sz);
         g_free(sz);
         UserCommand("save settings");
-    }
 }
 
 // 
@@ -612,7 +611,9 @@ ToolbarNew(void)
         _("Analyse current match (set default behaviour in Settings -> Analysis)"),
         G_CALLBACK(GTKAnalyzeCurrent), NULL);
 
-    /* Analyze file button */
+    /* Analyze file button 
+    ... switching to the British "analyse" even though "analyze" is much more common in the world...
+    */
     ptw->pwAnalyzeFile =
         ToolbarAddButton(GTK_TOOLBAR(pwtb), GTK_STOCK_DIRECTORY, _("Analyse File"),
         _("Analyze match from file (set default behaviour in Settings -> Analysis -> Analysis Buttons:"
