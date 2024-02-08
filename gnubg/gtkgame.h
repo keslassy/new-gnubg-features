@@ -165,13 +165,12 @@ extern void ShowMove(hintdata * phd, const int f);
 extern void SwapBoardToPanel(int ToPanel, int updateEvents);
 extern void DoHideAllPanels(int updateEvents);
 #if defined(USE_GTKITEMFACTORY)
-// extern void ToggleClockwise(GtkToggleAction * action, gpointer user_data);
 extern void ToggleDockPanels(gpointer p, guint n, GtkWidget * pw);
 #else
 extern void ToggleEdit(GtkToggleAction * action, gpointer user_data);
+extern void ToggleClockwise(GtkToggleAction * action, gpointer user_data);
 extern void ToggleDockPanels(GtkToggleAction * action, gpointer user_data);
 #endif
-extern void ToggleClockwise(void);
 extern void GTKUndo(void);
 extern void UserCommand(const char *szCommand);
 extern void ShowToolbar(void);
