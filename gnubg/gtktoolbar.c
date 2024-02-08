@@ -118,6 +118,7 @@ toggle_button_from_images(GtkWidget * pwImageOff, GtkWidget * pwImageOn, char *s
 }
 #endif
 
+#if 0	/* not (no longer? not yet?) used */
 extern void
 ToolbarSetAnalyzeCurrent(GtkWidget * pwToolbar, const int f)
 {
@@ -137,6 +138,8 @@ ToolbarSetAnalyzeFile(GtkWidget * pwToolbar, const int f)
 
     gtk_widget_set_sensitive(ptw->pwAnalyzeFile, f);
 }
+#endif
+
 extern void
 ToolbarSetPlaying(GtkWidget * pwToolbar, const int f)
 {

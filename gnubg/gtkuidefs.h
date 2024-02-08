@@ -232,13 +232,15 @@
 	    "<toolitem name='Reject' action='RejectAction' />" \
 	    "<toolitem name='Double' action='DoubleAction' />" \
 	    "<toolitem name='Resign' action='ResignAction' />" \
+	    "<toolitem name='EndGame' action='EndGameAction' />" \
 	    "<separator/>" \
 	    "<toolitem name='Undo' action='UndoAction' />" \
 	    "<toolitem name='Hint' action='HintAction' />" \
 	    "<toolitem name='EditPosition' action='EditPositionAction' />" \
-	    "<separator/>" \
-	    "<toolitem name='Analyse' action='AnalyseCurrentAction' />" \
-	    "<toolitem name='Analyse File' action='AnalyseFileAction' />" \
+	    "<toolitem name='PlayClockwise' action='PlayClockwiseAction' />" \
+            "<separator/>" \
+            "<toolitem name='Analyse' action='AnalyseCurrentAction' />" \
+            "<toolitem name='Analyse File' action='AnalyseFileAction' />" \
 	    "<separator expand='true'/>" \
 	    "<toolitem name='PreviousMarkedMove' action='GoPreviousMarkedMoveAction' />" \
 	    "<toolitem name='PreviousCMarkedMove' action='GoPreviousCMarkedMoveAction' />" \
