@@ -1556,7 +1556,6 @@ RelationalOptions(void)
 extern void
 GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
-    
     GtkWidget *pwRun, *pwDialog, *pwHbox2, *pwVbox2,
         *pwPlayerFrame, *pwUpdate, *pwPaned, *pwVbox, *pwErase, *pwOpen,
         *pwn, *pwLabel, *pwScrolled, *pwHbox, *histButton;

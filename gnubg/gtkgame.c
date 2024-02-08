@@ -4356,8 +4356,8 @@ static GtkActionEntry actionEntries[] = {
     { "BatchAnalyseAction", NULL, N_("Batch analyse..."), NULL, NULL, G_CALLBACK(GTKBatchAnalyse) },
     { "MatchOrSessionStatsAction", NULL, N_("Match or session statistics"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_STATISTICS_MATCH) },
-    {"PlotMWCAction", NULL, N_("Plot MWC"), NULL, NULL,
-     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MWC)},
+    { "PlotMWCAction", NULL, N_("Plot MWC"), NULL, NULL,
+     CMD_ACTION_CALLBACK_FROMID(CMD_SHOW_MWC) },
     { "AddMatchOrSessionStatsToDBAction", GTK_STOCK_ADD, N_("Add match or session to database"), NULL, NULL,
      G_CALLBACK(GtkRelationalAddMatch) },
     { "ShowRecordsAction", NULL, N_("Show Records"), NULL, NULL, G_CALLBACK(GtkShowRelational) },
@@ -4606,7 +4606,7 @@ static GtkItemFactoryEntry aife[] = {
     { N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL },
     { N_("/_Analyse/Match or session statistics"), NULL, G_CALLBACK(Command),
      CMD_SHOW_STATISTICS_MATCH, NULL, NULL },
-    {N_("/_Analyse/Plot MWC"), NULL, Command,
+    {N_("/_Analyse/Plot MWC"), NULL, G_CALLBACK(Command), //Command,
      CMD_SHOW_MWC, NULL, NULL},
     { N_("/_Analyse/-"), NULL, NULL, 0, "<Separator>", NULL },
     { N_("/_Analyse/Add match or session to database"), NULL,
@@ -8220,6 +8220,9 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/GoMenu/PreviousCMarkedMove"), plGame != NULL);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/FileMenu/MatchInfo"), !ListEmpty(&lMatch));
+
+        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu/Quiz"), TRUE);                                 
+
         enable_menu(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu"), ms.gs == GAME_PLAYING);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/AnalyseFile"), TRUE);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/BatchAnalyse"), TRUE);
@@ -8238,8 +8241,16 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget
                                  (puim, "/MainMenu/AnalyseMenu/ClearAnalysisMenu/MatchOrSession"), !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
+                                                           "/MainMenu/AnalyseMenu/AddMatchOrSessionStatsToDB"),
+                                 !ListEmpty(&lMatch));
+        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/AnalyseMenu/MatchOrSessionStats"),
                                  !ListEmpty(&lMatch));
+        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
+                                                           "/MainMenu/AnalyseMenu/PlotMWC"),
+                                 !ListEmpty(&lMatch) && (ms.nMatchTo > 0));                              
+        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/ShowRecords"), TRUE);
+        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/PlotHistory"), TRUE);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/MatchEquityTable"), TRUE);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/EvaluationSpeed"), TRUE);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
@@ -8282,11 +8293,7 @@ GTKSet(void *p)
                                                            "/MainMenu/AnalyseMenu/RolloutMenu/Match"),
                                  !ListEmpty(&lMatch));
 
-        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
-                                                           "/MainMenu/AnalyseMenu/AddMatchOrSessionStatsToDB"),
-                                 !ListEmpty(&lMatch));
-        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/ShowRecords"), TRUE);
-        gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GameMenu/Quiz"), TRUE);
+
 
         /*disabling everything when we analyze a game in the background*/
 
@@ -8354,8 +8361,10 @@ GTKSet(void *p)
                                  !ListEmpty(&lMatch));
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MWC),
                                     !ListEmpty(&lMatch) && (ms.nMatchTo > 0));
-        gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_HISTORY),
-                                 !ListEmpty(&lMatch));
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Show Records"), TRUE);                                    
+        gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_HISTORY), TRUE);
+                                //  !ListEmpty(&lMatch));
+        // gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Plot History"), TRUE);
 
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_MATCHEQUITYTABLE), TRUE);
         gtk_widget_set_sensitive(gtk_item_factory_get_widget_by_action(pif, CMD_SHOW_CALIBRATION), TRUE);
@@ -8383,7 +8392,6 @@ GTKSet(void *p)
                     "/Analyse/Add match or session to database"), 
                     !ListEmpty(&lMatch));
 
-        gtk_widget_set_sensitive(gtk_item_factory_get_widget(pif, "/Analyse/Show Records"), TRUE);
 
         
         /*disabling everything when we analyze a game in the background*/

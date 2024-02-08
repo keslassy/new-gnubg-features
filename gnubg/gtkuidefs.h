@@ -241,9 +241,9 @@
 	    "<toolitem name='Hint' action='HintAction' />" \
 	    "<toolitem name='EditPosition' action='EditPositionAction' />" \
 	    "<toolitem name='PlayClockwise' action='PlayClockwiseAction' />" \
-            "<separator/>" \
-            "<toolitem name='Analyse' action='AnalyseCurrentAction' />" \
-            "<toolitem name='AnalyseFile' action='AnalyseFileAction' />" \
+        "<separator/>" \
+        "<toolitem name='Analyse' action='AnalyseCurrentAction' />" \
+        "<toolitem name='AnalyseFile' action='AnalyseFileAction' />" \
 	    "<separator expand='true'/>" \
 	    "<toolitem name='PreviousMarkedMove' action='GoPreviousMarkedMoveAction' />" \
 	    "<toolitem name='PreviousCMarkedMove' action='GoPreviousCMarkedMoveAction' />" \
