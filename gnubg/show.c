@@ -526,6 +526,12 @@ CommandShowDelay(char *UNUSED(sz))
 #endif
 }
 
+extern void
+CommandShowAliases(char *UNUSED(sz))
+{
+    outputf(_("Aliases for player 1 when importing MAT files is set to \"%s\".\n "), player1aliases);
+}
+
 #if CACHE_STATS
 extern void
 CommandShowCache(char *UNUSED(sz))
@@ -735,14 +741,6 @@ CommandShowEvaluation(char *UNUSED(sz))
 
 }
 
-#if defined(USE_GTK)
-extern void
-CommandShowHistory(char *UNUSED(sz))
-{
-    ComputeHistory();
-}
-#endif
-
 extern void
 CommandShowHistory(char *UNUSED(sz))
 {
@@ -925,7 +923,8 @@ CommandShowScore(char *UNUSED(sz))
         outputf(ngettext(" (match to %d point%s)",
                          " (match to %d points%s)",
                          ms.nMatchTo),
-                ms.nMatchTo, (ms.nMatchTo > 1 && ms.fCrawford) ? _(", Crawford game") : (ms.nMatchTo > 1 && ms.fPostCrawford) ? _(", post-Crawford play") : "");
+                ms.nMatchTo, ms.fCrawford ? _(", Crawford game") : (ms.fPostCrawford ? _(", post-Crawford play") : ""));
+                //ms.nMatchTo, (ms.nMatchTo > 1 && ms.fCrawford) ? _(", Crawford game") : (ms.nMatchTo > 1 && ms.fPostCrawford) ? _(", post-Crawford play") : "");
     } else {
         if (ms.fJacoby)
             outputl(_(" (money session, with Jacoby rule)."));
@@ -2384,7 +2383,7 @@ extern void
 CommandShowAutoSave(char *UNUSED(sz))
 {
     outputf(ngettext
-            ("Auto save every %d minute\n", "Auto save every %d minutes\n", nAutoSaveTime), nAutoSaveTime);
+            ("Auto save every %d minutes\n", "Auto save every %d minutes\n", nAutoSaveTime), nAutoSaveTime);
     outputf(fAutoSaveRollout ? _("Match will be autosaved during and after rollouts\n") :
             _("Match will not be autosaved during and after rollouts\n"));
     outputf(fAutoSaveAnalysis ? _("Match will be autosaved during and after analysis\n") :
