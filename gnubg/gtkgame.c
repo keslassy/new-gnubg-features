@@ -514,7 +514,7 @@ CREATE_CMD_ACTION_CALLBACK(CMD_RELATIONAL_ADD_MATCH, "relational add match");
 #endif
 CREATE_CMD_ACTION_CALLBACK(CMD_ROLL, "roll");
 CREATE_CMD_ACTION_CALLBACK(CMD_ROLLOUT, "rollout");
-CREATE_CMD_ACTION_CALLBACK(CMD_SAVE_SETTINGS, "save settings");
+//CREATE_CMD_ACTION_CALLBACK(CMD_SAVE_SETTINGS, "save settings");
 #if 0
 CREATE_CMD_ACTION_CALLBACK(CMD_SET_ANNOTATION_ON, "set annotation on");
 #endif
@@ -8137,6 +8137,7 @@ GTKSet(void *p)
 {
 
     BoardData *bd = BOARD(pwBoard)->board_data;
+                    g_message("GTKSet\n");
 
     if (p == ap) {
         /* Handle the player names. */
@@ -8219,19 +8220,16 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GoMenu/NextCMarkedMove"), plGame != NULL);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/GoMenu/PreviousCMarkedMove"), plGame != NULL);
-
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/FileMenu/MatchInfo"), !ListEmpty(&lMatch));
         enable_menu(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu"), ms.gs == GAME_PLAYING);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/AnalyseFile"), TRUE);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/BatchAnalyse"), TRUE);
-
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/AnalyseMenu/AnalyseMove"),
                                  plLastMove && plLastMove->plNext && plLastMove->plNext->p);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/AnalyseGame"), plGame != NULL);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/AnalyseMenu/AnalyseMatch"), !ListEmpty(&lMatch));
-
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/AnalyseMenu/ClearAnalysisMenu/Move"),
                                  plLastMove && plLastMove->plNext && plLastMove->plNext->p);
@@ -8240,7 +8238,6 @@ GTKSet(void *p)
                                  plGame != NULL);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget
                                  (puim, "/MainMenu/AnalyseMenu/ClearAnalysisMenu/MatchOrSession"), !ListEmpty(&lMatch));
-
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/AnalyseMenu/MatchOrSessionStats"),
                                  !ListEmpty(&lMatch));
@@ -8248,7 +8245,6 @@ GTKSet(void *p)
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/AnalyseMenu/EvaluationSpeed"), TRUE);
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/GameMenu/SwapPlayers"), !ListEmpty(&lMatch));
-
         gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim,
                                                            "/MainMenu/AnalyseMenu/CMarkMenu/CMarkCubeMenu/Clear"),
                                  !ListEmpty(&lMatch));
@@ -8304,7 +8300,6 @@ GTKSet(void *p)
             // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/GoMenu/"), !fBackgroundAnalysisRunning);
             // gtk_widget_set_sensitive(gtk_ui_manager_get_widget(puim, "/MainMenu/HelpMenu/"), !fBackgroundAnalysisRunning);
         } 
-
 
 
 
@@ -8408,7 +8403,6 @@ GTKSet(void *p)
         
         
         
-        
         fAutoCommand = FALSE;
     } else if (p == &ms.fCrawford) {
         bd->crawford_game = ms.fCrawford;
@@ -8470,6 +8464,7 @@ GTKSet(void *p)
             gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pwDetails), showMoveListDetail);
     }
 }
+
 
 
 /* Match stats variables */

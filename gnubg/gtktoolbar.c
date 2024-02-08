@@ -146,7 +146,6 @@ ToolbarSetPlaying(GtkWidget * pwToolbar, const int f)
 
     toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar),
                                            "toolbarwidget");
-
     gtk_widget_set_sensitive(ptw->pwReset, f);
 
 }
@@ -454,7 +453,7 @@ ToolbarNew(void)
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwReset), TRUE);
     ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/Analyse");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
-    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/Analyse File");
+    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyseFile");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeFile), TRUE);
     ptw->pwHint = gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwHint), TRUE);

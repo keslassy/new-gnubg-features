@@ -167,12 +167,15 @@
 	      "</menu>" \
 	      \
 	      "<separator/>" \
+	      "<menuitem name='AnalyseFile' action='AnalyseFileAction' />" \
 	      "<menuitem name='BatchAnalyse' action='BatchAnalyseAction' />" \
 	      "<separator/>" \
 	      "<menuitem name='MatchOrSessionStats' action='MatchOrSessionStatsAction' />" \
+	      "<menuitem name='PlotMWC' action='PlotMWCAction' />" \
 	      "<separator/>" \
 	      "<menuitem name='AddMatchOrSessionStatsToDB' action='AddMatchOrSessionStatsToDBAction' />" \
 	      "<menuitem name='ShowRecords' action='ShowRecordsAction' />" \
+	      "<menuitem name='PlotHistory' action='PlotHistoryAction' />" \
 	      "<separator/>" \
 	      "<menuitem name='DistributionOfRolls' action='DistributionOfRollsAction' />" \
 	      "<menuitem name='TemperatureMap' action='TemperatureMapAction' />" \
@@ -240,7 +243,7 @@
 	    "<toolitem name='PlayClockwise' action='PlayClockwiseAction' />" \
             "<separator/>" \
             "<toolitem name='Analyse' action='AnalyseCurrentAction' />" \
-            "<toolitem name='Analyse File' action='AnalyseFileAction' />" \
+            "<toolitem name='AnalyseFile' action='AnalyseFileAction' />" \
 	    "<separator expand='true'/>" \
 	    "<toolitem name='PreviousMarkedMove' action='GoPreviousMarkedMoveAction' />" \
 	    "<toolitem name='PreviousCMarkedMove' action='GoPreviousCMarkedMoveAction' />" \
