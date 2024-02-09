@@ -252,6 +252,11 @@ int fBackgroundAnalysis = FALSE;
  * since we are not equipped for a second parallel analysis
  */
 int fBackgroundAnalysisRunning = FALSE;
+/*
+ * if we analyze in batch mode, we turn on the following global flag
+ */
+int fBatchAnalysisRunning = FALSE;
+
 /*AR flags*/
 int fGameARRunning = FALSE;
 

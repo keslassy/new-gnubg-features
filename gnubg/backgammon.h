@@ -402,6 +402,7 @@ extern int nTutorSkillCurrent;
 
 extern int fBackgroundAnalysis; /* define whether to analyze in the background*/
 extern int fBackgroundAnalysisRunning; /* when analyzing a match in background */
+extern int fBatchAnalysisRunning; /* when analyzing a match in batch mode */
 #if defined(USE_BOARD3D)
 extern int fSync;
 extern int fResetSync;

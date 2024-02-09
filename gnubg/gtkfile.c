@@ -1008,6 +1008,7 @@ GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     static gchar *last_folder = NULL;
     GtkWidget *add_to_db;
     fInterrupt = FALSE;
+    fBatchAnalysisRunning=TRUE;
 
     folder = last_folder ? last_folder : default_import_folder;
 
@@ -1041,4 +1042,6 @@ GTKBatchAnalyse(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
         fConfirmNew = fConfirmNew_s;
     } else
         gtk_widget_destroy(fc);
+
+    fBatchAnalysisRunning=FALSE;
 }

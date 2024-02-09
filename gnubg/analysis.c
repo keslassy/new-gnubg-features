@@ -1572,7 +1572,7 @@ CommandAnalyseGame(char *UNUSED(sz))
 
     /* see explanations in CommandAnalyseMatch()*/
 #if defined(USE_GTK)
-    if(fBackgroundAnalysis && fX) {
+    if(fBackgroundAnalysis && fX && !fBatchAnalysisRunning) {
         fBackgroundAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
             "feel free to browse and check the early analysis results."), 
@@ -1607,7 +1607,7 @@ CommandAnalyseGame(char *UNUSED(sz))
 
 #if defined(USE_GTK)
     if (fX) {
-        if (fBackgroundAnalysis) {
+        if (fBackgroundAnalysis && !fBatchAnalysisRunning) {
             fBackgroundAnalysisRunning = FALSE;
             ShowBoard(); /* unhide unallowd toolbar items*/
             GTKRegenerateGames(); /* unhide unallowed menu items; problem: it rebuilds 
@@ -1651,7 +1651,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
     /* if we analyze in the background, we turn on a global flag to disable all sorts of 
     buttons during the analysis*/
 #if defined(USE_GTK)
-    if(fBackgroundAnalysis && fX) {
+    if(fBackgroundAnalysis && fX  && !fBatchAnalysisRunning) {
         fBackgroundAnalysisRunning = TRUE;
         ProgressStartValue(_("Background analysis. Browsing-only mode: "
             "feel free to browse and check the early analysis results."), 
@@ -1700,7 +1700,7 @@ CommandAnalyseMatch(char *UNUSED(sz))
 
 #if defined(USE_GTK)
     if (fX) {
-        if(fBackgroundAnalysis) {
+        if(fBackgroundAnalysis  && !fBatchAnalysisRunning) {
             fBackgroundAnalysisRunning = FALSE;
             // CalculateBoard();
             ShowBoard(); /* show toolbar items*/
