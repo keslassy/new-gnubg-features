@@ -908,7 +908,7 @@ DrawGauge(GtkWidget * pw, int i, scoreMapColour toggledColor) {
 static void
 SetHoverText(char buf [], quadrantdata * pq, const scoremap * psm) {
 /*
-This functions sets the hover text.
+This function sets the hover text.
 We first put a header text for special squares (e.g. same score as current match, or money),
     then we put the equities for the 3 alternatives (ND, D/T, D/P).
 Note: we add one more space for "ND" b/c it has one less character than D/T, D/P so they are later aligned
@@ -1399,6 +1399,8 @@ UpdateIsTrueScore(const scoremap * psm, int i, int j)
         else if (!psm->cubeScoreMap && (psm->aaQuadrantData[i][j].isAllowedScore == ALLOWED)) {
             if (psm->pms->nMatchTo - psm->pms->anScore[0] > 1 && psm->pms->nMatchTo - psm->pms->anScore[1] > 1) //no Crawford issue
                 scoreLike=((i == psm->pms->nMatchTo-psm->pms->anScore[0]) && (j == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0;
+            else if (psm->pms->nMatchTo-psm->pms->anScore[0] == 1 && psm->pms->nMatchTo-psm->pms->anScore[1] == 1)
+                scoreLike=((i == 0) && (i == j)) ? 1 : 0; //i=j=0 dmp                       
             else if (psm->pms->nMatchTo-psm->pms->anScore[0] == 1 && psm->pms->fPostCrawford == 0)
                 scoreLike=((i == 1) && (j == psm->pms->nMatchTo-psm->pms->anScore[1])) ? 1 : 0; //i=1 Crawford
             else if (psm->pms->nMatchTo-psm->pms->anScore[1] == 1 && psm->pms->fPostCrawford == 0)
