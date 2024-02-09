@@ -276,6 +276,7 @@ float qNow_NDBeforeMoveError=-1.0; /*extern*/
 // float fQuizAutoAddThreshold=0.1;
 // float fQuizAutoAddThreshold=arSkillLevel[SKILL_VERYBAD]; //<--pb, not constant?
 int fQuizOnePlayer=TRUE;
+int fQuizAtMoney=TRUE;
 // int fQuizSkill;
 skilltype QuizSkill = SKILL_VERYBAD;
 int nQuizSkillCurrent = 0;
@@ -3537,6 +3538,7 @@ SaveMiscSettings(FILE * pf)
         fprintf(pf, "doubtful\n");
 
     fprintf(pf, "set quiz allow %s\n", fUseQuiz ? "on" : "off");
+    fprintf(pf, "set quiz atmoney %s\n", fQuizAtMoney ? "on" : "off");
     fprintf(pf, "set quiz autoadd %s\n", fQuizAutoAdd ? "on" : "off");
     fprintf(pf, "set quiz oneplayer %s\n", fQuizOnePlayer ? "on" : "off");
     fprintf(pf, "set quiz skill ");

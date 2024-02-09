@@ -866,6 +866,7 @@ extern void CommandSetPrompt(char *);
 extern void CommandSetQuizAllow(char *);
 extern void CommandSetQuizAutoAdd(char *);
 extern void CommandSetQuizOnePlayer(char *);
+extern void CommandSetQuizAtMoney(char *);
 extern void CommandSetQuizSkillBad(char *);
 extern void CommandSetQuizSkillDoubtful(char *);
 extern void CommandSetQuizSkillVeryBad(char *);
@@ -1139,6 +1140,7 @@ extern int fQuizAutoAdd; /*for each analysis, add all mistakes of player 1 above
 // extern float fQuizAutoAddThreshold;
 // extern int fQuizSkill;
 extern int fQuizOnePlayer;
+extern int fQuizAtMoney;
 extern int nQuizSkillCurrent;
 extern skilltype QuizSkill;
 extern int fDelayNewMatchTillLeavingConsole;

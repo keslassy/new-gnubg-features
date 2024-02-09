@@ -3960,14 +3960,12 @@ CommandSetTutorSkillVeryBad(char *UNUSED(sz))
 extern void
 CommandSetQuizAllow(char *sz)
 {
-
     SetToggle("quiz-allow", &fUseQuiz, sz, _("Allow quiz mode."), _("Don't allow quiz mode"));
 }
 
 extern void
 CommandSetQuizAutoAdd(char *sz)
 {
-
     SetToggle("quiz-autoadd", &fQuizAutoAdd, sz,
               _("Set quiz automatic collection of positions."),
               _("Cancel quiz automatic collection of positions."));
@@ -3976,16 +3974,23 @@ CommandSetQuizAutoAdd(char *sz)
 extern void
 CommandSetQuizOnePlayer(char *sz)
 {
-
     SetToggle("quiz-oneplayer", &fQuizOnePlayer, sz,
               _("Any quiz automatic collection should only be for player 1."), 
               _("Any quiz automatic collection should only be for both players."));
 }
 
+extern void
+CommandSetQuizAtMoney(char *sz)
+{
+    SetToggle("quiz-atmoney", &fQuizAtMoney, sz,
+              _("Evaluate quiz positions assuming money play."), 
+              _("Evaluate quiz positions assuming their original score."));
+    g_message("fQuizAtMoney:%d\n",fQuizAtMoney);
+}
+
 static void
 set_quiz_skill(skilltype Skill, int skillno, char *UNUSED(skill))
 {
-
     nQuizSkillCurrent = skillno;
     QuizSkill = Skill;
     // outputf(_("Quiz automatic collection will be given for mistakes marked at least `%s'.\n"), skill);
@@ -3994,14 +3999,12 @@ set_quiz_skill(skilltype Skill, int skillno, char *UNUSED(skill))
 extern void
 CommandSetQuizSkillDoubtful(char *UNUSED(sz))
 {
-
     set_quiz_skill(SKILL_DOUBTFUL, 0, _("doubtful"));
 }
 
 extern void
 CommandSetQuizSkillBad(char *UNUSED(sz))
 {
-
     set_quiz_skill(SKILL_BAD, 1, _("bad"));
 }
 

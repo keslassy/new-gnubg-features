@@ -63,6 +63,7 @@ typedef struct {
     GtkWidget *pwQuiz;
     GtkWidget *pwQuizAutoAdd;
     GtkWidget *pwQuizOnePlayer;
+    GtkWidget *pwQuizAtMoney;
     GtkWidget *pwQuizSkill;
     GtkAdjustment *padjCubeBeaver;
     GtkAdjustment *padjCubeAutomatic;
@@ -333,6 +334,7 @@ static void QuizToggled(GtkWidget * UNUSED(pw), optionswidget * pow)
     gtk_widget_set_sensitive(pow->pwQuizAutoAdd, n);
     gtk_widget_set_sensitive(pow->pwQuizSkill, n&&n2);
     gtk_widget_set_sensitive(pow->pwQuizOnePlayer, n&&n2);
+    gtk_widget_set_sensitive(pow->pwQuizAtMoney, n);
 
     // gtk_widget_set_sensitive(pow->pwQuizAutoAdd, fUseQuiz);
     // gtk_widget_set_sensitive(pow->pwQuizSkill, fUseQuiz && fQuizAutoAdd);
@@ -836,6 +838,7 @@ append_quiz_options(optionswidget * pow)
     // g_signal_connect(G_OBJECT(pow->pwQuizOnePlayer), "toggled", G_CALLBACK(QuizToggled), pow);
 
 
+
     // pow->pwQuizCube = gtk_check_button_new_with_label(_("Cube Decisions"));
     // gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwQuizCube, FALSE, FALSE, 0);
     // gtk_widget_set_tooltip_text(pow->pwQuizCube, _("Use the Quiz for cube decisions."));
@@ -865,9 +868,17 @@ append_quiz_options(optionswidget * pow)
                                 _("Specify how bad GNU Backgammon must think a "
                                   "decision is before adding it to the quiz positions."));
 
+    pow->pwQuizAtMoney = gtk_check_button_new_with_label(_("Evaluate quiz positions assuming money play (and not the score at which they were collected)"));
+    gtk_box_pack_start(GTK_BOX(pwvbox2), pow->pwQuizAtMoney, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(pow->pwQuizAtMoney,
+                                _("Intuitively allow GNU Backgammon to erase the match score of the quiz questions "
+                                "so it doesn't impact the result. "));
+    g_signal_connect(G_OBJECT(pow->pwQuizAtMoney), "toggled", G_CALLBACK(QuizToggled), pow);
+
     gtk_widget_set_sensitive(pow->pwQuizAutoAdd, TRUE);//fUseQuiz);
     gtk_widget_set_sensitive(pow->pwQuizSkill, TRUE);//fUseQuiz && fQuizAutoAdd);
     gtk_widget_set_sensitive(pow->pwQuizOnePlayer, TRUE);//fUseQuiz && fQuizAutoAdd);
+    gtk_widget_set_sensitive(pow->pwQuizAtMoney, TRUE);//fUseQuiz && fQuizAutoAdd);
 }
 
 
@@ -1978,6 +1989,8 @@ OptionsOK(GtkWidget * pw, optionswidget * pow)
     CHECKUPDATE(pow->pwQuiz, fUseQuiz, "set quiz allow %s");
     CHECKUPDATE(pow->pwQuizAutoAdd, fQuizAutoAdd, "set quiz autoadd %s");
     CHECKUPDATE(pow->pwQuizOnePlayer, fQuizOnePlayer, "set quiz oneplayer %s");
+    CHECKUPDATE(pow->pwQuizAtMoney, fQuizAtMoney, "set quiz atmoney %s");
+
     {
         GtkTreeModel *model;
         GtkTreeIter iter;
@@ -2263,6 +2276,7 @@ OptionsSet(optionswidget * pow)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuiz), fUseQuiz);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizAutoAdd), fQuizAutoAdd);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizOnePlayer), fQuizOnePlayer);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pow->pwQuizAtMoney), fQuizAtMoney);
     gtk_combo_box_set_active(GTK_COMBO_BOX(pow->pwQuizSkill), nQuizSkillCurrent);
 
 

@@ -1076,6 +1076,8 @@ static command acSetExportHTMLType[] = {
 }, acSetQuiz[] = {
   { "allow", CommandSetQuizAllow, N_("Allow quiz mode"),
     szONOFF, &cOnOff },
+  { "atmoney", CommandSetQuizAtMoney, N_("Evaluate quiz positions assuming money play"),
+    szONOFF, &cOnOff },    
   { "autoadd", CommandSetQuizAutoAdd, N_("Set quiz automatic collection of positions"),
     szONOFF, &cOnOff },
   { "oneplayer", CommandSetQuizOnePlayer, 
