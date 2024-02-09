@@ -19,6 +19,9 @@
  */
 
 /*
+02/2024: Isaac Keslassy: added an option for the quiz to always ask questions at
+money play so the score doesn't impact the answer.
+
 03/2023: Isaac Keslassy: new Quiz feature:
 - we start it with the quiz console
 - see explanations in the quiz console: 
