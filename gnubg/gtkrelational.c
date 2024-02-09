@@ -292,7 +292,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_line_to (cr, xToX(1.0), trueHistY(0.0));
         // cairo_stroke (cr);
 
-        /* PLOT 1: 5-match avg error */
+        /* PLOT 1: 5-match avg error (in orange) */
         cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         /* 1. the newest record is the first, so we conceptually start by plotting
         the oldest; 2. it's an average, so it's not defined on all i's*/
@@ -314,7 +314,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_move_to (cr, xToX(0.4), trueHistY(1.0+margin2y/2));
         cairo_line_to (cr, xToX(0.45), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
-        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         cairo_move_to(cr,  xToX(0.47), trueHistY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, _("5-match average"));
         cairo_stroke (cr);
@@ -326,7 +326,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_show_text(cr, strTemp);
         cairo_stroke(cr);
 
-        /* PLOT 2: match error*/
+        /* PLOT 2: match error (in blue)*/
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         for (int i = numRecords-1; i >=0; --i) {
         // for (int i = 0; i < numRecords; i ++) {

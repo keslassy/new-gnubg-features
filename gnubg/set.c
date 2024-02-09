@@ -3985,7 +3985,7 @@ CommandSetQuizAtMoney(char *sz)
     SetToggle("quiz-atmoney", &fQuizAtMoney, sz,
               _("Evaluate quiz positions assuming money play."), 
               _("Evaluate quiz positions assuming their original score."));
-    g_message("fQuizAtMoney:%d\n",fQuizAtMoney);
+    // g_message("fQuizAtMoney:%d\n",fQuizAtMoney);
 }
 
 static void

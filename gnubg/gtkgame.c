@@ -9046,6 +9046,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         // cairo_stroke (cr);
 
         /* Cumulative skill */
+            /* 1: plot */
         cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         cairo_move_to (cr, trueX(0.0), trueY(0.5));
         for (int i = 1; i < MWCLength; i ++) {
@@ -9055,7 +9056,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             // }
         }
         cairo_stroke (cr);
-            /*discs*/
+            /* 2: discs */
         for (int i = 1; i < MWCLength; i ++) {
             cairo_arc(cr, trueX(((double)i)/(MWCLength-1)), 
                 trueY(mwcCumulSkillDiff[i]), dx/2, 0, 2 * M_PI);
@@ -9063,22 +9064,30 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
             cairo_fill(cr);
         }   
 
-        /* text: legend */
-            /*1:plot*/
+            /*3: legend at the top for cumul. skill */
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
+        cairo_move_to (cr, trueX(0.5), trueY(1.0+margin2y/2));
+        cairo_line_to (cr, trueX(0.55), trueY(1.0+margin2y/2));
+        cairo_stroke (cr);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
+        cairo_move_to(cr,  trueX(0.57), trueY(1.0+margin2y/2)+0.3*fontSize);
+        cairo_show_text(cr, "Cumulative skill difference");
+
+            /* 4: text to the right of line */
+        cairo_move_to(cr, trueX(1.0)+3*dx/2, trueY(mwcCumulSkillDiff[MWCLength-1]) + 0.3 * fontSize);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
+        sprintf(strTemp, "%.0f%%", 100*mwcCumulSkillDiff[MWCLength-1]);
+        cairo_show_text(cr, strTemp);
+        cairo_stroke(cr);
+
+
+        /* text: legend at the top for match winning chances */
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         cairo_move_to (cr, trueX(0.05), trueY(1.0+margin2y/2));
         cairo_line_to (cr, trueX(0.1), trueY(1.0+margin2y/2));
         cairo_stroke (cr);
         cairo_move_to(cr,  trueX(0.12), trueY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, "Match winning chances");
-            /*2:cumul. skill*/
-        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
-        cairo_move_to (cr, trueX(0.5), trueY(1.0+margin2y/2));
-        cairo_line_to (cr, trueX(0.55), trueY(1.0+margin2y/2));
-        cairo_stroke (cr);
-        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
-        cairo_move_to(cr,  trueX(0.57), trueY(1.0+margin2y/2)+0.3*fontSize);
-        cairo_show_text(cr, "Cumulative skill difference");
 
         /* grid*/
         cairo_set_source_rgb (cr, 0.8, 0.8, 0.8);
