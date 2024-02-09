@@ -516,7 +516,7 @@ CreateMoveListTools(hintdata * phd)
     GtkWidget *pwEval = gtk_button_new_with_label(_("Eval"));
     GtkWidget *pwEvalSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwRollout = gtk_button_new_with_label(_("Rollout"));
-    GtkWidget *pwAutoRollout = gtk_button_new_with_label(_("AR"));
+    // GtkWidget *pwAutoRollout = gtk_button_new_with_label(_("AR"));
     GtkWidget *pwRolloutSettings = gtk_button_new_with_label(_("..."));
     GtkWidget *pwMWC = gtk_toggle_button_new_with_label(_("MWC"));
     GtkWidget *pwMove = gtk_button_new_with_label(Q_("verb|Move"));
@@ -529,7 +529,7 @@ CreateMoveListTools(hintdata * phd)
 
     pwDetails = phd->fDetails ? NULL : gtk_toggle_button_new_with_label(_("Details"));
     phd->pwRollout = pwRollout;
-    phd->pwAutoRollout = pwAutoRollout;
+    // phd->pwAutoRollout = pwAutoRollout;
     phd->pwRolloutSettings = pwRolloutSettings;
     phd->pwEval = pwEval;
     phd->pwEvalSettings = pwEvalSettings;
@@ -544,7 +544,7 @@ CreateMoveListTools(hintdata * phd)
     gtk_style_context_add_class(gtk_widget_get_style_context(pwEval), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwEvalSettings), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwRollout), "gnubg-analysis-button");
-    gtk_style_context_add_class(gtk_widget_get_style_context(pwAutoRollout), "gnubg-analysis-button");
+    // gtk_style_context_add_class(gtk_widget_get_style_context(pwAutoRollout), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwRolloutSettings), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwMWC), "gnubg-analysis-button");
     gtk_style_context_add_class(gtk_widget_get_style_context(pwMove), "gnubg-analysis-button");
@@ -579,8 +579,7 @@ CreateMoveListTools(hintdata * phd)
     Alternatives: 
         (1) replace the seldom-used "Move" button;
         (2) put it at the right of ScoreMap
-    V3: replace the Move button, and put the Move instead of Copy. Does anyone
-    really need to copy moves?
+    V3: cancel the AR button, and have it replace Rollout when no move is selected
     */
 
     // // gtk_table_attach(GTK_TABLE(pwTools), pwAutoRollout, 0, 1, 1, 2,
@@ -744,9 +743,9 @@ CreateMoveListTools(hintdata * phd)
     in the background*/
     gtk_widget_set_sensitive(pwMWC, ms.nMatchTo && !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwRollout, !fBackgroundAnalysisRunning);
-    gtk_widget_set_sensitive(pwAutoRollout, !fBackgroundAnalysisRunning);
+    // gtk_widget_set_sensitive(pwAutoRollout, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwRolloutSettings, !fBackgroundAnalysisRunning);
-    gtk_widget_set_sensitive(pwAutoRollout, !fBackgroundAnalysisRunning);
+    // gtk_widget_set_sensitive(pwAutoRollout, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwEval, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwEvalSettings, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwMove, !fBackgroundAnalysisRunning);
@@ -776,7 +775,9 @@ CreateMoveListTools(hintdata * phd)
 
     /* tool tips */
 
-    gtk_widget_set_tooltip_text(pwRollout, _("Rollout selected moves with current settings"));
+    gtk_widget_set_tooltip_text(pwRollout, _("(1) Once you select moves, rollout the selected moves with current settings.\n"
+        "(2) Before you select moves, AutoRollout automatically selects the player move and the best moves, and "
+        "launches the rollout. "));
 
     gtk_widget_set_tooltip_text(pwEval, _("Evaluate selected moves with current settings"));
 

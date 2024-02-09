@@ -19,6 +19,17 @@
  */
 
 /*
+
+02/2024: Isaac Keslassy: simplified the AutoRollout (AR) button. AR now essentially means 
+two things:
+
+(1) instead of analysing a match at 2ply or 3ply, we automatically analyse it at 
+2ply as well as rollout the close cases
+
+(2) new: for a given move decision, if we don't select specific alternatives, we can now
+click on the "Rollout" button, and AR automatically picks the best alternatives
+and launches the rollout
+
 03/2023: Isaac Keslassy: introduced the experimental AutoRollout feature. 
 After the usual eval analysis (e.g., after a 0-ply or 2-ply eval), AutoRollout can 
 automatically launch a rollout to refine selected move & cube decisions, 
