@@ -2266,6 +2266,7 @@ typedef struct {
     GtkWidget *pwOptionMenu;
     int fMoveFilter;
     GtkWidget *pwMoveFilter;
+    int fUseAR;
 } evalwidget;
 
 static void
@@ -2276,7 +2277,8 @@ EvalGetValues(evalcontext * pec, evalwidget * pew)
     pec->fCubeful = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwCubeful));
 
     pec->fUsePrune = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwUsePrune));
-    pec->fAutoRollout = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout));
+    if (pew->fUseAR)
+        pec->fAutoRollout = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout));
 
     pec->rNoise = (float) gtk_adjustment_get_value(pew->padjNoise);
     pec->fDeterministic = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwDeterministic));
@@ -2375,7 +2377,8 @@ SettingsMenuActivate(GtkComboBox * box, evalwidget * pew)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwUsePrune), pec->fUsePrune);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwCubeful), pec->fCubeful);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwDeterministic), pec->fDeterministic);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
+    if (pew->fUseAR)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
 		    
     if (pew->fMoveFilter)
         MoveFilterSetPredefined(pew->pwMoveFilter, aiSettingsMoveFilter[iSelected]);
@@ -2388,7 +2391,7 @@ SettingsMenuActivate(GtkComboBox * box, evalwidget * pew)
  */
 
 static GtkWidget *
-EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter)
+EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter, const int fUseAR)
 {
 
     evalwidget *pew;
@@ -2404,6 +2407,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     if (pfOK)
         *pfOK = FALSE;
 
+
 #if GTK_CHECK_VERSION(3,0,0)
     pwEval = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 #else
@@ -2414,7 +2418,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     pew = g_malloc(sizeof *pew);
 
     /*
-     * Frame with prefined settings
+     * Frame with predefined settings
      */
 
     pwev = gtk_event_box_new();
@@ -2436,10 +2440,16 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     gtk_container_add(GTK_CONTAINER(pw2), gtk_label_new(_("Select a predefined setting:")));
 
-    gtk_widget_set_tooltip_text(pwev,
-                                _("Select a predefined setting, ranging from " 
-                                "beginner's play to the 4ply setting or a setting "
-                                "with AutoRollout."));
+    if (fUseAR) {
+        gtk_widget_set_tooltip_text(pwev,
+            _("Select a predefined setting, ranging from " 
+            "beginner's play to the 4ply setting or a setting "
+            "with AutoRollout."));
+    } else{
+        gtk_widget_set_tooltip_text(pwev,
+            _("Select a predefined setting, ranging from " 
+            "beginner's play to the 4ply setting."));  
+    }
 
     pew->pwOptionMenu = gtk_combo_box_text_new();
 
@@ -2493,17 +2503,19 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
     gtk_container_add(GTK_CONTAINER(pw), gtk_spin_button_new(pew->padjPlies, 1, 0));
 
     /* Use AutoRollout*/
+    pew->fUseAR = fUseAR;
+    if (fUseAR) {
+        pwFrame2 = gtk_frame_new(_("AutoRollout"));
+        gtk_container_add(GTK_CONTAINER(pw2), pwFrame2);
 
-    pwFrame2 = gtk_frame_new(_("AutoRollout"));
-    gtk_container_add(GTK_CONTAINER(pw2), pwFrame2);
-
-    gtk_container_add(GTK_CONTAINER(pwFrame2),
-                      pew->pwAutoRollout = gtk_check_button_new_with_label(_("Use AutoRollout")));
-    // g_message("%d",pec->fCubeful);
-    // g_message("%f",pec->rNoise);
-    // g_message("%d",pec->fAutoRollout);            
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
-    gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(ARHelp));
+        gtk_container_add(GTK_CONTAINER(pwFrame2),
+                        pew->pwAutoRollout = gtk_check_button_new_with_label(_("Use AutoRollout")));
+        // g_message("%d",pec->fCubeful);
+        // g_message("%f",pec->rNoise);
+        // g_message("%d",pec->fAutoRollout);            
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
+        gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(ARHelp));
+    }
 
     /* Use pruning neural nets */
 
@@ -2630,7 +2642,8 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
 
     g_signal_connect(G_OBJECT(pew->pwUsePrune), "toggled", G_CALLBACK(EvalChanged), pew);
 
-    g_signal_connect(G_OBJECT(pew->pwAutoRollout), "toggled", G_CALLBACK(EvalChanged), pew);
+    if (fUseAR)
+        g_signal_connect(G_OBJECT(pew->pwAutoRollout), "toggled", G_CALLBACK(EvalChanged), pew);
 
     g_object_set_data_full(G_OBJECT(pwEval), "user_data", pew, g_free);
 
@@ -2750,6 +2763,7 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
     pwDialog = GTKCreateDialog(pDetails->title,
                                DT_INFO, button, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON,
                                G_CALLBACK(DetailedAnalysisOK), pDetails);
+    int fUseAR;
 
 #if GTK_CHECK_VERSION(3,0,0)
     hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -2763,9 +2777,14 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
     gtk_box_pack_start(GTK_BOX(hbox), pwFrame, TRUE, TRUE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(pwFrame), 4);
 
+    /* We want to use AutoRollout in the Analysis settings, not 
+     * elsewhere (e.g. rollout settings for the eval within the rollout)
+     */
+    fUseAR = (strcmp(pDetails->title, "Analysis settings") == 0)? 1 : 0;
+
     gtk_container_add(GTK_CONTAINER(pwFrame),
-                      pDetails->pwChequer = EvalWidget(pDetails->esChequer, pDetails->mfChequer,
-                                                       NULL, pDetails->mfChequer != NULL));
+        pDetails->pwChequer = EvalWidget(pDetails->esChequer, pDetails->mfChequer,
+            NULL, pDetails->mfChequer != NULL, fUseAR));
 
     pwFrame = gtk_frame_new(_("Cube decisions"));
     gtk_box_pack_start(GTK_BOX(hbox), pwFrame, TRUE, TRUE, 0);
@@ -2779,8 +2798,9 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
     gtk_container_add(GTK_CONTAINER(pwFrame), pwvbox);
 
     gtk_box_pack_start(GTK_BOX(pwvbox),
-                       pDetails->pwCube = EvalWidget(pDetails->esCube, (movefilter *) & pDetails->mfCube[9],
-                                                     NULL, pDetails->mfCube != NULL), FALSE, FALSE, 0);
+        pDetails->pwCube = EvalWidget(pDetails->esCube, (movefilter *) & pDetails->mfCube[9],
+            NULL, pDetails->mfCube != NULL, fUseAR), 
+        FALSE, FALSE, 0);
 
     if (pDetails->cubeDisabled)
         gtk_widget_set_sensitive(pDetails->pwCube, FALSE);
