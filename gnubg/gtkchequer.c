@@ -70,7 +70,7 @@ extern void MoveListAutoRollout(movelist * pml, int keyIndex)
                 || (j<ARAnalysisFilter.Accept+ARAnalysisFilter.Extra 
                         && pml->amMoves[0].rScore - pml->amMoves[j].rScore 
                         <ARAnalysisFilter.Threshold) ) 
-                /*the top decision alternatives are within the thereshold*/
+                /*the top decision alternatives are within the threshold*/
             && (pml->amMoves[0].rScore - pml->amMoves[j].rScore>0.00001) ) {
                 /*heuristically avoid trivial decisions*/
             // g_message("added: j=%d/%d, score=%f, delta=%f",j,pml->cMoves,
