@@ -43,6 +43,57 @@
 int showMoveListDetail = 1;
 moverecord *pmrCurAnn;
 
+
+extern void MoveListAutoRollout(movelist * pml, int keyIndex)
+{
+    // g_message("AR clicked");
+
+    int c;
+
+    if (ARAnalysisFilter.Accept == -1){
+        GTKMessage(_("Error: the user-defined filter (in Settings->Analysis) does not allow AutoRollout"), DT_INFO);
+        return;
+    }
+
+
+    if (!(pml->amMoves) || (pml->cMoves <=1)) { /*not a trivial decision nor a doubling decision*/ 
+        GTKMessage(_("Error: no non-trivial decision to roll out"), DT_INFO);
+        return;
+    }
+
+    pml->amMoves[0].cmark = CMARK_ROLLOUT; /*always roll out the best move,
+            then add close decisions or the player's decision if it's different */   
+    c=0;
+    for (int j = 1; j < (int)(pml->cMoves); j++) {
+        if ( (j==keyIndex /*the player didn't choose the best decision*/
+                || j<ARAnalysisFilter.Accept /*automatically added*/
+                || (j<ARAnalysisFilter.Accept+ARAnalysisFilter.Extra 
+                        && pml->amMoves[0].rScore - pml->amMoves[j].rScore 
+                        <ARAnalysisFilter.Threshold) ) 
+                /*the top decision alternatives are within the thereshold*/
+            && (pml->amMoves[0].rScore - pml->amMoves[j].rScore>0.00001) ) {
+                /*heuristically avoid trivial decisions*/
+            // g_message("added: j=%d/%d, score=%f, delta=%f",j,pml->cMoves,
+            //         pml->amMoves[j].rScore,pml->amMoves[0].rScore - pml->amMoves[j].rScore);       
+            pml->amMoves[j].cmark = CMARK_ROLLOUT;
+            c++;
+        }
+    }
+    if(c==0) {
+        pml->amMoves[0].cmark = CMARK_NONE;
+        GTKMessage(_("Error: no close decisions and no player mistake to roll out"), DT_INFO);
+        return;
+    }
+
+    CommandAnalyseRolloutMove(NULL);
+}
+
+static void
+MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * phd)
+{
+    MoveListAutoRollout(phd->pml,(int)(*phd->piHighlight));
+}
+
 static void
 MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
 {
@@ -52,8 +103,11 @@ MoveListRolloutClicked(GtkWidget * pw, hintdata * phd)
     GList *pl, *plSelList = MoveListGetSelectionList(phd);
     int c;
 
-    if (!plSelList)
+    if (!plSelList) {
+        /* if the user hasn't selected moves, we call AutoRollout which selects them automatically */
+        MoveListAutoRolloutClicked(pw,phd);
         return;
+    }
 
     GetMatchStateCubeInfo(&ci, &ms);
 
@@ -366,56 +420,6 @@ MoveListRolloutPresets(GtkWidget * pw, hintdata * phd)
     g_free(command);
 }
 
-extern void MoveListAutoRollout(movelist * pml, int keyIndex)
-{
-    // g_message("AR clicked");
-
-    int c;
-
-    if (ARAnalysisFilter.Accept == -1){
-        GTKMessage(_("Error: the user-defined filter (in Settings->Analysis) does not allow AutoRollout"), DT_INFO);
-        return;
-    }
-
-
-    if (!(pml->amMoves) || (pml->cMoves <=1)) { /*not a trivial decision nor a doubling decision*/ 
-        GTKMessage(_("Error: no non-trivial decision to roll out"), DT_INFO);
-        return;
-    }
-
-    pml->amMoves[0].cmark = CMARK_ROLLOUT; /*always roll out the best move,
-            then add close decisions or the player's decision if it's different */   
-    c=0;
-    for (int j = 1; j < (int)(pml->cMoves); j++) {
-        if ( (j==keyIndex /*the player didn't choose the best decision*/
-                || j<ARAnalysisFilter.Accept /*automatically added*/
-                || (j<ARAnalysisFilter.Accept+ARAnalysisFilter.Extra 
-                        && pml->amMoves[0].rScore - pml->amMoves[j].rScore 
-                        <ARAnalysisFilter.Threshold) ) 
-                /*the top decision alternatives are within the thereshold*/
-            && (pml->amMoves[0].rScore - pml->amMoves[j].rScore>0.00001) ) {
-                /*heuristically avoid trivial decisions*/
-            // g_message("added: j=%d/%d, score=%f, delta=%f",j,pml->cMoves,
-            //         pml->amMoves[j].rScore,pml->amMoves[0].rScore - pml->amMoves[j].rScore);       
-            pml->amMoves[j].cmark = CMARK_ROLLOUT;
-            c++;
-        }
-    }
-    if(c==0) {
-        pml->amMoves[0].cmark = CMARK_NONE;
-        GTKMessage(_("Error: no close decisions and no player mistake to roll out"), DT_INFO);
-        return;
-    }
-
-    CommandAnalyseRolloutMove(NULL);
-}
-
-static void
-MoveListAutoRolloutClicked(GtkWidget * UNUSED(pw), hintdata * phd)
-{
-    MoveListAutoRollout(phd->pml,(int)(*phd->piHighlight));
-}
-
 typedef int (*cfunc) (const void *, const void *);
 
 static int
@@ -555,14 +559,14 @@ CreateMoveListTools(hintdata * phd)
 #if GTK_CHECK_VERSION(3,0,0)
     pwTools = gtk_grid_new();
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwAutoRollout, 0, 0, 1, 2);
-    // gtk_grid_attach(GTK_GRID(pwTools), pwAutoRollout, 0, 0, 1, 1);
+    // gtk_grid_attach(GTK_GRID(pwTools), pwAutoRollout, 0, 0, 1, 2);
+    // // gtk_grid_attach(GTK_GRID(pwTools), pwAutoRollout, 0, 0, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwEval, 1, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwEval, 0, 0, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwEvalSettings, 2, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwEvalSettings, 1, 0, 1, 1);
 #else
-    pwTools = gtk_table_new(2, 8, FALSE);
+    pwTools = gtk_table_new(2, 7, FALSE);
 
     /* The positioning of the AutoRollout button is a problem: Rollout and Eval currently
     correspond to each other vertically.
@@ -575,27 +579,29 @@ CreateMoveListTools(hintdata * phd)
     Alternatives: 
         (1) replace the seldom-used "Move" button;
         (2) put it at the right of ScoreMap
+    V3: replace the Move button, and put the Move instead of Copy. Does anyone
+    really need to copy moves?
     */
 
-    // gtk_table_attach(GTK_TABLE(pwTools), pwAutoRollout, 0, 1, 1, 2,
-    gtk_table_attach(GTK_TABLE(pwTools), pwAutoRollout, 0, 1, 0, 2,
-                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
+    // // gtk_table_attach(GTK_TABLE(pwTools), pwAutoRollout, 0, 1, 1, 2,
+    // gtk_table_attach(GTK_TABLE(pwTools), pwAutoRollout, 0, 1, 0, 2,
+    //                  (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwEval, 1, 2, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwEval, 0, 1, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwEvalSettings, 2, 3, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwEvalSettings, 1, 2, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     phd->pwEvalPly = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
-    gtk_grid_attach(GTK_GRID(pwTools), phd->pwEvalPly, 3, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), phd->pwEvalPly, 2, 0, 1, 1);
 #else
     phd->pwEvalPly = gtk_hbox_new(FALSE, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), phd->pwEvalPly, 3, 4, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), phd->pwEvalPly, 2, 3, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
@@ -620,52 +626,55 @@ CreateMoveListTools(hintdata * phd)
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_grid_attach(GTK_GRID(pwTools), pwShow, 4, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwShow, 3, 0, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwMWC, 5, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwMWC, 4, 0, 1, 1);
 
     if (!phd->fDetails)
-        gtk_grid_attach(GTK_GRID(pwTools), pwDetails, 6, 0, 1, 1);
+        gtk_grid_attach(GTK_GRID(pwTools), pwDetails, 5, 0, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwTempMap, 7, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwTempMap, 6, 0, 1, 1);
 
     /*2nd row*/
-    gtk_grid_attach(GTK_GRID(pwTools), pwRollout, 1, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwRollout, 0, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwRolloutSettings, 2, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwRolloutSettings, 1, 1, 1, 1);
 #else
-    gtk_table_attach(GTK_TABLE(pwTools), pwShow, 4, 5, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwShow, 3, 4, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwMWC, 5, 6, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwMWC, 4, 5, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     if (!phd->fDetails)
-        gtk_table_attach(GTK_TABLE(pwTools), pwDetails, 6, 7, 0, 1,
+        gtk_table_attach(GTK_TABLE(pwTools), pwDetails, 5, 6, 0, 1,
                          (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 7, 8, 0, 1,
+    gtk_table_attach(GTK_TABLE(pwTools), pwTempMap, 6, 7, 0, 1,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
     /*2nd row*/
-    gtk_table_attach(GTK_TABLE(pwTools), pwRollout, 1, 2, 1, 2,
+
+    gtk_table_attach(GTK_TABLE(pwTools), pwRollout, 0, 1, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwRolloutSettings, 2, 3, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwRolloutSettings, 1, 2, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
 #if GTK_CHECK_VERSION(3,0,0)
     phd->pwRolloutPresets = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_grid_attach(GTK_GRID(pwTools), phd->pwRolloutPresets, 3, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), phd->pwRolloutPresets, 2, 1, 1, 1);
 #else
     phd->pwRolloutPresets = gtk_hbox_new(FALSE, 0);
-    gtk_table_attach(GTK_TABLE(pwTools), phd->pwRolloutPresets, 3, 4, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), phd->pwRolloutPresets, 2, 3, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 #endif
 
-//     /*removed 'e' to put AutoRollout; could also remove the seldom-used "Move" button;
-//     or move everything to the right */
+//     /* first removed 'e' to put AutoRollout; could also remove the seldom-used "Move" button;
+//     or move everything to the right 
+//        * then put it back... 
+//      */
 //     gchar *sz = g_strdup_printf("AR");    /* string is freed by set_data_full */
 //     pwAutoRollout = gtk_button_new_with_label(sz);
 
@@ -684,7 +693,7 @@ CreateMoveListTools(hintdata * phd)
 //     gtk_widget_set_tooltip_text(pwAutoRollout, sz);
 //     g_free(sz);
 
-    for (i = 0; i < 4; ++i) {
+    for (i = 0; i < 5; ++i) {
         gchar *sz = g_strdup_printf("%c", i + 'a');    /* string is freed by set_data_full */
         GtkWidget *ro_preset = gtk_button_new_with_label(sz);
 
@@ -693,35 +702,35 @@ CreateMoveListTools(hintdata * phd)
 #endif
         gtk_box_pack_start(GTK_BOX(phd->pwRolloutPresets), ro_preset, TRUE, TRUE, 0);
 
-            g_signal_connect(G_OBJECT(ro_preset), "clicked", G_CALLBACK(MoveListRolloutPresets), phd);
+        g_signal_connect(G_OBJECT(ro_preset), "clicked", G_CALLBACK(MoveListRolloutPresets), phd);
 
         g_object_set_data_full(G_OBJECT(ro_preset), "user_data", sz, g_free);
 
-            sz = g_strdup_printf(_("Rollout preset %c"), i + 'a');
+        sz = g_strdup_printf(_("Rollout preset %c"), i + 'a');
         gtk_widget_set_tooltip_text(ro_preset, sz);
         g_free(sz);
 
     }
 
 #if GTK_CHECK_VERSION(3,0,0)
-    gtk_grid_attach(GTK_GRID(pwTools), pwMove, 4, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwMove, 3, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwCopy, 5, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwCopy, 4, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwCmark, 6, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwCmark, 5, 1, 1, 1);
 
-    gtk_grid_attach(GTK_GRID(pwTools), pwScoreMap, 7, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(pwTools), pwScoreMap, 6, 1, 1, 1);
 #else
-    gtk_table_attach(GTK_TABLE(pwTools), pwMove, 4, 5, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwMove, 3, 4, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwCopy, 5, 6, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwCopy, 4, 5, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwCmark, 6, 7, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwCmark, 5, 6, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0);
 
-    gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 7, 8, 1, 2,
+    gtk_table_attach(GTK_TABLE(pwTools), pwScoreMap, 6, 7, 1, 2,
                      (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (0), 0, 0); 
 #endif
 
@@ -734,9 +743,8 @@ CreateMoveListTools(hintdata * phd)
     /* We want to disable particularly when we are in the middle of running an analysis
     in the background*/
     gtk_widget_set_sensitive(pwMWC, ms.nMatchTo && !fBackgroundAnalysisRunning);
-
     gtk_widget_set_sensitive(pwRollout, !fBackgroundAnalysisRunning);
-    gtk_widget_set_sensitive(pwRollout, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(pwAutoRollout, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwRolloutSettings, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwAutoRollout, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(pwEval, !fBackgroundAnalysisRunning);
@@ -752,7 +760,7 @@ CreateMoveListTools(hintdata * phd)
     /* signals */
 
     g_signal_connect(G_OBJECT(pwRollout), "clicked", G_CALLBACK(MoveListRolloutClicked), phd);
-    g_signal_connect(G_OBJECT(pwAutoRollout), "clicked", G_CALLBACK(MoveListAutoRolloutClicked), phd);
+    // g_signal_connect(G_OBJECT(pwAutoRollout), "clicked", G_CALLBACK(MoveListAutoRolloutClicked), phd);
     g_signal_connect(G_OBJECT(pwEval), "clicked", G_CALLBACK(MoveListEval), phd);
     g_signal_connect(G_OBJECT(pwEvalSettings), "clicked", G_CALLBACK(MoveListEvalSettings), NULL);
     g_signal_connect(G_OBJECT(pwRolloutSettings), "clicked", G_CALLBACK(MoveListRolloutSettings), NULL);
@@ -790,12 +798,12 @@ CreateMoveListTools(hintdata * phd)
 
     gtk_widget_set_tooltip_text(pwScoreMap, _("Show map of best moves at different scores"));
 
-    gtk_widget_set_tooltip_text(pwAutoRollout, 
-            _("AutoRollout: after an eval, automatically rollout (1) the closest moves and "
-            "(2) a player mistake (if any). "
-            "AutoRollout automatically selects the moves before rollout. "
-            "Use the 'Rollout' button to select specific moves instead, and '...' for rollout settings. "
-            "See 'Settings->Analysis' for more details."));
+    // gtk_widget_set_tooltip_text(pwAutoRollout, 
+    //         _("AutoRollout: after an eval, automatically rollout (1) the closest moves and "
+    //         "(2) a player mistake (if any). "
+    //         "AutoRollout automatically selects the moves before rollout. "
+    //         "Use the 'Rollout' button to select specific moves instead, and '...' for rollout settings. "
+    //         "See 'Settings->Analysis' for more details."));
 
 
     return pwTools;
@@ -843,7 +851,7 @@ CheckHintButtons(hintdata * phd)
     gtk_widget_set_sensitive(phd->pwCopy, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwTempMap, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwCmark, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwRollout, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    //gtk_widget_set_sensitive(phd->pwRollout, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwRolloutPresets, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwEval, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwEvalPly, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
@@ -851,7 +859,7 @@ CheckHintButtons(hintdata * phd)
 
     bd = BOARD(pwBoard)->board_data;
     gtk_widget_set_sensitive(phd->pwScoreMap, (bd->diceShown == DICE_ON_BOARD) && !fBackgroundAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwAutoRollout, !fBackgroundAnalysisRunning);
+    // gtk_widget_set_sensitive(phd->pwAutoRollout, !fBackgroundAnalysisRunning);
 
     return c;
 }
