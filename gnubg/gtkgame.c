@@ -18,6 +18,8 @@
  * $Id: gtkgame.c,v 1.1012 2023/12/30 20:36:15 plm Exp $
  */
 /*
+02/2024: nicer MWC plot with exact value at the end
+
 03/2023: Isaac Keslassy: to check GNUBG updates, we now make it opt-in rather 
 than opt-out: a month after starting GNUBG, the user is asked whether to check 
 updates online. Thanks to Russ Allbery for the feedback!
