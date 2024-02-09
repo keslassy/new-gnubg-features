@@ -868,11 +868,11 @@ append_quiz_options(optionswidget * pow)
                                 _("Specify how bad GNU Backgammon must think a "
                                   "decision is before adding it to the quiz positions."));
 
-    pow->pwQuizAtMoney = gtk_check_button_new_with_label(_("Evaluate quiz positions assuming money play (and not the score at which they were collected)"));
-    gtk_box_pack_start(GTK_BOX(pwvbox2), pow->pwQuizAtMoney, FALSE, FALSE, 0);
+    pow->pwQuizAtMoney = gtk_check_button_new_with_label(_("Evaluate quiz positions assuming money play"));
+    gtk_box_pack_start(GTK_BOX(pwvbox), pow->pwQuizAtMoney, FALSE, FALSE, 0);
     gtk_widget_set_tooltip_text(pow->pwQuizAtMoney,
-                                _("Intuitively allow GNU Backgammon to erase the match score of the quiz questions "
-                                "so it doesn't impact the result. "));
+                                _("Intuitively allow quiz questions to erase the match scores at which the quiz positions were collected "
+                                "so they don't impact the result. "));
     g_signal_connect(G_OBJECT(pow->pwQuizAtMoney), "toggled", G_CALLBACK(QuizToggled), pow);
 
     gtk_widget_set_sensitive(pow->pwQuizAutoAdd, TRUE);//fUseQuiz);

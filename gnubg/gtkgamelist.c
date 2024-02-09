@@ -1501,6 +1501,9 @@ extern void LoadPositionAndStart (void) {
     // g_message("Starting quiz mode: ap names: (%s,%s) vs: (%s,%s)",
     //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);        
 
+    /* this changes the state to a money game if the option is checked */
+    if (fQuizAtMoney)
+        edit_new(0);
     UserCommand2("set player 0 human");
     UserCommand2("set player 0 name QuizOpponent");
     char buf[100];
