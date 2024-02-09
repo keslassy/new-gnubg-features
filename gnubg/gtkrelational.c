@@ -319,6 +319,13 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_show_text(cr, _("5-match average"));
         cairo_stroke (cr);
 
+            /* +text to the right of line */
+        cairo_move_to(cr, xToX(1.0)+dx/2, errorToY(matchAvgErrorRate[0]) + 0.3 * fontSize);
+        cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
+        sprintf(strTemp, "%.1f", matchAvgErrorRate[0]);
+        cairo_show_text(cr, strTemp);
+        cairo_stroke(cr);
+
         /* PLOT 2: match error*/
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         for (int i = numRecords-1; i >=0; --i) {
@@ -361,12 +368,13 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_move_to (cr, xToX(0.75), trueHistY(1.0+margin2y/2));
         cairo_line_to (cr, xToX(0.8), trueHistY(1.0+margin2y/2));
         cairo_stroke (cr);
-        cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+        cairo_set_source_rgb (cr, 0.0, 0.35, 0.65);
         cairo_move_to(cr,  xToX(0.82), trueHistY(1.0+margin2y/2)+0.3*fontSize);
         cairo_show_text(cr, _("Average"));
         cairo_stroke (cr);
             /* +text to the right of line */
         cairo_move_to(cr, xToX(1.0)+dx/2, errorToY(matchAvg) + 0.3 * fontSize);
+        cairo_set_source_rgb (cr, 0.0, 0.35, 0.65);
         sprintf(strTemp, "%.1f", matchAvg);
         cairo_show_text(cr, strTemp);
         cairo_stroke(cr);
