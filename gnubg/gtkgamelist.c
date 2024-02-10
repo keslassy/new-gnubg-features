@@ -1471,12 +1471,13 @@ extern void LoadPositionAndStart (void) {
 
     // qNow=q[iOpt];
 
-    if(!q[iOpt].position){
-        char buf[100];
-        sprintf(buf, _("Error: wrong position in line %d of file?"), iOpt+1);
-        GTKMessage(_(buf), DT_INFO);
-        return;
-    }
+    // // the compiler states that the following is never false => removed
+    // if(!q[iOpt].position){
+    //     char buf[100];
+    //     sprintf(buf, _("Error: wrong position in line %d of file?"), iOpt+1);
+    //     GTKMessage(_(buf), DT_INFO);
+    //     return;
+    // }
 
     /* start quiz-mode play! */
     // fInQuizMode=TRUE;
