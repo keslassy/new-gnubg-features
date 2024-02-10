@@ -252,6 +252,7 @@ extern const char *aszDoubleTypes[NUM_DOUBLE_TYPES];
 #define SETTINGS_INTERMEDIATE   2
 #define SETTINGS_NOVICE         1
 #define SETTINGS_BEGINNER       0
+#define NUM_SETTINGS_NO_AR SETTINGS_0PLY_AR
 
 extern evalcontext aecSettings[NUM_SETTINGS];
 extern evalcontext ecBasic;

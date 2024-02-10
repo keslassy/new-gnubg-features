@@ -226,13 +226,14 @@ typedef enum {
 
 typedef struct {
     const char *title;
-    evalcontext *esChequer;
+    evalcontext *esChequer; //careful: here it's "evalcontext *esChequer", and below "evalsetup esChequer"!?
     movefilter *mfChequer;
     evalcontext *esCube;
     movefilter *mfCube;
     GtkWidget *pwCube, *pwChequer, *pwOptionMenu, *pwSettingWidgets;
     int cubeDisabled;
     int fWeakLevels;
+    int fUseAR;
 } AnalysisDetails;
 
 
@@ -2274,11 +2275,15 @@ EvalGetValues(evalcontext * pec, evalwidget * pew)
 {
 
     pec->nPlies = (unsigned int) gtk_adjustment_get_value(pew->padjPlies);
+    g_message("in EvalGetValues, we get plies=%d",pec->nPlies);
     pec->fCubeful = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwCubeful));
 
     pec->fUsePrune = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwUsePrune));
     if (pew->fUseAR)
         pec->fAutoRollout = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout));
+    else
+        pec->fAutoRollout = FALSE;
+
 
     pec->rNoise = (float) gtk_adjustment_get_value(pew->padjNoise);
     pec->fDeterministic = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwDeterministic));
@@ -2307,7 +2312,7 @@ EvalChanged(GtkWidget * UNUSED(pw), evalwidget * pew)
         if (fEval && fMoveFilter) {
 
             /* current settings equal to a predefined setting */
-
+                g_message("evalchanged 1");
             gtk_combo_box_set_active(GTK_COMBO_BOX(pew->pwOptionMenu), i);
             fFound = TRUE;
             break;
@@ -2319,17 +2324,18 @@ EvalChanged(GtkWidget * UNUSED(pw), evalwidget * pew)
 
     /* user defined setting */
 
-    if (!fFound)
+    if (!fFound) {
+                g_message("evalchanged 1");
         gtk_combo_box_set_active(GTK_COMBO_BOX(pew->pwOptionMenu), NUM_SETTINGS);
-
+    }
 
     if (pew->fMoveFilter) {
-        // g_message("move changed?");
+        g_message("move changed?");
         moveNeedsMFWidget=(ecCurrent.nPlies || ecCurrent.fAutoRollout);
         gtk_widget_set_sensitive(latestMFWidget, moveNeedsMFWidget || cubeNeedsMFWidget);
         // gtk_widget_set_sensitive(GTK_WIDGET(pew->pwMoveFilter), ecCurrent.nPlies || ecCurrent.fAutoRollout);
     } else {
-        // g_message("cube changed?");
+        g_message("cube changed?");
         cubeNeedsMFWidget=(ecCurrent.fAutoRollout);
         gtk_widget_set_sensitive(latestMFWidget, moveNeedsMFWidget || cubeNeedsMFWidget);
         // g_message("sensitive? %d",gtk_widget_get_sensitive(GTK_WIDGET(aw.pAnalDetailSettings1->pwChequer->fMoveFilter)));
@@ -2364,12 +2370,15 @@ SettingsMenuActivate(GtkComboBox * box, evalwidget * pew)
 
 
     iSelected = gtk_combo_box_get_active(box);
+    g_message("iSelected setting=%d",iSelected);
     if (iSelected == NUM_SETTINGS)
         return;                 /* user defined */
 
     /* set all widgets to predefined values */
 
     pec = &aecSettings[iSelected];
+
+      g_message("pec->nPlies=%d",pec->nPlies);  
 
     gtk_adjustment_set_value(pew->padjPlies, pec->nPlies);
     gtk_adjustment_set_value(pew->padjNoise, pec->rNoise);
@@ -2512,7 +2521,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                         pew->pwAutoRollout = gtk_check_button_new_with_label(_("Use AutoRollout")));
         // g_message("%d",pec->fCubeful);
         // g_message("%f",pec->rNoise);
-        // g_message("%d",pec->fAutoRollout);            
+        g_message("in EvalWidget: pec->fAutoRollout=%d",pec->fAutoRollout);            
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
         gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(ARHelp));
     }
@@ -2727,7 +2736,7 @@ EvalDefaultSetting(evalcontext * pec, movefilter * pmf)
             (!pmf || equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pmf,
                             aaamfMoveFilterSettings
                             [aiSettingsMoveFilter[i]]));
-
+        g_message("i %d,fEval %d,fMoveFilter %d\n",i,fEval,fMoveFilter);
         if (fEval && fMoveFilter)
             return i;
     }
@@ -2740,18 +2749,41 @@ UpdateSummaryEvalMenuSetting(AnalysisDetails * pAnalDetails)
 {
     int chequerDefault = EvalDefaultSetting(pAnalDetails->esChequer, pAnalDetails->mfChequer);
     int cubeDefault = EvalDefaultSetting(pAnalDetails->esCube, pAnalDetails->mfCube);
-    int setting = NUM_SETTINGS;
 
-    if (chequerDefault == cubeDefault
+    /* hijacking the fWeakLevels property that is disabled in the first, simplified menu and not in the advanced one
+    to also disable AutoRollout in the first menu  */
+    int setting = (pAnalDetails->fUseAR ? NUM_SETTINGS : NUM_SETTINGS_NO_AR);
+    // int setting = NUM_SETTINGS;
+    g_message("before: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
+
+    /* setting is "user-defined" unless cube setting and checker setting agree.
+    Added: they agree whenever cube settings are defined as the same as checker settings
+    and therefore cube settings are disabled. 
+    */
+    if (pAnalDetails->cubeDisabled ||
+        chequerDefault == cubeDefault
         /* Special case as cube_supremo==cube_worldclass */
         || (chequerDefault == SETTINGS_SUPREMO && cubeDefault == SETTINGS_WORLDCLASS))
         setting = chequerDefault;
+
+    if (!pAnalDetails->fUseAR) {
+        if (setting==SETTINGS_0PLY_AR)
+            setting=SETTINGS_EXPERT;
+        if (setting==SETTINGS_2PLY_AR)
+            setting=SETTINGS_WORLDCLASS;
+        if (setting==SETTINGS_3PLY_AR)
+            setting=SETTINGS_GRANDMASTER;
+    }
+    g_message("middle: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
 
     setting -= (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
     if (setting < 0)
         /* This combo box doesn't accept weak levels
          * but one of them was selected through user defined */
-        setting = NUM_SETTINGS - (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
+        setting = (pAnalDetails->fUseAR ? NUM_SETTINGS : NUM_SETTINGS_NO_AR)-(pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
+        // setting = NUM_SETTINGS - (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
+
+    g_message("after: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(pAnalDetails->pwOptionMenu), setting);
 }
@@ -2763,7 +2795,7 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
     pwDialog = GTKCreateDialog(pDetails->title,
                                DT_INFO, button, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON,
                                G_CALLBACK(DetailedAnalysisOK), pDetails);
-    int fUseAR;
+    // int fUseAR;
 
 #if GTK_CHECK_VERSION(3,0,0)
     hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -2780,11 +2812,13 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
     /* We want to use AutoRollout in the Analysis settings, not 
      * elsewhere (e.g. rollout settings for the eval within the rollout)
      */
-    fUseAR = (strcmp(pDetails->title, "Analysis settings") == 0)? 1 : 0;
+    // fUseAR = (strcmp(pDetails->title, "Analysis settings") == 0)? 1 : 0;
+
+        g_message("calling EvalWidget w/ pDetails->esChequer->fAutoRollout=%d",pDetails->esChequer->fAutoRollout); 
 
     gtk_container_add(GTK_CONTAINER(pwFrame),
         pDetails->pwChequer = EvalWidget(pDetails->esChequer, pDetails->mfChequer,
-            NULL, pDetails->mfChequer != NULL, fUseAR));
+            NULL, pDetails->mfChequer != NULL, pDetails->fUseAR));
 
     pwFrame = gtk_frame_new(_("Cube decisions"));
     gtk_box_pack_start(GTK_BOX(hbox), pwFrame, TRUE, TRUE, 0);
@@ -2799,7 +2833,7 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
 
     gtk_box_pack_start(GTK_BOX(pwvbox),
         pDetails->pwCube = EvalWidget(pDetails->esCube, (movefilter *) & pDetails->mfCube[9],
-            NULL, pDetails->mfCube != NULL, fUseAR), 
+            NULL, pDetails->mfCube != NULL, pDetails->fUseAR), 
         FALSE, FALSE, 0);
 
     if (pDetails->cubeDisabled)
@@ -2813,8 +2847,10 @@ static void
 SummaryMenuActivate(GtkComboBox * box, AnalysisDetails * pAnalDetails)
 {
     int selected = gtk_combo_box_get_active(box) + (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
-        // g_message("SummaryMenuActivate: selected=%d",selected);
-    if (selected == NUM_SETTINGS)
+        g_message("SummaryMenuActivate: selected=%d",selected);
+
+    if (selected == (pAnalDetails->fUseAR ? NUM_SETTINGS : NUM_SETTINGS_NO_AR))
+    // if (selected == (pAnalDetails->fWeakLevels ? NUM_SETTINGS : NUM_SETTINGS_NO_AR-SETTINGS_EXPERT))
         return;                 /* user defined */
 
     /* set eval settings to predefined values */
@@ -2865,7 +2901,7 @@ AddLevelSettings(GtkWidget * pwFrame, AnalysisDetails * pAnalDetails)
 
     pAnalDetails->pwOptionMenu = gtk_combo_box_text_new();
 
-    for (i = (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT); i < NUM_SETTINGS; i++)
+    for (i = (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT); i < (pAnalDetails->fUseAR ? NUM_SETTINGS : NUM_SETTINGS_NO_AR) ; i++)
         gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pAnalDetails->pwOptionMenu), Q_(aszSettings[i]));
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(pAnalDetails->pwOptionMenu), _("user defined"));
     g_signal_connect(G_OBJECT(pAnalDetails->pwOptionMenu), "changed", G_CALLBACK(SummaryMenuActivate), pAnalDetails);
@@ -3113,7 +3149,7 @@ HintSameToggled(GtkWidget * UNUSED(notused), analysiswidget * paw)
 
 static AnalysisDetails *
 CreateEvalSettings(GtkWidget * pwParent, const char *title, evalcontext * pechequer, movefilter * pmfchequer,
-                   evalcontext * pecube, movefilter * pmfcube, int fWeakLevels)
+                   evalcontext * pecube, movefilter * pmfcube, int fWeakLevels, int fUseAR)
 {
     AnalysisDetails *pAnalDetail = g_malloc(sizeof(AnalysisDetails));
     pAnalDetail->title = title;
@@ -3123,6 +3159,7 @@ CreateEvalSettings(GtkWidget * pwParent, const char *title, evalcontext * pecheq
     pAnalDetail->mfCube = pmfcube;
     pAnalDetail->cubeDisabled = FALSE;
     pAnalDetail->fWeakLevels = fWeakLevels;
+    pAnalDetail->fUseAR = fUseAR;
 
     pAnalDetail->pwSettingWidgets = AddLevelSettings(pwParent, pAnalDetail);
     return pAnalDetail;
@@ -3611,7 +3648,7 @@ append_analysis_options(analysiswidget * paw)
 
     /*giving a name to be able to g_free it later*/
     paw->pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
-            &paw->esChequer.ec, (movefilter *) &paw->aamf, &paw->esCube.ec, NULL, FALSE);
+            &paw->esChequer.ec, (movefilter *) &paw->aamf, &paw->esCube.ec, NULL, FALSE, TRUE);
 //    pAnalDetailSettings1 = CreateEvalSettings(pwFrame, _("Analysis settings"),
 //                                              &aw.esChequer.ec, (movefilter *) & aw.aamf, &aw.esCube.ec, NULL, FALSE);
 
@@ -3657,7 +3694,7 @@ append_analysis_options(analysiswidget * paw)
 
     paw->pAnalDetailSettings2 = CreateEvalSettings(vbox1, _("Hint/Tutor settings"),
                                               &paw->esEvalChequer.ec, (movefilter *) &paw->aaEvalmf, &paw->esEvalCube.ec,
-                                              NULL, FALSE);
+                                              NULL, FALSE, FALSE);
     paw->pwCubeSummary = paw->pAnalDetailSettings2->pwSettingWidgets;
 
     //gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwPage);
@@ -3820,7 +3857,7 @@ PlayersPage(playerswidget * ppw, int i, const char *title)
 
     ppw->pLevelSettings[i] = CreateEvalSettings(pwVBox, _("GNU Backgammon settings"),
                                                 &ppw->ap[i].esChequer.ec, (movefilter *) ppw->ap[i].aamf,
-                                                &ppw->ap[i].esCube.ec, NULL, TRUE);
+                                                &ppw->ap[i].esCube.ec, NULL, TRUE, FALSE);
 
     gtk_container_add(GTK_CONTAINER(pwVBox),
                       ppw->apwRadio[i][2] =
@@ -6048,7 +6085,7 @@ RolloutPage(rolloutpagewidget * prpw, const char *title, const int UNUSED(fMoveF
     if (frameRet)
         *frameRet = pwFrame;
 
-    return CreateEvalSettings(pwFrame, title, prpw->precCheq, prpw->pmf, prpw->precCube, NULL, FALSE);
+    return CreateEvalSettings(pwFrame, title, prpw->precCheq, prpw->pmf, prpw->precCube, NULL, FALSE, FALSE);
 }
 
 static void

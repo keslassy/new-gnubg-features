@@ -316,7 +316,7 @@ const char *aszSettings[NUM_SETTINGS] = {
     N_("setting|3ply + AutoRollout"),
 };
 
-/* which evaluation context does the predefined settings use */
+/* which evaluation context does the predefined setting use */
 evalcontext aecSettings[NUM_SETTINGS] = {
     {TRUE, 0, FALSE, TRUE, 0.060f, FALSE},     /* beginner */
     {TRUE, 0, FALSE, TRUE, 0.050f, FALSE},     /* casual player */
@@ -332,7 +332,7 @@ evalcontext aecSettings[NUM_SETTINGS] = {
     {TRUE, 3, TRUE, TRUE, 0.0f, TRUE},         /* 3ply (grandmaster)+AR */
 };
 
-/* which move filter does the predefined settings use [see below: 0=Tiny, 1=Narrow, etc] */
+/* which move filter does the predefined setting use [see below: 0=Tiny, 1=Narrow, etc] */
 int aiSettingsMoveFilter[NUM_SETTINGS] = {
     -1,                         /* beginner: n/a */
     -1,                         /* casual play: n/a */
@@ -4313,13 +4313,14 @@ cmp_evalcontext(const evalcontext * pec1, const evalcontext * pec2)
 
     /* Check for AutoRollout */
     // g_message("sizes: %lu,%lu",sizeof(pec1),sizeof(pec2));
+    g_message("fAR? %d,%d",pec1->fAutoRollout,pec2->fAutoRollout);
     if (pec1->fAutoRollout < pec2->fAutoRollout)
         return -1;
     else if (pec1->fAutoRollout > pec2->fAutoRollout)
         return +1;
 
     /* Check if plies are different */
-
+    g_message("plies: %d,%d",pec1->nPlies,pec2->nPlies);
     if (pec1->nPlies < pec2->nPlies)
         return -1;
     else if (pec1->nPlies > pec2->nPlies)
@@ -4345,7 +4346,7 @@ cmp_evalcontext(const evalcontext * pec1, const evalcontext * pec2)
         else if (pec1->fDeterministic > pec2->fDeterministic)
             return +1;
     }
-
+    g_message("around the end\n");  
     if (pec1->nPlies > 0) {
         int nPrune1 = (pec1->fUsePrune);
         int nPrune2 = (pec2->fUsePrune);
