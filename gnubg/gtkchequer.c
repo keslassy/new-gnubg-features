@@ -853,7 +853,8 @@ CheckHintButtons(hintdata * phd)
     gtk_widget_set_sensitive(phd->pwTempMap, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwCmark, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     //gtk_widget_set_sensitive(phd->pwRollout, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
-    gtk_widget_set_sensitive(phd->pwRolloutPresets, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwRollout, !fBackgroundAnalysisRunning);
+    gtk_widget_set_sensitive(phd->pwRolloutPresets, !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwEval, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     gtk_widget_set_sensitive(phd->pwEvalPly, c && phd->fButtonsValid && !fBackgroundAnalysisRunning);
     // gtk_widget_set_sensitive(phd->pwAutoRollout, phd->fButtonsValid && !fBackgroundAnalysisRunning);
