@@ -171,7 +171,7 @@ SetupSettingsMenuActivate(GtkWidget * combo, const movefiltersetupwidget * pfmsw
 {
 
     int iSelected = gtk_combo_box_get_active(GTK_COMBO_BOX(combo));
-    g_message("iSelected setting in setup=%d",iSelected);
+    // g_message("iSelected setting in setup=%d",iSelected);
     if (iSelected == NUM_MOVEFILTER_SETTINGS)
         return;                 /* user defined */
 
@@ -407,7 +407,7 @@ SettingsMenuActivate(GtkWidget * combo, movefilterwidget * pmfw)
 {
 
     int iSelected = gtk_combo_box_get_active(GTK_COMBO_BOX(combo));
-    g_message("iSelected setting in gtkmovefilter=%d",iSelected);
+    // g_message("iSelected setting in gtkmovefilter=%d",iSelected);
     if (iSelected == NUM_MOVEFILTER_SETTINGS)
         return;                 /* user defined */
 

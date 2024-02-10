@@ -4313,14 +4313,14 @@ cmp_evalcontext(const evalcontext * pec1, const evalcontext * pec2)
 
     /* Check for AutoRollout */
     // g_message("sizes: %lu,%lu",sizeof(pec1),sizeof(pec2));
-    g_message("fAR? %d,%d",pec1->fAutoRollout,pec2->fAutoRollout);
+    // g_message("fAR? %d,%d",pec1->fAutoRollout,pec2->fAutoRollout);
     if (pec1->fAutoRollout < pec2->fAutoRollout)
         return -1;
     else if (pec1->fAutoRollout > pec2->fAutoRollout)
         return +1;
 
     /* Check if plies are different */
-    g_message("plies: %d,%d",pec1->nPlies,pec2->nPlies);
+    // g_message("plies: %d,%d",pec1->nPlies,pec2->nPlies);
     if (pec1->nPlies < pec2->nPlies)
         return -1;
     else if (pec1->nPlies > pec2->nPlies)
@@ -4346,7 +4346,7 @@ cmp_evalcontext(const evalcontext * pec1, const evalcontext * pec2)
         else if (pec1->fDeterministic > pec2->fDeterministic)
             return +1;
     }
-    g_message("around the end\n");  
+    // g_message("around the end\n");  
     if (pec1->nPlies > 0) {
         int nPrune1 = (pec1->fUsePrune);
         int nPrune2 = (pec2->fUsePrune);

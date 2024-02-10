@@ -2275,7 +2275,7 @@ EvalGetValues(evalcontext * pec, evalwidget * pew)
 {
 
     pec->nPlies = (unsigned int) gtk_adjustment_get_value(pew->padjPlies);
-    g_message("in EvalGetValues, we get plies=%d",pec->nPlies);
+    // g_message("in EvalGetValues, we get plies=%d",pec->nPlies);
     pec->fCubeful = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwCubeful));
 
     pec->fUsePrune = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pew->pwUsePrune));
@@ -2312,7 +2312,7 @@ EvalChanged(GtkWidget * UNUSED(pw), evalwidget * pew)
         if (fEval && fMoveFilter) {
 
             /* current settings equal to a predefined setting */
-                g_message("evalchanged 1");
+                // g_message("evalchanged 1");
             gtk_combo_box_set_active(GTK_COMBO_BOX(pew->pwOptionMenu), i);
             fFound = TRUE;
             break;
@@ -2325,17 +2325,17 @@ EvalChanged(GtkWidget * UNUSED(pw), evalwidget * pew)
     /* user defined setting */
 
     if (!fFound) {
-                g_message("evalchanged 1");
+                // g_message("evalchanged 1");
         gtk_combo_box_set_active(GTK_COMBO_BOX(pew->pwOptionMenu), NUM_SETTINGS);
     }
 
     if (pew->fMoveFilter) {
-        g_message("move changed?");
+        // g_message("move changed?");
         moveNeedsMFWidget=(ecCurrent.nPlies || ecCurrent.fAutoRollout);
         gtk_widget_set_sensitive(latestMFWidget, moveNeedsMFWidget || cubeNeedsMFWidget);
         // gtk_widget_set_sensitive(GTK_WIDGET(pew->pwMoveFilter), ecCurrent.nPlies || ecCurrent.fAutoRollout);
     } else {
-        g_message("cube changed?");
+        // g_message("cube changed?");
         cubeNeedsMFWidget=(ecCurrent.fAutoRollout);
         gtk_widget_set_sensitive(latestMFWidget, moveNeedsMFWidget || cubeNeedsMFWidget);
         // g_message("sensitive? %d",gtk_widget_get_sensitive(GTK_WIDGET(aw.pAnalDetailSettings1->pwChequer->fMoveFilter)));
@@ -2370,7 +2370,7 @@ SettingsMenuActivate(GtkComboBox * box, evalwidget * pew)
 
 
     iSelected = gtk_combo_box_get_active(box);
-    g_message("iSelected setting=%d",iSelected);
+    // g_message("iSelected setting=%d",iSelected);
     if (iSelected == NUM_SETTINGS)
         return;                 /* user defined */
 
@@ -2378,7 +2378,7 @@ SettingsMenuActivate(GtkComboBox * box, evalwidget * pew)
 
     pec = &aecSettings[iSelected];
 
-      g_message("pec->nPlies=%d",pec->nPlies);  
+    //   g_message("pec->nPlies=%d",pec->nPlies);  
 
     gtk_adjustment_set_value(pew->padjPlies, pec->nPlies);
     gtk_adjustment_set_value(pew->padjNoise, pec->rNoise);
@@ -2521,7 +2521,7 @@ EvalWidget(evalcontext * pec, movefilter * pmf, int *pfOK, const int fMoveFilter
                         pew->pwAutoRollout = gtk_check_button_new_with_label(_("Use AutoRollout")));
         // g_message("%d",pec->fCubeful);
         // g_message("%f",pec->rNoise);
-        g_message("in EvalWidget: pec->fAutoRollout=%d",pec->fAutoRollout);            
+        // g_message("in EvalWidget: pec->fAutoRollout=%d",pec->fAutoRollout);            
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pew->pwAutoRollout), pec->fAutoRollout);
         gtk_widget_set_tooltip_text(pew->pwAutoRollout, _(ARHelp));
     }
@@ -2754,7 +2754,7 @@ UpdateSummaryEvalMenuSetting(AnalysisDetails * pAnalDetails)
     to also disable AutoRollout in the first menu  */
     int setting = (pAnalDetails->fUseAR ? NUM_SETTINGS : NUM_SETTINGS_NO_AR);
     // int setting = NUM_SETTINGS;
-    g_message("before: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
+    // g_message("before: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
 
     /* setting is "user-defined" unless cube setting and checker setting agree.
     Added: they agree whenever cube settings are defined as the same as checker settings
@@ -2774,7 +2774,7 @@ UpdateSummaryEvalMenuSetting(AnalysisDetails * pAnalDetails)
         if (setting==SETTINGS_3PLY_AR)
             setting=SETTINGS_GRANDMASTER;
     }
-    g_message("middle: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
+    // g_message("middle: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
 
     setting -= (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
     if (setting < 0)
@@ -2783,7 +2783,7 @@ UpdateSummaryEvalMenuSetting(AnalysisDetails * pAnalDetails)
         setting = (pAnalDetails->fUseAR ? NUM_SETTINGS : NUM_SETTINGS_NO_AR)-(pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
         // setting = NUM_SETTINGS - (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
 
-    g_message("after: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
+    // g_message("after: pAnalDetails->fWeakLevels:%d,fUseAR:%d,chequerDefault %d,cubeDefault %d,setting %d\n",pAnalDetails->fWeakLevels,pAnalDetails->fUseAR,chequerDefault,cubeDefault,setting);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(pAnalDetails->pwOptionMenu), setting);
 }
@@ -2814,7 +2814,7 @@ ShowDetailedAnalysis(GtkWidget * button, AnalysisDetails * pDetails)
      */
     // fUseAR = (strcmp(pDetails->title, "Analysis settings") == 0)? 1 : 0;
 
-        g_message("calling EvalWidget w/ pDetails->esChequer->fAutoRollout=%d",pDetails->esChequer->fAutoRollout); 
+    // g_message("calling EvalWidget w/ pDetails->esChequer->fAutoRollout=%d",pDetails->esChequer->fAutoRollout); 
 
     gtk_container_add(GTK_CONTAINER(pwFrame),
         pDetails->pwChequer = EvalWidget(pDetails->esChequer, pDetails->mfChequer,
@@ -2847,7 +2847,7 @@ static void
 SummaryMenuActivate(GtkComboBox * box, AnalysisDetails * pAnalDetails)
 {
     int selected = gtk_combo_box_get_active(box) + (pAnalDetails->fWeakLevels ? 0 : SETTINGS_EXPERT);
-        g_message("SummaryMenuActivate: selected=%d",selected);
+        // g_message("SummaryMenuActivate: selected=%d",selected);
 
     if (selected == (pAnalDetails->fUseAR ? NUM_SETTINGS : NUM_SETTINGS_NO_AR))
     // if (selected == (pAnalDetails->fWeakLevels ? NUM_SETTINGS : NUM_SETTINGS_NO_AR-SETTINGS_EXPERT))
