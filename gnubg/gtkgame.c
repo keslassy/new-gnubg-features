@@ -2033,6 +2033,50 @@ ToggleShowingIDs(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * pw)
 }
 #endif
 
+int fShortToolbar = TRUE;
+
+#if !defined(USE_GTKITEMFACTORY)
+static void
+ToggleShortToolbar(GtkToggleAction * action, gpointer UNUSED(user_data))
+{
+    int newValue = gtk_toggle_action_get_active(action);
+    g_message("ToggleShortToolbar newValue=%d",newValue);
+
+    if(newValue) {
+        fShortToolbar = TRUE;
+        gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
+        gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));
+    }
+    else {
+        fShortToolbar = FALSE;
+        gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
+        gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));
+    }
+
+    UserCommand("save settings");
+}
+#else
+static void
+ToggleShortToolbar(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * pw)
+{
+    int newValue = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(pw));
+    g_message("ToggleShortToolbar 2 newValue=%d",newValue);
+
+    if(newValue) {
+        fShortToolbar = TRUE;
+        gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame")); //GTK_TOOL_ITEM(ptw->pwEndGame)
+        //    toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
+        gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
+    }
+    else {
+        fShortToolbar = FALSE;
+        gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame"));
+        gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
+    }
+    UserCommand("save settings");
+}
+#endif
+
 int fToolbarShowing = TRUE;
 
 extern void
@@ -2042,6 +2086,7 @@ ShowToolbar(void)
     gtk_widget_show(pwToolbar);
     gtk_widget_show(pwHandle);
 
+    /* when we show the toolbar, we also offer in the menu the option of hiding it, and hide the option of showing it*/
 #if !defined(USE_GTKITEMFACTORY)
     gtk_widget_show((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/HideToolBar")));
     gtk_widget_hide((gtk_ui_manager_get_widget(puim, "/MainMenu/ViewMenu/ToolBarMenu/ShowToolBar")));
@@ -4302,7 +4347,7 @@ ReportBug(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pwEvent))
 #if !defined(USE_GTKITEMFACTORY)
 
 static GtkActionEntry actionEntries[] = {
-    { "FileMenuAction", NULL, N_("_File"), NULL, NULL, G_CALLBACK(NULL) },
+  { "FileMenuAction", NULL, N_("_File"), NULL, NULL, G_CALLBACK(NULL) },
     { "FileNewAction", GTK_STOCK_NEW, N_("_New..."), "<control>N", N_("Start new game, match, session or position"),
      G_CALLBACK(NewClicked) },
     { "FileOpenAction", GTK_STOCK_OPEN, N_("_Open"), "<control>O", N_("Open game, match, session or position"),
@@ -4317,7 +4362,7 @@ static GtkActionEntry actionEntries[] = {
     { "FileExitAction", NULL, N_("_Quit"), "<control>Q", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_QUIT) },
 #endif
 
-    { "EditMenuAction", NULL, N_("_Edit"), NULL, NULL, G_CALLBACK(NULL) },
+  { "EditMenuAction", NULL, N_("_Edit"), NULL, NULL, G_CALLBACK(NULL) },
     { "UndoAction", GTK_STOCK_UNDO, N_("_Undo"), "<control>Z", N_("Undo moves"), G_CALLBACK(GTKUndo) },
     { "CopyIDMenuAction", NULL, N_("_Copy ID to Clipboard"), NULL, NULL, G_CALLBACK(NULL) },
     { "CopyGNUBGIDAction", NULL, N_("GNUbg ID"), "<control>C", NULL, G_CALLBACK(CopyIDs) },
@@ -4344,7 +4389,7 @@ static GtkActionEntry actionEntries[] = {
     { "SwitchModeAction", NULL, N_("Switch to xD view"), NULL, NULL, G_CALLBACK(SwitchDisplayMode) },
 #endif
 
-    { "GameMenuAction", NULL, N_("_Game"), NULL, NULL, G_CALLBACK(NULL) },
+  { "GameMenuAction", NULL, N_("_Game"), NULL, NULL, G_CALLBACK(NULL) },
     { "RollAction", NULL, N_("_Roll"), "<control>R", NULL, CMD_ACTION_CALLBACK_FROMID(CMD_ROLL) },
     { "FinishMoveAction", NULL, N_("_Finish move"), "<control>F", NULL, G_CALLBACK(FinishMove) },
     { "DoubleAction", GNUBG_STOCK_DOUBLE, N_("_Double"), "<control>D", N_("Double or redouble(beaver)"),
@@ -4490,6 +4535,7 @@ static GtkToggleActionEntry toggleActionEntries[] = {
 
     { "DockPanelsAction", NULL, N_("_Dock panels"), NULL, NULL, G_CALLBACK(ToggleDockPanels), FALSE },
     { "ShowIDStatusBarAction", NULL, N_("Show _ID in status bar"), NULL, NULL, G_CALLBACK(ToggleShowingIDs), FALSE },   /* TOGGLE */
+    { "ShortToolbarAction", NULL, N_("Short toolbar"), NULL, NULL, G_CALLBACK(ToggleShortToolbar), FALSE },   /* TOGGLE */
     { "FullScreenAction", NULL, N_("Full screen"), "F11", NULL, G_CALLBACK(DoFullScreenMode), FALSE },  /* TOGGLE */
     { "PlayClockwiseAction", NULL, N_("Play _Clockwise"), NULL, N_("Reverse direction of play"), G_CALLBACK(ToggleClockwise), FALSE }   /* TOGGLE */
 };
@@ -4573,6 +4619,8 @@ static GtkItemFactoryEntry aife[] = {
     { N_("/_View/_Toolbar"), NULL, NULL, 0, "<Branch>", NULL },
     { N_("/_View/_Toolbar/_Hide Toolbar"), NULL, HideToolbar, 0, NULL, NULL },
     { N_("/_View/_Toolbar/_Show Toolbar"), NULL, ShowToolbar, 0, NULL, NULL },
+    { N_("/_View/_Toolbar/-"), NULL, NULL, 0, "<Separator>", NULL },
+    { N_("/_View/Shorten Toolbar"), NULL, G_CALLBACK(ToggleShortToolbar), 0, "<CheckItem>", NULL },
     { N_("/_View/_Toolbar/-"), NULL, NULL, 0, "<Separator>", NULL },
     { N_("/_View/_Toolbar/_Text only"), NULL, G_CALLBACK(ToolbarStyle), TOOLBAR_ACTION_OFFSET + GTK_TOOLBAR_TEXT,
      "<RadioItem>", NULL },
