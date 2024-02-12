@@ -778,6 +778,14 @@ CommandSetClockwise(char *sz)
 }
 
 extern void
+CommandSetShortToolbar(char *sz)
+{
+#if defined(USE_GTK)      
+    SetToggle("short-toolbar", &fShortToolbar, sz, _("Show a short toolbar with fewer icons."), _("Show a full toolbar."));
+#endif
+}
+
+extern void
 CommandSetAppearance(char *sz)
 {
 #if defined(USE_GTK)

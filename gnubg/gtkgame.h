@@ -54,6 +54,7 @@ extern int frozen;
 extern int fTTY;
 extern int fX;
 extern int fToolbarShowing;
+extern int fShortToolbar;
 extern int inCallback;
 extern unsigned int nDelay;
 extern GtkWidget *hpaned;

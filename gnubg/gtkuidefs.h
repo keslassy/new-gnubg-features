@@ -75,6 +75,8 @@
 	        "<menuitem name='HideToolBar' action='HideToolBarAction' />" \
 	        "<menuitem name='ShowToolBar' action='ShowToolBarAction' />" \
 	        "<separator/>" \
+		    "<menuitem name='ShortToolbar' action='ShortToolbarAction' />" \
+	        "<separator/>" \
 	        "<menuitem name='TextOnly' action='TextOnlyToolBarAction' />" \
 	        "<menuitem name='IconsOnly' action='IconsOnlyToolBarAction' />" \
 	        "<menuitem name='Both' action='BothToolBarAction' />" \
