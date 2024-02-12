@@ -889,6 +889,8 @@ extern void
 GTKAnalyzeCurrent(void)
 {
 
+    g_message("start");    
+
     /*analyze match*/
     UserCommand("analyse match");
 
@@ -898,6 +900,16 @@ GTKAnalyzeCurrent(void)
     }
     /*show stats panel*/
     UserCommand("show statistics match");
+
+    g_message("before save");
+
+
+    UserCommand("save match");
+
+    SaveCommon(N_EXPORT_TYPES, _("Save or export to file"));
+
+    g_message("saved");
+
 }
 
 extern void

@@ -452,10 +452,6 @@ ToolbarNew(void)
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwEndGame), FALSE);
     ptw->pwReset = gtk_ui_manager_get_widget(puim, "/MainToolBar/Undo");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwReset), TRUE);
-    ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/Analyse");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
-    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyseFile");
-    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeFile), TRUE);
     ptw->pwHint = gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwHint), TRUE);
     ptw->pwEdit = gtk_ui_manager_get_widget(puim, "/MainToolBar/EditPosition");
@@ -464,6 +460,10 @@ ToolbarNew(void)
     ptw->pwButtonClockwise = gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise");
     gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwButtonClockwise), FALSE);
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(ptw->pwButtonClockwise), _("Direction"));
+    ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/Analyse");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
+    ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyseFile");
+    gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeFile), TRUE);
     // ptw->pwAnalyzeCurrent = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeCurrent");
     // gtk_tool_item_set_homogeneous(GTK_TOOL_ITEM(ptw->pwAnalyzeCurrent), TRUE);
     // ptw->pwAnalyzeFile = gtk_ui_manager_get_widget(puim, "/MainToolBar/AnalyzeFile");

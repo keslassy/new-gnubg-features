@@ -2016,15 +2016,16 @@ CommandShowStatisticsMatch(char *UNUSED(sz))
 {
     char szOutput[STATCONTEXT_MAXSIZE];
 
-    updateStatisticsMatch(&lMatch);
 
+    updateStatisticsMatch(&lMatch);
+g_message("1");
 #if defined(USE_GTK)
     if (fX) {
         GTKDumpStatcontext(0);
         return;
     }
 #endif
-
+g_message("2");
     DumpStatcontext(szOutput, &scMatch, ap[0].szName, ap[1].szName, ms.nMatchTo);
     outputl(szOutput);
 }

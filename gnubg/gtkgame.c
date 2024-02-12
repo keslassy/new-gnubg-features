@@ -8620,7 +8620,7 @@ static char *aszStatHeading[NUM_STAT_TYPES] = {
 
 static GtkWidget *statViews[NUM_STAT_TYPES], *statView;
 static int numStatGames;
-static GtkWidget *pwStatDialog;
+static GtkWidget *pwStatDialogAux;
 int fGUIUseStatsPanel = TRUE;
 static GtkWidget *pswList;
 static GtkWidget *pwNotebook;
@@ -8764,11 +8764,11 @@ StatsSelectGame(GtkWidget * box, int UNUSED(i))
 {
     int curStatGame = gtk_combo_box_get_active(GTK_COMBO_BOX(box));
     if (!curStatGame) {
-        gtk_window_set_title(GTK_WINDOW(pwStatDialog), _("Statistics for all games"));
+        gtk_window_set_title(GTK_WINDOW(pwStatDialogAux), _("Statistics for all games"));
     } else {
         char sz[100];
         sprintf(sz, _("Statistics for game %d"), curStatGame);
-        gtk_window_set_title(GTK_WINDOW(pwStatDialog), sz);
+        gtk_window_set_title(GTK_WINDOW(pwStatDialogAux), sz);
     }
     SetStats(GetStatContext(curStatGame));
 }
@@ -9533,9 +9533,9 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
 
 /* creating this placeholder function with all the inputs needed when pressing a button;
 the real function above doesn't have inputs*/
-void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
+void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n)){    //}, GtkWidget * pw){
     // this is a problem when we close the MWC window:
-    //gtk_widget_destroy(pwStatDialog);
+    gtk_widget_destroy(pwStatDialogAux);
     ComputeMWC(); //pwStatDialog);
 }
 
@@ -9544,9 +9544,19 @@ void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 /* ***************************************************************************** */
 
 
+static void
+DestroyStats(void)
+{
+    g_message("destroy");
+    gtk_widget_destroy(gtk_widget_get_toplevel(pwStatDialogAux));
+}
+
+
 extern void
 GTKDumpStatcontext(int game)
 {
+    GtkWidget *pwStatDialog; 
+    
     GtkWidget *copyMenu, *menu_item, *pvbox, *pwUsePanels; //, *pwPlot;
     GtkWidget *navi_combo;
     GtkWidget *addToDbButton,*mwcButton;
@@ -9556,15 +9566,28 @@ GTKDumpStatcontext(int game)
     listOLD *pl;
     GraphData *gd = CreateGraphData();
 #endif
-    /* made non-modal so we can close the MWC-plot window after opening it
+g_message("GTKDumpStatcontext: 0");
+
+    // if (GetPanelWidget(WINDOW_HINT))
+    //     gtk_widget_destroy(GetPanelWidget(WINDOW_HINT));
+
+    /* 
+    IK: V1: made non-modal so we can close the MWC-plot window after opening it
     ...else there are all sorts of problems when closing, including
     gnubg closing the main window.
     Also, a user may want to look at the moves while checking the plot.
+    V2: in an unexplained way, with non-modal, this window is a black hole.
      */
     //  pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
-    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
+    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE | DIALOG_FLAG_CLOSEBUTTON,  G_CALLBACK(DestroyStats), NULL);
+    pwStatDialogAux=pwStatDialog;
+    //  pwStatDialog = GTKCreateDialog("Stats", DT_INFO, NULL, DIALOG_FLAG_NOTIDY, G_CALLBACK(HintOK), NULL);   
      //GTKCreateDialog(_("About GNU Backgammon"), DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL,
      //    NULL);
+
+    // SetPanelWidget(WINDOW_HINT, pwStatDialog);
+    //     setWindowGeometry(WINDOW_HINT);
+    //     g_object_weak_ref(G_OBJECT(pwStatDialog), DestroyHint, NULL);
 
     if (!fAutoDB) {
         gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
@@ -9574,8 +9597,9 @@ GTKDumpStatcontext(int game)
     if(ms.nMatchTo > 0) {
         gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
             mwcButton = gtk_button_new_with_label(_("Plot MWC")));
-        g_signal_connect(mwcButton, "clicked", G_CALLBACK(PlotMWCTrigger), NULL);
+        g_signal_connect(mwcButton, "clicked", G_CALLBACK(PlotMWCTrigger), pwStatDialog);
     }
+// g_message("GTKDumpStatcontext: 1");
 
     pwNotebook = gtk_notebook_new();
     gtk_notebook_set_scrollable(GTK_NOTEBOOK(pwNotebook), TRUE);
@@ -9607,6 +9631,7 @@ GTKDumpStatcontext(int game)
     gtk_container_add(GTK_CONTAINER(pswList), statView);
 
     gtk_box_pack_start(GTK_BOX(pvbox), pswList, TRUE, TRUE, 0);
+// g_message("GTKDumpStatcontext: 2");
 
     navi_combo = AddNavigation(pvbox);
     gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_MAIN)), pvbox);
@@ -9679,6 +9704,7 @@ GTKDumpStatcontext(int game)
     gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
     gtk_widget_show(menu_item);
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(CopyPage), pwNotebook);
+// g_message("GTKDumpStatcontext: 3");
 
     menu_item = gtk_menu_item_new_with_label(_("Copy all pages"));
     gtk_menu_shell_append(GTK_MENU_SHELL(copyMenu), menu_item);
@@ -9686,12 +9712,15 @@ GTKDumpStatcontext(int game)
     g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(CopyAll), pwNotebook);
 
     g_signal_connect(G_OBJECT(pwNotebook), "button-press-event", G_CALLBACK(ContextMenu), copyMenu);
+// g_message("GTKDumpStatcontext: 4");
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(navi_combo), game);
 
     g_signal_connect(pwStatDialog, "map", G_CALLBACK(stat_dialog_map), pwUsePanels);
+g_message("GTKDumpStatcontext: 5");
 
     GTKRunDialog(pwStatDialog);
+g_message("GTKDumpStatcontext: 6");
 
 #if defined(USE_BOARD3D)
     TidyGraphData(gd);

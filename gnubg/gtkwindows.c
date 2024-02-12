@@ -501,8 +501,14 @@ WriteWarnings(FILE * pf)
 extern void
 GTKRunDialog(GtkWidget * dialog)
 {
+// g_message("dialog: 1");
     GTKDisallowStdin();
+// g_message("dialog: 2");
     gtk_widget_show_all(dialog);
+g_message("dialog: 3 BEFORE");
     gtk_main();
+g_message("dialog: 4 AFTER");
     GTKAllowStdin();
+// g_message("dialog: 5");
+
 }
