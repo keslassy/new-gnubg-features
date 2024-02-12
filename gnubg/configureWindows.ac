@@ -55,6 +55,9 @@ case "$host" in
     win32=yes
     CFLAGS="$CFLAGS -mms-bitfields"
     LDFLAGS="$LDFLAGS -lws2_32 -lwinmm"
+    if [[[ "$(uname -or)" == *Msys ]]]; then
+        AC_DEFINE(USABLE_UNDER_MSYS, 1, [Using Msys])
+    fi
     ;;
   *-*-darwin*)
     darwin=yes
