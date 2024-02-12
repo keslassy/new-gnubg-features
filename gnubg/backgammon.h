@@ -718,6 +718,7 @@ extern void CommandSetCheatPlayer(char *);
 extern void CommandSetCheatPlayerRoll(char *);
 extern void CommandSetCheckUpdates(char *sz);
 extern void CommandSetClockwise(char *);
+extern void CommandSetShortToolbar(char *);
 extern void CommandSetUseKeyNames(char *);
 extern void CommandSetCommandWindow(char *);
 extern void CommandSetConfirmDefault(char *);

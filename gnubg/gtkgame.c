@@ -18,7 +18,10 @@
  * $Id: gtkgame.c,v 1.1012 2023/12/30 20:36:15 plm Exp $
  */
 /*
-02/2024: nicer MWC plot with exact value at the end
+02/2024: Isaac Keslassy:
+- nicer MWC plot with exact value at the end
+- new menu option to pick a shorter toolbar, enabling large toolbar icons with
+text even in smaller screens (without cutting the arrows on the top right)
 
 03/2023: Isaac Keslassy: to check GNUBG updates, we now make it opt-in rather 
 than opt-out: a month after starting GNUBG, the user is asked whether to check 
@@ -2040,27 +2043,30 @@ static void
 ToggleShortToolbar(GtkToggleAction * action, gpointer UNUSED(user_data))
 {
     int newValue = gtk_toggle_action_get_active(action);
-    g_message("ToggleShortToolbar newValue=%d",newValue);
-
+    // g_message("ToggleShortToolbar newValue=%d",newValue);
+    char *sz = g_strdup_printf("set short-toolbar %s", newValue ? "on" : "off");    
+    UserCommand(sz);
+    g_free(sz);
+    UserCommand("save settings");
     if(newValue) {
-        fShortToolbar = TRUE;
         gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
         gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));
     }
     else {
-        fShortToolbar = FALSE;
         gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
         gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));
     }
-
-    UserCommand("save settings");
 }
 #else
 static void
 ToggleShortToolbar(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * pw)
 {
     int newValue = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(pw));
-    g_message("ToggleShortToolbar 2 newValue=%d",newValue);
+    // g_message("ToggleShortToolbar 2 newValue=%d",newValue);
+    char *sz = g_strdup_printf("set short-toolbar %s", newValue ? "on" : "off");    
+    UserCommand(sz);
+    g_free(sz);
+    UserCommand("save settings");
 
     if(newValue) {
         fShortToolbar = TRUE;
@@ -2073,7 +2079,6 @@ ToggleShortToolbar(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * pw)
         gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame"));
         gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
     }
-    UserCommand("save settings");
 }
 #endif
 
@@ -2781,7 +2786,7 @@ EvalDefaultSetting(evalcontext * pec, movefilter * pmf)
             (!pmf || equal_movefilters((movefilter(*)[MAX_FILTER_PLIES]) pmf,
                             aaamfMoveFilterSettings
                             [aiSettingsMoveFilter[i]]));
-        g_message("i %d,fEval %d,fMoveFilter %d\n",i,fEval,fMoveFilter);
+        // g_message("i %d,fEval %d,fMoveFilter %d\n",i,fEval,fMoveFilter);
         if (fEval && fMoveFilter)
             return i;
     }

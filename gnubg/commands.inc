@@ -1296,6 +1296,10 @@ static command acSetVariation[] = {
 #endif
     { "seed", CommandSetSeed, 
       N_("Set the dice generator seed"), szOPTSEED, NULL },
+#if defined(USE_GTK)      
+    { "short-toolbar", CommandSetShortToolbar, N_("Set a short toolbar"),
+      szONOFF, &cOnOff },   
+#endif         
     { "sound", NULL, 
       N_("Control audio parameters"), NULL, acSetSound },
     { "styledgamelist", CommandSetStyledGameList, N_("Display colours for marked moves in game window"),
