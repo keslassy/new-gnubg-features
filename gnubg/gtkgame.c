@@ -1631,6 +1631,70 @@ SetPanelWidth(int size)
     }
 }
 
+
+int fShortToolbar = TRUE;
+
+/* toggledValue = 1 to shorten, 0 to lengthen */
+static void
+ApplyShortToolbar (int toggledValue){
+    // g_message("in Apply");
+#if !defined(USE_GTKITEMFACTORY)
+    if(toggledValue) {
+        gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
+        gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));     
+    }
+    else {
+        gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
+        gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));
+    }
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
+                                        "/MainMenu/ViewMenu/ToolBarMenu/ShortToolbar")),
+                                fShortToolbar); 
+#else
+    if(toggledValue) {
+        fShortToolbar = TRUE;
+        gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame")); //GTK_TOOL_ITEM(ptw->pwEndGame)
+        //    toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
+        gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
+    }
+    else {
+        fShortToolbar = FALSE;
+        gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame"));
+        gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
+    }
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget(pif, 
+                                        "/View/ToolBar/ShortToolbar")), 
+                                fShortToolbar);
+#endif    
+}
+
+#if !defined(USE_GTKITEMFACTORY)
+static void
+ToggleShortToolbar(GtkToggleAction * action, gpointer UNUSED(user_data))
+{
+    int newValue = gtk_toggle_action_get_active(action);
+    // g_message("ToggleShortToolbar newValue=%d",newValue);
+    char *sz = g_strdup_printf("set short-toolbar %s", newValue ? "on" : "off");    
+    UserCommand(sz);
+    g_free(sz);
+    UserCommand("save settings");
+    ApplyShortToolbar(newValue);
+}
+#else
+static void
+ToggleShortToolbar(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * pw)
+{
+    int newValue = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(pw));
+    // g_message("ToggleShortToolbar 2 newValue=%d",newValue);
+    char *sz = g_strdup_printf("set short-toolbar %s", newValue ? "on" : "off");    
+    UserCommand(sz);
+    g_free(sz);
+    UserCommand("save settings");
+    ApplyShortToolbar(newValue);
+}
+#endif
+
+
 extern void
 SwapBoardToPanel(int ToPanel, int updateEvents)
 {                               /* Show/Hide panel on right of screen */
@@ -1665,6 +1729,7 @@ SwapBoardToPanel(int ToPanel, int updateEvents)
         gtk_widget_hide(gtk_widget_get_parent(pwMenuBar));
         if (fToolbarShowing)
             gtk_widget_hide(gtk_widget_get_parent(pwToolbar));
+        ApplyShortToolbar(fShortToolbar);  
 
 #if GTK_CHECK_VERSION(3,0,0)
         g_object_ref(pwEventBox);
@@ -1685,6 +1750,7 @@ SwapBoardToPanel(int ToPanel, int updateEvents)
         gtk_widget_show(gtk_widget_get_parent(pwMenuBar));
         if (fToolbarShowing)
             gtk_widget_show(gtk_widget_get_parent(pwToolbar));
+        ApplyShortToolbar(fShortToolbar);    
     }
 }
 
@@ -2036,52 +2102,6 @@ ToggleShowingIDs(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * pw)
 }
 #endif
 
-int fShortToolbar = TRUE;
-
-#if !defined(USE_GTKITEMFACTORY)
-static void
-ToggleShortToolbar(GtkToggleAction * action, gpointer UNUSED(user_data))
-{
-    int newValue = gtk_toggle_action_get_active(action);
-    // g_message("ToggleShortToolbar newValue=%d",newValue);
-    char *sz = g_strdup_printf("set short-toolbar %s", newValue ? "on" : "off");    
-    UserCommand(sz);
-    g_free(sz);
-    UserCommand("save settings");
-    if(newValue) {
-        gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
-        gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));
-    }
-    else {
-        gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
-        gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));
-    }
-}
-#else
-static void
-ToggleShortToolbar(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * pw)
-{
-    int newValue = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(pw));
-    // g_message("ToggleShortToolbar 2 newValue=%d",newValue);
-    char *sz = g_strdup_printf("set short-toolbar %s", newValue ? "on" : "off");    
-    UserCommand(sz);
-    g_free(sz);
-    UserCommand("save settings");
-
-    if(newValue) {
-        fShortToolbar = TRUE;
-        gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame")); //GTK_TOOL_ITEM(ptw->pwEndGame)
-        //    toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
-        gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
-    }
-    else {
-        fShortToolbar = FALSE;
-        gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame"));
-        gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
-    }
-}
-#endif
-
 int fToolbarShowing = TRUE;
 
 extern void
@@ -2234,6 +2254,7 @@ DoFullScreenMode(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
             gtk_widget_show(pwToolbar);
             gtk_widget_show(pwHandle);
         }
+        ApplyShortToolbar(fShortToolbar);
         gtk_widget_show(GTK_WIDGET(bd->table));
 #if defined(USE_BOARD3D)
         /* Only show 2d dice below board if in 2d */
@@ -5381,7 +5402,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
                                                                                          "/MainMenu/ViewMenu/ToolBarMenu/Both")),
                                            nToolbarStyle);
 #endif
-
+        	ApplyShortToolbar(fShortToolbar);
         }
 
 #if defined(USE_BOARD3D)
@@ -5442,7 +5463,7 @@ RunGTK(GtkWidget * pwSplash, char *commands, char *python_script, char *match)
 #else
             gtk_widget_hide(gtk_item_factory_get_widget(pif, "/View/Toolbar/Show Toolbar"));
 #endif
-
+        ApplyShortToolbar(fShortToolbar);
         if (fFullScreen) {      /* Change to full screen (but hide warning) */
             fullScreenOnStartup = TRUE;
             FullScreenMode(TRUE);

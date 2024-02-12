@@ -3372,6 +3372,7 @@ SaveGUISettings(FILE * pf)
     fprintf(pf, "set toolbar %d\n", nToolbarStyle);
     if (!fToolbarShowing)
         fputs("set toolbar off\n", pf);
+    fprintf(pf, "set short-toolbar %s\n", fShortToolbar ? "on" : "off");    
 
 #if defined(USE_BOARD3D)
     if (fSync != -1)

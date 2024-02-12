@@ -435,3 +435,4 @@ gnubg/textures/Makefile.in
 gnubg/win32/Makefile
 gnubg/win32/Makefile.in
 gnubg/configure~
+gnubg/config.h.in~
