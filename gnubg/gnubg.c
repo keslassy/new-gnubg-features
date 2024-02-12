@@ -3028,8 +3028,12 @@ LoadRCFiles(void)
     outputoff();
     sz = g_build_filename(szHomeDirectory, "gnubgautorc", NULL);
     szz = g_strdup_printf("\"%s\"", sz);
-    if (g_file_test(sz, G_FILE_TEST_EXISTS))
+    if (g_file_test(sz, G_FILE_TEST_EXISTS)){
+        GTKMessage(_("LoadRCFiles: OK, we found that the file exists"), DT_INFO);
         CommandLoadCommands(szz);
+    } else
+            GTKMessage(_("LoadRCFiles: we found that the file doesn't exist!!!"), DT_INFO);
+
 
     UpdateSettings();
     g_free(sz);
@@ -3568,8 +3572,10 @@ CommandSaveSettings(char *szParam)
     /* If we were started without a configuration file, don't
      * save anything since this will overwrite an existing file
      * with defaults */
-    if (fNoRC)
+    if (fNoRC){
+                GTKMessage(_("noRC"), DT_INFO);
         return;
+    }
 
     if (!szParam || !*szParam) {
         /* no filename parameter given -- save to default location */
