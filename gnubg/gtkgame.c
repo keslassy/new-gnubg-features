@@ -9534,9 +9534,10 @@ extern void ComputeMWC(void)//GtkWidget* pwParent)
 /* creating this placeholder function with all the inputs needed when pressing a button;
 the real function above doesn't have inputs*/
 void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
-    // this is a problem when we close the MWC window:
-    //gtk_widget_destroy(pwStatDialog);
-    ComputeMWC(); //pwStatDialog);
+    // this used to be a problem when we close the MWC window; for now it seems to work
+    gtk_widget_destroy(pwStatDialog);
+
+    ComputeMWC(); 
 }
 
 
@@ -9556,15 +9557,16 @@ GTKDumpStatcontext(int game)
     listOLD *pl;
     GraphData *gd = CreateGraphData();
 #endif
-    /* made non-modal so we can close the MWC-plot window after opening it
+    /*
+    V1: made non-modal so we can close the MWC-plot window after opening it
     ...else there are all sorts of problems when closing, including
     gnubg closing the main window.
     Also, a user may want to look at the moves while checking the plot.
+    V2: in an unexplained way, with non-modal, this window is a black hole: we
+    cannot relaunch it after closing it. So we make it modal.
      */
-    //  pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
-    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
-     //GTKCreateDialog(_("About GNU Backgammon"), DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL,
-     //    NULL);
+    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL  | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
+    // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
 
     if (!fAutoDB) {
         gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),

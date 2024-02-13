@@ -1182,7 +1182,7 @@ struct MemoryStruct {
   size_t size;
 };
 
-extern int fTriggeredByRecordList; /* whether history plot is launched from record list or from menu*/
+// extern int fTriggeredByRecordList; /* whether history plot is launched from record list or from menu*/
 
 extern void UserCommand2(const char *szCommand); /* UserCommand is GTK-only, this function also works outside GTK*/
 

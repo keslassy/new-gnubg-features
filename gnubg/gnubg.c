@@ -271,7 +271,7 @@ int keyNamesFirstEmpty=0;
 int fUseKeyNames=TRUE; 
 int fWithinSmartSit=FALSE;
 int fCheckUpdateGTK = FALSE;
-int fTriggeredByRecordList=FALSE;
+// int fTriggeredByRecordList=FALSE;
     /*quiz*/
 int fInQuizMode=FALSE;
 int fUseQuiz=TRUE;

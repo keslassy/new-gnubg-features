@@ -31,5 +31,5 @@ extern void RelationalOptionsShown(void);
 extern void RelationalSaveOptions(void);
 extern void GtkShowQuery(RowSet * pRow);
 
-extern void ComputeHistory(void); /* for history plot*/
+extern void ComputeHistory(int usePlayerName); /* for history plot*/
 #endif

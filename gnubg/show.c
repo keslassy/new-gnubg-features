@@ -745,7 +745,7 @@ extern void
 CommandShowHistory(char *UNUSED(sz))
 {
 #if defined(USE_GTK)
-    ComputeHistory();
+    ComputeHistory(FALSE);
 #endif    
 }
 
