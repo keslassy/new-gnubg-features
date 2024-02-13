@@ -625,6 +625,8 @@ static command acSetGeometry[] = {
       N_("Show target help while dragging a chequer"), szONOFF, NULL },
     { "usestatspanel", CommandSetGUIUseStatsPanel,
       N_("Show statistics in a panel"), szONOFF, NULL },
+    { "markedsameplayer", CommandSetMarkedSamePlayer,
+      N_("Focus on same player when moving between marked moves."), szONOFF, NULL },
     { "movelistdetail", CommandSetGUIMoveListDetail,
       N_("Show win/loss stats in move list"), szONOFF, NULL },
     { "grayedit", CommandSetGUIGrayEdit,
