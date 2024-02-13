@@ -3004,7 +3004,7 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
         } 
     }
 
-
+    /*
     for (i = 0; i < NUM_LABEL; ++i)
         if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(paw->apwScoreMapLabel[i])) && scoreMapLabelDef != (scoreMapLabel) i) {
             sprintf(sz, "set scoremaplabel %s", aszScoreMapLabelCommands[i]);
@@ -3041,10 +3041,10 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
             UserCommand(sz);
             break;
         }} 
-
+        */
 
     /* Group output in one batch */
-    outputpostpone();
+    //outputpostpone();
 
     SetEvalCommands("set analysis chequerplay eval", &paw->esChequer.ec, &esAnalysisChequer.ec);
     SetMovefilterCommands("set analysis movefilter", paw->aamf, aamfAnalysis);
@@ -3062,7 +3062,7 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
         SetEvalCommands("set evaluation cubedecision eval", &paw->esEvalCube.ec, &GetEvalCube()->ec);
     }
     UserCommand("save settings");
-    outputresume();
+    //outputresume();
 
     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
 

@@ -3029,10 +3029,10 @@ LoadRCFiles(void)
     sz = g_build_filename(szHomeDirectory, "gnubgautorc", NULL);
     szz = g_strdup_printf("\"%s\"", sz);
     if (g_file_test(sz, G_FILE_TEST_EXISTS)){
-        GTKMessage(_("LoadRCFiles: OK, we found that the file exists"), DT_INFO);
+        //GTKMessage(_("LoadRCFiles: OK, we found that the file exists"), DT_INFO);
         CommandLoadCommands(szz);
     } else
-            GTKMessage(_("LoadRCFiles: we found that the file doesn't exist!!!"), DT_INFO);
+           // GTKMessage(_("LoadRCFiles: we found that the file doesn't exist!!!"), DT_INFO);
 
 
     UpdateSettings();
@@ -3122,6 +3122,18 @@ SaveEvalSettings(FILE * pf, const char *sz, evalcontext * pec)
             sz, pec->fCubeful ? "on" : "off", 
             sz, szNoise, 
             sz, pec->fDeterministic ? "on" : "off");
+    //outputerrf("%s plies %u\n"
+    //        "%s autorollout %s\n"
+    //        "%s prune %s\n"
+    //        "%s cubeful %s\n"
+    //        "%s noise %s\n"
+    //    "%s deterministic %s\n",
+    //    sz, pec->nPlies,
+    //    sz, pec->fAutoRollout ? "on" : "off",
+    //    sz, pec->fUsePrune ? "on" : "off",
+    //    sz, pec->fCubeful ? "on" : "off",
+    //    sz, szNoise,
+    //    sz, pec->fDeterministic ? "on" : "off");
 }
 
 
@@ -3342,7 +3354,8 @@ SaveGUISettings(FILE * pf)
     const char *aszAnimation[] = { "none", "blink", "slide" };
     const char *aszShowPips[N_GUI_SHOW_PIPS] = { "none", "pips", "epc", "wastage" };
     int dummy;
-
+    //outputerrf(_("start threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
+ //   GTKMessage(_("in savegui"), DT_INFO);
     SaveWindowSettings(pf);
     WriteWarnings(pf);
     if (fX)
@@ -3381,6 +3394,7 @@ SaveGUISettings(FILE * pf)
     if (fSync != -1)
         fprintf(pf, "set vsync3d %s\n", fSync ? "yes" : "no");
 #endif
+    //outputerrf(_("end gui threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
 }
 
 static void
@@ -3394,6 +3408,7 @@ SaveScoreMapSettings(FILE * pf)
     fprintf(pf, "set scoremapmoveequitydisplay %s\n", aszScoreMapMoveEquityDisplayCommands[scoreMapMoveEquityDisplayDef]);
     fprintf(pf, "set scoremapcolour %s\n", aszScoreMapColourCommands[scoreMapColourDef]);
     fprintf(pf, "set scoremaplayout %s\n", aszScoreMapLayoutCommands[scoreMapLayoutDef]);
+    //outputerrf(_("end scoremap threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
 }
 #endif
 
@@ -3566,6 +3581,7 @@ CommandSaveSettings(char *szParam)
 {
     FILE *pf;
     char *szFile;
+    char* mysz;
 
     szParam = NextToken(&szParam);
 
@@ -3618,33 +3634,63 @@ CommandSaveSettings(char *szParam)
           VERSION_STRING);
 
     fprintf(pf, "\n");
-
+//        outputerrf(_("%d error before lang, threads=%d, scoremap=%d\n"), errno, MT_GetNumThreads(), scoreMapPlyDefault);
+    // here OK
     /* language preference */
     fprintf(pf, "set lang %s\n", szLang);
+//    outputerrf("set lang %s\n", szLang);
 
+   //        outputerrf(_("%d error after lang, threads=%d, scoremap=%d\n"), errno, MT_GetNumThreads(), scoreMapPlyDefault);
 #if defined(USE_GTK)
     SaveGUISettings(pf);
+//    if (errno) {
+//        outputerrf(_("error after GUI, threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
+//    outputerr(szFile);
+//}
     SaveScoreMapSettings(pf);
+/*    if (errno) {
+        outputerrf(_("error after scoremap, threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
+        outputerr(szFile);
+    }  */ 
 #endif
+    
+//    outputerrf(_("pf: %s\n"), mysz);
+
+    //here starts the bug!?!?
     SaveAnalysisSettings(pf);
+    //if (errno)
+    //    outputerrf(_("error after analysis, threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
+
     SaveRenderingSettings(pf);
     SavePlayingSettings(pf);
     SaveRuleSettings(pf);
     SaveEvaluationSettings(pf);
     SavePlayerSettings(pf);
+    //if (errno)
+    //    outputerrf(_("error at player, threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
     SaveRNGSettings(pf, "set", rngCurrent, rngctxCurrent);
     SaveRolloutSettings(pf, "set rollout", &rcRollout);
     SaveImportExportSettings(pf);
+    //if (errno) {
+    //    outputerrf(_("error after import, threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
+    //    outputerr(szFile);
+    //}   
     SaveSoundSettings(pf);
     RelationalSaveSettings(pf);
-
+    //outputerrf(_("end relational threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
     SaveMiscSettings(pf);
+    //if (errno)
+    //    outputerrf(_("error at misc, threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
     SaveAutoSaveSettings(pf);
-    if (pf != stdout)
-        fclose(pf);
+    //if (pf != stdout)
+    //    fclose(pf);
+    //if (errno)
+    //    outputerrf(_("error at end, threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
 
-    if (errno)
+    if (errno) {
+  //      outputerrf(_("error part threads=%d, scoremap=%d\n"), MT_GetNumThreads(), scoreMapPlyDefault);
         outputerr(szFile);
+    }
     else {
         outputf(_("Settings saved to %s."), (!strcmp(szFile, "-")) ? _("standard output stream") : szFile);
         output("\n");
@@ -3654,6 +3700,9 @@ CommandSaveSettings(char *szParam)
             outputpostpone();
         }
     }
+    //if (pf != stdout)
+    //    fclose(pf);
+
     g_free(szFile);
 
 }
