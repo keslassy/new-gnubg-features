@@ -58,6 +58,10 @@ dkms.conf
 
 *.vs/*
 
+# CVS
+
+*/CVS*
+
 # list of files that appear during compilation
 
 gnubg/aclocal.m4
