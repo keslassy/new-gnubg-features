@@ -51,6 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+.vs/*
+
 # list of files that appear during compilation
 
 gnubg/aclocal.m4
