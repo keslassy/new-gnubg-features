@@ -563,7 +563,7 @@ static void initHistoryArrays(void) {
     numRecords = NUM_PLOT;
 }
 
-extern void ComputeHistory(int usePlayerName) {
+extern void ComputeHistory(int usePlayerName) 
 {
     /* let's re-initialize all the static values and recompute the History */
     // if (numRecords<NUM_PLOT+1) {
@@ -754,9 +754,8 @@ extern void ComputeHistory(int usePlayerName) {
 /* creating this placeholder function with all the inputs needed when
  * pressing a button; the real function above doesn't have all these inputs
  */
-static void
-//PlotHistoryTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * (pw))
-PlotHistoryTrigger(GtkWidget * UNUSED(pw), GtkWidget * pwr) //gpointer UNUSED(p))
+static void 
+PlotHistoryTrigger(GtkWidget * UNUSED(pw), GtkWidget * pwr) 
 {
     char *listName = NULL;
 
@@ -767,10 +766,10 @@ PlotHistoryTrigger(GtkWidget * UNUSED(pw), GtkWidget * pwr) //gpointer UNUSED(p)
     listName = GetSelectedPlayer();
     if (listName) {
         sprintf(playerName, "%s", listName);
-        g_message("using listName:%s",listName);
+        // g_message("using listName:%s",listName);
         g_free(listName);
     } else {
-        g_message("not from list");
+        // g_message("not from list");
         // if(fTriggeredByRecordList && !listName){
             // g_message("we free listName");
         g_free(listName);
