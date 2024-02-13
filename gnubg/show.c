@@ -732,7 +732,7 @@ CommandShowEvaluation(char *UNUSED(sz))
 extern void
 CommandShowHistory(char *UNUSED(sz))
 {
-    ComputeHistory();
+    ComputeHistory(FALSE);
 }
 #endif
 

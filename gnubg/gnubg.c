@@ -250,7 +250,7 @@ char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN] = { "" };
 int keyNamesFirstEmpty = 0;
 int fUseKeyNames = TRUE;
 int fWithinSmartSit = FALSE;
-int fTriggeredByRecordList = FALSE;
+// int fTriggeredByRecordList = FALSE;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char *aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] =
