@@ -9544,12 +9544,12 @@ void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n)){    //}, GtkWidget * pw
 /* ***************************************************************************** */
 
 
-static void
-DestroyStats(void)
-{
-    g_message("destroy");
-    gtk_widget_destroy(gtk_widget_get_toplevel(pwStatDialogAux));
-}
+// static void
+// DestroyStats(void)
+// {
+//     g_message("destroy");
+//     gtk_widget_destroy(gtk_widget_get_toplevel(pwStatDialogAux));
+// }
 
 
 extern void
@@ -9578,8 +9578,8 @@ g_message("GTKDumpStatcontext: 0");
     Also, a user may want to look at the moves while checking the plot.
     V2: in an unexplained way, with non-modal, this window is a black hole.
      */
-    //  pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
-    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE | DIALOG_FLAG_CLOSEBUTTON,  G_CALLBACK(DestroyStats), NULL);
+     pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+    // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE | DIALOG_FLAG_CLOSEBUTTON,  G_CALLBACK(DestroyStats), NULL);
     pwStatDialogAux=pwStatDialog;
     //  pwStatDialog = GTKCreateDialog("Stats", DT_INFO, NULL, DIALOG_FLAG_NOTIDY, G_CALLBACK(HintOK), NULL);   
      //GTKCreateDialog(_("About GNU Backgammon"), DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL,
