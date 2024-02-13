@@ -1,3 +1,6 @@
+#due to msys conflict
+configure.ac
+
 # Prerequisites
 *.d
 
@@ -50,6 +53,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# visual studio code
+
+*.vs/*
 
 # list of files that appear during compilation
 
