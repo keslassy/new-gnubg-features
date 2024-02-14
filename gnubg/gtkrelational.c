@@ -789,10 +789,10 @@ PlotHistoryTrigger(GtkWidget * UNUSED(pw), GtkWidget * pwr) //gpointer UNUSED(p)
     listName = GetSelectedPlayer();
     if (listName) {
         sprintf(playerName, "%s", listName);
-        g_message("using listName:%s",listName);
+        // g_message("using listName:%s",listName);
         g_free(listName);
     } else {
-        g_message("not from list");
+        // g_message("not from list");
         // if(fTriggeredByRecordList && !listName){
             // g_message("we free listName");
         g_free(listName);
