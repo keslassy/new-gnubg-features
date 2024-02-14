@@ -253,7 +253,7 @@ typedef struct {
     GtkAdjustment *apadjSkill[3], *apadjLuck[4];
     GtkWidget *pwMoves, *pwCube, *pwLuck, *pwHintSame, *pwCubeSummary;
     GtkWidget *apwAnalysePlayers[2];
-    GtkWidget *pwAutoDB;
+    GtkWidget *pwAutoDB, *pwAutoSaveToFile;
     GtkWidget *pwBackgroundAnalysis;
     GtkWidget* apwAnalyzeFileSetting[NUM_AnalyzeFileSettings];
 
@@ -3031,6 +3031,7 @@ AnalysisOK(GtkWidget * pw, analysiswidget * paw)
     CHECKUPDATE(paw->apwAnalysePlayers[0], afAnalysePlayers[0], "set analysis player 0 analyse %s")
     CHECKUPDATE(paw->apwAnalysePlayers[1], afAnalysePlayers[1], "set analysis player 1 analyse %s")
     CHECKUPDATE(paw->pwAutoDB, fAutoDB, "set automatic db %s")
+    CHECKUPDATE(paw->pwAutoSaveToFile, fAutoSaveToFile, "set automatic savetofile %s")
     CHECKUPDATE(paw->pwBackgroundAnalysis, fBackgroundAnalysis, "set analysis background %s")
 
     ADJUSTSKILLUPDATE(0, SKILL_DOUBTFUL, "set analysis threshold doubtful %s")
@@ -3155,6 +3156,7 @@ AnalysisSet(analysiswidget * paw)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwCube), fAnalyseCube);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwLuck), fAnalyseDice);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoDB), fAutoDB);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwAutoSaveToFile), fAutoSaveToFile);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(paw->pwBackgroundAnalysis), fBackgroundAnalysis);
 
 
@@ -3790,6 +3792,11 @@ append_analysis_options(analysiswidget * paw)
                                   "add it to the database. The database needs to have been defined in "
                                   "Settings -> Options -> Database"));
 
+    paw->pwAutoSaveToFile= gtk_check_button_new_with_label(_("Automatically save analysis"));
+    gtk_box_pack_start(GTK_BOX(vbox3), paw->pwAutoSaveToFile, FALSE, FALSE, 0);
+    gtk_widget_set_tooltip_text(paw->pwAutoSaveToFile,
+                                _("Whenever the analysis of a game or match is complete, automatically "
+                                  "save it in the \"analyzed\" sub-folder (as in batch analysis)."));
 
     paw->pwBackgroundAnalysis= gtk_check_button_new_with_label(_("Allow background analysis (NEW! Careful, experimental!) "));
     gtk_box_pack_start(GTK_BOX(vbox3), paw->pwBackgroundAnalysis, FALSE, FALSE, 0);

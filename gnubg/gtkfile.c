@@ -18,6 +18,12 @@
  * $Id: gtkfile.c,v 1.83 2023/12/17 17:58:31 plm Exp $
  */
 
+/*
+02/2024: Isaac Keslassy: added the option of automatically saving analysis results
+as files in the "analyzed" sub-folder (as in batch analysis)
+*/
+
+
 #include "config.h"
 #include "backgammon.h"
 #include "gtklocdefs.h"
@@ -885,6 +891,7 @@ static void recentByModification(const char* path, char* recent){
     }
 }
 
+/* this function saves the analysis in the analyzed folder, as in the batch analysis */
 static void GTKAutoSave(void)
 {
     // UserCommand("save match \"/home/isaac/n/examples/analysed/mytest.sgf\"");
@@ -911,13 +918,13 @@ static void GTKAutoSave(void)
 
     filename = GetFilename(TRUE, EXPORT_SGF);
 
-    g_message("file %s\n", filename);
+    // g_message("file %s\n", filename);
 
     dir = (default_import_folder && (*default_import_folder)) ?
         g_build_filename(default_import_folder, "analysed", NULL) :
         g_build_filename(".", "analysed", NULL);
 
-        g_message("dir %s\n", dir);
+        // g_message("dir %s\n", dir);
 
     // g_free(folder);
 
@@ -943,139 +950,6 @@ static void GTKAutoSave(void)
     g_free(cmd);
     g_free(save);
 
-
-
-
-//     /******************************/
-
-//     g_free(szCurrentFileName);
-//     szCurrentFileName = NULL;
-
-
-//         gchar *cmd;
-//     gchar *save = NULL;
-//     gboolean fMatchAnalysed;
-
-//     if (!batch_create_save(filename, &save, result))
-//         return FALSE;
-
-
-//     if (g_file_test((save), G_FILE_TEST_EXISTS)) {
-//         *result = _("Pre-existing");
-//         g_free(save);
-//         return TRUE;
-//     }
-
-//     cmd = g_strdup_printf("import auto \"%s\"", filename);
-//     UserCommand(cmd);
-//     g_free(cmd);
-//     if (!szCurrentFileName) {
-//         *result = _("Failed import");
-//         g_free(save);
-//         return FALSE;
-//     }
-
-//     UserCommand("analysis clear match");
-//     UserCommand("analyse match");
-
-//     if (fMatchCancelled) {
-//         *result = _("Cancelled");
-//         g_free(save);
-//         fInterrupt = FALSE;
-//         fMatchCancelled = FALSE;
-//         return FALSE;
-//     }
-
-//     cmd = g_strdup_printf("save match \"%s\"", save);
-//     UserCommand(cmd);
-//     g_free(cmd);
-//     g_free(save);
-
-//     /******************************/
-
-//     SaveCommon(N_EXPORT_TYPES, _("Save or export to file"))
-
-//     SaveCommon(guint f, gchar * prompt)
-// {
-//     GtkWidget *hbox;
-//     guint i;
-//     gint j, type;
-//     SaveOptions so;
-//     static ExportType last_export_type = EXPORT_SGF;
-//     static gint last_export_mgp = 0;
-//     static gchar *last_save_folder = NULL;
-//     static gchar *last_export_folder = NULL;
-//     gchar *fn = GetFilename(TRUE, (f == 1) ? EXPORT_SGF : last_export_type);
-//     gchar *folder = NULL;
-//     const gchar *mgp_text[3] = { "match", "game", "position" };
-
-//     if (f == 1)
-//         folder = last_save_folder ? last_save_folder : default_sgf_folder;
-//     else
-//         folder = last_export_folder ? last_export_folder : default_export_folder;
-
-//     so.fc = GnuBGFileDialog(prompt, folder, fn, GTK_FILE_CHOOSER_ACTION_SAVE);
-//     g_free(fn);
-
-//     so.description = gtk_combo_box_text_new();
-//     for (j = i = 0; i < f; ++i) {
-//         gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(so.description), export_format[i].description);
-//         if (i == last_export_type)
-//             gtk_combo_box_set_active(GTK_COMBO_BOX(so.description), j);
-//         j++;
-//     }
-//     if (f == 1)
-//         gtk_combo_box_set_active(GTK_COMBO_BOX(so.description), 0);
-
-//     so.mgp = gtk_combo_box_text_new();
-//     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(so.mgp), _("match"));
-//     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(so.mgp), _("game"));
-//     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(so.mgp), _("position"));
-//     gtk_combo_box_set_active(GTK_COMBO_BOX(so.mgp), last_export_mgp);
-
-//     so.upext = gtk_check_button_new_with_label(_("Update extension"));
-//     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(so.upext), TRUE);
-
-// #if GTK_CHECK_VERSION(3,0,0)
-//     hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
-// #else
-//     hbox = gtk_hbox_new(FALSE, 10);
-// #endif
-//     gtk_box_pack_start(GTK_BOX(hbox), so.mgp, TRUE, TRUE, 0);
-//     gtk_box_pack_start(GTK_BOX(hbox), so.description, TRUE, TRUE, 0);
-//     gtk_box_pack_start(GTK_BOX(hbox), so.upext, TRUE, TRUE, 0);
-//     gtk_widget_show_all(hbox);
-//     gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER(so.fc), hbox);
-
-//     g_signal_connect(G_OBJECT(so.description), "changed", G_CALLBACK(SaveOptionsCallBack), &so);
-//     g_signal_connect(G_OBJECT(so.mgp), "changed", G_CALLBACK(SaveOptionsCallBack), &so);
-
-//     SaveOptionsCallBack(so.fc, &so);
-
-//     if (gtk_dialog_run(GTK_DIALOG(so.fc)) == GTK_RESPONSE_ACCEPT) {
-//         SaveOptionsCallBack(so.fc, &so);
-//         fn = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(so.fc));
-//         if (fn) {
-//             const gchar *et = mgp_text[gtk_combo_box_get_active(GTK_COMBO_BOX(so.mgp))];
-//             gchar *cmd = NULL;
-//             type = gtk_combo_box_get_active(GTK_COMBO_BOX(so.description));
-//             if (type == EXPORT_SGF)
-//                 cmd = g_strdup_printf("save %s \"%s\"", et, fn);
-//             else
-//                 cmd = g_strdup_printf("export %s %s \"%s\"", et, export_format[type].clname, fn);
-//             last_export_type = (ExportType) type;
-//             last_export_mgp = gtk_combo_box_get_active(GTK_COMBO_BOX(so.mgp));
-//             g_free(last_export_folder);
-//             last_export_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(so.fc));
-//             UserCommand(cmd);
-//             UserCommand("save settings");
-//             g_free(cmd);
-//         }
-//         g_free(fn);
-//     }
-//     gtk_widget_destroy(so.fc);
-// }
-
 }
 
 extern void
@@ -1090,9 +964,9 @@ GTKAnalyzeCurrent(void)
         CommandRelationalAddMatch(NULL);
     }
 
-     /*save analyzed match*/
-//    UserCommand("save match");   
-    GTKAutoSave();
+     /*save the analyzed match in the "analyzed" folder (as for batch analysis)*/
+    if(fAutoSaveToFile)
+        GTKAutoSave();
 
     /*show stats panel*/
     UserCommand("show statistics match");
@@ -1143,6 +1017,11 @@ AnalyzeSingleFile(void)
             /*add match to db*/
             CommandRelationalAddMatch(NULL);
         }
+
+        /*save the analyzed match in the "analyzed" folder (as for batch analysis)*/
+        if(fAutoSaveToFile)
+            GTKAutoSave();
+
         /*show stats panel*/
         UserCommand("show statistics match");
         return;
@@ -1175,10 +1054,17 @@ SmartAnalyze(void)
 
     /*analyze match*/
     UserCommand2("analyse match");
+
     if(fAutoDB) {
         /*add match to db*/
         CommandRelationalAddMatch(NULL);
     }
+
+    /*save the analyzed match in the "analyzed" folder (as for batch analysis)*/
+    if(fAutoSaveToFile) {
+        GTKAutoSave();
+    }
+
     /*show stats panel*/
     UserCommand2("show statistics match");
     return;

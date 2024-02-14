@@ -505,7 +505,7 @@ static command acSetAutomatic[] = {
     { "crawford", CommandSetAutoCrawford, N_("Enable the Crawford game "
       "based on match score"), szONOFF, &cOnOff },
     { "db", CommandSetAutoDB, N_("Select whether to add to database after analysis"),
-      szONOFF, &cOnOff },
+      szONOFF, &cOnOff },    
     { "doubles", CommandSetAutoDoubles, N_("Control automatic doubles "
       "during (money) session play"), szLIMIT, NULL },
     { "game", CommandSetAutoGame, N_("Select whether to start new games "
@@ -514,6 +514,8 @@ static command acSetAutomatic[] = {
       "made automatically"), szONOFF, &cOnOff },
     { "roll", CommandSetAutoRoll, N_("Control whether dice will be rolled "
       "automatically"), szONOFF, &cOnOff },
+    { "savetofile", CommandSetAutoSaveToFile, N_("Select whether to save to file after analysis"),
+      szONOFF, &cOnOff },
     { NULL, NULL, NULL, NULL, NULL }
 }, acSetConfirm[] = {
     { "default", CommandSetConfirmDefault, N_("Set default answer to yes/no questions"), NULL, NULL },

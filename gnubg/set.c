@@ -560,6 +560,14 @@ CommandSetAutoDB(char *sz)
 }
 
 extern void
+CommandSetAutoSaveToFile(char *sz)
+{
+
+    SetToggle("automatic savetofile", &fAutoDB, sz,
+              _("Will automatically save analysis to file."), _("Will not automatically save analysis to file."));
+}
+
+extern void
 CommandSetAutoGame(char *sz)
 {
 

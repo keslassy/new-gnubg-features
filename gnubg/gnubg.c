@@ -193,6 +193,7 @@ int fAnalyseMove = TRUE;
 int fAutoBearoff = FALSE;
 int fAutoCrawford = 1;
 int fAutoDB = FALSE;
+int fAutoSaveToFile = TRUE;
 int fAutoGame = TRUE;
 int fAutoMove = FALSE;
 int fAutoRoll = TRUE;
@@ -3269,6 +3270,7 @@ SaveAnalysisSettings(FILE * pf)
     fprintf(pf, "set analysis player 0 analyse %s\n", afAnalysePlayers[0] ? "yes" : "no");
     fprintf(pf, "set analysis player 1 analyse %s\n", afAnalysePlayers[1] ? "yes" : "no");
     fprintf(pf, "set automatic db %s\n", fAutoDB ? "on" : "off");
+    fprintf(pf, "set automatic savetofile %s\n", fAutoSaveToFile ? "on" : "off");
     fprintf(pf, "set analysis background %s\n", fBackgroundAnalysis ? "on" : "off");
     fprintf(pf, "set analysis filesetting %s\n", aszAnalyzeFileSettingCommands[AnalyzeFileSettingDef]);
 }
