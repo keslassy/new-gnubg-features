@@ -1641,10 +1641,12 @@ ApplyShortToolbar (int toggledValue){
 #if !defined(USE_GTKITEMFACTORY)
     if(toggledValue) {
         gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
+        gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint"));
         gtk_widget_hide(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));     
     }
     else {
         gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/EndGame"));
+        gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/Hint"));
         gtk_widget_show(gtk_ui_manager_get_widget(puim, "/MainToolBar/PlayClockwise"));
     }
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_ui_manager_get_widget(puim,
@@ -1655,11 +1657,13 @@ ApplyShortToolbar (int toggledValue){
         fShortToolbar = TRUE;
         gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame")); //GTK_TOOL_ITEM(ptw->pwEndGame)
         //    toolbarwidget *ptw = g_object_get_data(G_OBJECT(pwToolbar), "toolbarwidget");
+        gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/Hint"));
         gtk_widget_hide(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
     }
     else {
         fShortToolbar = FALSE;
         gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/EndGame"));
+        gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/Hint"));
         gtk_widget_show(gtk_item_factory_get_widget(pif, "/MainToolBar/PlayClockwise"));
     }
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget(pif, 
