@@ -627,8 +627,6 @@ static command acSetGeometry[] = {
       N_("Show target help while dragging a chequer"), szONOFF, NULL },
     { "usestatspanel", CommandSetGUIUseStatsPanel,
       N_("Show statistics in a panel"), szONOFF, NULL },
-    { "markedsameplayer", CommandSetMarkedSamePlayer,
-      N_("Focus on same player when moving between marked moves."), szONOFF, NULL },
     { "movelistdetail", CommandSetGUIMoveListDetail,
       N_("Show win/loss stats in move list"), szONOFF, NULL },
     { "grayedit", CommandSetGUIGrayEdit,
@@ -1226,6 +1224,10 @@ static command acSetVariation[] = {
           szNAME, NULL },
     { "lang", CommandSetLang, N_("Set your language preference"),
       szLANG, NULL },
+#if defined(USE_GTK)
+    { "markedsameplayer", CommandSetMarkedSamePlayer,
+      N_("Focus on same player when moving between marked moves."), szONOFF, NULL },
+#endif
     { "matchequitytable", CommandSetMET,
       N_("Read match equity table from XML file"), szFILENAME, &cFilename },
     { "matchid", CommandSetMatchID, N_("set Match ID"), szMATCHID, NULL },

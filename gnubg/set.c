@@ -479,7 +479,8 @@ CommandSetMarkedSamePlayer(char *sz)
 {
 
     SetToggle("markedsameplayer", &fMarkedSamePlayer, sz,
-              _("Focus on same player when moving between marked moves."), _("Do not focus on same player when moving between marked moves."));
+              _("Focus on same player when moving between marked moves."), 
+              _("Do not focus on same player when moving between marked moves."));
 
 }
 
