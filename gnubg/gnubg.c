@@ -3635,8 +3635,10 @@ CommandSaveSettings(char *szParam)
 
     SaveMiscSettings(pf);
     SaveAutoSaveSettings(pf);
-    if (pf != stdout)
-        fclose(pf);
+
+    // this seemed to cause the bug in v1.08 where in some users, most settings were reset each time
+    // if (pf != stdout)
+    //     fclose(pf);
 
     if (errno)
         outputerr(szFile);
