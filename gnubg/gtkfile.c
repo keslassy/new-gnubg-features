@@ -896,8 +896,14 @@ GTKAnalyzeCurrent(void)
         /*add match to db*/
         CommandRelationalAddMatch(NULL);
     }
+
+     /*save analyzed match*/
+    UserCommand("save match");   
+
+
     /*show stats panel*/
     UserCommand("show statistics match");
+
 }
 
 extern void
