@@ -438,3 +438,7 @@ gnubg/win32/Makefile
 gnubg/win32/Makefile.in
 gnubg/configure~
 gnubg/config.h.in~
+/gnubg/autom4te.cache/output.5
+/gnubg/autom4te.cache/output.6
+/gnubg/autom4te.cache/traces.5
+/gnubg/autom4te.cache/traces.6
