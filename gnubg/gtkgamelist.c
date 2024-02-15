@@ -1541,7 +1541,6 @@ extern void LoadPositionAndStart (void) {
         quizTitle=g_strdup(_("Quiz position: DOUBLE or NO-DOUBLE?"));
 
     StatusBarMessage(quizTitle);
-    outputerrf("status bar");
 #if defined(USE_GTK)
     if (fX) {
         gtk_window_set_title(GTK_WINDOW(pwMain), quizTitle);
