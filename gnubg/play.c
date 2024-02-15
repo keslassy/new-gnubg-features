@@ -19,6 +19,11 @@
  */
 
 /*
+02/2024: Isaac Keslassy: introduced a better match title for new matches:
+- MOTIVATION: Let's say we open a 21-point match between A and B, then click on the 
+    "New" button to play a 5-point match against Gnubg. Then the filename should be 
+    Me_vs_gnubg_5pt_date.sgf, not A_vs_B_21pt_OldDate.sgf.
+
 01/2023: Isaac Keslassy: introduced "fMarkedSamePlayer":
 - MOTIVATION: When reviewing her mistakes in a game, a user may not be interested
      in the mistakes of her opponent. Unfortunately, the current red arrow that
@@ -44,6 +49,7 @@
 #include "drawboard.h"
 #include "external.h"
 #include "eval.h"
+#include "file.h" //for GetFilename
 #include "positionid.h"
 #include "matchid.h"
 #include "matchequity.h"
@@ -2981,6 +2987,20 @@ CommandNewMatch(char *sz)
     ms.fJacoby = fJacoby;
 
     SetMatchDate(&mi);
+
+    /* Let's say we open a match between A and B, then click on the "New" button to play a match against Gnubg.
+    Then the filename should be Me_vs_gnubg_date.sgf, not A_vs_B_OldDate.sgf. */
+    szCurrentFileName = GetFilename(FALSE, EXPORT_SGF);    
+    if (!(szCurrentFolder && *szCurrentFolder)) {
+        szCurrentFolder = (default_sgf_folder && (*default_sgf_folder)) ? default_sgf_folder : ".";
+    }
+#if defined(USE_GTK)
+    if (fX) {
+        gchar *title = g_strdup_printf("%s (%s)", _("GNU Backgammon"), szCurrentFileName);
+        gtk_window_set_title(GTK_WINDOW(pwMain), title);
+        g_free(title);
+    }
+#endif
 
     UpdateSetting(&ms.nMatchTo);
     UpdateSetting(&ms.fTurn);
