@@ -23,6 +23,9 @@
 - MOTIVATION: Let's say we open a 21-point match between A and B, then click on the 
     "New" button to play a 5-point match against Gnubg. Then the filename should be 
     Me_vs_gnubg_5pt_date.sgf, not A_vs_B_21pt_OldDate.sgf.
+- ADDITIONAL MOTIVATION: when we save the analysis of this new match, we don't want 
+to save it under the old match name and delete its analysis. So the user is forced
+today to correct the title manually.
 
 01/2023: Isaac Keslassy: introduced "fMarkedSamePlayer":
 - MOTIVATION: When reviewing her mistakes in a game, a user may not be interested
