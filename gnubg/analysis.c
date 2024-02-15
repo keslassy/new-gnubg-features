@@ -865,6 +865,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                 q.ewmaError=-rSkill;
                 q.lastSeen=(long int) (time(NULL));
                 q.player=pms->fTurn;
+                q.set=QUIZ_D_ND;
                 AutoAddQuizPosition(q,QUIZ_NODOUBLE);  
                 // g_message("in no-double");
             }
@@ -990,6 +991,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                         q.ewmaError=-rChequerSkill;
                         q.lastSeen=(long int) (time(NULL));
                         q.player=pms->fTurn;
+                        q.set=QUIZ_M;                        
                         AutoAddQuizPosition(q,QUIZ_MOVE);  
                     }
 #endif                    
@@ -1094,6 +1096,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     q.ewmaError=-rSkill;
                     q.lastSeen=(long int) (time(NULL));
                     q.player=pms->fTurn;
+                    q.set=QUIZ_D_ND;
                     AutoAddQuizPosition(q,QUIZ_DOUBLE);  
                 }
 #endif                
@@ -1135,6 +1138,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     q.ewmaError=(*pdoubleError);
                     q.lastSeen=(long int) (time(NULL));
                     q.player=pms->fTurn;
+                    q.set=QUIZ_P_T;
                     AutoAddQuizPosition(q,QUIZ_TAKE);  
                 }
 #endif                
@@ -1172,6 +1176,7 @@ AnalyzeMove(moverecord * pmr, matchstate * pms, const listOLD * plParentGame,
                     q.ewmaError=-(*pdoubleError);
                     q.lastSeen=(long int) (time(NULL));
                     q.player=pms->fTurn;
+                    q.set=QUIZ_P_T;
                     AutoAddQuizPosition(q,QUIZ_PASS);  
                 }
 #endif                

@@ -1117,10 +1117,16 @@ typedef struct
     char path[MAX_CATEGORY_PATH_LENGTH];
     // char notes[MAX_NOTE_LENGTH]; /*future feature? not sure if needed*/
 } categorytype;
+typedef enum {
+    QUIZ_M,
+    QUIZ_D_ND,
+    QUIZ_P_T,
+    N_QUIZ_TYPES
+} quizset;
 typedef struct {
     char position [100]; 
     int player; /*player when adding position*/
-    // int player;
+    quizset set;
     float ewmaError; 
     long int lastSeen; 
     float priority;

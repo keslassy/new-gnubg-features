@@ -521,11 +521,13 @@ int OpenQuizPositionsFile(const int index)
                 strcpy(q[i].position,token); 
         // g_message("read new line %d: %s\n", i, q[i].position);
             } else if (column == 1) {
-                q[i].player=strtol(token, NULL, 10); //atof(token);
+                q[i].set=strtol(token, NULL, 10); //atof(token);
             } else if (column == 2) {
+                q[i].player=strtol(token, NULL, 10); //atof(token);
+            } else if (column == 3) {
                 q[i].ewmaError=atof(token);
         // g_message("read new line %d: %s, %.3f\n", i, q[i].position, q[i].ewmaError);
-            } else if (column == 3) {
+            } else if (column == 4) {
                 q[i].lastSeen=strtol(token, NULL, 10);
                 // q[i].lastSeen=strtoimax(sz, NULL, 10);
         // g_message("read new line %d: %s, %.3f, %ld\n", i, q[i].position, q[i].ewmaError, q[i].lastSeen);
@@ -553,19 +555,23 @@ int OpenQuizPositionsFile(const int index)
     } 
 	return qLength;
 }
-/* in backgammon.h, we define: */
+
+/* reminder: in backgammon.h, we define: */
 // typedef struct {
-//     char * position; 
-//     double ewmaError; 
+//     char position [100]; 
+//     int player; /*player when adding position*/
+//     quizset set;
+//     float ewmaError; 
 //     long int lastSeen; 
+//     float priority;
 // } quiz;
 
 
 static void writeQuizHeader (FILE* fp) {
-        fprintf(fp, "position, player, ewmaError, lastSeen\n");
+        fprintf(fp, "position, set, player, ewmaError, lastSeen\n");
 }
 static void writeQuizLine (quiz q, FILE* fp) {
-        fprintf(fp, "%s, %d, %.5f, %ld\n", q.position, q.player, q.ewmaError, q.lastSeen);
+        fprintf(fp, "%s, %d, %d, %.5f, %ld\n", q.position, q.set, q.player, q.ewmaError, q.lastSeen);
 }
 static int writeQuizLineFull (quiz q, char * file, int quiet) {
     /*test that file exists, else write header*/
@@ -1210,17 +1216,17 @@ DestroyQuizDialog(gpointer UNUSED(p), GObject * UNUSED(obj))
 Allows garbage collection.
 */
 {
-    g_message("in destroy");
+    // g_message("in destroy");
     // sprintf(name0BeforeQuiz, "%s",ap[0].szName);
     // sprintf(name1BeforeQuiz, "%s",ap[0].szName);
     
     if (pwQuiz!=NULL) { //i.e. we haven't closed it using DestroyQuizDialog()
-        g_message("1st if option: pwQuiz exists");
+        // g_message("1st if option: pwQuiz exists");
         gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
         pwQuiz = NULL;
     }
     if(fDelayNewMatchTillLeavingConsole) {
-        g_message("2nd option: fDelayNewMatchTillLeavingConsole");
+        // g_message("2nd option: fDelayNewMatchTillLeavingConsole");
         fDelayNewMatchTillLeavingConsole=0;
         fQuietNewMatch=1;
         UserCommand2("new match");
@@ -1232,7 +1238,7 @@ Allows garbage collection.
 #endif   
         fQuietNewMatch=0;
     }
-        g_message("done w/ destroy");
+        // g_message("done w/ destroy");
 }
 
 static void ReloadQuizConsole(void) {
@@ -1538,12 +1544,27 @@ extern void LoadPositionAndStart (void) {
     In such a case:
     Before doubling: fMove=0,fTurn=0 (and fDoubled=0)
     After doubling: fMove=0,fTurn=1 (and fDoubled=0)
-    */
 
-    if(ms.fTurn ==0) { /* T/P decision*/
-        CommandDouble("");
+    Intuitive idea:
+        if(ms.fTurn ==0) { <T/P decision>}
+        else if(ms.anDice[0]>0) {<move decision>}
+        else {<D/ND decision>}
+
+    Problem:
+        P/T decisions:  fDoubled=0, fMove=1, fTurn=1
+        D/ND decisions: fDoubled=0, fMove=1, fTurn=1 
+        => the same!
+
+    Reason:  When we have a P/T decision, gnubg doesn't want to set it up, and 
+    insists to go back to the double decision. 
+    
+    Solution: We define a quiz position "set" property to tell us what type of 
+    decision it is.
+    */
+    if(q[iOpt].set==QUIZ_P_T) { /* P / T decision */
+        CommandDouble(NULL);
         quizTitle =g_strdup(_("Quiz position: TAKE or PASS?"));
-    } else if(ms.anDice[0]>0) /* move decision*/
+    } else if (q[iOpt].set==QUIZ_M)  /* move decision*/
         quizTitle =g_strdup(_("Quiz position: BEST MOVE?"));
     else    /* D / ND decision */
         quizTitle=g_strdup(_("Quiz position: DOUBLE or NO-DOUBLE?"));
@@ -1693,7 +1714,7 @@ extern void TurnOffQuizMode(void){
 }
 
 static void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
-    g_message("in StartQuiz");
+    // g_message("in StartQuiz");
     // outputerrf("in StartQuiz");
 
     // currentCategory = GetSelectedCategory(treeview);
@@ -1843,14 +1864,14 @@ extern void QuizConsole(void) {
     GtkWidget *addPos1Button;
     GtkWidget *addPos2Button;
 
-    g_message("start of console");
+    // g_message("start of console");
 
     currentCategoryIndex=-1;
     /* [not relevant anymore?
     "putting true means that we need to end it when we leave by using the close button and
     only for this screen; so we put false by default for now"] */
     if(fInQuizMode) {
-        g_message("console: in quiz mode");
+        // g_message("console: in quiz mode");
         TurnOffQuizMode();
         // UserCommand2("new match");
     }
@@ -1860,7 +1881,7 @@ extern void QuizConsole(void) {
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
 
     if (pwQuiz) { //i.e. we didn't close it using DestroyQuizDialog()
-        g_message("start of console: non-zero pwQuiz");
+        // g_message("start of console: non-zero pwQuiz");
         gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
         pwQuiz = NULL;
     }
@@ -2030,7 +2051,7 @@ extern void QuizConsole(void) {
     g_signal_connect(G_OBJECT(treeview), "button-press-event", G_CALLBACK(QuizManageClicked), GTK_TREE_VIEW(treeview));
     // g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(QuizManageReleased), treeview);
     
-    g_message("end of console");
+    // g_message("end of console");
     // g_object_weak_ref(G_OBJECT(pwQuiz), DestroyQuizDialog, NULL);
 
     GTKRunDialog(pwQuiz);
