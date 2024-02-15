@@ -19,8 +19,9 @@
  */
 
 /*
-02/2024: Isaac Keslassy: added an option for the quiz to always ask questions at
-money play so the score doesn't impact the answer.
+02/2024: Isaac Keslassy: 
+- added an option for the quiz to always ask questions at money play so the score doesn't impact the answer.
+- changed the window title during the quiz
 
 03/2023: Isaac Keslassy: new Quiz feature:
 - we start it with the quiz console
@@ -1432,6 +1433,8 @@ static void updatePriority(quiz * pq, long int seconds) {
 }
 
 extern void LoadPositionAndStart (void) {
+    gchar *quizTitle;
+
     // fInQuizMode=TRUE;
     qDecision=QUIZ_UNKNOWN;
     // sprintf(name0BeforeQuiz, "%s", ap[0].szName);
@@ -1528,19 +1531,29 @@ extern void LoadPositionAndStart (void) {
     Before doubling: fMove=0,fTurn=0 (and fDoubled=0)
     After doubling: fMove=0,fTurn=1 (and fDoubled=0)
     */
-   if(ms.fTurn ==0) { /*T/P*/
+
+    if(ms.fTurn ==0) { /* T/P decision*/
         CommandDouble("");
-        // StatusBarMessage(_("Your turn to play this quiz position: take or pass?"));
-        StatusBarMessage(_("Quiz position: TAKE or PASS?"));
-   } else if(ms.anDice[0]>0) /*move*/
-        StatusBarMessage(_("Quiz position: BEST MOVE?"));
-    else /*T/K*/
-        StatusBarMessage(_("Quiz position: DOUBLE or NO-DOUBLE?"));
+        quizTitle =g_strdup(_("Quiz position: TAKE or PASS?"));
+    } else if(ms.anDice[0]>0) /* move decision*/
+        quizTitle =g_strdup(_("Quiz position: BEST MOVE?"));
+    else    /* D / ND decision */
+        quizTitle=g_strdup(_("Quiz position: DOUBLE or NO-DOUBLE?"));
+
+    StatusBarMessage(quizTitle);
+    outputerrf("status bar");
+#if defined(USE_GTK)
+    if (fX) {
+        gtk_window_set_title(GTK_WINDOW(pwMain), quizTitle);
+    }
+#endif   
+
+    g_free(quizTitle);
+
     // g_message("double");
     //  g_message("Post: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
     //     ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
     // gtk_statusbar_push(GTK_STATUSBAR(pwStatus), idOutput, _("Your turn to play this quiz position!"));
-
 
 }
 
