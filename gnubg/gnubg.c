@@ -6081,7 +6081,7 @@ get_input_discard(void)
     if (fInterrupt)
         return FALSE;
 
-    if (autosave && fAutoSaveConfirmDelete) {
+    if (autosave && fAutoSaveConfirmDelete && !fInQuizMode) {
         if (!GetInputYN(_("Are you sure you want to discard the current match and your existing autosave? ")))
             return FALSE;
         g_unlink(autosave);
@@ -6089,7 +6089,7 @@ get_input_discard(void)
         autosave = NULL;
         return TRUE;
     }
-    if (ms.gs == GAME_PLAYING && fConfirmNew)
+    if (ms.gs == GAME_PLAYING && fConfirmNew && !fInQuizMode)
         return GetInputYN(_("Are you sure you want to discard the current match? "));
 
     return TRUE;

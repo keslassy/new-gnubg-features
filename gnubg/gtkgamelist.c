@@ -1206,26 +1206,33 @@ GetSelectedCategory(GtkTreeView * treeview)
 
 static void
 DestroyQuizDialog(gpointer UNUSED(p), GObject * UNUSED(obj))
-/* Called by gtk when the window is closed.
+/* Called by gtk when the quiz console window is closed.
 Allows garbage collection.
 */
 {
-    // g_message("in destroy");
+    g_message("in destroy");
     // sprintf(name0BeforeQuiz, "%s",ap[0].szName);
     // sprintf(name1BeforeQuiz, "%s",ap[0].szName);
     
-
     if (pwQuiz!=NULL) { //i.e. we haven't closed it using DestroyQuizDialog()
+        g_message("1st if option: pwQuiz exists");
         gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
-        // g_message("in destroy loop");
         pwQuiz = NULL;
     }
     if(fDelayNewMatchTillLeavingConsole) {
+        g_message("2nd option: fDelayNewMatchTillLeavingConsole");
         fDelayNewMatchTillLeavingConsole=0;
         fQuietNewMatch=1;
         UserCommand2("new match");
+        StatusBarMessage("Out of quiz mode");
+#if defined(USE_GTK)
+        if (fX) {
+            gtk_window_set_title(GTK_WINDOW(pwMain), "GNU Backgammon - out of quiz mode");
+        }
+#endif   
         fQuietNewMatch=0;
     }
+        g_message("done w/ destroy");
 }
 
 static void ReloadQuizConsole(void) {
@@ -1240,6 +1247,7 @@ static void ReloadQuizConsole(void) {
 
     /*this was needed to apply the change in the gamelist menu, but is not anymore*/
     //UserCommand2("set dockpanels on"); //       DockPanels();
+    g_message("reload console");
 
     DestroyQuizDialog(NULL,NULL);
     QuizConsole();
@@ -1685,7 +1693,8 @@ extern void TurnOffQuizMode(void){
 }
 
 static void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
-    // g_message("in StartQuiz");
+    g_message("in StartQuiz");
+    // outputerrf("in StartQuiz");
 
     // currentCategory = GetSelectedCategory(treeview);
     // if(!currentCategory) {
@@ -1833,11 +1842,15 @@ extern void QuizConsole(void) {
     GtkWidget *pwMainVBox;
     GtkWidget *addPos1Button;
     GtkWidget *addPos2Button;
-    
+
+    g_message("start of console");
+
     currentCategoryIndex=-1;
-    /* putting true means that we need to end it when we leave by using the close button and
-    only for this screen; so we put false by default for now */
+    /* [not relevant anymore?
+    "putting true means that we need to end it when we leave by using the close button and
+    only for this screen; so we put false by default for now"] */
     if(fInQuizMode) {
+        g_message("console: in quiz mode");
         TurnOffQuizMode();
         // UserCommand2("new match");
     }
@@ -1847,6 +1860,7 @@ extern void QuizConsole(void) {
     pwScrolled = gtk_scrolled_window_new(NULL, NULL);
 
     if (pwQuiz) { //i.e. we didn't close it using DestroyQuizDialog()
+        g_message("start of console: non-zero pwQuiz");
         gtk_widget_destroy(gtk_widget_get_toplevel(pwQuiz));
         pwQuiz = NULL;
     }
@@ -1855,23 +1869,28 @@ extern void QuizConsole(void) {
     pwQuiz = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (pwQuiz, WIDTH, HEIGHT);
     gtk_window_set_position     (pwQuiz, GTK_WIN_POS_CENTER);
-    gtk_window_set_title        (pwQuiz, "MWC plot");
+    gtk_window_set_title        (pwQuiz, "Quiz console");
     g_signal_connect(pwQuiz, "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
     gtk_widget_show_all ((GtkWidget*)pwQuiz);
 #else
+    /*  V1: non-modal, looks nicer
+        V2: non-modal causes the fact that we cannot re-open the window after 
+        closing it. Back to modal.
+    */
     pwQuiz = GTKCreateDialog(_("Quiz console"), DT_INFO, NULL, 
-        DIALOG_FLAG_NOOK, NULL, NULL);
+        // DIALOG_FLAG_NOOK, NULL, NULL);
         // DIALOG_FLAG_NONE, NULL, NULL);
         // DIALOG_FLAG_NONE, (GCallback) StartQuiz, treeview);
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON,(GCallback) StartQuiz, 
         //     GTK_TREE_VIEW(treeview));
-        // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
+        DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, NULL);
         // DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL, treeview);
     //    DIALOG_FLAG_NONE
     gtk_window_set_default_size (GTK_WINDOW (pwQuiz), WIDTH, 350);
     GdkColor color;
     gdk_color_parse ("#EDF5FF", &color);
     gtk_widget_modify_bg(pwQuiz, GTK_STATE_NORMAL, &color);
+    g_signal_connect(G_OBJECT(pwQuiz), "destroy", G_CALLBACK(DestroyQuizDialog), NULL);
 
     // color.red = 0xcfff;
     // color.green = 0xdfff;
@@ -2011,8 +2030,8 @@ extern void QuizConsole(void) {
     g_signal_connect(G_OBJECT(treeview), "button-press-event", G_CALLBACK(QuizManageClicked), GTK_TREE_VIEW(treeview));
     // g_signal_connect(G_OBJECT(treeview), "button-release-event", G_CALLBACK(QuizManageReleased), treeview);
     
-
-    g_object_weak_ref(G_OBJECT(pwQuiz), DestroyQuizDialog, NULL);
+    g_message("end of console");
+    // g_object_weak_ref(G_OBJECT(pwQuiz), DestroyQuizDialog, NULL);
 
     GTKRunDialog(pwQuiz);
 }
