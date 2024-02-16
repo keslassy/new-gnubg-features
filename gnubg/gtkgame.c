@@ -9591,12 +9591,13 @@ GTKDumpStatcontext(int game)
 
 #if defined(USE_BOARD3D)
     int graph3d=0;
-
+    int i;
+    GtkWidget *pw;
+    listOLD *pl;
+    GraphData* gd;
     if (graph3d) {
-        int i;
-        GtkWidget *pw;
-        listOLD *pl;
-        GraphData *gd = CreateGraphData();
+ 
+        gd = CreateGraphData();
     }
 #endif
     
@@ -9682,7 +9683,7 @@ GTKDumpStatcontext(int game)
     if (graph3d) {
         SetNumGames(gd, numStatGames);
 
-        g_message("3d");
+        // g_message("3d");
         pl = lMatch.plNext;
         for (i = 0; i < numStatGames; i++) {
             listOLD *plg = pl->p;

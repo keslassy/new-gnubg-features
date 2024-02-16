@@ -442,3 +442,6 @@ gnubg/config.h.in~
 /gnubg/autom4te.cache/output.6
 /gnubg/autom4te.cache/traces.5
 /gnubg/autom4te.cache/traces.6
+/.vs/VSWorkspaceState.json
+/.vs/VSWorkspaceState.json
+*.Tpo
