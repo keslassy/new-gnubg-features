@@ -524,6 +524,7 @@ static void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
 
     // window setup
     // window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    /* careful: GTK3 only here, not GTK2! */
     window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     gtk_window_set_default_size (GTK_WINDOW(window), WIDTH, HEIGHT);
     gtk_window_set_position     (GTK_WINDOW(window), GTK_WIN_POS_CENTER);
@@ -548,9 +549,10 @@ static void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
     GtkWidget *window;
     // GtkWidget *da;
     GtkWidget *helpButton;
-    // window = GTKCreateDialog(_("History plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    // window = GTKCreateDialog(_("History plot"), DT_INFO, pwDialog, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    window = GTKCreateDialog(_("History plot"), DT_INFO, pwDialog, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
-    window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    // window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
     gtk_window_set_title (GTK_WINDOW (window), plotTitle);
@@ -778,7 +780,8 @@ extern void ComputeHistory(int usePlayerName)
  */
 static void
 //PlotHistoryTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * (pw))
-PlotHistoryTrigger(GtkWidget * UNUSED(pw), GtkWidget * pwr) //gpointer UNUSED(p))
+// PlotHistoryTrigger(GtkWidget * UNUSED(pw), GtkWidget * pwr) 
+PlotHistoryTrigger(GtkWidget * UNUSED(pw), gpointer UNUSED(p))
 {
     char *listName = NULL;
 
@@ -808,7 +811,7 @@ PlotHistoryTrigger(GtkWidget * UNUSED(pw), GtkWidget * pwr) //gpointer UNUSED(p)
         //     return;
         // }
     }
-    gtk_widget_destroy(pwr);
+    // gtk_widget_destroy(pwr);
 
     ComputeHistory(TRUE); 
 }
@@ -1608,10 +1611,13 @@ RelationalOptions(void)
     return vb2;
 }
 
+GtkWidget *pwDialog;
+
 extern void
 GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
-    GtkWidget *pwRun, *pwDialog, *pwHbox2, *pwVbox2,
+    GtkWidget *pwRun, //*pwDialog, 
+        *pwHbox2, *pwVbox2,
         *pwPlayerFrame, *pwUpdate, *pwPaned, *pwVbox, *pwErase, *pwOpen,
         *pwn, *pwLabel, *pwScrolled, *pwHbox, *histButton;
     DBProvider *pdb;
@@ -1626,12 +1632,21 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     }
     pdb->Disconnect();
 
-    /* in an unexplained way, with non-modal, this window is a black hole: we
-    cannot relaunch it after closing it. So we make it modal.
+    /* We had the following bug: in an unexplained way, this window became a black hole: we
+    could not relaunch it after closing it. 
+    V1: we make it modal. But then, if we click on a plot window and close the two windows
+    successively, gnubg crashes.
+    V2: it turns out that we need to first check that gnubg does not think there is an open
+    top-level window before starting this window. It then works fine.
      */
+
+    // if (pwDialog && gtk_widget_get_toplevel(pwDialog))
+    //     gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
+
     pwDialog = GTKCreateDialog(_("GNU Backgammon - Database"),
+            DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
             // DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
-            DT_INFO, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+            // DT_INFO, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
 
 #
 #define REL_DIALOG_HEIGHT 600
@@ -1817,7 +1832,8 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
     gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwn);
 
-    GTKRunDialog(pwDialog);
+    gtk_widget_show_all (pwDialog);
+    // GTKRunDialog(pwDialog);
 }
 
 extern void

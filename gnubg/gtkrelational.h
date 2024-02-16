@@ -32,4 +32,6 @@ extern void RelationalSaveOptions(void);
 extern void GtkShowQuery(RowSet * pRow);
 
 extern void ComputeHistory(int usePlayerName); /* for history plot*/
+
+extern GtkWidget *pwDialog;
 #endif

@@ -9367,6 +9367,7 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
 {
 
 #if GTK_CHECK_VERSION(3,0,0)
+    /* careful: GTK3, not GTK2*/
     GtkWindow * window; 
     { // window setup
         window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -9387,13 +9388,13 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
     } 
     gtk_widget_show_all ((GtkWidget*)window);
 #else
-
     GtkWidget *window;
     // GtkWidget *da;
     GtkWidget *helpButton;
     // window = GTKCreateDialog(_("MWC plot"), DT_INFO, pwParent, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
-    window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    // window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, G_CALLBACK(gtk_widget_destroy), NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
     char plotTitle[300];
@@ -9408,7 +9409,8 @@ void DrawMWC (void)  //GtkWidget* pwParent) {
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_hide), NULL);
     // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(CloseWindow), window);
-    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
+
+    // g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_widget_destroy), NULL);
 
     gtk_container_add(GTK_CONTAINER(DialogArea(window, DA_BUTTONS)),
         helpButton = gtk_button_new_with_label(_("Explanations")));
@@ -9547,7 +9549,9 @@ the real function above doesn't have inputs*/
 void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw)){
     // destroying first the parent window
     // this used to be a problem when we close the MWC window:
-    gtk_widget_destroy(pwStatDialog);
+    // it was solved in the stats window function, so no need
+    // anymore
+    // gtk_widget_destroy(pwStatDialog);
     ComputeMWC(); //pwStatDialog);
 }
 
@@ -9555,6 +9559,26 @@ void PlotMWCTrigger(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 
 /* ***************************************************************************** */
 
+// static void StatOK (GtkWidget * pw, gpointer * UNUSED(p)) {
+
+//     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+//     // gtk_widget_destroy(gtk_widget_get_toplevel(pwStatDialog));
+//     // gtk_widget_destroy(pwNotebook); 
+//     // gtk_widget_destroy(pwStatDialog);
+//     // GTK_WINDOW(pwStatDialog)
+//     // pwStatDialog=NULL;
+
+//     // getWindowGeometry(WINDOW_HINT);
+//     // DestroyPanel(WINDOW_HINT);
+//     // SetPanelWidget(WINDOW_HINT, NULL);
+
+// //     DetailedAnalysisOK(GtkWidget * pw, AnalysisDetails * pDetails)
+// // {
+// //     EvalOK(pDetails->pwChequer, pDetails->pwChequer);
+// //     EvalOK(pDetails->pwCube, pDetails->pwCube);
+// //     gtk_widget_destroy(gtk_widget_get_toplevel(pw));
+// // }
+// }
 
 extern void
 GTKDumpStatcontext(int game)
@@ -9574,9 +9598,30 @@ GTKDumpStatcontext(int game)
     Also, a user may want to look at the moves while checking the plot.
     V2: this causes issues, like a button being unavailable once it's clicked once.
     Back to modal. 
+    V3: problem: 
+     - if stats are non-modal: black hole, cannot call the function twice. 
+            interestingly, if mwc is modal, the 2nd time we call stats, nothing appears; 
+            but then when we call mwc and close it, the stats window appears alone!
+     - if stats are modal:  
+         - modal (mwc) on modal (stats) =>crash upon closing; 
+         - non-modal (mwc) on modal (stats): does not close, need to close the modal first.
+    Solution: it was all because of the "GTKRunDialog" at the end, which becomes blocking.
+    Removing it solves everything.
      */
-    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+    // if (pwStatDialog && gtk_widget_get_toplevel(pwStatDialog)){
+    //     g_message("in cond");
+    //     gtk_widget_destroy(gtk_widget_get_toplevel(pwStatDialog));
+    // }
+    // // if (pwStatDialog){
+    // //     g_message("in cond2");
+    // //     gtk_widget_destroy(pwStatDialog);
+    // // }
+    // pwStatDialog=NULL;
+    // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
     // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
+    // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(StatOK), NULL);
+    // pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, G_CALLBACK(gtk_widget_destroy), NULL);
+    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(gtk_widget_destroy), NULL);
      //GTKCreateDialog(_("About GNU Backgammon"), DT_CUSTOM, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_CLOSEBUTTON, NULL,
      //    NULL);
 
@@ -9705,7 +9750,8 @@ GTKDumpStatcontext(int game)
 
     g_signal_connect(pwStatDialog, "map", G_CALLBACK(stat_dialog_map), pwUsePanels);
 
-    GTKRunDialog(pwStatDialog);
+    gtk_widget_show_all (pwStatDialog);
+    // GTKRunDialog(pwStatDialog); // <-- causes issues! see above
 
 #if defined(USE_BOARD3D)
     TidyGraphData(gd);
