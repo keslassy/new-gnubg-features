@@ -8204,7 +8204,10 @@ GTKDumpStatcontext(int game)
     listOLD *pl;
     GraphData *gd = CreateGraphData();
 #endif
-    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+
+    //pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MODAL, NULL, NULL);
+    pwStatDialog = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_NONE, G_CALLBACK(gtk_widget_destroy), NULL);
+    
 
     if (!fAutoDB) {
         gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_BUTTONS)),
@@ -8322,7 +8325,9 @@ GTKDumpStatcontext(int game)
 
     g_signal_connect(pwStatDialog, "map", G_CALLBACK(stat_dialog_map), pwUsePanels);
 
-    GTKRunDialog(pwStatDialog);
+    gtk_widget_show_all (pwStatDialog);
+    // GTKRunDialog(pwStatDialog); // <-- causes issues! 
+
 
 #if defined(USE_BOARD3D)
     TidyGraphData(gd);
