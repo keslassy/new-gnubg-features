@@ -1530,10 +1530,7 @@ extern void LoadPositionAndStart (void) {
         edit_new(0);
     UserCommand2("set player 0 human");
     UserCommand2("set player 1 human");
-    UserCommand2("set player 0 name QuizOpponent");
-    char buf[100];
-    sprintf(buf,"set player 1 name %s",name1BeforeQuiz);
-    UserCommand2(buf);
+
     // g_message("names: %s %s",ap[0].szName,ap[1].szName);
 
     // if (ap[ms.fTurn].pt != PLAYER_HUMAN) {
@@ -1565,6 +1562,7 @@ extern void LoadPositionAndStart (void) {
     Solution: We define a quiz position "set" property to tell us what type of 
     decision it is.
     */
+    // g_message("iopt ID:%d",q[iOpt].player);
     if(q[iOpt].set==QUIZ_P_T) { /* P / T decision */
         skipDoubleHint=1;
         CommandDouble(NULL);
@@ -1573,8 +1571,7 @@ extern void LoadPositionAndStart (void) {
     } else if (q[iOpt].set==QUIZ_M) {  /* move decision*/
         skipDoubleHint=0;
         quizTitle =g_strdup(_("Quiz position: BEST MOVE?"));
-    }
-    else {   /* D / ND decision */
+    } else {   /* D / ND decision */
         skipDoubleHint=0;
         quizTitle=g_strdup(_("Quiz position: DOUBLE or NO-DOUBLE?"));
     }
@@ -1584,8 +1581,20 @@ extern void LoadPositionAndStart (void) {
         gtk_window_set_title(GTK_WINDOW(pwMain), quizTitle);
     }
 #endif   
-
     g_free(quizTitle);
+    char buf[100];
+    /* Problem if we attempt to assign a used name, so picking a 
+    random temp name momentarily */
+    // sprintf(buf,"set player %d name temp-delete",1);
+    UserCommand2("set player 1 name temp-delete");
+    UserCommand2("set player 0 name QuizOpponent");
+    // UserCommand2(buf);    
+    // sprintf(buf,"set player %d name QuizOpponent",0);
+    // UserCommand2("set player 0 name QuizOpponent");
+    // UserCommand2(buf);
+    sprintf(buf,"set player 1 name %s",name1BeforeQuiz);
+    UserCommand2(buf);
+
 
     // g_message("double");
     //  g_message("Post: fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",

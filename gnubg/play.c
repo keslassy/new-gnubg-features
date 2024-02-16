@@ -2461,7 +2461,7 @@ CommandDouble(char *UNUSED(sz))
 #endif
     TurnDone();
     if(fInQuizMode &&ms.fMove==1 && (!skipDoubleHint)){
-        g_message("within CommandDouble");
+        // g_message("within CommandDouble");
         qDecision=QUIZ_DOUBLE;
         hint_double(TRUE, 1);
         // CommandHint("");
@@ -3939,7 +3939,7 @@ CommandRedouble(char *UNUSED(sz))
     if (!move_not_last_in_match_ok())
         return;
     if(fInQuizMode && (!skipDoubleHint)){
-        g_message("within Command*Re*Double");
+        // g_message("within Command*Re*Double");
         qDecision=QUIZ_DOUBLE;
         hint_double(TRUE, 1);
         // CommandHint("");

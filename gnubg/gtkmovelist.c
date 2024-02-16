@@ -290,7 +290,7 @@ MoveListUpdate(const hintdata * phd)
         */
         if(fUseQuiz && phd->piHighlight && *phd->piHighlight == i) {
             if(fInQuizMode) {
-                g_message("i=%u,diff=%f",i,pml->amMoves[i].rScore-rBest);
+                // g_message("i=%u,diff=%f",i,pml->amMoves[i].rScore-rBest);
                 qUpdate(-(pml->amMoves[i].rScore-rBest));
             } 
             // else {

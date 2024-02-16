@@ -5498,9 +5498,10 @@ CommandSwapPlayers(char *UNUSED(sz))
     VERSION2: also add if fUseKeyNames is not enabled yet, so users don't think they 
     need to add names manually. We only check that the permutation wasn't launched 
     by the SmartSit() function, which would mean the name is already in the list.
+    V3: we also exclude permutations caused by quiz mode
     */
     // if (fUseKeyNames && !fWithinSmartSit) {
-    if (!fWithinSmartSit) {
+    if (!fWithinSmartSit && !fInQuizMode) {
         // g_message("in CommandSwapPlayers: %s", ap[0].szName);
         AddKeyName(ap[0].szName);
     }
