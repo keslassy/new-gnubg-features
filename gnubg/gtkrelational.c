@@ -320,7 +320,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_stroke (cr);
 
             /* +text to the right of line */
-        cairo_move_to(cr, xToX(1.0)+dx/2, errorToY(matchAvgErrorRate[0]) + 0.3 * fontSize);
+        cairo_move_to(cr, xToX(1.0)+10*dx/2, errorToY(matchAvgErrorRate[0]) + 0.3 * fontSize);
         cairo_set_source_rgb (cr, 1.0, 0.5, 0.0);
         sprintf(strTemp, "%.1f", matchAvgErrorRate[0]);
         // g_message("avg error rate %.1f\n", matchAvgErrorRate[0]);
@@ -355,7 +355,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_show_text(cr, _("Match error rate"));
         cairo_stroke (cr);
             /* +text to the right of line */
-        cairo_move_to(cr, xToX(1.0)+dx/2, errorToY(matchErrorRate[0]) + 0.3 * fontSize);
+        cairo_move_to(cr, xToX(1.0)+3*dx/2, errorToY(matchErrorRate[0]) + 0.3 * fontSize);
         cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
         sprintf(strTemp, "%.1f", matchErrorRate[0]);
         // g_message("error rate %.1f\n", matchErrorRate[0]);
@@ -381,7 +381,7 @@ DrawHistoryPlot (GtkWidget *widget, GdkEventExpose *event, gpointer UNUSED(user_
         cairo_show_text(cr, _("Average"));
         cairo_stroke (cr);
             /* +text to the right of line */
-        cairo_move_to(cr, xToX(1.0)+dx/2, errorToY(matchAvg) + 0.3 * fontSize);
+        cairo_move_to(cr, xToX(1.0)+17*dx/2, errorToY(matchAvg) + 0.3 * fontSize);
         cairo_set_source_rgb (cr, 0.0, 0.35, 0.65);
         sprintf(strTemp, "%.1f", matchAvg);
         cairo_show_text(cr, strTemp);

@@ -1750,7 +1750,9 @@ static void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
         // QuizConsole();
         return;
     }
-
+    if(!fInQuizMode)
+        TurnOnQuizMode();
+        
     /* the following function:
     - updates positionsFileFullPath,
     - opens the corrsponding file, 
@@ -1769,8 +1771,7 @@ static void StartQuiz(GtkWidget * UNUSED(pw), GtkTreeView * treeview) {
 
     /*start!*/
     DestroyQuizDialog(NULL,NULL);
-    if(!fInQuizMode)
-        TurnOnQuizMode();
+
     // // sprintf(name0BeforeQuiz, "%s", ap[0].szName);
     // // sprintf(name1BeforeQuiz, "%s", ap[1].szName);
     // name0BeforeQuiz=g_strdup(ap[0].szName);
