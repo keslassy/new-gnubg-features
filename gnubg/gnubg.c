@@ -277,7 +277,7 @@ int fCheckUpdateGTK = FALSE;
 int fInQuizMode=FALSE;
 int fUseQuiz=TRUE;
 int fQuizAutoAdd=TRUE;
-quiz qNow={"\0",0,0.0,0,0.0}; /*extern*/
+quiz qNow={"\0",0,0,0.0,0,0.0}; /*extern*/
 float qNow_NDBeforeMoveError=-1.0; /*extern*/
 // float fQuizAutoAddThreshold=0.1;
 // float fQuizAutoAddThreshold=arSkillLevel[SKILL_VERYBAD]; //<--pb, not constant?
@@ -2170,6 +2170,7 @@ no_double_skill(moverecord * pmr, cubeinfo * pci)
         qNow.ewmaError=-1.0;
         qNow_NDBeforeMoveError=-eq;
         qNow.player=ms.fTurn;
+        qNow.set=QUIZ_D_ND;
         // g_message("copied no_double error: %f, player: %d",qNow_NDBeforeMoveError,qNow.player);
     }
 #endif
@@ -2209,12 +2210,13 @@ double_skill(moverecord * pmr, cubeinfo * pci)
     // g_message("in double_skill (end)");
 #if defined(USE_GTK)    
     if (fInQuizMode) {
-        // g_message("double error in quiz: %f",-eq);
+        g_message("double error in quiz: %f",-eq);
         qUpdate(-eq);
     } else if(fUseQuiz){
         qNow.ewmaError=-(eq);
         qNow_NDBeforeMoveError=-1.0;
         qNow.player=ms.fTurn;
+        qNow.set=QUIZ_D_ND;
         // g_message("copied double error: %f",qNow.ewmaError);
             // g_message("player=%d",ms.fTurn);
     }
@@ -2258,6 +2260,7 @@ drop_skill(moverecord * pmr, cubeinfo * pci)
         qNow.ewmaError=-(eq);
         qNow_NDBeforeMoveError=-1.0;
         qNow.player=ms.fTurn;
+        qNow.set=QUIZ_P_T;
         // g_message("copied drop error: %f",qNow.ewmaError);
     }
 #endif
@@ -2288,14 +2291,15 @@ take_skill(moverecord * pmr, cubeinfo * pci)
     }
 #if defined(USE_GTK)    
     if (fInQuizMode) {
-        // g_message("no-double error in quiz: %f",-eq);
+        g_message("no-double error in quiz: %f",-eq);
         qUpdate(-eq);
     } else if(fUseQuiz){
         qNow.ewmaError=-(eq);
         qNow_NDBeforeMoveError=-1.0;
         qNow.player=ms.fTurn;
+        qNow.set=QUIZ_P_T;
         // g_message("copied take error: %f",qNow.ewmaError);
-            // g_message("player=%d",ms.fTurn);
+        //     g_message("player=%d",ms.fTurn);
     }
 #endif    
     return Skill(eq);
@@ -2315,6 +2319,7 @@ move_skill(moverecord * pmr)
         if(fUseQuiz){
             qNow.ewmaError=0.0;
             qNow.player=ms.fTurn;
+            qNow.set=QUIZ_M;
             // g_message("no eval => zero error: %f, player %d",
             //     qNow.ewmaError,qNow.player);
         }
@@ -2335,6 +2340,7 @@ move_skill(moverecord * pmr)
                 qNow_NDBeforeMoveError=-1.0;
             qNow.ewmaError=move_0->rScore-move_i->rScore; /*new value*/
             qNow.player=ms.fTurn;
+            qNow.set=QUIZ_M;
             // g_message("move: error: %f, player %d",qNow.ewmaError,qNow.player);
         }
 #endif        
@@ -2424,7 +2430,9 @@ hint_double(int show, int did_double)
             ChangeGame(NULL);
     // g_message("hint_double before GTK: did_double=%d, movetype=%d",did_double, pmr->mt);
 
-        if (show)
+        /* if we are running the quiz mode, we want to skip the double answer
+        when it's a pass/take question */
+        if (show) // && !(fInQuizMode && skipDoubleHint))
             GTKCubeHint(pmr, &ms, did_double, -1, hist);
     // g_message("hint_double after GTK: did_double=%d, movetype=%d",did_double, pmr->mt);
 

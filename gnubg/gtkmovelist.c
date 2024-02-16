@@ -282,14 +282,15 @@ MoveListUpdate(const hintdata * phd)
         }
 
         /* 1) if we play in quiz mode, we want to take into account the player's mistake
-        2) if we collect errors manually, we want to save the error in case the users
+        [2) if we collect errors manually, we want to save the error in case the user
             needs to add it to a position list
             -> cancelled, moved to move_skill()
-        3) TBD: if we collect errors automatically, we add it to a position list directly
+        3) Future option: if we collect errors automatically, we add it to a position list 
+        directly]
         */
         if(fUseQuiz && phd->piHighlight && *phd->piHighlight == i) {
             if(fInQuizMode) {
-                // g_message("i=%u,diff=%f",i,pml->amMoves[i].rScore-rBest);
+                g_message("i=%u,diff=%f",i,pml->amMoves[i].rScore-rBest);
                 qUpdate(-(pml->amMoves[i].rScore-rBest));
             } 
             // else {

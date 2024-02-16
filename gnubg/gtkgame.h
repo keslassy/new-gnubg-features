@@ -192,21 +192,22 @@ extern void SetSwitchModeMenuText(void);
 /*also used in scoremap and relational history plot*/
 extern void AddText(GtkWidget* pwBox, char* Text);
 /*used in history plot*/
-extern void drawArrow (cairo_t *cr, double start_x, double start_y, double end_x, double end_y);
+extern void drawArrow(cairo_t *cr, double start_x, double start_y, double end_x, double end_y);
 
 extern void GTKAskToUpdate(char * availableVersion);
 
 // extern GtkWidget *pQuizMenu; /*extern:right-click menu, to be updated in quiz mode*/
 // extern void BuildQuizMenu(GdkEventButton *event);
 extern void StopLoopClicked(GtkWidget * UNUSED(pw), gpointer UNUSED(p));
-extern void StatusBarMessage (char* text);
+extern void StatusBarMessage(char* text);
 
 /* For quiz mode; note that it uses GTKWidget so cannot be in backgammon.h */
 // extern void StartQuiz(GtkWidget * pw, GtkTreeView * treeview); 
 // extern int AddPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw));
 // extern int AddNDPositionToFile(categorytype * pcategory, GtkWidget * UNUSED(pw));
-extern void LoadPositionAndStart (void);
+extern void LoadPositionAndStart(void);
 extern void DeletePosition(void) ;
 // extern GtkWidget *pwQuiz;
+extern int skipDoubleHint; 
 
 #endif

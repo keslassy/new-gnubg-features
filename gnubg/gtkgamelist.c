@@ -445,7 +445,8 @@ static quiz q[MAX_ROWS];
 static int qLength=0;
 static int iOpt=-1; 
 static int iOptCounter=0; 
-// quiz qNow={"\0",0,0,0.0}; /*extern*/
+int skipDoubleHint=0; 
+// quiz qNow={"\0",0,0,0,0.0}; /*extern*/
 int counterForFile=0; /*extern*/
 float latestErrorInQuiz=-1.0; /*extern*/
 // char * name0BeforeQuiz=NULL; //[MAX_NAME_LEN+1];
@@ -1504,7 +1505,9 @@ extern void LoadPositionAndStart (void) {
 
     // g_message("fDoubled=%d, fMove=%d, fTurn=%d, recorderdplayer=%d",
     //         ms.fDoubled, ms.fMove, ms.fTurn, q[iOpt].player);
-    if(q[iOpt].player==0) {
+    if (q[iOpt].player==0) {
+    // if (q[iOpt].player==0 && !(q[iOpt].set==QUIZ_P_T)) {
+        // |        (q[iOpt].player==0 &&  (q[iOpt].set==QUIZ_P_T))) {
     // if(ms.fTurn == 0) {
         // g_message("swap!");
         // SwapSides(ms.anBoard);
@@ -1522,10 +1525,11 @@ extern void LoadPositionAndStart (void) {
     // g_message("Starting quiz mode: ap names: (%s,%s) vs: (%s,%s)",
     //     ap[0].szName,ap[1].szName,name0BeforeQuiz,name1BeforeQuiz);        
 
-    /* this changes the state to a money game if the option is checked */
+    /* this changes the state to an unlimited (money) game if the option is checked */
     if (fQuizAtMoney)
         edit_new(0);
     UserCommand2("set player 0 human");
+    UserCommand2("set player 1 human");
     UserCommand2("set player 0 name QuizOpponent");
     char buf[100];
     sprintf(buf,"set player 1 name %s",name1BeforeQuiz);
@@ -1562,13 +1566,18 @@ extern void LoadPositionAndStart (void) {
     decision it is.
     */
     if(q[iOpt].set==QUIZ_P_T) { /* P / T decision */
+        skipDoubleHint=1;
         CommandDouble(NULL);
+        CommandSwapPlayers(NULL);   
         quizTitle =g_strdup(_("Quiz position: TAKE or PASS?"));
-    } else if (q[iOpt].set==QUIZ_M)  /* move decision*/
+    } else if (q[iOpt].set==QUIZ_M) {  /* move decision*/
+        skipDoubleHint=0;
         quizTitle =g_strdup(_("Quiz position: BEST MOVE?"));
-    else    /* D / ND decision */
+    }
+    else {   /* D / ND decision */
+        skipDoubleHint=0;
         quizTitle=g_strdup(_("Quiz position: DOUBLE or NO-DOUBLE?"));
-
+    }
     StatusBarMessage(quizTitle);
 #if defined(USE_GTK)
     if (fX) {
@@ -2158,7 +2167,7 @@ static void BuildQuizMenu(GdkEventButton *event){
 
             Non-implemented potential future alternatives:
             (A) Let the user right-click on the cube decision
-            panel. But it's not clear that this is better, because now the user
+            panel. But it's not clear that this is better, because then the user
             (1) needs to know he can do it, and (2) needs to start clicking around. 
             (B) Only present each category once, but when a user picks a category,
             a window asks whether to add the ND decision or the move decision.  */

@@ -2460,8 +2460,8 @@ CommandDouble(char *UNUSED(sz))
     }
 #endif
     TurnDone();
-    if(fInQuizMode &&ms.fMove==1){
-        // g_message("within CommandDouble");
+    if(fInQuizMode &&ms.fMove==1 && (!skipDoubleHint)){
+        g_message("within CommandDouble");
         qDecision=QUIZ_DOUBLE;
         hint_double(TRUE, 1);
         // CommandHint("");
@@ -3938,8 +3938,8 @@ CommandRedouble(char *UNUSED(sz))
 
     if (!move_not_last_in_match_ok())
         return;
-    if(fInQuizMode){
-        // g_message("within Command*Re*Double");
+    if(fInQuizMode && (!skipDoubleHint)){
+        g_message("within Command*Re*Double");
         qDecision=QUIZ_DOUBLE;
         hint_double(TRUE, 1);
         // CommandHint("");
