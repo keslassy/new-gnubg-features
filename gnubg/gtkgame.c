@@ -9588,16 +9588,18 @@ GTKDumpStatcontext(int game)
     GtkWidget *addToDbButton,*mwcButton;
     
     /* the 3D graph seems buggy and makes gnubg crash, removing for now */
+
+#if defined(USE_BOARD3D)
     int graph3d=0;
 
     if (graph3d) {
-#if defined(USE_BOARD3D)
         int i;
         GtkWidget *pw;
         listOLD *pl;
         GraphData *gd = CreateGraphData();
-#endif
     }
+#endif
+    
     /* V1: made non-modal so we can close the MWC-plot window after opening it
     ...else there are all sorts of problems when closing, including
     gnubg closing the main window.
@@ -9676,8 +9678,8 @@ GTKDumpStatcontext(int game)
     navi_combo = AddNavigation(pvbox);
     gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_MAIN)), pvbox);
 
-    if (graph3d) {
 #if defined(USE_BOARD3D)
+    if (graph3d) {
         SetNumGames(gd, numStatGames);
 
         g_message("3d");
@@ -9699,8 +9701,8 @@ GTKDumpStatcontext(int game)
                                             " The games are along the bottom and the error rates up the side."
                                             " Chequer error in green, cube error in blue."));
         }
-#endif
     }
+#endif
     // //pwPlot = ComputeMWC();
     // gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pwPlot,
     //                          gtk_label_new(_("Match Winning Chances")));
@@ -9762,11 +9764,11 @@ GTKDumpStatcontext(int game)
     gtk_widget_show_all (pwStatDialog);
     // GTKRunDialog(pwStatDialog); // <-- causes issues! see above
 
-    if (graph3d) {
 #if defined(USE_BOARD3D)
+    if (graph3d) {
         TidyGraphData(gd);
-#endif
     }
+#endif
 }
 
 extern int
