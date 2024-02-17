@@ -221,13 +221,17 @@ SaveCommon(guint f, gchar * prompt)
     static gint last_export_mgp = 0;
     static gchar *last_save_folder = NULL;
     static gchar *last_export_folder = NULL;
-    gchar *fn = GetFilename(TRUE, (f == 1) ? EXPORT_SGF : last_export_type);
+    /* updated the line below: if we play some match then click on new, we would expect a new 
+    title, not the same title as the old match. Keeping the same title also prevents us from 
+    distinguishing between the matches when saving the files. */
+    gchar *fn = GetFilename(FALSE, (f == 1) ? EXPORT_SGF : last_export_type);
+    // gchar *fn = GetFilename(TRUE, (f == 1) ? EXPORT_SGF : last_export_type);
     gchar *folder = NULL;
     const gchar *mgp_text[3] = { "match", "game", "position" };
 
-    if (f == 1)
+    if (f == 1) /* the "last_save_folder" was reset above, so what's the point of this next line??? */
         folder = last_save_folder ? last_save_folder : default_sgf_folder;
-    else
+    else /* the "last_export_folder" was reset above, so what's the point of this next line??? */
         folder = last_export_folder ? last_export_folder : default_export_folder;
 
     so.fc = GnuBGFileDialog(prompt, folder, fn, GTK_FILE_CHOOSER_ACTION_SAVE);
