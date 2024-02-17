@@ -1353,7 +1353,7 @@ AnalyzeGame(listOLD * plGame, int wait)
 
     /* Analyse first move record (gameinfo) */
     g_assert(pmr->mt == MOVE_GAMEINFO);
-        g_message("before first move"); 
+        g_message("before first move, numMoves=%d",numMoves); 
     if (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
                     &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, NULL) < 0)
         return -1;              /* Interrupted */

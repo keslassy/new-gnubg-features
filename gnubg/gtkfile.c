@@ -961,6 +961,13 @@ static void GTKAutoSave(void)
 extern void
 GTKAnalyzeCurrent(void)
 {
+    // /* Background analysis sometimes crashes the application. This may be due to 3-ply analysis, which first
+    // runs a 2ply analysis then the match filter and has trouble in the first move. One easy solution is to 
+    // first analyze the first move separately. */
+    // if(fBackgroundAnalysis && fX) {
+    //     StatusBarMessage("preparing background analysis");
+    //     UserCommand("analyse move");
+    // }
 
     /*analyze match*/
     UserCommand("analyse match");
