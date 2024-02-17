@@ -1353,10 +1353,11 @@ AnalyzeGame(listOLD * plGame, int wait)
 
     /* Analyse first move record (gameinfo) */
     g_assert(pmr->mt == MOVE_GAMEINFO);
+        g_message("before first move"); 
     if (AnalyzeMove(pmr, &msAnalyse, plGame, psc,
                     &esAnalysisChequer, &esAnalysisCube, aamfAnalysis, afAnalysePlayers, NULL) < 0)
         return -1;              /* Interrupted */
-
+    g_message("after first move"); 
     numMoves--;                 /* Done one - the gameinfo */
 
 
@@ -1365,6 +1366,7 @@ AnalyzeGame(listOLD * plGame, int wait)
         pmr = pl->p;
 
         if (pmr == NULL) {
+            g_message("corrupt"); 
             /* corrupt moves list */
             g_assert_not_reached();
             break;
@@ -1574,6 +1576,7 @@ CommandAnalyseGame(char *UNUSED(sz))
     // int fShowProgressOld;
     int doAR=(esAnalysisChequer.ec.fAutoRollout || esAnalysisCube.ec.fAutoRollout);
 
+    g_message("before game check"); 
     if (!CheckGameExists())
         return;
 
@@ -1599,6 +1602,7 @@ CommandAnalyseGame(char *UNUSED(sz))
 #endif  
         ProgressStartValue(_("Analysing game"), nMoves*(1+doAR));
 
+    g_message("before game analysis");    
     AnalyzeGame(plGame, TRUE);
 
     /*Post-analysis AutoRollout*/
@@ -1685,12 +1689,12 @@ CommandAnalyseMatch(char *UNUSED(sz))
     }
 
     IniStatcontext(&scMatch);
- 
+        g_message("match: before loop");  
     for (pl = lMatch.plNext; pl != &lMatch; pl = pl->plNext) {
-
+            g_message("match: before game analysis");  
         if (AnalyzeGame(pl->p, FALSE) < 0) {
             /* analysis incomplete; erase partial summary */
-
+                g_message("match: incomplete analysis");  
             IniStatcontext(&scMatch);
             break;
         }
