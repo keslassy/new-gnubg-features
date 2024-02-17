@@ -221,9 +221,11 @@ SaveCommon(guint f, gchar * prompt)
     static gint last_export_mgp = 0;
     static gchar *last_save_folder = NULL;
     static gchar *last_export_folder = NULL;
-    /* updated the line below: if we play some match then click on new, we would expect a new 
-    title, not the same title as the old match. Keeping the same title also prevents us from 
-    distinguishing between the matches when saving the files. */
+    /* IK: updated the line below: if we open an existing match or play some match, then click on "New", 
+    we would expect a new (filename) title for the new match, not the same title as the old match. 
+    Keeping the same title also prevented us from distinguishing between the matches when saving 
+    the files. 
+    In the line, I just changed TRUE->FALSE.*/
     gchar *fn = GetFilename(FALSE, (f == 1) ? EXPORT_SGF : last_export_type);
     // gchar *fn = GetFilename(TRUE, (f == 1) ? EXPORT_SGF : last_export_type);
     gchar *folder = NULL;
