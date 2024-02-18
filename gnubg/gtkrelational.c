@@ -77,6 +77,8 @@ static GtkWidget *pwQueryText;
 static GtkWidget *pwQueryResult = NULL;
 static GtkWidget *pwQueryBox;
 
+static GtkWidget *pwDBDialog;
+
 static GtkListStore *playerStore;
 static GtkListStore *dbStore;
 static GtkTreeIter selected_iter;
@@ -549,9 +551,9 @@ static void CreateHistoryWindow (void)  //GtkWidget* pwParent) {
     GtkWidget *window;
     // GtkWidget *da;
     GtkWidget *helpButton;
-    // window = GTKCreateDialog(_("History plot"), DT_INFO, pwDialog, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
-    window = GTKCreateDialog(_("History plot"), DT_INFO, pwDialog, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
-    //pwDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
+    // window = GTKCreateDialog(_("History plot"), DT_INFO, pwDBDialog, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    window = GTKCreateDialog(_("History plot"), DT_INFO, pwDBDialog, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+    //pwDBDialog = GTKCreateDialog(_("GNU Backgammon - Credits"), DT_INFO, pwParent, DIALOG_FLAG_MODAL, NULL, NULL);
     // window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
     //window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_window_set_default_size (GTK_WINDOW (window), WIDTH, HEIGHT);
@@ -1610,8 +1612,6 @@ RelationalOptions(void)
 
     return vb2;
 }
-
-GtkWidget *pwDBDialog;
 
 extern void
 GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))

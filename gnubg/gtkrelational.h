@@ -33,5 +33,5 @@ extern void GtkShowQuery(RowSet * pRow);
 
 extern void ComputeHistory(int usePlayerName); /* for history plot*/
 
-extern GtkWidget *pwDialog;
+//extern GtkWidget *pwDialog;
 #endif
