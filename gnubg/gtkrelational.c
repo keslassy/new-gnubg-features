@@ -1611,12 +1611,12 @@ RelationalOptions(void)
     return vb2;
 }
 
-GtkWidget *pwDialog;
+GtkWidget *pwDBDialog;
 
 extern void
 GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 {
-    GtkWidget *pwRun, //*pwDialog, 
+    GtkWidget *pwRun, //*pwDBDialog, 
         *pwHbox2, *pwVbox2,
         *pwPlayerFrame, *pwUpdate, *pwPaned, *pwVbox, *pwErase, *pwOpen,
         *pwn, *pwLabel, *pwScrolled, *pwHbox, *histButton;
@@ -1640,24 +1640,24 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
     top-level window before starting this window. It then works fine.
      */
 
-    // if (pwDialog && gtk_widget_get_toplevel(pwDialog))
-    //     gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
+    // if (pwDBDialog && gtk_widget_get_toplevel(pwDBDialog))
+    //     gtk_widget_destroy(gtk_widget_get_toplevel(pwDBDialog));
 
-    pwDialog = GTKCreateDialog(_("GNU Backgammon - Database"),
+    pwDBDialog = GTKCreateDialog(_("GNU Backgammon - Database"),
             DT_INFO, NULL, DIALOG_FLAG_NONE, NULL, NULL);
             // DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
             // DT_INFO, NULL, DIALOG_FLAG_MODAL | DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
 
 #
 #define REL_DIALOG_HEIGHT 600
-    gtk_window_set_default_size(GTK_WINDOW(pwDialog), -1, REL_DIALOG_HEIGHT);
+    gtk_window_set_default_size(GTK_WINDOW(pwDBDialog), -1, REL_DIALOG_HEIGHT);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_BUTTONS)),
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDBDialog, DA_BUTTONS)),
         histButton = gtk_button_new_with_label(_("Plot History")));
     gtk_widget_set_tooltip_text(histButton, _("Click on the button to plot the historical "
             "error of (1) a player selected in the above list, or if no player is selected, "
             "(2) the player sitting at the bottom of the board in the current match."));
-    g_signal_connect(histButton, "clicked", G_CALLBACK(PlotHistoryTrigger), pwDialog);
+    g_signal_connect(histButton, "clicked", G_CALLBACK(PlotHistoryTrigger), pwDBDialog);
 
     pwn = gtk_notebook_new();
     gtk_container_set_border_width(GTK_CONTAINER(pwn), 0);
@@ -1830,10 +1830,10 @@ GtkShowRelational(gpointer UNUSED(p), guint UNUSED(n), GtkWidget * UNUSED(pw))
 #endif
     gtk_box_pack_start(GTK_BOX(pwVbox), pwScrolled, TRUE, TRUE, 0);
 
-    gtk_container_add(GTK_CONTAINER(DialogArea(pwDialog, DA_MAIN)), pwn);
+    gtk_container_add(GTK_CONTAINER(DialogArea(pwDBDialog, DA_MAIN)), pwn);
 
-    gtk_widget_show_all (pwDialog);
-    // GTKRunDialog(pwDialog);
+    gtk_widget_show_all (pwDBDialog);
+    // GTKRunDialog(pwDBDialog);
 }
 
 extern void
