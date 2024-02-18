@@ -967,11 +967,14 @@ GTKAnalyzeCurrent(void)
     evalcontext ecAux;
     memcpy(&ecAux, &GetEvalChequer()->ec, sizeof(evalcontext));
     if(fBackgroundAnalysis && (ecAux.nPlies > 2)) {
+        CommandFirstGame(NULL);
+        CommandFirstMove(NULL);
+        //UserCommand("gotofirstgame on");
         CommandAnalyseMoveAux(1);
         // StatusBarMessage("preparing background analysis");
         // UserCommand("analyse move");
     }
-    
+
     /*analyze match*/
     UserCommand("analyse match");
 
