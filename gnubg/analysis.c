@@ -2146,8 +2146,12 @@ cmark_move_rollout(moverecord * pmr, gboolean destroy)
     return res == 0 ? c : res;
 }
 
+/* adding an intermediate function to enable a different message to the user at the bottom:
+AnalyzeMove(0) is usual, AnalyzeMove(1) functions as a preliminary in background analysis.
+*/
+
 extern void
-CommandAnalyseMove(char *UNUSED(sz))
+CommandAnalyseMoveAux(int backgroundFlag)
 {
     if (!CheckGameExists())
         return;
@@ -2168,7 +2172,10 @@ CommandAnalyseMove(char *UNUSED(sz))
         md.pesChequer = &esAnalysisChequer;
         md.pesCube = &esAnalysisCube;
         md.aamf = aamfAnalysis;
-        RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
+        if (backgroundFlag)
+            RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Preparing background analysis"));
+        else
+            RunAsyncProcess((AsyncFun) asyncAnalyzeMove, &md, _("Analysing move..."));
 
 #if defined(USE_GTK)
         if (fX)
@@ -2184,6 +2191,12 @@ CommandAnalyseMove(char *UNUSED(sz))
 
     } else
         outputerrf("%s", _("Please use `hint' on unfinished moves"));
+}
+
+extern void
+CommandAnalyseMove(char *UNUSED(sz))
+{
+    CommandAnalyseMoveAux(0);
 }
 
 static void

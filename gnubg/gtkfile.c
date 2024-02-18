@@ -23,7 +23,7 @@
 as files in the "analyzed" sub-folder (as in batch analysis)
 */
 
-
+#include "analysis.h" // for CommandAnalyseMoveAux
 #include "config.h"
 #include "backgammon.h"
 #include "gtklocdefs.h"
@@ -961,7 +961,17 @@ static void GTKAutoSave(void)
 extern void
 GTKAnalyzeCurrent(void)
 {
-
+    /* Background analysis sometimes crashes the application. This may be due to 3-ply analysis, which first
+    runs a 2ply analysis then the match filter, and somehow has trouble in the first move. One simple solution 
+    is to first analyze the first move separately. */
+    evalcontext ecAux;
+    memcpy(&ecAux, &GetEvalChequer()->ec, sizeof(evalcontext));
+    if(fBackgroundAnalysis && (ecAux.nPlies > 2)) {
+        CommandAnalyseMoveAux(1);
+        // StatusBarMessage("preparing background analysis");
+        // UserCommand("analyse move");
+    }
+    
     /*analyze match*/
     UserCommand("analyse match");
 
