@@ -3022,6 +3022,7 @@ CommandNewMatch(char *sz)
     CommandNewGame(NULL);
 }
 
+/* What's the difference between a session and a match? Do we really need this concept with a duplication of functions? */
 extern void
 CommandNewSession(char *sz)
 {
@@ -3050,6 +3051,13 @@ CommandNewSession(char *sz)
     plLastMove = NULL;
 
     SetMatchDate(&mi);
+
+    /* Let's say we open a match between A and B, then click on the "New" button to play a match against Gnubg.
+    Then the filename should be Me_vs_gnubg_date.sgf, not A_vs_B_OldDate.sgf. */
+    szCurrentFileName = GetFilename(FALSE, EXPORT_SGF);    
+    if (!(szCurrentFolder && *szCurrentFolder)) {
+        szCurrentFolder = (default_sgf_folder && (*default_sgf_folder)) ? default_sgf_folder : ".";
+    }
 
     UpdateSetting(&ms.nMatchTo);
     UpdateSetting(&ms.fTurn);
