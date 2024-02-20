@@ -1590,8 +1590,8 @@ CommandAnalyseGame(char *UNUSED(sz))
 #if defined(USE_GTK)
     if(fBackgroundAnalysis && fX && !fBatchAnalysisRunning) {
         fBackgroundAnalysisRunning = TRUE;
-        ProgressStartValue(_("Background analysis. Browsing-only mode: "
-            "feel free to browse and check the early analysis results."), 
+        ProgressStartValue(_("Background analysis. "
+            "Feel free to check the early analysis results."), 
             nMoves*(1+doAR));        
         ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
@@ -1669,8 +1669,8 @@ CommandAnalyseMatch(char *UNUSED(sz))
 #if defined(USE_GTK)
     if(fBackgroundAnalysis && fX  && !fBatchAnalysisRunning) {
         fBackgroundAnalysisRunning = TRUE;
-        ProgressStartValue(_("Background analysis. Browsing-only mode: "
-            "feel free to browse and check the early analysis results."), 
+        ProgressStartValue(_("Background analysis. "
+            "Feel free to check the early analysis results."), 
             nMoves*(1+doAR)); 
         ShowBoard(); /* hide unallowd toolbar items*/
         GTKRegenerateGames(); /* hide unallowed menu items*/
