@@ -30,6 +30,8 @@
 
 # Executables
 *.exe
+!windows/**
+
 *.out
 *.app
 *.i*86
@@ -446,3 +448,4 @@ gnubg/config.h.in~
 /.vs/VSWorkspaceState.json
 *.Tpo
 gnubg/.vscode/settings.json
+
