@@ -216,7 +216,8 @@ int fCubeEqualChequer = FALSE;
 int fCubeUse = TRUE;
 int fDisplay = TRUE;
 int fFullScreen = FALSE;
-int fGotoFirstGame = FALSE;
+/* IK: updated default. Going to the first move in a new match is logical.*/
+int fGotoFirstGame = TRUE;
 int fInvertMET = FALSE;
 int fJacoby = TRUE;
 int fOutputRawboard = FALSE;
@@ -5601,11 +5602,15 @@ setDefaultFileName(char *path)
 {
     g_free(szCurrentFolder);
     g_free(szCurrentFileName);
-    DisectPath(path, NULL, &szCurrentFileName, &szCurrentFolder);
+    DisectPath(path, NULL, &szCurrentFileName, &szCurrentFolder); // gets szCurrentFileName without extension
+    // g_message("filename:%s", szCurrentFileName);
+    // g_message("folder:%s", szCurrentFolder);
 #if defined(USE_GTK)
     if (fX) {
         gchar *title = g_strdup_printf("%s (%s)", _("GNU Backgammon"), szCurrentFileName);
         gtk_window_set_title(GTK_WINDOW(pwMain), title);
+    // g_message("title:%s", title);
+
         g_free(title);
     }
 #endif
@@ -5622,7 +5627,7 @@ DisectPath(const char *path, const char *extension, char **name, char **folder)
     }
     *folder = g_path_get_dirname(path);
     fnn = g_path_get_basename(path);
-    pc = strrchr(fnn, '.');
+    pc = strrchr(fnn, '.'); //pointer to the last occurrence of '.' 'in fnn
     if (pc)
         *pc = '\0';
     *name = g_strconcat(fnn, extension, NULL);

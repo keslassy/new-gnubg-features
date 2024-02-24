@@ -445,3 +445,4 @@ gnubg/config.h.in~
 /.vs/VSWorkspaceState.json
 /.vs/VSWorkspaceState.json
 *.Tpo
+gnubg/.vscode/settings.json

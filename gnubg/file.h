@@ -73,7 +73,7 @@ typedef struct {
     ImportType type;
 } FilePreviewData;
 
-extern char *GetFilename(int CheckForCurrent, ExportType type);
+extern char *GetFilename(int CheckForCurrent, ExportType type, char * extens);
 extern FilePreviewData *ReadFilePreview(const char *filename);
 
 #endif

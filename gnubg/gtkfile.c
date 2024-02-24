@@ -219,22 +219,29 @@ SaveCommon(guint f, gchar * prompt)
     SaveOptions so;
     static ExportType last_export_type = EXPORT_SGF;
     static gint last_export_mgp = 0;
-    static gchar *last_save_folder = NULL;
-    static gchar *last_export_folder = NULL;
+    /* IK: removed what seemed like a bug. These static variables are defined 
+        once and not re-used? 
+    */
+    // static gchar *last_save_folder = NULL;
+    // static gchar *last_export_folder = NULL;
+
     /* IK: updated the line below: if we open an existing match or play some match, then click on "New", 
     we would expect a new (filename) title for the new match, not the same title as the old match. 
     Keeping the same title also prevented us from distinguishing between the matches when saving 
     the files. 
     In the line, I just changed TRUE->FALSE.*/
-    gchar *fn = GetFilename(FALSE, (f == 1) ? EXPORT_SGF : last_export_type);
-    // gchar *fn = GetFilename(TRUE, (f == 1) ? EXPORT_SGF : last_export_type);
+    gchar *fn = GetFilename(TRUE, (f == 1) ? EXPORT_SGF : last_export_type, TRUE);
+        g_message("fn:%s", fn);
     gchar *folder = NULL;
     const gchar *mgp_text[3] = { "match", "game", "position" };
 
-    if (f == 1) /* the "last_save_folder" was reset above, so what's the point of this next line??? */
-        folder = last_save_folder ? last_save_folder : default_sgf_folder;
-    else /* the "last_export_folder" was reset above, so what's the point of this next line??? */
-        folder = last_export_folder ? last_export_folder : default_export_folder;
+    
+    // if (f == 1) /* the "last_save_folder" was reset above, so what's the point of this next line??? */
+    //     folder = last_save_folder ? last_save_folder : default_sgf_folder;
+    // else /* the "last_export_folder" was reset above, so what's the point of this next line??? */
+    //     folder = last_export_folder ? last_export_folder : default_export_folder;
+
+    folder = (f==1) ? default_sgf_folder : default_export_folder;
 
     so.fc = GnuBGFileDialog(prompt, folder, fn, GTK_FILE_CHOOSER_ACTION_SAVE);
     g_free(fn);
@@ -287,8 +294,8 @@ SaveCommon(guint f, gchar * prompt)
                 cmd = g_strdup_printf("export %s %s \"%s\"", et, export_format[type].clname, fn);
             last_export_type = (ExportType) type;
             last_export_mgp = gtk_combo_box_get_active(GTK_COMBO_BOX(so.mgp));
-            g_free(last_export_folder);
-            last_export_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(so.fc));
+            //g_free(last_export_folder);
+            //last_export_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(so.fc));
             UserCommand(cmd);
             UserCommand("save settings");
             g_free(cmd);
@@ -922,9 +929,9 @@ static void GTKAutoSave(void)
 
     // g_message("folder %s\n", folder);
 
-    filename = GetFilename(TRUE, EXPORT_SGF);
+    filename = GetFilename(TRUE, EXPORT_SGF, TRUE);
 
-    // g_message("file %s\n", filename);
+    // g_message("file %s", filename);
 
     dir = (default_import_folder && (*default_import_folder)) ?
         g_build_filename(default_import_folder, "analysed", NULL) :

@@ -465,13 +465,20 @@ ReadFilePreview(const char *filename)
     return fpd;
 }
 
+/* IK: modified the function to enable a value without extension */
+
 extern char *
-GetFilename(int CheckForCurrent, ExportType type)
+GetFilename(int CheckForCurrent, ExportType type, char * extens)
 {
     char *sz;
 
-    if (CheckForCurrent && szCurrentFileName && *szCurrentFileName)
-        sz = g_strdup_printf("%s%s", szCurrentFileName, export_format[type].extension);
+    if (CheckForCurrent && szCurrentFileName && *szCurrentFileName) {
+        if(extens)
+            sz = g_strdup_printf("%s%s", szCurrentFileName, export_format[type].extension);
+        else
+            sz = g_strdup(szCurrentFileName);
+        // g_message("sz:%s", sz);
+    }
     else {
         time_t t = time(NULL);
         char tstr[20]; /* to be on the safe side, there was a bug that may be due to it being 16*/
@@ -479,11 +486,12 @@ GetFilename(int CheckForCurrent, ExportType type)
         // 4 bits for year + 4 times 2 bits for other fields + 3 hyphens =15
         if (strftime(tstr, 20, "%Y-%m-%d-%H%M", localtime(&t)) == 0) 
             *tstr = '\0';
-
-        sz = g_strdup_printf("%s-%s_%dp_%s.sgf", ap[0].szName, ap[1].szName, ms.nMatchTo, tstr);
-
+        if(extens)
+            sz = g_strdup_printf("%s-%s_%dp_%s.sgf", ap[0].szName, ap[1].szName, ms.nMatchTo, tstr);
+        else
+            sz = g_strdup_printf("%s-%s_%dp_%s", ap[0].szName, ap[1].szName, ms.nMatchTo, tstr);
         // g_message("tstr:%s\n",tstr);
-        // g_message("sz:%s\n",sz);
+        // g_message("sz2:%s",sz);
     }
 
     return sz;

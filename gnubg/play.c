@@ -2992,10 +2992,10 @@ CommandNewMatch(char *sz)
     SetMatchDate(&mi);
 
     /* Let's say we open a match between A and B, then click on the "New" button to play a match against Gnubg.
-    Then the filename should be Me_vs_gnubg_date.sgf, not A_vs_B_OldDate.sgf. */
-    szCurrentFileName = GetFilename(FALSE, EXPORT_SGF);    
+    Then the filename should be Me_vs_gnubg_date, not A_vs_B_OldDate. */
+    szCurrentFileName = GetFilename(FALSE, EXPORT_SGF, FALSE);    
     if (!(szCurrentFolder && *szCurrentFolder)) {
-        szCurrentFolder = (default_sgf_folder && (*default_sgf_folder)) ? default_sgf_folder : ".";
+        szCurrentFolder = g_strdup( (default_sgf_folder && (*default_sgf_folder)) ? default_sgf_folder : ".");
     }
 #if defined(USE_GTK)
     if (fX) {
@@ -3053,10 +3053,10 @@ CommandNewSession(char *sz)
     SetMatchDate(&mi);
 
     /* Let's say we open a match between A and B, then click on the "New" button to play a match against Gnubg.
-    Then the filename should be Me_vs_gnubg_date.sgf, not A_vs_B_OldDate.sgf. */
-    szCurrentFileName = GetFilename(FALSE, EXPORT_SGF);    
+    Then the filename should be Me_vs_gnubg_date, not A_vs_B_OldDate. */
+    szCurrentFileName = GetFilename(FALSE, EXPORT_SGF, FALSE); 
     if (!(szCurrentFolder && *szCurrentFolder)) {
-        szCurrentFolder = (default_sgf_folder && (*default_sgf_folder)) ? default_sgf_folder : ".";
+        szCurrentFolder = g_strdup( (default_sgf_folder && (*default_sgf_folder)) ? default_sgf_folder : ".");
     }
 
     UpdateSetting(&ms.nMatchTo);
