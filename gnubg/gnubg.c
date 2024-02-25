@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gnubg.c,v 1.1038 2024/01/04 21:10:49 plm Exp $
+ * $Id: gnubg.c,v 1.1039 2024/02/18 16:54:39 plm Exp $
  */
 
 /*
@@ -250,7 +250,7 @@ char keyNames[MAX_KEY_NAMES][MAX_NAME_LEN] = { "" };
 int keyNamesFirstEmpty = 0;
 int fUseKeyNames = TRUE;
 int fWithinSmartSit = FALSE;
-// int fTriggeredByRecordList = FALSE;
+int fTriggeredByRecordList = FALSE;
 
 analyzeFileSetting AnalyzeFileSettingDef = AnalyzeFileBatch;
 const char *aszAnalyzeFileSetting[NUM_AnalyzeFileSettings] =
@@ -3366,6 +3366,11 @@ CommandSaveSettings(char *szParam)
      * save anything since this will overwrite an existing file
      * with defaults */
     if (fNoRC)
+        return;
+
+    /* If we are still in the process of reading rc files, don't
+     * try to save gnubgautorc or we may corrupt it */
+    if (loading_rc)
         return;
 
     if (!szParam || !*szParam) {

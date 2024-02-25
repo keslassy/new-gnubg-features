@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtktempmap.c,v 1.65 2022/09/02 13:43:30 plm Exp $
+ * $Id: gtktempmap.c,v 1.66 2024/02/24 21:09:34 plm Exp $
  */
 
 /*
@@ -88,10 +88,9 @@ static int fShowEquity = FALSE;
 static int fShowBestMove = FALSE;
 
 static int
-TempMapEquities(evalcontext * pec, matchstate * pms,
+TempMapEquities(evalcontext * pec, const matchstate * pms,
                 float aarEquity[6][6], int aaanMove[6][6][8], const gchar * szTitle, const float rFac)
 {
-
 
     int i, j;
     float arOutput[NUM_ROLLOUT_OUTPUTS];
@@ -150,8 +149,6 @@ TempMapEquities(evalcontext * pec, matchstate * pms,
             ProgressValueAdd(1);
 
         }
-
-
 
     ProgressEnd();
 
@@ -213,7 +210,7 @@ SetStyle(GtkWidget * pw, const float rEquity, const float rMin, const float rMax
 
 
 static char *
-GetEquityString(const float rEquity, cubeinfo * pci, const int fInvert)
+GetEquityString(const float rEquity, const cubeinfo * pci, const int fInvert)
 {
 
     float r;
@@ -274,7 +271,6 @@ UpdateTempMapEquities(tempmapwidget * ptmw)
 
     GetMatchStateCubeInfo(&ci, ptmw->atm[0].pms);
 
-
     for (m = 0; m < ptmw->n; ++m) {
         for (i = 0; i < 6; ++i)
             for (j = 0; j < 6; ++j) {
@@ -284,7 +280,6 @@ UpdateTempMapEquities(tempmapwidget * ptmw)
                                                             &ci, ptmw->fInvert),
                                             FormatMove(szMove, (ConstTanBoard) ptmw->atm[m].pms->anBoard,
                                                        ptmw->atm[m].aaanMove[i][j]));
-
 
                 SetStyle(ptmw->atm[m].aapwDA[i][j], ptmw->atm[m].aarEquity[i][j], rMin, rMax, ptmw->fInvert);
 
@@ -311,7 +306,7 @@ UpdateTempMapEquities(tempmapwidget * ptmw)
 static gboolean
 DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
 {
-    int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
+    const int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
     int i = 0;
     int j = 0;
     int m = 0;
@@ -362,7 +357,7 @@ DrawQuadrant(GtkWidget * pw, cairo_t * cr, tempmapwidget * ptmw)
             r = ptmw->atm[m].aarEquity[i][j];
         else if (j == -1)
             r = ptmw->atm[m].rAverage;
-        GetMatchStateCubeInfo(&ci, ptmw->atm[m].pms);
+        GetMatchStateCubeInfo(&ci, ptmw->atm[0].pms);
         tmp = GetEquityString(r, &ci, ptmw->fInvert);
         while (*tmp == ' ')
             tmp++;
@@ -435,7 +430,7 @@ ExposeQuadrant(GtkWidget * pw, GdkEventExpose * UNUSED(pev), tempmapwidget * ptm
 static void
 ExposeDieArea(GtkWidget * pw, cairo_t * cr, gint area_x, gint area_y, gint area_width, gint area_height, tempmapwidget * ptmw)
 {
-    int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
+    const int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
     int x, y;
     int nSizeDie;
     GtkAllocation allocation;
@@ -500,7 +495,7 @@ ExposeDie(GtkWidget * pw, GdkEventExpose * pev, tempmapwidget * ptmw)
 static void
 TempMapPlyToggled(GtkWidget * pw, tempmapwidget * ptmw)
 {
-    int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
+    const int *pi = (int *) g_object_get_data(G_OBJECT(pw), "user_data");
 
     evalcontext ec = { TRUE, 0, FALSE, TRUE, 0.0 };
 

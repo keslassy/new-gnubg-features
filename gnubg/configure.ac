@@ -19,11 +19,11 @@ dnl You should have received a copy of the GNU General Public License
 dnl along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 dnl
-dnl $Id: configure.ac,v 1.123 2024/02/04 21:16:25 plm Exp $
+dnl $Id: configure.ac,v 1.124 2024/02/24 21:40:00 plm Exp $
 dnl
 
-AC_REVISION($Revision: 1.123 $)
-AC_INIT([GNU Backgammon],m4_esyscmd(echo 1.08.001$VERSION_EXT | tr -d '\n'),[bug-gnubg@gnu.org],[gnubg])
+AC_REVISION($Revision: 1.124 $)
+AC_INIT([GNU Backgammon],m4_esyscmd(echo 1.08.002$VERSION_EXT | tr -d '\n'),[bug-gnubg@gnu.org],[gnubg])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR(gnubg.c)
@@ -55,6 +55,9 @@ case "$host" in
     win32=yes
     CFLAGS="$CFLAGS -mms-bitfields"
     LDFLAGS="$LDFLAGS -lws2_32 -lwinmm"
+    if [[[ "$(uname -or)" == *Msys ]]]; then
+        AC_DEFINE(USABLE_UNDER_MSYS, 1, [Using Msys])
+    fi
     ;;
   *-*-darwin*)
     darwin=yes

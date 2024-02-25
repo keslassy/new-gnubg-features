@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006-2008 Christian Anthon <anthon@kiku.dk>
- * Copyright (C) 2007-2023 the AUTHORS
+ * Copyright (C) 2007-2024 the AUTHORS
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkrelational.h,v 1.14 2023/11/20 21:00:06 plm Exp $
+ * $Id: gtkrelational.h,v 1.16 2024/02/24 21:07:39 plm Exp $
  */
 
 #include "relational.h"
@@ -32,4 +32,6 @@ extern void RelationalSaveOptions(void);
 extern void GtkShowQuery(RowSet * pRow);
 
 extern void ComputeHistory(int usePlayerName); /* for history plot*/
+
+extern GtkWidget *pwDBStatDialog;
 #endif

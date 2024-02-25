@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkrolls.c,v 1.49 2023/09/23 21:28:16 plm Exp $
+ * $Id: gtkrolls.c,v 1.50 2024/02/17 17:39:25 plm Exp $
  */
 
 #include "config.h"
@@ -195,7 +195,7 @@ RollsTree(const int n, evalcontext * pec, const matchstate * pms)
     int i;
     static const char *aszColumn[] = {
         N_("noun|Roll"),
-        N_("noun|Move"),
+        N_("Move"),
         N_("Equity")
     };
 

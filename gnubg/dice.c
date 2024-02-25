@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: dice.c,v 1.107 2023/03/19 22:56:25 plm Exp $
+ * $Id: dice.c,v 1.108 2024/02/19 21:09:02 plm Exp $
  */
 
 #include "config.h"
@@ -66,7 +66,7 @@ const char *aszRNGTip[NUM_RNGS] = {
     N_("Blum, Blum and Shub's verifiably strong generator"),
     N_("Bob Jenkins' Indirection, Shift, Accumulate, Add and Count " "cryptographic generator"),
     N_("A generator based on the Message Digest 5 algorithm"),
-    N_("Makoto Matsumoto and  Mutsuo Saito's generator"),
+    N_("Makoto Matsumoto and Mutsuo Saito's generator"),
     N_("Enter each dice roll by hand"),
     N_("The online non-deterministic generator from random.org"),
     N_("Dice loaded from a file"),
@@ -512,12 +512,12 @@ InitRNGSeedMP(mpz_t n, rng rng, rngcontext * rngctx)
 
     case RNG_MERSENNE:{
             if (mpz_cmp_ui(n, UINT_MAX) > 0) {
-                gint32 *achState;
+                uint32_t *achState;
                 uint32_t tempmtkey[SFMT_N32];
                 size_t cb;
                 unsigned int i;
 
-                achState = mpz_export(NULL, &cb, -1, sizeof(gint32), 0, 0, n);
+                achState = mpz_export(NULL, &cb, -1, sizeof(uint32_t), 0, 0, n);
                 for (i = 0; i < SFMT_N32 && i < cb; i++) {
                     tempmtkey[i] = achState[i];
                 }

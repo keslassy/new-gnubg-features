@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: set.c,v 1.437 2023/12/20 23:09:54 plm Exp $
+ * $Id: set.c,v 1.438 2024/02/19 21:17:37 plm Exp $
  */
 
 #include "config.h"
@@ -4570,6 +4570,18 @@ SetXGID(char *sz)
 
     if (s == NULL)
         return 1;
+
+    /* If "XGID=" found, then parse "XGID=" line.
+     * For get along with XGID+board style clipboard.
+     * (also Board position: Above )
+     */
+    c = strstr(s, "XGID=");
+    if (c != NULL) {
+        c = strchr(c, '\n');
+        if (c != NULL) {
+            *c = '\0';
+	}
+    }
 
     for (i = 0; i < 9 && (c = strrchr(s, ':')); i++) {
         g_strlcpy(v[i], c + 1, 5);

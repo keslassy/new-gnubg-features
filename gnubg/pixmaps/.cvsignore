@@ -1,0 +1,11 @@
+.deps
+Makefile
+Makefile.in
+stock-icons.list
+gnubg-stock-pixbufs.h
+*.lo
+*.la
+.libs
+gnubg-stock-resources.c
+gnubg-stock-resources.h
+stock-icons.xml
