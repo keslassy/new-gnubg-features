@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkmovelist.c,v 1.45 2024/02/17 17:39:25 plm Exp $
+ * $Id: gtkmovelist.c,v 1.44 2022/12/15 22:23:00 plm Exp $
  */
 
 #include "config.h"
@@ -60,7 +60,7 @@ MoveListCreate(hintdata * phd)
         N_("L bg"),
         NULL,
         N_("Diff."),
-        N_("Move")
+        N_("noun|Move")
     };
     unsigned int i;
     int showWLTree = showMoveListDetail && !phd->fDetails;

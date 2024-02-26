@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnubg 0.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-03 22:39+0100\n"
+"POT-Creation-Date: 2024-02-24 22:14+0100\n"
 "PO-Revision-Date: 2010-01-02 16:50+0100\n"
 "Last-Translator: Christian Anthon <christian.anthon@gmail.com>\n"
 "Language-Team: American English <kde-i18n-doc@lists.kde.org>\n"
@@ -125,7 +125,7 @@ msgstr "Analyserer kamp; træk:"
 #. ** Start of right hand side of player screen...
 #. ******************************************************
 #: analysis.c:1488 bearoff.c:557 bearoff.c:593 bearoff.c:596 bearoff.c:635
-#: bearoff.c:661 bearoff.c:692 format.c:282 gtkrelational.c:1612 html.c:2482
+#: bearoff.c:661 bearoff.c:692 format.c:282 gtkrelational.c:1674 html.c:2482
 #: show.c:1369
 msgid "Player"
 msgstr "Spiller"
@@ -2257,7 +2257,7 @@ msgstr "Menneske vinder parti"
 msgid "Human wins match"
 msgstr "Mennesket vinder kampen"
 
-#: commands.inc:1046 gtkchequer.c:467
+#: commands.inc:1046 gtkchequer.c:467 sound.c:351
 #, fuzzy
 msgid "verb|Move"
 msgstr "Træk"
@@ -2266,7 +2266,7 @@ msgstr "Træk"
 msgid "Redouble"
 msgstr "Redobling"
 
-#: commands.inc:1050 gtkgame.c:1430 gtkgame.c:1436 gtkgame.c:8723 sound.c:353
+#: commands.inc:1050 gtkgame.c:1430 gtkgame.c:1436 gtkgame.c:8728 sound.c:353
 msgid "Resign"
 msgstr "Resigner"
 
@@ -3454,9 +3454,8 @@ msgid "A generator based on the Message Digest 5 algorithm"
 msgstr "En generator baseret på MD5 algoritmen"
 
 #: dice.c:69
-#, fuzzy
-msgid "Makoto Matsumoto and  Mutsuo Saito's generator"
-msgstr "Makoto Matsumoto og Takuji Nishimuras generator"
+msgid "Makoto Matsumoto and Mutsuo Saito's generator"
+msgstr "Makoto Matsumoto og Mutsuo Saitos generator"
 
 #: dice.c:70
 msgid "Enter each dice roll by hand"
@@ -3533,7 +3532,7 @@ msgstr ""
 msgid "Rewinding dice file (%s)"
 msgstr "Spoler terningefilen (%s) tilbage."
 
-#: drawboard.c:70 drawboard.c:294 gnubg.c:5185 gtkexport.c:824 gtkgame.c:3502
+#: drawboard.c:70 drawboard.c:294 gnubg.c:5190 gtkexport.c:824 gtkgame.c:3502
 #: gtkgame.c:4500 gtkgame.c:7469
 msgid "GNU Backgammon"
 msgstr "GNU Backgammon"
@@ -4798,7 +4797,7 @@ msgstr "Ukendt nøgleord `%s'.\n"
 msgid "Rolled"
 msgstr "Rullede"
 
-#: gnubg.c:1438 gnubg.c:5608 gtkgame.c:1716 gtkgame.c:1734 gtkgame.c:1754
+#: gnubg.c:1438 gnubg.c:5613 gtkgame.c:1716 gtkgame.c:1734 gtkgame.c:1754
 msgid "No game in progress."
 msgstr "Intet parti i igang."
 
@@ -4979,7 +4978,7 @@ msgstr "Du skal angive hvilken fil, du ønsker at indlæse."
 msgid "Pip counts:"
 msgstr "Pipcount:"
 
-#: gnubg.c:3397
+#: gnubg.c:3402
 #, c-format
 msgid ""
 "#\n"
@@ -4994,16 +4993,16 @@ msgid ""
 "# in a 'gnubgrc' file in the same directory.\n"
 msgstr ""
 
-#: gnubg.c:3440
+#: gnubg.c:3445
 #, c-format
 msgid "Settings saved to %s."
 msgstr "Indstillinger gemt i %s."
 
-#: gnubg.c:3440
+#: gnubg.c:3445
 msgid "standard output stream"
 msgstr "Standard uddata "
 
-#: gnubg.c:3931 makebearoff.c:1374 makebearoff.c:1375 makebearoff.c:1376
+#: gnubg.c:3936 makebearoff.c:1374 makebearoff.c:1375 makebearoff.c:1376
 #: makebearoff.c:1377 makebearoff.c:1379 makebearoff.c:1438 makebearoff.c:1443
 #: show.c:385 show.c:1857 show.c:1859 show.c:1861 show.c:1864 show.c:1889
 #: show.c:1893 show.c:1897 show.c:1906 show.c:1914 show.c:1918 show.c:1922
@@ -5011,7 +5010,7 @@ msgstr "Standard uddata "
 msgid "yes"
 msgstr "ja"
 
-#: gnubg.c:3931 makebearoff.c:1374 makebearoff.c:1375 makebearoff.c:1376
+#: gnubg.c:3936 makebearoff.c:1374 makebearoff.c:1375 makebearoff.c:1376
 #: makebearoff.c:1377 makebearoff.c:1379 makebearoff.c:1438 makebearoff.c:1443
 #: show.c:385 show.c:1857 show.c:1859 show.c:1861 show.c:1864 show.c:1889
 #: show.c:1893 show.c:1897 show.c:1906 show.c:1914 show.c:1918 show.c:1922
@@ -5019,196 +5018,196 @@ msgstr "ja"
 msgid "no"
 msgstr "nej"
 
-#: gnubg.c:3960 gnubg.c:5241
+#: gnubg.c:3965 gnubg.c:5246
 msgid "Please answer `y' or `n'."
 msgstr "Svar venligst y eller n."
 
-#: gnubg.c:3968
+#: gnubg.c:3973
 msgid "output will be shown"
 msgstr "output vises"
 
-#: gnubg.c:3968
+#: gnubg.c:3973
 msgid "output will not be shown"
 msgstr "output vises ikke"
 
-#: gnubg.c:4453
+#: gnubg.c:4458
 msgid "Enter dice: "
 msgstr "Indtast terninger: "
 
-#: gnubg.c:4471
+#: gnubg.c:4476
 msgid "You must enter two numbers between 1 and 6."
 msgstr "Du skal indtaste to numre mellem 1 og 6."
 
-#: gnubg.c:4488
+#: gnubg.c:4493
 msgid "Failure setting up RNG"
 msgstr "Fejl under opsætningen af RNG"
 
-#: gnubg.c:4492
+#: gnubg.c:4497
 msgid "Failure setting up RNG for rollout."
 msgstr "Ude af stand til at sætte RNG op for udrulningen."
 
-#: gnubg.c:4510
+#: gnubg.c:4515
 #, fuzzy
 msgid "Windows sockets initialisation error"
 msgstr "Windows socket fejl"
 
-#: gnubg.c:4605
+#: gnubg.c:4610
 msgid "Do not use bearoff database"
 msgstr "Benyt ikke bearoffdatabase"
 
-#: gnubg.c:4607
+#: gnubg.c:4612
 msgid "Evaluate commands in FILE and exit"
 msgstr "Evaluer kommandoerne i FILE og luk programmet."
 
-#: gnubg.c:4609
+#: gnubg.c:4614
 msgid "Set language to LANG"
 msgstr "Sæt sprog til LANG"
 
-#: gnubg.c:4611
+#: gnubg.c:4616
 #, fuzzy
 msgid "Start in Python mode or evaluate code in FILE and exit"
 msgstr "Evaluer Python koden i FILE og luk programmet"
 
-#: gnubg.c:4613
+#: gnubg.c:4618
 msgid "Disable sound effects"
 msgstr "Slå lydeffekter fra"
 
-#: gnubg.c:4615
+#: gnubg.c:4620
 msgid "Do not read .gnubgrc and .gnubgautorc commands"
 msgstr "Læs ikke kommandoer fra .gnubgrc og .gnubgautorc."
 
-#: gnubg.c:4618
+#: gnubg.c:4623
 msgid "Show gtk splash screen"
 msgstr "Vis gtk opstartskærm"
 
-#: gnubg.c:4620
+#: gnubg.c:4625
 #, fuzzy
 msgid "Start the command-line instead of using the graphical interface"
 msgstr "Start i kommandolinieinterfacet i stedet for det grafiske interface"
 
-#: gnubg.c:4622
+#: gnubg.c:4627
 msgid "Show version information and exit"
 msgstr "Vis versionsoplysninger og afslut"
 
-#: gnubg.c:4624
+#: gnubg.c:4629
 msgid "Ignore tty input when using the graphical interface"
 msgstr "Ignore tty-input når det grafiske interface anvendes"
 
-#: gnubg.c:4626
+#: gnubg.c:4631
 msgid "Turn on debug"
 msgstr "Aktivér fejlsøgning"
 
-#: gnubg.c:4628
+#: gnubg.c:4633
 msgid "Specify location of general data"
 msgstr "Angiv placering af generelle data"
 
-#: gnubg.c:4630
+#: gnubg.c:4635
 msgid "Specify location of program specific data"
 msgstr "Angiv placering af programspecifikke data"
 
-#: gnubg.c:4632
+#: gnubg.c:4637
 msgid "Specify location of program documentation"
 msgstr "Angiv placering af dokumentation"
 
-#: gnubg.c:4634
+#: gnubg.c:4639
 #, fuzzy
 msgid "Specify location of user's preferences directory"
 msgstr "Angiv placering af programspecifikke data"
 
-#: gnubg.c:4741 gnubg.c:4744 gnubg.c:4749 gnubg.c:4752 gnubg.c:4757
-#: gnubg.c:4762
+#: gnubg.c:4746 gnubg.c:4749 gnubg.c:4754 gnubg.c:4757 gnubg.c:4762
+#: gnubg.c:4767
 msgid "Initialising"
 msgstr "Initialiserer"
 
-#: gnubg.c:4741 gtkoptions.c:1310
+#: gnubg.c:4746 gtkoptions.c:1310
 msgid "Random number generator"
 msgstr "Generatorer af tilfældige tal(RNG)"
 
-#: gnubg.c:4744
+#: gnubg.c:4749
 msgid "match equity table"
 msgstr "Matchequity-tabel"
 
-#: gnubg.c:4749
+#: gnubg.c:4754
 msgid "neural nets"
 msgstr "neuralenet"
 
-#: gnubg.c:4752
+#: gnubg.c:4757
 #, fuzzy
 msgid "initialising thread data"
 msgstr "Fejl under initialisering af gammel bearoffdatabase!\n"
 
-#: gnubg.c:4757
+#: gnubg.c:4762
 msgid "Windows sockets"
 msgstr "Windows-sockets"
 
-#: gnubg.c:4770
+#: gnubg.c:4775
 msgid "Loading"
 msgstr "Indlæser"
 
-#: gnubg.c:4770
+#: gnubg.c:4775
 msgid "User Settings"
 msgstr "Brugerindstillinger"
 
-#: gnubg.c:4824
+#: gnubg.c:4829
 #, c-format
 msgid "GNU Backgammon build without Python."
 msgstr "Denne installation af GNU Backgammon understøtter ikke Python."
 
-#: gnubg.c:4856 gnubg.c:4899
+#: gnubg.c:4861 gnubg.c:4904
 msgid "Command only valid in match play"
 msgstr "Kommandoen er ikke gyldig under moneygames."
 
-#: gnubg.c:4868 gnubg.c:4869 gnubg.c:4871
+#: gnubg.c:4873 gnubg.c:4874 gnubg.c:4876
 msgid "MWC for equity"
 msgstr "MWC fra equity"
 
-#: gnubg.c:4870 gnubg.c:4915
+#: gnubg.c:4875 gnubg.c:4920
 msgid "By linear interpolation"
 msgstr "Ved linear interpolation:"
 
-#: gnubg.c:4913 gnubg.c:4914 gnubg.c:4916
+#: gnubg.c:4918 gnubg.c:4919 gnubg.c:4921
 msgid "Equity for MWC"
 msgstr "Equity fra MWC"
 
 #. for(unsigned int j=0;j < strlen(sz); j++) {
 #. g_message("%c", sz[j]);
 #. }
-#: gnubg.c:5041
+#: gnubg.c:5046
 #, c-format
 msgid "Player name contains unallowed character"
 msgstr ""
 
-#: gnubg.c:5047
+#: gnubg.c:5052
 #, fuzzy, c-format
 msgid "Player name is too long"
 msgstr "Spillerstatistik"
 
-#: gnubg.c:5165
+#: gnubg.c:5170
 #, c-format
 msgid "File \"%s\" exists. Overwrite? "
 msgstr "Filen \"%s\" eksisterer. Overskriv?"
 
-#: gnubg.c:5259
+#: gnubg.c:5264
 msgid "You may be about to make a very bad play"
 msgstr "Du er muligvis igang med at udføre et meget dårligt træk"
 
-#: gnubg.c:5263
+#: gnubg.c:5268
 msgid "You may be about to make a bad play"
 msgstr "Du er muligvis igang med at udføre et dårligt træk"
 
-#: gnubg.c:5267
+#: gnubg.c:5272
 msgid "You may be about to make a doubtful play"
 msgstr "Du er muligvis igang med at udføre et tvivlsomt træk"
 
-#: gnubg.c:5279
+#: gnubg.c:5284
 msgid "Are you sure?"
 msgstr "Er du sikker?"
 
-#: gnubg.c:5335
+#: gnubg.c:5340
 msgid "Analysis used for `hint' has been cleared"
 msgstr "Analysedata for `hint' nulstillet"
 
-#: gnubg.c:5468
+#: gnubg.c:5473
 #, c-format
 msgid ""
 "Locale in your environment not supported by C library. Falling back to C "
@@ -5217,13 +5216,13 @@ msgstr ""
 "Regionaldata i miljøet er ikke understøttet af C biblioteket. Falder tilbage "
 "til C regionaldata.\n"
 
-#: gnubg.c:5671
+#: gnubg.c:5676
 msgid ""
 "Are you sure you want to discard the current match and your existing "
 "autosave? "
 msgstr "Er du sikker på du vil smide den nuværende kamp og dit autosave væk?"
 
-#: gnubg.c:5679
+#: gnubg.c:5684
 msgid "Are you sure you want to discard the current match? "
 msgstr "Er du sikker på at smide resten af matchen væk?"
 
@@ -5946,7 +5945,7 @@ msgstr "Bræt"
 msgid "move(s) between board shown"
 msgstr "træk mellem bræt bliver vist"
 
-#: gtkexport.c:608 gtkexport.c:640 gtkrelational.c:1589
+#: gtkexport.c:608 gtkexport.c:640 gtkrelational.c:1651
 msgid "Players"
 msgstr "Spillere"
 
@@ -6132,7 +6131,7 @@ msgstr "Afbrudt"
 msgid "Done"
 msgstr "Færdig"
 
-#: gtkfile.c:703 gtkrelational.c:1717
+#: gtkfile.c:703 gtkrelational.c:1779
 msgid "Result"
 msgstr "Resultat"
 
@@ -6163,7 +6162,7 @@ msgstr "Spring over"
 msgid "Stop"
 msgstr "Stop"
 
-#: gtkfile.c:801 gtkrelational.c:1600
+#: gtkfile.c:801 gtkrelational.c:1662
 msgid "Open"
 msgstr "Åbn"
 
@@ -6226,7 +6225,7 @@ msgstr "Flyttede"
 msgid "Cube decision"
 msgstr "Cubeaction"
 
-#: gtkgame.c:1336 gtkgame.c:2636 gtkgame.c:3204 gtkgame.c:8230 gtkoptions.c:709
+#: gtkgame.c:1336 gtkgame.c:2636 gtkgame.c:3204 gtkgame.c:8233 gtkoptions.c:709
 msgid "Chequer play"
 msgstr "Brikflyt"
 
@@ -6403,7 +6402,7 @@ msgstr ""
 "Superbrugere kan opsætte deres egne trækfiltere ved at klikke på [Rediger] "
 "knappen"
 
-#: gtkgame.c:2644 gtkgame.c:3207 gtkgame.c:8233
+#: gtkgame.c:2644 gtkgame.c:3207 gtkgame.c:8236
 msgid "Cube decisions"
 msgstr "Cubeactions"
 
@@ -6533,7 +6532,7 @@ msgstr "Uheldigt:"
 msgid "Very unlucky:"
 msgstr "Meget uheldigt:"
 
-#: gtkgame.c:3210 gtkgame.c:8236 gtkrelational.c:71
+#: gtkgame.c:3210 gtkgame.c:8239 gtkrelational.c:71
 msgid "Luck"
 msgstr "Held"
 
@@ -6924,10 +6923,9 @@ msgid "Clear analysis"
 msgstr "Dobbelananalyse"
 
 #: gtkgame.c:4028 gtkgame.c:4039 gtkmovelist.c:63 gtkrolls.c:198 html.c:2161
-#: sound.c:351
 #, fuzzy
-msgid "noun|Move"
-msgstr "Træk"
+msgid "Move"
+msgstr "Flyttede"
 
 #: gtkgame.c:4032
 #, fuzzy
@@ -7005,7 +7003,7 @@ msgstr "/_Analyse/Føj kamp eller session til databasen"
 msgid "Show Records"
 msgstr "/_Analyse/Vis database"
 
-#: gtkgame.c:4068 gtkrelational.c:1568
+#: gtkgame.c:4068 gtkrelational.c:1630
 #, fuzzy
 msgid "Plot History"
 msgstr "/_Analyse/_Hint"
@@ -8357,30 +8355,30 @@ msgstr "Flyt frem til næste parti"
 msgid "Game %d: %s %d, %s %d"
 msgstr "Parti %d: %s %d, %s %d"
 
-#: gtkgame.c:8146 gtkgame.c:8281
+#: gtkgame.c:8146 gtkgame.c:8284
 #, fuzzy
 msgid "Copy selection"
 msgstr "3D farve udvalg"
 
-#: gtkgame.c:8151 gtkgame.c:8286
+#: gtkgame.c:8151 gtkgame.c:8289
 #, fuzzy
 msgid "Copy all"
 msgstr "Kopiér"
 
-#: gtkgame.c:8211
+#: gtkgame.c:8214
 #, fuzzy
 msgid "Add to DB"
 msgstr "Tilføj ekstra:"
 
-#: gtkgame.c:8227
+#: gtkgame.c:8230
 msgid "Overall"
 msgstr "Samlet"
 
-#: gtkgame.c:8265
+#: gtkgame.c:8268
 msgid "Graph"
 msgstr "Graf"
 
-#: gtkgame.c:8266
+#: gtkgame.c:8269
 msgid ""
 "This graph shows the total error rates per game for each player. The games "
 "are along the bottom and the error rates up the side. Chequer error in "
@@ -8389,100 +8387,100 @@ msgstr ""
 "Denne graf viser den samlede fejlrate per parti for hver spiller. Partierne "
 "er x-aksen og fejlraterne er y-aksen. Trækfejl i grønt, cubefejl i blåt."
 
-#: gtkgame.c:8272
+#: gtkgame.c:8275
 msgid "Split statistics into panels"
 msgstr "Del statiskerne på flere paneler"
 
-#: gtkgame.c:8273
+#: gtkgame.c:8276
 msgid "Show data in a single list or split into several panels"
 msgstr ""
 
-#: gtkgame.c:8309
+#: gtkgame.c:8312
 #, fuzzy
 msgid "Copy page"
 msgstr "Kopiér"
 
-#: gtkgame.c:8314
+#: gtkgame.c:8317
 #, fuzzy
 msgid "Copy all pages"
 msgstr "Kopiér"
 
-#: gtkgame.c:8429
+#: gtkgame.c:8434
 msgid "GNU Backgammon - Match information"
 msgstr "GNU Backgammon - Kampinformation"
 
-#: gtkgame.c:8438 gtkgame.c:8441
+#: gtkgame.c:8443 gtkgame.c:8446
 #, c-format
 msgid "%s's rating:"
 msgstr "%ss rating:"
 
-#: gtkgame.c:8444
+#: gtkgame.c:8449
 msgid "Date:"
 msgstr "Dato:"
 
-#: gtkgame.c:8445
+#: gtkgame.c:8450
 msgid "Event:"
 msgstr "Begivenhed:"
 
-#: gtkgame.c:8446
+#: gtkgame.c:8451
 msgid "Round:"
 msgstr "Runde:"
 
-#: gtkgame.c:8447
+#: gtkgame.c:8452
 msgid "Place:"
 msgstr "Sted:"
 
-#: gtkgame.c:8448
+#: gtkgame.c:8453
 msgid "Annotator:"
 msgstr "Notar:"
 
-#: gtkgame.c:8450
+#: gtkgame.c:8455
 msgid "Comments:"
 msgstr "Kommentarer:"
 
 #. FIXME should be modal but presently causes crash and/or killing of the main window
-#: gtkgame.c:8591
+#: gtkgame.c:8596
 msgid "GNU Backgammon - Speed estimate"
 msgstr "GNU Backgammon - Hastighedsestimat"
 
-#: gtkgame.c:8606
+#: gtkgame.c:8611
 msgid "Speed recorded:"
 msgstr "Optaget hastighed:"
 
-#: gtkgame.c:8612 gtkgame.c:8651
+#: gtkgame.c:8617 gtkgame.c:8656
 msgid "static evaluations/second"
 msgstr "statiske evalueringer/sekund"
 
-#: gtkgame.c:8614
+#: gtkgame.c:8619
 msgid "Calibrate"
 msgstr "Kalibrér"
 
-#: gtkgame.c:8615
+#: gtkgame.c:8620
 #, fuzzy
 msgid "Estimate speed, in 0-ply evaluations/second"
 msgstr "statiske evalueringer/sekund"
 
-#: gtkgame.c:8640
+#: gtkgame.c:8645
 msgid "GNU Backgammon - Calibration"
 msgstr "GNU Backgammon - Kalibrering"
 
-#: gtkgame.c:8649
+#: gtkgame.c:8654
 msgid "Calibrating:"
 msgstr "Kalibrerer:"
 
-#: gtkgame.c:8650
+#: gtkgame.c:8655
 msgid "       (n/a)       "
 msgstr "       (i/t)       "
 
-#: gtkgame.c:8710
+#: gtkgame.c:8715
 msgid "Resign normal"
 msgstr "Afstå normal"
 
-#: gtkgame.c:8711
+#: gtkgame.c:8716
 msgid "Resign gammon"
 msgstr "Afstå gammon"
 
-#: gtkgame.c:8712
+#: gtkgame.c:8717
 msgid "Resign backgammon"
 msgstr "Afstå backgammon"
 
@@ -10522,7 +10520,7 @@ msgstr "Ensidet rollout/database"
 msgid "Two-Sided Database"
 msgstr "Tvosidet database"
 
-#: gtkrelational.c:58 gtkrelational.c:866
+#: gtkrelational.c:58 gtkrelational.c:909
 msgid "Nick"
 msgstr "Kælenavn"
 
@@ -10636,7 +10634,7 @@ msgstr "kamp"
 msgid "vs. %s"
 msgstr ""
 
-#: gtkrelational.c:447 gtkrelational.c:730
+#: gtkrelational.c:447 gtkrelational.c:745
 msgid "Error, not enough datapoints for a plot."
 msgstr ""
 
@@ -10678,73 +10676,87 @@ msgstr ""
 msgid "History plot for %s"
 msgstr "Oversættelser"
 
-#: gtkrelational.c:513 gtkrelational.c:538 gtkscoremap.c:3278
+#. window setup
+#. window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+#. window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+#: gtkrelational.c:505
+#, fuzzy
+msgid "History plot"
+msgstr "Oversættelser"
+
+#: gtkrelational.c:515 gtkrelational.c:541 gtkscoremap.c:3278
 #, fuzzy
 msgid "Explanations"
 msgstr "Oversættelser"
 
-#: gtkrelational.c:515 gtkrelational.c:540
+#: gtkrelational.c:517 gtkrelational.c:543
 msgid "Click to obtain more explanations on this History plot"
 msgstr ""
 
-#: gtkrelational.c:600
+#: gtkrelational.c:618
 msgid ""
-"No player name. Please open a match or select one in the database records."
+"No player name. Please open a match, or open the database records and select "
+"one."
 msgstr ""
 
-#: gtkrelational.c:616 gtkrelational.c:663 gtkrelational.c:695
+#: gtkrelational.c:631 gtkrelational.c:678 gtkrelational.c:710
 #, fuzzy
 msgid "Problem accessing database"
 msgstr "Fejl under tilslutning til databasen"
 
-#: gtkrelational.c:668 gtkrelational.c:794 gtkrelational.c:1555
+#: gtkrelational.c:683 gtkrelational.c:837 gtkrelational.c:1602
 msgid "No data in database"
 msgstr "Ingen data i databasen"
 
-#: gtkrelational.c:992
+#: gtkrelational.c:780
+msgid ""
+"No player name. Please open a match or select one in the database records."
+msgstr ""
+
+#: gtkrelational.c:1035
 msgid "Search failed or empty."
 msgstr "Søgning fejlede eller er tom."
 
-#: gtkrelational.c:1022
+#: gtkrelational.c:1065
 #, c-format
 msgid "Remove all data for %s?"
 msgstr "Fjern alle data for %s?"
 
-#: gtkrelational.c:1216
+#: gtkrelational.c:1259
 #, fuzzy
 msgid "Failed to connect to database!"
 msgstr "Fejl under oprettelse af databasen"
 
-#: gtkrelational.c:1223
+#: gtkrelational.c:1266
 msgid ""
 "This database is from an old version of GNU Backgammon and cannot be used"
 msgstr ""
 "Denne database er fra en gammel version af GNU Backgammon og kan ikke bruges"
 
-#: gtkrelational.c:1225
+#: gtkrelational.c:1268
 msgid ""
 "This database is from a new version of GNU Backgammon and cannot be used"
 msgstr ""
 "Denne database er fra en ny version af GNU Backgammon og kan ikke bruges"
 
-#: gtkrelational.c:1228
+#: gtkrelational.c:1271
 msgid "This database structure is invalid"
 msgstr "Denne databasestruktur er ulovlig"
 
-#: gtkrelational.c:1232
+#: gtkrelational.c:1275
 msgid "This database contains no matches"
 msgstr "Denne database indeholder ingen kampe"
 
-#: gtkrelational.c:1234
+#: gtkrelational.c:1277
 msgid "This database contains 1 match"
 msgstr "Denne database indeholder 1 kamp"
 
-#: gtkrelational.c:1236
+#: gtkrelational.c:1279
 #, c-format
 msgid "This database contains %d matches\n"
 msgstr "Denne database indeholder %d kampe\n"
 
-#: gtkrelational.c:1241
+#: gtkrelational.c:1284
 #, c-format
 msgid ""
 "Database connection successful\n"
@@ -10753,142 +10765,151 @@ msgstr ""
 "Databaseforbindelse lykkedes\n"
 "%s\n"
 
-#: gtkrelational.c:1279
+#: gtkrelational.c:1322
 msgid "Add Database"
 msgstr "TilFøj database"
 
-#: gtkrelational.c:1279
+#: gtkrelational.c:1322
 msgid "Database Name:"
 msgstr "Databasenavn:"
 
-#: gtkrelational.c:1292
+#: gtkrelational.c:1335
 #, fuzzy
 msgid "Failed to create, database exists!"
 msgstr "Fejl under oprettelse af databasen"
 
-#: gtkrelational.c:1310
+#: gtkrelational.c:1353
 msgid "Failed to create database!"
 msgstr "Fejl under oprettelse af databasen"
 
-#: gtkrelational.c:1320
+#: gtkrelational.c:1363
 msgid "Are you sure you want to delete all the matches in this database?"
 msgstr "Er du sikker på du vil slette alle kampe i denne database?"
 
-#: gtkrelational.c:1329
+#: gtkrelational.c:1372
 msgid "Database successfully removed"
 msgstr "Database fjernet"
 
-#: gtkrelational.c:1332
+#: gtkrelational.c:1375
 msgid "Failed to delete database!"
 msgstr "Kunne ikke slette database!"
 
-#: gtkrelational.c:1370
+#: gtkrelational.c:1413
 msgid "Databases"
 msgstr "Databaser"
 
-#: gtkrelational.c:1397
+#: gtkrelational.c:1440
 msgid ""
 "Database type can be SQLite (bundled with GNU Backgammon), MySQL/MariaDB or "
 "PostgreSQL. The first one needs only a database name. For the other two you "
 "need an external database server and to configure how to access it"
 msgstr ""
 
-#: gtkrelational.c:1398
+#: gtkrelational.c:1441
 msgid "DB Type"
 msgstr "DB-type"
 
-#: gtkrelational.c:1409
+#: gtkrelational.c:1452
 msgid "Username"
 msgstr "Brugernavn"
 
-#: gtkrelational.c:1429
+#: gtkrelational.c:1472
 msgid "Password"
 msgstr "Adgangskode"
 
-#: gtkrelational.c:1450
+#: gtkrelational.c:1493
 msgid "DB server"
 msgstr ""
 
-#: gtkrelational.c:1451
+#: gtkrelational.c:1494
 msgid "Entered as: hostname:port"
 msgstr ""
 
-#: gtkrelational.c:1473
+#: gtkrelational.c:1516
 msgid "Login"
 msgstr ""
 
-#: gtkrelational.c:1475
+#: gtkrelational.c:1518
 #, fuzzy
 msgid "Check connection to database server"
 msgstr "Fejl under tilslutning til databasen"
 
-#: gtkrelational.c:1493
+#: gtkrelational.c:1536
 msgid "Store game stats"
 msgstr "Gem partistats"
 
-#: gtkrelational.c:1496
+#: gtkrelational.c:1539
 msgid "Store individual games statistics in addition to global match ones"
 msgstr ""
 
-#: gtkrelational.c:1500
+#: gtkrelational.c:1543
 msgid "Info"
 msgstr "Info"
 
-#: gtkrelational.c:1532
+#: gtkrelational.c:1575
 #, fuzzy
 msgid "Add database"
 msgstr "TilFøj database"
 
-#: gtkrelational.c:1535
+#: gtkrelational.c:1578
 #, fuzzy
 msgid "Delete database"
 msgstr "cubefri database"
 
-#. no longer modal with the additional history dialog
-#: gtkrelational.c:1561
+#. We had the following bug: in an unexplained way, this window became a black hole: we
+#. could not relaunch it after closing it.
+#. V1: we make it modal. But then, if we click on a plot window and close the two windows
+#. successively, gnubg crashes.
+#. V2: it turns out that we need to first check that gnubg does not think there is an open
+#. top-level window before starting this window. It then works fine.
+#. V2b: just disable the GTKRunDialog() at the end. It's the cause of all the trouble.
+#.
+#. if (pwDialog && gtk_widget_get_toplevel(pwDialog))
+#. gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
+#: gtkrelational.c:1619
 #, fuzzy
 msgid "GNU Backgammon - Database"
 msgstr "GNU Backgammon - Databaseresultatat"
 
-#: gtkrelational.c:1569
+#: gtkrelational.c:1631
 msgid ""
 "Click on the button to plot the historical error of (1) a player selected in "
 "the above list, or if no player is selected, (2) the player sitting at the "
 "bottom of the board in the current match."
 msgstr ""
 
-#: gtkrelational.c:1604
+#: gtkrelational.c:1666
 msgid "Erase"
 msgstr "Slet"
 
-#: gtkrelational.c:1631
+#: gtkrelational.c:1693
 msgid "Name"
 msgstr "Navn"
 
-#: gtkrelational.c:1643
+#: gtkrelational.c:1705
 msgid "Notes"
 msgstr ""
 
-#: gtkrelational.c:1667
+#: gtkrelational.c:1729
 #, fuzzy
 msgid "Update Details"
 msgstr "Detaljer"
 
-#: gtkrelational.c:1681
+#: gtkrelational.c:1743
 msgid "Query"
 msgstr "Forespørg"
 
-#: gtkrelational.c:1684
+#: gtkrelational.c:1746
 #, fuzzy
 msgid "Query text"
 msgstr "Forespørg"
 
-#: gtkrelational.c:1726
+#: gtkrelational.c:1788
 #, fuzzy
 msgid "Run Query"
 msgstr "Forespørg"
 
-#: gtkrelational.c:1754
+#: gtkrelational.c:1817
 msgid "GNU Backgammon - Database Result"
 msgstr "GNU Backgammon - Databaseresultatat"
 
@@ -10896,7 +10917,7 @@ msgstr "GNU Backgammon - Databaseresultatat"
 msgid "Average equity"
 msgstr "Gennemslitlig equity"
 
-#: gtkrolls.c:175 gtktempmap.c:113
+#: gtkrolls.c:175 gtktempmap.c:112
 msgid "Calculating equities"
 msgstr "Beregner equities"
 
@@ -11512,30 +11533,30 @@ msgstr ""
 msgid "Starting "
 msgstr "Begynder "
 
-#: gtktempmap.c:109
+#: gtktempmap.c:108
 #, c-format
 msgid "Calculating equities for %s"
 msgstr "Beregner equties for %s"
 
-#: gtktempmap.c:600
+#: gtktempmap.c:595
 #, fuzzy
 msgid "Sho Sengoku Temperature Map - Distribution of Rolls"
 msgstr "Sho Sengoku temperaturkort - Fordeling af rul"
 
-#: gtktempmap.c:603
+#: gtktempmap.c:598
 msgid "Temperature Map in Hypothetical Money Play"
 msgstr ""
 
-#: gtktempmap.c:852 gtktheory.c:961
+#: gtktempmap.c:847 gtktheory.c:961
 #, c-format
 msgid "%d ply"
 msgstr "%d ply"
 
-#: gtktempmap.c:884
+#: gtktempmap.c:879
 msgid "Show equities"
 msgstr "Vis equities"
 
-#: gtktempmap.c:891
+#: gtktempmap.c:886
 msgid "Show best move"
 msgstr "Vis bedste træk"
 
@@ -15552,52 +15573,52 @@ msgstr "Du skal indtaste et positivt tal\n"
 msgid "The factor used for multiplying error rates is: %.1f\n"
 msgstr "Faktoren for multiplikation af fejlrater er: %.1f\n"
 
-#: set.c:4763
+#: set.c:4775
 #, c-format
 msgid "Not a valid XGID '%s'"
 msgstr ""
 
-#: set.c:4767 set.c:4833
+#: set.c:4779 set.c:4845
 msgid ""
 "This position has player on roll appearing on top. \n"
 "Swap players so the player on roll appears on the bottom? "
 msgstr ""
 
-#: set.c:4807
+#: set.c:4819
 #, fuzzy, c-format
 msgid "No valid IDs found"
 msgstr "Ingen gyldige GNUBG id'er fundet"
 
-#: set.c:4814
+#: set.c:4826
 #, fuzzy, c-format
 msgid "Setting GNUbg ID %s:%s\n"
 msgstr "Sætter GNUBG id  %s:%s\n"
 
-#: set.c:4841
+#: set.c:4853
 msgid "Auto save during rollouts"
 msgstr "Autosave under rollouts"
 
-#: set.c:4841
+#: set.c:4853
 msgid "Don't auto save during rollouts"
 msgstr "Autosave ikke under rollouts"
 
-#: set.c:4848
+#: set.c:4860
 msgid "Auto save after each analysed game"
 msgstr "Autosave efter hvert analyseret parti"
 
-#: set.c:4848
+#: set.c:4860
 msgid "Don't auto save after each analysed game"
 msgstr "Autosave ikke efter hvert analyseret parti"
 
-#: set.c:4855
+#: set.c:4867
 msgid "Prompt before deleting autosaves"
 msgstr "Spørg før autosaves slettes"
 
-#: set.c:4855
+#: set.c:4867
 msgid "Delete autosaves automatically"
 msgstr "Slet autosaves automatisk"
 
-#: set.c:4864
+#: set.c:4876
 msgid "You must specify a positive autosave time in minutes"
 msgstr "Du skal angive en positiv autosavetid i minutter."
 
@@ -16381,7 +16402,7 @@ msgstr ""
 #: show.c:1299
 #, c-format
 msgid ""
-"Estimated GWC: %4.1f%% (80 - L/3 + 2*(L-T))\n"
+"Estimated GWC: %4.1f%% (80 - L/3 + 2*(T-L))\n"
 "\n"
 msgstr ""
 
@@ -17207,6 +17228,10 @@ msgid "You must specify a file to export to (see `help export position text')."
 msgstr ""
 "Du skal angive hvilken fil, du ønsker at eksportere til (se `help export "
 "position text')."
+
+#, fuzzy
+#~ msgid "noun|Move"
+#~ msgstr "Træk"
 
 #, fuzzy, c-format
 #~ msgid "%d point match (Crawford game)"

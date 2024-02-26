@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gtkgame.c,v 1.1014 2024/02/18 16:30:31 plm Exp $
+ * $Id: gtkgame.c,v 1.1012 2023/12/30 20:36:15 plm Exp $
  */
 /*
 02/2024: Isaac Keslassy:
@@ -410,14 +410,12 @@ ExecActionCommand_internal(guint UNUSED(iWidgetType), guint iCommand, gchar * sz
 		return; \
 	} ;
 
-#if 0
 #define CREATE_CMD_TOGGLE_CALLBACK(CMDID, szCommand) \
 	static void CMDID##_toggle_cb ( GtkToggleAction *action, gpointer user_data ) \
 	{ \
 		ExecToggleActionCommand_internal ( 1, CMDID, szCommand, (gpointer)action, NULL, user_data ); \
 		return; \
 	} ;
-#endif
 
 #define CREATE_CMD_RADIO_CALLBACK(CMDID, szCommand) \
 	static void CMDID##_radio_cb ( GtkRadioAction *action, GtkRadioAction *current, gpointer user_data ) \
@@ -426,14 +424,12 @@ ExecActionCommand_internal(guint UNUSED(iWidgetType), guint iCommand, gchar * sz
 		return; \
 	} ;
 
-#if 0
 #define CREATE_GENERIC_ACTION_CALLBACK(ACTIONID, callbackfunc) \
 	static void ACTIONID##_action_g_cb ( GtkAction *action, gpointer user_data ) \
 	{ \
 		callbackfunc ( 0, ACTIONID, action, NULL, user_data ); \
 		return; \
 	} ;
-#endif
 
 #define CREATE_GENERIC_TOGGLE_CALLBACK(ACTIONID, callbackfunc) \
 	static void ACTIONID##_toggle_g_cb ( GtkToggleAction *action, gpointer user_data ) \
@@ -4464,7 +4460,7 @@ static GtkActionEntry actionEntries[] = {
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_MATCH) },
 
     { "ClearAnalysisMenuAction", NULL, N_("Clear analysis"), NULL, NULL, G_CALLBACK(NULL) },
-    { "ClearAnalysisMoveAction", GTK_STOCK_CLEAR, N_("Move"), NULL, NULL,
+    { "ClearAnalysisMoveAction", GTK_STOCK_CLEAR, N_("noun|Move"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_CLEAR_MOVE) },
     { "ClearAnalysisGameAction", GTK_STOCK_CLEAR, N_("_Game"), NULL, NULL,
      CMD_ACTION_CALLBACK_FROMID(CMD_ANALYSE_CLEAR_GAME) },
@@ -4475,7 +4471,7 @@ static GtkActionEntry actionEntries[] = {
     { "CMarkCubeMenuAction", NULL, N_("Cube"), NULL, NULL, G_CALLBACK(NULL) },
     { "CMarkCubeClearAction", NULL, N_("Clear"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_CUBE_CLEAR) },
     { "CMarkCubeShowAction", NULL, N_("Show"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_CUBE_SHOW) },
-    { "CMarkMoveMenuAction", NULL, N_("Move"), NULL, NULL, G_CALLBACK(NULL) },
+    { "CMarkMoveMenuAction", NULL, N_("noun|Move"), NULL, NULL, G_CALLBACK(NULL) },
     { "CMarkMoveClearAction", NULL, N_("Clear"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_MOVE_CLEAR) },
     { "CMarkMoveShowAction", NULL, N_("Show"), NULL, NULL, CMD_ACTION_CALLBACK_FROMID(CMD_CMARK_MOVE_SHOW) },
     { "CMarkGameMenuAction", NULL, N_("Game"), NULL, NULL, G_CALLBACK(NULL) },

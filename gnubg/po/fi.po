@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU Backgammon 1.06\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-03 22:39+0100\n"
-"PO-Revision-Date: 2022-03-14 10:14+0200\n"
+"POT-Creation-Date: 2024-02-24 22:14+0100\n"
+"PO-Revision-Date: 2024-02-19 02:40+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.4.2\n"
 
 # 'rating' teksti ja pystyviiva on tarpeeton. Älä muuta tekstiä, vaikka Poedit ilmoittaa virheestä.
 #: analysis.c:69
@@ -98,9 +98,10 @@ msgid ""
 "Background analysis. Browsing-only mode: feel free to browse and check the "
 "early analysis results."
 msgstr ""
+"Tausta-analyysi. Vain selaustila: voit selata ja tarkistaa varhaisen "
+"analyysin tulokset."
 
 #: analysis.c:1200
-#, fuzzy
 msgid "Analysing game"
 msgstr "Analysoi peli"
 
@@ -109,16 +110,15 @@ msgstr "Analysoi peli"
 #.
 #. ProgressStartValue(_("Analysing match; move:"), nMoves);
 #: analysis.c:1260
-#, fuzzy
 msgid "Analysing match"
-msgstr "Analysoi ottelu; siirto:"
+msgstr "Analysoi ottelu"
 
 #. header
 #. ******************************************************
 #. ** Start of right hand side of player screen...
 #. ******************************************************
 #: analysis.c:1488 bearoff.c:557 bearoff.c:593 bearoff.c:596 bearoff.c:635
-#: bearoff.c:661 bearoff.c:692 format.c:282 gtkrelational.c:1612 html.c:2482
+#: bearoff.c:661 bearoff.c:692 format.c:282 gtkrelational.c:1674 html.c:2482
 #: show.c:1369
 msgid "Player"
 msgstr "Pelaaja"
@@ -701,7 +701,7 @@ msgstr "PNG-tiedoston luonti ei onnistunut: %s\n"
 
 #: board3d/misc3d.c:1383
 msgid "exporting a 3D image is only supported from the GUI"
-msgstr ""
+msgstr "3D-kuvan vientiä tuetaan vain graafisesta käyttöliittymästä"
 
 #: board3d/shadow.c:53
 msgid "No stencil buffer, no shadows\n"
@@ -1321,9 +1321,8 @@ msgid "Specify parameters for rollout"
 msgstr "Aseta parametrit rolloutille"
 
 #: commands.inc:467
-#, fuzzy
 msgid "Select whether to run analysis in the background"
-msgstr "Valitse tulevatko siirron analyysi ja kommentit esille"
+msgstr "Valitse, suoritetaanko analyysi taustalla"
 
 #: commands.inc:469
 msgid "Specify parameters for the analysis of chequerplay"
@@ -1339,7 +1338,7 @@ msgstr "Aseta tuplausratkaisu parametrit analyysille"
 
 #: commands.inc:477
 msgid "Set the default analyze-file setting"
-msgstr ""
+msgstr "Aseta oletusarvoinen analysointitiedostoasetus"
 
 #: commands.inc:479
 msgid "Select whether dice rolls will be analysed"
@@ -1374,9 +1373,8 @@ msgid "Enable the Crawford game based on match score"
 msgstr "Valitse Crawford peli ottelupisteiden mukaisesti"
 
 #: commands.inc:505
-#, fuzzy
 msgid "Select whether to add to database after analysis"
-msgstr "Valitse aloitetaanko uusi peli automaattisesti edellisen loputtua"
+msgstr "Valitse, lisätäänkö tietokantaan analyysin jälkeen"
 
 #: commands.inc:507
 msgid "Control automatic doubles during (money) session play"
@@ -2096,7 +2094,7 @@ msgid "Human wins match"
 msgstr "Ihminen voittaa ottelun"
 
 # 'verb' teksti ja pystyviiva on tarpeeton. Älä muuta tekstiä, vaikka Poedit ilmoittaa virheestä.
-#: commands.inc:1046 gtkchequer.c:467
+#: commands.inc:1046 gtkchequer.c:467 sound.c:351
 msgid "verb|Move"
 msgstr "Siirto"
 
@@ -2104,13 +2102,12 @@ msgstr "Siirto"
 msgid "Redouble"
 msgstr "Uusintatuplaus"
 
-#: commands.inc:1050 gtkgame.c:1430 gtkgame.c:1436 gtkgame.c:8723 sound.c:353
+#: commands.inc:1050 gtkgame.c:1430 gtkgame.c:1436 gtkgame.c:8728 sound.c:353
 msgid "Resign"
 msgstr "Luovutus"
 
 # 'verb' teksti ja pystyviiva on tarpeeton. Älä muuta tekstiä, vaikka Poedit ilmoittaa virheestä.
 #: commands.inc:1052 sound.c:354
-#, fuzzy
 msgid "verb|Roll"
 msgstr "Siirto"
 
@@ -2345,7 +2342,7 @@ msgstr "Aseta oletusnimet pelaajille"
 
 #: commands.inc:1195
 msgid "Set key player names to highlight"
-msgstr ""
+msgstr "Aseta avainpelaajien nimet korostettaviksi"
 
 #: commands.inc:1197
 msgid "Set your language preference"
@@ -2435,36 +2432,41 @@ msgstr "Aseta ottelun tai session pistetilanne "
 
 #: commands.inc:1243
 msgid "Set the default evaluation ply in the ScoreMap window"
-msgstr ""
+msgstr "Aseta oletusarvoinen arviointikerros ScoreMap-ikkunassa"
 
 #: commands.inc:1246
-#, fuzzy
 msgid "Set the default match length in the ScoreMap window"
-msgstr "Tarkista oletus ottelupituus"
+msgstr "Tarkista oletus ottelupituus tulostaulu ikkunassa"
 
 #: commands.inc:1249
 msgid "Set the default axis label option in the ScoreMap window"
-msgstr ""
+msgstr "Aseta akselin oletusmerkkivaihtoehto Tulostaulu-ikkunassa"
 
 #: commands.inc:1252
 msgid "Set the default top-left square Jacoby option in the ScoreMap window"
 msgstr ""
+"Aseta Tulostaulu-ikkunan vasemman yläreunan ruudun Jacoby-vaihtoehto "
+"oletusarvoisesti"
 
 #: commands.inc:1255
 msgid "Set the default scoremapcubeequitydisplay option in the ScoreMap window"
 msgstr ""
+"Aseta oletusarvoinen scoremapcubeequitydisplay-vaihtoehto Tulostaulu-"
+"ikkunassa."
 
 #: commands.inc:1258
 msgid "Set the default scoremapmoveequitydisplay option in the ScoreMap window"
 msgstr ""
+"Aseta oletusarvoinen scoremapmoveequitydisplay-vaihtoehto Tulostaulu-"
+"ikkunassa"
 
 #: commands.inc:1261
 msgid "Set the default scoremapcolour option in the ScoreMap window"
-msgstr ""
+msgstr "Aseta oletusarvoinen scoremapcolour -vaihtoehto Tulostaulu-ikkunassa"
 
 #: commands.inc:1264
 msgid "Set the default scoremaplayout option in the ScoreMap window"
-msgstr ""
+msgstr "Määritä Tulostaulu-ikkunan scoremaplayout-vaihtoehdon oletusasetukset"
 
 #: commands.inc:1268
 msgid "Set the dice generator seed"
@@ -2499,9 +2501,8 @@ msgid "Control tutor setup"
 msgstr "Hallitse ohjaajatilan asetuksia"
 
 #: commands.inc:1287
-#, fuzzy
 msgid "Set whether to use the list of key player names"
-msgstr "Jacoby asetus rahapeleille"
+msgstr "Määritä, käytetäänkö avainpelaajien nimiluetteloa"
 
 #: commands.inc:1290
 msgid "Set which variation of backgammon is used"
@@ -2649,7 +2650,7 @@ msgstr "Katso geometria-asetukset"
 
 #: commands.inc:1377
 msgid "Show plot of player's historical error rate"
-msgstr ""
+msgstr "Näytä pelaajan virhesuhdekaavio"
 
 #: commands.inc:1379
 msgid "Calculate Isight Count for position"
@@ -2776,7 +2777,6 @@ msgid "Show temperature map (graphic overview of dice distribution)"
 msgstr "Katso TM-karttaa (graafinen yleiskatsaus noppajakautumalle)"
 
 #: commands.inc:1442
-#, fuzzy
 msgid "Show ScoreMap (graphic overview of cube decisions at different scores)"
 msgstr ""
 "Katso tulostaulua (graafinen katsaus tuplausratkaisuille eri "
@@ -2993,7 +2993,6 @@ msgid "Agree to an offered double"
 msgstr "Ota vastaan tarjottu tuplaus"
 
 #: non-src/credits.c:22
-#, fuzzy
 msgid ""
 "Copyright (C) 1999-2004 Gary Wong.\n"
 "Copyright (C) 2004-2024 the AUTHORS; for details type `show version'."
@@ -3174,9 +3173,8 @@ msgid "A generator based on the Message Digest 5 algorithm"
 msgstr "Generaattori perustuen Message Digest 5 algoritmiin"
 
 #: dice.c:69
-#, fuzzy
-msgid "Makoto Matsumoto and  Mutsuo Saito's generator"
-msgstr "Makoto Matsumoton ja Takuji Nishimuran generaattori"
+msgid "Makoto Matsumoto and Mutsuo Saito's generator"
+msgstr "Makoto Matsumoton ja Matsuo Saiton generaattori"
 
 #: dice.c:70
 msgid "Enter each dice roll by hand"
@@ -3253,7 +3251,7 @@ msgstr "Noppageneraattori ei toimi. Palaan takaisin RNG_MERSENNEen"
 msgid "Rewinding dice file (%s)"
 msgstr "Noppatiedoston kelaus takaisin (%s)"
 
-#: drawboard.c:70 drawboard.c:294 gnubg.c:5185 gtkexport.c:824 gtkgame.c:3502
+#: drawboard.c:70 drawboard.c:294 gnubg.c:5190 gtkexport.c:824 gtkgame.c:3502
 #: gtkgame.c:4500 gtkgame.c:7469
 msgid "GNU Backgammon"
 msgstr "GNU Backgammon"
@@ -4208,19 +4206,16 @@ msgstr ""
 "'Kopiointiehdot'.\n"
 
 #: gnubg.c:257
-#, fuzzy
 msgid "Batch analysis"
 msgstr "Analysoi useita tiedostoja"
 
 #: gnubg.c:257
-#, fuzzy
 msgid "Single-File analysis"
-msgstr "- analyysit"
+msgstr "Yhden tiedoston analyysi"
 
 #: gnubg.c:257
-#, fuzzy
 msgid "Smart analysis"
-msgstr "Sama kuin analyysille"
+msgstr "Älykäs analyysi"
 
 #. Usage strings
 #: gnubg.c:528
@@ -4512,7 +4507,7 @@ msgstr "Tuntematon avainsana `%s'.\n"
 msgid "Rolled"
 msgstr "Heitto"
 
-#: gnubg.c:1438 gnubg.c:5608 gtkgame.c:1716 gtkgame.c:1734 gtkgame.c:1754
+#: gnubg.c:1438 gnubg.c:5613 gtkgame.c:1716 gtkgame.c:1734 gtkgame.c:1754
 msgid "No game in progress."
 msgstr "Peli on aloittamatta."
 
@@ -4694,7 +4689,7 @@ msgstr "Valitse tiedosto jonka haluat ladata."
 msgid "Pip counts:"
 msgstr "Pipsitilanne:"
 
-#: gnubg.c:3397
+#: gnubg.c:3402
 #, c-format
 msgid ""
 "#\n"
@@ -4720,16 +4715,16 @@ msgstr ""
 "# Jos haluat ohittaa ne pysyvillä asetuksilla, aseta ne itse manuaalisesti\n"
 "# 'gnubgrc'-tiedostossa, jonka voit luoda samaan hakemistoon.\n"
 
-#: gnubg.c:3440
+#: gnubg.c:3445
 #, c-format
 msgid "Settings saved to %s."
 msgstr "Asetukset tallennettu %s."
 
-#: gnubg.c:3440
+#: gnubg.c:3445
 msgid "standard output stream"
 msgstr "standardi ulostulovirtaus"
 
-#: gnubg.c:3931 makebearoff.c:1374 makebearoff.c:1375 makebearoff.c:1376
+#: gnubg.c:3936 makebearoff.c:1374 makebearoff.c:1375 makebearoff.c:1376
 #: makebearoff.c:1377 makebearoff.c:1379 makebearoff.c:1438 makebearoff.c:1443
 #: show.c:385 show.c:1857 show.c:1859 show.c:1861 show.c:1864 show.c:1889
 #: show.c:1893 show.c:1897 show.c:1906 show.c:1914 show.c:1918 show.c:1922
@@ -4737,7 +4732,7 @@ msgstr "standardi ulostulovirtaus"
 msgid "yes"
 msgstr "kyllä"
 
-#: gnubg.c:3931 makebearoff.c:1374 makebearoff.c:1375 makebearoff.c:1376
+#: gnubg.c:3936 makebearoff.c:1374 makebearoff.c:1375 makebearoff.c:1376
 #: makebearoff.c:1377 makebearoff.c:1379 makebearoff.c:1438 makebearoff.c:1443
 #: show.c:385 show.c:1857 show.c:1859 show.c:1861 show.c:1864 show.c:1889
 #: show.c:1893 show.c:1897 show.c:1906 show.c:1914 show.c:1918 show.c:1922
@@ -4745,204 +4740,204 @@ msgstr "kyllä"
 msgid "no"
 msgstr "ei"
 
-#: gnubg.c:3960 gnubg.c:5241
+#: gnubg.c:3965 gnubg.c:5246
 msgid "Please answer `y' or `n'."
 msgstr "Vastaa `y' tai `n'."
 
-#: gnubg.c:3968
+#: gnubg.c:3973
 msgid "output will be shown"
 msgstr "ulostulo tulee esille"
 
-#: gnubg.c:3968
+#: gnubg.c:3973
 msgid "output will not be shown"
 msgstr "ulostulo ei tule esille"
 
-#: gnubg.c:4453
+#: gnubg.c:4458
 msgid "Enter dice: "
 msgstr "Anna nopat: "
 
-#: gnubg.c:4471
+#: gnubg.c:4476
 msgid "You must enter two numbers between 1 and 6."
 msgstr "Anna kaksi numeroa väliltä 1-6."
 
-#: gnubg.c:4488
+#: gnubg.c:4493
 msgid "Failure setting up RNG"
 msgstr "Virhe RNG asetuksessa"
 
-#: gnubg.c:4492
+#: gnubg.c:4497
 msgid "Failure setting up RNG for rollout."
 msgstr "RNG ei asetettavissa rolloutille."
 
-#: gnubg.c:4510
+#: gnubg.c:4515
 msgid "Windows sockets initialisation error"
 msgstr "Windows vastakkeen alustus virhe"
 
-#: gnubg.c:4605
+#: gnubg.c:4610
 msgid "Do not use bearoff database"
 msgstr "Ulosheittely tietokantaa ei oteta mukaan"
 
-#: gnubg.c:4607
+#: gnubg.c:4612
 msgid "Evaluate commands in FILE and exit"
 msgstr "Arvioi komennot TIEDOSTOssa ja poistuu"
 
-#: gnubg.c:4609
+#: gnubg.c:4614
 msgid "Set language to LANG"
 msgstr "Aseta kieleksi KIELI"
 
-#: gnubg.c:4611
+#: gnubg.c:4616
 msgid "Start in Python mode or evaluate code in FILE and exit"
 msgstr "Aloita Python-tilassa tai arvioi koodi TIEDOSTOssa ja poistu"
 
-#: gnubg.c:4613
+#: gnubg.c:4618
 msgid "Disable sound effects"
 msgstr "Audiotehosteet poistetaan"
 
-#: gnubg.c:4615
+#: gnubg.c:4620
 msgid "Do not read .gnubgrc and .gnubgautorc commands"
 msgstr ".gnubgrc ja .gnubgautorc tiedostojen komentoja ei lueta"
 
-#: gnubg.c:4618
+#: gnubg.c:4623
 msgid "Show gtk splash screen"
 msgstr "Valitse gtk aloitusruutu"
 
-#: gnubg.c:4620
+#: gnubg.c:4625
 msgid "Start the command-line instead of using the graphical interface"
 msgstr "Valitse komentorivi graafisen tilan sijaan"
 
-#: gnubg.c:4622
+#: gnubg.c:4627
 msgid "Show version information and exit"
 msgstr "Tulostaa versiotiedot ja poistuu"
 
-#: gnubg.c:4624
+#: gnubg.c:4629
 msgid "Ignore tty input when using the graphical interface"
 msgstr "Ohita tty-tulo graafisessa tilassa"
 
-#: gnubg.c:4626
+#: gnubg.c:4631
 msgid "Turn on debug"
 msgstr "Aseta virheenkorjaus toimintaan"
 
-#: gnubg.c:4628
+#: gnubg.c:4633
 msgid "Specify location of general data"
 msgstr "Aseta yleisdatan sijainti"
 
-#: gnubg.c:4630
+#: gnubg.c:4635
 msgid "Specify location of program specific data"
 msgstr "Aseta ohjelmakohtaisen datan sijainti"
 
-#: gnubg.c:4632
+#: gnubg.c:4637
 msgid "Specify location of program documentation"
 msgstr "Aseta ohjelman dokumentaation sijainti"
 
-#: gnubg.c:4634
+#: gnubg.c:4639
 msgid "Specify location of user's preferences directory"
 msgstr "Aseta käyttäjäasetusten sijainti"
 
-#: gnubg.c:4741 gnubg.c:4744 gnubg.c:4749 gnubg.c:4752 gnubg.c:4757
-#: gnubg.c:4762
+#: gnubg.c:4746 gnubg.c:4749 gnubg.c:4754 gnubg.c:4757 gnubg.c:4762
+#: gnubg.c:4767
 msgid "Initialising"
 msgstr "Alustetaan"
 
-#: gnubg.c:4741 gtkoptions.c:1310
+#: gnubg.c:4746 gtkoptions.c:1310
 msgid "Random number generator"
 msgstr "Satunnaislukugeneraattori"
 
-#: gnubg.c:4744
+#: gnubg.c:4749
 msgid "match equity table"
 msgstr "ottelun voitto-odote taulukko"
 
-#: gnubg.c:4749
+#: gnubg.c:4754
 msgid "neural nets"
 msgstr "hermoverkot"
 
-#: gnubg.c:4752
+#: gnubg.c:4757
 msgid "initialising thread data"
 msgstr "alustetaan säie dataa"
 
-#: gnubg.c:4757
+#: gnubg.c:4762
 msgid "Windows sockets"
 msgstr "Windowsin vastakkeet"
 
-#: gnubg.c:4770
+#: gnubg.c:4775
 msgid "Loading"
 msgstr "Lataa"
 
-#: gnubg.c:4770
+#: gnubg.c:4775
 msgid "User Settings"
 msgstr "Käyttäjäasetukset"
 
-#: gnubg.c:4824
+#: gnubg.c:4829
 #, c-format
 msgid "GNU Backgammon build without Python."
 msgstr "GNU Backgammon kokoonpanosi on luotu ilman Pythonia."
 
-#: gnubg.c:4856 gnubg.c:4899
+#: gnubg.c:4861 gnubg.c:4904
 msgid "Command only valid in match play"
 msgstr "Komento on voimassa vain ottelussa"
 
-#: gnubg.c:4868 gnubg.c:4869 gnubg.c:4871
+#: gnubg.c:4873 gnubg.c:4874 gnubg.c:4876
 msgid "MWC for equity"
 msgstr "MWC voitto-odotteen sijaan"
 
-#: gnubg.c:4870 gnubg.c:4915
+#: gnubg.c:4875 gnubg.c:4920
 msgid "By linear interpolation"
 msgstr "Lineaarisella interpoloinnilla"
 
-#: gnubg.c:4913 gnubg.c:4914 gnubg.c:4916
+#: gnubg.c:4918 gnubg.c:4919 gnubg.c:4921
 msgid "Equity for MWC"
 msgstr "Voitto-odote MWC arvon sijaan"
 
 #. for(unsigned int j=0;j < strlen(sz); j++) {
 #. g_message("%c", sz[j]);
 #. }
-#: gnubg.c:5041
+#: gnubg.c:5046
 #, c-format
 msgid "Player name contains unallowed character"
-msgstr ""
+msgstr "Pelaajan nimi sisältää kiellettyjä merkkejä"
 
-#: gnubg.c:5047
-#, fuzzy, c-format
+#: gnubg.c:5052
+#, c-format
 msgid "Player name is too long"
-msgstr "Pelaajien nimet samoja"
+msgstr "Pelaajan nimi on liian pitkä"
 
-#: gnubg.c:5165
+#: gnubg.c:5170
 #, c-format
 msgid "File \"%s\" exists. Overwrite? "
 msgstr "Tiedosto \"%s\" on jo olemassa. Korvataanko? "
 
-#: gnubg.c:5259
+#: gnubg.c:5264
 msgid "You may be about to make a very bad play"
 msgstr "Ratkaisusi saattaa olla hyvin huono"
 
-#: gnubg.c:5263
+#: gnubg.c:5268
 msgid "You may be about to make a bad play"
 msgstr "Ratkaisusi saattaa olla huono"
 
-#: gnubg.c:5267
+#: gnubg.c:5272
 msgid "You may be about to make a doubtful play"
 msgstr "Ratkaisusi on kyseenalainen"
 
-#: gnubg.c:5279
+#: gnubg.c:5284
 msgid "Are you sure?"
 msgstr "Oletko varma?"
 
-#: gnubg.c:5335
+#: gnubg.c:5340
 msgid "Analysis used for `hint' has been cleared"
 msgstr "Vihjeen (hint) analyysi on poistettu"
 
-#: gnubg.c:5468
+#: gnubg.c:5473
 #, c-format
 msgid ""
 "Locale in your environment not supported by C library. Falling back to C "
 "locale.\n"
 msgstr "C-kirjasto ei tue alueen kieliasetusta. Palaa takaisin paikalliseen.\n"
 
-#: gnubg.c:5671
+#: gnubg.c:5676
 msgid ""
 "Are you sure you want to discard the current match and your existing "
 "autosave? "
 msgstr "Haluatko varmasti poistua ottelusta ilman tallennusta? "
 
-#: gnubg.c:5679
+#: gnubg.c:5684
 msgid "Are you sure you want to discard the current match? "
 msgstr "Haluatko varmasti poistua ottelusta? "
 
@@ -5327,7 +5322,6 @@ msgid "Cmark"
 msgstr "Cmark"
 
 #: gtkchequer.c:472 gtkcube.c:1544 gtkgame.c:3072 gtkgame.c:3077
-#, fuzzy
 msgid "ScoreMap"
 msgstr "Tulostaulu"
 
@@ -5637,7 +5631,7 @@ msgstr "Pelilauta"
 msgid "move(s) between board shown"
 msgstr "  siirto(a) väleihin"
 
-#: gtkexport.c:608 gtkexport.c:640 gtkrelational.c:1589
+#: gtkexport.c:608 gtkexport.c:640 gtkrelational.c:1651
 msgid "Players"
 msgstr "Pelaajat"
 
@@ -5795,10 +5789,9 @@ msgstr "Tallenna tai vie tiedostoon"
 
 #: gtkfile.c:522
 msgid "Incorrect path"
-msgstr ""
+msgstr "Epäkelpo polku"
 
 #: gtkfile.c:536
-#, fuzzy
 msgid "Failed to create directory"
 msgstr "Hakemiston luominen ei onnistunut"
 
@@ -5818,13 +5811,13 @@ msgstr "Peruttu"
 msgid "Done"
 msgstr "Valmis"
 
-#: gtkfile.c:703 gtkrelational.c:1717
+#: gtkfile.c:703 gtkrelational.c:1779
 msgid "Result"
 msgstr "Tulos"
 
 #: gtkfile.c:705
 msgid "fileType|Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #: gtkfile.c:707
 msgid "File"
@@ -5850,15 +5843,14 @@ msgstr "Ohita"
 msgid "Stop"
 msgstr "Seis"
 
-#: gtkfile.c:801 gtkrelational.c:1600
+#: gtkfile.c:801 gtkrelational.c:1662
 msgid "Open"
 msgstr "Avaa"
 
 #. now select a file; could also use GTKFileSelect()
 #: gtkfile.c:905
-#, fuzzy
 msgid "Select file to analyse"
-msgstr "Valitse analysoitavat tiedostot"
+msgstr "Valitse analysoitava tiedosto"
 
 #: gtkfile.c:1005
 msgid "Select files to analyse"
@@ -5912,7 +5904,7 @@ msgstr "Siirretty "
 msgid "Cube decision"
 msgstr "Tuplausratkaisut"
 
-#: gtkgame.c:1336 gtkgame.c:2636 gtkgame.c:3204 gtkgame.c:8230 gtkoptions.c:709
+#: gtkgame.c:1336 gtkgame.c:2636 gtkgame.c:3204 gtkgame.c:8233 gtkoptions.c:709
 msgid "Chequer play"
 msgstr "Siirrot"
 
@@ -6082,7 +6074,7 @@ msgstr ""
 "mutta ohjelma ei silloin varmuudella valitse parasta siirtoa. "
 "Siirtosuodattimien asetuksia voi muokata klikkaamalla [Muokkaa] -painiketta."
 
-#: gtkgame.c:2644 gtkgame.c:3207 gtkgame.c:8233
+#: gtkgame.c:2644 gtkgame.c:3207 gtkgame.c:8236
 msgid "Cube decisions"
 msgstr "Tuplausratkaisut"
 
@@ -6098,27 +6090,24 @@ msgstr "Edistyneet asetukset..."
 #. gtk_box_pack_start(GTK_BOX(pwvbox), pwScoreMapBox, FALSE, FALSE, 0);
 #. AddText(pwvbox, _(frameTitle));
 #: gtkgame.c:3089
-#, fuzzy
 msgid "Default ScoreMap settings"
-msgstr "Otteluasetukset"
+msgstr "Tulostaulun oletusasetukset"
 
 #: gtkgame.c:3091
 msgid "Select the settings with which to initialize each new ScoreMap window"
-msgstr ""
+msgstr "Valitse asetukset, joilla alustetaan jokainen uusi Tulostaulu-ikkuna"
 
 #: gtkgame.c:3101
-#, fuzzy
 msgid "Evaluation strength:"
-msgstr "Arviointinopeus"
+msgstr "Arvioinnin vahvuus:"
 
 #: gtkgame.c:3101 gtkscoremap.c:2874
 msgid "Select the ply at which to evaluate the equity at each score"
-msgstr ""
+msgstr "Valitse taso, jolla arvioit kunkin pistemäärän voitto-odoteeen"
 
 #: gtkgame.c:3102
-#, fuzzy
 msgid "Simulated match length:"
-msgstr "Oletus ottelupituus:"
+msgstr "Simuloitu ottelun pituus:"
 
 #: gtkgame.c:3102
 msgid ""
@@ -6126,20 +6115,23 @@ msgid ""
 "length picks a length of 3 for current real short matches, 7 for long, and 5 "
 "otherwise."
 msgstr ""
+"Valitse oletusottelupituus, jolle Tulostaulu piirretään; muuttuva pituus "
+"valitsee pituuden 3 nykyisille oikeille lyhyille otteluille, 7 pitkille "
+"otteluille ja 5 muutoin."
 
 #: gtkgame.c:3103
-#, fuzzy
 msgid "Money-play analysis:"
-msgstr "- analyysit"
+msgstr "Rahapelianalyysi:"
 
 #: gtkgame.c:3103
 msgid ""
 "Select the default Jacoby option in the money play analysis of the top-left "
 "ScoreMap square"
 msgstr ""
+"Valitse oletusarvoinen Jacoby-vaihtoehto vasemman yläkulman Tulostaulu-"
+"ruudun rahapelianalyysissä."
 
 #: gtkgame.c:3104
-#, fuzzy
 msgid "Cube equity display:"
 msgstr "Tuplatun pelin voitto-odote:"
 
@@ -6147,42 +6139,41 @@ msgstr "Tuplatun pelin voitto-odote:"
 msgid ""
 "Select the default equity text to display in the squares of the cube ScoreMap"
 msgstr ""
+"Valitse oletus voitto-odote teksti, joka näytetään kuution Tulostaulu-"
+"ruuduissa"
 
 #: gtkgame.c:3105
-#, fuzzy
 msgid "Move equity display:"
-msgstr "Siirtoviive:"
+msgstr "Voitto-odote siirrollle:"
 
 #: gtkgame.c:3105
 msgid ""
 "Select the default equity text to display in the squares of the move ScoreMap"
-msgstr ""
+msgstr "Valitse oletusteksti, joka näytetään siirron Tulostaulu ruuduissa"
 
 #: gtkgame.c:3106
 msgid "In cube ScoreMaps, colour by:"
-msgstr ""
+msgstr "Kuution väri Tulostaulussa:"
 
 #: gtkgame.c:3106
 msgid "Select what equity to use when deciding to colour the cube ScoreMap"
-msgstr ""
+msgstr "Valitse haluamasi voitto-odote, kun värität kuution Tulostaululla"
 
 #: gtkgame.c:3107
-#, fuzzy
 msgid "Axis orientation:"
-msgstr "Huomautus:\n"
+msgstr "Akselin suuntaus:"
 
 #: gtkgame.c:3107
 msgid "Select how to orient the ScoreMap axes by default"
-msgstr ""
+msgstr "Valitse, miten Tulostaulun akselit suunnataan oletuksena"
 
 #: gtkgame.c:3108
-#, fuzzy
 msgid "Option pane location:"
-msgstr "Muokkaa peliasemaa"
+msgstr "Vaihtoehtoruudun sijainti:"
 
 #: gtkgame.c:3108
 msgid "Decide where to place the options with respect to the ScoreMap table"
-msgstr ""
+msgstr "Aseta, mihin kohtaan vaihtoehdot sijoitetaan suhteessa Tulostauluun"
 
 #: gtkgame.c:3115
 msgid "Doubtful:"
@@ -6212,7 +6203,7 @@ msgstr "Ei onnekas:"
 msgid "Very unlucky:"
 msgstr "Hyvin huono onni:"
 
-#: gtkgame.c:3210 gtkgame.c:8236 gtkrelational.c:71
+#: gtkgame.c:3210 gtkgame.c:8239 gtkrelational.c:71
 msgid "Luck"
 msgstr "Onni"
 
@@ -6251,9 +6242,8 @@ msgid "Hint/Tutor settings"
 msgstr "Vihje/Ohjaaja asetukset"
 
 #: gtkgame.c:3374
-#, fuzzy
 msgid "Automatically add analysis to database"
-msgstr "Siirrot pelataan automaattisesti"
+msgstr "Lisää analyysi automaattisesti tietokantaan"
 
 #: gtkgame.c:3377
 msgid ""
@@ -6261,10 +6251,13 @@ msgid ""
 "to the database. The database needs to have been defined in Settings -> "
 "Options -> Database"
 msgstr ""
+"Kun pelin tai ottelun analyysi on valmis, lisätään se automaattisesti "
+"tietokantaan. Tietokanta on määritettävä kohdassa Asetukset -> Valinnat -> "
+"Tietokanta."
 
 #: gtkgame.c:3382
 msgid "Allow background analysis (experimental) "
-msgstr ""
+msgstr "Salli tausta-analyysi (kokeellinen)"
 
 #: gtkgame.c:3385
 msgid ""
@@ -6272,10 +6265,15 @@ msgid ""
 "still running in the background. Some features may be disabled until the "
 "analysis is over."
 msgstr ""
+"Mahdollistaa ottelun ja sen varhaisen analyysin tulosten selaamisen, kun "
+"analyysi on vielä käynnissä taustalla. Jotkin ominaisuudet saattavat olla "
+"poissa käytöstä, kunnes analyysi on päättynyt."
 
 #: gtkgame.c:3390
 msgid "Select the default file analysis settings (hover for details):"
 msgstr ""
+"Valitse tiedostoanalyysin oletusasetukset (lisätietoja saat sijoittamalla "
+"hiiren osoittimen kohteen päälle):"
 
 #: gtkgame.c:3391
 msgid ""
@@ -6286,6 +6284,12 @@ msgid ""
 "- Smart analysis will open the latest file in the most recently opened "
 "folder and/or the default import folder, then run the single-file analysis."
 msgstr ""
+"- Eräanalyysi voi analysoida useita tiedostoja, mutta se ei salli tulosten "
+"selaamista samanaikaisesti.\n"
+" - Yhden tiedoston analyysi voi analysoida vain yhden tiedoston, mutta se "
+"voi toimia taustalla. \n"
+"- Älykäs analyysi avaa viimeisimmän tiedoston viimeksi avatussa kansiossa ja/"
+"tai oletustuontikansiossa ja suorittaa sitten yhden tiedoston analyysin."
 
 #. AnalysisDetails *pAnalDetailSettings1 = NULL;
 #. AnalysisDetails *pAnalDetailSettings2 = NULL;
@@ -6433,7 +6437,7 @@ msgstr "Peliasema ASCII tiedostona"
 
 #: gtkgame.c:3978
 msgid "BGonline (HTML)"
-msgstr "/Muokkaa/Kopioi leikepöydälle/peliasema HTML"
+msgstr "peliasema HTML tiedostona"
 
 #: gtkgame.c:3980
 msgid "_Paste ID"
@@ -6565,8 +6569,7 @@ msgstr "Poista analyysi"
 
 # 'luck' teksti ja pystyviiva on tarpeeton. Älä muuta tekstiä, vaikka Poedit ilmoittaa virheestä.
 #: gtkgame.c:4028 gtkgame.c:4039 gtkmovelist.c:63 gtkrolls.c:198 html.c:2161
-#: sound.c:351
-msgid "noun|Move"
+msgid "Move"
 msgstr "Siirto"
 
 #: gtkgame.c:4032
@@ -6602,24 +6605,25 @@ msgid "CMarked from Match"
 msgstr "CMark ottelusta"
 
 #: gtkgame.c:4057 gtktoolbar.c:550
-#, fuzzy
 msgid "Analyse"
-msgstr "_Analyysi"
+msgstr "Analyysi"
 
 #: gtkgame.c:4058
 msgid "Analyse current match (set default behavior in Settings -> Analysis)"
 msgstr ""
+"Analysoi nykyinen ottelu (aseta oletuskäyttö kohdassa Asetukset -> Analyysi)."
 
 #: gtkgame.c:4059 gtktoolbar.c:556
-#, fuzzy
 msgid "Analyse File"
-msgstr "Analysoi siirto"
+msgstr "Analysoi tiedosto"
 
 #: gtkgame.c:4060 gtktoolbar.c:557
 msgid ""
 "Analyze match from file (set default behaviour in Settings -> Analysis -> "
 "Analysis Buttons)"
 msgstr ""
+"Analysoi ottelu tiedostosta (aseta oletuskäyttö kohdassa Asetukset -> "
+"Analyysi -> Analyysipainikkeet)."
 
 #: gtkgame.c:4062
 msgid "Batch analyse..."
@@ -6637,10 +6641,9 @@ msgstr "Vie ottelu tai sessio tietokantaan"
 msgid "Show Records"
 msgstr "Pelaajien tilastot"
 
-#: gtkgame.c:4068 gtkrelational.c:1568
-#, fuzzy
+#: gtkgame.c:4068 gtkrelational.c:1630
 msgid "Plot History"
-msgstr "/_Analyysi/Vi_hje"
+msgstr "Virhesuhde historia"
 
 #: gtkgame.c:4070 gtkrolls.c:334
 msgid "Distribution of rolls"
@@ -6655,14 +6658,12 @@ msgid "Temperature Map (cube decision)"
 msgstr "Lämpötilakartta (tuplausratkaisut)"
 
 #: gtkgame.c:4076
-#, fuzzy
 msgid "ScoreMap (cube decision)"
-msgstr "/_Analyysi/Tulostaulu (tuplausratkaisu)"
+msgstr "Tulostaulu (tuplausratkaisu)"
 
 #: gtkgame.c:4078
-#, fuzzy
 msgid "ScoreMap (move decision)"
-msgstr "/_Analyysi/Tulostaulu (tuplausratkaisu)"
+msgstr "Tulostaulu (siirtopäätös)"
 
 #: gtkgame.c:4080
 msgid "_Race Theory"
@@ -7239,9 +7240,8 @@ msgid "/_Analyse/Rollout/CMarked from Match"
 msgstr "/_Analyysi/Rolloutti/CMark ottelu"
 
 #: gtkgame.c:4308
-#, fuzzy
 msgid "/_Analyse/Analyse File"
-msgstr "/_Analyysi/Analysoi siirto"
+msgstr "/_Analyysi/Analysoi tiedosto"
 
 #: gtkgame.c:4309
 msgid "/_Analyse/Batch analyse..."
@@ -7260,9 +7260,8 @@ msgid "/_Analyse/Show Records"
 msgstr "/Analyysi/Pelaajien tilastot"
 
 #: gtkgame.c:4320
-#, fuzzy
 msgid "/_Analyse/Plot History"
-msgstr "/_Analyysi/Vi_hje"
+msgstr "/_Analyysi/Virhesuhde historia"
 
 #: gtkgame.c:4323
 msgid "/_Analyse/Distribution of rolls"
@@ -7277,12 +7276,10 @@ msgid "/_Analyse/Temperature Map (cube decision)"
 msgstr "/_Analyysi/Lämpötilakartta (tuplausratkaisu)"
 
 #: gtkgame.c:4329
-#, fuzzy
 msgid "/_Analyse/ScoreMap (move decision)"
-msgstr "/_Analyysi/Tulostaulu (tuplausratkaisu)"
+msgstr "/_Analyysi/Tulostaulu (siirtopäätös)"
 
 #: gtkgame.c:4331
-#, fuzzy
 msgid "/_Analyse/ScoreMap (cube decision)"
 msgstr "/_Analyysi/Tulostaulu (tuplausratkaisu)"
 
@@ -7559,7 +7556,6 @@ msgid "Seed:"
 msgstr "Seed:"
 
 #: gtkgame.c:5768
-#, fuzzy
 msgid ""
 "The seed is a number used to initialise the dice rolls generator. Reusing "
 "the same seed allows to reproduce the rollout results. 0 is a special value "
@@ -7567,8 +7563,8 @@ msgid ""
 msgstr ""
 "Seed arvo on numero, jota käytetään noppageneraattorin alustamiseen. Saman "
 "seed arvon uudelleenkäyttö mahdollistaa rolloutin tulosten toistamisen "
-"tarkasti. 0 on erityinen arvo, joka sallii GNU backgammon ohjelman käyttää "
-"satunnaista seed arvoa."
+"tarkasti. 0 on erikoisarvo, joka jättää GNU Backgammonin käyttämään "
+"satunnaisarvoa."
 
 #: gtkgame.c:5771 gtkrace.c:374
 msgid "Trials:"
@@ -7970,27 +7966,27 @@ msgstr "Siirry seuraavaan peliin"
 msgid "Game %d: %s %d, %s %d"
 msgstr "Peli %d: %s %d, %s %d"
 
-#: gtkgame.c:8146 gtkgame.c:8281
+#: gtkgame.c:8146 gtkgame.c:8284
 msgid "Copy selection"
 msgstr "Kopioi valinta"
 
-#: gtkgame.c:8151 gtkgame.c:8286
+#: gtkgame.c:8151 gtkgame.c:8289
 msgid "Copy all"
 msgstr "Kopioi kaikki"
 
-#: gtkgame.c:8211
+#: gtkgame.c:8214
 msgid "Add to DB"
 msgstr "Vie tietokantaan"
 
-#: gtkgame.c:8227
+#: gtkgame.c:8230
 msgid "Overall"
 msgstr "Yleiset"
 
-#: gtkgame.c:8265
+#: gtkgame.c:8268
 msgid "Graph"
 msgstr "Kaavio"
 
-#: gtkgame.c:8266
+#: gtkgame.c:8269
 msgid ""
 "This graph shows the total error rates per game for each player. The games "
 "are along the bottom and the error rates up the side. Chequer error in "
@@ -7999,97 +7995,97 @@ msgstr ""
 "Kaaviossa ovat pelaajien kokonaisvirhetasot per peli. Pelit ovat alhaalla ja "
 "virheet sivulla. Siirtovirhe on vihreä ja tuplausratkaisu virhe sininen."
 
-#: gtkgame.c:8272
+#: gtkgame.c:8275
 msgid "Split statistics into panels"
 msgstr "Jaa tilastot erillisiksi"
 
-#: gtkgame.c:8273
+#: gtkgame.c:8276
 msgid "Show data in a single list or split into several panels"
 msgstr "Näytä tiedot yhtenä luettelona tai jaa ne omiin välilehtiinsä"
 
-#: gtkgame.c:8309
+#: gtkgame.c:8312
 msgid "Copy page"
 msgstr "Kopioi sivu"
 
-#: gtkgame.c:8314
+#: gtkgame.c:8317
 msgid "Copy all pages"
 msgstr "Kopioi kaikki sivut"
 
-#: gtkgame.c:8429
+#: gtkgame.c:8434
 msgid "GNU Backgammon - Match information"
 msgstr "GNU Backgammon - Ottelu informaatio"
 
-#: gtkgame.c:8438 gtkgame.c:8441
+#: gtkgame.c:8443 gtkgame.c:8446
 #, c-format
 msgid "%s's rating:"
 msgstr "%s luokitus:"
 
-#: gtkgame.c:8444
+#: gtkgame.c:8449
 msgid "Date:"
 msgstr "Ajankohta:"
 
-#: gtkgame.c:8445
+#: gtkgame.c:8450
 msgid "Event:"
 msgstr "Tapahtuma:"
 
-#: gtkgame.c:8446
+#: gtkgame.c:8451
 msgid "Round:"
 msgstr "Kierros:"
 
-#: gtkgame.c:8447
+#: gtkgame.c:8452
 msgid "Place:"
 msgstr "Paikka:"
 
-#: gtkgame.c:8448
+#: gtkgame.c:8453
 msgid "Annotator:"
 msgstr "Kirjuri:"
 
-#: gtkgame.c:8450
+#: gtkgame.c:8455
 msgid "Comments:"
 msgstr "Kommentit:"
 
 #. FIXME should be modal but presently causes crash and/or killing of the main window
-#: gtkgame.c:8591
+#: gtkgame.c:8596
 msgid "GNU Backgammon - Speed estimate"
 msgstr "GNU Backgammon - Arviointi nopeus"
 
-#: gtkgame.c:8606
+#: gtkgame.c:8611
 msgid "Speed recorded:"
 msgstr "Tallennettu nopeus:"
 
-#: gtkgame.c:8612 gtkgame.c:8651
+#: gtkgame.c:8617 gtkgame.c:8656
 msgid "static evaluations/second"
 msgstr "staattista arviointia/sekunti"
 
-#: gtkgame.c:8614
+#: gtkgame.c:8619
 msgid "Calibrate"
 msgstr "Kalibroi"
 
-#: gtkgame.c:8615
+#: gtkgame.c:8620
 msgid "Estimate speed, in 0-ply evaluations/second"
 msgstr "0-kerroksen arviointi nopeus annettuna staattista arviointia/sekunti"
 
-#: gtkgame.c:8640
+#: gtkgame.c:8645
 msgid "GNU Backgammon - Calibration"
 msgstr "GNU Backgammon - Kalibrointi"
 
-#: gtkgame.c:8649
+#: gtkgame.c:8654
 msgid "Calibrating:"
 msgstr "Kalibroitu:"
 
-#: gtkgame.c:8650
+#: gtkgame.c:8655
 msgid "       (n/a)       "
 msgstr "       (n/a)       "
 
-#: gtkgame.c:8710
+#: gtkgame.c:8715
 msgid "Resign normal"
 msgstr "Luovutus normaali"
 
-#: gtkgame.c:8711
+#: gtkgame.c:8716
 msgid "Resign gammon"
 msgstr "Luovutus gammon"
 
-#: gtkgame.c:8712
+#: gtkgame.c:8717
 msgid "Resign backgammon"
 msgstr "Luovutus backgammon"
 
@@ -8183,7 +8179,7 @@ msgstr "Sija"
 
 #: gtkmovelist.c:54
 msgid "analysisType|Type"
-msgstr ""
+msgstr "analysisType|Tyyppi"
 
 #: gtkmovelist.c:56 gtkrace.c:324 html.c:290
 msgid "W g"
@@ -8224,41 +8220,37 @@ msgstr "3-kerros"
 
 #: gtkoptions.c:149
 msgid "Add key name"
-msgstr ""
+msgstr "Lisää avainnimi"
 
 #: gtkoptions.c:149
 msgid "Key Player Name:"
-msgstr ""
+msgstr "Avainpelaajan nimi:"
 
 #: gtkoptions.c:158
 #, c-format
 msgid "there was a problem adding this key name"
-msgstr ""
+msgstr "ongelma avain nimen lisäämisessä"
 
 #: gtkoptions.c:192
 #, c-format
 msgid "there was a problem deleting this key name"
-msgstr ""
+msgstr "avain nimen poistamisessa ongelma"
 
 #: gtkoptions.c:216
-#, fuzzy
 msgid "Edit key player names"
-msgstr "Anna nimi kahdelle pelaajalle."
+msgstr "Muokkaa avainpelaajien nimiä"
 
 #: gtkoptions.c:250
-#, fuzzy
 msgid "Key Player Names"
-msgstr "Pelaaja %s"
+msgstr "Avainpelaajien nimet"
 
 #: gtkoptions.c:269
-#, fuzzy
 msgid "Add name"
-msgstr "Tuo tietokanta"
+msgstr "Lisää nimi"
 
 #: gtkoptions.c:272
-#, fuzzy
 msgid "Delete name"
-msgstr "Poista tietokanta"
+msgstr "Poista nimi"
 
 #: gtkoptions.c:326
 msgid "Doubtful"
@@ -8519,6 +8511,7 @@ msgstr "Muokkaa"
 #: gtkoptions.c:803
 msgid "Use SmartSit to automatically sit at bottom of board"
 msgstr ""
+"Käytä SmartSit-järjestelmää istuaksesi automaattisesti laudan alareunaan."
 
 #: gtkoptions.c:805
 msgid ""
@@ -8532,6 +8525,15 @@ msgid ""
 "is unknown, they swap places automatically, so you can sit at the bottom of "
 "the board."
 msgstr ""
+"SmartSit olettaa, että haluat järjestää laudan niin, että voit istua "
+"alhaalla (eli voit olla pelaaja1, toinen pelaaja). \n"
+"(1) OPPIMINEN: Jos valitset pelaajan pelaajaksi player1 ja istut laudan "
+"alareunassa, SmartSit arvelee, että pelaajan nimi on yksi peitenimistäsi, ja "
+"lisää sen avain pelaajien nimien luetteloon (jota voit muokata täällä).  \n"
+"(2) SOVELTAMINEN: Kun avaat uuden ottelun tiedostosta (esim. internetissä "
+"pelatusta pelistä), jos pelaaja0 on tunnettu avainpelaajan nimi, kun taas "
+"pelaaja1 on tuntematon, he vaihtavat paikkoja automaattisesti, jotta voit "
+"istua laudan alareunassa."
 
 #: gtkoptions.c:828
 msgid "Move delay:"
@@ -8848,7 +8850,6 @@ msgid "Seed: "
 msgstr "Seed: "
 
 #: gtkoptions.c:1361
-#, fuzzy
 msgid ""
 "The seed is a number used to initialise the dice rolls generator. Reusing "
 "the same seed allows to reproduce the dice sequence. 0 is a special value "
@@ -8856,8 +8857,8 @@ msgid ""
 msgstr ""
 "Seed arvo on numero, jota käytetään noppageneraattorin alustamiseen. Saman "
 "seed arvon uudelleenkäyttö mahdollistaa rolloutin tulosten toistamisen "
-"tarkasti. 0 on erityinen arvo, joka sallii GNU backgammon ohjelman käyttää "
-"satunnaista seed arvoa."
+"tarkasti. 0 on erikoisarvo, joka jättää GNU Backgammonin käyttämään "
+"satunnaisarvoa."
 
 #: gtkoptions.c:1387
 msgid "Dice manipulation"
@@ -8999,9 +9000,8 @@ msgid "Confirm when overwriting existing files"
 msgstr "Vahvista, kun korvaan olemassa olevat tiedostot"
 
 #: gtkoptions.c:1498
-#, fuzzy
 msgid "Ask for confirmation when overwriting existing files."
-msgstr "Kysyy vahvistusta ennen olemassa olevien tiedostojen korvaamista"
+msgstr "Kysy vahvistusta, kun ylikirjoitat olemassa olevia tiedostoja."
 
 #: gtkoptions.c:1500
 msgid "Record all games"
@@ -9067,7 +9067,6 @@ msgid "Small"
 msgstr "Pieni"
 
 #: gtkoptions.c:1649
-#, fuzzy
 msgid ""
 "GNU Backgammon uses a cache of previous evaluations to speed up processing. "
 "Increasing the size will help evaluations complete more quickly, although "
@@ -9075,9 +9074,11 @@ msgid ""
 "The default value is fine for 2-ply play and analysis. Higher values will "
 "help a little for higher plies evaluations and for rollouts."
 msgstr ""
-"Otetaan mukaan aiempien arviointien välimuistia toiminnon nopeuttamiseen. "
-"Koon suurennus voi auttaa arviointeja valmistumaan nopeammin, ja pienennys "
-"ei kuluta muistia niin paljon."
+"GNU Backgammon käyttää välimuistia aiemmista arvioinneista nopeuttaakseen "
+"käsittelyä. Koon kasvattaminen auttaa arviointeja valmistumaan nopeammin, "
+"vaikka sen hyödyt vähenevätkin suhteellisen nopeasti.\n"
+"Oletusarvo on hyvä 2-kerros pelille ja analyysille. Suuremmat arvot auttavat "
+"jonkin verran korkeampien kerrosten arvioinnissa ja rollouteissa."
 
 #: gtkoptions.c:1670
 msgid "Eval Threads:"
@@ -10114,7 +10115,7 @@ msgstr "1-puolinen rolloutti/tietokanta"
 msgid "Two-Sided Database"
 msgstr "2-puolinen tietokanta"
 
-#: gtkrelational.c:58 gtkrelational.c:866
+#: gtkrelational.c:58 gtkrelational.c:909
 msgid "Nick"
 msgstr "Nimi"
 
@@ -10200,12 +10201,11 @@ msgstr ""
 
 #: gtkrelational.c:312
 msgid "5-match average"
-msgstr ""
+msgstr "5 ottelun keskiarvo"
 
 #: gtkrelational.c:340
-#, fuzzy
 msgid "Match error rate"
-msgstr "Snowie virheprosentti"
+msgstr "Otteluvirheiden osuus"
 
 #: gtkrelational.c:359 show.c:2335
 msgid "Average"
@@ -10213,27 +10213,26 @@ msgstr "Keskiarvo"
 
 #: gtkrelational.c:395
 msgid "decisions (cube or move)"
-msgstr ""
+msgstr "päätökset (tuplaus tai siirto)"
 
 #: gtkrelational.c:438
-#, fuzzy, c-format
+#, c-format
 msgid "match %d"
-msgstr "ottelu"
+msgstr "ottelu %d"
 
 #: gtkrelational.c:441
 #, c-format
 msgid "vs. %s"
-msgstr ""
+msgstr "vs. %s"
 
-#: gtkrelational.c:447 gtkrelational.c:730
+#: gtkrelational.c:447 gtkrelational.c:745
 msgid "Error, not enough datapoints for a plot."
-msgstr ""
+msgstr "Virhe, ei tarpeeksi datapisteitä virhesuhdetta varten."
 
 #. const char* pch;
 #: gtkrelational.c:466
-#, fuzzy
 msgid "History Plot Explanations"
-msgstr "Kääntäjät"
+msgstr "Virhesuhde historian selitykset"
 
 #. Add explanation text for mwc plot
 #: gtkrelational.c:477
@@ -10261,76 +10260,112 @@ msgid ""
 "\n"
 "- Some match examples are provided throughout the plot (blue arrows)."
 msgstr ""
+" Tämä kaavio näyttää, miten pelaajan GNU-virheprosentti on kehittynyt "
+"pelaajan historian aikana tietokantatietojen mukaan (100 viimeisimpään "
+"otteluun asti).\n"
+"\n"
+"- Jotta voit piirtää kuvaajan, sinun on ensin lisättävä analyysit "
+"tietokantaan. Varmista myös, että pelaaja, jota haluat analysoida, on näytön "
+"alareunassa.\n"
+"\n"
+"- x-akseli edustaa kaikkia analysoidun pelaajan (ei-triviaaleja) tuplaus- ja "
+"siirtopäätöksiä otteluissa. \n"
+"\n"
+"- Y-akseli edustaa GNU-virheprosenttia, eli virheiden kokonaismäärän "
+"suhdetta ei-triviaalien pelattujen päätösten kokonaismäärään. Pienempi on "
+"parempi.\n"
+"\n"
+"- Musta kuvaaja osoittaa GNU-virheiden määrän kussakin ottelussa.\n"
+"\n"
+"- Oranssi kuvaaja kuvaa painotettua keskimääräistä virhetasoa viimeisten "
+"viiden ottelun ajalta. Siinä kokonaisvirheet jaetaan pelattujen päätösten "
+"lukumäärällä näissä viidessä ottelussa.\n"
+"\n"
+"- Joitakin otteluesimerkkejä on esitetty kauttaaltaan taulukossa (siniset "
+"nuolet)."
 
 #: gtkrelational.c:497
-#, fuzzy, c-format
+#, c-format
 msgid "History plot for %s"
-msgstr "Kääntäjät"
+msgstr "Virhesuhde historia (%s)"
 
-#: gtkrelational.c:513 gtkrelational.c:538 gtkscoremap.c:3278
-#, fuzzy
+#. window setup
+#. window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+#. window = GTKCreateDialog("", DT_INFO, NULL, DIALOG_FLAG_MINMAXBUTTONS, NULL, NULL);
+#: gtkrelational.c:505
+msgid "History plot"
+msgstr "Virhesuhde historia"
+
+#: gtkrelational.c:515 gtkrelational.c:541 gtkscoremap.c:3278
 msgid "Explanations"
-msgstr "Kääntäjät"
+msgstr "Selitykset"
 
-#: gtkrelational.c:515 gtkrelational.c:540
+#: gtkrelational.c:517 gtkrelational.c:543
 msgid "Click to obtain more explanations on this History plot"
-msgstr ""
+msgstr "Klikkaa saadaksesi lisää selityksiä virhesuhde historiasta"
 
-#: gtkrelational.c:600
+#: gtkrelational.c:618
 msgid ""
-"No player name. Please open a match or select one in the database records."
+"No player name. Please open a match, or open the database records and select "
+"one."
 msgstr ""
+"Ei pelaajan nimeä. Avaa ottelu tai valitse ottelu tietokannan tietueista."
 
-#: gtkrelational.c:616 gtkrelational.c:663 gtkrelational.c:695
-#, fuzzy
+#: gtkrelational.c:631 gtkrelational.c:678 gtkrelational.c:710
 msgid "Problem accessing database"
-msgstr "Virhe tietokannan avaamisessa"
+msgstr "Ongelma tietokantaan pääsyssä"
 
-#: gtkrelational.c:668 gtkrelational.c:794 gtkrelational.c:1555
+#: gtkrelational.c:683 gtkrelational.c:837 gtkrelational.c:1602
 msgid "No data in database"
 msgstr "Tietokannassa ei ole tietoja"
 
-#: gtkrelational.c:992
+#: gtkrelational.c:780
+msgid ""
+"No player name. Please open a match or select one in the database records."
+msgstr ""
+"Ei pelaajan nimeä. Avaa ottelu tai valitse ottelu tietokannan tietueista."
+
+#: gtkrelational.c:1035
 msgid "Search failed or empty."
 msgstr "Haku ei onnistunut tai on tyhjä."
 
-#: gtkrelational.c:1022
+#: gtkrelational.c:1065
 #, c-format
 msgid "Remove all data for %s?"
 msgstr "Poista kaikki kohteen %s tiedot?"
 
-#: gtkrelational.c:1216
+#: gtkrelational.c:1259
 msgid "Failed to connect to database!"
 msgstr "Tietokantayhteys ei onnistunut!"
 
-#: gtkrelational.c:1223
+#: gtkrelational.c:1266
 msgid ""
 "This database is from an old version of GNU Backgammon and cannot be used"
 msgstr "Tietokanta on vanhasta GNU Backgammon -versiosta, joten se ei toimi"
 
-#: gtkrelational.c:1225
+#: gtkrelational.c:1268
 msgid ""
 "This database is from a new version of GNU Backgammon and cannot be used"
 msgstr "Tietokanta on uudemmasta GNU Backgammon -versiosta, joten se ei toimi"
 
-#: gtkrelational.c:1228
+#: gtkrelational.c:1271
 msgid "This database structure is invalid"
 msgstr "Tietokannan rakenne on virheellinen"
 
-#: gtkrelational.c:1232
+#: gtkrelational.c:1275
 msgid "This database contains no matches"
 msgstr "Tietokannassa ei ole otteluja"
 
-#: gtkrelational.c:1234
+#: gtkrelational.c:1277
 msgid "This database contains 1 match"
 msgstr "Tietokannassa on 1 ottelu"
 
-#: gtkrelational.c:1236
+#: gtkrelational.c:1279
 #, c-format
 msgid "This database contains %d matches\n"
 msgstr "Tietokannassa on %d ottelua\n"
 
-#: gtkrelational.c:1241
+#: gtkrelational.c:1284
 #, c-format
 msgid ""
 "Database connection successful\n"
@@ -10339,39 +10374,39 @@ msgstr ""
 "Tietokantayhteys onnistui\n"
 "%s\n"
 
-#: gtkrelational.c:1279
+#: gtkrelational.c:1322
 msgid "Add Database"
 msgstr "Tuo tietokanta"
 
-#: gtkrelational.c:1279
+#: gtkrelational.c:1322
 msgid "Database Name:"
 msgstr "Tietokannan nimi:"
 
-#: gtkrelational.c:1292
+#: gtkrelational.c:1335
 msgid "Failed to create, database exists!"
 msgstr "Luonti ei onnistunut, tietokanta on jo olemassa!"
 
-#: gtkrelational.c:1310
+#: gtkrelational.c:1353
 msgid "Failed to create database!"
 msgstr "Tietokannan luonti ei onnistunut!"
 
-#: gtkrelational.c:1320
+#: gtkrelational.c:1363
 msgid "Are you sure you want to delete all the matches in this database?"
 msgstr "Haluatko varmasti poistaa kaikki ottelut tietokannasta?"
 
-#: gtkrelational.c:1329
+#: gtkrelational.c:1372
 msgid "Database successfully removed"
 msgstr "Tietokannan poistaminen onnistui"
 
-#: gtkrelational.c:1332
+#: gtkrelational.c:1375
 msgid "Failed to delete database!"
 msgstr "Tietokannan poistaminen ei onnistunut!"
 
-#: gtkrelational.c:1370
+#: gtkrelational.c:1413
 msgid "Databases"
 msgstr "Tietokannat"
 
-#: gtkrelational.c:1397
+#: gtkrelational.c:1440
 msgid ""
 "Database type can be SQLite (bundled with GNU Backgammon), MySQL/MariaDB or "
 "PostgreSQL. The first one needs only a database name. For the other two you "
@@ -10382,96 +10417,108 @@ msgstr ""
 "tietokannan nimen. Kahta muuta varten tarvitset ulkoisen "
 "tietokantapalvelimen ja asetukset sen toiminnalle"
 
-#: gtkrelational.c:1398
+#: gtkrelational.c:1441
 msgid "DB Type"
 msgstr "TK tyyppi"
 
-#: gtkrelational.c:1409
+#: gtkrelational.c:1452
 msgid "Username"
 msgstr "Käyttäjänimi"
 
-#: gtkrelational.c:1429
+#: gtkrelational.c:1472
 msgid "Password"
 msgstr "Salasana"
 
-#: gtkrelational.c:1450
+#: gtkrelational.c:1493
 msgid "DB server"
 msgstr "TK palvelin"
 
-#: gtkrelational.c:1451
+#: gtkrelational.c:1494
 msgid "Entered as: hostname:port"
 msgstr "Anna muodossa: hostname:portti"
 
-#: gtkrelational.c:1473
+#: gtkrelational.c:1516
 msgid "Login"
 msgstr "Kirjaudu"
 
-#: gtkrelational.c:1475
+#: gtkrelational.c:1518
 msgid "Check connection to database server"
 msgstr "Tarkista yhteys tietokantapalvelimeen"
 
-#: gtkrelational.c:1493
+#: gtkrelational.c:1536
 msgid "Store game stats"
 msgstr "Tallenna pelitilastot"
 
-#: gtkrelational.c:1496
+#: gtkrelational.c:1539
 msgid "Store individual games statistics in addition to global match ones"
 msgstr ""
 "Tallenna yksittäisten pelien tilastot globaalien ottelutilastojen lisäksi"
 
-#: gtkrelational.c:1500
+#: gtkrelational.c:1543
 msgid "Info"
 msgstr "Info"
 
-#: gtkrelational.c:1532
+#: gtkrelational.c:1575
 msgid "Add database"
 msgstr "Tuo tietokanta"
 
-#: gtkrelational.c:1535
+#: gtkrelational.c:1578
 msgid "Delete database"
 msgstr "Poista tietokanta"
 
-#. no longer modal with the additional history dialog
-#: gtkrelational.c:1561
+#. We had the following bug: in an unexplained way, this window became a black hole: we
+#. could not relaunch it after closing it.
+#. V1: we make it modal. But then, if we click on a plot window and close the two windows
+#. successively, gnubg crashes.
+#. V2: it turns out that we need to first check that gnubg does not think there is an open
+#. top-level window before starting this window. It then works fine.
+#. V2b: just disable the GTKRunDialog() at the end. It's the cause of all the trouble.
+#.
+#. if (pwDialog && gtk_widget_get_toplevel(pwDialog))
+#. gtk_widget_destroy(gtk_widget_get_toplevel(pwDialog));
+#: gtkrelational.c:1619
 msgid "GNU Backgammon - Database"
 msgstr "GNU Backgammon - Pelaajien tilastot"
 
-#: gtkrelational.c:1569
+#: gtkrelational.c:1631
 msgid ""
 "Click on the button to plot the historical error of (1) a player selected in "
 "the above list, or if no player is selected, (2) the player sitting at the "
 "bottom of the board in the current match."
 msgstr ""
+"Klikkaa painiketta (1) yllä olevasta luettelosta valitun pelaajan "
+"virhehistorian saamiseksi, tai jos yhtään pelaajaa ei ole valittu, (2) "
+"pelaajan, joka istuu laudan alareunassa nykyisessä ottelussa."
 
-#: gtkrelational.c:1604
+#: gtkrelational.c:1666
 msgid "Erase"
 msgstr "Poista"
 
-#: gtkrelational.c:1631
+#: gtkrelational.c:1693
 msgid "Name"
 msgstr "Nimi"
 
-#: gtkrelational.c:1643
+#: gtkrelational.c:1705
 msgid "Notes"
 msgstr "Muistiinpanot"
 
-#: gtkrelational.c:1667
+#: gtkrelational.c:1729
 msgid "Update Details"
 msgstr "Päivitä yksityiskohdat"
 
-#: gtkrelational.c:1681
+#: gtkrelational.c:1743
 msgid "Query"
 msgstr "Tietokantakysely"
 
-#: gtkrelational.c:1684
+#: gtkrelational.c:1746
 msgid "Query text"
 msgstr "Kyselyteksti"
 
-#: gtkrelational.c:1726
+#: gtkrelational.c:1788
 msgid "Run Query"
 msgstr "Aloita kysely"
 
-#: gtkrelational.c:1754
+#: gtkrelational.c:1817
 msgid "GNU Backgammon - Database Result"
 msgstr "GNU Backgammon - Tietokantatulos"
 
@@ -10479,15 +10526,14 @@ msgstr "GNU Backgammon - Tietokantatulos"
 msgid "Average equity"
 msgstr "Voitto-odote keskiarvo"
 
-#: gtkrolls.c:175 gtktempmap.c:113
+#: gtkrolls.c:175 gtktempmap.c:112
 msgid "Calculating equities"
 msgstr "Voitto-odotteiden laskeminen"
 
 # 'luck' teksti ja pystyviiva on tarpeeton. Älä muuta tekstiä, vaikka Poedit ilmoittaa virheestä.
 #: gtkrolls.c:197
-#, fuzzy
 msgid "noun|Roll"
-msgstr "Siirto"
+msgstr "noun|Heitto"
 
 #: gtkrolls.c:382
 msgid "Depth"
@@ -10516,116 +10562,104 @@ msgstr "4-kerros"
 #. list of allowed match sizes
 #: gtkscoremap.c:146
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: gtkscoremap.c:146
 msgid "5"
-msgstr ""
+msgstr "5"
 
 #: gtkscoremap.c:146
 msgid "7"
-msgstr ""
+msgstr "7"
 
 #: gtkscoremap.c:146
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #: gtkscoremap.c:146
 msgid "11"
-msgstr ""
+msgstr "11"
 
 #: gtkscoremap.c:146
 msgid "15"
-msgstr ""
+msgstr "15"
 
 #: gtkscoremap.c:146
 msgid "21"
-msgstr ""
+msgstr "21"
 
 #: gtkscoremap.c:146
-#, fuzzy
 msgid "Based on current match length"
-msgstr "Oletus ottelupituus:"
+msgstr "Perustuu nykyiseen ottelupituuteen"
 
 #: gtkscoremap.c:150
-#, fuzzy
 msgid "By away score"
-msgstr "Away tulos"
+msgstr "Pistemäärän mukaan"
 
 #: gtkscoremap.c:150
-#, fuzzy
 msgid "By true score"
 msgstr "Todellinen tulos"
 
 #: gtkscoremap.c:158
-#, fuzzy
 msgid "Unlimited game"
-msgstr "Rajoittamaton peli, %s"
+msgstr "Rajoittamaton peli"
 
 #: gtkscoremap.c:158
-#, fuzzy
 msgid "Money game with Jacoby"
-msgstr "Raha (ei Jacoby):"
+msgstr "Rahapeli Jacoby säännöllä"
 
 #: gtkscoremap.c:159
-#, fuzzy
 msgid "Unlimited (money w/o J)"
-msgstr "Rajoittamaton peli, %s"
+msgstr "Rajoittamaton (raha w/o J)"
 
 #: gtkscoremap.c:159
-#, fuzzy
 msgid "Money w/ J"
-msgstr "Rahapeli"
+msgstr "Rahapeli w/ J"
 
 #: gtkscoremap.c:163 gtkscoremap.c:173
-#, fuzzy
 msgid "Double vs No Double"
-msgstr "Tuplattu"
+msgstr "Tuplattu vs ei tuplattu"
 
 #: gtkscoremap.c:163 gtkscoremap.c:173
 msgid "Double/Pass vs Double/Take"
-msgstr ""
+msgstr "Tuplaus/Hylkäys vs Tuplaus/Otto"
 
 #: gtkscoremap.c:164
 msgid "D-ND"
-msgstr ""
+msgstr "D-ND"
 
 #: gtkscoremap.c:164
 msgid "D/P-D/T"
-msgstr ""
+msgstr "D/P-D/T"
 
 #: gtkscoremap.c:168
 msgid "Relative to second best"
 msgstr "Suhteessa toiseksi parhaaseen"
 
 #: gtkscoremap.c:169
-#, fuzzy
 msgid "vs 2nd best"
-msgstr "toiseksi paras"
+msgstr "vs toiseksi paras"
 
 #: gtkscoremap.c:173 gtkscoremap.c:174
 msgid "All"
 msgstr "Kaikki"
 
 #: gtkscoremap.c:174
-#, fuzzy
 msgid "D vs ND"
-msgstr "Ei tuplausta (ND) vs. tuplaus (D)"
+msgstr "D vs ND"
 
 #: gtkscoremap.c:174
-#, fuzzy
 msgid "D/P vs D/T"
-msgstr "Otto (T) vs. hylkäys (P)"
+msgstr "D/P vs D/T"
 
 #. strcpy(psm->aaQuadrantData[i][j].unallowedExplanation, _("11This score is not allowed because one player is in Crawford while the other is in post-Crawford"));
 #: gtkscoremap.c:379
-#, fuzzy
 msgid ""
 "This score is not allowed because both players cannot simultaneously reach "
 "one-away Crawford scores"
 msgstr ""
-"Pistemäärä ei ole sallittu, koska toinen pelaaja olisi Crawford pelissä ja "
-"toinen post-Crawford pelissä"
+"Tämä pistetilanne ei ole sallittu, koska molemmat pelaajat eivät voi "
+"saavuttaa yhtä aikaa Crawford pistetilannetta"
 
 #: gtkscoremap.c:381
 msgid ""
@@ -10666,7 +10700,7 @@ msgstr "Kuten nykyinen ottelutulos:"
 
 #: gtkscoremap.c:945
 msgid "DMP (double match point):"
-msgstr "DMP (%d pisteen ottelu)"
+msgstr "DMP (double match point):"
 
 #: gtkscoremap.c:950
 msgid "Typical GG (gammon-go):"
@@ -10689,6 +10723,8 @@ msgid ""
 "Score not analysed\n"
 "Computation stopped by user"
 msgstr ""
+"Pisteitä ei analysoitu\n"
+"Käyttäjä keskeytti laskennan"
 
 #. define spacing before putting ply of 1st line
 #. ND is best //format: "+" forces +/-; .*f displays f with precision DIGITS
@@ -10699,6 +10735,9 @@ msgid ""
 "2. D/P\t%+.*f  %+.*f  (%u-ply)\n"
 "3. D/T\t%+.*f  %+.*f  (%u-ply)</tt>"
 msgstr ""
+"<tt>1. ND \t%+.*f%s(%u-kerros)\n"
+"2. D/P\t%+.*f  %+.*f  (%u-kerros)\n"
+"3. D/T\t%+.*f  %+.*f  (%u-kerros)</tt>"
 
 #. pq->ml.amMoves[0].esMove.ec.nPlies
 #. DT is best
@@ -10709,6 +10748,9 @@ msgid ""
 "2. D/P\t%+.*f  %+.*f  (%u-ply)\n"
 "3. ND \t%+.*f  %+.*f  (%u-ply)</tt>"
 msgstr ""
+"<tt>1. D/T\t%+.*f%s(%u-kerros)\n"
+"2. D/P\t%+.*f  %+.*f  (%u-kerros)\n"
+"3. ND \t%+.*f  %+.*f  (%u-kerros)</tt>"
 
 #. DP is best
 #: gtkscoremap.c:976
@@ -10718,6 +10760,9 @@ msgid ""
 "2. D/T\t%+.*f  %+.*f  (%u-ply)\n"
 "3. ND \t%+.*f  %+.*f  (%u-ply)</tt>"
 msgstr ""
+"<tt>1. D/P\t%+.*f%s(%u-kerros)\n"
+"2. D/T\t%+.*f  %+.*f  (%u-kerros)\n"
+"3. ND \t%+.*f  %+.*f  (%u-kerros)</tt>"
 
 #. TGTD is best
 #: gtkscoremap.c:978
@@ -10727,6 +10772,9 @@ msgid ""
 "2. D/T\t%+.*f  %+.*f  (%u-ply)\n"
 "3. D/P\t%+.*f  %+.*f  (%u-ply)</tt>"
 msgstr ""
+"<tt>1. ND \t%+.*f%s(%u-kerros)\n"
+"2. D/T\t%+.*f  %+.*f  (%u-kerros)\n"
+"3. D/P\t%+.*f  %+.*f  (%u-kerros)</tt>"
 
 #. we leave an additional spacing of 2 characters, where 2 is arbitrary,
 #. b/w the longest move string and its equity
@@ -10735,7 +10783,7 @@ msgstr ""
 #: gtkscoremap.c:1017 gtkscoremap.c:1031
 #, c-format
 msgid "<tt>1. %s%s%1.*f%s(%u-ply)"
-msgstr ""
+msgstr "<tt>1. %s%s%1.*f%s(%u-kerros)"
 
 #. define spacing for 2nd best move
 #: gtkscoremap.c:1020
@@ -10744,6 +10792,8 @@ msgid ""
 "\n"
 "2. %s%s%1.*f  %+.*f (%u-ply)"
 msgstr ""
+"\n"
+"2. %s%s%1.*f  %+.*f (%u-kerros)"
 
 #. define spacing for 3rd best move
 #: gtkscoremap.c:1023
@@ -10752,6 +10802,8 @@ msgid ""
 "\n"
 "3. %s%s%1.*f  %+.*f (%u-ply)</tt>"
 msgstr ""
+"\n"
+"3. %s%s%1.*f  %+.*f (%u-kerros)</tt>"
 
 #. define spacing for 2nd best move
 #: gtkscoremap.c:1034
@@ -10760,12 +10812,14 @@ msgid ""
 "\n"
 "2. %s%s%1.*f  %+.*f  (%u-ply)</tt>"
 msgstr ""
+"\n"
+"2. %s%s%1.*f  %+.*f  (%u-kerros)</tt>"
 
 #. single move
 #: gtkscoremap.c:1037
 #, c-format
 msgid "<tt>1. %s  %1.*f         (%u-ply)</tt>"
-msgstr ""
+msgstr "<tt>1. %s  %1.*f         (%u-kerros)</tt>"
 
 #: gtkscoremap.c:1223 gtkscoremap.c:1240
 #, c-format
@@ -10778,9 +10832,9 @@ msgid "1pC"
 msgstr "1pC"
 
 #: gtkscoremap.c:1232
-#, fuzzy, c-format
+#, c-format
 msgid " post-Cr "
-msgstr " post-C. "
+msgstr " post-Cr. "
 
 #: gtkscoremap.c:1233
 #, c-format
@@ -10793,9 +10847,9 @@ msgid "1C"
 msgstr "1C"
 
 #: gtkscoremap.c:1236
-#, fuzzy, c-format
+#, c-format
 msgid " 1-away Cr "
-msgstr " 1-away C. "
+msgstr " 1-away Cr "
 
 #: gtkscoremap.c:1237
 #, c-format
@@ -10808,9 +10862,9 @@ msgid "%dC"
 msgstr "%dC"
 
 #: gtkscoremap.c:1248
-#, fuzzy, c-format
+#, c-format
 msgid " %d/%d Cr "
-msgstr " %d/%d C. "
+msgstr " %d/%d Cr "
 
 #: gtkscoremap.c:1249
 #, c-format
@@ -10823,9 +10877,9 @@ msgid "%dpC"
 msgstr "%dpC"
 
 #: gtkscoremap.c:1252
-#, fuzzy, c-format
+#, c-format
 msgid " %d/%d post-Cr "
-msgstr " %d/%d post-C. "
+msgstr " %d/%d post-Cr. "
 
 #: gtkscoremap.c:1253
 #, c-format
@@ -10857,9 +10911,8 @@ msgid "D/P"
 msgstr "Tuplaus/hylkäys (D/P)"
 
 #: gtkscoremap.c:1335
-#, fuzzy
 msgid "TG"
-msgstr "Otto (T)"
+msgstr "TG"
 
 #: gtkscoremap.c:1336
 msgid "No double/take"
@@ -10879,14 +10932,12 @@ msgstr "Tilanne on liian hyvä tuplattavaksi, yritä sen sijaan gammonvoittoa"
 
 #. recompute fully (beyond oldSize); we only recompute the money equity when oldSize==0
 #: gtkscoremap.c:1631
-#, fuzzy
 msgid "Finding correct decisions"
 msgstr "Harkitaan oikeaa ratkaisua"
 
 #: gtkscoremap.c:1893 gtkscoremap.c:1907
-#, fuzzy
 msgid "Unlimited"
-msgstr "rajoittamaton"
+msgstr "Rajoittamaton"
 
 #: gtkscoremap.c:1896
 msgid "Current score"
@@ -10918,14 +10969,12 @@ msgid "current"
 msgstr "nykyinen"
 
 #: gtkscoremap.c:2356
-#, fuzzy
 msgid "Select the cube value (before the current decision)"
-msgstr "Valitse noppalukemat nykyiselle siirrolle"
+msgstr "Valitse kuution arvo (ennen nykyistä päätöstä)"
 
 #: gtkscoremap.c:2369 gtkscoremap.c:2387 gtkscoremap.c:2391
-#, fuzzy
 msgid "Select the cube value and who doubled (before the current decision)"
-msgstr "Valitse noppalukemat nykyiselle siirrolle"
+msgstr "Valitse kuution arvo ja se, joka tuplasi (ennen nykyistä päätöstä)"
 
 #: gtkscoremap.c:2395
 #, c-format
@@ -10935,7 +10984,7 @@ msgstr "%s tuplasi arvoon: "
 #. const char* pch;
 #: gtkscoremap.c:2769
 msgid "Move ScoreMap Info"
-msgstr ""
+msgstr "Siirtojen Tulostaulu info"
 
 #. gtk_box_pack_start(GTK_BOX(pwBox), SelectableLabel(pwDialog, VERSION_STRING), FALSE, FALSE, 4);
 #. #if GTK_CHECK_VERSION(3,0,0)
@@ -10966,11 +11015,31 @@ msgid ""
 "\n"
 "- Default ScoreMap settings can be selected in the Settings > Analysis menu"
 msgstr ""
+" - Cr = Crawford, J = Jacoby, DMP = Double Match Point, GG = Gammon Go, GS = "
+"Gammon Save.        \n"
+"\n"
+"- Kunkin pistemäärän kohdalla vastaava ruutu osoittaa parhaan "
+"siirron.        \n"
+"\n"
+"- Eri värit vastaavat eri parhaita siirtoja (punainen yleisintä siirtoa, "
+"sininen toiseksi yleisintä jne.).        \n"
+"\n"
+"- Tummempi värin voimakkuus kuvastaa suurempaa eroa 2. parhaan siirron "
+"kanssa.        \n"
+"\n"
+"- Kuten tavallista, jos 2-kerroksisessa analyysissä yksikään siirto ei ole "
+"lähellä parhaan siirron arvoa, 3- tai 4-kerroksinen analyysi voidaan "
+"lopettaa 2-kerroksiseen analyysiin.        \n"
+"\n"
+"- Voit vapaasti siirtää hiiren osoittimen eri elementtien päälle saadaksesi "
+"lisätietoja.        \n"
+"\n"
+"- Tulostaulun oletusasetukset voidaan valita valikosta Asetukset > Analyysi."
 
 #. const char* pch;
 #: gtkscoremap.c:2806
 msgid "Cube ScoreMap Info"
-msgstr ""
+msgstr "Tuplaus Tulostaulu info"
 
 #: gtkscoremap.c:2816
 msgid ""
@@ -10993,6 +11062,22 @@ msgid ""
 "\n"
 "- Default ScoreMap settings can be selected in the Settings > Analysis menu"
 msgstr ""
+"- D = Tuplaus, ND = Ei tuplausta, D/T = Tuplaus/Otto, D/P = Tuplaus/Hylkäys, "
+"TG = Liian hyvä       \n"
+"\n"
+"     Tuplaa, J = Jacoby        \n"
+"\n"
+"- Kunkin pistemäärän kohdalla vastaava ruudukko osoittaa parhaan kuutioon "
+"perustuvan päätöksen.        \n"
+"\n"
+"- Eri värit vastaavat eri tuplauspäätöksiä, kuten mittari osoittaa.        \n"
+"\n"
+"- Tummempi värin voimakkuus kuvastaa suurempaa voitto-odote eroa toiseksi "
+"parhaan päätöksen kanssa.        \n"
+"\n"
+"- Vie hiiren osoitin eri elementtien päälle saadaksesi lisätietoja.        \n"
+"\n"
+"- Tulostaulun oletusasetukset voidaan valita valikosta Asetukset > Analyysi."
 
 #. eval ply
 #. frameToolTip = "Select the ply at which to evaluate the equity at each score";
@@ -11008,7 +11093,7 @@ msgstr "Ottelupituus"
 
 #: gtkscoremap.c:2878
 msgid "Select the match length (which determines the grid size)"
-msgstr ""
+msgstr "Valitse ottelun pituus (joka määrittää ruudukon koon)."
 
 #. cube
 #: gtkscoremap.c:2882
@@ -11024,7 +11109,7 @@ msgstr "Kuution arvo"
 #. topleft toggle frame
 #: gtkscoremap.c:2909
 msgid "Top-left square"
-msgstr ""
+msgstr "Vasen yläkulmaruutu"
 
 #: gtkscoremap.c:2909
 msgid ""
@@ -11032,13 +11117,16 @@ msgid ""
 "evaluation (money play without Jacoby) or an evaluation of money play with "
 "Jacoby"
 msgstr ""
+"Valitse, pitäisikö vasemman yläkulman ruudun antaa \"rajoittamaton\" "
+"arviointi (rahapelit ilman Jacobya) vai rahapelien arviointi Jacobyn kanssa."
 
 #. frameToolTip = "Select whether to display the equity, and how to display it: absolute equity, relative equity difference between Double and No-Double, or relative equity difference between Double/Pass and Double/Take";
 #. frameToolTip =  "Select whether to display the equity, and how to display it: absolute equity, or relative equity difference between best move and second best move";
 #: gtkscoremap.c:2914 gtkscoremap.c:2917
-#, fuzzy
 msgid "Display equity (hover over grid for details)"
-msgstr "Tarkista nappuloiden siirtosuunta"
+msgstr ""
+"Näytä voitto-odote (siirrä hiiren osoitin ruudukon päälle saadaksesi "
+"lisätietoja)"
 
 #: gtkscoremap.c:2914
 msgid ""
@@ -11046,12 +11134,19 @@ msgid ""
 "equity, relative equity difference between Double and No-Double, or relative "
 "equity difference between Double/Pass and Double/Take"
 msgstr ""
+"Valitse, näytetäänkö voitto-odote ja miten se näytetään: absoluuttinen "
+"voitto-odote, suhteellinen voitto-odote erotus tuplauksen ja ei-tuplauksen "
+"välillä tai suhteellinen voitto-odote erotus tuplaus/hylkäys ja tuplaus/otto "
+"välillä."
 
 #: gtkscoremap.c:2917
 msgid ""
 "Select whether to display the equity, and how to display it: absolute "
 "equity, or relative equity difference between best move and second best move"
 msgstr ""
+"Valitse, näytetäänkö voitto-odote ja miten se näytetään: absoluuttinen vai "
+"suhteellinen voitto-odote tai parhaan siirron ja toiseksi parhaan siirron "
+"välinen ero."
 
 #. We now insert the radio buttons of the "colour by" scheme, in (a) cube scoremap, or
 #. (b) move scoremap we disable the buttons since they are only relevant to the cube scoremap
@@ -11067,48 +11162,49 @@ msgid ""
 "the Double vs. No-Double decision, or emphasize the Double/Take vs. Double/"
 "Pass decision"
 msgstr ""
+"Valitse, väritetäänkö taulukon ruudut käyttämällä kaikkia vaihtoehtoja vai "
+"korostetaanko päätöstä tuplaus vs. ei-tuplaus vai korostetaanko päätöstä "
+"tuplaus/otto vs. tuplaus/hylkäys."
 
 #: gtkscoremap.c:3022
-#, fuzzy
 msgid "Cube ScoreMap: Best Cube Decision at Different Scores"
-msgstr "Arvioi tuplausratkaisu eri pistetilanteissa"
+msgstr "Kuution tulostaulu: Paras tuplausratkaisu eri pistetilanteissa"
 
 #: gtkscoremap.c:3025
-#, fuzzy
 msgid "Move ScoreMap: Best Move Decision at Different Scores"
-msgstr "Tulostaulu - Arviointi eri pistetilanteille"
+msgstr "Siirto tulostaulu: Paras siirtopäätös eri pistemäärillä"
 
 #: gtkscoremap.c:3279
 msgid "Click to obtain more explanations on this ScoreMap window"
-msgstr ""
+msgstr "Klikkaa saadaksesi lisää selityksiä tästä Tulostaulu-ikkunasta."
 
 #: gtksplash.c:49
 msgid "Starting "
 msgstr "Aloita "
 
-#: gtktempmap.c:109
+#: gtktempmap.c:108
 #, c-format
 msgid "Calculating equities for %s"
 msgstr "Voitto-odotteiden laskeminen %s"
 
-#: gtktempmap.c:600
+#: gtktempmap.c:595
 msgid "Sho Sengoku Temperature Map - Distribution of Rolls"
 msgstr "Sho Sengoku lämpötilakartta - Noppajakauma"
 
-#: gtktempmap.c:603
+#: gtktempmap.c:598
 msgid "Temperature Map in Hypothetical Money Play"
 msgstr "Lämpötilakartta hypoteettiselle rahapelille"
 
-#: gtktempmap.c:852 gtktheory.c:961
+#: gtktempmap.c:847 gtktheory.c:961
 #, c-format
 msgid "%d ply"
 msgstr "%d kerros"
 
-#: gtktempmap.c:884
+#: gtktempmap.c:879
 msgid "Show equities"
 msgstr "Katso voitto-odote"
 
-#: gtktempmap.c:891
+#: gtktempmap.c:886
 msgid "Show best move"
 msgstr "Katso paras siirto"
 
@@ -11274,6 +11370,7 @@ msgstr "Pelisuunta"
 #: gtktoolbar.c:551
 msgid "Analyse current match (set default behaviour in Settings -> Analysis)"
 msgstr ""
+"Analysoi nykyinen ottelu (aseta oletuskäytös kohdassa Asetukset -> Analyysi)."
 
 #: gtkwindows.c:42
 msgid "Press escape to exit full screen mode"
@@ -12521,9 +12618,8 @@ msgid "%s has won the match.\n"
 msgstr "%s voitti ottelun.\n"
 
 #: play.c:1812
-#, fuzzy
 msgid "Session complete"
-msgstr "Kalibrointi puutteellinen."
+msgstr "Istunto päättynyt"
 
 #: play.c:1916
 msgid "You can only accept if the cube or a resignation has been offered."
@@ -12951,19 +13047,16 @@ msgid "Average move number for close out"
 msgstr "Siirtojen keskiarvo ulossuljennassa"
 
 #: progress.c:489
-#, fuzzy
 msgid "Close-out statistics"
-msgstr "Ulossuljenta tilastot"
+msgstr "Lopputilastot"
 
 #: progress.c:516
-#, fuzzy
 msgid "Number of games with hits"
-msgstr "Pelin aikana tulleet osumat"
+msgstr "Osumia sisältävien pelien määrä"
 
 #: progress.c:523
-#, fuzzy
 msgid "Percentage of games with hits"
-msgstr "Osumaprosentti"
+msgstr "Osumia sisältävien pelien prosenttiosuus"
 
 #: progress.c:537
 msgid "Average move number for first hit"
@@ -13084,9 +13177,8 @@ msgid "Error opening database"
 msgstr "Virhe tietokannan avaamisessa"
 
 #: relational.c:448
-#, fuzzy
 msgid "Match exists in database, overwrite?"
-msgstr "Ottelu on jo olemassa, korvataanko?"
+msgstr "Ottelu on jo tietokannassa, korvataanko?"
 
 #: relational.c:474
 msgid "Error adding match."
@@ -13296,11 +13388,11 @@ msgstr ""
 
 #: set.c:333
 msgid "Will run analysis in the background."
-msgstr ""
+msgstr "Suorittaa analyysin taustalla."
 
 #: set.c:333
 msgid "Will not run analysis in the background."
-msgstr ""
+msgstr "Ei suorita analyysiä taustalla."
 
 #: set.c:342 show.c:373
 msgid "Cube action will be analysed."
@@ -13431,14 +13523,12 @@ msgstr ""
 "sallimista (see `help set cube use')."
 
 #: set.c:546
-#, fuzzy
 msgid "Will automatically add analysis to database."
-msgstr "Uusi peli ei ala automaattisesti."
+msgstr "Lisää automaattisesti analyysin tietokantaan."
 
 #: set.c:546
-#, fuzzy
 msgid "Will not automatically add analysis to database."
-msgstr "Uusi peli ei ala automaattisesti."
+msgstr "Ei lisää automaattisesti analyysiä tietokantaan."
 
 #: set.c:554
 msgid "Will automatically start games after wins."
@@ -14351,10 +14441,12 @@ msgstr "`%s' on nyt siirtovuorossa.\n"
 #: set.c:2735
 msgid "Use key player names to set key player at bottom of board."
 msgstr ""
+"Käyttää avainpelaajien nimiä asettaaksesi avainpelaajan taulun alareunaan."
 
 #: set.c:2736
 msgid "Dont use key player names to set key player at bottom of board."
 msgstr ""
+"Ei käytä avainpelaajien nimiä asettaaksesi avainpelaajan taulun alareunaan."
 
 #: set.c:2746
 msgid "Will use the Jacoby rule for money sessions."
@@ -14455,17 +14547,16 @@ msgstr "Beavereita ei sallita nyt rahapeli sessioissa."
 
 #: set.c:2925
 msgid "Wrong ply number."
-msgstr ""
+msgstr "Väärä kerrosnumero."
 
 #. g_print("\n again: n:%d, i:%d",n,scoreMapMatchLengthDefIdx);
 #: set.c:2954
 msgid "Wrong match length, not within the vector."
-msgstr ""
+msgstr "Väärä ottelupituus, ei vektorin sisällä."
 
 #: set.c:2967 set.c:2980 set.c:2993 set.c:3006 set.c:3019 set.c:3032 set.c:3049
-#, fuzzy
 msgid "Wrong option."
-msgstr "3D valinnat"
+msgstr "Epäkelpo valinta"
 
 #: set.c:3059
 #, c-format
@@ -15103,12 +15194,12 @@ msgstr "Anna positiivinen luku\n"
 msgid "The factor used for multiplying error rates is: %.1f\n"
 msgstr "Virhetasojen tekijäkerroin on: %.1f\n"
 
-#: set.c:4763
+#: set.c:4775
 #, c-format
 msgid "Not a valid XGID '%s'"
 msgstr "XGID '%s' ei ole kelvollinen"
 
-#: set.c:4767 set.c:4833
+#: set.c:4779 set.c:4845
 msgid ""
 "This position has player on roll appearing on top. \n"
 "Swap players so the player on roll appears on the bottom? "
@@ -15116,41 +15207,41 @@ msgstr ""
 "Siirtovuorossa on ylimmäinen pelaaja.\n"
 "Vaihda siirtovuorossa oleva pelaaja alimmaiseksi? "
 
-#: set.c:4807
+#: set.c:4819
 #, c-format
 msgid "No valid IDs found"
 msgstr "Kelvollisia ID tunnuksia ei havaittu"
 
-#: set.c:4814
+#: set.c:4826
 #, c-format
 msgid "Setting GNUbg ID %s:%s\n"
 msgstr "GNUbg ID asetus %s:%s\n"
 
-#: set.c:4841
+#: set.c:4853
 msgid "Auto save during rollouts"
 msgstr "Automaattinen tallennus rolloutin aikana"
 
-#: set.c:4841
+#: set.c:4853
 msgid "Don't auto save during rollouts"
 msgstr "Ei automaattista tallennusta rolloutin aikana"
 
-#: set.c:4848
+#: set.c:4860
 msgid "Auto save after each analysed game"
 msgstr "Automaattinen tallennus jokaiselle pelianalyysille"
 
-#: set.c:4848
+#: set.c:4860
 msgid "Don't auto save after each analysed game"
 msgstr "Ei automaattista tallennusta jokaiselle pelianalyysille"
 
-#: set.c:4855
+#: set.c:4867
 msgid "Prompt before deleting autosaves"
 msgstr "Kysyy vahvistusta ennen automaattisen tallennuksen poistamista"
 
-#: set.c:4855
+#: set.c:4867
 msgid "Delete autosaves automatically"
 msgstr "Poista automaattinen tallennus automaattisesti"
 
-#: set.c:4864
+#: set.c:4876
 msgid "You must specify a positive autosave time in minutes"
 msgstr "Aseta positiivinen automaattinen tallennusaika minuutteina"
 
@@ -15929,10 +16020,10 @@ msgstr ""
 #: show.c:1299
 #, c-format
 msgid ""
-"Estimated GWC: %4.1f%% (80 - L/3 + 2*(L-T))\n"
+"Estimated GWC: %4.1f%% (80 - L/3 + 2*(T-L))\n"
 "\n"
 msgstr ""
-"Arvioitu GWC: %4.1f%% (80 - L/3 + 2*(L-T))\n"
+"Arvioitu GWC: %4.1f%% (80 - L/3 + 2*(T-L))\n"
 "\n"
 
 #: show.c:1302
@@ -16403,18 +16494,20 @@ msgid "disabled"
 msgstr "ei sallittu"
 
 #: show.c:2212
-#, fuzzy, c-format
+#, c-format
 msgid "Parameters for cube evaluations (2+ ply/0-1 ply):\n"
-msgstr "Tuplausratkaisu arviointien parametrit:\n"
+msgstr ""
+"Tuplausarviointien parametrit (2+ kerros/0-1 kerros):\n"
+"\n"
 
 #: show.c:2216
 msgid "Cube efficiency for race: x = pips"
 msgstr "Tuplaustehokkuus juoksupelille: x = pipsit"
 
 #: show.c:2217
-#, fuzzy, c-format
+#, c-format
 msgid "(min value %.2f/%.2f, max value %.2f/%.2f)\n"
-msgstr "(min. arvo %.4f, max arvo %.4f)\n"
+msgstr "(min arvo %.2f/%.2f, max arvo %.2f/%.2f)\n"
 
 #: show.c:2223
 msgid ""
@@ -16464,7 +16557,7 @@ msgid "95%CI"
 msgstr "95%CI"
 
 #: show.c:2368
-#, fuzzy, c-format
+#, c-format
 msgid "Auto save every %d minute\n"
 msgid_plural "Auto save every %d minutes\n"
 msgstr[0] "Automaattinen tallennus %d minuutin välein\n"
@@ -16595,9 +16688,9 @@ msgid "(Cube: %d)"
 msgstr "(Kuutio: %d)"
 
 #: text.c:98
-#, fuzzy, c-format
+#, c-format
 msgid "%c: %.20s (Cube: %d)"
-msgstr "%c: %*s (Kuutio: %d)"
+msgstr "%c: %.20s (Kuutio: %d)"
 
 #: text.c:111
 #, c-format
@@ -16647,11 +16740,13 @@ msgstr[0] " (%d pisteen ottelu)"
 msgstr[1] " (%d pisteen ottelu)"
 
 #: text.c:225
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Output generated %s by %s\n"
 "\n"
-msgstr "Tuloste luotu %s %s "
+msgstr ""
+"%s tuotti tulosteen %s\n"
+"\n"
 
 #: text.c:496
 #, c-format

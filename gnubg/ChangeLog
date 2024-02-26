@@ -1,3 +1,11 @@
+2024-02-24  Philippe Michel  <philippe.michel7@free.fr>
+
+	Version 1.08.002 released.
+
+2024-02-18  Philippe Michel  <philippe.michel7@free.fr>
+
+	* gnubg.c: Fix potential corruption of gnubgautorc file.
+
 2024-02-04  Philippe Michel  <philippe.michel7@free.fr>
 
 	Version 1.08.001 released.

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: gnubg.c,v 1.1039 2024/02/18 16:54:39 plm Exp $
+ * $Id: gnubg.c,v 1.1038 2024/01/04 21:10:49 plm Exp $
  */
 
 
@@ -24,7 +24,7 @@
 Thanks to Philippe Michel for the suggestion!
 
 02/2023: Isaac Keslassy: introduced the "SmartSit" feature 
-that enables users to automatically sit at the bottom of 
+that enables users to automatically to sit at the bottom of 
 the board (i.e. as player1) in opened matches.
     
 It works as follows:
@@ -3581,11 +3581,6 @@ CommandSaveSettings(char *szParam)
      * save anything since this will overwrite an existing file
      * with defaults */
     if (fNoRC)
-        return;
-
-    /* If we are still in the process of reading rc files, don't
-     * try to save gnubgautorc or we may corrupt it */
-    if (loading_rc)
         return;
 
     if (!szParam || !*szParam) {
