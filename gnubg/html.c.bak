@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: html.c,v 1.274 2024/02/17 17:39:25 plm Exp $
+ * $Id: html.c,v 1.273 2023/10/18 20:30:47 plm Exp $
  */
 
 #include "config.h"
@@ -2158,7 +2158,7 @@ HTMLPrintMoveAnalysis(FILE * pf, matchstate * pms, moverecord * pmr,
     fprintf(pf, "<th %s colspan=\"2\">%s</th>\n",
             GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVENUMBER, -1), _("#"));
     fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVEPLY, -1), _("Ply"));
-    fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVEMOVE, -1), _("Move"));
+    fprintf(pf, "<th %s>%s</th>\n", GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVEMOVE, -1), Q_("noun|Move"));
     fprintf(pf,
             "<th %s>%s</th>\n" "</tr>\n",
             GetStyleGeneral((int)hecss, CLASS_MOVEHEADER, CLASS_MOVEEQUITY, -1),

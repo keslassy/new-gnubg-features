@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- * $Id: set.c,v 1.438 2024/02/19 21:17:37 plm Exp $
+ * $Id: set.c,v 1.437 2023/12/20 23:09:54 plm Exp $
  */
 
 #include "config.h"
@@ -330,6 +330,7 @@ SetMoveFilter(char *sz, movefilter aamf[MAX_FILTER_PLIES][MAX_FILTER_PLIES])
 extern void
 CommandSetAnalysisBackground(char *sz)
 {
+
     SetToggle("analysis background", &fBackgroundAnalysis, sz,
               _("Will run analysis in the background."), _("Will not run analysis in the background."));
 }
@@ -356,6 +357,7 @@ CommandSetAnalysisLuck(char *sz)
 extern void
 CommandSetAnalysisLuckAnalysis(char *sz)
 {
+
 
     szSet = _("luck analysis");
     szSetCommand = "set analysis luckanalysis";
@@ -610,6 +612,7 @@ CorrectNumberOfChequers(TanBoard anBoard, int numCheq)
 extern int
 SetBoard(char *sz)
 {
+
     TanBoard an;
     moverecord *pmr;
 
@@ -1041,6 +1044,7 @@ SetDice(int n0, int n1)
 extern void
 CommandSetDice(char *sz)
 {
+
     int n0, n1;
 
     if (ms.gs != GAME_PLAYING) {
@@ -4501,6 +4505,7 @@ CommandSetGotoFirstGame(char *sz)
 static void
 SetEfficiency(const char *szText, char *sz, float *prX)
 {
+
     float r = ParseReal(&sz);
 
     if (r >= 0.0f && r <= 1.0f) {
@@ -4508,12 +4513,15 @@ SetEfficiency(const char *szText, char *sz, float *prX)
         outputf("%s: %7.5f\n", szText, *prX);
     } else
         outputl(_("Cube efficiency must be between 0 and 1"));
+
 }
 
 extern void
 CommandSetCubeEfficiencyOS(char *sz)
 {
+
     SetEfficiency(_("Cube efficiency for one sided bearoff positions"), sz, &rOSCubeX);
+
 }
 
 extern void
@@ -4533,6 +4541,7 @@ CommandSetCubeEfficiencyContact(char *sz)
 extern void
 CommandSetCubeEfficiencyRaceFactor(char *sz)
 {
+
     float r = ParseReal(&sz);
 
     if (r >= 0) {
@@ -4541,6 +4550,7 @@ CommandSetCubeEfficiencyRaceFactor(char *sz)
         rRaceFactorX[1] = rRaceFactorX[0];
     } else
         outputl(_("Cube efficiency race factor must be larger than 0."));
+
 }
 
 extern void
@@ -4560,6 +4570,7 @@ CommandSetCubeEfficiencyRaceMin(char *sz)
 extern void
 CommandSetCubeEfficiencyRaceCoefficient(char *sz)
 {
+
     float r = ParseReal(&sz);
 
     if (r >= 0) {
@@ -4568,6 +4579,7 @@ CommandSetCubeEfficiencyRaceCoefficient(char *sz)
         rRaceCoefficientX[1] = rRaceCoefficientX[0];
     } else
         outputl(_("Cube efficiency race coefficient must be larger than 0."));
+
 }
 
 
@@ -4697,18 +4709,6 @@ SetXGID(char *sz)
 
     if (s == NULL)
         return 1;
-
-    /* If "XGID=" found, then parse "XGID=" line.
-     * For get along with XGID+board style clipboard.
-     * (also Board position: Above )
-     */
-    c = strstr(s, "XGID=");
-    if (c != NULL) {
-        c = strchr(c, '\n');
-        if (c != NULL) {
-            *c = '\0';
-	}
-    }
 
     for (i = 0; i < 9 && (c = strrchr(s, ':')); i++) {
         g_strlcpy(v[i], c + 1, 5);
