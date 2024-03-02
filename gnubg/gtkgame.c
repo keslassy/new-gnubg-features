@@ -8248,7 +8248,7 @@ GTKDumpStatcontext(int game)
 
     navi_combo = AddNavigation(pvbox);
     gtk_container_add(GTK_CONTAINER(DialogArea(pwStatDialog, DA_MAIN)), pvbox);
-
+    g_message("0");
 #if defined(USE_BOARD3D)
     SetNumGames(gd, numStatGames);
 
@@ -8264,7 +8264,10 @@ GTKDumpStatcontext(int game)
     AddGameData(gd, i, &scMatch);
 
     pw = StatGraph(gd);
+    g_message("1");
     if (pw != NULL) {
+        g_message("2");
+
         gtk_notebook_append_page(GTK_NOTEBOOK(pwNotebook), pw, gtk_label_new(_("Graph")));
         gtk_widget_set_tooltip_text(pw, _("This graph shows the total error rates per game for each player."
                                           " The games are along the bottom and the error rates up the side."
@@ -8326,7 +8329,7 @@ GTKDumpStatcontext(int game)
     g_signal_connect(pwStatDialog, "map", G_CALLBACK(stat_dialog_map), pwUsePanels);
 
     gtk_widget_show_all (pwStatDialog);
-    // GTKRunDialog(pwStatDialog); // <-- causes issues! 
+    //GTKRunDialog(pwStatDialog); // <-- causes issues! 
 
 
 #if defined(USE_BOARD3D)
